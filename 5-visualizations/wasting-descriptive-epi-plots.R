@@ -9,6 +9,7 @@ theme_set(theme_ki())
 
 #Load data
 load("results/desc_data_cleaned.Rdata")
+d <- shiny_desc_data
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
@@ -31,14 +32,25 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   )
   df <- droplevels(df)
   
+  # Rename region
+  asia_region <- which(levels(df$region) == 'Asia')
+  levels(df$region)[asia_region] = 'South Asia'
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_point(aes(fill=region, color=region), size = 4) +
     geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    geom_text(data=df, aes(x=agecat,y=0,label=nmeas.f),size=3)+
-    geom_text(data=df, aes(x=agecat,y=1,label=nstudy.f),size=3)+
+    geom_text(data=df, aes(x=agecat,y=38,label=nmeas.f),size=3)+
+    geom_text(data=df, aes(x=agecat,y=41,label=nstudy.f),size=3)+
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
+    theme(plot.subtitle = element_text(size=40)) +
+    theme(axis.text.x = element_text(margin = 
+                                       margin(t = -30, r = 0, b = 0, l = 0),
+                                     size = 15)) +
+    theme(axis.title.x = element_text(margin = 
+                                        margin(t = 25, r = 0, b = 0, l = 0))) +
     # annotate("text",label=df$ptest.f,x=df$agecat,
     #          y=df$est,hjust=-2,size=3)+
     ggtitle("") +
