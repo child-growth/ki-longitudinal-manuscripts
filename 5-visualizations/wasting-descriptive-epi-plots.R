@@ -20,7 +20,9 @@ d$nmeas.f <- clean_nmeans(d$nmeas)
 ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                         Cohort="pooled",
                         xlabel="Age category",
-                        ylabel=""){
+                        ylabel="",
+                        h1=0,
+                        h2=3){
   df <- d %>% filter(
     disease == Disease &
       measure == Measure &
@@ -36,16 +38,22 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   asia_region <- which(levels(df$region) == 'Asia')
   levels(df$region)[asia_region] = 'South Asia'
   
+  # add line break to label columns
+  df <- df %>% mutate(nmeas.f = gsub(' ', '\n', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' ', '\n', nstudy.f))
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_point(aes(fill=region, color=region), size = 4) +
     geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    geom_text(data=df, aes(x=agecat,y=38,label=nmeas.f),size=3)+
-    geom_text(data=df, aes(x=agecat,y=41,label=nstudy.f),size=3)+
+    geom_text(data=df, aes(x = agecat, y = h1, 
+                           label = nmeas.f), size = 3) +
+    geom_text(data=df, aes(x = agecat, y = h2, 
+                           label = nstudy.f), size = 3) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
-    theme(plot.subtitle = element_text(size=40)) +
+    theme(strip.text = element_text(size=22)) +
     theme(axis.text.x = element_text(margin = 
                                        margin(t = -30, r = 0, b = 0, l = 0),
                                      size = 15)) +
@@ -108,7 +116,9 @@ p1 <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age category")
+                   xlabel="Age category",
+                   h1=0,
+                   h2=3)
 
 
 ggsave(p1, file="figures/wasting/pooled_prev.png", width=10, height=8)
@@ -125,7 +135,9 @@ p2 <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age category")
+                   xlabel="Age category",
+                   h1=36,
+                   h2=42)
 
 
 ggsave(p2, file="figures/wasting/pooled_ci.png", width=10, height=8)
@@ -141,7 +153,9 @@ p3 <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="6 months", 
                    Cohort="pooled",
-                   xlabel="Age category")
+                   xlabel="Age category",
+                   h1=4.5,
+                   h2=5.25)
 
 
 ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
