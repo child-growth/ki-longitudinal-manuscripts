@@ -9,7 +9,7 @@ theme_set(theme_ki())
 
 #Load data
 load("results/desc_data_cleaned.Rdata")
-d <- shiny_desc_data
+
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
@@ -39,8 +39,8 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   levels(df$region)[asia_region] = 'South Asia'
   
   # add line break to label columns
-  df <- df %>% mutate(nmeas.f = gsub(' ', '\n', nmeas.f)) %>%
-    mutate(nstudy.f = gsub(' ', '\n', nstudy.f))
+  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub('N=', '', nstudy.f))
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_point(aes(fill=region, color=region), size = 4) +
@@ -161,3 +161,18 @@ p3 <- ki_desc_plot(d,
 ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
 
 
+#-------------------------------------------------------------------------------------------
+# Wasting recovery
+#-------------------------------------------------------------------------------------------
+
+
+
+#-------------------------------------------------------------------------------------------
+# WLZ seasonality
+#-------------------------------------------------------------------------------------------
+
+
+
+#-------------------------------------------------------------------------------------------
+# Prevalence of co-occurrence
+#-------------------------------------------------------------------------------------------
