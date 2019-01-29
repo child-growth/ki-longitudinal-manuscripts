@@ -165,6 +165,41 @@ ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
 # Wasting recovery
 #-------------------------------------------------------------------------------------------
 
+p4 <- ki_desc_plot(d,
+                   Disease="Wasting",
+                   Measure="Recovery", 
+                   Birth="yes", 
+                   Severe="no", 
+                   Age_range="60 days", 
+                   Cohort="pooled",
+                   xlabel="Age category",
+                   h1=4.5,
+                   h2=5.25)
+
+
+ggsave(p4, file="figures/wasting/pooled_rev.png", width=10, height=8)
+
+
+
+#-------------------------------------------------------------------------------------------
+# Persistent Wasting 
+#-------------------------------------------------------------------------------------------
+
+p5 <- ki_desc_plot(d,
+                   Disease="Wasting",
+                   Measure="Persistent wasting", 
+                   Birth="yes", 
+                   Severe="no", 
+                   Age_range="6 months", 
+                   Cohort="pooled",
+                   xlabel="Age category",
+                   h1=4.5,
+                   h2=5.25)
+
+
+ggsave(p5, file="figures/wasting/pooled_pers.png", width=10, height=8)
+
+
 
 
 #-------------------------------------------------------------------------------------------
