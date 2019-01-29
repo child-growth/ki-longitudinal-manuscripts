@@ -98,7 +98,12 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   xlab("Age (months)")+
   ylab("Z-scores (WHO)") +
   ggtitle("Mean WLZ by child age and region") +
-  theme(legend.position="right")
+  theme(legend.position="right") +
+  theme(axis.text.x = element_text(margin = 
+                                     margin(t = -30, r = 0, b = 0, l = 0),
+                                   size = 15)) +
+  theme(axis.title.x = element_text(margin = 
+                                      margin(t = 25, r = 0, b = 0, l = 0)))
 
 ggsave(p, file="figures/wasting/WLZ_by_region.png", width=10, height=4)
 
