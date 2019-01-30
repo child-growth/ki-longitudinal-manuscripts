@@ -42,16 +42,19 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub('N=', '', nstudy.f))
   
+  # set height staggering variable
+  df <- df %>% mutate(height_level = rep(c(-1, 1), length.out = nrow(df)))
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_point(aes(fill=region, color=region), size = 4) +
-    geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
+    geom_linerange(aes(ymin=lb, ymax=1.3*ub, color=region),  alpha=0.5, size = 3) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    geom_text(data=df, aes(x = agecat, y = h1, 
-                           label = nmeas.f), size = 3) +
-    geom_text(data=df, aes(x = agecat, y = h2, 
-                           label = nstudy.f), size = 3) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
+                           label = nmeas.f), size = 3, angle = 45) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
+                           label = nstudy.f), size = 3, angle = 45) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
     theme(strip.text = element_text(size=22)) +
     theme(axis.text.x = element_text(margin = 
@@ -122,8 +125,8 @@ p1 <- ki_desc_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Age category",
-                   h1=0,
-                   h2=3)
+                   h1=25,
+                   h2=28)
 
 
 ggsave(p1, file="figures/wasting/pooled_prev.png", width=10, height=8)
@@ -178,8 +181,8 @@ p4 <- ki_desc_plot(d,
                    Age_range="90 days", 
                    Cohort="pooled",
                    xlabel="Age category",
-                   h1=4.5,
-                   h2=5.25)
+                   h1=120,
+                   h2=10)
 
 
 ggsave(p4, file="figures/wasting/pooled_rev.png", width=10, height=8)
@@ -198,7 +201,7 @@ p5 <- ki_desc_plot(d,
                    Age_range="6 months", 
                    Cohort="pooled",
                    xlabel="Age category",
-                   h1=4.5,
+                   h1=22.5,
                    h2=5.25)
 
 
