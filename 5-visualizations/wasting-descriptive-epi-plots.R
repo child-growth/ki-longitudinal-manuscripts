@@ -13,6 +13,9 @@ load("results/desc_data_cleaned.Rdata")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
+# Rename region
+asia_region <- which(levels(d$region) == 'Asia')
+levels(d$region)[asia_region] = 'South Asia'
 
 #-------------------------------------------------------------------------------------------
 # Plot function
@@ -33,10 +36,6 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
       !is.na(region) & !is.na(agecat)
   )
   df <- droplevels(df)
-  
-  # Rename region
-  asia_region <- which(levels(df$region) == 'Asia')
-  levels(df$region)[asia_region] = 'South Asia'
   
   # add line break to label columns
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
@@ -87,8 +86,7 @@ df$agecat <- factor(df$agecat,
                     levels=c("Two weeks", "One month",
                              paste0(2:24," months")))
 df <- df %>% arrange(agecat) %>%
-  filter(!is.na(agecat)) 
-  # %>% filter(region!="Overall")
+  filter(!is.na(agecat))   
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   geom_point(aes(fill=region, color=region), size = 4, shape=22) +

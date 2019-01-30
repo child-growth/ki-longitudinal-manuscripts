@@ -13,6 +13,9 @@ load("results/desc_data_cleaned.Rdata")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
+# Rename region
+asia_region <- which(levels(d$region) == 'Asia')
+levels(d$region)[asia_region] = 'South Asia'
 
 #-------------------------------------------------------------------------------------------
 # Plot function
@@ -34,10 +37,6 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   )
   df <- droplevels(df)
   
-  # Rename region
-  asia_region <- which(levels(df$region) == 'Asia')
-  levels(df$region)[asia_region] = 'South Asia'
-  
   # add line break to label columns
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub('N=', '', nstudy.f))
@@ -48,10 +47,10 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    geom_text(data=df, aes(x = agecat, y = h1, 
-                           label = nmeas.f), size = 3) +
-    geom_text(data=df, aes(x = agecat, y = h2, 
-                           label = nstudy.f), size = 3) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
+                           label = nmeas.f), size = 3, angle = 45) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
+                           label = nstudy.f), size = 3, angle = 45) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
     theme(strip.text = element_text(size=22)) +
     theme(axis.text.x = element_text(margin = 
@@ -82,14 +81,17 @@ df <- d %>% filter(
     age_range == "1 month" &
     cohort == "pooled" 
 )
+
 df <- droplevels(df)
 
 df$agecat <- factor(df$agecat, 
                     levels=c("Two weeks", "One month",
                              paste0(2:24," months")))
 df <- df %>% arrange(agecat) %>%
-  filter(!is.na(agecat)) 
-  # %>% filter(region!="Overall")
+  filter(!is.na(agecat)) %>%
+  filter(!is.na(region))
+
+
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   geom_point(aes(fill=region, color=region), size = 4, shape=22) +
@@ -125,7 +127,8 @@ p1 <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age category")
+                   xlabel="Age category",
+                   h1=60)
 
 
 ggsave(p1, file="figures/stunting/pooled_prev.png", width=10, height=8)
@@ -142,7 +145,8 @@ p2 <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age category")
+                   xlabel="Age category",
+                   h1=32)
 
 
 ggsave(p2, file="figures/stunting/pooled_ci.png", width=10, height=8)
@@ -158,7 +162,8 @@ p3 <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="6 months", 
                    Cohort="pooled",
-                   xlabel="Age category")
+                   xlabel="Age category",
+                   h1=4.5)
 
 
 ggsave(p3, file="figures/stunting/pooled_ir.png", width=10, height=8)
@@ -177,7 +182,8 @@ df <- d %>% filter(
     cohort == "pooled" 
 )
 df <- droplevels(df)
-df <- df %>% arrange(region) 
+df <- df %>% arrange(region) %>%
+  filter(region != 'Overall')
 
 p4 <- ggplot(df,aes(y=est,x=region)) +
   geom_point(aes(fill=region, color=region), size = 4) +
@@ -187,7 +193,13 @@ p4 <- ggplot(df,aes(y=est,x=region)) +
   xlab("Region")+
   ylab("Percent recovered") +
   ggtitle("Percentage of children who became stunted\nand were recovered at 24 months") +
-  theme(legend.position="right")
+  theme(legend.position="right") +
+  theme(strip.text = element_text(size=22)) +
+  theme(axis.text.x = element_text(margin = 
+                                     margin(t = -30, r = 0, b = 0, l = 0),
+                                   size = 15)) +
+  theme(axis.title.x = element_text(margin = 
+                                      margin(t = 25, r = 0, b = 0, l = 0)))
 p4
 
 ggsave(p4, file="figures/stunting/pooled_rec.png", width=10, height=8)
