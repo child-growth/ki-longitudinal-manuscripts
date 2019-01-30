@@ -87,9 +87,15 @@ df <- droplevels(df)
 df$agecat <- factor(df$agecat, 
                     levels=c("Two weeks", "One month",
                              paste0(2:24," months")))
-df <- df %>% arrange(agecat) %>%
+
+# levels(df$agecat) <- gsub(" month.*", "", levels(df$agecat))
+# levels(df$agecat) <- gsub('One', '1', levels(df$agecat))
+
+df <- df %>% 
+  arrange(agecat) %>%
   filter(!is.na(agecat)) %>%
-  filter(!is.na(region))
+  filter(!is.na(region)) %>%
+  filter(agecat != 'Two weeks')
 
 
 
@@ -99,11 +105,13 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
                      limits = c(-2.2, 1.5)) + 
-  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
-  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+                    name = 'Region') +
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+                     name = 'Region') +
   xlab("Age (months)")+
-  ylab("Z-scores (WHO)") +
-  ggtitle("Mean LAZ by child age and region") +
+  ylab("Length-for-age Z-score") +
+  ggtitle("") +
   theme(axis.text.x = element_text(margin = 
                                      margin(t = -30, r = 0, b = 0, l = 0),
                                    size = 15)) +
@@ -112,6 +120,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   theme(legend.position="right")
 
 ggsave(p, file="figures/stunting/LAZ_by_region.png", width=10, height=4)
+
 
 
 
@@ -203,3 +212,32 @@ p4 <- ggplot(df,aes(y=est,x=region)) +
 p4
 
 ggsave(p4, file="figures/stunting/pooled_rec.png", width=10, height=8)
+
+
+
+#------------------------------------------------------------------------------
+#LAZ with percentiles
+#------------------------------------------------------------------------------
+p5 <- ggplot(df,aes(y=est,x=agecat, group=region)) +
+  geom_point(aes(fill=region, color=region), size = 4, shape=22) +
+  geom_line(aes(color=region)) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
+                     limits = c(-2.2, 1.5)) + 
+  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+                    name = 'Region') +
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+                     name = 'Region') +
+  xlab("Age (months)")+
+  ylab("Length-for-age Z-score") +
+  ggtitle("") +
+  theme(axis.text.x = element_text(margin = 
+                                     margin(t = -30, r = 0, b = 0, l = 0),
+                                   size = 15)) +
+  theme(axis.title.x = element_text(margin = 
+                                      margin(t = 25, r = 0, b = 0, l = 0))) +
+  theme(legend.position="right")
+  # stat_summary(fun.y = "quantile", fun.args = list(probs = c(0.05, 0.5, 0.95)), 
+  #              geom = "hline", aes(yintercept = est))
+
+ggsave(p5, file="figures/stunting/LAZ_by_region.png", width=10, height=4)

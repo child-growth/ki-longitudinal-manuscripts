@@ -94,11 +94,13 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
                      limits = c(min(df$est), 1.5)) + 
-  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
-  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                    name = 'Region') +
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                     name = 'Region') +
   xlab("Age (months)") +
-  ylab("Z-scores (WHO)") +
-  ggtitle("Mean WLZ by child age and region") +
+  ylab("Weight-for-length Z-score") +
+  ggtitle("") +
   theme(legend.position="right") +
   theme(axis.text.x = element_text(margin = 
                                      margin(t = -30, r = 0, b = 0, l = 0),
