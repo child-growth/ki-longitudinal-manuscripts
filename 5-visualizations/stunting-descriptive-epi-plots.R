@@ -88,17 +88,25 @@ df$agecat <- factor(df$agecat,
                     levels=c("Two weeks", "One month",
                              paste0(2:24," months")))
 df <- df %>% arrange(agecat) %>%
-  filter(!is.na(agecat)) %>%
-  filter(region!="Overall")
+  filter(!is.na(agecat)) 
+  # %>% filter(region!="Overall")
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   geom_point(aes(fill=region, color=region), size = 4, shape=22) +
   geom_line(aes(color=region)) +
-  scale_fill_manual(values=tableau10, drop=TRUE, limits = levels(df$measure)) +
-  scale_color_manual(values=tableau10, drop=TRUE, limits = levels(df$measure)) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
+                     limits = c(-2.2, 1.5)) + 
+  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
   xlab("Age (months)")+
   ylab("Z-scores (WHO)") +
   ggtitle("Mean LAZ by child age and region") +
+  theme(axis.text.x = element_text(margin = 
+                                     margin(t = -30, r = 0, b = 0, l = 0),
+                                   size = 15)) +
+  theme(axis.title.x = element_text(margin = 
+                                      margin(t = 25, r = 0, b = 0, l = 0))) +
   theme(legend.position="right")
 
 ggsave(p, file="figures/stunting/LAZ_by_region.png", width=10, height=4)

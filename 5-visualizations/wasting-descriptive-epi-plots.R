@@ -42,9 +42,6 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub('N=', '', nstudy.f))
   
-  # set height staggering variable
-  df <- df %>% mutate(height_level = rep(c(-1, 1), length.out = nrow(df)))
-  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_point(aes(fill=region, color=region), size = 4) +
     geom_linerange(aes(ymin=lb, ymax=1.3*ub, color=region),  alpha=0.5, size = 3) +
@@ -90,15 +87,18 @@ df$agecat <- factor(df$agecat,
                     levels=c("Two weeks", "One month",
                              paste0(2:24," months")))
 df <- df %>% arrange(agecat) %>%
-  filter(!is.na(agecat)) %>%
-  filter(region!="Overall")
+  filter(!is.na(agecat)) 
+  # %>% filter(region!="Overall")
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   geom_point(aes(fill=region, color=region), size = 4, shape=22) +
   geom_line(aes(color=region)) +
-  scale_fill_manual(values=tableau10, drop=TRUE, limits = levels(df$measure)) +
-  scale_color_manual(values=tableau10, drop=TRUE, limits = levels(df$measure)) +
-  xlab("Age (months)")+
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
+                     limits = c(min(df$est), 1.5)) + 
+  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+  xlab("Age (months)") +
   ylab("Z-scores (WHO)") +
   ggtitle("Mean WLZ by child age and region") +
   theme(legend.position="right") +
