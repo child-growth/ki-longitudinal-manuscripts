@@ -15,18 +15,29 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Figure 2
 
-![ ](pooled_ci.png)
+![ ](pooled_prev.png)
 
 # Figure 3
 
-![ ](pooled_ir.png)
+![ ](pooled_ci.png)
 
 # Figure 4
 
-![ ](pooled_prev.png)
+![ ](pooled_ir.png)
 
 
+# Figure 5
 
+![ ](pooled_rev.png)
+
+
+# Figure 6
+
+![ ](pooled_pers.png)
+
+# Figure 7
+
+![ ](season_WLZ_trajectories.png)
 
 
 
