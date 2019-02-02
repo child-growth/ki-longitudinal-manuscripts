@@ -12,6 +12,10 @@ load("results/desc_data_cleaned.Rdata")
 
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
+d$nstudy.f <- gsub("N=","",d$nstudy.f)
+d$nmeas.f <- gsub("N=","",d$nmeas.f)
+d$nstudy.f <- gsub(" studies","",d$nstudy.f)
+d$nmeas.f <- gsub(" children","",d$nmeas.f)
 
 # Rename region
 asia_region <- which(levels(d$region) == 'Asia')
@@ -48,11 +52,10 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     xlab(xlabel)+
     ylab(ylabel) +
     geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-                           label = nmeas.f), size = 3, angle = 45) +
+                           label = nmeas.f), size = 4) +
     geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-                           label = nstudy.f), size = 3, angle = 45) +
+                           label = nstudy.f), size = 4) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
-    theme(strip.text = element_text(size=22)) +
     theme(axis.text.x = element_text(margin = 
                                        margin(t = -30, r = 0, b = 0, l = 0),
                                      size = 15)) +

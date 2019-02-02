@@ -7,10 +7,10 @@ theme_ki <- function() {
       strip.background = element_blank(),
       legend.position="none",
       plot.title = element_text(size = 30, face = "bold"),
-      strip.text = element_text(size=16),
+      strip.text = element_text(size=22, vjust= 1.5),
       axis.title = element_text(size=18),
       axis.text.y = element_text(size=16),
-      axis.text.x = element_text(size=16, angle = 45, hjust = 1)
+      axis.text.x = element_text(size=15, angle = 25, hjust = 1, vjust= -0.2)
     )
 }
 
@@ -28,8 +28,12 @@ tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
 scaleFUN <- function(x) sprintf("%.2f", x)
 
 clean_nmeans<-function(nmeas){
-  nmeas <- round(nmeas/1000)
-  nmeas.f <- paste0("N=",nmeas,"K children")
+  nmeas.f <- as.character(nmeas)
+  i <- nmeas>10000 & !is.na(nmeas)
+  nmeas[i] <- round(nmeas[i]/1000)
+  nmeas.f[i] <- paste0("N=",nmeas[i],"K children")
+  nmeas.f[!i] <- as.character(nmeas[!i])
+  
   return(nmeas.f)
 }
 
