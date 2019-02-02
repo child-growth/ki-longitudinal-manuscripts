@@ -37,9 +37,16 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   )
   df <- droplevels(df)
   
-  # add line break to label columns
+  # remove N= from labels
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub('N=', '', nstudy.f))
+  
+  # remove text from labels
+  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
+  
+  # levels(df$agecat) <- gsub(" month.*", "", levels(df$agecat))
+  
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_point(aes(fill=region, color=region), size = 4) +
@@ -47,10 +54,10 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-                           label = nmeas.f), size = 3, angle = 45) +
-    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-                           label = nstudy.f), size = 3, angle = 45) +
+    geom_text(data=df, aes(x = agecat, y = h1, 
+                           label = nmeas.f), size = 3) +
+    geom_text(data=df, aes(x = agecat, y = h2,  
+                           label = nstudy.f), size = 3) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
     theme(strip.text = element_text(size=22)) +
     theme(axis.text.x = element_text(margin = 
@@ -92,6 +99,8 @@ df$agecat <- factor(df$agecat,
 # levels(df$agecat) <- gsub('One', '1', levels(df$agecat))
 
 df <- df %>% 
+  # mutate(agecat = gsub(' month.*', '', agecat)) %>%
+  # mutate(agecat = gsub('One', '1', agecat)) %>%
   arrange(agecat) %>%
   filter(!is.na(agecat)) %>%
   filter(!is.na(region)) %>%
@@ -100,11 +109,11 @@ df <- df %>%
 
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-  geom_point(aes(fill=region, color=region), size = 4, shape=22) +
-  geom_line(aes(color=region)) +
+  geom_smooth(aes(fill=region, color=region)) +
+  # geom_line(aes(color=region)) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
-                     limits = c(-2.2, 1.5)) + 
+                     limits = c(-2.2, 0.5)) + 
   scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
                     name = 'Region') +
   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
@@ -113,10 +122,10 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ylab("Length-for-age Z-score") +
   ggtitle("") +
   theme(axis.text.x = element_text(margin = 
-                                     margin(t = -30, r = 0, b = 0, l = 0),
+                                     margin(t = -40, r = 0, b = 0, l = 0),
                                    size = 15)) +
   theme(axis.title.x = element_text(margin = 
-                                      margin(t = 25, r = 0, b = 0, l = 0))) +
+                                      margin(t = 35, r = 0, b = 0, l = 0))) +
   theme(legend.position="right")
 
 ggsave(p, file="figures/stunting/LAZ_by_region.png", width=10, height=4)
@@ -137,7 +146,8 @@ p1 <- ki_desc_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Age category",
-                   h1=60)
+                   h1=60,
+                   h2=65)
 
 
 ggsave(p1, file="figures/stunting/pooled_prev.png", width=10, height=8)

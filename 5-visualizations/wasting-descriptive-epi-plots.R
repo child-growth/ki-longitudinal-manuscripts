@@ -92,8 +92,8 @@ df <- df %>% arrange(agecat) %>%
   filter(!is.na(agecat))   
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-  geom_point(aes(fill=region, color=region), size = 4, shape=22) +
-  geom_line(aes(color=region)) +
+  geom_smooth(aes(fill = region, color = region)) +
+  # geom_line(aes(color=region)) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
                      limits = c(min(df$est), 1.5)) + 
@@ -106,10 +106,10 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right") +
   theme(axis.text.x = element_text(margin = 
-                                     margin(t = -30, r = 0, b = 0, l = 0),
+                                     margin(t = -40, r = 0, b = 0, l = 0),
                                    size = 15)) +
   theme(axis.title.x = element_text(margin = 
-                                      margin(t = 25, r = 0, b = 0, l = 0)))
+                                      margin(t = 35, r = 0, b = 0, l = 0)))
 
 ggsave(p, file="figures/wasting/WLZ_by_region.png", width=10, height=4)
 
