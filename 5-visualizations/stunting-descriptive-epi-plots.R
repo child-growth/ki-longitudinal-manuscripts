@@ -52,8 +52,6 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
     geom_point(aes(fill=region, color=region), size = 2) +
     geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
-    # geom_point(aes(fill=region, color=region), size = 4) +
-    # geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
@@ -242,9 +240,12 @@ ggsave(p4, file="figures/stunting/pooled_rec.png", width=10, height=8)
 #------------------------------------------------------------------------------
 #LAZ with percentiles
 #------------------------------------------------------------------------------
+df <- df %>% group_by(agecat, region) %>%
+  mutate(fifth_perc = quantile(est, probs = c(0.05)),
+         fiftieth_perc = quantile(est, probs = c(0.5)),
+         ninetyfifth_perc = quantile(est, probs = c(0.95))) 
 p5 <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-  geom_point(aes(fill=region, color=region), size = 4, shape=22) +
-  geom_line(aes(color=region)) +
+  geom_smooth(aes(fill=region, color=region)) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
                      limits = c(-2.2, 1.5)) + 
@@ -260,8 +261,20 @@ p5 <- ggplot(df,aes(y=est,x=agecat, group=region)) +
                                    size = 15)) +
   theme(axis.title.x = element_text(margin = 
                                       margin(t = 25, r = 0, b = 0, l = 0))) +
-  theme(legend.position="right")
-  # stat_summary(fun.y = "quantile", fun.args = list(probs = c(0.05, 0.5, 0.95)), 
-  #              geom = "hline", aes(yintercept = est))
+  theme(legend.position="right") +
+  geom_line(aes(x=agecat, y=fifth_perc)) +
+  geom_line(aes(x = agecat, y = fiftieth_perc)) +
+  geom_line(aes(x = agecat, y = ninetyfifth_perc)) +
+  facet_wrap(~region)
+  # stat_summary(fun.y = "quantile", fun.args = list(probs = c(0.05, 0.5, 0.95)),
+                 # aes(yintercept = est, group = region, x = agecat))
 
-ggsave(p5, file="figures/stunting/LAZ_by_region.png", width=10, height=4)
+p5
+
+ggsave(p5, file="figures/stunting/LAZ_by_region_perc.png", width=10, height=4)
+
+
+# -----------------------------------------------------------------------------
+# Mean LAZ with percentiles
+# -----------------------------------------------------------------------------
+d <- data.frame(laz=rnorm(10000), agedays=runif(10000, 1, 720))
