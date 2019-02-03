@@ -49,16 +49,23 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
-    geom_point(aes(fill=region, color=region), size = 4) +
-    geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
+    geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
+    geom_point(aes(fill=region, color=region), size = 2) +
+    geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
+    # geom_point(aes(fill=region, color=region), size = 4) +
+    # geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    geom_text(data=df, aes(x = agecat, y = h1, 
-                           label = nmeas.f), size = 3) +
-    geom_text(data=df, aes(x = agecat, y = h2,  
-                           label = nstudy.f), size = 3) +
-    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
+    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
+                           label = nmeas.f), size = 4) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
+                           label = nstudy.f), size = 4) +
+    scale_x_discrete(expand = expand_scale(add = 2)) +
+    annotate('text', x = -0.25, y = h1, label = 'Studies:', vjust = -1) +
+    annotate('text', x = -0.25, y = h1, label = 'Children:', vjust = 1) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    expand_limits(y = h2) +
     theme(strip.text = element_text(size=22)) +
     theme(axis.text.x = element_text(margin = 
                                        margin(t = -30, r = 0, b = 0, l = 0),
@@ -146,8 +153,8 @@ p1 <- ki_desc_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Age category",
-                   h1=60,
-                   h2=65)
+                   h1=67,
+                   h2=72)
 
 
 ggsave(p1, file="figures/stunting/pooled_prev.png", width=10, height=8)
@@ -165,7 +172,8 @@ p2 <- ki_desc_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Age category",
-                   h1=32)
+                   h1=38,
+                   h2=42)
 
 
 ggsave(p2, file="figures/stunting/pooled_ci.png", width=10, height=8)
@@ -182,7 +190,8 @@ p3 <- ki_desc_plot(d,
                    Age_range="6 months", 
                    Cohort="pooled",
                    xlabel="Age category",
-                   h1=4.5)
+                   h1=5.5,
+                   h2=6.5)
 
 
 ggsave(p3, file="figures/stunting/pooled_ir.png", width=10, height=8)
@@ -205,10 +214,15 @@ df <- df %>% arrange(region) %>%
   filter(region != 'Overall')
 
 p4 <- ggplot(df,aes(y=est,x=region)) +
-  geom_point(aes(fill=region, color=region), size = 4) +
-  geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
-  scale_fill_manual(values=tableau10, drop=TRUE, limits = levels(df$measure)) +
-  scale_color_manual(values=tableau10, drop=TRUE, limits = levels(df$measure)) +
+  geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0, size = 1) +
+  geom_point(aes(fill=region, color=region), size = 2) +
+  geom_text(aes(x = region, y = est, label = round(est)), hjust = 2) +
+  # geom_point(aes(fill=region, color=region), size = 4) +
+  # geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
+  scale_fill_manual(values=tableau10, drop=TRUE, limits = levels(df$measure),
+                    name = 'Region') +
+  scale_color_manual(values=tableau10, drop=TRUE, limits = levels(df$measure),
+                     name = 'Region') +
   xlab("Region")+
   ylab("Percent recovered") +
   ggtitle("Percentage of children who became stunted\nand were recovered at 24 months") +
