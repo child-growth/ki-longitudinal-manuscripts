@@ -241,9 +241,13 @@ ggsave(p4, file="figures/stunting/pooled_rec.png", width=10, height=8)
 #LAZ with percentiles
 #------------------------------------------------------------------------------
 df <- df %>% group_by(agecat, region) %>%
-  mutate(fifth_perc = quantile(est, probs = c(0.05)),
-         fiftieth_perc = quantile(est, probs = c(0.5)),
-         ninetyfifth_perc = quantile(est, probs = c(0.95))) 
+  summarise(fifth_perc = quantile(est, probs = c(0.05)[[1]]),
+            fiftieth_perc = quantile(est, probs = c(0.5)[[1]]),
+            ninetyfifth_perc = quantile(est, probs = c(0.95))[[1]]) %>%
+  ungroup()
+  # mutate(fifth_perc = quantile(est, probs = c(0.05)),
+  #        fiftieth_perc = quantile(est, probs = c(0.5)),
+  #        ninetyfifth_perc = quantile(est, probs = c(0.95))) 
 p5 <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   geom_smooth(aes(fill=region, color=region)) +
   geom_hline(yintercept = 0, colour = "black") +
@@ -278,3 +282,25 @@ ggsave(p5, file="figures/stunting/LAZ_by_region_perc.png", width=10, height=4)
 # Mean LAZ with percentiles
 # -----------------------------------------------------------------------------
 d <- data.frame(laz=rnorm(10000), agedays=runif(10000, 1, 720))
+d <- d %>%
+  mutate(fifth_perc = quantile(laz, probs = c(0.05))[[1]],
+         fiftieth_perc = quantile(laz, probs = c(0.5))[[1]],
+         ninetyfifth_perc = quantile(laz, probs = c(0.95))[[1]])
+
+p6 <- ggplot(d, aes(x = agedays, y = laz)) +
+  geom_smooth() +
+  geom_line(aes(x = agedays, y = fifth_perc)) +
+  geom_line(aes(x = agedays, y = fiftieth_perc)) +
+  geom_line(aes(x = agedays, y = ninetyfifth_perc)) +
+  xlab('Age in Days') +
+  ylab('Length-for-age Z-score') +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  theme(axis.text.x = element_text(margin = 
+                                     margin(t = -10, r = 0, b = 0, l = 0),
+                                   size = 15)) +
+  theme(axis.title.x = element_text(margin = 
+                                      margin(t = 25, r = 0, b = 0, l = 0)))
+  
+p6
+ggsave(p6, file="figures/stunting/LAZ_percentiles.png", width=10, height=4)
