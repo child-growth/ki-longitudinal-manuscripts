@@ -50,8 +50,9 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     mutate(nstudy.f = gsub(' studies', '', nstudy.f))
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
-    geom_errorbar(aes(color=region, ymin=lb, ymax=ub)) +
+    geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
     geom_point(aes(fill=region, color=region), size = 2) +
+    geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
     # geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
