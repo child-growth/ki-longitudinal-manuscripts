@@ -49,6 +49,9 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub(' studies', '', nstudy.f))
   
+  # remove 'months' from age categories
+  # df <- df %>% mutate(agecat = gsub(' months', '', agecat))
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
     geom_point(aes(fill=region, color=region), size = 2) +
