@@ -466,3 +466,63 @@ p5
 ggsave(p5, file="figures/stunting/LAZ_by_region_perc.png", width=10, height=4)
 
 
+
+
+
+
+
+#------------------------------------------------------------------------------
+#Length velocity
+#------------------------------------------------------------------------------
+
+#Load length velocity data
+load("results/pool_vel.RData")
+
+
+
+vel <- pooled_vel %>% filter(pooled==1)
+
+vel$nmeas.f <- clean_nmeans(vel$N)
+vel$strata <- clean_agecat(vel$strata)
+
+
+#Add WHO cm/month standards
+#SONALI - these numbers need to be updated to include the sex-specific growth standards
+# from here: https://www.who.int/childgrowth/standards/velocity/technical_report/en/
+vel$who_cm <- c(3.666666667,
+                2.016666667,
+                1.466666667,
+                1.283333333,
+                1.15,
+                1.05,
+                0.966666667,
+                0.883333333, rep(NA,8))
+
+
+#SONALI - update below to facet by gender 
+
+p6 <- ggplot(vel, aes(y=Mean,x=strata))+
+  geom_point(aes(fill=strata, color=strata), size = 4) +
+  geom_point(aes(y=who_cm), size = 5, shape=4) +
+  geom_text(x=2.8, y=3.6666667, label="<-WHO cm/month standard") + 
+  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=strata),
+                 alpha=0.5, size = 3) +
+  scale_color_manual(values=rep(tableau10[4],20))+  
+  xlab("Age category")+ ylab("")+
+  geom_hline(yintercept = -0) +
+  #scale_y_continuous(limits=c(0,20))+
+  # annotate("text",x=vel$strata,y=.12,label=vel$nmeas.f,size=3)+
+  # annotate("text",x=vel$strata,y=0.1,label=vel$nstudy.f,size=3)+
+  facet_wrap(~measure, scales="free_y") +
+  ggtitle("")+
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        strip.text.x = element_text(size=12),
+        axis.text.x = element_text(size=12, angle = 25, hjust = 1)) 
+
+
+p6
+
+ggsave(p6, file="figures/stunting/pool_vel.png", width=10, height=4)
+
+
