@@ -67,8 +67,10 @@ p +   geom_point(aes(x = x, y = y, size = `Number of observations`, color=`Wasti
 p <- ggplot(world, aes(long, lat)) +
   geom_map(map=world, aes(map_id=region), fill=NA, color="grey20") +
   coord_quickmap() + theme_bw() + coord_cartesian(xlim=c(-90,120), ylim=c(-36,50)) +
-  geom_point(aes(x = x, y = y, size = `Number of observations`, color=`Wasting Prevalence (%)`), data = d, alpha = 0.8) +
-  scale_color_viridis_c() + scale_size(range = c(4,9)) +
+  geom_point(aes(x = x, y = y, size = `Number of observations`, 
+                 fill=`Wasting Prevalence (%)`), 
+             data = d, alpha = 0.8, pch = 21, color = 'grey20') +
+  scale_color_viridis_c() + scale_size(range = c(2,7)) +
   xlab("Longitude") + ylab("Latitude") +
   theme(strip.background = element_blank(),
         strip.text.x = element_text(size=12),
