@@ -200,6 +200,7 @@ p1 <- ki_desc_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Age category",
+                   ylabel='Point Prevalence (95% CI)',
                    h1=67,
                    h2=72)
 
@@ -383,6 +384,7 @@ p3 <- ki_desc_plot(d,
                    Age_range="6 months", 
                    Cohort="pooled",
                    xlabel="Age category",
+                   ylabel='Episodes per 1000 person-days at risk',
                    h1=5.5,
                    h2=6.5)
 
@@ -413,6 +415,7 @@ p4 <- ki_desc_plot(df,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Age category",
+                   ylabel='Percent recovered (95% CI)', 
                    h1=26,
                    h2=28,
                    yrange=c(0,30))
