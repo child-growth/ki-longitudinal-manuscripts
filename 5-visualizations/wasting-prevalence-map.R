@@ -7,12 +7,16 @@ library(ggrepel)
 library(maps)
 library(FField)
 library(viridis)
-setwd("C:/Users/andre/Documents/HBGDki/Results/country_centroids/")
-mediods<-read.csv("country_centroids_primary.csv", header=T, sep = "\t")
+# setwd("C:/Users/andre/Documents/HBGDki/Results/country_centroids/")
+# mediods<-read.csv("country_centroids_primary.csv", header=T, sep = "\t")
+mediods <- read.csv('results/country_centroids/country_centroids_primary.csv',
+                    , header=T, sep = "\t")
+
 head(mediods)
 mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
 mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
-load("C:/Users/andre/Documents/HBGDki/Results/wast_scattermap_data.Rdata")
+# load("C:/Users/andre/Documents/HBGDki/Results/wast_scattermap_data.Rdata")
+load('results/wast_scattermap_data.Rdata')
 
 
 
@@ -70,4 +74,4 @@ p <- ggplot(world, aes(long, lat)) +
         axis.text.x = element_text(size=12))
 p
 
-ggsave(p, file="C:/Users/andre/Dropbox/HBGDki figures/Berlin wasting figures/Wasting_map.png", width=9, height=4)
+ggsave(p, file="figures/intro/Wasting_map.png", width=9, height=4)
