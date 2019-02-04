@@ -178,6 +178,12 @@ dd$measure_freq[dd$monthly==1]<-"Monthly Measurements"
 dd$measure_freq[dd$yearly==1]<-"Yearly"
 dd$measure_freq <- factor(dd$measure_freq)
 
+# DROP yearly measurements
+dd <- dd[dd$measure_freq != 'Yearly', ]
+dd <- dd %>%
+  filter(measure_freq != 'Yearly', yearly != 1)
+# dd <- dd %>% droplevels()
+
 temp <- cbind(dd$study_id, dd$countrycohort, dd$median_length_between_measures, dd$measure_freq, dd$numobs)
 
 #drop any non-intervention cohorts with only yearly measurements
@@ -248,7 +254,7 @@ dd$short_description[dd$study_id=='SAS-CompFeed'] <- 'Optimal Infant Feeding'
 dd$short_description[dd$study_id=='NIH-Birth'] <- 'NIH Birth Cohort'
 
 
-# simplify Tanzania label
+# # simplify Tanzania label
 dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
 
 # make a study-country label, and make the monthly variable into a factor
@@ -282,9 +288,9 @@ dd$stpcat <- factor(dd$stpcat)
 colnames(dd)
 
 studylist <- dd[,c(1:10,29:38)] %>% distinct()
-library(xlsx)
-write.xlsx(studylist, "U:/Data/Stunting/UCBerkeley_stunting_studylist.xlsx")
-saveRDS(studylist, "U:/Data/Stunting/UCBerkeley_stunting_studylist.rds")
+# library(xlsx)
+# write.xlsx(studylist, "U:/Data/Stunting/UCBerkeley_stunting_studylist.xlsx")
+# saveRDS(studylist, "U:/Data/Stunting/UCBerkeley_stunting_studylist.rds")
 
 #-----------------------------------
 # Create a long format dataset
@@ -363,7 +369,7 @@ hm <- ggplot(dp,aes(x=age,y=studycountry)) +
                      breaks=1:24,labels=1:24)+
   #one unit on x-axis is equal to one unit on y-axis.
   #equal aspect ratio x and y axis
-  coord_equal()+
+  # coord_equal()+
   #set base size for all font elements
   theme_grey(base_size=10)+
   #theme options
@@ -409,7 +415,7 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
   facet_grid(measure_freq~.,scales='free_y',space='free_y') +
   #remove extra space
   scale_x_discrete(expand=c(0,0)) +
-  scale_fill_manual(values=rep('gray70',5),na.value="grey90",
+  scale_fill_manual(values=rep('gray70',7),na.value="grey90",
                     guide=guide_legend(title="",title.hjust = 0.5,
                                        label.position="bottom",label.hjust=0.5,nrow=1,
                                        override.aes = list(color = "white", fill="white"))) +
@@ -466,7 +472,7 @@ nbar <- sidebar +
 
 
 ngrid <- grid.arrange(nhm, nbar, nrow = 1, ncol = 2, widths=c(100,20))
-ggsave(filename="U:/Figures/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
+ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
 
 
 #-----------------------------------
@@ -492,7 +498,7 @@ stpbar <- sidebar +
   
 # combined plot
 stpgrid <- grid.arrange(stphm, stpbar, nrow = 1, ncol = 2, widths=c(100,20))
-ggsave(filename="U:/Figures/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=10,height=9)
+ggsave(filename="figures/intro/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=10,height=9)
 
 
 
@@ -502,15 +508,15 @@ ggsave(filename="U:/Figures/stunting-study-inventory-heatmap-prev.pdf",plot = st
 # prevalence
 #-----------------------------------
 ngridbig <- grid.arrange(nhm,nbar,stpbar,nrow=1,ncol=3,widths=c(100,20,20))
-ggsave(filename="U:/Figures/stunting-study-inventory-heatmap-nbig2.pdf",plot = ngridbig,device='pdf',width=12,height=9)
-ggsave(filename="U:/Figures/stunting-study-inventory-heatmap-nbig2.png",plot = ngridbig,device='png',width=12,height=9)
+ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.pdf",plot = ngridbig,device='pdf',width=12,height=9)
+ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.png",plot = ngridbig,device='png',width=12,height=9)
 
 
 #-----------------------------------
 # giant panel of both heat maps
 #-----------------------------------
 hmbiggest <- grid.arrange(nhm,nbar,stphm,stpbar,nrow=1,ncol=4,widths=c(100,20,100,20))
-ggsave(filename="U:/Figures/stunting-study-inventory-heatmap-n-prev2.pdf",plot = hmbiggest,device='pdf',width=20,height=9)
+ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n-prev2.pdf",plot = hmbiggest,device='pdf',width=20,height=9)
 
 #-----------------------------------
 # anonymized heatmap for WHO
@@ -518,7 +524,7 @@ ggsave(filename="U:/Figures/stunting-study-inventory-heatmap-n-prev2.pdf",plot =
 nhma <- nhm + aes(y=anonym) + ylab("")
 stphma <- stphm + aes(y=anonym) + ylab("")
 hmwho <- grid.arrange(nhma,nbar,stphma,stpbar,nrow=1,ncol=4,widths=c(100,20,100,20))
-ggsave(filename="U:/Figures/stunting-study-inventory-heatmap-WHOanonymous2.pdf",plot = hmwho,device='pdf',width=18,height=9)
+ggsave(filename="figures/intro/stunting-study-inventory-heatmap-WHOanonymous2.pdf",plot = hmwho,device='pdf',width=18,height=9)
 
 
 
