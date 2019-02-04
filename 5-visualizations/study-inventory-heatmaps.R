@@ -52,11 +52,11 @@ cgrey <- "#777777"
 #-----------------------------------
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
-md <- readRDS('U:/Data/Stunting/GHAP_metadata_stunting.rds')
+md <- readRDS('results/GHAP_metadata_stunting.rds')
 
 
 # subset studies to those that meet stunting inclusion criteria
-load("U:/Data/Stunting/stunting_studies.RData")
+load("results/stunting_studies.RData")
 elig=as.character(ss$short_id)
 md <- md %>% filter(md$short_id %in% elig)
 
