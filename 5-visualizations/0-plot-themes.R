@@ -29,7 +29,7 @@ scaleFUN <- function(x) sprintf("%.2f", x)
 
 clean_nmeans<-function(nmeas){
   nmeas.f <- as.character(nmeas)
-  i <- nmeas>10000 & !is.na(nmeas)
+  i <- nmeas>=1000 & !is.na(nmeas)
   nmeas[i] <- round(nmeas[i]/1000)
   nmeas.f[i] <- paste0("N=",nmeas[i],"K children")
   nmeas.f[!i] <- as.character(nmeas[!i])
