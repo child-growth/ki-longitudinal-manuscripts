@@ -42,7 +42,8 @@ set.seed(14)
 jit <- 4
 repel <- 5 
 coords <- FFieldPtRep(coords = cbind(jitter(df$long,jit),jitter(df$lat,jit)),rep.fact = repel)
-d <- cbind(data.frame(df), coords) %>% rename(`Not stunted`=Not.stunted, `Severe stunted`=Severe.stunted)
+d <- cbind(data.frame(df), coords)
+# %>% rename(`Not stunted`=Not.stunted, `Severe stunted`=Severe.stunted)
 
 p <- ggplot(world, aes(long, lat)) +
   geom_map(map=world, aes(map_id=region), fill=NA, color="grey20") +
@@ -50,7 +51,7 @@ p <- ggplot(world, aes(long, lat)) +
 
 
 summary(d$n)
-d <- d %>% mutate(ncat=ntile(n,4), Stunted=Stunted*100) %>% rename(`Number of observations`=n, `Wasting Prevalence (%)`=Stunted) 
+d <- d %>% mutate(ncat=ntile(n,4), Wasted=Wasted*100) %>% rename(`Number of observations`=n, `Wasting Prevalence (%)`=Wasted) 
 
 
 p +   geom_point(aes(x = x, y = y, size = `Number of observations`, color=`Wasting Prevalence (%)`), data = d, alpha = 0.8) +
