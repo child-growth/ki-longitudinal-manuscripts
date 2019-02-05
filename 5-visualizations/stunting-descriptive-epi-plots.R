@@ -432,13 +432,106 @@ p4 <- ki_desc_plot(df,
                    Cohort="pooled",
                    xlabel="Age (months)",
                    ylabel='Percent recovered (95% CI)', 
-                   h1=26,
-                   h2=28,
-                   yrange=c(0,30))
+                   h1=89,
+                   h2=93)
 
 
 ggsave(p4, file="figures/stunting/pooled_rec.png", width=10, height=8)
 
+
+#-------------------------------------------------------------------------------------------
+# Stunting recovery - overall/pooled only
+#-------------------------------------------------------------------------------------------
+
+df <- d %>% filter(
+  disease == "Stunting" &
+    measure == "Recovery" &
+    birth == "yes" &
+    severe == "no" &
+    age_range == "3 months" &
+    cohort == "pooled" 
+)
+df <- droplevels(df)
+df <- df %>% arrange(region)
+
+ki_desc_plot_overall_only <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+                         Cohort="pooled",
+                         xlabel="Age category",
+                         ylabel="",
+                         h1=0,
+                         h2=3,
+                         yrange=NULL){
+  df <- d %>% filter(
+    disease == Disease &
+      measure == Measure &
+      birth == Birth &
+      severe == Severe &
+      age_range == Age_range &
+      cohort == Cohort &
+      !is.na(region) & !is.na(agecat) &
+      region == 'Overall'
+  )
+  df <- droplevels(df)
+  
+  # remove N= from labels
+  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub('N=', '', nstudy.f))
+  
+  # remove text from labels
+  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
+  
+  # Remove 'months' from x axis labels  
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  
+  p <- ggplot(df,aes(y=est,x=agecat)) +
+    geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
+    geom_point(aes(fill=region, color=region), size = 2) +
+    geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
+    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+    xlab(xlabel)+
+    ylab(ylabel) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
+                           label = nmeas.f), size = 4) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
+                           label = nstudy.f), size = 4) +
+    scale_x_discrete(expand = expand_scale(add = 2)) +
+    annotate('text', x = -0.25, y = h1, label = 'Studies:', vjust = -1) +
+    annotate('text', x = -0.25, y = h1, label = 'Children:', vjust = 1) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    expand_limits(y = h2) +
+    theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
+    theme(axis.text.x = element_text(margin = 
+                                       margin(t = -15, r = 0, b = 0, l = 0),
+                                     size = 15)) +
+    theme(axis.title.x = element_text(margin = 
+                                        margin(t = 25, r = 0, b = 0, l = 0))) +
+    ggtitle("") 
+  
+  if(!is.null(yrange)){
+    p <- p + coord_cartesian(ylim=yrange)
+  }
+  
+  return(p)
+}
+
+p7 <- ki_desc_plot_overall_only(df,
+                   Disease="Stunting",
+                   Measure="Recovery", 
+                   Birth="yes", 
+                   Severe="no", 
+                   Age_range="3 months", 
+                   Cohort="pooled",
+                   xlabel="Age (months)",
+                   ylabel='Percent recovered (95% CI)', 
+                   h1=26,
+                   h2=28)
+
+
+ggsave(p7, file="figures/stunting/pooled_only_rec.png", width=10, height=8)
 
 
 # #------------------------------------------------------------------------------
