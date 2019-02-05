@@ -37,7 +37,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Figure 7
 
+__Note: will update the plot to facet by regions__
+
 ![ ](season_WLZ_trajectories.png)
 
 
+# Figure S1
 
+![ ](example_trajectory.png)

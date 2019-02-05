@@ -112,7 +112,7 @@ df <- df %>% arrange(agecat) %>%
   filter(!is.na(agecat))   
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-  geom_smooth(aes(fill = region, color = region)) +
+  geom_smooth(aes(fill = region, color = region), se=F) +
   # geom_line(aes(color=region)) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
@@ -247,3 +247,4 @@ ggsave(p5, file="figures/wasting/pooled_pers.png", width=10, height=8)
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
 #-------------------------------------------------------------------------------------------
+
