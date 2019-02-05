@@ -126,25 +126,7 @@ dd$measurefreq[dd$studyid %in% c(
 )] <- "yearly"
 
 
-#Add regions
-dd <- dd %>% mutate(region = case_when(
-  country=="BANGLADESH" | country=="INDIA"|
-    country=="NEPAL" | country=="PAKISTAN"|
-    country=="PHILIPPINES"                   ~ "Asia", 
-  country=="KENYA"|
-    country=="GHANA"|
-    country=="BURKINA FASO"|
-    country=="GUINEA-BISSAU"|
-    country=="MALAWI"|
-    country=="SOUTH AFRICA"|
-    country=="TANZANIA, UNITED REPUBLIC OF"|
-    country=="ZIMBABWE"|
-    country=="GAMBIA"                       ~ "Africa",
-  country=="BELARUS"                      ~ "Europe",
-  country=="BRAZIL" | country=="GUATEMALA" |
-    country=="PERU"                         ~ "Latin America",
-  TRUE                                    ~ "Other"
-))
+
 
 
 
@@ -263,6 +245,29 @@ dd <- mutate(dd,
              country=str_to_title(str_to_lower(countrycohort)), 
              studycountry=paste0(short_description,', ',country))
 
+#Add regions
+dd <- dd %>% mutate(country = toupper(country))
+dd <- dd %>% mutate(region = case_when(
+  country=="BANGLADESH" | country=="INDIA"|
+    country=="NEPAL" | country=="PAKISTAN"|
+    country=="PHILIPPINES"                   ~ "Asia", 
+  country=="KENYA"|
+    country=="GHANA"|
+    country=="BURKINA FASO"|
+    country=="GUINEA-BISSAU"|
+    country=="MALAWI"|
+    country=="SOUTH AFRICA"|
+    country=="TANZANIA, UNITED REPUBLIC OF"|
+    country=="TANZANIA"|
+    country=="ZIMBABWE"|
+    country=="GAMBIA"                       ~ "Africa",
+  country=="BELARUS"                      ~ "Europe",
+  country=="BRAZIL" | country=="GUATEMALA" |
+    country=="PERU"                         ~ "Latin America",
+  TRUE                                    ~ "Other"
+))
+
+
 unique(dd$studycountry)
 unique(dd$study_id)
 
@@ -298,13 +303,13 @@ studylist <- dd[,c(1:10,29:38)] %>% distinct()
 #-----------------------------------
 
 # gather N measurements by month data into long format
-dnsubj <- select(dd,study_id,anonym,country,studycountry,measure_freq,stuntprev,starts_with('n')) %>%
+dnsubj <- select(dd,study_id,anonym,country,studycountry,region,stuntprev,starts_with('n')) %>%
   select(-neurocog_data,-nutrition,-notes,-num_countries,-numcountry,-numsubj,-numobs,-nmeas) %>%
-  gather(age,nobs,-study_id,-anonym,-country,-studycountry,-measure_freq,-stuntprev) %>%
+  gather(age,nobs,-study_id,-anonym,-country,-studycountry,-region,-stuntprev) %>%
   mutate(age=as.integer(str_sub(age,2,-1)),nobs=as.integer(nobs)) %>%
-  select(study_id,anonym,country,studycountry,measure_freq,stuntprev,age,nobs) %>%
+  select(study_id,anonym,country,studycountry,region,stuntprev,age,nobs) %>%
   filter(age>=1 & age <=24 ) %>%
-  arrange(measure_freq,stuntprev)
+  arrange(region,stuntprev)
 
 # gather stunting prev by month data into long format
 dstuntp <- select(dd,study_id,anonym,country,studycountry,starts_with('stuntprev_m')) %>%
@@ -360,7 +365,7 @@ textcol <- "grey20"
 # heat map plot scheme
 hm <- ggplot(dp,aes(x=age,y=studycountry)) +
   # facet over measurement frequency
-  facet_grid(measure_freq~.,scales='free_y',space='free_y') +
+  facet_grid(region~.,scales='free_y',space='free_y') +
   #add border white colour of line thickness 0.25
   geom_tile(colour="white",size=0.25)+
   #remove extra space
@@ -412,7 +417,7 @@ hm <- ggplot(dp,aes(x=age,y=studycountry)) +
 sidebar <- ggplot(data = dd, aes(x = studycountry)) + 
   geom_bar(stat = "identity") +
   coord_flip() + 
-  facet_grid(measure_freq~.,scales='free_y',space='free_y') +
+  facet_grid(region~.,scales='free_y',space='free_y') +
   #remove extra space
   scale_x_discrete(expand=c(0,0)) +
   scale_fill_manual(values=rep('gray70',7),na.value="grey90",
@@ -468,11 +473,11 @@ nbar <- sidebar +
   labs(x = "",y="Child-Months (x1000)",title="Sample size") +
   scale_y_continuous(expand=c(0,0),limits=c(0,130),
                      breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
-  geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3) 
+  geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3)
 
 
 ngrid <- grid.arrange(nhm, nbar, nrow = 1, ncol = 2, widths=c(100,20))
-ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
+# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
 
 
 #-----------------------------------
@@ -486,7 +491,7 @@ stphm <- hm +
   scale_fill_brewer(palette = "YlOrRd",na.value="grey90",
                     guide=guide_legend(title="Stunting (%)",title.vjust = 1,
                                        label.position="bottom",label.hjust=0.5,nrow=1))
-  
+
 # stunting prevalence side bar plot
 stpbar <- sidebar +
   aes(y=stuntprev,fill=stpcat) +
@@ -494,12 +499,12 @@ stpbar <- sidebar +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
-  
-  
+
+
 # combined plot
 stpgrid <- grid.arrange(stphm, stpbar, nrow = 1, ncol = 2, widths=c(100,20))
-ggsave(filename="figures/intro/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=10,height=9)
-
+# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=10,height=9)
+# 
 
 
 
@@ -515,16 +520,16 @@ ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.png",plot 
 #-----------------------------------
 # giant panel of both heat maps
 #-----------------------------------
-hmbiggest <- grid.arrange(nhm,nbar,stphm,stpbar,nrow=1,ncol=4,widths=c(100,20,100,20))
-ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n-prev2.pdf",plot = hmbiggest,device='pdf',width=20,height=9)
+# hmbiggest <- grid.arrange(nhm,nbar,stphm,stpbar,nrow=1,ncol=4,widths=c(100,20,100,20))
+# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n-prev2.pdf",plot = hmbiggest,device='pdf',width=20,height=9)
 
 #-----------------------------------
 # anonymized heatmap for WHO
 #-----------------------------------
-nhma <- nhm + aes(y=anonym) + ylab("")
-stphma <- stphm + aes(y=anonym) + ylab("")
-hmwho <- grid.arrange(nhma,nbar,stphma,stpbar,nrow=1,ncol=4,widths=c(100,20,100,20))
-ggsave(filename="figures/intro/stunting-study-inventory-heatmap-WHOanonymous2.pdf",plot = hmwho,device='pdf',width=18,height=9)
+# nhma <- nhm + aes(y=anonym) + ylab("")
+# stphma <- stphm + aes(y=anonym) + ylab("")
+# hmwho <- grid.arrange(nhma,nbar,stphma,stpbar,nrow=1,ncol=4,widths=c(100,20,100,20))
+# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-WHOanonymous2.pdf",plot = hmwho,device='pdf',width=18,height=9)
 
 
 
