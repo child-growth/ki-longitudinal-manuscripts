@@ -53,6 +53,15 @@ cgrey <- "#777777"
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
 md <- readRDS('results/GHAP_metadata_stunting.rds')
+wmd <- readRDS('results/GHAP_metadata_wasting.RDS')
+wmd <- wmd %>% select(study_id, country, wastprev, wastprev_m1, wastprev_m2,
+                      wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
+                      wastprev_m7, wastprev_m8, wastprev_m9, wastprev_m10,
+                      wastprev_m11, wastprev_m12, wastprev_m13, wastprev_m14,
+                      wastprev_m15, wastprev_m16, wastprev_m17, wastprev_m18,
+                      wastprev_m19, wastprev_m20, wastprev_m21, wastprev_m22,
+                      wastprev_m23, wastprev_m24)
+md <- merge(md, wmd, by=c('study_id', 'country'), all = TRUE)
 
 
 # subset studies to those that meet stunting inclusion criteria
@@ -66,6 +75,15 @@ md$numsubj <- as.numeric(md$numsubj)
 for(i in 1:24){
   ni <- paste("n",i,sep="")
   wi <- paste("stuntprev_m",i,sep="")
+  md[ni] <- as.numeric(md[,c(ni)])
+  md[wi] <- as.numeric(md[,c(wi)])
+}
+
+# convert wasting prevalence to numeric
+md$wastprev <- as.numeric(md$wastprev)
+for(i in 1:24){
+  ni <- paste("n",i,sep="")
+  wi <- paste("wastprev_m",i,sep="")
   md[ni] <- as.numeric(md[,c(ni)])
   md[wi] <- as.numeric(md[,c(wi)])
 }
