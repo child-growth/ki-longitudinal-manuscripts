@@ -547,7 +547,8 @@ vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 p6 <- ggplot(vel, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex, shape=sex), size = 4) +
   geom_point(aes(y=who_cm), size = 5, shape=4) +
-  geom_text(x=1.8, y=3.6666667, label="WHO cm/month standard ->") + 
+  geom_text(x=1.8, y=3.6666667, label="WHO cm/month standard ->", 
+            check_overlap = TRUE) + 
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 3) +
   scale_color_manual(values=rep(tableau10[4],20))+  
@@ -563,7 +564,7 @@ p6 <- ggplot(vel, aes(y=Mean,x=strata))+
         strip.text.x = element_text(size=12),
         strip.text = element_text(margin=margin(t = 5)),
         axis.text.x = element_text(size=12, angle = 25, hjust = 1, 
-                                   margin = margin(t = -10))) +
+                                   margin = margin(t = -30))) +
   theme(axis.title.x = element_text(margin = 
                                       margin(t = 25, r = 0, b = 0, l = 0))) 
 
