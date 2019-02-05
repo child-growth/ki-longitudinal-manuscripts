@@ -50,7 +50,10 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     mutate(nstudy.f = gsub(' studies', '', nstudy.f))
   
   # levels(df$agecat) <- gsub(" month.*", "", levels(df$agecat))
-  
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
@@ -70,7 +73,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     expand_limits(y = h2) +
     theme(strip.text = element_text(size=22)) +
     theme(axis.text.x = element_text(margin = 
-                                       margin(t = -30, r = 0, b = 0, l = 0),
+                                       margin(t = -15, r = 0, b = 0, l = 0),
                                      size = 15)) +
     theme(axis.title.x = element_text(margin = 
                                         margin(t = 25, r = 0, b = 0, l = 0))) +
