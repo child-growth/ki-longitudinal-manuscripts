@@ -279,7 +279,7 @@ dd <- dd %>% mutate(region = case_when(
     country=="TANZANIA"|
     country=="ZIMBABWE"|
     country=="GAMBIA"                       ~ "Africa",
-  country=="BELARUS"                      ~ "ZEurope",
+  country=="BELARUS"                      ~ "",
   country=="BRAZIL" | country=="GUATEMALA" |
     country=="PERU"                         ~ "Latin America",
   TRUE                                    ~ "Other"
@@ -306,6 +306,9 @@ dd <- mutate(dd,
 dd$stpcat <- cut(dd$stuntprev,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
 dd$stpcat <- factor(dd$stpcat)
 
+# categorize wasting prevalence
+dd$wpcat <- cut(dd$wastprev,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
+dd$wpcat <- factor(dd$wpcat)
 
 #Create dataset of studies we are using
 colnames(dd)
@@ -321,14 +324,13 @@ studylist <- dd[,c(1:10,29:38)] %>% distinct()
 #-----------------------------------
 
 # gather N measurements by month data into long format
-dnsubj <- select(dd,study_id,anonym,country,studycountry,region,stuntprev,starts_with('n')) %>%
+dnsubj <- select(dd,study_id,anonym,country,studycountry,region,stuntprev,wastprev,starts_with('n')) %>%
   select(-neurocog_data,-nutrition,-notes,-num_countries,-numcountry,-numsubj,-numobs,-nmeas) %>%
-  gather(age,nobs,-study_id,-anonym,-country,-studycountry,-region,-stuntprev) %>%
+  gather(age,nobs,-study_id,-anonym,-country,-studycountry,-region,-stuntprev, -wastprev) %>%
   mutate(age=as.integer(str_sub(age,2,-1)),nobs=as.integer(nobs)) %>%
-  select(study_id,anonym,country,studycountry,region,stuntprev,age,nobs) %>%
+  select(study_id,anonym,country,studycountry,region,stuntprev,wastprev,age,nobs) %>%
   filter(age>=1 & age <=24 ) %>%
-  arrange(region,stuntprev) %>%
-  mutate(region = ifelse(region == 'ZEurope', '', region))
+  arrange(region,stuntprev,wastprev) 
 
 # gather stunting prev by month data into long format
 dstuntp <- select(dd,study_id,anonym,country,studycountry,starts_with('stuntprev_m')) %>%
@@ -337,15 +339,29 @@ dstuntp <- select(dd,study_id,anonym,country,studycountry,starts_with('stuntprev
   select(study_id,anonym,country,studycountry,age,stp) %>%
   filter(age>=1 & age <=24 )
 
+# gather stunting prev by month data into long format
+dwastp <- select(dd,study_id,anonym,country,studycountry,starts_with('wastprev_m')) %>%
+  gather(age,wp,-study_id,-anonym,-country,-studycountry) %>%
+  mutate(age=as.integer(str_sub(age,12,-1))) %>%
+  select(study_id,anonym,country,studycountry,age,wp) %>%
+  filter(age>=1 & age <=24 )
+
 # join the long tables together and sort countries by measure_freq and stunting prev
 dp <- left_join(dnsubj,dstuntp,by=c('study_id','anonym','country','studycountry','age'))
-  
+dp <- left_join(dp,dwastp,by=c('study_id','anonym','country','studycountry','age'))
+
 
 # categorize stunting prevalence, set stunting prevalence category estimates to missing if n<50
 dp$stpcat <- cut(dp$stp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
 
 dp$stpcat <- factor(dp$stpcat)
 dp$stpcat[dp$nobs<50 | is.nan(dp$stp)] <- NA
+
+# categorize wasting prevalence, set wasting prevalence category estimates to missing if n<50
+dp$wpcat <- cut(dp$wp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
+
+dp$wpcat <- factor(dp$wpcat)
+dp$wpcat[dp$nobs<50 | is.nan(dp$wp)] <- NA
 
 # categorize number of observations
 
@@ -513,7 +529,7 @@ nhm <- hm +
 
 # wasting prevalence side bar plot
 wpbar <- sidebar +
-  aes(y=stuntprev,fill=stpcat) +
+  aes(y=wastprev,fill=wpcat) +
   labs(x = "",y="Overall Prevalence (%)",title="Wasting (%)") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
