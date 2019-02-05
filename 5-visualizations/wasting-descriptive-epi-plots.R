@@ -80,6 +80,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                                      size = 15)) +
     theme(axis.title.x = element_text(margin = 
                                         margin(t = 30, r = 0, b = 0, l = 0))) +
+    theme(strip.text = element_text(margin=margin(t = 5))) +
     # annotate("text",label=df$ptest.f,x=df$agecat,
     #          y=df$est,hjust=-2,size=3)+
     ggtitle("") +
