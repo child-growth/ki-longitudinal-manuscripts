@@ -245,7 +245,7 @@ dd <- mutate(dd,
              country=str_to_title(str_to_lower(countrycohort)), 
              studycountry=paste0(short_description,', ',country))
 
-#Add regions
+#Add regions with ugly Europe hack to change ordering
 dd <- dd %>% mutate(country = toupper(country))
 dd <- dd %>% mutate(region = case_when(
   country=="BANGLADESH" | country=="INDIA"|
@@ -261,7 +261,7 @@ dd <- dd %>% mutate(region = case_when(
     country=="TANZANIA"|
     country=="ZIMBABWE"|
     country=="GAMBIA"                       ~ "Africa",
-  country=="BELARUS"                      ~ "Europe",
+  country=="BELARUS"                      ~ "ZEurope",
   country=="BRAZIL" | country=="GUATEMALA" |
     country=="PERU"                         ~ "Latin America",
   TRUE                                    ~ "Other"
@@ -309,7 +309,8 @@ dnsubj <- select(dd,study_id,anonym,country,studycountry,region,stuntprev,starts
   mutate(age=as.integer(str_sub(age,2,-1)),nobs=as.integer(nobs)) %>%
   select(study_id,anonym,country,studycountry,region,stuntprev,age,nobs) %>%
   filter(age>=1 & age <=24 ) %>%
-  arrange(region,stuntprev)
+  arrange(region,stuntprev) %>%
+  mutate(region = ifelse(region == 'ZEurope', '', region))
 
 # gather stunting prev by month data into long format
 dstuntp <- select(dd,study_id,anonym,country,studycountry,starts_with('stuntprev_m')) %>%
@@ -468,15 +469,15 @@ nhm <- hm +
                     guide=guide_legend(title="Number of Measurements",title.vjust = 1,
                                        label.position="bottom",label.hjust=0.5,nrow=1))
 
-nbar <- sidebar +
-  aes(y=nmeas/1000,fill=stpcat) +
-  labs(x = "",y="Child-Months (x1000)",title="Sample size") +
-  scale_y_continuous(expand=c(0,0),limits=c(0,130),
-                     breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
-  geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3)
+# nbar <- sidebar +
+#   aes(y=nmeas/1000,fill=stpcat) +
+#   labs(x = "",y="Child-Months (x1000)",title="Sample size") +
+#   scale_y_continuous(expand=c(0,0),limits=c(0,130),
+#                      breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
+#   geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3)
 
 
-ngrid <- grid.arrange(nhm, nbar, nrow = 1, ncol = 2, widths=c(100,20))
+# ngrid <- grid.arrange(nhm, nbar, nrow = 1, ncol = 2, widths=c(100,20))
 # ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
 
 
@@ -484,13 +485,21 @@ ngrid <- grid.arrange(nhm, nbar, nrow = 1, ncol = 2, widths=c(100,20))
 # STUNTING PREVALENCE HEAT MAP
 #-----------------------------------
 
-# heat map
-stphm <- hm +
-  aes(fill=stpcat) +
-  labs(x="Age in months",y="",title="Stunting prevalence by month of age") +
-  scale_fill_brewer(palette = "YlOrRd",na.value="grey90",
-                    guide=guide_legend(title="Stunting (%)",title.vjust = 1,
-                                       label.position="bottom",label.hjust=0.5,nrow=1))
+# # heat map
+# stphm <- hm +
+#   aes(fill=stpcat) +
+#   labs(x="Age in months",y="",title="Stunting prevalence by month of age") +
+#   scale_fill_brewer(palette = "YlOrRd",na.value="grey90",
+#                     guide=guide_legend(title="Stunting (%)",title.vjust = 1,
+#                                        label.position="bottom",label.hjust=0.5,nrow=1))
+
+# wasting prevalence side bar plot
+wpbar <- sidebar +
+  aes(y=stuntprev,fill=stpcat) +
+  labs(x = "",y="Overall Prevalence (%)",title="Wasting (%)") +
+  scale_y_continuous(expand=c(0,0),limits=c(0,70),
+                     breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
+  geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
 
 # stunting prevalence side bar plot
 stpbar <- sidebar +
@@ -502,7 +511,7 @@ stpbar <- sidebar +
 
 
 # combined plot
-stpgrid <- grid.arrange(stphm, stpbar, nrow = 1, ncol = 2, widths=c(100,20))
+# stpgrid <- grid.arrange(stphm, stpbar, nrow = 1, ncol = 2, widths=c(100,20))
 # ggsave(filename="figures/intro/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=10,height=9)
 # 
 
@@ -512,7 +521,9 @@ stpgrid <- grid.arrange(stphm, stpbar, nrow = 1, ncol = 2, widths=c(100,20))
 # measurement heat map with stunting
 # prevalence
 #-----------------------------------
-ngridbig <- grid.arrange(nhm,nbar,stpbar,nrow=1,ncol=3,widths=c(100,20,20))
+# ngridbig <- grid.arrange(nhm,nbar,stpbar,nrow=1,ncol=3,widths=c(100,20,20))
+ngridbig <- grid.arrange(nhm, wpbar, stpbar, nrow=1, ncol = 3, 
+                         widths = c(100, 20, 20))
 ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.pdf",plot = ngridbig,device='pdf',width=12,height=9)
 ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.png",plot = ngridbig,device='png',width=12,height=9)
 
