@@ -505,14 +505,45 @@ vel$strata <- clean_agecat(vel$strata)
 #Add WHO cm/month standards
 #SONALI - these numbers need to be updated to include the sex-specific growth standards
 # from here: https://www.who.int/childgrowth/standards/velocity/technical_report/en/
-vel$who_cm <- c(3.666666667,
-                2.016666667,
-                1.466666667,
-                1.283333333,
-                1.15,
-                1.05,
-                0.966666667,
-                0.883333333, rep(NA,8))
+who_cm_boys <- c(
+  11.4,
+  6.2,
+  4.4,
+  3.8,
+  3.4,
+  3.1,
+  2.9,
+  2.6
+)
+
+who_cm_girls <- c(
+  10.6,
+  5.9,
+  4.4,
+  3.9,
+  3.5,
+  3.2,
+  2.9,
+  2.7
+)
+who_cm_boys <- data.frame(who_cm_boys)
+who_cm_boys$sex <- 'Male'
+who_cm_boys$strata <- unique(vel$strata)
+who_cm_girls <- data.frame(who_cm_girls)
+who_cm_girls$sex <- 'Female'
+who_cm_girls$strata <- unique(vel$strata)
+colnames(who_cm_boys) <- c('who_cm', 'sex', 'strata')
+colnames(who_cm_girls) <- c('who_cm', 'sex', 'strata')
+who_cm <- rbind(who_cm_girls, who_cm_boys)
+vel <- merge(vel, who_cm, by=c('sex', 'strata'))
+# vel$who_cm <- c(3.666666667,
+#                 2.016666667,
+#                 1.466666667,
+#                 1.283333333,
+#                 1.15,
+#                 1.05,
+#                 0.966666667,
+#                 0.883333333, rep(NA,8))
 
 
 #SONALI - update below to facet by gender 
