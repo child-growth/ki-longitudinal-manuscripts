@@ -232,7 +232,7 @@ Ylab <- "Relative Risk of EBF compared to no EBF"
   
 
 p <-  ggplot(d, aes(x=RFlabel)) + 
-  geom_point(aes( y=PAR,  color=RFtype), size = 4) +
+  geom_point(aes(reorder(RFlabel, -PAR), y=PAR,  color=RFtype), size = 4) +
   geom_linerange(aes(ymin=PAR.CI1, ymax=PAR.CI2, color=RFtype)) +
   coord_flip() +
   # coord_flip(ylim=range(0.5,1)) +
