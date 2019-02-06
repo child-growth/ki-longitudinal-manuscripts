@@ -629,8 +629,8 @@ colnames(who_cm_boys) <- c('who_cm', 'sex', 'strata')
 colnames(who_cm_girls) <- c('who_cm', 'sex', 'strata')
 who_cm <- rbind(who_cm_girls, who_cm_boys)
 vel <- merge(vel, who_cm, by=c('sex', 'strata'))
-
-
+vel <- vel %>% mutate(who_cm = who_cm / 3)
+vel <- vel %>% mutate(who_cm = ifelse(ycat == 'haz', NA, who_cm))
 
 #SONALI - update below to facet by gender 
 # vel$ycat_sex <- paste0(vel$ycat," ", vel$sex) 
@@ -640,7 +640,7 @@ vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 p6 <- ggplot(vel, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex, shape=sex), size = 4) +
   geom_point(aes(y=who_cm), size = 5, shape=4) +
-  geom_text(x=1.8, y=3.6666667, label="WHO cm/month standard ->", 
+  geom_text(x=2.8, y=3.6666667, label="<- WHO cm/month standard", 
             check_overlap = TRUE) + 
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 3) +
