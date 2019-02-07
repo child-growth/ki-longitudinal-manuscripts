@@ -219,6 +219,7 @@ d <- d[grepl("Random",d$studyid),]
 d <- d %>% arrange(RFlabel, PAR)
 
 yticks <- c( 0.5,0.6,0.7, 0.8,0.9, 1.00)
+yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 
 #hbgdki pallet
 tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
@@ -228,6 +229,11 @@ scaleFUN <- function(x) sprintf("%.1f", x)
 #df$agecat <- "0-24 months cumulative incidence\n(no birth stunting)"
 Ylab <- "Relative Risk of EBF compared to no EBF"
   
+
+d <- d %>%
+  mutate(PAR = PAR * 100,
+         PAR.CI2 = PAR.CI2 * 100,
+         PAR.CI1 = PAR.CI1 * 100)
   
   
 
@@ -235,18 +241,22 @@ p <-  ggplot(d, aes(x=RFlabel)) +
   geom_point(aes(reorder(RFlabel, -PAR), y=PAR,  color=RFtype), size = 4) +
   geom_linerange(aes(ymin=PAR.CI1, ymax=PAR.CI2, color=RFtype)) +
   coord_flip() +
+  # coord_flip(ylim = range(-0.1, 0.2)) +
   # coord_flip(ylim=range(0.5,1)) +
-  labs(x = "Exposure", y = "Percent reduction in cumulative incidence of stunting\nassociated with assigning each variable optimally") +
-  geom_hline(yintercept = 1) +
+  labs(x = "Exposure", y = "Percent reduction in cumulative incidence of stunting") +
+  # geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=yticks, labels=scaleFUN) +
   scale_shape_manual(values=c(21, 23)) +
   scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
   # scale_size_continuous(range = c(0, 0.5))+
   theme(strip.background = element_blank(),
         legend.position="right",
+        axis.text.y = element_text(hjust = 1),
         strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12, angle = 45, hjust = 1)) +
-  ggtitle("Exposures ranked by\nPAR") +guides(shape=FALSE)
+        axis.text.x = element_text(size=12, angle = 45, hjust = 1, 
+                                   margin = margin(t = -20)),
+        axis.title.x = element_text(margin = margin(t = 20))) +
+  ggtitle("Exposures ranked by\nattributable risk") +guides(shape=FALSE)
 print(p)
 
 ggsave(p, file="figures/Stunting_par.png", width=6, height=5.6)
