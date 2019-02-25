@@ -35,6 +35,8 @@ library('scales')
 library('RColorBrewer')
 library('ggplot2')
 library('gridExtra')
+library('readxl')
+library('fastDummies')
 
 
 # bright color blind palette:  https://personal.sron.nl/~pault/ 
@@ -54,6 +56,36 @@ cgrey <- "#777777"
 #-----------------------------------
 md <- readRDS('results/GHAP_metadata_stunting.rds')
 wmd <- readRDS('results/GHAP_metadata_wasting.RDS')
+
+# load figure 1 metadata
+ki_md <- read_excel('results/KI-metadata_WJ.xlsx', sheet = 'StudyMetadata')
+ki_md <- ki_md[!is.na(ki_md$short_id), ]
+ki_md <- ki_md %>%
+  mutate(obs = as.integer(obs), subj = as.integer(subj))
+# create dummy columns for inclusion/exclusion
+ki_md <- fastDummies::dummy_cols(ki_md, select_columns = "reason_excluded")
+ki_md <- ki_md %>%
+  dplyr::select(-reason_excluded_0, -reason_excluded) %>%
+  dplyr::rename(excludedIncome = `reason_excluded_High income`,
+                excludedAge = `reason_excluded_Wrong age range`,
+                excludedIll = `reason_excluded_enrolled ill`,
+                excludedFrequency = `reason_excluded_insufficient measurement freq`,
+                excludedSampleSize = `reason_excluded_<200`,
+                included = `included/excluded`,
+                countrycohort = country)
+# rename exclusion reasons
+ki_md <- ki_md %>%
+  mutate(excludedIncome = ifelse(included == 'included', 0, excludedIncome)) %>%
+  mutate(excludedAge = ifelse(included == 'included', 0, excludedAge)) %>%
+  mutate(excludedIll = ifelse(included == 'included', 0, excludedIll)) %>%
+  mutate(excludedFrequency = ifelse(included == 'included', 0, excludedFrequency)) %>%
+  mutate(excludedSampleSize = ifelse(included == 'included', 0, excludedSampleSize))
+
+# wide to long format
+ki_md <- ki_md %>%
+  gather('excludedReason', 'excludedIndicator', -short_id, -study_id, 
+         -countrycohort, -included, -subj, -notes, -obs)
+
 wmd <- wmd %>% select(study_id, country, wastprev, wastprev_m1, wastprev_m2,
                       wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
                       wastprev_m7, wastprev_m8, wastprev_m9, wastprev_m10,
@@ -62,6 +94,10 @@ wmd <- wmd %>% select(study_id, country, wastprev, wastprev_m1, wastprev_m2,
                       wastprev_m19, wastprev_m20, wastprev_m21, wastprev_m22,
                       wastprev_m23, wastprev_m24)
 md <- merge(md, wmd, by=c('study_id', 'country'), all = TRUE)
+
+# merge to get short descriptions
+ki_md <- merge(x = ki_md, y = md[, c('study_id', 'short_description')], by = 'study_id', all.x = TRUE)
+
 
 
 # subset studies to those that meet stunting inclusion criteria
@@ -226,6 +262,7 @@ sum(dd$nmeas)
 # Do some final tidying up for the plot
 #-----------------------------------
 
+
 # shorten the description for a few studies
 dd$short_description[dd$study_id=='CONTENT'] <- 'Eval of Negl. Enteric Inf'
 dd$short_description[dd$study_id=='LCNI-5'] <- 'Lungwena Child Nutr RCT'
@@ -253,6 +290,42 @@ dd$short_description[dd$study_id=='JiVitA-4'] <- 'JiVitA-4'
 dd$short_description[dd$study_id=='SAS-CompFeed'] <- 'Optimal Infant Feeding'
 dd$short_description[dd$study_id=='NIH-Birth'] <- 'NIH Birth Cohort'
 
+
+study_label_transformation <- function(df){
+  # # simplify Tanzania label
+  df$countrycohort[df$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
+  
+  # make a study-country label, and make the monthly variable into a factor
+  # including an anonymous label (temporary) for sharing with WHO
+  df <- mutate(df,
+               country=str_to_title(str_to_lower(countrycohort)), 
+               studycountry=paste0(short_description,', ',country))
+  
+  #Add regions with ugly Europe hack to change ordering
+  df <- df %>% mutate(country = toupper(country))
+  df <- df %>% mutate(region = case_when(
+    country=="BANGLADESH" | country=="INDIA"|
+      country=="NEPAL" | country=="PAKISTAN"|
+      country=="PHILIPPINES"                   ~ "Asia", 
+    country=="KENYA"|
+      country=="GHANA"|
+      country=="BURKINA FASO"|
+      country=="GUINEA-BISSAU"|
+      country=="MALAWI"|
+      country=="SOUTH AFRICA"|
+      country=="TANZANIA, UNITED REPUBLIC OF"|
+      country=="TANZANIA"|
+      country=="ZIMBABWE"|
+      country=="GAMBIA"                       ~ "Africa",
+    country=="BELARUS"                      ~ "",
+    country=="BRAZIL" | country=="GUATEMALA" |
+      country=="PERU"                         ~ "Latin America",
+    TRUE                                    ~ "Other"
+  ))
+  return(df)
+}
+
+ki_md <- study_label_transformation(ki_md)
 
 # # simplify Tanzania label
 dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
@@ -503,12 +576,12 @@ nhm <- hm +
                     guide=guide_legend(title="Number of Measurements",title.vjust = 1,
                                        label.position="bottom",label.hjust=0.5,nrow=1))
 
-# nbar <- sidebar +
-#   aes(y=nmeas/1000,fill=stpcat) +
-#   labs(x = "",y="Child-Months (x1000)",title="Sample size") +
-#   scale_y_continuous(expand=c(0,0),limits=c(0,130),
-#                      breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
-#   geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3)
+nbar <- sidebar +
+  aes(y=nmeas/1000,fill=stpcat) +
+  labs(x = "",y="Child-Months (x1000)",title="Sample size") +
+  scale_y_continuous(expand=c(0,0),limits=c(0,130),
+                     breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
+  geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3)
 
 
 # ngrid <- grid.arrange(nhm, nbar, nrow = 1, ncol = 2, widths=c(100,20))
@@ -600,5 +673,129 @@ ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.png",plot 
 #   group_by(measure_freq) %>%
 #   summarise(sum(nmeas))
 
+
+#####--------------------------------------------------------------------------
+##### Figure 1
+#####--------------------------------------------------------------------------
+#define a color for fonts
+textcol <- "grey20"
+
+# heat map plot scheme
+hm1 <- ggplot(ki_md,aes(x=excludedReason,y=countrycohort)) +
+  # # facet over measurement frequency
+  # facet_grid(region~.,scales='free_y',space='free_y') +
+  #add border white colour of line thickness 0.25
+  geom_tile(colour="white",size=0.25)+
+  #remove extra space
+  scale_y_discrete(expand=c(0,0))+
+  scale_x_discrete(expand=c(0,0),
+                     breaks=1:5)+
+  #one unit on x-axis is equal to one unit on y-axis.
+  #equal aspect ratio x and y axis
+  # coord_equal()+
+  #set base size for all font elements
+  theme_grey(base_size=10)+
+  #theme options
+  theme(
+    # legend options
+    legend.title=element_text(color=textcol,size=8),
+    #reduce/remove legend margin
+    legend.margin = margin(grid::unit(0.1,"cm")),
+    #change legend text properties
+    legend.text=element_text(colour=textcol,size=7,face="bold"),
+    #change legend key height
+    legend.key.height=grid::unit(0.2,"cm"),
+    #set a slim legend
+    legend.key.width=grid::unit(1,"cm"),
+    #move legend to the bottom
+    legend.position = "bottom",
+    #set x axis text size and colour
+    axis.text.x=element_text(size=8,colour=textcol,angle=0,vjust=0.5),
+    #set y axis text colour and adjust vertical justification
+    axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
+    #change axis ticks thickness
+    axis.ticks=element_line(size=0.4),
+    # axis.ticks.x=element_blank(),
+    #change title font, size, colour and justification
+    plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
+    #format facet labels
+    strip.text.x = element_text(size=10),
+    strip.text.y = element_text(angle=270,size=10),
+    #remove plot background
+    plot.background=element_blank(),
+    #remove plot border
+    panel.border=element_blank()
+    
+    #remove plot margins
+    # plot.margin=margin(grid::unit(1,"cm"))
+  )
+
+
+# side bar plot scheme
+sidebar1 <- ggplot(data = ki_md, aes(x = countrycohort)) + 
+  geom_bar(stat = "identity") +
+  coord_flip() + 
+  # facet_grid(region~.,scales='free_y',space='free_y') +
+  #remove extra space
+  scale_x_discrete(expand=c(0,0)) +
+  scale_fill_manual(values=rep('gray70',7),na.value="grey90",
+                    guide=guide_legend(title="",title.hjust = 0.5,
+                                       label.position="bottom",label.hjust=0.5,nrow=1,
+                                       override.aes = list(color = "white", fill="white"))) +
+  theme_grey(base_size=10) +
+  theme(
+    # legend options
+    # has to be the exact same format as for the other panel (for correct alignment)
+    legend.title=element_text(color=textcol,size=8),
+    #reduce/remove legend margin
+    legend.margin = margin(grid::unit(0.1,"cm")),
+    #change legend text properties
+    legend.text=element_text(colour=NA,size=7,face="bold"),
+    #change legend key height
+    legend.key.height=grid::unit(0.2,"cm"),
+    #set a slim legend
+    legend.key.width=grid::unit(0.2,"cm"),
+    #move legend to the bottom
+    legend.position = "bottom",
+    # remove study labels
+    axis.title.y = element_blank(), 
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    #adjust facet labels
+    strip.text.x = element_blank(),
+    strip.text.y = element_blank(),
+    # x-axis labels
+    axis.title.x = element_text(size=10),
+    # title has to be the exact same format as for the other panel (for correct alignment)
+    plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
+    # remove grid lines
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank()
+    
+  )
+
+
+#-----------------------------------
+# measurement heat map
+#-----------------------------------
+
+nhm1 <- hm1 +
+  aes(fill=as.factor(excludedIndicator)) +
+  labs(x="Exclusion Reason",y="",title="Study Selection Criteria") +
+  scale_fill_brewer(palette = "Greens",na.value="grey90",
+                    guide=guide_legend(title="Number of Measurements",title.vjust = 1,
+                                       label.position="bottom",label.hjust=0.5,nrow=1))
+
+nbar1 <- sidebar1 + 
+  # aes(y=nmeas/1000,fill=stpcat) +
+  aes(y=obs/1000) +
+  labs(x = "",y="Total Observations (x1000)",title="Sample size") +
+  scale_y_continuous(expand=c(0,0),limits=c(0,130),
+                     breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
+  geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3)
+
+
+ngrid1 <- grid.arrange(nhm1, nbar1, nrow = 1, ncol = 2, widths=c(100,20))
+# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
 
 
