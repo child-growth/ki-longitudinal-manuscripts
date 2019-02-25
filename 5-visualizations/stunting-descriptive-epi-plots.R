@@ -637,7 +637,7 @@ vel <- vel %>% mutate(who_cm = ifelse(ycat == 'haz', NA, who_cm))
 vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
 vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 
-p6 <- ggplot(vel, aes(y=Mean,x=strata))+
+p6 <- ggplot(vel[vel$country_cohort=="Pooled - All",], aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex, shape=sex), size = 4) +
   geom_point(aes(y=who_cm), size = 5, shape=4) +
   geom_text(x=2.8, y=3.6666667, label="<- WHO cm/month standard", 
@@ -647,23 +647,18 @@ p6 <- ggplot(vel, aes(y=Mean,x=strata))+
   scale_color_manual(values=rep(tableau10[4],20))+  
   xlab("Age category")+ ylab("")+
   geom_hline(yintercept = -0) +
-  #scale_y_continuous(limits=c(0,20))+
-  # annotate("text",x=vel$strata,y=.12,label=vel$nmeas.f,size=3)+
-  # annotate("text",x=vel$strata,y=0.1,label=vel$nstudy.f,size=3)+
-  facet_wrap(sex ~ ycat, scales="free_y", ncol = 2) +
-  ggtitle("")+
-  theme(strip.background = element_blank(),
-        legend.position="right",
-        strip.text.x = element_text(size=12),
-        strip.text = element_text(margin=margin(t = 5)),
-        axis.text.x = element_text(size=12, angle = 25, hjust = 1, 
-                                   margin = margin(t = -30))) +
-  theme(axis.title.x = element_text(margin = 
-                                      margin(t = 25, r = 0, b = 0, l = 0))) 
-
-
-p6
+  facet_wrap(sex ~ ycat, scales="free_y", ncol = 2) #+
+  # ggtitle("")+
+  # theme(strip.background = element_blank(),
+  #       legend.position="right",
+  #       strip.text.x = element_text(size=12),
+  #       strip.text = element_text(margin=margin(t = 5)),
+  #       axis.text.x = element_text(size=12, angle = 25, hjust = 1, 
+  #                                  margin = margin(t = -30))) +
+  # theme(axis.title.x = element_text(margin = 
+  #                                     margin(t = 25, r = 0, b = 0, l = 0))) 
 
 ggsave(p6, file="figures/stunting/pool_vel.png", width=10, height=4)
+
 
 
