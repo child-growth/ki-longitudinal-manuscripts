@@ -6,15 +6,13 @@ theme_ki <- function() {
     theme(
       strip.background = element_blank(),
       legend.position="none",
-      plot.title = element_text(size = 30, face = "bold"),
-      strip.text = element_text(size=22),
-      axis.title = element_text(size=18),
-      axis.text.y = element_text(size=16),
-      axis.text.x = element_text(size=15, angle = 25, hjust = 1, vjust=1)
+      plot.title = element_text(size = 16, face = "bold"),
+      strip.text = element_text(size=14),
+      axis.title = element_text(size=12),
+      axis.text.y = element_text(size=10),
+      axis.text.x = element_text(size=10, angle = 0, hjust = 0.5, vjust=.1)
     )
 }
-
-
 
 #hbgdki pallets
 tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
