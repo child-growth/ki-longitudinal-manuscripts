@@ -59,45 +59,31 @@ wmd <- readRDS('results/GHAP_metadata_wasting.RDS')
 
 # load figure 1 metadata
 ki_md <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyMetadata')
-ki_md <- ki_md %>%
-  dplyr::select(short_id, country, subj, obs, study_id, reason_excluded, 
-                `included/excluded`, notes, short_description)
+ki_md_status <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyStatus')
+ki_md_status <- ki_md_status %>%
+  dplyr::mutate(short_id = tolower(Short_ID))
 ki_md <- ki_md[!is.na(ki_md$short_id), ]
 ki_md <- ki_md %>%
+  dplyr::select(short_id, country, subj, obs, study_id, short_description)
+ki_md <- merge(ki_md, ki_md_status, by = 'short_id', all.x = TRUE)
+ki_md <- ki_md %>%
   mutate(obs = as.integer(obs), subj = as.integer(subj))
-# create dummy columns for inclusion/exclusion
-ki_md <- fastDummies::dummy_cols(ki_md, select_columns = "reason_excluded")
-ki_md <- ki_md %>%
-  dplyr::select(-reason_excluded_0, -reason_excluded) %>%
-  dplyr::rename(excludedIncome = `reason_excluded_High income`,
-                excludedAge = `reason_excluded_Wrong age range`,
-                excludedIll = `reason_excluded_enrolled ill`,
-                excludedFrequency = `reason_excluded_insufficient measurement freq`,
-                excludedSampleSize = `reason_excluded_<200`,
-                included = `included/excluded`,
-                countrycohort = country)
-# rename exclusion reasons
-ki_md <- ki_md %>%
-  mutate(excludedIncome = ifelse(included == 'included', 0, excludedIncome)) %>%
-  mutate(excludedAge = ifelse(included == 'included', 0, excludedAge)) %>%
-  mutate(excludedIll = ifelse(included == 'included', 0, excludedIll)) %>%
-  mutate(excludedFrequency = ifelse(included == 'included', 0, excludedFrequency)) %>%
-  mutate(excludedSampleSize = ifelse(included == 'included', 0, excludedSampleSize))
 
 # wide to long format
 ki_md <- ki_md %>%
-  gather('excludedReason', 'excludedIndicator', -short_id, -study_id, 
-         -countrycohort, -included, -subj, -notes, -obs, -short_description)
+  dplyr::select(-Study_ID, -`included/excluded`, -reason_excluded, -Short_ID) %>%
+  gather('excludedReason', 'excludedIndicator', -short_id, -study_id,
+         -country, -subj, -obs, -short_description)
 
 study_label_transformation <- function(df){
   # # simplify Tanzania label
-  df$countrycohort[df$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
+  df$country[df$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
   
   # make a study-country label, and make the monthly variable into a factor
   # including an anonymous label (temporary) for sharing with WHO
   df <- mutate(df,
-               country=str_to_title(str_to_lower(countrycohort)), 
-               studycountry=paste0(short_description,', ',country))
+               country=str_to_title(str_to_lower(country)), 
+               cohort=paste0(short_description,'-',country))
   
   #Add regions with ugly Europe hack to change ordering
   df <- df %>% mutate(country = toupper(country))
@@ -129,7 +115,7 @@ study_label_transformation <- function(df){
 }
 
 ki_md <- study_label_transformation(ki_md)
-ki_md$cohort <- paste0(ki_md$study_id,"-",ki_md$countrycohort)
+# ki_md$cohort <- paste0(ki_md$study_id,"-",ki_md$countrycohort)
 
 wmd <- wmd %>% select(study_id, country, wastprev, wastprev_m1, wastprev_m2,
                       wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
@@ -797,7 +783,7 @@ nhm1 <- hm1 +
 
 nbar1 <- sidebar1 + 
   # aes(y=nmeas/1000,fill=stpcat) +
-  aes(y=obs/1000) +
+  aes(y=subj/1000) +
   labs(x = "",y="Total Observations (x1000)",title="Sample size") +
   scale_y_continuous(expand=c(0,0),limits=c(0,130),
                      breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
