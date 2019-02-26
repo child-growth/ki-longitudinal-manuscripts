@@ -68,12 +68,14 @@ ki_md <- ki_md %>%
 ki_md <- merge(ki_md, ki_md_status, by = 'short_id', all.x = TRUE)
 ki_md <- ki_md %>%
   mutate(obs = as.integer(obs), subj = as.integer(subj))
-
+testing <- ki_md %>%
+  group_by(reason_excluded) %>%
+  mutate(n = cumsum(obs))
 # wide to long format
 ki_md <- ki_md %>%
-  dplyr::select(-Study_ID, -`included/excluded`, -reason_excluded, -Short_ID) %>%
+  dplyr::select(-Study_ID, -`included/excluded`,  -Short_ID) %>%
   gather('excludedReason', 'excludedIndicator', -short_id, -study_id,
-         -country, -subj, -obs, -short_description)
+         -country, -subj, -obs, -short_description, -reason_excluded, -final_inclusion)
 
 study_label_transformation <- function(df){
   # # simplify Tanzania label
@@ -115,7 +117,27 @@ study_label_transformation <- function(df){
 }
 
 ki_md <- study_label_transformation(ki_md)
-# ki_md$cohort <- paste0(ki_md$study_id,"-",ki_md$countrycohort)
+ki_md$excludedReason <- factor(ki_md$excludedReason, 
+                               levels = c('included_first', 
+                                          'included_high_income',
+                                          'included_age',
+                                          'included_ill',
+                                          'included_measurement_freq',
+                                          'included_small'))
+
+name_labeling <- function(df){
+  df <- df %>%
+    mutate(label = case_when(
+      excludedReason == 'included_first' ~ 'Longitudinal cohorts',
+      excludedReason == 'included_high_income' ~ 'Located in low- or middle income countries',
+      excludedReason == 'included_ill' ~ 'Enrollment not restricted to acutely ill children',
+      excludedReason == 'included_measurement_freq' ~ 'Monthly growth measurements',
+      excludedReason == 'included_small' ~ 'Enrolled >= 200 children',
+      excludedReason == 'included_age' ~ 'Enrolled correct age range'
+    ))
+}
+
+ki_md <- name_labeling(ki_md)
 
 wmd <- wmd %>% select(study_id, country, wastprev, wastprev_m1, wastprev_m2,
                       wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
@@ -793,6 +815,25 @@ nbar1 <- sidebar1 +
 ngrid1 <- grid.arrange(nhm1, nbar1, nrow = 1, ncol = 2, widths=c(100,20))
 # ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
 
-# ggplot(ki_md, aes(x = excludedReason, y = obs, fill=region)) +
-  # geom_bar(stat='identity')
+ggplot(ki_md) + geom_bar(aes(x = final_inclusion, y = obs/10000, fill = region),
+                         stat = 'identity')
 
+# -----------------------------------------------------------------------------
+# Bar chart for the top of figure 1
+
+ki_md$reason_excluded <- factor(ki_md$reason_excluded,
+                                levels = c('<200',
+                                           'insufficient measurement freq',
+                                           'enrolled ill',
+                                           'Wrong age range',
+                                           'High income',
+                                           NA))
+
+testing <- ki_md %>%
+  dplyr::group_by(reason_excluded) %>%
+  mutate(obs = ifelse(is.na(obs), 0, obs)) %>%
+  mutate(n = cumsum(obs))
+
+
+ggplot(testing) + geom_bar(aes(x = reason_excluded, y = n/10000, fill = region),
+                                    stat = 'identity')
