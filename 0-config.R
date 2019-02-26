@@ -10,6 +10,8 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(gridExtra)
+library(ggalluvial)
+library(reshape2)
 
 # define directories
 res_dir = paste0(here::here(),"/results/")
