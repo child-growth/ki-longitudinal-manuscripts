@@ -58,7 +58,10 @@ md <- readRDS('results/GHAP_metadata_stunting.rds')
 wmd <- readRDS('results/GHAP_metadata_wasting.RDS')
 
 # load figure 1 metadata
-ki_md <- read_excel('results/KI-metadata_WJ.xlsx', sheet = 'StudyMetadata')
+ki_md <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyMetadata')
+ki_md <- ki_md %>%
+  dplyr::select(short_id, country, subj, obs, study_id, reason_excluded, 
+                `included/excluded`, notes, short_description)
 ki_md <- ki_md[!is.na(ki_md$short_id), ]
 ki_md <- ki_md %>%
   mutate(obs = as.integer(obs), subj = as.integer(subj))
@@ -84,7 +87,49 @@ ki_md <- ki_md %>%
 # wide to long format
 ki_md <- ki_md %>%
   gather('excludedReason', 'excludedIndicator', -short_id, -study_id, 
-         -countrycohort, -included, -subj, -notes, -obs)
+         -countrycohort, -included, -subj, -notes, -obs, -short_description)
+
+study_label_transformation <- function(df){
+  # # simplify Tanzania label
+  df$countrycohort[df$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
+  
+  # make a study-country label, and make the monthly variable into a factor
+  # including an anonymous label (temporary) for sharing with WHO
+  df <- mutate(df,
+               country=str_to_title(str_to_lower(countrycohort)), 
+               studycountry=paste0(short_description,', ',country))
+  
+  #Add regions with ugly Europe hack to change ordering
+  df <- df %>% mutate(country = toupper(country))
+  df <- df %>% mutate(region = case_when(
+    country=="BANGLADESH" | country=="INDIA"|
+      country=="NEPAL" | country=="PAKISTAN"|
+      country=="PHILIPPINES"| country=="CHINA"|
+      country=="THAILAND"|country=="SINGAPORE"|
+      country=='OMAN'~ "Asia",
+    country=="KENYA"|
+      country=="GHANA"|
+      country=="BURKINA FASO"|
+      country=="GUINEA-BISSAU"|
+      country=="MALAWI"|
+      country=="SOUTH AFRICA"|
+      country=="TANZANIA, UNITED REPUBLIC OF"|
+      country=="TANZANIA"|
+      country=="ZIMBABWE"|
+      country=="GAMBIA"|
+      country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "Africa",
+    country=="BRAZIL" | country=="GUATEMALA" |
+      country=="PERU"|country=='ECUADOR'   ~ "Latin America",
+    country=='UNITED STATES' | country=='UNITED KINGDOM'|country=='ITALY'|
+      # country=='NETHERLANDS'|
+      country=='BELARUS'~ 'N.America & Europe',
+    TRUE                                    ~ "Other"
+  ))
+  return(df)
+}
+
+ki_md <- study_label_transformation(ki_md)
+ki_md$cohort <- paste0(ki_md$study_id,"-",ki_md$countrycohort)
 
 wmd <- wmd %>% select(study_id, country, wastprev, wastprev_m1, wastprev_m2,
                       wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
@@ -95,8 +140,6 @@ wmd <- wmd %>% select(study_id, country, wastprev, wastprev_m1, wastprev_m2,
                       wastprev_m23, wastprev_m24)
 md <- merge(md, wmd, by=c('study_id', 'country'), all = TRUE)
 
-# merge to get short descriptions
-ki_md <- merge(x = ki_md, y = md[, c('study_id', 'short_description')], by = 'study_id', all.x = TRUE)
 
 
 
@@ -291,41 +334,7 @@ dd$short_description[dd$study_id=='SAS-CompFeed'] <- 'Optimal Infant Feeding'
 dd$short_description[dd$study_id=='NIH-Birth'] <- 'NIH Birth Cohort'
 
 
-study_label_transformation <- function(df){
-  # # simplify Tanzania label
-  df$countrycohort[df$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
-  
-  # make a study-country label, and make the monthly variable into a factor
-  # including an anonymous label (temporary) for sharing with WHO
-  df <- mutate(df,
-               country=str_to_title(str_to_lower(countrycohort)), 
-               studycountry=paste0(short_description,', ',country))
-  
-  #Add regions with ugly Europe hack to change ordering
-  df <- df %>% mutate(country = toupper(country))
-  df <- df %>% mutate(region = case_when(
-    country=="BANGLADESH" | country=="INDIA"|
-      country=="NEPAL" | country=="PAKISTAN"|
-      country=="PHILIPPINES"                   ~ "Asia", 
-    country=="KENYA"|
-      country=="GHANA"|
-      country=="BURKINA FASO"|
-      country=="GUINEA-BISSAU"|
-      country=="MALAWI"|
-      country=="SOUTH AFRICA"|
-      country=="TANZANIA, UNITED REPUBLIC OF"|
-      country=="TANZANIA"|
-      country=="ZIMBABWE"|
-      country=="GAMBIA"                       ~ "Africa",
-    country=="BELARUS"                      ~ "",
-    country=="BRAZIL" | country=="GUATEMALA" |
-      country=="PERU"                         ~ "Latin America",
-    TRUE                                    ~ "Other"
-  ))
-  return(df)
-}
 
-ki_md <- study_label_transformation(ki_md)
 
 # # simplify Tanzania label
 dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
@@ -681,9 +690,9 @@ ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.png",plot 
 textcol <- "grey20"
 
 # heat map plot scheme
-hm1 <- ggplot(ki_md,aes(x=excludedReason,y=countrycohort)) +
-  # # facet over measurement frequency
-  # facet_grid(region~.,scales='free_y',space='free_y') +
+hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
+  # facet over geographic region
+  facet_grid(region~.,scales='free_y',space='free_y') +
   #add border white colour of line thickness 0.25
   geom_tile(colour="white",size=0.25)+
   #remove extra space
@@ -732,10 +741,10 @@ hm1 <- ggplot(ki_md,aes(x=excludedReason,y=countrycohort)) +
 
 
 # side bar plot scheme
-sidebar1 <- ggplot(data = ki_md, aes(x = countrycohort)) + 
+sidebar1 <- ggplot(data = ki_md, aes(x = cohort)) + 
   geom_bar(stat = "identity") +
   coord_flip() + 
-  # facet_grid(region~.,scales='free_y',space='free_y') +
+  facet_grid(region~.,scales='free_y',space='free_y') +
   #remove extra space
   scale_x_discrete(expand=c(0,0)) +
   scale_fill_manual(values=rep('gray70',7),na.value="grey90",
@@ -798,4 +807,6 @@ nbar1 <- sidebar1 +
 ngrid1 <- grid.arrange(nhm1, nbar1, nrow = 1, ncol = 2, widths=c(100,20))
 # ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
 
+# ggplot(ki_md, aes(x = excludedReason, y = obs, fill=region)) +
+  # geom_bar(stat='identity')
 
