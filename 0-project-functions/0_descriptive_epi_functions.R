@@ -1,5 +1,21 @@
 
 
+mean_sd <- function(x){
+  cat("\n", round(mean(x, na.rm=T),3),
+      "  ", round(sd(x, na.rm=T),3),"\n") 
+}
+N_perc <- function(x){
+  print(table(x))
+  cat("\n")
+  for(i in unique(x)){
+    cat(i,":     ")
+    y<-ifelse(x==i,1,0)
+    cat(sum(y, na.rm=T),
+        " (", round(mean(y*100, na.rm=T),3),")\n", sep = "") 
+  }
+}
+
+
 
 
 calc.prev.agecat <- function(d){
@@ -25,6 +41,7 @@ calc.monthly.agecat <- function(d){
   d$agecat <- cut(d$agedays, breaks=c(0:25)*30.4167-30.4167/2, include.lowest = F,
               labels =paste0(0:24, " months"))
   levels(d$agecat)[1] <- "Two weeks"
+  levels(d$agecat)[2] <- "One month"
   table(d$agecat)
 return(d)
 }
@@ -569,6 +586,77 @@ summary.prev <- function(d, severe.wasted=F){
 
 
 
+summary.ci <- function(d,  
+                       agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
+                                    "12-15 months","15-18 months","18-21 months","21-24 months")){
+  
+  
+  # identify ever stunted children
+  evs = d %>%
+    filter(!is.na(agecat)) %>%
+    group_by(studyid,country,subjid) %>%
+    arrange(studyid,subjid) %>%
+    #create variable with minwhz by age category, cumulatively
+    mutate(minwhz=ifelse(agecat=="0-3 months",min(whz[agecat=="0-3 months"]),
+                         ifelse(agecat=="3-6 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"]),
+                                ifelse(agecat=="6-9 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                       ifelse(agecat=="9-12 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                              ifelse(agecat=="12-15 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                     ifelse(agecat=="15-18 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                            ifelse(agecat=="18-21 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                   ifelse(agecat=="21-24 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                          min(whz)))))))))) %>%
+    # create indicator for whether the child was ever stunted
+    # by age category
+    group_by(studyid,country,agecat,subjid) %>%
+    summarise(minwhz=min(minwhz)) %>%
+    mutate(ever_wasted=ifelse(minwhz< -2,1,0))
+  
+  
+  # count incident cases per study by age
+  # exclude time points if number of measurements per age
+  # in a study is <50  
+  cuminc.data= evs%>%
+    group_by(studyid,country,agecat) %>%
+    summarise(
+      nchild=length(unique(subjid)),
+      nstudy=length(unique(studyid)),
+      ncases=sum(ever_wasted),
+      N=sum(length(ever_wasted))) %>%
+    filter(N>=5)
+  
+  cuminc.data <- droplevels(cuminc.data)
+  agelist <- agelist[agelist %in% levels(cuminc.data$agecat)]
+  
+  if(class(agelist)!="list"){
+    agelist=list(agelist)
+  }
+  
+  # cohort specific results
+  ci.cohort=lapply(agelist,function(x) 
+    fit.escalc(data=cuminc.data,ni="N", xi="ncases",age=x,meas="PLO"))
+  ci.cohort=as.data.frame(do.call(rbind, ci.cohort))
+  ci.cohort=cohort.format(ci.cohort,y=ci.cohort$yi,
+                          lab=  agelist)
+  
+  # estimate random effects, format results
+  ci.res=lapply((agelist),function(x)
+    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
+  ci.res=as.data.frame(rbindlist(ci.res))
+  ci.res[,4]=as.numeric(ci.res[,4])
+  ci.res[,6]=as.numeric(ci.res[,6])
+  ci.res[,7]=as.numeric(ci.res[,7])
+  ci.res = ci.res %>%
+    mutate(est=est*100, lb=lb*100, ub=ub*100)
+  ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
+  
+  
+  return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
+}
+
+
+
+
 summary.whz <- function(d){
   
   # take mean of multiple measurements within age window
@@ -686,7 +774,7 @@ summary.rec.stunt <- function(d){
 }
 
 
-summary.ci <- function(d, recovery=F, severe.wasted=F, agelist=list("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")){
+summary.incprop <- function(d, recovery=F, severe.wasted=F, agelist=list("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")){
   
   if(recovery==T){
     d$wast_inc <- d$wast_rec
@@ -767,8 +855,8 @@ summary.rec60 <- function(d, length=60, agelist=as.list(c("0-3 months","3-6 mont
       nchild=length(unique(subjid)),
       nstudy=length(unique(studyid)),
       ncases=sum(ever_wasted),
-      N=sum(length(ever_wasted))) %>%
-    filter(N>=50)
+      N=sum(length(ever_wasted)))# %>%
+  #  filter(N>=50)
   
   
   
@@ -913,53 +1001,104 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, agelist=list("0-3 months","
 }
 
 
-summary.dur <- function(d){
+summary.dur <- function(d, agelist){
   
   df <- d %>% 
-    group_by(studyid, country, agecat) %>% 
+    group_by(studyid, region, country, agecat) %>% 
     summarize(mean=mean(wasting_duration, na.rm=T), var=var(wasting_duration, na.rm=T), n=n()) %>%
     mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se,
-           nmeas.f=paste0("N=",n," children")) %>% 
-    mutate(region = case_when(
-      country=="BANGLADESH" | country=="INDIA"|
-        country=="NEPAL" | country=="PAKISTAN"|
-        country=="PHILIPPINES"                   ~ "Asia", 
-      country=="BURKINA FASO"|
-        country=="GUINEA-BISSAU"|
-        country=="MALAWI"|
-        country=="KENYA"|
-        country=="GHANA"|
-        country=="SOUTH AFRICA"|
-        country=="TANZANIA, UNITED REPUBLIC OF"|
-        country=="ZIMBABWE"|
-        country=="GAMBIA"                       ~ "Africa",
-      country=="BELARUS"                      ~ "Europe",
-      country=="BRAZIL" | country=="GUATEMALA" |
-        country=="PERU"                         ~ "Latin America",
-      TRUE ~ "Other"
-    ),
-    country_cohort=paste0(studyid," ", country))
-    
+           nmeas.f=paste0("N=",n," children"))
   
-  pooled.vel=lapply(list("0-3 months", "3-6 months",  "6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months"),function(x) 
+  pooled.vel=lapply(agelist,function(x) 
     fit.cont.rma(data=df,yi="mean", vi="var", ni="n",age=x, nlab="children"))
   pooled.vel=as.data.frame(rbindlist(pooled.vel))
   
     pooled.vel$est <- as.numeric(pooled.vel$est)
     pooled.vel <- pooled.vel %>% 
-    mutate(country_cohort="pooled", pooled=1, region="Overall") %>% 
+    mutate(country_cohort="pooled", pooled=1) %>% 
   subset(., select = -c(se)) %>%
-  rename(strata=agecat, Mean=est, N=nmeas, Lower.95.CI=lb, Upper.95.CI=ub)
-    
+  rename(strata=agecat, Mean=est, N=nmeas, Lower.95.CI=lb, Upper.95.CI=ub) %>% as.data.frame()
+    print(pooled.vel)
      
-    cohort.df <- df %>% subset(., select = c(country_cohort, agecat, n, nmeas.f, mean, ci.lb, ci.ub, region)) %>%
+    cohort.df <- df %>% subset(., select = c(studyid, country, region, agecat, n, nmeas.f, mean, ci.lb, ci.ub)) %>%
       rename(N=n, Mean=mean, Lower.95.CI=ci.lb, Upper.95.CI=ci.ub,
              strata=agecat) %>%
       mutate(pooled=0, nstudies=1)
     
-  suppressWarnings(plotdf <- bind_rows(pooled.vel, cohort.df))
-  return(plotdf)
+    return(list(dur.data=df, dur.res=pooled.vel))
 }
+
+
+#stunting reversal
+
+summary.stunt.rev <- function(d){
+  
+  d <- d %>% mutate(agem=round(agedays/30.4167))
+  
+  
+  # stunted by age x, recovered by age y
+  # children with recovery=NA didn't have 2 measurements
+  # in the age window, so recovery could not be assessed
+  rec.03=rec.age(data=d,s.agem=1,r.agem=3)
+  rec.36=rec.age(data=d,s.agem=3,r.agem=6)
+  rec.69=rec.age(data=d,s.agem=6,r.agem=9)
+  rec.912=rec.age(data=d,s.agem=9,r.agem=12)
+  rec.1215=rec.age(data=d,s.agem=12,r.agem=15)
+  rec.1518=rec.age(data=d,s.agem=15,r.agem=18)
+  rec.1821=rec.age(data=d,s.agem=18,r.agem=21)
+  rec.2124=rec.age(data=d,s.agem=21,r.agem=24)
+
+  
+  # prepare data for pooling 
+  rec.03.sum=summary_rev_df(rec.03, Age="0-3 months")
+  rec.36.sum=summary_rev_df(rec.36, Age="3-6 months")
+  rec.69.sum=summary_rev_df(rec.69, Age="6-9 months")
+  rec.912.sum=summary_rev_df(rec.912, Age="9-12 months")
+  rec.1215.sum=summary_rev_df(rec.1215, Age="12-15 months")
+  rec.1518.sum=summary_rev_df(rec.1518, Age="15-18 months")
+  rec.1821.sum=summary_rev_df(rec.1821, Age="18-21 months")
+  rec.2124.sum=summary_rev_df(rec.2124, Age="21-24 months")
+  
+  rev.data=bind_rows(rec.03.sum,rec.36.sum,rec.69.sum,
+                     rec.912.sum, rec.1215.sum, rec.1518.sum,
+                     rec.1821.sum, rec.2124.sum) 
+  rev.data = rev.data %>%mutate(agecat=as.factor(agecat))
+  
+  # cohort specific results
+  rec.cohort=lapply(list("0-3 months","3-6 months","6-9 months",
+                         "9-12 months","12-15 months","15-18 months",
+                         "18-21 months", "21-24 months"),function(x) 
+                           fit.escalc(data=rev.data,ni="N", xi="n",age=x,meas="PLO"))
+  rec.cohort=as.data.frame(do.call(rbind, rec.cohort))
+  rec.cohort=cohort.format(rec.cohort,y=rec.cohort$yi,
+                           lab=  c("0-3 months","3-6 months","6-9 months",
+                                   "9-12 months","12-15 months","15-18 months",
+                                   "18-21 months", "21-24 months"))
+  
+  
+  # estimate random effects, format results
+  rev.res=lapply(list("0-3 months","3-6 months","6-9 months",
+                      "9-12 months","12-15 months","15-18 months",
+                      "18-21 months", "21-24 months"),function(x) 
+                        fit.rma(rev.data,ni="N", xi="n",age=x,measure="PLO",
+                                nlab="children"))
+  rev.res=as.data.frame(do.call(rbind, rev.res))
+  rev.res[,4]=as.numeric(rev.res[,4])
+  rev.res[,5]=as.numeric(rev.res[,5])
+  rev.res[,6]=as.numeric(rev.res[,6])
+  rev.res[,7]=as.numeric(rev.res[,7])
+  rev.res = rev.res %>%
+    mutate(est=est*100,lb=lb*100,ub=ub*100)
+  rev.res$agecat=factor(rev.res$agecat,levels=c("0-3 months","3-6 months","6-9 months",
+                                                "9-12 months","12-15 months","15-18 months",
+                                                "18-21 months", "21-24 months"))
+  
+  rev.res$ptest.f=sprintf("%0.1f",rev.res$est)
+  
+  return(list(rev.data=rev.data, rev.res=rev.res, rev.cohort=rec.cohort))
+}
+
+
 
 #----------------------------------------------
 # mark the start of wasted of not wasted episodes 
@@ -1153,10 +1292,90 @@ summary.stunt.ir <- function(d, agelist, sev_stunt=F){
   ir.res$ptest.f=sprintf("%0.02f",ir.res$est*1000)
   
   return(list(ir.data=inc.data, ir.res=ir.res, ir.cohort=inc.cohort))
-  
-  
+
 }
 
+
+
+
+# inputs:
+rec.age=function(s.agem,r.agem,data){
+  # subset to stunted between birth and 3 months
+  stunt <- data %>%
+    filter(agem<=s.agem) 
+  
+  if(s.agem>1){
+    # identify last two measurements prior to 24 months
+    stunt <- stunt %>%
+      group_by(studyid,country,subjid) %>%
+      mutate(rank=min_rank(-agedays)) %>%
+      # drop last 2 measurements prior to 24 m
+      filter(rank> 2) 
+  }
+  # create stunting indicator
+  stunt <- stunt %>%
+    mutate(measid=seq_along(subjid))  %>%
+    mutate(stunted=ifelse(haz< -2,1,0),
+           lagstunted=lag(stunted),
+           leadstunted=lead(stunted))  %>%
+    # unique stunting episode
+    mutate(sepisode=ifelse(lagstunted==0 & stunted==1 & leadstunted==1 |
+                             stunted==1 & measid==1,1,0)) %>%
+    # identify whether child had stunting episode by 24 months 
+    group_by(studyid,country,subjid) %>%
+    summarise(stunted=max(sepisode,na.rm=TRUE))
+  
+  rec.prev <- data %>%
+    filter(agem<=s.agem) %>%
+    # identify last two measurements prior to 24 months
+    group_by(studyid,country,subjid) %>%
+    mutate(rank=min_rank(-agedays)) %>%
+    # keep last two measurements 
+    filter(rank<= 2) %>%
+    # flag kids with 2 measurements not stunted
+    mutate(rec=ifelse(haz>= -2,1,0)) %>%
+    mutate(recsum=cumsum(rec)) %>%
+    # one row for each kid, indicator for recovered
+    summarise(maxrec=max(recsum)) %>%
+    mutate(rec.prev=ifelse(maxrec==2,1,0)) %>%
+    select(-c(maxrec))
+  
+  rec <- data %>%
+    filter(agem>s.agem & agem<=r.agem) %>%
+    # identify last two measurements prior to 24 months
+    group_by(studyid,country,subjid) %>%
+    mutate(rank=min_rank(-agedays)) %>%
+    # keep last two measurements 
+    filter(rank<= 2) %>%
+    # flag kids with 2 measurements not stunted
+    mutate(rec=ifelse(haz>= -2,1,0)) %>%
+    mutate(recsum=cumsum(rec)) %>%
+    # one row for each kid, indicator for recovered
+    summarise(maxrec=max(recsum)) %>%
+    mutate(rec=ifelse(maxrec==2,1,0)) %>%
+    select(-c(maxrec))
+  
+  rev <- full_join(stunt, rec,by=c("studyid","country","subjid")) 
+  rev <- full_join(rev, rec.prev,by=c("studyid","country","subjid")) %>%
+    # subset to kids who were stunted
+    filter(stunted==1) %>%
+    mutate(recovered=ifelse(stunted==1 & rec==1 & rec.prev==0,1,0)) %>%
+    select(-c(stunted,rec,rec.prev))
+  
+  return(rev)
+}
+
+
+#Recovery summary measures ooling function
+summary_rev_df <- function(d, Age="0-3 months"){
+  res=d %>%
+    group_by(studyid,country) %>%
+    summarise(mn=mean(recovered,na.rm=TRUE),
+              n=sum(recovered,na.rm=TRUE),
+              N=sum(!is.na(recovered))) %>%
+    mutate(agecat=Age)
+  return(res)
+}
 
 
 

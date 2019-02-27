@@ -5,7 +5,10 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load fake data
-stunt_data = readRDS(paste0(res_dir, "fakeflow.RDS"))
+# stunt_data = readRDS(paste0(res_dir, "fakeflow.RDS"))
+
+# load real data
+stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
 
 plot_data = stunt_data %>%
   mutate(classif = case_when(
@@ -37,7 +40,8 @@ flow_plot = ggplot(plot_data,
   theme(legend.position = "bottom") +
   xlab("Child age") + ylab("Number of children")
 
-ggsave(flow_plot, file="figures/stunting/pool_flow_fake.png", width=10, height=5)
+#ggsave(flow_plot, file="figures/stunting/pool_flow_fake.png", width=10, height=5)
+ggsave(flow_plot, file="figures/stunting/pool_flow.png", width=10, height=5)
 
 
 
