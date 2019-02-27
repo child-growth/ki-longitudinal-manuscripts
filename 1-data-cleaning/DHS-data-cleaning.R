@@ -36,7 +36,7 @@ DHS <- DHS %>%
 d <- DHS %>% subset(., select=c(DHScode, region, year, b4, hw1, hw3, hw2)) %>%
             rename(sex=b4, age=hw1, weight=hw2, height=hw3) %>%
             filter(age <= 24) %>% #Drop children over two
-            mutate(age=round(age*30.4167)) #Convert age to days for Z-score calculation
+            mutate(aged=round(age*30.4167)) #Convert age to days for Z-score calculation
 
 #Get most recent survey year
 dim(d)
@@ -58,11 +58,11 @@ summary(d$height)
 summary(d$weight)
 
 
-d$haz <- who_htcm2zscore(d$age, d$height/10, sex = d$sex)
+d$haz <- who_htcm2zscore(d$agde, d$height/10, sex = d$sex)
 d$haz[d$haz < -6 | d$haz > 6] <- NA
 summary(d$haz)
 
-d$whz <- who_wtkg2zscore(d$age, d$weight/10, sex = d$sex)
+d$whz <- who_wtkg2zscore(d$aged, d$weight/10, sex = d$sex)
 d$whz[d$whz < -5 | d$whz > 5] <- NA
 summary(d$whz)
 
@@ -71,9 +71,13 @@ region <- d %>% group_by(region) %>% summarize(haz_mn=mean(haz, na.rm=T), haz_sd
 region
 
 
+#Get plot data with less age categories
+plot_df <- d %>% filter(age==0 | age ==6 | age==12 | age==18 |age==24)
+
+
 #code for plots
-p <- ggplot(data=d,aes(x=whz,group=factor(age),color=region,fill=region)) +
-  facet_wrap(~region,ncol=1) +
+p <- ggplot(data=plot_df,aes(x=whz,group=region,color=region,fill=region)) +
+  facet_wrap(~age,nrow=1) +
   geom_density(aes(y=..density..),color=NA,alpha=0.7)+
   geom_vline(aes(xintercept= -2), size=2) +
   scale_x_continuous(limits = c(-5,5), breaks = c(-4:4)) +
