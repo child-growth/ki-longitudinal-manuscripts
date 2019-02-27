@@ -45,42 +45,42 @@ wast_data = d %>%
   group_by(subjid, agecat) %>%
   arrange(subjid) %>%
   
-  summarize(minhaz = min(haz)) %>%
+  summarize(minwhz = min(whz)) %>%
   
   # create indicator for whether the child 
   # was wasted in CURRENT age category
-  mutate(wasted=ifelse(minhaz< -2,1,0)) %>%
+  mutate(wasted=ifelse(minwhz< -2,1,0)) %>%
   
   # create indicator for whether the child 
   # was wasted in PREVIOUS age category
   group_by(subjid) %>%
-  mutate(minhaz_prev=ifelse(
+  mutate(minwhz_prev=ifelse(
     agecat=="Birth",NA,      
-    ifelse(agecat=="3 months",minhaz[agecat=="Birth"],
-           ifelse(agecat=="6 months",minhaz[agecat=="3 months"],
-                  ifelse(agecat=="9 months",minhaz[agecat=="6 months"],
-                         ifelse(agecat=="12 months",minhaz[agecat=="9 months"],
-                                ifelse(agecat=="15 months",minhaz[agecat=="12 months"],
-                                       ifelse(agecat=="18 months",minhaz[agecat=="15 months"],
-                                              ifelse(agecat=="21 months",minhaz[agecat=="18 months"],
-                                                     ifelse(agecat=="24 months",minhaz[agecat=="21 months"],
+    ifelse(agecat=="3 months",minwhz[agecat=="Birth"],
+           ifelse(agecat=="6 months",minwhz[agecat=="3 months"],
+                  ifelse(agecat=="9 months",minwhz[agecat=="6 months"],
+                         ifelse(agecat=="12 months",minwhz[agecat=="9 months"],
+                                ifelse(agecat=="15 months",minwhz[agecat=="12 months"],
+                                       ifelse(agecat=="18 months",minwhz[agecat=="15 months"],
+                                              ifelse(agecat=="21 months",minwhz[agecat=="18 months"],
+                                                     ifelse(agecat=="24 months",minwhz[agecat=="21 months"],
                                                             NA)))))))))) %>%
-  mutate(still_wasted = ifelse(minhaz_prev < -2 & minhaz < -2, 1, 0),
-         prev_wasted = ifelse(minhaz_prev < -2 & minhaz >= -2 , 1, 0)) 
+  mutate(still_wasted = ifelse(minwhz_prev < -2 & minwhz < -2, 1, 0),
+         prev_wasted = ifelse(minwhz_prev < -2 & minwhz >= -2 , 1, 0)) 
 
 
 # create indicator for whether the child 
 # was NEVER wasted 
 wast_data = wast_data %>%
   group_by(subjid) %>%
-  mutate(cum_minhaz = cummin(minhaz)) %>%
-  mutate(never_wasted = ifelse(cum_minhaz >= -2, 1, 0)) %>%
+  mutate(cum_minwhz = cummin(minwhz)) %>%
+  mutate(never_wasted = ifelse(cum_minwhz >= -2, 1, 0)) %>%
   
   # create indicator for whether the child 
   # was NEWLY wasted 
   mutate(newly_wasted = ifelse(never_wasted==0 & still_wasted==0 & prev_wasted==0, 1, 0)) %>%
-  mutate(newly_wasted = ifelse(agecat=="Birth" & minhaz< -2, 1, newly_wasted)) %>%
-  select(subjid, agecat, minhaz, minhaz_prev, cum_minhaz, wasted, 
+  mutate(newly_wasted = ifelse(agecat=="Birth" & minwhz< -2, 1, newly_wasted)) %>%
+  select(subjid, agecat, minwhz, minwhz_prev, cum_minwhz, wasted, 
          never_wasted, prev_wasted, newly_wasted, still_wasted) 
 
 # Check that no child was classified in more
