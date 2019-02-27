@@ -1,17 +1,18 @@
 
 rm(list=ls())
 library(tidyverse)
-try(setwd("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/"))
+library(ggplot2)
+library(dplyr)
 
 #Plot themes
-source("5-visualizations/0-plot-themes.R")
+source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 theme_set(theme_ki())
 
 #Load data
-load("results/desc_data_cleaned.Rdata")
+load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
 
 #Quantile data (object: quantile_d)
-load("results/quantile_data_stunting.Rdata")
+load(paste0(here::here(),"/results/quantile_data_stunting.Rdata"))
 
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
@@ -579,86 +580,6 @@ ggsave(p7, file="figures/stunting/pooled_only_rec.png", width=10, height=8)
 
 
 
-
-#------------------------------------------------------------------------------
-#Length velocity
-#------------------------------------------------------------------------------
-
-#Load length velocity data
-load("results/pool_vel.RData")
-
-
-
-vel <- pooled_vel %>% filter(pooled==1)
-
-vel$nmeas.f <- clean_nmeans(vel$N)
-vel$strata <- clean_agecat(vel$strata)
-
-
-#Add WHO cm/month standards
-#SONALI - these numbers need to be updated to include the sex-specific growth standards
-# from here: https://www.who.int/childgrowth/standards/velocity/technical_report/en/
-who_cm_boys <- c(
-  11.4,
-  6.2,
-  4.4,
-  3.8,
-  3.4,
-  3.1,
-  2.9,
-  2.6
-)
-
-who_cm_girls <- c(
-  10.6,
-  5.9,
-  4.4,
-  3.9,
-  3.5,
-  3.2,
-  2.9,
-  2.7
-)
-who_cm_boys <- data.frame(who_cm_boys)
-who_cm_boys$sex <- 'Male'
-who_cm_boys$strata <- unique(vel$strata)
-who_cm_girls <- data.frame(who_cm_girls)
-who_cm_girls$sex <- 'Female'
-who_cm_girls$strata <- unique(vel$strata)
-colnames(who_cm_boys) <- c('who_cm', 'sex', 'strata')
-colnames(who_cm_girls) <- c('who_cm', 'sex', 'strata')
-who_cm <- rbind(who_cm_girls, who_cm_boys)
-vel <- merge(vel, who_cm, by=c('sex', 'strata'))
-vel <- vel %>% mutate(who_cm = who_cm / 3)
-vel <- vel %>% mutate(who_cm = ifelse(ycat == 'haz', NA, who_cm))
-
-#SONALI - update below to facet by gender 
-# vel$ycat_sex <- paste0(vel$ycat," ", vel$sex) 
-vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
-vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
-
-p6 <- ggplot(vel[vel$country_cohort=="Pooled - All",], aes(y=Mean,x=strata))+
-  geom_point(aes(fill=sex, color=sex, shape=sex), size = 4) +
-  geom_point(aes(y=who_cm), size = 5, shape=4) +
-  geom_text(x=2.8, y=3.6666667, label="<- WHO cm/month standard", 
-            check_overlap = TRUE) + 
-  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 alpha=0.5, size = 3) +
-  scale_color_manual(values=rep(tableau10[4],20))+  
-  xlab("Age category")+ ylab("")+
-  geom_hline(yintercept = -0) +
-  facet_wrap(sex ~ ycat, scales="free_y", ncol = 2) #+
-  # ggtitle("")+
-  # theme(strip.background = element_blank(),
-  #       legend.position="right",
-  #       strip.text.x = element_text(size=12),
-  #       strip.text = element_text(margin=margin(t = 5)),
-  #       axis.text.x = element_text(size=12, angle = 25, hjust = 1, 
-  #                                  margin = margin(t = -30))) +
-  # theme(axis.title.x = element_text(margin = 
-  #                                     margin(t = 25, r = 0, b = 0, l = 0))) 
-
-ggsave(p6, file="figures/stunting/pool_vel.png", width=10, height=4)
 
 
 

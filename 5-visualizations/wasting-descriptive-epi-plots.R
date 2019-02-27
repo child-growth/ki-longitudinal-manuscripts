@@ -21,6 +21,16 @@ d$nmeas.f <- gsub(" children","",d$nmeas.f)
 asia_region <- which(levels(d$region) == 'Asia')
 levels(d$region)[asia_region] = 'South Asia'
 
+
+Disease="Wasting"
+Measure="Prevalence"
+Birth="yes"
+Severe="no" 
+Age_range="3 months"
+Cohort="pooled"
+xlabel="Age in months"
+h1=20
+h2=22
 #-------------------------------------------------------------------------------------------
 # Plot function
 #-------------------------------------------------------------------------------------------
@@ -38,8 +48,14 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
       age_range == Age_range &
       cohort == Cohort &
       !is.na(region) & !is.na(agecat)
-  )
+  ) 
   df <- droplevels(df)
+  
+  empty <- data.frame( nstudy.f=rep("Studies:",4), nmeas.f=rep("Children:",4), agecat=rep("",4) , region=c("Overall", "Africa","Asia", "Latin America"))
+  df <- bind_rows(empty, df)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  df$region <- factor(df$region, levels=c("Overall", "Asia", "Africa","Latin America"))
+  
   
   # add line break to label columns
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
@@ -69,20 +85,20 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                            label = nmeas.f), size = 4) +
     geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
                            label = nstudy.f), size = 4) +
-    scale_x_discrete(expand = expand_scale(add = 2)) +
-    annotate('text', x = -0.25, y = h1, label = 'Studies:', vjust = -1) +
-    annotate('text', x = -0.25, y = h1, label = 'Children:', vjust = 1) +
+    #scale_x_discrete(expand = expand_scale(add = 2)) +
+    # annotate('text', x = -0.25, y = h1, label = 'Studies:', vjust = -1) +
+    # annotate('text', x = -0.25, y = h1, label = 'Children:', vjust = 1) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
     expand_limits(y = h2) +
-    # annotate("blank", x = 0, y = h1) +
-    theme(axis.text.x = element_text(margin = 
-                                       margin(t = -15, r = 0, b = 0, l = 0),
-                                     size = 15)) +
-    theme(axis.title.x = element_text(margin = 
-                                        margin(t = 30, r = 0, b = 0, l = 0))) +
-    theme(strip.text = element_text(margin=margin(t = 5))) +
-    # annotate("text",label=df$ptest.f,x=df$agecat,
-    #          y=df$est,hjust=-2,size=3)+
+    # # annotate("blank", x = 0, y = h1) +
+    # theme(axis.text.x = element_text(margin = 
+    #                                    margin(t = -15, r = 0, b = 0, l = 0),
+    #                                  size = 15)) +
+    # theme(axis.title.x = element_text(margin = 
+    #                                     margin(t = 30, r = 0, b = 0, l = 0))) +
+    # theme(strip.text = element_text(margin=margin(t = 5))) +
+    # # annotate("text",label=df$ptest.f,x=df$agecat,
+    # #          y=df$est,hjust=-2,size=3)+
     ggtitle("") +
     facet_wrap(~region) 
   
