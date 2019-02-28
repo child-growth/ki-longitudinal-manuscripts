@@ -796,7 +796,7 @@ sidebar1 <- ggplot(data = ki_md, aes(x = cohort)) +
 
 nhm1 <- hm1 +
   aes(fill=as.factor(excludedIndicator)) +
-  labs(x="Exclusion Reason",y="",title="Study Selection Criteria") +
+  labs(x="Exclusion Reason",y="", title="") +
   scale_fill_brewer(palette = "Greens",na.value="grey90",
                     guide=guide_legend(title="Number of Measurements",title.vjust = 1,
                                        label.position="bottom",label.hjust=0.5,nrow=1))
@@ -809,12 +809,6 @@ nbar1 <- sidebar1 +
                      breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
   geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3)
 
-
-ngrid1 <- grid.arrange(top1, nhm1, nbar1, nrow = 2, ncol = 2, widths=c(100,20))
-# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
-
-ggplot(ki_md) + geom_bar(aes(x = final_inclusion, y = obs/10000, fill = region),
-                         stat = 'identity')
 
 # -----------------------------------------------------------------------------
 # Bar chart for the top of figure 1
@@ -876,10 +870,40 @@ levels(d$reason_excluded) <- c('Longitudinal cohorts',
 
 top1 <- ggplot(d, aes(x = reason_excluded, y = n/10000)) + 
   geom_bar(stat = 'identity') +
-  theme(axis.text.x = element_text(margin = margin(t = -80)),
-        axis.title.x = element_blank()) +
-  ylab('Total Observations\n (x 10,000)') +
-  ylim(0, 110) +
+  theme_grey(base_size=10)+
+  scale_y_continuous(limits = c(0, 110), breaks=seq(0,80,by=20), 
+                     labels=seq(0,80,by=20)) +
+  labs(y = 'Total Observations\n (x 10,000)', title="Study Selection Criteria") +
   geom_text(aes(label = paste0(reason_excluded, ' (n=', floor(n/10000), ')')), 
-                  position=position_dodge(width=0.9), vjust=-8, hjust = 0.1)
+                  position=position_dodge(width=0.9), vjust=-8, hjust = 0.1) +
+  theme(
+    plot.margin = margin(0, 0.5, 0, 9.25, "cm"),
+    # legend options
+    # has to be the exact same format as for the other panel (for correct alignment)
+    legend.title=element_text(color=textcol,size=8),
+    #reduce/remove legend margin
+    legend.margin = margin(grid::unit(0.1,"cm")),
+    #change legend text properties
+    legend.text=element_text(colour=NA,size=7,face="bold"),
+    #change legend key height
+    legend.key.height=grid::unit(0.2,"cm"),
+    #set a slim legend
+    legend.key.width=grid::unit(0.2,"cm"),
+    #move legend to the bottom
+    legend.position = "bottom",
+    #adjust facet labels
+    strip.text.x = element_blank(),
+    strip.text.y = element_blank(),
+    # x-axis labels
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    # title has to be the exact same format as for the other panel (for correct alignment)
+    plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
+    # remove grid lines
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank()
+  )
 
+ngrid1 <- grid.arrange(top1, grid::nullGrob(), nhm1, nbar1, nrow = 2, ncol = 2, widths=c(100,20))
+# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-fig1.pdf",plot = ngrid1,device='pdf',width=10,height=9)
