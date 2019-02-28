@@ -119,30 +119,32 @@ df <- df %>%
   arrange(agecat) %>%
   filter(!is.na(agecat)) %>%
   filter(!is.na(region)) %>%
-  filter(agecat != 'Two weeks')
+  filter(agecat != 'Two weeks') %>%
+  mutate(agecat = gsub(" month", "", agecat)) %>%
+  mutate(agecat = gsub(" months", "", agecat)) %>%
+  mutate(agecat = gsub("s", "", agecat)) %>%
+  mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
+  mutate(agecat = as.numeric(agecat))
+
+  
 
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month 
 #-------------------------------------------------------------------------------------------
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-  geom_smooth(aes(fill=region, color=region), se=F) +
-  # geom_line(aes(color=region)) +
+  stat_smooth(aes(fill=region, color=region), se=F, span = 0.5) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
                      limits = c(-2.2, 0.5)) + 
+  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
   scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
                     name = 'Region') +
   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
                      name = 'Region') +
-  xlab("Age (months)")+
+  xlab("Child age, months")+
   ylab("Length-for-age Z-score") +
   ggtitle("") +
-  theme(axis.text.x = element_text(margin = 
-                                     margin(t = -40, r = 0, b = 0, l = 0),
-                                   size = 15)) +
-  theme(axis.title.x = element_text(margin = 
-                                      margin(t = 35, r = 0, b = 0, l = 0))) +
   theme(legend.position="right")
 
 ggsave(p, file="figures/stunting/LAZ_by_region.png", width=10, height=4)
@@ -169,28 +171,30 @@ df <- df %>% arrange(agecat)
 df$agecat <- as.character(df$agecat)
 df$agecat <- gsub(" months", "", df$agecat)
 df$agecat <- gsub("One month", "1", df$agecat)
-df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+df$agecat <- as.numeric(df$agecat)
 
+df = df %>% mutate(region = factor(region, levels = c("Overall", 
+                                                      "Africa",
+                                                      "Latin America",
+                                                      "Asia")))
+
+# NEED TO ADD LEGEND
 
 p <- ggplot(df,aes(x=agecat, group=region)) +
-  geom_smooth(aes(y=fiftieth_perc,fill=region, color=region), se=F) +
-  geom_smooth(aes(y=fifth_perc,fill=region, color=region), linetype="dashed", se=F) +
-  geom_smooth(aes(y=ninetyfifth_perc,fill=region, color=region), linetype="dashed", se=F) +
+  stat_smooth(aes(y=fiftieth_perc,fill=region, color=region), se=F, span = 0.5) +
+  stat_smooth(aes(y=fifth_perc,fill=region, color=region), linetype="dotted", se=F, span = 0.5) +
+  stat_smooth(aes(y=ninetyfifth_perc,fill=region, color=region), linetype="dashed", se=F, span = 0.5) +
   facet_wrap(~region)+
   geom_hline(yintercept = 0, colour = "black") +
+  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
   scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
                     name = 'Region') +
   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
                      name = 'Region') +
-  xlab("Age (months)")+
+  xlab("Child age, months")+
   ylab("Length-for-age Z-score") +
   ggtitle("") +
-  theme(axis.text.x = element_text(margin = 
-                                     margin(t = -10, r = 0, b = 0, l = 0),
-                                   size = 12)) +
-  theme(axis.title.x = element_text(margin = 
-                                      margin(t = 35, r = 0, b = 0, l = 0))) +
   theme(strip.text = element_text(margin=margin(t=5))) +
   theme(legend.position="none")
 
