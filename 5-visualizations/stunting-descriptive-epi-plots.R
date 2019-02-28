@@ -106,26 +106,19 @@ df <- d %>% filter(
 
 df <- droplevels(df)
 
-df$agecat <- factor(df$agecat, 
-                    levels=c("Two weeks", "One month",
-                             paste0(2:24," months")))
-
-# levels(df$agecat) <- gsub(" month.*", "", levels(df$agecat))
-# levels(df$agecat) <- gsub('One', '1', levels(df$agecat))
-
 df <- df %>% 
-  # mutate(agecat = gsub(' month.*', '', agecat)) %>%
-  # mutate(agecat = gsub('One', '1', agecat)) %>%
   arrange(agecat) %>%
   filter(!is.na(agecat)) %>%
   filter(!is.na(region)) %>%
-  filter(agecat != 'Two weeks') %>%
+  mutate(agecat = as.character(agecat)) %>%
+  mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
   mutate(agecat = gsub(" month", "", agecat)) %>%
   mutate(agecat = gsub(" months", "", agecat)) %>%
   mutate(agecat = gsub("s", "", agecat)) %>%
   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
   mutate(agecat = as.numeric(agecat)) %>%
-  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "Asia")))
+  mutate(region = ifelse(region=="Asia", "South Asia", region)) %>%
+  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
 
   
 
@@ -163,21 +156,31 @@ df$agecat <- factor(df$agecat,
 
 df <- df %>% 
   arrange(agecat) %>%
-  filter(agecat != 'Two weeks') %>%
+  # filter(agecat != 'Two weeks') %>%
   filter(region!="Europe")
 df <-droplevels(df)
 
 # Remove 'months' from x axis labels  
-df <- df %>% arrange(agecat)
-df$agecat <- as.character(df$agecat)
-df$agecat <- gsub(" months", "", df$agecat)
-df$agecat <- gsub("One month", "1", df$agecat)
-df$agecat <- as.numeric(df$agecat)
+# df <- df %>% arrange(agecat)
+# df$agecat <- as.character(df$agecat)
+# df$agecat <- gsub(" months", "", df$agecat)
+# df$agecat <- gsub("One month", "1", df$agecat)
+# df$agecat <- as.numeric(df$agecat)
 
-df = df %>% mutate(region = factor(region, levels = c("Overall", 
-                                                      "Africa",
-                                                      "Latin America",
-                                                      "Asia")))
+df <- df %>% 
+  ungroup(agecat) %>%
+  arrange(agecat) %>%
+  filter(!is.na(agecat)) %>%
+  filter(!is.na(region)) %>%
+  mutate(agecat = as.character(agecat)) %>%
+  mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
+  mutate(agecat = gsub(" month", "", agecat)) %>%
+  mutate(agecat = gsub(" months", "", agecat)) %>%
+  mutate(agecat = gsub("s", "", agecat)) %>%
+  mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
+  mutate(agecat = as.numeric(agecat)) %>%
+  mutate(region = ifelse(region=="Asia", "South Asia", region)) %>%
+  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
 
 # NEED TO ADD LEGEND
 
