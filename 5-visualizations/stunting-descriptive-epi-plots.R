@@ -124,7 +124,8 @@ df <- df %>%
   mutate(agecat = gsub(" months", "", agecat)) %>%
   mutate(agecat = gsub("s", "", agecat)) %>%
   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
-  mutate(agecat = as.numeric(agecat))
+  mutate(agecat = as.numeric(agecat)) %>%
+  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "Asia")))
 
   
 
