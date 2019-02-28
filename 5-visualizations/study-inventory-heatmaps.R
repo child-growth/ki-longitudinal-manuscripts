@@ -877,6 +877,7 @@ top1 <- ggplot(d, aes(x = reason_excluded, y = n/10000)) +
   geom_text(aes(label = paste0(reason_excluded, ' (n=', floor(n/10000), ')')), 
                   position=position_dodge(width=0.9), vjust=-8, hjust = 0.1) +
   theme(
+    # adjust margins for aligning with heat map
     plot.margin = margin(0, 0.5, 0, 9.25, "cm"),
     # legend options
     # has to be the exact same format as for the other panel (for correct alignment)
