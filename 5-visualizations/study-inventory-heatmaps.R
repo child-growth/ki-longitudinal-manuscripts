@@ -712,20 +712,10 @@ hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
   theme_grey(base_size=10)+
   #theme options
   theme(
-    # legend options
-    legend.title=element_text(color=textcol,size=8),
-    #reduce/remove legend margin
-    legend.margin = margin(grid::unit(0.1,"cm")),
-    #change legend text properties
-    legend.text=element_text(colour=textcol,size=7,face="bold"),
-    #change legend key height
-    legend.key.height=grid::unit(0.2,"cm"),
-    #set a slim legend
-    legend.key.width=grid::unit(1,"cm"),
-    #move legend to the bottom
-    legend.position = "bottom",
+    # hide legend
+    legend.position = 'none',
     #set x axis text size and colour
-    axis.text.x=element_text(size=8,colour=textcol,angle=0,vjust=0.5),
+    axis.text.x=element_text(size=8,colour=textcol),
     #set y axis text colour and adjust vertical justification
     axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
     #change axis ticks thickness
@@ -740,9 +730,7 @@ hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
     plot.background=element_blank(),
     #remove plot border
     panel.border=element_blank()
-    
-    #remove plot margins
-    # plot.margin=margin(grid::unit(1,"cm"))
+
   )
 
 
@@ -797,9 +785,7 @@ sidebar1 <- ggplot(data = ki_md, aes(x = cohort)) +
 nhm1 <- hm1 +
   aes(fill=as.factor(excludedIndicator)) +
   labs(x="Exclusion Reason",y="", title="") +
-  scale_fill_brewer(palette = "Greens",na.value="grey90",
-                    guide=guide_legend(title="Number of Measurements",title.vjust = 1,
-                                       label.position="bottom",label.hjust=0.5,nrow=1))
+  scale_fill_brewer(palette = "Greens",na.value="grey90")
 
 nbar1 <- sidebar1 + 
   # aes(y=nmeas/1000,fill=stpcat) +
@@ -873,9 +859,9 @@ top1 <- ggplot(d, aes(x = reason_excluded, y = n/10000)) +
   theme_grey(base_size=10)+
   scale_y_continuous(limits = c(0, 110), breaks=seq(0,80,by=20), 
                      labels=seq(0,80,by=20)) +
-  labs(y = 'Total Observations\n (x 10,000)', title="Study Selection Criteria") +
-  geom_text(aes(label = paste0(reason_excluded, ' (n=', floor(n/10000), ')')), 
-                  position=position_dodge(width=0.9), vjust=-8, hjust = 0.1) +
+  labs(y = 'Total Observations\n (x 10,000)') +
+  # geom_text(aes(label = paste0(reason_excluded, ' (n=', floor(n/10000), ')')), 
+  #                 position=position_dodge(width=0.9), vjust=-8, hjust = 0.1) +
   theme(
     # adjust margins for aligning with heat map
     plot.margin = margin(0, 0.5, 0, 9.25, "cm"),
