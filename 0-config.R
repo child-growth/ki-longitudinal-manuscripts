@@ -12,6 +12,8 @@ library(dplyr)
 library(gridExtra)
 library(ggalluvial)
 library(reshape2)
+library(metafor)
+library(data.table)
 
 # define directories
 res_dir = paste0(here::here(),"/results/")
