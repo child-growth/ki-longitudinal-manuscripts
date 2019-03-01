@@ -730,6 +730,7 @@ hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
     plot.background=element_blank(),
     #remove plot border
     panel.border=element_blank()
+    # plot.margin = margin(0, 0.5, 0, 9.25, "cm")
 
   )
 
@@ -812,8 +813,10 @@ ki_bar <- ki_bar_data %>%
   mutate(reason_excluded = replace_na(reason_excluded, 'Included')) %>%
   dplyr::group_by(reason_excluded) %>%
   mutate(obs = ifelse(is.na(obs), 0, obs)) %>%
-  summarize(n = sum(obs)) %>%
-  mutate(n = cumsum(n)) 
+  summarize(n = sum(obs)) 
+
+# %>%
+#   mutate(n = cumsum(n)) 
 
 d <- data.frame('reason_excluded' = ki_bar$reason_excluded, n = rep(0, 6))
 d$reason_excluded <- factor(d$reason_excluded,
@@ -864,7 +867,7 @@ top1 <- ggplot(d, aes(x = reason_excluded, y = n/10000)) +
   #                 position=position_dodge(width=0.9), vjust=-8, hjust = 0.1) +
   theme(
     # adjust margins for aligning with heat map
-    plot.margin = margin(0, 0.5, 0, 9.25, "cm"),
+    plot.margin = margin(0, 0.25, 0, 9.25, "cm"),
     # legend options
     # has to be the exact same format as for the other panel (for correct alignment)
     legend.title=element_text(color=textcol,size=8),
@@ -892,5 +895,11 @@ top1 <- ggplot(d, aes(x = reason_excluded, y = n/10000)) +
     panel.background = element_blank()
   )
 
-ngrid1 <- grid.arrange(top1, grid::nullGrob(), nhm1, nbar1, nrow = 2, ncol = 2, widths=c(100,20))
+library(cowplot)
+top_row <- plot_grid(top1, grid::nullGrob(), rel_widths = c(3/4, 1/4))
+bottom_row <- plot_grid(nhm1, nbar1, rel_widths = c(3/4, 1/4))
+ngrid1 <- plot_grid(top_row, bottom_row, nrow = 2, rel_heights = c(1/4, 3/4))
+
+
+# ngrid1 <- grid.arrange(top1, grid::nullGrob(), nhm1, nbar1, nrow = 2, ncol = 2, widths=c(100,20))
 # ggsave(filename="figures/intro/stunting-study-inventory-heatmap-fig1.pdf",plot = ngrid1,device='pdf',width=10,height=9)
