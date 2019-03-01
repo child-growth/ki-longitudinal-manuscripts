@@ -62,10 +62,13 @@ ki_md <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyMetadata')
 ki_md_status <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyStatus')
 ki_md_status <- ki_md_status %>%
   dplyr::mutate(short_id = tolower(Short_ID))
+# drop empty rows
 ki_md <- ki_md[!is.na(ki_md$short_id), ]
+# select only relevant columns for figure 1
 ki_md <- ki_md %>%
   dplyr::select(short_id, country, subj, obs, study_id, short_description)
 ki_md <- merge(ki_md, ki_md_status, by = 'short_id', all.x = TRUE)
+# convert factors to numeric
 ki_md <- ki_md %>%
   mutate(obs = as.integer(obs), subj = as.integer(subj))
 ki_bar_data <- data.frame(ki_md)
@@ -74,6 +77,36 @@ ki_md <- ki_md %>%
   dplyr::select(-Study_ID, -`included/excluded`,  -Short_ID) %>%
   gather('excludedReason', 'excludedIndicator', -short_id, -study_id,
          -country, -subj, -obs, -short_description, -reason_excluded, -final_inclusion)
+
+# shorten the description for a few studies
+shorten_descriptions <- function(dd){
+  dd$short_description[dd$study_id=='CONTENT'] <- 'Eval of Negl. Enteric Inf'
+  dd$short_description[dd$study_id=='LCNI-5'] <- 'Lungwena Child Nutr RCT'
+  dd$short_description[dd$study_id=='Burkina Faso Zn'] <- 'Zinc RCT'
+  dd$short_description[dd$study_id=='AgaKhanUniv'] <- 'Aga Khan Nutr RCT'
+  dd$short_description[dd$study_id=='SAS-FoodSuppl'] <- 'Food Suppl RCT'
+  dd$short_description[dd$study_id=="MAL-ED"] <- 'MAL-ED'
+  dd$short_description[dd$study_id=='CMIN'] <- 'CMIN'
+  dd$short_description[dd$study_id=='Guatemala BSC'] <- 'Bovine Serum RCT'
+  dd$short_description[dd$study_id=='Peru Huascar'] <- 'Infant growth in Huascar'
+  dd$short_description[dd$study_id=='EE'] <- 'Biomarkers for EE'
+  dd$short_description[dd$study_id=='GMS-Nepal'] <- 'Growth Monitoring Study'
+  dd$short_description[dd$study_id=='NIH-Crypto'] <- 'NIH Crypto'
+  dd$short_description[dd$study_id=='PROVIDE'] <- 'PROVIDE RCT'
+  dd$short_description[dd$short_description=='Vitamin A Supplementation in Serrinha, Brazil'] <- 'Vit. A Sup., Serrinha'
+  dd$short_description[dd$short_description=='Respiratory Pathogens Birth Cohort'] <- 'Resp. Pathogens'
+  dd$short_description[dd$study_id=='CMC-V-BCS-2002'] <- 'CMC Birth, Vellore'
+  dd$short_description[dd$study_id=='ZnMort'] <- 'PROVIDE RCT'
+  dd$short_description[dd$study_id=='WASH-Bangladesh'] <- 'WASH Benefits RCT'
+  dd$short_description[dd$study_id=='WASH-Kenya'] <- 'Zn Supp + Infant Mort.'
+  dd$short_description[dd$study_id=='EU'] <- 'Zn Supp RCT'
+  dd$short_description[dd$study_id=='JiVitA-3'] <- 'JiVitA-3'
+  dd$short_description[dd$study_id=='JiVitA-4'] <- 'JiVitA-4'
+  
+  dd$short_description[dd$study_id=='SAS-CompFeed'] <- 'Optimal Infant Feeding'
+  dd$short_description[dd$study_id=='NIH-Birth'] <- 'NIH Birth Cohort'
+  return(dd)
+}
 
 study_label_transformation <- function(df){
   # # simplify Tanzania label
@@ -114,6 +147,7 @@ study_label_transformation <- function(df){
   return(df)
 }
 
+ki_md <- shorten_descriptions(ki_md)
 ki_md <- study_label_transformation(ki_md)
 ki_md$excludedReason <- factor(ki_md$excludedReason, 
                                levels = c('included_first', 
@@ -313,34 +347,7 @@ sum(dd$nmeas)
 
 
 # shorten the description for a few studies
-dd$short_description[dd$study_id=='CONTENT'] <- 'Eval of Negl. Enteric Inf'
-dd$short_description[dd$study_id=='LCNI-5'] <- 'Lungwena Child Nutr RCT'
-dd$short_description[dd$study_id=='Burkina Faso Zn'] <- 'Zinc RCT'
-dd$short_description[dd$study_id=='AgaKhanUniv'] <- 'Aga Khan Nutr RCT'
-dd$short_description[dd$study_id=='SAS-FoodSuppl'] <- 'Food Suppl RCT'
-dd$short_description[dd$study_id=="MAL-ED"] <- 'MAL-ED'
-dd$short_description[dd$study_id=='CMIN'] <- 'CMIN'
-dd$short_description[dd$study_id=='Guatemala BSC'] <- 'Bovine Serum RCT'
-dd$short_description[dd$study_id=='Peru Huascar'] <- 'Infant growth in Huascar'
-dd$short_description[dd$study_id=='EE'] <- 'Biomarkers for EE'
-dd$short_description[dd$study_id=='GMS-Nepal'] <- 'Growth Monitoring Study'
-dd$short_description[dd$study_id=='NIH-Crypto'] <- 'NIH Crypto'
-dd$short_description[dd$study_id=='PROVIDE'] <- 'PROVIDE RCT'
-dd$short_description[dd$short_description=='Vitamin A Supplementation in Serrinha, Brazil'] <- 'Vit. A Sup., Serrinha'
-dd$short_description[dd$short_description=='Respiratory Pathogens Birth Cohort'] <- 'Resp. Pathogens'
-dd$short_description[dd$study_id=='CMC-V-BCS-2002'] <- 'CMC Birth, Vellore'
-dd$short_description[dd$study_id=='ZnMort'] <- 'PROVIDE RCT'
-dd$short_description[dd$study_id=='WASH-Bangladesh'] <- 'WASH Benefits RCT'
-dd$short_description[dd$study_id=='WASH-Kenya'] <- 'Zn Supp + Infant Mort.'
-dd$short_description[dd$study_id=='EU'] <- 'Zn Supp RCT'
-dd$short_description[dd$study_id=='JiVitA-3'] <- 'JiVitA-3'
-dd$short_description[dd$study_id=='JiVitA-4'] <- 'JiVitA-4'
-
-dd$short_description[dd$study_id=='SAS-CompFeed'] <- 'Optimal Infant Feeding'
-dd$short_description[dd$study_id=='NIH-Birth'] <- 'NIH Birth Cohort'
-
-
-
+dd <- shorten_descriptions(dd)
 
 # # simplify Tanzania label
 dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
