@@ -1,4 +1,3 @@
-
 #-----------------------------------
 # stunting-study-inventory-heatmaps.R
 #
@@ -395,7 +394,7 @@ dd <- mutate(dd,
              anonym = factor(paste("Cohort",1:nrow(dd),dd$country)),
              anonym = factor(anonym,levels=unique(anonym[order(monthly,stuntprev)]),
                              ordered=TRUE)
-             )
+)
 
 # categorize stunting prevalence
 dd$stpcat <- cut(dd$stuntprev,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
@@ -702,6 +701,19 @@ ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.png",plot 
 #define a color for fonts
 textcol <- "grey20"
 
+ki_md$excludedReason <- factor(ki_md$excludedReason, 
+                               levels = c('included_first', 
+                                          'included_high_income',
+                                          'included_age',
+                                          'included_ill',
+                                          'included_measurement_freq',
+                                          'included_small'))
+ki_md <- ki_md %>%
+  group_by(region) %>%
+  arrange(desc(excludedReason), excludedIndicator, subj, .by_group = TRUE)
+ki_md$cohort <- sapply(ki_md$cohort, function(x) as.character(x))
+ki_md$cohort<-factor(ki_md$cohort, levels=unique(ki_md$cohort))
+
 # heat map plot scheme
 hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
   # facet over geographic region
@@ -711,7 +723,7 @@ hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
   #remove extra space
   scale_y_discrete(expand=c(0,0))+
   scale_x_discrete(expand=c(0,0),
-                     breaks=1:5)+
+                   breaks=1:5)+
   #one unit on x-axis is equal to one unit on y-axis.
   #equal aspect ratio x and y axis
   # coord_equal()+
@@ -738,7 +750,7 @@ hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
     #remove plot border
     panel.border=element_blank()
     # plot.margin = margin(0, 0.5, 0, 9.25, "cm")
-
+    
   )
 
 
@@ -808,12 +820,12 @@ nbar1 <- sidebar1 +
 # Bar chart for the top of figure 1
 
 ki_bar_data$reason_excluded <- factor(ki_bar_data$reason_excluded,
-                                levels = c('<200',
-                                           'insufficient measurement freq',
-                                           'enrolled ill',
-                                           'Wrong age range',
-                                           'High income',
-                                           'Included'))
+                                      levels = c('<200',
+                                                 'insufficient measurement freq',
+                                                 'enrolled ill',
+                                                 'Wrong age range',
+                                                 'High income',
+                                                 'Included'))
 
 
 ki_bar <- ki_bar_data %>%
@@ -827,42 +839,42 @@ ki_bar <- ki_bar_data %>%
 
 d <- data.frame('reason_excluded' = ki_bar$reason_excluded, n = rep(0, 6))
 d$reason_excluded <- factor(d$reason_excluded,
-                                 levels = c('Included',
-                                            'High income',
-                                            'Wrong age range',
-                                            'enrolled ill',
-                                            'insufficient measurement freq',
-                                            '<200'))
+                            levels = c('Included',
+                                       'High income',
+                                       'Wrong age range',
+                                       'enrolled ill',
+                                       'insufficient measurement freq',
+                                       '<200'))
 d <- d %>% arrange(reason_excluded)
 d$n <- c(sum(ki_bar$n, na.rm = TRUE),
          sum(ki_bar$n, na.rm = TRUE) - 
-                          ki_bar[ki_bar$reason_excluded == 'High income', ]$n,
+           ki_bar[ki_bar$reason_excluded == 'High income', ]$n,
          sum(ki_bar$n, na.rm = TRUE) - 
-                          ki_bar[ki_bar$reason_excluded == 'High income', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'Wrong age range', ]$n,
+           ki_bar[ki_bar$reason_excluded == 'High income', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'Wrong age range', ]$n,
          sum(ki_bar$n, na.rm = TRUE) - 
-                          ki_bar[ki_bar$reason_excluded == 'High income', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'Wrong age range', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'enrolled ill', ]$n,
+           ki_bar[ki_bar$reason_excluded == 'High income', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'Wrong age range', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'enrolled ill', ]$n,
          sum(ki_bar$n, na.rm = TRUE) - 
-                          ki_bar[ki_bar$reason_excluded == 'High income', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'Wrong age range', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'enrolled ill', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'insufficient measurement freq', ]$n,
+           ki_bar[ki_bar$reason_excluded == 'High income', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'Wrong age range', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'enrolled ill', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'insufficient measurement freq', ]$n,
          sum(ki_bar$n, na.rm = TRUE) - 
-                          ki_bar[ki_bar$reason_excluded == 'High income', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'Wrong age range', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'enrolled ill', ]$n -
-                          ki_bar[ki_bar$reason_excluded == 'insufficient measurement freq', ]$n -
-                          ki_bar[ki_bar$reason_excluded == '<200', ]$n)
+           ki_bar[ki_bar$reason_excluded == 'High income', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'Wrong age range', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'enrolled ill', ]$n -
+           ki_bar[ki_bar$reason_excluded == 'insufficient measurement freq', ]$n -
+           ki_bar[ki_bar$reason_excluded == '<200', ]$n)
 
 
 levels(d$reason_excluded) <- c('Longitudinal cohorts',
-                                     'Located in low- or middle income countries',
-                                     'Enrolled correct age range',
-                                     'Enrollment not restricted to acutely ill children',
-                                     'Monthly growth measurements',
-                                     'Enrolled >= 200 children')
+                               'Located in low- or middle income countries',
+                               'Enrolled correct age range',
+                               'Enrollment not restricted to acutely ill children',
+                               'Monthly growth measurements',
+                               'Enrolled >= 200 children')
 
 top1 <- ggplot(d, aes(x = reason_excluded, y = n/10000)) + 
   geom_bar(stat = 'identity') +
