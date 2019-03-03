@@ -1,5 +1,5 @@
 #-----------------------------------
-# stunting-study-inventory-heatmaps.R
+# study-inventory-heatmaps.R
 #
 # ben arnold (benarnold@berkeley.edu)
 # modified by jade benjamin-chung (jadebc@berkeley.edu)
@@ -11,17 +11,7 @@
 # using GHAPStudyMetadata.R
 #-----------------------------------
 
-#-----------------------------------
-# input files:
-#    GHAP_metadata.rds (created by GHAPStudyMetadata.R)
-#
-# output files:
-#    stunting-study-inventory-heatmap-n.pdf
-#    stunting-study-inventory-heatmap-nbig.pdf
-#    stunting-study-inventory-heatmap-prev.pdf
-#    stunting-study-inventory-heatmap-n-prev.pdf
-#    stunting-study-inventory-heatmap-WHOanonymous.pdf
-#-----------------------------------
+
 
 #-----------------------------------
 # preamble
@@ -214,7 +204,11 @@ dd <- md
 
 
 
-#mark measure frequencies
+#-----------------------------------
+# separate cohorts into monthly, quarterly, or yearly
+# and drop any non-intervention cohorts with only yearly 
+# measurements
+#-----------------------------------
 dd$measurefreq <- NA
 
 dd$measurefreq[dd$studyid %in% c(
@@ -262,83 +256,20 @@ dd$measurefreq[dd$studyid %in% c(
 )] <- "yearly"
 
 
+#Mark COHORTS and CMIN cohorts with different measurement frequency than quarterly
+dd$measurefreq[dd$studyid=="ki1114097-CMIN" & dd$country=="BANGLADESH"] <- "monthly"
+dd$measurefreq[dd$studyid=="ki1114097-CMIN" & dd$country=="PERU"] <- "monthly"
+dd<- dd[!(dd$studyid=="ki1135781-COHORTS" & dd$country=="BRAZIL"),] #Drop because yearly but not an RCT
+dd<- dd[!(dd$studyid=="ki1135781-COHORTS" & dd$country=="SOUTH AFRICA"),] #Drop because yearly but not an RCT
 
 
 
-
-
-#-----------------------------------
-# separate cohorts into monthly, quarterly, or yearly
-# and drop any non-intervention cohorts with only yearly 
-# measurements
-#-----------------------------------
 dd$cohort <- paste0(dd$study_id," ", dd$countrycohort)
 dd$median_length_between_measures <- as.numeric(dd$median_length_between_measures)
-paste0(unique(dd$cohort[dd$median_length_between_measures<=40]), ": ",unique(dd$median_length_between_measures[dd$median_length_between_measures<=40]))
-paste0(unique(dd$cohort[dd$median_length_between_measures>40 & dd$median_length_between_measures<=100]), ": ",unique(dd$median_length_between_measures[dd$median_length_between_measures>40 & dd$median_length_between_measures<=100]))
-paste0(unique(dd$cohort[dd$median_length_between_measures>100]), ": ",unique(dd$median_length_between_measures[dd$median_length_between_measures>100]))
 
-monthly <- c('gms_nepal','respak','irc','divids','ee','cmc_v_bcs_2002','mal_ed','tanzaniachild2','cmin','guatemala_bsc','incap','tdc','peru_huascar','content')
-dd$monthly<-0
-dd$monthly[dd$fstudy_id %in% monthly] <- 1
+#Drop yearly studies 
+dd <- dd %>% filter(measurefreq != 'Yearly')
 
-# Two of the CMIN cohorts (Brazil and Guinea-Bissau)  do not have monthly measurments
-dd$monthly[dd$study_id=="CMIN" & dd$countrycohort=="BRAZIL"] <- 0
-dd$monthly[dd$study_id=="CMIN" & dd$countrycohort=="GUINEA-BISSAU"] <- 0
-
-#Mark less-than-quarterly studies
-yearly <- c('jivita_3','wash_bangladesh','wash_kenya','ilins_dose','ilins_dyad_m','znmort')
-dd$yearly<-0
-dd$yearly[dd$fstudy_id %in% yearly] <- 1
-
-dd$measure_freq<-"Quarterly Measurements"
-dd$measure_freq[dd$monthly==1]<-"Monthly Measurements"
-dd$measure_freq[dd$yearly==1]<-"Yearly"
-dd$measure_freq <- factor(dd$measure_freq)
-
-# DROP yearly measurements
-dd <- dd[dd$measure_freq != 'Yearly', ]
-dd <- dd %>%
-  filter(measure_freq != 'Yearly', yearly != 1)
-# dd <- dd %>% droplevels()
-
-temp <- cbind(dd$study_id, dd$countrycohort, dd$median_length_between_measures, dd$measure_freq, dd$numobs)
-
-#drop any non-intervention cohorts with only yearly measurements
-dd <- dd[dd$cohort!="COHORTS BRAZIL" & dd$cohort!="COHORTS SOUTH AFRICA",]
-
-
-#-----------------------------------
-# basic counts and total summary stats
-#-----------------------------------
-# number of cohorts with monthly measurement
-sum(dd$monthly==1)
-# number of children
-sum(dd$numsubj[dd$monthly==1])
-# number of child-months
-sum(dd$nmeas[dd$monthly==1])
-
-# number of cohorts with quarterly measurement
-sum(dd$monthly==0 & dd$yearly==0)
-# number of children
-sum(dd$numsubj[dd$monthly==0 & dd$yearly==0])
-# number of child-months
-sum(dd$nmeas[dd$monthly==0 & dd$yearly==0])
-
-
-# number of cohorts with yearly measurement
-sum(dd$yearly==1)
-# number of children
-sum(dd$numsubj[dd$yearly==1])
-# number of child-months
-sum(dd$nmeas[dd$yearly==1])
-
-
-#overall totals
-# number of cohorts, children, child-months
-nrow(dd)
-sum(dd$numsubj)
-sum(dd$nmeas)
 
 #-----------------------------------
 # Do some final tidying up for the plot
@@ -379,6 +310,8 @@ dd <- dd %>% mutate(region = case_when(
   TRUE                                    ~ "Other"
 ))
 
+dd$region <- as.character(dd$region)
+dd$region <- factor(dd$region, levels=c("Asia","Africa","Latin America","Other"))
 
 unique(dd$studycountry)
 unique(dd$study_id)
@@ -404,13 +337,7 @@ dd$stpcat <- factor(dd$stpcat)
 dd$wpcat <- cut(dd$wastprev,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
 dd$wpcat <- factor(dd$wpcat)
 
-#Create dataset of studies we are using
-colnames(dd)
 
-studylist <- dd[,c(1:10,29:38)] %>% distinct()
-# library(xlsx)
-# write.xlsx(studylist, "U:/Data/Stunting/UCBerkeley_stunting_studylist.xlsx")
-# saveRDS(studylist, "U:/Data/Stunting/UCBerkeley_stunting_studylist.rds")
 
 #-----------------------------------
 # Create a long format dataset
@@ -464,6 +391,8 @@ dp$ncat <- cut(dp$nobs,
                breaks=N_breaks,
                labels=c('<50','50-100','100-250','250-500','500-750','750-1000','1000-1500','1500-2000','>2000'))
 dp$ncat <- factor(dp$ncat)
+
+
 
 
 #-----------------------------------
@@ -604,22 +533,17 @@ nbar <- sidebar +
                      breaks=seq(0,120,by=20),labels=seq(0,120,by=20)) +
   geom_hline(yintercept = seq(0,120,by=20),color='white',size=0.3)
 
-
-# ngrid <- grid.arrange(nhm, nbar, nrow = 1, ncol = 2, widths=c(100,20))
-# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n2.pdf",plot = ngrid,device='pdf',width=10,height=9)
-
-
 #-----------------------------------
 # STUNTING PREVALENCE HEAT MAP
 #-----------------------------------
 
 # # heat map
-# stphm <- hm +
-#   aes(fill=stpcat) +
-#   labs(x="Age in months",y="",title="Stunting prevalence by month of age") +
-#   scale_fill_brewer(palette = "YlOrRd",na.value="grey90",
-#                     guide=guide_legend(title="Stunting (%)",title.vjust = 1,
-#                                        label.position="bottom",label.hjust=0.5,nrow=1))
+stphm <- hm +
+  aes(fill=stpcat) +
+  labs(x="Age in months",y="",title="Stunting prevalence by month of age") +
+  scale_fill_viridis_d(na.value="grey90",
+                    guide=guide_legend(title="Stunting (%)",title.vjust = 1,
+                                       label.position="bottom",label.hjust=0.5,nrow=1))
 
 # wasting prevalence side bar plot
 wpbar <- sidebar +
@@ -639,60 +563,10 @@ stpbar <- sidebar +
 
 
 # combined plot
-# stpgrid <- grid.arrange(stphm, stpbar, nrow = 1, ncol = 2, widths=c(100,20))
-# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=10,height=9)
-# 
+stpgrid <- grid.arrange(stphm, stpbar, wpbar, nrow = 1, ncol = 3, widths=c(100,20,20))
+ggsave(filename="figures/stunting/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=12,height=9)
 
 
-
-#-----------------------------------
-# measurement heat map with stunting
-# prevalence
-#-----------------------------------
-# ngridbig <- grid.arrange(nhm,nbar,stpbar,nrow=1,ncol=3,widths=c(100,20,20))
-ngridbig <- grid.arrange(nhm, wpbar, stpbar, nrow=1, ncol = 3, 
-                         widths = c(100, 20, 20))
-ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.pdf",plot = ngridbig,device='pdf',width=12,height=9)
-ggsave(filename="figures/intro/stunting-study-inventory-heatmap-nbig2.png",plot = ngridbig,device='png',width=12,height=9)
-
-
-#-----------------------------------
-# giant panel of both heat maps
-#-----------------------------------
-# hmbiggest <- grid.arrange(nhm,nbar,stphm,stpbar,nrow=1,ncol=4,widths=c(100,20,100,20))
-# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-n-prev2.pdf",plot = hmbiggest,device='pdf',width=20,height=9)
-
-#-----------------------------------
-# anonymized heatmap for WHO
-#-----------------------------------
-# nhma <- nhm + aes(y=anonym) + ylab("")
-# stphma <- stphm + aes(y=anonym) + ylab("")
-# hmwho <- grid.arrange(nhma,nbar,stphma,stpbar,nrow=1,ncol=4,widths=c(100,20,100,20))
-# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-WHOanonymous2.pdf",plot = hmwho,device='pdf',width=18,height=9)
-
-
-
-#-----------------------------------
-# print # measurements in each group
-#-----------------------------------
-# number of children per group 
-
-# dd %>% 
-#   group_by(measure_freq) %>%
-#   summarise(sum(numsubj)) 
-# 
-# # number of child-months per group 
-# dd %>% 
-#   group_by(measure_freq) %>%
-#   mutate(numobs=as.numeric(numobs)) %>%
-#   summarise(children=sum(numsubj),months=sum(numobs)) %>%
-#   mutate(months=months*c(1,3,12)) %>%
-#   mutate(child_mo=children*months) 
-# 
-# # number of measurements per group
-# dd %>% 
-#   group_by(measure_freq) %>%
-#   summarise(sum(nmeas))
 
 
 #####--------------------------------------------------------------------------
