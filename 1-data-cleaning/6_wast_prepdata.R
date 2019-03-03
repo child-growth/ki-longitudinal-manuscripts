@@ -4,9 +4,8 @@
 # Import data, subset to relevant variables
 #-----------------------------------
 rm(list=ls())
-library(dplyr)
-library(ggplot2)
-library(data.table)
+source(paste0(here::here(), "/0-config.R"))
+
 
 #--------------------------------------------
 # Read in .csv file and save as an .rds file
@@ -20,7 +19,7 @@ d<-fread("U:/data/FINAL/UCB Rally7/Main/adam/FINAL.csv", header = T)
 
 #change names to lower case
 colnames(d) <- tolower(colnames(d))
-d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, month, whz, haz, waz))
+d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, month, whz, haz, waz, latitude, longitud))
 
 
 #--------------------------------------------
@@ -126,7 +125,7 @@ load("U:/data/compiled_WHZ_dataset.RData")
 # Subset to relevant variables
 #--------------------------------------------
 colnames(d)=tolower(colnames(d))
-d <- d %>% select(studyid, subjid, country, tr, agedays, month, whz, haz, waz, measurefreq)
+d <- d %>% select(studyid, subjid, country, tr, agedays, month, whz, haz, waz, latitude, longitud, measurefreq)
 
 nrow(d)
 
@@ -219,15 +218,5 @@ d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]
 
 
 save(d,file="U:/Data/Wasting/Wasting_data.RData")
-
-
-#--------------------------------------------
-# plot HAZ by agedays for included studies
-#--------------------------------------------
-# pdf("U:/Figures/whz-scatter-1a.pdf",width=15,height=15,onefile=TRUE)
-# ggplot(d[d$agedays<=365*2,],aes(x=agedays,y=whz))+geom_point(alpha=0.3)+geom_smooth()+
-#   facet_wrap(~studyid+country)+geom_hline(yintercept=-2,linetype="dashed",col="red")
-# dev.off()
-
 
 

@@ -24,7 +24,7 @@ d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
 
 #change names to lower case
 colnames(d) <- tolower(colnames(d))
-d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz))
+d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, latitude, longitud))
 
 #--------------------------------------------
 #Check for duplicate agedays
@@ -115,7 +115,7 @@ load("U:/data/Stunting/Full-compiled-data/compiled_HAZ_dataset.RData")
 # Subset to relevant variables
 #--------------------------------------------
 colnames(d)=tolower(colnames(d))
-d <- d %>% select(studyid, subjid, country, tr, agedays, haz, measurefreq)
+d <- d %>% select(studyid, subjid, country, tr, agedays, haz, measurefreq, latitude, longitud)
 
 nrow(d)
 
@@ -207,14 +207,6 @@ d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]
 
 save(d,file="U:/Data/Stunting/stunting_data.RData")
 
-
-#--------------------------------------------
-# plot HAZ by agedays for included studies
-#--------------------------------------------
-pdf("U:/Figures/haz-scatter-1a.pdf",width=15,height=15,onefile=TRUE)
-ggplot(d[d$agedays<=365*2,],aes(x=agedays,y=haz))+geom_point(alpha=0.3)+geom_smooth()+
-  facet_wrap(~studyid+country)+geom_hline(yintercept=-2,linetype="dashed",col="red")
-dev.off()
 
 
 

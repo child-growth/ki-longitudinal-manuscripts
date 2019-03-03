@@ -9,15 +9,14 @@ head(mediods)
 mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
 mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
 
-#Load cohort data and calc wasting prev by study
-load("U:/Data/Wasting/Wasting_data.RData")
-d <- d %>% filter(measurefreq=="monthly")
+#Load cohort data and calc stunting prev by study
+load("U:/Data/Stunting/Stunting_data.RData")
 
 d$cohort <- paste0(d$studyid,"-",d$country)
-df <- d %>% filter(!is.na(whz)) %>% group_by(studyid,cohort) %>% 
+df <- d %>% filter(!is.na(haz)) %>% group_by(studyid,cohort) %>% 
   filter(agedays < 30.4167 * 24) %>%
   summarise(n=n(),
-            wast = mean(whz < (-2)),
+            stunt = mean(haz < (-2)),
             lat=mean(latitude),
             long=mean(longitud),
             country=first(country))
@@ -50,15 +49,15 @@ coords <- FFieldPtRep(coords = cbind(jitter(df$long,jit),jitter(df$lat,jit)),rep
 d <- cbind(data.frame(df), coords)
 
 
-summary(d$wast)
-d$wastcat <- cut(d$wast*100, include.lowest = T, breaks = c(0,2,6,12,100), labels=c("<2%","2-6%","6-12%",">12"))
-table(d$wastcat)
+summary(d$stunt)
+d$stuntcat <- cut(d$stunt*100, include.lowest = T, breaks = c(0,20,30,40,100), labels=c("<20%","20-30%","30-40%",">40%"))
+table(d$stuntcat)
 
 summary(d$n)
-d$Ncat <- cut(d$n, include.lowest = T, breaks = c(0,5000,7500,10000,100000), labels=c("<5,000","5,000-7,500","7,500-10,000",">10,000"))
+d$Ncat <- cut(d$n, include.lowest = T, breaks = c(0,5000,8000,15000,100000), labels=c("<5,000","5,000-8,000","8,000-15,000",">15,000"))
 table(d$Ncat)
 
-d <- d %>% rename(`Number of observations`=Ncat, `Wasting Prevalence (%)`=wastcat) 
+d <- d %>% rename(`Number of observations`=Ncat, `Stunting Prevalence (%)`=stuntcat) 
 
 
 
@@ -69,7 +68,7 @@ p <- ggplot(world, aes(long, lat)) +
   geom_map(map=world, aes(map_id=region), fill=NA, color="grey20") +
   coord_quickmap() + theme_bw() + coord_cartesian(xlim=c(-90,120), ylim=c(-36,50)) +
   geom_point(aes(x = x, y = y, size = `Number of observations`, 
-                 fill=`Wasting Prevalence (%)`), 
+                 fill=`Stunting Prevalence (%)`), 
              data = d, alpha = 0.8, pch = 21, color = 'grey20') +
   scale_color_viridis(discrete=T) + 
   scale_fill_viridis(discrete=T) + 
@@ -80,4 +79,4 @@ p <- ggplot(world, aes(long, lat)) +
         axis.text.x = element_text(size=12))
 p
 
-ggsave(p, file="figures/wasting/Wasting_map.png", width=9, height=4)
+ggsave(p, file="figures/stunting/Stunting_map.png", width=9, height=4)

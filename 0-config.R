@@ -14,6 +14,10 @@ library(ggalluvial)
 library(reshape2)
 library(metafor)
 library(data.table)
+library(viridis)
+library(ggrepel)
+library(maps)
+library(FField)
 
 # define directories
 res_dir = paste0(here::here(),"/results/")
