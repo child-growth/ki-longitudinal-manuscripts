@@ -15,17 +15,21 @@ plot_data = stunt_data %>%
     never_stunted == 1 ~ "Never stunted",
     prev_stunted == 1 ~ "Recovered",
     still_stunted == 1 ~ "Still stunted",
-    newly_stunted == 1 ~ "Newly stunted"
+    newly_stunted == 1 ~ "Newly stunted",
+    relapse == 1 ~ "Stunting relapse"
+    
   )) %>%
   select(subjid, agecat, classif) %>%
   mutate(freq = 1) %>%
   mutate(classif = factor(classif, levels = c("Never stunted", 
                                               "Recovered",
+                                              "Stunting relapse",
                                               "Newly stunted",
                                               "Still stunted"
                                               )))
 
-mycols = c("#11466B", tableau10[1], tableau10[4], "#811818")
+mycols = c("#11466B", tableau10[1], tableau10[4], "#FB5D5E", "#811818")
+# mycols = c("#11466B", tableau10[1], tableau10[4], tableau10[2], "#811818")
 
 #-----------------------------------------
 # Alluvial flow plot
