@@ -28,6 +28,8 @@ addon = bind_rows(recst1, recst2, recst3, recst4, recst5,
 
 d = bind_rows(d, addon)
 
+# d = readRDS(file="~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
+
 # impute study id and country
 d <- d %>% 
   mutate(
