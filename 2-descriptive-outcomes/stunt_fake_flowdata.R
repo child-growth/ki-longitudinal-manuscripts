@@ -95,13 +95,22 @@ stunt_data = stunt_data %>%
   group_by(subjid) %>%
   mutate(cum_minhaz = cummin(minhaz)) %>%
   mutate(never_stunted = ifelse(cum_minhaz >= -2, 1, 0)) %>%
+  mutate(cum_stunt = cummax(stunted)) %>%
+  mutate(cum_stunt_lag = lag(cum_stunt)) %>%
   
   # create indicator for whether the child 
   # was NEWLY stunted 
   mutate(newly_stunted = ifelse(never_stunted==0 & still_stunted==0 & prev_stunted==0, 1, 0)) %>%
   mutate(newly_stunted = ifelse(agecat=="Birth" & minhaz< -2, 1, newly_stunted)) %>%
+  # create indicator for whether the child 
+  # had a stunting RELAPSE
+  mutate(relapse = ifelse(newly_stunted==1 & cum_stunt_lag==1,1,0)) %>%
+  # reassign NEWLY stunted = 0 if relapse = 1
+  mutate(newly_stunted = ifelse(relapse==1 & newly_stunted==1 & !is.na(relapse),
+                                0,newly_stunted)) %>%
+  
   select(subjid, agecat, minhaz, minhaz_prev, cum_minhaz, stunted, 
-         never_stunted, prev_stunted, newly_stunted, still_stunted) 
+         never_stunted, prev_stunted, newly_stunted, still_stunted, relapse) 
 
 # Check that no child was classified in more
 # than one category at any time point 
@@ -112,18 +121,21 @@ summary = stunt_data %>%
     newly_stunted = sum(newly_stunted),
     still_stunted = sum(still_stunted),
     prev_stunted = sum(prev_stunted),
-    never_stunted = sum(never_stunted)) %>%
+    never_stunted = sum(never_stunted),
+    relapse = sum(relapse)) %>%
   mutate(newly_stunted = newly_stunted/nchild,
          still_stunted = still_stunted/nchild,
          prev_stunted = prev_stunted/nchild,
-         never_stunted = never_stunted/nchild)
+         never_stunted = never_stunted/nchild,
+         relapse = relapse/nchild)
 
 summary = summary %>%
   mutate(still_stunted = ifelse(agecat=="Birth",0,still_stunted),
-         prev_stunted = ifelse(agecat=="Birth",0,prev_stunted)) 
+         prev_stunted = ifelse(agecat=="Birth",0,prev_stunted),
+         relapse = ifelse(agecat=="Birth",0,relapse)) 
 
 summary = summary %>%
-  mutate(sum = still_stunted + newly_stunted + prev_stunted + never_stunted)
+  mutate(sum = still_stunted + newly_stunted + prev_stunted + never_stunted + relapse)
 
 summary
 
