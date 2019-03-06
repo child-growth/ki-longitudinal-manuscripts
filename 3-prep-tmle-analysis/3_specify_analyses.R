@@ -40,8 +40,7 @@ st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
 st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
                                       "mbmi",          "single",        "fage",          "fhtcm",       
                                       "nrooms",      "nchldlt5",    "nhh",              
-                                      "hh
-                                      wealth_quart", "brthmon", "parity",   "meducyrs", 
+                                      "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
                                  Y="ever_stunted", file="st_cuminc_rf.Rdata")
 
