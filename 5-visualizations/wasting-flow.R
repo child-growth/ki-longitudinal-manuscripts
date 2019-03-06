@@ -24,20 +24,43 @@ plot_data = wast_data %>%
 
 mycols = c("#11466B", tableau10[1], tableau10[4], "#811818")
 
-flow_plot = ggplot(plot_data,
-                   aes(x = agecat,  
-                       alluvium = subjid,
-                       stratum = classif,
-                       fill = classif, 
-                       label = classif)) +
-  geom_flow(stat = "alluvium", lode.guidance = "rightleft",
-            color = "darkgray") +
-  geom_stratum()  +
+# flow_plot = ggplot(plot_data,
+#                    aes(x = agecat,  
+#                        alluvium = subjid,
+#                        stratum = classif,
+#                        fill = classif, 
+#                        label = classif)) +
+#   geom_flow(stat = "alluvium", lode.guidance = "rightleft",
+#             color = "darkgray") +
+#   geom_stratum()  +
+#   scale_fill_manual("", values = mycols) +
+#   theme(legend.position = "bottom") +
+#   xlab("Child age") + ylab("Number of children")
+# 
+# ggsave(flow_plot, file="figures/wasting/pool_wast_flow.png", width=10, height=5)
+
+
+#-----------------------------------------
+# bar graphs without alluvival flow between each child
+#-----------------------------------------
+age_classif_totals = plot_data %>%
+  group_by(agecat, classif) %>%
+  summarise(n = sum(freq))
+
+age_totals = plot_data %>%
+  group_by(agecat) %>%
+  summarise(tot = sum(freq))
+
+bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agecat"))
+
+bar_plot_data = bar_plot_data %>% mutate(percent = n/tot * 100)
+
+bar_plot <- ggplot(bar_plot_data) +
+  geom_bar(aes(x = agecat, y = percent, fill = classif), stat="identity", width=0.5) +
   scale_fill_manual("", values = mycols) +
   theme(legend.position = "bottom") +
-  xlab("Child age") + ylab("Number of children")
-
-ggsave(flow_plot, file="figures/wasting/pool_wast_flow.png", width=10, height=5)
+  xlab("Child age") + ylab("Percentage of children")
 
 
+ggsave(bar_plot, file="figures/wasting/pool_wast_bar.png", width=10, height=5)
 

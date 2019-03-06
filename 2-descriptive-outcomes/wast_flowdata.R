@@ -66,7 +66,9 @@ wast_data = d %>%
                                                      ifelse(agecat=="24 months",minwhz[agecat=="21 months"],
                                                             NA)))))))))) %>%
   mutate(still_wasted = ifelse(minwhz_prev < -2 & minwhz < -2, 1, 0),
-         prev_wasted = ifelse(minwhz_prev < -2 & minwhz >= -2 , 1, 0)) 
+         prev_wasted = ifelse(minwhz_prev < -2 & minwhz >= -2 , 1, 0)) %>%
+  mutate(still_wasted = ifelse(is.na(minwhz_prev), 0, still_wasted ),
+         prev_wasted = ifelse(is.na(minwhz_prev), 0, prev_wasted )) 
 
 
 # create indicator for whether the child 

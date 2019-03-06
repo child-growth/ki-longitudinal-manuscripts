@@ -29,6 +29,10 @@ d = d %>%
   mutate(agecat=factor(agecat,levels=c("Birth","3 months","6 months","9 months",
                                        "12 months","15 months","18 months","21 months","24 months")))
 
+
+
+
+
 # check age categories
 d %>%
   group_by(agecat) %>%
