@@ -1,19 +1,22 @@
 
-#---------------------------------------------
-#Adjustment sets
-#---------------------------------------------
+
 rm(list=ls())
-setwd("U:/UCB-SuperLearner/Wasting rallies")
-load("adjustment_sets_list.Rdata")
+
+
+load("U:/ucb-superlearner/Wasting rallies/adjustment_sets_list.Rdata")
+A <- names(adjustment_sets)
+
+Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
+
 
 #---------------------------------------------
 #Adjustment specifying function
 #---------------------------------------------
 
 
-specify_rf_analysis <- function(A=names(adjustment_sets), Y, file,  W=NULL, V= c("agecat","studyid","country"), id="id", adj_sets=adjustment_sets){
+specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","country"), id="id", adj_sets=adjustment_sets){
   
-  analyses <- expand.grid(A=A,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
+  analyses <- expand.grid(A=Avars,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
   analyses$id <- id
   analyses$strata <- list(V)
   if(is.null(W)){analyses$W <- adj_sets[analyses$A]}else{
@@ -30,7 +33,28 @@ specify_rf_analysis <- function(A=names(adjustment_sets), Y, file,  W=NULL, V= c
 # Specify the binary analyses
 #---------------------------------------------
 
-Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
+
+st_prev <- specify_rf_analysis(A=Avars, Y=c("stunted","sstunted"), file="st_prev_rf.Rdata")
+st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
+
+st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
+                                      "mbmi",          "single",        "fage",          "fhtcm",       
+                                      "nrooms",      "nchldlt5",    "nhh",              
+                                      "hh
+                                      wealth_quart", "brthmon", "parity",   "meducyrs", 
+                                      "feducyrs", "hfoodsec"),
+                                 Y="ever_stunted", file="st_cuminc_rf.Rdata")
+
+st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
+                                              "birthlen",       "vagbrth",       "hdlvry",    
+                                              "enwast", "anywast06", "pers_wast", 
+                                              "trth2o", "cleanck", "impfloor",  
+                                              "impsan", "safeh20",
+                                              "perdiar6", "perdiar24", 
+                                              "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
+                                              "predexfd6", "earlybf", "month"),
+                                         Y="ever_stunted", file="st_cuminc_nobirth_rf.Rdata")
+
 
 prev <- specify_rf_analysis(A=Avars, Y=c("wasted","swasted"), file="wast_prev_rf.Rdata")
 
@@ -56,97 +80,64 @@ rec <- specify_rf_analysis(A=Avars, id="subjid", Y="wast_rec90d", file="wast_rec
 pers_wast <- specify_rf_analysis(A=Avars, Y="pers_wast", file="pers_wast_rf.Rdata")
 
 
-#Birthweight stratified
-prev_BWstrat <- specify_rf_analysis(A=Avars, Y=c("wasted","swasted"), V= c("agecat","studyid","country", "birthwt"), file="wast_prev_rf.Rdata")
+WHZ_quart_prev <- specify_rf_analysis(A="lag_WHZ_quart", Y="stunted", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+                                                                          "vagbrth","hdlvry",
+                                                                          "single",
+                                                                          "W_nrooms","W_nhh","W_nchldlt5",
+                                                                          "month","brthmon","W_parity",
+                                                                          "trth2o","cleanck","impfloor","impsan","safeh20"),
+                                      file="stuntprev_whz_rf.Rdata")
 
-cuminc_BWstrat  <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                            "mbmi",          "single",        "fage",          "fhtcm",       
-                                            "nrooms",      "nchldlt5",    "nhh",              
-                                            "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
-                                            "feducyrs", "hfoodsec"),
-                                       Y="ever_wasted",  V= c("agecat","studyid","country", "birthwt"), file="wast_cuminc_rf.Rdata")
+WHZ_quart_cuminc <- specify_rf_analysis(A="lag_WHZ_quart", Y="ever_stunted", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+                                                                                 "vagbrth","hdlvry",
+                                                                                 "single",
+                                                                                 "W_nrooms","W_nhh","W_nchldlt5",
+                                                                                 "month","brthmon","W_parity",
+                                                                                 "trth2o","cleanck","impfloor","impsan","safeh20"),
+                                        file="stuntCI_whz_rf.Rdata")
 
-
-rec_BWstrat  <- specify_rf_analysis(A=Avars, id="subjid", Y="wast_rec90d", V= c("agecat","studyid","country", "birthwt"), file="wast_rec_rf.Rdata")
-pers_wast_BWstrat  <- specify_rf_analysis(A=Avars, Y="pers_wast", V= c("agecat","studyid","country", "birthwt"), file="pers_wast_rf.Rdata")
-
-
-
-#Specify the mortality analyses
-load("mortality_adjustment_sets_list.Rdata")
-
-Avars <- c("ever_wasted06",
-           "ever_swasted06",
-           "pers_wasted06",
-           "ever_stunted06",
-           "ever_sstunted06",
-           "ever_wasted024",
-           "ever_swasted024",
-           "pers_wasted024",
-           "ever_stunted024",
-           "ever_sstunted024",
-           "ever_wasted06_noBW",
-           "ever_swasted06_noBW",
-           "ever_wasted024_noBW",
-           "ever_swasted024_noBW",
-           "ever_underweight06",
-           "ever_sunderweight06",
-           "ever_underweight024",
-           "ever_sunderweight024",
-           "ever_co06",
-           "ever_co024")
-
-mortality <- specify_rf_analysis(A=Avars, Y=c("dead"), 
-                                 V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality, 
-                                 file="stuntwast_mort.Rdata")
-
-Avars_morbidity <- c("ever_wasted06",
-                     "ever_swasted06",
-                     "pers_wasted06",
-                     "ever_stunted06",
-                     "ever_wasted06_noBW",
-                     "ever_swasted06_noBW",
-                     "ever_underweight06",
-                     "ever_co06")
-
-morbidity <- specify_rf_analysis(A=Avars_morbidity,
-                                 Y=c("co_occurence", "pers_wasted624"),
-                                 V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality,
-                                 file="stuntwast_morbidity.Rdata")
-
-
-mortality_BWstrat <- specify_rf_analysis(A=Avars, Y=c("dead"), 
-                                 V= c("studyid","country", "birthwt"), id="id", adj_sets=adjustment_sets_mortality, 
-                                 file="stuntwast_mort.Rdata")
-
-morbidity_BWstrat <- specify_rf_analysis(A=Avars_morbidity,
-                                 Y=c("co_occurence", "pers_wasted624"),
-                                 V= c("studyid","country", "birthwt"), id="id", adj_sets=adjustment_sets_mortality,
-                                 file="stuntwast_morbidity.Rdata")
-
-#Birthweight stratified
 
 
 #bind together datasets
-analyses <- rbind(prev, cuminc, cuminc_nobirth, rec, pers_wast, mortality, morbidity,
-                  prev_BWstrat, cuminc_BWstrat, rec_BWstrat, pers_wast_BWstrat, mortality_BWstrat, morbidity_BWstrat)
-
-analyses  <- rbind(mortality, morbidity, mortality_BWstrat, morbidity_BWstrat)
-
+analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, st_rec, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc)
 table(analyses$file)
 
 #Save analysis specification
-#setwd("C:/Users/andre/Documents/HBGDki/Results/")
-save(analyses, file="wasting_adjusted_binary_analyses.rdata")
-save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/wasting_adjusted_binary_analyses.rdata")
+save(analyses, file="adjusted_binary_analyses.rdata")
+save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/adjusted_binary_analyses.rdata.rdata")
 
 
 #Make unadjusted analysis set
 analyses$W <- NULL
-save(analyses, file="wasting_unadjusted_binary_analyses.rdata")
-save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/wasting_unadjusted_binary_analyses.rdata")
+save(analyses, file="unadjusted_binary_analyses.rdata")
+save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/unadjusted_binary_analyses.rdata")
 
 
 
+#---------------------------------------------
+# Specify the continuous analyses
+#---------------------------------------------
+
+vel_haz <- specify_rf_analysis(A=Avars, Y="y_rate_haz", file="st_haz_vel_rf.Rdata")
+vel_lencm <- specify_rf_analysis(A=Avars, Y="y_rate_len", file="st_len_vel_rf.Rdata")
+vel_waz <- specify_rf_analysis(A=Avars, Y="y_rate_waz", file="wast_waz_vel_rf.Rdata")
+vel_wtkg <- specify_rf_analysis(A=Avars, Y="y_rate_wtkg", file="wast_wtkg_vel_rf.Rdata")
+haz <- specify_rf_analysis(A=Avars, Y="haz", file="st_meanZ_rf.Rdata")
+whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
+
+
+analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
+
+
+
+#Save analysis specification
+save(analyses, file="adjusted_continuous.rdata")
+save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/adjusted_continuous.rdata")
+
+
+#Make unadjusted analysis set
+analyses$W <- NULL
+save(analyses, file="unadjusted_continuous.rdata")
+save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/unadjusted_continuous.rdata")
 
 
