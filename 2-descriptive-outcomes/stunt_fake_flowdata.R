@@ -84,7 +84,9 @@ stunt_data = d %>%
                                                      ifelse(agecat=="24 months",minhaz[agecat=="21 months"],
                                                             NA)))))))))) %>%
   mutate(still_stunted = ifelse(minhaz_prev < -2 & minhaz < -2, 1, 0),
-         prev_stunted = ifelse(minhaz_prev < -2 & minhaz >= -2 , 1, 0)) 
+         prev_stunted = ifelse(minhaz_prev < -2 & minhaz >= -2 , 1, 0)) %>%
+  mutate(still_stunted = ifelse(is.na(minhaz_prev), 0, still_stunted ),
+         prev_stunted = ifelse(is.na(minhaz_prev), 0, prev_stunted ))
 
 
 # create indicator for whether the child 
