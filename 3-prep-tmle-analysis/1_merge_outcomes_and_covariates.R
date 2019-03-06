@@ -43,6 +43,8 @@ vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
 meanHAZ$subjid <- as.character(meanHAZ$subjid)
 
 
+setwd("U:/ucb-superlearner/Wasting rallies/")
+
 
 #------------------------------------
 # Create cumulative incidence dataset

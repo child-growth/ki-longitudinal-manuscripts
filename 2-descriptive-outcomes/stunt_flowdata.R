@@ -64,7 +64,9 @@ stunt_data = d %>%
                                                      ifelse(agecat=="24 months",minhaz[agecat=="21 months"],
                                                             NA)))))))))) %>%
   mutate(still_stunted = ifelse(minhaz_prev < -2 & minhaz < -2, 1, 0),
-         prev_stunted = ifelse(minhaz_prev < -2 & minhaz >= -2 , 1, 0)) 
+         prev_stunted = ifelse(minhaz_prev < -2 & minhaz >= -2 , 1, 0)) %>%
+  mutate(still_stunted = ifelse(is.na(minhaz_prev), 0, still_stunted ),
+         prev_stunted = ifelse(is.na(minhaz_prev), 0, prev_stunted ))
 
 
 # create indicator for whether the child 
@@ -87,10 +89,10 @@ summary = stunt_data %>%
   group_by(agecat) %>%
   summarise(
     nchild=length(unique(subjid)),
-    newly_stunted = sum(newly_stunted, na.rm=T),
-    still_stunted = sum(still_stunted, na.rm=T),
-    prev_stunted = sum(prev_stunted, na.rm=T),
-    never_stunted = sum(never_stunted, na.rm=T)) %>%
+    newly_stunted = sum(newly_stunted),
+    still_stunted = sum(still_stunted),
+    prev_stunted = sum(prev_stunted),
+    never_stunted = sum(never_stunted)) %>%
   mutate(newly_stunted = newly_stunted/nchild,
          still_stunted = still_stunted/nchild,
          prev_stunted = prev_stunted/nchild,
