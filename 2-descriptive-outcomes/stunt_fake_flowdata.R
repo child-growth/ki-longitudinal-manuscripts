@@ -50,18 +50,19 @@ d <- d %>%
 d = d %>% 
   mutate(agecat = case_when(
     agedays==1 ~ "Birth",
-    agedays>1 & agedays<=3*30.4167 ~ "3 months",
-    agedays>3*30.4167 & agedays<=6*30.4167 ~ "6 months",
-    agedays>6*30.4167 & agedays<=9*30.4167 ~ "9 months",
-    agedays>9*30.4167 & agedays<=12*30.4167 ~ "12 months",
-    agedays>12*30.4167 & agedays<=15*30.4167 ~ "15 months",
-    agedays>15*30.4167 & agedays<=18*30.4167 ~"18 months",
-    agedays>18*30.4167 & agedays<=21*30.4167 ~ "21 months",
-    agedays>21*30.4167& agedays<=24*30.4167 ~ "24 months",
+    agedays>1 & agedays<=3*30.4167 ~ "0-3 months",
+    agedays>3*30.4167 & agedays<=6*30.4167 ~ "3-6 months",
+    agedays>6*30.4167 & agedays<=9*30.4167 ~ "6-9 months",
+    agedays>9*30.4167 & agedays<=12*30.4167 ~ "9-12 months",
+    agedays>12*30.4167 & agedays<=15*30.4167 ~ "12-15 months",
+    agedays>15*30.4167 & agedays<=18*30.4167 ~"15-18 months",
+    agedays>18*30.4167 & agedays<=21*30.4167 ~ "18-21 months",
+    agedays>21*30.4167& agedays<=24*30.4167 ~ "21-24 months",
     TRUE ~ ""
   )) %>%
-  mutate(agecat=factor(agecat,levels=c("Birth","3 months","6 months","9 months",
-                                       "12 months","15 months","18 months","21 months","24 months")))
+  mutate(agecat=factor(agecat,levels=c("Birth","0-3 months","3-6 months","6-9 months",
+                                       "9-12 months","12-15 months","15-18 months",
+                                       "18-21 months","21-24 months")))
 
 # check age categories
 d %>%
@@ -88,14 +89,14 @@ stunt_data = d %>%
   group_by(studyid, country, subjid) %>%
   mutate(minhaz_prev=ifelse(
     agecat=="Birth",NA,      
-    ifelse(agecat=="3 months",minhaz[agecat=="Birth"],
-           ifelse(agecat=="6 months",minhaz[agecat=="3 months"],
-                  ifelse(agecat=="9 months",minhaz[agecat=="6 months"],
-                         ifelse(agecat=="12 months",minhaz[agecat=="9 months"],
-                                ifelse(agecat=="15 months",minhaz[agecat=="12 months"],
-                                       ifelse(agecat=="18 months",minhaz[agecat=="15 months"],
-                                              ifelse(agecat=="21 months",minhaz[agecat=="18 months"],
-                                                     ifelse(agecat=="24 months",minhaz[agecat=="21 months"],
+    ifelse(agecat=="0-3 months",minhaz[agecat=="Birth"],
+           ifelse(agecat=="3-6 months",minhaz[agecat=="0-3 months"],
+                  ifelse(agecat=="6-9 months",minhaz[agecat=="3-6 months"],
+                         ifelse(agecat=="9-12 months",minhaz[agecat=="6-9 months"],
+                                ifelse(agecat=="12-15 months",minhaz[agecat=="9-12 months"],
+                                       ifelse(agecat=="15-18 months",minhaz[agecat=="12-15 months"],
+                                              ifelse(agecat=="18-21 months",minhaz[agecat=="15-18 months"],
+                                                     ifelse(agecat=="21-24 months",minhaz[agecat=="18-21 months"],
                                                             NA)))))))))) %>%
   mutate(still_stunted = ifelse(minhaz_prev < -2 & minhaz < -2, 1, 0),
          prev_stunted = ifelse(minhaz_prev < -2 & minhaz >= -2 , 1, 0)) %>%
