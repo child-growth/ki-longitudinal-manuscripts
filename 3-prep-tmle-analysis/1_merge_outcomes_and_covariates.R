@@ -2,17 +2,277 @@
 
 
 
+#merge outcomes with covariates
 
 rm(list=ls())
-library(tidyverse)
-library(reshape2)
+source(paste0(here::here(), "/0-config.R"))
 
-#merge outcomes with covariates
+
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#Stunting
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+# setwd("U:/UCB-SuperLearner/Stunting rallies/")
+setwd("U:/ucb-superlearner/Stunting rallies/")
+
+#load covariates
+cov<-readRDS("FINAL_clean_covariates.rds")
+
+#load outcomes
+load("st_prev_rf_outcomes.rdata")
+load("st_meanZ_rf_outcomes.rdata")
+load("st_cuminc_rf_outcomes.rdata")
+load("st_cuminc_rf_outcomes_nobirth.rdata")
+load("st_rec_rf_outcomes.rdata")
+load("st_vel_rf_outcomes.rdata")
+
+
+
+#convert subjid to character for the merge with covariate dataset
+cov$subjid <- as.character(cov$subjid)
+prev$subjid <- as.character(prev$subjid)
+cuminc$subjid <- as.character(cuminc$subjid)
+cuminc_nobirth$subjid <- as.character(cuminc_nobirth$subjid)
+rev$subjid <- as.character(rev$subjid)
+vel_haz$subjid <- as.character(vel_haz$subjid)
+vel_lencm$subjid <- as.character(vel_lencm$subjid)
+vel_waz$subjid <- as.character(vel_waz$subjid)
+vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
+meanHAZ$subjid <- as.character(meanHAZ$subjid)
+
+
+
+#------------------------------------
+# Create cumulative incidence dataset
+#------------------------------------
+
+#merge in covariates
+cuminc <- cuminc %>% subset(., select = -c(tr))
+d <- left_join(cuminc, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+
+#Vector of outcome names
+Y<-c("ever_stunted")
+
+#Vector of risk factor names
+A<-c( "sex",               "mage",          "mhtcm",         "mwtkg",        
+      "mbmi",          "single",        "fage",          "fhtcm",       
+      "nrooms",      "nchldlt5",    "nhh",              
+      "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
+      "feducyrs", "hfoodsec")  
+
+
+
+#Vector of covariate names
+W<-c("")
+
+#Subgroup variable
+V <- c("agecat")
+
+#clusterid ID variable
+id <- c("id")
+
+
+save(d, Y, A,V, id,  file="st_cuminc_rf.Rdata")
+
+
+#------------------------------------
+# Create cumulative incidence dataset
+# - no birth incidence
+#------------------------------------
+
+#merge in covariates
+cuminc_nobirth <- cuminc_nobirth %>% subset(., select = -c(tr))
+cuminc_nobirth <- bind_rows(cuminc_nobirth, cuminc[cuminc$agecat=="6-24 months",])
+
+d <- left_join(cuminc_nobirth, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+
+#Vector of outcome names
+Y<-c("ever_stunted")
+
+#Vector of risk factor names
+A<-c( "gagebrth",      "birthwt",    
+      "birthlen",       "vagbrth",       "hdlvry",    
+      "enwast", "anywast06", "pers_wast", 
+      "trth2o", "cleanck", "impfloor",  
+      "impsan", "safeh20",
+      "perdiar6", "perdiar24", 
+      "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
+      "predexfd6", "earlybf", "month")
+
+#Vector of covariate names
+W<-c("")
+
+#Subgroup variable
+V <- c("agecat")
+
+#clusterid ID variable
+id <- c("id")
+
+
+save(d, Y, A,V, id,  file="st_cuminc_nobirth_rf.Rdata")
+
+
+#------------------------------------
+# Create prevalence dataset
+#------------------------------------
+
+
+#merge in covariates
+d <- left_join(prev, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+#Vector of outcome names
+Y<-c("stunted","sstunted")
+
+
+A<-c( "sex",              "gagebrth",      "birthwt",      
+      "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
+      "mbmi",          "single",        "fage",          "fhtcm",         "nrooms",        "nhh",           "nchldlt5",     
+      "hhwealth_quart", "month", "brthmon", "parity",   "meducyrs", 
+      "feducyrs", "hfoodsec",  
+      "enwast", "anywast06", "pers_wast", 
+      "trth2o", "cleanck", "impfloor",  "impsan", "safeh20",
+      "perdiar6", "perdiar24", "predexfd6", 
+      "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
+      "earlybf")  
+
+
+
+save(d, Y, A,V, id,  file="st_prev_rf.Rdata")
+
+#------------------------------------
+# Create mean Z dataset
+#------------------------------------
+
+
+#merge in covariates
+d <- left_join(meanHAZ, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+#Vector of outcome names
+Y<-c("haz")
+
+
+A<-c( "sex",              "gagebrth",      "birthwt",      
+      "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
+      "mbmi",          "single",        "fage",          "fhtcm",         "nrooms",        "nhh",           "nchldlt5",     
+      "hhwealth_quart", "month", "brthmon", "parity",   "meducyrs", 
+      "feducyrs", "hfoodsec",  
+      "enwast", "anywast06", "pers_wast", 
+      "trth2o", "cleanck", "impfloor",  "impsan", "safeh20",
+      "perdiar6", "perdiar24", "predexfd6", 
+      "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
+      "earlybf")  
+
+
+
+save(d, Y, A,V, id,  file="st_meanZ_rf.Rdata")
+
+
+#------------------------------------
+# Create recovery dataset
+#------------------------------------
+
+#merge in covariates
+d <- left_join(rev, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+#Vector of outcome names
+Y<-c("s03rec24")
+
+#Vector of covariate names
+W<-c("")
+
+#Subgroup variable
+V <- c("agecat")
+
+#clusterid ID variable
+id <- c("id")
+
+
+save(d, Y, A,V, id, file="st_rec_rf.Rdata")
+
+
+
+
+#------------------------------------
+# Create growth velocity dataset
+#------------------------------------
+
+#HAZ
+
+#merge in covariates
+d <- left_join(vel_haz, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+#Vector of outcome names
+Y<-c("y_rate_haz")
+
+
+#Vector of covariate names
+W<-c("")
+
+#Subgroup variable
+V <- c("agecat")
+
+#clusterid ID variable
+id <- c("id")
+
+#Change outcome name to differentiate from lencm velocity outcome
+d <- d %>% rename(y_rate_haz=y_rate)
+
+save(d, Y, A,V, id, file="st_haz_vel_rf.Rdata")
+
+
+# Height in cm
+
+#merge in covariates
+d <- left_join(vel_lencm, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+#Vector of outcome names
+Y<-c("y_rate_len")
+
+
+#Vector of covariate names
+W<-c("")
+
+#Subgroup variable
+V <- c("agecat")
+
+#clusterid ID variable
+id <- c("id")
+
+d <- d %>% rename(y_rate_len=y_rate)
+
+
+save(d, Y, A,V, id, file="st_len_vel_rf.Rdata")
+
+
+
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#WASTING
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
 
 setwd("U:/UCB-SuperLearner/Wasting rallies/")
 
-#load covariates
-cov<-readRDS("U:/ucb-superlearner/stunting rallies/FINAL_clean_covariates.rds")
 
 #Drop wasting risk factors
 cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
@@ -20,6 +280,7 @@ cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
 
 #load outcomes
 load("wast_prev.RData")
+load("wast_meanZ.RData")
 load("wast_cuminc.rdata")
 load("wast_cuminc_nobirth.rdata")
 load("pers_wast.rdata")
@@ -37,6 +298,8 @@ rec$subjid <- as.character(rec$subjid)
 pers_wast$subjid <- as.character(pers_wast$subjid)
 birthanthro_ci$subjid <- as.character(birthanthro_ci$subjid)
 vel_waz$subjid <- as.character(vel_waz$subjid)
+vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
+meanWHZ$subjid <- as.character(meanWHZ$subjid)
 
 
 
@@ -144,6 +407,35 @@ A<-c( "sex",              "gagebrth",      "birthwt",
 
 save(d, Y, A,V, id,  file="wast_prev_rf.Rdata")
 
+#------------------------------------
+# Create prevalence dataset
+#------------------------------------
+
+
+#merge in covariates
+dim(meanWHZ)
+d <- left_join(meanWHZ, cov, by=c("studyid", "subjid", "country"))
+dim(d)
+
+
+#Vector of outcome names
+Y<-c("whz")
+
+
+A<-c( "sex",              "gagebrth",      "birthwt",      
+      "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
+      "mbmi",          "single",        "fage",          "fhtcm",         "nrooms",        "nhh",           "nchldlt5",     
+      "hhwealth_quart", "month", "brthmon", "parity",   "meducyrs", 
+      "feducyrs", "hfoodsec",  
+      "trth2o", "cleanck", "impfloor",  "impsan", "safeh20",
+      "perdiar6", "perdiar24", "predexfd6", 
+      "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
+      "earlybf")  
+
+
+
+save(d, Y, A,V, id,  file="wast_meanZ_rf.Rdata")
+
 
 #------------------------------------
 # Create recovery dataset
@@ -242,11 +534,35 @@ V <- c("agecat")
 id <- c("id")
 
 #Change outcome name to differentiate from lencm velocity outcome
-d <- d %>% rename(y_rate_waz=y_rate)
+d <- d %>% rename(y_rate_haz=y_rate)
 
 save(d, Y, A,V, id, file="wast_waz_vel_rf.Rdata")
 
 
+# Height in cm
+
+#merge in covariates
+d <- left_join(vel_wtkg, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+#Vector of outcome names
+Y<-c("y_rate_wtkg")
+
+
+#Vector of covariate names
+W<-c("")
+
+#Subgroup variable
+V <- c("agecat")
+
+#clusterid ID variable
+id <- c("id")
+
+d <- d %>% rename(y_rate_wtkg=y_rate)
+
+
+save(d, Y, A,V, id, file="wast_wtkg_vel_rf.Rdata")
 
 
 
@@ -291,6 +607,13 @@ adjustment_sets <- list(
              "brthmon","W_parity",
              "trth2o","cleanck","impfloor","impsan","safeh20"),   
   
+  enstunt=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+            #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+            "vagbrth","hdlvry",
+            "single",
+            "W_nrooms","W_nhh","W_nchldlt5",
+            "brthmon","W_parity",
+            "trth2o","cleanck","impfloor","impsan","safeh20"),     
   
   enwast=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
            #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
@@ -413,6 +736,21 @@ adjustment_sets <- list(
              "brthmon","W_parity",
              "trth2o","cleanck","impfloor","impsan","safeh20"),
   
+  anywast06=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+              #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+              "vagbrth","hdlvry",
+              "single",
+              "W_nrooms","W_nhh","W_nchldlt5",
+              "month","brthmon","W_parity",
+              "trth2o","cleanck","impfloor","impsan","safeh20"),
+  
+  pers_wast=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+              #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+              "vagbrth","hdlvry",
+              "single",
+              "W_nrooms","W_nhh","W_nchldlt5",
+              "month","brthmon","W_parity",
+              "trth2o","cleanck","impfloor","impsan","safeh20"),
   
   trth2o=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
