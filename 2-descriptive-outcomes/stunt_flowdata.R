@@ -44,8 +44,8 @@ d %>%
 # identify ever stunted children
 stunt_data = d %>%
   filter(!is.na(agecat)) %>%
-  group_by(subjid, agecat) %>%
-  arrange(subjid) %>%
+  group_by(studyid, country, subjid, agecat) %>%
+  arrange(studyid, country, subjid) %>%
   
   summarize(minhaz = min(haz)) %>%
   
@@ -55,7 +55,7 @@ stunt_data = d %>%
   
   # create indicator for whether the child 
   # was stunted in PREVIOUS age category
-  group_by(subjid) %>%
+  group_by(studyid, country, subjid) %>%
   mutate(minhaz_prev=ifelse(
     agecat=="Birth",NA,      
     ifelse(agecat=="3 months",minhaz[agecat=="Birth"],
@@ -76,16 +76,30 @@ stunt_data = d %>%
 # create indicator for whether the child 
 # was NEVER stunted 
 stunt_data = stunt_data %>%
-  group_by(subjid) %>%
+  group_by(studyid, country, subjid) %>%
   mutate(cum_minhaz = cummin(minhaz)) %>%
   mutate(never_stunted = ifelse(cum_minhaz >= -2, 1, 0)) %>%
+  mutate(cum_stunt = cummax(stunted)) %>%
+  mutate(cum_stunt_lag = lag(cum_stunt)) %>%
   
   # create indicator for whether the child 
   # was NEWLY stunted 
   mutate(newly_stunted = ifelse(never_stunted==0 & still_stunted==0 & prev_stunted==0, 1, 0)) %>%
   mutate(newly_stunted = ifelse(agecat=="Birth" & minhaz< -2, 1, newly_stunted)) %>%
-  select(subjid, agecat, minhaz, minhaz_prev, cum_minhaz, stunted, 
-         never_stunted, prev_stunted, newly_stunted, still_stunted) 
+  # create indicator for whether the child 
+  # had a stunting RELAPSE
+  mutate(relapse = ifelse(newly_stunted==1 & cum_stunt_lag==1 & !is.na(cum_stunt_lag),1,0)) %>%
+  # reassign NEWLY stunted = 0 if relapse = 1
+  mutate(newly_stunted = ifelse(relapse==1 & newly_stunted==1 & !is.na(relapse),
+                                0,newly_stunted)) %>%
+  
+  select(studyid, country, subjid, agecat, minhaz, minhaz_prev, cum_minhaz, stunted, 
+         never_stunted, prev_stunted, newly_stunted, still_stunted, relapse) %>%
+  
+  mutate(still_stunted = ifelse(agecat=="Birth",0,still_stunted),
+         prev_stunted = ifelse(agecat=="Birth",0,prev_stunted),
+         relapse = ifelse(agecat=="Birth",0,relapse)) 
+
 
 # Check that no child was classified in more
 # than one category at any time point 
@@ -96,20 +110,64 @@ summary = stunt_data %>%
     newly_stunted = sum(newly_stunted),
     still_stunted = sum(still_stunted),
     prev_stunted = sum(prev_stunted),
-    never_stunted = sum(never_stunted)) %>%
+    never_stunted = sum(never_stunted),
+    relapse = sum(relapse)) %>%
   mutate(newly_stunted = newly_stunted/nchild,
          still_stunted = still_stunted/nchild,
          prev_stunted = prev_stunted/nchild,
-         never_stunted = never_stunted/nchild)
+         never_stunted = never_stunted/nchild,
+         relapse = relapse/nchild)
 
 summary = summary %>%
-  mutate(still_stunted = ifelse(agecat=="Birth",0,still_stunted),
-         prev_stunted = ifelse(agecat=="Birth",0,prev_stunted)) 
+  mutate(sum = still_stunted + newly_stunted + prev_stunted + never_stunted + relapse)
 
-summary = summary %>%
-  mutate(sum = still_stunted + newly_stunted + prev_stunted + never_stunted)
 
-summary
+
+# aggregate data within study, country, and agecat
+stunt_agg = stunt_data %>%
+  group_by(studyid, country, agecat) %>%
+  summarise(
+    nchild=length(unique(subjid)),
+    newly_stunted = sum(newly_stunted),
+    still_stunted = sum(still_stunted),
+    prev_stunted = sum(prev_stunted),
+    never_stunted = sum(never_stunted),
+    relapse = sum(relapse)) 
+
+# estimate random effects, format results
+pooled_newly = run_rma(data = stunt_agg, 
+                       n_name = "nchild", 
+                       x_name = "newly_stunted", 
+                       label = "Newly stunted")
+
+pooled_still = run_rma(data = stunt_agg, 
+                       n_name = "nchild", 
+                       x_name = "still_stunted", 
+                       label = "Still stunted")
+
+pooled_prev = run_rma(data = stunt_agg, 
+                      n_name = "nchild", 
+                      x_name = "prev_stunted",
+                      label = "Previously stunted")
+
+pooled_relapse = run_rma(data = stunt_agg, 
+                         n_name = "nchild", 
+                         x_name = "relapse",
+                         label = "Stunting relapse")
+
+pooled_never = run_rma(data = stunt_agg, 
+                       n_name = "nchild", 
+                       x_name = "never_stunted",
+                       label = "Never stunted")
+
+stunt_pooled = bind_rows(pooled_newly, 
+                         pooled_still,
+                         pooled_prev,
+                         pooled_relapse,
+                         pooled_never
+)
 
 saveRDS(stunt_data, file=paste0(res_dir, "stuntflow.RDS"))
+saveRDS(stunt_pooled, file=paste0(res_dir, "stuntflow_pooled.RDS"))
+
 

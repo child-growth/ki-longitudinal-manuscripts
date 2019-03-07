@@ -331,7 +331,7 @@ run_rma = function(data, n_name, x_name, label){
   
   # apply fit.rma across age list
   res.list=lapply(agelist,function(x) 
-    fit.rma(data=data,ni=n_name, xi=x_name,age=x,measure="PR",nlab="children"))
+    fit.rma(data=data,ni=n_name, xi=x_name,age=x,measure="PLO",nlab="children"))
   
   # unlist output
   res=as.data.frame(do.call(rbind, res.list))

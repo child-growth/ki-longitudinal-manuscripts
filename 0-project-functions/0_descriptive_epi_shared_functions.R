@@ -135,6 +135,33 @@ cohort.format=function(df, lab, y, est="percent"){
 
 
 
+#---------------------------------------
+# rma wrapper function across a list of ages
+#---------------------------------------
+run_rma = function(data, n_name, x_name, label){
+  
+  # create age list
+  agelist = as.list(levels(data$agecat))
+  
+  # apply fit.rma across age list
+  res.list=lapply(agelist,function(x) 
+    fit.rma(data=data,ni=n_name, xi=x_name,age=x,measure="PLO",nlab="children"))
+  
+  # unlist output
+  res=as.data.frame(do.call(rbind, res.list))
+  
+  # tidy up output
+  res[,4]=as.numeric(res[,4])
+  res[,6]=as.numeric(res[,6])
+  res[,7]=as.numeric(res[,7])
+  res = res %>% mutate(est=est*100,lb=lb*100,ub=ub*100)
+  res$agecat=factor(res$agecat,levels=levels(data$agecat))
+  res$ptest.f=sprintf("%0.0f",res$est)
+  res$label = label
+  
+  return(res)
+}
+
 
 
 
