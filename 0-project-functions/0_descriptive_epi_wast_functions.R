@@ -442,7 +442,7 @@ summary.dur <- function(d, agelist){
   
   return(list(dur.data=df, dur.res=pooled.vel))
 }
-x
+
 
 
 

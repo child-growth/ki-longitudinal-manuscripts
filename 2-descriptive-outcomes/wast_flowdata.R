@@ -7,6 +7,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 load("U:/Data/Wasting/wasting_data.RData")
 
+d <- d %>% filter(measurefreq=="monthly")
 
 ##########################################
 # Define indicators of wasting at each time point

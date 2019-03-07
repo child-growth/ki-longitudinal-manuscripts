@@ -18,6 +18,8 @@ library(viridis)
 library(ggrepel)
 library(maps)
 library(FField)
+library(data.table)
+
 
 # define directories
 res_dir = paste0(here::here(),"/results/")
