@@ -8,13 +8,12 @@ library(gridExtra)
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# load fake data
+# load individual level fake data
 d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS") 
 
+# load data created in the stunt_flowdata.R script
 stunt_data = readRDS(paste0(res_dir, "fakeflow2.RDS"))
 stunt_data = stunt_data %>% ungroup()
-
-# list of ids who recovered by x months
 
 #-----------------------------------------
 # function to filter data to children
