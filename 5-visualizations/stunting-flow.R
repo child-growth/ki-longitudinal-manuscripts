@@ -4,12 +4,15 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
+
+
 # load fake data
 stunt_data = readRDS(paste0(res_dir, "fakeflow.RDS"))
 stunt_pool = readRDS(paste0(res_dir, "fakeflow_pooled.RDS"))
 
 # load real data
 stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
+stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
 
 plot_data = stunt_data %>%
   mutate(classif = case_when(
@@ -95,7 +98,7 @@ ggsave(bar_flow_plot, file="figures/stunting/pool_flow_bar.png", width=10, heigh
 #   xlab("Child age") + ylab("Percentage of children")
 # 
 
-ggsave(bar_plot, file="figures/stunting/pool_bar.png", width=10, height=5)
+# ggsave(bar_plot, file="figures/stunting/pool_bar.png", width=10, height=5)
 
 
 

@@ -25,7 +25,11 @@ res_dir = paste0(here::here(),"/results/")
   
 
 # source base functions  
-source(paste0(here::here(), "/0-base-functions.R"))
+#source(paste0(here::here(), "/0-base-functions.R"))
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functions.R"))
+#source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_wast_functions.R"))
+
 
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 theme_set(theme_ki())
