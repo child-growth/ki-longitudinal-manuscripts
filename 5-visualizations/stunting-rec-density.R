@@ -97,13 +97,46 @@ ggplot(x_dens, aes(x=haz)) +
                     guide = guide_legend()) +
   theme(legend.position="bottom")
 
+# violin plot
 
+x_dens = x_dens %>% 
+  mutate(label2 = factor(label2, levels = c("12 month measurement",
+                                            "9 month measurement",
+                                            "6 month measurement",
+                                            "3 month measurement")))
 
+# violin plot
+ggplot(x_dens, aes(y=haz, x = label2)) + 
+  geom_violin(aes(fill = label2)) + 
+  facet_wrap(~label) +
+  coord_flip() +
+  geom_jitter(shape=16, position=position_jitter(0.2), alpha=0.5) +
+  scale_fill_manual("", values = c("#EBF5FB","#85C1E9","#2E86C1", "#1B4F72"), 
+                    guide = guide_legend()) +
+  theme(legend.position="bottom") +
+  geom_hline(yintercept = -2, linetype="dashed")
 
+# stacked density plot
+library(ggjoy)
+ggplot(x_dens, aes(x=haz, y = label2)) + 
+  geom_joy(aes(fill=label2), scale=0.5) + 
+  facet_wrap(~label) +
+  scale_fill_manual("", values = c("#EBF5FB","#85C1E9","#2E86C1", "#1B4F72"), 
+                    guide = guide_legend()) +
+  theme(legend.position="bottom") +
+  ylab("Measurement following recovery")+
+  geom_vline(xintercept = -2, linetype="dashed")
 
-
-
-
+# box plots
+ggplot(x_dens, aes(y=haz, x = label2)) + 
+  geom_boxplot() + 
+  geom_jitter(aes(col = label2), shape=16, position=position_jitter(0.2), alpha=0.75) +
+  facet_wrap(~label) +
+  coord_flip()+
+  scale_color_manual("", values = c("#EBF5FB","#85C1E9","#2E86C1", "#1B4F72"), 
+                  guide = guide_legend()) +
+  theme(legend.position="bottom") +
+  geom_hline(yintercept = -2, linetype="dashed")
 
 
 
