@@ -8,12 +8,22 @@ library(gridExtra)
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
+# # load individual level fake data
+# d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS") 
+# 
+# # load data created in the stunt_flowdata.R script
+# stunt_data = readRDS(paste0(res_dir, "fakeflow2.RDS"))
+# stunt_data = stunt_data %>% ungroup()
+
+
 # load individual level fake data
-d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS") 
+load("U:/Data/Stunting/stunting_data.RData")
+d$subjid <- as.numeric(d$subjid)
 
 # load data created in the stunt_flowdata.R script
-stunt_data = readRDS(paste0(res_dir, "fakeflow2.RDS"))
+stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
 stunt_data = stunt_data %>% ungroup()
+stunt_data$subjid <- as.numeric(stunt_data$subjid)
 
 #-----------------------------------------
 # function to filter data to children
@@ -34,7 +44,6 @@ get_rec = function(indiv_data, data, age_upper){
   rec_data = data %>% 
     filter(agecat==age_range & prev_stunted==1) %>%
     select(subjid) %>%
-    mutate(subjid = as.numeric(subjid)) %>%
     mutate(rec_age = 1,
            age_rec = age_range) 
   

@@ -423,6 +423,6 @@ stpbar <- stpbar %+% dp[dp$study_id %in% monthlystudies,]
 
 # combined plot
 awstpgrid <- grid.arrange(wastphm, stpbar, wpbar, nrow = 1, ncol = 3, widths=c(100,20,20))
-ggsave(filename="figures/wasting/wasting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=12,height=9)
+ggsave(filename="figures/wasting/wasting-study-inventory-heatmap-prev.pdf",plot = awstpgrid,device='pdf',width=12,height=9)
 
 
