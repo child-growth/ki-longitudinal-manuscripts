@@ -106,13 +106,15 @@ vel <- vel %>%
 vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
 vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 
-velplot_laz = vel %>% filter(country_cohort=="Pooled - All" &
-                               ycat == "LAZ change (Z-score per month)") %>%
-  mutate(sex = factor(sex))
 
 #-------------------------------------
 # LAZ plot
 #-------------------------------------
+velplot_laz = vel %>% filter(country_cohort=="Pooled - All" &
+                               ycat == "LAZ change (Z-score per month)") %>%
+  mutate(sex = factor(sex))
+
+
 plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
@@ -125,12 +127,27 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   facet_wrap( ~ sex) +
   ggtitle("A) Monthly change in LAZ") 
 
-velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
-                              ycat == "Length velocity (cm per month)") %>%
-  select(Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
-  mutate(sex = as.factor(sex))
 
 ggsave(plot_laz, file="figures/stunting/pool_vel_laz.png", width=12, height=6)
+
+
+#-------------------------------------
+# LAZ plot - stratified by region
+#-------------------------------------
+velplot_laz_strat = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
+  mutate(sex = factor(sex))
+
+plot_laz_strat <- ggplot(velplot_laz_strat, aes(y=Mean,x=strata))+
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
+  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+                 alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
+  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_y_continuous(limits=c(-0.5,0.25), breaks=seq(-0.5,0.25,0.05), labels=seq(-0.5,0.25,0.05)) +
+  xlab("Age in months") + 
+  ylab("Length-for-age Z-score")+
+  geom_hline(yintercept = -0) +
+  facet_grid( ~  region) +
+  ggtitle("A) Monthly change in LAZ") 
 
 
 #-------------------------------------
@@ -138,6 +155,11 @@ ggsave(plot_laz, file="figures/stunting/pool_vel_laz.png", width=12, height=6)
 
 # to do: add legend for WHO standard
 #-------------------------------------
+velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
+                              ycat == "Length velocity (cm per month)") %>%
+  select(Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
+  mutate(sex = as.factor(sex))
+
 plot_cm <- ggplot(velplot_cm, aes(y=Mean,x=strata))+
   geom_point(aes(color=sex), size = 3) +
   geom_line(aes(y=Mean, group=sex, col=sex)) +
@@ -156,8 +178,37 @@ plot_cm <- ggplot(velplot_cm, aes(y=Mean,x=strata))+
 
 ggsave(plot_cm, file="figures/stunting/pool_vel_cm.png", width=10, height=8)
 
+#-------------------------------------
+# absolute length plot - stratified by region
+
+# to do: add legend for WHO standard
+#-------------------------------------
+velplot_cm_strat = vel %>% filter(ycat == "Length velocity (cm per month)") %>%
+  select(region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
+  mutate(sex = as.factor(sex))
+
+plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
+  geom_point(aes(color=sex), size = 3) +
+  geom_line(aes(y=Mean, group=sex, col=sex)) +
+  geom_line(aes(y=pct_50, group=sex)) +
+  geom_line(aes(y=pct_25, group=sex), linetype="dashed") +
+  geom_line(aes(y=pct_15, group=sex), linetype="dotted") +
+  
+  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+                 alpha=0.5, size = 1) +
+  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_y_continuous(limits=c(0.3,4.2), breaks=seq(0.25,4.25,0.25), labels=seq(0.25,4.25,0.25)) +
+  xlab("Age in months") +  
+  ylab("Length (cm)") +
+  facet_grid( sex~ region) +
+  ggtitle("B) Monthly change in length (cm)") 
+
+#-------------------------------------
+# combined LAZ and length plots
+#-------------------------------------
 combined_plot = grid.arrange(plot_laz, plot_cm, nrow = 2, heights = c(4, 8))
+combined_plot_strat = grid.arrange(plot_laz_strat, plot_cm_strat, nrow = 2, heights = c(4, 10))
 
 ggsave(combined_plot, file="figures/stunting/pool_vel.png", width=10, height=8)
-
+ggsave(combined_plot_strat, file="figures/stunting/strat_vel.png", width=16, height=18)
 
