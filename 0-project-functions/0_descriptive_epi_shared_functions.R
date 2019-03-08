@@ -138,14 +138,15 @@ cohort.format=function(df, lab, y, est="percent"){
 #---------------------------------------
 # rma wrapper function across a list of ages
 #---------------------------------------
-run_rma = function(data, n_name, x_name, label){
+run_rma = function(data, n_name, x_name, label, method){
   
   # create age list
   agelist = as.list(levels(data$agecat))
   
   # apply fit.rma across age list
   res.list=lapply(agelist,function(x) 
-    fit.rma(data=data,ni=n_name, xi=x_name,age=x,measure="PLO",nlab="children"))
+    fit.rma(data=data,ni=n_name, xi=x_name,age=x,measure="PLO",nlab="children",
+            method=method))
   
   # unlist output
   res=as.data.frame(do.call(rbind, res.list))
@@ -173,12 +174,12 @@ run_rma = function(data, n_name, x_name, label){
 #---------------------------------------
 
 # random effects function, save results nicely
-fit.rma=function(data,age,ni,xi,measure,nlab){
+fit.rma=function(data,age,ni,xi,measure,nlab, method = "REML"){
   data=filter(data,agecat==age)
   
   if(measure=="PLO"){
     if(nrow(data)==1){
-      data<-escalc(data=data, ni=data[[ni]], xi=data[[xi]], method="REML", measure="PLO", append=T)
+      data<-escalc(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure="PLO", append=T)
       data$se <- sqrt(data$vi)
       
       out=data %>% 
