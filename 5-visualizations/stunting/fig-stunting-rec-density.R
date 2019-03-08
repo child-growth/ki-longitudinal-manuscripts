@@ -156,5 +156,69 @@ rec_histogram_plot = ggplot(plot_data, aes(x=haz, y = age_meas, fill = ..x..)) +
 ggsave(rec_histogram_plot, file="figures/stunting/stunting_rec_hist.png", width=11, height=6)
 
 
+# --------------------------------------------
+# Kolmogorov-Smirnov test
+# --------------------------------------------
 
+# wrapper for ks.test
+run_ks_by_age = function(age_rec, data){
+  
+  age_meas_list = rev(levels(data$age_meas[data$age_rec==age_rec]))
+  
+  ks_res = matrix(NA, nrow = length(age_meas_list), ncol = 9)
+  for(i in 1:(length(age_meas_list))){
+    x = plot_data %>% 
+      filter(age_rec == age_rec & 
+               age_meas == age_meas_list[1]) %>%
+      select(haz)
+    
+    y = plot_data %>% 
+      filter(age_rec == age_rec & 
+               age_meas == age_meas_list[i]) %>%
+      select(haz)
+    
+    y_q = quantile(y$haz, probs = c(0, .5, 1))
+    
+    ks_out = ks.test(x = x$haz, y = y$haz)
+    
+    ks_res[i, 1] = age_rec
+    ks_res[i, 2] = age_meas_list[i]
+    ks_res[i, 3] = y_q[1]
+    ks_res[i, 4] = y_q[2]
+    ks_res[i, 5] = y_q[3]
+    ks_res[i, 6] = as.numeric(ks_out$statistic)
+    ks_res[i, 7] = as.numeric(ks_out$p.value)
+    ks_res[i, 8] = ks_out$alternative
+    ks_res[i, 9] = ks_out$method
+    
+  }
+  
+  ks_res[1, 5] = ""
+  ks_res[1, 6] = ""
+  ks_res[1, 7] = ""
+  ks_res[1, 8] = ""
+  ks_res[1, 9] = ""
+  
+  ks_df = as.data.frame(ks_res)
+  colnames(ks_df) = c("age_rec", "age_meas", 
+                      "min", "median", "max",
+                      "ks_stat", "pval", "tails", "method")
+  
+  ks_df = ks_df %>%
+    mutate(min = as.numeric(as.character(min)),
+           median = as.numeric(as.character(median)),
+           max = as.numeric(as.character(max)),
+           ks_stat = as.numeric(as.character(ks_stat)),
+           pval = as.numeric(as.character(pval)))
+  
+  return(ks_df)
 
+}
+
+age_rec_list = as.list(levels(plot_data$age_rec))
+ks_results_list = lapply(age_rec_list, function(x) run_ks_by_age(
+  data = plot_data, age_rec = x))
+
+ks_results_df = bind_rows(ks_results_list)
+
+saveRDS(ks_results_df, file = paste0(res_dir, "ks_results_stunting.RDS"))
