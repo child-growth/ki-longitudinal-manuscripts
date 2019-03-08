@@ -17,17 +17,24 @@ source(paste0(here::here(), "/0-config.R"))
 d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
 
 # load data created in the stunt_flowdata.R script
-stunt_data = readRDS(paste0(res_dir, "fakeflow2.RDS"))
+stunt_data = readRDS(paste0(res_dir, "stuntflow_fake.RDS"))
 stunt_data = stunt_data %>% ungroup()
+
+# drop data beyond 16 months since it is 
+# sparse in most studies
+d = d %>% filter(agedays<=16 * 30.4167)
+stunt_data = stunt_data %>% filter(agecat!= "15-18 months" &
+                                     agecat!="18-21 months" &
+                                     agecat!="21-24 months")
 
 # load individual level real data
 # load("U:/Data/Stunting/stunting_data.RData")
-d$subjid <- as.numeric(d$subjid)
+# d$subjid <- as.numeric(d$subjid)
 
 # load data created in the stunt_flowdata.R script
-stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-stunt_data = stunt_data %>% ungroup()
-stunt_data$subjid <- as.numeric(stunt_data$subjid)
+# stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
+# stunt_data = stunt_data %>% ungroup()
+# stunt_data$subjid <- as.numeric(stunt_data$subjid)
 
 #-----------------------------------------
 # function to filter data to children
@@ -56,7 +63,7 @@ get_rec = function(indiv_data, data, age_upper){
     select(-rec_age)
   
   # subsequent measurement ages after recovery
-  age_meas = seq(age_upper, 24, 3) 
+  age_meas = seq(age_upper, 15, 3) 
   
   rec_meas_sub_list = lapply(age_meas, function(x) 
     subset_rec(data = rec_indiv, 
@@ -72,12 +79,12 @@ get_rec = function(indiv_data, data, age_upper){
 # --------------------------------------------
 subset_rec = function(data, age_months){
   out = data %>% 
-    filter(agedays == age_months*30.4167) %>%
+    filter(agedays >= ((age_months-1)*30.4167) & agedays <= ((age_months+1)*30.4167)) %>%
     mutate(age_meas = paste0(age_months, " month measurement"))
   return(out) 
 }
 
-age_range_list = as.list(seq(3, 21, 3))
+age_range_list = as.list(seq(3, 12, 3))
 
 rec_data = lapply(age_range_list, function(x)
   get_rec(
@@ -97,9 +104,6 @@ plot_data = plot_data %>%
     age_meas,
     levels =
       c(
-        "24 month measurement",
-        "21 month measurement",
-        "18 month measurement",
         "15 month measurement",
         "12 month measurement",
         "9 month measurement",
@@ -115,9 +119,7 @@ plot_data = plot_data %>%
         "3-6 months",
         "6-9 months",
         "9-12 months",
-        "12-15 months",
-        "15-18 months",
-        "18-21 months"
+        "12-15 months"
       )
   )
   )
@@ -127,15 +129,31 @@ plot_data = plot_data %>%
 # --------------------------------------------
 mycol = brewer.pal(n = length(levels(plot_data$age_meas)), name = "PuBu")
 
-rec_density_plot = ggplot(plot_data, aes(x=haz, y = age_meas)) + 
-        geom_joy(aes(fill=age_meas), scale=0.5) + 
-        facet_grid(~age_rec) +
-        scale_fill_manual("", values = mycol) +
-        ylab("Measurement following recovery")+
-        xlab("Height-for-age Z-score")+
-        geom_vline(xintercept = -2, linetype="dashed") 
+# smoothed density
+# rec_density_plot = ggplot(plot_data, aes(x=haz, y = age_meas)) + 
+#         geom_joy(aes(fill=age_meas), scale=0.5) + 
+#         facet_grid(~age_rec) +
+#         scale_fill_manual("", values = mycol) +
+#         ylab("Measurement following recovery")+
+#         xlab("Height-for-age Z-score")+
+#         geom_vline(xintercept = -2, linetype="dashed") 
 
-ggsave(rec_density_plot, file="figures/stunting/stunting_rec_dens.png", width=11, height=6)
+# ggsave(rec_density_plot, file="figures/stunting/stunting_rec_dens.png", width=11, height=6)
+
+
+# histogram 
+rec_histogram_plot = ggplot(plot_data, aes(x=haz, y = age_meas, fill = ..x..)) + 
+  geom_density_ridges_gradient(stat = "binline", binwidth=.1, scale=0.9) + 
+  facet_grid(~age_rec) +
+  # scale_fill_manual("", values = mycol) +
+  ylab("Measurement following recovery")+
+  xlab("Height-for-age Z-score")+
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_viridis(name = "LAZ", option = "C") 
+
+
+
+ggsave(rec_histogram_plot, file="figures/stunting/stunting_rec_dens.png", width=11, height=6)
 
 
 
