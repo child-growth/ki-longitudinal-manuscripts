@@ -48,12 +48,13 @@ d = data.frame(subjid = rep(seq(1,4*eachn), each=length(age)),
 d <- d %>%
   mutate(
     studyid = case_when(
-      subjid<29 ~ 1,
-      subjid>=29 ~ 2
+      subjid<nrow(d)/2 ~ 1,
+      subjid>=nrow(d)/2 ~ 2
     ),
+    
     country = case_when(
-      subjid<29 ~ "Country 1",
-      subjid>=29 ~ "Country 2"
+      subjid<nrow(d)/2 ~ "Country 1",
+      subjid>=nrow(d)/2 ~ "Country 2"
     )
     
   )
