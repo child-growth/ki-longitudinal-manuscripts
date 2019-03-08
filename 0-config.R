@@ -19,6 +19,9 @@ library(ggrepel)
 library(maps)
 library(FField)
 library(data.table)
+library(ggjoy)
+library(RColorBrewer)
+library(gridExtra)
 
 
 # define directories
