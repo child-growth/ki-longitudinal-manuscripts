@@ -1,3 +1,12 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+
+# create indicators for newly stunted, 
+# recovered, relapsed, and never stunted
+# FAKE DATA for use off GHAP
+##########################################
+
 #-----------------------------------------
 # Process data for stunting flow chart
 
