@@ -39,16 +39,34 @@ d = bind_rows(d, addon)
 
 # d = readRDS(file="~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
 
+# # impute study id and country
+# d <- d %>%
+#   mutate(
+#     studyid = case_when(
+#       subjid<29 ~ 1,
+#       subjid>=29 ~ 2
+#     ),
+#     country = case_when(
+#       subjid<29 ~ "Country 1",
+#       subjid>=29 ~ "Country 2"
+#     )
+# 
+#   )
+
 # impute study id and country
-d <- d %>% 
+d <- d %>%
   mutate(
     studyid = case_when(
       subjid<29 ~ 1,
       subjid>=29 ~ 2
     ),
     country = case_when(
-      subjid<29 ~ "Country 1",
-      subjid>=29 ~ "Country 2"
+      subjid>=1 & subjid<=10 ~ "Country 1",
+      subjid>=11 & subjid<=20 ~ "Country 2",
+      subjid>=21 & subjid<=30 ~ "Country 1",
+      subjid>=31 & subjid<=40 ~ "Country 2",
+      subjid>=41 & subjid<=50 ~ "Country 1",
+      subjid>=51 & subjid<=60 ~ "Country 2"
     )
     
   )
@@ -209,5 +227,5 @@ stunt_pooled = bind_rows(pooled_newly,
                          pooled_never
                          )
 
-saveRDS(stunt_data, file=paste0(res_dir, "fakeflow.RDS"))
-saveRDS(stunt_pooled, file=paste0(res_dir, "fakeflow_pooled.RDS"))
+saveRDS(stunt_data, file=paste0(res_dir, "stuntflow_fake.RDS"))
+saveRDS(stunt_pooled, file=paste0(res_dir, "stuntflow_pooled_fake.RDS"))
