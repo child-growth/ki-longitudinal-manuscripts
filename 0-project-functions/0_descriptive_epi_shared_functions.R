@@ -179,9 +179,13 @@ fit.rma=function(data,age,ni,xi,measure,nlab, method = "REML"){
   
   if(measure=="PLO"){
     if(nrow(data)==1){
-      data<-escalc(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure="PLO", append=T)
+      fit <- NULL
+      try(fit<-escalc(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure="PLO", append=T))
+      if(is.null(fit)){try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method="ML", measure = "PLO"))}
+      if(is.null(fit)){try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method="DL", measure = "PLO"))}
+      if(is.null(fit)){try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method="HE", measure = "PLO"))}
+      data<-fit
       data$se <- sqrt(data$vi)
-      
       out=data %>% 
         ungroup() %>%
         mutate(nstudies=1, nmeas=data[[ni]]) %>%
@@ -196,7 +200,21 @@ fit.rma=function(data,age,ni,xi,measure,nlab, method = "REML"){
         fit<-rma(ni=data[[ni]], xi=data[[xi]], 
                  method="FE", measure="PLO") #Use FE model if all 0 counts because no heterogeneity and rma.glmm fails
       }else{
-        fit<-rma.glmm(ni=data[[ni]], xi=data[[xi]], measure="PLO") 
+        fit <- NULL
+        try(fit<-rma.glmm(ni=data[[ni]], method=method, xi=data[[xi]], measure="PLO")) 
+        if(is.null(fit)){
+          method="ML"
+          try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure = "PLO"))
+          }
+        if(is.null(fit)){
+          method="DL"
+          try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure = "PLO"))
+          }
+        if(is.null(fit)){
+          method="HE"
+          try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure = "PLO"))
+        }
+        cat("\nMethod chosen to fit RE model:", method, "\n")
       }
       out=data %>%
         ungroup() %>%
