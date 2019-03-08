@@ -1,6 +1,10 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
 
-
-
+# calculate mean LAZ, prevalence, incidence, 
+# and recovery 
+##########################################
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
