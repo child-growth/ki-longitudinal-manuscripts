@@ -47,13 +47,10 @@ d <- d %>%
       subjid<29 ~ 1,
       subjid>=29 ~ 2
     ),
+
     country = case_when(
-      subjid>=1 & subjid<=10 ~ "Country 1",
-      subjid>=11 & subjid<=20 ~ "Country 2",
-      subjid>=21 & subjid<=30 ~ "Country 1",
-      subjid>=31 & subjid<=40 ~ "Country 2",
-      subjid>=41 & subjid<=50 ~ "Country 1",
-      subjid>=51 & subjid<=60 ~ "Country 2"
+      subjid<29 ~ "Country 1",
+      subjid>=29 ~ "Country 2"
     )
     
   )
@@ -114,8 +111,9 @@ stunt_data = d %>%
                                               ifelse(agecat=="18-21 months",minhaz[agecat=="15-18 months"],
                                                      ifelse(agecat=="21-24 months",minhaz[agecat=="18-21 months"],
                                                             NA)))))))))) %>%
+  mutate(cum_minhaz = cummin(minhaz)) %>%
   mutate(still_stunted = ifelse(minhaz_prev < -2 & minhaz < -2, 1, 0),
-         prev_stunted = ifelse(minhaz_prev < -2 & minhaz >= -2 , 1, 0)) %>%
+         prev_stunted = ifelse(minhaz >= -2 & cum_minhaz < -2, 1, 0)) %>%
   mutate(still_stunted = ifelse(is.na(minhaz_prev), 0, still_stunted ),
          prev_stunted = ifelse(is.na(minhaz_prev), 0, prev_stunted ))
 
@@ -124,14 +122,13 @@ stunt_data = d %>%
 # was NEVER stunted 
 stunt_data = stunt_data %>%
   group_by(studyid, country, subjid) %>%
-  mutate(cum_minhaz = cummin(minhaz)) %>%
   mutate(never_stunted = ifelse(cum_minhaz >= -2, 1, 0)) %>%
   mutate(cum_stunt = cummax(stunted)) %>%
   mutate(cum_stunt_lag = lag(cum_stunt)) %>%
   
   # create indicator for whether the child 
   # was NEWLY stunted 
-  mutate(newly_stunted = ifelse(never_stunted==0 & still_stunted==0 & prev_stunted==0, 1, 0)) %>%
+  mutate(newly_stunted = ifelse(minhaz < -2 & never_stunted==0 & still_stunted==0 & prev_stunted==0, 1, 0)) %>%
   mutate(newly_stunted = ifelse(agecat=="Birth" & minhaz< -2, 1, newly_stunted)) %>%
   # create indicator for whether the child 
   # had a stunting RELAPSE
@@ -169,6 +166,21 @@ summary = summary %>%
   mutate(sum = still_stunted + newly_stunted + prev_stunted + never_stunted + relapse)
 
 summary
+
+# check indicators against minimum HAZ within age groups
+assert_that(min(stunt_data$minhaz[stunt_data$never_stunted==1]) >= -2)
+
+assert_that(min(stunt_data$minhaz[stunt_data$prev_stunted==1]) >= -2)
+assert_that(min(stunt_data$minhaz[stunt_data$prev_stunted==0]) < -2) 
+
+assert_that(min(stunt_data$minhaz[stunt_data$still_stunted==1]) < -2)
+assert_that(min(stunt_data$minhaz[stunt_data$still_stunted==0 & 
+                                    stunt_data$newly_stunted==0 & 
+                                    stunt_data$relapse==0]) >= -2)
+
+assert_that(min(stunt_data$minhaz[stunt_data$relapse==1]) < -2)
+
+assert_that(min(stunt_data$minhaz[stunt_data$newly_stunted==1]) < -2)
 
 # aggregate data within study, country, and agecat
 stunt_agg = stunt_data %>%
