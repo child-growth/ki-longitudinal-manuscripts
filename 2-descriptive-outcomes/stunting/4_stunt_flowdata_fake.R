@@ -15,43 +15,30 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-load("~/Dropbox/HBGD/Manuscripts/testdata.RData")
-
-colnames(d)[which(colnames(d)=="whz")]="haz"
-
-# simulate some kids with no stunting
-template = d[d$subjid==1, c("subjid","agedays")]
-recst1 = template %>% mutate(haz = seq(-2.5,3, length=nrow(template))) %>% mutate(subjid=51)
-recst2 = template %>% mutate(haz = seq(-2.5,1, length=nrow(template)))  %>% mutate(subjid=52)
-recst3 = template %>% mutate(haz = seq(-2.5,0, length=nrow(template))) %>% mutate(subjid=53)
-recst4 = template %>% mutate(haz = seq(-2.5,-1, length=nrow(template))) %>% mutate(subjid=54)
-recst5 = template %>% mutate(haz = seq(-2.5,-1.9, length=nrow(template))) %>% mutate(subjid=55)
-nost1 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=56)
-nost2 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=57)
-nost3 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=58)
-nost4 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=59)
-nost5 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=60)
-
-addon = bind_rows(recst1, recst2, recst3, recst4, recst5,
-                  nost1, nost2, nost3, nost4, nost5)
-
-d = bind_rows(d, addon)
-
-# d = readRDS(file="~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
-
-# # impute study id and country
-# d <- d %>%
-#   mutate(
-#     studyid = case_when(
-#       subjid<29 ~ 1,
-#       subjid>=29 ~ 2
-#     ),
-#     country = case_when(
-#       subjid<29 ~ "Country 1",
-#       subjid>=29 ~ "Country 2"
-#     )
+# load("~/Dropbox/HBGD/Manuscripts/testdata.RData")
 # 
-#   )
+# colnames(d)[which(colnames(d)=="whz")]="haz"
+# 
+# # simulate some kids with no stunting
+# template = d[d$subjid==1, c("subjid","agedays")]
+# recst1 = template %>% mutate(haz = seq(-2.5,3, length=nrow(template))) %>% mutate(subjid=51)
+# recst2 = template %>% mutate(haz = seq(-2.5,1, length=nrow(template)))  %>% mutate(subjid=52)
+# recst3 = template %>% mutate(haz = seq(-2.5,0, length=nrow(template))) %>% mutate(subjid=53)
+# recst4 = template %>% mutate(haz = seq(-2.5,-1, length=nrow(template))) %>% mutate(subjid=54)
+# recst5 = template %>% mutate(haz = seq(-2.5,-1.9, length=nrow(template))) %>% mutate(subjid=55)
+# nost1 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=56)
+# nost2 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=57)
+# nost3 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=58)
+# nost4 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=59)
+# nost5 = template %>% mutate(haz = rep(2,nrow(template))) %>% mutate(subjid=60)
+# 
+# addon = bind_rows(recst1, recst2, recst3, recst4, recst5,
+#                   nost1, nost2, nost3, nost4, nost5)
+# 
+# d = bind_rows(d, addon)
+
+d = readRDS(file="~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
+
 
 # impute study id and country
 d <- d %>%
@@ -198,7 +185,8 @@ stunt_agg = stunt_data %>%
 pooled_newly = run_rma(data = stunt_agg, 
                        n_name = "nchild", 
                        x_name = "newly_stunted", 
-                       label = "Newly stunted")
+                       label = "Newly stunted",
+                       method = "REML")
 
 pooled_still = run_rma(data = stunt_agg, 
                        n_name = "nchild", 
