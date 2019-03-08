@@ -215,5 +215,54 @@ stunt_pooled = bind_rows(pooled_newly,
                          pooled_never
                          )
 
+#----------------------------------------------
+# setting estimates to 0 at birth for
+# still, previously, relapse stunted
+#----------------------------------------------
+
+# identify which cells have 0's 
+newly_0 = as.character(summary$agecat[summary$newly_stunted==0])
+still_0 = as.character(summary$agecat[summary$still_stunted==0])
+prev_0 = as.character(summary$agecat[summary$prev_stunted==0])
+relapse_0 = as.character(summary$agecat[summary$relapse==0])
+never_0 = as.character(summary$agecat[summary$never_stunted==0])
+
+# function to replace est, se, lb, ub, est.f if
+# no observations in summary
+replace_zero = function(data, age_list, label){
+  
+  if(length(age_list)>0){
+    
+    data$est[data$label==label & data$agecat %in% age_list] = 0
+    data$ptest.f[data$label==label & data$agecat %in% age_list] = "0"
+    data$se[data$label==label & data$agecat %in% age_list] = 0
+    data$lb[data$label==label & data$agecat %in% age_list] = 0
+    data$ub[data$label==label & data$agecat %in% age_list] = 0
+    
+  }
+  return(data)
+}
+
+stunt_pooled_corr = replace_zero(data = stunt_pooled,
+                                 age_list = newly_0,
+                                 label = "Newly stunted")
+
+stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
+                                 age_list = still_0,
+                                 label = "Still stunted")
+
+stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
+                                 age_list = prev_0,
+                                 label = "Previously stunted")
+
+stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
+                                 age_list = relapse_0,
+                                 label = "Stunting relapse")
+
+stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
+                                 age_list = never_0,
+                                 label = "Never stunted")
+
+  
 saveRDS(stunt_data, file=paste0(res_dir, "stuntflow_fake.RDS"))
 saveRDS(stunt_pooled, file=paste0(res_dir, "stuntflow_pooled_fake.RDS"))
