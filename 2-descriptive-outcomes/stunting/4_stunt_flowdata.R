@@ -1,3 +1,11 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+
+# create indicators for newly stunted, 
+# recovered, relapsed, and never stunted
+##########################################
+
 #-----------------------------------------
 # Process data for stunting flow chart
 #-----------------------------------------
