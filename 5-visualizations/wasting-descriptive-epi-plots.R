@@ -18,9 +18,11 @@ d$nstudy.f <- gsub(" studies","",d$nstudy.f)
 d$nmeas.f <- gsub(" children","",d$nmeas.f)
 
 # Rename region
+unique(d$region)
+d$region <- factor(d$region, levels=c("Overall", "Africa", "Latin America", "Asia"))
 asia_region <- which(levels(d$region) == 'Asia')
 levels(d$region)[asia_region] = 'South Asia'
-
+levels(d$region)
 
 Disease="Wasting"
 Measure="Prevalence"
@@ -108,7 +110,7 @@ h2=22
 
 
 #-------------------------------------------------------------------------------------------
-# Mean LAZ by month 
+# Mean WLZ by month 
 #-------------------------------------------------------------------------------------------
 
 df <- d %>% filter(

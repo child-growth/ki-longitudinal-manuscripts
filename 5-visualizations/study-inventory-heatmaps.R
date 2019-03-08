@@ -404,7 +404,7 @@ wastphm <- wastphm %+% dp[dp$study_id %in% monthlystudies,]
 
 # wasting prevalence side bar plot
 wpbar <- sidebar +
-  aes(y=wastprev,fill=wpcat) +
+  aes(y=wastprev) +
   labs(x = "",y="Overall Prevalence (%)",title="Wasting (%)") +
   scale_y_continuous(expand=c(0,0),limits=c(0,30),
                      breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
@@ -413,7 +413,7 @@ wpbar <- wpbar %+% dp[dp$study_id %in% monthlystudies,]
 
 # stunting prevalence side bar plot
 stpbar <- sidebar +
-  aes(y=stuntprev,fill=stpcat) +
+  aes(y=stuntprev) +
   labs(x = "",y="Overall Prevalence (%)",title="Stunting (%)") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
