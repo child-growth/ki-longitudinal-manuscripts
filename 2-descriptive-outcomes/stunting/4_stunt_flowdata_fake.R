@@ -265,4 +265,4 @@ stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
 
   
 saveRDS(stunt_data, file=paste0(res_dir, "stuntflow_fake.RDS"))
-saveRDS(stunt_pooled, file=paste0(res_dir, "stuntflow_pooled_fake.RDS"))
+saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stuntflow_pooled_fake.RDS"))
