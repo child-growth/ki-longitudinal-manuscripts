@@ -1,10 +1,16 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+
+# figure: stacked bar chart showing 
+# proportion of children who were newly stunted, 
+# still stunted, relapsed, recovered, never stunted
+##########################################
 #-----------------------------------------
 # Stunting flow chart
 #-----------------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-
-
 
 # load fake data
 stunt_data = readRDS(paste0(res_dir, "fakeflow.RDS"))
