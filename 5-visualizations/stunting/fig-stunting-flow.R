@@ -13,13 +13,16 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load fake data
-stunt_data = readRDS(paste0(res_dir, "fakeflow.RDS"))
-stunt_pool = readRDS(paste0(res_dir, "fakeflow_pooled.RDS"))
+stunt_data = readRDS(paste0(res_dir, "stuntflow_fake.RDS"))
+stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled_fake.RDS"))
 
 # load real data
-stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
+# stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
+# stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
 
+#-----------------------------------------
+# format data for plot
+#-----------------------------------------
 plot_data = stunt_data %>%
   mutate(classif = case_when(
     never_stunted == 1 ~ "Never stunted",
@@ -40,29 +43,9 @@ plot_data = stunt_data %>%
 
 
 mycols = c("#11466B", tableau10[1], tableau10[4], "#FB5D5E", "#811818")
-# mycols = c("#11466B", tableau10[1], tableau10[4], tableau10[2], "#811818")
 
 #-----------------------------------------
-# Alluvial flow plot
-#-----------------------------------------
-# flow_plot = ggplot(plot_data,
-#        aes(x = agecat,  
-#            alluvium = subjid,
-#            stratum = classif,
-#            fill = classif, 
-#            label = classif)) +
-#   geom_flow(stat = "alluvium", lode.guidance = "rightleft",
-#             color = "darkgray") +
-#   geom_stratum()  +
-#   scale_fill_manual("", values = mycols) +
-#   theme(legend.position = "bottom") +
-#   xlab("Child age") + ylab("Number of children")
-# 
-# #ggsave(flow_plot, file="figures/stunting/pool_flow_fake.png", width=10, height=5)
-# ggsave(flow_plot, file="figures/stunting/pool_flow.png", width=10, height=5)
-
-#-----------------------------------------
-# bar graphs without alluvival flow between each child
+# stacked bar graphs using random effects pooled data
 #-----------------------------------------
 plot_data_pooled = stunt_pool %>%
   rename(classif = label) %>%
@@ -76,7 +59,7 @@ plot_data_pooled = stunt_pool %>%
   )))
 
 
-bar_flow_plot = ggplot(plot_data_pooled) +
+bar_plot_RE = ggplot(plot_data_pooled) +
   geom_bar(aes(x = agecat, y = est, fill = classif), stat="identity", width=0.5) +
   scale_fill_manual("", values = mycols) +
   theme(legend.position = "bottom") +
@@ -84,27 +67,49 @@ bar_flow_plot = ggplot(plot_data_pooled) +
 
 ggsave(bar_flow_plot, file="figures/stunting/pool_flow_bar.png", width=10, height=5)
 
-# old code from draft with individual level data, no RMA 
-# age_classif_totals = plot_data %>%
-#   group_by(agecat, classif) %>%
-#   summarise(n = sum(freq))
-# 
-# age_totals = plot_data %>%
+#-----------------------------------------
+# stacked bar graphs NOT using random effects pooled data
+#-----------------------------------------
+age_classif_totals = plot_data %>%
+  group_by(agecat, classif) %>%
+  summarise(n = sum(freq))
+
+age_totals = plot_data %>%
+  group_by(agecat) %>%
+  summarise(tot = sum(freq))
+
+bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agecat"))
+
+bar_plot_data = bar_plot_data %>% mutate(percent = n/tot * 100)
+
+bar_plot_noRE = ggplot(bar_plot_data) +
+  geom_bar(aes(x = agecat, y = percent, fill = classif), stat="identity", width=0.5) +
+  scale_fill_manual("", values = mycols) +
+  theme(legend.position = "bottom") +
+  xlab("Child age") + ylab("Percentage of children")
+
+ggsave(bar_plot, file="figures/stunting/pool_bar.png", width=10, height=5)
+
+
+#-----------------------------------------
+# cross check prevalence - DELETE LATER
+#-----------------------------------------
+# cross-check prevalence
+# bar_prev = bar_plot_data  %>%
+#   filter(classif == "Newly stunted" | 
+#            classif == "Still stunted" |
+#            classif == "Stunting relapse") %>%
 #   group_by(agecat) %>%
-#   summarise(tot = sum(freq))
-# 
-# bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agecat"))
-# 
-# bar_plot_data = bar_plot_data %>% mutate(percent = n/tot * 100)
+#   summarise(n = sum(n), tot = mean(tot)) %>%
+#   mutate(prev = n/tot)
 
-# ggplot(bar_plot_data) +
-#   geom_bar(aes(x = agecat, y = percent, fill = classif), stat="identity", width=0.5) +
-#   scale_fill_manual("", values = mycols) +
-#   theme(legend.position = "bottom") +
-#   xlab("Child age") + ylab("Percentage of children")
+# d = readRDS(file="~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
+# da <- calc.prev.agecat(d)
+# prevdata = summary.prev.haz(da)$prev.res 
 # 
+# da$stunted = ifelse(da$haz < -2, 1, 0)
+# da %>% group_by(agecat) %>% summarise(stunting_prev = mean(stunted))
 
-# ggsave(bar_plot, file="figures/stunting/pool_bar.png", width=10, height=5)
 
 
 
