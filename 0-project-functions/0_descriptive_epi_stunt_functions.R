@@ -2,7 +2,7 @@
 
 
 
-summary.prev <- function(d, severe.stunted=F){
+summary.prev.haz <- function(d, severe.stunted=F){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
