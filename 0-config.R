@@ -20,6 +20,7 @@ library(maps)
 library(FField)
 library(data.table)
 library(ggjoy)
+library(ggridges)
 library(RColorBrewer)
 library(gridExtra)
 
