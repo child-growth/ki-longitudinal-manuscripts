@@ -65,7 +65,7 @@ bar_plot_RE = ggplot(plot_data_pooled) +
   theme(legend.position = "bottom") +
   xlab("Child age") + ylab("Percentage of children")
 
-ggsave(bar_flow_plot, file="figures/stunting/pool_flow_bar.png", width=10, height=5)
+ggsave(bar_plot_RE, file="figures/stunting/fig-stunting-stacked-bar-RE.png", width=10, height=5)
 
 #-----------------------------------------
 # stacked bar graphs NOT using random effects pooled data
@@ -88,7 +88,7 @@ bar_plot_noRE = ggplot(bar_plot_data) +
   theme(legend.position = "bottom") +
   xlab("Child age") + ylab("Percentage of children")
 
-ggsave(bar_plot, file="figures/stunting/pool_bar.png", width=10, height=5)
+ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=5)
 
 
 #-----------------------------------------
