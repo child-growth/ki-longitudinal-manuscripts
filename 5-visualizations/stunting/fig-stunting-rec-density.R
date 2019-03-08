@@ -130,15 +130,15 @@ plot_data = plot_data %>%
 mycol = brewer.pal(n = length(levels(plot_data$age_meas)), name = "PuBu")
 
 # smoothed density
-# rec_density_plot = ggplot(plot_data, aes(x=haz, y = age_meas)) + 
-#         geom_joy(aes(fill=age_meas), scale=0.5) + 
-#         facet_grid(~age_rec) +
-#         scale_fill_manual("", values = mycol) +
-#         ylab("Measurement following recovery")+
-#         xlab("Height-for-age Z-score")+
-#         geom_vline(xintercept = -2, linetype="dashed") 
+rec_density_plot = ggplot(plot_data, aes(x=haz, y = age_meas)) +
+        geom_joy(aes(fill=age_meas), scale=0.5) +
+        facet_grid(~age_rec) +
+        scale_fill_manual("", values = mycol) +
+        ylab("Measurement following recovery")+
+        xlab("Height-for-age Z-score")+
+        geom_vline(xintercept = -2, linetype="dashed")
 
-# ggsave(rec_density_plot, file="figures/stunting/stunting_rec_dens.png", width=11, height=6)
+ggsave(rec_density_plot, file="figures/stunting/stunting_rec_dens.png", width=11, height=6)
 
 
 # histogram 
@@ -153,7 +153,7 @@ rec_histogram_plot = ggplot(plot_data, aes(x=haz, y = age_meas, fill = ..x..)) +
 
 
 
-ggsave(rec_histogram_plot, file="figures/stunting/stunting_rec_dens.png", width=11, height=6)
+ggsave(rec_histogram_plot, file="figures/stunting/stunting_rec_hist.png", width=11, height=6)
 
 
 
