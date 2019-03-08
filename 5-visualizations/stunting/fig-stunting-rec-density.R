@@ -1,23 +1,27 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+
+# figure: stacked density of cohorts of 
+# children who recovered at different ages. 
+# histograms show distribution of LAZ
+# at subsequent measurements following recovery.
+##########################################
 #-----------------------------------------
 # Stunting recovery density
 #-----------------------------------------
-library(ggjoy)
-library(RColorBrewer)
-library(gridExtra)
-
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# # load individual level fake data
-# d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS") 
-# 
-# # load data created in the stunt_flowdata.R script
-# stunt_data = readRDS(paste0(res_dir, "fakeflow2.RDS"))
-# stunt_data = stunt_data %>% ungroup()
-
-
 # load individual level fake data
-load("U:/Data/Stunting/stunting_data.RData")
+d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
+
+# load data created in the stunt_flowdata.R script
+stunt_data = readRDS(paste0(res_dir, "fakeflow2.RDS"))
+stunt_data = stunt_data %>% ungroup()
+
+# load individual level real data
+# load("U:/Data/Stunting/stunting_data.RData")
 d$subjid <- as.numeric(d$subjid)
 
 # load data created in the stunt_flowdata.R script
