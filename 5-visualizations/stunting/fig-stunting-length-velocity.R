@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-config.R"))
 #Load length velocity data
 load(paste0(res_dir,"pool_vel.RData"))
 
-vel <- pooled_vel %>% filter(pooled==1)
+vel <- pooled_vel 
 
 vel$nmeas.f <- clean_nmeans(vel$N)
 vel$strata <- clean_agecat(vel$strata)
@@ -128,7 +128,7 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   ggtitle("A) Monthly change in LAZ") 
 
 
-ggsave(plot_laz, file="figures/stunting/pool_vel_laz.png", width=12, height=6)
+ggsave(plot_laz, file="figures/stunting/fig_stunt_vel_laz_pool.png", width=12, height=6)
 
 
 #-------------------------------------
@@ -137,7 +137,7 @@ ggsave(plot_laz, file="figures/stunting/pool_vel_laz.png", width=12, height=6)
 velplot_laz_strat = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
   mutate(sex = factor(sex))
 
-plot_laz_strat <- ggplot(velplot_laz_strat, aes(y=Mean,x=strata))+
+plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
@@ -148,6 +148,61 @@ plot_laz_strat <- ggplot(velplot_laz_strat, aes(y=Mean,x=strata))+
   geom_hline(yintercept = -0) +
   facet_grid( ~  region) +
   ggtitle("A) Monthly change in LAZ") 
+
+#-------------------------------------
+# LAZ plot - stratified by cohort
+#-------------------------------------
+plot_laz_cohort_asia <- ggplot(velplot_laz_strat %>% filter(region=="Asia"), aes(y=Mean,x=strata))+
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
+  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+                 alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
+  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  xlab("Age in months") + 
+  ylab("Length-for-age Z-score")+
+  geom_hline(yintercept = -0) +
+  facet_wrap( ~  country_cohort) +
+  ggtitle("A) Monthly change in LAZ") 
+ggsave(plot_laz_cohort_asia, file="figures/stunting/fig_stunt_vel_cm_asia.png", width=18, height=10)
+
+plot_laz_cohort_latamer <- ggplot(velplot_laz_strat %>% filter(region=="Latin America"), aes(y=Mean,x=strata))+
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
+  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+                 alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
+  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  xlab("Age in months") + 
+  ylab("Length-for-age Z-score")+
+  geom_hline(yintercept = -0) +
+  facet_wrap( ~  country_cohort) +
+  ggtitle("A) Monthly change in LAZ") 
+
+ggsave(plot_laz_cohort_latamer, file="figures/stunting/fig_stunt_vel_cm_latamer.png", width=18, height=10)
+
+plot_laz_cohort_eur <- ggplot(velplot_laz_strat %>% filter(region=="Europe"), aes(y=Mean,x=strata))+
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
+  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+                 alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
+  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  xlab("Age in months") + 
+  ylab("Length-for-age Z-score")+
+  geom_hline(yintercept = -0) +
+  facet_wrap( ~  country_cohort) +
+  ggtitle("A) Monthly change in LAZ") 
+
+ggsave(plot_laz_cohort_eur, file="figures/stunting/fig_stunt_vel_cm_eur.png", width=8, height=6)
+
+plot_laz_cohort_afr <- ggplot(velplot_laz_strat %>% filter(region=="Africa"), aes(y=Mean,x=strata))+
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
+  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+                 alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
+  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  xlab("Age in months") + 
+  ylab("Length-for-age Z-score")+
+  geom_hline(yintercept = -0) +
+  facet_wrap( ~  country_cohort) +
+  ggtitle("A) Monthly change in LAZ") 
+
+ggsave(plot_laz_cohort_afr, file="figures/stunting/fig_stunt_vel_cm_africa.png", width=18, height=10)
+
 
 
 #-------------------------------------
@@ -176,14 +231,16 @@ plot_cm <- ggplot(velplot_cm, aes(y=Mean,x=strata))+
   facet_wrap( ~ sex) +
   ggtitle("B) Monthly change in length (cm)") 
 
-ggsave(plot_cm, file="figures/stunting/pool_vel_cm.png", width=10, height=8)
+ggsave(plot_cm, file="figures/stunting/fig_stunt_vel_cm_pool.png", width=10, height=8)
 
 #-------------------------------------
 # absolute length plot - stratified by region
 
 # to do: add legend for WHO standard
 #-------------------------------------
-velplot_cm_strat = vel %>% filter(ycat == "Length velocity (cm per month)") %>%
+velplot_cm_strat = vel %>% 
+  filter(ycat == "Length velocity (cm per month)") %>%
+  filter(pooled==1) %>%
   select(region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
   mutate(sex = as.factor(sex))
 
@@ -209,6 +266,6 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
 combined_plot = grid.arrange(plot_laz, plot_cm, nrow = 2, heights = c(4, 8))
 combined_plot_strat = grid.arrange(plot_laz_strat, plot_cm_strat, nrow = 2, heights = c(4, 10))
 
-ggsave(combined_plot, file="figures/stunting/pool_vel.png", width=10, height=8)
-ggsave(combined_plot_strat, file="figures/stunting/strat_vel.png", width=16, height=18)
+ggsave(combined_plot, file="figures/stunting/fig_stunt_vel_pool.png", width=10, height=8)
+ggsave(combined_plot_strat, file="figures/stunting/fig_stunt_vel_region.png", width=16, height=18)
 
