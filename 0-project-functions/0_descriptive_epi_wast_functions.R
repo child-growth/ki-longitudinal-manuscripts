@@ -2,7 +2,7 @@
 
 
 
-summary.prev <- function(d, severe.wasted=F){
+summary.prev.whz <- function(d, severe.wasted=F){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
