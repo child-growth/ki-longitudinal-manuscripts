@@ -138,7 +138,7 @@ rec_density_plot = ggplot(plot_data, aes(x=haz, y = age_meas)) +
         xlab("Height-for-age Z-score")+
         geom_vline(xintercept = -2, linetype="dashed")
 
-ggsave(rec_density_plot, file="figures/stunting/stunting_rec_dens.png", width=11, height=6)
+ggsave(rec_density_plot, file="figures/stunting/fig_stunt_rec_dist_dens.png", width=11, height=6)
 
 
 # histogram 
@@ -153,7 +153,7 @@ rec_histogram_plot = ggplot(plot_data, aes(x=haz, y = age_meas, fill = ..x..)) +
 
 
 
-ggsave(rec_histogram_plot, file="figures/stunting/stunting_rec_hist.png", width=11, height=6)
+ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=11, height=6)
 
 
 # --------------------------------------------
