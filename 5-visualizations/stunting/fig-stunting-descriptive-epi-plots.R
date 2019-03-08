@@ -75,7 +75,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file="figures/stunting/LAZ_by_region.png", width=10, height=4)
+ggsave(p, file="figures/stunting/fig_stunt_mean_LAZ_region.png", width=10, height=4)
 
 
 #-------------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ p <- ggplot(df,aes(x=agecat, group=region)) +
   theme(strip.text = element_text(margin=margin(t=5))) +
   theme(legend.position="none")
 
-ggsave(p, file="figures/stunting/LAZ_quantiles_by_region.png", width=10, height=8)
+ggsave(p, file="figures/stunting/fig_stunt_mean_quantile_LAZ_region.png", width=10, height=8)
 
 
 
@@ -159,7 +159,7 @@ p1 <- ki_desc_plot(d,
                    h2=72)
 p1
 
-ggsave(p1, file="figures/stunting/pooled_prev.png", width=10, height=8)
+ggsave(p1, file="figures/stunting/fig_stunt_prev_pooled.png", width=10, height=8)
 
 
 
@@ -278,7 +278,7 @@ p_temp <- ki_combo_plot(d,
 
 
 
-ggsave(p_temp, file="figures/stunting/pooled_ci.png", width=12, height=8)
+ggsave(p_temp, file="figures/stunting/fig_stunt_ci_inc_pooled.png", width=12, height=8)
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion
@@ -361,7 +361,7 @@ p3 <- ki_desc_plot(d,
                    h2=6.5)
 
 
-ggsave(p3, file="figures/stunting/pooled_ir.png", width=10, height=8)
+ggsave(p3, file="figures/stunting/fig_stunt_ir_pooled.png", width=10, height=8)
 
 
 #-------------------------------------------------------------------------------------------
@@ -392,7 +392,7 @@ p4 <- ki_desc_plot(df,
                    h2=93)
 
 
-ggsave(p4, file="figures/stunting/pooled_rec.png", width=10, height=8)
+ggsave(p4, file="figures/stunting/fig_stunt_rec_pooled.png", width=10, height=8)
 
 
 #-------------------------------------------------------------------------------------------
@@ -487,7 +487,7 @@ p7 <- ki_desc_plot_overall_only(df,
                    h2=28)
 
 
-ggsave(p7, file="figures/stunting/pooled_only_rec.png", width=10, height=8)
+ggsave(p7, file="figures/stunting/fig_stunt_rec_pooled_only.png", width=10, height=8)
 
 
 # #------------------------------------------------------------------------------
