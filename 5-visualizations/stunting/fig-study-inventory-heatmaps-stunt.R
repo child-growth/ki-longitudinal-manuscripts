@@ -342,25 +342,17 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 # STUNTING PREVALENCE HEAT MAP
 #-----------------------------------
 
-# # heat map
+# heat map
 stphm <- hm + 
   aes(fill=stpcat) +
   labs(x="Age in months",y="",title="Stunting prevalence by month of age") +
-  # scale_fill_viridis_d(na.value="grey90",
-  #                   guide=guide_legend(title="Stunting (%)",title.vjust = 1,
-  #                                      label.position="bottom",label.hjust=0.5,nrow=1))
+
   scale_fill_viridis_d(option = "C",
                      na.value="grey90",
+                     direction = -1,
+                     end = 0.8,
                      guide=guide_legend(title="Stunting (%)",title.vjust = 1,
                                         label.position="bottom",label.hjust=0.5,nrow=1)) 
-
-# # wasting prevalence side bar plot
-# wpbar <- sidebar +
-#   aes(y=wastprev,fill=wpcat) +
-#   labs(x = "",y="Overall Prevalence (%)",title="Wasting (%)") +
-#   scale_y_continuous(expand=c(0,0),limits=c(0,30),
-#                      breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
-#   geom_hline(yintercept = seq(0,30,by=10),color='white',size=0.3)
 
 # number of obs side bar plot
 nbar <- sidebar +
