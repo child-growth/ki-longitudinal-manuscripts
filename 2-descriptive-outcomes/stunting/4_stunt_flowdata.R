@@ -13,7 +13,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 
-load("U:/Data/Stunting/stunting_data.RData")
+load("U:/ucb-superlearner/data/stunting_data.RData")
 
 
 ##########################################

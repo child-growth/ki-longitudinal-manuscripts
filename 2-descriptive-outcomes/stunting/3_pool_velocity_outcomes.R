@@ -199,3 +199,6 @@ pooled_vel <- rbind(
 )
 
 saveRDS(pooled_vel, file="U:/ki-longitudinal-manuscripts/results/stunting/pool_vel.RDS")
+
+
+#Pool velocity, dropping CONTENT and Cohorts Guat.
