@@ -197,11 +197,11 @@ fit.rma=function(data,age,ni,xi,measure,nlab, method = "REML"){
       rownames(out) <- NULL
     }else{
       if(sum(data[[xi]])==0){
-        fit<-rma(ni=data[[ni]], xi=data[[xi]], 
+        fit<-rma(data=data, ni=data[[ni]], xi=data[[xi]], 
                  method="FE", measure="PLO") #Use FE model if all 0 counts because no heterogeneity and rma.glmm fails
       }else{
         fit <- NULL
-        try(fit<-rma.glmm(ni=data[[ni]], method=method, xi=data[[xi]], measure="PLO")) 
+        try(fit <- rma(data=data, ni=data[[ni]], method=method, xi=data[[xi]], measure="PLO")) 
         if(is.null(fit)){
           method="ML"
           try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure = "PLO"))
