@@ -17,8 +17,8 @@ stunt_data = readRDS(paste0(res_dir, "stuntflow_fake.RDS"))
 stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled_fake.RDS"))
 
 # load real data
-# stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-# stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
+stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
+stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
 
 #-----------------------------------------
 # format data for plot

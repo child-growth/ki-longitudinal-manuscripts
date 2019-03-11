@@ -20,21 +20,23 @@ d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
 stunt_data = readRDS(paste0(res_dir, "stuntflow_fake.RDS"))
 stunt_data = stunt_data %>% ungroup()
 
+
+# load individual level real data
+load("U:/Data/Stunting/stunting_data.RData")
+d$subjid <- as.numeric(d$subjid)
+
+# load data created in the stunt_flowdata.R script
+stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
+stunt_data = stunt_data %>% ungroup()
+stunt_data$subjid <- as.numeric(stunt_data$subjid)
+
+
 # drop data beyond 16 months since it is 
 # sparse in most studies
 d = d %>% filter(agedays<=16 * 30.4167)
 stunt_data = stunt_data %>% filter(agecat!= "15-18 months" &
                                      agecat!="18-21 months" &
                                      agecat!="21-24 months")
-
-# load individual level real data
-# load("U:/Data/Stunting/stunting_data.RData")
-# d$subjid <- as.numeric(d$subjid)
-
-# load data created in the stunt_flowdata.R script
-# stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-# stunt_data = stunt_data %>% ungroup()
-# stunt_data$subjid <- as.numeric(stunt_data$subjid)
 
 #-----------------------------------------
 # function to filter data to children

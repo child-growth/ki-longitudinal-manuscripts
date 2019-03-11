@@ -83,27 +83,28 @@ stunt_data = d %>%
 # was NEVER stunted 
 stunt_data = stunt_data %>%
   group_by(studyid, country, subjid) %>%
+  arrange(studyid, country, subjid, agecat) %>%
+  mutate(first_age=first(agecat)) %>%
   mutate(never_stunted = ifelse(cum_minhaz >= -2, 1, 0)) %>%
   mutate(cum_stunt = cummax(stunted)) %>%
-  mutate(cum_stunt_lag = lag(cum_stunt)) %>%
+  mutate(cum_stunt_lag = lag(cum_stunt),
+         cum_stunt_lag = ifelse(agecat==first_age,0,cum_stunt_lag)) %>%
   
   # create indicator for whether the child 
   # was NEWLY stunted 
   mutate(newly_stunted = ifelse(minhaz < -2 & never_stunted==0 & still_stunted==0 & prev_stunted==0, 1, 0)) %>%
-  mutate(newly_stunted = ifelse(agecat=="Birth" & minhaz< -2, 1, newly_stunted)) %>%
+  mutate(newly_stunted = ifelse(agecat==first_age & minhaz< -2, 1, newly_stunted)) %>%
   # create indicator for whether the child 
   # had a stunting RELAPSE
   mutate(relapse = ifelse(newly_stunted==1 & cum_stunt_lag==1,1,0)) %>%
   # reassign NEWLY stunted = 0 if relapse = 1
   mutate(newly_stunted = ifelse(relapse==1 & newly_stunted==1 & !is.na(relapse),
                                 0,newly_stunted)) %>%
-  
+  mutate(still_stunted = ifelse(agecat==first_age,0,still_stunted),
+         prev_stunted = ifelse(agecat==first_age,0,prev_stunted),
+         relapse = ifelse(agecat==first_age,0,relapse)) %>%
   select(studyid, country, subjid, agecat, minhaz, minhaz_prev, cum_minhaz, stunted, 
-         never_stunted, prev_stunted, newly_stunted, still_stunted, relapse) %>%
-  
-  mutate(still_stunted = ifelse(agecat=="Birth",0,still_stunted),
-         prev_stunted = ifelse(agecat=="Birth",0,prev_stunted),
-         relapse = ifelse(agecat=="Birth",0,relapse)) 
+         never_stunted, prev_stunted, newly_stunted, still_stunted, relapse)
 
 
 # Check that no child was classified in more
@@ -164,22 +165,26 @@ pooled_newly = run_rma(data = stunt_agg,
 pooled_still = run_rma(data = stunt_agg, 
                        n_name = "nchild", 
                        x_name = "still_stunted", 
-                       label = "Still stunted")
+                       label = "Still stunted",
+                       method = "REML")
 
 pooled_prev = run_rma(data = stunt_agg, 
                       n_name = "nchild", 
                       x_name = "prev_stunted",
-                      label = "Previously stunted")
+                      label = "Previously stunted",
+                      method = "REML")
 
 pooled_relapse = run_rma(data = stunt_agg, 
                          n_name = "nchild", 
                          x_name = "relapse",
-                         label = "Stunting relapse")
+                         label = "Stunting relapse",
+                         method = "REML")
 
 pooled_never = run_rma(data = stunt_agg, 
                        n_name = "nchild", 
                        x_name = "never_stunted",
-                       label = "Never stunted")
+                       label = "Never stunted",
+                       method = "REML")
 
 stunt_pooled = bind_rows(pooled_newly, 
                          pooled_still,
