@@ -1,8 +1,8 @@
-
-
 ######################
 #Ki DHS Analysis
 #Spring 2019
+#This script evaluates the GHAP DHS data. We concluded that this data does not include the z-score variables we need. 
+
 ######################
 #install.packages("dplyr")
 library(tidyverse)
