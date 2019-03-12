@@ -39,32 +39,32 @@ calc.prev.agecat <- function(d){
 calc.monthly.agecat <- function(d){
   
   d$agecat <- cut(d$agedays, breaks=c(0:25)*30.4167-30.4167/2, include.lowest = F,
-              labels =paste0(0:24, " months"))
+                  labels =paste0(0:24, " months"))
   levels(d$agecat)[1] <- "Two weeks"
   levels(d$agecat)[2] <- "One month"
   table(d$agecat)
-return(d)
+  return(d)
 }
 
 calc.ci.agecat <- function(d, range=3){
   if(range==3){
-  d = d %>% 
-    mutate(agecat=ifelse(agedays<=3*30.4167,"0-3 months",
-                         ifelse(agedays>3*30.4167 & agedays<=6*30.4167,"3-6 months",
-                                ifelse(agedays>6*30.4167 & agedays<=9*30.4167,"6-9 months",
-                                       ifelse(agedays>9*30.4167 & agedays<=12*30.4167,"9-12 months",
-                                              ifelse(agedays>12*30.4167 & agedays<=15*30.4167,"12-15 months",
-                                                     ifelse(agedays>15*30.4167 & agedays<=18*30.4167,"15-18 months",
-                                                            ifelse(agedays>18*30.4167 & agedays<=21*30.4167,"18-21 months",
-                                                                   ifelse(agedays>21*30.4167& agedays<=24*30.4167,"21-24 months",""))))))))) %>%
-    mutate(agecat=factor(agecat,levels=c("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")))
+    d = d %>% 
+      mutate(agecat=ifelse(agedays<=3*30.4167,"0-3 months",
+                           ifelse(agedays>3*30.4167 & agedays<=6*30.4167,"3-6 months",
+                                  ifelse(agedays>6*30.4167 & agedays<=9*30.4167,"6-9 months",
+                                         ifelse(agedays>9*30.4167 & agedays<=12*30.4167,"9-12 months",
+                                                ifelse(agedays>12*30.4167 & agedays<=15*30.4167,"12-15 months",
+                                                       ifelse(agedays>15*30.4167 & agedays<=18*30.4167,"15-18 months",
+                                                              ifelse(agedays>18*30.4167 & agedays<=21*30.4167,"18-21 months",
+                                                                     ifelse(agedays>21*30.4167& agedays<=24*30.4167,"21-24 months",""))))))))) %>%
+      mutate(agecat=factor(agecat,levels=c("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")))
   }
   if(range==6){
     d = d %>% 
       mutate(agecat=ifelse(agedays<=6*30.4167,"0-6 months",
-                                         ifelse(agedays>6*30.4167 & agedays<=12*30.4167,"6-12 months",
-                                                       ifelse(agedays>12*30.4167 & agedays<=18*30.4167,"12-18 months",
-                                                                     ifelse(agedays>18*30.4167& agedays<=24*30.4167,"18-24 months",""))))) %>%
+                           ifelse(agedays>6*30.4167 & agedays<=12*30.4167,"6-12 months",
+                                  ifelse(agedays>12*30.4167 & agedays<=18*30.4167,"12-18 months",
+                                         ifelse(agedays>18*30.4167& agedays<=24*30.4167,"18-24 months",""))))) %>%
       mutate(agecat=factor(agecat,levels=c("0-6 months","6-12 months","12-18 months","18-24 months")))
   }
   return(d)
@@ -205,11 +205,11 @@ fit.rma=function(data,age,ni,xi,measure,nlab, method = "REML"){
         if(is.null(fit)){
           method="ML"
           try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure = measure))
-          }
+        }
         if(is.null(fit)){
           method="DL"
           try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure = measure))
-          }
+        }
         if(is.null(fit)){
           method="HE"
           try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], method=method, measure = measure))
@@ -243,6 +243,55 @@ fit.rma=function(data,age,ni,xi,measure,nlab, method = "REML"){
                             " ",nlab),
              nstudy.f=paste0("N=",nstudies," studies"))
   }
+  return(out)
+  
+}
+
+
+
+
+# random effects function, save results nicely
+# customized for stunting recovery cohort analysis
+# since it does not use age categories
+fit.rma.rec.cohort=function(data,ni,xi,measure,nlab, method = "REML"){
+  
+  fit <- NULL
+  try(fit <- rma(data=data, ni=data[[ni]], method=method, 
+                 xi=data[[xi]], measure="PLO")) 
+  if(is.null(fit)){
+    method="ML"
+    try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], 
+                   method=method, measure = measure))
+  }
+  if(is.null(fit)){
+    method="DL"
+    try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], 
+                   method=method, measure = measure))
+  }
+  if(is.null(fit)){
+    method="HE"
+    try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], 
+                   method=method, measure = measure))
+  }
+  cat("\nMethod chosen to fit RE model:", method, "\n")
+  
+  out=data %>%
+    ungroup() %>%
+    summarise(nstudies=length(unique(studyid)),
+              nmeas=sum(data[[ni]])) %>%
+    mutate(
+      est = plogis(fit$beta),
+      se = fit$se,
+      lb = plogis(fit$beta-qnorm(0.975)*fit$se),
+      ub = plogis(fit$beta+qnorm(0.975)*fit$se),
+      nmeas.f = paste0("N=", format(
+        sum(data[[ni]]), big.mark = ",",
+        scientific = FALSE
+      ),
+      " ", nlab),
+      nstudy.f = paste0("N=", nstudies, " studies")
+    )
+  
   return(out)
   
 }
