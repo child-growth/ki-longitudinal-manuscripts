@@ -16,6 +16,8 @@ source(paste0(here::here(), "/0-config.R"))
 load("U:/ucb-superlearner/data/stunting_data.RData")
 
 
+d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
+
 ##########################################
 # Define indicators of stunting at each time point
 ##########################################
@@ -46,6 +48,9 @@ d %>%
             mean=mean(agedays/30.4167),
             max=max(agedays/30.4167))
 
+# drop measurements with ages over 24 months
+d = d %>% filter(!is.na(agecat)) 
+
 # identify ever stunted children
 stunt_data = d %>%
   filter(!is.na(agecat)) %>%
@@ -61,22 +66,30 @@ stunt_data = d %>%
   # create indicator for whether the child 
   # was stunted in PREVIOUS age category
   group_by(studyid, country, subjid) %>%
-  mutate(minhaz_prev=ifelse(
-    agecat=="Birth",NA,      
-    ifelse(agecat=="0-3 months",minhaz[agecat=="Birth"],
-           ifelse(agecat=="3-6 months",minhaz[agecat=="0-3 months"],
-                  ifelse(agecat=="6-9 months",minhaz[agecat=="3-6 months"],
-                         ifelse(agecat=="9-12 months",minhaz[agecat=="6-9 months"],
-                                ifelse(agecat=="12-15 months",minhaz[agecat=="9-12 months"],
-                                       ifelse(agecat=="15-18 months",minhaz[agecat=="12-15 months"],
-                                              ifelse(agecat=="18-21 months",minhaz[agecat=="15-18 months"],
-                                                     ifelse(agecat=="21-24 months",minhaz[agecat=="18-21 months"],
-                                                            NA)))))))))) %>%
+  
+  mutate(minhaz_prev = lag(minhaz))
+
+
+
+
+%>%
+  
+  # mutate(minhaz_prev=ifelse(
+  #   agecat=="Birth",NA,
+  #   ifelse(agecat=="0-3 months",minhaz[agecat=="Birth"],
+  #          ifelse(agecat=="3-6 months",minhaz[agecat=="0-3 months"],
+  #                 ifelse(agecat=="6-9 months",minhaz[agecat=="3-6 months"],
+  #                        ifelse(agecat=="9-12 months",minhaz[agecat=="6-9 months"],
+  #                               ifelse(agecat=="12-15 months",minhaz[agecat=="9-12 months"],
+  #                                      ifelse(agecat=="15-18 months",minhaz[agecat=="12-15 months"],
+  #                                             ifelse(agecat=="18-21 months",minhaz[agecat=="15-18 months"],
+  #                                                    ifelse(agecat=="21-24 months",minhaz[agecat=="18-21 months"],
+  #                                                           NA)))))))))) %>%
   mutate(cum_minhaz = cummin(minhaz)) %>%
   mutate(still_stunted = ifelse(minhaz_prev < -2 & minhaz < -2, 1, 0),
          prev_stunted = ifelse(minhaz >= -2 & cum_minhaz < -2, 1, 0)) %>%
-  mutate(still_stunted = ifelse(is.na(minhaz_prev), 0, still_stunted ),
-         prev_stunted = ifelse(is.na(minhaz_prev), 0, prev_stunted ))
+  mutate(still_stunted = ifelse(is.na(minhaz_prev) & agecat=="Birth", 0, still_stunted ),
+         prev_stunted = ifelse(is.na(minhaz_prev) & agecat=="Birth", 0, prev_stunted ))
 
 
 # create indicator for whether the child 
@@ -104,8 +117,11 @@ stunt_data = stunt_data %>%
          prev_stunted = ifelse(agecat==first_age,0,prev_stunted),
          relapse = ifelse(agecat==first_age,0,relapse)) %>%
   select(studyid, country, subjid, agecat, minhaz, minhaz_prev, cum_minhaz, stunted, 
-         never_stunted, prev_stunted, newly_stunted, still_stunted, relapse)
+         never_stunted, prev_stunted, newly_stunted, still_stunted, relapse) %>%
+  mutate(total_indicators = never_stunted + prev_stunted + 
+           newly_stunted + still_stunted + relapse)
 
+table(stunt_data$total_indicators)
 
 # Check that no child was classified in more
 # than one category at any time point 
@@ -113,21 +129,32 @@ summary = stunt_data %>%
   group_by(agecat) %>%
   summarise(
     nchild=length(unique(subjid)),
-    newly_stunted = sum(newly_stunted),
-    still_stunted = sum(still_stunted),
-    prev_stunted = sum(prev_stunted),
-    never_stunted = sum(never_stunted),
-    relapse = sum(relapse)) %>%
+    newly_stunted = sum(newly_stunted, na.rm = TRUE),
+    still_stunted = sum(still_stunted, na.rm = TRUE),
+    prev_stunted = sum(prev_stunted, na.rm = TRUE),
+    never_stunted = sum(never_stunted, na.rm = TRUE),
+    relapse = sum(relapse, na.rm = TRUE)) %>%
   mutate(newly_stunted = newly_stunted/nchild,
          still_stunted = still_stunted/nchild,
          prev_stunted = prev_stunted/nchild,
          never_stunted = never_stunted/nchild,
          relapse = relapse/nchild)
 
+summary = stunt_data %>%
+  group_by(agecat) %>%
+  summarise(
+    nchild=length(unique(subjid)),
+    newly_stunted = mean(newly_stunted, na.rm = TRUE),
+    still_stunted = mean(still_stunted, na.rm = TRUE),
+    prev_stunted = mean(prev_stunted, na.rm = TRUE),
+    never_stunted = mean(never_stunted, na.rm = TRUE),
+    relapse = mean(relapse, na.rm = TRUE))
+
 summary = summary %>%
   mutate(sum = still_stunted + newly_stunted + prev_stunted + never_stunted + relapse)
 
 summary
+
 
 # check indicators against minimum HAZ within age groups
 assert_that(min(stunt_data$minhaz[stunt_data$never_stunted==1]) >= -2)
