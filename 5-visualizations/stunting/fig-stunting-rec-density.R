@@ -14,7 +14,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load individual level fake data
-d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
+# d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
 
 # load data created in the stunt_flowdata.R script
 stunt_data = readRDS(paste0(res_dir, "stuntflow_fake.RDS"))
@@ -22,21 +22,25 @@ stunt_data = stunt_data %>% ungroup()
 
 
 # load individual level real data
-load("U:/Data/Stunting/stunting_data.RData")
+# load("U:/Data/Stunting/stunting_data.RData")
+# Jade's:
+# load("U:/ucb-superlearner/data/stunting_data.RData")
+d = readRDS(paste0(res_dir, "stunt_rec_cohort.RDS"))
+
 d$subjid <- as.numeric(d$subjid)
 
 # load data created in the stunt_flowdata.R script
-stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-stunt_data = stunt_data %>% ungroup()
-stunt_data$subjid <- as.numeric(stunt_data$subjid)
+# stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
+# stunt_data = stunt_data %>% ungroup()
+# stunt_data$subjid <- as.numeric(stunt_data$subjid)
 
 
 # drop data beyond 16 months since it is 
 # sparse in most studies
 d = d %>% filter(agedays<=16 * 30.4167)
-stunt_data = stunt_data %>% filter(agecat!= "15-18 months" &
-                                     agecat!="18-21 months" &
-                                     agecat!="21-24 months")
+# stunt_data = stunt_data %>% filter(agecat!= "15-18 months" &
+#                                      agecat!="18-21 months" &
+#                                      agecat!="21-24 months")
 
 #-----------------------------------------
 # function to filter data to children
@@ -50,53 +54,100 @@ stunt_data = stunt_data %>% filter(agecat!= "15-18 months" &
 # age_range = range by which stunting recovered
 # label = age range label
 #-----------------------------------------
-get_rec = function(indiv_data, data, age_upper){
+# get_rec = function(indiv_data, data, age_upper){
+#   age_lower = age_upper - 3
+#   age_range = paste0(age_lower, "-", age_upper, " months")
+# 
+#   rec_data = data %>% 
+#     filter(agecat==age_range & prev_stunted==1) %>%
+#     select(studyid, country, subjid) %>%
+#     mutate(rec_age = 1,
+#            age_rec = age_range) 
+#   
+#   rec_indiv = full_join(indiv_data, rec_data, by = c("studyid","country","subjid")) %>%
+#     filter(rec_age==1) %>%
+#     select(-rec_age)
+#   
+#   # subsequent measurement ages after recovery
+#   age_meas = seq(age_upper, 15, 3) 
+#   
+#   rec_meas_sub_list = lapply(age_meas, function(x) 
+#     subset_rec(data = rec_indiv, 
+#                age_months = x))
+#   
+#   rec_meas_sub = bind_rows(rec_meas_sub_list)
+# 
+# }
+
+get_rec = function(data, age_upper){
   age_lower = age_upper - 3
   age_range = paste0(age_lower, "-", age_upper, " months")
-
-  rec_data = data %>% 
-    filter(agecat==age_range & prev_stunted==1) %>%
-    select(studyid, country, subjid) %>%
-    mutate(rec_age = 1,
-           age_rec = age_range) 
   
-  rec_indiv = full_join(indiv_data, rec_data, by = c("studyid","country","subjid")) %>%
-    filter(rec_age==1) %>%
-    select(-rec_age)
+  # identify children who recovered in 
+  # this age range
+  rec_data = data %>% 
+    filter(prev_stunted == 1 & agecat == age_range) %>%
+    select(studyid, country, subjid) %>%
+    mutate(age_rec = age_range)
+  
+  rec_data = rec_data[!duplicated(rec_data),]
+  
+  rec_data_haz = full_join(rec_data, data, 
+    by = c("studyid", "country", "subjid")) %>%
+    filter(!is.na(age_rec)) %>%
+    select(studyid, country, subjid, agedays, haz, age_rec)
   
   # subsequent measurement ages after recovery
   age_meas = seq(age_upper, 15, 3) 
   
+
   rec_meas_sub_list = lapply(age_meas, function(x) 
-    subset_rec(data = rec_indiv, 
-               age_months = x))
+    subset_rec(data = rec_data_haz, 
+               age_months = x,
+               age_range = age_range))
+
   
   rec_meas_sub = bind_rows(rec_meas_sub_list)
 
 }
 
+
 # --------------------------------------------
 # function to subset recovery individual level 
 # data to haz at a list of specific ages in months
 # --------------------------------------------
-subset_rec = function(data, age_months){
+subset_rec = function(data, age_months, age_range){
   out = data %>% 
-    filter(agedays >= ((age_months-1)*30.4167) & agedays <= ((age_months+1)*30.4167)) %>%
-    mutate(age_meas = paste0(age_months, " month measurement"))
-  return(out) 
+    filter(agedays >= ((age_months-0.5)*30.4167) & 
+             agedays <= ((age_months+0)*30.4167)) %>%
+    mutate(age_meas = paste0(age_months, " month measurement"),
+           age_rec = age_range)
+
+  return(out)
 }
+
 
 age_range_list = as.list(seq(3, 12, 3))
 
 rec_data = lapply(age_range_list, function(x)
   get_rec(
-    indiv_data = d,
-    data = stunt_data,
+    data = d,
     age_upper = x
   ))
 
+
 # bind list elements
 plot_data = bind_rows(rec_data) 
+
+summary = plot_data %>%
+  group_by(age_rec, age_meas) %>%
+  summarise(
+    nchild = length(unique(subjid)),
+    nstudy = length(unique(studyid)),
+    ncountry = length(unique(country)),
+    mean_haz= mean(haz)
+  )
+
 
 # --------------------------------------------
 # density plot of kids who recovered
@@ -126,6 +177,11 @@ plot_data = plot_data %>%
   )
   )
 
+
+# drop HAZ at tails of distributions
+plot_data_sub = plot_data %>% filter(haz >=-5 & haz <=3.5)
+
+
 # --------------------------------------------
 # stacked density plot
 # --------------------------------------------
@@ -144,16 +200,20 @@ ggsave(rec_density_plot, file="figures/stunting/fig_stunt_rec_dist_dens.png", wi
 
 
 # histogram 
-rec_histogram_plot = ggplot(plot_data, aes(x=haz, y = age_meas, fill = ..x..)) + 
-  geom_density_ridges_gradient(stat = "binline", binwidth=.1, scale=0.9) + 
+rec_histogram_plot = ggplot(plot_data_sub, aes(x=haz, y = age_meas, fill = ..x..)) + 
+  geom_density_ridges_gradient(stat = "binline", 
+                               binwidth=.1, 
+                               scale=0.8,
+                               size=0.01) + 
   facet_grid(~age_rec) +
-  # scale_fill_manual("", values = mycol) +
   ylab("Measurement following recovery")+
   xlab("Height-for-age Z-score")+
+  scale_x_continuous(breaks = seq(-5, 3.5, 1), 
+                     labels = seq(-5, 3.5, 1)) +
   geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_viridis(name = "LAZ", option = "C") 
+  scale_fill_viridis(name = "LAZ", option = "magma") 
 
-
+# to do: add better labels, n, etc
 
 ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=11, height=6)
 
