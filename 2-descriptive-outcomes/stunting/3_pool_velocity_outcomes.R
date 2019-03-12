@@ -202,3 +202,15 @@ saveRDS(pooled_vel, file="U:/ki-longitudinal-manuscripts/results/stunting/pool_v
 
 
 #Pool velocity, dropping CONTENT and Cohorts Guat.
+dsub <- d %>% filter(studyid!="ki1114097-CONTENT") %>% filter(!(studyid=="ki1135781-COHORTS" & country=="GUATEMALA"))
+poolhaz_boys <- RE_pool(dsub, ycategory="haz", gender="Male")
+poolhaz_girls <- RE_pool(dsub, ycategory="haz", gender="Female")
+poollencm_boys <- RE_pool(dsub, ycategory="lencm", gender="Male")
+poollencm_girls <- RE_pool(dsub, ycategory="lencm", gender="Female")
+
+pooled_vel_sub <- rbind(
+  poolhaz_boys, poolhaz_girls, poollencm_boys, poollencm_girls
+)
+
+saveRDS(pooled_vel_sub, file="U:/ki-longitudinal-manuscripts/results/stunting/pool_vel_sub.RDS")
+
