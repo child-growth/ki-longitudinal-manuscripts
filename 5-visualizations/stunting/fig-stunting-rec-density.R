@@ -187,7 +187,7 @@ summarize_dist = function(age_recov, data){
   
   age_meas_list = rev(names(tab_age_meas[tab_age_meas>0]))
   
-  res = matrix(NA, nrow = length(age_meas_list), ncol = 7)
+  res = matrix(NA, nrow = length(age_meas_list), ncol = 8)
   
   for(i in 1:(length(age_meas_list))){
     y = data %>% 
@@ -196,20 +196,39 @@ summarize_dist = function(age_recov, data){
                age_meas == age_meas_list[i]) %>%
       mutate(stunted = ifelse(haz < -2 , 1, 0))
     
+    prev.cohort = y %>%
+      group_by(studyid,country) %>%
+      summarise(nmeas=length(unique(subjid)),
+                prev=mean(stunted),
+                nxprev=sum(stunted==1))
+    
+    re = fit.rma.rec.cohort(
+      data = prev.cohort,
+      ni = "nmeas",
+      xi = "nxprev",
+      measure = "PLO",
+      nlab = "children"
+    )
+    
     res[i,1] = age_recov
     res[i,2] = age_meas_list[i]
     res[i,3] = length(unique(y$studyid))
     res[i,4] = length(unique(y$country))
     res[i,5] = length(unique(y$subjid))
-    res[i,6] = mean(y$stunted)
-    res[i,7] = quantile(y$haz, probs = 0.5)
+    res[i,6] = re$est
+    res[i,7] = re$lb
+    res[i,8] = re$ub
     
   }
   
   res = as.data.frame(res)
   colnames(res) = c("age_rec", "age_meas",
                     "nstudy", "ncountry", "nchild",
-                    "stunting_prev", "median_haz")
+                    "stunting_prev", "prev_lb", "prev_ub")
+  
+  res$stunting_prev = as.numeric(as.character(res$stunting_prev))
+  res$prev_lb = as.numeric(as.character(res$prev_lb))
+  res$prev_ub = as.numeric(as.character(res$prev_ub))
   
   return(res)
   
