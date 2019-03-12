@@ -22,36 +22,43 @@ d <- df %>% rename(country = v000,
   select(-contains("sh"))
 
 
-
-# Here is my suggested way of selecting relevant
-# variables: 
-# Wendy: please double check the age variables -- what
-# are the variables that start with b19? 
-age_vars = colnames(df)[grep("b8", colnames(df))]
+# Subsetting to relevant variables
+age_vars = c("hw1_1", "hw1_2", "hw1_3", "hw1_4", "hw1_5", "hw1_6")
 haz_vars = colnames(df)[grep("hw70", colnames(df))]
 whz_vars = colnames(df)[grep("hw72", colnames(df))]
 
-d_haz_wide = df %>% select(caseid, country, dataset, year, 
+d_haz_wide = d %>% select(caseid, country, dataset, year, 
                   age_vars, haz_vars)
 
-d_whz_wide = df %>% select(caseid, country, dataset, year, 
+d_whz_wide = d %>% select(caseid, country, dataset, year, 
                   age_vars, whz_vars)
+
 
 #-------------------------------------------
 # Reshape from wide to long 
 # Keep one column for case id 
 # Convert age in months, WHZ, HAZ from wide to long 
 #-------------------------------------------
-d_haz_wide <- d %>%
-  select("caseid", "country", "year", "dataset", "hw1_1", "hw1_2", "hw1_3", "hw1_4", "hw1_5", "hw1_6", "hw70_1", "hw70_2", "hw70_3", "hw70_4", "hw70_5", "hw70_6")
+# making a small dataset with a subset to 
+# test out code below. once code is right, switch to
+# real dataset
 
-d_haz_long <- reshape(d_haz_wide, varying=list(c("hw1_1", "hw1_2", "hw1_3", "hw1_4", "hw1_5", "hw1_6"), c("hw70_1", "hw70_2", "hw70_3", "hw70_4", "hw70_5", "hw70_6")), direction="long", idvar=c("caseid","country", "year", "dataset"), sep="_")
+# Wendy: please try replacing temp with d_haz_wide 
+# to double check everything, then remove temp and
+# delete this comment
+temp = d_haz_wide[29470:29476,]
 
+d_haz_long <- reshape(temp,
+                      varying = c(age_vars, haz_vars),
+                      direction = "long",
+                      idvar = c("caseid", "country", "year", "dataset"),
+                      sep = "_",
+                      new.row.names = NULL
+)
 
-d_whz_wide <- d %>%
-  select("caseid", "country", "year", "dataset", "hw1_1", "hw1_2", "hw1_3", "hw1_4", "hw1_5", "hw1_6", "hw72_1", "hw72_2", "hw72_3", "hw72_4", "hw72_5", "hw72_6")
-
-d_qhz_long <- reshape(d_haz_wide, varying=c(4:16), direction="long", idvar="caseid", sep="_", timevar="order")
+# Wendy: please update the line below to match my 
+# changes above then delete this comment 
+d_whz_long <- reshape(d_haz_wide, varying=c(4:16), direction="long", idvar="caseid", sep="_", timevar="order")
 
 # Age columns start with "b". Data for to 20 children were recorded per woman. 
 # height for age columns start with "hw70". Data for up to 6 children under age 5 were collected.
@@ -61,6 +68,15 @@ d_qhz_long <- reshape(d_haz_wide, varying=c(4:16), direction="long", idvar="case
 #-------------------------------------------
 # Clean long format data
 #-------------------------------------------
+# rename variables
+d_haz_long = d_haz_long %>% 
+  rename(childid = time,
+         agem = hw1, 
+         haz = hw70) %>%
+  mutate(haz = haz / 100)
+
+# drop rows with missing values 
+d_haz_long = d_haz_long %>% filter(!is.na(agem) & !is.na(haz))
 
 # Missing is indicated with 9999 or 99999
 # Outside acceptable range is indicated with 9998 or 99998
