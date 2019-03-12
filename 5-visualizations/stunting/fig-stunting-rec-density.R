@@ -13,34 +13,14 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# load individual level fake data
-# d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
-
-# load data created in the stunt_flowdata.R script
-stunt_data = readRDS(paste0(res_dir, "stuntflow_fake.RDS"))
-stunt_data = stunt_data %>% ungroup()
-
-
-# load individual level real data
-# load("U:/Data/Stunting/stunting_data.RData")
-# Jade's:
-# load("U:/ucb-superlearner/data/stunting_data.RData")
+# load stunting recovery cohort data
 d = readRDS(paste0(res_dir, "stunt_rec_cohort.RDS"))
 
 d$subjid <- as.numeric(d$subjid)
 
-# load data created in the stunt_flowdata.R script
-# stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-# stunt_data = stunt_data %>% ungroup()
-# stunt_data$subjid <- as.numeric(stunt_data$subjid)
-
-
 # drop data beyond 16 months since it is 
 # sparse in most studies
 d = d %>% filter(agedays<=16 * 30.4167)
-# stunt_data = stunt_data %>% filter(agecat!= "15-18 months" &
-#                                      agecat!="18-21 months" &
-#                                      agecat!="21-24 months")
 
 #-----------------------------------------
 # function to filter data to children
@@ -48,37 +28,9 @@ d = d %>% filter(agedays<=16 * 30.4167)
 # a specific age range 
 
 # inputs:
-# indiv_data = individual level data with haz and agedays
-# data = dataset created for stacked bar plot with
-# four stuntnig categories
-# age_range = range by which stunting recovered
-# label = age range label
+# data = dataset created by 5_stunt_rec_cohort.R
+# age_upper = age of recovery 
 #-----------------------------------------
-# get_rec = function(indiv_data, data, age_upper){
-#   age_lower = age_upper - 3
-#   age_range = paste0(age_lower, "-", age_upper, " months")
-# 
-#   rec_data = data %>% 
-#     filter(agecat==age_range & prev_stunted==1) %>%
-#     select(studyid, country, subjid) %>%
-#     mutate(rec_age = 1,
-#            age_rec = age_range) 
-#   
-#   rec_indiv = full_join(indiv_data, rec_data, by = c("studyid","country","subjid")) %>%
-#     filter(rec_age==1) %>%
-#     select(-rec_age)
-#   
-#   # subsequent measurement ages after recovery
-#   age_meas = seq(age_upper, 15, 3) 
-#   
-#   rec_meas_sub_list = lapply(age_meas, function(x) 
-#     subset_rec(data = rec_indiv, 
-#                age_months = x))
-#   
-#   rec_meas_sub = bind_rows(rec_meas_sub_list)
-# 
-# }
-
 get_rec = function(data, age_upper){
   age_lower = age_upper - 3
   age_range = paste0(age_lower, "-", age_upper, " months")
@@ -183,23 +135,8 @@ plot_data_sub = plot_data %>% filter(haz >=-5 & haz <=3.5)
 
 
 # --------------------------------------------
-# stacked density plot
+# stacked histogram plot
 # --------------------------------------------
-mycol = brewer.pal(n = length(levels(plot_data$age_meas)), name = "PuBu")
-
-# smoothed density
-rec_density_plot = ggplot(plot_data, aes(x=haz, y = age_meas)) +
-  geom_joy(aes(fill=age_meas), scale=0.5) +
-  facet_grid(~age_rec) +
-  scale_fill_manual("", values = mycol) +
-  ylab("Measurement following recovery")+
-  xlab("Height-for-age Z-score")+
-  geom_vline(xintercept = -2, linetype="dashed")
-
-ggsave(rec_density_plot, file="figures/stunting/fig_stunt_rec_dist_dens.png", width=11, height=6)
-
-
-# histogram 
 rec_histogram_plot = ggplot(plot_data_sub, aes(x=haz, y = age_meas, fill = ..x..)) + 
   geom_density_ridges_gradient(stat = "binline", 
                                binwidth=.1, 
