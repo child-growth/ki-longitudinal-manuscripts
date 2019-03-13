@@ -9,13 +9,6 @@
 d_haz_long <- d_haz_long %>% filter(agem <= 24)
 d_whz_long <- d_whz_long %>% filter(agem <= 24)
 
-#exclude z-scores outside WHO plausible values
-#HAZ[-6,6] and WHZ [-5,5]
-d_haz_long$haz[d_haz_long$haz < -6 | d_haz_long$haz > 6] <- NA
-summary(d_haz_long$haz)
-
-d_whz_long$whz[d_whz_long$whz < -5 | d_whz_long$whz > 5] <- NA
-summary(d_whz_long$whz)
 
 # make new new region variable 
 d_haz_long$region <- rep(NA, nrow(d_haz_long))
