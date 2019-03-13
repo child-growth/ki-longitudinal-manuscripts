@@ -27,7 +27,7 @@ library(assertthat)
 # library(haven)
 library(tidyselect)
 library(growthstandards)
-
+library(stringr)
 
 # define directories
 res_dir = paste0(here::here(),"/results/")
