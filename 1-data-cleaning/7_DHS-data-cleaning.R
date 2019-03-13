@@ -15,7 +15,8 @@ df <- read_rds(paste0(data_dir, "dhs-combined/", "dhs_data_combined.rds"))
 #-------------------------------------------
 # Drop unnecessary variables and rename selected variables
 #-------------------------------------------
-
+#extra variables beginning with m or shhw are results of the stata lookfor function and
+#can be ignored
 d <- df %>% rename(country = v000, 
                    year = v007) %>%
   select("caseid", "country", "year", "dataset", grep("hw", colnames(df))) %>%
@@ -46,7 +47,7 @@ d_whz_wide = d %>% select(caseid, country, dataset, year,
 # Wendy: please try replacing temp with d_haz_wide 
 # to double check everything, then remove temp and
 # delete this comment
-temp = d_haz_wide[29470:29476,]
+temp = d_haz_wide[29000:30000,]
 
 d_haz_long <- reshape(temp,
                       varying = c(age_vars, haz_vars),
@@ -58,10 +59,17 @@ d_haz_long <- reshape(temp,
 
 # Wendy: please update the line below to match my 
 # changes above then delete this comment 
-d_whz_long <- reshape(d_haz_wide, varying=c(4:16), direction="long", idvar="caseid", sep="_", timevar="order")
+temp2 = d_whz_wide[29000:30000,]
+d_whz_long <- reshape(temp2,
+                      varying = c(age_vars, whz_vars),
+                      direction = "long",
+                      idvar = c("caseid", "country", "year", "dataset"),
+                      sep = "_",
+                      new.row.names = NULL
+)
 
 # Age columns start with "b". Data for to 20 children were recorded per woman. 
-# height for age columns start with "hw70". Data for up to 6 children under age 5 were collected.
+# height for age columns start with "hw70". Data for up to 6 children under age 5 were collected
 # weight for height columns start with "hw72". Data for up to 6 children under age 5 were #collected. 
 
 
@@ -86,8 +94,8 @@ d_haz_long = d_haz_long %>% filter(!is.na(agem) & !is.na(haz))
 
 # Try to figure out what the non sensical year codes are
 # Add country names
-# Figure out what sb19 s308b8 s402ab19 are - can ignore, result of stata lookfor function to #identify relevant variables
-# Figure out codes for 9996 and 9997
 
 
-
+#save cleaned data as RDS
+saveRDS(d_haz_long, file = (here::here()))
+saveRDS(d_whz_long, file = (here::here()))
