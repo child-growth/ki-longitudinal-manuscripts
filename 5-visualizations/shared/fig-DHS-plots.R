@@ -79,8 +79,8 @@ df <- df %>% mutate(region=case_when(region=="Africa" ~ "AFRO",
 combine.haz <- merge(haz, df, by=c("agem","region"))
 
 p <- ggplot(combine.haz,aes(x=agem)) +
-  stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP cohorts"), se=F, span = 0.5) +
-  stat_smooth(aes(y=haz_mn,fill=region, color=region, linetype="DHS"), se=F, span = 0.5) +
+  stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP cohorts"), se=F, span = 0.75) +
+  stat_smooth(aes(y=haz,fill=region, color=region, linetype="DHS"), se=F, span = 0.75) +
   facet_wrap(~region)+
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
