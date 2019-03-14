@@ -41,27 +41,45 @@ wmd <- wmd %>% filter(measurefreq!="yearly" & !is.na(measurefreq))
 
 unique(md$study_id)
 unique(wmd$study_id)
-
+#wmd$study_id[wmd$study_id=="MAL-ED"] <- "MAL-ED"
+  
 #fix PROVIDE location
 wmd$countrycohort[wmd$study_id=="PROVIDE"] <- "BANGLADESH"
 
+unique(md$study_id)
+unique(wmd$study_id)
+
+#drop yearly COHORTS
+md <- md[!(md$study_id=="COHORTS" & (md$countrycohort=="BRAZIL"|md$countrycohort=="SOUTH AFRICA")),] 
+wmd <- wmd[!(wmd$study_id=="COHORTS" & (wmd$countrycohort=="BRAZIL"|wmd$countrycohort=="SOUTH AFRICA")),] 
 
 md <- md[(md$study_id %in% wmd$study_id),]
 wmd <- wmd[(wmd$study_id %in% md$study_id),]
+unique(wmd$study_id)
+
 
 dim(wmd)
 dim(md)
 md$countrycohort[is.na(md$countrycohort)] <- "singlecohort"
 wmd$countrycohort[is.na(wmd$countrycohort)] <- "singlecohort"
 
-wmd <- wmd %>% select(study_id, countrycohort, wastprev, wastprev_m1, wastprev_m2,
+wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m1, wastprev_m2,
                       wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
                       wastprev_m7, wastprev_m8, wastprev_m9, wastprev_m10,
                       wastprev_m11, wastprev_m12, wastprev_m13, wastprev_m14,
                       wastprev_m15, wastprev_m16, wastprev_m17, wastprev_m18,
                       wastprev_m19, wastprev_m20, wastprev_m21, wastprev_m22,
-                      wastprev_m23, wastprev_m24)
-md <- merge(md, wmd, by=c('study_id', 'countrycohort'), all = TRUE)
+                      wastprev_m23, wastprev_m24, meanWHZ_m1, meanWHZ_m2,
+                      meanWHZ_m3, meanWHZ_m4, meanWHZ_m5, meanWHZ_m6,
+                      meanWHZ_m7, meanWHZ_m8, meanWHZ_m9, meanWHZ_m10,
+                      meanWHZ_m11, meanWHZ_m12, meanWHZ_m13, meanWHZ_m14,
+                      meanWHZ_m15, meanWHZ_m16, meanWHZ_m17, meanWHZ_m18,
+                      meanWHZ_m19, meanWHZ_m20, meanWHZ_m21, meanWHZ_m22,
+                      meanWHZ_m23, meanWHZ_m24)
+md <- merge(md, wmd, by=c('study_id', 'cohortnum'), all = TRUE)
+
+#drop mal-ed Pakistan
+md <- md[!(md$study_id=="MAL-ED" & md$countrycohort=="singlecohort"),]
 dim(md)
 
 
@@ -80,11 +98,18 @@ for(i in 1:24){
 # convert wasting prevalence to numeric
 md$wastprev <- as.numeric(md$wastprev)
 for(i in 1:24){
-  ni <- paste("n",i,sep="")
   wi <- paste("wastprev_m",i,sep="")
-  md[ni] <- as.numeric(md[,c(ni)])
   md[wi] <- as.numeric(md[,c(wi)])
 }
+
+# convert mean HAZ and WHZ to numeric
+for(i in 1:24){
+  sti <- paste("meanHAZ_m",i,sep="")
+  wi <- paste("meanWHZ_m",i,sep="")
+  md[sti] <- as.numeric(md[,c(sti)])
+  md[wi] <- as.numeric(md[,c(wi)])
+}
+
 
 # calculate the total number of measurements
 md$nmeas <- rowSums(md[,paste('n',1:24,sep='')],na.rm=TRUE)
@@ -179,12 +204,27 @@ dstuntp <- select(dd,study_id,country,studycountry,starts_with('stuntprev_m')) %
   select(study_id,country,studycountry,age,stp) %>%
   filter(age>=1 & age <=24 )
 
-# gather stunting prev by month data into long format
+# gather wasting prev by month data into long format
 dwastp <- select(dd,study_id,country,studycountry,starts_with('wastprev_m')) %>%
   gather(age,wp,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,11,-1))) %>%
   select(study_id,country,studycountry,age,wp) %>%
   filter(age>=1 & age <=24 )
+
+# gather meanHAZ by month data into long format
+dhaz <- select(dd,study_id,country,studycountry,starts_with('meanHAZ_m')) %>%
+  gather(age,haz,-study_id,-country,-studycountry) %>%
+  mutate(age=as.integer(str_sub(age,10,-1))) %>%
+  select(study_id,country,studycountry,age,haz) %>%
+  filter(age>=1 & age <=24 )
+
+# gather meanWHZ by month data into long format
+dwhz <- select(dd,study_id,country,studycountry,starts_with('meanWHZ_m')) %>%
+  gather(age,whz,-study_id,-country,-studycountry) %>%
+  mutate(age=as.integer(str_sub(age,10,-1))) %>%
+  select(study_id,country,studycountry,age,whz) %>%
+  filter(age>=1 & age <=24 )
+
 
 # join the long tables together and sort countries by measure_freq and stunting prev
 dim(dnsubj)
@@ -193,16 +233,18 @@ dp <- left_join(dnsubj,dstuntp,by=c('study_id','studycountry','age'))
 dim(dp)
 dp <- left_join(dp,dwastp,by=c('study_id','studycountry','age'))
 dim(dp)
+dp <- left_join(dp,dhaz,by=c('study_id','studycountry','age'))
+dim(dp)
+dp <- left_join(dp,dwhz,by=c('study_id','studycountry','age'))
+dim(dp)
 
 # categorize stunting prevalence, set stunting prevalence category estimates to missing if n<50
 dp$stpcat <- cut(dp$stp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
-
 dp$stpcat <- factor(dp$stpcat)
 dp$stpcat[dp$nobs<50 | is.nan(dp$stp)] <- NA
 
 # categorize wasting prevalence, set wasting prevalence category estimates to missing if n<50
 dp$wpcat <- cut(dp$wp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
-
 dp$wpcat <- factor(dp$wpcat)
 dp$wpcat[dp$nobs<50 | is.nan(dp$wp)] <- NA
 
@@ -214,6 +256,20 @@ dp$ncat <- cut(dp$nobs,
                labels=c('<50','50-100','100-250','250-500','500-750','750-1000','1000-1500','1500-2000','>2000'))
 dp$ncat <- factor(dp$ncat)
 
+# categorize mean HAZ
+summary(dp$haz)
+dp$hazcat <- cut(dp$haz,breaks=c(-5, -3, -2.5, -2,-1.5,-1,-0.5,0,5), labels=c("<= -3","(-3,-2.5]", "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",  "(-0.5,0]", ">0" ))
+table(dp$hazcat)
+dp$hazcat<- factor(dp$hazcat)
+dp$hazcat[dp$nobs<50 | is.nan(dp$hazcat)] <- NA
+
+# categorize mean WHZ
+summary(dp$whz)
+dp$whzcat <- cut(dp$whz,breaks=c(-5, -1, -0.75, -0.5,-0.25,0,0.5,1,5), labels=c("<= -1","(-1,-0.75]", "(-0.75,-0.5]", "(-0.5,-0.25]", "(-0.25,0]", "(0,0.5]",  "(0.5,1]", ">1"))
+table(dp$whzcat)
+dp$whzcat<- factor(dp$whzcat)
+dp$whzcat[dp$nobs<50 | is.nan(dp$whzcat)] <- NA
+table(dp$whzcat)
 
 
 
@@ -344,16 +400,19 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 
 # # heat map
 stphm <- hm + 
-  aes(fill=stpcat) +
-  labs(x="Age in months",y="",title="Stunting prevalence by month of age") +
-  scale_fill_viridis_d(na.value="grey90",
-                    guide=guide_legend(title="Stunting (%)",title.vjust = 1,
-                                       label.position="bottom",label.hjust=0.5,nrow=1))
+  aes(fill=hazcat) +
+  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
+scale_fill_viridis(option = "C", discrete = T,
+                     na.value="grey90",
+                     direction = -1,
+                     end = 0.8,
+                     guide=guide_legend(title="Mean HAZ",title.vjust = 1,
+                                        label.position="bottom",label.hjust=0.5,nrow=1)) 
 
 # wasting prevalence side bar plot
 wpbar <- sidebar +
   aes(y=wastprev,fill=wpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Wasting (%)") +
+  labs(x = "",y="Overall Prevalence (%)",title="Wasting") +
   scale_y_continuous(expand=c(0,0),limits=c(0,30),
                      breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
   geom_hline(yintercept = seq(0,30,by=10),color='white',size=0.3)
@@ -361,7 +420,7 @@ wpbar <- sidebar +
 # stunting prevalence side bar plot
 stpbar <- sidebar +
   aes(y=stuntprev,fill=stpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Stunting (%)") +
+  labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
@@ -369,7 +428,7 @@ stpbar <- sidebar +
 
 # combined plot
 stpgrid <- grid.arrange(stphm, stpbar, wpbar, nrow = 1, ncol = 3, widths=c(100,20,20))
-ggsave(filename="figures/stunting/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=12,height=9)
+ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
 
 
 
@@ -395,10 +454,12 @@ monthlystudies <- c(
 
 # heat map
 wastphm <- hm + 
-  aes(fill=wpcat) +
-  labs(x="Age in months",y="",title="Wasting prevalence by month of age") +
-  scale_fill_viridis_d(na.value="grey90",
-                       guide=guide_legend(title="Wasting (%)",title.vjust = 1,
+  aes(fill=whzcat) +
+  labs(x="Age in months",y="",title="Mean weight-for-height Z-score by month of age") +
+  scale_fill_viridis(na.value="grey90", discrete = T,
+                       direction = -1,
+                       end = 0.8,
+                       guide=guide_legend(title="Mean WHZ",title.vjust = 1,
                                           label.position="bottom",label.hjust=0.5,nrow=1))
 wastphm <- wastphm %+% dp[dp$study_id %in% monthlystudies,]
 
@@ -423,6 +484,6 @@ stpbar <- stpbar %+% dp[dp$study_id %in% monthlystudies,]
 
 # combined plot
 awstpgrid <- grid.arrange(wastphm, stpbar, wpbar, nrow = 1, ncol = 3, widths=c(100,20,20))
-ggsave(filename="figures/wasting/wasting-study-inventory-heatmap-prev.pdf",plot = awstpgrid,device='pdf',width=12,height=9)
+ggsave(filename="figures/wasting/wasting-study-inventory-heatmap.pdf",plot = awstpgrid,device='pdf',width=12,height=9)
 
 

@@ -213,23 +213,66 @@ ggsave(plot_laz_cohort_afr, file="figures/stunting/fig_stunt_vel_cm_africa.png",
 velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
                               ycat == "Length velocity (cm per month)") %>%
   select(Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
-  mutate(sex = as.factor(sex))
+  mutate(sex = as.factor(sex)) %>% 
+  gather(`pct_15`, `pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>% 
+  mutate(linecol = ifelse(msmt_type != "Mean", "black", ifelse(sex == "Male", "red", "blue")), 
+         sexcol = ifelse(sex == "Male", "red2", "blue2"))
 
-plot_cm <- ggplot(velplot_cm, aes(y=Mean,x=strata))+
-  geom_point(aes(color=sex), size = 3) +
-  geom_line(aes(y=Mean, group=sex, col=sex)) +
-  geom_line(aes(y=pct_50, group=sex)) +
-  geom_line(aes(y=pct_25, group=sex), linetype="dashed") +
-  geom_line(aes(y=pct_15, group=sex), linetype="dotted") +
+plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
+  geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3) +
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol, linetype = msmt_type)) +
   
-  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+
+  
+  # scale_color_manual(values = c("Male" = tableau10[4],
+  #                               "Female" = tableau10[1], 
+  #                               "Mean" = ifelse(sex == "Male", tableau10[4], tableau10[1]), 
+  #                               "pct_15" = "black", 
+  #                               "pct_25" = "black", 
+  #                               "pct_50" = "black")) +
+                       
+  # scale_linetype_manual('solid', 'dotted', 'dashed', 'solid') +
+  # geom_line(aes(y=pct_50, group=sex)) +
+  # geom_line(aes(y=pct_25, group=sex), linetype="dashed") +
+  # geom_line(aes(y=pct_15, group=sex), linetype="dotted") +
+  
+  geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                  alpha=0.5, size = 1) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  
+  scale_linetype_manual(values = c("Mean" = "solid", 
+                                   "pct_15" = "dotted", 
+                                   "pct_25" = "dashed", 
+                                   "pct_50" = "solid"),
+                        breaks = c("pct_15", "pct_25", "pct_50"),
+                        labels = c("15th percentile", 
+                                   "25th percentile", 
+                                   "50th percentile")) +
+  
+  scale_color_manual(values = c("black" = "black",
+                                "blue" = tableau10[4],
+                                "red" = tableau10[1], 
+                                "blue" = "blue", 
+                                "red2" = tableau10[1], 
+                                "blue2" = tableau10[4],
+                                "red2" = tableau10[1], 
+                                "blue2" = tableau10[4])) +
+  
   scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
   xlab("Age in months") +  
   ylab("Length (cm)") +
   facet_wrap( ~ sex) +
-  ggtitle("B) Monthly change in length (cm)") 
+  ggtitle("B) Monthly change in length (cm)") +
+  
+  guides(color=FALSE) +
+  
+  labs(linetype = c("", "12", "14", "13")) +
+  
+  theme(legend.position = c(.9, .85),
+        legend.title = element_blank(),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(colour = "black")) 
+
+plot_cm
 
 ggsave(plot_cm, file="figures/stunting/fig_stunt_vel_cm_pool.png", width=10, height=8)
 
