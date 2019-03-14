@@ -91,7 +91,7 @@ mark_measure_freq <- function(dd){
   
   #mark measure frequency of ID's with grant identifiers stripped:
   dd$measurefreq[dd$studyid %in% c(
-    "MAL-ED",   
+    "MAL-ED", "MAL-ED",
     "CMC-V-BCS-2002",              
     "IRC",               
     "EE",           

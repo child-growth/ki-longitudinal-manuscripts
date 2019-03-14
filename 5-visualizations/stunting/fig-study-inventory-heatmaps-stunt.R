@@ -68,6 +68,8 @@ wmd <- wmd %>% select(study_id, countrycohort, wastprev, wastprev_m1, wastprev_m
                       wastprev_m15, wastprev_m16, wastprev_m17, wastprev_m18,
                       wastprev_m19, wastprev_m20, wastprev_m21, wastprev_m22,
                       wastprev_m23, wastprev_m24)
+dim(wmd)
+dim(md)
 md <- merge(md, wmd, by=c('study_id', 'countrycohort'), all = TRUE)
 dim(md)
 
@@ -369,13 +371,12 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 # heat map
 stphm <- hm + 
   aes(fill=hazcat) +
-  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
-
-  scale_fill_viridis_d(option = "C",
+  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") 
+  scale_fill_viridis(option = "C",
                      na.value="grey90",
                      direction = -1,
                      end = 0.8,
-                     guide=guide_legend(title="Stunting (%)",title.vjust = 1,
+                     guide=guide_legend(title="Mean HAZ",title.vjust = 1,
                                         label.position="bottom",label.hjust=0.5,nrow=1)) 
 
 # number of obs side bar plot
@@ -389,21 +390,30 @@ nbar <- sidebar +
 # stunting prevalence side bar plot
 stpbar <- sidebar +
   aes(y=stuntprev,fill=stpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Mean HAZ") +
+  labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
+  geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
+
+# wasting prevalence side bar plot
+wastpbar <- sidebar +
+  aes(y=wastprev,fill=wpcat) +
+  labs(x = "",y="Overall Prevalence (%)",title="Wasting") +
+  scale_y_continuous(expand=c(0,0),limits=c(0,30),
+                     breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
 
 # add margin around plots
 margin = theme(plot.margin = unit(c(0.25,0.25,0.25,0.25), "cm"))
 stphm = stphm + margin
 stpbar = stpbar + margin
+wastpbar = wastpbar + margin
 nbar = nbar + margin
 
 # combined plot
-stpgrid <- grid.arrange(stphm, stpbar, nbar, nrow = 1, ncol = 3, 
+stpgrid <- grid.arrange(stphm, stpbar, wastpbar, nrow = 1, ncol = 3, 
                         widths=c(100,20,20))
-ggsave(filename="figures/stunting/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=12,height=9)
+ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
 
 
 
