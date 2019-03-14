@@ -78,9 +78,9 @@ df <- df %>% mutate(region=case_when(region=="Africa" ~ "AFRO",
 #merge together DHS and GHAP data
 combine.haz <- merge(haz, df, by=c("agem","region"))
 
-p <- ggplot(combine.haz,aes(x=agem, group=region)) +
-  stat_smooth(aes(y=haz_mn,fill=region, color=region), se=F, span = 0.5) +
-  stat_smooth(aes(y=est,fill=region, color=region), linetype="dotted", se=F, span = 0.5) +
+p <- ggplot(combine.haz,aes(x=agem)) +
+  stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP"), se=F, span = 0.5) +
+  stat_smooth(aes(y=haz_mn,fill=region, color=region, linetype="DHS"), se=F, span = 0.5) +
   facet_wrap(~region)+
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
@@ -93,7 +93,8 @@ p <- ggplot(combine.haz,aes(x=agem, group=region)) +
   ylab("mean Length-for-age Z-score") +
   ggtitle("") +
   theme(strip.text = element_text(margin=margin(t=5))) +
-  theme(legend.position="none")
+  theme(legend.position="left") + 
+  scale_linetype_manual("Data",values=c("DHS"=2,"GHAP"=1))
 
 ggsave(p, file="figures/stunting/fig_stunt_mean_LAZ_region_DHS.png", width=10, height=8)
 
@@ -133,9 +134,9 @@ df <- df %>% mutate(region=case_when(region=="Africa" ~ "AFRO",
 combine.whz <- merge(whz, df, by=c("agem","region"))
 
 
-q <- ggplot(combine.whz,aes(x=agem, group=region)) +
-  stat_smooth(aes(y=whz_mn,fill=region, color=region), se=F, span = 0.5) +
-  stat_smooth(aes(y=est,fill=region, color=region), linetype="dotted", se=F, span = 0.5) +
+q <- ggplot(combine.whz,aes(x=agem)) +
+  stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP"), se=F, span = 0.5) +
+  stat_smooth(aes(y=whz_mn,fill=region, color=region, linetype="DHS"), se=F, span = 0.5) +
   facet_wrap(~region)+
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
@@ -145,10 +146,11 @@ q <- ggplot(combine.whz,aes(x=agem, group=region)) +
   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
                      name = 'Region') +
   xlab("Child age, months")+
-  ylab("mean Length-for-age Z-score") +
+  ylab("mean weight-for-length Z-score") +
   ggtitle("") +
   theme(strip.text = element_text(margin=margin(t=5))) +
-  theme(legend.position="none")
+  theme(legend.position="none") + 
+  scale_linetype_manual("Data",values=c("DHS"=2,"GHAP"=1))
 
 ggsave(q, file="figures/wasting/fig_wasting_mean_WLZ_region_DHS.png", width=10, height=8)
 
