@@ -13,34 +13,14 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# load individual level fake data
-# d = readRDS("~/Dropbox/HBGD/Manuscripts/testdata2.RDS")
-
-# load data created in the stunt_flowdata.R script
-stunt_data = readRDS(paste0(res_dir, "stuntflow_fake.RDS"))
-stunt_data = stunt_data %>% ungroup()
-
-
-# load individual level real data
-# load("U:/Data/Stunting/stunting_data.RData")
-# Jade's:
-# load("U:/ucb-superlearner/data/stunting_data.RData")
+# load stunting recovery cohort data
 d = readRDS(paste0(res_dir, "stunt_rec_cohort.RDS"))
 
 d$subjid <- as.numeric(d$subjid)
 
-# load data created in the stunt_flowdata.R script
-# stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-# stunt_data = stunt_data %>% ungroup()
-# stunt_data$subjid <- as.numeric(stunt_data$subjid)
-
-
 # drop data beyond 16 months since it is 
 # sparse in most studies
 d = d %>% filter(agedays<=16 * 30.4167)
-# stunt_data = stunt_data %>% filter(agecat!= "15-18 months" &
-#                                      agecat!="18-21 months" &
-#                                      agecat!="21-24 months")
 
 #-----------------------------------------
 # function to filter data to children
@@ -48,37 +28,9 @@ d = d %>% filter(agedays<=16 * 30.4167)
 # a specific age range 
 
 # inputs:
-# indiv_data = individual level data with haz and agedays
-# data = dataset created for stacked bar plot with
-# four stuntnig categories
-# age_range = range by which stunting recovered
-# label = age range label
+# data = dataset created by 5_stunt_rec_cohort.R
+# age_upper = age of recovery 
 #-----------------------------------------
-# get_rec = function(indiv_data, data, age_upper){
-#   age_lower = age_upper - 3
-#   age_range = paste0(age_lower, "-", age_upper, " months")
-# 
-#   rec_data = data %>% 
-#     filter(agecat==age_range & prev_stunted==1) %>%
-#     select(studyid, country, subjid) %>%
-#     mutate(rec_age = 1,
-#            age_rec = age_range) 
-#   
-#   rec_indiv = full_join(indiv_data, rec_data, by = c("studyid","country","subjid")) %>%
-#     filter(rec_age==1) %>%
-#     select(-rec_age)
-#   
-#   # subsequent measurement ages after recovery
-#   age_meas = seq(age_upper, 15, 3) 
-#   
-#   rec_meas_sub_list = lapply(age_meas, function(x) 
-#     subset_rec(data = rec_indiv, 
-#                age_months = x))
-#   
-#   rec_meas_sub = bind_rows(rec_meas_sub_list)
-# 
-# }
-
 get_rec = function(data, age_upper){
   age_lower = age_upper - 3
   age_range = paste0(age_lower, "-", age_upper, " months")
@@ -171,116 +123,122 @@ plot_data = plot_data %>%
         "0-3 months",
         "3-6 months",
         "6-9 months",
-        "9-12 months",
-        "12-15 months"
+        "9-12 months"
       )
   )
   )
 
-
+# --------------------------------------------
+# stacked histogram plot
+# --------------------------------------------
 # drop HAZ at tails of distributions
 plot_data_sub = plot_data %>% filter(haz >=-5 & haz <=3.5)
 
+# rename labels
+plot_data_sub = plot_data_sub %>%
+  mutate(age_rec_f = case_when(
+    age_rec == "0-3 months" ~ "Stunting recovery\nat 3 months",
+    age_rec == "3-6 months" ~ "Stunting recovery\nat 6 months",
+    age_rec == "6-9 months" ~ "Stunting recovery\nat 9 months",
+    age_rec == "9-12 months" ~ "Stunting recovery\nat 12 months"
+  )) %>%
+  mutate(age_rec_f = factor(age_rec_f, levels = c(
+    "Stunting recovery\nat 3 months",
+    "Stunting recovery\nat 6 months",
+    "Stunting recovery\nat 9 months",
+    "Stunting recovery\nat 12 months"
+  )))
 
-# --------------------------------------------
-# stacked density plot
-# --------------------------------------------
-mycol = brewer.pal(n = length(levels(plot_data$age_meas)), name = "PuBu")
-
-# smoothed density
-rec_density_plot = ggplot(plot_data, aes(x=haz, y = age_meas)) +
-        geom_joy(aes(fill=age_meas), scale=0.5) +
-        facet_grid(~age_rec) +
-        scale_fill_manual("", values = mycol) +
-        ylab("Measurement following recovery")+
-        xlab("Height-for-age Z-score")+
-        geom_vline(xintercept = -2, linetype="dashed")
-
-ggsave(rec_density_plot, file="figures/stunting/fig_stunt_rec_dist_dens.png", width=11, height=6)
+plot_data_sub = plot_data_sub %>%
+  mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
+  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
 
 
-# histogram 
-rec_histogram_plot = ggplot(plot_data_sub, aes(x=haz, y = age_meas, fill = ..x..)) + 
+rec_histogram_plot = ggplot(plot_data_sub, 
+                            aes(x=haz, y = age_meas_n, fill = ..x..)) + 
   geom_density_ridges_gradient(stat = "binline", 
                                binwidth=.1, 
                                scale=0.8,
                                size=0.01) + 
-  facet_grid(~age_rec) +
-  ylab("Measurement following recovery")+
-  xlab("Height-for-age Z-score")+
+  facet_grid(~age_rec_f) +
+  ylab("Measurement age, months")+
+  xlab("Length-for-age Z-score")+
   scale_x_continuous(breaks = seq(-5, 3.5, 1), 
                      labels = seq(-5, 3.5, 1)) +
   geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_viridis(name = "LAZ", option = "magma") 
+  scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) 
 
 # to do: add better labels, n, etc
 
 ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=11, height=6)
 
-
 # --------------------------------------------
-# Kolmogorov-Smirnov test
+# % stunted / median 
 # --------------------------------------------
 
-# wrapper for ks.test
-run_ks_by_age = function(age_rec, data){
+# function to get % stunted and min, med, max
+# for each recovery cohort at each subsequent
+# measurement age 
+summarize_dist = function(age_recov, data){
   
-  age_meas_list = rev(levels(data$age_meas[data$age_rec==age_rec]))
+  data = data %>% filter(age_rec == age_recov) 
   
-  ks_res = matrix(NA, nrow = length(age_meas_list), ncol = 9)
+  tab_age_meas =  table(data$age_meas)
+  
+  age_meas_list = rev(names(tab_age_meas[tab_age_meas>0]))
+  
+  res = matrix(NA, nrow = length(age_meas_list), ncol = 8)
+  
   for(i in 1:(length(age_meas_list))){
-    x = plot_data %>% 
-      filter(age_rec == age_rec & 
-               age_meas == age_meas_list[1]) %>%
-      select(haz)
-    
-    y = plot_data %>% 
-      filter(age_rec == age_rec & 
+    y = data %>% 
+      ungroup() %>%
+      filter(age_rec == age_recov & 
                age_meas == age_meas_list[i]) %>%
-      select(haz)
+      mutate(stunted = ifelse(haz < -2 , 1, 0))
     
-    y_q = quantile(y$haz, probs = c(0, .5, 1))
+    prev.cohort = y %>%
+      group_by(studyid,country) %>%
+      summarise(nmeas=length(unique(subjid)),
+                prev=mean(stunted),
+                nxprev=sum(stunted==1))
     
-    ks_out = ks.test(x = x$haz, y = y$haz)
-    
-    ks_res[i, 1] = age_rec
-    ks_res[i, 2] = age_meas_list[i]
-    ks_res[i, 3] = y_q[1]
-    ks_res[i, 4] = y_q[2]
-    ks_res[i, 5] = y_q[3]
-    ks_res[i, 6] = as.numeric(ks_out$statistic)
-    ks_res[i, 7] = as.numeric(ks_out$p.value)
-    ks_res[i, 8] = ks_out$alternative
-    ks_res[i, 9] = ks_out$method
+    re = fit.rma.rec.cohort(
+      data = prev.cohort,
+      ni = "nmeas",
+      xi = "nxprev",
+      measure = "PLO",
+      nlab = "children"
+    )
+  
+    res[i,1] = age_recov
+    res[i,2] = age_meas_list[i]
+    res[i,3] = length(unique(y$studyid))
+    res[i,4] = length(unique(y$country))
+    res[i,5] = length(unique(y$subjid))
+    res[i,6] = re$est
+    res[i,7] = re$lb
+    res[i,8] = re$ub
     
   }
   
-  ks_res[1, 5] = ""
-  ks_res[1, 6] = ""
-  ks_res[1, 7] = ""
-  ks_res[1, 8] = ""
-  ks_res[1, 9] = ""
+  res = as.data.frame(res)
+  colnames(res) = c("age_rec", "age_meas",
+                    "nstudy", "ncountry", "nchild",
+                        "stunting_prev", "prev_lb", "prev_ub")
   
-  ks_df = as.data.frame(ks_res)
-  colnames(ks_df) = c("age_rec", "age_meas", 
-                      "min", "median", "max",
-                      "ks_stat", "pval", "tails", "method")
+  res$stunting_prev = as.numeric(as.character(res$stunting_prev))
+  res$prev_lb = as.numeric(as.character(res$prev_lb))
+  res$prev_ub = as.numeric(as.character(res$prev_ub))
   
-  ks_df = ks_df %>%
-    mutate(min = as.numeric(as.character(min)),
-           median = as.numeric(as.character(median)),
-           max = as.numeric(as.character(max)),
-           ks_stat = as.numeric(as.character(ks_stat)),
-           pval = as.numeric(as.character(pval)))
+  return(res)
   
-  return(ks_df)
-
 }
 
 age_rec_list = as.list(levels(plot_data$age_rec))
-ks_results_list = lapply(age_rec_list, function(x) run_ks_by_age(
+results_list = lapply(age_rec_list, function(x) summarize_dist(
   data = plot_data, age_rec = x))
 
-ks_results_df = bind_rows(ks_results_list)
+results_df = bind_rows(results_list)
 
-saveRDS(ks_results_df, file = paste0(res_dir, "ks_results_stunting.RDS"))
+
+saveRDS(results_df, file = paste0(res_dir, "stunting_rec_cohort_summary.RDS"))
