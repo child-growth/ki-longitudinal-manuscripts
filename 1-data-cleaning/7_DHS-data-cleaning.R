@@ -21,12 +21,6 @@ d <- df %>% rename(country = v000) %>%
   select("caseid", "country", "dataset", grep("hw", colnames(df))) %>%
   select(-contains("sh"))
 
-#drop Afghanistan, Cambodia, Sudan and Vietnam - confirm if OK to do this
-d <- filter(d, country != "AF7") 
-d <- filter(d, country != "KH6")
-d <- filter(d, country != "SD")
-d <- filter(d, country != "VNT")
-
 #check for duplicates
 table(duplicated(d))
 duplicates <- d[duplicated(d),]
@@ -44,7 +38,7 @@ d_haz_wide = d %>% select(caseid, country, dataset, year_vars,
                   age_vars, haz_vars)
 
 d_whz_wide = d %>% select(caseid, country, dataset, year_vars, 
-                  age_vars, whz_vars)
+                  age_vars, whz_vars) #68 countries
 
 #-------------------------------------------
 # Reshape from wide to long 
@@ -116,7 +110,7 @@ d_whz_long3 <- reshape(whz.temp3,
                        new.row.names = NULL
 )
 
-d_whz_long <- bind_rows(d_whz_long1, d_whz_long2, d_whz_long3)
+d_whz_long <- bind_rows(d_whz_long1, d_whz_long2, d_whz_long3) #after reshape 64 countries
 
 # Age columns start with "b". Data for to 20 children were recorded per woman. 
 # height for age columns start with "hw70". Data for up to 6 children under age 5 were collected
@@ -151,7 +145,7 @@ summary(d_whz_long$whz)
 
 # drop rows with missing values 
 #confim OK to drop NAs for year
-d_haz_long = d_haz_long %>% filter(!is.na(agem) & !is.na(haz) & !is.na(year)) 
+d_haz_long = d_haz_long %>% filter(!is.na(agem) & !is.na(haz) & !is.na(year)) #drops to 47 countries!
 d_whz_long = d_whz_long %>% filter(!is.na(agem) & !is.na(whz) & !is.na(year))
 
 #restrict to children ages 0-24 months
