@@ -254,7 +254,7 @@ fit.rma=function(data,age,ni,xi,measure,nlab, method = "REML"){
 # customized for stunting recovery cohort analysis
 # since it does not use age categories
 fit.rma.rec.cohort=function(data,ni,xi,measure,nlab, method = "REML"){
-  
+
   fit <- NULL
   try(fit <- rma(data=data, ni=data[[ni]], method=method, 
                  xi=data[[xi]], measure="PLO")) 
