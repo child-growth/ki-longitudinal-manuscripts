@@ -249,6 +249,55 @@ fit.rma=function(data,age,ni,xi,measure,nlab, method = "REML"){
 
 
 
+
+# random effects function, save results nicely
+# customized for stunting recovery cohort analysis
+# since it does not use age categories
+fit.rma.rec.cohort=function(data,ni,xi,measure,nlab, method = "REML"){
+
+  fit <- NULL
+  try(fit <- rma(data=data, ni=data[[ni]], method=method, 
+                 xi=data[[xi]], measure="PLO")) 
+  if(is.null(fit)){
+    method="ML"
+    try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], 
+                   method=method, measure = measure))
+  }
+  if(is.null(fit)){
+    method="DL"
+    try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], 
+                   method=method, measure = measure))
+  }
+  if(is.null(fit)){
+    method="HE"
+    try(fit <- rma(data=data, ni=data[[ni]], xi=data[[xi]], 
+                   method=method, measure = measure))
+  }
+  cat("\nMethod chosen to fit RE model:", method, "\n")
+  
+  out=data %>%
+    ungroup() %>%
+    summarise(nstudies=length(unique(studyid)),
+              nmeas=sum(data[[ni]])) %>%
+    mutate(
+      est = plogis(fit$beta),
+      se = fit$se,
+      lb = plogis(fit$beta-qnorm(0.975)*fit$se),
+      ub = plogis(fit$beta+qnorm(0.975)*fit$se),
+      nmeas.f = paste0("N=", format(
+        sum(data[[ni]]), big.mark = ",",
+        scientific = FALSE
+      ),
+      " ", nlab),
+      nstudy.f = paste0("N=", nstudies, " studies")
+    )
+  
+  return(out)
+  
+}
+
+
+
 # random effects function, save results nicely
 fit.cont.rma=function(data,age,yi,vi,ni,nlab){
   
