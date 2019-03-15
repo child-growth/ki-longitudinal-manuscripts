@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-config.R"))
 source("U:/Wasting/1-outcomes/0_wast_incfunctions.R")
 
 
-load("U:/Data/Wasting/wasting_data.RData")
+load("U:/ucb-superlearner/data/wasting_data.RData")
 
 d <- d %>% filter(measurefreq=="monthly")
 
@@ -110,7 +110,6 @@ d$whz2[d$whz >= (-2) & lead(d$whz) >= (-2) & lag(d$whz2) >= (-2) & d$agecat!="Bi
 
 
 # Individual trajectories by age
-df <- d[1:5000,]
 p <- ggplot(d, aes(x=agecat, group=id)) +
   geom_line(aes(y=whz, alpha=0.1), color="gray70") +
   geom_hline(aes(yintercept=-2),linetype="dashed") +
@@ -129,7 +128,7 @@ p <- ggplot(d, aes(x=agecat, group=id)) +
     axis.ticks.y=element_line(color="gray40")
   )
 
-#ggsave(p, file="figures/wasting/pool_wast_traj.png", width=10, height=5)
+ggsave(p, file="figures/wasting/pool_wast_traj.png", width=10, height=5)
 
 
 
@@ -139,13 +138,13 @@ d <- d %>% group_by(studyid, subjid) %>% arrange(agecat) %>%
 
 d$born_wasted <- ifelse(d$born_wasted==1, "Born wasted", "Not born wasted")
 
-
-p <- ggplot(d, aes(x=agecat, y=whz, group=subjid, color=lead(velcat2)) ) +
+p <- ggplot(d, aes(x=agecat)) +
   facet_wrap(~born_wasted)+
-  geom_line(aes(alpha=lead(velcat))) +
-  scale_alpha_manual(values=c(1,0.7,0.3,0.3,0.7,1)) +
+  geom_line(aes(y=whz, alpha=0.1, group=id), color="gray70") +
   geom_hline(aes(yintercept=-2),linetype="dashed") +
-  scale_color_manual(values=cols)+
+  geom_line(aes(y=whz2, color=inccat, group=id)) +
+  geom_smooth(aes(y=whz)) +
+  scale_color_manual(values=cols) +
   xlab("Age in months") +
   ylab("WHZ") +
   theme_bw() +
@@ -157,5 +156,7 @@ p <- ggplot(d, aes(x=agecat, y=whz, group=subjid, color=lead(velcat2)) ) +
   )
 
 
-#ggsave(p, file="figures/wasting/pool_wast_traj_bw_strat.png", width=10, height=5)
+
+
+ggsave(p, file="figures/wasting/pool_wast_traj_bw_strat.png", width=10, height=5)
 

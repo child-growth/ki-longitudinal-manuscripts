@@ -46,21 +46,20 @@ get_rec = function(data, age_upper){
   
   rec_data_haz = full_join(rec_data, data, 
     by = c("studyid", "country", "subjid")) %>%
+
     filter(!is.na(age_rec)) %>%
     select(studyid, country, subjid, agedays, haz, age_rec)
   
   # subsequent measurement ages after recovery
   age_meas = seq(age_upper, 15, 3) 
   
-
   rec_meas_sub_list = lapply(age_meas, function(x) 
     subset_rec(data = rec_data_haz, 
                age_months = x,
                age_range = age_range))
-
   
   rec_meas_sub = bind_rows(rec_meas_sub_list)
-
+  
 }
 
 
@@ -180,11 +179,12 @@ ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", 
 # for each recovery cohort at each subsequent
 # measurement age 
 summarize_dist = function(age_recov, data){
-  
+
   data = data %>% filter(age_rec == age_recov) 
   
   tab_age_meas =  table(data$age_meas)
   
+
   age_meas_list = rev(names(tab_age_meas[tab_age_meas>0]))
   
   res = matrix(NA, nrow = length(age_meas_list), ncol = 8)
@@ -195,7 +195,7 @@ summarize_dist = function(age_recov, data){
       filter(age_rec == age_recov & 
                age_meas == age_meas_list[i]) %>%
       mutate(stunted = ifelse(haz < -2 , 1, 0))
-    
+
     prev.cohort = y %>%
       group_by(studyid,country) %>%
       summarise(nmeas=length(unique(subjid)),
@@ -209,7 +209,7 @@ summarize_dist = function(age_recov, data){
       measure = "PLO",
       nlab = "children"
     )
-  
+
     res[i,1] = age_recov
     res[i,2] = age_meas_list[i]
     res[i,3] = length(unique(y$studyid))
@@ -225,6 +225,7 @@ summarize_dist = function(age_recov, data){
   colnames(res) = c("age_rec", "age_meas",
                     "nstudy", "ncountry", "nchild",
                         "stunting_prev", "prev_lb", "prev_ub")
+
   
   res$stunting_prev = as.numeric(as.character(res$stunting_prev))
   res$prev_lb = as.numeric(as.character(res$prev_lb))

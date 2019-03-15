@@ -133,6 +133,7 @@ rec.prev <- d %>%
   group_by(studyid,country,subjid, agecat) %>%
   mutate(rank=min_rank(-agedays),
          maxrank = max(rank)) %>%
+
   
   group_by(studyid,country,subjid) %>%
   mutate(stunted=ifelse(haz< -2,1,0),
@@ -226,6 +227,8 @@ x=rec.age(s.agem = 18, r.agem = 21, data = d)
 
 
 
+table(stunt_data$total_indicators)
+
 stunt_data = rec.prev
 
 
@@ -284,10 +287,22 @@ summary = stunt_data %>%
          relapse = relapse/childmonths)
 
 
+
+summary = stunt_data %>%
+  group_by(agecat) %>%
+  summarise(
+    nchild=length(unique(subjid)),
+    newly_stunted = mean(newly_stunted, na.rm = TRUE),
+    still_stunted = mean(still_stunted, na.rm = TRUE),
+    prev_stunted = mean(prev_stunted, na.rm = TRUE),
+    never_stunted = mean(never_stunted, na.rm = TRUE),
+    relapse = mean(relapse, na.rm = TRUE))
+
 summary = summary %>%
   mutate(sum = still_stunted + newly_stunted + recover + never_stunted + relapse)
 
 summary
+
 
 
 # check indicators against minimum HAZ within age groups

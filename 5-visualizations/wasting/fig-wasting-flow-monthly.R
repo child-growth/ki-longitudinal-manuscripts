@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-config.R"))
 source("U:/Wasting/1-outcomes/0_wast_incfunctions.R")
 
 
-load("U:/Data/Wasting/wasting_data.RData")
+load("U:/ucb-superlearner/data/wasting_data.RData")
 
 d <- d %>% filter(measurefreq=="monthly")
 

@@ -45,6 +45,13 @@ unique(wmd$study_id)
 #fix PROVIDE location
 wmd$countrycohort[wmd$study_id=="PROVIDE"] <- "BANGLADESH"
 
+#drop mal-ed Pakistan
+md <- md[!(md$study_id=="MAL-ED" & (is.na(md$countrycohort)|md$countrycohort=="PAKISTAN")),]
+wmd <- wmd[!(wmd$study_id=="MAL-ED" & (is.na(wmd$countrycohort)|wmd$countrycohort=="PAKISTAN")),]
+
+#drop yearly COHORTS
+md <- md[!(md$study_id=="COHORTS" & (md$countrycohort=="BRAZIL"|md$countrycohort=="SOUTH AFRICA")),] 
+wmd <- wmd[!(wmd$study_id=="COHORTS" & (wmd$countrycohort=="BRAZIL"|wmd$countrycohort=="SOUTH AFRICA")),] 
 
 md <- md[(md$study_id %in% wmd$study_id),]
 wmd <- wmd[(wmd$study_id %in% md$study_id),]
@@ -61,6 +68,8 @@ wmd <- wmd %>% select(study_id, countrycohort, wastprev, wastprev_m1, wastprev_m
                       wastprev_m15, wastprev_m16, wastprev_m17, wastprev_m18,
                       wastprev_m19, wastprev_m20, wastprev_m21, wastprev_m22,
                       wastprev_m23, wastprev_m24)
+dim(wmd)
+dim(md)
 md <- merge(md, wmd, by=c('study_id', 'countrycohort'), all = TRUE)
 dim(md)
 
@@ -80,11 +89,16 @@ for(i in 1:24){
 # convert wasting prevalence to numeric
 md$wastprev <- as.numeric(md$wastprev)
 for(i in 1:24){
-  ni <- paste("n",i,sep="")
   wi <- paste("wastprev_m",i,sep="")
-  md[ni] <- as.numeric(md[,c(ni)])
   md[wi] <- as.numeric(md[,c(wi)])
 }
+
+# convert mean HAZ to numeric
+for(i in 1:24){
+  wi <- paste("meanHAZ_m",i,sep="")
+  md[wi] <- as.numeric(md[,c(wi)])
+}
+
 
 # calculate the total number of measurements
 md$nmeas <- rowSums(md[,paste('n',1:24,sep='')],na.rm=TRUE)
@@ -186,6 +200,14 @@ dwastp <- select(dd,study_id,country,studycountry,starts_with('wastprev_m')) %>%
   select(study_id,country,studycountry,age,wp) %>%
   filter(age>=1 & age <=24 )
 
+# gather meanWHZ by month data into long format
+dhaz <- select(dd,study_id,country,studycountry,starts_with('meanHAZ_m')) %>%
+  gather(age,haz,-study_id,-country,-studycountry) %>%
+  mutate(age=as.integer(str_sub(age,10,-1))) %>%
+  select(study_id,country,studycountry,age,haz) %>%
+  filter(age>=1 & age <=24 )
+
+
 # join the long tables together and sort countries by measure_freq and stunting prev
 dim(dnsubj)
 dim(dstuntp)
@@ -193,28 +215,39 @@ dp <- left_join(dnsubj,dstuntp,by=c('study_id','studycountry','age'))
 dim(dp)
 dp <- left_join(dp,dwastp,by=c('study_id','studycountry','age'))
 dim(dp)
+dp <- left_join(dp,dhaz,by=c('study_id','studycountry','age'))
+dim(dp)
 
 # categorize stunting prevalence, set stunting prevalence category estimates to missing if n<50
 dp$stpcat <- cut(dp$stp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
-
 dp$stpcat <- factor(dp$stpcat)
 dp$stpcat[dp$nobs<50 | is.nan(dp$stp)] <- NA
 
 # categorize wasting prevalence, set wasting prevalence category estimates to missing if n<50
 dp$wpcat <- cut(dp$wp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
-
 dp$wpcat <- factor(dp$wpcat)
 dp$wpcat[dp$nobs<50 | is.nan(dp$wp)] <- NA
 
 # categorize number of observations
-
 N_breaks <- c(1,50, 100, 250, 500, 750, 1000, 1500, 2000, 100000)
 dp$ncat <- cut(dp$nobs,
                breaks=N_breaks,
                labels=c('<50','50-100','100-250','250-500','500-750','750-1000','1000-1500','1500-2000','>2000'))
 dp$ncat <- factor(dp$ncat)
 
+# categorize mean HAZ
+summary(dp$haz)
+dp$hazcat <- cut(dp$haz,breaks=c(-5, -3, -2.5, -2,-1.5,-1,-0.5,0,5), 
+                 labels=c("<= -3","(-3,-2.5]", "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",  "(-0.5,0]", ">0" ))
+table(dp$hazcat)
+dp$hazcat<- factor(dp$hazcat)
+dp$hazcat[dp$nobs<50 | is.nan(dp$hazcat)] <- NA
 
+dp$hazcatnew = as.character(dp$hazcat)
+dp$hazcatnew = ifelse(is.na(dp$hazcat), "Fewer than 30\nobservations", dp$hazcatnew)
+dp$hazcatnew<- factor(dp$hazcatnew, levels = c("<= -3","(-3,-2.5]",
+                              "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",
+                              "(-0.5,0]", ">0", "Fewer than 30\nobservations"))
 
 
 #-----------------------------------
@@ -341,18 +374,36 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 #-----------------------------------
 # STUNTING PREVALENCE HEAT MAP
 #-----------------------------------
-
 # heat map
-stphm <- hm + 
-  aes(fill=stpcat) +
-  labs(x="Age in months",y="",title="Stunting prevalence by month of age") +
+stphm <- hm +
+  aes(fill=hazcat) +
+  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
+  # scale_fill_manual("Mean HAZ", values = viridis_cols)
 
-  scale_fill_viridis_d(option = "C",
+  scale_fill_viridis(option = "C",
                      na.value="grey90",
                      direction = -1,
                      end = 0.8,
-                     guide=guide_legend(title="Stunting (%)",title.vjust = 1,
-                                        label.position="bottom",label.hjust=0.5,nrow=1)) 
+                     guide=guide_legend(title="Mean HAZ",title.vjust = 1,
+                                        label.position="bottom",label.hjust=0.5,nrow=1),
+                     discrete=TRUE)
+
+# anna start here
+# viridis_cols = c(viridis(
+#   n = length(levels(dp$hazcatnew)) - 1,
+#   alpha = 1,
+#   begin = 0,
+#   end = 0.8,
+#   direction = -1,
+#   option = "C"
+# ),
+# "grey90")
+
+# stphm <- hm +
+#   aes(fill = hazcatnew) +
+#   labs(x = "Age in months", y = "", title = "Mean height-for-age Z-score by month of age") +
+#   scale_fill_manual("Mean HAZ", values = viridis_cols)
+  
 
 # number of obs side bar plot
 nbar <- sidebar +
@@ -365,7 +416,7 @@ nbar <- sidebar +
 # stunting prevalence side bar plot
 stpbar <- sidebar +
   aes(y=stuntprev,fill=stpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Stunting (%)") +
+  labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
@@ -379,7 +430,7 @@ nbar = nbar + margin
 # combined plot
 stpgrid <- grid.arrange(stphm, stpbar, nbar, nrow = 1, ncol = 3, 
                         widths=c(100,20,20))
-ggsave(filename="figures/stunting/stunting-study-inventory-heatmap-prev.pdf",plot = stpgrid,device='pdf',width=12,height=9)
+ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
 
 
 
