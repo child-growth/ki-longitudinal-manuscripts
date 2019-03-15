@@ -103,6 +103,9 @@ p <-  ggplot() +
   ggtitle("") + 
   scale_color_manual(values = c("blue", "red", "green"))
 
+
+
+
 ####GGPLOT
 #p <- ggplot(combine.haz,aes(x=agem)) +
   #stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP cohorts"), se=F, span = 0.5) +
