@@ -31,7 +31,7 @@ d = d %>%
   mutate(revmeasid = rev(seq_along(agedays)))
 
 # temporarily just subset to first study
-d = d %>% filter(studyid == "ki0047075b-MAL-ED")
+# d = d %>% filter(studyid == "ki0047075b-MAL-ED")
 
 # drop kids who only have measurements at birth
 drop = d %>% group_by(studyid, country, subjid) %>%
