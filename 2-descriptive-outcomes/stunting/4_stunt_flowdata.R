@@ -32,189 +32,87 @@ d = d %>%
   mutate(revmeasid = rev(seq_along(agedays)))
 
 # temporarily just subset to first study
-# d = d %>% filter(studyid == "ki0047075b-MAL-ED")
-
-# drop kids who only have measurements at birth
-drop = d %>% group_by(studyid, country, subjid) %>%
-  summarise(measid = max(measid)) %>%
-  filter(measid==1)
-
-d = d %>% filter(!subjid %in% drop$subjid)
+d = d %>% filter(studyid == "ki0047075b-MAL-ED")
 
 ##########################################
 # Define indicators of stunting at each time point
 ##########################################
 # define age windows
-d <- calc.ci.agecat(d, range = 3)
+d <- d %>% 
+      mutate(agecat=ifelse(agedays==1, "Birth",
+                      ifelse(agedays>1 & agedays<=3*30.4167,"0-3 months",
+                           ifelse(agedays>3*30.4167 & agedays<=6*30.4167,"3-6 months",
+                                  ifelse(agedays>6*30.4167 & agedays<=9*30.4167,"6-9 months",
+                                         ifelse(agedays>9*30.4167 & agedays<=12*30.4167,"9-12 months",
+                                                ifelse(agedays>12*30.4167 & agedays<=15*30.4167,"12-15 months",
+                                                       ifelse(agedays>15*30.4167 & agedays<=18*30.4167,"15-18 months",
+                                                              ifelse(agedays>18*30.4167 & agedays<=21*30.4167,"18-21 months",
+                                                                     ifelse(agedays>21*30.4167& agedays<=24*30.4167,"21-24 months","")))))))))) %>%
+      mutate(agecat=factor(agecat,levels=c("Birth","0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")))
+  
+# check age categories
+d %>% group_by(agecat) %>%
+  summarise(min = min(agedays)/30.4167,
+            max = max(agedays)/30.4167)
 
-rec.prev <- d %>%
 
-  group_by(studyid,country,subjid, agecat) %>%
-
+flow_m = d %>%
+  mutate(agem = agedays / 30.4167) %>%
   group_by(studyid,country,subjid) %>%
+
   mutate(stunted=ifelse(haz< -2,1,0),
          lagstunted=lag(stunted),
-         leadstunted=lead(stunted),
-         lageverstunted = lag(cummax(stunted)),
-         two_stunt = ifelse(stunted==1 & leadstunted==1,1,0),
-         ctwo_stunt = lag(cummax(two_stunt))) %>%
+         lageverstunted = lag(cummax(stunted))) %>%
   
-  # newly stunted if the last observation
-  # in that age category LAZ < -2
   mutate(newly_stunted = ifelse(stunted==1 & 
-                                leadstunted==1 &
-                                ctwo_stunt == 0 , 1, 0),
+                                lageverstunted == 0 , 1, 0),
          
          recover =       ifelse(stunted==0 &
-                                leadstunted==0 &
                                 lagstunted==1 &
-                                ctwo_stunt==1, 1, 0)) %>%
+                                lageverstunted==1, 1, 0),
          
-  # recoding indicators at first measurement since lag is NA
+         never_stunted =       ifelse(stunted==0 &
+                                lagstunted==0 &
+                                lageverstunted==0, 1, 0)) %>%
+
+ # recoding indicators at first measurement since lag is NA
   mutate(newly_stunted = ifelse(stunted==1 & measid==1, 1, newly_stunted),
          
-         recover = ifelse(stunted==0 & measid==1, 0, recover),
+         never_stunted = ifelse(stunted==0 & measid==1, 1, never_stunted),
+      
+         recover = ifelse(stunted==0 & measid==1, 0, recover)) %>%
            
-         everrecover = cummax(recover),
+ # code relapse 
+   mutate(everrecover = cummax(recover),
+          evernew = cummax(newly_stunted),
          
          relapse =       ifelse(stunted==1 &
-                                leadstunted==1 &
-                                ctwo_stunt==1 &
-                                everrecover==1, 1, 0)) %>%
-  
-  # recoding indicators at first measurement since lag is NA
-  mutate(relapse = ifelse(stunted==1 & measid==1, 0, relapse)) %>%
-  
+                                lageverstunted==1 &
+                                lagstunted==0 &
+                                everrecover==1, 1, 0),
+         
+         still_stunted = ifelse(stunted==1 & 
+                                 evernew==1 &
+                                  lagstunted==1, 1, 0),
+         
+         not_stunted =   ifelse(stunted==0 & 
+                                lagstunted==0 &
+                                 everrecover==1, 1, 0))  %>%
 
-  # recoding indicators for last measurement since lead is NA
-  mutate(newly_stunted = ifelse(stunted==1 & 
-                                revmeasid==1 &
-                                ctwo_stunt == 0, 1, newly_stunted),
-       
-         relapse =       ifelse(stunted==1 &
-                                revmeasid==1 &
-                                ctwo_stunt==1 &
-                                everrecover==1, 1, relapse),
-         
-         recover = ifelse(stunted==0 &
-                          revmeasid==1 &
-                          lagstunted==1 &
-                          ctwo_stunt==1, 1, recover))
-  
-# ever recover, relapse, newly stunted in each age  
-rec_agecat = rec.prev %>% group_by(studyid, country, subjid, agecat) %>%
-  summarise(new_age = max(newly_stunted),
-            rec_age = max(recover),
-            rel_age = max(relapse)) %>%
-  mutate(lag_new_age = lag(new_age),
-         lag_rec_age = lag(rec_age),
-         lag_rel_age = lag(rel_age))
-
-rec.prev = full_join(rec.prev, rec_agecat, by = c("studyid", "country", "subjid", "agecat"))
-
-# create indicators for still, not, never stunted
-rec.prev = rec.prev %>%
-  group_by(studyid, country, subjid) %>%
-
-  mutate(still_stunted = ifelse(new_age==0 &
-                                rec_age==0 &
-                                rel_age==0 &
-                                stunted==1 &
-                                ctwo_stunt == 1 , 1, 0),
-         
-         not_stunted =   ifelse(new_age==0 &
-                                  rec_age==0 &
-                                  rel_age==0 &
-                                  stunted==0 &
-                                  ctwo_stunt==1, 1, 0),
-         
-         never_stunted = ifelse(new_age==0 &
-                                  rec_age==0 &
-                                  rel_age==0 &
-                                  ctwo_stunt==0, 1, 0)
-         
-         ) %>%
-  
-  group_by(studyid, country, subjid, agecat) %>%
-  mutate(still_age = max(still_stunted),
-         not_age = max(not_stunted)) %>%
-
-  # recoding if LAZ fluctuated and so child had both 
-  # still stunted and not stunted in same interval 
-  # with no other indicator
-  
-  # stunted in previous age cat, fluctuate in current age cat
-  group_by(studyid, country, subjid) %>%
-  mutate(still_stunted2 = ifelse(new_age==0 &
-                                  rec_age==0 &
-                                  rel_age==0 &
-                                  still_age==1 &
-                                  not_age==1 &
-                                  (lag_rel_age==1 | lag_new_age==1), 1,still_stunted),
-         
-         not_stunted2 = ifelse(new_age==0 &
-                               rec_age==0 &
-                               rel_age==0 &
-                               still_age==1 &
-                               not_age==1 &
-                               (lag_rel_age==1 | lag_new_age==1), 0,not_stunted),
-         
-         still_stunted2 = ifelse(new_age==0 &
-                                 rec_age==0 &
-                                 rel_age==0 &
-                                 still_age==1 &
-                                 not_age==1 &
-                                 lag_rec_age==1 , 0,still_stunted2),
-         
-         not_stunted2 = ifelse(new_age==0 &
-                                 rec_age==0 &
-                                 rel_age==0 &
-                                 still_age==1 &
-                                 not_age==1 &
-                                 lag_rec_age==1 , 1,not_stunted2)
-         ) %>%
+  # recode still stunted at first measurement  
+     mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
 
   
-  # if relapsed in previous category recode as still stunted, not relapsed again
-  mutate(relapse = ifelse(lag_rel_age == 1 & !is.na(lag_rel_age) & 
-                          relapse == 1, 0, relapse), 
-         
-         still_stunted2 = ifelse(lag_rel_age == 1 & 
-                                 new_age==0 &
-                                 rec_age==0 &
-                                 stunted==1 &
-                                 ctwo_stunt == 1, 1, still_stunted2)) %>%
-
-  # if recovered in previous category recode as not stunted, not recovered again
-    mutate(recover = ifelse(lag_rec_age == 1 & !is.na(lag_rec_age) & 
-                          recover == 1, 0, recover), 
-         
-         not_stunted2 = ifelse(lag_rec_age == 1 & 
-                                 new_age==0 &
-                                 rel_age==0 &
-                                 stunted==0 &
-                                 ctwo_stunt == 1, 1, not_stunted2))  %>%
   
-  # recoding indicators at first measurement since lag is NA
-  mutate(still_stunted2 = ifelse(measid==1, 0, still_stunted2),
-         not_stunted2 = ifelse(measid==1, 0, not_stunted2),
-         never_stunted = ifelse(stunted==0 & measid==1, 1, never_stunted)) %>%
   
-    
-# if newly and never in same cat, choose newly
-  group_by(studyid, country, subjid, agecat) %>%
-  mutate(nev_age = max(never_stunted)) %>%
-  group_by(studyid, country, subjid) %>%
+  
 
-  mutate(never_stunted = ifelse(new_age==1 &
-                                nev_age==1 , 0, never_stunted))
-
-# rec.prev[rec.prev$subjid==103,-c(1:5, 7,9:11, 13:14)]
+# rec.prev[rec.prev$subjid==103,-c(1:5, 7,10:11, 14)]
 # rec.prev[rec.prev$subjid==103,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
-# # age 3-6 should be still stunted 
+# # age 3-6 should be still stunted
 # # age 12-15 months should be not stunted
 # 
-# # what to do with the last row of 103? 
+# # what to do with the last row of 103?
 # # id 108 meas id 12
 # rec.prev[rec.prev$subjid==108,-c(1:5, 7,9:11, 13:14)][1:10,]
 # rec.prev[rec.prev$subjid==108,-c(1:5, 7,9:11, 13:14)][11:24,]
@@ -225,39 +123,38 @@ rec.prev = rec.prev %>%
 # rec.prev[rec.prev$subjid==2,-c(1:5, 7)][9:24,]
 # rec.prev[rec.prev$subjid==2,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][1:8,]
 # rec.prev[rec.prev$subjid==2,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][9:24,]
-
-rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11)][1:9,]
-rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11,14)][10:23,]
-rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
-rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","new_age","never_stunted","nev_age")][1:9,]
+# 
+# rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11)][1:9,]
+# rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11,14)][10:23,]
+# rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
+# rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","new_age","never_stunted","nev_age")][1:9,]
 
 
 # drop measurements with ages over 24 months
-rec.prev = rec.prev %>% filter(!is.na(agecat)) 
+flow_m = flow_m %>% filter(!is.na(agecat)) 
+
+# summarise within age months
+flow_m = flow_m %>% mutate(agem = round(agem))
 
 # check that indicators do not contain missing values
-assert_that(names(table(is.na(rec.prev$newly_stunted)))=="FALSE")
-assert_that(names(table(is.na(rec.prev$recover)))=="FALSE")
-assert_that(names(table(is.na(rec.prev$relapse)))=="FALSE")
-assert_that(names(table(is.na(rec.prev$still_stunted2)))=="FALSE")
-assert_that(names(table(is.na(rec.prev$not_stunted2)))=="FALSE")
-assert_that(names(table(is.na(rec.prev$never_stunted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$newly_stunted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$recover)))=="FALSE")
+assert_that(names(table(is.na(flow_m$relapse)))=="FALSE")
+assert_that(names(table(is.na(flow_m$still_stunted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$not_stunted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$never_stunted)))=="FALSE")
 
-# summarise within age categories
-stunt_data = rec.prev %>%
-  group_by(studyid, country, subjid, agecat) %>%
-  summarise(newly_stunted = max(newly_stunted),
-            recover = max(recover),
-            relapse = max(relapse),
-            still_stunted = max(still_stunted2),
-            not_stunted = max(not_stunted2),
-            never_stunted = max(never_stunted))
+# check for multiple categories
+flow_m = flow_m %>% mutate(sum = newly_stunted + 
+                             still_stunted + recover + not_stunted + never_stunted + 
+                             relapse)
+assert_that(names(table(flow_m$sum))=="1")
 
 
 # Check that no child was classified in more
 # than one category at any time point 
-summary = stunt_data %>%
-  group_by(agecat) %>%
+summary = flow_m %>%
+  group_by(agem) %>%
   summarise(
     nchild=length(unique(subjid)),
     newly_stunted = mean(newly_stunted, na.rm = TRUE),
@@ -275,8 +172,10 @@ summary
 
 
 # aggregate data within study, country, and agecat
-stunt_agg = stunt_data %>%
-  group_by(studyid, country, agecat) %>%
+stunt_agg = flow_m %>%
+  ungroup() %>%
+  mutate(agem = as.factor(agem)) %>%
+  group_by(studyid, country, agem) %>%
   summarise(
     nchild=length(unique(subjid)),
     newly_stunted = sum(newly_stunted),
@@ -287,37 +186,37 @@ stunt_agg = stunt_data %>%
     relapse = sum(relapse))  
 
 # estimate random effects, format results
-pooled_newly = run_rma(data = stunt_agg, 
+pooled_newly = run_rma_agem(data = stunt_agg, 
                        n_name = "nchild", 
                        x_name = "newly_stunted", 
                        label = "Newly stunted",
                        method = "REML")
 
-pooled_still = run_rma(data = stunt_agg, 
+pooled_still = run_rma_agem(data = stunt_agg, 
                        n_name = "nchild", 
                        x_name = "still_stunted", 
                        label = "Still stunted",
                        method = "REML")
 
-pooled_not = run_rma(data = stunt_agg, 
+pooled_not = run_rma_agem(data = stunt_agg, 
                        n_name = "nchild", 
                        x_name = "not_stunted", 
                        label = "Not stunted",
                        method = "REML")
 
-pooled_rec = run_rma(data = stunt_agg, 
+pooled_rec = run_rma_agem(data = stunt_agg, 
                       n_name = "nchild", 
                       x_name = "recover",
                       label = "Recovered",
                       method = "REML")
 
-pooled_relapse = run_rma(data = stunt_agg, 
+pooled_relapse = run_rma_agem(data = stunt_agg, 
                          n_name = "nchild", 
                          x_name = "relapse",
                          label = "Stunting relapse",
                          method = "REML")
 
-pooled_never = run_rma(data = stunt_agg, 
+pooled_never = run_rma_agem(data = stunt_agg, 
                        n_name = "nchild", 
                        x_name = "never_stunted",
                        label = "Never stunted",
@@ -337,12 +236,12 @@ stunt_pooled = bind_rows(pooled_newly,
 #----------------------------------------------
 
 # identify which cells have 0's 
-newly_0 = as.character(summary$agecat[summary$newly_stunted==0])
-still_0 = as.character(summary$agecat[summary$still_stunted==0])
-rec_0 = as.character(summary$agecat[summary$recover==0])
-relapse_0 = as.character(summary$agecat[summary$relapse==0])
-not_0 = as.character(summary$agecat[summary$not_stunted==0])
-never_0 = as.character(summary$agecat[summary$never_stunted==0])
+newly_0 = as.character(summary$agem[summary$newly_stunted==0])
+still_0 = as.character(summary$agem[summary$still_stunted==0])
+rec_0 = as.character(summary$agem[summary$recover==0])
+relapse_0 = as.character(summary$agem[summary$relapse==0])
+not_0 = as.character(summary$agem[summary$not_stunted==0])
+never_0 = as.character(summary$agem[summary$never_stunted==0])
 
 # function to replace est, se, lb, ub, est.f if
 # no observations in summary
@@ -385,7 +284,7 @@ stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
                                  label = "Never stunted")
 
 
-saveRDS(stunt_data, file=paste0(res_dir, "stuntflow.RDS"))
+saveRDS(flow_m, file=paste0(res_dir, "stuntflow.RDS"))
 saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stuntflow_pooled.RDS"))
 
 
