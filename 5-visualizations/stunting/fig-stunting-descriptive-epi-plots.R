@@ -114,7 +114,8 @@ df <- df %>%
   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
   mutate(agecat = as.numeric(agecat)) %>%
   mutate(region = ifelse(region=="Asia", "South Asia", region)) %>% 
-  gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "LAZ")
+  gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "LAZ") %>% 
+  mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
   
 # NEED TO ADD LEGEND
 
@@ -133,26 +134,27 @@ p <- ggplot(df,aes(x = agecat, group = region)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
   #scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
   #                  name = 'Region') +
-  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+  scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=TRUE, limits = levels(df$measure), 
                      name = 'Region') +
-  scale_linetype_manual(values = c("fiftiest_perc" = "solid",
+  scale_linetype_manual(name = "interval", values = c("fiftieth_perc" = "solid",
                                    "ninetyfifth_perc" = "dashed",
                                    "fifth_perc" = "dotted"),
-                        breaks = c("fiftiest_perc",
+                        breaks = c("fiftieth_perc",
                                    "ninetyfifth_perc",
                                    "fifth_perc"),
-                        labels = c("50", "95", "5")) +
+                        labels = c("Mean", "95th percentile", "5th percentile")) +
   xlab("Child age, months") +
   ylab("Length-for-age Z-score") +
   ggtitle("") +
   theme(strip.text = element_text(margin=margin(t=5))) +
-  guides(linetype = guide_legend(keywidth = 3, keyheight = 1),
+  guides(linetype = guide_legend(override.aes = list(col = 'black'), 
+                                 keywidth = 3, keyheight = 1),
            colour = FALSE) +
   theme(legend.position = "bottom",
         legend.title = element_blank(),
-        )
+        legend.background = element_blank(),
+        legend.box.background = element_rect(colour = "black"))
 
-p
 ggsave(p, file="figures/stunting/fig_stunt_mean_quantile_LAZ_region.png", width=10, height=8)
 
 
