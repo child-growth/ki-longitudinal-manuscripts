@@ -24,14 +24,14 @@ whz <- whz %>%
                             is.na(region) ~ "AFRO"))
 
 #age-specific mean z-scores
-country.haz <- haz %>% group_by(country) %>% summarize(haz_mn = mean(haz), haz_sd = sd(haz))
-country.whz <- whz %>% group_by(country) %>% summarize(whz_mn = mean(whz), whz_sd = sd(whz))
+#country.haz <- haz %>% group_by(country) %>% summarize(haz_mn = mean(haz), haz_sd = sd(haz))
+#country.whz <- whz %>% group_by(country) %>% summarize(whz_mn = mean(whz), whz_sd = sd(whz))
 
 #why is madagascar not in whz dataset??
 
 #merge in mean z-scores estimates
-haz <- merge(haz, country.haz, by="country")
-whz <- merge(whz, country.whz, by="country")
+#haz <- merge(haz, country.haz, by="country")
+#whz <- merge(whz, country.whz, by="country")
 
 
 
@@ -84,15 +84,15 @@ haz.overlap <- haz %>%
 
 ####LOESS
 
-fit.haz.dhs=loess(haz~agem, data=haz)
-haz$predhaz = predict(fit.haz.dhs)
+fit.haz.dhs=loess(haz ~ agem, data=haz, span=0.50)
+haz$predhaz = predict(fit.haz.dhs, newdata=haz$agem)
 fit.haz.ghap=loess(est~agem, data=df)
 df$predest = predict(fit.haz.ghap)
 fit.haz.overlap=loess(haz~agem, data=haz.overlap)
 haz.overlap$predhazover = predict(fit.haz.overlap)
 
 
-p <- ggplot(data=haz, group=region, color=region, fill=region) +
+p <- ggplot() +
   geom_line(data=haz, aes(y = predhaz, x=agem, linetype="solid"), size = 1) +
   geom_line(data=df, aes(y=predest, x=agem, group=region, linetype="dashed"), size = 1)+
   geom_line(data=haz.overlap, aes(y=predhazover, x=agem, group=region, linetype="dotted"), size=1)+
@@ -102,9 +102,9 @@ p <- ggplot(data=haz, group=region, color=region, fill=region) +
   xlab("Child age, months")+
   ylab("mean Length-for-age Z-score")+
   ggtitle("") + 
-  theme(strip.text = element_text(margin=margin(t=5))) +
-  theme(legend.position="left") +
-  scale_linetype_manual("Region",values=c("DHS overlap"=3,"DHS"=2,"GHAP cohorts"=1))
+  theme(strip.text = element_text(margin=margin(t=5))) 
+  #theme(legend.position="left") +
+  #scale_fill_discrete(names="Region",values=c("DHS overlap"=3,"DHS"=2,"GHAP cohorts"=1))
 
 
 ####GGPLOT

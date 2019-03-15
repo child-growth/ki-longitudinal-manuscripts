@@ -32,10 +32,14 @@ d <- d %>% distinct()
 year_vars = c("hw19_1", "hw19_2", "hw19_3", "hw19_4", "hw19_5", "hw19_6")
 age_vars = c("hw1_1", "hw1_2", "hw1_3", "hw1_4", "hw1_5", "hw1_6")
 haz_vars = colnames(df)[grep("hw70", colnames(df))]
+waz_vars = colnames(df)[grep("hw71", colnames(df))]
 whz_vars = colnames(df)[grep("hw72", colnames(df))]
 
 d_haz_wide = d %>% select(caseid, country, dataset, year_vars, 
                   age_vars, haz_vars)
+
+d_waz_wide = d %>% select(caseid, country, dataset, year_vars, 
+                          age_vars, waz_vars)
 
 d_whz_wide = d %>% select(caseid, country, dataset, year_vars, 
                   age_vars, whz_vars) #68 countries
@@ -43,7 +47,7 @@ d_whz_wide = d %>% select(caseid, country, dataset, year_vars,
 #-------------------------------------------
 # Reshape from wide to long 
 # Keep one column for case id 
-# Convert age in months, WHZ, HAZ from wide to long 
+# Convert age in months, WHZ, WAZ, HAZ from wide to long 
 #-------------------------------------------
 haz.temp1 = d_haz_wide[1:500000,]
 haz.temp2 = d_haz_wide[500001:1000000,]
@@ -81,6 +85,40 @@ d_haz_long3 <- reshape(haz.temp3,
 toc()
 
 d_haz_long <- bind_rows(d_haz_long1, d_haz_long2, d_haz_long3)
+
+
+waz.temp1 = d_waz_wide[1:500000,]
+waz.temp2 = d_waz_wide[500001:1000000,]
+waz.temp3 = d_waz_wide[1000001:1586661,]
+
+d_waz_long1 <- reshape(waz.temp1,
+                       varying = c(year_vars, age_vars, waz_vars),
+                       direction = "long",
+                       idvar = c("caseid", "country", "dataset"),
+                       sep = "_",
+                       new.row.names = NULL
+)
+
+d_waz_long2 <- reshape(waz.temp2,
+                       varying = c(year_vars, age_vars, waz_vars),
+                       direction = "long",
+                       idvar = c("caseid", "country", "dataset"),
+                       sep = "_",
+                       new.row.names = NULL
+)
+
+d_waz_long3 <- reshape(waz.temp3,
+                       varying = c(year_vars, age_vars, waz_vars),
+                       direction = "long",
+                       idvar = c("caseid", "country", "dataset"),
+                       sep = "_",
+                       new.row.names = NULL
+)
+
+
+d_waz_long <- bind_rows(d_waz_long1, d_waz_long2, d_waz_long3)
+
+
 
 whz.temp1 = d_whz_wide[1:500000,]
 whz.temp2 = d_whz_wide[500001:1000000,]
@@ -128,6 +166,13 @@ d_haz_long = d_haz_long %>%
          haz = hw70) %>%
   mutate(haz = haz / 100)
 
+d_waz_long = d_waz_long %>% 
+  rename(childid = time,
+         year = hw19,
+         agem = hw1, 
+         waz = hw71) %>%
+  mutate(waz = waz / 100)
+
 d_whz_long = d_whz_long %>%
   rename(childid = time,
          year = hw19,
@@ -140,16 +185,21 @@ d_whz_long = d_whz_long %>%
 d_haz_long$haz[d_haz_long$haz < -6 | d_haz_long$haz > 6] <- NA
 summary(d_haz_long$haz)
 
+d_waz_long$waz[d_waz_long$waz < -6 | d_waz_long$waz > 5] <- NA
+summary(d_waz_long$waz)
+
 d_whz_long$whz[d_whz_long$whz < -5 | d_whz_long$whz > 5] <- NA
 summary(d_whz_long$whz)
 
 # drop rows with missing values 
 #confim OK to drop NAs for year
 d_haz_long = d_haz_long %>% filter(!is.na(agem) & !is.na(haz) & !is.na(year)) #drops to 47 countries!
+d_waz_long = d_waz_long %>% filter(!is.na(agem) & !is.na(waz) & !is.na(year))
 d_whz_long = d_whz_long %>% filter(!is.na(agem) & !is.na(whz) & !is.na(year))
 
 #restrict to children ages 0-24 months
 d_haz_long <- d_haz_long %>% filter(agem <= 24)
+d_waz_long <- d_waz_long %>% filter(agem <= 24)
 d_whz_long <- d_whz_long %>% filter(agem <= 24)
 
 # Missing is indicated with 9999 or 99999
@@ -160,4 +210,5 @@ d_whz_long <- d_whz_long %>% filter(agem <= 24)
 
 #save cleaned data as RDS
 saveRDS(d_haz_long, file = (here::here("data", "clean-DHS-haz.rds")))
+saveRDS(d_waz_long, file = (here::here("data", "clean-DHS-waz.rds")))
 saveRDS(d_whz_long, file = (here::here("data", "clean-DHS-whz.rds")))
