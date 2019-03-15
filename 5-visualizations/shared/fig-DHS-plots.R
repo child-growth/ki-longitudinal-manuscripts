@@ -78,7 +78,7 @@ df <- df %>% mutate(region=case_when(region=="Africa" ~ "AFRO",
 #merge together DHS and GHAP data
 #combine.haz <- merge(haz, df, by=c("agem","region"))
 
-#create DHS overlap data
+#create DHS overlap data - HAZ
 haz.overlap <- haz %>% 
   filter(country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7")
 
@@ -91,18 +91,20 @@ df$predest = predict(fit.haz.ghap)
 fit.haz.overlap=loess(haz~agem, data=haz.overlap)
 haz.overlap$predhazover = predict(fit.haz.overlap)
 
-p <-  ggplot() +
-  geom_line(data=test, aes(y = predhaz, x=agem, group=region, color="blue"), size = 1) +
-  geom_line(data=df, aes(y=predest, x=agem, group=region, color="red"), size = 1)+
-  geom_line(data=haz.overlap, aes(y=predhazover, x=agem, group=region, color="green"), size=1)+
+
+p <- ggplot(data=haz, group=region, color=region, fill=region) +
+  geom_line(data=haz, aes(y = predhaz, x=agem, linetype="solid"), size = 1) +
+  geom_line(data=df, aes(y=predest, x=agem, group=region, linetype="dashed"), size = 1)+
+  geom_line(data=haz.overlap, aes(y=predhazover, x=agem, group=region, linetype="dotted"), size=1)+
   facet_grid(~region)+ 
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
   xlab("Child age, months")+
-  ylab("mean Length-for-age Z-score") +
+  ylab("mean Length-for-age Z-score")+
   ggtitle("") + 
-  scale_color_manual(values = c("blue", "red", "green"))
-
+  theme(strip.text = element_text(margin=margin(t=5))) +
+  theme(legend.position="left") +
+  scale_linetype_manual("Region",values=c("DHS overlap"=3,"DHS"=2,"GHAP cohorts"=1))
 
 
 ####GGPLOT
@@ -114,9 +116,9 @@ p <-  ggplot() +
   #scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
   #scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
   #scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                    name = 'Region' +
+                   # name = 'Region') +
   #scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                     name = 'Region' +
+                     #name = 'Region') +
   #xlab("Child age, months")+
   #ylab("mean Length-for-age Z-score") +
   #ggtitle("") +
@@ -161,48 +163,52 @@ df <- df %>% mutate(region=case_when(region=="Africa" ~ "AFRO",
                                      region=="South Asia" ~ "SEARO"))
 
 #merge together DHS and GHAP data
-combine.whz <- merge(whz, df, by=c("agem","region"))
+#combine.whz <- merge(whz, df, by=c("agem","region"))
+
+#create DHS overlap data - WHZ
+whz.overlap <- whz %>% 
+  filter(country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7")
 
 ####LOESS
-test = whz[1:100000,] #use test data to make go faster
-fit.whz.dhs=loess(whz~agem, data=test)
-test$predwhz = predict(fit.whz.dhs)
+fit.whz.dhs=loess(whz~agem, data=whz)
+whz$predwhz = predict(fit.whz.dhs)
 fit.whz.ghap=loess(est~agem, data=df)
 df$predest = predict(fit.whz.ghap)
+fit.whz.overlap=loess(whz~agem, data=whz.overlap)
+whz.overlap$predwhzover = predict(fit.whz.overlap)
 
-ggplot(test, aes(x = agem, y=whz, color=region)) +
-  geom_line(aes(y = predwhz), size = 1) +
-  geom_line(data=df, aes(y=predest), size = 1)+
+
+ggplot(data=test, group=region, color=region, fill=region) +
+  geom_line(data=test, aes(y = predhaz, x=agem, color=region, linetype="solid"), size = 1) +
+  geom_line(data=df, aes(y=predest, x=agem, color=region, linetype="dashed"), size = 1)+
+  geom_line(data=haz.overlap, aes(y=predhazover, x=agem, color=region, linetype="dotted"), size=1)+
   facet_grid(~region)+ 
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
   xlab("Child age, months")+
-  ylab("mean Weight-for-length Z-score") +
-  ggtitle("") +
-  theme(strip.text = element_text(margin=margin(t=5))) +
-  theme(legend.position="left") + 
-  scale_linetype_manual("Data",values=c("DHS"=2,"GHAP cohorts"=1))
-
+  ylab("mean weight-for-length z-score") +
+  ggtitle("") + 
+  scale_color_manual(values = c("blue", "red", "green"))
 
 
 ###GGPLOT
-q <- ggplot(combine.whz,aes(x=agem)) +
-  stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP cohorts"), se=F, span = 0.5) +
-  stat_smooth(aes(y=whz_mn,fill=region, color=region, linetype="DHS"), se=F, span = 0.5) +
-  facet_wrap(~region)+
-  geom_hline(yintercept = 0, colour = "black") +
-  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
-  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                    name = 'Region') +
-  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                     name = 'Region') +
-  xlab("Child age, months")+
-  ylab("mean weight-for-length Z-score") +
-  ggtitle("") +
-  theme(strip.text = element_text(margin=margin(t=5))) +
-  theme(legend.position="none") + 
-  scale_linetype_manual("Data",values=c("DHS"=2,"GHAP cohorts"=1))
+#q <- ggplot(combine.whz,aes(x=agem)) +
+  #stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP cohorts"), se=F, span = 0.5) +
+  #stat_smooth(aes(y=whz_mn,fill=region, color=region, linetype="DHS"), se=F, span = 0.5) +
+  #facet_wrap(~region)+
+  #geom_hline(yintercept = 0, colour = "black") +
+  #scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
+  #scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
+  #scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+                   # name = 'Region') +
+  #scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+                   #  name = 'Region') +
+ # xlab("Child age, months")+
+  #ylab("mean weight-for-length Z-score") +
+  #ggtitle("") +
+  #theme(strip.text = element_text(margin=margin(t=5))) +
+  #theme(legend.position="none") + 
+  #scale_linetype_manual("Data",values=c("DHS"=2,"GHAP cohorts"=1))
 
 ggsave(q, file="figures/wasting/fig_wasting_mean_WLZ_region_DHS.png", width=10, height=8)
 
