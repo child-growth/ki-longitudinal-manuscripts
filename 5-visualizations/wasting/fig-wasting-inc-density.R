@@ -174,30 +174,11 @@ inc_histogram_plot = ggplot(plot_data_sub,
 ggsave(inc_histogram_plot, file="figures/wasting/fig_wast_inc_dist_hist.png", width=11, height=6)
 
 
+
 # --------------------------------------------
 # stacked histogram plot -stratified by birth wasting
 # --------------------------------------------
-# # drop whz at tails of distributions and subset to kids born wasted
-# plot_data_sub = plot_data %>% filter(whz >=-5 & whz <=3.5)
-# 
-# # rename labels
-# plot_data_sub = plot_data_sub %>%
-#   mutate(age_inc_f = case_when(
-#     age_inc == "0-3 months" ~ "wasting incidence\nat 3 months",
-#     age_inc == "3-6 months" ~ "wasting incidence\nat 6 months",
-#     age_inc == "6-9 months" ~ "wasting incidence\nat 9 months",
-#     age_inc == "9-12 months" ~ "wasting incidence\nat 12 months"
-#   )) %>%
-#   mutate(age_inc_f = factor(age_inc_f, levels = c(
-#     "wasting incidence\nat 3 months",
-#     "wasting incidence\nat 6 months",
-#     "wasting incidence\nat 9 months",
-#     "wasting incidence\nat 12 months"
-#   )))
-# 
-# plot_data_sub = plot_data_sub %>%
-#   mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
-#   mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
+
 
 
 inc_histogram_plot_strat = ggplot(plot_data_sub, 
@@ -217,6 +198,24 @@ inc_histogram_plot_strat = ggplot(plot_data_sub,
 # to do: add better labels, n, etc
 
 ggsave(inc_histogram_plot_strat, file="figures/wasting/fig_wast_inc_dist_hist_strat.png", width=11, height=6)
+
+
+
+# --------------------------------------------
+# density plot 
+# --------------------------------------------
+
+mycol = brewer.pal(n = length(levels(plot_data$age_meas)), name = "PuBu")
+
+rec_density_plot = ggplot(plot_data, aes(x=whz, y = age_meas)) +	
+  geom_joy(aes(fill=age_meas), scale=0.5) +	
+  facet_grid(born_wasted~age_inc) +	
+  scale_fill_manual("", values = mycol) +	
+  ylab("Measurement following recovery")+	
+  xlab("Height-for-age Z-score")+	
+  geom_vline(xintercept = -2, linetype="dashed")
+rec_density_plot
+
 
 # --------------------------------------------
 # % wasted / median 
