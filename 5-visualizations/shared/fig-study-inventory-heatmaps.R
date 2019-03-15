@@ -456,7 +456,7 @@ monthlystudies <- c(
 wastphm <- hm + 
   aes(fill=whzcat) +
   labs(x="Age in months",y="",title="Mean weight-for-height Z-score by month of age") +
-  scale_fill_viridis(na.value="grey90", discrete = T,
+  scale_fill_viridis(na.value="grey90", option = "C", discrete = T,
                        direction = -1,
                        end = 0.8,
                        guide=guide_legend(title="Mean WHZ",title.vjust = 1,
