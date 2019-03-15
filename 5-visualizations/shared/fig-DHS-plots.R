@@ -105,7 +105,6 @@ p <-  ggplot() +
 
 
 
-
 ####GGPLOT
 #p <- ggplot(combine.haz,aes(x=agem)) +
   #stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP cohorts"), se=F, span = 0.5) +
@@ -115,9 +114,9 @@ p <-  ggplot() +
   #scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
   #scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
   #scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                    name = 'Region') +
+                    name = 'Region' +
   #scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                     name = 'Region') +
+                     name = 'Region' +
   #xlab("Child age, months")+
   #ylab("mean Length-for-age Z-score") +
   #ggtitle("") +
@@ -126,6 +125,8 @@ p <-  ggplot() +
   #scale_linetype_manual("Data",values=c("DHS"=2,"GHAP cohorts"=1))
 
 ggsave(p, file="figures/stunting/fig_stunt_mean_LAZ_region_DHS.png", width=10, height=8)
+
+
 
 ############################ WHZ plots ###################################
 df <- d %>% filter(
