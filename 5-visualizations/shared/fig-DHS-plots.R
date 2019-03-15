@@ -92,20 +92,19 @@ fit.haz.overlap=loess(haz~agem, data=haz.overlap)
 haz.overlap$predhazover = predict(fit.haz.overlap)
 
 
-p <- ggplot(data=haz, aes(group=region)) +
-    geom_line(data=haz, aes(y = predhaz, x=agem, color="blue"), inherit.aes = FALSE, size = 1) +
-    geom_line(data=df, aes(y=predest, x=agem, group=region, color="red"), size = 1)+
-    geom_line(data=haz.overlap, aes(y=predhazover, x=agem, group=region, color="green"), size=1)+
-    facet_grid(~region)+ 
-    geom_hline(yintercept = 0, colour = "black") +
-    scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
-    xlab("Child age, months")+
-    ylab("mean Length-for-age Z-score")+
+p <- ggplot(data=haz, group=region, color=region, fill=region) +
+  geom_line(data=haz, aes(y = predhaz, x=agem, linetype="solid"), size = 1) +
+  geom_line(data=df, aes(y=predest, x=agem, group=region, linetype="dashed"), size = 1)+
+  geom_line(data=haz.overlap, aes(y=predhazover, x=agem, group=region, linetype="dotted"), size=1)+
+  facet_grid(~region)+ 
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
+  xlab("Child age, months")+
+  ylab("mean Length-for-age Z-score")+
   ggtitle("") + 
-    theme(strip.text = element_text(margin=margin(t=5))) +
-    theme(legend.position="left") +
-    scale_color_discrete(name="", 
-                       labels = c("GHAP cohorts", "DHS overlap", "DHS"))
+  theme(strip.text = element_text(margin=margin(t=5))) +
+  theme(legend.position="left") +
+  scale_linetype_manual("Region",values=c("DHS overlap"=3,"DHS"=2,"GHAP cohorts"=1))
 
 
 ####GGPLOT
@@ -178,22 +177,11 @@ df$predest = predict(fit.whz.ghap)
 fit.whz.overlap=loess(whz~agem, data=whz.overlap)
 whz.overlap$predwhzover = predict(fit.whz.overlap)
 
-q <-  ggplot() +
-  geom_line(data=test, aes(y = predhaz, x=agem, group=region, color="blue"), size = 1) +
-  geom_line(data=df, aes(y=predest, x=agem, group=region, color="red"), size = 1)+
-  geom_line(data=haz.overlap, aes(y=predhazover, x=agem, group=region, color="green"), size=1)+
-  facet_grid(~region)+ 
-  geom_hline(yintercept = 0, colour = "black") +
-  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
-  xlab("Child age, months")+
-  ylab("mean weight-for-length z-score") +
-  ggtitle("") + 
-  scale_color_manual(values = c("blue", "red", "green"))
 
-ggplot() +
-  geom_line(data=test, aes(y = predhaz, x=agem, group=region, linetype="solid"), size = 1) +
-  geom_line(data=df, aes(y=predest, x=agem, group=region, linetype="dashed"), size = 1)+
-  geom_line(data=haz.overlap, aes(y=predhazover, x=agem, group=region, linetype="dotted"), size=1)+
+ggplot(data=test, group=region, color=region, fill=region) +
+  geom_line(data=test, aes(y = predhaz, x=agem, color=region, linetype="solid"), size = 1) +
+  geom_line(data=df, aes(y=predest, x=agem, color=region, linetype="dashed"), size = 1)+
+  geom_line(data=haz.overlap, aes(y=predhazover, x=agem, color=region, linetype="dotted"), size=1)+
   facet_grid(~region)+ 
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
