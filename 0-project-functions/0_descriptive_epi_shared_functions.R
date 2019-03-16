@@ -164,6 +164,37 @@ run_rma = function(data, n_name, x_name, label, method){
 }
 
 
+#---------------------------------------
+# rma wrapper function across a list of ages
+# for age in months
+#---------------------------------------
+run_rma_agem = function(data, n_name, x_name, label, method){
+  
+  # create age list
+  agelist = as.list(levels(data$agem))
+  
+  # apply fit.rma across age list
+  res.list=lapply(agelist,function(x) 
+    fit.rma.rec.cohort(data=data %>% filter(agem==x),
+                       ni=n_name, xi=x_name,measure="PLO",nlab="children",
+            method=method))
+  
+  # unlist output
+  res=as.data.frame(do.call(rbind, res.list))
+  
+  # tidy up output
+  res[,3]=as.numeric(res[,3])
+  res[,5]=as.numeric(res[,5])
+  res[,6]=as.numeric(res[,6])
+  res = res %>% mutate(est=est*100,lb=lb*100,ub=ub*100)
+  res$agem=factor(levels(data$agem),levels=levels(data$agem))
+  res$ptest.f=sprintf("%0.0f",res$est)
+  res$label = label
+  
+  res = res %>% select(label, agem, nstudies, nmeas, everything())
+  
+  return(res)
+}
 
 
 
@@ -295,6 +326,8 @@ fit.rma.rec.cohort=function(data,ni,xi,measure,nlab, method = "REML"){
   return(out)
   
 }
+
+
 
 
 
