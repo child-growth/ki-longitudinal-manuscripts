@@ -11,6 +11,13 @@ haz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
 waz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
 whz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
 
+
+haz <- readRDS(file = "U:/data/clean-DHS-haz.rds")
+whz <- readRDS(file = "U:/data/clean-DHS-whz.rds")
+waz <- readRDS(file = "U:/data/clean-DHS-whz.rds")
+waz <- waz %>% rename(waz=whz)
+
+
 # make new new region variable 
 haz$region <- rep(NA, nrow(haz))
 haz <- haz %>% 
@@ -201,8 +208,8 @@ p <- ggplot(pred.haz, aes(color=region)) +
   ylab("mean Length-for-age Z-score")+
   #ggtitle("") + 
   theme(strip.text = element_text(margin=margin(t=5))) 
-  theme(legend.position="left") +
-  scale_linetype_discrete(names="Region",values=c("DHS overlap"=3,"DHS"=2,"GHAP cohorts"=1))
+  theme(legend.position="left")# +
+  #scale_linetype_discrete(names="Region",values=c("DHS overlap"=3,"DHS"=2,"GHAP cohorts"=1))
   
 ggsave(p, file="figures/stunting/fig_stunt_mean_LAZ_region_DHS.png", width=10, height=8)
 
@@ -271,9 +278,30 @@ ggsave(q, file="figures/wasting/fig_wasting_mean_WLZ_region_DHS.png", width=10, 
 #library(ggthemes)
 #library(scales)
 set.seed(123)
+load("U://ucb-superlearner/data/co-occurrence_data.RData")
 
-z3 <- rnorm(215345,mean=-1.5,sd=1.2) #Andrew -add KI data
-
+d <- d %>% mutate(region = case_when(
+  country=="BANGLADESH" | country=="INDIA"|
+    country=="NEPAL" | country=="PAKISTAN"|
+    country=="PHILIPPINES"| country=="CHINA"|
+    country=="THAILAND"|country=="SINGAPORE"|
+    country=='OMAN'~ "SEARO",
+  country=="KENYA"|
+    country=="GHANA"|
+    country=="BURKINA FASO"|
+    country=="GUINEA-BISSAU"|
+    country=="MALAWI"|
+    country=="SOUTH AFRICA"|
+    country=="TANZANIA, UNITED REPUBLIC OF"|
+    country=="TANZANIA"|
+    country=="ZIMBABWE"|
+    country=="GAMBIA"|
+    country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "AFRO",
+  country=="BRAZIL" | country=="GUATEMALA" |
+    country=="PERU"|country=='ECUADOR'   ~ "PAHO",
+  TRUE                                    ~ "Other"
+))
+d <- d %>% filter(region!="Other")
 
 tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
@@ -284,7 +312,7 @@ pcols <- tableau10[c(1,2,5)]
 r <- ggplot(haz, aes(x=haz, group=region)) +
   geom_density() +
   geom_density(data=haz.overlap, aes(x=haz, group=region),col=pcols[3],lty=2)+
-  #geom_density(data=z3, aes(z3),col=pcols[3],lty=3)+
+  geom_density(data=d, aes(x=haz),col=pcols[3],lty=3)+
   facet_grid(~region) +
   labs(x="length-for-age z-score")+
   theme_minimal()
@@ -292,21 +320,26 @@ r <- ggplot(haz, aes(x=haz, group=region)) +
 ggsave(r, file="figures/stunting/fig_stunting_mean_LAZ_DHS_density.png", width=10, height=8)
 
 
-z3 <- rnorm(213174,mean=-1.5,sd=1.2) #add KI data
 
-
-tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
-               "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
-tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- tableau10[c(1,2,5)]
 
 s <- ggplot(whz, aes(x=whz, group=region)) +
   geom_density() +
   geom_density(data=whz.overlap, aes(x=whz, group=region),col=pcols[3],lty=2)+
-  #geom_density(data=z3, aes(z3),col=pcols[3],lty=3)+
+  geom_density(data=d, aes(x=whz),col=pcols[3],lty=3)+
   facet_grid(~region) +
   labs(x="weight-for-length z-score")+
   theme_minimal()
 
 ggsave(s, file="figures/wasting/fig_wasting_mean_WLZ_DHS_density.png", width=10, height=8)
+
+
+t <- ggplot(waz, aes(x=whz, group=region)) +
+  geom_density() +
+  geom_density(data=waz.overlap, aes(x=whz, group=region),col=pcols[3],lty=2)+
+  geom_density(data=d, aes(x=waz),col=pcols[3],lty=3)+
+  facet_grid(~region) +
+  labs(x="weight-for-agez-score")+
+  theme_minimal()
+
+ggsave(t, file="figures/wasting/fig_wasting_mean_WAZ_DHS_density.png", width=10, height=8)
 
