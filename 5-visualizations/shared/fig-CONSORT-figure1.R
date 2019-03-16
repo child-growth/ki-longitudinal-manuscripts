@@ -647,4 +647,4 @@ ngrid1 <- plot_grid(top_row, bottom_row, nrow = 2, rel_heights = c(1/4, 3/4))
 
 
 # ngrid1 <- grid.arrange(top1, grid::nullGrob(), nhm1, nbar1, nrow = 2, ncol = 2, widths=c(100,20))
-ggsave(filename="figures/stunting-study-inventory-heatmap-fig1.pdf",plot = ngrid1,device='pdf',width=10,height=9)
+ggsave(filename="figures/study-selection-heatmap-fig1.pdf",plot = ngrid1,device='pdf',width=10,height=9)
