@@ -24,17 +24,20 @@ stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
 # format data for plot
 #-----------------------------------------
 plot_data = stunt_data %>%
+  ungroup() %>%
   mutate(classif = case_when(
     never_stunted == 1 ~ "Never stunted",
-    prev_stunted == 1 ~ "Recovered",
+    recover == 1 ~ "Recovered",
+    not_stunted == 1 ~ "Not stunted",
     still_stunted == 1 ~ "Still stunted",
     newly_stunted == 1 ~ "Newly stunted",
     relapse == 1 ~ "Stunting relapse"
 
   )) %>%
-  select(subjid, agecat, classif) %>%
+  select(subjid, agem, classif) %>%
   mutate(freq = 1) %>%
   mutate(classif = factor(classif, levels = c("Never stunted",
+                                              "Not stunted",
                                               "Recovered",
                                               "Stunting relapse",
                                               "Newly stunted",
@@ -42,28 +45,28 @@ plot_data = stunt_data %>%
                                               )))
 
 
-mycols = c("#11466B", tableau10[1], tableau10[4], "#FB5D5E", "#811818")
+mycols = c("#092334", "#175E90", "#2796E3", "#FB5D5E", tableau10[4],  "#811818")
 
 #-----------------------------------------
 # stacked bar graphs using random effects pooled data
 #-----------------------------------------
 plot_data_pooled = stunt_pool %>%
   rename(classif = label) %>%
-  select(agecat, classif, est) %>%
-  mutate(classif = ifelse(classif=="Previously stunted", "Recovered", classif)) %>%
+  select(agem, classif, est) %>%
   mutate(classif = factor(classif, levels = c("Never stunted", 
+                                              "Not stunted",
                                               "Recovered",
-                                              "Stunting relapse",
                                               "Newly stunted",
+                                              "Stunting relapse",
                                               "Still stunted"
   )))
 
 
 bar_plot_RE = ggplot(plot_data_pooled) +
-  geom_bar(aes(x = agecat, y = est, fill = classif), stat="identity", width=0.5) +
+  geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
   scale_fill_manual("", values = mycols) +
   theme(legend.position = "bottom") +
-  xlab("Child age") + ylab("Percentage of children")
+  xlab("Child age, months") + ylab("Percentage of children")
 
 ggsave(bar_plot_RE, file="figures/stunting/fig-stunting-stacked-bar-RE.png", width=10, height=5)
 
@@ -71,22 +74,31 @@ ggsave(bar_plot_RE, file="figures/stunting/fig-stunting-stacked-bar-RE.png", wid
 # stacked bar graphs NOT using random effects pooled data
 #-----------------------------------------
 age_classif_totals = plot_data %>%
-  group_by(agecat, classif) %>%
+  group_by(agem, classif) %>%
   summarise(n = sum(freq))
 
 age_totals = plot_data %>%
-  group_by(agecat) %>%
+  group_by(agem) %>%
   summarise(tot = sum(freq))
 
-bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agecat"))
+bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agem"))
 
-bar_plot_data = bar_plot_data %>% mutate(percent = n/tot * 100)
+bar_plot_data = bar_plot_data %>% 
+  mutate(percent = n/tot * 100,
+         classif = factor(classif, levels = c("Never stunted", 
+                                                     "Not stunted",
+                                                     "Recovered",
+                                                     "Newly stunted",
+                                                     "Stunting relapse",
+                                                     "Still stunted")))
 
 bar_plot_noRE = ggplot(bar_plot_data) +
-  geom_bar(aes(x = agecat, y = percent, fill = classif), stat="identity", width=0.5) +
+  geom_bar(aes(x = agem, y = percent, fill = classif), stat="identity", width=0.5) +
   scale_fill_manual("", values = mycols) +
+  # scale_x_continuous(limits = c(0,25), breaks = seq(0,24,1), labels = seq(0,24,1)) +
   theme(legend.position = "bottom") +
-  xlab("Child age") + ylab("Percentage of children")
+  xlab("Child age, months") + 
+  ylab("Percentage of children")  
 
 ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=5)
 
