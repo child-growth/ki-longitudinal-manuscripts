@@ -144,15 +144,15 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right") +
   theme(axis.text.x = element_text(margin = 
-                                     margin(t = -40, r = 0, b = 0, l = 0),
+                                     margin(t = 4, r = 0, b = 0, l = 0),
                                    size = 15)) +
   theme(axis.title.x = element_text(margin = 
-                                      margin(t = 35, r = 0, b = 0, l = 0)))
+                                      margin(t = 14, r = 0, b = 0, l = 0)))
 
 ggsave(p, file="figures/wasting/WLZ_by_region.png", width=10, height=4)
 
 
-
+# What's supposed to be the x-axis here? Moved it to right place but need to clean axis label
 
 
 #-------------------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ ggsave(p1, file="figures/wasting/pooled_prev.png", width=10, height=8)
 
 
 #-------------------------------------------------------------------------------------------
-# Wasting cululative incidence
+# Wasting cumulative incidence
 #-------------------------------------------------------------------------------------------
 p2 <- ki_desc_plot(d,
                    Disease="Wasting",
@@ -187,11 +187,11 @@ p2 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Cumulative incidence (95% CI)',
-                   h1=36,
-                   h2=42)
+                   h1=65,
+                   h2=70)
 
 
-ggsave(p2, file="figures/wasting/pooled_ci.png", width=10, height=8)
+ggsave(p2, file="figures/wasting/pooled_ci1.png", width=12, height=8)
 
 
 #-------------------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ p3 <- ki_desc_plot(d,
                    h2=5.25)
 
 
-ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
+ggsave(p3, file="figures/wasting/pooled_ir1.png", width=10, height=8)
 
 
 #-------------------------------------------------------------------------------------------
