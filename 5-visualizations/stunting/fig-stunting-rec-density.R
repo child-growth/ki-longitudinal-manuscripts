@@ -127,49 +127,6 @@ plot_data = plot_data %>%
   )
   )
 
-# --------------------------------------------
-# stacked histogram plot
-# --------------------------------------------
-# drop HAZ at tails of distributions
-plot_data_sub = plot_data %>% filter(haz >=-5 & haz <=3.5)
-
-# rename labels
-plot_data_sub = plot_data_sub %>%
-  mutate(age_rec_f = case_when(
-    age_rec == "0-3 months" ~ "Stunting recovery\nat 3 months",
-    age_rec == "3-6 months" ~ "Stunting recovery\nat 6 months",
-    age_rec == "6-9 months" ~ "Stunting recovery\nat 9 months",
-    age_rec == "9-12 months" ~ "Stunting recovery\nat 12 months"
-  )) %>%
-  mutate(age_rec_f = factor(age_rec_f, levels = c(
-    "Stunting recovery\nat 3 months",
-    "Stunting recovery\nat 6 months",
-    "Stunting recovery\nat 9 months",
-    "Stunting recovery\nat 12 months"
-  )))
-
-plot_data_sub = plot_data_sub %>%
-  mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
-  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
-
-
-rec_histogram_plot = ggplot(plot_data_sub, 
-                            aes(x=haz, y = age_meas_n, fill = ..x..)) + 
-  geom_density_ridges_gradient(stat = "binline", 
-                               binwidth=.1, 
-                               scale=0.8,
-                               size=0.01) + 
-  facet_grid(~age_rec_f) +
-  ylab("Measurement age, months")+
-  xlab("Length-for-age Z-score")+
-  scale_x_continuous(breaks = seq(-5, 3.5, 1), 
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) 
-
-# to do: add better labels, n, etc
-
-ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=11, height=6)
 
 # --------------------------------------------
 # % stunted / median 
@@ -242,3 +199,81 @@ results_df = bind_rows(results_list)
 
 
 saveRDS(results_df, file = paste0(res_dir, "stunting_rec_cohort_summary.RDS"))
+
+
+# --------------------------------------------
+# further prepare data for the plot
+# --------------------------------------------
+# drop HAZ at tails of distributions
+plot_data_sub = plot_data %>% filter(haz >=-5 & haz <=3.5)
+
+# rename labels
+plot_data_sub = plot_data_sub %>%
+  mutate(age_rec_f = case_when(
+    age_rec == "0-3 months" ~ "Stunting recovery\nat 3 months",
+    age_rec == "3-6 months" ~ "Stunting recovery\nat 6 months",
+    age_rec == "6-9 months" ~ "Stunting recovery\nat 9 months",
+    age_rec == "9-12 months" ~ "Stunting recovery\nat 12 months"
+  )) %>%
+  mutate(age_rec_f = factor(age_rec_f, levels = c(
+    "Stunting recovery\nat 3 months",
+    "Stunting recovery\nat 6 months",
+    "Stunting recovery\nat 9 months",
+    "Stunting recovery\nat 12 months"
+  )))
+
+plot_data_sub = plot_data_sub %>%
+  mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
+  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
+
+# --------------------------------------------
+# prepare label for each panel of the plot
+# --------------------------------------------
+results_df = results_df %>% 
+  mutate(lab = paste0("Children: ", nchild, "\n",
+                        "Studies: ", nstudy, "\n",
+                        "Countries: ", ncountry, "\n",
+                        "% Stunted: ", sprintf("%0.0f", stunting_prev*100), " ",
+                        "(95% CI ", sprintf("%0.0f", prev_lb*100), ", ",
+                        sprintf("%0.0f", prev_ub*100), ")") ) %>%
+  mutate(x = 0,
+         y = case_when(
+           age_meas == "3 month measurement" ~ 5.4,
+           age_meas == "6 month measurement" ~ 4.7,
+           age_meas == "9 month measurement" ~ 3.7,
+           age_meas == "12 month measurement" ~ 2.7,
+           age_meas == "15 month measurement" ~ 1.7
+         )) %>%
+  mutate(age_rec_f = case_when(
+    age_rec == "0-3 months" ~ "Stunting recovery\nat 3 months",
+    age_rec == "3-6 months" ~ "Stunting recovery\nat 6 months",
+    age_rec == "6-9 months" ~ "Stunting recovery\nat 9 months",
+    age_rec == "9-12 months" ~ "Stunting recovery\nat 12 months"
+  )) %>%
+  mutate(age_rec_f = factor(age_rec_f, levels = c(
+    "Stunting recovery\nat 3 months",
+    "Stunting recovery\nat 6 months",
+    "Stunting recovery\nat 9 months",
+    "Stunting recovery\nat 12 months"
+  )))
+
+# --------------------------------------------
+# stacked histogram plot
+# --------------------------------------------
+rec_histogram_plot = ggplot(plot_data_sub, 
+                            aes(x=haz, y = age_meas_n, fill = ..x..)) + 
+  geom_density_ridges_gradient(stat = "binline", 
+                               binwidth=.1, 
+                               scale=0.8,
+                               size=0.01) + 
+  facet_grid(~age_rec_f) +
+  ylab("Measurement age, months")+
+  xlab("Length-for-age Z-score")+
+  scale_y_discrete(expand = c(0.01, 0)) +
+  scale_x_continuous(breaks = seq(-5, 3.5, 1), 
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) +
+  geom_text(aes(x, y, label = lab), data = results_df, size=2, hjust=0)
+
+ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=13, height=8)

@@ -26,7 +26,7 @@ d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
 
 #change names to lower case
 colnames(d) <- tolower(colnames(d))
-d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, whz, waz))
+d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, whz, waz, muaz))
 
 #--------------------------------------------
 #Check for duplicate agedays
@@ -105,7 +105,7 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop beca
 # Subset to relevant variables
 #--------------------------------------------
 colnames(d)=tolower(colnames(d))
-d <- d %>% select(studyid, subjid, country, tr, agedays, haz, whz, waz, measurefreq)
+d <- d %>% select(studyid, subjid, country, tr, agedays, haz, whz, waz, muaz, measurefreq)
 
 nrow(d)
 
@@ -148,6 +148,29 @@ d$subjid <- as.character(d$subjid)
 
 #Keep monthly and quarterly studies
 d <- d %>% filter(measurefreq!="yearly")
+
+
+
+d <- d %>% mutate(region = case_when(
+  country=="BANGLADESH" | country=="INDIA"|
+    country=="NEPAL" | country=="PAKISTAN"|
+    country=="PHILIPPINES"| country=="CHINA"|
+    country=="THAILAND"|country=="SINGAPORE"|
+    country=='OMAN'~ "Asia",
+  country=="KENYA"|
+    country=="GHANA"|
+    country=="BURKINA FASO"|
+    country=="GUINEA-BISSAU"|
+    country=="MALAWI"|
+    country=="SOUTH AFRICA"|
+    country=="TANZANIA, UNITED REPUBLIC OF"|
+    country=="TANZANIA"|
+    country=="ZIMBABWE"|
+    country=="GAMBIA"|
+    country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "Africa",
+  country=="BRAZIL" | country=="GUATEMALA" |
+    country=="PERU"|country=='ECUADOR'   ~ "Latin America",
+  TRUE                                    ~ "Other"))
 
 save(d,file="U://ucb-superlearner/data/co-occurrence_data.RData")
 
