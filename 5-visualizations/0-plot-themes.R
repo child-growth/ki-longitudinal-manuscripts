@@ -82,10 +82,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     theme(axis.text.x = element_text(margin = 
                                        margin(t = 0, r = 0, b = 0, l = 0),
-                                     size = 15)) +
-    theme(axis.title.x = element_text(margin = 
-                                        margin(t = 25, r = 0, b = 0, l = 0),
-                                      size = 15)) +
+                                     size = 10)) +
     theme(axis.title.y = element_text(size = 15)) +
     
     ggtitle("") +
