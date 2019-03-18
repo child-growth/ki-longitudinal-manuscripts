@@ -237,10 +237,17 @@ dp$ncat <- factor(dp$ncat)
 
 # categorize mean HAZ
 summary(dp$haz)
-dp$hazcat <- cut(dp$haz,breaks=c(-5, -3, -2.5, -2,-1.5,-1,-0.5,0,5), labels=c("<= -3","(-3,-2.5]", "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",  "(-0.5,0]", ">0" ))
+dp$hazcat <- cut(dp$haz,breaks=c(-5, -3, -2.5, -2,-1.5,-1,-0.5,0,5), 
+                 labels=c("<= -3","(-3,-2.5]", "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",  "(-0.5,0]", ">0" ))
 table(dp$hazcat)
 dp$hazcat<- factor(dp$hazcat)
 dp$hazcat[dp$nobs<50 | is.nan(dp$hazcat)] <- NA
+
+dp$hazcatnew = as.character(dp$hazcat)
+dp$hazcatnew = ifelse(is.na(dp$hazcat), "Fewer than 30\nobservations", dp$hazcatnew)
+dp$hazcatnew<- factor(dp$hazcatnew, levels = c("<= -3","(-3,-2.5]",
+                              "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",
+                              "(-0.5,0]", ">0", "Fewer than 30\nobservations"))
 
 
 #-----------------------------------
@@ -367,17 +374,36 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 #-----------------------------------
 # STUNTING PREVALENCE HEAT MAP
 #-----------------------------------
-
 # heat map
-stphm <- hm + 
+stphm <- hm +
   aes(fill=hazcat) +
-  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") 
+  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
+  # scale_fill_manual("Mean HAZ", values = viridis_cols)
+
   scale_fill_viridis(option = "C",
                      na.value="grey90",
                      direction = -1,
                      end = 0.8,
                      guide=guide_legend(title="Mean HAZ",title.vjust = 1,
-                                        label.position="bottom",label.hjust=0.5,nrow=1)) 
+                                        label.position="bottom",label.hjust=0.5,nrow=1),
+                     discrete=TRUE)
+
+# anna start here
+# viridis_cols = c(viridis(
+#   n = length(levels(dp$hazcatnew)) - 1,
+#   alpha = 1,
+#   begin = 0,
+#   end = 0.8,
+#   direction = -1,
+#   option = "C"
+# ),
+# "grey90")
+
+# stphm <- hm +
+#   aes(fill = hazcatnew) +
+#   labs(x = "Age in months", y = "", title = "Mean height-for-age Z-score by month of age") +
+#   scale_fill_manual("Mean HAZ", values = viridis_cols)
+  
 
 # number of obs side bar plot
 nbar <- sidebar +
@@ -395,23 +421,14 @@ stpbar <- sidebar +
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
 
-# wasting prevalence side bar plot
-wastpbar <- sidebar +
-  aes(y=wastprev,fill=wpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Wasting") +
-  scale_y_continuous(expand=c(0,0),limits=c(0,30),
-                     breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
-  geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
-
 # add margin around plots
 margin = theme(plot.margin = unit(c(0.25,0.25,0.25,0.25), "cm"))
 stphm = stphm + margin
 stpbar = stpbar + margin
-wastpbar = wastpbar + margin
 nbar = nbar + margin
 
 # combined plot
-stpgrid <- grid.arrange(stphm, stpbar, wastpbar, nrow = 1, ncol = 3, 
+stpgrid <- grid.arrange(stphm, stpbar, nbar, nrow = 1, ncol = 3, 
                         widths=c(100,20,20))
 ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
 

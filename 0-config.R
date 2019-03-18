@@ -10,12 +10,12 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(gridExtra)
-library(ggalluvial)
 library(reshape2)
 library(metafor)
 library(data.table)
 library(viridis)
 library(ggrepel)
+library(ggthemes)
 library(maps)
 library(FField)
 library(data.table)
@@ -28,6 +28,12 @@ library(assertthat)
 library(tidyselect)
 library(growthstandards)
 library(stringr)
+
+# for parallel computing 
+# (will need to configure in each script)
+library(foreach)
+library(doParallel)
+
 
 # define directories
 res_dir = paste0(here::here(),"/results/")

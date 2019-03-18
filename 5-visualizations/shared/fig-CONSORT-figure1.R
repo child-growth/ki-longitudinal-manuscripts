@@ -73,7 +73,7 @@ ki_bar_data <- data.frame(ki_md)
 ki_md <- ki_md %>%
   dplyr::select(-Study_ID, -`included/excluded`,  -Short_ID) %>%
   gather('excludedReason', 'excludedIndicator', -short_id, -study_id,
-         -country, -subj, -obs, -short_description, -reason_excluded, -final_inclusion)
+         -country, -subj, -obs, -short_description, -reason_excluded)
 
 ki_md <- shorten_descriptions(ki_md)
 ki_md <- study_label_transformation(ki_md)
@@ -647,4 +647,4 @@ ngrid1 <- plot_grid(top_row, bottom_row, nrow = 2, rel_heights = c(1/4, 3/4))
 
 
 # ngrid1 <- grid.arrange(top1, grid::nullGrob(), nhm1, nbar1, nrow = 2, ncol = 2, widths=c(100,20))
-# ggsave(filename="figures/intro/stunting-study-inventory-heatmap-fig1.pdf",plot = ngrid1,device='pdf',width=10,height=9)
+ggsave(filename="figures/study-selection-heatmap-fig1.pdf",plot = ngrid1,device='pdf',width=10,height=9)
