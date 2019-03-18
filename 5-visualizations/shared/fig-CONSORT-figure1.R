@@ -55,8 +55,12 @@ unique(wmd$study_id)
 #-----------------------------------
 # load figure 1 metadata
 #-----------------------------------
-ki_md <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyMetadata')
-ki_md_status <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyStatus')
+# ki_md <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyMetadata')
+# ki_md_status <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyStatus')
+
+ki_md <- read.csv('results/KI-metadata.csv')
+ki_md_status <- read.csv('results/KI-studyStatus.csv')
+
 ki_md_status <- ki_md_status %>%
   dplyr::mutate(short_id = tolower(Short_ID))
 # drop empty rows
@@ -142,7 +146,7 @@ hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
     # plot.margin = margin(0, 0.5, 0, 9.25, "cm")
     
   )
-
+hm1
 
 # side bar plot scheme
 sidebar1 <- ggplot(data = ki_md, aes(x = cohort)) + 
@@ -186,7 +190,7 @@ sidebar1 <- ggplot(data = ki_md, aes(x = cohort)) +
     panel.background = element_blank()
     
   )
-
+sidebar1
 
 #-----------------------------------
 # measurement heat map
