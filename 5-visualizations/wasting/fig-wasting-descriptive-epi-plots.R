@@ -168,10 +168,10 @@ p1 <- ki_desc_plot(d,
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
                    h1=25,
-                   h2=28)
+                   h2=27)
 
 
-ggsave(p1, file="figures/wasting/pooled_prev.png", width=10, height=8)
+ggsave(p1, file="figures/wasting/pooled_prev.png", width=12, height=8)
 
 
 
@@ -191,7 +191,7 @@ p2 <- ki_desc_plot(d,
                    h2=70)
 
 
-ggsave(p2, file="figures/wasting/pooled_ci1.png", width=12, height=8)
+ggsave(p2, file="figures/wasting/pooled_ci.png", width=12, height=8)
 
 
 #-------------------------------------------------------------------------------------------
@@ -206,11 +206,11 @@ p3 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Episodes per 1000 person-days at risk',
-                   h1=4.5,
-                   h2=5.25)
+                   h1=4.4,
+                   h2=4.8)
 
 
-ggsave(p3, file="figures/wasting/pooled_ir1.png", width=10, height=8)
+ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
 
 
 #-------------------------------------------------------------------------------------------
