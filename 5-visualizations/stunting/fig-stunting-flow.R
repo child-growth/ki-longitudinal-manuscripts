@@ -40,6 +40,23 @@ plot_data = stunt_data %>%
                                               "Still stunted"
                                               )))
 
+plot_data_pooled = stunt_pool %>%
+  rename(classif = label) %>%
+  select(agem, classif, est) %>%
+  mutate(classif = factor(classif, levels = c("Never stunted", 
+                                              "Not stunted",
+                                              "Recovered",
+                                              "Newly stunted",
+                                              "Stunting relapse",
+                                              "Still stunted"
+  )))
+
+# drop measurements beyond 15 months since
+# data is sparse
+plot_data = plot_data %>% filter(agem<=15)
+plot_data_pooled = plot_data_pooled %>% 
+  mutate(agem = as.numeric(as.character(agem))) %>%
+  filter(agem<=15)
 
 #-----------------------------------------
 # define color palette
@@ -59,17 +76,6 @@ plot_cols  = viridis_cols[c(2, 4, 6, 8, 10, 11)]
 #-----------------------------------------
 # stacked bar graphs using random effects pooled data
 #-----------------------------------------
-plot_data_pooled = stunt_pool %>%
-  rename(classif = label) %>%
-  select(agem, classif, est) %>%
-  mutate(classif = factor(classif, levels = c("Never stunted", 
-                                              "Not stunted",
-                                              "Recovered",
-                                              "Newly stunted",
-                                              "Stunting relapse",
-                                              "Still stunted"
-  )))
-
 
 bar_plot_RE = ggplot(plot_data_pooled) +
   geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
