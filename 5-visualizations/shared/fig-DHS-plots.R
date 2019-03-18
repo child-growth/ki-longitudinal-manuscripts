@@ -49,7 +49,7 @@ dhsz <- bind_rows(dlaz,dwaz,dwhz) %>%
 #---------------------------------------
 # make a WHO region variable 
 # flag countries that overlap with the
-# GHAP cohorts
+# ki cohorts
 #
 # Note: Philippines (Western Pacific)
 # and Pakistan (Middle East) are classified
@@ -86,7 +86,7 @@ dhsallfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:%
 #---------------------------------------
 # estimate mean z-scores by age
 # subset to countries that overlap the
-# GHAP cohorts
+# ki cohorts
 #---------------------------------------
 dhssubfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
   foreach(rgn=levels(dhsz$region),.combine=rbind) %dopar% {
@@ -144,11 +144,11 @@ ghapfits <- foreach(zmeas=c("LAZ","WAZ","WHZ"),.combine=rbind) %:%
 #---------------------------------------
 # Append the fits into a single data frame
 #---------------------------------------
-ghapfits   <- ghapfits   %>% mutate(dsource="GHAP cohorts")
-dhssubfits <- dhssubfits %>% mutate(dsource="DHS, GHAP countries")
+ghapfits   <- ghapfits   %>% mutate(dsource="ki cohorts")
+dhssubfits <- dhssubfits %>% mutate(dsource="DHS, ki countries")
 dhsallfits <- dhsallfits %>% mutate(dsource="DHS")
 dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
-  mutate(dsource=factor(dsource,levels=c("GHAP cohorts","DHS, GHAP countries","DHS")))
+  mutate(dsource=factor(dsource,levels=c("ki cohorts","DHS, ki countries","DHS")))
 
 #---------------------------------------
 # make figure
@@ -161,7 +161,7 @@ dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
 #---------------------------------------
 
 dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("GHAP cohorts","DHS"))
+  filter(dsource %in% c("ki cohorts","DHS"))
 
 
 # standard region colors used in other plots
