@@ -74,12 +74,14 @@ dhsz <- dhsz %>%
 #---------------------------------------
 dhsallfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
   foreach(rgn=levels(dhsz$region),.combine=rbind) %dopar% {
-   di <- dhsz %>% filter(measure==zmeas & region==rgn)
-   fiti <- loess(zscore~agem,data=di,span=0.5)
-   newd <- data.frame(agem=0:24)
-   dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=predict(fiti,newdata = newd))
-   dfit
+    di <- dhsz %>% filter(measure==zmeas & region==rgn)
+    fiti <- gam(zscore~s(agem,bs="cr"),data=di)
+    newd <- data.frame(agem=0:24)
+    pfiti <- predict(fiti,newdata = newd,se=TRUE)
+    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=pfiti$fit,se=pfiti$se.fit)
+    dfit
   }
+
 
 #---------------------------------------
 # estimate mean z-scores by age
@@ -89,17 +91,20 @@ dhsallfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:%
 dhssubfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
   foreach(rgn=levels(dhsz$region),.combine=rbind) %dopar% {
     di <- dhsz %>% filter(measure==zmeas & region==rgn & inghap==1)
-    fiti <- loess(zscore~agem,data=di,span=0.5)
+    fiti <- gam(zscore~s(agem,bs="cr"),data=di)
     newd <- data.frame(agem=0:24)
-    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=predict(fiti,newdata = newd))
+    pfiti <- predict(fiti,newdata = newd,se=TRUE)
+    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=pfiti$fit,se=pfiti$se.fit)
     dfit
   }
+
 
 #---------------------------------------
 # Grab GHAP estimated mean Z-scores
 # by age, and format the data for this analysis
 #---------------------------------------
 load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
+# load(paste0(here::here(),"/results/co_desc_data.Rdata"))
 ghapd <- d %>%
   filter(measure %in% c("Mean LAZ","Mean WAZ","Mean WLZ"),
          birth=="yes",
@@ -126,10 +131,10 @@ ghapd <- d %>%
 #---------------------------------------
 # fit smooths to GHAP LAZ data
 #---------------------------------------
-ghapfits <- foreach(zmeas=c("LAZ","WHZ"),.combine=rbind) %:% 
+ghapfits <- foreach(zmeas=c("LAZ","WAZ","WHZ"),.combine=rbind) %:% 
   foreach(rgn=levels(ghapd$whoregion),.combine=rbind) %do% {
     di <- ghapd %>% filter(measure==zmeas & whoregion==rgn)
-    fiti <- loess(est~agem,data=di,span=0.5)
+    fiti <- mgcv::gam(est~s(agem,bs="cr"),data=di)
     newd <- data.frame(agem=0:24)
     dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=predict(fiti,newdata = newd))
     dfit
@@ -147,24 +152,46 @@ dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
 
 #---------------------------------------
 # make figure
+# after preliminary inspection, the
+# DHS and DHS subset estimates are so
+# similar in nearly every case that it 
+# doesn't add much to the plot.
+# Simplify to only include GHAP and 
+# DHS overall estimates
 #---------------------------------------
-tableau10 <- tableau_color_pal("Tableau 10")
+
+dhs_plotd <- dhsfits %>%
+  filter(dsource %in% c("GHAP cohorts","DHS"))
+
+
+# standard region colors used in other plots
+# tableau10 <- tableau_color_pal("Tableau 10")
 pcols <- tableau10(10)[c(1,5,2)]
-dhsp <- ggplot(data=dhsfits,aes(x=agem,y=fit,color=region,linetype=dsource))+
+
+# colors for data source
+# vircols <- viridis(4,begin=0,end=0.8)[c(1,3,4)]
+# safe color blind palette
+# cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+# pcols <- c("black", cbPalette[c(7,8)])
+
+dhsp <- ggplot(data=dhs_plotd,aes(x=agem,y=fit,color=region,linetype=dsource))+
   facet_grid(measure~region,switch="y")+
-  geom_line()+
   geom_abline(intercept=0,slope=0,color="gray60")+
-  scale_x_continuous(breaks=seq(0,24,by=3))+
-  scale_y_continuous(breaks=seq(-2,1,by=0.5))+
+
+  geom_line(alpha=1)+
+  scale_x_continuous(breaks=seq(0,24,by=6))+
+  scale_y_continuous(breaks=seq(-2,2,by=1))+
   scale_color_manual(values=pcols,guide=FALSE)+
   scale_linetype_manual(values=c("solid","dashed","dotdash"))+
   labs(x="child age, months",y="")+
-  coord_cartesian(ylim=c(-2,1))+
+  coord_cartesian(ylim=c(-2,2))+
   theme_minimal()+
   theme(legend.position = "bottom",
         strip.placement="outside",
+        strip.background = element_rect(fill=NA,color=NA),
         strip.text.y = element_text(angle=180),
-        panel.spacing = unit(0.5, "lines"))
+        panel.spacing = unit(0.5, "lines")
+  )
 
 dhsp
 
