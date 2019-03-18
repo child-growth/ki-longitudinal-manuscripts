@@ -377,7 +377,8 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 # heat map
 stphm <- hm +
   aes(fill=hazcat) +
-  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
+  # labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
+  labs(x="Age in months",y="",title="a") +
   # scale_fill_manual("Mean HAZ", values = viridis_cols)
 
   scale_fill_viridis(option = "C",
@@ -408,7 +409,7 @@ stphm <- hm +
 # number of obs side bar plot
 nbar <- sidebar +
   aes(y=nmeas/1000,fill=wpcat) +
-  labs(x = "",y="Sample size (1000s)",title="Sample size (N)") +
+  labs(x = "",y="Sample size (1000s)",title="c") +
   scale_y_continuous(expand=c(0,0),limits=c(0,125),
                      breaks=seq(0,125,by=25),labels=seq(0,125,by=25)) +
   geom_hline(yintercept = seq(0,125,by=25),color='white',size=0.3)
@@ -416,7 +417,8 @@ nbar <- sidebar +
 # stunting prevalence side bar plot
 stpbar <- sidebar +
   aes(y=stuntprev,fill=stpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
+  # labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
+  labs(x = "",y="Stunting Prevalence (%)",title="b") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
