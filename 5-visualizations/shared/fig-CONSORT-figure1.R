@@ -61,27 +61,57 @@ unique(wmd$study_id)
 ki_md <- read.csv('results/KI-metadata.csv')
 ki_md_status <- read.csv('results/KI-studyStatus.csv')
 
-ki_md_status <- ki_md_status %>%
-  dplyr::mutate(short_id = tolower(Short_ID))
+colnames(ki_md_status)[which(colnames(ki_md_status)=="Short_ID")] = "short_id"
+ki_md_status = ki_md_status %>% mutate(short_id = tolower(short_id))
+
 # drop empty rows
 ki_md <- ki_md[!is.na(ki_md$short_id), ]
+
+# why do 91 rows have no short_id? dropping for now
+nrow(ki_md)
+ki_md <- ki_md %>% filter(short_id != "")
+nrow(ki_md)
+
 # select only relevant columns for figure 1
-ki_md <- ki_md %>%
-  dplyr::select(short_id, country, subj, obs, study_id, short_description)
-ki_md <- merge(ki_md, ki_md_status, by = 'short_id', all.x = TRUE)
+ki_md <- ki_md %>% select(short_id, country, subj, obs, study_id,
+                          short_description)
+
+# ki_md_m <- merge(ki_md, ki_md_status, by = 'short_id', all.x = TRUE)
+ki_md_m <- full_join(ki_md, ki_md_status, by = 'short_id')
+
 # convert factors to numeric
-ki_md <- ki_md %>%
-  mutate(obs = as.integer(obs), subj = as.integer(subj))
-ki_bar_data <- data.frame(ki_md)
+ki_md_m <- ki_md_m %>% mutate(obs = as.integer(obs), subj = as.integer(subj))
+
+# ki_bar_data <- data.frame(ki_md)
+
 # wide to long format
-ki_md <- ki_md %>%
-  dplyr::select(-Study_ID, -`included/excluded`,  -Short_ID) %>%
-  gather('excludedReason', 'excludedIndicator', -short_id, -study_id,
-         -country, -subj, -obs, -short_description, -reason_excluded)
+# ki_md <- ki_md %>%
+#   # select(-Study_ID, -`included.excluded`) %>%
+#   mutate(excludedIndicator = ifelse(reason_excluded == "", 0, 1))
+
+# ki_md = ki_md %>% rename(excludedReason = reason_excluded)
+
+# reshape included study reasons 
+ki_inc <- ki_md_m %>% filter(included.excluded == "included")
+ki_exc <- ki_md_m %>% filter(included.excluded == "Excluded") %>%
+  select(short_id, country, study_id, short_description, reason_excluded)
+
+ki_inc_long = ki_inc %>%
+  gather('reason', 'included_indicator', included_first, included_high_income, 
+         included_age, included_ill, included_measurement_freq, included_small) 
+
+ki_inc_long = ki_inc_long %>% select(-c(subj, obs, Study_ID, included.excluded))
+
 # shorten study descriptions to fit labels on figure
-ki_md <- shorten_descriptions(ki_md)
+ki_md <- ki_md %>% mutate(study_id = as.character(study_id))
+# to do: debug this function
+# ki_md_long <- shorten_descriptions(ki_md_long)
+
 # transform study location labels
-ki_md <- study_label_transformation(ki_md)
+ki_md <- ki_md %>% mutate(country = as.character(country))
+# to do: debug this function
+# ki_md <- study_label_transformation(ki_md)
+
 # ordering/naming of exclusion reasons
 ki_md$excludedReason <- factor(ki_md$excludedReason, 
                                levels = c('included_first', 
@@ -96,7 +126,10 @@ ki_md <- name_labeling(ki_md)
 
 
 #####--------------------------------------------------------------------------
-##### Figure 1
+##### Heat map
+
+# Fill in cell with color if the study meets the inclusion criteria for the column
+# Otherwise make gray 
 #####--------------------------------------------------------------------------
 #define a color for fonts
 textcol <- "grey20"
@@ -148,7 +181,10 @@ hm1 <- ggplot(ki_md,aes(x=excludedReason,y=cohort)) +
   )
 hm1
 
+#####--------------------------------------------------------------------------
 # side bar plot scheme
+# Number of observations (nobs) in each cohorts
+#####--------------------------------------------------------------------------
 sidebar1 <- ggplot(data = ki_md, aes(x = cohort)) + 
   geom_bar(stat = "identity") +
   coord_flip() + 
@@ -212,7 +248,10 @@ nbar1 <- sidebar1 +
 
 # -----------------------------------------------------------------------------
 # Bar chart for the top of figure 1
-
+# x axis = reason
+# fill = region
+# y = nobs -- number of children, not number of cohorts
+#--------------------------------------------------------------------------
 ki_bar_data$reason_excluded <- factor(ki_bar_data$reason_excluded,
                                       levels = c('<200',
                                                  'insufficient measurement freq',
