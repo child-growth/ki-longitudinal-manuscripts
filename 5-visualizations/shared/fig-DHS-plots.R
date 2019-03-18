@@ -14,6 +14,46 @@ source(paste0(here::here(), "/0-config.R"))
 # configure for a laptop (use only 3 cores)
 registerDoParallel(cores=3)
 
+
+#----------------------------------
+# simulataneous CIs for GAMs
+# estimated by resampling the 
+# Baysian posterior estimates of
+# the variance-covariance matrix
+# assuming that it is multivariate normal
+# the function below also estimates 
+# the unconditional variance-covariance
+# matrix, Vb=vcov(x,unconditional=TRUE), 
+# which allows for undertainty in the actual
+# estimated mean as well 
+# (Marra & Wood 2012 Scandinavian Journal of Statistics, 
+#  Vol. 39: 53–74, 2012, doi: 10.1111/j.1467-9469.2011.00760.x )
+# simultaneous CIs provide much better coverage than pointwise CIs
+# see: http://www.fromthebottomoftheheap.net/2016/12/15/simultaneous-interval-revisited/
+#----------------------------------
+gamCI <- function(m,newdata,nreps=10000) {
+  require(mgcv)
+  require(dplyr)
+  Vb <- vcov(m,unconditional = TRUE)
+  pred <- predict(m, newdata, se.fit = TRUE)
+  fit <- pred$fit
+  se.fit <- pred$se.fit
+  BUdiff <- MASS::mvrnorm(n=nreps, mu = rep(0, nrow(Vb)), Sigma = Vb)
+  Cg <- predict(m, newdata, type = "lpmatrix")
+  simDev <- Cg %*% t(BUdiff)
+  absDev <- abs(sweep(simDev, 1, se.fit, FUN = "/"))
+  masd <- apply(absDev, 2L, max)
+  crit <- quantile(masd, prob = 0.95, type = 8)
+  pred <- data.frame(newdata,fit=pred$fit,se.fit=pred$se.fit)
+  pred <- mutate(pred,
+                 uprP = fit + (2 * se.fit),
+                 lwrP = fit - (2 * se.fit),
+                 uprS = fit + (crit * se.fit),
+                 lwrS = fit - (crit * se.fit)
+  )
+  return(pred)
+}
+
 #---------------------------------------
 # load cleaned DHS anthro data
 # created by 7_DHS-data-cleaning.R
@@ -66,21 +106,34 @@ dhsz <- dhsz %>%
   )
 
 dhsz <- dhsz %>%
-  mutate(region=factor(region,levels=c("SEARO","AFRO","PAHO")))
+  mutate(region=factor(region,levels=c("OVERALL","SEARO","AFRO","PAHO")))
 
 #---------------------------------------
 # estimate mean z-scores by age
 # including all countries in each region
 #---------------------------------------
 dhsallfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
-  foreach(rgn=levels(dhsz$region),.combine=rbind) %dopar% {
+  foreach(rgn=c("SEARO","AFRO","PAHO"),.combine=rbind) %dopar% {
     di <- dhsz %>% filter(measure==zmeas & region==rgn)
-    fiti <- gam(zscore~s(agem,bs="cr"),data=di)
+    fiti <- mgcv::gam(zscore~s(agem,bs="cr"),data=di)
     newd <- data.frame(agem=0:24)
-    pfiti <- predict(fiti,newdata = newd,se=TRUE)
-    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=pfiti$fit,se=pfiti$se.fit)
+    fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
+    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
     dfit
   }
+
+# estimate a pooled fit, over all regions
+dhsall_pool <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %dopar% {
+  di <- dhsz %>% filter(measure==zmeas)
+  fiti <- mgcv::gam(zscore~s(agem,bs="cr"),data=di)
+  newd <- data.frame(agem=0:24)
+  fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
+  dfit <- data.frame(measure=zmeas,region="OVERALL",agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
+  dfit
+}
+
+dhsallfits <- bind_rows(dhsallfits,dhsall_pool) %>%
+  mutate(region=factor(region,levels=c("OVERALL","SEARO","AFRO","PAHO")))
 
 
 #---------------------------------------
@@ -89,14 +142,27 @@ dhsallfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:%
 # ki cohorts
 #---------------------------------------
 dhssubfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
-  foreach(rgn=levels(dhsz$region),.combine=rbind) %dopar% {
+  foreach(rgn=c("SEARO","AFRO","PAHO"),.combine=rbind) %dopar% {
     di <- dhsz %>% filter(measure==zmeas & region==rgn & inghap==1)
-    fiti <- gam(zscore~s(agem,bs="cr"),data=di)
+    fiti <- mgcv::gam(zscore~s(agem,bs="cr"),data=di)
     newd <- data.frame(agem=0:24)
-    pfiti <- predict(fiti,newdata = newd,se=TRUE)
-    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=pfiti$fit,se=pfiti$se.fit)
+    fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
+    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
     dfit
   }
+
+# estimate a pooled fit, over all regions
+dhssub_pool <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %dopar% {
+  di <- dhsz %>% filter(measure==zmeas & inghap==1)
+  fiti <- mgcv::gam(zscore~s(agem,bs="cr"),data=di)
+  newd <- data.frame(agem=0:24)
+  fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
+  dfit <- data.frame(measure=zmeas,region="OVERALL",agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
+  dfit
+}
+
+dhssubfits <- bind_rows(dhssubfits,dhssub_pool) %>%
+  mutate(region=factor(region,levels=c("OVERALL","SEARO","AFRO","PAHO")))
 
 
 #---------------------------------------
@@ -116,8 +182,8 @@ ghapd <- d %>%
            region=="Asia" ~ "SEARO",
            region=="Africa" ~ "AFRO",
            region=="Latin America" ~ "PAHO",
-           region=="Overall" ~ "Overall"),
-         whoregion=factor(whoregion,levels=c("SEARO","AFRO","PAHO")),
+           region=="Overall" ~ "OVERALL"),
+         whoregion=factor(whoregion,levels=c("OVERALL","SEARO","AFRO","PAHO")),
          agecat2=as.character(agecat),
          agems=str_trim(str_sub(agecat2,1,2)),
          agem = as.integer(
@@ -125,18 +191,18 @@ ghapd <- d %>%
                           agems=="On" ~ "1",
                           !is.na(agems) ~ agems)
            )
-  ) %>%
-  filter(region!="Overall")
+  )
 
 #---------------------------------------
-# fit smooths to GHAP LAZ data
+# fit smooths to GHAP data
 #---------------------------------------
 ghapfits <- foreach(zmeas=c("LAZ","WAZ","WHZ"),.combine=rbind) %:% 
   foreach(rgn=levels(ghapd$whoregion),.combine=rbind) %do% {
     di <- ghapd %>% filter(measure==zmeas & whoregion==rgn)
     fiti <- mgcv::gam(est~s(agem,bs="cr"),data=di)
     newd <- data.frame(agem=0:24)
-    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=predict(fiti,newdata = newd))
+    fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
+    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
     dfit
   }
 
@@ -148,7 +214,9 @@ ghapfits   <- ghapfits   %>% mutate(dsource="ki cohorts")
 dhssubfits <- dhssubfits %>% mutate(dsource="DHS, ki countries")
 dhsallfits <- dhsallfits %>% mutate(dsource="DHS")
 dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
-  mutate(dsource=factor(dsource,levels=c("ki cohorts","DHS, ki countries","DHS")))
+  mutate(dsource=factor(dsource,levels=c("ki cohorts","DHS, ki countries","DHS")),
+         region=factor(region,levels=c("OVERALL","SEARO","AFRO","PAHO") )
+         )
 
 #---------------------------------------
 # make figure
@@ -159,37 +227,31 @@ dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
 # Simplify to only include GHAP and 
 # DHS overall estimates
 #---------------------------------------
-
 dhs_plotd <- dhsfits %>%
   filter(dsource %in% c("ki cohorts","DHS"))
 
-
 # standard region colors used in other plots
-# tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- tableau10(10)[c(1,5,2)]
+tableau10 <- tableau_color_pal("Tableau 10")
+pcols <- c("black",tableau10(10)[c(1,5,2)])
 
-# colors for data source
-# vircols <- viridis(4,begin=0,end=0.8)[c(1,3,4)]
-# safe color blind palette
-# cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-# pcols <- c("black", cbPalette[c(7,8)])
-
-dhsp <- ggplot(data=dhs_plotd,aes(x=agem,y=fit,color=region,linetype=dsource))+
+dhsp <- ggplot(data=dhs_plotd,aes(x=agem,y=fit,color=region,fill=region,linetype=dsource))+
   facet_grid(measure~region,switch="y")+
   geom_abline(intercept=0,slope=0,color="gray60")+
 
+  geom_ribbon(aes(ymin=fit_lb,ymax=fit_ub),color=NA,alpha=0.2)+
   geom_line(alpha=1)+
   scale_x_continuous(breaks=seq(0,24,by=6))+
   scale_y_continuous(breaks=seq(-2,2,by=1))+
   scale_color_manual(values=pcols,guide=FALSE)+
+  scale_fill_manual(values=pcols,guide=FALSE)+
   scale_linetype_manual(values=c("solid","dashed","dotdash"))+
-  labs(x="child age, months",y="")+
+  labs(x="child age, months",y="anthropometric z-score")+
   coord_cartesian(ylim=c(-2,2))+
   theme_minimal()+
   theme(legend.position = "bottom",
         strip.placement="outside",
         strip.background = element_rect(fill=NA,color=NA),
-        strip.text.y = element_text(angle=180),
+        # strip.text.y = element_text(angle=180),
         panel.spacing = unit(0.5, "lines")
   )
 
