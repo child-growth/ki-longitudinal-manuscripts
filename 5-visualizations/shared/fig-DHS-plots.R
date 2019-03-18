@@ -1,277 +1,176 @@
-######################
+#---------------------------------------
 #Ki DHS Analysis
 #Spring 2019
 
 # This script plots age by HAZ and WHZ for DHS data
-######################
+#---------------------------------------
+
+#---------------------------------------
+# source configuration file
+#---------------------------------------
 source(paste0(here::here(), "/0-config.R"))
 
-#load data
-haz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
-waz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
-whz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
+# set up for parallel computing
+# configure for a laptop (use only 3 cores)
+registerDoParallel(cores=3)
+
+#---------------------------------------
+# load cleaned DHS anthro data
+# created by 7_DHS-data-cleaning.R
+#---------------------------------------
+dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
+dwaz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
+dwhz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
 
 
-haz <- readRDS(file = "U:/data/clean-DHS-haz.rds")
-whz <- readRDS(file = "U:/data/clean-DHS-whz.rds")
-waz <- readRDS(file = "U:/data/clean-DHS-whz.rds")
-waz <- waz %>% rename(waz=whz)
+dhaz <- readRDS(file = "U:/data/clean-DHS-haz.rds")
+dwaz <- readRDS(file = "U:/data/clean-DHS-whz.rds")
+  dwaz <- dwaz %>% rename(waz=whz)
+dwhz <- readRDS(file = "U:/data/clean-DHS-whz.rds")
+
+#---------------------------------------
+# combine all of the DHS data 
+# into a single dataframe
+#---------------------------------------
+dlaz <- dhaz %>%
+  rename(zscore=haz) %>% 
+  mutate(measure="LAZ")
+dwaz <- dwaz %>%
+  rename(zscore=waz) %>%
+  mutate(measure="WAZ")
+dwhz <- dwhz %>%
+  rename(zscore=whz) %>%
+  mutate(measure="WHZ")
+
+dhsz <- bind_rows(dlaz,dwaz,dwhz) %>%
+  mutate(measure=factor(measure,levels=c("LAZ","WAZ","WHZ")))
 
 
-# make new new region variable 
-haz$region <- rep(NA, nrow(haz))
-haz <- haz %>% 
+#---------------------------------------
+# make a WHO region variable 
+# flag countries that overlap with the
+# GHAP cohorts
+#
+# Note: Philippines (Western Pacific)
+# and Pakistan (Middle East) are classified
+# into SEARO
+#---------------------------------------
+dhsz$region <- rep(NA, nrow(dhsz))
+dhsz <- dhsz %>% 
   mutate(region = case_when(country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" | country == "AF7" | country == "KH6" | country == "VNT" ~ "SEARO",
                             country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "PAHO", 
-                            is.na(region) ~ "AFRO"))
-
-waz$region <- rep(NA, nrow(waz))
-waz <- waz %>% 
-  mutate(region = case_when(country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" | country == "AF7" | country == "KH6" | country == "VNT" ~ "SEARO",
-                            country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "PAHO", 
-                            is.na(region) ~ "AFRO"))
-
-whz$region <- rep(NA, nrow(whz))
-whz <- whz %>% 
-  mutate(region = case_when(country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" ~ "SEARO",
-                            country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "PAHO", 
-                            is.na(region) ~ "AFRO"))
-
-#age-specific mean z-scores
-#country.haz <- haz %>% group_by(country) %>% summarize(haz_mn = mean(haz), haz_sd = sd(haz))
-#country.whz <- whz %>% group_by(country) %>% summarize(whz_mn = mean(whz), whz_sd = sd(whz))
-
-#why is madagascar not in whz dataset??
-
-#merge in mean z-scores estimates
-#haz <- merge(haz, country.haz, by="country")
-#whz <- merge(whz, country.whz, by="country")
-
-
-
-#merge in GHAP data
-load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
-
-d = d %>% 
-  mutate(region = ifelse(region=="Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
-
-
-########################################## HAZ plots #######################################
-ghap.haz <- d %>% filter(
-  disease == "Stunting" &
-    measure == "Mean LAZ" &
-    birth == "yes" &
-    severe == "no" &
-    age_range == "1 month" &
-    cohort == "pooled" 
-)
-
-ghap.haz <- ghap.haz %>% filter(region != "Overall")
-
-ghap.haz <- droplevels(ghap.haz)
-
-ghap.haz <- ghap.haz %>% 
-  arrange(agecat) %>%
-  filter(!is.na(agecat)) %>%
-  filter(!is.na(region)) %>%
-  mutate(agecat = as.character(agecat)) %>%
-  mutate(agecat = ifelse(agecat == "Two weeks", "0", agecat)) %>%
-  mutate(agecat = gsub(" month", "", agecat)) %>%
-  mutate(agecat = gsub(" months", "", agecat)) %>%
-  mutate(agecat = gsub("s", "", agecat)) %>%
-  mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
-  mutate(agecat = as.numeric(agecat)) 
-
-names(ghap.haz)[names(ghap.haz)=="agecat"] <- "agem"
-
-ghap.haz <- ghap.haz %>% mutate(region=case_when(region=="Africa" ~ "AFRO",
-                                     region=="Latin America" ~ "PAHO",
-                                     region=="South Asia" ~ "SEARO"))
-
-#merge together DHS and GHAP data
-#combine.haz <- merge(haz, df, by=c("agem","region"))
-
-#create DHS overlap data - HAZ
-haz.overlap <- haz %>% 
-  filter(country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7")
-
-
-ghap.whz <- d %>% filter(
-  disease == "Wasting" &
-    measure == "Mean WLZ" &
-    birth == "yes" &
-    severe == "no" &
-    age_range == "1 month" &
-    cohort == "pooled" 
-)
-
-ghap.whz <- ghap.whz %>% filter(region != "Overall")
-
-ghap.whz <- droplevels(ghap.whz)
-
-ghap.whz <- ghap.whz%>% 
-  arrange(agecat) %>%
-  filter(!is.na(agecat)) %>%
-  filter(!is.na(region)) %>%
-  mutate(agecat = as.character(agecat)) %>%
-  mutate(agecat = ifelse(agecat == "Two weeks", "0", agecat)) %>%
-  mutate(agecat = gsub(" month", "", agecat)) %>%
-  mutate(agecat = gsub(" months", "", agecat)) %>%
-  mutate(agecat = gsub("s", "", agecat)) %>%
-  mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
-  mutate(agecat = as.numeric(agecat)) 
-
-names(ghap.whz)[names(ghap.whz)=="agecat"] <- "agem"
-
-ghap.whz <- ghap.whz %>% mutate(region=case_when(region=="Africa" ~ "AFRO",
-                                                 region=="Latin America" ~ "PAHO",
-                                                 region=="South Asia" ~ "SEARO"))
-
-#merge together DHS and GHAP data
-#combine.whz <- merge(whz, df, by=c("agem","region"))
-
-#create DHS overlap data - WHZ
-whz.overlap <- whz %>% 
-  filter(country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7")
-
-###############################################  LOESS  #################################################
-# LOESS regressions - 3 regions x 3 z-scores = 9 separate regressions. doubled since there is overall 
-#estimates for the region and subregion subset to countries in ghap
-
-#HAZ loess regressions
-afro.haz <- haz %>% filter(region =="AFRO")
-loess.afro.haz = loess(haz ~ agem, data=afro.haz, span=0.5)
-afro.haz$predhaz = predict(loess.afro.haz)
-
-paho.haz <- haz %>% filter(region =="PAHO")
-loess.paho.haz = loess(haz ~ agem, data=paho.haz, span=0.5)
-paho.haz$predhaz = predict(loess.paho.haz)
-
-searo.haz <- haz %>% filter(region == "SEARO")
-loess.searo.haz = loess(haz ~ agem, data=searo.haz, span=0.5)
-searo.haz$predhaz = predict(loess.searo.haz)
-
-pred.haz <- bind_rows(afro.haz, paho.haz, searo.haz)
-
-afro.haz.over <- haz.overlap %>% filter(region =="AFRO")
-loess.afro.haz.over = loess(haz ~ agem, data=afro.haz.over, span=0.5)
-afro.haz.over$predhaz = predict(loess.afro.haz.over)
-
-paho.haz.over <- haz.overlap %>% filter(region =="PAHO")
-loess.paho.haz.over = loess(haz ~ agem, data=paho.haz.over, span=0.5)
-paho.haz.over$predhaz = predict(loess.paho.haz.over)
-
-searo.haz.over <- haz.overlap %>% filter(region == "SEARO")
-loess.searo.haz.over = loess(haz ~ agem, data=searo.haz.over, span=0.5)
-searo.haz.over$predhaz = predict(loess.searo.haz.over)
-
-pred.haz.over <- bind_rows(afro.haz.over, paho.haz.over, searo.haz.over)
-
-#WHZ loess regressions
-afro.whz <- whz %>% filter(region =="AFRO")
-loess.afro.whz = loess(whz ~ agem, data=afro.whz, span=0.5)
-afro.whz$predwhz = predict(loess.afro.whz)
-
-paho.whz <- whz %>% filter(region =="PAHO")
-loess.paho.whz = loess(whz ~ agem, data=paho.whz, span=0.5)
-paho.whz$predwhz = predict(loess.paho.whz)
-
-searo.whz <- whz %>% filter(region == "SEARO")
-loess.searo.whz = loess(whz ~ agem, data=searo.whz, span=0.5)
-searo.whz$predwhz = predict(loess.searo.whz)
-
-pred.whz <- bind_rows(afro.whz, paho.whz, searo.whz)
-
-afro.whz.over <- whz.overlap %>% filter(region =="AFRO")
-loess.afro.whz.over = loess(whz ~ agem, data=afro.whz.over, span=0.5)
-afro.whz.over$predwhz = predict(loess.afro.whz.over)
-
-paho.whz.over <- whz.overlap %>% filter(region =="PAHO")
-loess.paho.whz.over = loess(whz ~ agem, data=paho.whz.over, span=0.5)
-paho.whz.over$predwhz = predict(loess.paho.whz.over)
-
-searo.whz.over <- whz.overlap %>% filter(region == "SEARO")
-loess.searo.whz.over = loess(whz ~ agem, data=searo.whz.over, span=0.5)
-searo.whz.over$predwhz = predict(loess.searo.whz.over)
-
-pred.whz.over <- bind_rows(afro.whz.over, paho.whz.over, searo.whz.over)
-
-p <- ggplot(pred.haz, aes(color=region)) +
-  geom_line(data=pred.haz, aes(y = predhaz, x=agem, linetype="solid"), size = 0.5) +
-  geom_line(data=ghap.haz, aes(y=est, x=agem, group=region, linetype="dotted"), size = 0.5)+
-  geom_line(data=pred.haz.over, aes(y=predhaz, x=agem, group=region, linetype="longdash"), size=0.5)+
-  facet_grid(~region)+ 
-  geom_hline(yintercept = 0, colour = "black") +
-  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
-  xlab("Child age, months")+
-  ylab("mean Length-for-age Z-score")+
-  #ggtitle("") + 
-  theme(strip.text = element_text(margin=margin(t=5))) 
-  theme(legend.position="left")# +
-  #scale_linetype_discrete(names="Region",values=c("DHS overlap"=3,"DHS"=2,"GHAP cohorts"=1))
+                            is.na(region) ~ "AFRO")) %>%
   
-ggsave(p, file="figures/stunting/fig_stunt_mean_LAZ_region_DHS.png", width=10, height=8)
+  mutate(inghap = ifelse(
+    country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7",1,0)
+  )
 
-q <- ggplot(pred.whz, aes(color=region)) +
-  geom_line(data=pred.whz, aes(y = predwhz, x=agem, linetype="solid"), size = 0.5) +
-  geom_line(data=ghap.whz, aes(y=est, x=agem, group=region, linetype="dotted"), size = 0.5)+
-  geom_line(data=pred.whz.over, aes(y=predwhz, x=agem, group=region, linetype="longdash"), size=0.5)+
-  facet_grid(~region)+ 
-  geom_hline(yintercept = 0, colour = "black") +
-  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
-  xlab("Child age, months")+
-  ylab("mean weight-for-length Z-score")+
-  #ggtitle("") + 
-  theme(strip.text = element_text(margin=margin(t=5))) 
-theme(legend.position="left") +
-  scale_linetype_discrete("Region",values=c("DHS overlap"=3,"DHS"=2,"GHAP cohorts"=1))
+dhsz <- dhsz %>%
+  mutate(region=factor(region,levels=c("SEARO","AFRO","PAHO")))
 
-ggsave(q, file="figures/wasting/fig_wasting_mean_WLZ_region_DHS.png", width=10, height=8)
+#---------------------------------------
+# estimate mean z-scores by age
+# including all countries in each region
+#---------------------------------------
+dhsallfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
+  foreach(rgn=levels(dhsz$region),.combine=rbind) %dopar% {
+   di <- dhsz %>% filter(measure==zmeas & region==rgn)
+   fiti <- loess(zscore~agem,data=di,span=0.5)
+   newd <- data.frame(agem=0:24)
+   dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=predict(fiti,newdata = newd))
+   dfit
+  }
+
+#---------------------------------------
+# estimate mean z-scores by age
+# subset to countries that overlap the
+# GHAP cohorts
+#---------------------------------------
+dhssubfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
+  foreach(rgn=levels(dhsz$region),.combine=rbind) %dopar% {
+    di <- dhsz %>% filter(measure==zmeas & region==rgn & inghap==1)
+    fiti <- loess(zscore~agem,data=di,span=0.5)
+    newd <- data.frame(agem=0:24)
+    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=predict(fiti,newdata = newd))
+    dfit
+  }
+
+#---------------------------------------
+# Grab GHAP estimated mean Z-scores
+# by age, and format the data for this analysis
+#---------------------------------------
+load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
+ghapd <- d %>%
+  filter(measure %in% c("Mean LAZ","Mean WAZ","Mean WLZ"),
+         birth=="yes",
+         age_range=="1 month",
+         cohort=="pooled") %>%
+  mutate(measure = str_sub(measure,6,9),
+         measure = factor(measure,levels=c("LAZ","WAZ","WLZ"),labels=c("LAZ","WAZ","WHZ")),
+         whoregion = case_when(
+           region=="Asia" ~ "SEARO",
+           region=="Africa" ~ "AFRO",
+           region=="Latin America" ~ "PAHO",
+           region=="Overall" ~ "Overall"),
+         whoregion=factor(whoregion,levels=c("SEARO","AFRO","PAHO")),
+         agecat2=as.character(agecat),
+         agems=str_trim(str_sub(agecat2,1,2)),
+         agem = as.integer(
+           case_when(agems=="Tw" ~ "0",
+                          agems=="On" ~ "1",
+                          !is.na(agems) ~ agems)
+           )
+  ) %>%
+  filter(region!="Overall")
+
+#---------------------------------------
+# fit smooths to GHAP LAZ data
+#---------------------------------------
+ghapfits <- foreach(zmeas=c("LAZ","WHZ"),.combine=rbind) %:% 
+  foreach(rgn=levels(ghapd$whoregion),.combine=rbind) %do% {
+    di <- ghapd %>% filter(measure==zmeas & whoregion==rgn)
+    fiti <- loess(est~agem,data=di,span=0.5)
+    newd <- data.frame(agem=0:24)
+    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=predict(fiti,newdata = newd))
+    dfit
+  }
 
 
-#### HAZ GGPLOT
-#p <- ggplot(combine.haz,aes(x=agem)) +
-  #stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP cohorts"), se=F, span = 0.5) +
-  #stat_smooth(aes(y=haz_mn,fill=region, color=region, linetype="DHS"), se=F, span = 0.5) +
-  #facet_wrap(~region)+
-  #geom_hline(yintercept = 0, colour = "black") +
-  #scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
-  #scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
-  #scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                   # name = 'Region') +
-  #scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                     #name = 'Region') +
-  #xlab("Child age, months")+
-  #ylab("mean Length-for-age Z-score") +
-  #ggtitle("") +
-  #theme(strip.text = element_text(margin=margin(t=5))) +
-  #theme(legend.position="left") + 
-  #scale_linetype_manual("Data",values=c("DHS"=2,"GHAP cohorts"=1))
+#---------------------------------------
+# Append the fits into a single data frame
+#---------------------------------------
+ghapfits   <- ghapfits   %>% mutate(dsource="GHAP cohorts")
+dhssubfits <- dhssubfits %>% mutate(dsource="DHS, GHAP countries")
+dhsallfits <- dhsallfits %>% mutate(dsource="DHS")
+dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
+  mutate(dsource=factor(dsource,levels=c("GHAP cohorts","DHS, GHAP countries","DHS")))
 
-#ggsave(p, file="figures/stunting/fig_stunt_mean_LAZ_region_DHS.png", width=10, height=8)
+#---------------------------------------
+# make figure
+#---------------------------------------
+tableau10 <- tableau_color_pal("Tableau 10")
+pcols <- tableau10(10)[c(1,5,2)]
+dhsp <- ggplot(data=dhsfits,aes(x=agem,y=fit,color=region,linetype=dsource))+
+  facet_grid(measure~region,switch="y")+
+  geom_line()+
+  geom_abline(intercept=0,slope=0,color="gray60")+
+  scale_x_continuous(breaks=seq(0,24,by=3))+
+  scale_y_continuous(breaks=seq(-2,1,by=0.5))+
+  scale_color_manual(values=pcols,guide=FALSE)+
+  scale_linetype_manual(values=c("solid","dashed","dotdash"))+
+  labs(x="child age, months",y="")+
+  coord_cartesian(ylim=c(-2,1))+
+  theme_minimal()+
+  theme(legend.position = "bottom",
+        strip.placement="outside",
+        strip.text.y = element_text(angle=180),
+        panel.spacing = unit(0.5, "lines"))
 
+dhsp
 
-### WHZ GGPLOT
-#q <- ggplot(combine.whz,aes(x=agem)) +
-  #stat_smooth(aes(y=est,fill=region, color=region, linetype="GHAP cohorts"), se=F, span = 0.5) +
-  #stat_smooth(aes(y=whz_mn,fill=region, color=region, linetype="DHS"), se=F, span = 0.5) +
-  #facet_wrap(~region)+
-  #geom_hline(yintercept = 0, colour = "black") +
-  #scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
-  #scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
-  #scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                   # name = 'Region') +
-  #scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-                   #  name = 'Region') +
- # xlab("Child age, months")+
-  #ylab("mean weight-for-length Z-score") +
-  #ggtitle("") +
-  #theme(strip.text = element_text(margin=margin(t=5))) +
-  #theme(legend.position="none") + 
-  #scale_linetype_manual("Data",values=c("DHS"=2,"GHAP cohorts"=1))
+ggsave(here("figures/dhs","dhs-ghap-zscore-byage.png"),plot=dhsp,device="png",width=6,height=6)
 
-# ggsave(q, file="figures/wasting/fig_wasting_mean_WLZ_region_DHS.png", width=10, height=8)
+# LEFT OFF HERE.  NEED TO DO DENSITY PLOTS
 
 
 #################### Density plots ######################
