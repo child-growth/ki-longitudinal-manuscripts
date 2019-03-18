@@ -183,7 +183,7 @@ summarize_dist = function(age_recov, data){
   data = data %>% filter(age_rec == age_recov) 
   
   tab_age_meas =  table(data$age_meas)
-  
+
 
   age_meas_list = rev(names(tab_age_meas[tab_age_meas>0]))
   
@@ -224,8 +224,7 @@ summarize_dist = function(age_recov, data){
   res = as.data.frame(res)
   colnames(res) = c("age_rec", "age_meas",
                     "nstudy", "ncountry", "nchild",
-                        "stunting_prev", "prev_lb", "prev_ub")
-
+                    "stunting_prev", "prev_lb", "prev_ub")
   
   res$stunting_prev = as.numeric(as.character(res$stunting_prev))
   res$prev_lb = as.numeric(as.character(res$prev_lb))
