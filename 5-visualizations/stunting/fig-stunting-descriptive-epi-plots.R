@@ -241,7 +241,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
                        name = 'Measure', 
-                       labels = c('Cumulative Incidence', 'Incidence Proportion')) + 
+                       labels = c('Cumulative Incidence', 'New Incident Cases')) + 
     scale_fill_manual(values=tableau11, guide = FALSE) +
     # theme(legend.position = 'right') +
     xlab(xlabel)+
@@ -272,7 +272,14 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     theme(axis.title.y = element_text(size = 15)) +
     
     ggtitle("") +
-    facet_wrap(~region) 
+    facet_wrap(~region) +
+    
+    guides(color = FALSE) +
+    
+    theme(legend.position = c(.08,.87),
+          legend.title = element_blank(),
+          legend.background = element_blank(),
+          legend.box.background = element_rect(colour = "black"))
   
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
@@ -294,7 +301,7 @@ p_temp <- ki_combo_plot(d,
                         xlabel="Child age, months",
                         h1=85,
                         h2=90)
-
+p_temp
 
 
 ggsave(p_temp, file="figures/stunting/fig_stunt_ci_inc_pooled.png", width=12, height=8)
