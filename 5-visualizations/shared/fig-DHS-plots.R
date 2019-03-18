@@ -176,36 +176,15 @@ ggsave(here("figures/dhs","dhs-ghap-zscore-byage.png"),plot=dhsp,device="png",wi
 #################### Density plots ######################
 #library(ggthemes)
 #library(scales)
-set.seed(123)
-load("U://ucb-superlearner/data/co-occurrence_data.RData")
 
-d <- d %>% mutate(region = case_when(
-  country=="BANGLADESH" | country=="INDIA"|
-    country=="NEPAL" | country=="PAKISTAN"|
-    country=="PHILIPPINES"| country=="CHINA"|
-    country=="THAILAND"|country=="SINGAPORE"|
-    country=='OMAN'~ "SEARO",
-  country=="KENYA"|
-    country=="GHANA"|
-    country=="BURKINA FASO"|
-    country=="GUINEA-BISSAU"|
-    country=="MALAWI"|
-    country=="SOUTH AFRICA"|
-    country=="TANZANIA, UNITED REPUBLIC OF"|
-    country=="TANZANIA"|
-    country=="ZIMBABWE"|
-    country=="GAMBIA"|
-    country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "AFRO",
-  country=="BRAZIL" | country=="GUATEMALA" |
-    country=="PERU"|country=='ECUADOR'   ~ "PAHO",
-  TRUE                                    ~ "Other"
-))
-d <- d %>% filter(region!="Other")
 
-tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
-               "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
-tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- tableau10[c(1,2,5)]
+#Example KI density plot
+ki <- readRDS(paste0(here(),"/results/ki.density.fits.rds"))
+#KI density data.frames divided by 3 regions and 3 Z-scores
+ki %>% filter(region=="SEARO" & measure=="haz") %>%
+                ggplot(aes(x=x,y=y)) + geom_path()
+
+
 
 
 r <- ggplot(haz, aes(x=haz, group=region)) +
@@ -215,9 +194,6 @@ r <- ggplot(haz, aes(x=haz, group=region)) +
   facet_grid(~region) +
   labs(x="length-for-age z-score")+
   theme_minimal()
-
-ggsave(r, file="figures/stunting/fig_stunting_mean_LAZ_DHS_density.png", width=10, height=8)
-
 
 
 
@@ -229,16 +205,13 @@ s <- ggplot(whz, aes(x=whz, group=region)) +
   labs(x="weight-for-length z-score")+
   theme_minimal()
 
-ggsave(s, file="figures/wasting/fig_wasting_mean_WLZ_DHS_density.png", width=10, height=8)
 
-
-t <- ggplot(waz, aes(x=whz, group=region)) +
+t <- ggplot(waz, aes(x=waz, group=region)) +
   geom_density() +
   geom_density(data=waz.overlap, aes(x=whz, group=region),col=pcols[3],lty=2)+
   geom_density(data=d, aes(x=waz),col=pcols[3],lty=3)+
   facet_grid(~region) +
-  labs(x="weight-for-agez-score")+
+  labs(x="weight-for-age z-score")+
   theme_minimal()
 
-ggsave(t, file="figures/wasting/fig_wasting_mean_WAZ_DHS_density.png", width=10, height=8)
 
