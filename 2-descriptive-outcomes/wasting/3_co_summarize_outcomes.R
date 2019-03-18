@@ -3,9 +3,6 @@
 
 
 rm(list = ls())
-library(tidyverse)
-library(metafor)
-library(data.table)
 
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
@@ -129,10 +126,10 @@ monthly.waz <- bind_rows(
 
 
 co_desc_data <- bind_rows(
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Mean WAZ",  waz),
-  data.frame(disease = "Wasting", age_range="1 month",   birth="yes", severe="no", measure= "Mean WAZ",  monthly.waz)
+  data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
+  data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
+  data.frame(disease = "Underweight", age_range="3 months",   birth="yes", severe="no", measure= "Mean WAZ",  waz),
+  data.frame(disease = "Underweight", age_range="1 month",   birth="yes", severe="no", measure= "Mean WAZ",  monthly.waz)
 )
 
 

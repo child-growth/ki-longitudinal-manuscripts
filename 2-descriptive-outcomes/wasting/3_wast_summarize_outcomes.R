@@ -400,6 +400,7 @@ shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Af
 #  shiny_desc_data$est[(shiny_desc_data$est < shiny_desc_data$lb & shiny_desc_data$est < shiny_desc_data$ub) | (shiny_desc_data$est > shiny_desc_data$lb & shiny_desc_data$est > shiny_desc_data$ub)] * 100
 
 save(shiny_desc_data, file = "U:/Data/Wasting/shiny_desc_data.Rdata")
+save(shiny_desc_data, file = paste0(here(),"/results/shiny_desc_data.Rdata"))
 
 
 

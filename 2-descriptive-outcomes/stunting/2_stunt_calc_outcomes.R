@@ -262,8 +262,8 @@ shiny_desc_data$agecat <- factor(shiny_desc_data$agecat, levels=unique(shiny_des
 unique(shiny_desc_data$region)
 shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Africa", "Latin America", "Asia"))
 
-save(shiny_desc_data, file = "U:/ki-longitudinal-manuscripts/results/stunting/shiny_desc_data_stunting_objects.Rdata")
 
+save(shiny_desc_data, file = paste0(here(),"/results/shiny_desc_data_stunting_objects.Rdata"))
 
 
 
