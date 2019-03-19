@@ -16,6 +16,12 @@ source(paste0(here::here(), "/0-config.R"))
 stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
 stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
 
+# number of studies, countries, children included
+length(names(table(stunt_data$studyid)))
+length(names(table(stunt_data$country)))
+x=stunt_data %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
+sum(x$n)
+
 #-----------------------------------------
 # format data for plot
 #-----------------------------------------
