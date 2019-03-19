@@ -169,7 +169,7 @@ p1 <- ki_desc_plot(d,
                    h2=72)
 p1
 
-ggsave(p1, file="figures/stunting/fig_stunt_prev_pooled.png", width=10, height=8)
+ggsave(p1, file="figures/stunting/fig_stunt_prev_pooled.png", width=9, height=6)
 
 
 
@@ -205,7 +205,7 @@ p_temp <- ki_combo_plot(d,
 p_temp
 
 
-ggsave(p_temp, file="figures/stunting/fig_stunt_ci_inc_pooled.png", width=12, height=8)
+ggsave(p_temp, file="figures/stunting/fig_stunt_ci_inc_pooled.png", width=9, height=6)
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion
