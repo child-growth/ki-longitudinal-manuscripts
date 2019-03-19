@@ -33,7 +33,9 @@ d = d %>%
     "3", "6", "9", "12"
   ))) %>%
   mutate(month_diff = age_meas_n - age_rec_n) %>%
-  mutate(stunting_prev = stunting_prev * 100)
+  mutate(stunting_prev = stunting_prev * 100,
+         prev_lb = prev_lb * 100,
+         prev_ub = prev_ub * 100)
 
 n=4
 viridis_cols = viridis(
@@ -48,13 +50,13 @@ viridis_cols = viridis(
 # manually reset prevalence at time 0 to 0
 # because the random effects pooling caused
 # some not to equal 0 
-d = d %>%
-  mutate(stunting_prev = ifelse(month_diff ==0, 0, stunting_prev))
+# d = d %>%
+#   mutate(stunting_prev = ifelse(month_diff ==0, 0, stunting_prev))
 
 stplot = ggplot(d, aes(x = month_diff, y = stunting_prev)) +
   geom_point(aes(col = age_rec_f)) +
-  # geom_errorbar(aes(ymin = prev_lb, ymax = prev_ub, col = age_rec_f),
-  #               width=0.2) +
+  geom_errorbar(aes(ymin = prev_lb, ymax = prev_ub, col = age_rec_f),
+                width=0.2) +
   geom_line(aes(col = age_rec_f)) +
   ylab("Stunting prevalence") + 
   xlab("Months since initial recovery from stunting") +
@@ -66,5 +68,25 @@ stplot = ggplot(d, aes(x = month_diff, y = stunting_prev)) +
 
 ggsave(stplot, file="figures/stunting/fig_stunt_rec_cohort_st.png", 
        width=5, height=4)
+
+
+
+stplot2 =ggplot(d, aes(x = month_diff, y = stunting_prev)) +
+  geom_point(aes(col = age_rec_f)) +
+  geom_errorbar(aes(ymin = prev_lb, ymax = prev_ub, col = age_rec_f),
+                width=0.2) +
+  geom_line(aes(col = age_rec_f)) +
+  facet_wrap(~age_rec_f, ncol = 1) + 
+  ylab("Stunting prevalence") + 
+  xlab("Months since initial recovery from stunting") +
+  scale_color_manual("Age in months\nof initial recovery", values = 
+                       viridis_cols) +
+  scale_x_continuous(breaks = c(0,3,6,9,12),
+                     labels = c(0,3,6,9,12)) + 
+  theme(legend.position = "bottom") 
+ggsave(stplot, file="figures/stunting/fig_stunt_rec_cohort_st2.png", 
+       width=5, height=4)
+
+
 
 
