@@ -36,7 +36,7 @@ load("co_desc_data.Rdata")
 
 d <- bind_rows(stunt, wast, co_desc_data)
 d$agecat <- factor(d$agecat, levels=unique(d$agecat))
-d$region[d$region=="Asia"] <- "South Asia"
+d$region[d$region=="Asia" & !is.na(d$region)] <- "South Asia"
 d$region <- factor(d$region, levels=c("Overall","Africa","Latin America", "South Asia"))
 
 save(d, file=paste0(here(),"/results/desc_data_cleaned.Rdata"))
