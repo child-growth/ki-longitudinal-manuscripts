@@ -17,8 +17,12 @@ df <- read_rds(paste0(data_dir, "dhs-combined/", "dhs_data_combined.rds"))
 #-------------------------------------------
 #extra variables beginning with m or shhw are results of the stata lookfor function and
 #can be ignored
-d <- df %>% rename(country = v000) %>%
-  select("caseid", "country", "dataset", grep("hw", colnames(df))) %>%
+d <- df %>% rename(country = v000,
+                   weight = v005,
+                   cluster_no = v001,
+                   psu = v021,
+                   stratification = v023) %>%
+  select("caseid", "country", "weight", "dataset", "cluster_no", "psu", "stratification", grep("hw", colnames(df))) %>%
   select(-contains("sh"))
 
 #check for duplicates
@@ -35,120 +39,75 @@ haz_vars = colnames(df)[grep("hw70", colnames(df))]
 waz_vars = colnames(df)[grep("hw71", colnames(df))]
 whz_vars = colnames(df)[grep("hw72", colnames(df))]
 
-d_haz_wide = d %>% select(caseid, country, dataset, year_vars, 
-                  age_vars, haz_vars)
+d_haz_wide = d %>% select(caseid, country, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, haz_vars)
 
-d_waz_wide = d %>% select(caseid, country, dataset, year_vars, 
-                          age_vars, waz_vars)
+d_waz_wide = d %>% select(caseid, country, dataset, weight, cluster_no, psu, stratification,  year_vars, age_vars, waz_vars)
 
-d_whz_wide = d %>% select(caseid, country, dataset, year_vars, 
-                  age_vars, whz_vars) #68 countries
+d_whz_wide = d %>% select(caseid, country, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, whz_vars) #68 countries
 
 #-------------------------------------------
 # Reshape from wide to long 
-# Keep one column for case id 
-# Convert age in months, WHZ, WAZ, HAZ from wide to long 
 #-------------------------------------------
-haz.temp1 = d_haz_wide[1:500000,]
-haz.temp2 = d_haz_wide[500001:1000000,]
-haz.temp3 = d_haz_wide[1000001:1586661,]
+# reshape all the z-score measures to long
+# filter to non-missing obs
+dlz <- d_haz_wide %>%
+  select("caseid" , "country" , "dataset", "weight", "cluster_no", "psu", "stratification", grep("hw70", colnames(d_haz_wide))) %>%
+  gather("child" , "zscore" ,-"caseid",-"country",-"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
+  mutate(childid=str_sub(child,start=6,end=6),
+         measure="HAZ") %>%
+  select("caseid", "country", "dataset", "weight", "cluster_no", "psu", "stratification", "childid", "measure", "zscore") %>%
+  filter(!is.na(zscore))
+
+# reshape the age measures to long
+dla <- d_haz_wide %>%
+  select("caseid",  "country" , "dataset","weight", "cluster_no", "psu", "stratification", grep("hw1_", colnames(d_haz_wide))) %>%
+  gather("child", "agem", -"caseid", -"country", -"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
+  mutate(childid=str_sub(child,start=5,end=5)) %>%
+  select("caseid", "country", "dataset","weight", "cluster_no", "psu", "stratification", "childid", "agem") %>%
+  filter(!is.na(agem))
+
+# merge the ages onto the z-scores
+d_haz_long <- left_join(dlz, dla, by=c("caseid","country","dataset","weight", "cluster_no", "psu", "stratification", "childid"))
 
 
-tic()
-d_haz_long1 <- reshape(haz.temp1,
-                       varying = c(year_vars, age_vars, haz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
-toc()
+dwz <- d_waz_wide %>%
+  select("caseid" , "country" , "dataset", "weight", "cluster_no", "psu", "stratification", grep("hw71", colnames(d_waz_wide))) %>%
+  gather("child" , "zscore" ,-"caseid",-"country",-"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
+  mutate(childid=str_sub(child,start=6,end=6),
+         measure="WAZ") %>%
+  select("caseid", "country", "dataset", "weight", "cluster_no", "psu", "stratification", "childid", "measure", "zscore") %>%
+  filter(!is.na(zscore))
 
-tic()
-d_haz_long2 <- reshape(haz.temp2,
-                       varying = c(year_vars, age_vars, haz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
-toc()
+# reshape the age measures to long
+dwa <- d_waz_wide %>%
+  select("caseid",  "country" , "dataset","weight", "cluster_no", "psu", "stratification", grep("hw1_", colnames(d_waz_wide))) %>%
+  gather("child", "agem", -"caseid", -"country", -"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
+  mutate(childid=str_sub(child,start=5,end=5)) %>%
+  select("caseid", "country", "dataset","weight", "cluster_no", "psu", "stratification", "childid", "agem") %>%
+  filter(!is.na(agem))
 
-tic()
-d_haz_long3 <- reshape(haz.temp3,
-                       varying = c(year_vars, age_vars, haz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
-toc()
-
-d_haz_long <- bind_rows(d_haz_long1, d_haz_long2, d_haz_long3)
+# merge the ages onto the z-scores
+d_waz_long <- left_join(dwz, dwa, by=c("caseid","country","dataset","weight", "cluster_no", "psu", "stratification", "childid"))
 
 
-waz.temp1 = d_waz_wide[1:500000,]
-waz.temp2 = d_waz_wide[500001:1000000,]
-waz.temp3 = d_waz_wide[1000001:1586661,]
+dwhz <- d_whz_wide %>%
+  select("caseid" , "country" , "dataset", "weight", "cluster_no", "psu", "stratification", grep("hw72", colnames(d_whz_wide))) %>%
+  gather("child" , "zscore" ,-"caseid",-"country",-"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
+  mutate(childid=str_sub(child,start=6,end=6),
+         measure="WHZ") %>%
+  select("caseid", "country", "dataset", "weight", "cluster_no", "psu", "stratification", "childid", "measure", "zscore") %>%
+  filter(!is.na(zscore))
 
-d_waz_long1 <- reshape(waz.temp1,
-                       varying = c(year_vars, age_vars, waz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
+# reshape the age measures to long
+dwha <- d_whz_wide %>%
+  select("caseid",  "country" , "dataset","weight", "cluster_no", "psu", "stratification", grep("hw1_", colnames(d_whz_wide))) %>%
+  gather("child", "agem", -"caseid", -"country", -"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
+  mutate(childid=str_sub(child,start=5,end=5)) %>%
+  select("caseid", "country", "dataset","weight", "cluster_no", "psu", "stratification", "childid", "agem") %>%
+  filter(!is.na(agem))
 
-d_waz_long2 <- reshape(waz.temp2,
-                       varying = c(year_vars, age_vars, waz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
-
-d_waz_long3 <- reshape(waz.temp3,
-                       varying = c(year_vars, age_vars, waz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
-
-
-d_waz_long <- bind_rows(d_waz_long1, d_waz_long2, d_waz_long3)
-
-
-
-whz.temp1 = d_whz_wide[1:500000,]
-whz.temp2 = d_whz_wide[500001:1000000,]
-whz.temp3 = d_whz_wide[1000001:1586661,]
-
-d_whz_long1 <- reshape(whz.temp1,
-                       varying = c(year_vars, age_vars, whz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
-
-d_whz_long2 <- reshape(whz.temp2,
-                       varying = c(year_vars, age_vars, whz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
-
-d_whz_long3 <- reshape(whz.temp3,
-                       varying = c(year_vars, age_vars, whz_vars),
-                       direction = "long",
-                       idvar = c("caseid", "country", "dataset"),
-                       sep = "_",
-                       new.row.names = NULL
-)
-
-d_whz_long <- bind_rows(d_whz_long1, d_whz_long2, d_whz_long3) #after reshape 64 countries
+# merge the ages onto the z-scores
+d_whz_long <- left_join(dwhz, dwha, by=c("caseid","country","dataset","weight", "cluster_no", "psu", "stratification", "childid")) #after reshape 50 countries
 
 # Age columns start with "b". Data for to 20 children were recorded per woman. 
 # height for age columns start with "hw70". Data for up to 6 children under age 5 were collected
@@ -158,49 +117,39 @@ d_whz_long <- bind_rows(d_whz_long1, d_whz_long2, d_whz_long3) #after reshape 64
 #-------------------------------------------
 # Clean long format data
 #-------------------------------------------
-# rename variables
+# fix zscore variables
 d_haz_long = d_haz_long %>% 
-  rename(childid = time,
-         year = hw19,
-         agem = hw1, 
-         haz = hw70) %>%
-  mutate(haz = haz / 100)
+  mutate(zscore = zscore / 100)
 
 d_waz_long = d_waz_long %>% 
-  rename(childid = time,
-         year = hw19,
-         agem = hw1, 
-         waz = hw71) %>%
-  mutate(waz = waz / 100)
+  mutate(zscore = zscore / 100)
 
 d_whz_long = d_whz_long %>%
-  rename(childid = time,
-         year = hw19,
-         agem = hw1, 
-         whz = hw72) %>%
-  mutate(whz = whz / 100)
+  mutate(zscore = zscore / 100)
 
 #exclude z-scores outside WHO plausible values
 #HAZ[-6,6] and WHZ [-5,5]
-d_haz_long$haz[d_haz_long$haz < -6 | d_haz_long$haz > 6] <- NA
-summary(d_haz_long$haz)
+d_haz_long$zscore[d_haz_long$zscore <= -6 | d_haz_long$zscore >= 6] <- NA
+summary(d_haz_long$zscore)
 
-d_waz_long$waz[d_waz_long$waz < -6 | d_waz_long$waz > 5] <- NA
-summary(d_waz_long$waz)
+d_waz_long$zscore[d_waz_long$zscore <= -6 | d_waz_long$zscore >= 5] <- NA
+summary(d_waz_long$zscore)
 
-d_whz_long$whz[d_whz_long$whz < -5 | d_whz_long$whz > 5] <- NA
-summary(d_whz_long$whz)
-
-# drop rows with missing values 
-#confim OK to drop NAs for year
-d_haz_long = d_haz_long %>% filter(!is.na(agem) & !is.na(haz) & !is.na(year)) #drops to 47 countries!
-d_waz_long = d_waz_long %>% filter(!is.na(agem) & !is.na(waz) & !is.na(year))
-d_whz_long = d_whz_long %>% filter(!is.na(agem) & !is.na(whz) & !is.na(year))
+d_whz_long$zscore[d_whz_long$zscore <= -5 | d_whz_long$zscore >= 5] <- NA
+summary(d_whz_long$zscore)
 
 #restrict to children ages 0-24 months
 d_haz_long <- d_haz_long %>% filter(agem <= 24)
 d_waz_long <- d_waz_long %>% filter(agem <= 24)
 d_whz_long <- d_whz_long %>% filter(agem <= 24)
+
+# drop rows with missing values 
+#confim OK to drop NAs for year?
+d_haz_long = d_haz_long %>% filter(!is.na(agem) & !is.na(zscore)) #51 countries!
+d_waz_long = d_waz_long %>% filter(!is.na(agem) & !is.na(zscore))
+d_whz_long = d_whz_long %>% filter(!is.na(agem) & !is.na(zscore))
+
+
 
 # Missing is indicated with 9999 or 99999
 # Outside acceptable range is indicated with 9998 or 99998
