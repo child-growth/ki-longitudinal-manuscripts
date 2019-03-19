@@ -74,6 +74,19 @@ monthly.whz <- bind_rows(
   monthly.cohort
 )
 
+#Get monthly HAZ quantiles
+quantile_d <- d %>% group_by(agecat, region) %>%
+  mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
+         fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
+         ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
+  select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+quantile_d_overall <- d %>% group_by(agecat) %>%
+  mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
+         fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
+         ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
+  select(agecat, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_wasting.Rdata"))
+
 
 
 
@@ -351,8 +364,8 @@ ir_noRec <- bind_rows(
 shiny_desc_data <- bind_rows(
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Mean LAZ",  whz),
-  data.frame(disease = "Wasting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ",  monthly.whz),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Mean WLZ",  whz),
+  data.frame(disease = "Wasting", age_range="1 month",   birth="yes", severe="no", measure= "Mean WLZ",  monthly.whz),
   data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci_3),
   data.frame(disease = "Wasting", age_range="6 months",   birth="no",  severe="no",   measure= "Cumulative incidence",  ci_nobw),

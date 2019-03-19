@@ -84,6 +84,7 @@ quantile_d_overall <- d %>% group_by(agecat) %>%
   mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
          fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]])
+save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_stunting.Rdata"))
 
 
 #Incidence proportion
