@@ -152,21 +152,19 @@ ggsave(p1, file="figures/wasting/pooled_prev.png", width=12, height=8)
 #-------------------------------------------------------------------------------------------
 # Wasting cumulative incidence
 #-------------------------------------------------------------------------------------------
-p2 <- ki_desc_plot(d,
-                   Disease="Wasting",
-                   Measure="Cumulative incidence", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="3 months", 
-                   Cohort="pooled",
-                   xlabel="Age in months",
-                   ylabel='Cumulative incidence (95% CI)',
-                   h1=65,
-                   h2=70)
+p2 <- ki_combo_plot(d,
+                        Disease="Wasting",
+                        Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                        Birth="yes", 
+                        Severe="no", 
+                        Age_range="3 months", 
+                        Cohort="pooled",
+                        xlabel="Child age, months",
+                        h1=60,
+                        h2=62)
 
 
-ggsave(p2, file="figures/wasting/pooled_ci.png", width=12, height=8)
-
+ggsave(p2, file="figures/wasting/fig_wast_ci_inc_pooled.png", width=12, height=8)
 
 #-------------------------------------------------------------------------------------------
 # Wasting incidence rate
@@ -191,18 +189,117 @@ ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
 # Wasting recovery
 #-------------------------------------------------------------------------------------------
 
-p4 <- ki_desc_plot(d,
+
+
+rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+                          Cohort="pooled",
+                          xlabel="Age category",
+                          ylabel="",
+                          h1=0,
+                          h2=3,
+                          yrange=NULL){
+  
+  df <- d %>% filter(
+    disease == Disease &
+      measure %in% Measure &
+      birth == Birth &
+      severe == Severe &
+      age_range %in% Age_range &
+      cohort == Cohort &
+      !is.na(region) & !is.na(agecat)
+  )
+  df <- droplevels(df)
+  
+  #Keep N studies and children from only one study
+  df$nmeas.f[df$age_range!="30 days"] <- NA
+  df$nstudy.f[df$age_range!="30 days"] <- NA
+  
+  # remove N= from labels
+  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub('N=', '', nstudy.f))
+  
+  # remove text from labels
+  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
+  
+  # Remove 'months' from x axis labels  
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  
+  # remove N= labels for incidence proportion
+  # df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence_proportion', '', nmeas.f)) %>%
+  #   mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
+  
+  
+  p <- ggplot(df,aes(y=est,x=agecat)) +
+    facet_wrap(~region) +
+    geom_errorbar(aes(color=region, 
+                      group=interaction(age_range, region), ymin=lb, ymax=ub), 
+                  width = 0, position = position_dodge(0.5)) +
+    geom_point(aes(shape=age_range, fill=region, color=region, group=interaction(age_range, region)
+    ), size = 2, position = position_dodge(0.5)) +
+    #geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
+    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) +
+    scale_shape_manual(values = c(16, 17, 18),
+                       name = 'Measure', 
+                       labels = c('30 days', '60 days', '90 days')) + 
+    scale_fill_manual(values=tableau11, guide = FALSE) +
+    # theme(legend.position = 'right') +
+    xlab(xlabel)+
+    ylab(ylabel) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
+                           label = nmeas.f), size = 3.5) +
+    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1,
+                           label = nstudy.f), size = 3.5) +
+    scale_x_discrete(expand = expand_scale(add = 2)) +
+    
+    annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
+    annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    expand_limits(y = h2) +
+    theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
+    
+    theme(axis.text.x = element_text(margin = 
+                                       margin(t = 0, r = 0, b = 0, l = 0),
+                                     size = 10)) +
+    theme(axis.title.x = element_text(margin = 
+                                        margin(t = 25, r = 0, b = 0, l = 0),
+                                      size = 15)) +
+    theme(axis.title.y = element_text(size = 15)) +
+    
+    ggtitle("") +
+    
+    guides(color = FALSE) +
+    
+    theme(legend.position = c(.08,.87),
+          legend.title = element_blank(),
+          legend.background = element_blank(),
+          legend.box.background = element_rect(colour = "black"))
+  
+  if(!is.null(yrange)){
+    p <- p + coord_cartesian(ylim=yrange)
+  }
+  
+  return(p)
+}
+
+
+
+p4 <- rec_combo_plot(d,
                    Disease="Wasting",
                    Measure="Recovery", 
                    Birth="yes", 
                    Severe="no", 
-                   Age_range="90 days", 
+                   Age_range=c("30 days","60 days","90 days"), 
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Percent recovered (95% CI)',
                    h1=105,
                    h2=110)
-
+print(p4)
 
 ggsave(p4, file="figures/wasting/pooled_rev.png", width=10, height=8)
 
