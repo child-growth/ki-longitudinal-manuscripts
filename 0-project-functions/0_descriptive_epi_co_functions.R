@@ -202,7 +202,7 @@ summary.prev.muaz <- function(d, severe=F){
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
   m.prev.res=lapply((levels(prev.data$agecat)),function(x) 
-    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
+    fit.rma(data=prev.data,ni="nmeas", xi="m.nxprev",age=x,measure="PLO",nlab="children"))
   m.prev.res=as.data.frame(rbindlist(m.prev.res))
   m.prev.res[,4]=as.numeric(m.prev.res[,4])
   m.prev.res[,6]=as.numeric(m.prev.res[,6])
