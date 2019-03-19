@@ -144,7 +144,6 @@ d_waz_long <- d_waz_long %>% filter(agem <= 24)
 d_whz_long <- d_whz_long %>% filter(agem <= 24)
 
 # drop rows with missing values 
-#confim OK to drop NAs for year?
 d_haz_long = d_haz_long %>% filter(!is.na(agem) & !is.na(zscore)) #51 countries!
 d_waz_long = d_waz_long %>% filter(!is.na(agem) & !is.na(zscore))
 d_whz_long = d_whz_long %>% filter(!is.na(agem) & !is.na(zscore))
