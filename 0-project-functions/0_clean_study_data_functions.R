@@ -162,8 +162,9 @@ study_label_transformation <- function(df){
   # make a study-country label, and make the monthly variable into a factor
   # including an anonymous label (temporary) for sharing with WHO
   df <- mutate(df,
-               country=str_to_title(str_to_lower(country)), 
-               cohort=paste0(short_description,'-',country))
+               country=str_to_title(str_to_lower(country))) 
+  
+  try(df <- mutate(df,cohort=paste0(short_description,'-',country)))
   
   #Add regions with ugly Europe hack to change ordering
   df <- df %>% mutate(country = toupper(country))
