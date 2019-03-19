@@ -35,7 +35,7 @@ prev <- bind_rows(
   prev.cohort
 )
 
-#Severe wasting prevalence
+#Severe wasting and stunting prevalence
 sev.prev.data <- summary.prev.co(d, severe = T)
 sev.prev.region <-
   d %>% group_by(region) %>% do(summary.prev.co(., severe = T)$prev.res)
@@ -77,6 +77,21 @@ monthly.waz <- bind_rows(
   monthly.cohort
 )
 
+
+
+#monthly mean haz
+d <- calc.monthly.agecat(d)
+monthly.data <- summary.haz(d)
+monthly.region <- d %>% group_by(region) %>% do(summary.haz(.)$haz.res)
+monthly.cohort <-
+  monthly.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
+  rename(est = meanwaz,  lb = ci.lb,  ub = ci.ub)
+
+monthly.haz <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", monthly.data$haz.res),
+  data.frame(cohort = "pooled", monthly.region),
+  monthly.cohort
+)
 
 
 

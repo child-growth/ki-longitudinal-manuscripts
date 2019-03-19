@@ -73,10 +73,10 @@ summary.prev.whz <- function(d, severe.wasted=F){
 
 summary.ci <- function(d,  
                        agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
-                                    "12-15 months","15-18 months","18-21 months","21-24 months")){
+                                    "12-15 months","15-18 months","18-21 months","21-24 months"), severe.wasted = F){
+  cutoff <- ifelse(severe.wasted,-3,-2)
   
-  
-  # identify ever stunted children
+  # identify ever wasted children
   evs = d %>%
     filter(!is.na(agecat)) %>%
     group_by(studyid,country,subjid) %>%
@@ -91,11 +91,11 @@ summary.ci <- function(d,
                                                             ifelse(agecat=="18-21 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
                                                                    ifelse(agecat=="21-24 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
                                                                           min(whz)))))))))) %>%
-    # create indicator for whether the child was ever stunted
+    # create indicator for whether the child was ever wasted
     # by age category
     group_by(studyid,country,agecat,subjid) %>%
     summarise(minwhz=min(minwhz)) %>%
-    mutate(ever_wasted=ifelse(minwhz< -2,1,0))
+    mutate(ever_wasted=ifelse(minwhz< cutoff,1,0))
   
   
   # count incident cases per study by age

@@ -12,10 +12,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# IS THIS THE RIGHT DATA? 
 load("U:/ucb-superlearner/data/stunting_data.RData")
-
-# load("U:/Data/Stunting/stunting_data.RData")
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 

@@ -1,102 +1,132 @@
+##########################################
+# ki longitudinal manuscripts
+# wasting analysis
+
+# figure: stacked bar chart showing 
+# proportion of children who were newly wasted, 
+# still wasted, relapsed, recovered, never wasted
+##########################################
 #-----------------------------------------
-# wasting flow chart
+# Wasting flow chart
 #-----------------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# load fake data
-wast_data = readRDS(paste0(res_dir, "fakeflow.RDS"))
-wast_pool = readRDS(paste0(res_dir, "fakeflow_pooled.RDS"))
-
-# load real data
+# load data
 wast_data = readRDS(paste0(res_dir, "wastflow.RDS"))
 wast_pool = readRDS(paste0(res_dir, "wastflow_pooled.RDS"))
 
+#-----------------------------------------
+# format data for plot
+#-----------------------------------------
 plot_data = wast_data %>%
+  ungroup() %>%
   mutate(classif = case_when(
     never_wasted == 1 ~ "Never wasted",
-    prev_wasted == 1 ~ "Recovered",
+    recover == 1 ~ "Recovered",
+    not_wasted == 1 ~ "Not wasted",
     still_wasted == 1 ~ "Still wasted",
     newly_wasted == 1 ~ "Newly wasted",
-    relapse == 1 ~ "wasting relapse"
+    relapse == 1 ~ "Wasting relapse"
     
   )) %>%
-  select(subjid, agecat, classif) %>%
+  select(subjid, agem, classif) %>%
   mutate(freq = 1) %>%
   mutate(classif = factor(classif, levels = c("Never wasted",
+                                              "Not wasted",
                                               "Recovered",
-                                              "wasting relapse",
+                                              "Wasting relapse",
                                               "Newly wasted",
                                               "Still wasted"
   )))
 
 
-mycols = c("#11466B", tableau10[1], tableau10[4], "#FB5D5E", "#811818")
-# mycols = c("#11466B", tableau10[1], tableau10[4], tableau10[2], "#811818")
+#-----------------------------------------
+# define color palette
+#-----------------------------------------
+n=12
+viridis_cols = viridis(
+  n = n,
+  alpha = 1,
+  begin = 0,
+  end = 1,
+  direction = 1,
+  option = "C"
+)
+
+plot_cols  = viridis_cols[c(2, 4, 6, 8, 10, 11)]
 
 #-----------------------------------------
-# Alluvial flow plot
-#-----------------------------------------
-# flow_plot = ggplot(plot_data,
-#        aes(x = agecat,  
-#            alluvium = subjid,
-#            stratum = classif,
-#            fill = classif, 
-#            label = classif)) +
-#   geom_flow(stat = "alluvium", lode.guidance = "rightleft",
-#             color = "darkgray") +
-#   geom_stratum()  +
-#   scale_fill_manual("", values = mycols) +
-#   theme(legend.position = "bottom") +
-#   xlab("Child age") + ylab("Number of children")
-# 
-# #ggsave(flow_plot, file="figures/wasting/pool_flow_fake.png", width=10, height=5)
-# ggsave(flow_plot, file="figures/wasting/pool_flow.png", width=10, height=5)
-
-#-----------------------------------------
-# bar graphs without alluvival flow between each child
+# stacked bar graphs using random effects pooled data
 #-----------------------------------------
 plot_data_pooled = wast_pool %>%
   rename(classif = label) %>%
-  select(agecat, classif, est) %>%
-  mutate(classif = ifelse(classif=="Previously wasted", "Recovered", classif)) %>%
+  select(agem, classif, est) %>%
   mutate(classif = factor(classif, levels = c("Never wasted", 
+                                              "Not wasted",
                                               "Recovered",
-                                              "wasting relapse",
                                               "Newly wasted",
+                                              "Wasting relapse",
                                               "Still wasted"
   )))
 
 
-bar_flow_plot = ggplot(plot_data_pooled) +
-  geom_bar(aes(x = agecat, y = est, fill = classif), stat="identity", width=0.5) +
-  scale_fill_manual("", values = mycols) +
+bar_plot_RE = ggplot(plot_data_pooled) +
+  geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
+  scale_fill_manual("", values = plot_cols) +
   theme(legend.position = "bottom") +
-  xlab("Child age") + ylab("Percentage of children")
+  xlab("Child age, months") + ylab("Percentage of children")
 
-ggsave(bar_flow_plot, file="figures/wasting/pool_flow_bar.png", width=10, height=5)
+ggsave(bar_plot_RE, file="figures/wasting/fig-wasting-stacked-bar-RE.png", width=10, height=5)
 
-# old code from draft with individual level data, no RMA 
-# age_classif_totals = plot_data %>%
-#   group_by(agecat, classif) %>%
-#   summarise(n = sum(freq))
-# 
-# age_totals = plot_data %>%
-#   group_by(agecat) %>%
-#   summarise(tot = sum(freq))
-# 
-# bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agecat"))
-# 
-# bar_plot_data = bar_plot_data %>% mutate(percent = n/tot * 100)
+#-----------------------------------------
+# stacked bar graphs NOT using random effects pooled data
+#-----------------------------------------
+age_classif_totals = plot_data %>%
+  group_by(agem, classif) %>%
+  summarise(n = sum(freq))
 
-# ggplot(bar_plot_data) +
-#   geom_bar(aes(x = agecat, y = percent, fill = classif), stat="identity", width=0.5) +
-#   scale_fill_manual("", values = mycols) +
-#   theme(legend.position = "bottom") +
-#   xlab("Child age") + ylab("Percentage of children")
-# 
+age_totals = plot_data %>%
+  group_by(agem) %>%
+  summarise(tot = sum(freq))
 
-# ggsave(bar_plot, file="figures/wasting/pool_bar.png", width=10, height=5)
+bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agem"))
+
+bar_plot_data = bar_plot_data %>% 
+  mutate(percent = n/tot * 100,
+         classifnew = as.character(classif)) %>%
+  mutate(classifnew = ifelse(classif=="Not wasted", "Still recovered", classifnew),
+         classifnew = ifelse(classif=="Recovered", "Newly recovered", classifnew),
+         classifnew = factor(classifnew, levels = c("Never wasted", 
+                                                    "Still recovered",
+                                                    "Newly recovered",
+                                                    "Newly wasted",
+                                                    "Wasting relapse",
+                                                    "Still wasted")))
+
+bar_plot_data = bar_plot_data %>% 
+  ungroup() %>%
+  mutate(agem= as.factor(agem)) %>%
+  mutate(wasted = as.factor(ifelse(classifnew %in%
+                                      c("Never wasted", "Newly recovered", "Still recovered"), 0, 1)))
+
+bar_plot_noRE = ggplot(bar_plot_data) +
+  geom_bar(aes(x = agem, y = percent, fill = classifnew), 
+           stat="identity", width=0.5) +
+  scale_fill_manual("", values = plot_cols) +
+  scale_color_manual(values = c(NA, 'black'), guide=F) +
+  # Why isn't this working? 
+  # scale_y_continuous(limits = c(0,100),
+  #                    breaks = seq(0,100,20),
+  #                    labels = seq(0,100,20)) +
+  theme(legend.position = "bottom") +
+  xlab("Child age, months") + 
+  ylab("Percentage of children (%)")  + 
+  guides(fill = guide_legend(nrow = 1))
+bar_plot_noRE
+
+ggsave(bar_plot_noRE, file="figures/wasting/fig-wasting-stacked-bar-noRE.png", width=10, height=5)
+
 
 
 
