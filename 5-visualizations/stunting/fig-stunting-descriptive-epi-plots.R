@@ -17,15 +17,6 @@ load(paste0(here::here(),"/results/quantile_data_stunting.Rdata"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
-# Rename region
-# asia_region <- which(levels(d$region) == 'Asia')
-# levels(d$region)[asia_region] = 'South Asia'
-
-d = d %>% 
-  mutate(region = ifelse(region=="Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
-
-
 
 
 #-------------------------------------------------------------------------------------------

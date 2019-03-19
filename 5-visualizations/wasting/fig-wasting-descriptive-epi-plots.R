@@ -17,13 +17,6 @@ d$nmeas.f <- gsub("N=","",d$nmeas.f)
 d$nstudy.f <- gsub(" studies","",d$nstudy.f)
 d$nmeas.f <- gsub(" children","",d$nmeas.f)
 
-# Rename region
-unique(d$region)
-d$region <- factor(d$region, levels=c("Overall", "Africa", "Latin America", "Asia"))
-asia_region <- which(levels(d$region) == 'Asia')
-levels(d$region)[asia_region] = 'South Asia'
-levels(d$region)
-
 Disease="Wasting"
 Measure="Prevalence"
 Birth="yes"
@@ -265,4 +258,70 @@ ggsave(p5, file="figures/wasting/pooled_pers.png", width=10, height=8)
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
 #-------------------------------------------------------------------------------------------
+p6 <- ki_desc_plot(d,
+                   Disease="co-occurrence",
+                   Measure="Prevalence", 
+                   Birth="yes", 
+                   Severe="no", 
+                   Age_range="3 months", 
+                   Cohort="pooled",
+                   xlabel="Age in months",
+                   ylabel='Point prevalence (95% CI)',
+                   h1=9,
+                   h2=10)
 
+
+ggsave(p6, file="figures/wasting/pooled_co_prev.png", width=12, height=8)
+
+#-------------------------------------------------------------------------------------------
+# Underweight prevalence 
+#-------------------------------------------------------------------------------------------
+p7 <- ki_desc_plot(d,
+                   Disease="Underweight",
+                   Measure="Mean WAZ", 
+                   Birth="yes", 
+                   Severe="no", 
+                   Age_range="3 months", 
+                   Cohort="pooled",
+                   xlabel="Age in months",
+                   ylabel='Mean Z',
+                   h1=0,
+                   h2=1)
+
+#-------------------------------------------------------------------------------------------
+# Wasting prevalence -MUAC based
+#-------------------------------------------------------------------------------------------
+p8 <- ki_desc_plot(d,
+                   Disease="Wasting",
+                   Measure="MUAC  WHZ Prevalence", 
+                   Birth="yes", 
+                   Severe="no", 
+                   Age_range="3 months", 
+                   Cohort="pooled",
+                   xlabel="Age in months",
+                   ylabel='Point prevalence (95% CI)',
+                   h1=25,
+                   h2=27)
+
+
+
+#-------------------------------------------------------------------------------------------
+# Wasting prevalence -MUAC subset
+#-------------------------------------------------------------------------------------------
+p9 <- ki_desc_plot(d,
+                   Disease="Wasting",
+                   Measure="MUAC Prevalence", 
+                   Birth="yes", 
+                   Severe="no", 
+                   Age_range="3 months", 
+                   Cohort="pooled",
+                   xlabel="Age in months",
+                   ylabel='Point prevalence (95% CI)',
+                   h1=69,
+                   h2=70)
+
+#COMBINE INTO ONE PLOT
+#ggsave(p1, file="figures/wasting/pooled_prev.png", width=12, height=8)
+
+
+df <- d %>% filter(measure=="MUAC Prevalence" & cohort!="pooled")
