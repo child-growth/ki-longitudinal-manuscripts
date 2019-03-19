@@ -251,14 +251,25 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                  alpha=0.5, size = 1) +
   
+  # scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
+  #                                  "pct_15" = "dotted", 
+  #                                  "pct_25" = "dashed", 
+  #                                  "pct_50" = "solid"),
+  #                       breaks = c("pct_15", "pct_25", "pct_50"),
+  #                       labels = c("15th percentile", 
+  #                                  "25th percentile", 
+  #                                  "50th percentile")) +
+  
   scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
-                                   "pct_15" = "dotted", 
-                                   "pct_25" = "dashed", 
-                                   "pct_50" = "solid"),
-                        breaks = c("pct_15", "pct_25", "pct_50"),
-                        labels = c("15th percentile", 
+                                                                     "pct_50" = "solid",
+                                                                     "pct_25" = "dashed", 
+                                                                     "pct_15" = "dotted"
+                                                                     ),
+                        breaks = c("pct_50", "pct_25", "pct_15"),
+                        labels = c("50th percentile",
                                    "25th percentile", 
-                                   "50th percentile")) +
+                                   "15th percentile"
+                                   )) +
   
   scale_color_manual("WHO Growth\nVelocity Standards", values = c("black" = "black",
                                 "blue" = tableau10[4],
