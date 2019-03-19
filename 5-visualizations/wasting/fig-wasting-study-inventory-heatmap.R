@@ -272,6 +272,23 @@ dp$whzcat[dp$nobs<50 | is.nan(dp$whzcat)] <- NA
 table(dp$whzcat)
 
 
+#Subset to monthly studies
+monthlystudies <- c(
+  "MAL-ED",   
+  "CMC-V-BCS-2002",              
+  "IRC",               
+  "EE",           
+  "ResPak",  
+  "PROVIDE", 
+  "TanzaniaChild2",           
+  "Keneba",  
+  "Guatemala BSC",       
+  "GMS-Nepal",             
+  "CONTENT")
+
+dp <- dp[dp$study_id %in% monthlystudies,]
+dd <- dd[dd$study_id %in% monthlystudies,]
+
 
 #-----------------------------------
 # Basic plot schemes
@@ -395,95 +412,55 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 
 
 #-----------------------------------
-# STUNTING PREVALENCE HEAT MAP
-#-----------------------------------
-
-# # heat map
-stphm <- hm + 
-  aes(fill=hazcat) +
-  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
-scale_fill_viridis(option = "C", discrete = T,
-                     na.value="grey90",
-                     direction = -1,
-                     end = 0.8,
-                     guide=guide_legend(title="Mean HAZ",title.vjust = 1,
-                                        label.position="bottom",label.hjust=0.5,nrow=1)) 
-
-# wasting prevalence side bar plot
-wpbar <- sidebar +
-  aes(y=wastprev,fill=wpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Wasting") +
-  scale_y_continuous(expand=c(0,0),limits=c(0,30),
-                     breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
-  geom_hline(yintercept = seq(0,30,by=10),color='white',size=0.3)
-
-# stunting prevalence side bar plot
-stpbar <- sidebar +
-  aes(y=stuntprev,fill=stpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
-  scale_y_continuous(expand=c(0,0),limits=c(0,70),
-                     breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
-  geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
-
-
-# combined plot
-stpgrid <- grid.arrange(stphm, stpbar, wpbar, nrow = 1, ncol = 3, widths=c(100,20,20))
-ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
-
-
-
-
-
-
-#-----------------------------------
 # WASTING PREVALENCE HEAT MAP
 #-----------------------------------
-
-monthlystudies <- c(
-  "MAL-ED",   
-  "CMC-V-BCS-2002",              
-  "IRC",               
-  "EE",           
-  "ResPak",  
-  "PROVIDE", 
-  "TanzaniaChild2",           
-  "Keneba",  
-  "Guatemala BSC",       
-  "GMS-Nepal",             
-  "CONTENT")
 
 # heat map
 wastphm <- hm + 
   aes(fill=whzcat) +
-  labs(x="Age in months",y="",title="Mean weight-for-height Z-score by month of age") +
+  labs(x="Age in months",y="",title="a") +
   scale_fill_viridis(na.value="grey90", option = "C", discrete = T,
                        direction = -1,
                        end = 0.8,
-                       guide=guide_legend(title="Mean WHZ",title.vjust = 1,
+                       guide=guide_legend(title="Mean WLZ",title.vjust = 1,
                                           label.position="bottom",label.hjust=0.5,nrow=1))
-wastphm <- wastphm %+% dp[dp$study_id %in% monthlystudies,]
 
 # wasting prevalence side bar plot
 wpbar <- sidebar +
-  aes(y=wastprev) +
-  labs(x = "",y="Overall Prevalence (%)",title="Wasting (%)") +
+  aes(y=wastprev,fill=wpcat) +
+  labs(x = "",y="Wasting Prevalence (%)",title="b") +
   scale_y_continuous(expand=c(0,0),limits=c(0,30),
-                     breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
-  geom_hline(yintercept = seq(0,30,by=10),color='white',size=0.3)
-wpbar <- wpbar %+% dp[dp$study_id %in% monthlystudies,]
+                     breaks=seq(0,20,by=5),labels=seq(0,20,by=5)) +
+  geom_hline(yintercept = seq(0,20,by=5),color='white',size=0.3)
 
 # stunting prevalence side bar plot
 stpbar <- sidebar +
-  aes(y=stuntprev) +
-  labs(x = "",y="Overall Prevalence (%)",title="Stunting (%)") +
+  aes(y=stuntprev,fill=stpcat) +
+  labs(x = "",y="Stunting Prevalence (%)",title="b") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
-stpbar <- stpbar %+% dp[dp$study_id %in% monthlystudies,]
+
+# number of obs side bar plot
+nbar <- sidebar +
+  aes(y=nmeas/1000,fill=wpcat) +
+  labs(x = "",y="Sample size (1000s)",title="c") +
+  scale_y_continuous(expand=c(0,0),limits=c(0,50),
+                     breaks=seq(0,50,by=10),labels=seq(0,50,by=10)) +
+  geom_hline(yintercept = seq(0,50,by=10),color='white',size=0.3)
+
+
+
+# add margin around plots
+margin = theme(plot.margin = unit(c(0.25,0.25,0.25,0.25), "cm"))
+wastphm = wastphm + margin
+wpbar = wpbar + margin
+stpbar = stpbar + margin
+nbar = nbar + margin
 
 
 # combined plot
-awstpgrid <- grid.arrange(wastphm, stpbar, wpbar, nrow = 1, ncol = 3, widths=c(100,20,20))
+awstpgrid <- grid.arrange(wastphm, wpbar, nbar, nrow = 1, ncol = 3, widths=c(100,20,20))
 ggsave(filename="figures/wasting/wasting-study-inventory-heatmap.pdf",plot = awstpgrid,device='pdf',width=12,height=9)
 
 
