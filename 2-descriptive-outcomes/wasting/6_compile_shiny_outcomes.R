@@ -4,9 +4,13 @@ source(paste0(here::here(), "/0-config.R"))
 
 setwd(paste0(here(),"/results"))
 
-load("desc_data_cleaned.Rdata")
+load("shiny_desc_data.Rdata")
+wast <- shiny_desc_data
+load("shiny_desc_data_stunting_objects.Rdata")
+stunt <- shiny_desc_data
+load("co_desc_data.Rdata")
 
-d <- shiny_desc_data
+
 # 
 # d$disease <- "Wasting"
 # 
@@ -30,8 +34,7 @@ d <- shiny_desc_data
 # head(shiny_desc_data)
 
 
-load("co_desc_data.Rdata")
-d <- bind_rows(d, co_desc_data)
+d <- bind_rows(stunt, wast, co_desc_data)
 
 
 save(d, file=paste0(here(),"/results/desc_data_cleaned.Rdata"))
