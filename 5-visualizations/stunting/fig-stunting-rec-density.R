@@ -135,7 +135,7 @@ plot_data = plot_data %>%
 # function to get % stunted and min, med, max
 # for each recovery cohort at each subsequent
 # measurement age 
-summarize_dist = function(age_recov, data){
+summarize_dist = function(data, age_recov){
 
   data = data %>% filter(age_rec == age_recov) 
   
@@ -193,7 +193,7 @@ summarize_dist = function(age_recov, data){
 
 age_rec_list = as.list(levels(plot_data$age_rec))
 results_list = lapply(age_rec_list, function(x) summarize_dist(
-  data = plot_data, age_rec = x))
+  data = plot_data, age_recov = x))
 
 results_df = bind_rows(results_list)
 
@@ -230,19 +230,16 @@ plot_data_sub = plot_data_sub %>%
 # prepare label for each panel of the plot
 # --------------------------------------------
 results_df = results_df %>% 
-  mutate(lab = paste0("Children: ", nchild, "\n",
-                        "Studies: ", nstudy, "\n",
-                        "Countries: ", ncountry, "\n",
-                        "% Stunted: ", sprintf("%0.0f", stunting_prev*100), " ",
+  mutate(lab = paste0("% Stunted:\n", sprintf("%0.0f", stunting_prev*100), " ",
                         "(95% CI ", sprintf("%0.0f", prev_lb*100), ", ",
                         sprintf("%0.0f", prev_ub*100), ")") ) %>%
-  mutate(x = 0,
+  mutate(x = -5,
          y = case_when(
            age_meas == "3 month measurement" ~ 5.4,
-           age_meas == "6 month measurement" ~ 4.7,
-           age_meas == "9 month measurement" ~ 3.7,
-           age_meas == "12 month measurement" ~ 2.7,
-           age_meas == "15 month measurement" ~ 1.7
+           age_meas == "6 month measurement" ~ 4.85,
+           age_meas == "9 month measurement" ~ 3.85,
+           age_meas == "12 month measurement" ~ 2.85,
+           age_meas == "15 month measurement" ~ 1.85
          )) %>%
   mutate(age_rec_f = case_when(
     age_rec == "0-3 months" ~ "Stunting recovery\nat 3 months",
@@ -256,6 +253,8 @@ results_df = results_df %>%
     "Stunting recovery\nat 9 months",
     "Stunting recovery\nat 12 months"
   )))
+
+results_df = results_df
 
 # --------------------------------------------
 # stacked histogram plot
@@ -274,6 +273,6 @@ rec_histogram_plot = ggplot(plot_data_sub,
                      labels = seq(-5, 3.5, 1)) +
   geom_vline(xintercept = -2, linetype="dashed") +
   scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) +
-  geom_text(aes(x, y, label = lab), data = results_df, size=2, hjust=0)
+  geom_text(aes(x, y, label = lab), data = results_df, size=2.9, hjust=0)
 
 ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=13, height=8)
