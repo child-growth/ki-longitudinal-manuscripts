@@ -84,9 +84,22 @@ stplot2 =ggplot(d, aes(x = month_diff, y = stunting_prev)) +
   scale_x_continuous(breaks = c(0,3,6,9,12),
                      labels = c(0,3,6,9,12)) + 
   theme(legend.position = "bottom") 
-ggsave(stplot, file="figures/stunting/fig_stunt_rec_cohort_st2.png", 
+ggsave(stplot2, file="figures/stunting/fig_stunt_rec_cohort_st2.png", 
+       width=4, height=6)
+
+
+
+stplot3 = ggplot(d, aes(x = month_diff, y = stunting_prev)) +
+  geom_point(aes(col = age_rec_f), position= position_dodge(width=1.2)) +
+  geom_pointrange(aes(ymin = prev_lb, ymax = prev_ub, col = age_rec_f),
+                position= position_dodge(width=1.2)) +
+  ylab("Stunting prevalence") + 
+  xlab("Months since initial recovery from stunting") +
+  scale_color_manual("Age in months\nof initial recovery", values = 
+                       viridis_cols) +
+  scale_x_continuous(breaks = c(0,3,6,9,12),
+                     labels = c(0,3,6,9,12)) + 
+  theme(legend.position = "bottom") 
+ggsave(stplot3, file="figures/stunting/fig_stunt_rec_cohort_st3.png", 
        width=5, height=4)
-
-
-
 
