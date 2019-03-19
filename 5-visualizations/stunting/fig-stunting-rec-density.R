@@ -272,7 +272,8 @@ rec_histogram_plot = ggplot(plot_data_sub,
   scale_x_continuous(breaks = seq(-5, 3.5, 1), 
                      labels = seq(-5, 3.5, 1)) +
   geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) +
-  geom_text(aes(x, y, label = lab), data = results_df, size=2.9, hjust=0)
+  scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) 
 
-ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=13, height=8)
+  # geom_text(aes(x, y, label = lab), data = results_df, size=2.9, hjust=0)
+
+ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=8, height=5)
