@@ -109,6 +109,12 @@ dhsz <- dhsz %>%
   mutate(region=factor(region,levels=c("OVERALL","SEARO","AFRO","PAHO")))
 
 #---------------------------------------
+#---------------------------------------
+# estimate z-scores by age
+#---------------------------------------
+#---------------------------------------
+
+#---------------------------------------
 # estimate mean z-scores by age
 # including all countries in each region
 #---------------------------------------
@@ -166,7 +172,7 @@ dhssubfits <- bind_rows(dhssubfits,dhssub_pool) %>%
 
 
 #---------------------------------------
-# Grab GHAP estimated mean Z-scores
+# Grab GHAP KI cohort estimated mean Z-scores
 # by age, and format the data for this analysis
 #---------------------------------------
 load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
@@ -257,50 +263,114 @@ dhsp <- ggplot(data=dhs_plotd,aes(x=agem,y=fit,color=region,fill=region,linetype
 
 dhsp
 
+# output a file to png
 ggsave(here("figures/dhs","dhs-ghap-zscore-byage.png"),plot=dhsp,device="png",width=6,height=6)
 
-# LEFT OFF HERE.  NEED TO DO DENSITY PLOTS
+
+#---------------------------------------
+#---------------------------------------
+# estimate z-score densities 
+# for subpanels in the figure
+#---------------------------------------
+#---------------------------------------
+
+#---------------------------------------
+# read in saved GHAP density estimates
+# for z-scores, stratified by
+# region
+#---------------------------------------
+kidens <- readRDS(paste0(here(),"/results/ki.density.fits.rds"))
+kidens <- kidens %>%
+  mutate(region=factor(region,levels=c("OVERALL","SEARO","AFRO","PAHO")),
+         measure=factor(measure,levels=c("haz","waz","whz"),labels=c("LAZ","WAZ","WHZ"))
+  )
 
 
-#################### Density plots ######################
-#library(ggthemes)
-#library(scales)
+#---------------------------------------
+# plot density subpanels
+# create a separate figure for each
+# z-score to ensure there are x-axis
+# labels on each
+#---------------------------------------
+# standard region colors used in other plots
+tableau10 <- tableau_color_pal("Tableau 10")
+# pcols <- c("black",tableau10(10)[c(1,5,2)])
+pcols <- tableau10(10)[c(1,5,2)]
+
+#---------------------------------------
+# LAZ
+#---------------------------------------
+laz_dplot <- ggplot(data=filter(dhsz,measure=="LAZ"),aes(x=zscore,color=region))+
+  facet_grid(~region)+
+  stat_density(geom="line",linetype="dashed")+
+  geom_line(data=filter(kidens,measure=="LAZ"),aes(x=x,y=y))+
+  scale_color_manual(values=pcols,guide=FALSE)+
+  scale_fill_manual(values=pcols,guide=FALSE)+
+  scale_x_continuous(breaks=seq(-6,6,by=2))+
+  coord_cartesian(xlim=c(-6,6))+
+  labs(y="relative density",x="length-for-age z-score")+
+  theme_minimal()+
+  theme(panel.grid.major.y=element_blank(),
+        panel.grid.minor.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.y=element_blank()
+        )
+
+laz_dplot
+
+# output a file to png
+ggsave(here("figures/dhs","dhs-ghap-laz-density.png"),plot=laz_dplot,device="png",width=6,height=2)
 
 
-#Example KI density plot
-ki <- readRDS(paste0(here(),"/results/ki.density.fits.rds"))
-#KI density data.frames divided by 3 regions and 3 Z-scores
-ki %>% filter(region=="SEARO" & measure=="haz") %>%
-                ggplot(aes(x=x,y=y)) + geom_path()
+
+#---------------------------------------
+# WAZ
+#---------------------------------------
+waz_dplot <- ggplot(data=filter(dhsz,measure=="WAZ"),aes(x=zscore,color=region))+
+  facet_grid(~region)+
+  stat_density(geom="line",linetype="dashed")+
+  geom_line(data=filter(kidens,measure=="WAZ"),aes(x=x,y=y))+
+  scale_color_manual(values=pcols,guide=FALSE)+
+  scale_fill_manual(values=pcols,guide=FALSE)+
+  scale_x_continuous(breaks=seq(-6,6,by=2))+
+  coord_cartesian(xlim=c(-6,6))+
+  labs(y="relative density",x="weight-for-age z-score")+
+  theme_minimal()+
+  theme(panel.grid.major.y=element_blank(),
+        panel.grid.minor.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.y=element_blank()
+  )
+
+waz_dplot
+
+# output a file to png
+ggsave(here("figures/dhs","dhs-ghap-waz-density.png"),plot=waz_dplot,device="png",width=6,height=2)
 
 
+#---------------------------------------
+# WHZ
+#---------------------------------------
+whz_dplot <- ggplot(data=filter(dhsz,measure=="WHZ"),aes(x=zscore,color=region))+
+  facet_grid(~region)+
+  stat_density(geom="line",linetype="dashed")+
+  geom_line(data=filter(kidens,measure=="WHZ"),aes(x=x,y=y))+
+  scale_color_manual(values=pcols,guide=FALSE)+
+  scale_fill_manual(values=pcols,guide=FALSE)+
+  scale_x_continuous(breaks=seq(-6,6,by=2))+
+  coord_cartesian(xlim=c(-6,6))+
+  labs(y="relative density",x="weight-for-height z-score")+
+  theme_minimal()+
+  theme(panel.grid.major.y=element_blank(),
+        panel.grid.minor.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.y=element_blank()
+  )
+
+whz_dplot
 
 
-r <- ggplot(haz, aes(x=haz, group=region)) +
-  geom_density() +
-  geom_density(data=haz.overlap, aes(x=haz, group=region),col=pcols[3],lty=2)+
-  geom_density(data=d, aes(x=haz),col=pcols[3],lty=3)+
-  facet_grid(~region) +
-  labs(x="length-for-age z-score")+
-  theme_minimal()
-
-
-
-s <- ggplot(whz, aes(x=whz, group=region)) +
-  geom_density() +
-  geom_density(data=whz.overlap, aes(x=whz, group=region),col=pcols[3],lty=2)+
-  geom_density(data=d, aes(x=whz),col=pcols[3],lty=3)+
-  facet_grid(~region) +
-  labs(x="weight-for-length z-score")+
-  theme_minimal()
-
-
-t <- ggplot(waz, aes(x=waz, group=region)) +
-  geom_density() +
-  geom_density(data=waz.overlap, aes(x=whz, group=region),col=pcols[3],lty=2)+
-  geom_density(data=d, aes(x=waz),col=pcols[3],lty=3)+
-  facet_grid(~region) +
-  labs(x="weight-for-age z-score")+
-  theme_minimal()
+# output a file to png
+ggsave(here("figures/dhs","dhs-ghap-whz-density.png"),plot=whz_dplot,device="png",width=6,height=2)
 
 
