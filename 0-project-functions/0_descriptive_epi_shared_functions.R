@@ -89,7 +89,7 @@ calc.ci.agecat <- function(d, range=3){
 
 #Returns:
 # data frame formatted for plotting cohort specific results
-cohort.format=function(df, lab, y, est="percent"){
+cohort.format=function(df, lab, y, est="NA"){
   y = as.numeric(y)
   
   # rescale percentages
