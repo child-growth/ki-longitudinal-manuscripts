@@ -1,14 +1,15 @@
 
 rm(list=ls())
-library(tidyverse)
-
+library(ggplot2)
+library(dplyr)
 
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
 theme_set(theme_ki())
 
 #Load data
-load("results/desc_data_cleaned.Rdata")
+load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
+load(paste0(here::here(),"/results/quantile_data_wasting.Rdata"))
 
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
@@ -17,90 +18,6 @@ d$nmeas.f <- gsub("N=","",d$nmeas.f)
 d$nstudy.f <- gsub(" studies","",d$nstudy.f)
 d$nmeas.f <- gsub(" children","",d$nmeas.f)
 
-Disease="Wasting"
-Measure="Prevalence"
-Birth="yes"
-Severe="no" 
-Age_range="3 months"
-Cohort="pooled"
-xlabel="Age in months"
-h1=20
-h2=22
-#-------------------------------------------------------------------------------------------
-# Plot function
-#-------------------------------------------------------------------------------------------
-# ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-#                         Cohort="pooled",
-#                         xlabel="Age (months)",
-#                         ylabel="",
-#                         h1=0,
-#                         h2=3){
-#   df <- d %>% filter(
-#     disease == Disease &
-#       measure == Measure &
-#       birth == Birth &
-#       severe == Severe &
-#       age_range == Age_range &
-#       cohort == Cohort &
-#       !is.na(region) & !is.na(agecat)
-#   ) 
-#   df <- droplevels(df)
-#   
-#   empty <- data.frame( nstudy.f=rep("Studies:",4), nmeas.f=rep("Children:",4), agecat=rep("",4) , region=c("Overall", "Africa","Asia", "Latin America"))
-#   df <- bind_rows(empty, df)
-#   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
-#   df$region <- factor(df$region, levels=c("Overall", "Asia", "Africa","Latin America"))
-#   
-#   
-#   # add line break to label columns
-#   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
-#     mutate(nstudy.f = gsub('N=', '', nstudy.f))
-#   
-#   # remove text from labels
-#   df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
-#     mutate(nstudy.f = gsub(' studies', '', nstudy.f))
-#   
-#   # remove 'months' from age categories
-#   # df <- df %>% mutate(agecat = gsub(' months', '', agecat))
-# 
-#   df <- df %>% arrange(agecat)
-#   df$agecat <- as.character(df$agecat)
-#   df$agecat <- gsub(" months", "", df$agecat)
-#   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
-#   
-#   p <- ggplot(df,aes(y=est,x=agecat)) +
-#     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
-#     geom_point(aes(fill=region, color=region), size = 2) +
-#     geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
-#     # geom_linerange(aes(ymin=lb, ymax=ub, color=region),  alpha=0.5, size = 3) +
-#     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
-#     xlab(xlabel)+
-#     ylab(ylabel) +
-#     geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-#                            label = nmeas.f), size = 4) +
-#     geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-#                            label = nstudy.f), size = 4) +
-#     #scale_x_discrete(expand = expand_scale(add = 2)) +
-#     # annotate('text', x = -0.25, y = h1, label = 'Studies:', vjust = -1) +
-#     # annotate('text', x = -0.25, y = h1, label = 'Children:', vjust = 1) +
-#     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-#     expand_limits(y = h2) +
-#     # # annotate("blank", x = 0, y = h1) +
-#     # theme(axis.text.x = element_text(margin = 
-#     #                                    margin(t = -15, r = 0, b = 0, l = 0),
-#     #                                  size = 15)) +
-#     # theme(axis.title.x = element_text(margin = 
-#     #                                     margin(t = 30, r = 0, b = 0, l = 0))) +
-#     # theme(strip.text = element_text(margin=margin(t = 5))) +
-#     # # annotate("text",label=df$ptest.f,x=df$agecat,
-#     # #          y=df$est,hjust=-2,size=3)+
-#     ggtitle("") +
-#     facet_wrap(~region) 
-#   
-#   return(p)
-# }
-
-
 
 #-------------------------------------------------------------------------------------------
 # Mean WLZ by month 
@@ -108,7 +25,7 @@ h2=22
 
 df <- d %>% filter(
   disease == "Wasting" &
-    measure == "Mean WLZ" &
+    measure == "Mean WLZ" & 
     birth == "yes" &
     severe == "no" &
     age_range == "1 month" &
@@ -116,36 +33,100 @@ df <- d %>% filter(
 )
 df <- droplevels(df)
 
-df$agecat <- factor(df$agecat, 
-                    levels=c("Two weeks", "One month",
-                             paste0(2:24," months")))
-df <- df %>% arrange(agecat) %>%
-  filter(!is.na(agecat))   
+df <- df %>% 
+  arrange(agecat) %>%
+  filter(!is.na(agecat)) %>%
+  filter(!is.na(region)) %>%
+  mutate(agecat = as.character(agecat)) %>%
+  mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
+  mutate(agecat = gsub(" month", "", agecat)) %>%
+  mutate(agecat = gsub(" months", "", agecat)) %>%
+  mutate(agecat = gsub("s", "", agecat)) %>%
+  mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
+  mutate(agecat = as.numeric(agecat)) 
+
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-  geom_smooth(aes(fill = region, color = region), se=F) +
-  # geom_line(aes(color=region)) +
+  stat_smooth(aes(fill=region, color=region), se=F, span = 1) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
-                     limits = c(-1, 1)) + 
-  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                     limits = c(-1, 0.5)) + 
+  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
+  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
                     name = 'Region') +
-  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
                      name = 'Region') +
-  xlab("Age (months)") +
+  xlab("Child age, months")+
   ylab("Weight-for-length Z-score") +
   ggtitle("") +
-  theme(legend.position="right") +
-  theme(axis.text.x = element_text(margin = 
-                                     margin(t = 4, r = 0, b = 0, l = 0),
-                                   size = 15)) +
-  theme(axis.title.x = element_text(margin = 
-                                      margin(t = 14, r = 0, b = 0, l = 0)))
+  theme(legend.position="right")
 
 ggsave(p, file="figures/wasting/WLZ_by_region.png", width=10, height=4)
 
 
-# What's supposed to be the x-axis here? Moved it to right place but need to clean axis label
+
+#-------------------------------------------------------------------------------------------
+# Mean WLZ by month with quantiles
+#-------------------------------------------------------------------------------------------
+
+df <- quantile_d
+
+df$agecat <- factor(df$agecat, 
+                    levels=c("Two weeks", "One month",
+                             paste0(2:24," months")))
+
+df <- df %>% 
+  arrange(agecat) %>%
+  filter(region!="Europe")
+df <-droplevels(df)
+
+df <- df %>% 
+  ungroup(agecat) %>%
+  arrange(agecat) %>%
+  filter(!is.na(agecat)) %>%
+  filter(!is.na(region)) %>%
+  mutate(agecat = as.character(agecat)) %>%
+  mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
+  mutate(agecat = gsub(" month", "", agecat)) %>%
+  mutate(agecat = gsub(" months", "", agecat)) %>%
+  mutate(agecat = gsub("s", "", agecat)) %>%
+  mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
+  mutate(agecat = as.numeric(agecat)) %>%
+  mutate(region = ifelse(region=="Asia", "South Asia", region)) %>% 
+  gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "LAZ") %>% 
+  mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+
+# NEED TO ADD LEGEND
+
+p <- ggplot(df,aes(x = agecat, group = region)) +
+
+  geom_smooth(aes(y = LAZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
+  facet_wrap(~region) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
+  scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=TRUE, limits = levels(df$measure), 
+                     name = 'Region') +
+  scale_linetype_manual(name = "interval", values = c("fiftieth_perc" = "solid",
+                                                      "ninetyfifth_perc" = "dashed",
+                                                      "fifth_perc" = "dotted"),
+                        breaks = c("fiftieth_perc",
+                                   "ninetyfifth_perc",
+                                   "fifth_perc"),
+                        labels = c("Mean", "95th percentile", "5th percentile")) +
+  xlab("Child age, months") +
+  ylab("Weight-for-length Z-score") +
+  ggtitle("") +
+  theme(strip.text = element_text(margin=margin(t=5))) +
+  guides(linetype = guide_legend(override.aes = list(col = 'black'), 
+                                 keywidth = 3, keyheight = 1),
+         colour = FALSE) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(colour = "black"))
+
+ggsave(p, file="figures/wasting/fig_wast_mean_quantile_WLZ_region.png", width=10, height=8)
 
 
 #-------------------------------------------------------------------------------------------
