@@ -67,23 +67,23 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     xlab(xlabel)+
     ylab(ylabel) +
     
-    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-                           label = nmeas.f), size = 3.5) +
-    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-                           label = nstudy.f), size = 3.5) +
-    scale_x_discrete(expand = expand_scale(add = 2)) +
+    # geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
+    #                        label = nmeas.f), size = 3.5) +
+    # geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
+    #                        label = nstudy.f), size = 3.5) +
+    # scale_x_discrete(expand = expand_scale(add = 2)) +
     
-    annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
-    annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
+    # annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
+    # annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
     
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    expand_limits(y = h2) +
-    theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
+    # expand_limits(y = h2) +
+    theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
     
     theme(axis.text.x = element_text(margin = 
                                        margin(t = 0, r = 0, b = 0, l = 0),
-                                     size = 10)) +
-    theme(axis.title.y = element_text(size = 15)) +
+                                     size = 12)) +
+    theme(axis.title.y = element_text(size = 12)) +
     
     ggtitle("") +
     facet_wrap(~region) 
@@ -112,7 +112,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                           Cohort="pooled",
                           xlabel="Age category",
-                          ylabel="",
+                          ylabel="Proportion (95% CI)",
                           h1=0,
                           h2=3,
                           yrange=NULL){
@@ -153,7 +153,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                   width = 0) +
     geom_point(aes(shape=measure, fill=region, color=region
     ), size = 2) +
-    geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
+    geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 1.5) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
@@ -164,36 +164,36 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     xlab(xlabel)+
     ylab(ylabel) +
     
-    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-                           label = nmeas.f), size = 3.5) +
-    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-                           label = nstudy.f), size = 3.5) +
-    scale_x_discrete(expand = expand_scale(add = 2)) +
+    # geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
+    #                        label = nmeas.f), size = 3.5) +
+    # geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
+                           # label = nstudy.f), size = 3.5) +
+    # scale_x_discrete(expand = expand_scale(add = 2)) +
     
-    annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
-    annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
+    # annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
+    # annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
     
     # annotate('text', x = 5, y = 70, label = 'Cumulative % stunted', size = 3.5) +
     # annotate('text', x = 5, y = 15, label = '% new incident cases', size = 3.5) +
     
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    expand_limits(y = h2) +
-    theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
+    # expand_limits(y = h2) +
+    theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
     
     theme(axis.text.x = element_text(margin = 
                                        margin(t = 0, r = 0, b = 0, l = 0),
                                      size = 10)) +
     theme(axis.title.x = element_text(margin = 
-                                        margin(t = 25, r = 0, b = 0, l = 0),
-                                      size = 15)) +
-    theme(axis.title.y = element_text(size = 15)) +
+                                        margin(t = 5, r = 0, b = 0, l = 0),
+                                      size = 12)) +
+    theme(axis.title.y = element_text(size = 12)) +
     
     ggtitle("") +
     facet_wrap(~region) +
     
     guides(color = FALSE) +
     
-    theme(legend.position = c(.08,.87),
+    theme(legend.position = c(.1,.92),
           legend.title = element_blank(),
           legend.background = element_blank(),
           legend.box.background = element_rect(colour = "black"))

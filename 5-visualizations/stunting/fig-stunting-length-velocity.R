@@ -125,8 +125,8 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   facet_wrap( ~ sex) +
-  # ggtitle("A) Monthly change in LAZ")  +
-  ggtitle("a") +
+  # ggtitle("B) Monthly change in LAZ")  +
+  ggtitle("b") +
   theme(plot.title = element_text(hjust=0))
 
 
@@ -149,7 +149,7 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   facet_grid( ~  region) +
-  ggtitle("A) Monthly change in LAZ") +
+  ggtitle("B) Monthly change in LAZ") +
   theme(plot.title = element_text(hjust=0))
 
 
@@ -165,7 +165,7 @@ plot_laz_cohort_asia <- ggplot(velplot_laz_strat %>% filter(region=="Asia"), aes
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   facet_wrap( ~  country_cohort) +
-  ggtitle("A) Monthly change in LAZ") +
+  ggtitle("B) Monthly change in LAZ") +
   theme(plot.title = element_text(hjust=0))
 
 ggsave(plot_laz_cohort_asia, file="figures/stunting/fig_stunt_vel_cm_asia.png", width=18, height=10)
@@ -179,7 +179,7 @@ plot_laz_cohort_latamer <- ggplot(velplot_laz_strat %>% filter(region=="Latin Am
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   facet_wrap( ~  country_cohort) +
-  ggtitle("A) Monthly change in LAZ") +
+  ggtitle("B) Monthly change in LAZ") +
   theme(plot.title = element_text(hjust=0))
 
 
@@ -194,7 +194,7 @@ plot_laz_cohort_eur <- ggplot(velplot_laz_strat %>% filter(region=="Europe"), ae
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   facet_wrap( ~  country_cohort) +
-  ggtitle("A) Monthly change in LAZ") +
+  ggtitle("B) Monthly change in LAZ") +
   theme(plot.title = element_text(hjust=0))
 
 
@@ -209,7 +209,7 @@ plot_laz_cohort_afr <- ggplot(velplot_laz_strat %>% filter(region=="Africa"), ae
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   facet_wrap( ~  country_cohort) +
-  ggtitle("A) Monthly change in LAZ") +
+  ggtitle("B) Monthly change in LAZ") +
   theme(plot.title = element_text(hjust=0))
 
 
@@ -251,14 +251,25 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                  alpha=0.5, size = 1) +
   
+  # scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
+  #                                  "pct_15" = "dotted", 
+  #                                  "pct_25" = "dashed", 
+  #                                  "pct_50" = "solid"),
+  #                       breaks = c("pct_15", "pct_25", "pct_50"),
+  #                       labels = c("15th percentile", 
+  #                                  "25th percentile", 
+  #                                  "50th percentile")) +
+  
   scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
-                                   "pct_15" = "dotted", 
-                                   "pct_25" = "dashed", 
-                                   "pct_50" = "solid"),
-                        breaks = c("pct_15", "pct_25", "pct_50"),
-                        labels = c("15th percentile", 
+                                                                     "pct_50" = "solid",
+                                                                     "pct_25" = "dashed", 
+                                                                     "pct_15" = "dotted"
+                                                                     ),
+                        breaks = c("pct_50", "pct_25", "pct_15"),
+                        labels = c("50th percentile",
                                    "25th percentile", 
-                                   "50th percentile")) +
+                                   "15th percentile"
+                                   )) +
   
   scale_color_manual("WHO Growth\nVelocity Standards", values = c("black" = "black",
                                 "blue" = tableau10[4],
@@ -273,8 +284,8 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month")+
   facet_wrap( ~ sex) +
-  # ggtitle("B) Monthly change in length (cm)") +
-  ggtitle("b") +
+  # ggtitle("A) Monthly change in length (cm)") +
+  ggtitle("a") +
   
   guides(color=FALSE) +
   
@@ -315,15 +326,15 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month")+
   facet_grid( sex~ region) +
-  ggtitle("B) Monthly change in length (cm)") +
+  ggtitle("A) Monthly change in length (cm)") +
   theme(plot.title = element_text(hjust=0))
 
 
 #-------------------------------------
 # combined LAZ and length plots
 #-------------------------------------
-combined_plot = grid.arrange(plot_laz, plot_cm, nrow = 2, heights = c(4, 8))
-combined_plot_strat = grid.arrange(plot_laz_strat, plot_cm_strat, nrow = 2, heights = c(4, 10))
+combined_plot = grid.arrange(plot_cm, plot_laz, nrow = 2, heights = c(8, 4))
+combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, nrow = 2, heights = c(10, 4))
 
 ggsave(combined_plot, file="figures/stunting/fig_stunt_vel_pool.png", width=10, height=8)
 ggsave(combined_plot_strat, file="figures/stunting/fig_stunt_vel_region.png", width=16, height=18)

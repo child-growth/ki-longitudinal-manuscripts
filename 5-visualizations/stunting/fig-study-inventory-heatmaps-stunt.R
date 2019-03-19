@@ -378,7 +378,7 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 stphm <- hm +
   aes(fill=hazcat) +
   # labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
-  labs(x="Age in months",y="",title="a") +
+  labs(x="Age in months",y="",title="b") +
   # scale_fill_manual("Mean HAZ", values = viridis_cols)
 
   scale_fill_viridis(option = "C",
@@ -386,7 +386,7 @@ stphm <- hm +
                      direction = -1,
                      end = 0.8,
                      guide=guide_legend(title="Mean HAZ",title.vjust = 1,
-                                        label.position="bottom",label.hjust=0.5,nrow=1),
+                                        label.position="bottom",label.hjust=0.1,nrow=1),
                      discrete=TRUE)
 
 # anna start here
@@ -406,7 +406,9 @@ stphm <- hm +
 #   scale_fill_manual("Mean HAZ", values = viridis_cols)
   
 
+#-----------------------------------
 # number of obs side bar plot
+#-----------------------------------
 nbar <- sidebar +
   aes(y=nmeas/1000,fill=wpcat) +
   labs(x = "",y="Sample size (1000s)",title="c") +
@@ -414,23 +416,50 @@ nbar <- sidebar +
                      breaks=seq(0,125,by=25),labels=seq(0,125,by=25)) +
   geom_hline(yintercept = seq(0,125,by=25),color='white',size=0.3)
 
+#-----------------------------------
 # stunting prevalence side bar plot
+#-----------------------------------
 stpbar <- sidebar +
   aes(y=stuntprev,fill=stpcat) +
   # labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
-  labs(x = "",y="Stunting Prevalence (%)",title="b") +
+  labs(x = "",y="Stunting Prevalence (%)",title="d") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
 
-# add margin around plots
-margin = theme(plot.margin = unit(c(0.25,0.25,0.25,0.25), "cm"))
-stphm = stphm + margin
-stpbar = stpbar + margin
-nbar = nbar + margin
+#-----------------------------------
+# n by age top plot 
+#-----------------------------------
+nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
+  geom_bar(stat = "identity", fill='gray70') +  
+  scale_x_continuous(breaks = seq(1,24,1), labels = seq(1,24,1)) +
+  theme(
+    # make background white
+    panel.background = element_blank(),
+    # remove major grid lines
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    plot.title=element_text(colour=textcol,hjust=0.04,size=12,face="bold"),
+    # remove x axis ticks
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    panel.border = element_blank(),
+    axis.title.y = element_text(size=10)
+  ) +
+  ylab("Sample size (1000s)") + xlab("") +
+  geom_hline(yintercept = seq(0,80,by=10),color='white',size=0.3) +
+  ggtitle("a")
 
-# combined plot
-stpgrid <- grid.arrange(stphm, stpbar, nbar, nrow = 1, ncol = 3, 
+# add margin around plots
+stphm = stphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
+stpbar = stpbar + theme(plot.margin = unit(c(0,0.3,0.25,0.1), "cm"))
+nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.25,0.1), "cm"))
+nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.125,0,3.5), "cm"))
+empty <- textGrob("") 
+
+stpgrid <- grid.arrange(nagebar,empty, empty,
+                        stphm, nbar, stpbar,nrow = 2, ncol = 3,
+                        heights = c(25,100),
                         widths=c(100,20,20))
 ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
 
