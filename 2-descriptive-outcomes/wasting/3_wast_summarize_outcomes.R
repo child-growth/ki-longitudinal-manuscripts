@@ -74,16 +74,16 @@ monthly.whz <- bind_rows(
   monthly.cohort
 )
 
-#Get monthly HAZ quantiles
+#Get monthly whz quantiles
 quantile_d <- d %>% group_by(agecat, region) %>%
-  mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
-         fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
-         ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
+  mutate(fifth_perc = quantile(whz, probs = c(0.05))[[1]],
+         fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
+         ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
   select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
 quantile_d_overall <- d %>% group_by(agecat) %>%
-  mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
-         fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
-         ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
+  mutate(fifth_perc = quantile(whz, probs = c(0.05))[[1]],
+         fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
+         ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
   select(agecat, fifth_perc, fiftieth_perc, ninetyfifth_perc)
 save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_wasting.Rdata"))
 
@@ -129,6 +129,18 @@ ci_3 <- bind_rows(
   ci.cohort3
 )
 
+#Incidence proportions 3 month intervals
+ip.data3 <- summary.incprop(d3, agelist = agelst3)
+ip.region3 <- d3 %>% group_by(region) %>% do(summary.incprop(., agelist = agelst3)$ci.res)
+ip.cohort3 <-
+  ip.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
+
+ip_3 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ip.data3$ci.res),
+  data.frame(cohort = "pooled", ip.region3),
+  ip.cohort3
+)
 
 
 #Cumulative inc, no birth
@@ -252,9 +264,9 @@ d <- calc.ci.agecat(d, range = 6)
 rec.data30 <- summary.rec60( d, length = 30, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))
 rec.data60 <- summary.rec60( d, length = 60, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))
 rec.data90 <- summary.rec60( d, length = 90, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))
-rec30.region <- d %>% group_by(region) %>% do(summary.rec60( d, length = 30, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))$ci.res)
-rec60.region <- d %>% group_by(region) %>% do(summary.rec60( d, length = 60, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))$ci.res)
-rec90.region <- d %>% group_by(region) %>% do(summary.rec60( d, length = 90, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))$ci.res)
+rec30.region <- d %>% group_by(region) %>% do(summary.rec60( ., length = 30, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))$ci.res)
+rec60.region <- d %>% group_by(region) %>% do(summary.rec60( ., length = 60, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))$ci.res)
+rec90.region <- d %>% group_by(region) %>% do(summary.rec60( ., length = 90, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))$ci.res)
 
 rec30.cohort <-
   rec.data30$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
@@ -368,6 +380,7 @@ shiny_desc_data <- bind_rows(
   data.frame(disease = "Wasting", age_range="1 month",   birth="yes", severe="no", measure= "Mean WLZ",  monthly.whz),
   data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci_3),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ip_3),
   data.frame(disease = "Wasting", age_range="6 months",   birth="no",  severe="no",   measure= "Cumulative incidence",  ci_nobw),
   data.frame(disease = "Wasting", age_range="3 months",   birth="no",  severe="no",   measure= "Cumulative incidence",  ci_nobw3),
   data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="yes", measure= "Cumulative incidence",  sev.ci),
