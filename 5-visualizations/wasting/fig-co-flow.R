@@ -64,4 +64,4 @@ bar_plot_RE = ggplot(plot_data_pooled) +
   xlab("Child age, months") + ylab("Percentage of children")
 bar_plot_RE
 
-ggsave(bar_plot_RE, file="figures/wasting/fig-wasting-stacked-bar-RE.png", width=10, height=5)
+ggsave(bar_plot_RE, file="figures/wasting/fig-co-stacked-bar-RE.png", width=10, height=5)
