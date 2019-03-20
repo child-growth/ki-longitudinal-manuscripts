@@ -94,6 +94,8 @@ for(i in 1:nrow(df)){
   try(d <- readRDS(paste0(df$short_id[i],".rds")))
   
   if(!is.null(d)){
+    if("WHZ" %in% colnames(d)){
+      
     d<-d[!is.na(d$WHZ),]
     
     
@@ -171,8 +173,8 @@ for(i in 1:nrow(df)){
     meanWHZ_m0 <- mean(d$WHZ[d$AGEDAYS==1], na.rm=T)
     wastprev_m0<-mean(as.numeric(d$WHZ[d$AGEDAYS==1] < (-2)), na.rm=T)*100
     n0 <- length(d$WHZ[d$AGEDAYS==1])
-    meanHAZ_m1 <- mean(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167], na.rm=T)
-    stuntprev_m1<-mean(as.numeric(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167] < (-2)), na.rm=T)*100
+    meanWHZ_m1 <- mean(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167], na.rm=T)
+    wastprev_m1<-mean(as.numeric(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167] < (-2)), na.rm=T)*100
     n1 <- length(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167])
     for(j in 1:23){
       assign(paste('meanWHZ_m', j+1, sep=''),  mean(d$WHZ[d$AGEDAYS>=j*30.4167 & d$AGEDAYS<(j+1)*30.4167], na.rm=T))
@@ -184,7 +186,7 @@ for(i in 1:nrow(df)){
     
     
     variables<-paste(colnames(d), collapse=', ' )
-    
+    }
   }
   res<-t(c(numcountry, countrycohort, wastprev, numsubj, numobs, median_length_between_measures, sd_obs, minages, maxages, mortality, birthweek, RCT, diar, 
            HAZsd, WAZsd, WHZsd, perc_length_decrease, 
@@ -205,8 +207,8 @@ for(i in 1:nrow(df)){
 
 
 
-saveRDS(df, "U:/results/Metadata/GHAP_metadata.RDS")
-saveRDS(df, "U:/ki-longitudinal-manuscripts/results/GHAP_metadata.RDS")
+saveRDS(df, "U:/results/Metadata/GHAP_metadata_wasting.RDS")
+saveRDS(df, "U:/ki-longitudinal-manuscripts/results/GHAP_metadata_wasting.RDS")
 getwd()
 
 
