@@ -1,8 +1,26 @@
 #---------------------------------------
-#Ki DHS Analysis
-#Spring 2019
+# Ki DHS Analysis
+# Spring 2019
+# This script reads in clean DHS z-score
+# data, estimates means by age in months
+# and estimates kernel densities
+# the script creates two figures that
+# compare DHS estimates to those from
+# the KI cohorts.
+# This script is limited to LAZ for the
+# linear growth paper. It includes
+# KI cohorts with measurement frequency
+# at least quarterly
+#---------------------------------------
 
-# This script plots age by HAZ and WHZ for DHS data
+#---------------------------------------
+# input files:
+#   0-config.R / configuration file
+#   clean-DHS-haz.rds  / clean DHS LAZ data
+#
+# output files:
+#
+#
 #---------------------------------------
 
 #---------------------------------------
@@ -59,21 +77,12 @@ gamCI <- function(m,newdata,nreps=10000) {
 # created by 7_DHS-data-cleaning.R
 #---------------------------------------
 dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
-dwaz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
-dwhz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
-
-#---------------------------------------
-# combine all of the DHS data 
-# into a single dataframe
-#---------------------------------------
-dhsz <- bind_rows(dhaz,dwaz,dwhz) %>%
-  mutate(measure=factor(measure,levels=c("HAZ","WAZ","WHZ"),labels=c("LAZ","WAZ","WHZ")))
 
 #---------------------------------------
 # compute weights per instructions from
 # DHS
 #---------------------------------------
-dhsz <- dhsz %>%
+dhsz <- dhaz %>%
   mutate(wgt=weight/1000000)
 
 #---------------------------------------
@@ -108,25 +117,22 @@ dhsz <- dhsz %>%
 # estimate mean z-scores by age
 # including all countries in each region
 #---------------------------------------
-dhsallfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
-  foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
-    di <- dhsz %>% filter(measure==zmeas & region==rgn)
+dhsallfits <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
+    di <- dhsz %>% filter(region==rgn)
     fiti <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=di)
     newd <- data.frame(agem=0:24)
+    # estimate approximate simultaneous confidence intervals
     fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
-    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
+    dfit <- data.frame(measure="LAZ",region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
     dfit
   }
 
 # estimate a pooled fit, over all regions
-dhsall_pool <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %dopar% {
-  di <- dhsz %>% filter(measure==zmeas)
-  fiti <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=di)
-  newd <- data.frame(agem=0:24)
-  fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
-  dfit <- data.frame(measure=zmeas,region="OVERALL",agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
-  dfit
-}
+fitpool <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=dhsz)
+newd <- data.frame(agem=0:24)
+fitpoolci <- gamCI(m=fitpool,newdata=newd,nreps=1000)
+dhsall_pool <- data.frame(measure="LAZ",region="OVERALL",agem=0:24,fit=fitpoolci$fit,fit_se=fitpoolci$se.fit,fit_lb=fitpoolci$lwrS,fit_ub=fitpoolci$uprS)
+
 
 dhsallfits <- bind_rows(dhsallfits,dhsall_pool) %>%
   mutate(region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO")))
@@ -137,25 +143,21 @@ dhsallfits <- bind_rows(dhsallfits,dhsall_pool) %>%
 # subset to countries that overlap the
 # ki cohorts
 #---------------------------------------
-dhssubfits <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
-  foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
-    di <- dhsz %>% filter(measure==zmeas & region==rgn & inghap==1)
+dhssubfits <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
+    di <- dhsz %>% filter(region==rgn & inghap==1)
     fiti <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=di)
     newd <- data.frame(agem=0:24)
+    # estimate approximate simultaneous confidence intervals
     fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
-    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
+    dfit <- data.frame(measure="LAZ",region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
     dfit
   }
 
 # estimate a pooled fit, over all regions
-dhssub_pool <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %dopar% {
-  di <- dhsz %>% filter(measure==zmeas & inghap==1)
-  fiti <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=di)
-  newd <- data.frame(agem=0:24)
-  fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
-  dfit <- data.frame(measure=zmeas,region="OVERALL",agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
-  dfit
-}
+fitsubpool <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=filter(dhsz,inghap==1))
+newd <- data.frame(agem=0:24)
+fitsubpoolci <- gamCI(m=fitsubpool,newdata=newd,nreps=1000)
+dhssub_pool <- data.frame(measure="LAZ",region="OVERALL",agem=0:24,fit=fitsubpoolci$fit,fit_se=fitsubpoolci$se.fit,fit_lb=fitsubpoolci$lwrS,fit_ub=fitsubpoolci$uprS)
 
 dhssubfits <- bind_rows(dhssubfits,dhssub_pool) %>%
   mutate(region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO")))
@@ -168,7 +170,7 @@ dhssubfits <- bind_rows(dhssubfits,dhssub_pool) %>%
 load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
 # load(paste0(here::here(),"/results/co_desc_data.Rdata"))
 ghapd <- d %>%
-  filter(measure %in% c("Mean LAZ","Mean WAZ","Mean WLZ"),
+  filter(measure %in% c("Mean LAZ"),
          birth=="yes",
          age_range=="1 month",
          cohort=="pooled") %>%
@@ -192,13 +194,12 @@ ghapd <- d %>%
 #---------------------------------------
 # fit smooths to GHAP data
 #---------------------------------------
-ghapfits <- foreach(zmeas=c("LAZ","WAZ","WHZ"),.combine=rbind) %:% 
-  foreach(rgn=levels(ghapd$whoregion),.combine=rbind) %do% {
-    di <- ghapd %>% filter(measure==zmeas & whoregion==rgn)
+ghapfits <- foreach(rgn=levels(ghapd$whoregion),.combine=rbind) %do% {
+    di <- ghapd %>% filter(whoregion==rgn)
     fiti <- mgcv::gam(est~s(agem,bs="cr"),data=di)
     newd <- data.frame(agem=0:24)
     fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
-    dfit <- data.frame(measure=zmeas,region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
+    dfit <- data.frame(measure="LAZ",region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
     dfit
   }
 
@@ -216,7 +217,7 @@ dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
          )
 
 #---------------------------------------
-# make z-score by age figure
+# make LAZ  by age figure
 # after preliminary inspection, the
 # DHS and DHS subset estimates are so
 # similar in nearly every case that it 
@@ -231,38 +232,6 @@ dhs_plotd <- dhsfits %>%
 tableau10 <- tableau_color_pal("Tableau 10")
 pcols <- c("black",tableau10(10)[c(1,5,2)])
 
-dhsp <- ggplot(data=dhs_plotd,aes(x=agem,y=fit,color=region,fill=region,linetype=dsource))+
-  facet_grid(measure~region,switch="y")+
-  geom_abline(intercept=0,slope=0,color="gray70")+
-
-  geom_ribbon(aes(ymin=fit_lb,ymax=fit_ub),color=NA,alpha=0.2)+
-  geom_line(alpha=1)+
-  scale_x_continuous(breaks=seq(0,24,by=6))+
-  scale_y_continuous(breaks=seq(-2,1,by=1))+
-  scale_color_manual(values=pcols,guide=FALSE)+
-  scale_fill_manual(values=pcols,guide=FALSE)+
-  scale_linetype_manual(values=c("solid","dashed","dotdash"))+
-  labs(x="child age, months",y="anthropometric z-score")+
-  coord_cartesian(ylim=c(-2,1))+
-  theme_minimal()+
-  theme(legend.position = "bottom",
-        strip.placement="outside",
-        strip.background = element_rect(fill=NA,color=NA),
-        # strip.text.y = element_text(angle=180),
-        panel.spacing = unit(0.5, "lines"),
-        panel.grid.minor.x = element_blank()
-        )
-
-dhsp
-
-# output a file to png
-ggsave(here("figures/dhs","dhs-ghap-zscore-byage.png"),plot=dhsp,device="png",width=6,height=6)
-
-#---------------------------------------
-# create a solo LAZ figure for the
-# length manuscript, tailored to LAZ
-#---------------------------------------
-# LAZ by age
 laz_ageplot <- ggplot(data=filter(dhs_plotd,measure=="LAZ"),aes(x=agem,y=fit,color=region,fill=region,linetype=dsource))+
   facet_grid(~region)+
   geom_abline(intercept=0,slope=0,color="gray70")+
@@ -288,7 +257,7 @@ laz_ageplot
 
 
 # output a file to png
-ggsave(here("figures/dhs","dhs-ghap-laz-byage.png"),plot=laz_ageplot,device="png",width=8,height=3)
+ggsave(here("figures/stunting","fig_dhs_ki_laz_byage.png"),plot=laz_ageplot,device="png",width=8,height=3)
 
 #---------------------------------------
 #---------------------------------------
@@ -301,19 +270,16 @@ ggsave(here("figures/dhs","dhs-ghap-laz-byage.png"),plot=laz_ageplot,device="png
 # estimate DHS z-score densities 
 # by region and overall
 #---------------------------------------
-dhsallden <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
-  foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
-    di <- dhsz %>% filter(measure==zmeas & region==rgn)
+dhsallden <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
+    di <- dhsz %>% filter(region==rgn)
     deni <- density(di$zscore)
-    denid <- data.frame(x=deni$x,y=deni$y,measure=zmeas,region=rgn)
+    denid <- data.frame(x=deni$x,y=deni$y,measure="LAZ",region=rgn)
     denid
   }
-dhsallden_pool <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %dopar% {
-  di <- dhsz %>% filter(measure==zmeas)
-  deni <- density(di$zscore)
-  denid <- data.frame(x=deni$x,y=deni$y,measure=zmeas,region="OVERALL")
-  denid
-}
+# overall pooled estimate
+deni <- density(dhsz$zscore)
+dhsallden_pool <- data.frame(x=deni$x,y=deni$y,measure="LAZ",region="OVERALL")
+
 dhsallden <- bind_rows(dhsallden,dhsallden_pool) %>%
   mutate(region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO")))
 
@@ -322,19 +288,16 @@ dhsallden <- bind_rows(dhsallden,dhsallden_pool) %>%
 # by region and overall
 # subset to countries that overlap KI cohorts
 #---------------------------------------
-dhssubden <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %:% 
-  foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
-    di <- dhsz %>% filter(measure==zmeas & region==rgn & inghap==1)
+dhssubden <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
+    di <- dhsz %>% filter(region==rgn & inghap==1)
     deni <- density(di$zscore)
-    denid <- data.frame(x=deni$x,y=deni$y,measure=zmeas,region=rgn)
+    denid <- data.frame(x=deni$x,y=deni$y,measure="LAZ",region=rgn)
     denid
   }
-dhssubden_pool <- foreach(zmeas=levels(dhsz$measure),.combine=rbind) %dopar% {
-  di <- dhsz %>% filter(measure==zmeas & inghap==1)
-  deni <- density(di$zscore)
-  denid <- data.frame(x=deni$x,y=deni$y,measure=zmeas,region="OVERALL")
-  denid
-}
+# overall pooled estimate
+subdeni <- density(dhsz$zscore[dhsz$inghap==1])
+dhssubden_pool <- data.frame(x=subdeni$x,y=subdeni$y,measure="LAZ",region="OVERALL")
+
 dhssubden <- bind_rows(dhssubden,dhssubden_pool) %>%
   mutate(region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO")))
 
@@ -348,7 +311,8 @@ kiden <- readRDS(paste0(here(),"/results/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>%
   mutate(region=factor(region,levels=c("Overall","AFRO","SEARO","PAHO"),labels=c("OVERALL","AFRO","SEARO","PAHO")),
          measure=factor(measure,levels=c("haz","waz","whz"),labels=c("LAZ","WAZ","WHZ"))
-  )
+  ) %>%
+  filter(measure=="LAZ")
 
 #---------------------------------------
 # Append the fits into a single data frame
@@ -393,69 +357,19 @@ laz_dplot <- ggplot(data=filter(dhsden_plot,measure=="LAZ"),aes(x=x,y=y,color=re
   scale_fill_manual(values=pcols,guide=FALSE)+
   scale_linetype_manual(values=c("solid","dashed","dotdash"))+
   scale_x_continuous(breaks=seq(-6,6,by=2))+
-  coord_cartesian(xlim=c(-6,6))+
+  coord_cartesian(xlim=c(-6,6),ylim=c(0,0.4))+
   labs(y="density",x="length-for-age z-score")+
   theme_minimal()+
   theme(legend.position="none",
     panel.grid.minor.y=element_blank(),
-    axis.ticks.y=element_blank(),
-    axis.text.y=element_blank()
+    # axis.ticks.y=element_blank(),
+    # axis.text.y=element_blank()
         )
 
 laz_dplot
 
 # output a file to png
-ggsave(here("figures/dhs","dhs-ghap-laz-density.png"),plot=laz_dplot,device="png",width=8,height=2)
-
-
-
-#---------------------------------------
-# WAZ density by region
-#---------------------------------------
-waz_dplot <- ggplot(data=filter(dhsden_plot,measure=="WAZ"),aes(x=x,y=y,color=region,linetype=dsource))+
-  facet_grid(~region)+
-  geom_line()+
-  scale_color_manual(values=pcols,guide=FALSE)+
-  scale_fill_manual(values=pcols,guide=FALSE)+
-  scale_linetype_manual(values=c("solid","dashed","dotdash"))+
-  scale_x_continuous(breaks=seq(-6,6,by=2))+
-  coord_cartesian(xlim=c(-6,6))+
-  labs(y="relative density",x="weight-for-age z-score")+
-  theme_minimal()+
-  theme(legend.position="none",
-        panel.grid.minor.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.text.y=element_blank()
-  )
-
-waz_dplot
-
-# output a file to png
-ggsave(here("figures/dhs","dhs-ghap-waz-density.png"),plot=waz_dplot,device="png",width=8,height=2)
-
-#---------------------------------------
-# WHZ density by region
-#---------------------------------------
-whz_dplot <- ggplot(data=filter(dhsden_plot,measure=="WHZ"),aes(x=x,y=y,color=region,linetype=dsource))+
-  facet_grid(~region)+
-  geom_line()+
-  scale_color_manual(values=pcols,guide=FALSE)+
-  scale_fill_manual(values=pcols,guide=FALSE)+
-  scale_linetype_manual(values=c("solid","dashed","dotdash"))+
-  scale_x_continuous(breaks=seq(-6,6,by=2))+
-  coord_cartesian(xlim=c(-6,6))+
-  labs(y="relative density",x="weight-for-height z-score")+
-  theme_minimal()+
-  theme(legend.position="none",
-        panel.grid.minor.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.text.y=element_blank()
-  )
-
-whz_dplot
-
-# output a file to png
-ggsave(here("figures/dhs","dhs-ghap-whz-density.png"),plot=whz_dplot,device="png",width=8,height=2)
+ggsave(here("figures/stunting","fig_dhs_ki_laz_density.png"),plot=laz_dplot,device="png",width=8,height=2)
 
 
 
