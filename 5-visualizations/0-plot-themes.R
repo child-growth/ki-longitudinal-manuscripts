@@ -115,7 +115,8 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                           ylabel="Proportion (95% CI)",
                           h1=0,
                           h2=3,
-                          yrange=NULL){
+                          yrange=NULL,
+                          dodge=0){
   
   df <- d %>% filter(
     disease == Disease &
@@ -150,10 +151,10 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, 
                       group=interaction(measure, region), ymin=lb, ymax=ub), 
-                  width = 0) +
+                  width = 0, position = position_dodge(dodge)) +
     geom_point(aes(shape=measure, fill=region, color=region
-    ), size = 2) +
-    geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 1.5) +
+    ), size = 2, position = position_dodge(dodge)) +
+    geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 1.5, position = position_dodge(width = dodge)) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17),

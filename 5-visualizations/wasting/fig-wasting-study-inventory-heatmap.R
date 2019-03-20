@@ -62,9 +62,6 @@ dim(md)
 md$countrycohort[is.na(md$countrycohort)] <- "singlecohort"
 wmd$countrycohort[is.na(wmd$countrycohort)] <- "singlecohort"
 
-for(i in 0:24){
-  print(table(is.na(wmd[,paste0("wastprev_m",i)])))
-}
 
 wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m0, wastprev_m1, wastprev_m2,
                       wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
@@ -421,7 +418,7 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 # heat map
 wastphm <- hm + 
   aes(fill=whzcat) +
-  labs(x="Age in months",y="",title="a") +
+  labs(x="Age in months",y="",title="b") +
   scale_fill_viridis(na.value="grey90", option = "C", discrete = T,
                        direction = -1,
                        end = 0.8,
@@ -431,7 +428,7 @@ wastphm <- hm +
 # wasting prevalence side bar plot
 wpbar <- sidebar +
   aes(y=wastprev,fill=wpcat) +
-  labs(x = "",y="Wasting Prevalence (%)",title="b") +
+  labs(x = "",y="Wasting Prevalence (%)",title="d") +
   scale_y_continuous(expand=c(0,0),limits=c(0,30),
                      breaks=seq(0,20,by=5),labels=seq(0,20,by=5)) +
   geom_hline(yintercept = seq(0,20,by=5),color='white',size=0.3)
@@ -439,7 +436,7 @@ wpbar <- sidebar +
 # stunting prevalence side bar plot
 stpbar <- sidebar +
   aes(y=stuntprev,fill=stpcat) +
-  labs(x = "",y="Stunting Prevalence (%)",title="b") +
+  labs(x = "",y="Stunting Prevalence (%)",title="d") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
@@ -452,18 +449,45 @@ nbar <- sidebar +
                      breaks=seq(0,50,by=10),labels=seq(0,50,by=10)) +
   geom_hline(yintercept = seq(0,50,by=10),color='white',size=0.3)
 
+#-----------------------------------
+# n by age top plot 
+#-----------------------------------
+nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
+  geom_bar(stat = "identity", fill='gray70') +  
+  scale_x_continuous(breaks = seq(0,24,1), labels = seq(0,24,1)) +
+  theme(
+    # make background white
+    panel.background = element_blank(),
+    # remove major grid lines
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    plot.title=element_text(colour=textcol,hjust=0.04,size=12,face="bold"),
+    # remove x axis ticks
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    panel.border = element_blank(),
+    axis.title.y = element_text(size=10)
+  ) +
+  ylab("Sample size (1000s)") + xlab("") +
+  geom_hline(yintercept = seq(0,12,by=2),color='white',size=0.3) +
+  ggtitle("a")
+
 
 
 # add margin around plots
-margin = theme(plot.margin = unit(c(0.25,0.25,0.25,0.25), "cm"))
-wastphm = wastphm + margin
-wpbar = wpbar + margin
-stpbar = stpbar + margin
-nbar = nbar + margin
+wastphm2 = wastphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
+wpbar2 = wpbar + theme(plot.margin = unit(c(0,0.3,0.25,0.1), "cm"))
+nbar2 = nbar + theme(plot.margin = unit(c(0,0.25,0.25,0.1), "cm"))
+nagebar2 = nagebar + theme(plot.margin = unit(c(0.25,0.31,0,3.2), "cm"))
+empty <- grid::textGrob("") 
+
+awstpgrid <- grid.arrange(nagebar2,empty, empty,
+                          wastphm2, nbar2, wpbar2, nrow = 2, ncol = 3,
+                        heights = c(25,100),
+                        widths=c(100,20,20))
 
 
 # combined plot
-awstpgrid <- grid.arrange(wastphm, wpbar, nbar, nrow = 1, ncol = 3, widths=c(100,20,20))
 ggsave(filename="figures/wasting/wasting-study-inventory-heatmap.pdf",plot = awstpgrid,device='pdf',width=12,height=9)
 
 

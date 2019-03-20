@@ -141,8 +141,7 @@ p1 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
-                   h1=25,
-                   h2=27)
+                   yrange=c(0,24))
 
 
 ggsave(p1, file="figures/wasting/pooled_prev.png", width=12, height=8)
@@ -160,8 +159,7 @@ p2 <- ki_combo_plot(d,
                         Age_range="3 months", 
                         Cohort="pooled",
                         xlabel="Child age, months",
-                        h1=60,
-                        h2=62)
+                    yrange=c(0,55))
 
 
 ggsave(p2, file="figures/wasting/fig_wast_ci_inc_pooled.png", width=12, height=8)
@@ -178,8 +176,7 @@ p3 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Episodes per 1000 person-days at risk',
-                   h1=4.4,
-                   h2=4.8)
+                   yrange=c(0,5))
 
 
 ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
@@ -195,9 +192,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                           Cohort="pooled",
                           xlabel="Age category",
                           ylabel="",
-                          h1=0,
-                          h2=3,
-                          yrange=NULL){
+                          yrange=c(0,90)){
   
   df <- d %>% filter(
     disease == Disease &
@@ -250,16 +245,16 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     # theme(legend.position = 'right') +
     xlab(xlabel)+
     ylab(ylabel) +
-    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-                           label = nmeas.f), size = 3.5) +
-    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1,
-                           label = nstudy.f), size = 3.5) +
+    # geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
+    #                        label = nmeas.f), size = 3.5) +
+    # geom_text(data=df, aes(x = agecat, y = h1, vjust = -1,
+    #                        label = nstudy.f), size = 3.5) +
     scale_x_discrete(expand = expand_scale(add = 2)) +
     
-    annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
-    annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
+    #annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
+    #annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    expand_limits(y = h2) +
+    #expand_limits(y = h2) +
     theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
     
     theme(axis.text.x = element_text(margin = 
@@ -297,9 +292,8 @@ p4 <- rec_combo_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Percent recovered (95% CI)',
-                   h1=105,
-                   h2=110)
-print(p4)
+                   yrange=c(0,100))
+#print(p4)
 
 ggsave(p4, file="figures/wasting/pooled_rev.png", width=10, height=8)
 
@@ -318,8 +312,7 @@ p5 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel = 'Proportion (%)',
-                   h1=20,
-                   h2=22)
+                   yrange=c(0,20))
 
 
 ggsave(p5, file="figures/wasting/pooled_pers.png", width=10, height=8)
@@ -331,7 +324,7 @@ ggsave(p5, file="figures/wasting/pooled_pers.png", width=10, height=8)
 # WLZ seasonality
 #-------------------------------------------------------------------------------------------
 
-
+#- Made in seperate script on GHAP
 
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
@@ -345,8 +338,7 @@ p6 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
-                   h1=9,
-                   h2=10)
+                   yrange=c(0,12))
 
 
 ggsave(p6, file="figures/wasting/pooled_co_prev.png", width=12, height=8)
@@ -363,43 +355,25 @@ p7 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Mean Z',
-                   h1=0,
-                   h2=1)
+                   yrange=c(-2.5,1.5))
 
 #-------------------------------------------------------------------------------------------
 # Wasting prevalence -MUAC based
 #-------------------------------------------------------------------------------------------
-p8 <- ki_desc_plot(d,
-                   Disease="Wasting",
-                   Measure="MUAC  WHZ Prevalence", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="3 months", 
-                   Cohort="pooled",
-                   xlabel="Age in months",
-                   ylabel='Point prevalence (95% CI)',
-                   h1=25,
-                   h2=27)
+
+d$nstudy.f[d$measure %in% c("MUAC  WHZ Prevalence", "MUAC Prevalence")] <- NA
+d$nmeas.f[d$measure %in% c("MUAC  WHZ Prevalence", "MUAC Prevalence")]  <- NA
+
+p9 <- ki_combo_plot(d,
+              Disease="Wasting",
+              Measure=c("MUAC  WHZ Prevalence", "MUAC Prevalence"), 
+              Birth="yes", 
+              Severe="no", 
+              Age_range="3 months", 
+              Cohort="pooled",
+              xlabel="Child age, months",
+              yrange=c(0,75), dodge = 0.5) 
+
+ggsave(p9, file="figures/wasting/pooled_muac_comp.png", width=12, height=8)
 
 
-
-#-------------------------------------------------------------------------------------------
-# Wasting prevalence -MUAC subset
-#-------------------------------------------------------------------------------------------
-p9 <- ki_desc_plot(d,
-                   Disease="Wasting",
-                   Measure="MUAC Prevalence", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="3 months", 
-                   Cohort="pooled",
-                   xlabel="Age in months",
-                   ylabel='Point prevalence (95% CI)',
-                   h1=69,
-                   h2=70)
-
-#COMBINE INTO ONE PLOT
-#ggsave(p1, file="figures/wasting/pooled_prev.png", width=12, height=8)
-
-
-df <- d %>% filter(measure=="MUAC Prevalence" & cohort!="pooled")
