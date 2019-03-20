@@ -61,13 +61,14 @@ rec_density_plot = ggplot(df,aes(x=recZ, fill = agecat)) +
   geom_density(alpha=0.5) + 
   facet_wrap(~agecat) +
   geom_vline(aes(xintercept = medianRecZ)) +
-  geom_text(aes(x=medianRecZ+0.6, y=0.75, label=(round(medianRecZ,2)))) +
+  geom_text(aes(x=medianRecZ+0.4, y=0.75, label=(round(medianRecZ,2)))) +
   xlab("Mean Weight-for-age Z-score within 3 months of recovery")+
   scale_y_discrete(expand = c(0.01, 0)) +
   scale_x_continuous(breaks = seq(-5, 3.5, 1), 
                      labels = seq(-5, 3.5, 1)) +
   geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual(values=rep(tableau10[3], 4))
+  scale_fill_manual(values=rep(tableau10[3], 4)) +
+  coord_cartesian(xlim=c(-3,2))
 rec_density_plot
 
 ggsave(rec_density_plot, file="U:/ki-longitudinal-manuscripts/figures/wasting/fig_wast_rec_dist_hist.png", width=8, height=5)
