@@ -47,59 +47,20 @@ viridis_cols = viridis(
   option = "C"
 )
 
-# manually reset prevalence at time 0 to 0
-# because the random effects pooling caused
-# some not to equal 0 
-# d = d %>%
-#   mutate(stunting_prev = ifelse(month_diff ==0, 0, stunting_prev))
 
 stplot = ggplot(d, aes(x = month_diff, y = stunting_prev)) +
-  geom_point(aes(col = age_rec_f)) +
-  geom_errorbar(aes(ymin = prev_lb, ymax = prev_ub, col = age_rec_f),
-                width=0.2) +
-  geom_line(aes(col = age_rec_f)) +
-  ylab("Stunting prevalence") + 
-  xlab("Months since initial recovery from stunting") +
-  scale_color_manual("Age in months\nof initial recovery", values = 
-                       viridis_cols) +
-  scale_x_continuous(breaks = c(0,3,6,9,12),
-                     labels = c(0,3,6,9,12)) + 
-  theme(legend.position = "bottom") 
-
-ggsave(stplot, file="figures/stunting/fig_stunt_rec_cohort_st.png", 
-       width=5, height=4)
-
-
-
-stplot2 =ggplot(d, aes(x = month_diff, y = stunting_prev)) +
-  geom_point(aes(col = age_rec_f)) +
-  geom_errorbar(aes(ymin = prev_lb, ymax = prev_ub, col = age_rec_f),
-                width=0.2) +
-  geom_line(aes(col = age_rec_f)) +
-  facet_wrap(~age_rec_f, ncol = 1) + 
-  ylab("Stunting prevalence") + 
-  xlab("Months since initial recovery from stunting") +
-  scale_color_manual("Age in months\nof initial recovery", values = 
-                       viridis_cols) +
-  scale_x_continuous(breaks = c(0,3,6,9,12),
-                     labels = c(0,3,6,9,12)) + 
-  theme(legend.position = "bottom") 
-ggsave(stplot2, file="figures/stunting/fig_stunt_rec_cohort_st2.png", 
-       width=4, height=6)
-
-
-
-stplot3 = ggplot(d, aes(x = month_diff, y = stunting_prev)) +
   geom_point(aes(col = age_rec_f), position= position_dodge(width=1.2)) +
   geom_pointrange(aes(ymin = prev_lb, ymax = prev_ub, col = age_rec_f),
                 position= position_dodge(width=1.2)) +
-  ylab("Stunting prevalence") + 
+  ylab("Stunting prevalence (95% CI)") + 
   xlab("Months since initial recovery from stunting") +
   scale_color_manual("Age in months\nof initial recovery", values = 
                        viridis_cols) +
   scale_x_continuous(breaks = c(0,3,6,9,12),
                      labels = c(0,3,6,9,12)) + 
+  scale_y_continuous(breaks = seq(0,60,10),
+                     labels = seq(0,60,10)) +
   theme(legend.position = "bottom") 
-ggsave(stplot3, file="figures/stunting/fig_stunt_rec_cohort_st3.png", 
+ggsave(stplot, file="figures/stunting/fig_stunt_rec_cohort_st.png", 
        width=5, height=4)
 
