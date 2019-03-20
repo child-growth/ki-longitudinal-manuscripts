@@ -49,6 +49,22 @@ sev.prev <- bind_rows(
   sev.prev.cohort
 )
 
+#Underweight Prevalence
+d <- calc.prev.agecat(d)
+prev.data <-  summary.prev.whz(d)
+prev.region <- d %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)
+prev.cohort <-
+  prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
+  rename(est = prev,  lb = ci.lb,  ub = ci.ub)
+
+underweight.prev <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
+  data.frame(cohort = "pooled", prev.region),
+  prev.cohort
+)
+
+
+
 #mean waz
 waz.data <- summary.waz(d)
 waz.region <- d %>% group_by(region) %>% do(summary.waz(.)$waz.res)
@@ -169,6 +185,7 @@ co_desc_data <- bind_rows(
   data.frame(disease = "Underweight", age_range="3 months",   birth="yes", severe="no", measure= "Mean WAZ",  waz),
   data.frame(disease = "Stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ - monthly cohorts",  monthly.haz),
   data.frame(disease = "Underweight", age_range="1 month",   birth="yes", severe="no", measure= "Mean WAZ",  monthly.waz),
+  data.frame(disease = "Underweight", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence",  underweight.prev),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC Prevalence",  muaz.prev),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC  WHZ Prevalence",  m.whz.prev)
 )

@@ -45,7 +45,7 @@ p3 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region) + geom_smooth(aes(colo
   scale_color_manual(values=tableau10, drop=TRUE, limits = levels(d$region)) #+
   #geom_label_repel(aes(label=region))
 p3
-ggsave(p3, file=paste0(here(),"/figures/wasting/pooled_prev.png"), width=12, height=8)
+ggsave(p3, file=paste0(here(),"/figures/wasting/season_WLZ_trajectories.png"), width=12, height=8)
 
 
 p4 <- ggplot(d, aes(x=jday, y=100*(whz< -2))) + facet_wrap(~region) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
