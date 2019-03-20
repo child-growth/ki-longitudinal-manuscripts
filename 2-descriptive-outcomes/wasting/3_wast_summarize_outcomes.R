@@ -307,6 +307,22 @@ perswast <- bind_rows(
   perswast.cohort
 )
 
+#0-24 month persistent wasting
+df<- d %>% mutate(agecat="0-24 months")
+perswast.data <- summary.perswast(df, agelist = c("0-24 months"))
+perswast.region <- df %>% group_by(region) %>% do(summary.perswast(., agelist = c("0-24 months"))$pers.res)
+perswast.cohort <-
+  perswast.data$pers.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
+
+perswast024 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", perswast.data$pers.res),
+  data.frame(cohort = "pooled", perswast.region),
+  perswast.cohort
+)
+save(perswast024, file = paste0(here(),"/results/persistent_wasting024.Rdata"))
+
+
 
 #------------------------------------
 # Calculate outcomes with no recovery
