@@ -1,7 +1,6 @@
 
 rm(list=ls())
-library(ggplot2)
-library(dplyr)
+library(tidyverse)
 
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
@@ -69,7 +68,8 @@ ggsave(p, file="figures/wasting/WLZ_by_region.png", width=10, height=4)
 # Mean WLZ by month with quantiles
 #-------------------------------------------------------------------------------------------
 
-df <- quantile_d
+quantile_d_overall <- quantile_d_overall %>% mutate(region="Overall")
+df <- rbind(quantile_d_overall, quantile_d)
 
 df$agecat <- factor(df$agecat, 
                     levels=c("Two weeks", "One month",
@@ -93,14 +93,14 @@ df <- df %>%
   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
   mutate(agecat = as.numeric(agecat)) %>%
   mutate(region = ifelse(region=="Asia", "South Asia", region)) %>% 
-  gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "LAZ") %>% 
+  gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "WLZ") %>% 
   mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
 # NEED TO ADD LEGEND
 
 p <- ggplot(df,aes(x = agecat, group = region)) +
 
-  geom_smooth(aes(y = LAZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
+  geom_smooth(aes(y = WLZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
   facet_wrap(~region) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
@@ -176,7 +176,7 @@ p3 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Episodes per 1000 person-days at risk',
-                   yrange=c(0,5))
+                   yrange=c(0,4))
 
 
 ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
@@ -192,7 +192,8 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                           Cohort="pooled",
                           xlabel="Age category",
                           ylabel="",
-                          yrange=c(0,90)){
+                          yrange=c(0,90),
+                          legend.pos = c(.9,.32)){
   
   df <- d %>% filter(
     disease == Disease &
@@ -249,7 +250,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     #                        label = nmeas.f), size = 3.5) +
     # geom_text(data=df, aes(x = agecat, y = h1, vjust = -1,
     #                        label = nstudy.f), size = 3.5) +
-    scale_x_discrete(expand = expand_scale(add = 2)) +
+    #scale_x_discrete(expand = expand_scale(add = 2)) +
     
     #annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
     #annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
@@ -267,16 +268,16 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     ggtitle("") +
     
-    guides(color = FALSE) +
+    guides(color = FALSE) 
     
-    theme(legend.position = c(.08,.87),
-          legend.title = element_blank(),
-          legend.background = element_blank(),
-          legend.box.background = element_rect(colour = "black"))
-  
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
   }
+  
+  p <- p +  theme(legend.position = legend.pos,
+                  legend.title = element_blank(),
+                  legend.background = element_blank(),
+                  legend.box.background = element_rect(colour = "black"))
   
   return(p)
 }
@@ -292,8 +293,8 @@ p4 <- rec_combo_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Percent recovered (95% CI)',
-                   yrange=c(0,100))
-#print(p4)
+                   yrange=c(0,100),
+                   legend.pos = c(.95,.4))
 
 ggsave(p4, file="figures/wasting/pooled_rev.png", width=10, height=8)
 
@@ -348,23 +349,83 @@ ggsave(p6, file="figures/wasting/pooled_co_prev.png", width=12, height=8)
 #-------------------------------------------------------------------------------------------
 p7 <- ki_desc_plot(d,
                    Disease="Underweight",
-                   Measure="Mean WAZ", 
+                   Measure="Prevalence", 
                    Birth="yes", 
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Age in months",
-                   ylabel='Mean Z',
-                   yrange=c(-2.5,1.5))
+                   ylabel='Point prevalence (95% CI)',
+                   yrange=c(0,20))
 
 #-------------------------------------------------------------------------------------------
 # Wasting prevalence -MUAC based
 #-------------------------------------------------------------------------------------------
 
-d$nstudy.f[d$measure %in% c("MUAC  WHZ Prevalence", "MUAC Prevalence")] <- NA
-d$nmeas.f[d$measure %in% c("MUAC  WHZ Prevalence", "MUAC Prevalence")]  <- NA
+ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+         Cohort="pooled",
+         xlabel="Age category",
+         ylabel="Proportion (95% CI)",
+         yrange=NULL,
+         dodge=0,
+         legend.pos = c(.1,.92)){
+  
+  df <- d %>% filter(
+    disease == Disease &
+      measure %in% Measure &
+      birth == Birth &
+      severe == Severe &
+      age_range == Age_range &
+      cohort == Cohort &
+      !is.na(region) & !is.na(agecat)
+  )
+  df <- droplevels(df)
+  
+  # Remove 'months' from x axis labels  
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  
+  p <- ggplot(df,aes(y=est,x=agecat)) +
+    geom_errorbar(aes(color=region, 
+                      group=interaction(measure, region), ymin=lb, ymax=ub), 
+                  width = 0, position = position_dodge(dodge)) +
+    geom_point(aes(shape=measure, fill=region, color=region
+    ), size = 2, position = position_dodge(dodge)) +
+    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) +
+    scale_shape_manual(values = c(16, 17),
+                       name = 'Measure', 
+                       labels = c('WLZ-based wasting', 'MUAC-based wasting')) + 
+    scale_fill_manual(values=tableau11, guide = FALSE) +
+    xlab(xlabel)+
+    ylab(ylabel) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
+    theme(axis.text.x = element_text(margin = 
+                                       margin(t = 0, r = 0, b = 0, l = 0),
+                                     size = 10)) +
+    theme(axis.title.x = element_text(margin = 
+                                        margin(t = 5, r = 0, b = 0, l = 0),
+                                      size = 12)) +
+    theme(axis.title.y = element_text(size = 12)) +
+    facet_wrap(~region) +
+    guides(color = FALSE) +
+    theme(legend.position = legend.pos,
+          legend.title = element_blank(),
+          legend.background = element_blank(),
+          legend.box.background = element_rect(colour = "black"))
+  
+  if(!is.null(yrange)){
+    p <- p + coord_cartesian(ylim=yrange)
+  }
+  
+  return(p)
+}
 
-p9 <- ki_combo_plot(d,
+
+p9 <- ki_combo_plot2(d,
               Disease="Wasting",
               Measure=c("MUAC  WHZ Prevalence", "MUAC Prevalence"), 
               Birth="yes", 
@@ -372,7 +433,8 @@ p9 <- ki_combo_plot(d,
               Age_range="3 months", 
               Cohort="pooled",
               xlabel="Child age, months",
-              yrange=c(0,75), dodge = 0.5) 
+              yrange=c(0,75), dodge = 0.5,
+              legend.pos=c(.15,.92)) 
 
 ggsave(p9, file="figures/wasting/pooled_muac_comp.png", width=12, height=8)
 

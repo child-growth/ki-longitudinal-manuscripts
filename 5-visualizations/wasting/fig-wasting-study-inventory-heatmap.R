@@ -284,11 +284,19 @@ monthlystudies <- c(
   "Keneba",  
   "Guatemala BSC",       
   "GMS-Nepal",             
-  "CONTENT")
+  "CONTENT",
+  "CMIN")
 
 dp <- dp[dp$study_id %in% monthlystudies,]
 dd <- dd[dd$study_id %in% monthlystudies,]
 
+
+#Drop CMIN GUINEA-BISSAU and BRAZIL for insufficient measure frequency
+
+dp <- dp[!(dp$studycountry %in% c("CMIN, Brazil", "CMIN, Guinea-Bissau")),]
+dd <- dd[!(dd$studycountry %in% c("CMIN, Brazil", "CMIN, Guinea-Bissau")),]
+# dp <- droplevels(dp)
+# dd <- droplevels(dd)
 
 #-----------------------------------
 # Basic plot schemes
