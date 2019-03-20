@@ -205,8 +205,8 @@ for(i in 1:nrow(df)){
 
 
 
-saveRDS(df, "U:/results/Metadata/GHAP_metadata.RDS")
-saveRDS(df, "U:/ki-longitudinal-manuscripts/results/GHAP_metadata.RDS")
+saveRDS(df, "U:/results/Metadata/GHAP_metadata_wasting.RDS")
+saveRDS(df, "U:/ki-longitudinal-manuscripts/results/GHAP_metadata_wasting.RDS")
 getwd()
 
 
