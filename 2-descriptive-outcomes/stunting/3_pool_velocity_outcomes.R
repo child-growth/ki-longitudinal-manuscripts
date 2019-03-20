@@ -27,34 +27,7 @@ d <- left_join(d, cov, by=c("studyid", "subjid", "country"))
 dim(d)
 
 
-table(d$diffcat)
-
-d <- d %>% rename(agecat = diffcat) %>%
-  group_by(studyid, country, agecat, ycat, sex) %>%
-  summarize(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), n=n()) %>%
-  mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se) %>% 
-  mutate(region = case_when(
-    country=="BANGLADESH" | country=="INDIA"|
-      country=="NEPAL" | country=="PAKISTAN"|
-      country=="PHILIPPINES"                   ~ "Asia", 
-    country=="BURKINA FASO"|
-      country=="GUINEA-BISSAU"|
-      country=="MALAWI"|
-      country=="KENYA"|
-      country=="GHANA"|
-      country=="SOUTH AFRICA"|
-      country=="TANZANIA, UNITED REPUBLIC OF"|
-      country=="ZIMBABWE"|
-      country=="GAMBIA"                       ~ "Africa",
-    country=="BELARUS"                      ~ "Europe",
-    country=="BRAZIL" | country=="GUATEMALA" |
-      country=="PERU"                         ~ "Latin America",
-    TRUE ~ "Other"
-  ),
-  country_cohort=paste0(studyid," ", country))
-
-
-# Drop yearly studies and non-control arms for the descriptive analysis
+# Subset to study datasets
 #Drop studies Vishak added to data product that don't meet inclusion criteria
 d <- d[d$studyid!="ki1000301-DIVIDS" & d$studyid!="ki1055867-WomenFirst" & d$studyid!="ki1135782-INCAP",]
 
@@ -113,6 +86,40 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop beca
 
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
+
+#Summarize N's in study
+d %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(N=n())
+
+
+
+#Format results for pooling
+table(d$diffcat)
+
+d <- d %>% rename(agecat = diffcat) %>%
+  group_by(studyid, country, agecat, ycat, sex) %>%
+  summarize(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), n=n()) %>%
+  mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se) %>% 
+  mutate(region = case_when(
+    country=="BANGLADESH" | country=="INDIA"|
+      country=="NEPAL" | country=="PAKISTAN"|
+      country=="PHILIPPINES"                   ~ "Asia", 
+    country=="BURKINA FASO"|
+      country=="GUINEA-BISSAU"|
+      country=="MALAWI"|
+      country=="KENYA"|
+      country=="GHANA"|
+      country=="SOUTH AFRICA"|
+      country=="TANZANIA, UNITED REPUBLIC OF"|
+      country=="ZIMBABWE"|
+      country=="GAMBIA"                       ~ "Africa",
+    country=="BELARUS"                      ~ "Europe",
+    country=="BRAZIL" | country=="GUATEMALA" |
+      country=="PERU"                         ~ "Latin America",
+    TRUE ~ "Other"
+  ),
+  country_cohort=paste0(studyid," ", country))
+
+
 
 # age specific pooled results
 RE_pool <- function(df, ycategory, gender){
