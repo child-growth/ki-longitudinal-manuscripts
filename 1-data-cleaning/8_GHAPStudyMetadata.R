@@ -94,6 +94,8 @@ for(i in 1:nrow(df)){
   try(d <- readRDS(paste0(df$short_id[i],".rds")))
   
   if(!is.null(d)){
+    if("WHZ" %in% colnames(d)){
+      
     d<-d[!is.na(d$WHZ),]
     
     
@@ -184,7 +186,7 @@ for(i in 1:nrow(df)){
     
     
     variables<-paste(colnames(d), collapse=', ' )
-    
+    }
   }
   res<-t(c(numcountry, countrycohort, wastprev, numsubj, numobs, median_length_between_measures, sd_obs, minages, maxages, mortality, birthweek, RCT, diar, 
            HAZsd, WAZsd, WHZsd, perc_length_decrease, 
