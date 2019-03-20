@@ -173,7 +173,7 @@ for(i in 1:nrow(df)){
     meanWHZ_m0 <- mean(d$WHZ[d$AGEDAYS==1], na.rm=T)
     wastprev_m0<-mean(as.numeric(d$WHZ[d$AGEDAYS==1] < (-2)), na.rm=T)*100
     n0 <- length(d$WHZ[d$AGEDAYS==1])
-    meanHAZ_m1 <- mean(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167], na.rm=T)
+    meanWHZ_m1 <- mean(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167], na.rm=T)
     wastprev_m1<-mean(as.numeric(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167] < (-2)), na.rm=T)*100
     n1 <- length(d$WHZ[d$AGEDAYS>=2 & d$AGEDAYS<30.4167])
     for(j in 1:23){
