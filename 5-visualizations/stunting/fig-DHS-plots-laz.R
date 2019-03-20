@@ -15,12 +15,16 @@
 
 #---------------------------------------
 # input files:
-#   0-config.R / configuration file
-#   clean-DHS-haz.rds  / clean DHS LAZ data
+#   0-config.R : configuration file
+#
+#   clean-DHS-haz.rds  : clean DHS LAZ data
+#
+#   desc_data_cleaned.Rdata       : KI mean Z-scores by age
+#   ki.density.fits.quarterly.rds : KI kernel densities of Z-scores for quarterly cohorts
 #
 # output files:
-#
-#
+#   fig_dhs_ki_laz_byage.png
+#   fig_dhs_ki_laz_density.png
 #---------------------------------------
 
 #---------------------------------------
@@ -361,9 +365,7 @@ laz_dplot <- ggplot(data=filter(dhsden_plot,measure=="LAZ"),aes(x=x,y=y,color=re
   labs(y="density",x="length-for-age z-score")+
   theme_minimal()+
   theme(legend.position="none",
-    panel.grid.minor.y=element_blank(),
-    # axis.ticks.y=element_blank(),
-    # axis.text.y=element_blank()
+    panel.grid.minor.y=element_blank()
         )
 
 laz_dplot
