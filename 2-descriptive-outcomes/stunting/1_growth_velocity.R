@@ -110,6 +110,7 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="BRAZIL"),] #Drop because ye
 d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop because yearly but not an RCT
 
 
+
 #--------------------------------------------------------
 # filter out obs with missing sex
 # filter out person-time obs with missing both haz & waz
@@ -238,7 +239,3 @@ head(dd_out[["diffcat"]])
 
 saveRDS(dd_out, file="velocity_longfmt.rds")
 
-#--------------------------------------------------------------------------
-# resave in wide format (diff and rate for each outcome type are separate columns)
-#--------------------------------------------------------------------------
-dd_out <- readRDS(file="velocity_longfmt.rds")

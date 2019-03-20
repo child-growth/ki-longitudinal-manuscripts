@@ -114,8 +114,6 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop beca
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
 
-
-
 # age specific pooled results
 RE_pool <- function(df, ycategory, gender){
   
