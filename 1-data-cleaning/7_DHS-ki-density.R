@@ -83,7 +83,7 @@ waz2 <- ki.density(df, Region="PAHO", Measure="waz")
 waz3 <- ki.density(df, Region="AFRO", Measure="waz")
 waz4 <- ki.density(df2, Region="Overall", Measure="waz")
 
-resdf.quarterly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, whz4)
+resdf.quarterly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4)
 
 #Subset to monthly data 
 d <- d %>% filter(measurefreq=="monthly")
@@ -107,7 +107,7 @@ waz2 <- ki.density(df, Region="PAHO", Measure="waz")
 waz3 <- ki.density(df, Region="AFRO", Measure="waz")
 waz4 <- ki.density(df2, Region="Overall", Measure="waz")
 
-resdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, whz4)
+resdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4)
 
 saveRDS(resdf.monthly, file = paste0(here(),"/results/ki.density.fits.monthly.rds"))
 saveRDS(resdf.quarterly, file = paste0(here(),"/results/ki.density.fits.quarterly.rds"))
