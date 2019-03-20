@@ -45,10 +45,6 @@ unique(wmd$study_id)
 #fix PROVIDE location
 wmd$countrycohort[wmd$study_id=="PROVIDE"] <- "BANGLADESH"
 
-#drop mal-ed Pakistan
-md <- md[!(md$study_id=="MAL-ED" & (is.na(md$countrycohort)|md$countrycohort=="PAKISTAN")),]
-wmd <- wmd[!(wmd$study_id=="MAL-ED" & (is.na(wmd$countrycohort)|wmd$countrycohort=="PAKISTAN")),]
-
 #drop yearly COHORTS
 md <- md[!(md$study_id=="COHORTS" & (md$countrycohort=="BRAZIL"|md$countrycohort=="SOUTH AFRICA")),] 
 wmd <- wmd[!(wmd$study_id=="COHORTS" & (wmd$countrycohort=="BRAZIL"|wmd$countrycohort=="SOUTH AFRICA")),] 
@@ -61,7 +57,7 @@ dim(md)
 md$countrycohort[is.na(md$countrycohort)] <- "singlecohort"
 wmd$countrycohort[is.na(wmd$countrycohort)] <- "singlecohort"
 
-wmd <- wmd %>% select(study_id, countrycohort, wastprev, wastprev_m1, wastprev_m2,
+wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m0, wastprev_m1, wastprev_m2,
                       wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
                       wastprev_m7, wastprev_m8, wastprev_m9, wastprev_m10,
                       wastprev_m11, wastprev_m12, wastprev_m13, wastprev_m14,
@@ -70,16 +66,18 @@ wmd <- wmd %>% select(study_id, countrycohort, wastprev, wastprev_m1, wastprev_m
                       wastprev_m23, wastprev_m24)
 dim(wmd)
 dim(md)
-md <- merge(md, wmd, by=c('study_id', 'countrycohort'), all = TRUE)
+md <- merge(md, wmd, by=c('study_id', 'cohortnum'), all = TRUE)
 dim(md)
 
-
+#drop mal-ed Pakistan
+md <- md[!(md$study_id=="MAL-ED" & md$countrycohort=="singlecohort"),]
+dim(md)
 
 
 # convert stunting prevalence and numsubj to numeric
 md$stuntprev <- as.numeric(md$stuntprev)
 md$numsubj <- as.numeric(md$numsubj)
-for(i in 1:24){
+for(i in 0:24){
   ni <- paste("n",i,sep="")
   wi <- paste("stuntprev_m",i,sep="")
   md[ni] <- as.numeric(md[,c(ni)])
@@ -88,20 +86,20 @@ for(i in 1:24){
 
 # convert wasting prevalence to numeric
 md$wastprev <- as.numeric(md$wastprev)
-for(i in 1:24){
+for(i in 0:24){
   wi <- paste("wastprev_m",i,sep="")
   md[wi] <- as.numeric(md[,c(wi)])
 }
 
 # convert mean HAZ to numeric
-for(i in 1:24){
+for(i in 0:24){
   wi <- paste("meanHAZ_m",i,sep="")
   md[wi] <- as.numeric(md[,c(wi)])
 }
 
 
 # calculate the total number of measurements
-md$nmeas <- rowSums(md[,paste('n',1:24,sep='')],na.rm=TRUE)
+md$nmeas <- rowSums(md[,paste('n',0:24,sep='')],na.rm=TRUE)
 
 dd <- md
 
@@ -183,7 +181,7 @@ dnsubj <- select(dd,study_id,country,studycountry,region,stuntprev,wastprev,star
   gather(age,nobs,-study_id,-country,-studycountry,-region,-stuntprev, -wastprev) %>%
   mutate(age=as.integer(str_sub(age,2,-1)),nobs=as.integer(nobs)) %>%
   select(study_id,country,studycountry,region,stuntprev,wastprev,age,nobs) %>%
-  filter(age>=1 & age <=24 ) %>%
+  filter(age>=0 & age <=24 ) %>%
   arrange(region,stuntprev,wastprev) 
 
 # gather stunting prev by month data into long format
@@ -191,21 +189,21 @@ dstuntp <- select(dd,study_id,country,studycountry,starts_with('stuntprev_m')) %
   gather(age,stp,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,12,-1))) %>%
   select(study_id,country,studycountry,age,stp) %>%
-  filter(age>=1 & age <=24 )
+  filter(age>=0 & age <=24 )
 
 # gather stunting prev by month data into long format
 dwastp <- select(dd,study_id,country,studycountry,starts_with('wastprev_m')) %>%
   gather(age,wp,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,11,-1))) %>%
   select(study_id,country,studycountry,age,wp) %>%
-  filter(age>=1 & age <=24 )
+  filter(age>=0 & age <=24 )
 
 # gather meanWHZ by month data into long format
 dhaz <- select(dd,study_id,country,studycountry,starts_with('meanHAZ_m')) %>%
   gather(age,haz,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,10,-1))) %>%
   select(study_id,country,studycountry,age,haz) %>%
-  filter(age>=1 & age <=24 )
+  filter(age>=0 & age <=24 )
 
 
 # join the long tables together and sort countries by measure_freq and stunting prev
@@ -284,7 +282,7 @@ hm <- ggplot(dp,aes(x=age,y=studycountry)) +
   #remove extra space
   scale_y_discrete(expand=c(0,0))+
   scale_x_continuous(expand=c(0,0),
-                     breaks=1:24,labels=1:24)+
+                     breaks=0:24,labels=0:24)+
   #one unit on x-axis is equal to one unit on y-axis.
   #equal aspect ratio x and y axis
   # coord_equal()+
@@ -410,7 +408,7 @@ stphm <- hm +
 # number of obs side bar plot
 #-----------------------------------
 nbar <- sidebar +
-  aes(y=nmeas/1000,fill=wpcat) +
+  aes(y=nmeas/1000,fill=stpcat) +
   labs(x = "",y="Sample size (1000s)",title="c") +
   scale_y_continuous(expand=c(0,0),limits=c(0,125),
                      breaks=seq(0,125,by=25),labels=seq(0,125,by=25)) +
@@ -455,7 +453,7 @@ stphm = stphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
 stpbar = stpbar + theme(plot.margin = unit(c(0,0.3,0.25,0.1), "cm"))
 nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.25,0.1), "cm"))
 nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.125,0,3.5), "cm"))
-empty <- textGrob("") 
+empty <- grid::textGrob("") 
 
 stpgrid <- grid.arrange(nagebar,empty, empty,
                         stphm, nbar, stpbar,nrow = 2, ncol = 3,
