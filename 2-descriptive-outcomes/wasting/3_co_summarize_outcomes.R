@@ -50,6 +50,10 @@ sev.prev <- bind_rows(
 )
 
 #Underweight Prevalence
+summary(d$whz)
+df <- d %>% rename(whz=waz)
+summary(df$whz)
+
 d <- calc.prev.agecat(d)
 prev.data <-  summary.prev.whz(d)
 prev.region <- d %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)

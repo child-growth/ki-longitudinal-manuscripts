@@ -169,6 +169,18 @@ flow_m = flow_m %>% mutate(sum = stunted+wasted+underwt+wu+su+co+recovered+healt
 assert_that(names(table(flow_m$sum))=="1")
 
 
+#Summary stats
+table(flow_m$wu)
+
+#Percent of wasted kids only wasted
+mean(sum(flow_m$wasted)/sum(flow_m$wasted, flow_m$wu, flow_m$co))
+#Also underweight
+mean(sum(flow_m$wu)/sum(flow_m$wasted, flow_m$wu, flow_m$co))
+#Also stunted + underweight
+mean(sum(flow_m$co)/sum(flow_m$wasted, flow_m$wu, flow_m$co))
+
+
+
 # Check that no child was classified in more
 # than one category at any time point
 summary = flow_m %>%
