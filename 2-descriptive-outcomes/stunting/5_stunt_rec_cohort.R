@@ -15,6 +15,9 @@ source(paste0(here::here(), "/0-config.R"))
 
 load("U:/ucb-superlearner/data/stunting_data.RData")
 
+# since this will include recovery, 
+# subsetting to monthly cohorts
+d <- d %>% filter(measurefreq=="monthly")
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 
