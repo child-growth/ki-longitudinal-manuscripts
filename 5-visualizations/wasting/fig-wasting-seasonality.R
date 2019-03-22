@@ -138,18 +138,16 @@ df2 <- df2 %>% group_by(birthcat) %>% mutate(meanZ=mean(whz), prev=mean(whz < -2
 p1 <- ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthcat, ncol=1) + 
   #geom_point(alpha=0.1, shape=19) + 
   geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
+  geom_vline(xintercept=c(365,730)) +
   geom_hline(aes(yintercept=meanZ), linetype="dashed") +
-  scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Days since first January birthday")
-  #coord_cartesian(ylim=c(-2,1))
+  scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Days since first January birthday") +
+  scale_x_continuous(limits=c(1,1086), expand = c(0, 0)) 
 
 p2 <- ggplot(df2[df2$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(aes(color=region), span=1, se=T, size=2) + 
         ylab("WLZ") + xlab("Birthday")
 
 ggsave(p1, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
 ggsave(p2, file=paste0(here(),"/figures/wasting/seasonal_trajectories_birthstrat.png"), width=8, height=5)
-
-
-
 
 
 
