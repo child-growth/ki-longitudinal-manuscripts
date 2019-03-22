@@ -230,7 +230,7 @@ dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
 # DHS overall estimates
 #---------------------------------------
 dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts","DHS, ki countries"))
+  filter(dsource %in% c("ki cohorts","DHS"))
 
 # standard region colors used in other plots
 tableau10 <- tableau_color_pal("Tableau 10")
@@ -344,7 +344,7 @@ dhsden <- bind_rows(kiden,dhssubden,dhsallden) %>%
 # DHS overall estimates
 #---------------------------------------
 dhsden_plot <- dhsden %>%
-  filter(dsource %in% c("ki cohorts","DHS, ki countries"))
+  filter(dsource %in% c("ki cohorts","DHS"))
 
 #---------------------------------------
 # standard region colors used in other plots
