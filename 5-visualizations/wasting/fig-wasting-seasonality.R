@@ -112,9 +112,71 @@ df %>% group_by(region, agecat) %>% summarize(diff=max(mn)-min(mn)) %>%
 df2 <- d %>% filter(region=="South Asia")
 ggplot(df2, aes(x=studyday, y=whz)) + facet_wrap(~brthmon) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
 
+df2$x <- (df2$brthmon-1)*30.4167 - 30.4167/2 + df2$agedays
+ggplot(df2, aes(x=x, y=whz)) + facet_wrap(~brthmon) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
+ggplot(df2[df2$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
+
+df2 <- calc.prev.agecat(df2)
+ggplot(df2, aes(x=birthday, y=whz)) + facet_wrap(~agecat) + stat_smooth(method = "gam", formula = y ~ s(x, k = 5), se=F, size = 1)
+ggplot(df2, aes(x=birthday, y=1*(whz < -2))) + facet_wrap(~agecat) + stat_smooth(method = "gam", formula = y ~ s(x, k = 3), se=F, size = 1)
+
 ggplot(df2, aes(x=jday, y=whz)) + facet_wrap(~brthmon) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
 
+# 
+# df2$agecat[df2$agedays < 12*30.4167] <- "0-12" 
+# df2$agecat[df2$agedays >= 12*30.4167] <- "12-24" 
+# ggplot(df2, aes(x=jday, y=whz)) + facet_wrap(brthmon~agecat) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
 
-df2$agecat[df2$agedays < 12*30.4167] <- "0-12" 
-df2$agecat[df2$agedays >= 12*30.4167] <- "12-24" 
-ggplot(df2, aes(x=jday, y=whz)) + facet_wrap(brthmon~agecat) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
+
+df2$birthcat <- cut(df2$birthday+1, breaks=c(0, 91, 182, 273, 365), labels=c("Jan-Mar","Apr-June","Jul-Sept","Oct-Dec"))
+ggplot(df2, aes(x=jday, y=whz)) + facet_wrap(~birthcat) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
+
+ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthcat) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
+
+
+df2 <- df2 %>% group_by(birthcat) %>% mutate(meanZ=mean(whz), prev=mean(whz < -2))
+p1 <- ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthcat, ncol=1) + 
+  #geom_point(alpha=0.1, shape=19) + 
+  geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
+  geom_hline(aes(yintercept=meanZ), linetype="dashed") +
+  scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Days since first January birthday")
+  #coord_cartesian(ylim=c(-2,1))
+
+p2 <- ggplot(df2[df2$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(aes(color=region), span=1, se=T, size=2) + 
+        ylab("WLZ") + xlab("Birthday")
+
+ggsave(p1, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
+ggsave(p2, file=paste0(here(),"/figures/wasting/seasonal_trajectories_birthstrat.png"), width=8, height=5)
+
+
+
+
+
+
+ggplot(df2[df2$agedays==1,], aes(x=birthday, y=1*(whz< (-2)))) + geom_smooth(aes(color=region), span=1, se=T, size=2) 
+
+
+ggplot(df2[df2$agedays<730,], aes(x=studyday, y=1*(whz< -2))) + facet_wrap(~birthcat, ncol=1) + 
+  #geom_point(alpha=0.1, shape=19) + 
+  geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
+  scale_color_manual(values=tableau10) + ylab("Wasting Prevalence") +
+  geom_hline(aes(yintercept=prev), linetype="dashed") 
+#coord_cartesian(ylim=c(-2,1))
+
+df2$studymonth <- ceiling(df2$studyday/30.4167)
+df3 <- df2 %>% filter(df3$agedays<730) %>% group_by(birthcat, studymonth) %>% summarize(mn=mean(whz), se =sd(whz))
+ggplot(df3, aes(x=studymonth, y=mn)) + facet_wrap(~birthcat, ncol=1) + 
+  geom_line(aes(color=birthcat)) +
+  #geom_hline(aes(yintercept=meanZ), linetype="dashed") +
+  scale_color_manual(values=tableau10) + ylab("WLZ")
+
+df4 <- df2
+df4$birthcat <- cut(df4$birthday+1, breaks=c(30.4167 * 0:12))
+df4 <- df4 %>% group_by(birthcat) %>% mutate(meanZ=mean(whz), prev=mean(whz < -2))
+ggplot(df4[df4$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthcat, nrow=1) + 
+  #geom_point(alpha=0.1, shape=19) + 
+  geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
+  geom_hline(aes(yintercept=meanZ), linetype="dashed") +
+  scale_color_manual(values=c(tableau10,tableau10)) + ylab("WLZ")
+
+
