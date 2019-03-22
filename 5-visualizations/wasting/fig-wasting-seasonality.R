@@ -140,8 +140,17 @@ p1 <- ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthc
   geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
   geom_vline(xintercept=c(365,730)) +
   geom_hline(aes(yintercept=meanZ), linetype="dashed") +
-  scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Days since first January birthday") +
-  scale_x_continuous(limits=c(1,1086), expand = c(0, 0)) 
+  scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Month of the year") +
+  scale_x_continuous(limits=c(1,1086), expand = c(0, 0),
+                      breaks = 1:18*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),3)) +
+  #annotate(geom = "text", x = 1:3 * 180, y = 32, aes(label = rep(c("Year 1", "Year 2", "Year 3"),1)), size = 6)
+  #geom_text(x = 1:3 * 180, y = -1, label = c("Year 1", "Year 2", "Year 3"), size = 6)
+#geom_text(x = 180, y = -1, label = c("Year 1"), size = 6)  
+geom_text(x = 180, y = -1.2, label = c("Year 1"), size = 4) +
+  geom_text(x = 180*3, y = -1.2, label = c("Year 2"), size = 4) +
+  geom_text(x = 180*5, y = -1.2, label = c("Year 3"), size = 4) 
+
+p1
 
 p2 <- ggplot(df2[df2$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(aes(color=region), span=1, se=T, size=2) + 
         ylab("WLZ") + xlab("Birthday")
@@ -149,6 +158,8 @@ p2 <- ggplot(df2[df2$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(aes(col
 ggsave(p1, file=paste0(here(),"/figures/wasting/seasonal_trajectories_birthstrat.png"), width=8, height=5)
 ggsave(p2, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
 
+df2 %>% group_by(studyid, subjid, birthcat) %>% summarize(meanZ=mean(whz), sdZ=sd(whz, na.rm=T)) %>%
+  group_by(birthcat) %>% summarize(meanZ=mean(meanZ), sdZ=mean(sdZ, na.rm=T))
 
 
 ggplot(df2[df2$agedays==1,], aes(x=birthday, y=1*(whz< (-2)))) + geom_smooth(aes(color=region), span=1, se=T, size=2) 
