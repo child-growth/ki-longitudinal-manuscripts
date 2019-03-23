@@ -128,7 +128,7 @@ ggplot(df2, aes(x=jday, y=whz)) + facet_wrap(~brthmon) + geom_smooth(aes(color=r
 # ggplot(df2, aes(x=jday, y=whz)) + facet_wrap(brthmon~agecat) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
 
 
-df2$birthcat <- cut(df2$birthday+1, breaks=c(0, 91, 182, 273, 365), labels=c("Jan-Mar","Apr-June","Jul-Sept","Oct-Dec"))
+df2$birthcat <- cut(df2$birthday+1, breaks=c(0, 91, 182, 273, 365), labels=c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec"))
 ggplot(df2, aes(x=jday, y=whz)) + facet_wrap(~birthcat) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
 
 ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthcat) + geom_smooth(aes(color=region), span=1, se=F, size=2) 
@@ -146,11 +146,17 @@ p1 <- ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthc
   #annotate(geom = "text", x = 1:3 * 180, y = 32, aes(label = rep(c("Year 1", "Year 2", "Year 3"),1)), size = 6)
   #geom_text(x = 1:3 * 180, y = -1, label = c("Year 1", "Year 2", "Year 3"), size = 6)
 #geom_text(x = 180, y = -1, label = c("Year 1"), size = 6)  
-geom_text(x = 180, y = -1.2, label = c("Year 1"), size = 4) +
-  geom_text(x = 180*3, y = -1.2, label = c("Year 2"), size = 4) +
-  geom_text(x = 180*5, y = -1.2, label = c("Year 3"), size = 4) 
-
+# geom_text(x = 180, y = -1.2, label = c("Year 1"), size = 4, color="grey70") +
+#   geom_text(x = 180*3, y = -1.2, label = c("Year 2"), size = 4, color="grey70") +
+#   geom_text(x = 180*5, y = -1.2, label = c("Year 3"), size = 4, color="grey70")+
+  geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") 
+                                      
 p1
+
+ann_text <- data.frame(studyday = c(1,3,5)*182, whz = -1.2,lab = c("Year 1","Year 2", "Year 3"),
+                       birthcat = factor("Born Oct-Dec",
+                       levels = c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec")))
+
 
 p2 <- ggplot(df2[df2$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(aes(color=region), span=1, se=T, size=2) + 
         ylab("WLZ") + xlab("Birthday")
