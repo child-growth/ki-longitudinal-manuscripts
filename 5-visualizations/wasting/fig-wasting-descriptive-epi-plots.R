@@ -181,6 +181,21 @@ p3 <- ki_desc_plot(d,
 
 ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
 
+#No birth wasting
+p3no_bw <- ki_desc_plot(d,
+                   Disease="Wasting",
+                   Measure="Incidence rate", 
+                   Birth="no", 
+                   Severe="no", 
+                   Age_range="6 months", 
+                   Cohort="pooled",
+                   xlabel="Age in months",
+                   ylabel='Episodes per 1000 person-days at risk',
+                   yrange=c(0,4))
+
+
+ggsave(p3no_bw, file="figures/wasting/pooled_ir_no_bw.png", width=10, height=8)
+
 
 #-------------------------------------------------------------------------------------------
 # Wasting recovery
@@ -227,7 +242,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   # remove N= labels for incidence proportion
   # df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence_proportion', '', nmeas.f)) %>%
   #   mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
-  
+  print(df)
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
     facet_wrap(~region) +
@@ -237,7 +252,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     geom_point(aes(shape=age_range, fill=region, color=region, group=interaction(age_range, region)
     ), size = 2, position = position_dodge(0.5)) +
     #geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
-    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+    scale_color_manual(values=tableau11,
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17, 18),
                        name = 'Measure', 
@@ -356,7 +371,9 @@ p7 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
-                   yrange=c(0,20))
+                   yrange=c(0,24))
+ggsave(p7, file="figures/wasting/pooled_underweight_prev.png", width=12, height=8)
+
 
 #-------------------------------------------------------------------------------------------
 # Wasting prevalence -MUAC based
@@ -437,5 +454,49 @@ p9 <- ki_combo_plot2(d,
               legend.pos=c(.15,.92)) 
 
 ggsave(p9, file="figures/wasting/pooled_muac_comp.png", width=12, height=8)
+
+
+#-------------------------------------------------------------------------------------------
+# Comparison of washout period for incidence rate.
+#-------------------------------------------------------------------------------------------
+
+d<-readRDS(paste0(here::here(),"/results/wast_ir_sens_data.rds"))
+
+
+p10 <- rec_combo_plot(d,
+                     Disease="Wasting",
+                     Measure="Incidence rate", 
+                     Birth="yes", 
+                     Severe="no", 
+                     Age_range=c("30 days","60 days","90 days"), 
+                     Cohort="pooled",
+                     xlabel="Age in months",
+                     ylabel='Episodes per 1000 person-days at risk',
+                     yrange=c(0,4),
+                     legend.pos = c(.95,.4))
+
+ggsave(p10, file="figures/wasting/ir_sens.png", width=10, height=8)
+
+
+
+
+
+#-------------------------------------------------------------------------------------------
+# Severe Wasting prevalence
+#-------------------------------------------------------------------------------------------
+
+p11 <- ki_desc_plot(d,
+                   Disease="Wasting",
+                   Measure="Prevalence", 
+                   Birth="yes", 
+                   Severe="yes", 
+                   Age_range="3 months", 
+                   Cohort="pooled",
+                   xlabel="Age in months",
+                   ylabel='Point prevalence (95% CI)',
+                   yrange=c(0,10))
+
+
+ggsave(p11, file="figures/wasting/pooled_sevprev.png", width=12, height=8)
 
 
