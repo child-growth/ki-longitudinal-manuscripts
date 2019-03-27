@@ -17,7 +17,8 @@ load(paste0(here::here(),"/results/quantile_data_stunting.Rdata"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
-
+# subset to primary analysis
+d <- d %>% filter(analysis == "Primary")
 
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month 
