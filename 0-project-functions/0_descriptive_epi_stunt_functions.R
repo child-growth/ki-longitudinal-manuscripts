@@ -186,6 +186,83 @@ summary.haz <- function(d){
 }
 
 
+# summarize mean within age and sex categories
+summary.haz.age.sex <- function(d){
+  
+  # take mean of multiple measurements within age window
+  dmn <- d %>%
+    filter(!is.na(agecat)) %>%
+    group_by(studyid,country,subjid,agecat, sex) %>%
+    summarise(haz=mean(haz))
+  
+  # count measurements per study by age
+  # exclude time points if number of measurements per age
+  # in a study is <50
+  haz.data = dmn %>%
+    filter(!is.na(agecat)) %>%
+    group_by(studyid,country,agecat, sex) %>%
+    summarise(nmeas=sum(!is.na(haz)),
+              meanhaz=mean(haz),
+              varhaz=var(haz)) %>%
+    filter(nmeas>=50) 
+  
+  haz.data <- droplevels(haz.data)
+  
+  # cohort specific results stratified within grouping variables
+  haz.cohort.female=lapply(levels(haz.data$agecat),function(x) 
+    fit.escalc.cont(data=haz.data %>% filter(sex == "Female"),
+                        yi="meanhaz", vi="varhaz", age=x))
+  
+  haz.cohort.male=lapply(levels(haz.data$agecat),function(x) 
+    fit.escalc.cont(data=haz.data %>% filter(sex == "Male"),
+                    yi="meanhaz", vi="varhaz", age=x))
+  
+  haz.cohort.female.df = as.data.frame(rbindlist(haz.cohort.female)) %>%
+    mutate(sex = "Female")
+  
+  haz.cohort.male.df = as.data.frame(rbindlist(haz.cohort.male)) %>%
+    mutate(sex = "Male")
+  
+  haz.cohort=rbind(haz.cohort.female.df, haz.cohort.male.df)
+ 
+  haz.cohort=cohort.format(haz.cohort,y=haz.cohort$yi,
+                           lab=  levels(haz.cohort$agecat), est="mean")
+  
+  
+  # estimate random effects, format results
+  haz.res.female=lapply((levels(haz.data$agecat)),function(x) 
+    fit.cont.rma(data=haz.data %>% filter(sex == "Female"), 
+                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+  
+  haz.res.male=lapply((levels(haz.data$agecat)),function(x) 
+    fit.cont.rma(data=haz.data %>% filter(sex == "Male"), 
+                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+  
+  haz.df.female = as.data.frame(rbindlist(haz.res.female)) %>%
+    mutate(sex = "Female")
+  
+  haz.df.male = as.data.frame(rbindlist(haz.res.male)) %>%
+    mutate(sex = "Male")
+  
+  haz.res=rbind(haz.df.female, haz.df.male)
+  
+  # haz.res[,4]=as.numeric(haz.res[,4])
+  # haz.res[,6]=as.numeric(haz.res[,6])
+  # haz.res[,7]=as.numeric(haz.res[,7])
+  haz.res$agecat=factor(haz.res$agecat)
+  haz.res$sex=factor(haz.res$sex)
+  
+  haz.res$ptest.f=sprintf("%0.0f",haz.res$est)
+  
+  
+  return(list(haz.data=haz.data, haz.res=haz.res, haz.cohort=haz.cohort))
+  
+  return(out)
+  
+}
+
+
+
 
 
 
