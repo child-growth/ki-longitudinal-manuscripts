@@ -8,10 +8,17 @@ load("shiny_desc_data.Rdata")
 wast <- shiny_desc_data
 load("shiny_desc_data_stunting_objects.Rdata")
 stunt <- shiny_desc_data
+load("shiny_desc_data_stunting_objects_monthly24.Rdata")
+stunt_monthly24 <- shiny_desc_data
 load("co_desc_data.Rdata")
 
+stunt <- stunt %>% mutate(analysis = "Primary")
+stunt_monthly24 <- stunt_monthly24 %>% mutate(analysis = "Cohorts monthly 0-24 m")
+wast <- wast %>% mutate(analysis = "Primary")
+co_desc_data <- co_desc_data %>% mutate(analysis = "Primary")
 
-d <- bind_rows(stunt, wast, co_desc_data)
+
+d <- bind_rows(stunt, stunt_monthly24, wast, co_desc_data)
 d$agecat <- factor(d$agecat, levels=unique(d$agecat))
 d$region[d$region=="Asia" & !is.na(d$region)] <- "South Asia"
 d$region <- factor(d$region, levels=c("Overall","Africa","Latin America", "South Asia"))
