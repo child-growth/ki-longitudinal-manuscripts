@@ -231,9 +231,9 @@ ir.cohort.nobirth <-
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 
 ir_noBW <- bind_rows(
-  data.frame(cohort = "pooled", region = "Overall", ir.data$ir.res),
-  data.frame(cohort = "pooled", ir.region),
-  ci.cohort
+  data.frame(cohort = "pooled", region = "Overall", ir.data.nobirth$ir.res),
+  data.frame(cohort = "pooled", ir.region.nobirth),
+  ir.cohort.nobirth
 )
 
 #Incidence rate - severe wasting

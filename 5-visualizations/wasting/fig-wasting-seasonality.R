@@ -19,6 +19,24 @@ d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
 d$cohort <- paste0(d$studyid, " ", d$country)
 
 
+#Check if children are measured spread throughout the year by cohort
+p <- ggplot(d, aes(x=jday, y=agedays)) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
+  facet_wrap(~cohort) 
+p
+
+ggplot(d[d$studyid=="ki1101329-Keneba",], aes(x=jday, y=whz)) + geom_smooth(aes(color=region), span=1, se=F, size=2)
+
+#Only GMS nepal has a group of children all measured at the same age throughout the year.
+
+
+p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
+  geom_smooth(aes(group=cohort), color="grey20", span=1, se=F,linetype=3, size=1) + xlab("Month") +
+  scale_color_manual(values=tableau10, drop=TRUE, limits = levels(d$region)) +
+  scale_x_continuous(limits=c(1,364), expand = c(0, 0),
+                     breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
+p1
+
+
 p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
   geom_smooth(aes(group=cohort), color="grey20", span=1, se=F,linetype=3, size=1) + xlab("Month") +
   scale_color_manual(values=tableau10, drop=TRUE, limits = levels(d$region)) +

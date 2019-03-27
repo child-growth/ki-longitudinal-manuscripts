@@ -26,6 +26,9 @@ d<-d %>% subset(., select=c(studyid, subjid, country, agedays, month, whz, haz, 
 d <- d %>% filter(agedays < 24 * 30.4167)
 d <- d %>% filter(!is.na(brthweek))
 
+#convert subjid to character for the merge with covariate dataset
+d$subjid <- as.character(d$subjid)
+
 #Monthly studies
 d <- d[d$studyid %in% c(
   "ki0047075b-MAL-ED",   
