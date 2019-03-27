@@ -107,11 +107,16 @@ quantile_d <- d %>% group_by(agecat, region) %>%
   mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
          fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
-  select()
-quantile_d_overall <- d %>% group_by(agecat) %>%
-  mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
-         fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
-         ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]])
+  select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+
+quantile_d_overall <- d %>% 
+  group_by(agecat) %>%
+  summarise(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
+            fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
+            ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
+  mutate(region = "Overall") %>%
+  select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+
 save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_stunting.Rdata"))
 
 
