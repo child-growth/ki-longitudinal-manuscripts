@@ -99,6 +99,7 @@ quantile_d <- d %>% group_by(agecat, region) %>%
          fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
   select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+
 quantile_d_overall <- d %>% 
   group_by(agecat) %>%
   summarise(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
