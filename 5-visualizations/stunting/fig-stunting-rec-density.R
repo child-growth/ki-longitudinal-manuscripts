@@ -51,8 +51,8 @@ get_rec = function(data, age_upper){
   rec_data = rec_data[!duplicated(rec_data),]
   
   rec_data_haz = full_join(rec_data, data, 
-    by = c("studyid", "country", "subjid")) %>%
-
+                           by = c("studyid", "country", "subjid")) %>%
+    
     filter(!is.na(age_rec)) %>%
     select(studyid, country, subjid, agedays, haz, age_rec)
   
@@ -79,7 +79,7 @@ subset_rec = function(data, age_months, age_range){
              agedays <= ((age_months+0)*30.4167)) %>%
     mutate(age_meas = paste0(age_months, " month measurement"),
            age_rec = age_range)
-
+  
   return(out)
 }
 
@@ -142,15 +142,15 @@ plot_data = plot_data %>%
 # for each recovery cohort at each subsequent
 # measurement age 
 summarize_dist = function(data, age_recov){
-
+  
   data = data %>% filter(age_rec == age_recov) 
   
   tab_age_meas =  table(data$age_meas)
-
-
+  
+  
   age_meas_list = rev(names(tab_age_meas[tab_age_meas>0]))
   
-  res = matrix(NA, nrow = length(age_meas_list), ncol = 8)
+  res = matrix(NA, nrow = length(age_meas_list), ncol = 11)
   
   for(i in 1:(length(age_meas_list))){
     y = data %>% 
@@ -158,7 +158,7 @@ summarize_dist = function(data, age_recov){
       filter(age_rec == age_recov & 
                age_meas == age_meas_list[i]) %>%
       mutate(stunted = ifelse(haz < -2 , 1, 0))
-
+    
     prev.cohort = y %>%
       group_by(studyid,country) %>%
       summarise(nmeas=length(unique(subjid)),
@@ -172,26 +172,53 @@ summarize_dist = function(data, age_recov){
       measure = "PLO",
       nlab = "children"
     )
-
+    
+    meanlaz_data = data %>%
+      ungroup() %>%
+      filter(age_meas == age_meas_list[[i]] | 
+               age_meas == age_meas_list[[1]]) %>%
+      mutate(x = ifelse(age_meas == age_meas_list[[i]], 1, 0),
+             age_meas = droplevels(age_meas))
+    
+    if(i>1){
+      glm.fit = glm(haz ~ x, data = meanlaz_data)
+      meanlaz = data.frame(meandiff =  glm.fit$coefficients[2])
+      meanlaz$lb = confint(glm.fit)[2,1]
+      meanlaz$ub = confint(glm.fit)[2,2]
+    }
+    
     res[i,1] = age_recov
     res[i,2] = age_meas_list[i]
-    res[i,3] = length(unique(y$studyid))
-    res[i,4] = length(unique(y$country))
-    res[i,5] = length(unique(y$subjid))
-    res[i,6] = re$est
-    res[i,7] = re$lb
-    res[i,8] = re$ub
+    res[i,3] = as.character(length(unique(y$studyid)))
+    res[i,4] = as.character(length(unique(y$country)))
+    res[i,5] = as.character(length(unique(y$subjid)))
+    res[i,6] = as.character(as.numeric(re$est))
+    res[i,7] = as.character(as.numeric(re$lb))
+    res[i,8] = as.character(as.numeric(re$ub))
+    if(i==1){
+      res[i,9] = as.character("")
+      res[i,10] = as.character("")
+      res[i,11] = as.character("")
+    }else
+      res[i,9] = as.character(as.numeric(meanlaz$meandiff))
+    res[i,10] = as.character(as.numeric(meanlaz$lb))
+    res[i,11] = as.character(as.numeric(meanlaz$ub))
     
   }
   
   res = as.data.frame(res)
   colnames(res) = c("age_rec", "age_meas",
                     "nstudy", "ncountry", "nchild",
-                    "stunting_prev", "prev_lb", "prev_ub")
+                    "stunting_prev", "prev_lb", "prev_ub", 
+                    "mean_diff_laz", "mean_diff_lb", "mean_diff_ub")
   
   res$stunting_prev = as.numeric(as.character(res$stunting_prev))
   res$prev_lb = as.numeric(as.character(res$prev_lb))
   res$prev_ub = as.numeric(as.character(res$prev_ub))
+  
+  res$mean_diff_laz = as.numeric(as.character(res$mean_diff_laz))
+  res$mean_diff_lb = as.numeric(as.character(res$mean_diff_lb))
+  res$mean_diff_ub = as.numeric(as.character(res$mean_diff_ub))
   
   return(res)
   
@@ -237,8 +264,8 @@ plot_data_sub = plot_data_sub %>%
 # --------------------------------------------
 results_df = results_df %>% 
   mutate(lab = paste0("% Stunted:\n", sprintf("%0.0f", stunting_prev*100), " ",
-                        "(95% CI ", sprintf("%0.0f", prev_lb*100), ", ",
-                        sprintf("%0.0f", prev_ub*100), ")") ) %>%
+                      "(95% CI ", sprintf("%0.0f", prev_lb*100), ", ",
+                      sprintf("%0.0f", prev_ub*100), ")") ) %>%
   mutate(x = -5,
          y = case_when(
            age_meas == "3 month measurement" ~ 5.4,
@@ -280,6 +307,6 @@ rec_histogram_plot = ggplot(plot_data_sub,
   geom_vline(xintercept = -2, linetype="dashed") +
   scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) 
 
-  # geom_text(aes(x, y, label = lab), data = results_df, size=2.9, hjust=0)
+# geom_text(aes(x, y, label = lab), data = results_df, size=2.9, hjust=0)
 
 ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=8, height=5)

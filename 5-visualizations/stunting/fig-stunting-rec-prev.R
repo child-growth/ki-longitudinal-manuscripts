@@ -47,11 +47,13 @@ viridis_cols = viridis(
   option = "C"
 )
 
-
+#---------------------------------------
+# Stunting prevalence
+#---------------------------------------
 stplot = ggplot(d, aes(x = month_diff, y = stunting_prev)) +
   geom_point(aes(col = age_rec_f), position= position_dodge(width=1.2)) +
   geom_pointrange(aes(ymin = prev_lb, ymax = prev_ub, col = age_rec_f),
-                position= position_dodge(width=1.2)) +
+                  position= position_dodge(width=1.2)) +
   ylab("Stunting prevalence (95% CI)") + 
   xlab("Months since initial recovery from stunting") +
   scale_color_manual("Age in months\nof initial recovery", values = 
@@ -64,3 +66,23 @@ stplot = ggplot(d, aes(x = month_diff, y = stunting_prev)) +
 ggsave(stplot, file="figures/stunting/fig_stunt_rec_cohort_st.png", 
        width=5, height=4)
 
+md_data = d %>% filter(!is.na(mean_diff_laz)) 
+
+#---------------------------------------
+# Mean difference in LAZ plot
+#---------------------------------------
+meandiff_plot = ggplot(md_data, aes(x = month_diff, y = mean_diff_laz)) +
+  geom_point(aes(col = age_rec_f), position= position_dodge(width=1.2)) +
+  geom_pointrange(aes(ymin = mean_diff_lb, ymax = mean_diff_ub, col = age_rec_f),
+                  position= position_dodge(width=1.2)) +
+  ylab("Mean difference in LAZ (95% CI)") + 
+  xlab("Months since initial recovery from stunting") +
+  scale_color_manual("Age in months\nof initial recovery", values = 
+                       viridis_cols) +
+  scale_x_continuous(breaks = c(3,6,9,12),
+                     labels = c(3,6,9,12)) + 
+  scale_y_continuous(breaks = seq(-1,1,0.25),
+                     labels = seq(-1,1,0.25)) +
+  theme(legend.position = "bottom") 
+ggsave(meandiff_plot, file="figures/stunting/fig_stunt_rec_cohort_meandiff.png", 
+       width=5, height=4)

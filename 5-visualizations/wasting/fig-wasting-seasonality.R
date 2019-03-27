@@ -18,14 +18,16 @@ d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
 
 d$cohort <- paste0(d$studyid, " ", d$country)
 
+d$month <- floor(d$jday/30.417) + 1
+table(d$month)
+#Monsoon is May-October in Bangladesh
+d$monsoon <- factor(ifelse(d$month > 4 & d$month < 11, 1, 0))
+
 
 #Check if children are measured spread throughout the year by cohort
-p <- ggplot(d, aes(x=jday, y=agedays)) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
-  facet_wrap(~cohort) 
-p
-
-ggplot(d[d$studyid=="ki1101329-Keneba",], aes(x=jday, y=whz)) + geom_smooth(aes(color=region), span=1, se=F, size=2)
-
+# p <- ggplot(d, aes(x=jday, y=agedays)) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
+#   facet_wrap(~cohort) 
+# p
 #Only GMS nepal has a group of children all measured at the same age throughout the year.
 
 
@@ -46,15 +48,6 @@ p1
 
 ggsave(p1, file=paste0(here(),"/figures/wasting/season_WLZ_trajectories.png"), width=12, height=8)
 
-
-
-
-
-d$agecat <- NA 
-d$agecat[d$agedays < 12*30.4167] <- "0-6" 
-d$agecat[d$agedays >= 12*30.4167] <- "6-24" 
-
-df <- d %>% group_by(region, agecat, month) %>% summarize(N=n(), mn=mean(whz)) %>% filter(N>50)
 
 
 
@@ -89,3 +82,25 @@ p3
 
 ggsave(p2, file=paste0(here(),"/figures/wasting/seasonal_trajectories_birthstrat.png"), width=8, height=5)
 ggsave(p3, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
+
+
+
+
+shade="grey90"
+
+
+p2 <- ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz, group=birthcat)) + 
+  geom_rect(aes(xmin = 30.4617*5, xmax = 30.4617*10 , ymin = -1.25, ymax = 1, fill = shade, color = shade), alpha=0.3) +
+  #geom_point(alpha=0.1, shape=19) + 
+  geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
+  geom_vline(xintercept=c(365,730)) +
+  #geom_hline(aes(yintercept=meanZ), linetype="dashed") +
+  scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Month of the year") +
+  scale_x_continuous(limits=c(1,1086), expand = c(0, 0),
+                     breaks = 1:18*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),3)) +
+  geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") + 
+  coord_cartesian(ylim=c(-1.25, 1))
+
+p2
+
+
