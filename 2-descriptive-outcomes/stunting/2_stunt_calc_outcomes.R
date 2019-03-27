@@ -13,7 +13,6 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
-#load("U:/Data/Stunting/stunting_data.RData")
 load("U:/ucb-superlearner/data/stunting_data.RData")
 
 head(d)
