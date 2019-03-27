@@ -74,7 +74,7 @@ ggsave(p, file="figures/stunting/fig_stunt_mean_LAZ_region.png", width=10, heigh
 # Mean LAZ by month with quantiles
 #-------------------------------------------------------------------------------------------
 
-df <- quantile_d
+df <- bind_rows(quantile_d, quantile_d_overall)
 
 df$agecat <- factor(df$agecat, 
                     levels=c("Two weeks", "One month",
@@ -116,8 +116,6 @@ df <- df %>%
   )) %>%
   mutate(region_who = factor(region_who, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")))
   
-# NEED TO ADD LEGEND
-
 p <- ggplot(df,aes(x = agecat, group = region)) +
   
   geom_smooth(aes(y = LAZ, color = region, group = interval, linetype = interval), se = F, span = 0.5) +
