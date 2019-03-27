@@ -13,7 +13,8 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
-load("U:/Data/Stunting/stunting_data.RData")
+#load("U:/Data/Stunting/stunting_data.RData")
+load("U:/ucb-superlearner/data/stunting_data.RData")
 
 head(d)
 d <- d %>% subset(., select = -c(tr))
@@ -59,6 +60,34 @@ haz <- bind_rows(
   data.frame(cohort = "pooled", haz.region),
   haz.cohort
 )
+
+# mean haz for growth velocity age categories
+d_vel = d %>% 
+  mutate(agecat=ifelse(agedays<3*30.4167,"0-3",
+                              ifelse(agedays>=3*30.4167 & agedays<6*30.4167,"3-6",
+                                     ifelse(agedays>=6*30.4167 & agedays<9*30.4167,"6-9",
+                                            ifelse(agedays>=9*30.4167 & agedays<12*30.4167,"9-12",
+                                                   ifelse(agedays>=12*30.4167 & agedays<15*30.4167,"12-15",
+                                                          ifelse(agedays>=15*30.4167 & agedays<18*30.4167,"15-18",
+                                                                 ifelse(agedays>=18*30.4167 & agedays<21*30.4167,"18-21",
+                                                                        ifelse(agedays>=21*30.4167& agedays<24*30.4167,"21-24",""))))))))) %>%
+  mutate(agecat=factor(agecat,levels=c("0-3","3-6","6-9","9-12",
+                                       "12-15","15-18","18-21","21-24"))) 
+haz.data.vel <- summary.haz.age.sex(d_vel)
+haz.region.vel <- d_vel  %>% group_by(region) %>% do(summary.haz.age.sex(.)$haz.res)
+haz.cohort.vel <-
+  haz.data.vel$haz.cohort %>% 
+  subset(., select = c(cohort, region, agecat, sex, nmeas,  meanhaz, 
+                       ci.lb,  ci.ub)) %>%
+  rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
+
+haz.vel <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", haz.data.vel$haz.res),
+  data.frame(cohort = "pooled", haz.region.vel),
+  haz.cohort.vel
+)
+
+saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity.RDS"))
 
 #monthly mean haz
 d <- calc.monthly.agecat(d)
