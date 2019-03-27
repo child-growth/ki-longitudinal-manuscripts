@@ -24,7 +24,7 @@ d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
 
 #change names to lower case
 colnames(d) <- tolower(colnames(d))
-d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, latitude, longitud))
+d<-d %>% subset(., select=c(studyid, subjid, country, tr, sex, agedays, haz, latitude, longitud))
 
 #--------------------------------------------
 #Check for duplicate agedays
@@ -115,7 +115,7 @@ load("U:/data/Stunting/Full-compiled-data/compiled_HAZ_dataset.RData")
 # Subset to relevant variables
 #--------------------------------------------
 colnames(d)=tolower(colnames(d))
-d <- d %>% select(studyid, subjid, country, tr, agedays, haz, measurefreq, latitude, longitud)
+d <- d %>% select(studyid, subjid, country, tr, agedays, sex, haz, measurefreq, latitude, longitud)
 
 nrow(d)
 
