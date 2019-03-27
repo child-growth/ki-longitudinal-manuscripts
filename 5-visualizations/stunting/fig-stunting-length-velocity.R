@@ -6,6 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Load length velocity data
 load(paste0(res_dir,"pool_vel.RData"))
+meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocity.RDS"))
 
 vel <- pooled_vel 
 
@@ -107,6 +108,28 @@ vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
 vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 
 
+#-------------------------------------
+# mean LAZ plot
+#-------------------------------------
+meanlaz = meanlaz %>% 
+  filter(region=="Overall") %>%
+  mutate(agecat = factor(agecat, 
+                         levels = c("0-3", "3-6", "6-9",
+                                    "9-12", "12-15", "15-18",
+                                    "18-21", "21-24")))
+
+plot_mean_laz = ggplot(meanlaz, aes(y=est, x = agecat)) + 
+  geom_point(aes(col=sex), position = position_dodge(width=0.2), size=2) +
+  geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
+                 position = position_dodge(width=0.2)) +
+  scale_color_manual(values = c(tableau10[4], tableau10[1])) + 
+  scale_y_continuous(limits = c(-2.5, -0.25)) +
+  xlab("Child age, months") + 
+  ylab("Mean LAZ\n ") +
+  ggtitle("c\n")+
+  theme(plot.title = element_text(hjust=0))
+
+ 
 #-------------------------------------
 # LAZ plot
 #-------------------------------------
@@ -233,33 +256,10 @@ velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
 plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3) +
   geom_line(aes(y = length_cm, group = msmt_type, color = linecol, linetype = msmt_type)) +
-  
 
-  
-  # scale_color_manual(values = c("Male" = tableau10[4],
-  #                               "Female" = tableau10[1], 
-  #                               "Mean" = ifelse(sex == "Male", tableau10[4], tableau10[1]), 
-  #                               "pct_15" = "black", 
-  #                               "pct_25" = "black", 
-  #                               "pct_50" = "black")) +
-                       
-  # scale_linetype_manual('solid', 'dotted', 'dashed', 'solid') +
-  # geom_line(aes(y=pct_50, group=sex)) +
-  # geom_line(aes(y=pct_25, group=sex), linetype="dashed") +
-  # geom_line(aes(y=pct_15, group=sex), linetype="dotted") +
-  
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                  alpha=0.5, size = 1) +
-  
-  # scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
-  #                                  "pct_15" = "dotted", 
-  #                                  "pct_25" = "dashed", 
-  #                                  "pct_50" = "solid"),
-  #                       breaks = c("pct_15", "pct_25", "pct_50"),
-  #                       labels = c("15th percentile", 
-  #                                  "25th percentile", 
-  #                                  "50th percentile")) +
-  
+
   scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
                                                                      "pct_50" = "solid",
                                                                      "pct_25" = "dashed", 
@@ -282,16 +282,15 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   
   scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
   xlab("Child age, months") +  
-  ylab("Difference in length (cm) per month")+
+  ylab("Difference in length (cm) per month\n")+
   facet_wrap( ~ sex) +
-  # ggtitle("A) Monthly change in length (cm)") +
   ggtitle("a") +
   
   guides(color=FALSE) +
   
   labs(linetype = c("", "12", "14", "13")) +
   
-  theme(legend.position = c(.9, .85),
+  theme(legend.position = c(.91, .8),
         # legend.title = element_blank(),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"),
@@ -333,7 +332,8 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
 #-------------------------------------
 # combined LAZ and length plots
 #-------------------------------------
-combined_plot = grid.arrange(plot_cm, plot_laz, nrow = 2, heights = c(8, 4))
+combined_plot = grid.arrange(plot_cm, plot_laz, plot_mean_laz, 
+                             nrow = 3, heights = c(8, 4, 3))
 combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, nrow = 2, heights = c(10, 4))
 
 ggsave(combined_plot, file="figures/stunting/fig_stunt_vel_pool.png", width=10, height=8)
