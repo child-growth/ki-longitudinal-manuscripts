@@ -8,7 +8,7 @@ summary.prev.whz <- function(d, severe.wasted=F){
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
     group_by(studyid,country,subjid,agecat) %>%
-    summarise(whz=mean(whz)) %>%
+    summarise(whz=mean(whz, na.rm=T)) %>%
     mutate(wasted=ifelse(whz< -2, 1,0),swasted=ifelse(whz< -3, 1,0))
   
   if(severe.wasted==T){
@@ -78,7 +78,7 @@ summary.ci <- function(d,
   
   # identify ever wasted children
   evs = d %>%
-    filter(!is.na(agecat)) %>%
+    filter(!is.na(agecat) & !is.na(whz)) %>%
     group_by(studyid,country,subjid) %>%
     arrange(studyid,subjid) %>%
     #create variable with minwhz by age category, cumulatively
@@ -148,7 +148,7 @@ summary.whz <- function(d){
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
     group_by(studyid,country,subjid,agecat) %>%
-    summarise(whz=mean(whz))
+    summarise(whz=mean(whz, na.rm=T))
   
   # count measurements per study by age
   # exclude time points if number of measurements per age
@@ -306,7 +306,7 @@ summary.perswast <- function(d, agelist=c("0-3 months","3-6 months","6-9 months"
   pers <- d %>%
     group_by(studyid, country, agecat, subjid) %>%
     filter(!is.na(agecat)) %>%
-    summarise(perc_wast = mean(whz < (-2))) %>%
+    summarise(perc_wast = mean(whz < (-2)), na.rm=T) %>%
     mutate(pers_wast = 1*(perc_wast>=.5))
   
   # count incident cases per study by age
@@ -317,7 +317,7 @@ summary.perswast <- function(d, agelist=c("0-3 months","3-6 months","6-9 months"
     summarise(
       nchild=length(unique(subjid)),
       nstudy=length(unique(studyid)),
-      ncases=sum(pers_wast),
+      ncases=sum(pers_wast, na.rm=T),
       N=sum(length(pers_wast))) %>%
     filter(N>=50)
   

@@ -43,8 +43,9 @@ summary(df$recZ)
 df <- calc.ci.agecat(df, range=6)
 df$agecat <- as.character(df$agecat)
 df$agecat[df$wasting_episode=="Born Wasted"] <- "Birth"
-df$agecat[df$agecat %in% c("12-18 months", "18-24 months")] <- "12-24 months"
-df$agecat <- factor(df$agecat, levels=c("Birth", "0-6 months", "6-12 months", "12-24 months"))
+#df$agecat[df$agecat %in% c("12-18 months", "18-24 months")] <- "12-24 months"
+df <- df %>% filter(agecat!="18-24 months")
+df$agecat <- factor(df$agecat, levels=c("Birth", "0-6 months", "6-12 months", "12-18 months"))
 table(df$agecat)
 
 df <- df %>% group_by(agecat) %>% mutate(medianRecZ=median(recZ))
@@ -83,7 +84,7 @@ rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) +
   geom_violin(alpha=0.5) + 
    geom_point(aes(y = firstMedianRecZ)) +
    geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
-   ylab("Mean Weight-for-age Z-score within 3 months of recovery")+
+   ylab("Mean Weight-for-length Z-score within 3 months of recovery")+
    xlab("Age at wasting episode onset")+
   # scale_y_discrete(expand = c(0.01, 0)) +
   # scale_x_continuous(breaks = seq(-5, 3.5, 1), 
