@@ -250,6 +250,37 @@ sev.ir <- bind_rows(
 )
 
 
+
+
+
+#Incidence rate - 3 month intervals
+d <- calc.ci.agecat(d, range = 3)
+ir.data <- summary.ir(d, agelist = agelst3)
+ir.region <- d %>% group_by(region) %>% do(summary.ir(., agelist = agelst3)$ir.res)
+ir.cohort <-
+  ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
+
+ir3 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ir.data$ir.res),
+  data.frame(cohort = "pooled", ir.region),
+  ir.cohort
+)
+
+#Incidence rate - no birth wasting
+ir.data.nobirth <- summary.ir(d_noBW, agelist = agelst3)
+ir.region.nobirth <- d_noBW %>% group_by(region) %>% do(summary.ir(., agelist = agelst3)$ir.res)
+ir.cohort.nobirth <-
+  ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
+
+ir_noBW3 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ir.data.nobirth$ir.res),
+  data.frame(cohort = "pooled", ir.region.nobirth),
+  ir.cohort.nobirth
+)
+
+
 #Recovery incidence rate
 #rec.ir.data <- summary.ir(d, recovery = T)
 
@@ -402,6 +433,8 @@ shiny_desc_data <- bind_rows(
   data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="yes", measure= "Cumulative incidence",  sev.ci),
   data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence rate",  ir),
   data.frame(disease = "Wasting", age_range="6 months",   birth="no", severe="no", measure= "Incidence rate",  ir_noBW),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence rate",  ir3),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="no", severe="no", measure= "Incidence rate",  ir_noBW3),  
   data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence rate",  sev.ir),
   data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="no", measure= "Persistent wasting", perswast),
   data.frame(disease = "Wasting", age_range="30 days",   birth="yes", severe="no", measure= "Recovery", rec30),
