@@ -49,11 +49,6 @@ table(df$agecat)
 
 df <- df %>% group_by(agecat) %>% mutate(medianRecZ=median(recZ))
 
-ggplot(df, aes(x=recZ, fill=region, color=region)) + geom_density() + facet_grid(agecat ~ region) + geom_vline(aes(xintercept = medianRecZ))
-ggplot(df, aes(x=recZ)) + geom_histogram(bins=60) + facet_grid(agecat ~ region)
-
-ggplot(df, aes(x=recZ)) + geom_density() + facet_wrap(~agecat, ncol=1) + geom_vline(aes(xintercept = medianRecZ))
-
 
 
 
@@ -72,4 +67,32 @@ rec_density_plot = ggplot(df,aes(x=recZ, fill = agecat)) +
 rec_density_plot
 
 ggsave(rec_density_plot, file="U:/ki-longitudinal-manuscripts/figures/wasting/fig_wast_rec_dist_hist.png", width=8, height=5)
+
+
+
+
+
+#Create violin plot alternative
+df <- df %>% group_by(agecat) %>% 
+  mutate(firstMedianRecZ=medianRecZ,
+         firstMedianRecZ=ifelse(studyid==first(studyid) & 
+                                subjid==first(subjid) &
+                                agedays==first(agedays), firstMedianRecZ,NA))
+
+rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) + 
+  geom_violin(alpha=0.5) + 
+   geom_point(aes(y = firstMedianRecZ)) +
+   geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
+   ylab("Mean Weight-for-age Z-score within 3 months of recovery")+
+   xlab("Age at wasting episode onset")+
+  # scale_y_discrete(expand = c(0.01, 0)) +
+  # scale_x_continuous(breaks = seq(-5, 3.5, 1), 
+  #                    labels = seq(-5, 3.5, 1)) +
+   geom_hline(yintercept = -2, linetype="dashed") +
+   scale_fill_manual(values=rep(tableau10[3], 4)) +
+   coord_cartesian(ylim=c(-3,2))
+rec_violin_plot
+
+ggsave(rec_violin_plot, file="U:/ki-longitudinal-manuscripts/figures/wasting/fig_wast_rec_dist_violin.png", width=8, height=5)
+
 

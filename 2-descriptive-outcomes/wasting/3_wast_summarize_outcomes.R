@@ -268,6 +268,7 @@ ir3 <- bind_rows(
 )
 
 #Incidence rate - no birth wasting
+d_noBW <- calc.ci.agecat(d_noBW, range = 3)
 ir.data.nobirth <- summary.ir(d_noBW, agelist = agelst3)
 ir.region.nobirth <- d_noBW %>% group_by(region) %>% do(summary.ir(., agelist = agelst3)$ir.res)
 ir.cohort.nobirth <-
