@@ -68,27 +68,21 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    
-    # geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-    #                        label = nmeas.f), size = 3.5) +
-    # geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-    #                        label = nstudy.f), size = 3.5) +
-    # scale_x_discrete(expand = expand_scale(add = 2)) +
-    
-    # annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
-    # annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
+
+    # add space to the left and right of points on x axis
+    # to accommodate point estimate labels
+    scale_x_discrete(expand = expand_scale(add = 1)) +
     
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    # expand_limits(y = h2) +
-    theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
+     theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
     
     theme(axis.text.x = element_text(margin = 
                                        margin(t = 0, r = 0, b = 0, l = 0),
-                                     size = 12)) +
-    theme(axis.title.y = element_text(size = 12)) +
+                                     size = 14)) +
+    theme(axis.title.y = element_text(size = 14)) +
     
     ggtitle("") +
-    facet_wrap(~region) 
+    facet_grid(~region) 
   
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
@@ -163,42 +157,35 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                        name = 'Measure', 
                        labels = c('Cumulative Incidence', 'New Incident Cases')) + 
     scale_fill_manual(values=tableau11, guide = FALSE) +
-    # theme(legend.position = 'right') +
+    
     xlab(xlabel)+
     ylab(ylabel) +
     
-    # geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-    #                        label = nmeas.f), size = 3.5) +
-    # geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-                           # label = nstudy.f), size = 3.5) +
-    # scale_x_discrete(expand = expand_scale(add = 2)) +
-    
-    # annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
-    # annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
-    
-    # annotate('text', x = 5, y = 70, label = 'Cumulative % stunted', size = 3.5) +
-    # annotate('text', x = 5, y = 15, label = '% new incident cases', size = 3.5) +
+    # add space to the left and right of points on x axis
+    # to accommodate point estimate labels
+    scale_x_discrete(expand = expand_scale(add = 1)) +
     
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    # expand_limits(y = h2) +
-    theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
+    theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
     
     theme(axis.text.x = element_text(margin = 
                                        margin(t = 0, r = 0, b = 0, l = 0),
-                                     size = 10)) +
+                                     size = 9)) +
     theme(axis.title.x = element_text(margin = 
                                         margin(t = 5, r = 0, b = 0, l = 0),
-                                      size = 12)) +
-    theme(axis.title.y = element_text(size = 12)) +
+                                      size = 14)) +
+    theme(axis.title.y = element_text(size = 14)) +
     
     ggtitle("") +
-    facet_wrap(~region) +
+    facet_grid(~region) +
     
     guides(color = FALSE) +
     
-    theme(legend.position = c(.1,.92),
+    theme(legend.position = c(.06,.83),
           legend.title = element_blank(),
+          legend.text = element_text(size = 8),
           legend.background = element_blank(),
+          legend.margin = margin(0.5, 1.5, 0.5, 0.5),
           legend.box.background = element_rect(colour = "black"))
   
   if(!is.null(yrange)){
