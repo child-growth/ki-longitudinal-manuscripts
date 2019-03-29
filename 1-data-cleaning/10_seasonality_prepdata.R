@@ -58,6 +58,31 @@ d$studyday <-  d$birthday + d$agedays
 d$jday <- ((d$birthday + d$agedays)/364)%%1 * 364
 summary(d$jday)
 
+d <- d %>% mutate(country = toupper(country))
+d <- d %>% mutate(region = case_when(
+  country=="BANGLADESH" | country=="INDIA"|
+    country=="NEPAL" | country=="PAKISTAN"|
+    country=="PHILIPPINES"| country=="CHINA"|
+    country=="THAILAND"|country=="SINGAPORE"|
+    country=='OMAN'~ "Asia",
+  country=="KENYA"|
+    country=="GHANA"|
+    country=="BURKINA FASO"|
+    country=="GUINEA-BISSAU"|
+    country=="MALAWI"|
+    country=="SOUTH AFRICA"|
+    country=="TANZANIA, UNITED REPUBLIC OF"|
+    country=="TANZANIA"|
+    country=="ZIMBABWE"|
+    country=="GAMBIA"|
+    country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "Africa",
+  country=="BRAZIL" | country=="GUATEMALA" |
+    country=="PERU"|country=='ECUADOR'   ~ "Latin America",
+  country=='UNITED STATES' | country=='UNITED KINGDOM'|country=='ITALY'|
+    # country=='NETHERLANDS'|
+    country=='BELARUS'~ 'N.America & Europe',
+  TRUE                                    ~ "Other"
+))
 
 saveRDS(d, file="U:/ucb-superlearner/data/seasonality_data.rds")
 

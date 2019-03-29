@@ -5,6 +5,8 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source("U:/Wasting/1-outcomes/0_wast_incfunctions.R")
+source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
+
 
 load("U:/ucb-superlearner/data/Wasting_inc_data.RData")
 
@@ -52,23 +54,28 @@ df <- df %>% group_by(agecat) %>% mutate(medianRecZ=median(recZ))
 
 
 
+#test if the pooled means are significantly different
+pvals <- ki.ttest(data=df, y="recZ", levels="agecat", ref="Birth", comp=c("0-6 months", "6-12 months", "12-18 months"))
+pvals
 
-rec_density_plot = ggplot(df,aes(x=recZ, fill = agecat)) + 
-  geom_density(alpha=0.5) + 
-  facet_wrap(~agecat) +
-  geom_vline(aes(xintercept = medianRecZ)) +
-  geom_text(aes(x=medianRecZ+0.4, y=0.75, label=(round(medianRecZ,2)))) +
-  xlab("Mean Weight-for-age Z-score within 3 months of recovery")+
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(breaks = seq(-5, 3.5, 1), 
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual(values=rep(tableau10[3], 4)) +
-  coord_cartesian(xlim=c(-3,2))
-rec_density_plot
 
-ggsave(rec_density_plot, file="U:/ki-longitudinal-manuscripts/figures/wasting/fig_wast_rec_dist_hist.png", width=8, height=5)
-
+# #Plot Z scores after recovery
+# rec_density_plot = ggplot(df,aes(x=recZ, fill = agecat)) + 
+#   geom_density(alpha=0.5) + 
+#   facet_wrap(~agecat) +
+#   geom_vline(aes(xintercept = medianRecZ)) +
+#   geom_text(aes(x=medianRecZ+0.4, y=0.75, label=(round(medianRecZ,2)))) +
+#   xlab("Mean Weight-for-age Z-score within 3 months of recovery")+
+#   scale_y_discrete(expand = c(0.01, 0)) +
+#   scale_x_continuous(breaks = seq(-5, 3.5, 1), 
+#                      labels = seq(-5, 3.5, 1)) +
+#   geom_vline(xintercept = -2, linetype="dashed") +
+#   scale_fill_manual(values=rep(tableau10[3], 4)) +
+#   coord_cartesian(xlim=c(-3,2))
+# rec_density_plot
+# 
+# ggsave(rec_density_plot, file="U:/ki-longitudinal-manuscripts/figures/wasting/fig_wast_rec_dist_hist.png", width=8, height=5)
+# 
 
 
 
@@ -84,6 +91,7 @@ rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) +
   geom_violin(alpha=0.5) + 
    geom_point(aes(y = firstMedianRecZ)) +
    geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
+  geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
    ylab("Mean Weight-for-length Z-score within 3 months of recovery")+
    xlab("Age at wasting episode onset")+
   # scale_y_discrete(expand = c(0.01, 0)) +
