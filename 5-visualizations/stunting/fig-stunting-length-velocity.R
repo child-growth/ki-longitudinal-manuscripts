@@ -302,7 +302,7 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   
   labs(linetype = c("", "12", "14", "13")) +
   
-  theme(legend.position = c(.91, .8),
+  theme(legend.position = c(.9, .8),
         # legend.title = element_blank(),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"),
@@ -344,8 +344,8 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
 #-------------------------------------
 # combined LAZ and length plots
 #-------------------------------------
-combined_plot = grid.arrange(plot_cm, plot_laz, plot_mean_laz, 
-                             nrow = 3, heights = c(8, 4, 3))
+combined_plot = grid.arrange(plot_cm, plot_laz2, plot_mean_laz, 
+                              nrow = 3, heights = c(8, 4, 4))
 combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, nrow = 2, heights = c(10, 4))
 
 
@@ -353,8 +353,4 @@ combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, nrow = 2, heig
 ggsave(combined_plot, file="figures/stunting/fig_stunt_vel_pool.png", width=10, height=8)
 ggsave(combined_plot_strat, file="figures/stunting/fig_stunt_vel_region.png", width=16, height=18)
 
-
-combined_plot2 = grid.arrange(plot_cm, plot_laz2, plot_mean_laz, 
-                              nrow = 3, heights = c(8, 4, 4))
-ggsave(combined_plot2, file="figures/stunting/fig_stunt_vel_pool2.png", width=10, height=8)
 
