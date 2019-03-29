@@ -114,7 +114,24 @@ bar_plot_data = bar_plot_data %>%
                                                      "Newly recovered",
                                                      "Newly stunted",
                                                      "Stunting relapse",
-                                                     "Still stunted")))
+                                                     "Still stunted"))) %>%
+  # labels not using recovered
+  mutate(classif3 = case_when(
+    classifnew == "Never stunted" ~ "Never stunted",
+    classifnew == "Still recovered" ~ "Still not stunted",
+    classifnew == "Newly recovered" ~ "No longer stunted",
+    classifnew == "Newly stunted" ~ "Newly stunted",
+    classifnew == "Stunting relapse" ~ "Stunting relapse",
+    classifnew == "Still stunted" ~ "Still stunted"
+    
+  )) %>%
+  mutate(classif3 = factor(classif3, levels = c("Never stunted",
+                                                "Still not stunted",
+                                                "No longer stunted",
+                                                "Newly stunted",
+                                                "Stunting relapse",
+                                                "Still stunted")))
+
 
 bar_plot_data = bar_plot_data %>% 
   ungroup() %>%
@@ -122,10 +139,17 @@ bar_plot_data = bar_plot_data %>%
   mutate(stunted = as.factor(ifelse(classifnew %in%
     c("Never stunted", "Newly recovered", "Still recovered"), 0, 1)))
 
+pink_green = rev(brewer.pal(n = 6, name = "PiYG"))
+pink_green[3] = "#CDF592"
+pink_green[5] = "#EA67AE"
+pink_green[4] = "#FFB7DC"
+
+# pink_green_reord = pink_green[c(3, 2, 1, 6, 5, 4)]
+
 bar_plot_noRE = ggplot(bar_plot_data) +
-  geom_bar(aes(x = agem, y = percent, fill = classifnew), 
+  geom_bar(aes(x = agem, y = percent, fill = classif3), 
            stat="identity", width=0.5) +
-  scale_fill_manual("", values = plot_cols) +
+  scale_fill_manual("", values = pink_green) +
   scale_color_manual(values = c(NA, 'black'), guide=F) +
   # Why isn't this working? 
   # scale_y_continuous(limits = c(0,100),
