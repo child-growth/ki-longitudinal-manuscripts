@@ -137,7 +137,7 @@ bar_plot_noRE = ggplot(bar_plot_data) +
   guides(fill = guide_legend(nrow = 1))
 bar_plot_noRE
 
-ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=5)
+ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=3)
 
 
 
