@@ -201,9 +201,11 @@ summarize_dist = function(data, age_recov){
       res[i,11] = as.character("")
     }else{
       res[i,9] = as.character(as.numeric(meanlaz$meandiff))
-    res[i,10] = as.character(as.numeric(meanlaz$lb))
-    res[i,11] = as.character(as.numeric(meanlaz$ub))
+      res[i,10] = as.character(as.numeric(meanlaz$lb))
+      res[i,11] = as.character(as.numeric(meanlaz$ub))
     }
+
+    
   }
   
   res = as.data.frame(res)
