@@ -155,10 +155,13 @@ bar_plot_noRE = ggplot(bar_plot_data) +
   # scale_y_continuous(limits = c(0,100),
   #                    breaks = seq(0,100,20),
   #                    labels = seq(0,100,20)) +
-  theme(legend.position = "bottom") +
+  theme(axis.title.x = element_text(size=14),
+        axis.title.y = element_text(size=14),
+        legend.position = "bottom",
+        legend.text = element_text(size=12)) +
   xlab("Child age, months") + 
   ylab("Percentage of children (%)")  + 
-  guides(fill = guide_legend(nrow = 1))
+  guides(fill = guide_legend(nrow = 1)) 
 bar_plot_noRE
 
 ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=4)
