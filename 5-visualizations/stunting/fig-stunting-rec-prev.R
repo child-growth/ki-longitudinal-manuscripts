@@ -47,6 +47,8 @@ viridis_cols = viridis(
   option = "C"
 )
 
+bluegreen = rev(brewer.pal(n = 5, name = "YlGnBu"))
+
 #---------------------------------------
 # Stunting prevalence
 #---------------------------------------
@@ -76,9 +78,9 @@ meandiff_plot = ggplot(md_data, aes(x = month_diff, y = mean_diff_laz)) +
   geom_pointrange(aes(ymin = mean_diff_lb, ymax = mean_diff_ub, col = age_rec_f),
                   position= position_dodge(width=1.2)) +
   ylab("Mean difference in LAZ (95% CI)") + 
-  xlab("Months since initial recovery from stunting") +
-  scale_color_manual("Age in months\nof initial recovery", values = 
-                       viridis_cols) +
+  xlab("Months since LAZ rose from below to above -2") +
+  scale_color_manual("Age in months\n when LAZ\nrose above -2", values = 
+                       bluegreen) +
   scale_x_continuous(breaks = c(3,6,9,12),
                      labels = c(3,6,9,12)) + 
   scale_y_continuous(breaks = seq(-1,1,0.25),
