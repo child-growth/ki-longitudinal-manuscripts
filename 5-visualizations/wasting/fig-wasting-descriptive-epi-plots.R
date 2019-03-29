@@ -144,7 +144,7 @@ p1 <- ki_desc_plot(d,
                    yrange=c(0,24))
 
 
-ggsave(p1, file="figures/wasting/pooled_prev.png", width=12, height=8)
+ggsave(p1, file="figures/wasting/pooled_prev.png", width=14, height=5)
 
 
 
@@ -162,39 +162,108 @@ p2 <- ki_combo_plot(d,
                     yrange=c(0,55))
 
 
-ggsave(p2, file="figures/wasting/fig_wast_ci_inc_pooled.png", width=12, height=8)
+ggsave(p2, file="figures/wasting/fig_wast_ci_inc_pooled.png", width=14, height=5)
 
 #-------------------------------------------------------------------------------------------
 # Wasting incidence rate
 #-------------------------------------------------------------------------------------------
-p3 <- ki_desc_plot(d,
+
+inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+                           Cohort="pooled",
+                           xlabel="Age category",
+                           ylabel="",
+                           yrange=c(0,90),
+                           legend.pos = c(.9,.32)){
+
+    df <- d %>% filter(
+    disease == Disease &
+      measure == Measure &
+      birth %in% Birth &
+      severe == Severe &
+      age_range %in% Age_range &
+      cohort == Cohort &
+      !is.na(region) & !is.na(agecat)
+  )
+  df <- df %>% filter(birth=="yes" | agecat=="0-3 months")
+  df <- droplevels(df)
+
+  
+  #Keep N studies and children from only one study
+  df$nmeas.f[df$age_range!="30 days"] <- NA
+  df$nstudy.f[df$age_range!="30 days"] <- NA
+  
+  # remove N= from labels
+  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub('N=', '', nstudy.f))
+  
+  # remove text from labels
+  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
+  
+  # Remove 'months' from x axis labels  
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  
+  p <- ggplot(df,aes(y=est,x=agecat)) +
+    facet_wrap(~region) +
+    geom_errorbar(aes(color=region, 
+                      group=interaction(birth, region), ymin=lb, ymax=ub), 
+                  width = 0, position = position_dodge(0.5)) +
+    geom_point(aes(shape=birth, fill=region, color=region, group=interaction(birth, region)
+    ), size = 2, position = position_dodge(0.5)) +
+    scale_color_manual(values=tableau11, guide = FALSE) +
+    scale_shape_manual(values = c(16, 17),
+                       name = 'Measure', 
+                       labels = c('Including wasting at birth', 'Excluding wasting at birth')) + 
+    scale_fill_manual(values=tableau11, guide = FALSE) +
+    xlab(xlabel) + ylab(ylabel) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
+    theme(axis.text.x = element_text(margin = 
+                                       margin(t = 0, r = 0, b = 0, l = 0),
+                                     size = 10)) +
+    theme(axis.title.x = element_text(margin = 
+                                        margin(t = 25, r = 0, b = 0, l = 0),
+                                      size = 15)) +
+    theme(axis.title.y = element_text(size = 15)) +
+    ggtitle("") + guides(color = FALSE) 
+  
+  if(!is.null(yrange)){
+    p <- p + coord_cartesian(ylim=yrange)
+  }
+  
+  p <- p +  theme(legend.position = legend.pos,
+                  legend.title = element_blank(),
+                  legend.background = element_blank(),
+                  legend.box.background = element_rect(colour = "black"))
+  return(p)
+}
+
+
+d <- d %>% mutate(birth=factor(birth, levels=c("yes","no"))) %>% arrange(birth)
+
+
+
+p3 <- inc_combo_plot(d,
                    Disease="Wasting",
                    Measure="Incidence rate", 
-                   Birth="yes", 
+                   Birth=c("yes","no"), 
                    Severe="no", 
-                   Age_range="6 months", 
+                   Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Episodes per 1000 person-days at risk',
-                   yrange=c(0,4))
+                   yrange=c(0,7.5),
+                   legend.pos = c(.9,.32))
+print(p3)
+
+ggsave(p3, file="figures/wasting/pooled_ir.png", width=8, height=5)
 
 
-ggsave(p3, file="figures/wasting/pooled_ir.png", width=10, height=8)
-
-#No birth wasting
-p3no_bw <- ki_desc_plot(d,
-                   Disease="Wasting",
-                   Measure="Incidence rate", 
-                   Birth="no", 
-                   Severe="no", 
-                   Age_range="6 months", 
-                   Cohort="pooled",
-                   xlabel="Age in months",
-                   ylabel='Episodes per 1000 person-days at risk',
-                   yrange=c(0,4))
 
 
-ggsave(p3no_bw, file="figures/wasting/pooled_ir_no_bw.png", width=10, height=8)
 
 
 #-------------------------------------------------------------------------------------------
@@ -238,12 +307,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- as.character(df$agecat)
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
-  
-  # remove N= labels for incidence proportion
-  # df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence_proportion', '', nmeas.f)) %>%
-  #   mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
-  print(df)
-  
+
   p <- ggplot(df,aes(y=est,x=agecat)) +
     facet_wrap(~region) +
     geom_errorbar(aes(color=region, 
@@ -251,26 +315,15 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                   width = 0, position = position_dodge(0.5)) +
     geom_point(aes(shape=age_range, fill=region, color=region, group=interaction(age_range, region)
     ), size = 2, position = position_dodge(0.5)) +
-    #geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
     scale_color_manual(values=tableau11,
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17, 18),
                        name = 'Measure', 
                        labels = c('30 days', '60 days', '90 days')) + 
     scale_fill_manual(values=tableau11, guide = FALSE) +
-    # theme(legend.position = 'right') +
     xlab(xlabel)+
     ylab(ylabel) +
-    # geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-    #                        label = nmeas.f), size = 3.5) +
-    # geom_text(data=df, aes(x = agecat, y = h1, vjust = -1,
-    #                        label = nstudy.f), size = 3.5) +
-    #scale_x_discrete(expand = expand_scale(add = 2)) +
-    
-    #annotate('text', x = -0.2, y = h1, label = 'Studies:', vjust = -1, size = 3.5) +
-    #annotate('text', x = -0.2, y = h1, label = 'Children:', vjust = 1, size = 3.5) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    #expand_limits(y = h2) +
     theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
     
     theme(axis.text.x = element_text(margin = 
@@ -311,7 +364,7 @@ p4 <- rec_combo_plot(d,
                    yrange=c(0,100),
                    legend.pos = c(.95,.4))
 
-ggsave(p4, file="figures/wasting/pooled_rev.png", width=10, height=8)
+ggsave(p4, file="figures/wasting/pooled_rev.png", width=8, height=5)
 
 
 
@@ -331,7 +384,7 @@ p5 <- ki_desc_plot(d,
                    yrange=c(0,20))
 
 
-ggsave(p5, file="figures/wasting/pooled_pers.png", width=10, height=8)
+ggsave(p5, file="figures/wasting/pooled_pers.png", width=8, height=5)
 
 
 
@@ -357,7 +410,7 @@ p6 <- ki_desc_plot(d,
                    yrange=c(0,12))
 
 
-ggsave(p6, file="figures/wasting/pooled_co_prev.png", width=12, height=8)
+ggsave(p6, file="figures/wasting/pooled_co_prev.png", width=14, height=5)
 
 #-------------------------------------------------------------------------------------------
 # Underweight prevalence 
@@ -372,7 +425,7 @@ p7 <- ki_desc_plot(d,
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,24))
-ggsave(p7, file="figures/wasting/pooled_underweight_prev.png", width=12, height=8)
+ggsave(p7, file="figures/wasting/pooled_underweight_prev.png", width=14, height=5)
 
 
 #-------------------------------------------------------------------------------------------
@@ -453,7 +506,7 @@ p9 <- ki_combo_plot2(d,
               yrange=c(0,75), dodge = 0.5,
               legend.pos=c(.15,.92)) 
 
-ggsave(p9, file="figures/wasting/pooled_muac_comp.png", width=12, height=8)
+ggsave(p9, file="figures/wasting/pooled_muac_comp.png", width=14, height=5)
 
 
 #-------------------------------------------------------------------------------------------
@@ -475,7 +528,7 @@ p10 <- rec_combo_plot(d,
                      yrange=c(0,4),
                      legend.pos = c(.95,.4))
 
-ggsave(p10, file="figures/wasting/ir_sens.png", width=10, height=8)
+ggsave(p10, file="figures/wasting/ir_sens.png", width=8, height=5)
 
 
 
@@ -497,6 +550,6 @@ p11 <- ki_desc_plot(d,
                    yrange=c(0,10))
 
 
-ggsave(p11, file="figures/wasting/pooled_sevprev.png", width=12, height=8)
+ggsave(p11, file="figures/wasting/pooled_sevprev.png", width=14, height=5)
 
 

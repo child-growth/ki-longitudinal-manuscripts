@@ -326,7 +326,8 @@ textcol <- "grey20"
 # heat map plot scheme
 hm <- ggplot(dp,aes(x=age,y=studycountry)) +
   # facet over measurement frequency
-  facet_grid(region~.,scales='free_y',space='free_y') +
+  #facet_grid(region~. ) + #,scales='free_y',space='free_y') +
+  facet_grid(region~., scales = "free_y", space="free") +
   #add border white colour of line thickness 0.25
   geom_tile(colour="white",size=0.25)+
   #remove extra space
@@ -335,11 +336,12 @@ hm <- ggplot(dp,aes(x=age,y=studycountry)) +
                      breaks=0:24,labels=0:24)+
   #one unit on x-axis is equal to one unit on y-axis.
   #equal aspect ratio x and y axis
-  # coord_equal()+
+  #coord_fixed()+
   #set base size for all font elements
   theme_grey(base_size=10)+
   #theme options
   theme(
+    aspect.ratio = 1,
     # legend options
     legend.title=element_text(color=textcol,size=8),
     #reduce/remove legend margin
@@ -476,6 +478,8 @@ nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
     panel.border = element_blank(),
     axis.title.y = element_text(size=10)
   ) +
+  scale_y_continuous(expand=c(0,0),limits=c(0,12),
+                     breaks=seq(0,12,by=2),labels=seq(0,12,by=2))+
   ylab("Sample size (1000s)") + xlab("") +
   geom_hline(yintercept = seq(0,12,by=2),color='white',size=0.3) +
   ggtitle("a")
