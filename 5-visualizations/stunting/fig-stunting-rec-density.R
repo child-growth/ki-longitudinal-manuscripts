@@ -259,7 +259,21 @@ plot_data_sub = plot_data_sub %>%
 
 plot_data_sub = plot_data_sub %>%
   mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
-  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
+  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3"))) %>%
+
+  # new label
+  mutate(age_rec_f2 = case_when(
+    age_rec_f == "Stunting recovery\nat 3 months" ~ "LAZ rose above -2\nat 3 months",
+    age_rec_f == "Stunting recovery\nat 6 months" ~ "LAZ rose above -2\nat 6 months",
+    age_rec_f == "Stunting recovery\nat 9 months" ~ "LAZ rose above -2\nat 9 months",
+    age_rec_f == "Stunting recovery\nat 12 months" ~ "LAZ rose above -2\nat 12 months"
+  )) %>%
+  mutate(age_rec_f2 = factor(age_rec_f2, levels = c(
+    "LAZ rose above -2\nat 3 months",
+    "LAZ rose above -2\nat 6 months",
+    "LAZ rose above -2\nat 9 months",
+    "LAZ rose above -2\nat 12 months"
+  )))
 
 # --------------------------------------------
 # prepare label for each panel of the plot
@@ -287,9 +301,8 @@ results_df = results_df %>%
     "Stunting recovery\nat 6 months",
     "Stunting recovery\nat 9 months",
     "Stunting recovery\nat 12 months"
-  )))
+  ))) 
 
-results_df = results_df
 
 # --------------------------------------------
 # stacked histogram plot
@@ -300,7 +313,7 @@ rec_histogram_plot = ggplot(plot_data_sub,
                                binwidth=.1, 
                                scale=0.8,
                                size=0.01) + 
-  facet_grid(~age_rec_f) +
+  facet_grid(~age_rec_f2) +
   ylab("Measurement age, months")+
   xlab("Length-for-age Z-score")+
   scale_y_discrete(expand = c(0.01, 0)) +
@@ -309,6 +322,5 @@ rec_histogram_plot = ggplot(plot_data_sub,
   geom_vline(xintercept = -2, linetype="dashed") +
   scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) 
 
-# geom_text(aes(x, y, label = lab), data = results_df, size=2.9, hjust=0)
 
 ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=8, height=5)
