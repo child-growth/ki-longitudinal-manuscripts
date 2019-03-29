@@ -119,7 +119,7 @@ meanlaz = meanlaz %>%
                                     "18-21", "21-24")))
 
 plot_mean_laz = ggplot(meanlaz, aes(y=est, x = agecat)) + 
-  geom_point(aes(col=sex), position = position_dodge(width=0.2), size=2) +
+  geom_point(aes(col=sex), position = position_dodge(width=0.2), size=3) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
                  position = position_dodge(width=0.2)) +
   scale_color_manual(values = c(tableau10[4], tableau10[1])) + 
@@ -127,8 +127,7 @@ plot_mean_laz = ggplot(meanlaz, aes(y=est, x = agecat)) +
   xlab("Child age, months") + 
   ylab("Mean LAZ\n ") +
   ggtitle("c\n")+
-  theme(plot.title = element_text(hjust=0))
-
+  theme(plot.title = element_text(hjust=0)) 
  
 #-------------------------------------
 # LAZ plot
@@ -154,6 +153,19 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
 
 
 ggsave(plot_laz, file="figures/stunting/fig_stunt_vel_laz_pool.png", width=12, height=6)
+
+plot_laz2 <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width = 0.2)) +
+  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+                 alpha=0.5, size = 1, position = position_dodge(width = 0.2)) +
+  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_y_continuous(limits=c(-0.25,0.1), breaks=seq(-0.25,0.1,0.05), labels=seq(-0.25,0.1,0.05)) +
+  xlab("Child age, months") +  
+  ylab("Difference in length-for-age\nZ-score per month")+
+  geom_hline(yintercept = -0) +
+  ggtitle("b") +
+  theme(plot.title = element_text(hjust=0))
+
 
 
 #-------------------------------------
@@ -336,6 +348,13 @@ combined_plot = grid.arrange(plot_cm, plot_laz, plot_mean_laz,
                              nrow = 3, heights = c(8, 4, 3))
 combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, nrow = 2, heights = c(10, 4))
 
+
+
 ggsave(combined_plot, file="figures/stunting/fig_stunt_vel_pool.png", width=10, height=8)
 ggsave(combined_plot_strat, file="figures/stunting/fig_stunt_vel_region.png", width=16, height=18)
+
+
+combined_plot2 = grid.arrange(plot_cm, plot_laz2, plot_mean_laz, 
+                              nrow = 3, heights = c(8, 4, 4))
+ggsave(combined_plot2, file="figures/stunting/fig_stunt_vel_pool2.png", width=10, height=8)
 
