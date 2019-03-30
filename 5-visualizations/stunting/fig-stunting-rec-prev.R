@@ -47,7 +47,7 @@ viridis_cols = viridis(
   option = "C"
 )
 
-bluegreen = rev(brewer.pal(n = 5, name = "YlGnBu"))
+bluegreen = brewer.pal(n = 5, name = "YlGnBu")[2:5]
 
 #---------------------------------------
 # Stunting prevalence
@@ -74,17 +74,21 @@ md_data = d %>% filter(!is.na(mean_diff_laz))
 # Mean difference in LAZ plot
 #---------------------------------------
 meandiff_plot = ggplot(md_data, aes(x = month_diff, y = mean_diff_laz)) +
-  geom_point(aes(col = age_rec_f), position= position_dodge(width=1.2)) +
+  geom_point(aes(col = age_rec_f), position= position_dodge(width=1.8)) +
   geom_pointrange(aes(ymin = mean_diff_lb, ymax = mean_diff_ub, col = age_rec_f),
-                  position= position_dodge(width=1.2)) +
-  ylab("Mean difference in LAZ (95% CI)") + 
-  xlab("Months since LAZ rose from below to above -2") +
+                  position= position_dodge(width=1.8), size=1.3) +
+  ylab("Mean difference in\nLAZ (95% CI)") + 
+  xlab("Months since LAZ rose\nfrom below to above -2") +
   scale_color_manual("Age in months\n when LAZ\nrose above -2", values = 
                        bluegreen) +
   scale_x_continuous(breaks = c(3,6,9,12),
                      labels = c(3,6,9,12)) + 
   scale_y_continuous(breaks = seq(-1,1,0.25),
                      labels = seq(-1,1,0.25)) +
-  theme(legend.position = "bottom") 
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(size=14),
+        axis.text.y = element_text(size=14),
+        axis.title.x = element_text(size=16),
+        axis.title.y = element_text(size=16)) 
 ggsave(meandiff_plot, file="figures/stunting/fig_stunt_rec_cohort_meandiff.png", 
        width=5, height=4)
