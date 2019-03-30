@@ -80,13 +80,12 @@ meandiff_plot = ggplot(md_data, aes(x = month_diff, y = mean_diff_laz)) +
   ylab("Mean difference in\nLAZ (95% CI)") + 
   xlab("Months since LAZ rose\nfrom below to above -2") +
   scale_color_manual("Age in months\n when LAZ\nrose above -2", values = 
-                       bluegreen) +
+                       bluegreen, guide = FALSE) +
   scale_x_continuous(breaks = c(3,6,9,12),
                      labels = c(3,6,9,12)) + 
   scale_y_continuous(breaks = seq(-1,1,0.25),
                      labels = seq(-1,1,0.25)) +
-  theme(legend.position = "bottom",
-        axis.text.x = element_text(size=14),
+  theme(axis.text.x = element_text(size=14),
         axis.text.y = element_text(size=14),
         axis.title.x = element_text(size=16),
         axis.title.y = element_text(size=16)) 
