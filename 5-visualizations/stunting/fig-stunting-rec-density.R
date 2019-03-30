@@ -322,7 +322,7 @@ results_df = results_df %>%
 #   geom_vline(xintercept = -2, linetype="dashed") +
 #   scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) 
 
-bluegreen = rev(brewer.pal(n = 5, name = "YlGnBu"))
+bluegreen = brewer.pal(n = 5, name = "YlGnBu")[2:5]
 
 rec_histogram_plot = ggplot(plot_data_sub, 
                             aes(x=haz, y = age_meas_n, fill = age_rec_f2)) + 
