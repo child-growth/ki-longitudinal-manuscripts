@@ -16,6 +16,12 @@ source(paste0(here::here(), "/0-config.R"))
 stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
 stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
 
+# number of studies, countries, children included
+length(names(table(stunt_data$studyid)))
+length(names(table(stunt_data$country)))
+x=stunt_data %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
+sum(x$n)
+
 #-----------------------------------------
 # format data for plot
 #-----------------------------------------
@@ -40,6 +46,23 @@ plot_data = stunt_data %>%
                                               "Still stunted"
                                               )))
 
+plot_data_pooled = stunt_pool %>%
+  rename(classif = label) %>%
+  select(agem, classif, est) %>%
+  mutate(classif = factor(classif, levels = c("Never stunted", 
+                                              "Not stunted",
+                                              "Recovered",
+                                              "Newly stunted",
+                                              "Stunting relapse",
+                                              "Still stunted"
+  )))
+
+# drop measurements beyond 15 months since
+# data is sparse
+plot_data = plot_data %>% filter(agem<=15)
+plot_data_pooled = plot_data_pooled %>% 
+  mutate(agem = as.numeric(as.character(agem))) %>%
+  filter(agem<=15)
 
 #-----------------------------------------
 # define color palette
@@ -59,17 +82,6 @@ plot_cols  = viridis_cols[c(2, 4, 6, 8, 10, 11)]
 #-----------------------------------------
 # stacked bar graphs using random effects pooled data
 #-----------------------------------------
-plot_data_pooled = stunt_pool %>%
-  rename(classif = label) %>%
-  select(agem, classif, est) %>%
-  mutate(classif = factor(classif, levels = c("Never stunted", 
-                                              "Not stunted",
-                                              "Recovered",
-                                              "Newly stunted",
-                                              "Stunting relapse",
-                                              "Still stunted"
-  )))
-
 
 bar_plot_RE = ggplot(plot_data_pooled) +
   geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
@@ -102,7 +114,24 @@ bar_plot_data = bar_plot_data %>%
                                                      "Newly recovered",
                                                      "Newly stunted",
                                                      "Stunting relapse",
-                                                     "Still stunted")))
+                                                     "Still stunted"))) %>%
+  # labels not using recovered
+  mutate(classif3 = case_when(
+    classifnew == "Never stunted" ~ "Never stunted",
+    classifnew == "Still recovered" ~ "Still not stunted",
+    classifnew == "Newly recovered" ~ "No longer stunted",
+    classifnew == "Newly stunted" ~ "Newly stunted",
+    classifnew == "Stunting relapse" ~ "Stunting relapse",
+    classifnew == "Still stunted" ~ "Still stunted"
+    
+  )) %>%
+  mutate(classif3 = factor(classif3, levels = c("Never stunted",
+                                                "Still not stunted",
+                                                "No longer stunted",
+                                                "Newly stunted",
+                                                "Stunting relapse",
+                                                "Still stunted")))
+
 
 bar_plot_data = bar_plot_data %>% 
   ungroup() %>%
@@ -110,22 +139,32 @@ bar_plot_data = bar_plot_data %>%
   mutate(stunted = as.factor(ifelse(classifnew %in%
     c("Never stunted", "Newly recovered", "Still recovered"), 0, 1)))
 
+pink_green = rev(brewer.pal(n = 6, name = "PiYG"))
+pink_green[3] = "#CDF592"
+pink_green[5] = "#EA67AE"
+pink_green[4] = "#FFB7DC"
+
+# pink_green_reord = pink_green[c(3, 2, 1, 6, 5, 4)]
+
 bar_plot_noRE = ggplot(bar_plot_data) +
-  geom_bar(aes(x = agem, y = percent, fill = classifnew), 
+  geom_bar(aes(x = agem, y = percent, fill = classif3), 
            stat="identity", width=0.5) +
-  scale_fill_manual("", values = plot_cols) +
+  scale_fill_manual("", values = pink_green) +
   scale_color_manual(values = c(NA, 'black'), guide=F) +
   # Why isn't this working? 
   # scale_y_continuous(limits = c(0,100),
   #                    breaks = seq(0,100,20),
   #                    labels = seq(0,100,20)) +
-  theme(legend.position = "bottom") +
+  theme(axis.title.x = element_text(size=14),
+        axis.title.y = element_text(size=14),
+        legend.position = "bottom",
+        legend.text = element_text(size=12)) +
   xlab("Child age, months") + 
   ylab("Percentage of children (%)")  + 
-  guides(fill = guide_legend(nrow = 1))
+  guides(fill = guide_legend(nrow = 1)) 
 bar_plot_noRE
 
-ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=5)
+ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=4)
 
 
 

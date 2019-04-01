@@ -12,10 +12,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# IS THIS THE RIGHT DATA? 
 load("U:/ucb-superlearner/data/stunting_data.RData")
-
-# load("U:/Data/Stunting/stunting_data.RData")
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 
@@ -32,7 +29,7 @@ d = d %>%
   mutate(revmeasid = rev(seq_along(agedays)))
 
 # temporarily just subset to first study
-d = d %>% filter(studyid == "ki0047075b-MAL-ED")
+# d = d %>% filter(studyid == "ki0047075b-MAL-ED")
 
 ##########################################
 # Define indicators of stunting at each time point

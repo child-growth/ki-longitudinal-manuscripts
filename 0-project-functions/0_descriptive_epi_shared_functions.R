@@ -1,4 +1,73 @@
 
+#ttest function across agecats
+ki.ttest <- function(data, y, levels, ref, comp){
+  pval <- NULL
+  for(i in 1:length(comp)){
+    colnames(data)[colnames(data)==y] <- "y"
+    colnames(data)[colnames(data)==levels] <- "levels"
+    datasub =data[data$levels %in% c(ref, comp[i]),]
+    pval <- rbind(pval, t.test(y ~ levels, data = datasub)$p.value)
+  }
+  pval=data.frame(comp=comp, pval)
+  colnames(pval)[2] <- "pval"
+  pval$pvalcat <- ""
+  pval$pvalcat[pval$pval<0.05] <- "*"
+  pval$pvalcat[pval$pval<0.01] <- "**"
+  pval$pvalcat[pval$pval<0.001] <- "***"
+  return(pval)
+}
+
+
+#glm function across agecats
+ki.glm<- function(data, y, levels, ref, comp){
+  diffdf <- NULL
+  for(i in 1:length(comp)){
+    colnames(data)[colnames(data)==y] <- "y"
+    colnames(data)[colnames(data)==levels] <- "levels"
+    datasub =data[data$levels %in% c(ref, comp[i]),]
+    datasub$levels <- relevel(datasub$levels, ref=ref)
+    
+    res <- glm(y ~ levels, data = datasub)
+    se <- summary(res)$coefficients[2,2]
+    resdf <- data.frame(diff=res$coefficients[2])
+    resdf$lb <- resdf$dif - 1.96 * se
+    resdf$ub <- resdf$dif + 1.96 * se
+    resdf$pval <- summary(res)$coefficients[2,4]
+    rownames(resdf) <- NULL
+    diffdf <- rbind(diffdf, resdf)
+  }
+  diffdf=data.frame(comp=comp, diffdf)
+  diffdf$pvalcat <- ""
+  diffdf$pvalcat[diffdf$pval<0.05] <- "*"
+  diffdf$pvalcat[diffdf$pval<0.01] <- "**"
+  diffdf$pvalcat[diffdf$pval<0.001] <- "***"
+  return(diffdf)
+}
+
+
+gamCI <- function(m,newdata,nreps=10000) {
+  require(mgcv)
+  require(dplyr)
+  Vb <- vcov(m,unconditional = TRUE)
+  pred <- predict(m, newdata, se.fit = TRUE)
+  fit <- pred$fit
+  se.fit <- pred$se.fit
+  BUdiff <- MASS::mvrnorm(n=nreps, mu = rep(0, nrow(Vb)), Sigma = Vb)
+  Cg <- predict(m, newdata, type = "lpmatrix")
+  simDev <- Cg %*% t(BUdiff)
+  absDev <- abs(sweep(simDev, 1, se.fit, FUN = "/"))
+  masd <- apply(absDev, 2L, max)
+  crit <- quantile(masd, prob = 0.95, type = 8)
+  pred <- data.frame(newdata,fit=pred$fit,se.fit=pred$se.fit)
+  pred <- mutate(pred,
+                 uprP = fit + (2 * se.fit),
+                 lwrP = fit - (2 * se.fit),
+                 uprS = fit + (crit * se.fit),
+                 lwrS = fit - (crit * se.fit)
+  )
+  return(pred)
+}
+
 
 mean_sd <- function(x){
   cat("\n", round(mean(x, na.rm=T),3),
@@ -89,7 +158,7 @@ calc.ci.agecat <- function(d, range=3){
 
 #Returns:
 # data frame formatted for plotting cohort specific results
-cohort.format=function(df, lab, y, est="percent"){
+cohort.format=function(df, lab, y, est="NA"){
   y = as.numeric(y)
   
   # rescale percentages
@@ -176,7 +245,7 @@ run_rma_agem = function(data, n_name, x_name, label, method){
   # apply fit.rma across age list
   res.list=lapply(agelist,function(x) 
     fit.rma.rec.cohort(data=data %>% filter(agem==x),
-                       ni=n_name, xi=x_name,measure="PLO",nlab="children",
+                       ni=n_name, xi=x_name, measure="PLO", nlab="children",
             method=method))
   
   # unlist output

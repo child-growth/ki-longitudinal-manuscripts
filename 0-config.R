@@ -29,6 +29,9 @@ library(tidyselect)
 library(growthstandards)
 library(stringr)
 library(mgcv)
+library(grid)
+library(lazyeval)
+library(rlang)
 
 # for parallel computing 
 # (will need to configure in each script)

@@ -24,7 +24,7 @@ d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
 
 #change names to lower case
 colnames(d) <- tolower(colnames(d))
-d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, latitude, longitud))
+d<-d %>% subset(., select=c(studyid, subjid, country, tr, sex, agedays, haz, latitude, longitud))
 
 #--------------------------------------------
 #Check for duplicate agedays
@@ -115,7 +115,7 @@ load("U:/data/Stunting/Full-compiled-data/compiled_HAZ_dataset.RData")
 # Subset to relevant variables
 #--------------------------------------------
 colnames(d)=tolower(colnames(d))
-d <- d %>% select(studyid, subjid, country, tr, agedays, haz, measurefreq, latitude, longitud)
+d <- d %>% select(studyid, subjid, country, tr, agedays, sex, haz, measurefreq, latitude, longitud)
 
 nrow(d)
 
@@ -175,7 +175,8 @@ d <- d %>% mutate(region = case_when(
 # Save intervention effects dataset
 #--------------------------------------------
 
-save(d,file="U:/Data/Stunting/int_stunting_data.RData")
+# save(d,file="U:/Data/Stunting/int_stunting_data.RData")
+save(d, file="U:/ucb-superlearner/data/int_stunting_data.RData")
 
 #--------------------------------------------
 # Subset to and save risk factor data
@@ -184,7 +185,8 @@ save(d,file="U:/Data/Stunting/int_stunting_data.RData")
 #Keep monthly and quarterly studies
 d <- d %>% filter(measurefreq!="yearly")
 
-save(d,file="U:/Data/Stunting/rf_stunting_data.RData")
+# save(d,file="U:/Data/Stunting/rf_stunting_data.RData")
+save(d, file="U:/ucb-superlearner/data/rf_stunting_data.RData")
 
 
 #--------------------------------------------
@@ -205,7 +207,8 @@ d=d[-which(d$studyid=="kiGH5241-JiVitA-3" & d$tr!="Control"),]
 d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]
 
 
-save(d,file="U:/Data/Stunting/stunting_data.RData")
+# save(d,file="U:/Data/Stunting/stunting_data.RData")
+save(d, file="U:/ucb-superlearner/data/stunting_data.RData")
 
 
 

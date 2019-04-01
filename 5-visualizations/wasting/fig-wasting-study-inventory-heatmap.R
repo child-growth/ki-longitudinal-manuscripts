@@ -41,8 +41,7 @@ wmd <- wmd %>% filter(measurefreq!="yearly" & !is.na(measurefreq))
 
 unique(md$study_id)
 unique(wmd$study_id)
-#wmd$study_id[wmd$study_id=="MAL-ED"] <- "MAL-ED"
-  
+
 #fix PROVIDE location
 wmd$countrycohort[wmd$study_id=="PROVIDE"] <- "BANGLADESH"
 
@@ -63,13 +62,14 @@ dim(md)
 md$countrycohort[is.na(md$countrycohort)] <- "singlecohort"
 wmd$countrycohort[is.na(wmd$countrycohort)] <- "singlecohort"
 
-wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m1, wastprev_m2,
+
+wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m0, wastprev_m1, wastprev_m2,
                       wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
                       wastprev_m7, wastprev_m8, wastprev_m9, wastprev_m10,
                       wastprev_m11, wastprev_m12, wastprev_m13, wastprev_m14,
                       wastprev_m15, wastprev_m16, wastprev_m17, wastprev_m18,
                       wastprev_m19, wastprev_m20, wastprev_m21, wastprev_m22,
-                      wastprev_m23, wastprev_m24, meanWHZ_m1, meanWHZ_m2,
+                      wastprev_m23, wastprev_m24, meanWHZ_m0, meanWHZ_m1, meanWHZ_m2,
                       meanWHZ_m3, meanWHZ_m4, meanWHZ_m5, meanWHZ_m6,
                       meanWHZ_m7, meanWHZ_m8, meanWHZ_m9, meanWHZ_m10,
                       meanWHZ_m11, meanWHZ_m12, meanWHZ_m13, meanWHZ_m14,
@@ -88,7 +88,7 @@ dim(md)
 # convert stunting prevalence and numsubj to numeric
 md$stuntprev <- as.numeric(md$stuntprev)
 md$numsubj <- as.numeric(md$numsubj)
-for(i in 1:24){
+for(i in 0:24){
   ni <- paste("n",i,sep="")
   wi <- paste("stuntprev_m",i,sep="")
   md[ni] <- as.numeric(md[,c(ni)])
@@ -97,13 +97,13 @@ for(i in 1:24){
 
 # convert wasting prevalence to numeric
 md$wastprev <- as.numeric(md$wastprev)
-for(i in 1:24){
+for(i in 0:24){
   wi <- paste("wastprev_m",i,sep="")
   md[wi] <- as.numeric(md[,c(wi)])
 }
 
 # convert mean HAZ and WHZ to numeric
-for(i in 1:24){
+for(i in 0:24){
   sti <- paste("meanHAZ_m",i,sep="")
   wi <- paste("meanWHZ_m",i,sep="")
   md[sti] <- as.numeric(md[,c(sti)])
@@ -112,7 +112,7 @@ for(i in 1:24){
 
 
 # calculate the total number of measurements
-md$nmeas <- rowSums(md[,paste('n',1:24,sep='')],na.rm=TRUE)
+md$nmeas <- rowSums(md[,paste('n',0:24,sep='')],na.rm=TRUE)
 
 dd <- md
 
@@ -190,11 +190,11 @@ dd$wpcat <- factor(dd$wpcat)
 
 # gather N measurements by month data into long format
 dnsubj <- select(dd,study_id,country,studycountry,region,stuntprev,wastprev,starts_with('n')) %>%
-  select(-neurocog_data,-nutrition,-notes,-num_countries,-numcountry,-numsubj,-numobs,-nmeas) %>%
+  select(-neurocog_data,-nutrition,-notes,-num_countries,-numcountry,-numsubj,-numobs,-nmeas, -numsubj_u24mo, -numobs_u24mo) %>%
   gather(age,nobs,-study_id,-country,-studycountry,-region,-stuntprev, -wastprev) %>%
   mutate(age=as.integer(str_sub(age,2,-1)),nobs=as.integer(nobs)) %>%
   select(study_id,country,studycountry,region,stuntprev,wastprev,age,nobs) %>%
-  filter(age>=1 & age <=24 ) %>%
+  filter(age>=0 & age <=24 ) %>%
   arrange(region,stuntprev,wastprev) 
 
 # gather stunting prev by month data into long format
@@ -202,40 +202,40 @@ dstuntp <- select(dd,study_id,country,studycountry,starts_with('stuntprev_m')) %
   gather(age,stp,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,12,-1))) %>%
   select(study_id,country,studycountry,age,stp) %>%
-  filter(age>=1 & age <=24 )
+  filter(age>=0 & age <=24 )
 
 # gather wasting prev by month data into long format
 dwastp <- select(dd,study_id,country,studycountry,starts_with('wastprev_m')) %>%
   gather(age,wp,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,11,-1))) %>%
   select(study_id,country,studycountry,age,wp) %>%
-  filter(age>=1 & age <=24 )
+  filter(age>=0 & age <=24 )
 
 # gather meanHAZ by month data into long format
 dhaz <- select(dd,study_id,country,studycountry,starts_with('meanHAZ_m')) %>%
   gather(age,haz,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,10,-1))) %>%
   select(study_id,country,studycountry,age,haz) %>%
-  filter(age>=1 & age <=24 )
+  filter(age>=0 & age <=24 )
 
 # gather meanWHZ by month data into long format
 dwhz <- select(dd,study_id,country,studycountry,starts_with('meanWHZ_m')) %>%
   gather(age,whz,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,10,-1))) %>%
   select(study_id,country,studycountry,age,whz) %>%
-  filter(age>=1 & age <=24 )
+  filter(age>=0 & age <=24 )
 
 
 # join the long tables together and sort countries by measure_freq and stunting prev
 dim(dnsubj)
 dim(dstuntp)
-dp <- left_join(dnsubj,dstuntp,by=c('study_id','studycountry','age'))
+dp <- left_join(dnsubj,dstuntp,by=c('study_id','studycountry','country','age'))
 dim(dp)
-dp <- left_join(dp,dwastp,by=c('study_id','studycountry','age'))
+dp <- left_join(dp,dwastp,by=c('study_id','studycountry','country','age'))
 dim(dp)
-dp <- left_join(dp,dhaz,by=c('study_id','studycountry','age'))
+dp <- left_join(dp,dhaz,by=c('study_id','studycountry','country','age'))
 dim(dp)
-dp <- left_join(dp,dwhz,by=c('study_id','studycountry','age'))
+dp <- left_join(dp,dwhz,by=c('study_id','studycountry','country','age'))
 dim(dp)
 
 # categorize stunting prevalence, set stunting prevalence category estimates to missing if n<50
@@ -272,6 +272,31 @@ dp$whzcat[dp$nobs<50 | is.nan(dp$whzcat)] <- NA
 table(dp$whzcat)
 
 
+#Subset to monthly studies
+monthlystudies <- c(
+  "MAL-ED",   
+  "CMC-V-BCS-2002",              
+  "IRC",               
+  "EE",           
+  "ResPak",  
+  "PROVIDE", 
+  "TanzaniaChild2",           
+  "Keneba",  
+  "Guatemala BSC",       
+  "GMS-Nepal",             
+  "CONTENT",
+  "CMIN")
+
+dp <- dp[dp$study_id %in% monthlystudies,]
+dd <- dd[dd$study_id %in% monthlystudies,]
+
+
+#Drop CMIN GUINEA-BISSAU and BRAZIL for insufficient measure frequency
+
+dp <- dp[!(dp$studycountry %in% c("CMIN, Brazil", "CMIN, Guinea-Bissau")),]
+dd <- dd[!(dd$studycountry %in% c("CMIN, Brazil", "CMIN, Guinea-Bissau")),]
+# dp <- droplevels(dp)
+# dd <- droplevels(dd)
 
 #-----------------------------------
 # Basic plot schemes
@@ -301,20 +326,22 @@ textcol <- "grey20"
 # heat map plot scheme
 hm <- ggplot(dp,aes(x=age,y=studycountry)) +
   # facet over measurement frequency
-  facet_grid(region~.,scales='free_y',space='free_y') +
+  #facet_grid(region~. ) + #,scales='free_y',space='free_y') +
+  facet_grid(region~., scales = "free_y", space="free") +
   #add border white colour of line thickness 0.25
   geom_tile(colour="white",size=0.25)+
   #remove extra space
   scale_y_discrete(expand=c(0,0))+
   scale_x_continuous(expand=c(0,0),
-                     breaks=1:24,labels=1:24)+
+                     breaks=0:24,labels=0:24)+
   #one unit on x-axis is equal to one unit on y-axis.
   #equal aspect ratio x and y axis
-  # coord_equal()+
+  #coord_fixed()+
   #set base size for all font elements
   theme_grey(base_size=10)+
   #theme options
   theme(
+    aspect.ratio = 1,
     # legend options
     legend.title=element_text(color=textcol,size=8),
     #reduce/remove legend margin
@@ -395,95 +422,84 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 
 
 #-----------------------------------
-# STUNTING PREVALENCE HEAT MAP
-#-----------------------------------
-
-# # heat map
-stphm <- hm + 
-  aes(fill=hazcat) +
-  labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
-scale_fill_viridis(option = "C", discrete = T,
-                     na.value="grey90",
-                     direction = -1,
-                     end = 0.8,
-                     guide=guide_legend(title="Mean HAZ",title.vjust = 1,
-                                        label.position="bottom",label.hjust=0.5,nrow=1)) 
-
-# wasting prevalence side bar plot
-wpbar <- sidebar +
-  aes(y=wastprev,fill=wpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Wasting") +
-  scale_y_continuous(expand=c(0,0),limits=c(0,30),
-                     breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
-  geom_hline(yintercept = seq(0,30,by=10),color='white',size=0.3)
-
-# stunting prevalence side bar plot
-stpbar <- sidebar +
-  aes(y=stuntprev,fill=stpcat) +
-  labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
-  scale_y_continuous(expand=c(0,0),limits=c(0,70),
-                     breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
-  geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
-
-
-# combined plot
-stpgrid <- grid.arrange(stphm, stpbar, wpbar, nrow = 1, ncol = 3, widths=c(100,20,20))
-ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
-
-
-
-
-
-
-#-----------------------------------
 # WASTING PREVALENCE HEAT MAP
 #-----------------------------------
-
-monthlystudies <- c(
-  "MAL-ED",   
-  "CMC-V-BCS-2002",              
-  "IRC",               
-  "EE",           
-  "ResPak",  
-  "PROVIDE", 
-  "TanzaniaChild2",           
-  "Keneba",  
-  "Guatemala BSC",       
-  "GMS-Nepal",             
-  "CONTENT")
 
 # heat map
 wastphm <- hm + 
   aes(fill=whzcat) +
-  labs(x="Age in months",y="",title="Mean weight-for-height Z-score by month of age") +
+  labs(x="Age in months",y="",title="b") +
   scale_fill_viridis(na.value="grey90", option = "C", discrete = T,
                        direction = -1,
                        end = 0.8,
-                       guide=guide_legend(title="Mean WHZ",title.vjust = 1,
+                       guide=guide_legend(title="Mean WLZ",title.vjust = 1,
                                           label.position="bottom",label.hjust=0.5,nrow=1))
-wastphm <- wastphm %+% dp[dp$study_id %in% monthlystudies,]
 
 # wasting prevalence side bar plot
 wpbar <- sidebar +
-  aes(y=wastprev) +
-  labs(x = "",y="Overall Prevalence (%)",title="Wasting (%)") +
+  aes(y=wastprev,fill=wpcat) +
+  labs(x = "",y="Wasting Prevalence (%)",title="d") +
   scale_y_continuous(expand=c(0,0),limits=c(0,30),
-                     breaks=seq(0,30,by=10),labels=seq(0,30,by=10)) +
-  geom_hline(yintercept = seq(0,30,by=10),color='white',size=0.3)
-wpbar <- wpbar %+% dp[dp$study_id %in% monthlystudies,]
+                     breaks=seq(0,20,by=5),labels=seq(0,20,by=5)) +
+  geom_hline(yintercept = seq(0,20,by=5),color='white',size=0.3)
 
 # stunting prevalence side bar plot
 stpbar <- sidebar +
-  aes(y=stuntprev) +
-  labs(x = "",y="Overall Prevalence (%)",title="Stunting (%)") +
+  aes(y=stuntprev,fill=stpcat) +
+  labs(x = "",y="Stunting Prevalence (%)",title="d") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
                      breaks=seq(0,70,by=10),labels=seq(0,70,by=10)) +
   geom_hline(yintercept = seq(0,70,by=10),color='white',size=0.3)
-stpbar <- stpbar %+% dp[dp$study_id %in% monthlystudies,]
+
+# number of obs side bar plot
+nbar <- sidebar +
+  aes(y=nmeas/1000,fill=wpcat) +
+  labs(x = "",y="Sample size (1000s)",title="c") +
+  scale_y_continuous(expand=c(0,0),limits=c(0,50),
+                     breaks=seq(0,50,by=10),labels=seq(0,50,by=10)) +
+  geom_hline(yintercept = seq(0,50,by=10),color='white',size=0.3)
+
+#-----------------------------------
+# n by age top plot 
+#-----------------------------------
+nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
+  geom_bar(stat = "identity", fill='gray70') +  
+  scale_x_continuous(breaks = seq(0,24,1), labels = seq(0,24,1)) +
+  theme(
+    # make background white
+    panel.background = element_blank(),
+    # remove major grid lines
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    plot.title=element_text(colour=textcol,hjust=0.04,size=12,face="bold"),
+    # remove x axis ticks
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    panel.border = element_blank(),
+    axis.title.y = element_text(size=10)
+  ) +
+  scale_y_continuous(expand=c(0,0),limits=c(0,12),
+                     breaks=seq(0,12,by=2),labels=seq(0,12,by=2))+
+  ylab("Sample size (1000s)") + xlab("") +
+  geom_hline(yintercept = seq(0,12,by=2),color='white',size=0.3) +
+  ggtitle("a")
+
+
+
+# add margin around plots
+wastphm2 = wastphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
+wpbar2 = wpbar + theme(plot.margin = unit(c(0,0.3,0.25,0.1), "cm"))
+nbar2 = nbar + theme(plot.margin = unit(c(0,0.25,0.25,0.1), "cm"))
+nagebar2 = nagebar + theme(plot.margin = unit(c(0.25,0.31,0,3.2), "cm"))
+empty <- grid::textGrob("") 
+
+awstpgrid <- grid.arrange(nagebar2,empty, empty,
+                          wastphm2, nbar2, wpbar2, nrow = 2, ncol = 3,
+                        heights = c(25,100),
+                        widths=c(100,20,20))
 
 
 # combined plot
-awstpgrid <- grid.arrange(wastphm, stpbar, wpbar, nrow = 1, ncol = 3, widths=c(100,20,20))
 ggsave(filename="figures/wasting/wasting-study-inventory-heatmap.pdf",plot = awstpgrid,device='pdf',width=12,height=9)
 
 

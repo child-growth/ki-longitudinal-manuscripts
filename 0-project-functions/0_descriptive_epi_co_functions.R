@@ -74,22 +74,17 @@ summary.prev.co <- function(d, severe=F){
 
 
 
-summary.prev.muaz <- function(d, severe=F){
-  
-  d <- d %>% filter(!is.na(muaz))
+summary.prev.haz <- function(d, severe.stunted=F){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
     group_by(studyid,country,subjid,agecat) %>%
-    summarise(whz=mean(whz),
-              muaz=mean(muaz)) %>%
-    mutate(wasted=ifelse(whz< -2, 1,0),swasted=ifelse(whz< -3, 1,0)) %>%
-    mutate(m.wasted=ifelse(muaz< -2, 1,0),m.swasted=ifelse(muaz< -3, 1,0))
+    summarise(haz=mean(haz)) %>%
+    mutate(stunted=ifelse(haz< -2, 1,0),sstunted=ifelse(haz< -3, 1,0))
   
-  if(severe==T){
-    dmn$wasted <- dmn$swasted
-    dmn$m.wasted <- dmn$m.swasted
+  if(severe.stunted==T){
+    dmn$stunted <- dmn$sstunted
   }
   
   # count measurements per study by age
@@ -98,9 +93,9 @@ summary.prev.muaz <- function(d, severe=F){
   prev.data = dmn %>%
     filter(!is.na(agecat)) %>%
     group_by(studyid,country,agecat) %>%
-    summarise(nmeas=sum(!is.na(whz)),
-              prev=mean(wasted==1 & stunted==1),
-              nxprev=sum(wasted==1 & stunted==1)) %>%
+    summarise(nmeas=sum(!is.na(haz)),
+              prev=mean(stunted),
+              nxprev=sum(stunted==1)) %>%
     filter(nmeas>=50) 
   
   prev.data <- droplevels(prev.data)
@@ -144,6 +139,80 @@ summary.prev.muaz <- function(d, severe=F){
     prev.res.birthcohorts$ptest.f=sprintf("%0.0f",prev.res.birthcohorts$est)
   }
   return(list(prev.data=prev.data, prev.res=prev.res, prev.res.birthcohorts=prev.res.birthcohorts, prev.cohort=prev.cohort))
+}
+
+
+
+summary.prev.muaz <- function(d, severe=F){
+  
+  d <- d %>% filter(!is.na(muaz)) %>% filter(muaz > (-5) & muaz < 5)
+  
+  # take mean of multiple measurements within age window
+  dmn <- d %>%
+    filter(!is.na(agecat)) %>%
+    group_by(studyid,country,subjid,agecat) %>%
+    summarise(whz=mean(whz),
+              muaz=mean(muaz)) %>%
+    mutate(wasted=ifelse(whz< -2, 1,0),swasted=ifelse(whz< -3, 1,0)) %>%
+    mutate(m.wasted=ifelse(muaz< -2, 1,0),m.swasted=ifelse(muaz< -3, 1,0))
+  
+  if(severe==T){
+    dmn$wasted <- dmn$swasted
+    dmn$m.wasted <- dmn$m.swasted
+  }
+  
+  # count measurements per study by age
+  # exclude time points if number of measurements per age
+  # in a study is <50
+  prev.data = dmn %>%
+    filter(!is.na(agecat)) %>%
+    group_by(studyid,country,agecat) %>%
+    summarise(nmeas=sum(!is.na(whz)),
+              prev=mean(wasted==1),
+              nxprev=sum(wasted==1),
+              m.prev=mean(m.wasted==1),
+              m.nxprev=sum(m.wasted==1)) %>%
+    filter(nmeas>=50) 
+  
+  prev.data <- droplevels(prev.data)
+  
+  
+  # cohort specific results
+  prev.cohort=lapply((levels(prev.data$agecat)),function(x) 
+    fit.escalc(data=prev.data,ni="nmeas", xi="nxprev",age=x,meas="PLO"))
+  m.prev.cohort=lapply((levels(prev.data$agecat)),function(x) 
+    fit.escalc(data=prev.data,ni="nmeas", xi="m.nxprev",age=x,meas="PLO"))
+  prev.cohort=as.data.frame(rbindlist(prev.cohort))
+  m.prev.cohort=as.data.frame(rbindlist(m.prev.cohort))
+  prev.cohort=cohort.format(prev.cohort,y=prev.cohort$yi,
+                            lab=  levels(prev.data$agecat))
+  m.prev.cohort=cohort.format(m.prev.cohort,y=m.prev.cohort$yi,
+                            lab=  levels(m.prev.cohort$agecat))
+  
+  # estimate random effects, format results
+  prev.res=lapply((levels(prev.data$agecat)),function(x) 
+    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
+  prev.res=as.data.frame(rbindlist(prev.res))
+  prev.res[,4]=as.numeric(prev.res[,4])
+  prev.res[,6]=as.numeric(prev.res[,6])
+  prev.res[,7]=as.numeric(prev.res[,7])
+  prev.res = prev.res %>%
+    mutate(est=est*100,lb=lb*100,ub=ub*100)
+  prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
+  prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
+  
+  m.prev.res=lapply((levels(prev.data$agecat)),function(x) 
+    fit.rma(data=prev.data,ni="nmeas", xi="m.nxprev",age=x,measure="PLO",nlab="children"))
+  m.prev.res=as.data.frame(rbindlist(m.prev.res))
+  m.prev.res[,4]=as.numeric(m.prev.res[,4])
+  m.prev.res[,6]=as.numeric(m.prev.res[,6])
+  m.prev.res[,7]=as.numeric(m.prev.res[,7])
+  m.prev.res = m.prev.res %>%
+    mutate(est=est*100,lb=lb*100,ub=ub*100)
+  m.prev.res$agecat=factor(m.prev.res$agecat,levels=levels(prev.data$agecat))
+  m.prev.res$ptest.f=sprintf("%0.0f",m.prev.res$est)
+  
+  return(list(prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort, m.prev.res=m.prev.res, m.prev.cohort=m.prev.cohort))
 }
 
 

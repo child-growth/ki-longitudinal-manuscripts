@@ -15,6 +15,9 @@ source(paste0(here::here(), "/0-config.R"))
 
 load("U:/ucb-superlearner/data/stunting_data.RData")
 
+# since this will include recovery, 
+# subsetting to monthly cohorts
+d <- d %>% filter(measurefreq=="monthly")
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 
@@ -52,25 +55,25 @@ d %>%
 d = d %>% filter(!is.na(agecat)) 
 
 
-# identify maximum age measurement
-# within each age category
+# identify children who have recovered 
 ds = d %>% 
   group_by(studyid, country, subjid, agecat) %>%
   arrange(studyid, country, subjid, agecat) %>%
   mutate(maxage = max(agedays)) %>%
   
-  # get haz within 1 month of maximum
-  # measurement within each age range
+  # get minimum haz in this age range
   mutate(minhaz = min(haz)) %>%
   
   # create indicator for whether the child 
   # was stunted in PREVIOUS age category
+  # but is no longer stunted
   group_by(studyid, country, subjid) %>%
   mutate(minhaz_prev = lag(minhaz)) %>%
   
   mutate(cum_minhaz = cummin(minhaz)) %>%
   mutate(prev_stunted = ifelse(minhaz >= -2 & cum_minhaz < -2, 1, 0)) %>%
-  mutate(prev_stunted = ifelse(is.na(minhaz_prev) & agecat=="Birth", 0, prev_stunted ))
+  mutate(prev_stunted = ifelse(is.na(minhaz_prev) & 
+                                 agecat=="Birth", 0, prev_stunted ))
 
 saveRDS(ds, file=paste0(res_dir, "stunt_rec_cohort.RDS"))
 
