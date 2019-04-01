@@ -59,10 +59,12 @@ ind_traj_plot <- function(d){
   tj$w1[is.na(tj$w1)] <- tj$agedays[is.na(tj$w1)]
   tj$w2[is.na(tj$w2)] <- tj$agedays[is.na(tj$w2)]
   yrange=c(min(tj$whz), max(tj$whz))
+  p<-NULL
+  if(length(unique(tj$`Wasting status`))>2){
   p <- ggplot(tj, aes(x=agedays, y=whz)) + 
-    geom_line(lwd=2) +
     scale_fill_manual(values = colors) +   
-    geom_rect(aes(xmin = w1, xmax = w2 , ymin = -4, ymax =1.5, fill = `Wasting status`, color = NULL), alpha=0.3) +
+    geom_rect(aes(xmin = w1, xmax = w2 , ymin = -5, ymax =5, fill = `Wasting status`, color = NULL), alpha=0.5) +
+    geom_line(lwd=2) +
     #guides(fill=T) + 
     xlab("Child age in months") + theme(strip.background = element_blank()) +
     geom_hline(yintercept= -2, color="grey20", linetype=2) +
@@ -78,7 +80,8 @@ ind_traj_plot <- function(d){
                        breaks = 1:24*30.41 - 15.2, labels = as.character(1:24)) +
     theme(legend.position = "right") + guides(fill=guide_legend(title="Wasting status"))
     #+ aes(alpha=alpha, group=factor(subjid)) + guides(alpha=FALSE)
-  p
+  print(p)
+  }
   
   return(p)  
 }
@@ -91,7 +94,7 @@ ind_traj_plot <- function(d){
 
 df <- d %>% filter(studyid=="ki0047075b-MAL-ED")
 
-i<-1
+i<-100
 p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],])
 print(p)
 
@@ -102,7 +105,7 @@ print(p)
 
 
 
-pdf(paste0(here(),"/figures/individual_traj.pdf"),width=10,height=8.5)    
+pdf(paste0(here(),"/figures/wasting/individual_traj.pdf"),width=10,height=8.5)    
 for(i in 1:length(unique(df$subjid))){   
   p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],])
   print(p)
