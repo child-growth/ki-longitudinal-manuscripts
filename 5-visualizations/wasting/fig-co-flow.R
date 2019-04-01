@@ -58,7 +58,7 @@ plot_data_pooled = co_pool %>%
 
 
 bar_plot_RE = ggplot(plot_data_pooled) +
-  geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
+  geom_bar(aes(x = agem, y = est*100, fill = classif), colour="black", stat="identity", width=0.5) +
   scale_fill_manual("", values = plot_cols) +
   theme(legend.position = "bottom") +
   xlab("Child age, months") + ylab("Percentage of children")

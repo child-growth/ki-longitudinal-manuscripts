@@ -58,30 +58,31 @@ ind_traj_plot <- function(d){
   tj$w2 <- tj$agedays+(lead(tj$agedays)-tj$agedays)/2
   tj$w1[is.na(tj$w1)] <- tj$agedays[is.na(tj$w1)]
   tj$w2[is.na(tj$w2)] <- tj$agedays[is.na(tj$w2)]
+  yrange=c(min(tj$whz), max(tj$whz))
   p <- ggplot(tj, aes(x=agedays, y=whz)) + 
     geom_line(lwd=2) +
     scale_fill_manual(values = colors) +   
     geom_rect(aes(xmin = w1, xmax = w2 , ymin = -4, ymax =1.5, fill = `Wasting status`, color = NULL), alpha=0.3) +
-    guides(colour=FALSE) + xlab("Child Age (Days)") + theme(strip.background = element_blank()) +
+    #guides(fill=T) + 
+    xlab("Child age in months") + theme(strip.background = element_blank()) +
     geom_hline(yintercept= -2, color="grey20", linetype=2) +
     geom_hline(yintercept= -3, color="grey20", linetype=2) +
-    geom_text(aes(x=agedays, label=period_length), color="white") +
+    #geom_text(aes(x=agedays, label=period_length), color="white") +
     #geom_text_repel(aes(x=agedays, label=period_length), color="white") +  
-    geom_text(aes(x=300,y=1.2,label=wastinc))+#geom_text(aes(x=300,y=1,label=sevwastinc))+ 
-    geom_text(aes(x=300,y=1,label=wastrec))+#geom_text(aes(x=300,y=0.6,label=sevwastrec))+ 
+    #geom_text(aes(x=300,y=1.2,label=wastinc))+#geom_text(aes(x=300,y=1,label=sevwastinc))+ 
+    #geom_text(aes(x=300,y=1,label=wastrec))+#geom_text(aes(x=300,y=0.6,label=sevwastrec))+ 
     #geom_text(aes(x=300,y=0.4,label=dur))+ 
-    coord_cartesian(xlim=c(1,732), ylim=c(-4,1.5), expand = c(0,0)) +
-    ylab("whz")  +
-    geom_text(data=ann_text,label =  c("Year 1","Year 2"), color="grey30")+
+    coord_cartesian(xlim=c(1,732), ylim=yrange, expand = c(0,0)) +
+    ylab("Weight-for-length Z-score")  +
     scale_x_continuous(limits=c(1,731), expand = c(0, 0),
-                       breaks = 1:12*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),2)) 
+                       breaks = 1:24*30.41 - 15.2, labels = as.character(1:24)) +
+    theme(legend.position = "right") + guides(fill=guide_legend(title="Wasting status"))
     #+ aes(alpha=alpha, group=factor(subjid)) + guides(alpha=FALSE)
   p
   
   return(p)  
 }
 
-ann_text <- data.frame(agedays = c(1,3)*182, whz = -3.8,lab = c("Year 1","Year 2"))
 
 
 #------------------------------------------
@@ -90,6 +91,7 @@ ann_text <- data.frame(agedays = c(1,3)*182, whz = -3.8,lab = c("Year 1","Year 2
 
 df <- d %>% filter(studyid=="ki0047075b-MAL-ED")
 
+i<-1
 p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],])
 print(p)
 
@@ -97,21 +99,10 @@ print(p)
 
 
 
-p2 <- ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthcat, ncol=1) + 
-  #geom_point(alpha=0.1, shape=19) + 
-  geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
-  geom_vline(xintercept=c(365,730)) +
-  geom_hline(aes(yintercept=meanZ), linetype="dashed") +
-  scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Month of the year") +
-  scale_x_continuous(limits=c(1,1086), expand = c(0, 0),
-                     breaks = 1:18*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),3)) +
-  geom_text(x = c(1,3)*182, y = -4,label =  c("Year 1","Year 2", "Year 3"), color="grey30") 
-
-p2
 
 
 
-pdf(paste0(here(),"\figures\individual_traj.pdf"),width=10,height=8.5)    
+pdf(paste0(here(),"/figures/individual_traj.pdf"),width=10,height=8.5)    
 for(i in 1:length(unique(df$subjid))){   
   p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],])
   print(p)

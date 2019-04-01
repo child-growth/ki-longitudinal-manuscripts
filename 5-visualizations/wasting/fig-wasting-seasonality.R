@@ -40,7 +40,6 @@ p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region) + geom_smooth(aes(colo
   scale_color_manual(values=tableau10, drop=TRUE, limits = levels(d$region)) +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
-p1
 
 
 ggsave(p1, file=paste0(here(),"/figures/wasting/season_WLZ_trajectories.png"), width=12, height=8)
@@ -56,8 +55,9 @@ d <- d %>% group_by(birthcat) %>% mutate(meanZ=mean(whz), prev=mean(whz < -2))
 #Mark each year and season
 d$studyyear <- factor(floor(d$studyday/365) + 1, labels = c("Year 1","Year 2","Year 3"))
 d$studyseason <- factor(interaction(d$studyyear, d$monsoon))
-d$studyseason_birthcat <- factor(interaction(d$studyseason, d$birthcat))
-table(d$studyseason_birthcat)
+
+# d2 <- d %>% filter(monsoon == "Monsoon") %>% arrange(studyday)
+# unique(d2$studyday)
 
 #Annotation dataframe
 ann_text <- data.frame(studyday = c(1,3,5)*182, whz = -1.2, fit = -1.2, lab = c("Year 1","Year 2", "Year 3"),
@@ -66,6 +66,41 @@ ann_text <- data.frame(studyday = c(1,3,5)*182, whz = -1.2, fit = -1.2, lab = c(
 
 # Note: need to calculate WLZ change over seasons 
 # (Summarize in boxplots)
+d$season_change <- NA
+d$season_change[d$monsoon=="Not monsoon"] <- "Entering monsoon season"
+d$season_change[d$monsoon=="Monsoon"] <- "Leaving monsoon season"
+d$season_change <- factor(d$season_change, levels=c("Entering monsoon season", "Leaving monsoon season"))
+
+#Make sure the inter-monsoon periods have the same category
+monsoon_timing <- d %>% group_by(monsoon, studyyear) %>% summarize(mean_age = mean(studyday))
+
+d$studyseason <- as.character(d$studyseason)
+d$studyseason[d$studyseason=="Year 1.Not monsoon" & d$studyday > monsoon_timing$mean_age[1]] <- "Year 2.Not monsoon"
+d$studyseason[d$studyseason=="Year 2.Not monsoon" & d$studyday > monsoon_timing$mean_age[2]] <- "Year 3.Not monsoon"
+d$studyseason <- factor(d$studyseason)
+
+#Create category to summarize mean WLZ based on season and birthcat
+d$studyseason_birthcat <- factor(interaction(d$studyseason, d$birthcat))
+table(d$studyseason_birthcat)
+table(d$birthcat, d$studyseason)
+
+df <- d %>% group_by(birthcat, studyseason_birthcat) %>% summarize(age1=mean(agedays), wlz1=mean(whz), season_change=season_change[1]) %>%
+     group_by(birthcat) %>% arrange(birthcat,age1) %>%
+     mutate(age2=lead(age1), wlz2=lead(wlz1))
+df
+
+
+ggplot(df, aes(color=birthcat)) + geom_segment(aes(x=age1, y=wlz1, xend=age2, yend=wlz2), size=2) +
+  scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
+
+ggplot(df, aes(color=birthcat)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
+  scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
+
+
+XXXXXXXXX
+#Why is there only 1 red recovery?
+
+
 
 
 
@@ -154,8 +189,8 @@ p2 <- ggplot(plotdf, aes(x=studyday, y=fit, group=birthcat, color=birthcat,  fil
   geom_ribbon(aes(ymin=fit_lb, ymax=fit_ub), alpha=0.1, color=NA) +
   geom_point(aes(x=xpos, y=fit, shape=agem), size=4) +
   geom_vline(xintercept=c(365,730)) +
-  scale_color_manual(values=tableau10) + 
-  scale_fill_manual(values=tableau10) + 
+  scale_color_manual(values=tableau10[c(7:10)]) + 
+  scale_fill_manual(values=tableau10[c(7:10)]) + 
   ylab("WLZ") + xlab("Month of the year") +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(limits=c(1,1086), expand = c(0, 0),
