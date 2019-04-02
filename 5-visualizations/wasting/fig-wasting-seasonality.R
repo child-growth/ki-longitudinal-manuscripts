@@ -37,7 +37,7 @@ d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "Monsoon", "Not monsoon")
 
 p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
   geom_smooth(aes(group=cohort), color="grey20", span=1, se=F,linetype=3, size=1) + xlab("Month") +
-  scale_color_manual(values=tableau10, drop=TRUE, limits = levels(d$region)) +
+  scale_color_manual(values=tableau10[c(7:10)], drop=TRUE, limits = levels(d$region)) +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 
@@ -131,8 +131,15 @@ res
 #                                       
 # p2
 
-shade="grey80"
 df <- d[d$agedays<730,]
+
+p2 <- ggplot(df[df$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color=tableau10[6], span=1, se=T, size=2) + 
+  ylab("WLZ") + xlab("Birth month") +
+  scale_x_continuous(limits=c(1,364), expand = c(0, 0),
+                     breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
+p2
+
+ggsave(p2, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
 
 
 #Add points at 6, 12, and 18 months
@@ -180,42 +187,41 @@ plotdf$agem[plotdf$agedays==548] <- "18 months"
 
 table(plotdf$xpos)
 
-p2 <- ggplot(plotdf, aes(x=studyday, y=fit, group=birthcat, color=birthcat,  fill=birthcat)) +
-  geom_rect(aes(xmin = 30.4617*5, xmax = 30.4617*10 , ymin = -1.25, ymax = 0), fill = shade, color = shade, alpha=0.1) +
-  geom_rect(aes(xmin = 30.4617*17, xmax = 30.4617*22 , ymin = -1.25, ymax = 0), fill = shade, color = shade, alpha=0.1) +
-  geom_rect(aes(xmin = 30.4617*29, xmax = 30.4617*34 , ymin = -1.25, ymax = 0), fill = shade, color = shade, alpha=0.1) +
+shade="grey80"
+
+rectd=data.frame(x1=30.4617*c(5,17,29), x2=30.4617*c(10,22,34), y1=rep(-1.25, 3), y2=rep(0, 3))
+
+p3 <- ggplot() +
+  geom_rect(data=rectd, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill=shade, color=shade, alpha=0.5) +
+    # geom_rect(xmin = 30.4617*5, xmax = 30.4617*10 , ymin = -1.25, ymax = 0, fill = shade, color = shade, alpha=0.1) +
+  # geom_rect(xmin = 30.4617*17, xmax = 30.4617*22 , ymin = -1.25, ymax = 0, fill = shade, color = shade, alpha=0.1) +
+  # geom_rect(xmin = 30.4617*29, xmax = 30.4617*34 , ymin = -1.25, ymax = 0, fill = shade, color = shade, alpha=0.1) +
   #geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
-  geom_line(size=2) +
-  geom_ribbon(aes(ymin=fit_lb, ymax=fit_ub), alpha=0.1, color=NA) +
-  geom_point(aes(x=xpos, y=fit, shape=agem), size=4) +
-  geom_vline(xintercept=c(365,730)) +
-  scale_color_manual(values=tableau10[c(7:10)]) + 
-  scale_fill_manual(values=tableau10[c(7:10)]) + 
+  geom_line(data=plotdf, aes(x=studyday, y=fit, group=birthcat, color=birthcat,  fill=birthcat), size=2) +
+  geom_ribbon(data=plotdf, aes(x=studyday, y=fit, ymin=fit_lb, ymax=fit_ub, group=birthcat, color=birthcat,  fill=birthcat), alpha=0.1, color=NA) +
+  geom_point(data=plotdf, aes(x=xpos, y=fit, shape=agem, group=birthcat, color=birthcat,  fill=birthcat), size=4, stroke = 2) +
+  #geom_vline(xintercept=c(365,730)) +
+  scale_shape_manual(values=c(0,1,2), na.translate = F) +
+  scale_color_manual(values=tableau10[c(7:10)], na.translate = F) + 
+  scale_fill_manual(values=tableau10[c(7:10)], na.translate = F) + 
   ylab("WLZ") + xlab("Month of the year") +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(limits=c(1,1086), expand = c(0, 0),
                      breaks = 1:18*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),3)) +
-  geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") +
+  #geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") +
   coord_cartesian(ylim=c(-1.25, 0)) + guides(shape=guide_legend(ncol=2), color=guide_legend(ncol=2)) + #guides(color = FALSE) + 
-  theme(legend.position = c(.9,.85),
+  theme(legend.position = c(.85,.8),
          legend.title = element_blank(),
          legend.background = element_blank(),
          legend.box.background = element_rect(colour = "black"),
          legend.text=element_text(size=rel(0.5)))
 
-print(p2)
+ggsave(p3, file=paste0(here(),"/figures/wasting/seasonal_trajectories_birthstrat.png"), width=8, height=5)
 
 
 
 
-p3 <- ggplot(df2[df2$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(aes(color=region), span=1, se=T, size=2) + 
-        ylab("WLZ") + xlab("Birthday") +
-  scale_x_continuous(limits=c(1,364), expand = c(0, 0),
-                     breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
-p3
 
-ggsave(p2, file=paste0(here(),"/figures/wasting/seasonal_trajectories_birthstrat.png"), width=8, height=5)
-ggsave(p3, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
 
 
 
