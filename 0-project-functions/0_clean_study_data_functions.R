@@ -157,7 +157,7 @@ mark_measure_freq <- function(dd){
 
 study_label_transformation <- function(df){
   # # simplify Tanzania label
-  df$country[df$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
+  # df$country[df$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
   
   # make a study-country label, and make the monthly variable into a factor
   # including an anonymous label (temporary) for sharing with WHO
