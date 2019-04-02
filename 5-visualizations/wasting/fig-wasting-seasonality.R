@@ -24,8 +24,8 @@ d$cohort <- paste0(d$studyid, " ", d$country)
 d$month <- floor(d$jday/30.417) + 1
 table(d$month)
 
-#Monsoon is assumed to be June-September 
-d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "Monsoon", "Not monsoon"))
+#Monsoon is assumed to be May-October 
+d$monsoon <- factor(ifelse(d$month > 4 & d$month < 11, "Monsoon", "Not monsoon"))
 
 
 #Check if children are measured spread throughout the year by cohort
@@ -96,6 +96,10 @@ ggplot(df, aes(color=birthcat)) + geom_segment(aes(x=age1, y=wlz1, xend=age2, ye
 ggplot(df, aes(color=birthcat)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
   scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
 
+ggplot(df, aes(color=season_change)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
+  facet_wrap(~birthcat) + 
+  scale_color_manual(values=tableau10) + theme(legend.position = "right")
+
 
 XXXXXXXXX
 #Why is there only 1 red recovery?
@@ -117,19 +121,6 @@ res <- ki.glm(data=d, y="whz", levels="studyseason_birthcat", ref="Year 1.Monsoo
 res
 
 
-#Note: need to write function to test if change in means between time of birth varies. 
-
-# p2 <- ggplot(df2[df2$agedays<730,], aes(x=studyday, y=whz)) + facet_wrap(~birthcat, ncol=1) + 
-#   #geom_point(alpha=0.1, shape=19) + 
-#   geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
-#   geom_vline(xintercept=c(365,730)) +
-#   geom_hline(aes(yintercept=meanZ), linetype="dashed") +
-#   scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Month of the year") +
-#   scale_x_continuous(limits=c(1,1086), expand = c(0, 0),
-#                       breaks = 1:18*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),3)) +
-#   geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") 
-#                                       
-# p2
 
 df <- d[d$agedays<730,]
 
@@ -192,15 +183,11 @@ shade="grey80"
 rectd=data.frame(x1=30.4617*c(5,17,29), x2=30.4617*c(10,22,34), y1=rep(-1.25, 3), y2=rep(0, 3))
 
 p3 <- ggplot() +
-  geom_rect(data=rectd, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill=shade, color=shade, alpha=0.5) +
-    # geom_rect(xmin = 30.4617*5, xmax = 30.4617*10 , ymin = -1.25, ymax = 0, fill = shade, color = shade, alpha=0.1) +
-  # geom_rect(xmin = 30.4617*17, xmax = 30.4617*22 , ymin = -1.25, ymax = 0, fill = shade, color = shade, alpha=0.1) +
-  # geom_rect(xmin = 30.4617*29, xmax = 30.4617*34 , ymin = -1.25, ymax = 0, fill = shade, color = shade, alpha=0.1) +
+  geom_rect(data=rectd, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill=shade, color=shade, alpha=1) +
   #geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
   geom_line(data=plotdf, aes(x=studyday, y=fit, group=birthcat, color=birthcat,  fill=birthcat), size=2) +
-  geom_ribbon(data=plotdf, aes(x=studyday, y=fit, ymin=fit_lb, ymax=fit_ub, group=birthcat, color=birthcat,  fill=birthcat), alpha=0.1, color=NA) +
+  geom_ribbon(data=plotdf, aes(x=studyday, y=fit, ymin=fit_lb, ymax=fit_ub, group=birthcat, color=birthcat,  fill=birthcat), alpha=0.3, color=NA) +
   geom_point(data=plotdf, aes(x=xpos, y=fit, shape=agem, group=birthcat, color=birthcat,  fill=birthcat), size=4, stroke = 2) +
-  #geom_vline(xintercept=c(365,730)) +
   scale_shape_manual(values=c(0,1,2), na.translate = F) +
   scale_color_manual(values=tableau10[c(7:10)], na.translate = F) + 
   scale_fill_manual(values=tableau10[c(7:10)], na.translate = F) + 
@@ -210,7 +197,7 @@ p3 <- ggplot() +
                      breaks = 1:18*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),3)) +
   #geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") +
   coord_cartesian(ylim=c(-1.25, 0)) + guides(shape=guide_legend(ncol=2), color=guide_legend(ncol=2)) + #guides(color = FALSE) + 
-  theme(legend.position = c(.85,.8),
+  theme(legend.position = c(.87,.83),
          legend.title = element_blank(),
          legend.background = element_blank(),
          legend.box.background = element_rect(colour = "black"),
