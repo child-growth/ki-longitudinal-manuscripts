@@ -25,8 +25,8 @@ summary.prev.co <- function(d, severe=F){
     filter(!is.na(agecat)) %>%
     group_by(studyid,country,agecat) %>%
     summarise(nmeas=sum(!is.na(whz)),
-              prev=mean(wasted==1 & stunted==1),
-              nxprev=sum(wasted==1 & stunted==1)) %>%
+              prev=mean(wasted==1 & stunted==1, na.rm=T),
+              nxprev=sum(wasted==1 & stunted==1, na.rm=T)) %>%
     filter(nmeas>=50) 
   
   prev.data <- droplevels(prev.data)

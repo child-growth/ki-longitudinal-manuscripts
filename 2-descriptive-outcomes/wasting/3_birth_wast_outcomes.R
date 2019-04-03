@@ -5,6 +5,7 @@
 rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
+source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
 
 
 load("U:/ucb-superlearner/data/Wasting_inc_data.RData")
@@ -12,7 +13,7 @@ load("U:/ucb-superlearner/data/Wasting_inc_data.RData")
 
 #Subset to monthly
 d <- d_noBW %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167) %>%
-  subset(., select = c(studyid, region, country, subjid, agedays, whz, wasting_episode, wast_inc, wast_rec, pt_wast, wasting_duration))
+  subset(., select = c(studyid, region, country, subjid, agedays, whz, haz, wasting_episode, wast_inc, wast_rec, pt_wast, wasting_duration))
 
 #Mark children born or enrolled wasted
 d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
@@ -121,9 +122,14 @@ perswast.res <- d %>% group_by(born_wast) %>% do(summary.perswast(., agelist = l
 perswast.res
 
 
+#co-occurrent wasting and stunting
+co.res <- d %>% group_by(born_wast) %>% do(summary.prev.co(.)$prev.res)
+co.res
+
+
 res <- data.frame(
-  measure= rep(c("Mean WLZ","Wasting cumulative incidence", "Severe wasting cumulative incidence", "Wasting incidence rate", "Persistent wasting"), each=2),
-    rbind(whz.res,ci.res, sev.ci.res, ir.res, perswast.res)
+  measure= rep(c("Mean WLZ","Wasting cumulative incidence", "Severe wasting cumulative incidence", "Wasting incidence rate", "Persistent wasting", "Co-occurrent wasting and stunting"), each=2),
+    rbind(whz.res,ci.res, sev.ci.res, ir.res, perswast.res, co.res)
 )
 res
 
