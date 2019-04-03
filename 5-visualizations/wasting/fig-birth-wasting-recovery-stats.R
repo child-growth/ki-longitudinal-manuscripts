@@ -27,13 +27,15 @@ d$measure_lab <- relevel(d$measure_lab, ref="Wasting\nincidence\nrate")
 
 
 p <- ggplot(d,aes(y=est,x=born_wast_lab)) +
-  geom_errorbar(aes(color=measure_lab, ymin=lb, ymax=ub), width = 0) +
-  geom_point(aes(fill=measure_lab, color=measure_lab), size = 2) +
+  geom_errorbar(aes(color=born_wast_lab, ymin=lb, ymax=ub), width = 0) +
+  geom_point(aes(fill=born_wast_lab, color=born_wast_lab), size = 2) +
   #geom_text(aes(x = born_wast, y = est, label = round(est)), hjust = 1.5) +
   #scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
   xlab("")+
   ylab("") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  scale_color_manual(values=tableau10[c(5:6)]) + 
+  scale_fill_manual(values=tableau10[c(5:6)]) + 
   theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
   theme(axis.text.x = element_text(margin = 
                                      margin(t = 0, r = 0, b = 0, l = 0),
@@ -44,7 +46,7 @@ p <- ggplot(d,aes(y=est,x=born_wast_lab)) +
   facet_wrap(~measure_lab, nrow=1, scales="free_y") 
 print(p)
 
-ggsave(p, file=paste0(here(),"/figures/wasting/birthwast_stats_subplot.png"), width=7, height=3)
+ggsave(p, file=paste0(here::here(),"/figures/wasting/birthwast_stats_subplot.png"), width=7, height=3)
 
 
 
