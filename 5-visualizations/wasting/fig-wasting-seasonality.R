@@ -90,35 +90,29 @@ df <- d %>% group_by(birthcat, studyseason_birthcat) %>% summarize(age1=mean(age
 df
 
 
-ggplot(df, aes(color=birthcat)) + geom_segment(aes(x=age1, y=wlz1, xend=age2, yend=wlz2), size=2) +
-  scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
-
-ggplot(df, aes(color=birthcat)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
-  scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
-
-ggplot(df, aes(color=season_change)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
-  facet_wrap(~birthcat) + 
-  scale_color_manual(values=tableau10) + theme(legend.position = "right")
-
-
-XXXXXXXXX
-#Why is there only 1 red recovery?
+# ggplot(df, aes(color=birthcat)) + geom_segment(aes(x=age1, y=wlz1, xend=age2, yend=wlz2), size=2) +
+#   scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
+# 
+# ggplot(df, aes(color=birthcat)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
+#   scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
+# 
+# ggplot(df, aes(color=season_change)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
+#   facet_wrap(~birthcat) + 
+#   scale_color_manual(values=tableau10) + theme(legend.position = "right")
 
 
 
-
-
-#test if the pooled means are significantly different
-pvals <- ki.ttest(data=d, y="whz", levels="studyseason", ref="Year 1.Not monsoon", comp=c("Year 1.Monsoon", "Year 2.Not monsoon"))
-pvals
-
-pvals <- ki.ttest(data=d, y="whz", levels="studyseason_birthcat", ref="Year 1.Monsoon.Born Jan-Mar",  comp=c("Year 2.Monsoon.Born Jan-Mar","Year 1.Monsoon.Born Apr-June"))
-pvals
-
-
-
-res <- ki.glm(data=d, y="whz", levels="studyseason_birthcat", ref="Year 1.Monsoon.Born Jan-Mar",  comp=c("Year 2.Monsoon.Born Jan-Mar","Year 1.Monsoon.Born Apr-June"))
-res
+# #test if the pooled means are significantly different
+# pvals <- ki.ttest(data=d, y="whz", levels="studyseason", ref="Year 1.Not monsoon", comp=c("Year 1.Monsoon", "Year 2.Not monsoon"))
+# pvals
+# 
+# pvals <- ki.ttest(data=d, y="whz", levels="studyseason_birthcat", ref="Year 1.Monsoon.Born Jan-Mar",  comp=c("Year 2.Monsoon.Born Jan-Mar","Year 1.Monsoon.Born Apr-June"))
+# pvals
+# 
+# 
+# 
+# res <- ki.glm(data=d, y="whz", levels="studyseason_birthcat", ref="Year 1.Monsoon.Born Jan-Mar",  comp=c("Year 2.Monsoon.Born Jan-Mar","Year 1.Monsoon.Born Apr-June"))
+# res
 
 
 
@@ -133,7 +127,6 @@ p2
 ggsave(p2, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
 
 
-#Add points at 6, 12, and 18 months
 # estimate a pooled fit, over all birthcats
 plotdf <- NULL
 for(i in 1:length(levels(df$birthcat))){
@@ -149,8 +142,6 @@ for(i in 1:length(levels(df$birthcat))){
                        fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
     plotdf<-rbind(plotdf,dfit)
   }
-
-
 
 
 # p2 <- ggplot(df, aes(x=studyday, y=whz, group=birthcat)) +
@@ -170,6 +161,7 @@ for(i in 1:length(levels(df$birthcat))){
 # 
 # print(p2)
 
+#Add points at 6, 12, and 18 months
 plotdf$xpos <- plotdf$agem <- NA
 plotdf$xpos[plotdf$agedays %in% c(182, 365,548)] <- plotdf$studyday[plotdf$agedays %in% c(182, 365,548)]
 plotdf$agem[plotdf$agedays==182] <- "6 months"

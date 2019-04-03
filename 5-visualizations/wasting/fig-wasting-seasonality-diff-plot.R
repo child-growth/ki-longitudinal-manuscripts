@@ -111,6 +111,10 @@ whz.res$birthcat <- factor(whz.res$birthcat, levels=unique(whz.res$birthcat))
 
 whz.res$age_label <- paste0(round(whz.res$mean_age1/30.4167),"->",round(whz.res$mean_age2/30.4167))
 
+
+# Note: need to add in pvalues from ttest comparing before and after WLZ
+
+
 p <- ggplot(whz.res,aes(y=est,x=studyseason)) +
   geom_errorbar(aes(color=birthcat, ymin=lb, ymax=ub), width = 0) +
   geom_point(aes(fill=birthcat, color=birthcat), size = 2) +
