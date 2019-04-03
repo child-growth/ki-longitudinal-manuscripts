@@ -502,8 +502,8 @@ nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
 
 # add margin around plots
 wastphm2 = wastphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-wpbar2 = wpbar + theme(plot.margin = unit(c(0,0.3,0.25,0.1), "cm"))
-nbar2 = nbar + theme(plot.margin = unit(c(0,0.25,0.25,0.1), "cm"))
+wpbar2 = wpbar + theme(plot.margin = unit(c(1.575,0.3,1.825,0.1), "cm"))
+nbar2 = nbar + theme(plot.margin = unit(c(1.575,0.25,1.825,0.1), "cm"))
 nagebar2 = nagebar + theme(plot.margin = unit(c(0.25,0.31,0,3.2), "cm"))
 empty <- grid::textGrob("") 
 
