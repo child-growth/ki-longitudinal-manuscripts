@@ -27,7 +27,7 @@ source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
 #-----------------------------------
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
-md <- readRDS('results/GHAP_metadata_stunting.rds')
+md <- readRDS('results/GHAP_metadata_stunting.RDS')
 wmd <- readRDS('results/GHAP_metadata_wasting.RDS')
 
 #Drop non-included studies
@@ -242,10 +242,10 @@ dp$hazcat<- factor(dp$hazcat)
 dp$hazcat[dp$nobs<50 | is.nan(dp$hazcat)] <- NA
 
 dp$hazcatnew = as.character(dp$hazcat)
-dp$hazcatnew = ifelse(is.na(dp$hazcat), "Fewer than 30\nobservations", dp$hazcatnew)
+dp$hazcatnew = ifelse(is.na(dp$hazcat), "Fewer than 50\nobservations", dp$hazcatnew)
 dp$hazcatnew<- factor(dp$hazcatnew, levels = c("<= -3","(-3,-2.5]",
                               "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",
-                              "(-0.5,0]", ">0", "Fewer than 30\nobservations"))
+                              "(-0.5,0]", ">0", "Fewer than 50\nobservations"))
 
 
 #-----------------------------------
@@ -373,36 +373,26 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 # STUNTING PREVALENCE HEAT MAP
 #-----------------------------------
 # heat map
+viridis_cols = c(viridis(
+  n = length(levels(dp$hazcatnew)) - 1,
+  alpha = 1,
+  begin = 0,
+  end = 0.8,
+  direction = -1,
+  option = "C"
+  ),
+  "grey90")
+
 stphm <- hm +
-  aes(fill=hazcat) +
+  #aes(fill=hazcat) +
   # labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
   labs(x="Age in months",y="",title="b") +
-  # scale_fill_manual("Mean HAZ", values = viridis_cols)
-
-  scale_fill_viridis(option = "C",
-                     na.value="grey90",
-                     direction = -1,
-                     end = 0.8,
-                     guide=guide_legend(title="Mean HAZ",title.vjust = 1,
-                                        label.position="bottom",label.hjust=0.1,nrow=1),
-                     discrete=TRUE)
-
-# anna start here
-# viridis_cols = c(viridis(
-#   n = length(levels(dp$hazcatnew)) - 1,
-#   alpha = 1,
-#   begin = 0,
-#   end = 0.8,
-#   direction = -1,
-#   option = "C"
-# ),
-# "grey90")
-
-# stphm <- hm +
-#   aes(fill = hazcatnew) +
-#   labs(x = "Age in months", y = "", title = "Mean height-for-age Z-score by month of age") +
-#   scale_fill_manual("Mean HAZ", values = viridis_cols)
+  aes(fill = hazcatnew) +
+  labs(x = "Age in months", y = "", title = "Mean height-for-age Z-score by month of age") +  
   
+  scale_fill_manual(guide=guide_legend(title="Mean HAZ",title.vjust = 1,
+                                       label.position="bottom",label.hjust=0.1,nrow=1),
+                    values = viridis_cols) 
 
 #-----------------------------------
 # number of obs side bar plot
@@ -455,12 +445,8 @@ nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.25,0.1), "cm"))
 nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.125,0,3.5), "cm"))
 empty <- grid::textGrob("") 
 
-stpgrid <- grid.arrange(nagebar,empty, empty,
+stpgrid <- grid.arrange(nagebar, empty, empty,
                         stphm, nbar, stpbar,nrow = 2, ncol = 3,
                         heights = c(25,100),
                         widths=c(100,20,20))
 ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
-
-
-
-
