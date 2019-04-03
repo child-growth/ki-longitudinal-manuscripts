@@ -298,6 +298,20 @@ dd <- dd[!(dd$studycountry %in% c("CMIN, Brazil", "CMIN, Guinea-Bissau")),]
 # dp <- droplevels(dp)
 # dd <- droplevels(dd)
 
+
+# Sort by wasting prevalence
+dp <- dp %>% 
+  group_by(region) %>%
+  dplyr::arrange(desc(wastprev), .by_group = TRUE)
+dp$studycountry <- sapply(dp$studycountry, function(x) as.character(x))
+dp$studycountry <- factor(dp$studycountry, levels = unique(dp$studycountry))
+
+dd <- dd %>% 
+  group_by(region) %>%
+  dplyr::arrange(wastprev, .by_group = TRUE) 
+dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
+dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
+
 #-----------------------------------
 # Basic plot schemes
 #
