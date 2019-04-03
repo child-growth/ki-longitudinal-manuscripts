@@ -113,8 +113,8 @@ ir.res$ub <- ir.res$ub * 1000
 
 
 #Duration
-#dur.res <- d %>% group_by(born_wast) %>% do(summary.dur(., agelist = list("6-24 months"))$dur.res)
-
+# dur.res <- d %>% group_by(born_wast) %>% do(summary.dur(., agelist = list("6-24 months"))$dur.res)
+# dur.res
 
 #Persistant wasting
 perswast.res <- d %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
