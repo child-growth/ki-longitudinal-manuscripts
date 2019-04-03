@@ -25,7 +25,7 @@ d$month <- floor(d$jday/30.417) + 1
 table(d$month)
 
 #Monsoon is assumed to be May-October 
-d$monsoon <- factor(ifelse(d$month > 4 & d$month < 11, "Monsoon", "Not monsoon"))
+d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "Monsoon", "Not monsoon"))
 
 
 #Check if children are measured spread throughout the year by cohort
@@ -37,7 +37,7 @@ d$monsoon <- factor(ifelse(d$month > 4 & d$month < 11, "Monsoon", "Not monsoon")
 
 p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
   geom_smooth(aes(group=cohort), color="grey20", span=1, se=F,linetype=3, size=1) + xlab("Month") +
-  scale_color_manual(values=tableau10[c(7:10)], drop=TRUE, limits = levels(d$region)) +
+  scale_color_manual(values=tableau10, drop=TRUE, limits = levels(d$region)) +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 
@@ -48,7 +48,18 @@ ggsave(p1, file=paste0(here(),"/figures/wasting/season_WLZ_trajectories.png"), w
 
 
 d <- d %>% filter(region=="South Asia")
-d <- calc.prev.agecat(d)
+d <- d[d$agedays<730,]
+
+p2 <- ggplot(d[d$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color=tableau10[6], span=1, se=T, size=2) + 
+  ylab("WLZ") + xlab("Birth month") +
+  scale_x_continuous(limits=c(1,364), expand = c(0, 0),
+                     breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
+p2
+
+ggsave(p2, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
+
+
+
 d$birthcat <- cut(d$birthday+1, breaks=c(0, 91, 182, 273, 365), labels=c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec"))
 d <- d %>% group_by(birthcat) %>% mutate(meanZ=mean(whz), prev=mean(whz < -2))
 
@@ -84,10 +95,10 @@ d$studyseason_birthcat <- factor(interaction(d$studyseason, d$birthcat))
 table(d$studyseason_birthcat)
 table(d$birthcat, d$studyseason)
 
-df <- d %>% group_by(birthcat, studyseason_birthcat) %>% summarize(age1=mean(agedays), wlz1=mean(whz), season_change=season_change[1]) %>%
-     group_by(birthcat) %>% arrange(birthcat,age1) %>%
-     mutate(age2=lead(age1), wlz2=lead(wlz1))
-df
+# df <- d %>% group_by(birthcat, studyseason_birthcat) %>% summarize(age1=mean(agedays), wlz1=mean(whz), season_change=season_change[1]) %>%
+#      group_by(birthcat) %>% arrange(birthcat,age1) %>%
+#      mutate(age2=lead(age1), wlz2=lead(wlz1))
+# df
 
 
 # ggplot(df, aes(color=birthcat)) + geom_segment(aes(x=age1, y=wlz1, xend=age2, yend=wlz2), size=2) +
@@ -116,22 +127,13 @@ df
 
 
 
-df <- d[d$agedays<730,]
-
-p2 <- ggplot(df[df$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color=tableau10[6], span=1, se=T, size=2) + 
-  ylab("WLZ") + xlab("Birth month") +
-  scale_x_continuous(limits=c(1,364), expand = c(0, 0),
-                     breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
-p2
-
-ggsave(p2, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
 
 
 # estimate a pooled fit, over all birthcats
 plotdf <- NULL
-for(i in 1:length(levels(df$birthcat))){
-    cat=levels(df$birthcat)[i]
-    di <- filter(df, birthcat==cat)
+for(i in 1:length(levels(d$birthcat))){
+    cat=levels(d$birthcat)[i]
+    di <- filter(d, birthcat==cat)
     fiti <- mgcv::gam(whz~s(studyday,bs="cr", k=10),data=di)
     range=min(di$studyday):max(di$studyday)
     agedays=1:(diff(range(range))+1)
@@ -173,6 +175,7 @@ table(plotdf$xpos)
 shade="grey80"
 
 rectd=data.frame(x1=30.4617*c(5,17,29), x2=30.4617*c(10,22,34), y1=rep(-1.25, 3), y2=rep(0, 3))
+#rectd=data.frame(x1=30.4617*c(4,16,28), x2=30.4617*c(11,23,35), y1=rep(-1.25, 3), y2=rep(0, 3))
 
 p3 <- ggplot() +
   geom_rect(data=rectd, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill=shade, color=shade, alpha=1) +

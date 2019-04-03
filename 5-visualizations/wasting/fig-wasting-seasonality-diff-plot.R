@@ -23,7 +23,8 @@ d$month <- floor(d$jday/30.417) + 1
 table(d$month)
 
 #Monsoon is assumed to be May-October
-d$monsoon <- factor(ifelse(d$month > 4 & d$month < 11, "leaving monsoon", "entering monsoon"))
+#d$monsoon <- factor(ifelse(d$month > 4 & d$month < 11, "leaving monsoon", "entering monsoon"))
+d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "leaving monsoon", "entering monsoon"))
 
 d <- d %>% filter(region=="South Asia")
 d <- calc.prev.agecat(d)
