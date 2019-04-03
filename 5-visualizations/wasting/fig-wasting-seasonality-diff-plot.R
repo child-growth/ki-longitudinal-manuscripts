@@ -27,7 +27,10 @@ table(d$month)
 d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "leaving monsoon", "entering monsoon"))
 
 d <- d %>% filter(region=="South Asia")
-d <- calc.prev.agecat(d)
+
+
+
+
 d$birthcat <- cut(d$birthday+1, breaks=c(0, 91, 182, 273, 365), labels=c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec"))
 #d$birthcat <- cut(d$birthday+1, breaks=c(0, 61, 122, 183, 243, 304, 365), labels=c("Born Jan-Feb","Born Mar-Apr","Born May-Jun","Born Jul-Aug","Born Sept-Oct","Born Nov-Dec"))
 
@@ -72,6 +75,10 @@ df
 
 df <- droplevels(df)
 
+#T-test of differences over seasonal change, by birth cohorts 
+ki.ttest(data=df, y=, levels, ref, comp)
+
+#Pool seasonal changes across cohorts
 
 fit.cont.rma <- function(data,age,yi,vi,ni,nlab){
   cat(age,"\n")
@@ -138,5 +145,31 @@ p
 
 
 ggsave(p, file=paste0(here(),"/figures/wasting/seasonal_trajectories_seasondiff.png"), width=14, height=5)
+
+
+#Facet by study season
+
+df <- whz.res
+
+df$studyseason <- as.character(df$studyseason)
+df$studyseason <- gsub("-",":\n",df$studyseason)
+
+p <- ggplot(df,aes(y=est,x=birthcat)) +
+  geom_errorbar(aes(color=birthcat, ymin=lb, ymax=ub), width = 0) +
+  geom_point(aes(fill=birthcat, color=birthcat), size = 2) +
+  geom_hline(yintercept = 0, linetype="dashed") +
+  geom_text(aes(x = birthcat, y = est+0.2, label = age_label), hjust = 0.5) +
+  scale_color_manual(values=tableau10[c(7:10)]) +
+  xlab("Season change")+
+  ylab("Mean WLZ change") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
+  theme(axis.text.x = element_text(size = 12, angle=45, hjust = 0.75, vjust=0.75)) +
+  theme(axis.title.y = element_text(size = 14)) +
+  ggtitle("") +
+  facet_grid(~studyseason, scales="free_x") #+
+p
+
+ggsave(p, file=paste0(here(),"/figures/wasting/seasonal_trajectories_seasondiff_alt.png"), width=14, height=5)
 
 
