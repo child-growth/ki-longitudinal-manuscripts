@@ -1,4 +1,5 @@
-
+# sensitivity analysis that subsets cohorts to those with 
+# monthly measurements each month from 0 to 24 months
 rm(list=ls())
 library(tidyverse)
 library(ggplot2)
