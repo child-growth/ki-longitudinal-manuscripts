@@ -20,16 +20,16 @@ This repository includes scripts to replicate the analyses included in the UC Be
 * shared
     *  
 * stunting
+    * `fig-DHS-plots-laz.R`: corresponds to stunting manuscript Fig 2
     * `fig-study-inventory-heatmaps-stunt.R`: corresponds to stunting manuscript Fig 1
-    * `fig-stunting-rec-density.R`: corresponds to stunting manuscript Fig 4b
-    * `fig-stunting-rec-prev.R`: corresponds to stunting manuscript Fig 4c
+    * `fig-stunting-descriptive-epi-plots.R`: corresponds to stunting manuscript Fig 3 (includes many other figures as well, some of which are not included in the manuscript currently)
+    * `fig-stunting-descriptive-epi-plot-monthly24.R`: sensitivity analysis for Fig 3 that subsets cohorts to those with monthly measurements each month from 0 to 24 months
     * `fig-stunting-flow.R`: corresponds to stunting manuscript Fig 4a
     * `fig-stunting-length-velocity.R`: corresponds to stunting manuscript Fig 5
-    * `fig-stunting-descriptive-epi-plots.R`: corresponds to stunting manuscript Fig 3 (includes many other figures as well, some of which are not included in the manuscript currently)
     * `fig-stunting-length-velocity-subset.R`: sensitivity analysis for Fig 5 that excludes COHORTS Guatemala and Content cohorts
-    * `fig-stunting-descriptive-epi-plot-monthly24.R`: sensitivity analysis for Fig 3 that subsets cohorts to those with monthly measurements each month from 0 to 24 months
-    * `fig-DHS-plots-laz.R`: corresponds to stunting manuscript Fig 2
     * `fig-stunting-prevalence-map.R`: corresponds to stunting manuscript Extended Data Fig 2
+    * `fig-stunting-rec-density.R`: corresponds to stunting manuscript Fig 4b
+    * `fig-stunting-rec-prev.R`: corresponds to stunting manuscript Fig 4c
 
 * wasting
     * [Andrew to add]
