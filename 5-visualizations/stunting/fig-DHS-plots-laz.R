@@ -177,7 +177,7 @@ df_survey <- foreach(measure = unique(dhsz$measure), .combine = rbind) %:%
   foreach(region = c("AFRO", "SEARO", "PAHO"), .combine = rbind) %dopar% {
     do_one_combination(measure_here = measure, region_here = region)
   }
-# WILSON: meta analysis, random effects
+# meta analysis using fixed effects or random effects based pooling
 fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
   data <- filter(data, agecat == age)
   fit <- NULL
@@ -313,8 +313,8 @@ ghapfits <- foreach(rgn=levels(ghapd$whoregion),.combine=rbind) %do% {
 #---------------------------------------
 ghapfits   <- ghapfits   %>% mutate(dsource="ki cohorts")
 dhssubfits <- dhssubfits %>% mutate(dsource="DHS, ki countries")
-# dhsallfits <- dhsallfits %>% mutate(dsource="DHS") # GAM fits
-dhsallfits <- df_survey_output %>% mutate(dsource="DHS") # with sampling weights
+# dhsallfits <- dhsallfits %>% mutate(dsource="DHS") # std_err based on bootstrapping GAM
+dhsallfits <- df_survey_output %>% mutate(dsource="DHS") # std_err based on survey_avg using sampling weight
 dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
   mutate(dsource=factor(dsource,levels=c("ki cohorts","DHS, ki countries","DHS")),
          region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO") )
