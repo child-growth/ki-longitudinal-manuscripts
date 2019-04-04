@@ -210,8 +210,6 @@ do_one_combination <- function(measure_here, region_here) {
   return(df_survey)
 }
 
-# measure <- "LAZ"
-# region <- "AFRO"
 df_survey <- foreach(measure = levels(dhsz$measure), .combine = rbind) %:%
   foreach(region = c("AFRO", "SEARO", "PAHO"), .combine = rbind) %dopar% {
     do_one_combination(measure_here = measure, region_here = region)
