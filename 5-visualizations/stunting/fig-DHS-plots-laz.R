@@ -1,17 +1,19 @@
-#---------------------------------------
-# Ki DHS Analysis
-# Spring 2019
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+
 # This script reads in clean DHS z-score
 # data, estimates means by age in months
 # and estimates kernel densities
 # the script creates two figures that
 # compare DHS estimates to those from
 # the KI cohorts.
+
 # This script is limited to LAZ for the
 # linear growth paper. It includes
 # KI cohorts with measurement frequency
 # at least quarterly
-#---------------------------------------
+##########################################
 
 #---------------------------------------
 # input files:

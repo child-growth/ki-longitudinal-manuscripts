@@ -1,5 +1,6 @@
-#-----------------------------------
-# study-inventory-heatmaps.R
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
 #
 # ben arnold (benarnold@berkeley.edu)
 # modified by jade benjamin-chung (jadebc@berkeley.edu)
@@ -9,9 +10,11 @@
 # in GHAP using meta-data
 # (GHAP_metadata) that Andrew created
 # using GHAPStudyMetadata.R
-#-----------------------------------
 
+# inputs: GHAP_metadata_stunting.RDS
 
+# outputs: stunting-study-inventory-heatmap.pdf
+##########################################
 
 #-----------------------------------
 # preamble
@@ -19,55 +22,28 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Function source
-source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
-
-
-
 #-----------------------------------
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
 md <- readRDS('results/GHAP_metadata_stunting.RDS')
-wmd <- readRDS('results/GHAP_metadata_wasting.RDS')
 
 #Drop non-included studies
 md <- mark_measure_freq(md)
-wmd <- mark_measure_freq(wmd)
 table(md$measurefreq)
-table(wmd$measurefreq)
 
 md <- md %>% filter(measurefreq!="yearly" & !is.na(measurefreq))
-wmd <- wmd %>% filter(measurefreq!="yearly" & !is.na(measurefreq))
 
 unique(md$study_id)
 unique(wmd$study_id)
 
-#fix PROVIDE location
-wmd$countrycohort[wmd$study_id=="PROVIDE"] <- "BANGLADESH"
-
 #drop yearly COHORTS
 md <- md[!(md$study_id=="COHORTS" & (md$countrycohort=="BRAZIL"|md$countrycohort=="SOUTH AFRICA")),] 
-wmd <- wmd[!(wmd$study_id=="COHORTS" & (wmd$countrycohort=="BRAZIL"|wmd$countrycohort=="SOUTH AFRICA")),] 
 
 md <- md[(md$study_id %in% wmd$study_id),]
-wmd <- wmd[(wmd$study_id %in% md$study_id),]
 
-dim(wmd)
 dim(md)
 md$countrycohort[is.na(md$countrycohort)] <- "singlecohort"
-wmd$countrycohort[is.na(wmd$countrycohort)] <- "singlecohort"
 
-wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m0, wastprev_m1, wastprev_m2,
-                      wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
-                      wastprev_m7, wastprev_m8, wastprev_m9, wastprev_m10,
-                      wastprev_m11, wastprev_m12, wastprev_m13, wastprev_m14,
-                      wastprev_m15, wastprev_m16, wastprev_m17, wastprev_m18,
-                      wastprev_m19, wastprev_m20, wastprev_m21, wastprev_m22,
-                      wastprev_m23, wastprev_m24)
-dim(wmd)
-dim(md)
-md <- merge(md, wmd, by=c('study_id', 'cohortnum'), all = TRUE)
-dim(md)
 
 #drop mal-ed Pakistan
 md <- md[!(md$study_id=="MAL-ED" & md$countrycohort=="singlecohort"),]

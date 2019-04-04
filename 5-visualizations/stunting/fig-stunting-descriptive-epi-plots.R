@@ -1,11 +1,29 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+#
+# plots of mean LAZ, stunting incidence, 
+# and stunting prevalence
 
+# inputs: desc_data_cleaned.Rdata, quantile_data_stunting.Rdata
+
+# outputs: 
+# fig_stunt_mean_LAZ_region.png
+# fig_stunt_mean_quantile_LAZ_region.png
+# fig_stunt_prev_pooled.png
+# fig_stunt_ci_inc_pooled.png
+# fig_stunt_ir_pooled.png
+# fig_stunt_rec_pooled.png
+# fig_stunt_rec_pooled_only.png
+##########################################
+
+#-----------------------------------
+# preamble
+#-----------------------------------
 rm(list=ls())
-library(tidyverse)
-library(ggplot2)
-library(dplyr)
+source(paste0(here::here(), "/0-config.R"))
 
 #Plot themes
-source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 theme_set(theme_ki())
 
 #Load data

@@ -5,6 +5,11 @@
 # figure: stacked bar chart showing 
 # proportion of children who were newly stunted, 
 # still stunted, relapsed, recovered, never stunted
+
+# inputs: stuntflow.RDS, stuntflow_pooled.RDS
+
+# outputs: fig-stunting-stacked-bar-RE.png,
+# fig-stunting-stacked-bar-noRE.png
 ##########################################
 #-----------------------------------------
 # Stunting flow chart
@@ -81,6 +86,8 @@ plot_cols  = viridis_cols[c(2, 4, 6, 8, 10, 11)]
 
 #-----------------------------------------
 # stacked bar graphs using random effects pooled data
+# NOTE THIS PLOT IS CURRENTLY NOT RUNNING
+# DUE TO UNDERLYING DATA ISSUES -- NOT PART OF MANUSCRIPT
 #-----------------------------------------
 
 bar_plot_RE = ggplot(plot_data_pooled) +

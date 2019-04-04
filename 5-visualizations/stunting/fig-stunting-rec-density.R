@@ -6,9 +6,14 @@
 # children who recovered at different ages. 
 # histograms show distribution of LAZ
 # at subsequent measurements following recovery.
+
+# inputs: stunt_rec_cohort.RDS
+
+# outputs: fig_stunt_rec_dist_hist.png
 ##########################################
+
 #-----------------------------------------
-# Stunting recovery density
+# Preamble
 #-----------------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))

@@ -1,16 +1,32 @@
-#------------------------------------------------------------------------------
-# Length velocity plots
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+#
+# plots of linear growth velocity
 
 # Sensitivity analysis excluding COHORTS Guatemala 
 # and Content
-#------------------------------------------------------------------------------
+
+# inputs: pool_vel_sub.RDS 
+
+# outputs: 
+# fig_stunt_vel_laz_pool_sub.png
+# fig_stunt_vel_cm_asia_sub.png
+# fig_stunt_vel_cm_latamer_sub.png
+# fig_stunt_vel_cm_eur_sub.png
+# fig_stunt_vel_cm_africa_sub.png
+# fig_stunt_vel_cm_pool_sub.png
+# fig_stunt_vel_pool_sub.png
+# fig_stunt_vel_region_sub.png
+##########################################
+#-----------------------------------
+# preamble
+#-----------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load length velocity data
 vel = readRDS(paste0(res_dir,"stunting/pool_vel_sub.RDS"))
-
-vel <- pooled_vel 
 
 vel$nmeas.f <- clean_nmeans(vel$N)
 vel$strata <- clean_agecat(vel$strata)

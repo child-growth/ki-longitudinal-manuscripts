@@ -1,11 +1,29 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+#
+# plots of mean LAZ, stunting incidence, 
+# and stunting prevalence
+# 
+# sensitivity analysis that subsets cohorts to those with 
+# monthly measurements each month from 0 to 24 months
 
+# inputs: desc_data_cleaned.Rdata, quantile_data_stunting_monthly24.Rdata
+
+# outputs: 
+# fig_stunt_mean_quantile_LAZ_region_monthly24.png
+# fig_stunt_mean_quantile_LAZ_region_monthly24.png
+# fig_stunt_prev_pooled_monthly24.png
+# fig_stunt_ci_inc_pooled_monthly24.png
+##########################################
+
+#-----------------------------------
+# preamble
+#-----------------------------------
 rm(list=ls())
-library(tidyverse)
-library(ggplot2)
-library(dplyr)
+source(paste0(here::here(), "/0-config.R"))
 
 #Plot themes
-source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 theme_set(theme_ki())
 
 #Load data
