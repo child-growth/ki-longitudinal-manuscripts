@@ -48,6 +48,7 @@ data_dir = paste0(here::here(), "/data/")
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_wast_functions.R"))
+source(paste0(here::here(),"/0-project-functions/0_clean_study_data_functions.R"))
 
 
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
