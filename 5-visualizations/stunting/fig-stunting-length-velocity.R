@@ -1,6 +1,24 @@
-#------------------------------------------------------------------------------
-# Length velocity plots
-#------------------------------------------------------------------------------
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+#
+# plots of linear growth velocity
+
+# inputs: pool_vel.RData, meanlaz_velocity.RDS
+
+# outputs: 
+# fig_stunt_vel_laz_pool.png
+# fig_stunt_vel_cm_asia.png
+# fig_stunt_vel_cm_latamer.png
+# fig_stunt_vel_cm_eur.png
+# fig_stunt_vel_cm_africa.png
+# fig_stunt_vel_cm_pool.png
+# fig_stunt_vel_pool.png
+# fig_stunt_vel_region.png
+##########################################
+#-----------------------------------
+# preamble
+#-----------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 

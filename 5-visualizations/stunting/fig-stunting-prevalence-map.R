@@ -1,4 +1,16 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+#
+# map of stunting prevalence
 
+# inputs: country_centroids_primary.csv, Stunting_data.RData
+
+# outputs: Stunting_map.png
+##########################################
+#-----------------------------------
+# preamble
+#-----------------------------------
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))

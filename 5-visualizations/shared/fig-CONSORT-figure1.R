@@ -24,8 +24,8 @@ library('scales')
 library('RColorBrewer')
 library('ggplot2')
 library('gridExtra')
-library('readxl')
-library('fastDummies')
+# library('readxl')
+# library('fastDummies')
 library('here')
 
 #Function source
@@ -229,7 +229,7 @@ hm1 <- ggplot(ki_md_hm1, aes(x = excludedReason, y = cohort)) +
     #remove plot background
     plot.background = element_blank(),
     #remove plot border
-    panel.border = element_blank(),
+    panel.border = element_blank()
     # plot.margin = margin(0, 0.5, 0, 9.25, "cm")
   )
 hm1
