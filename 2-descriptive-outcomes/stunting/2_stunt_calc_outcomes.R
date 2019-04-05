@@ -18,11 +18,30 @@ load("U:/ucb-superlearner/data/stunting_data.RData")
 head(d)
 d <- d %>% subset(., select = -c(tr))
 
+dprev <- calc.prev.agecat(d)
+dmon <- calc.monthly.agecat(d)
+d3 <- calc.ci.agecat(d, range = 3)
+d6 <- calc.ci.agecat(d, range = 6)
 
-#Prevalence and WHZ  - not including yearly studies
-d <- calc.prev.agecat(d)
-prev.data <- summary.prev.haz(d)
-prev.region <- d  %>% group_by(region) %>% do(summary.prev.haz(.)$prev.res)
+agelst3 = list(
+  "0-3 months",
+  "3-6 months",
+  "6-9 months",
+  "9-12 months",
+  "12-15 months",
+  "15-18 months",
+  "18-21 months",
+  "21-24 months"
+)
+
+agelst6 = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
+
+
+#----------------------------------------
+# Prevalence and WHZ  - not including yearly studies
+#----------------------------------------
+prev.data <- summary.prev.haz(dprev)
+prev.region <- dprev  %>% group_by(region) %>% do(summary.prev.haz(.)$prev.res)
 prev.cohort <-
   prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
@@ -33,10 +52,12 @@ prev <- bind_rows(
   prev.cohort
 )
 
-#Severe stunting prevalence
-sev.prev.data <- summary.prev.haz(d, severe.stunted = T)
+#----------------------------------------
+# Severe stunting prevalence
+#----------------------------------------
+sev.prev.data <- summary.prev.haz(dprev, severe.stunted = T)
 sev.prev.region <-
-  d  %>% group_by(region) %>% do(summary.prev.haz(., severe.stunted = T)$prev.res)
+  dprev  %>% group_by(region) %>% do(summary.prev.haz(., severe.stunted = T)$prev.res)
 sev.prev.cohort <-
   sev.prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
@@ -47,9 +68,11 @@ sev.prev <- bind_rows(
   sev.prev.cohort
 )
 
-#mean haz
-haz.data <- summary.haz(d)
-haz.region <- d  %>% group_by(region) %>% do(summary.haz(.)$haz.res)
+#----------------------------------------
+# mean haz
+#----------------------------------------
+haz.data <- summary.haz(dprev)
+haz.region <- dprev  %>% group_by(region) %>% do(summary.haz(.)$haz.res)
 haz.cohort <-
   haz.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
   rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
@@ -60,7 +83,9 @@ haz <- bind_rows(
   haz.cohort
 )
 
+#----------------------------------------
 # mean haz for growth velocity age categories
+#----------------------------------------
 d_vel = d %>% 
   mutate(agecat=ifelse(agedays<3*30.4167,"0-3",
                               ifelse(agedays>=3*30.4167 & agedays<6*30.4167,"3-6",
@@ -88,10 +113,12 @@ haz.vel <- bind_rows(
 
 saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity.RDS"))
 
-#monthly mean haz
-d <- calc.monthly.agecat(d)
-monthly.haz.data <- summary.haz(d)
-monthly.haz.region <- d  %>% group_by(region) %>% do(summary.haz(.)$haz.res)
+#----------------------------------------
+# monthly mean haz
+#----------------------------------------
+dmon <- calc.monthly.agecat(d)
+monthly.haz.data <- summary.haz(dmon)
+monthly.haz.region <- dmon  %>% group_by(region) %>% do(summary.haz(.)$haz.res)
 monthly.haz.cohort <-
   monthly.haz.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
   rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
@@ -102,14 +129,16 @@ monthly.haz <- bind_rows(
   monthly.haz.cohort
 )
 
-#Get monthly HAZ quantiles
-quantile_d <- d %>% group_by(agecat, region) %>%
+#----------------------------------------
+# Get monthly HAZ quantiles
+#----------------------------------------
+quantile_d <- dmon %>% group_by(agecat, region) %>%
   mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
          fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
   select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
 
-quantile_d_overall <- d %>% 
+quantile_d_overall <- dmon %>% 
   group_by(agecat) %>%
   summarise(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
             fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
@@ -120,34 +149,10 @@ quantile_d_overall <- d %>%
 save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_stunting.Rdata"))
 
 
-#Incidence proportion
-d <- calc.ci.agecat(d, range = 6)
-agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
-ci.data <- summary.stunt.incprop(d, agelist = agelst)
-ci.region <- d  %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst)$ci.res)
-ci.cohort <-
-  ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
-  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
-ci <- bind_rows(
-  data.frame(cohort = "pooled", region = "Overall", ci.data$ci.res),
-  data.frame(cohort = "pooled", ci.region),
-  ci.cohort
-)
-
-
-#Incidence proportion 3 month intervals
-d3 <- calc.ci.agecat(d, range = 3)
-agelst3 = list(
-  "0-3 months",
-  "3-6 months",
-  "6-9 months",
-  "9-12 months",
-  "12-15 months",
-  "15-18 months",
-  "18-21 months",
-  "21-24 months"
-)
+#----------------------------------------
+# Incidence proportion 3 month intervals
+#----------------------------------------
 ci.data3 <- summary.stunt.incprop(d3, agelist = agelst3)
 ci.region3 <- d3  %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3)$ci.res)
 ci.cohort3 <-
@@ -161,21 +166,68 @@ ci_3 <- bind_rows(
   ci.cohort3
 )
 
+#----------------------------------------
+# Incidence proportion 6 month intervals
+#----------------------------------------
+ci.data6 <- summary.stunt.incprop(d6, agelist = agelst6)
+ci.region6 <- d6  %>% group_by(region) %>% 
+  do(summary.stunt.incprop(., agelist = agelst6)$ci.res)
+ci.cohort6 <-
+  ci.data6$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
-
-
-#Cumulative Incidence 
-d3 <- calc.ci.agecat(d, range = 3)
-agelst3 = list(
-  "0-3 months",
-  "3-6 months",
-  "6-9 months",
-  "9-12 months",
-  "12-15 months",
-  "15-18 months",
-  "18-21 months",
-  "21-24 months"
+ci_6 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data6$ci.res),
+  data.frame(cohort = "pooled", ci.region6),
+  ci.cohort6
 )
+
+
+
+
+#----------------------------------------
+# Incidence proportion of severe stunting 
+# 3 month interval
+#----------------------------------------
+sev.ci.data3 <- summary.stunt.incprop(d3, agelist = agelst3, severe.stunted = T)
+sev.ci.region3 <- d3  %>% group_by(region) %>% 
+  do(summary.stunt.incprop(., agelist = agelst3, severe.stunted = T)$ci.res)
+sev.ci.cohort3 <-
+  sev.ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
+
+
+sev.ci3 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", sev.ci.data3$ci.res),
+  data.frame(cohort = "pooled", sev.ci.region3),
+  sev.ci.cohort3
+)
+
+#----------------------------------------
+# Incidence proportion of severe stunting
+# 6 month interval
+#----------------------------------------
+sev.ci.data6 <- summary.stunt.incprop(d6, agelist = agelst6, severe.stunted = T)
+sev.ci.region6 <- d6  %>% group_by(region) %>% 
+  do(summary.stunt.incprop(., agelist = agelst6, severe.stunted = T)$ci.res)
+sev.ci.cohort6 <-
+  sev.ci.data6$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
+
+
+sev.ci6 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", sev.ci.data6$ci.res),
+  data.frame(cohort = "pooled", sev.ci.region6),
+  sev.ci.cohort6
+)
+
+
+
+
+
+#----------------------------------------
+# Cumulative Incidence  - 3 month intervals
+#----------------------------------------
 ci.data3 <- summary.ci(d3, agelist = agelst3)
 ci.region3 <- d3  %>% group_by(region) %>% do(summary.ci(., agelist = agelst3)$ci.res)
 ci.cohort3 <-
@@ -183,35 +235,72 @@ ci.cohort3 <-
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 
-cuminc <- bind_rows(
+cuminc3 <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", ci.data3$ci.res),
   data.frame(cohort = "pooled", ci.region3),
   ci.cohort3
 )
 
 
-
-
-
-#Incidence proportion of severe stunting
-d <- calc.ci.agecat(d, range = 6)
-agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
-sev.ci.data <- summary.stunt.incprop(d, agelist = agelst, severe.stunted = T)
-sev.ci.region <- d  %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst, severe.stunted = T)$ci.res)
-sev.ci.cohort <-
-  sev.ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+#----------------------------------------
+# Cumulative Incidence  - 6 month intervals
+#----------------------------------------
+ci.data6 <- summary.ci(d6, agelist = agelst6)
+ci.region6 <- d6  %>% group_by(region) %>% do(summary.ci(., agelist = agelst6)$ci.res)
+ci.cohort6 <-
+  ci.data6$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 
-sev.ci <- bind_rows(
-  data.frame(cohort = "pooled", region = "Overall", sev.ci.data$ci.res),
-  data.frame(cohort = "pooled", sev.ci.region),
-  sev.ci.cohort
+cuminc6 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data6$ci.res),
+  data.frame(cohort = "pooled", ci.region6),
+  ci.cohort6
 )
 
 
 
+#----------------------------------------
+# Cumulative Incidence  - 3 month intervals 
+# severe
+#----------------------------------------
+sev.ci.data3 <- summary.ci(d3, agelist = agelst3, severe.stunted = T)
+sev.ci.region3 <- d3  %>% group_by(region) %>% 
+  do(summary.ci(., agelist = agelst3, severe.stunted = T)$ci.res)
+sev.ci.cohort3 <-
+  sev.ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
+
+
+sev.cuminc3 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", sev.ci.data3$ci.res),
+  data.frame(cohort = "pooled", sev.ci.region3),
+  sev.ci.cohort3
+)
+
+
+#----------------------------------------
+# Cumulative Incidence  - 6 month intervals
+# severe
+#----------------------------------------
+sev.ci.data6 <- summary.ci(d6, agelist = agelst6)
+sev.ci.region6 <- d6  %>% group_by(region) %>% 
+  do(summary.ci(., agelist = agelst6, severe.stunted = T)$ci.res)
+sev.ci.cohort6 <-
+  sev.ci.data6$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
+
+
+sev.cuminc6 <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", sev.ci.data6$ci.res),
+  data.frame(cohort = "pooled", sev.ci.region6),
+  sev.ci.cohort6
+)
+
+
+#----------------------------------------
 # #Incidence rate
+#----------------------------------------
 # ir.data <- summary.stunt.ir(d, agelist = agelst)
 # ir.region <- d  %>% group_by(region) %>% do(summary.stunt.ir(., agelist = agelst)$ir.res)
 # ir.cohort <-
@@ -230,7 +319,9 @@ sev.ci <- bind_rows(
 # ir$ub <- ir$ub * 1000
 
 
+#----------------------------------------
 # # #Incidence rate - severe stunting
+#----------------------------------------
 # sev.ir.data <- summary.stunt.ir(d, sev_stunt = T, agelist = agelst)
 # sev.ir.region <- d  %>% group_by(region) %>% do(summary.stunt.ir(., agelist = agelst, sev.stunting = T)$ir.res)
 # sev.ir.cohort <-
@@ -250,7 +341,9 @@ sev.ci <- bind_rows(
 
 
 
+#----------------------------------------
 # #Reversal
+#----------------------------------------
 # #-subset to monthly
 # df <- d %>% filter(measurefreq=="monthly")
 # 
@@ -267,7 +360,10 @@ sev.ci <- bind_rows(
 
 
 
-save(prev, sev.prev,  haz,  monthly.haz, rev, ci, ci_3,   sev.ci,  file = "U:/ki-longitudinal-manuscripts/results/stunting/shiny_desc_data_stunting_objects.Rdata")
+save(prev, sev.prev,  haz,  monthly.haz, 
+     cuminc3, cuminc6, sev.cuminc3, sev.cuminc6, 
+     ci_3, ci_6, sev.ci3, sev.ci6,  
+     file = paste0(here(), "/results/shiny_desc_data_stunting_objects.Rdata"))
 
 
 shiny_desc_data <- bind_rows(
@@ -275,11 +371,14 @@ shiny_desc_data <- bind_rows(
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Mean LAZ",  haz),
   data.frame(disease = "Stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ",  monthly.haz),
-  #data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Recovery", rev),
-  data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc),
-  data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc3),
+  data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc6),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc3),
+  data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci_3),
-  data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci)#,
+  data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci_6),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci3),
+  data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci6)
   #data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence rate",  ir),
   #data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence rate",  sev.ir)
 )
