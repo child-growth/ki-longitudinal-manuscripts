@@ -348,5 +348,20 @@ rec_histogram_plot = ggplot(plot_data_sub,
     legend.position = "bottom"
   )
 
+# define standardized plot names
+rec_histogram_plot_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "distribution after laz >= -2",
+  population = "overall",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
 
-ggsave(rec_histogram_plot, file="figures/stunting/fig_stunt_rec_dist_hist.png", width=8, height=5)
+# save plot 
+
+ggsave(rec_histogram_plot, file=paste0("figures/stunting/fig-",rec_histogram_plot_name,
+       ".png"), width=8, height=5)
+
+
