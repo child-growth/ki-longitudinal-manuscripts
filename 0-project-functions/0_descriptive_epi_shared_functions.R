@@ -556,7 +556,9 @@ create_name = function(outcome, cutoff, measure, population,
       outcome == "LAZ" ~ "laz",
       outcome == "laz" ~ "laz",
       outcome == "WHZ" ~ "whz",
-      outcome == "whz" ~ "whz"
+      outcome == "whz" ~ "whz",
+      outcome == "stunting and laz" ~ "stunt_laz"
+      
     )
     
     cutoff_s = cutoff
@@ -567,7 +569,8 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "cumulative incidence" ~ "cuminc",
       measure == "incidence rate" ~ "ir",
       measure == "mean" ~ "mean",
-      measure == "growth velocity" ~ "vel"
+      measure == "growth velocity" ~ "vel",
+      measure == "heatmap" ~ "heatmap"
     )
         
     population_s = case_when(
