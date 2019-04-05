@@ -603,7 +603,8 @@ create_name = function(outcome, cutoff, measure, population,
     analysis_s = case_when(
       analysis == "primary" ~ "primary",
       analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
-      analysis == "monthly cohorts" ~ "monthly"
+      analysis == "monthly cohorts" ~ "monthly",
+      analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff"
     )
     
     # create figure name string using short versions of each feature
