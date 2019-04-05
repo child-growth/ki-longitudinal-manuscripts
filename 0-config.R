@@ -40,6 +40,7 @@ library(rlang)
 # (will need to configure in each script)
 library(foreach)
 library(doParallel)
+library(survey)
 
 
 # define directories
