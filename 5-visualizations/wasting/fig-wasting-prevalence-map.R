@@ -4,13 +4,13 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load country mediods
-mediods <- read.csv('non-secure data/country_centroids/country_centroids_primary.csv', header=T, sep = "\t")
+mediods <- read.csv('data/non-secure data/country_centroids/country_centroids_primary.csv', header=T, sep = "\t")
 head(mediods)
 mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
 mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
 
 #Load cohort data and calc wasting prev by study
-load("U:/Data/Wasting/Wasting_data.RData")
+load("U:/ucb-superlearner/data/Wasting_data.RData")
 d <- d %>% filter(measurefreq=="monthly")
 
 d$cohort <- paste0(d$studyid,"-",d$country)
@@ -65,7 +65,7 @@ d <- d %>% rename(`Number of observations`=Ncat, `Wasting Prevalence (%)`=wastca
 
 
 #Plot map
-p <- ggplot(world, aes(long, lat)) +
+map_plot <- ggplot(world, aes(long, lat)) +
   geom_map(map=world, aes(map_id=region), fill=NA, color="grey20") +
   coord_quickmap() + theme_bw() + coord_cartesian(xlim=c(-90,120), ylim=c(-36,50)) +
   geom_point(aes(x = x, y = y, size = `Number of observations`, 
@@ -78,6 +78,20 @@ p <- ggplot(world, aes(long, lat)) +
   theme(strip.background = element_blank(),
         strip.text.x = element_text(size=12),
         axis.text.x = element_text(size=12))
-p
+map_plot
 
-ggsave(p, file="figures/wasting/Wasting_map.png", width=9, height=4)
+# define standardized plot names
+map_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "map",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(map_plot, file=paste0("figures/wasting/fig-",map_plot_name,".png"), width=9, height=4)
+saveRDS(d, file=paste0("results/figure-data/figdata-",map_plot_name,".RDS"))
+

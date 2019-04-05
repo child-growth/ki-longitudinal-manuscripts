@@ -559,8 +559,8 @@ create_name = function(outcome, cutoff, measure, population,
       outcome == "whz" ~ "wlz",
       outcome == "wlz" ~ "wlz",
       outcome == "stunting and laz" ~ "stunt_laz",
-      outcome == "wasting and wlz" ~ "wast_wlz"
-      
+      outcome == "wasting and wlz" ~ "wast_wlz",
+      outcome == "co-occurrence" ~ "co"
     )
     
     cutoff_s = cutoff
@@ -582,6 +582,7 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "prevalence after LAZ rose above -2" ~ "rec_prev",
       measure == "quantile" ~ "quant",
       measure == "map" ~ "map",
+      measure == "wasting, stunting, and underweight co-occurrence" ~ "coflow",
       measure == "change in stunting status" ~ "flow",
       measure == "persistent wasting" ~ "perswast",
       measure == "co-occurrence of wasting and stunting" ~ "co",
@@ -592,6 +593,7 @@ create_name = function(outcome, cutoff, measure, population,
     population_s = case_when(
       population == "overall" ~ "overall",
       population == "overall and region-stratified" ~ "overall_region",
+      population == "birth-stratified" ~ "birth",
       population == "region-stratified" ~ "region",
       population == "cohort-stratified" ~ "cohort"
     )
@@ -606,11 +608,13 @@ create_name = function(outcome, cutoff, measure, population,
     )
         
     age_s = case_when(
-      age == "All ages" ~ "allage"
+      age == "All ages" ~ "allage",
+      age == "Birth" ~ "birth"
     )
         
     analysis_s = case_when(
       analysis == "primary" ~ "primary",
+      analysis == "seasonality" ~ "season",
       analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
       analysis == "monthly cohorts" ~ "monthly",
       analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff",

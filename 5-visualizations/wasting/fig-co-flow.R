@@ -65,3 +65,24 @@ bar_plot_RE = ggplot(plot_data_pooled) +
 bar_plot_RE
 
 ggsave(bar_plot_RE, file="figures/wasting/fig-co-stacked-bar-RE.png", width=10, height=5)
+
+
+#-----------------------------------------
+# define standardized plot names
+#-----------------------------------------
+bar_plot_RE_name = create_name(
+  outcome = "co-occurrence",
+  cutoff = 2,
+  measure = "wasting, stunting, and underweight co-occurrence",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(bar_plot_RE, file=paste0("figures/wasting/fig-",bar_plot_RE_name,".png"), width=10, height=4)
+
+saveRDS(plot_data_pooled, file=paste0("results/figure-data/figdata-",bar_plot_RE_name,".RDS"))
+
+
