@@ -59,8 +59,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
-  print(df)
-  
+
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
     geom_point(aes(fill=region, color=region), size = 2) +
@@ -88,7 +87,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     p <- p + coord_cartesian(ylim=yrange)
   }
   
-  return(p)
+  return(list(plot=p,data=df))
 }
 
 

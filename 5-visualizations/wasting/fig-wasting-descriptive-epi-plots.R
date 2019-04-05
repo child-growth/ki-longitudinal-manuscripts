@@ -1,6 +1,6 @@
 
 rm(list=ls())
-library(tidyverse)
+source(paste0(here::here(), "/0-config.R"))
 
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
@@ -98,7 +98,7 @@ df <- df %>%
 
 # NEED TO ADD LEGEND
 
-p <- ggplot(df,aes(x = agecat, group = region)) +
+mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
 
   geom_smooth(aes(y = WLZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
   facet_wrap(~region, nrow=1) +
@@ -126,13 +126,29 @@ p <- ggplot(df,aes(x = agecat, group = region)) +
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"))
 
-ggsave(p, file="figures/wasting/fig_wast_mean_quantile_WLZ_region.png", width=14, height=4)
+
+# define standardized plot names
+mean_wlz_plot_name = create_name(
+  outcome = "wlz",
+  cutoff = 2,
+  measure = "mean",
+  population = "overall and region-stratified",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(mean_wlz_plot, file=paste0("figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=4)
+saveRDS(df, file=paste0("results/figure-data/figdata-",mean_wlz_plot_name,".RDS"))
+
+
 
 
 #-------------------------------------------------------------------------------------------
 # Wasting prevalence
 #-------------------------------------------------------------------------------------------
-p1 <- ki_desc_plot(d,
+prev_plot <- ki_desc_plot(d,
                    Disease="Wasting",
                    Measure="Prevalence", 
                    Birth="yes", 
@@ -144,7 +160,22 @@ p1 <- ki_desc_plot(d,
                    yrange=c(0,24))
 
 
-ggsave(p1, file="figures/wasting/pooled_prev.png",  width=14, height=3)
+# define standardized plot names
+prev_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "prevalence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(prev_plot, file=paste0("figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
+
+saveRDS(d, file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
+
 
 
 
