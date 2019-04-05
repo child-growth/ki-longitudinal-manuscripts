@@ -13,7 +13,9 @@
 
 # inputs: GHAP_metadata_stunting.RDS
 
-# outputs: stunting-study-inventory-heatmap.pdf
+# outputs: 
+# "fig-stunt_laz-2-heatmap-overall--allage-primary.png"
+# "figdata-stunt_laz-2-heatmap-overall--allage-primary.RDS"
 ##########################################
 
 #-----------------------------------
@@ -406,7 +408,7 @@ stpgrid_name = create_name(
   measure = "heatmap",
   population = "overall",
   location = "",
-  age = "all",
+  age = "All ages",
   analysis = "primary"
 )
 
