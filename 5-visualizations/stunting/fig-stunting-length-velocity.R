@@ -8,14 +8,22 @@
 # inputs: pool_vel.RData, meanlaz_velocity.RDS
 
 # outputs: 
-# fig_stunt_vel_laz_pool.png
-# fig_stunt_vel_cm_asia.png
-# fig_stunt_vel_cm_latamer.png
-# fig_stunt_vel_cm_eur.png
-# fig_stunt_vel_cm_africa.png
-# fig_stunt_vel_cm_pool.png
-# fig_stunt_vel_pool.png
-# fig_stunt_vel_region.png
+# overall plots: 
+#   fig-stunt-2-vel-overall--allage-primary.png
+#   fig-laz-2-length_vel-overall--allage-primary.png
+#   fig-laz-2-laz_vel-overall--allage-primary.png
+
+# region-stratified plots:
+#   fig-stunt-2-vel-region--allage-primary.png
+#   fig-laz-2-length_vel-region--allage-primary.png
+#   fig-laz-2-laz_vel-region--allage-primary.png
+
+# cohort-stratified plots: 
+#   fig-stunt-2-vel-cohort-africa-allage-primary.png
+#   fig-stunt-2-vel-cohort-eur-allage-primary.png
+#   fig-stunt-2-vel-cohort-latamer-allage-primary.png
+#   fig-stunt-2-vel-cohort-asia-allage-primary.png
+
 ##########################################
 #-----------------------------------
 # preamble
@@ -418,9 +426,9 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
 plot_cm_name = create_name(
   outcome = "laz",
   cutoff = 2,
-  measure = "laz velocity",
-  population = "cohort-stratified",
-  location = "South Asia",
+  measure = "length velocity",
+  population = "overall",
+  location = "",
   age = "All ages",
   analysis = "primary"
 )
@@ -468,9 +476,9 @@ plot_cm_strat_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_cm, file=paste0("figures/stunting/fig-",plot_cm_strat_name,".png"), 
+ggsave(plot_cm_strat, file=paste0("figures/stunting/fig-",plot_cm_strat_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm, file=paste0("results/figure-data/figdata-",plot_cm_strat_name,".RDS"))
+saveRDS(velplot_cm_strat, file=paste0("results/figure-data/figdata-",plot_cm_strat_name,".RDS"))
 
 #-------------------------------------
 # combined LAZ and length plots
@@ -505,10 +513,10 @@ combined_plot_strat_name = create_name(
 #-------------------------------------
 # save plots
 #-------------------------------------
-ggsave(combined_plot, file=paste0("figures/stunting/", combined_plot_name,
+ggsave(combined_plot, file=paste0("figures/stunting/fig-", combined_plot_name,
         ".png"), width=10, height=8)
-ggsave(combined_plot_strat, file="figures/stunting/",combined_plot_strat_name,
-       ".png", width=16, height=18)
+ggsave(combined_plot_strat, file=paste0("figures/stunting/fig-",combined_plot_strat_name,
+       ".png"), width=16, height=18)
 
 #-------------------------------------
 # save input data 
@@ -519,13 +527,13 @@ saveRDS(
     velplot_laz = velplot_laz,
     meanlaz = meanlaz
   ),
-  file = paste0("figures/stunting/", combined_plot_name, ".RDS")
+  file = paste0("results/figure-data/figdata-", combined_plot_name, ".RDS")
 )
 
 saveRDS(
   list(
-    velplot_cm = velplot_cm_strat,
-    velplot_laz = velplot_laz_strat
+    velplot_cm_strat = velplot_cm_strat,
+    velplot_laz_strat = velplot_laz_strat
   ),
-  file = paste0("figures/stunting/", combined_plot_strat_name, ".RDS")
+  file = paste0("results/figure-data/figdata-", combined_plot_strat_name, ".RDS")
 )
