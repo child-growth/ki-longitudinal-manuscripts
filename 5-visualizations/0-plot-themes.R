@@ -33,7 +33,8 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                          ylabel="",
                          h1=0,
                          h2=3,
-                         yrange=NULL){
+                         yrange=NULL,
+                         returnData=F){
   df <- d %>% filter(
     disease == Disease &
       measure == Measure &
@@ -87,7 +88,11 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     p <- p + coord_cartesian(ylim=yrange)
   }
   
-  return(list(plot=p,data=df))
+  if(returnData){
+    return(list(plot=p,data=df))
+  }else{
+    return(p)
+  }
 }
 
 
@@ -111,7 +116,8 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                           h1=0,
                           h2=3,
                           yrange=NULL,
-                          dodge=0){
+                          dodge=0,
+                          returnData=F){
   
   df <- d %>% filter(
     disease == Disease &
@@ -191,7 +197,11 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     p <- p + coord_cartesian(ylim=yrange)
   }
   
-  return(p)
+  if(returnData){
+    return(list(plot=p,data=df))
+  }else{
+    return(p)
+  }
 }
 
 

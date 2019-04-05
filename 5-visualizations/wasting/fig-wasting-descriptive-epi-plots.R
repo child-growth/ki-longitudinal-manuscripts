@@ -134,7 +134,7 @@ mean_wlz_plot_name = create_name(
   measure = "mean",
   population = "overall and region-stratified",
   location = "",
-  age = "all",
+  age = "All ages",
   analysis = "primary"
 )
 
@@ -157,7 +157,8 @@ prev_plot <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
-                   yrange=c(0,24))
+                   yrange=c(0,24),
+                   returnData=T)
 
 
 # define standardized plot names
@@ -167,14 +168,14 @@ prev_plot_name = create_name(
   measure = "prevalence",
   population = "overall and region-stratified",
   location = "",
-  age = "all",
+  age = "All ages",
   analysis = "primary"
 )
 
 # save plot and underlying data
-ggsave(prev_plot, file=paste0("figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot[[1]], file=paste0("figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
 
-saveRDS(d, file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
+saveRDS(prev_plot[[2]], file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
 
 
 
@@ -190,8 +191,18 @@ p2 <- ki_combo_plot(d,
                         Age_range="3 months", 
                         Cohort="pooled",
                         xlabel="Child age, months",
-                    yrange=c(0,55))
+                    yrange=c(0,55),
+                    returnData=T)
 
+prev_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "prevalence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
 
 ggsave(p2, file="figures/wasting/fig_wast_ci_inc_pooled.png", width=14, height=5)
 
@@ -269,7 +280,7 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                   legend.title = element_blank(),
                   legend.background = element_blank(),
                   legend.box.background = element_rect(colour = "black"))
-  return(p)
+  return(list(plot=p,data=df))
 }
 
 
@@ -289,9 +300,24 @@ p3 <- inc_combo_plot(d,
                    yrange=c(0,7.5),
                    legend.pos = c(.92,.8))
 
-ggsave(p3, file="figures/wasting/pooled_ir.png", width=14, height=3)
+#ggsave(p3, file="figures/wasting/pooled_ir.png", width=14, height=3)
 
 
+# define standardized plot names
+prev_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "prevalence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(prev_plot[[1]], file=paste0("figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
+
+saveRDS(prev_plot[[2]], file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
 
 
 
@@ -377,7 +403,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                   legend.background = element_blank(),
                   legend.box.background = element_rect(colour = "black"))
   
-  return(p)
+  return(list(plot=p,data=df))
 }
 
 
@@ -411,7 +437,8 @@ p5 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel = 'Proportion (%)',
-                   yrange=c(0,20))
+                   yrange=c(0,20),
+                   returnData=T)
 
 
 ggsave(p5, file="figures/wasting/pooled_pers.png", width=14, height=3)
@@ -437,7 +464,8 @@ p6 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
-                   yrange=c(0,12))
+                   yrange=c(0,12),
+                   returnData=T)
 
 
 ggsave(p6, file="figures/wasting/pooled_co_prev.png", width=14, height=3)
@@ -521,7 +549,7 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
     p <- p + coord_cartesian(ylim=yrange)
   }
   
-  return(p)
+  return(list(plot=p,data=df))
 }
 
 
@@ -577,7 +605,8 @@ p11 <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
-                   yrange=c(0,10))
+                   yrange=c(0,10),
+                   returnData=T)
 
 
 ggsave(p11, file="figures/wasting/pooled_sevprev.png", width=14, height=3)
