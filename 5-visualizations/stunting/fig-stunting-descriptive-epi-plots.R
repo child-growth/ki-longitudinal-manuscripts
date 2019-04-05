@@ -173,11 +173,11 @@ mean_laz_quantile_plot <- ggplot(df,aes(x = agecat, group = region)) +
 mean_laz_quantile_plot_name = create_name(
   outcome = "laz",
   cutoff = 2,
-  measure = "mean",
+  measure = "quantile",
   population = "overall and region-stratified",
   location = "",
   age = "all",
-  analysis = "quantile"
+  analysis = "primary"
 )
 
 # save plot and underlying data
@@ -220,7 +220,7 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot, file="figures/stunting/fig-",prev_plot_name, ".png", width=14, height=3)
+ggsave(prev_plot, file=paste0("figures/stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
 
 saveRDS(d, file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
 
