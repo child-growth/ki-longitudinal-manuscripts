@@ -9,8 +9,11 @@
 
 # inputs: stunting_rec_cohort_summary.RDS
 
-# outputs: fig_stunt_rec_cohort_st.png,
-# fig_stunt_rec_cohort_meandiff.png
+# outputs:
+# fig-stunt-2-rec_prev-overall--allage-primary.png
+# fig-laz-2-rec_laz-overall--allage-primary.png
+# figdata-stunt-2-rec_prev-overall--allage-primary.RDS
+# figdata-laz-2-rec_laz-overall--allage-primary.RDS
 ##########################################
 
 #-----------------------------------------
@@ -107,7 +110,7 @@ st_plot_name = create_name(
   measure = "prevalence after LAZ rose above -2",
   population = "overall",
   location = "",
-  age = "all",
+  age = "All ages",
   analysis = "primary"
 )
 
@@ -117,7 +120,7 @@ meandiff_plot_name = create_name(
   measure = "mean after LAZ rose above -2",
   population = "overall",
   location = "",
-  age = "all",
+  age = "All ages",
   analysis = "primary"
 )
 

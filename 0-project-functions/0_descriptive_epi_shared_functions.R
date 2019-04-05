@@ -571,11 +571,16 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "incidence rate" ~ "ir",
       measure == "mean" ~ "mean",
       measure == "growth velocity" ~ "vel",
+      measure == "LAZ velocity" ~ "laz_vel",
+      measure == "laz velocity" ~ "laz_vel",
+      measure == "length velocity" ~ "length_vel",
       measure == "heatmap" ~ "heatmap",
       measure == "distribution after laz >= -2" ~ "rec_dist",
       measure == "mean after LAZ rose above -2" ~ "rec_laz",
       measure == "prevalence after LAZ rose above -2" ~ "rec_prev",
-      measure == "quantile" ~ "quant"
+      measure == "quantile" ~ "quant",
+      measure == "map" ~ "map",
+      measure == "change in stunting status" ~ "flow"
     )
         
     population_s = case_when(
@@ -585,14 +590,24 @@ create_name = function(outcome, cutoff, measure, population,
       population == "cohort-stratified" ~ "cohort"
     )
         
-    location_s = location
+    location_s = case_when(
+      location == "" ~ "",
+      location == "South Asia" ~ "asia",
+      location == "Europe" ~ "eur",
+      location == "Latin America" ~ "latamer",
+      location == "Africa" ~ "africa"
+      
+    )
         
-    age_s = age
+    age_s = case_when(
+      age == "All ages" ~ "allage"
+    )
         
     analysis_s = case_when(
       analysis == "primary" ~ "primary",
       analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
-      analysis == "monthly cohorts" ~ "monthly"
+      analysis == "monthly cohorts" ~ "monthly",
+      analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff"
     )
     
     # create figure name string using short versions of each feature
