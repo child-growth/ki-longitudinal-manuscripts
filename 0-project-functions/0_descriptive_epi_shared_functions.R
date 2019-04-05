@@ -558,8 +558,9 @@ create_name = function(outcome, cutoff, measure, population,
       outcome == "WHZ" ~ "wlz",
       outcome == "whz" ~ "wlz",
       outcome == "wlz" ~ "wlz",
-      outcome == "stunting and laz" ~ "stunt_laz"
-      
+      outcome == "stunting and laz" ~ "stunt_laz",
+      outcome == "wasting and wlz" ~ "wast_wlz",
+      outcome == "co-occurrence" ~ "co"
     )
     
     cutoff_s = cutoff
@@ -575,17 +576,24 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "laz velocity" ~ "laz_vel",
       measure == "length velocity" ~ "length_vel",
       measure == "heatmap" ~ "heatmap",
+      measure == "recovery" ~ "rec",
       measure == "distribution after laz >= -2" ~ "rec_dist",
       measure == "mean after LAZ rose above -2" ~ "rec_laz",
       measure == "prevalence after LAZ rose above -2" ~ "rec_prev",
       measure == "quantile" ~ "quant",
       measure == "map" ~ "map",
-      measure == "change in stunting status" ~ "flow"
+      measure == "wasting, stunting, and underweight co-occurrence" ~ "coflow",
+      measure == "change in stunting status" ~ "flow",
+      measure == "persistent wasting" ~ "perswast",
+      measure == "co-occurrence of wasting and stunting" ~ "co",
+      measure == "underweight" ~ "uwt",
+      measure == "MUAC-based wasting" ~ "muac"
     )
-        
+    
     population_s = case_when(
       population == "overall" ~ "overall",
       population == "overall and region-stratified" ~ "overall_region",
+      population == "birth-stratified" ~ "birth",
       population == "region-stratified" ~ "region",
       population == "cohort-stratified" ~ "cohort"
     )
@@ -600,14 +608,17 @@ create_name = function(outcome, cutoff, measure, population,
     )
         
     age_s = case_when(
-      age == "All ages" ~ "allage"
+      age == "All ages" ~ "allage",
+      age == "Birth" ~ "birth"
     )
         
     analysis_s = case_when(
       analysis == "primary" ~ "primary",
+      analysis == "seasonality" ~ "season",
       analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
       analysis == "monthly cohorts" ~ "monthly",
-      analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff"
+      analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff",
+      analysis == "washout period sensitivity" ~ "ir_sense"
     )
     
     # create figure name string using short versions of each feature
