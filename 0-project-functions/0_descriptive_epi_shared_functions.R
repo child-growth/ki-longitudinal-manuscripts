@@ -573,7 +573,8 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "heatmap" ~ "heatmap",
       measure == "distribution after laz >= -2" ~ "rec_dist",
       measure == "mean after LAZ rose above -2" ~ "rec_laz",
-      measure == "prevalence after LAZ rose above -2" ~ "rec_prev"
+      measure == "prevalence after LAZ rose above -2" ~ "rec_prev",
+      measure == "quantile" ~ "quant"
     )
         
     population_s = case_when(
@@ -590,13 +591,15 @@ create_name = function(outcome, cutoff, measure, population,
     analysis_s = case_when(
       analysis == "primary" ~ "primary",
       analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
-      analysis == "monthly cohorts" ~ "monthly",
-      analysis == "quantile" ~ "quant"
+      analysis == "monthly cohorts" ~ "monthly"
     )
     
     # create figure name string using short versions of each feature
     name = paste(outcome_s ,cutoff_s, measure_s, population_s, 
                     location_s, age_s, analysis_s, sep = "-")
+    
+    assert_that(length(grep("NA", name))==0,
+                msg = "check name inputs, NA returned for at least one")
     
     return(name)
 
