@@ -13,6 +13,13 @@
 # linear growth paper. It includes
 # KI cohorts with measurement frequency
 # at least quarterly
+
+# Outputs:
+# fig-laz-2-mean_dhs-overall_region--allage-primary.png
+# fig-laz-2-density_dhs-overall_region--allage-primary.png
+# figdata-laz-2-mean_dhs-overall_region--allage-primary.RDS
+# figdata-laz-2-density_dhs-overall_region--allage-primary.RDS
+
 ##########################################
 
 #---------------------------------------
@@ -330,13 +337,21 @@ dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
 # DHS overall estimates
 #---------------------------------------
 dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts","DHS"))
+  filter(dsource %in% c("ki cohorts","DHS")) %>%
+  mutate(region = factor(region, levels = c("OVERALL", "AFRO", "PAHO", "SEARO")))
 
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black",tableau10(10)[c(1,5,2)])
+tableau10 <- tableau_color_pal("tableau10")
+pcols <- c("black",tableau10(10)[c(1,2,3)])
 
-laz_ageplot <- ggplot(data=filter(dhs_plotd,measure=="LAZ"),aes(x=agem,y=fit,color=region,fill=region,linetype=dsource))+
+blue = 1
+orange = 2
+green = 3
+
+dhs_plotd_laz = filter(dhs_plotd,measure=="LAZ")
+
+laz_ageplot <- ggplot(dhs_plotd_laz,
+                      aes(x=agem,y=fit,color=region,fill=region,linetype=dsource))+
   facet_grid(~region)+
   geom_abline(intercept=0,slope=0,color="gray70")+
   geom_ribbon(aes(ymin=fit_lb,ymax=fit_ub),color=NA,alpha=0.2)+
@@ -359,9 +374,20 @@ laz_ageplot <- ggplot(data=filter(dhs_plotd,measure=="LAZ"),aes(x=agem,y=fit,col
 
 laz_ageplot
 
+# define standardized plot names
+laz_ageplot_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "mean DHS",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
 
-# output a file to png
-ggsave(here("figures/stunting","fig_dhs_ki_laz_byage.png"),plot=laz_ageplot,device="png",width=8,height=3)
+# save plot and underlying data
+ggsave(laz_ageplot, file=paste0("figures/stunting/fig-",laz_ageplot_name,".png"), width=8, height=3)
+saveRDS(dhs_plotd_laz, file=paste0("results/figure-data/figdata-",laz_ageplot_name,".RDS"))
 
 #---------------------------------------
 #---------------------------------------
@@ -385,7 +411,7 @@ deni <- density(dhsz$zscore)
 dhsallden_pool <- data.frame(x=deni$x,y=deni$y,measure="LAZ",region="OVERALL")
 
 dhsallden <- bind_rows(dhsallden,dhsallden_pool) %>%
-  mutate(region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO")))
+  mutate(region=factor(region,levels=c("OVERALL","AFRO","PAHO","SEARO")))
 
 #---------------------------------------
 # estimate DHS z-score densities
@@ -403,7 +429,7 @@ subdeni <- density(dhsz$zscore[dhsz$inghap==1])
 dhssubden_pool <- data.frame(x=subdeni$x,y=subdeni$y,measure="LAZ",region="OVERALL")
 
 dhssubden <- bind_rows(dhssubden,dhssubden_pool) %>%
-  mutate(region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO")))
+  mutate(region=factor(region,levels=c("OVERALL","AFRO","PAHO","SEARO")))
 
 
 #---------------------------------------
@@ -413,7 +439,8 @@ dhssubden <- bind_rows(dhssubden,dhssubden_pool) %>%
 #---------------------------------------
 kiden <- readRDS(paste0(here(),"/results/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>%
-  mutate(region=factor(region,levels=c("Overall","AFRO","SEARO","PAHO"),labels=c("OVERALL","AFRO","SEARO","PAHO")),
+  mutate(region=factor(region,levels=c("Overall","AFRO","PAHO","SEARO"),
+                       labels=c("OVERALL","AFRO","PAHO","SEARO")),
          measure=factor(measure,levels=c("haz","waz","whz"),labels=c("LAZ","WAZ","WHZ"))
   ) %>%
   filter(measure=="LAZ")
@@ -427,7 +454,7 @@ dhssubden <- dhssubden %>% mutate(dsource="DHS, ki countries")
 dhsallden <- dhsallden %>% mutate(dsource="DHS")
 dhsden <- bind_rows(kiden,dhssubden,dhsallden) %>%
   mutate(dsource=factor(dsource,levels=c("ki cohorts","DHS, ki countries","DHS")),
-         region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO") )
+         region=factor(region,levels=c("OVERALL","AFRO","PAHO","SEARO") )
   )
 
 #---------------------------------------
@@ -448,13 +475,14 @@ dhsden_plot <- dhsden %>%
 
 #---------------------------------------
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black",tableau10(10)[c(1,5,2)])
+tableau10 <- tableau_color_pal("tableau10")
+pcols <- c("black",tableau10(10)[c(1:3)])
 
 #---------------------------------------
 # LAZ density by region
 #---------------------------------------
-laz_dplot <- ggplot(data=filter(dhsden_plot,measure=="LAZ"),aes(x=x,y=y,color=region,linetype=dsource))+
+dhsden_plot_laz = filter(dhsden_plot,measure=="LAZ")
+laz_dplot <- ggplot(data=dhsden_plot_laz,aes(x=x,y=y,color=region,linetype=dsource))+
   facet_grid(~region)+
   geom_line()+
   scale_color_manual(values=pcols,guide=FALSE)+
@@ -470,9 +498,20 @@ laz_dplot <- ggplot(data=filter(dhsden_plot,measure=="LAZ"),aes(x=x,y=y,color=re
 
 laz_dplot
 
-# output a file to png
-ggsave(here("figures/stunting","fig_dhs_ki_laz_density.png"),plot=laz_dplot,device="png",width=8,height=2)
+# define standardized plot names
+laz_dplot_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "density DHS",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
 
+# save plot and underlying data
+ggsave(laz_dplot, file=paste0("figures/stunting/fig-",laz_dplot_name,".png"), width=8, height=2)
+saveRDS(dhsden_plot_laz, file=paste0("results/figure-data/figdata-",laz_dplot_name,".RDS"))
 
 
 
