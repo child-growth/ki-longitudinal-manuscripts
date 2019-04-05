@@ -26,6 +26,10 @@
 #   fig-stunt-2-vel-cohort-eur-allage-exc_male_eff.png
 #   fig-stunt-2-vel-cohort-latamer-allage-exc_male_eff.png
 #   fig-stunt-2-vel-cohort-asia-allage-exc_male_eff.png
+
+# data for each plot is saved as an RDS file
+# with the same file name and the prefix "figdata"
+
 ##########################################
 #-----------------------------------
 # preamble

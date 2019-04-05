@@ -24,6 +24,9 @@
 #   fig-stunt-2-vel-cohort-latamer-allage-primary.png
 #   fig-stunt-2-vel-cohort-asia-allage-primary.png
 
+# data for each plot is saved as an RDS file
+# with the same file name and the prefix "figdata"
+
 ##########################################
 #-----------------------------------
 # preamble
