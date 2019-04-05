@@ -590,8 +590,8 @@ create_name = function(outcome, cutoff, measure, population,
     location_s = case_when(
       location == "" ~ "",
       location == "South Asia" ~ "asia",
-      location == "Europe" ~ "asia",
-      location == "Latin America" ~ "asia",
+      location == "Europe" ~ "eur",
+      location == "Latin America" ~ "latamer",
       location == "Africa" ~ "africa"
       
     )
