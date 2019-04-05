@@ -570,7 +570,10 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "incidence rate" ~ "ir",
       measure == "mean" ~ "mean",
       measure == "growth velocity" ~ "vel",
-      measure == "heatmap" ~ "heatmap"
+      measure == "heatmap" ~ "heatmap",
+      measure == "distribution after laz >= -2" ~ "rec_dist",
+      measure == "mean after LAZ rose above -2" ~ "rec_laz",
+      measure == "prevalence after LAZ rose above -2" ~ "rec_prev"
     )
         
     population_s = case_when(
