@@ -570,6 +570,9 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "incidence rate" ~ "ir",
       measure == "mean" ~ "mean",
       measure == "growth velocity" ~ "vel",
+      measure == "LAZ velocity" ~ "laz_vel",
+      measure == "laz velocity" ~ "laz_vel",
+      measure == "length velocity" ~ "length_vel",
       measure == "heatmap" ~ "heatmap",
       measure == "distribution after laz >= -2" ~ "rec_dist",
       measure == "mean after LAZ rose above -2" ~ "rec_laz",
@@ -584,9 +587,18 @@ create_name = function(outcome, cutoff, measure, population,
       population == "cohort-stratified" ~ "cohort"
     )
         
-    location_s = location
+    location_s = case_when(
+      location == "" ~ "",
+      location == "South Asia" ~ "asia",
+      location == "Europe" ~ "asia",
+      location == "Latin America" ~ "asia",
+      location == "Africa" ~ "africa"
+      
+    )
         
-    age_s = age
+    age_s = case_when(
+      age == "All ages" ~ "allage"
+    )
         
     analysis_s = case_when(
       analysis == "primary" ~ "primary",
