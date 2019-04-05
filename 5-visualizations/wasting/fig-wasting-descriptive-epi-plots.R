@@ -183,7 +183,7 @@ saveRDS(prev_plot[[2]], file=paste0("results/figure-data/figdata-",prev_plot_nam
 #-------------------------------------------------------------------------------------------
 # Wasting cumulative incidence
 #-------------------------------------------------------------------------------------------
-p2 <- ki_combo_plot(d,
+ci_plot <- ki_combo_plot(d,
                         Disease="Wasting",
                         Measure=c("Cumulative incidence", "Incidence_proportion"), 
                         Birth="yes", 
@@ -194,17 +194,21 @@ p2 <- ki_combo_plot(d,
                     yrange=c(0,55),
                     returnData=T)
 
-prev_plot_name = create_name(
+ci_plot_name = create_name(
   outcome = "wasting",
   cutoff = 2,
-  measure = "prevalence",
+  measure = "cumulative incidence",
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
   analysis = "primary"
 )
 
-ggsave(p2, file="figures/wasting/fig_wast_ci_inc_pooled.png", width=14, height=5)
+# save plot and underlying data
+ggsave(ci_plot[[1]], file=paste0("figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
+
+saveRDS(ci_plot[[2]], file=paste0("results/figure-data/figdata-",ci_plot_name,".RDS"))
+
 
 #-------------------------------------------------------------------------------------------
 # Wasting incidence rate
@@ -288,7 +292,7 @@ d <- d %>% mutate(birth=factor(birth, levels=c("yes","no"))) %>% arrange(birth)
 
 
 
-p3 <- inc_combo_plot(d,
+inc_plot <- inc_combo_plot(d,
                    Disease="Wasting",
                    Measure="Incidence rate", 
                    Birth=c("yes","no"), 
@@ -300,14 +304,12 @@ p3 <- inc_combo_plot(d,
                    yrange=c(0,7.5),
                    legend.pos = c(.92,.8))
 
-#ggsave(p3, file="figures/wasting/pooled_ir.png", width=14, height=3)
-
 
 # define standardized plot names
-prev_plot_name = create_name(
+inc_plot_name = create_name(
   outcome = "wasting",
   cutoff = 2,
-  measure = "prevalence",
+  measure = "incidence rate",
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
@@ -315,9 +317,9 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0("figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(inc_plot[[1]], file=paste0("figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
-saveRDS(prev_plot[[2]], file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
+saveRDS(inc_plot[[2]], file=paste0("results/figure-data/figdata-",inc_plot_name,".RDS"))
 
 
 
@@ -408,7 +410,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 
 
 
-p4 <- rec_combo_plot(d,
+rec_plot <- rec_combo_plot(d,
                    Disease="Wasting",
                    Measure="Recovery", 
                    Birth="yes", 
@@ -420,7 +422,22 @@ p4 <- rec_combo_plot(d,
                    yrange=c(0,100),
                    legend.pos = c(.95,.88))
 
-ggsave(p4, file="figures/wasting/pooled_rev.png", width=14, height=5)
+# define standardized plot names
+rec_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "recovery",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(rec_plot[[1]], file=paste0("figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=3)
+
+saveRDS(rec_plot[[2]], file=paste0("results/figure-data/figdata-",rec_plot_name,".RDS"))
+
 
 
 
@@ -428,7 +445,7 @@ ggsave(p4, file="figures/wasting/pooled_rev.png", width=14, height=5)
 # Persistent Wasting 
 #-------------------------------------------------------------------------------------------
 
-p5 <- ki_desc_plot(d,
+perswast_plot <- ki_desc_plot(d,
                    Disease="Wasting",
                    Measure="Persistent wasting", 
                    Birth="yes", 
@@ -441,8 +458,21 @@ p5 <- ki_desc_plot(d,
                    returnData=T)
 
 
-ggsave(p5, file="figures/wasting/pooled_pers.png", width=14, height=3)
+# define standardized plot names
+perswast_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "persistent wasting",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
 
+# save plot and underlying data
+ggsave(perswast_plot[[1]], file=paste0("figures/wasting/fig-",perswast_plot_name, ".png"), width=14, height=3)
+
+saveRDS(perswast_plot[[2]], file=paste0("results/figure-data/figdata-",perswast_plot_name,".RDS"))
 
 
 
@@ -455,7 +485,7 @@ ggsave(p5, file="figures/wasting/pooled_pers.png", width=14, height=3)
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
 #-------------------------------------------------------------------------------------------
-p6 <- ki_desc_plot(d,
+co_plot <- ki_desc_plot(d,
                    Disease="co-occurrence",
                    Measure="Prevalence", 
                    Birth="yes", 
@@ -468,12 +498,27 @@ p6 <- ki_desc_plot(d,
                    returnData=T)
 
 
-ggsave(p6, file="figures/wasting/pooled_co_prev.png", width=14, height=3)
+# define standardized plot names
+co_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "co-occurrence of wasting and stunting",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(co_plot[[1]], file=paste0("figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
+
+saveRDS(co_plot[[2]], file=paste0("results/figure-data/figdata-",co_plot_name,".RDS"))
+
 
 #-------------------------------------------------------------------------------------------
 # Underweight prevalence 
 #-------------------------------------------------------------------------------------------
-p7 <- ki_desc_plot(d,
+underweight_plot <- ki_desc_plot(d,
                    Disease="Underweight",
                    Measure="Prevalence", 
                    Birth="yes", 
@@ -483,8 +528,22 @@ p7 <- ki_desc_plot(d,
                    xlabel="Age in months",
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,24))
-ggsave(p7, file="figures/wasting/pooled_underweight_prev.png", width=14, height=3)
 
+# define standardized plot names
+underweight_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "underweight",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(underweight_plot[[1]], file=paste0("figures/wasting/fig-",underweight_plot_name, ".png"), width=14, height=3)
+
+saveRDS(underweight_plot[[2]], file=paste0("results/figure-data/figdata-",underweight_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Wasting prevalence -MUAC based
@@ -553,7 +612,7 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
 }
 
 
-p9 <- ki_combo_plot2(d,
+muac_plot <- ki_combo_plot2(d,
               Disease="Wasting",
               Measure=c("MUAC  WHZ Prevalence", "MUAC Prevalence"), 
               Birth="yes", 
@@ -564,8 +623,21 @@ p9 <- ki_combo_plot2(d,
               yrange=c(0,75), dodge = 0.5,
               legend.pos=c(.15,.92)) 
 
-ggsave(p9, file="figures/wasting/pooled_muac_comp.png", width=14, height=5)
+# define standardized plot names
+muac_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "MUAC-based wasting",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
 
+# save plot and underlying data
+ggsave(muac_plot[[1]], file=paste0("figures/wasting/fig-",muac_plot_name, ".png"), width=14, height=5)
+
+saveRDS(muac_plot[[2]], file=paste0("results/figure-data/figdata-",muac_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Comparison of washout period for incidence rate.
@@ -574,7 +646,7 @@ ggsave(p9, file="figures/wasting/pooled_muac_comp.png", width=14, height=5)
 d.ir<-readRDS(paste0(here::here(),"/results/wast_ir_sens_data.rds"))
 
 
-p10 <- rec_combo_plot(d.ir,
+ir_sens_plot <- rec_combo_plot(d.ir,
                      Disease="Wasting",
                      Measure="Incidence rate", 
                      Birth="yes", 
@@ -586,7 +658,21 @@ p10 <- rec_combo_plot(d.ir,
                      yrange=c(0,4),
                      legend.pos = c(.95,.8))
 
-ggsave(p10, file="figures/wasting/ir_sens.png", width=14, height=5)
+# define standardized plot names
+ir_sens_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "incidence rate",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "washout period sensitivity"
+)
+
+# save plot and underlying data
+ggsave(ir_sens_plot[[1]], file=paste0("figures/wasting/fig-",ir_sens_plot_name, ".png"), width=14, height=5)
+
+saveRDS(ir_sens_plot[[2]], file=paste0("results/figure-data/figdata-",ir_sens_plot_name,".RDS"))
 
 
 
@@ -596,7 +682,7 @@ ggsave(p10, file="figures/wasting/ir_sens.png", width=14, height=5)
 # Severe Wasting prevalence
 #-------------------------------------------------------------------------------------------
 
-p11 <- ki_desc_plot(d,
+sevwast_plot <- ki_desc_plot(d,
                    Disease="Wasting",
                    Measure="Prevalence", 
                    Birth="yes", 
@@ -609,6 +695,20 @@ p11 <- ki_desc_plot(d,
                    returnData=T)
 
 
-ggsave(p11, file="figures/wasting/pooled_sevprev.png", width=14, height=3)
+# define standardized plot names
+sevwast_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 3,
+  measure = "prevalence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(sevwast_plot[[1]], file=paste0("figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
+
+saveRDS(sevwast_plot[[2]], file=paste0("results/figure-data/figdata-",sevwast_plot_name,".RDS"))
 
 

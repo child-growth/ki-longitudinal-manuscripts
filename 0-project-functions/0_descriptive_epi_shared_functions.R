@@ -575,14 +575,19 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "laz velocity" ~ "laz_vel",
       measure == "length velocity" ~ "length_vel",
       measure == "heatmap" ~ "heatmap",
+      measure == "recovery" ~ "rec",
       measure == "distribution after laz >= -2" ~ "rec_dist",
       measure == "mean after LAZ rose above -2" ~ "rec_laz",
       measure == "prevalence after LAZ rose above -2" ~ "rec_prev",
       measure == "quantile" ~ "quant",
       measure == "map" ~ "map",
-      measure == "change in stunting status" ~ "flow"
+      measure == "change in stunting status" ~ "flow",
+      measure == "persistent wasting" ~ "perswast",
+      measure == "co-occurrence of wasting and stunting" ~ "co",
+      measure == "underweight" ~ "uwt",
+      measure == "MUAC-based wasting" ~ "muac"
     )
-        
+    
     population_s = case_when(
       population == "overall" ~ "overall",
       population == "overall and region-stratified" ~ "overall_region",
@@ -607,7 +612,8 @@ create_name = function(outcome, cutoff, measure, population,
       analysis == "primary" ~ "primary",
       analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
       analysis == "monthly cohorts" ~ "monthly",
-      analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff"
+      analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff",
+      analysis == "washout period sensitivity" ~ "ir_sense"
     )
     
     # create figure name string using short versions of each feature
