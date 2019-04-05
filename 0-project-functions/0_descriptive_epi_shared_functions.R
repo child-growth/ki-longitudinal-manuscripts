@@ -577,7 +577,8 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "distribution after laz >= -2" ~ "rec_dist",
       measure == "mean after LAZ rose above -2" ~ "rec_laz",
       measure == "prevalence after LAZ rose above -2" ~ "rec_prev",
-      measure == "quantile" ~ "quant"
+      measure == "quantile" ~ "quant",
+      measure == "map" ~ "map"
     )
         
     population_s = case_when(
