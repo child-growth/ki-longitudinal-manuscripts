@@ -8,13 +8,20 @@
 # inputs: desc_data_cleaned.Rdata, quantile_data_stunting.Rdata
 
 # outputs: 
-# fig_stunt_mean_LAZ_region.png
-# fig_stunt_mean_quantile_LAZ_region.png
-# fig_stunt_prev_pooled.png
-# fig_stunt_ci_inc_pooled.png
-# fig_stunt_ir_pooled.png
-# fig_stunt_rec_pooled.png
-# fig_stunt_rec_pooled_only.png
+# fig-laz-2-mean-overall_region--allage-primary.png
+# fig-laz-2-quant-overall_region--allage-primary.png
+# fig-stunt-2-prev-overall_region--allage-primary.png
+# fig-stunt-3-prev-overall_region--allage-primary.png
+# fig-stunt-2-inc-overall_region--allage-primary.png
+# fig-stunt-3-inc-overall_region--allage-primary.png
+
+# figdata-laz-2-mean-overall_region--allage-primary.RDS
+# figdata-laz-2-quant-overall_region--allage-primary.RDS
+# figdata-stunt-2-prev-overall_region--allage-primary.RDS
+# figdata-stunt-3-prev-overall_region--allage-primary.RDS
+# figdata-stunt-2-inc-overall_region--allage-primary.RDS
+# figdata-stunt-3-inc-overall_region--allage-primary.RDS
+
 ##########################################
 
 #-----------------------------------
@@ -192,7 +199,7 @@ saveRDS(df, file=paste0("results/figure-data/figdata-",mean_laz_quantile_plot_na
 
 
 #-------------------------------------------------------------------------------------------
-# Stunting prevalence
+# Stunting prevalence - 3 months
 #-------------------------------------------------------------------------------------------
 prev_plot <- ki_desc_plot(d,
                    Disease="Stunting",
@@ -223,6 +230,7 @@ prev_plot_name = create_name(
 ggsave(prev_plot, file=paste0("figures/stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
 
 saveRDS(d, file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
+
 
 
 
@@ -262,7 +270,6 @@ saveRDS(d, file=paste0("results/figure-data/figdata-",prev_plot_sev_name,".RDS")
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion
 #-------------------------------------------------------------------------------------------
-
 ci_inc_plot <- ki_combo_plot(d,
                         Disease="Stunting",
                         Measure=c("Cumulative incidence", "Incidence_proportion"), 
@@ -292,6 +299,40 @@ ggsave(ci_inc_plot, file=paste0("figures/stunting/fig-",ci_inc_plot_name,".png")
 
 saveRDS(d, file=paste0("results/figure-data/figdata-",ci_inc_plot_name,".RDS"))
 
+
+
+#-------------------------------------------------------------------------------------------
+# Stunting cumulative incidence + incidence proportion - severe
+#-------------------------------------------------------------------------------------------
+
+ci_inc_plot_sev <- ki_combo_plot(d,
+                             Disease="Stunting",
+                             Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                             Birth="yes", 
+                             Severe="yes", 
+                             Age_range="3 months", 
+                             Cohort="pooled",
+                             xlabel="Child age, months",
+                             h1=85,
+                             h2=90)
+ci_inc_plot_sev
+
+
+# define standardized plot names
+ci_inc_plot_sev_name = create_name(
+  outcome = "stunting",
+  cutoff = 3,
+  measure = "incidence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(ci_inc_plot_sev, file=paste0("figures/stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
+
+saveRDS(d, file=paste0("results/figure-data/figdata-",ci_inc_plot_sev_name,".RDS"))
 
 
 
