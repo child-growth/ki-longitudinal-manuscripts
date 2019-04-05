@@ -9,7 +9,10 @@
 
 # inputs: stunt_rec_cohort.RDS
 
-# outputs: fig_stunt_rec_dist_hist.png
+# outputs: 
+# fig-laz-2-rec_dist-overall--allage-primary.png
+# figdata-laz-2-rec_dist-overall--allage-primary.RDS
+
 ##########################################
 
 #-----------------------------------------
@@ -312,21 +315,7 @@ results_df = results_df %>%
 # --------------------------------------------
 # stacked histogram plot
 # --------------------------------------------
-# rec_histogram_plot = ggplot(plot_data_sub, 
-#                             aes(x=haz, y = age_meas_n, fill = ..x..)) + 
-#   geom_density_ridges_gradient(stat = "binline", 
-#                                binwidth=.1, 
-#                                scale=0.8,
-#                                size=0.01) + 
-#   facet_grid(~age_rec_f2) +
-#   ylab("Measurement age, months")+
-#   xlab("Length-for-age Z-score")+
-#   scale_y_discrete(expand = c(0.01, 0)) +
-#   scale_x_continuous(breaks = seq(-5, 3.5, 1), 
-#                      labels = seq(-5, 3.5, 1)) +
-#   geom_vline(xintercept = -2, linetype="dashed") +
-#   scale_fill_viridis(name = "LAZ", option = "magma", direction= -1) 
-
+# define color palette
 bluegreen = brewer.pal(n = 5, name = "YlGnBu")[2:5]
 
 rec_histogram_plot = ggplot(plot_data_sub, 
@@ -355,7 +344,7 @@ rec_histogram_plot_name = create_name(
   measure = "distribution after laz >= -2",
   population = "overall",
   location = "",
-  age = "all",
+  age = "All ages",
   analysis = "primary"
 )
 
