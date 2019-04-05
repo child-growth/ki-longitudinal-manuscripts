@@ -8,8 +8,9 @@
 
 # inputs: stuntflow.RDS, stuntflow_pooled.RDS
 
-# outputs: fig-stunting-stacked-bar-RE.png,
-# fig-stunting-stacked-bar-noRE.png
+# outputs: 
+# fig-stunt-2-flow-overall--allage-primary.png,
+# figdata-stunt-2-flow-overall--allage-primary.RDS
 
 # NOTE: RANDOM EFFECTS POOLED PLOT IS COMMENTED
 # OUT DUE TO UNDERLYING DATA ISSUES -- NOT PART OF MANUSCRIPT
