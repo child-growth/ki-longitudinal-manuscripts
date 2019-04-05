@@ -153,7 +153,7 @@ save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_dat
 #----------------------------------------
 # Incidence proportion 3 month intervals
 #----------------------------------------
-ci.data3 <- summary.stunt.incprop(d3, agelist = agelst3)
+ci.data3 <- summary.stunt.incprop(d3, agelist = agelst3, severe.stunted = F)
 ci.region3 <- d3  %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3)$ci.res)
 ci.cohort3 <-
   ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
@@ -169,7 +169,7 @@ ci_3 <- bind_rows(
 #----------------------------------------
 # Incidence proportion 6 month intervals
 #----------------------------------------
-ci.data6 <- summary.stunt.incprop(d6, agelist = agelst6)
+ci.data6 <- summary.stunt.incprop(d6, agelist = agelst6, severe.stunted = F)
 ci.region6 <- d6  %>% group_by(region) %>% 
   do(summary.stunt.incprop(., agelist = agelst6)$ci.res)
 ci.cohort6 <-
