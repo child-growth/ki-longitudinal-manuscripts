@@ -537,3 +537,72 @@ mean95CI <- function(Y, id=rep(1:length(Y)), persontime=NULL, proportion=F, perc
   return(mean_ci)
 }
 
+
+#----------------------------------------------
+# standardized naming convention for figures
+# and associated tables
+
+# inputs are string descriptors of results features
+
+# returns a string with a standardized naming convention
+#----------------------------------------------
+create_name = function(outcome, cutoff, measure, population, 
+                          location, age, analysis){
+    
+  # define short versions of each feature
+    outcome_s = case_when(
+      outcome == "stunting" ~ "stunt",
+      outcome == "wasting" ~ "wast",
+      outcome == "LAZ" ~ "laz",
+      outcome == "laz" ~ "laz",
+      outcome == "WHZ" ~ "whz",
+      outcome == "whz" ~ "whz",
+      outcome == "stunting and laz" ~ "stunt_laz"
+      
+    )
+    
+    cutoff_s = cutoff
+        
+    measure_s = case_when(
+      measure == "prevalence" ~ "prev",
+      measure == "incidence" ~ "inc",
+      measure == "cumulative incidence" ~ "cuminc",
+      measure == "incidence rate" ~ "ir",
+      measure == "mean" ~ "mean",
+      measure == "growth velocity" ~ "vel",
+      measure == "heatmap" ~ "heatmap",
+      measure == "distribution after laz >= -2" ~ "rec_dist",
+      measure == "mean after LAZ rose above -2" ~ "rec_laz",
+      measure == "prevalence after LAZ rose above -2" ~ "rec_prev",
+      measure == "quantile" ~ "quant"
+    )
+        
+    population_s = case_when(
+      population == "overall" ~ "overall",
+      population == "overall and region-stratified" ~ "overall_region",
+      population == "region-stratified" ~ "region",
+      population == "cohort-stratified" ~ "cohort"
+    )
+        
+    location_s = location
+        
+    age_s = age
+        
+    analysis_s = case_when(
+      analysis == "primary" ~ "primary",
+      analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
+      analysis == "monthly cohorts" ~ "monthly"
+    )
+    
+    # create figure name string using short versions of each feature
+    name = paste(outcome_s ,cutoff_s, measure_s, population_s, 
+                    location_s, age_s, analysis_s, sep = "-")
+    
+    assert_that(length(grep("NA", name))==0,
+                msg = "check name inputs, NA returned for at least one")
+    
+    return(name)
+
+}
+
+

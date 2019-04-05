@@ -70,7 +70,7 @@ df <- df %>%
 # Mean LAZ by month 
 #-------------------------------------------------------------------------------------------
 
-p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
+mean_laz_plot <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   stat_smooth(aes(fill=region, color=region), se=F, span = 0.5) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
@@ -85,7 +85,20 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file="figures/stunting/fig_stunt_mean_LAZ_region.png", width=10, height=4)
+# define standardized plot names
+mean_laz_plot_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "mean",
+  population = "overall and region-stratified",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(mean_laz_plot, file=paste0("figures/stunting/fig-",mean_laz_plot_name,".png"), width=10, height=4)
+saveRDS(df, file=paste0("results/figure-data/figdata-",mean_laz_plot_name,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -100,16 +113,8 @@ df$agecat <- factor(df$agecat,
 
 df <- df %>% 
   arrange(agecat) %>%
-  # filter(agecat != 'Two weeks') %>%
   filter(region!="Europe")
 df <-droplevels(df)
-
-# Remove 'months' from x axis labels  
-# df <- df %>% arrange(agecat)
-# df$agecat <- as.character(df$agecat)
-# df$agecat <- gsub(" months", "", df$agecat)
-# df$agecat <- gsub("One month", "1", df$agecat)
-# df$agecat <- as.numeric(df$agecat)
 
 df <- df %>% 
   ungroup(agecat) %>%
@@ -134,21 +139,15 @@ df <- df %>%
   )) %>%
   mutate(region_who = factor(region_who, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")))
   
-p <- ggplot(df,aes(x = agecat, group = region)) +
+mean_laz_quantile_plot <- ggplot(df,aes(x = agecat, group = region)) +
   
   geom_smooth(aes(y = LAZ, color = region, group = interval, linetype = interval), se = F, span = 0.5) +
   
-  
-  # stat_smooth(aes(y = fiftieth_perc, fill = region, color = region), se=F, span = 0.5) +
-  # stat_smooth(aes(y = fifth_perc, fill = region, color = region), linetype="dotted", se=F, span = 0.5) +
-  # stat_smooth(aes(y = ninetyfifth_perc, fill = region, color = region), linetype="dashed", se=F, span = 0.5) +
-  # 
   facet_grid(~region_who) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,6), labels = seq(0,24,6)) + 
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
-  #scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-  #                  name = 'Region') +
+
   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=TRUE, limits = levels(df$measure), 
                      name = 'Region') +
   scale_linetype_manual(name = "interval", values = c("fiftieth_perc" = "solid",
@@ -170,8 +169,23 @@ p <- ggplot(df,aes(x = agecat, group = region)) +
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"))
 
-ggsave(p, file="figures/stunting/fig_stunt_mean_quantile_LAZ_region.png", width=14, height=4)
+# define standardized plot names
+mean_laz_quantile_plot_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "quantile",
+  population = "overall and region-stratified",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
 
+# save plot and underlying data
+ggsave(mean_laz_quantile_plot, 
+       file=paste0("figures/stunting/fig-",mean_laz_quantile_plot_name,".png"), 
+       width=14, height=4)
+
+saveRDS(df, file=paste0("results/figure-data/figdata-",mean_laz_quantile_plot_name,".RDS"))
 
 
 
@@ -180,7 +194,7 @@ ggsave(p, file="figures/stunting/fig_stunt_mean_quantile_LAZ_region.png", width=
 #-------------------------------------------------------------------------------------------
 # Stunting prevalence
 #-------------------------------------------------------------------------------------------
-p1 <- ki_desc_plot(d,
+prev_plot <- ki_desc_plot(d,
                    Disease="Stunting",
                    Measure="Prevalence", 
                    Birth="yes", 
@@ -191,9 +205,24 @@ p1 <- ki_desc_plot(d,
                    ylabel='Point Prevalence (95% CI)',
                    h1=69,
                    h2=72)
-p1
+prev_plot
 
-ggsave(p1, file="figures/stunting/fig_stunt_prev_pooled.png", width=14, height=3)
+
+# define standardized plot names
+prev_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "prevalence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(prev_plot, file=paste0("figures/stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
+
+saveRDS(d, file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
 
 
 
@@ -201,22 +230,7 @@ ggsave(p1, file="figures/stunting/fig_stunt_prev_pooled.png", width=14, height=3
 # Stunting cumulative incidence + incidence proportion
 #-------------------------------------------------------------------------------------------
 
-#ANM: moved combo plot to shared 0-plot-themes.R to use with wasting
-
-
-
-# TO DO: implement Ben's request to move the legend into the body
-# of the plot
-
-# change incidence proportion to "% new incident cases"
-# change 
-
-
-
-#XXXXXXXX
-#TEMP - merge this plot in with the below
-#Use different point shape, and only use numbers from plot p2
-p_temp <- ki_combo_plot(d,
+ci_inc_plot <- ki_combo_plot(d,
                         Disease="Stunting",
                         Measure=c("Cumulative incidence", "Incidence_proportion"), 
                         Birth="yes", 
@@ -226,262 +240,24 @@ p_temp <- ki_combo_plot(d,
                         xlabel="Child age, months",
                         h1=85,
                         h2=90)
-p_temp
+ci_inc_plot
 
 
-ggsave(p_temp, file="figures/stunting/fig_stunt_ci_inc_pooled.png", width=14, height=3)
-
-#-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion
-#-------------------------------------------------------------------------------------------
-df <- d %>% filter(
-  disease == "Stunting" &
-    measure == "Cumulative incidence" &
-    birth == "yes" &
-    severe == "no" &
-    age_range == "3 months" &
-    cohort == "pooled" &
-    !is.na(region) & !is.na(agecat)
+# define standardized plot names
+ci_inc_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "incidence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "all",
+  analysis = "primary"
 )
-df2 <- df <- d %>% filter(
-  disease == "Stunting" &
-    measure == "Incidence Proportion" &
-    birth == "yes" &
-    severe == "no" &
-    age_range == "3 months" &
-    cohort == "pooled" &
-    !is.na(region) & !is.na(agecat)
-)
-df2$measure <- "Incidence proportion"
-df <- rbind(df, df2)
 
-df <- droplevels(df)
+# save plot and underlying data
+ggsave(ci_inc_plot, file=paste0("figures/stunting/fig-",ci_inc_plot_name,".png"), width=14, height=3)
 
-# remove N= from labels
-df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
-  mutate(nstudy.f = gsub('N=', '', nstudy.f))
-
-# remove text from labels
-df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
-  mutate(nstudy.f = gsub(' studies', '', nstudy.f))
-
-h1=0
-h2=3
-
-p <- ggplot(df,aes(y=est,x=agecat)) +
-  geom_jitter(height=0) +
-  geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
-  geom_point(aes(fill=region, color=region), size = 2) +
-  geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
-  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
-  xlab("Age category")+
-  ylab("") +
-  geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-                         label = nmeas.f), size = 4) +
-  geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-                         label = nstudy.f), size = 4) +
-  scale_x_discrete(expand = expand_scale(add = 2)) +
-  annotate('text', x = -0.25, y = h1, label = 'Studies:', vjust = -1) +
-  annotate('text', x = -0.25, y = h1, label = 'Children:', vjust = 1) +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-  expand_limits(y = h2) +
-  theme(strip.text = element_text(size=22)) +
-  theme(axis.text.x = element_text(margin = 
-                                     margin(t = -30, r = 0, b = 0, l = 0),
-                                   size = 15)) +
-  theme(axis.title.x = element_text(margin = 
-                                      margin(t = 25, r = 0, b = 0, l = 0))) +
-  # annotate("text",label=df$ptest.f,x=df$agecat,
-  #          y=df$est,hjust=-2,size=3)+
-  ggtitle("") +
-  facet_wrap(~region) 
-
-#-------------------------------------------------------------------------------------------
-# Stunting incidence rate
-#-------------------------------------------------------------------------------------------
-p3 <- ki_desc_plot(d,
-                   Disease="Stunting",
-                   Measure="Incidence rate", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="6 months", 
-                   Cohort="pooled",
-                   xlabel="Age (months)",
-                   ylabel='Episodes per 1000 person-days at risk',
-                   h1=5.5,
-                   h2=6.5)
-
-
-ggsave(p3, file="figures/stunting/fig_stunt_ir_pooled.png", width=10, height=8)
-
-
-#-------------------------------------------------------------------------------------------
-# Stunting recovery
-#-------------------------------------------------------------------------------------------
-
-df <- d %>% filter(
-  disease == "Stunting" &
-    measure == "Recovery" &
-    birth == "yes" &
-    severe == "no" &
-    age_range == "3 months" &
-    cohort == "pooled" 
-)
-df <- droplevels(df)
-df <- df %>% arrange(region)
-
-p4 <- ki_desc_plot(df,
-                   Disease="Stunting",
-                   Measure="Recovery", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="3 months", 
-                   Cohort="pooled",
-                   xlabel="Age (months)",
-                   ylabel='Percent recovered (95% CI)', 
-                   h1=89,
-                   h2=93)
-
-
-ggsave(p4, file="figures/stunting/fig_stunt_rec_pooled.png", width=10, height=8)
-
-
-#-------------------------------------------------------------------------------------------
-# Stunting recovery - overall/pooled only
-#-------------------------------------------------------------------------------------------
-
-df <- d %>% filter(
-  disease == "Stunting" &
-    measure == "Recovery" &
-    birth == "yes" &
-    severe == "no" &
-    age_range == "3 months" &
-    cohort == "pooled" 
-)
-df <- droplevels(df)
-df <- df %>% arrange(region)
-
-ki_desc_plot_overall_only <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-                         Cohort="pooled",
-                         xlabel="Age category",
-                         ylabel="",
-                         h1=0,
-                         h2=3,
-                         yrange=NULL){
-  df <- d %>% filter(
-    disease == Disease &
-      measure == Measure &
-      birth == Birth &
-      severe == Severe &
-      age_range == Age_range &
-      cohort == Cohort &
-      !is.na(region) & !is.na(agecat) &
-      region == 'Overall'
-  )
-  df <- droplevels(df)
-  
-  # remove N= from labels
-  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
-    mutate(nstudy.f = gsub('N=', '', nstudy.f))
-  
-  # remove text from labels
-  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
-    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
-  
-  # Remove 'months' from x axis labels  
-  df <- df %>% arrange(agecat)
-  df$agecat <- as.character(df$agecat)
-  df$agecat <- gsub(" months", "", df$agecat)
-  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
-  
-  p <- ggplot(df,aes(y=est,x=agecat)) +
-    geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
-    geom_point(aes(fill=region, color=region), size = 2) +
-    geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 2) +
-    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
-    xlab(xlabel)+
-    ylab(ylabel) +
-    geom_text(data=df, aes(x = agecat, y = h1, vjust =  1,
-                           label = nmeas.f), size = 4) +
-    geom_text(data=df, aes(x = agecat, y = h1, vjust = -1, 
-                           label = nstudy.f), size = 4) +
-    scale_x_discrete(expand = expand_scale(add = 2)) +
-    annotate('text', x = -0.25, y = h1, label = 'Studies:', vjust = -1) +
-    annotate('text', x = -0.25, y = h1, label = 'Children:', vjust = 1) +
-    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    expand_limits(y = h2) +
-    theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
-    theme(axis.text.x = element_text(margin = 
-                                       margin(t = -15, r = 0, b = 0, l = 0),
-                                     size = 15)) +
-    theme(axis.title.x = element_text(margin = 
-                                        margin(t = 25, r = 0, b = 0, l = 0))) +
-    ggtitle("") 
-  
-  if(!is.null(yrange)){
-    p <- p + coord_cartesian(ylim=yrange)
-  }
-  
-  return(p)
-}
-
-p7 <- ki_desc_plot_overall_only(df,
-                   Disease="Stunting",
-                   Measure="Recovery", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="3 months", 
-                   Cohort="pooled",
-                   xlabel="Age (months)",
-                   ylabel='Percent recovered (95% CI)', 
-                   h1=26,
-                   h2=28)
-
-
-ggsave(p7, file="figures/stunting/fig_stunt_rec_pooled_only.png", width=10, height=8)
-
-
-# #------------------------------------------------------------------------------
-# #LAZ with percentiles
-# #------------------------------------------------------------------------------
-# df <- df %>% group_by(agecat, region) %>%
-#   summarise(fifth_perc = quantile(est, probs = c(0.05)[[1]]),
-#             fiftieth_perc = quantile(est, probs = c(0.5)[[1]]),
-#             ninetyfifth_perc = quantile(est, probs = c(0.95))[[1]]) %>%
-#   ungroup()
-#   # mutate(fifth_perc = quantile(est, probs = c(0.05)),
-#   #        fiftieth_perc = quantile(est, probs = c(0.5)),
-#   #        ninetyfifth_perc = quantile(est, probs = c(0.95))) 
-# p5 <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-#   geom_smooth(aes(fill=region, color=region)) +
-#   geom_hline(yintercept = 0, colour = "black") +
-#   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
-#                      limits = c(-2.2, 1.5)) + 
-#   scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-#                     name = 'Region') +
-#   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-#                      name = 'Region') +
-#   xlab("Age (months)")+
-#   ylab("Length-for-age Z-score") +
-#   ggtitle("") +
-#   theme(axis.text.x = element_text(margin = 
-#                                      margin(t = -30, r = 0, b = 0, l = 0),
-#                                    size = 15)) +
-#   theme(axis.title.x = element_text(margin = 
-#                                       margin(t = 25, r = 0, b = 0, l = 0))) +
-#   theme(legend.position="right") +
-#   geom_line(aes(x=agecat, y=fifth_perc)) +
-#   geom_line(aes(x = agecat, y = fiftieth_perc)) +
-#   geom_line(aes(x = agecat, y = ninetyfifth_perc)) +
-#   facet_wrap(~region)
-#   # stat_summary(fun.y = "quantile", fun.args = list(probs = c(0.05, 0.5, 0.95)),
-#                  # aes(yintercept = est, group = region, x = agecat))
-# 
-# p5
-# 
-# ggsave(p5, file="figures/stunting/LAZ_by_region_perc.png", width=10, height=4)
-
-
+saveRDS(d, file=paste0("results/figure-data/figdata-",ci_inc_plot_name,".RDS"))
 
 
 

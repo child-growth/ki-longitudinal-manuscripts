@@ -73,8 +73,7 @@ stplot = ggplot(d, aes(x = month_diff, y = stunting_prev)) +
   scale_y_continuous(breaks = seq(0,60,10),
                      labels = seq(0,60,10)) +
   theme(legend.position = "bottom") 
-ggsave(stplot, file="figures/stunting/fig_stunt_rec_cohort_st.png", 
-       width=5, height=4)
+
 
 md_data = d %>% filter(!is.na(mean_diff_laz)) 
 
@@ -97,5 +96,41 @@ meandiff_plot = ggplot(md_data, aes(x = month_diff, y = mean_diff_laz)) +
         axis.text.y = element_text(size=14),
         axis.title.x = element_text(size=16),
         axis.title.y = element_text(size=16)) 
-ggsave(meandiff_plot, file="figures/stunting/fig_stunt_rec_cohort_meandiff.png", 
+
+
+#---------------------------------------
+# define standardized plot names
+#---------------------------------------
+st_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "prevalence after LAZ rose above -2",
+  population = "overall",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
+
+meandiff_plot_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "mean after LAZ rose above -2",
+  population = "overall",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
+
+#---------------------------------------
+# save plot and underlying data
+#---------------------------------------
+
+ggsave(stplot, file=paste0("figures/stunting/fig-",st_plot_name,".png"), 
        width=5, height=4)
+
+ggsave(meandiff_plot, file=paste0("figures/stunting/fig-",meandiff_plot_name,".png"), 
+       width=5, height=4)
+
+saveRDS(d, file=paste0("results/figure-data/figdata-",st_plot_name,".RDS"))
+saveRDS(md_data, file=paste0("results/figure-data/figdata-",meandiff_plot_name,".RDS"))
+

@@ -146,12 +146,18 @@ bar_plot_data = bar_plot_data %>%
   mutate(stunted = as.factor(ifelse(classifnew %in%
     c("Never stunted", "Newly recovered", "Still recovered"), 0, 1)))
 
+#-----------------------------------------
+# define color palette
+#-----------------------------------------
+
 pink_green = rev(brewer.pal(n = 6, name = "PiYG"))
 pink_green[3] = "#CDF592"
 pink_green[5] = "#EA67AE"
 pink_green[4] = "#FFB7DC"
 
-# pink_green_reord = pink_green[c(3, 2, 1, 6, 5, 4)]
+#-----------------------------------------
+# create plot
+#-----------------------------------------
 
 bar_plot_noRE = ggplot(bar_plot_data) +
   geom_bar(aes(x = agem, y = percent, fill = classif3), 
@@ -171,7 +177,25 @@ bar_plot_noRE = ggplot(bar_plot_data) +
   guides(fill = guide_legend(nrow = 1)) 
 bar_plot_noRE
 
-ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=4)
+#-----------------------------------------
+# define standardized plot names
+#-----------------------------------------
+bar_plot_noRE_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "change in stunting status",
+  population = "overall",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(bar_plot_noRE, file=paste0("figures/stunting/fig-",bar_plot_noRE_name,".png"), width=10, height=4)
+
+saveRDS(bar_plot_data, file=paste0("results/figure-data/figdata-",bar_plot_noRE_name,".RDS"))
+
+
 
 
 

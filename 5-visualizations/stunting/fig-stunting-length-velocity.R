@@ -366,9 +366,53 @@ combined_plot = grid.arrange(plot_cm, plot_laz2, plot_mean_laz,
                               nrow = 3, heights = c(8, 4, 4))
 combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, nrow = 2, heights = c(10, 4))
 
+#-------------------------------------
+# define standardized plot names
+#-------------------------------------
+combined_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "growth velocity",
+  population = "overall",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
 
+combined_plot_strat_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "growth velocity",
+  population = "region",
+  location = "",
+  age = "all",
+  analysis = "primary"
+)
 
-ggsave(combined_plot, file="figures/stunting/fig_stunt_vel_pool.png", width=10, height=8)
-ggsave(combined_plot_strat, file="figures/stunting/fig_stunt_vel_region.png", width=16, height=18)
+#-------------------------------------
+# save plots
+#-------------------------------------
+ggsave(combined_plot, file=paste0("figures/stunting/", combined_plot_name,
+        ".png"), width=10, height=8)
+ggsave(combined_plot_strat, file="figures/stunting/",combined_plot_strat_name,
+       ".png", width=16, height=18)
 
+#-------------------------------------
+# save input data 
+#-------------------------------------
+saveRDS(
+  list(
+    velplot_cm = velplot_cm,
+    velplot_laz = velplot_laz,
+    meanlaz = meanlaz
+  ),
+  file = paste0("figures/stunting/", combined_plot_name, ".RDS")
+)
 
+saveRDS(
+  list(
+    velplot_cm = velplot_cm_strat,
+    velplot_laz = velplot_laz_strat
+  ),
+  file = paste0("figures/stunting/", combined_plot_strat_name, ".RDS")
+)
