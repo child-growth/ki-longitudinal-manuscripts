@@ -368,7 +368,7 @@ server <- function(input, output, session) {
     list(src = file_path,
            contentType = 'image/png',
            height = 600,
-           width = 800,
+           # width = 800,
            alt = "This is alternate text")
   }, deleteFile = FALSE)
   
