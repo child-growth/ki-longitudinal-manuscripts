@@ -195,6 +195,155 @@ study_label_transformation <- function(df){
   return(df)
 }
 
+# for hgbd dataset
+clean_country <- function(df){
+  
+  df$country <- as.character(df$country)
+  
+  df <- df %>% mutate(country = case_when(
+    country == "AFG" ~ "Afghanistan",
+    country == "AGO" ~ "Angola",
+    country == "BDI" ~ "Burundi",
+    country == "BFA" ~ "Burkina Faso",
+    country == "BGD" ~ "Bangladesh",
+    country == "BGD, BRA, IND, NPL, PER, PAK, ZAF, TZA" ~ "Other",
+    country == "BGD, IND, PAK" ~ "Other",
+    country == "BGD, MWI" ~ "Other",
+    country == "BGD, PAK, TZA, ZMB, GHA" ~ "Other",
+    country == "BLR" ~ "Belarus",
+    country == "BLZ" ~ "Belize",
+    country == "BRA" ~ "Brazil",
+    country == "BRA, GBR, KEN, PAK, THA, ZAF " ~ "Other",
+    country == "BRA, GTM, IND, PHL, ZAF" ~ "Other",
+    country == "CHN" ~ "China",
+    country == "CIV" ~ "Cote d'lvoire",
+    country == "CMR" ~ "Cameroon",
+    country == "COD" ~ "Congo, Democratic Republic of the",
+    country == "COD, GTM, IND, PAK" ~ "Other",
+    country == "DNK" ~ "Denmark",
+    country == "ECU" ~ "Ecuador",
+    country == "EGY" ~ "Egypt",
+    country == "ETH" ~ "Ethiopia",
+    country == "GMB" ~ "Gambia",
+    country == "GMB, MLI, MOZ, KEN, IND, BGD, PAK" ~ "Other",
+    country == "GTM" ~ "Guatemala",
+    country == "IDN" ~ "Indonesia",
+    country == "IND" ~ "India",
+    country == "IRQ" ~ "Iraq",
+    country == "KEN" ~ "Kenya",
+    country == "KEN, CHN, GBR, IND, ITA, KEN, OMN, USA" ~ "Other",
+    country == "KHM" ~ "Cambodia",
+    country == "MDG" ~ "Madagascar",
+    country == "MEX" ~ "Mexico",
+    country == "MLI" ~ "Mali",
+    country == "MMR" ~ "Myanmar",
+    country == "MOZ" ~ "Mozambique",
+    country == "MWI" ~ "Malawi",
+    country == "NER" ~ "Niger",
+    country == "NGA" ~ "Nigeria",
+    country == "NLD" ~ "Netherlands",
+    country == "NPL" ~ "Nepal",
+    country == "PAK" ~ "Pakistan",
+    country == "PER" ~ "Persia",
+    country == "PER, BRA, GNB, BGD" ~ "Other",
+    country == "PHL" ~ "Philippines",
+    country == "RWA" ~ "Rwanda",
+    country == "SDN" ~ "Sudan",
+    country == "SGP" ~ "Singapore",
+    country == "SSD" ~ "South Sudan",
+    country == "TCD" ~ "Chad",
+    country == "TUR" ~ "Turkey",
+    country == "TZA" ~ "Tanzania",
+    country == "UGA" ~ "Uganda",
+    country == "USA" ~ "United States",
+    country == "USA, GTM" ~ "Other",
+    country == "VNM" ~ "Vietnam",
+    country == "YEM" ~ "Yemen",
+    country == "ZAF" ~ "South Africa",
+    country == "ZMB" ~ "Zambia",
+    country == "ZWE" ~ "Zimbabwe",
+    TRUE ~ "Other"
+    ))
+                                  
+  try(df <- mutate(df, cohort = paste0(short_desc,'-', country)))
+  
+  return(df)
+}
+
+# for hgbd dataset
+make_region <- function(df){
+  
+  df$country <- as.character(df$country)
+  
+  df <- df %>% mutate(region = case_when(
+    country == "AFG" ~ "Asia",
+    country == "AGO" ~ "Africa",
+    country == "BDI" ~ "Africa",
+    country == "BFA" ~ "Africa",
+    country == "BGD" ~ "Asia",
+    country == "BGD, BRA, IND, NPL, PER, PAK, ZAF, TZA" ~ "Other",
+    country == "BGD, IND, PAK" ~ "Other",
+    country == "BGD, MWI" ~ "Other",
+    country == "BGD, PAK, TZA, ZMB, GHA" ~ "Other",
+    country == "BLR" ~ "N.America & Europe",
+    country == "BLZ" ~ "N.America & Europe",
+    country == "BRA" ~ "Latin America",
+    country == "BRA, GBR, KEN, PAK, THA, ZAF " ~ "Other",
+    country == "BRA, GTM, IND, PHL, ZAF" ~ "Other",
+    country == "CHN" ~ "Asia",
+    country == "CIV" ~ "Africa",
+    country == "CMR" ~ "Africa",
+    country == "COD" ~ "Africa",
+    country == "COD, GTM, IND, PAK" ~ "Other",
+    country == "DNK" ~ "N.America & Europe",
+    country == "ECU" ~ "Latin America",
+    country == "EGY" ~ "Africa",
+    country == "ETH" ~ "Africa",
+    country == "GMB" ~ "Africa",
+    country == "GMB, MLI, MOZ, KEN, IND, BGD, PAK" ~ "Other",
+    country == "GTM" ~ "N.America & Europe",
+    country == "IDN" ~ "Asia",
+    country == "IND" ~ "Asia",
+    country == "IRQ" ~ "Asia",
+    country == "KEN" ~ "Africa",
+    country == "KEN, CHN, GBR, IND, ITA, KEN, OMN, USA" ~ "Other",
+    country == "KHM" ~ "Asia",
+    country == "MDG" ~ "Africa",
+    country == "MEX" ~ "N.America & Europe",
+    country == "MLI" ~ "Africa",
+    country == "MMR" ~ "Asia",
+    country == "MOZ" ~ "Africa",
+    country == "MWI" ~ "Africa",
+    country == "NER" ~ "Africa",
+    country == "NGA" ~ "Africa",
+    country == "NLD" ~ "N.America & Europe",
+    country == "NPL" ~ "Asia",
+    country == "PAK" ~ "Asia",
+    country == "PER" ~ "N.America & Europe",
+    country == "PER, BRA, GNB, BGD" ~ "Other",
+    country == "PHL" ~ "Asia",
+    country == "RWA" ~ "Africa",
+    country == "SDN" ~ "Africa",
+    country == "SGP" ~ "Asia",
+    country == "SSD" ~ "Africa",
+    country == "TCD" ~ "Africa",
+    country == "TUR" ~ "N.America & Europe",
+    country == "TZA" ~ "Africa",
+    country == "UGA" ~ "Africa",
+    country == "USA" ~ "N.America & Europe",
+    country == "USA, GTM" ~ "Other",
+    country == "VNM" ~ "Asia",
+    country == "YEM" ~ "Africa",
+    country == "ZAF" ~ "Africa",
+    country == "ZMB" ~ "Africa",
+    country == "ZWE" ~ "Africa",
+    TRUE ~ "Other"
+  ))
+  
+  try(df <- mutate(df, cohort = paste0(short_desc,'-', country)))
+  
+  return(df)
+}
 
 
 name_labeling <- function(df){
