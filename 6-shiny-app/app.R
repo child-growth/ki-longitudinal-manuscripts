@@ -189,9 +189,9 @@ ui <- navbarPage("HBGDki Results Dashboard",
                                                choices = unique(df$location))
                             ),
                             column(4,
-                                   selectInput("Severe",
-                                               "Severe:",
-                                               c("No", "Yes"))
+                                   selectInput("OutcomeType",
+                                               "Outcome Type:",
+                                               c("Not Severe", "Severe"))
                             ),
                             column(4,
                                    selectInput("Analysis",
@@ -282,64 +282,87 @@ ui <- navbarPage("HBGDki Results Dashboard",
 
 # Define server logic required to draw the forest plot
 server <- function(input, output, session) {
+
   # Adaptive input selections based on user input - avoids blank plots
   output$region <- renderUI({
     df <- df[df$outcome == input$Outcome, ]
     
     df <- df %>%
       drop_na(severe, measure, population, location, age, analysis)
-    
+    df <- droplevels(df)
     selectInput('Region',
                 'Region:',
                 unique(df$location))
 
   })
   output$severe <- renderUI({
-    df <- df[df$outcome == input$Outcome, ]
+    df <- df %>%
+      filter(outcome == input$Outcome) %>%
+      filter(location == input$Region)
     
     df <- df %>%
       drop_na(severe, measure, population, age, analysis)
-    
-    selectInput('Severe',
-                'Severe:',
-                choices = c('No', 'Yes'))
+    df <- droplevels(df)
+    selectInput('OutcomeType',
+                'Outcome Type:',
+                choices = c('Not Severe', 'Severe'))
   })
   output$measure <- renderUI({
-    df <- df[df$outcome == input$Outcome, ]
-    
+    df <- df %>%
+      filter(outcome == input$Outcome) %>%
+      filter(location == input$Region) 
+    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
+    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
     df <- df %>%
       drop_na(measure, population, age, analysis)
-    
+    df <- droplevels(df)
     selectInput('Measure',
                 'Measure:',
                 unique(df$measure))
   })
   output$population <- renderUI({
-    df <- df[df$outcome == input$Outcome, ]
-    
+    df <- df %>%
+      filter(outcome == input$Outcome) %>%
+      filter(location == input$Region) %>%
+      filter(measure == input$Measure)
+    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
+    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
     df <- df %>%
       drop_na(population, age, analysis)
-
+    df <- droplevels(df)
     selectInput('Population',
                 'Population:',
                 unique(df$population))
   })
   output$age <- renderUI({
-    df <- df[df$outcome == input$Outcome, ]
-    
+    df <- df %>%
+      filter(outcome == input$Outcome) %>%
+      filter(location == input$Region) %>%
+      filter(measure == input$Measure) %>%
+      filter(population == input$Population)
+    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
+    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
+
     df <- df %>%
       drop_na(age, analysis)
-    
+    df <- droplevels(df)
     selectInput('Age',
                 'Age Range:',
                 unique(df$age))
   })
   output$analysis <- renderUI({
-    df <- df[df$outcome == input$Outcome, ]
-    
+    df <- df %>%
+      filter(outcome == input$Outcome) %>%
+      filter(location == input$Region) %>%
+      filter(measure == input$Measure) %>%
+      filter(population == input$Population) %>%
+      filter(age == input$Age)
+    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
+    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
+
     df <- df %>%
       drop_na(analysis)
-
+    df <- droplevels(df)
     selectInput('Analysis',
                 'Analysis:',
                 unique(df$analysis))
@@ -349,8 +372,8 @@ server <- function(input, output, session) {
   
   selectedData <- reactive({
     df <- df[df$outcome == input$Outcome, ]
-    if(input$Severe == 'Yes'){df <- df %>% filter(severe == 1)}
-    if(input$Severe == 'No'){df <- df %>% filter(severe == 0)}
+    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
+    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
     d <- df[df$age == input$Age, ]
     d <- d[d$population == input$Population, ]
     d <- d[d$measure == input$Measure, ]
