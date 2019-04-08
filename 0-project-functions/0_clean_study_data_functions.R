@@ -28,8 +28,7 @@ shorten_descriptions <- function(dd){
   dd$short_description[dd$study_id=='NIH-Birth'] <- 'NIH Birth Cohort'
   return(dd)
 }
-
-
+ 
 #-----------------------------------
 # separate cohorts into monthly, quarterly, or yearly
 # and drop any non-intervention cohorts with only yearly 
@@ -224,12 +223,16 @@ clean_country <- function(df){
     country == "ECU" ~ "Ecuador",
     country == "EGY" ~ "Egypt",
     country == "ETH" ~ "Ethiopia",
+    country == "GBR" ~ "United Kingdom",
+    country == "GHA" ~ "Ghana",
     country == "GMB" ~ "Gambia",
     country == "GMB, MLI, MOZ, KEN, IND, BGD, PAK" ~ "Other",
+    country == "GNB" ~ "Guinea-Bissau",
     country == "GTM" ~ "Guatemala",
     country == "IDN" ~ "Indonesia",
     country == "IND" ~ "India",
     country == "IRQ" ~ "Iraq",
+    country == "ITA" ~ "Italy",
     country == "KEN" ~ "Kenya",
     country == "KEN, CHN, GBR, IND, ITA, KEN, OMN, USA" ~ "Other",
     country == "KHM" ~ "Cambodia",
@@ -243,8 +246,9 @@ clean_country <- function(df){
     country == "NGA" ~ "Nigeria",
     country == "NLD" ~ "Netherlands",
     country == "NPL" ~ "Nepal",
+    country == "OMN" ~ "Oman",
     country == "PAK" ~ "Pakistan",
-    country == "PER" ~ "Persia",
+    country == "PER" ~ "Peru",
     country == "PER, BRA, GNB, BGD" ~ "Other",
     country == "PHL" ~ "Philippines",
     country == "RWA" ~ "Rwanda",
@@ -252,6 +256,7 @@ clean_country <- function(df){
     country == "SGP" ~ "Singapore",
     country == "SSD" ~ "South Sudan",
     country == "TCD" ~ "Chad",
+    country == "THA" ~ "Thailand",
     country == "TUR" ~ "Turkey",
     country == "TZA" ~ "Tanzania",
     country == "UGA" ~ "Uganda",
@@ -299,9 +304,10 @@ make_region <- function(df){
     country == "ECU" ~ "Latin America",
     country == "EGY" ~ "Africa",
     country == "ETH" ~ "Africa",
+    country == "GHA" ~ "Africa",
     country == "GMB" ~ "Africa",
     country == "GMB, MLI, MOZ, KEN, IND, BGD, PAK" ~ "Other",
-    country == "GTM" ~ "N.America & Europe",
+    country == "GTM" ~ "Latin America",
     country == "IDN" ~ "Asia",
     country == "IND" ~ "Asia",
     country == "IRQ" ~ "Asia",
@@ -309,7 +315,7 @@ make_region <- function(df){
     country == "KEN, CHN, GBR, IND, ITA, KEN, OMN, USA" ~ "Other",
     country == "KHM" ~ "Asia",
     country == "MDG" ~ "Africa",
-    country == "MEX" ~ "N.America & Europe",
+    country == "MEX" ~ "Latin America",
     country == "MLI" ~ "Africa",
     country == "MMR" ~ "Asia",
     country == "MOZ" ~ "Africa",
@@ -319,7 +325,7 @@ make_region <- function(df){
     country == "NLD" ~ "N.America & Europe",
     country == "NPL" ~ "Asia",
     country == "PAK" ~ "Asia",
-    country == "PER" ~ "N.America & Europe",
+    country == "PER" ~ "Latin America",
     country == "PER, BRA, GNB, BGD" ~ "Other",
     country == "PHL" ~ "Asia",
     country == "RWA" ~ "Africa",
@@ -340,7 +346,12 @@ make_region <- function(df){
     TRUE ~ "Other"
   ))
   
-  try(df <- mutate(df, cohort = paste0(short_desc,'-', country)))
+  df$region <- factor(df$region, 
+                      levels = c("Africa",
+                                 "Asia",
+                                 "Latin America",
+                                 "N.America & Europe",
+                                 "Other"))
   
   return(df)
 }
