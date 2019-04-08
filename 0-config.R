@@ -35,6 +35,7 @@ library(mgcv)
 library(grid)
 library(lazyeval)
 library(rlang)
+library(scales)
 
 # for parallel computing 
 # (will need to configure in each script)

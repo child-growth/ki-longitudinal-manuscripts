@@ -17,16 +17,7 @@
 # preamble
 #-----------------------------------
 rm(list=ls())
-library('dplyr')
-library('tidyr')
-library('stringr')
-library('scales')
-library('RColorBrewer')
-library('ggplot2')
-library('gridExtra')
-# library('readxl')
-# library('fastDummies')
-library('here')
+source(paste0(here::here(), "/0-config.R"))
 
 # Function source
 source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
@@ -52,13 +43,10 @@ unique(md$study_id)
 unique(wmd$study_id)
 
 
-#-----------------------------------
-# load figure 1 metadata
-#-----------------------------------
-
-
-
-############START CONSORT TRIAL##################
+#########################################################################################
+# Load in HGBD Data from Andrew                                                         #
+#                                                                                       #
+#########################################################################################
 consort_ki <- read.csv("results/HBGDki_CONSORT_inclusion.csv")
 consort_ki <- consort_ki[!(consort_ki$Study_ID==""), ]
 consort_ki <- consort_ki[!is.na(consort_ki$Study_ID), ]
@@ -135,7 +123,7 @@ consort_ki <- consort_ki %>% rename(short_id = Short_ID.1, country = Country, su
                                       TRUE ~ 0)
                              )
 
-#need to do name labelling
+# didn't do do name labelling (no need to)
 
 # clean country labels and separate into regions
 consort_ki <- make_region(consort_ki)
@@ -174,7 +162,9 @@ consort_ki_long$inclusion_metric <- factor(consort_ki_long$inclusion_metric,
                                                  'included_qc',
                                                  'included_measurement_freq'))
 
-############END CONSORT TRIAL##################
+# #-----------------------------------
+# # load figure 1 metadata
+# #-----------------------------------
 # ki_md <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyMetadata')
 # ki_md_status <- read_excel('results/KI-metadata.xlsx', sheet = 'StudyStatus')
 
