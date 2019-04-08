@@ -464,9 +464,19 @@ empty <- grid::textGrob("")
 
 grid <- grid.arrange(bar, empty, hm, sidebar,
                         nrow = 2, ncol = 2,
-                        heights = c(20, 1200),
-                        widths = c(150, 10))
+                        heights = c(50, 1200),
+                        widths = c(70, 20))
 grid
+
+
+# save plot and underlying data
+ggsave(filename="figures/fig-consort.pdf",
+       plot = grid,device='pdf',width=12,height=50,limitsize = FALSE)
+
+# saveRDS(
+#         file=paste0("results/figure-data/figdata-",stpgrid_name,".RDS"))
+
+
 # 
 # # nhm1 <- hm1 +
 # #   aes(fill=as.factor(excludedIndicator)) +
