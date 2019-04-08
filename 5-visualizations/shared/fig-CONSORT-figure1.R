@@ -465,7 +465,7 @@ empty <- grid::textGrob("")
 grid <- grid.arrange(bar, empty, hm, sidebar,
                         nrow = 2, ncol = 2,
                         heights = c(20, 1200),
-                        widths = c(150, 10))
+                        widths = c(150, 30))
 grid
 
 
