@@ -327,14 +327,14 @@ bar
 
 # add margin around plots
 hm = hm + theme(plot.margin = unit(c(0, 0.25, 0.7, 0.25), "cm"))
-sidebar = sidebar + theme(plot.margin = unit(c(0, 0.3, .2, 0.1), "cm"))
+sidebar = sidebar + theme(plot.margin = unit(c(0, 0.3, .25, 0.1), "cm"))
 bar = bar + theme(plot.margin = unit(c(1, .8, -.65, 9.7), "cm"))
 empty <- grid::textGrob("") 
 
 grid <- grid.arrange(bar, empty, hm, sidebar,
                         nrow = 2, ncol = 2,
                         heights = c(120, 1200),
-                        widths = c(70, 20))
+                        widths = c(70, 25))
 
 # save plot and underlying data
 ggsave(filename="figures/fig-consort.pdf",
