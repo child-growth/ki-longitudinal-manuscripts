@@ -1,5 +1,6 @@
-#-----------------------------------
-# study-inventory-heatmaps.R
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
 #
 # ben arnold (benarnold@berkeley.edu)
 # modified by jade benjamin-chung (jadebc@berkeley.edu)
@@ -9,9 +10,13 @@
 # in GHAP using meta-data
 # (GHAP_metadata) that Andrew created
 # using GHAPStudyMetadata.R
-#-----------------------------------
 
+# inputs: GHAP_metadata_stunting.RDS
 
+# outputs: 
+# "fig-stunt_laz-2-heatmap-overall--allage-primary.png"
+# "figdata-stunt_laz-2-heatmap-overall--allage-primary.RDS"
+##########################################
 
 #-----------------------------------
 # preamble
@@ -19,55 +24,25 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Function source
-source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
-
-
-
 #-----------------------------------
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
 md <- readRDS('results/GHAP_metadata_stunting.RDS')
-wmd <- readRDS('results/GHAP_metadata_wasting.RDS')
 
 #Drop non-included studies
 md <- mark_measure_freq(md)
-wmd <- mark_measure_freq(wmd)
 table(md$measurefreq)
-table(wmd$measurefreq)
 
 md <- md %>% filter(measurefreq!="yearly" & !is.na(measurefreq))
-wmd <- wmd %>% filter(measurefreq!="yearly" & !is.na(measurefreq))
 
 unique(md$study_id)
-unique(wmd$study_id)
-
-#fix PROVIDE location
-wmd$countrycohort[wmd$study_id=="PROVIDE"] <- "BANGLADESH"
 
 #drop yearly COHORTS
 md <- md[!(md$study_id=="COHORTS" & (md$countrycohort=="BRAZIL"|md$countrycohort=="SOUTH AFRICA")),] 
-wmd <- wmd[!(wmd$study_id=="COHORTS" & (wmd$countrycohort=="BRAZIL"|wmd$countrycohort=="SOUTH AFRICA")),] 
 
-md <- md[(md$study_id %in% wmd$study_id),]
-wmd <- wmd[(wmd$study_id %in% md$study_id),]
-
-dim(wmd)
 dim(md)
 md$countrycohort[is.na(md$countrycohort)] <- "singlecohort"
-wmd$countrycohort[is.na(wmd$countrycohort)] <- "singlecohort"
 
-wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m0, wastprev_m1, wastprev_m2,
-                      wastprev_m3, wastprev_m4, wastprev_m5, wastprev_m6,
-                      wastprev_m7, wastprev_m8, wastprev_m9, wastprev_m10,
-                      wastprev_m11, wastprev_m12, wastprev_m13, wastprev_m14,
-                      wastprev_m15, wastprev_m16, wastprev_m17, wastprev_m18,
-                      wastprev_m19, wastprev_m20, wastprev_m21, wastprev_m22,
-                      wastprev_m23, wastprev_m24)
-dim(wmd)
-dim(md)
-md <- merge(md, wmd, by=c('study_id', 'cohortnum'), all = TRUE)
-dim(md)
 
 #drop mal-ed Pakistan
 md <- md[!(md$study_id=="MAL-ED" & md$countrycohort=="singlecohort"),]
@@ -84,12 +59,6 @@ for(i in 0:24){
   md[wi] <- as.numeric(md[,c(wi)])
 }
 
-# convert wasting prevalence to numeric
-md$wastprev <- as.numeric(md$wastprev)
-for(i in 0:24){
-  wi <- paste("wastprev_m",i,sep="")
-  md[wi] <- as.numeric(md[,c(wi)])
-}
 
 # convert mean HAZ to numeric
 for(i in 0:24){
@@ -164,11 +133,6 @@ dd <- mutate(dd,
 dd$stpcat <- cut(dd$stuntprev,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
 dd$stpcat <- factor(dd$stpcat)
 
-# categorize wasting prevalence
-dd$wpcat <- cut(dd$wastprev,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
-dd$wpcat <- factor(dd$wpcat)
-
-
 
 #-----------------------------------
 # Create a long format dataset
@@ -176,13 +140,13 @@ dd$wpcat <- factor(dd$wpcat)
 #-----------------------------------
 
 # gather N measurements by month data into long format
-dnsubj <- select(dd,study_id,country,studycountry,region,stuntprev,wastprev,starts_with('n')) %>%
+dnsubj <- select(dd,study_id,country,studycountry,region,stuntprev,starts_with('n')) %>%
   select(-neurocog_data,-nutrition,-notes,-num_countries,-numcountry,-numsubj,-numobs,-nmeas) %>%
-  gather(age,nobs,-study_id,-country,-studycountry,-region,-stuntprev, -wastprev) %>%
+  gather(age,nobs,-study_id,-country,-studycountry,-region,-stuntprev) %>%
   mutate(age=as.integer(str_sub(age,2,-1)),nobs=as.integer(nobs)) %>%
-  select(study_id,country,studycountry,region,stuntprev,wastprev,age,nobs) %>%
+  select(study_id,country,studycountry,region,stuntprev,age,nobs) %>%
   filter(age>=0 & age <=24 ) %>%
-  arrange(region,stuntprev,wastprev) 
+  arrange(region,stuntprev) 
 
 # gather stunting prev by month data into long format
 dstuntp <- select(dd,study_id,country,studycountry,starts_with('stuntprev_m')) %>%
@@ -191,14 +155,7 @@ dstuntp <- select(dd,study_id,country,studycountry,starts_with('stuntprev_m')) %
   select(study_id,country,studycountry,age,stp) %>%
   filter(age>=0 & age <=24 )
 
-# gather stunting prev by month data into long format
-dwastp <- select(dd,study_id,country,studycountry,starts_with('wastprev_m')) %>%
-  gather(age,wp,-study_id,-country,-studycountry) %>%
-  mutate(age=as.integer(str_sub(age,11,-1))) %>%
-  select(study_id,country,studycountry,age,wp) %>%
-  filter(age>=0 & age <=24 )
-
-# gather meanWHZ by month data into long format
+# gather meanLAZ by month data into long format
 dhaz <- select(dd,study_id,country,studycountry,starts_with('meanHAZ_m')) %>%
   gather(age,haz,-study_id,-country,-studycountry) %>%
   mutate(age=as.integer(str_sub(age,10,-1))) %>%
@@ -211,8 +168,6 @@ dim(dnsubj)
 dim(dstuntp)
 dp <- left_join(dnsubj,dstuntp,by=c('study_id','studycountry','age'))
 dim(dp)
-dp <- left_join(dp,dwastp,by=c('study_id','studycountry','age'))
-dim(dp)
 dp <- left_join(dp,dhaz,by=c('study_id','studycountry','age'))
 dim(dp)
 
@@ -220,11 +175,6 @@ dim(dp)
 dp$stpcat <- cut(dp$stp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
 dp$stpcat <- factor(dp$stpcat)
 dp$stpcat[dp$nobs<50 | is.nan(dp$stp)] <- NA
-
-# categorize wasting prevalence, set wasting prevalence category estimates to missing if n<50
-dp$wpcat <- cut(dp$wp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
-dp$wpcat <- factor(dp$wpcat)
-dp$wpcat[dp$nobs<50 | is.nan(dp$wp)] <- NA
 
 # categorize number of observations
 N_breaks <- c(1,50, 100, 250, 500, 750, 1000, 1500, 2000, 100000)
@@ -445,8 +395,27 @@ nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.25,0.1), "cm"))
 nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.125,0,3.5), "cm"))
 empty <- grid::textGrob("") 
 
+# arrange components into single plot
 stpgrid <- grid.arrange(nagebar, empty, empty,
                         stphm, nbar, stpbar,nrow = 2, ncol = 3,
                         heights = c(25,100),
                         widths=c(100,20,20))
-ggsave(filename="figures/stunting/stunting-study-inventory-heatmap.pdf",plot = stpgrid,device='pdf',width=12,height=9)
+
+# define standardized plot names
+stpgrid_name = create_name(
+  outcome = "stunting and laz" ,
+  cutoff = 2,
+  measure = "heatmap",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(filename=paste0("figures/stunting/fig-",stpgrid_name,".pdf"),
+       plot = stpgrid,device='pdf',width=12,height=9)
+saveRDS(list(dd = dd,
+             dp = dp), 
+        file=paste0("results/figure-data/figdata-",stpgrid_name,".RDS"))
+

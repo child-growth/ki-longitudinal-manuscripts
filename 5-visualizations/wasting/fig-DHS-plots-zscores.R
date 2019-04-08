@@ -173,8 +173,9 @@ dhsall_pool <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %dopar% {
 dhsallfits <- bind_rows(dhsallfits, dhsall_pool) %>%
   mutate(region = factor(region, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")))
 
-# WILSON: for each measure and region, do the cluster based pooling
-# for each child age
+#---------------------------------------
+# for each measure and region, do the cluster based pooling for each child age
+#---------------------------------------
 library(survey)
 # The most conservative approach would be to center any single-PSU strata around
 # the sample grand mean rather than the stratum mean
@@ -200,23 +201,14 @@ do_one_combination <- function(measure_here, region_here) {
 
   df_n <- df_one_combination %>% group_by(agem) %>% summarise(wgt_sum = sum(wgt))
   df_survey <- dplyr::left_join(df_survey, df_n, by = "agem")
-
-  # ben's approach
-  # ben <- dhsallfits %>% filter(measure == measure_here & region == region_here)
-  # check the point estimate is identical to weighted average
-  # wilson_naive <- df_one_combination %>%
-  #   group_by(agem) %>%
-  #   summarise(wilson = sum(zscore * wgt) / sum(wgt))
   return(df_survey)
 }
 
-# measure <- "LAZ"
-# region <- "AFRO"
 df_survey <- foreach(measure = levels(dhsz$measure), .combine = rbind) %:%
   foreach(region = c("AFRO", "SEARO", "PAHO"), .combine = rbind) %dopar% {
     do_one_combination(measure_here = measure, region_here = region)
   }
-# WILSON: meta analysis, random effects
+# meta analysis using fixed effects or random effects based pooling
 fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
   data <- filter(data, agecat == age)
   fit <- NULL
@@ -362,8 +354,8 @@ ghapfits <- foreach(zmeas = c("LAZ", "WAZ", "WHZ"), .combine = rbind) %:%
 #---------------------------------------
 ghapfits <- ghapfits %>% mutate(dsource = "ki cohorts")
 dhssubfits <- dhssubfits %>% mutate(dsource = "DHS, ki countries")
-# dhsallfits <- dhsallfits %>% mutate(dsource = "DHS") # ben's result
-dhsallfits <- df_survey_output %>% mutate(dsource = "DHS") # wilson's result
+# dhsallfits <- dhsallfits %>% mutate(dsource = "DHS") # std_err based on bootstrapping GAM
+dhsallfits <- df_survey_output %>% mutate(dsource = "DHS") # std_err based on survey_avg using sampling weight
 dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
   mutate(
     dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries", "DHS")),

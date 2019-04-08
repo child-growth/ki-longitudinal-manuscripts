@@ -24,8 +24,8 @@ library('scales')
 library('RColorBrewer')
 library('ggplot2')
 library('gridExtra')
-library('readxl')
-library('fastDummies')
+# library('readxl')
+# library('fastDummies')
 library('here')
 
 # Function source

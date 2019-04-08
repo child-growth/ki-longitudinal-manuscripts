@@ -41,9 +41,21 @@ p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region) + geom_smooth(aes(colo
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 
+#-----------------------------------------
+# define standardized plot names
+#-----------------------------------------
+p1_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "mean",
+  population = "region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "seasonality"
+)
 
-ggsave(p1, file=paste0(here(),"/figures/wasting/season_WLZ_trajectories.png"), width=12, height=8)
-
+# save plot and underlying data
+ggsave(p1, file=paste0("figures/wasting/fig-",p1_name,".png"), width=12, height=8)
 
 
 
@@ -56,7 +68,21 @@ p2 <- ggplot(d[d$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color=table
                      breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 p2
 
-ggsave(p2, file=paste0(here(),"/figures/wasting/season_WLZ_at_birth.png"), width=8, height=5)
+p2_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "mean",
+  population = "birth-stratified",
+  location = "South Asia",
+  age = "Birth",
+  analysis = "seasonality"
+)
+
+# save plot and underlying data
+ggsave(p2, file=paste0("figures/wasting/fig-",p2_name,".png"), width=8, height=5)
+
+
+
 
 
 
@@ -67,8 +93,6 @@ d <- d %>% group_by(birthcat) %>% mutate(meanZ=mean(whz), prev=mean(whz < -2))
 d$studyyear <- factor(floor(d$studyday/365) + 1, labels = c("Year 1","Year 2","Year 3"))
 d$studyseason <- factor(interaction(d$studyyear, d$monsoon))
 
-# d2 <- d %>% filter(monsoon == "Monsoon") %>% arrange(studyday)
-# unique(d2$studyday)
 
 #Annotation dataframe
 ann_text <- data.frame(studyday = c(1,3,5)*182, whz = -1.2, fit = -1.2, lab = c("Year 1","Year 2", "Year 3"),
@@ -95,36 +119,6 @@ d$studyseason_birthcat <- factor(interaction(d$studyseason, d$birthcat))
 table(d$studyseason_birthcat)
 table(d$birthcat, d$studyseason)
 
-# df <- d %>% group_by(birthcat, studyseason_birthcat) %>% summarize(age1=mean(agedays), wlz1=mean(whz), season_change=season_change[1]) %>%
-#      group_by(birthcat) %>% arrange(birthcat,age1) %>%
-#      mutate(age2=lead(age1), wlz2=lead(wlz1))
-# df
-
-
-# ggplot(df, aes(color=birthcat)) + geom_segment(aes(x=age1, y=wlz1, xend=age2, yend=wlz2), size=2) +
-#   scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
-# 
-# ggplot(df, aes(color=birthcat)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
-#   scale_color_manual(values=tableau10) + facet_wrap(~season_change) + theme(legend.position = "right")
-# 
-# ggplot(df, aes(color=season_change)) + geom_point(aes(x=age1, y=wlz2-wlz1), size=3) +
-#   facet_wrap(~birthcat) + 
-#   scale_color_manual(values=tableau10) + theme(legend.position = "right")
-
-
-
-# #test if the pooled means are significantly different
-# pvals <- ki.ttest(data=d, y="whz", levels="studyseason", ref="Year 1.Not monsoon", comp=c("Year 1.Monsoon", "Year 2.Not monsoon"))
-# pvals
-# 
-# pvals <- ki.ttest(data=d, y="whz", levels="studyseason_birthcat", ref="Year 1.Monsoon.Born Jan-Mar",  comp=c("Year 2.Monsoon.Born Jan-Mar","Year 1.Monsoon.Born Apr-June"))
-# pvals
-# 
-# 
-# 
-# res <- ki.glm(data=d, y="whz", levels="studyseason_birthcat", ref="Year 1.Monsoon.Born Jan-Mar",  comp=c("Year 2.Monsoon.Born Jan-Mar","Year 1.Monsoon.Born Apr-June"))
-# res
-
 
 
 
@@ -146,22 +140,7 @@ for(i in 1:length(levels(d$birthcat))){
   }
 
 
-# p2 <- ggplot(df, aes(x=studyday, y=whz, group=birthcat)) +
-#   geom_rect(aes(xmin = 30.4617*5, xmax = 30.4617*10 , ymin = -1.25, ymax = 1), fill = shade, color = shade, alpha=0.3) +
-#   geom_rect(aes(xmin = 30.4617*17, xmax = 30.4617*22 , ymin = -1.25, ymax = 1), fill = shade, color = shade, alpha=0.3) +
-#   geom_rect(aes(xmin = 30.4617*29, xmax = 30.4617*34 , ymin = -1.25, ymax = 1), fill = shade, color = shade, alpha=0.3) +
-#   #geom_point(alpha=0.1, shape=19) +
-#   geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
-#   geom_vline(xintercept=c(365,730)) +
-#   #geom_hline(aes(yintercept=meanZ), linetype="dashed") +
-#   scale_color_manual(values=tableau10) + ylab("WLZ") + xlab("Month of the year") +
-#   scale_y_continuous(expand = c(0, 0)) +
-#   scale_x_continuous(limits=c(1,1086), expand = c(0, 0),
-#                      breaks = 1:18*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),3)) +
-#   geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") +
-#   coord_cartesian(ylim=c(-1.25, -0.25))
-# 
-# print(p2)
+
 
 #Add points at 6, 12, and 18 months
 plotdf$xpos <- plotdf$agem <- NA
@@ -175,7 +154,6 @@ table(plotdf$xpos)
 shade="grey80"
 
 rectd=data.frame(x1=30.4617*c(5,17,29), x2=30.4617*c(10,22,34), y1=rep(-1.25, 3), y2=rep(0, 3))
-#rectd=data.frame(x1=30.4617*c(4,16,28), x2=30.4617*c(11,23,35), y1=rep(-1.25, 3), y2=rep(0, 3))
 
 p3 <- ggplot() +
   geom_rect(data=rectd, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill=shade, color=shade, alpha=1) +
@@ -198,8 +176,19 @@ p3 <- ggplot() +
          legend.box.background = element_rect(colour = "black"),
          legend.text=element_text(size=rel(0.5)))
 
-ggsave(p3, file=paste0(here(),"/figures/wasting/seasonal_trajectories_birthstrat.png"), width=8, height=5)
 
+p3_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "mean",
+  population = "birth-stratified",
+  location = "South Asia",
+  age = "All ages",
+  analysis = "seasonality"
+)
+
+# save plot and underlying data
+ggsave(p3, file=paste0("figures/wasting/fig-",p3_name,".png"), width=8, height=5)
 
 
 

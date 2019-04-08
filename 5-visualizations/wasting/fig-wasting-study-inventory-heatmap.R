@@ -513,7 +513,21 @@ awstpgrid <- grid.arrange(nagebar2,empty, empty,
                         widths=c(100,20,20))
 
 
-# combined plot
-ggsave(filename="figures/wasting/wasting-study-inventory-heatmap.pdf",plot = awstpgrid,device='pdf',width=12,height=9)
 
+# define standardized plot names
+awstpgrid_name = create_name(
+  outcome = "wasting and wlz" ,
+  cutoff = 2,
+  measure = "heatmap",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
 
+# save plot and underlying data
+ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name,".pdf"),
+       plot = awstpgrid,device='pdf',width=12,height=9)
+saveRDS(list(dd = dd,
+             dp = dp), 
+        file=paste0("results/figure-data/figdata-",awstpgrid_name,".RDS"))

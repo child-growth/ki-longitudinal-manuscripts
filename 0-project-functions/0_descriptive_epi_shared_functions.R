@@ -537,3 +537,101 @@ mean95CI <- function(Y, id=rep(1:length(Y)), persontime=NULL, proportion=F, perc
   return(mean_ci)
 }
 
+
+#----------------------------------------------
+# standardized naming convention for figures
+# and associated tables
+
+# inputs are string descriptors of results features
+
+# returns a string with a standardized naming convention
+#----------------------------------------------
+create_name = function(outcome, cutoff, measure, population, 
+                          location, age, analysis){
+    
+  # define short versions of each feature
+    outcome_s = case_when(
+      outcome == "stunting" ~ "stunt",
+      outcome == "wasting" ~ "wast",
+      outcome == "LAZ" ~ "laz",
+      outcome == "laz" ~ "laz",
+      outcome == "WHZ" ~ "wlz",
+      outcome == "whz" ~ "wlz",
+      outcome == "wlz" ~ "wlz",
+      outcome == "stunting and laz" ~ "stunt_laz",
+      outcome == "wasting and wlz" ~ "wast_wlz",
+      outcome == "co-occurrence" ~ "co"
+    )
+    
+    cutoff_s = cutoff
+        
+    measure_s = case_when(
+      measure == "prevalence" ~ "prev",
+      measure == "incidence" ~ "inc",
+      measure == "cumulative incidence" ~ "cuminc",
+      measure == "incidence rate" ~ "ir",
+      measure == "mean" ~ "mean",
+      measure == "mean DHS" ~ "mean_dhs",
+      measure == "density DHS" ~ "density_dhs",
+      measure == "growth velocity" ~ "vel",
+      measure == "LAZ velocity" ~ "laz_vel",
+      measure == "laz velocity" ~ "laz_vel",
+      measure == "length velocity" ~ "length_vel",
+      measure == "heatmap" ~ "heatmap",
+      measure == "recovery" ~ "rec",
+      measure == "distribution after laz >= -2" ~ "rec_dist",
+      measure == "mean after LAZ rose above -2" ~ "rec_laz",
+      measure == "prevalence after LAZ rose above -2" ~ "rec_prev",
+      measure == "quantile" ~ "quant",
+      measure == "map" ~ "map",
+      measure == "wasting, stunting, and underweight co-occurrence" ~ "coflow",
+      measure == "change in stunting status" ~ "flow",
+      measure == "persistent wasting" ~ "perswast",
+      measure == "co-occurrence of wasting and stunting" ~ "co",
+      measure == "underweight" ~ "uwt",
+      measure == "MUAC-based wasting" ~ "muac"
+    )
+    
+    population_s = case_when(
+      population == "overall" ~ "overall",
+      population == "overall and region-stratified" ~ "overall_region",
+      population == "birth-stratified" ~ "birth",
+      population == "region-stratified" ~ "region",
+      population == "cohort-stratified" ~ "cohort"
+    )
+        
+    location_s = case_when(
+      location == "" ~ "",
+      location == "South Asia" ~ "asia",
+      location == "Europe" ~ "eur",
+      location == "Latin America" ~ "latamer",
+      location == "Africa" ~ "africa"
+      
+    )
+        
+    age_s = case_when(
+      age == "All ages" ~ "allage",
+      age == "Birth" ~ "birth"
+    )
+        
+    analysis_s = case_when(
+      analysis == "primary" ~ "primary",
+      analysis == "seasonality" ~ "season",
+      analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
+      analysis == "monthly cohorts" ~ "monthly",
+      analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff",
+      analysis == "washout period sensitivity" ~ "ir_sense"
+    )
+    
+    # create figure name string using short versions of each feature
+    name = paste(outcome_s ,cutoff_s, measure_s, population_s, 
+                    location_s, age_s, analysis_s, sep = "-")
+    
+    assert_that(length(grep("NA", name))==0,
+                msg = "check name inputs, NA returned for at least one")
+    
+    return(name)
+
+}
+
+

@@ -5,6 +5,15 @@
 # figure: stacked bar chart showing 
 # proportion of children who were newly stunted, 
 # still stunted, relapsed, recovered, never stunted
+
+# inputs: stuntflow.RDS, stuntflow_pooled.RDS
+
+# outputs: 
+# fig-stunt-2-flow-overall--allage-primary.png,
+# figdata-stunt-2-flow-overall--allage-primary.RDS
+
+# NOTE: RANDOM EFFECTS POOLED PLOT IS COMMENTED
+# OUT DUE TO UNDERLYING DATA ISSUES -- NOT PART OF MANUSCRIPT
 ##########################################
 #-----------------------------------------
 # Stunting flow chart
@@ -14,7 +23,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 # load data
 stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
+# stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
 
 # number of studies, countries, children included
 length(names(table(stunt_data$studyid)))
@@ -46,23 +55,23 @@ plot_data = stunt_data %>%
                                               "Still stunted"
                                               )))
 
-plot_data_pooled = stunt_pool %>%
-  rename(classif = label) %>%
-  select(agem, classif, est) %>%
-  mutate(classif = factor(classif, levels = c("Never stunted", 
-                                              "Not stunted",
-                                              "Recovered",
-                                              "Newly stunted",
-                                              "Stunting relapse",
-                                              "Still stunted"
-  )))
+# plot_data_pooled = stunt_pool %>%
+#   rename(classif = label) %>%
+#   select(agem, classif, est) %>%
+#   mutate(classif = factor(classif, levels = c("Never stunted", 
+#                                               "Not stunted",
+#                                               "Recovered",
+#                                               "Newly stunted",
+#                                               "Stunting relapse",
+#                                               "Still stunted"
+#   )))
 
 # drop measurements beyond 15 months since
 # data is sparse
 plot_data = plot_data %>% filter(agem<=15)
-plot_data_pooled = plot_data_pooled %>% 
-  mutate(agem = as.numeric(as.character(agem))) %>%
-  filter(agem<=15)
+# plot_data_pooled = plot_data_pooled %>% 
+#   mutate(agem = as.numeric(as.character(agem))) %>%
+#   filter(agem<=15)
 
 #-----------------------------------------
 # define color palette
@@ -83,13 +92,13 @@ plot_cols  = viridis_cols[c(2, 4, 6, 8, 10, 11)]
 # stacked bar graphs using random effects pooled data
 #-----------------------------------------
 
-bar_plot_RE = ggplot(plot_data_pooled) +
-  geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
-  scale_fill_manual("", values = plot_cols) +
-  theme(legend.position = "bottom") +
-  xlab("Child age, months") + ylab("Percentage of children")
-
-ggsave(bar_plot_RE, file="figures/stunting/fig-stunting-stacked-bar-RE.png", width=10, height=5)
+# bar_plot_RE = ggplot(plot_data_pooled) +
+#   geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
+#   scale_fill_manual("", values = plot_cols) +
+#   theme(legend.position = "bottom") +
+#   xlab("Child age, months") + ylab("Percentage of children")
+# 
+# ggsave(bar_plot_RE, file="figures/stunting/fig-stunting-stacked-bar-RE.png", width=10, height=5)
 
 #-----------------------------------------
 # stacked bar graphs NOT using random effects pooled data
@@ -139,12 +148,18 @@ bar_plot_data = bar_plot_data %>%
   mutate(stunted = as.factor(ifelse(classifnew %in%
     c("Never stunted", "Newly recovered", "Still recovered"), 0, 1)))
 
+#-----------------------------------------
+# define color palette
+#-----------------------------------------
+
 pink_green = rev(brewer.pal(n = 6, name = "PiYG"))
 pink_green[3] = "#CDF592"
 pink_green[5] = "#EA67AE"
 pink_green[4] = "#FFB7DC"
 
-# pink_green_reord = pink_green[c(3, 2, 1, 6, 5, 4)]
+#-----------------------------------------
+# create plot
+#-----------------------------------------
 
 bar_plot_noRE = ggplot(bar_plot_data) +
   geom_bar(aes(x = agem, y = percent, fill = classif3), 
@@ -164,7 +179,25 @@ bar_plot_noRE = ggplot(bar_plot_data) +
   guides(fill = guide_legend(nrow = 1)) 
 bar_plot_noRE
 
-ggsave(bar_plot_noRE, file="figures/stunting/fig-stunting-stacked-bar-noRE.png", width=10, height=4)
+#-----------------------------------------
+# define standardized plot names
+#-----------------------------------------
+bar_plot_noRE_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "change in stunting status",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(bar_plot_noRE, file=paste0("figures/stunting/fig-",bar_plot_noRE_name,".png"), width=10, height=4)
+
+saveRDS(bar_plot_data, file=paste0("results/figure-data/figdata-",bar_plot_noRE_name,".RDS"))
+
+
 
 
 

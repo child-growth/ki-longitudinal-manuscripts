@@ -1,16 +1,30 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+#
+# map of stunting prevalence
 
+# inputs: country_centroids_primary.csv, Stunting_data.RData
+
+# outputs: 
+# fig-stunt-2-map-overall--allage-primary.png
+# figdata-stunt-2-map-overall--allage-primary.RDS
+##########################################
+#-----------------------------------
+# preamble
+#-----------------------------------
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load country mediods
-mediods <- read.csv('non-secure data/country_centroids/country_centroids_primary.csv', header=T, sep = "\t")
+mediods <- read.csv('data/non-secure data/country_centroids/country_centroids_primary.csv', header=T, sep = "\t")
 head(mediods)
 mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
 mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
 
 #Load cohort data and calc stunting prev by study
-load("U:/Data/Stunting/Stunting_data.RData")
+load("U:/ucb-superlearner/data/stunting_data.RData")
 
 d$cohort <- paste0(d$studyid,"-",d$country)
 df <- d %>% filter(!is.na(haz)) %>% group_by(studyid,cohort) %>% 
@@ -60,11 +74,10 @@ table(d$Ncat)
 d <- d %>% rename(`Number of observations`=Ncat, `Stunting Prevalence (%)`=stuntcat) 
 
 
-
-
-
+#-----------------------------------
 #Plot map
-p <- ggplot(world, aes(long, lat)) +
+#-----------------------------------
+map_plot <- ggplot(world, aes(long, lat)) +
   geom_map(map=world, aes(map_id=region), fill=NA, color="grey20") +
   coord_quickmap() + theme_bw() + coord_cartesian(xlim=c(-90,120), ylim=c(-36,50)) +
   geom_point(aes(x = x, y = y, size = `Number of observations`, 
@@ -77,6 +90,19 @@ p <- ggplot(world, aes(long, lat)) +
   theme(strip.background = element_blank(),
         strip.text.x = element_text(size=12),
         axis.text.x = element_text(size=12))
-p
 
-ggsave(p, file="figures/stunting/Stunting_map.png", width=9, height=4)
+# define standardized plot names
+map_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "map",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(map_plot, file=paste0("figures/stunting/fig-",map_plot_name,".png"), width=9, height=4)
+saveRDS(d, file=paste0("results/figure-data/figdata-",map_plot_name,".RDS"))
+

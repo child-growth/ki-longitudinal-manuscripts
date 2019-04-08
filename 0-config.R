@@ -26,6 +26,9 @@ library(gridExtra)
 library(assertthat)
 # library(haven)
 library(tidyselect)
+# options(repos = c(CRAN = "http://cran.rstudio.com/",
+#                   deltarho = "http://packages.deltarho.org"))
+# install.packages("growthstandards")
 library(growthstandards)
 library(stringr)
 library(mgcv)
@@ -37,6 +40,7 @@ library(rlang)
 # (will need to configure in each script)
 library(foreach)
 library(doParallel)
+library(survey)
 
 
 # define directories
@@ -48,6 +52,7 @@ data_dir = paste0(here::here(), "/data/")
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_wast_functions.R"))
+source(paste0(here::here(),"/0-project-functions/0_clean_study_data_functions.R"))
 
 
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))

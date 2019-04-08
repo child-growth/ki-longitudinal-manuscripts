@@ -28,9 +28,6 @@ d = d %>%
   group_by(studyid, country, subjid) %>%
   mutate(revmeasid = rev(seq_along(agedays)))
 
-# temporarily just subset to first study
-# d = d %>% filter(studyid == "ki0047075b-MAL-ED")
-
 ##########################################
 # Define indicators of stunting at each time point
 ##########################################
@@ -100,33 +97,6 @@ flow_m = d %>%
      mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
 
   
-  
-  
-  
-
-# rec.prev[rec.prev$subjid==103,-c(1:5, 7,10:11, 14)]
-# rec.prev[rec.prev$subjid==103,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
-# # age 3-6 should be still stunted
-# # age 12-15 months should be not stunted
-# 
-# # what to do with the last row of 103?
-# # id 108 meas id 12
-# rec.prev[rec.prev$subjid==108,-c(1:5, 7,9:11, 13:14)][1:10,]
-# rec.prev[rec.prev$subjid==108,-c(1:5, 7,9:11, 13:14)][11:24,]
-# rec.prev[rec.prev$subjid==108,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][1:10,]
-# rec.prev[rec.prev$subjid==108,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][11:24,]
-# 
-# rec.prev[rec.prev$subjid==2,-c(1:5, 7)][1:8,]
-# rec.prev[rec.prev$subjid==2,-c(1:5, 7)][9:24,]
-# rec.prev[rec.prev$subjid==2,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][1:8,]
-# rec.prev[rec.prev$subjid==2,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][9:24,]
-# 
-# rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11)][1:9,]
-# rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11,14)][10:23,]
-# rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
-# rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","new_age","never_stunted","nev_age")][1:9,]
-
-
 # drop measurements with ages over 24 months
 flow_m = flow_m %>% filter(!is.na(agecat)) 
 

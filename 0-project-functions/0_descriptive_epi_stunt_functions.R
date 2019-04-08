@@ -71,7 +71,7 @@ summary.prev.haz <- function(d, severe.stunted=F){
 
 
 
-summary.ci <- function(d,  
+summary.ci <- function(d,  severe.stunted=F, 
                        agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
                                     "12-15 months","15-18 months","18-21 months","21-24 months")){
   
@@ -94,8 +94,15 @@ summary.ci <- function(d,
     # create indicator for whether the child was ever stunted
     # by age category
     group_by(studyid,country,agecat,subjid) %>%
-    summarise(minhaz=min(minhaz)) %>%
-    mutate(ever_stunted=ifelse(minhaz< -2,1,0))
+    summarise(minhaz=min(minhaz)) 
+  
+
+    if(!severe.stunted){
+      evs = evs %>% mutate(ever_stunted=ifelse(minhaz< -2,1,0))
+    }
+    if(severe.stunted){
+      evs = evs %>% mutate(ever_stunted=ifelse(minhaz< -3,1,0))
+    }
   
   
   # count incident cases per study by age

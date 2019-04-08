@@ -1,16 +1,44 @@
-#------------------------------------------------------------------------------
-# Length velocity plots
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+#
+# plots of linear growth velocity
 
 # Sensitivity analysis excluding COHORTS Guatemala 
-# and Content
-#------------------------------------------------------------------------------
+# and Content, which had stronger LAZ velocity
+# faltering for males
+
+# inputs: pool_vel_sub.RDS 
+
+# outputs: 
+# overall plots: 
+#   fig-stunt-2-vel-overall--allage-exc_male_eff.png
+#   fig-laz-2-length_vel-overall--allage-exc_male_eff.png
+#   fig-laz-2-laz_vel-overall--allage-exc_male_eff.png
+
+# region-stratified plots:
+#   fig-stunt-2-vel-region--allage-exc_male_eff.png
+#   fig-laz-2-length_vel-region--allage-exc_male_eff.png
+#   fig-laz-2-laz_vel-region--allage-exc_male_eff.png
+
+# cohort-stratified plots: 
+#   fig-stunt-2-vel-cohort-africa-allage-exc_male_eff.png
+#   fig-stunt-2-vel-cohort-eur-allage-exc_male_eff.png
+#   fig-stunt-2-vel-cohort-latamer-allage-exc_male_eff.png
+#   fig-stunt-2-vel-cohort-asia-allage-exc_male_eff.png
+
+# data for each plot is saved as an RDS file
+# with the same file name and the prefix "figdata"
+
+##########################################
+#-----------------------------------
+# preamble
+#-----------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load length velocity data
 vel = readRDS(paste0(res_dir,"stunting/pool_vel_sub.RDS"))
-
-vel <- pooled_vel 
 
 vel$nmeas.f <- clean_nmeans(vel$N)
 vel$strata <- clean_agecat(vel$strata)
@@ -131,8 +159,20 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   ggtitle("A) Monthly change in LAZ") 
 
 
-ggsave(plot_laz, file="figures/stunting/fig_stunt_vel_laz_pool_sub.png", width=12, height=6)
+# define standardized plot names
+plot_laz_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
 
+# save plot and underlying data
+ggsave(plot_laz, file=paste0("figures/stunting/fig-",plot_laz_name,".png"), width=12, height=6)
+saveRDS(velplot_laz, file=paste0("results/figure-data/figdata-",plot_laz_name,".RDS"))
 
 #-------------------------------------
 # LAZ plot - stratified by region
@@ -152,10 +192,29 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   facet_grid( ~  region) +
   ggtitle("A) Monthly change in LAZ") 
 
+
+# define standardized plot names
+plot_laz_strat_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
+
+# save plot and underlying data
+ggsave(plot_laz_strat, file=paste0("figures/stunting/fig-",plot_laz_strat_name,".png"), width=12, height=6)
+saveRDS(velplot_laz_strat, file=paste0("results/figure-data/figdata-",plot_laz_strat_name,".RDS"))
+
+
 #-------------------------------------
-# LAZ plot - stratified by cohort
+# LAZ plot - asian cohorts
 #-------------------------------------
-plot_laz_cohort_asia <- ggplot(velplot_laz_strat %>% filter(region=="Asia"), aes(y=Mean,x=strata))+
+velplot_laz_asia = velplot_laz_strat %>% filter(region=="Asia")
+
+plot_laz_cohort_asia <- ggplot(velplot_laz_asia, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
@@ -167,7 +226,29 @@ plot_laz_cohort_asia <- ggplot(velplot_laz_strat %>% filter(region=="Asia"), aes
   ggtitle("A) Monthly change in LAZ") 
 ggsave(plot_laz_cohort_asia, file="figures/stunting/fig_stunt_vel_cm_asia_sub.png", width=18, height=10)
 
-plot_laz_cohort_latamer <- ggplot(velplot_laz_strat %>% filter(region=="Latin America"), aes(y=Mean,x=strata))+
+# define standardized plot names
+plot_laz_cohort_asia_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "cohort-stratified",
+  location = "South Asia",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
+
+# save plot and underlying data
+ggsave(plot_laz_cohort_asia, file=paste0("figures/stunting/fig-",plot_laz_cohort_asia_name,".png"), 
+       width=18, height=10)
+saveRDS(velplot_laz_asia, file=paste0("results/figure-data/figdata-",plot_laz_cohort_asia_name,".RDS"))
+
+
+#-------------------------------------
+# LAZ plot - latin american cohorts
+#-------------------------------------
+velplot_laz_latamer = velplot_laz_strat %>% filter(region=="Latin America")
+
+plot_laz_cohort_latamer <- ggplot(velplot_laz_latamer, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
@@ -178,9 +259,28 @@ plot_laz_cohort_latamer <- ggplot(velplot_laz_strat %>% filter(region=="Latin Am
   facet_wrap( ~  country_cohort) +
   ggtitle("A) Monthly change in LAZ") 
 
-ggsave(plot_laz_cohort_latamer, file="figures/stunting/fig_stunt_vel_cm_latamer_sub.png", width=18, height=10)
+# define standardized plot names
+plot_laz_cohort_latamer_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "cohort-stratified",
+  location = "Latin America",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
 
-plot_laz_cohort_eur <- ggplot(velplot_laz_strat %>% filter(region=="Europe"), aes(y=Mean,x=strata))+
+# save plot and underlying data
+ggsave(plot_laz_cohort_latamer, file=paste0("figures/stunting/fig-",plot_laz_cohort_latamer_name,".png"), 
+       width=18, height=10)
+saveRDS(velplot_laz_latamer, file=paste0("results/figure-data/figdata-",plot_laz_cohort_latamer_name,".RDS"))
+
+#-------------------------------------
+# LAZ plot - european cohorts
+#-------------------------------------
+velplot_laz_eur = velplot_laz_strat %>% filter(region=="Europe")
+
+plot_laz_cohort_eur <- ggplot(velplot_laz_eur, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
@@ -191,9 +291,28 @@ plot_laz_cohort_eur <- ggplot(velplot_laz_strat %>% filter(region=="Europe"), ae
   facet_wrap( ~  country_cohort) +
   ggtitle("A) Monthly change in LAZ") 
 
-ggsave(plot_laz_cohort_eur, file="figures/stunting/fig_stunt_vel_cm_eur_sub.png", width=8, height=6)
+# define standardized plot names
+plot_laz_cohort_eur_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "cohort-stratified",
+  location = "Europe",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
 
-plot_laz_cohort_afr <- ggplot(velplot_laz_strat %>% filter(region=="Africa"), aes(y=Mean,x=strata))+
+# save plot and underlying data
+ggsave(plot_laz_cohort_eur, file=paste0("figures/stunting/fig-",plot_laz_cohort_eur_name,".png"), 
+       width=8, height=6)
+saveRDS(velplot_laz_eur, file=paste0("results/figure-data/figdata-",plot_laz_cohort_eur_name,".RDS"))
+
+#-------------------------------------
+# LAZ plot - african cohorts
+#-------------------------------------
+velplot_laz_afr = velplot_laz_strat %>% filter(region=="Africa")
+
+plot_laz_cohort_afr <- ggplot(velplot_laz_afr, aes(y=Mean,x=strata))+  
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
@@ -204,7 +323,21 @@ plot_laz_cohort_afr <- ggplot(velplot_laz_strat %>% filter(region=="Africa"), ae
   facet_wrap( ~  country_cohort) +
   ggtitle("A) Monthly change in LAZ") 
 
-ggsave(plot_laz_cohort_afr, file="figures/stunting/fig_stunt_vel_cm_africa_sub.png", width=18, height=10)
+# define standardized plot names
+plot_laz_cohort_afr_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "cohort-stratified",
+  location = "Africa",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
+
+# save plot and underlying data
+ggsave(plot_laz_cohort_afr, file=paste0("figures/stunting/fig-",plot_laz_cohort_afr_name,".png"), 
+       width=18, height=10)
+saveRDS(velplot_laz_afr, file=paste0("results/figure-data/figdata-",plot_laz_cohort_afr_name,".RDS"))
 
 
 
@@ -234,7 +367,21 @@ plot_cm <- ggplot(velplot_cm, aes(y=Mean,x=strata))+
   facet_wrap( ~ sex) +
   ggtitle("B) Monthly change in length (cm)") 
 
-ggsave(plot_cm, file="figures/stunting/fig_stunt_vel_cm_pool_sub.png", width=10, height=8)
+# define standardized plot names
+plot_cm_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "length velocity",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
+
+# save plot and underlying data
+ggsave(plot_cm, file=paste0("figures/stunting/fig-",plot_cm_name,".png"), 
+       width=10, height=8)
+saveRDS(velplot_cm, file=paste0("results/figure-data/figdata-",plot_cm_name,".RDS"))
 
 #-------------------------------------
 # absolute length plot - stratified by region
@@ -263,12 +410,79 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
   facet_grid( sex~ region) +
   ggtitle("B) Monthly change in length (cm)") 
 
+# define standardized plot names
+plot_cm_strat_name = create_name(
+  outcome = "laz",
+  cutoff = 2,
+  measure = "length velocity",
+  population = "region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
+
+# save plot and underlying data
+ggsave(plot_cm_strat, file=paste0("figures/stunting/fig-",plot_cm_strat_name,".png"), 
+       width=10, height=8)
+saveRDS(velplot_cm_strat, file=paste0("results/figure-data/figdata-",plot_cm_strat_name,".RDS"))
+
+
 #-------------------------------------
 # combined LAZ and length plots
 #-------------------------------------
 combined_plot = grid.arrange(plot_laz, plot_cm, nrow = 2, heights = c(4, 8))
 combined_plot_strat = grid.arrange(plot_laz_strat, plot_cm_strat, nrow = 2, heights = c(4, 10))
 
-ggsave(combined_plot, file="figures/stunting/fig_stunt_vel_pool_sub.png", width=10, height=8)
-ggsave(combined_plot_strat, file="figures/stunting/fig_stunt_vel_region_sub.png", width=16, height=18)
+#-------------------------------------
+# define standardized plot names
+#-------------------------------------
+combined_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "growth velocity",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
+
+combined_plot_strat_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "growth velocity",
+  population = "region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "exclude excluding COHORTS Guatemala and Content"
+)
+
+#-------------------------------------
+# save plots
+#-------------------------------------
+ggsave(combined_plot, file=paste0("figures/stunting/fig-", combined_plot_name,
+                                  ".png"), width=10, height=8)
+ggsave(combined_plot_strat, file=paste0("figures/stunting/fig-",combined_plot_strat_name,
+                                        ".png"), width=16, height=18)
+
+
+
+#-------------------------------------
+# save input data 
+#-------------------------------------
+saveRDS(
+  list(
+    velplot_cm = velplot_cm,
+    velplot_laz = velplot_laz,
+    meanlaz = meanlaz
+  ),
+  file = paste0("results/figure-data/figdata-", combined_plot_name, ".RDS")
+)
+
+saveRDS(
+  list(
+    velplot_cm_strat = velplot_cm_strat,
+    velplot_laz_strat = velplot_laz_strat
+  ),
+  file = paste0("results/figure-data/figdata-", combined_plot_strat_name, ".RDS")
+)
 
