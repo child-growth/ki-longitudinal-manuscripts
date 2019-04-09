@@ -181,11 +181,10 @@ plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) +
   xlab("Child age, months") + 
   ylab("Mean LAZ\n ") +
   ggtitle("c")+
-  theme(plot.title = element_text(hjust=0),
+  theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
         strip.text.x = element_text(size=20, face="bold"),
         axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20),
-        plot.title = element_text(size = 20, face = "bold")) +
+        axis.title.y = element_text(size=20)) +
   facet_grid(~region)
  
 #-------------------------------------
@@ -242,11 +241,10 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   geom_hline(yintercept = -0) +
   facet_grid( ~  region) +
   ggtitle("b") +
-  theme(plot.title = element_text(hjust=0),
+  theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
         strip.text.x = element_text(size=20, face="bold"),
         axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20),
-        plot.title = element_text(size = 20, face = "bold"))
+        axis.title.y = element_text(size=20))
 
 
 # define standardized plot names
@@ -501,12 +499,11 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
   ylab("Difference in length (cm) per month")+
   facet_grid( sex~ region) +
   ggtitle("a") +
-  theme(plot.title = element_text(hjust=0),
+  theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
         strip.text.x = element_text(size=20, face="bold"),
         strip.text.y = element_text(size=20),
         axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20),
-        plot.title = element_text(size = 20, face = "bold"))
+        axis.title.y = element_text(size=20))
 
 # define standardized plot names
 plot_cm_strat_name = create_name(
