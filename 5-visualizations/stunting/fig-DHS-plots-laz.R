@@ -109,16 +109,16 @@ dhsz <- dhaz %>%
 #---------------------------------------
 dhsz$region <- rep(NA, nrow(dhsz))
 dhsz <- dhsz %>%
-  mutate(region = case_when(country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" | country == "AF7" | country == "KH6" | country == "VNT" ~ "SEARO",
-                            country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "PAHO",
-                            is.na(region) ~ "AFRO")) %>%
+  mutate(region = case_when(country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" | country == "AF7" | country == "KH6" | country == "VNT" ~ "South Asia",
+                            country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "Latin America",
+                            is.na(region) ~ "Africa")) %>%
 
   mutate(inghap = ifelse(
     country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7",1,0)
   )
 
 dhsz <- dhsz %>%
-  mutate(region=factor(region,levels=c("OVERALL","SEARO","AFRO","PAHO")))
+  mutate(region=factor(region,levels=c("Overall","Africa", "South Asia", "Latin America")))
 
 #---------------------------------------
 #---------------------------------------
@@ -130,7 +130,7 @@ dhsz <- dhsz %>%
 # estimate mean z-scores by age
 # including all countries in each region
 #---------------------------------------
-dhsallfits <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
+dhsallfits <- foreach(rgn=c("Africa", "South Asia", "Latin America"),.combine=rbind) %dopar% {
     di <- dhsz %>% filter(region==rgn)
     fiti <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=di)
     newd <- data.frame(agem=0:24)
@@ -144,16 +144,15 @@ dhsallfits <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
 fitpool <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=dhsz)
 newd <- data.frame(agem=0:24)
 fitpoolci <- gamCI(m=fitpool,newdata=newd,nreps=1000)
-dhsall_pool <- data.frame(measure="LAZ",region="OVERALL",agem=0:24,fit=fitpoolci$fit,fit_se=fitpoolci$se.fit,fit_lb=fitpoolci$lwrS,fit_ub=fitpoolci$uprS)
+dhsall_pool <- data.frame(measure="LAZ",region="Overall",agem=0:24,fit=fitpoolci$fit,fit_se=fitpoolci$se.fit,fit_lb=fitpoolci$lwrS,fit_ub=fitpoolci$uprS)
 
 
 dhsallfits <- bind_rows(dhsallfits,dhsall_pool) %>%
-  mutate(region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO")))
+  mutate(region=factor(region,levels=c("Overall","Africa", "South Asia", "Latin America")))
 
 #---------------------------------------
 # for each region, do the cluster based pooling for each child age
 #---------------------------------------
-library(survey)
 # The most conservative approach would be to center any single-PSU strata around
 # the sample grand mean rather than the stratum mean
 options(survey.lonely.psu = "adjust")
@@ -181,7 +180,7 @@ do_one_combination <- function(measure_here, region_here) {
 }
 
 df_survey <- foreach(measure = unique(dhsz$measure), .combine = rbind) %:%
-  foreach(region = c("AFRO", "SEARO", "PAHO"), .combine = rbind) %dopar% {
+  foreach(region = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
     do_one_combination(measure_here = measure, region_here = region)
   }
 # meta analysis using fixed effects or random effects based pooling
@@ -232,7 +231,7 @@ for (measure_here in "HAZ") {
     )
     df_random_effect$measure <- measure_here
     df_random_effect$agem <- age_here
-    df_random_effect$region <- "OVERALL"
+    df_random_effect$region <- "Overall"
     df_random_effects <- c(df_random_effects, list(df_random_effect))
   }
 }
@@ -245,7 +244,7 @@ df_random_effects <- df_random_effects %>%
   rename(fit = est, fit_lb = lb, fit_ub = ub, fit_se = se) %>%
   select(measure, region, agem, fit, fit_se, fit_lb, fit_ub)
 df_survey_output <- bind_rows(df_survey, df_random_effects) %>%
-  mutate(region = factor(region, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")))
+  mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 df_survey_output$measure <- "LAZ" # rename HAZ to LAZ
 
 #---------------------------------------
@@ -253,7 +252,7 @@ df_survey_output$measure <- "LAZ" # rename HAZ to LAZ
 # subset to countries that overlap the
 # ki cohorts
 #---------------------------------------
-dhssubfits <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
+dhssubfits <- foreach(rgn=c("Africa","South Asia","Latin America"),.combine=rbind) %dopar% {
     di <- dhsz %>% filter(region==rgn & inghap==1)
     fiti <- mgcv::gam(zscore~s(agem,bs="cr"),weights=wgt,data=di)
     newd <- data.frame(agem=0:24)
@@ -270,7 +269,7 @@ fitsubpoolci <- gamCI(m=fitsubpool,newdata=newd,nreps=1000)
 dhssub_pool <- data.frame(measure="LAZ",region="OVERALL",agem=0:24,fit=fitsubpoolci$fit,fit_se=fitsubpoolci$se.fit,fit_lb=fitsubpoolci$lwrS,fit_ub=fitsubpoolci$uprS)
 
 dhssubfits <- bind_rows(dhssubfits,dhssub_pool) %>%
-  mutate(region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO")))
+  mutate(region=factor(region,levels=c("Overall", "Africa", "South Asia", "Latin America")))
 
 
 #---------------------------------------
@@ -278,7 +277,6 @@ dhssubfits <- bind_rows(dhssubfits,dhssub_pool) %>%
 # by age, and format the data for this analysis
 #---------------------------------------
 load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
-# load(paste0(here::here(),"/results/co_desc_data.Rdata"))
 ghapd <- d %>%
   filter(measure %in% c("Mean LAZ"),
          birth=="yes",
@@ -286,12 +284,6 @@ ghapd <- d %>%
          cohort=="pooled") %>%
   mutate(measure = str_sub(measure,6,9),
          measure = factor(measure,levels=c("LAZ","WAZ","WLZ"),labels=c("LAZ","WAZ","WHZ")),
-         whoregion = case_when(
-           region=="Africa" ~ "AFRO",
-           region=="South Asia" ~ "SEARO",
-           region=="Latin America" ~ "PAHO",
-           region=="Overall" ~ "OVERALL"),
-         whoregion=factor(whoregion,levels=c("OVERALL","AFRO","SEARO","PAHO")),
          agecat2=as.character(agecat),
          agems=str_trim(str_sub(agecat2,1,2)),
          agem = as.integer(
@@ -304,12 +296,13 @@ ghapd <- d %>%
 #---------------------------------------
 # fit smooths to GHAP data
 #---------------------------------------
-ghapfits <- foreach(rgn=levels(ghapd$whoregion),.combine=rbind) %do% {
-    di <- ghapd %>% filter(whoregion==rgn)
+ghapfits <- foreach(rgn=levels(ghapd$region),.combine=rbind) %do% {
+    di <- ghapd %>% filter(region==rgn)
     fiti <- mgcv::gam(est~s(agem,bs="cr"),data=di)
     newd <- data.frame(agem=0:24)
     fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
-    dfit <- data.frame(measure="LAZ",region=rgn,agem=0:24,fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
+    dfit <- data.frame(measure="LAZ",region=rgn,agem=0:24,
+                       fit=fitci$fit,fit_se=fitci$se.fit,fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
     dfit
   }
 
@@ -323,9 +316,7 @@ dhssubfits <- dhssubfits %>% mutate(dsource="DHS, ki countries")
 # dhsallfits <- dhsallfits %>% mutate(dsource="DHS") # std_err based on bootstrapping GAM
 dhsallfits <- df_survey_output %>% mutate(dsource="DHS") # std_err based on survey_avg using sampling weight
 dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
-  mutate(dsource=factor(dsource,levels=c("ki cohorts","DHS, ki countries","DHS")),
-         region=factor(region,levels=c("OVERALL","AFRO","SEARO","PAHO") )
-         )
+  mutate(dsource=factor(dsource,levels=c("ki cohorts","DHS, ki countries","DHS")) )
 
 #---------------------------------------
 # make LAZ  by age figure
@@ -337,8 +328,7 @@ dhsfits <- bind_rows(ghapfits,dhssubfits,dhsallfits) %>%
 # DHS overall estimates
 #---------------------------------------
 dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts","DHS")) %>%
-  mutate(region = factor(region, levels = c("OVERALL", "AFRO", "PAHO", "SEARO")))
+  filter(dsource %in% c("ki cohorts","DHS"))
 
 # standard region colors used in other plots
 tableau10 <- tableau_color_pal("tableau10")
@@ -400,7 +390,7 @@ saveRDS(dhs_plotd_laz, file=paste0("results/figure-data/figdata-",laz_ageplot_na
 # estimate DHS z-score densities
 # by region and overall
 #---------------------------------------
-dhsallden <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
+dhsallden <- foreach(rgn=c("Africa", "South Asia", "Latin America"),.combine=rbind) %dopar% {
     di <- dhsz %>% filter(region==rgn)
     deni <- density(di$zscore)
     denid <- data.frame(x=deni$x,y=deni$y,measure="LAZ",region=rgn)
@@ -408,17 +398,17 @@ dhsallden <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
   }
 # overall pooled estimate
 deni <- density(dhsz$zscore)
-dhsallden_pool <- data.frame(x=deni$x,y=deni$y,measure="LAZ",region="OVERALL")
+dhsallden_pool <- data.frame(x=deni$x,y=deni$y,measure="LAZ",region="Overall")
 
 dhsallden <- bind_rows(dhsallden,dhsallden_pool) %>%
-  mutate(region=factor(region,levels=c("OVERALL","AFRO","PAHO","SEARO")))
+  mutate(region=factor(region,levels=c("Overall", "Africa", "South Asia", "Latin America")))
 
 #---------------------------------------
 # estimate DHS z-score densities
 # by region and overall
 # subset to countries that overlap KI cohorts
 #---------------------------------------
-dhssubden <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
+dhssubden <- foreach(rgn=c("Africa", "South Asia", "Latin America"),.combine=rbind) %dopar% {
     di <- dhsz %>% filter(region==rgn & inghap==1)
     deni <- density(di$zscore)
     denid <- data.frame(x=deni$x,y=deni$y,measure="LAZ",region=rgn)
@@ -426,10 +416,10 @@ dhssubden <- foreach(rgn=c("AFRO","SEARO","PAHO"),.combine=rbind) %dopar% {
   }
 # overall pooled estimate
 subdeni <- density(dhsz$zscore[dhsz$inghap==1])
-dhssubden_pool <- data.frame(x=subdeni$x,y=subdeni$y,measure="LAZ",region="OVERALL")
+dhssubden_pool <- data.frame(x=subdeni$x,y=subdeni$y,measure="LAZ",region="Overall")
 
 dhssubden <- bind_rows(dhssubden,dhssubden_pool) %>%
-  mutate(region=factor(region,levels=c("OVERALL","AFRO","PAHO","SEARO")))
+  mutate(region=factor(region,levels=c("Overall", "Africa", "South Asia", "Latin America")))
 
 
 #---------------------------------------
@@ -439,8 +429,8 @@ dhssubden <- bind_rows(dhssubden,dhssubden_pool) %>%
 #---------------------------------------
 kiden <- readRDS(paste0(here(),"/results/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>%
-  mutate(region=factor(region,levels=c("Overall","AFRO","PAHO","SEARO"),
-                       labels=c("OVERALL","AFRO","PAHO","SEARO")),
+  mutate(region=factor(region,levels=c("Overall", "Africa", "South Asia", "Latin America"),
+                       labels=c("Overall", "Africa", "South Asia", "Latin America")),
          measure=factor(measure,levels=c("haz","waz","whz"),labels=c("LAZ","WAZ","WHZ"))
   ) %>%
   filter(measure=="LAZ")
@@ -454,7 +444,7 @@ dhssubden <- dhssubden %>% mutate(dsource="DHS, ki countries")
 dhsallden <- dhsallden %>% mutate(dsource="DHS")
 dhsden <- bind_rows(kiden,dhssubden,dhsallden) %>%
   mutate(dsource=factor(dsource,levels=c("ki cohorts","DHS, ki countries","DHS")),
-         region=factor(region,levels=c("OVERALL","AFRO","PAHO","SEARO") )
+         region=factor(region,levels=c("Overall", "Africa", "South Asia", "Latin America") )
   )
 
 #---------------------------------------
