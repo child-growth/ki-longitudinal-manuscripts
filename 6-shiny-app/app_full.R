@@ -67,7 +67,11 @@ transform_variables <- function(df){
       outcome == "LAZ" ~ "LAZ",
       outcome == "whz" ~ "WHZ",
       outcome == "WHZ" ~ "WHZ",
+      outcome == 'wlz' ~ 'WHZ',
       outcome == "stunt_laz" ~ "stunting and laz",
+      outcome == 'wast_wlz' ~ 'wasting and wlz',
+      outcome == 'co' ~ 'co-occurrence',
+      outcome == 'length' ~ 'length',
       TRUE ~ as.character(outcome)
       )
     ) %>%
@@ -77,16 +81,24 @@ transform_variables <- function(df){
       measure == "cuminc" ~ "cumulative incidence",
       measure == "ir" ~ "incidence rate",
       measure == "mean" ~ "mean",
+      measure == 'mean_dhs' ~ 'mean DHS',
+      measure == 'density_dhs' ~ 'density DHS',
       measure == "vel" ~ "growth velocity",
       measure == "laz_vel" ~ "LAZ velocity",
       measure == "length_vel" ~ "length velocity",
       measure == "heatmap" ~ "heatmap",
+      measure == 'rec' ~ 'recovery',
       measure == "rec_dist" ~ "distribution after laz >= -2",
       measure == "rec_laz" ~ "mean after LAZ rose above -2",
       measure == "rec_prev" ~ "prevalence after LAZ rose above -2",
       measure == "quant" ~ "quantile",
       measure == "map" ~ "map",
+      measure == 'coflow' ~ 'wasting, stunting, and underweight co-occurrence',
       measure == "flow" ~ "change in stunting status",
+      measure == 'perswast' ~ 'persistent wasting',
+      measure == 'co' ~ 'co-occurrence of wasting and stunting',
+      measure == 'uwt' ~ 'underweight',
+      measure == 'muac' ~ 'MUAC-based wasting',
       TRUE ~ as.character(measure)
     )) %>%
     dplyr::mutate(population = case_when(
@@ -94,10 +106,12 @@ transform_variables <- function(df){
       population == "overall_region" ~ "overall and region-stratified",
       population == "region" ~ "region-stratified",
       population == "cohort" ~ "cohort-stratified",
+      population == 'birth' ~ 'birth-stratified',
       TRUE ~ as.character(population)
     )) %>%
     dplyr::mutate(age = case_when(
       age == "allage" ~ "All ages",
+      age == 'birth' ~ 'Birth',
       TRUE ~ as.character(age)
     )) %>%
     dplyr::mutate(location = case_when(
@@ -110,9 +124,11 @@ transform_variables <- function(df){
     )) %>%
     dplyr::mutate(analysis = case_when(
       analysis == "primary" ~ "primary",
+      analysis == 'season' ~ 'seasonality',
       analysis == "month24" ~ "monthly cohorts measured each month from 0 to 24",
       analysis == "monthly" ~ "monthly cohorts",
       analysis == "exc_male_eff" ~ "exclude excluding COHORTS Guatemala and Content",
+      analysis == 'ir_sense' ~ 'washout period sensitivity',
       TRUE ~ as.character(analysis)
     ))
   
