@@ -7,11 +7,23 @@
 # still stunted, relapsed, recovered, never stunted
 # stratified by region and cohort
 
-# inputs: stuntflow.RDS, stuntflow_pooled.RDS
+# inputs: 
+# stunt-flow-data-pooled.RDS
+# stunt-flow-data-region.RDS
+# stunt-flow-data-cohort.RDS
 
-# outputs: 
-# fig-stunt-2-flow-overall--allage-primary.png,
+# outputs: UPDATE
+# fig-stunt-2-flow-overall--allage-primary.png
+# fig-stunt-2-flow-region--allage-primary.png
+# fig-stunt-2-flow-cohort-asia-allage-primary.png
+# fig-stunt-2-flow-cohort-africa-allage-primary.png
+# fig-stunt-2-flow-cohort-latamer-allage-primary.png
+
 # figdata-stunt-2-flow-overall--allage-primary.RDS
+# figdata-stunt-2-flow-region--allage-primary.RDS
+# figdata-stunt-2-flow-cohort-asia-allage-primary.RDS
+# figdata-stunt-2-flow-cohort-africa-allage-primary.RDS
+# figdata-stunt-2-flow-cohort-latamer-allage-primary.RDS
 ##########################################
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
@@ -95,7 +107,7 @@ make_cohort_plot = function(data){
     xlab("Child age, months") + 
     ylab("Percentage of children (%)")  + 
     guides(fill = guide_legend(nrow = 1)) +
-    facet_grid(~studyid)
+    facet_wrap(~studyid)
   return(myplot)
 }
 
@@ -167,15 +179,15 @@ bar_plot_noRE_latamer_name = create_name(
 ggsave(bar_plot_noRE, file=paste0("figures/stunting/fig-",
            bar_plot_noRE_name,".png"), width=10, height=4)
 ggsave(bar_plot_noRE_region, file=paste0("figures/stunting/fig-",
-            bar_plot_noRE_region_name,".png"), width=10, height=4)
+            bar_plot_noRE_region_name,".png"), width=15, height=4)
 ggsave(bar_plot_noRE_asia, file=paste0("figures/stunting/fig-",
-            bar_plot_noRE_asia_name,".png"), width=10, height=4)
+            bar_plot_noRE_asia_name,".png"), width=15, height=8)
 ggsave(bar_plot_noRE_afr, file=paste0("figures/stunting/fig-",
-            bar_plot_noRE_afr_name,".png"), width=10, height=4)
+            bar_plot_noRE_afr_name,".png"), width=11, height=3.5)
 ggsave(bar_plot_noRE_latamer, file=paste0("figures/stunting/fig-",
             bar_plot_noRE_latamer_name,".png"), width=10, height=4)
 
-saveRDS(bar_plot_data, file=paste0("results/figure-data/figdata-",
+saveRDS(plot_overall, file=paste0("results/figure-data/figdata-",
                                    bar_plot_noRE_name,".RDS"))
 saveRDS(plot_region, file=paste0("results/figure-data/figdata-",
                                  bar_plot_noRE_region_name,".RDS"))
