@@ -278,19 +278,40 @@ sidebar
 #####################################################################################
 consort_ki_bar <- consort_ki_long[consort_ki_long$indicator == 1, ]
 
+# add extra x factors to widen plot to include all text
+
 bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)) + 
   geom_bar(stat = 'identity', aes(fill = region)) +
-  theme_grey(base_size = 10)+
+  theme_grey(base_size = 10) +
   scale_y_continuous(limits = c(0, 110), breaks = seq(0, 80, by = 20), 
                      labels = seq(0, 80, by = 20)) +
+  
   labs(y = 'Total Observations\n (x 10,000)') +
   # geom_text(aes(label = paste0(reason_excluded, ' (n=', floor(n/10000), ')')), 
   #                 position=position_dodge(width=0.9), vjust=-8, hjust = 0.1) +
   scale_fill_manual(values=c("#1F77B4", "#2CA02C", "#FF7F0E", "#D62728", "black")) +
+  
+  # Add top inclusion category labels
+  annotate(geom = "text", x = 3.2, y = 75, label = "Longitudinal cohorts (n=86)", size = 2) +
+  annotate(geom = "text", x = 4.9, y = 70, label = "Includes anthropometry data (n=xx)", size = 2) +
+  annotate(geom = "text", x = 7.1, y = 65, label = "Located in low- or middle income countries (n=74)", size = 2) +
+  annotate(geom = "text", x = 8.3, y = 60, label = "Enrollment not restricted to acutely ill children (n=41)", size = 2) +
+  annotate(geom = "text", x = 8.2, y = 55, label = "Enrolled more than 200 children (n=36)", size = 2) +
+  annotate(geom = "text", x = 9.5, y = 50, label = "Enrolled children between ages 0-2 (n=xx)", size = 2) +
+  annotate(geom = "text", x = 10.2, y = 45, label = "Quarterly growth measurements (n=23)", size = 2) +
+  annotate(geom = "text", x = 11, y = 40, label = "Monthly growth measurements (n=xx)", size = 2) +
+  
+  # Add vertical lines under labels
+  geom_segment(aes(x = 1, y = 62, xend = 1, yend = 72), color = "gray") +
+  geom_segment(aes(x = 2, y = 54, xend = 2, yend = 67), color = "gray") +
+  geom_segment(aes(x = 3, y = 43, xend = 3, yend = 62), color = "gray") +
+  geom_segment(aes(x = 4, y = 43, xend = 4, yend = 57), color = "gray") +
+  geom_segment(aes(x = 5, y = 43, xend = 5, yend = 52), color = "gray") +
+  geom_segment(aes(x = 6, y = 32, xend = 6, yend = 47), color = "gray") +
+  geom_segment(aes(x = 7, y = 32, xend = 7, yend = 42), color = "gray") +
+  geom_segment(aes(x = 8, y = 9, xend = 8, yend = 37), color = "gray") +
                     
   theme(
-    # adjust margins for aligning with heat map
-    plot.margin = margin(0, 0.25, 0, 9.25, "cm"),
     # legend options
     # has to be the exact same format as for the other panel (for correct alignment)
     legend.title = element_text(color = textcol, size = 8),
@@ -328,13 +349,12 @@ bar
 # add margin around plots
 hm = hm + theme(plot.margin = unit(c(0, 0.25, 0.7, 0.25), "cm"))
 sidebar = sidebar + theme(plot.margin = unit(c(0, 0.3, .25, 0.1), "cm"))
-bar = bar + theme(plot.margin = unit(c(1, .8, -.65, 9.7), "cm"))
+bar = bar + theme(plot.margin = unit(c(1, 5.4, -.65, 9.7), "cm"))
 empty <- grid::textGrob("") 
 
-grid <- grid.arrange(bar, empty, hm, sidebar,
-                        nrow = 2, ncol = 2,
-                        heights = c(120, 1200),
-                        widths = c(70, 25))
+grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
+                        nrow = 2, ncol = 1,
+                        heights = c(120, 1200))
 
 # save plot and underlying data
 ggsave(filename="figures/fig-consort.pdf",
