@@ -5,18 +5,16 @@
 # plots of mean LAZ, stunting incidence, 
 # and stunting prevalence
 
-# inputs: desc_data_cleaned.Rdata, quantile_data_stunting.Rdata
+# inputs: desc_data_cleaned.Rdata
 
 # outputs: 
 # fig-laz-2-mean-overall_region--allage-primary.png
-# fig-laz-2-quant-overall_region--allage-primary.png
 # fig-stunt-2-prev-overall_region--allage-primary.png
 # fig-stunt-3-prev-overall_region--allage-primary.png
 # fig-stunt-2-inc-overall_region--allage-primary.png
 # fig-stunt-3-inc-overall_region--allage-primary.png
 
 # figdata-laz-2-mean-overall_region--allage-primary.RDS
-# figdata-laz-2-quant-overall_region--allage-primary.RDS
 # figdata-stunt-2-prev-overall_region--allage-primary.RDS
 # figdata-stunt-3-prev-overall_region--allage-primary.RDS
 # figdata-stunt-2-inc-overall_region--allage-primary.RDS
@@ -35,10 +33,6 @@ theme_set(theme_ki())
 
 #Load data
 load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
-
-#Quantile data (object: quantile_d)
-quantile = readRDS(paste0(here::here(),"/results/quantile_data_stunting.RDS"))
-
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
