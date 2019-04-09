@@ -8,7 +8,8 @@
 # and Content, which had stronger LAZ velocity
 # faltering for males
 
-# inputs: pool_vel_sub.RDS 
+# inputs: pool_vel_sub.RDS,  
+# WHO_linear_growth_velocity_standard.RDS
 
 # outputs: 
 # overall plots: 
@@ -37,93 +38,17 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Load length velocity data
+# Load length velocity data
 vel = readRDS(paste0(res_dir,"stunting/pool_vel_sub.RDS"))
 
+# load who standard
+who_cm = readRDS(paste0(res_dir, "WHO_linear_growth_velocity_standard.RDS"))
+
+#-------------------------------------
+# prep data
+#-------------------------------------
 vel$nmeas.f <- clean_nmeans(vel$N)
 vel$strata <- clean_agecat(vel$strata)
-
-# Add WHO cm/month standards
-#  https://www.who.int/childgrowth/standards/velocity/technical_report/en/
-who_cm_boys <- data.frame(
-  pct_50 = c(
-    11.4,
-    6.2,
-    4.4,
-    3.8,
-    3.4,
-    3.1,
-    2.9,
-    2.6
-  ),
-  pct_25= c(
-    10.6,
-    5.5,
-    3.7,
-    3.2,
-    2.8,
-    2.5,
-    2.2,
-    2.0
-  ),
-  pct_15= c(
-    10.1,
-    5.1,
-    3.4,
-    2.8,
-    2.5,
-    2.1,
-    1.9,
-    1.7
-  )
-)
-
-who_cm_girls <- data.frame(
-  pct_50 = c(
-    10.6,
-    5.9,
-    4.4,
-    3.9,
-    3.5,
-    3.2,
-    2.9,
-    2.7
-  ),
-  pct_25 = c(
-    9.8,
-    5.2,
-    3.8,
-    3.3,
-    2.9,
-    2.6,
-    2.3,
-    2.1
-  ),
-  pct_15= c(
-    9.3,
-    4.9,
-    3.4,
-    2.9,
-    2.6,
-    2.3,
-    2.0,
-    1.8
-  )
-)
-
-who_cm_boys$sex <- 'Male'
-who_cm_boys$strata <- unique(vel$strata)
-who_cm_girls$sex <- 'Female'
-who_cm_girls$strata <- unique(vel$strata)
-
-who_cm <- rbind(who_cm_girls, who_cm_boys)
-vel <- merge(vel, who_cm, by=c('sex', 'strata'))
-vel <- vel %>% mutate(pct_50 = pct_50 / 3)
-vel <- vel %>% mutate(pct_25 = pct_25 / 3)
-vel <- vel %>% mutate(pct_15 = pct_15 / 3)
-vel <- vel %>% mutate(pct_50 = ifelse(ycat == 'haz', NA, pct_50))
-vel <- vel %>% mutate(pct_25 = ifelse(ycat == 'haz', NA, pct_25))
-vel <- vel %>% mutate(pct_15 = ifelse(ycat == 'haz', NA, pct_15))
 
 # remove mo from age label
 vel <- vel %>% 
@@ -132,6 +57,14 @@ vel <- vel %>%
                          levels = c("0-3", "3-6", "6-9",
                                     "9-12", "12-15", "15-18",
                                     "18-21", "21-24")))
+
+vel <- merge(vel, who_cm, by=c('sex', 'strata'))
+vel <- vel %>% mutate(pct_50 = pct_50 / 3)
+vel <- vel %>% mutate(pct_25 = pct_25 / 3)
+vel <- vel %>% mutate(pct_15 = pct_15 / 3)
+vel <- vel %>% mutate(pct_50 = ifelse(ycat == 'haz', NA, pct_50))
+vel <- vel %>% mutate(pct_25 = ifelse(ycat == 'haz', NA, pct_25))
+vel <- vel %>% mutate(pct_15 = ifelse(ycat == 'haz', NA, pct_15))
 
 # clean up y label
 vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
