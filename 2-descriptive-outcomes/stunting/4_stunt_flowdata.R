@@ -21,7 +21,7 @@ d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 d <- d %>% filter(measurefreq=="monthly")
 
 # drop variables we don't need
-d = d %>% select(studyid, subjid, country, measid, agedays, haz)
+d = d %>% select(studyid, subjid, region, country, measid, agedays, haz)
 
 # create reverse measid
 d = d %>% 
@@ -49,61 +49,65 @@ d %>% group_by(agecat) %>%
   summarise(min = min(agedays)/30.4167,
             max = max(agedays)/30.4167)
 
-
+#--------------------------------------------------
+# classify stunting status each month
+#--------------------------------------------------
 flow_m = d %>%
   mutate(agem = agedays / 30.4167) %>%
   group_by(studyid,country,subjid) %>%
-
+  
   mutate(stunted=ifelse(haz< -2,1,0),
          lagstunted=lag(stunted),
          lageverstunted = lag(cummax(stunted))) %>%
   
   mutate(newly_stunted = ifelse(stunted==1 & 
-                                lageverstunted == 0 , 1, 0),
+                                  lageverstunted == 0 , 1, 0),
          
          recover =       ifelse(stunted==0 &
-                                lagstunted==1 &
-                                lageverstunted==1, 1, 0),
+                                  lagstunted==1 &
+                                  lageverstunted==1, 1, 0),
          
          never_stunted =       ifelse(stunted==0 &
-                                lagstunted==0 &
-                                lageverstunted==0, 1, 0)) %>%
-
- # recoding indicators at first measurement since lag is NA
+                                        lagstunted==0 &
+                                        lageverstunted==0, 1, 0)) %>%
+  
+  # recoding indicators at first measurement since lag is NA
   mutate(newly_stunted = ifelse(stunted==1 & measid==1, 1, newly_stunted),
          
          never_stunted = ifelse(stunted==0 & measid==1, 1, never_stunted),
-      
+         
          recover = ifelse(stunted==0 & measid==1, 0, recover)) %>%
-           
- # code relapse 
-   mutate(everrecover = cummax(recover),
-          evernew = cummax(newly_stunted),
+  
+  # code relapse 
+  mutate(everrecover = cummax(recover),
+         evernew = cummax(newly_stunted),
          
          relapse =       ifelse(stunted==1 &
-                                lageverstunted==1 &
-                                lagstunted==0 &
-                                everrecover==1, 1, 0),
+                                  lageverstunted==1 &
+                                  lagstunted==0 &
+                                  everrecover==1, 1, 0),
          
          still_stunted = ifelse(stunted==1 & 
-                                 evernew==1 &
+                                  evernew==1 &
                                   lagstunted==1, 1, 0),
          
          not_stunted =   ifelse(stunted==0 & 
-                                lagstunted==0 &
-                                 everrecover==1, 1, 0))  %>%
-
-  # recode still stunted at first measurement  
-     mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
-
+                                  lagstunted==0 &
+                                  everrecover==1, 1, 0))  %>%
   
+  # recode still stunted at first measurement  
+  mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
+
+
 # drop measurements with ages over 24 months
 flow_m = flow_m %>% filter(!is.na(agecat)) 
 
 # summarise within age months
 flow_m = flow_m %>% mutate(agem = round(agem))
 
+#--------------------------------------------------
 # check that indicators do not contain missing values
+#--------------------------------------------------
 assert_that(names(table(is.na(flow_m$newly_stunted)))=="FALSE")
 assert_that(names(table(is.na(flow_m$recover)))=="FALSE")
 assert_that(names(table(is.na(flow_m$relapse)))=="FALSE")
@@ -116,10 +120,12 @@ flow_m = flow_m %>% mutate(sum = newly_stunted +
                              still_stunted + recover + not_stunted + never_stunted + 
                              relapse)
 assert_that(names(table(flow_m$sum))=="1")
+  
 
-
+#--------------------------------------------------
 # Check that no child was classified in more
 # than one category at any time point 
+#--------------------------------------------------
 summary = flow_m %>%
   group_by(agem) %>%
   summarise(
@@ -137,8 +143,9 @@ summary = summary %>%
 
 summary
 
-
+#--------------------------------------------------
 # aggregate data within study, country, and agecat
+#--------------------------------------------------
 stunt_agg = flow_m %>%
   ungroup() %>%
   mutate(agem = as.factor(agem)) %>%
@@ -152,7 +159,9 @@ stunt_agg = flow_m %>%
     never_stunted = sum(never_stunted),
     relapse = sum(relapse))  
 
+#--------------------------------------------------
 # estimate random effects, format results
+#--------------------------------------------------
 pooled_newly = run_rma_agem(data = stunt_agg, 
                        n_name = "nchild", 
                        x_name = "newly_stunted", 
