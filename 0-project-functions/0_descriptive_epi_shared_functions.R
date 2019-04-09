@@ -558,6 +558,7 @@ create_name = function(outcome, cutoff, measure, population,
       outcome == "WHZ" ~ "wlz",
       outcome == "whz" ~ "wlz",
       outcome == "wlz" ~ "wlz",
+      outcome == "length" ~ "length",
       outcome == "stunting and laz" ~ "stunt_laz",
       outcome == "wasting and wlz" ~ "wast_wlz",
       outcome == "co-occurrence" ~ "co"
