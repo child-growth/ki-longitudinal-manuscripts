@@ -120,8 +120,9 @@ d <- d %>% rename(agecat = diffcat) %>%
   country_cohort=paste0(studyid," ", country))
 
 
-
+#----------------------------------------------------
 # age specific pooled results
+#----------------------------------------------------
 RE_pool <- function(df, ycategory, gender){
   
   df <- df %>% filter(ycat==ycategory)
@@ -193,6 +194,9 @@ RE_pool <- function(df, ycategory, gender){
 }
 
 
+#----------------------------------------------------
+# pool results -- all quarterly studies
+#----------------------------------------------------
 
 poolhaz_boys <- RE_pool(d, ycategory="haz", gender="Male")
 poolhaz_girls <- RE_pool(d, ycategory="haz", gender="Female")
@@ -203,10 +207,36 @@ pooled_vel <- rbind(
   poolhaz_boys, poolhaz_girls, poollencm_boys, poollencm_girls
 )
 
-saveRDS(pooled_vel, file="U:/ki-longitudinal-manuscripts/results/stunting/pool_vel.RDS")
+saveRDS(pooled_vel, 
+        file=paste0(res_dir,"stunting/pool_vel.RDS"))
+
+#----------------------------------------------------
+# pool results -- sensitivity analysis with monthly 
+# cohorts with measurements at each age up to 24 months of age
+#----------------------------------------------------
+study24 = c("ki0047075b-MAL-ED", "ki1000108-CMC-V-BCS-2002", "ki1000108-IRC", 
+            "ki1101329-Keneba", "ki1113344-GMS-Nepal", "ki1114097-CMIN", 
+            "ki1114097-CONTENT", "ki1017093b-PROVIDE")
+
+dmonth24 <- d %>% filter(studyid %in% study24)
+
+poolhaz_boys_month24 <- RE_pool(dmonth24, ycategory="haz", gender="Male")
+poolhaz_girls_month24 <- RE_pool(dmonth24, ycategory="haz", gender="Female")
+poollencm_boys_month24 <- RE_pool(dmonth24, ycategory="lencm", gender="Male")
+poollencm_girls_month24 <- RE_pool(dmonth24, ycategory="lencm", gender="Female")
+
+pooled_vel_month24 <- rbind(
+  poolhaz_boys_month24, poolhaz_girls_month24, 
+  poollencm_boys_month24, poollencm_girls_month24
+)
+
+saveRDS(pooled_vel_month24,
+        file=paste0(res_dir,"stunting/pool_vel_month24.RDS"))
 
 
-#Pool velocity, dropping CONTENT and Cohorts Guat.
+#----------------------------------------------------
+#Pool velocity - sensitivity analysis dropping CONTENT and Cohorts Guat.
+#----------------------------------------------------
 dsub <- d %>% filter(studyid!="ki1114097-CONTENT") %>% filter(!(studyid=="ki1135781-COHORTS" & country=="GUATEMALA"))
 poolhaz_boys <- RE_pool(dsub, ycategory="haz", gender="Male")
 poolhaz_girls <- RE_pool(dsub, ycategory="haz", gender="Female")
@@ -217,5 +247,6 @@ pooled_vel_sub <- rbind(
   poolhaz_boys, poolhaz_girls, poollencm_boys, poollencm_girls
 )
 
-saveRDS(pooled_vel_sub, file="U:/ki-longitudinal-manuscripts/results/stunting/pool_vel_sub.RDS")
+saveRDS(pooled_vel_sub,
+        file=paste0(res_dir,"stunting/pool_vel_sub.RDS"))
 
