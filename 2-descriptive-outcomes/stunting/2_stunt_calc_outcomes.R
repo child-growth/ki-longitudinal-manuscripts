@@ -132,11 +132,18 @@ monthly.haz <- bind_rows(
 #----------------------------------------
 # Get monthly HAZ quantiles
 #----------------------------------------
+quantile_d_cohort <- dmon %>% group_by(agecat, region, studyid) %>%
+  mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
+         fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
+         ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
+  select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+
 quantile_d <- dmon %>% group_by(agecat, region) %>%
   mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
          fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
-  select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+  mutate(studyid = "pooled") %>%
+  select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
 
 quantile_d_overall <- dmon %>% 
   group_by(agecat) %>%
@@ -144,9 +151,14 @@ quantile_d_overall <- dmon %>%
             fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
             ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
   mutate(region = "Overall") %>%
-  select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+  mutate(studyid = "pooled") %>%
+  select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
 
-save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_stunting.Rdata"))
+# combine data
+quantiles <- bind_rows(quantile_d, quantile_d_overall,quantile_d_cohort)
+
+saveRDS(quantiles,
+     file = paste0(here(),"/results/quantile_data_stunting.RDS"))
 
 
 
