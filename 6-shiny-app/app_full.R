@@ -173,41 +173,15 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  #          )),
                  tabPanel("Descriptive epidemiology",
                           fluidRow(
-                            column(4,
-                                   selectInput("Outcome",
-                                               "Outcome:",
-                                               choices = unique(df$outcome))
-                            ),
-                            column(4,
-                                   selectInput("Measure",
-                                               "Measure:",
-                                               choices = unique(df$measure))
-                            ),
-                            column(4,
-                                   selectInput("Region",
-                                               "Region:",
-                                               choices = unique(df$location))
-                            ),
-                            column(4,
-                                   selectInput("OutcomeType",
-                                               "Outcome Type:",
-                                               c("Not Severe", "Severe"))
-                            ),
-                            column(4,
-                                   selectInput("Analysis",
-                                               "Analysis:",
-                                               choices = unique(df$analysis))
-                            ),
-                            column(4,
-                                   selectInput("Population",
-                                               "Population:",
-                                               choices = unique(df$population))
-                            ),
-                            column(4,
-                                   selectInput("Age",
-                                               "Age range:",
-                                               choices = unique(df$age))
-                            )
+                            column(4, selectInput("Outcome",
+                                                  "Outcome:",
+                                                  choices = unique(df$outcome))),
+                            column(4, uiOutput('Measure')),
+                            column(4, uiOutput('Region')),
+                            column(4, uiOutput('OutcomeType')),
+                            column(4, uiOutput('Analysis')),
+                            column(4, uiOutput('Population')),
+                            column(4, uiOutput('Age'))
                           ),
                           
                           
@@ -285,47 +259,51 @@ ui <- navbarPage("HBGDki Results Dashboard",
 server <- function(input, output, session) {
 
   # Adaptive input selections based on user input - avoids blank plots
-  output$region <- renderUI({
+  output$Measure <- renderUI({
+    df <- df %>%
+      filter(outcome == input$Outcome) 
+
+    df <- df %>%
+      drop_na(measure, location, severe, population, age, analysis)
+    df <- droplevels(df)
+    selectInput('Measure',
+                'Measure:',
+                unique(df$measure))
+  })
+  
+  output$Region <- renderUI({
     df <- df[df$outcome == input$Outcome, ]
     
     df <- df %>%
-      drop_na(severe, measure, population, location, age, analysis)
+      filter(outcome == input$Outcome) %>%
+      filter(measure == input$Measure) %>%
+      drop_na(severe, population, location, age, analysis)
     df <- droplevels(df)
     selectInput('Region',
                 'Region:',
                 unique(df$location))
 
   })
-  output$severe <- renderUI({
+  output$OutcomeType <- renderUI({
     df <- df %>%
       filter(outcome == input$Outcome) %>%
+      filter(measure == input$Measure) %>%
       filter(location == input$Region)
     
     df <- df %>%
-      drop_na(severe, measure, population, age, analysis)
+      drop_na(severe, population, age, analysis)
     df <- droplevels(df)
     selectInput('OutcomeType',
                 'Outcome Type:',
                 choices = c('Not Severe', 'Severe'))
   })
-  output$measure <- renderUI({
-    df <- df %>%
-      filter(outcome == input$Outcome) %>%
-      filter(location == input$Region) 
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-    df <- df %>%
-      drop_na(measure, population, age, analysis)
-    df <- droplevels(df)
-    selectInput('Measure',
-                'Measure:',
-                unique(df$measure))
-  })
-  output$population <- renderUI({
+  
+  output$Population <- renderUI({
     df <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(location == input$Region) %>%
       filter(measure == input$Measure)
+    
     if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
     if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
     df <- df %>%
@@ -335,7 +313,7 @@ server <- function(input, output, session) {
                 'Population:',
                 unique(df$population))
   })
-  output$age <- renderUI({
+  output$Age <- renderUI({
     df <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(location == input$Region) %>%
@@ -351,7 +329,7 @@ server <- function(input, output, session) {
                 'Age Range:',
                 unique(df$age))
   })
-  output$analysis <- renderUI({
+  output$Analysis <- renderUI({
     df <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(location == input$Region) %>%
