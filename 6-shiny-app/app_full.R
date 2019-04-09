@@ -360,7 +360,8 @@ server <- function(input, output, session) {
     df <- droplevels(df)
     selectInput('Analysis',
                 '7. Analysis:',
-                unique(df$analysis))
+                choices = unique(df$analysis),
+                selected = 'primary')
   })
   
 
