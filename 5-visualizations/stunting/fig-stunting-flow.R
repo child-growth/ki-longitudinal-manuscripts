@@ -21,132 +21,134 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# load data
-stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
-# stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
+plot_overall = readRDS(paste0(res_dir, "stunt-flow-data-pooled.RDS"))
 
-# number of studies, countries, children included
-length(names(table(stunt_data$studyid)))
-length(names(table(stunt_data$country)))
-x=stunt_data %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
-sum(x$n)
-
-#-----------------------------------------
-# format data for plot
-#-----------------------------------------
-plot_data = stunt_data %>%
-  ungroup() %>%
-  mutate(classif = case_when(
-    never_stunted == 1 ~ "Never stunted",
-    recover == 1 ~ "Recovered",
-    not_stunted == 1 ~ "Not stunted",
-    still_stunted == 1 ~ "Still stunted",
-    newly_stunted == 1 ~ "Newly stunted",
-    relapse == 1 ~ "Stunting relapse"
-
-  )) %>%
-  select(subjid, agem, classif) %>%
-  mutate(freq = 1) %>%
-  mutate(classif = factor(classif, levels = c("Never stunted",
-                                              "Not stunted",
-                                              "Recovered",
-                                              "Stunting relapse",
-                                              "Newly stunted",
-                                              "Still stunted"
-                                              )))
-
-# plot_data_pooled = stunt_pool %>%
-#   rename(classif = label) %>%
-#   select(agem, classif, est) %>%
-#   mutate(classif = factor(classif, levels = c("Never stunted", 
+# # load data
+# stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
+# # stunt_pool = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
+# 
+# # number of studies, countries, children included
+# length(names(table(stunt_data$studyid)))
+# length(names(table(stunt_data$country)))
+# x=stunt_data %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
+# sum(x$n)
+# 
+# #-----------------------------------------
+# # format data for plot
+# #-----------------------------------------
+# plot_data = stunt_data %>%
+#   ungroup() %>%
+#   mutate(classif = case_when(
+#     never_stunted == 1 ~ "Never stunted",
+#     recover == 1 ~ "Recovered",
+#     not_stunted == 1 ~ "Not stunted",
+#     still_stunted == 1 ~ "Still stunted",
+#     newly_stunted == 1 ~ "Newly stunted",
+#     relapse == 1 ~ "Stunting relapse"
+# 
+#   )) %>%
+#   select(subjid, agem, classif) %>%
+#   mutate(freq = 1) %>%
+#   mutate(classif = factor(classif, levels = c("Never stunted",
 #                                               "Not stunted",
 #                                               "Recovered",
-#                                               "Newly stunted",
 #                                               "Stunting relapse",
+#                                               "Newly stunted",
 #                                               "Still stunted"
-#   )))
-
-# drop measurements beyond 15 months since
-# data is sparse
-plot_data = plot_data %>% filter(agem<=15)
-# plot_data_pooled = plot_data_pooled %>% 
-#   mutate(agem = as.numeric(as.character(agem))) %>%
-#   filter(agem<=15)
-
-#-----------------------------------------
-# define color palette
-#-----------------------------------------
-n=12
-viridis_cols = viridis(
-  n = n,
-  alpha = 1,
-  begin = 0,
-  end = 1,
-  direction = 1,
-  option = "C"
-)
-
-plot_cols  = viridis_cols[c(2, 4, 6, 8, 10, 11)]
-
-#-----------------------------------------
-# stacked bar graphs using random effects pooled data
-#-----------------------------------------
-
-# bar_plot_RE = ggplot(plot_data_pooled) +
-#   geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
-#   scale_fill_manual("", values = plot_cols) +
-#   theme(legend.position = "bottom") +
-#   xlab("Child age, months") + ylab("Percentage of children")
+#                                               )))
 # 
-# ggsave(bar_plot_RE, file="figures/stunting/fig-stunting-stacked-bar-RE.png", width=10, height=5)
-
-#-----------------------------------------
-# stacked bar graphs NOT using random effects pooled data
-#-----------------------------------------
-age_classif_totals = plot_data %>%
-  group_by(agem, classif) %>%
-  summarise(n = sum(freq))
-
-age_totals = plot_data %>%
-  group_by(agem) %>%
-  summarise(tot = sum(freq))
-
-bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agem"))
-
-bar_plot_data = bar_plot_data %>% 
-  mutate(percent = n/tot * 100,
-         classifnew = as.character(classif)) %>%
-  mutate(classifnew = ifelse(classif=="Not stunted", "Still recovered", classifnew),
-         classifnew = ifelse(classif=="Recovered", "Newly recovered", classifnew),
-         classifnew = factor(classifnew, levels = c("Never stunted", 
-                                                     "Still recovered",
-                                                     "Newly recovered",
-                                                     "Newly stunted",
-                                                     "Stunting relapse",
-                                                     "Still stunted"))) %>%
-  # labels not using recovered
-  mutate(classif3 = case_when(
-    classifnew == "Never stunted" ~ "Never stunted",
-    classifnew == "Still recovered" ~ "Still not stunted",
-    classifnew == "Newly recovered" ~ "No longer stunted",
-    classifnew == "Newly stunted" ~ "Newly stunted",
-    classifnew == "Stunting relapse" ~ "Stunting relapse",
-    classifnew == "Still stunted" ~ "Still stunted"
-    
-  )) %>%
-  mutate(classif3 = factor(classif3, levels = c("Never stunted",
-                                                "Still not stunted",
-                                                "No longer stunted",
-                                                "Newly stunted",
-                                                "Stunting relapse",
-                                                "Still stunted")))
-
-
-bar_plot_data = bar_plot_data %>% 
-  ungroup() %>%
-  mutate(agem= as.factor(agem)) %>%
-  mutate(stunted = as.factor(ifelse(classifnew %in%
-    c("Never stunted", "Newly recovered", "Still recovered"), 0, 1)))
+# # plot_data_pooled = stunt_pool %>%
+# #   rename(classif = label) %>%
+# #   select(agem, classif, est) %>%
+# #   mutate(classif = factor(classif, levels = c("Never stunted", 
+# #                                               "Not stunted",
+# #                                               "Recovered",
+# #                                               "Newly stunted",
+# #                                               "Stunting relapse",
+# #                                               "Still stunted"
+# #   )))
+# 
+# # drop measurements beyond 15 months since
+# # data is sparse
+# plot_data = plot_data %>% filter(agem<=15)
+# # plot_data_pooled = plot_data_pooled %>% 
+# #   mutate(agem = as.numeric(as.character(agem))) %>%
+# #   filter(agem<=15)
+# 
+# #-----------------------------------------
+# # define color palette
+# #-----------------------------------------
+# n=12
+# viridis_cols = viridis(
+#   n = n,
+#   alpha = 1,
+#   begin = 0,
+#   end = 1,
+#   direction = 1,
+#   option = "C"
+# )
+# 
+# plot_cols  = viridis_cols[c(2, 4, 6, 8, 10, 11)]
+# 
+# #-----------------------------------------
+# # stacked bar graphs using random effects pooled data
+# #-----------------------------------------
+# 
+# # bar_plot_RE = ggplot(plot_data_pooled) +
+# #   geom_bar(aes(x = agem, y = est, fill = classif), stat="identity", width=0.5) +
+# #   scale_fill_manual("", values = plot_cols) +
+# #   theme(legend.position = "bottom") +
+# #   xlab("Child age, months") + ylab("Percentage of children")
+# # 
+# # ggsave(bar_plot_RE, file="figures/stunting/fig-stunting-stacked-bar-RE.png", width=10, height=5)
+# 
+# #-----------------------------------------
+# # stacked bar graphs NOT using random effects pooled data
+# #-----------------------------------------
+# age_classif_totals = plot_data %>%
+#   group_by(agem, classif) %>%
+#   summarise(n = sum(freq))
+# 
+# age_totals = plot_data %>%
+#   group_by(agem) %>%
+#   summarise(tot = sum(freq))
+# 
+# bar_plot_data = full_join(age_classif_totals, age_totals, by = c("agem"))
+# 
+# bar_plot_data = bar_plot_data %>% 
+#   mutate(percent = n/tot * 100,
+#          classifnew = as.character(classif)) %>%
+#   mutate(classifnew = ifelse(classif=="Not stunted", "Still recovered", classifnew),
+#          classifnew = ifelse(classif=="Recovered", "Newly recovered", classifnew),
+#          classifnew = factor(classifnew, levels = c("Never stunted", 
+#                                                      "Still recovered",
+#                                                      "Newly recovered",
+#                                                      "Newly stunted",
+#                                                      "Stunting relapse",
+#                                                      "Still stunted"))) %>%
+#   # labels not using recovered
+#   mutate(classif3 = case_when(
+#     classifnew == "Never stunted" ~ "Never stunted",
+#     classifnew == "Still recovered" ~ "Still not stunted",
+#     classifnew == "Newly recovered" ~ "No longer stunted",
+#     classifnew == "Newly stunted" ~ "Newly stunted",
+#     classifnew == "Stunting relapse" ~ "Stunting relapse",
+#     classifnew == "Still stunted" ~ "Still stunted"
+#     
+#   )) %>%
+#   mutate(classif3 = factor(classif3, levels = c("Never stunted",
+#                                                 "Still not stunted",
+#                                                 "No longer stunted",
+#                                                 "Newly stunted",
+#                                                 "Stunting relapse",
+#                                                 "Still stunted")))
+# 
+# 
+# bar_plot_data = bar_plot_data %>% 
+#   ungroup() %>%
+#   mutate(agem= as.factor(agem)) %>%
+#   mutate(stunted = as.factor(ifelse(classifnew %in%
+#     c("Never stunted", "Newly recovered", "Still recovered"), 0, 1)))
 
 #-----------------------------------------
 # define color palette
