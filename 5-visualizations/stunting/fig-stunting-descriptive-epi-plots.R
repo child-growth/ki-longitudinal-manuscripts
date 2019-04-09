@@ -232,6 +232,41 @@ ggsave(prev_plot, file=paste0("figures/stunting/fig-",prev_plot_name, ".png"), w
 saveRDS(d, file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
 
 
+#-------------------------------------------------------------------------------------------
+# Stunting prevalence - 3 months - stratified by cohort
+#-------------------------------------------------------------------------------------------
+prev_plot <- ki_desc_plot(d,
+                          Disease="Stunting",
+                          Measure="Prevalence", 
+                          Birth="yes", 
+                          Severe="no", 
+                          Age_range="3 months", 
+                          Cohort="pooled",
+                          xlabel="Child age, months",
+                          ylabel='Point Prevalence (95% CI)',
+                          h1=69,
+                          h2=72)
+prev_plot
+
+
+# define standardized plot names
+prev_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "prevalence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(prev_plot, file=paste0("figures/stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
+
+saveRDS(d, file=paste0("results/figure-data/figdata-",prev_plot_name,".RDS"))
+
+
+
 
 
 #-------------------------------------------------------------------------------------------
