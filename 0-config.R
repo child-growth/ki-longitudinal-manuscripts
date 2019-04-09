@@ -36,6 +36,7 @@ library(grid)
 library(lazyeval)
 library(rlang)
 library(scales)
+library(xtable)
 
 # for parallel computing 
 # (will need to configure in each script)

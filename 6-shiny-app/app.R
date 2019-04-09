@@ -220,7 +220,8 @@ ui <- navbarPage("HBGDki Results Dashboard",
                             # Create a new row for the table.
                             fluidRow(
                               #DT::dataTableOutput("table_desc")
-                              tableOutput("table_desc")
+                              # tableOutput("table_desc")
+                              uiOutput('tables_desc')
                             ),
                             br(),
                             br(),
@@ -228,7 +229,7 @@ ui <- navbarPage("HBGDki Results Dashboard",
                             # Create a new row for the table.
                             fluidRow(
                               #DT::dataTableOutput("table_desc")
-                              tableOutput("tablecode")
+                              tableOutput("table_desc")
                             )
                             
                           ))
@@ -396,18 +397,46 @@ server <- function(input, output, session) {
   }, deleteFile = FALSE)
   
   
-
-
-   output$table_desc <- renderTable({
+  # If RDS contains multiple dataframes, process them as HTML output for Shiny
+  # Else, use renderTable for an individual dataframe
+  
+  multi_tables <- function(table_dfs){
+    tables <- list()
+    for (x in names(table_dfs)){
+      tables_data <- table_dfs[[x]]
+      tables[[as.character(x)]] <- 
+        print(xtable(tables_data, caption = paste('Variable: ', x)),
+              type = 'html', include.rownames = FALSE,
+              html.table.attributes = 'class="data table table-bordered table-condensed"',
+              caption.placement = 'top')
+    }
+    return(lapply(tables, paste))
+  }
+  
+  output$tables_desc <- renderUI({
      d <- selectedData() 
-     print(head(d))
      d_tbl <- d %>% filter(fig == 'figdata')
-     print(d_tbl)
      file_path <- paste0(here::here(), '/results/figure-data/', d_tbl$plotnames)
      table_data <- readRDS(file_path)
-     table_data
-   })
+     if (class(table_data) == 'list'){
+       output <- unlist(multi_tables(table_data))
+       return(div(HTML(output), class = 'shiny-html-output'))
+     } else {
+       return('')
+     }
+  })
    
+  output$table_desc <- renderTable({
+    d <- selectedData()
+    d_tbl <- d %>% filter(fig == 'figdata')
+    file_path <- paste0(here::here(), '/results/figure-data/', d_tbl$plotnames)
+    table_data <- readRDS(file_path)
+    if (class(table_data) == 'list'){
+      return('')
+    } else {
+      return(table_data)
+    }
+  })
    
 
    
