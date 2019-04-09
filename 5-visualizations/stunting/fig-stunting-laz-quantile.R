@@ -4,13 +4,18 @@
 #
 # Plot of mean LAZ by month with quantiles
 
-# inputs: desc_data_cleaned.Rdata, quantile_data_stunting.Rdata
+# inputs: quantile_data_stunting.RDS
 
 # outputs: 
 # fig-laz-2-quant-overall_region--allage-primary.png
+# fig-laz-2-quant-cohort-asia-allage-primary.png
+# fig-laz-2-quant-cohort-afr-allage-primary.png
+# fig-laz-2-quant-cohort-latamer-allage-primary.png
 
 # figdata-laz-2-quant-overall_region--allage-primary.RDS
-
+# figdata-laz-2-quant-cohort-asia-primary.RDS
+# figdata-laz-2-quant-cohort-afr-primary.RDS
+# figdata-laz-2-quant-cohort-latamer-primary.RDS
 
 ##########################################
 #-----------------------------------
