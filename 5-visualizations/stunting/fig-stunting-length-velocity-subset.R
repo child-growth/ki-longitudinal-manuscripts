@@ -405,8 +405,7 @@ ggsave(combined_plot_strat, file=paste0("figures/stunting/fig-",combined_plot_st
 saveRDS(
   list(
     velplot_cm = velplot_cm,
-    velplot_laz = velplot_laz,
-    meanlaz = meanlaz
+    velplot_laz = velplot_laz
   ),
   file = paste0("results/figure-data/figdata-", combined_plot_name, ".RDS")
 )
