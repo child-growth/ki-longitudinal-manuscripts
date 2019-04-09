@@ -74,25 +74,11 @@ format_plot_data = function(data, group_vars = NULL){
       group_by(!!!(group_vars_sym),agem) %>%
       summarise(tot = sum(freq))
     
-    # THIS NOT WORKING
-    # group_vars_quo <- enquo(group_vars)
-    # myby = set_names(quo_name(group_vars_quo)) # need to add age_m
-    
-    # plot_data = full_join(age_classif_totals, age_totals, 
-    #                       by = myby)
+    plot_data = full_join(age_classif_totals, age_totals,
+                          by = c(group_vars, "agem"))
     
   }
-  
-  # sloppy workaround
-  if(setequal(group_vars, c("region"))){
-    plot_data = full_join(age_classif_totals, age_totals,
-                          by = c("region", "agem"))
-  }
-  if(setequal(group_vars, c("region", "studyid"))){
-    plot_data = full_join(age_classif_totals, age_totals,
-                          by = c("region","studyid", "agem"))
-  } 
-  
+
   if(is.null(group_vars)){
     age_classif_totals = data_fn %>%
       group_by( agem, classif) %>%
@@ -127,13 +113,21 @@ format_plot_data = function(data, group_vars = NULL){
 
 plot_overall = format_plot_data(stunt_data)
 plot_region = format_plot_data(stunt_data, group_vars = "region")
-plot_cohort = format_plot_data(stunt_data, group_vars = c("region", "studyid"))
 
 plot_overall = plot_overall %>%
   mutate(region = "Overall")
 
 plot_region = bind_rows(plot_region, plot_overall)
 
+plot_region = plot_region %>%
+  mutate(region = factor(region, levels = c("Overall", "Africa",
+                                            "Latin America", "South Asia")))
+
+# summarise n within region 
+plot_region %>% 
+  group_by(region) %>%
+  summarise(min = min(n),
+            max = max(n))
+
 saveRDS(plot_overall, file = paste0(res_dir, "stunt-flow-data-pooled.RDS"))
 saveRDS(plot_region, file = paste0(res_dir, "stunt-flow-data-region.RDS"))
-saveRDS(plot_cohort, file = paste0(res_dir, "stunt-flow-data-cohort.RDS"))
