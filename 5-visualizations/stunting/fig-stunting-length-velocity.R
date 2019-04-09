@@ -141,14 +141,14 @@ vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 #-------------------------------------
 # mean LAZ plot
 #-------------------------------------
-meanlaz = meanlaz %>% 
+meanlaz_overall = meanlaz %>% 
   filter(region=="Overall") %>%
   mutate(agecat = factor(agecat, 
                          levels = c("0-3", "3-6", "6-9",
                                     "9-12", "12-15", "15-18",
                                     "18-21", "21-24")))
 
-plot_mean_laz = ggplot(meanlaz, aes(y=est, x = agecat)) + 
+plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) + 
   geom_point(aes(col=sex), position = position_dodge(width=0.2), size=3) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
                  position = position_dodge(width=0.2)) +
@@ -159,6 +159,34 @@ plot_mean_laz = ggplot(meanlaz, aes(y=est, x = agecat)) +
   ggtitle("c\n")+
   theme(plot.title = element_text(hjust=0)) 
 
+
+#-------------------------------------
+# mean LAZ plot stratified by region
+#-------------------------------------
+meanlaz_strat = meanlaz %>% 
+  filter(cohort == "pooled") %>%
+  filter(region !="Europe") %>%
+  mutate(agecat = factor(agecat, 
+                         levels = c("0-3", "3-6", "6-9",
+                                    "9-12", "12-15", "15-18",
+                                    "18-21", "21-24")),
+         region = ifelse(region == "Asia", "South Asia", region)) %>%
+  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
+
+plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) + 
+  geom_point(aes(col=sex), position = position_dodge(width=0.6), size=3) +
+  geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
+                 position = position_dodge(width=0.6)) +
+  scale_color_manual(values = c(tableau10[4], tableau10[1])) + 
+  xlab("Child age, months") + 
+  ylab("Mean LAZ\n ") +
+  ggtitle("c")+
+  theme(plot.title = element_text(hjust=0),
+        strip.text.x = element_text(size=20, face="bold"),
+        axis.title.x = element_text(size=20),
+        axis.title.y = element_text(size=20),
+        plot.title = element_text(size = 20, face = "bold")) +
+  facet_grid(~region)
  
 #-------------------------------------
 # LAZ plot
@@ -199,7 +227,9 @@ saveRDS(velplot_laz, file=paste0("results/figure-data/figdata-",plot_laz_name,".
 # LAZ plot - stratified by region
 #-------------------------------------
 velplot_laz_strat = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
-  mutate(sex = factor(sex))
+  mutate(sex = factor(sex),
+         region = ifelse(region == "Asia", "South Asia", region)) %>%
+  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
 
 plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
@@ -211,8 +241,12 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   facet_grid( ~  region) +
-  ggtitle("B) Monthly change in LAZ") +
-  theme(plot.title = element_text(hjust=0))
+  ggtitle("b") +
+  theme(plot.title = element_text(hjust=0),
+        strip.text.x = element_text(size=20, face="bold"),
+        axis.title.x = element_text(size=20),
+        axis.title.y = element_text(size=20),
+        plot.title = element_text(size = 20, face = "bold"))
 
 
 # define standardized plot names
@@ -448,7 +482,9 @@ velplot_cm_strat = vel %>%
   filter(ycat == "Length velocity (cm per month)") %>%
   filter(pooled==1) %>%
   select(region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
-  mutate(sex = as.factor(sex))
+  mutate(sex = as.factor(sex),
+         region = ifelse(region == "Asia", "South Asia", region)) %>%
+  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
 
 plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
   geom_point(aes(color=sex), size = 3) +
@@ -464,8 +500,13 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month")+
   facet_grid( sex~ region) +
-  ggtitle("A) Monthly change in length (cm)") +
-  theme(plot.title = element_text(hjust=0))
+  ggtitle("a") +
+  theme(plot.title = element_text(hjust=0),
+        strip.text.x = element_text(size=20, face="bold"),
+        strip.text.y = element_text(size=20),
+        axis.title.x = element_text(size=20),
+        axis.title.y = element_text(size=20),
+        plot.title = element_text(size = 20, face = "bold"))
 
 # define standardized plot names
 plot_cm_strat_name = create_name(
@@ -483,12 +524,22 @@ ggsave(plot_cm_strat, file=paste0("figures/stunting/fig-",plot_cm_strat_name,".p
        width=10, height=8)
 saveRDS(velplot_cm_strat, file=paste0("results/figure-data/figdata-",plot_cm_strat_name,".RDS"))
 
-#-------------------------------------
+######################################
 # combined LAZ and length plots
-#-------------------------------------
+######################################
+# add margin around plots
+plot_cm_strat = plot_cm_strat + theme(plot.margin = 
+                                        unit(c(t = 0.1, r = 0.1, b = 0.1, l = 1.2), "cm"))
+plot_laz_strat = plot_laz_strat + theme(plot.margin = 
+                                          unit(c(t = 0.5, r = 0.7, b = 0.1, l = 0.2), "cm"))
+plot_mean_laz_strat = plot_mean_laz_strat + theme(plot.margin = 
+                                          unit(c(t = 0.1, r = 0.7, b = 0.1, l = 0.4), "cm"))
+
+
 combined_plot = grid.arrange(plot_cm, plot_laz, plot_mean_laz, 
                               nrow = 3, heights = c(8, 4, 4))
-combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, nrow = 2, heights = c(10, 4))
+combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
+                                   nrow = 3, heights = c(10, 4, 4))
 
 #-------------------------------------
 # define standardized plot names
@@ -514,7 +565,7 @@ combined_plot_strat_name = create_name(
 )
 
 #-------------------------------------
-# save plots
+# save overall plots together
 #-------------------------------------
 ggsave(combined_plot, file=paste0("figures/stunting/fig-", combined_plot_name,
         ".png"), width=10, height=8)
@@ -528,7 +579,7 @@ saveRDS(
   list(
     velplot_cm = velplot_cm,
     velplot_laz = velplot_laz,
-    meanlaz = meanlaz
+    meanlaz_overall = meanlaz_overall
   ),
   file = paste0("results/figure-data/figdata-", combined_plot_name, ".RDS")
 )
@@ -536,7 +587,8 @@ saveRDS(
 saveRDS(
   list(
     velplot_cm_strat = velplot_cm_strat,
-    velplot_laz_strat = velplot_laz_strat
+    velplot_laz_strat = velplot_laz_strat,
+    meanlaz_strat = meanlaz_strat
   ),
   file = paste0("results/figure-data/figdata-", combined_plot_strat_name, ".RDS")
 )
