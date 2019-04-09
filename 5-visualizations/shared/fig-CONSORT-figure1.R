@@ -278,7 +278,30 @@ sidebar
 #####################################################################################
 consort_ki_bar <- consort_ki_long[consort_ki_long$indicator == 1, ]
 
-# add extra x factors to widen plot to include all text
+# add extra x factors to widen plot to include all annotation text
+consort_ki_bar$inclusion_metric <- factor(consort_ki_bar$inclusion_metric,
+                                           levels = c('included_longitudinal',
+                                                      'included_anthropometry',
+                                                      'included_low_income',
+                                                      'included_ill',
+                                                      'included_small',
+                                                      'included_age',
+                                                      'included_qc',
+                                                      'included_measurement_freq',
+                                                      'extra1',
+                                                      'extra2',
+                                                      'extra3',
+                                                      'extra4',
+                                                      'extra5',
+                                                      'extra6',
+                                                      'extra7'))
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra1")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra2")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra3")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra4")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra5")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra6")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra7")
 
 bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)) + 
   geom_bar(stat = 'identity', aes(fill = region)) +
@@ -292,24 +315,24 @@ bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)
   scale_fill_manual(values=c("#1F77B4", "#2CA02C", "#FF7F0E", "#D62728", "black")) +
   
   # Add top inclusion category labels
-  annotate(geom = "text", x = 3.2, y = 75, label = "Longitudinal cohorts (n=86)", size = 2) +
-  annotate(geom = "text", x = 4.9, y = 70, label = "Includes anthropometry data (n=xx)", size = 2) +
-  annotate(geom = "text", x = 7.1, y = 65, label = "Located in low- or middle income countries (n=74)", size = 2) +
-  annotate(geom = "text", x = 8.3, y = 60, label = "Enrollment not restricted to acutely ill children (n=41)", size = 2) +
-  annotate(geom = "text", x = 8.2, y = 55, label = "Enrolled more than 200 children (n=36)", size = 2) +
-  annotate(geom = "text", x = 9.5, y = 50, label = "Enrolled children between ages 0-2 (n=xx)", size = 2) +
-  annotate(geom = "text", x = 10.2, y = 45, label = "Quarterly growth measurements (n=23)", size = 2) +
-  annotate(geom = "text", x = 11, y = 40, label = "Monthly growth measurements (n=xx)", size = 2) +
+  annotate(geom = "text", x = 2.9, y = 90, label = "Longitudinal cohorts (n=86)", size = 2) +
+  annotate(geom = "text", x = 4.5, y = 83, label = "Includes anthropometry data (n=xx)", size = 2) +
+  annotate(geom = "text", x = 6.7, y = 76, label = "Located in low- or middle income countries (n=74)", size = 2) +
+  annotate(geom = "text", x = 7.9, y = 69, label = "Enrollment not restricted to acutely ill children (n=41)", size = 2) +
+  annotate(geom = "text", x = 7.8, y = 62, label = "Enrolled more than 200 children (n=36)", size = 2) +
+  annotate(geom = "text", x = 9.1, y = 55, label = "Enrolled children between ages 0-2 (n=xx)", size = 2) +
+  annotate(geom = "text", x = 9.8, y = 47, label = "Quarterly growth measurements (n=23)", size = 2) +
+  annotate(geom = "text", x = 10.7, y = 40, label = "Monthly growth measurements (n=xx)", size = 2) +
   
   # Add vertical lines under labels
-  geom_segment(aes(x = 1, y = 62, xend = 1, yend = 72), color = "gray") +
-  geom_segment(aes(x = 2, y = 54, xend = 2, yend = 67), color = "gray") +
-  geom_segment(aes(x = 3, y = 43, xend = 3, yend = 62), color = "gray") +
-  geom_segment(aes(x = 4, y = 43, xend = 4, yend = 57), color = "gray") +
-  geom_segment(aes(x = 5, y = 43, xend = 5, yend = 52), color = "gray") +
-  geom_segment(aes(x = 6, y = 32, xend = 6, yend = 47), color = "gray") +
-  geom_segment(aes(x = 7, y = 32, xend = 7, yend = 42), color = "gray") +
-  geom_segment(aes(x = 8, y = 9, xend = 8, yend = 37), color = "gray") +
+  geom_segment(aes(x = 1, y = 64, xend = 1, yend = 85), color = "gray") +
+  geom_segment(aes(x = 2, y = 56, xend = 2, yend = 78), color = "gray") +
+  geom_segment(aes(x = 3, y = 45, xend = 3, yend = 71), color = "gray") +
+  geom_segment(aes(x = 4, y = 45, xend = 4, yend = 64), color = "gray") +
+  geom_segment(aes(x = 5, y = 45, xend = 5, yend = 57), color = "gray") +
+  geom_segment(aes(x = 6, y = 34, xend = 6, yend = 50), color = "gray") +
+  geom_segment(aes(x = 7, y = 34, xend = 7, yend = 42), color = "gray") +
+  geom_segment(aes(x = 8, y = 11, xend = 8, yend = 35), color = "gray") +
                     
   theme(
     # legend options
@@ -349,8 +372,7 @@ bar
 # add margin around plots
 hm = hm + theme(plot.margin = unit(c(0, 0.25, 0.7, 0.25), "cm"))
 sidebar = sidebar + theme(plot.margin = unit(c(0, 0.3, .25, 0.1), "cm"))
-bar = bar + theme(plot.margin = unit(c(1, 5.4, -.65, 9.7), "cm"))
-empty <- grid::textGrob("") 
+bar = bar + theme(plot.margin = unit(c(1, 2.5, -.65, 9.7), "cm"))
 
 grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
                         nrow = 2, ncol = 1,
