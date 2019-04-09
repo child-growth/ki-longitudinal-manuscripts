@@ -174,13 +174,13 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  tabPanel("Descriptive epidemiology",
                           fluidRow(
                             column(4, selectInput("Outcome",
-                                                  "Outcome:",
+                                                  "1. Outcome:",
                                                   choices = unique(df$outcome))),
                             column(4, uiOutput('Measure')),
                             column(4, uiOutput('Region')),
                             column(4, uiOutput('OutcomeType')),
-                            column(4, uiOutput('Analysis')),
                             column(4, uiOutput('Population')),
+                            column(4, uiOutput('Analysis')),
                             column(4, uiOutput('Age'))
                           ),
                           
@@ -267,7 +267,7 @@ server <- function(input, output, session) {
       drop_na(measure, location, severe, population, age, analysis)
     df <- droplevels(df)
     selectInput('Measure',
-                'Measure:',
+                '2. Measure:',
                 unique(df$measure))
   })
   
@@ -280,7 +280,7 @@ server <- function(input, output, session) {
       drop_na(severe, population, location, age, analysis)
     df <- droplevels(df)
     selectInput('Region',
-                'Region:',
+                '3. Region:',
                 unique(df$location))
 
   })
@@ -294,7 +294,7 @@ server <- function(input, output, session) {
       drop_na(severe, population, age, analysis)
     df <- droplevels(df)
     selectInput('OutcomeType',
-                'Outcome Type:',
+                '4. Outcome Type:',
                 choices = c('Not Severe', 'Severe'))
   })
   
@@ -310,7 +310,7 @@ server <- function(input, output, session) {
       drop_na(population, age, analysis)
     df <- droplevels(df)
     selectInput('Population',
-                'Population:',
+                '5. Population:',
                 unique(df$population))
   })
   output$Age <- renderUI({
@@ -326,7 +326,7 @@ server <- function(input, output, session) {
       drop_na(age, analysis)
     df <- droplevels(df)
     selectInput('Age',
-                'Age Range:',
+                '6. Age Range:',
                 unique(df$age))
   })
   output$Analysis <- renderUI({
@@ -343,7 +343,7 @@ server <- function(input, output, session) {
       drop_na(analysis)
     df <- droplevels(df)
     selectInput('Analysis',
-                'Analysis:',
+                '7. Analysis:',
                 unique(df$analysis))
   })
   
