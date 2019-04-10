@@ -139,7 +139,7 @@ mean_wlz_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(mean_wlz_plot, file=paste0("figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=4)
+ggsave(mean_wlz_plot, file=paste0("figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=3)
 saveRDS(df, file=paste0("results/figure-data/figdata-",mean_wlz_plot_name,".RDS"))
 
 
