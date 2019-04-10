@@ -98,10 +98,25 @@ rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) +
   # scale_x_continuous(breaks = seq(-5, 3.5, 1), 
   #                    labels = seq(-5, 3.5, 1)) +
    geom_hline(yintercept = -2, linetype="dashed") +
-   scale_fill_manual(values=rep(tableau10[3], 4)) +
+   scale_fill_manual(values=rep("grey30", 4)) +
    coord_cartesian(ylim=c(-3,2))
 rec_violin_plot
 
 ggsave(rec_violin_plot, file="U:/ki-longitudinal-manuscripts/figures/wasting/fig_wast_rec_dist_violin.png", width=8, height=5)
+
+
+# define standardized plot names
+rec_violin_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "recovery",
+  population = "overall",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(rec_violin_plot, file=paste0("figures/wasting/fig-", rec_violin_name, ".png"), width=14, height=3)
 
 

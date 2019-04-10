@@ -22,7 +22,7 @@ co_pool <- co_pool %>% group_by(agem) %>%
 
 
 #-----------------------------------------
-# define color palette
+# define hybrid color palette
 #-----------------------------------------
 n=8
 viridis_cols = viridis(
@@ -35,6 +35,37 @@ viridis_cols = viridis(
 )
 
 plot_cols  = viridis_cols #[c(1,2, 4, 6, 8, 10, 11, 12)]
+
+pink_green = rev(brewer.pal(n = 8, name = "PiYG"))
+
+#Colors 1 and 2 are never faltered and recovered
+
+#Stunting
+pink_green[3] = viridis_cols[8]
+
+#Underweight
+pink_green[4] = tableau10[1]
+
+#Wasting
+pink_green[5] = tableau10[4]
+
+#Combination of faltering:
+
+#Stunted + underweight
+# colfunc1 <- colorRampPalette(c(pink_green[3], pink_green[4]))
+# pink_green[6] = colfunc1(3)[2]
+pink_green[6] = "#3bd1d6"
+
+#Wasted + underweight
+# colfunc2 <- colorRampPalette(c(pink_green[5], pink_green[4]))
+# pink_green[7] = colfunc2(3)[2]
+pink_green[7] = tableau10[5]
+  
+#Black for all 3 conditions:
+pink_green[8] = tableau11[1]
+
+  
+
 
 #-----------------------------------------
 # stacked bar graphs using random effects pooled data
@@ -59,12 +90,11 @@ plot_data_pooled = co_pool %>%
 
 bar_plot_RE = ggplot(plot_data_pooled) +
   geom_bar(aes(x = agem, y = est*100, fill = classif), colour="black", stat="identity", width=0.5) +
-  scale_fill_manual("", values = plot_cols) +
+  scale_fill_manual("", values = pink_green) +
   theme(legend.position = "bottom") +
-  xlab("Child age, months") + ylab("Percentage of children")
+  xlab("Child age, months") + ylab("Percentage of children") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 5))
 bar_plot_RE
-
-ggsave(bar_plot_RE, file="figures/wasting/fig-co-stacked-bar-RE.png", width=10, height=5)
 
 
 #-----------------------------------------
