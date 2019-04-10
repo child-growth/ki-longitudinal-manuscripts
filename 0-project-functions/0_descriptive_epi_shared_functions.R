@@ -590,7 +590,8 @@ create_name = function(outcome, cutoff, measure, population,
       measure == "persistent wasting" ~ "perswast",
       measure == "co-occurrence of wasting and stunting" ~ "co",
       measure == "underweight" ~ "uwt",
-      measure == "MUAC-based wasting" ~ "muac"
+      measure == "MUAC-based wasting" ~ "muac",
+      measure == "Birth-stratified outcomes" ~ "birthstats"
     )
     
     population_s = case_when(
@@ -612,6 +613,7 @@ create_name = function(outcome, cutoff, measure, population,
         
     age_s = case_when(
       age == "All ages" ~ "allage",
+      age == "6-24 months" ~ "6_24",
       age == "Birth" ~ "birth"
     )
         

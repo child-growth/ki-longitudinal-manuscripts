@@ -102,13 +102,13 @@ analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, st_rec, prev, rec, cumi
 table(analyses$file)
 
 #Save analysis specification
-save(analyses, file="adjusted_binary_analyses.rdata")
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/adjusted_binary_analyses.rdata.rdata")
 
 
 #Make unadjusted analysis set
 analyses$W <- NULL
-save(analyses, file="unadjusted_binary_analyses.rdata")
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/unadjusted_binary_analyses.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/unadjusted_binary_analyses.rdata")
 
 
@@ -130,13 +130,13 @@ analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
 
 #Save analysis specification
-save(analyses, file="adjusted_continuous.rdata")
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/adjusted_continuous.rdata")
 
 
 #Make unadjusted analysis set
 analyses$W <- NULL
-save(analyses, file="unadjusted_continuous.rdata")
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/unadjusted_continuous.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/unadjusted_continuous.rdata")
 
 
