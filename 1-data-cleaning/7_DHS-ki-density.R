@@ -46,10 +46,29 @@ d <- d %>% mutate(region = case_when(
 ))
 d <- d %>% filter(region!="Other")
 
+#---------------------------------------------------------
+# Calculate medians
+#---------------------------------------------------------
 
+#Function to estimate median by region and Z-score
+kimedian <- function(d){
 
+  med_haz <- median(d$haz[d$haz > (-6) & d$haz < 6])
+  med_whz <- median(d$whz[d$whz > (-5) & d$whz < 5])
+  med_waz <- median(d$waz[d$waz > (-5) & d$waz < 5])
+  res <- data.frame(measure=c("haz","whz","waz"), median=c(med_haz, med_whz, med_waz))
+    
+  return(res)
+}
 
+medians_overall <- data.frame(region="Overall", kimedian(d))
+medians_strat <- d %>% group_by(region) %>% do(kimedian(.)) %>% as.data.frame()
+medians.quarterly <- rbind(medians_overall, medians_strat)
+medians.quarterly
 
+#---------------------------------------------------------
+# Estimate densities
+#---------------------------------------------------------
 
 #Function to estimate density by region and Z-score
 ki.density <- function(data, Region, Measure){
@@ -89,6 +108,12 @@ resdf.quarterly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, w
 d <- d %>% filter(measurefreq=="monthly")
 d.overall <- d.overall %>% filter(measurefreq=="monthly")
 
+medians_overall <- data.frame(region="Overall", kimedian(d))
+medians_strat <- d %>% group_by(region) %>% do(kimedian(.)) %>% as.data.frame()
+medians.monthly <- rbind(medians_overall, medians_strat)
+medians.monthly
+
+
 set.seed(123)
 haz1 <- ki.density(d, Region="SEARO", Measure="haz")
 haz2 <- ki.density(d, Region="PAHO", Measure="haz")
@@ -109,8 +134,15 @@ waz4 <- ki.density(df2, Region="Overall", Measure="waz")
 
 resdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4)
 
+
+#Save medians
+saveRDS(medians.monthly, file = paste0(here(),"/results/ki.zscore.medians.monthly.rds"))
+saveRDS(medians.quarterly, file = paste0(here(),"/results/ki.zscore.medians.quarterly.rds"))
+
+
+
+#Save densities
 saveRDS(resdf.monthly, file = paste0(here(),"/results/ki.density.fits.monthly.rds"))
 saveRDS(resdf.quarterly, file = paste0(here(),"/results/ki.density.fits.quarterly.rds"))
-saveRDS(resdf.quarterly, file = paste0(here(),"/results/ki.density.fits.rds"))
 
 
