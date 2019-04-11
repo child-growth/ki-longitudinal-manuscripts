@@ -70,6 +70,10 @@ vel <- vel %>% mutate(pct_15 = ifelse(ycat == 'haz', NA, pct_15))
 vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
 vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 
+# define color palette
+mypalette = c("#D87A16", "#0EA76A")
+tpalette = mypalette
+
 ####################################################################################
 # mean LAZ plots
 ####################################################################################
@@ -84,15 +88,21 @@ meanlaz_overall = meanlaz %>%
                                     "18-21", "21-24")))
 
 plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) + 
-  geom_point(aes(col=sex), position = position_dodge(width=0.2), size=3) +
+  geom_point(aes(col=sex), position = position_dodge(width=0.5), size=3) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
-                 position = position_dodge(width=0.2)) +
-  scale_color_manual(values = c(tableau10[4], tableau10[1])) + 
+                 position = position_dodge(width=0.5)) +
+  scale_color_manual("Child sex", values = mypalette) + 
   scale_y_continuous(limits = c(-2.5, -0.25)) +
   xlab("Child age, months") + 
-  ylab("Mean LAZ\n ") +
+  ylab("Mean LAZ") +
   ggtitle("c\n")+
-  theme(plot.title = element_text(hjust=0)) 
+  theme(plot.title = element_text(hjust=0)) +
+  theme(legend.position = c(.88, .83),
+        # legend.title = element_blank(),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(colour = "black"),
+        plot.title = element_text(hjust=0))
+
 
 
 #-------------------------------------
@@ -112,7 +122,7 @@ plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) +
   geom_point(aes(col=sex), position = position_dodge(width=0.6), size=3) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
                  position = position_dodge(width=0.6)) +
-  scale_color_manual(values = c(tableau10[4], tableau10[1])) + 
+  scale_color_manual(values = mypalette) + 
   xlab("Child age, months") + 
   ylab("Mean LAZ\n ") +
   ggtitle("c")+
@@ -133,15 +143,15 @@ velplot_laz = vel %>% filter(country_cohort=="Pooled - All" &
   mutate(sex = factor(sex))
 
 plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
-  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width = 0.2)) +
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width = 0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 alpha=0.5, size = 1, position = position_dodge(width = 0.2)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+                 alpha=0.5, size = 1, position = position_dodge(width = 0.5)) +
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.25,0.1), breaks=seq(-0.25,0.1,0.05), labels=seq(-0.25,0.1,0.05)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
-  ggtitle("b") +
+  ggtitle("b\n") +
   theme(plot.title = element_text(hjust=0))
 
 # define standardized plot names
@@ -172,7 +182,7 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.5,0.25), breaks=seq(-0.5,0.25,0.05), labels=seq(-0.5,0.25,0.05)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
@@ -213,7 +223,7 @@ make_vel_laz_cohort_plot <- function(data){
     geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
     geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                    alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-    scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+    scale_color_manual(values=mypalette)+  
     xlab("Child age, months") +  
     ylab("Difference in length-for-age\nZ-score per month")+
     geom_hline(yintercept = -0) +
@@ -281,8 +291,9 @@ velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
   select(Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
   mutate(sex = as.factor(sex)) %>% 
   gather(`pct_15`, `pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>% 
-  mutate(linecol = ifelse(msmt_type != "Mean", "black", ifelse(sex == "Male", "red", "blue")), 
-         sexcol = ifelse(sex == "Male", "red2", "blue2"))
+  mutate(linecol = ifelse(msmt_type != "Mean", "black", 
+                          ifelse(sex == "Male", "male_color", "female_color")), 
+         sexcol = ifelse(sex == "Male", "male_color2", "female_color2"))
 
 plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3) +
@@ -303,13 +314,13 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
                                    )) +
   
   scale_color_manual("WHO Growth\nVelocity Standards", values = c("black" = "black",
-                                "blue" = tableau10[4],
-                                "red" = tableau10[1], 
-                                "blue" = "blue", 
-                                "red2" = tableau10[1], 
-                                "blue2" = tableau10[4],
-                                "red2" = tableau10[1], 
-                                "blue2" = tableau10[4])) +
+                                "male_color" = mypalette[2],
+                                "female_color" = mypalette[1], 
+                                "male_color" = "male_color", 
+                                "female_color2" = mypalette[1], 
+                                "male_color2" = mypalette[2],
+                                "female_color2" = mypalette[1], 
+                                "male_color2" = mypalette[2])) +
   
   scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
   xlab("Child age, months") +  
@@ -321,7 +332,7 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   
   labs(linetype = c("", "12", "14", "13")) +
   
-  theme(legend.position = c(.9, .8),
+  theme(legend.position = c(.915, .78),
         # legend.title = element_blank(),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"),
@@ -364,7 +375,7 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
   
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(0.3,4.2), breaks=seq(0.25,4.25,0.25), labels=seq(0.25,4.25,0.25)) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month")+
@@ -417,7 +428,7 @@ make_vel_cm_cohort_plot <- function(data){
     
     geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                    alpha=0.5, size = 1) +
-    scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+    scale_color_manual(values=mypalette)+  
     scale_y_continuous(limits=c(0.3,4.2), breaks=seq(0.25,4.25,0.25), labels=seq(0.25,4.25,0.25)) +
     xlab("Child age, months") +  
     ylab("Difference in length (cm) per month")+
@@ -483,16 +494,23 @@ saveRDS(velplot_cm_afr, file=paste0("results/figure-data/figdata-",plot_cm_cohor
 # combined LAZ and length plots
 ############################################################################
 # add margin around plots
-plot_cm_strat = plot_cm_strat + theme(plot.margin = 
-                                        unit(c(t = 0.1, r = 0.1, b = 0.1, l = 1.2), "cm"))
-plot_laz_strat = plot_laz_strat + theme(plot.margin = 
-                                          unit(c(t = 0.5, r = 0.7, b = 0.1, l = 0.2), "cm"))
-plot_mean_laz_strat = plot_mean_laz_strat + theme(plot.margin = 
-                                          unit(c(t = 0.1, r = 0.7, b = 0.1, l = 0.4), "cm"))
+# plot_cm_strat = plot_cm_strat + theme(plot.margin = 
+#                                         unit(c(t = 0.1, r = 0.1, b = 0.1, l = 1.2), "cm"))
+# plot_laz_strat = plot_laz_strat + theme(plot.margin = 
+#                                           unit(c(t = 0.5, r = 0.7, b = 0.1, l = 0.2), "cm"))
+# plot_mean_laz_strat = plot_mean_laz_strat + theme(plot.margin = 
+#                                           unit(c(t = 0.1, r = 0.7, b = 0.1, l = 0.4), "cm"))
 
 
-combined_plot = grid.arrange(plot_cm, plot_laz, plot_mean_laz, 
-                              nrow = 3, heights = c(8, 4, 4))
+# combined_plot = grid.arrange(plot_cm, plot_laz, plot_mean_laz, 
+#                               nrow = 3, heights = c(8, 4, 4))
+# combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
+#                                    nrow = 3, heights = c(10, 4, 4))
+
+combined_plot = grid.arrange(plot_cm, 
+                             arrangeGrob(plot_laz, plot_mean_laz, 
+                             ncol=2, nrow = 1))
+
 combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
                                    nrow = 3, heights = c(10, 4, 4))
 
