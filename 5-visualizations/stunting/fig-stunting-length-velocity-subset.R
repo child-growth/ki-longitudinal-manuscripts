@@ -70,6 +70,8 @@ vel <- vel %>% mutate(pct_15 = ifelse(ycat == 'haz', NA, pct_15))
 vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
 vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 
+# define color palette
+mypalette = c("#D87A16", "#0EA76A")
 
 #-------------------------------------
 # LAZ plot
@@ -83,7 +85,7 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.25,0.1), breaks=seq(-0.25,0.1,0.05), labels=seq(-0.25,0.1,0.05)) +
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
@@ -117,7 +119,7 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.5,0.35), breaks=seq(-0.5,0.35,0.05), labels=seq(-0.5,0.35,0.05)) +
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
@@ -151,7 +153,7 @@ plot_laz_cohort_asia <- ggplot(velplot_laz_asia, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
   geom_hline(yintercept = -0) +
@@ -185,7 +187,7 @@ plot_laz_cohort_latamer <- ggplot(velplot_laz_latamer, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
   geom_hline(yintercept = -0) +
@@ -217,7 +219,7 @@ plot_laz_cohort_eur <- ggplot(velplot_laz_eur, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
   geom_hline(yintercept = -0) +
@@ -249,7 +251,7 @@ plot_laz_cohort_afr <- ggplot(velplot_laz_afr, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
   geom_hline(yintercept = -0) +
@@ -293,7 +295,7 @@ plot_cm <- ggplot(velplot_cm, aes(y=Mean,x=strata))+
   
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
   xlab("Age in months") +  
   ylab("Length (cm)") +
@@ -336,7 +338,7 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
   
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(0.3,4.3), breaks=seq(0.25,4.3,0.25), labels=seq(0.25,4.3,0.25)) +
   xlab("Age in months") +  
   ylab("Length (cm)") +
