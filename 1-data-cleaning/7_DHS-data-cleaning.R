@@ -103,7 +103,7 @@ d <- d %>%
     country == "ZW7" ~ "Zimbabwe"
   ))
 d$country <- NULL
-names(d)[names(dt) == "cntry_name"] <- "country"
+names(d)[names(d) == "cntry_name"] <- "country"
 
 
 # check for duplicates
