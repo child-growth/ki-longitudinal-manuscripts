@@ -91,7 +91,7 @@ plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
                  position = position_dodge(width=0.5)) +
   scale_color_manual("Child sex", values = mypalette) + 
-  # scale_y_continuous(limits = c(-2.5, -0.25)) +
+  scale_y_continuous(limits = c(-2.5, -0.25)) +
   xlab("Child age, months") + 
   ylab("Mean length-for-age Z-score") +
   ggtitle("c\n")+
@@ -102,34 +102,6 @@ plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) +
         legend.box.background = element_rect(colour = "black"),
         plot.title = element_text(hjust=0))
 
-
-
-#-------------------------------------
-# mean LAZ plot stratified by region
-#-------------------------------------
-meanlaz_strat = meanlaz %>% 
-  filter(cohort == "pooled") %>%
-  filter(region !="Europe") %>%
-  mutate(agecat = factor(agecat, 
-                         levels = c("0-3", "3-6", "6-9",
-                                    "9-12", "12-15", "15-18",
-                                    "18-21", "21-24")),
-         region = ifelse(region == "Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
-
-plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) + 
-  geom_point(aes(col=sex), position = position_dodge(width=0.6), size=3) +
-  geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
-                 position = position_dodge(width=0.6)) +
-  scale_color_manual(values = mypalette) + 
-  xlab("Child age, months") + 
-  ylab("Mean LAZ\n ") +
-  ggtitle("c")+
-  theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
-        strip.text.x = element_text(size=20, face="bold"),
-        axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20)) +
-  facet_grid(~region)
 
 ####################################################################################
 # LAZ velocity plots
@@ -146,7 +118,7 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width = 0.5)) +
   scale_color_manual(values=mypalette)+  
-  # scale_y_continuous(limits=c(-0.25,0.1), breaks=seq(-0.25,0.1,0.05), labels=seq(-0.25,0.1,0.05)) +
+  scale_y_continuous(limits=c(-0.25,0.25), breaks=seq(-0.25,0.25,0.05), labels=seq(-0.25,0.25,0.05)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
@@ -167,117 +139,6 @@ plot_laz_name = create_name(
 # save plot and underlying data
 ggsave(plot_laz, file=paste0("figures/stunting/fig-",plot_laz_name,".png"), width=12, height=6)
 saveRDS(velplot_laz, file=paste0("results/figure-data/figdata-",plot_laz_name,".RDS"))
-
-
-#-------------------------------------
-# LAZ plot - stratified by region
-#-------------------------------------
-velplot_laz_strat = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
-  mutate(sex = factor(sex),
-         region = ifelse(region == "Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
-
-plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=strata))+
-  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
-  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=mypalette)+  
-  # scale_y_continuous(limits=c(-0.5,0.25), breaks=seq(-0.5,0.25,0.05), labels=seq(-0.5,0.25,0.05)) +
-  xlab("Child age, months") +  
-  ylab("Difference in length-for-age\nZ-score per month")+
-  geom_hline(yintercept = -0) +
-  facet_grid( ~  region) +
-  ggtitle("b") +
-  theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
-        strip.text.x = element_text(size=20, face="bold"),
-        axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20))
-
-
-# define standardized plot names
-plot_laz_strat_name = create_name(
-  outcome = "laz",
-  cutoff = 2,
-  measure = "laz velocity",
-  population = "region-stratified",
-  location = "",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
-# save plot and underlying data
-ggsave(plot_laz_strat, file=paste0("figures/stunting/fig-",plot_laz_strat_name,".png"), width=12, height=6)
-saveRDS(velplot_laz_strat, file=paste0("results/figure-data/figdata-",plot_laz_strat_name,".RDS"))
-
-
-#-------------------------------------
-# LAZ plot - cohort stratified
-#-------------------------------------
-velplot_laz_asia = velplot_laz_strat %>% filter(region=="South Asia")
-velplot_laz_latamer = velplot_laz_strat %>% filter(region=="Latin America")
-velplot_laz_afr = velplot_laz_strat %>% filter(region=="Africa")
-
-make_vel_laz_cohort_plot <- function(data){
-  plot = ggplot(data, aes(y=Mean,x=strata))+
-    geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
-    geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                   alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-    scale_color_manual(values=mypalette)+  
-    xlab("Child age, months") +  
-    ylab("Difference in length-for-age\nZ-score per month")+
-    geom_hline(yintercept = -0) +
-    facet_wrap( ~  country_cohort) +
-    ggtitle("B) Monthly change in LAZ") +
-    theme(plot.title = element_text(hjust=0))
-  return(plot)
-}
-
-plot_laz_cohort_asia <- make_vel_laz_cohort_plot(velplot_laz_asia)
-plot_laz_cohort_afr <- make_vel_laz_cohort_plot(velplot_laz_afr)
-plot_laz_cohort_latamer <- make_vel_laz_cohort_plot(velplot_laz_latamer)
-
-# define standardized plot names
-plot_laz_cohort_asia_name = create_name(
-  outcome = "laz",
-  cutoff = 2,
-  measure = "laz velocity",
-  population = "cohort-stratified",
-  location = "South Asia",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
-plot_laz_cohort_latamer_name = create_name(
-  outcome = "laz",
-  cutoff = 2,
-  measure = "laz velocity",
-  population = "cohort-stratified",
-  location = "Latin America",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
-plot_laz_cohort_afr_name = create_name(
-  outcome = "laz",
-  cutoff = 2,
-  measure = "laz velocity",
-  population = "cohort-stratified",
-  location = "Africa",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
-# save plot and underlying data
-ggsave(plot_laz_cohort_asia, file=paste0("figures/stunting/fig-",plot_laz_cohort_asia_name,".png"), 
-       width=18, height=10)
-ggsave(plot_laz_cohort_latamer, file=paste0("figures/stunting/fig-",plot_laz_cohort_latamer_name,".png"), 
-       width=18, height=10)
-ggsave(plot_laz_cohort_afr, file=paste0("figures/stunting/fig-",plot_laz_cohort_afr_name,".png"), 
-       width=18, height=10)
-
-saveRDS(velplot_laz_asia, file=paste0("results/figure-data/figdata-",plot_laz_cohort_asia_name,".RDS"))
-saveRDS(velplot_laz_latamer, file=paste0("results/figure-data/figdata-",plot_laz_cohort_latamer_name,".RDS"))
-saveRDS(velplot_laz_afr, file=paste0("results/figure-data/figdata-",plot_laz_cohort_afr_name,".RDS"))
 
 ####################################################################################
 # length velocity plots
@@ -321,7 +182,7 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
                                                                   "female_color2" = mypalette[1], 
                                                                   "male_color2" = mypalette[2])) +
   
-  # scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
+  scale_y_continuous(limits=c(0,4), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month\n")+
   facet_wrap( ~ sex) +
@@ -354,164 +215,12 @@ ggsave(plot_cm, file=paste0("figures/stunting/fig-",plot_cm_name,".png"),
        width=10, height=8)
 saveRDS(velplot_cm, file=paste0("results/figure-data/figdata-",plot_cm_name,".RDS"))
 
-#-------------------------------------
-# absolute length plot - stratified by region
-#-------------------------------------
-velplot_cm_strat = vel %>% 
-  filter(ycat == "Length velocity (cm per month)") %>%
-  filter(pooled==1) %>%
-  select(region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
-  mutate(sex = as.factor(sex),
-         region = ifelse(region == "Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
-
-plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
-  geom_point(aes(color=sex), size = 3) +
-  geom_line(aes(y=Mean, group=sex, col=sex)) +
-  geom_line(aes(y=pct_50, group=sex)) +
-  geom_line(aes(y=pct_25, group=sex), linetype="dashed") +
-  geom_line(aes(y=pct_15, group=sex), linetype="dotted") +
-  
-  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 alpha=0.5, size = 1) +
-  scale_color_manual(values=mypalette)+  
-  # scale_y_continuous(limits=c(0.3,4.2), breaks=seq(0.25,4.25,0.25), labels=seq(0.25,4.25,0.25)) +
-  xlab("Child age, months") +  
-  ylab("Difference in length (cm) per month")+
-  facet_grid( sex~ region) +
-  ggtitle("a") +
-  theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
-        strip.text.x = element_text(size=20, face="bold"),
-        strip.text.y = element_text(size=20),
-        axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20))
-
-# define standardized plot names
-plot_cm_strat_name = create_name(
-  outcome = "laz",
-  cutoff = 2,
-  measure = "length velocity",
-  population = "region-stratified",
-  location = "",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
-# save plot and underlying data
-ggsave(plot_cm_strat, file=paste0("figures/stunting/fig-",plot_cm_strat_name,".png"), 
-       width=10, height=8)
-saveRDS(velplot_cm_strat, file=paste0("results/figure-data/figdata-",plot_cm_strat_name,".RDS"))
-
-
-#-------------------------------------
-# absolute length plot - stratified by cohort
-#-------------------------------------
-velplot_cm_strat_cohort = vel %>% 
-  filter(ycat == "Length velocity (cm per month)") %>%
-  select(country_cohort, region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
-  mutate(sex = as.factor(sex),
-         region = ifelse(region == "Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
-
-velplot_cm_asia = velplot_cm_strat_cohort %>% filter(region=="South Asia")
-velplot_cm_latamer = velplot_cm_strat_cohort %>% filter(region=="Latin America")
-velplot_cm_afr = velplot_cm_strat_cohort %>% filter(region=="Africa")
-
-make_vel_cm_cohort_plot <- function(data){
-  plot <- ggplot(data, aes(y=Mean,x=strata))+
-    geom_point(aes(color=sex), size = 3) +
-    geom_line(aes(y=Mean, group=sex, col=sex)) +
-    geom_line(aes(y=pct_50, group=sex)) +
-    geom_line(aes(y=pct_25, group=sex), linetype="dashed") +
-    geom_line(aes(y=pct_15, group=sex), linetype="dotted") +
-    
-    geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                   alpha=0.5, size = 1) +
-    scale_color_manual(values=mypalette)+  
-    # scale_y_continuous(limits=c(0.3,4.2), breaks=seq(0.25,4.25,0.25), labels=seq(0.25,4.25,0.25)) +
-    xlab("Child age, months") +  
-    ylab("Difference in length (cm) per month")+
-    facet_wrap(sex ~ country_cohort) +
-    ggtitle("a") +
-    theme(plot.title = element_text(hjust=0, size = 16, face = "bold"),
-          strip.text.x = element_text(size=16),
-          strip.text.y = element_text(size=16),
-          axis.title.x = element_text(size=16),
-          axis.title.y = element_text(size=16))
-  return(plot)
-}
-
-plot_cm_cohort_asia <- make_vel_cm_cohort_plot(velplot_cm_asia)
-plot_cm_cohort_afr <- make_vel_cm_cohort_plot(velplot_cm_afr)
-plot_cm_cohort_latamer <- make_vel_cm_cohort_plot(velplot_cm_latamer)
-
-# define standardized plot names
-plot_cm_cohort_asia_name = create_name(
-  outcome = "length",
-  cutoff = 2,
-  measure = "length velocity",
-  population = "cohort-stratified",
-  location = "South Asia",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
-plot_cm_cohort_latamer_name = create_name(
-  outcome = "length",
-  cutoff = 2,
-  measure = "length velocity",
-  population = "cohort-stratified",
-  location = "Latin America",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
-plot_cm_cohort_afr_name = create_name(
-  outcome = "length",
-  cutoff = 2,
-  measure = "length velocity",
-  population = "cohort-stratified",
-  location = "Africa",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
-# save plot and underlying data
-ggsave(plot_cm_cohort_asia, file=paste0("figures/stunting/fig-",plot_cm_cohort_asia_name,".png"), 
-       width=18, height=18)
-ggsave(plot_cm_cohort_latamer, file=paste0("figures/stunting/fig-",plot_cm_cohort_latamer_name,".png"), 
-       width=18, height=18)
-ggsave(plot_cm_cohort_afr, file=paste0("figures/stunting/fig-",plot_cm_cohort_afr_name,".png"), 
-       width=18, height=18)
-
-saveRDS(velplot_cm_asia, file=paste0("results/figure-data/figdata-",plot_cm_cohort_asia_name,".RDS"))
-saveRDS(velplot_cm_latamer, file=paste0("results/figure-data/figdata-",plot_cm_cohort_latamer_name,".RDS"))
-saveRDS(velplot_cm_afr, file=paste0("results/figure-data/figdata-",plot_cm_cohort_afr_name,".RDS"))
-
-
 ############################################################################
 # combined LAZ and length plots
 ############################################################################
-# add margin around plots
-# plot_cm_strat = plot_cm_strat + theme(plot.margin = 
-#                                         unit(c(t = 0.1, r = 0.1, b = 0.1, l = 1.2), "cm"))
-# plot_laz_strat = plot_laz_strat + theme(plot.margin = 
-#                                           unit(c(t = 0.5, r = 0.7, b = 0.1, l = 0.2), "cm"))
-# plot_mean_laz_strat = plot_mean_laz_strat + theme(plot.margin = 
-#                                           unit(c(t = 0.1, r = 0.7, b = 0.1, l = 0.4), "cm"))
-
-
-# combined_plot = grid.arrange(plot_cm, plot_laz, plot_mean_laz, 
-#                               nrow = 3, heights = c(8, 4, 4))
-# combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
-#                                    nrow = 3, heights = c(10, 4, 4))
-
 combined_plot = grid.arrange(plot_cm, 
                              arrangeGrob(plot_laz, plot_mean_laz, 
                                          ncol=2, nrow = 1))
-
-combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
-                                   nrow = 3, heights = c(10, 4, 4))
 
 #-------------------------------------
 # define standardized plot names
@@ -526,24 +235,11 @@ combined_plot_name = create_name(
   analysis = "monthly cohorts measured each month from 0 to 24"
 )
 
-combined_plot_strat_name = create_name(
-  outcome = "stunting",
-  cutoff = 2,
-  measure = "growth velocity",
-  population = "region-stratified",
-  location = "",
-  age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
-)
-
 #-------------------------------------
 # save overall plots together
 #-------------------------------------
 ggsave(combined_plot, file=paste0("figures/stunting/fig-", combined_plot_name,
                                   ".png"), width=10, height=8)
-ggsave(combined_plot_strat, file=paste0("figures/stunting/fig-",combined_plot_strat_name,
-                                        ".png"), width=16, height=18)
-
 #-------------------------------------
 # save input data 
 #-------------------------------------
@@ -554,13 +250,4 @@ saveRDS(
     meanlaz_overall = meanlaz_overall
   ),
   file = paste0("results/figure-data/figdata-", combined_plot_name, ".RDS")
-)
-
-saveRDS(
-  list(
-    velplot_cm_strat = velplot_cm_strat,
-    velplot_laz_strat = velplot_laz_strat,
-    meanlaz_strat = meanlaz_strat
-  ),
-  file = paste0("results/figure-data/figdata-", combined_plot_strat_name, ".RDS")
 )
