@@ -620,6 +620,8 @@ create_name = function(outcome, cutoff, measure, population,
     analysis_s = case_when(
       analysis == "primary" ~ "primary",
       analysis == "seasonality" ~ "season",
+      analysis == "seasonality by month" ~ "seasonbymonth",
+      analysis == "seasonality by age" ~ "seasonbyage",
       analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
       analysis == "monthly cohorts" ~ "monthly",
       analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff",
