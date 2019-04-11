@@ -84,8 +84,8 @@ ggsave(p2, file=paste0("figures/wasting/fig-",p2_name,".png"), width=8, height=5
 
 
 
-
-
+#mlen <- 30.417
+#d$birthcat <- cut(d$birthday+1, breaks=c(0, mlen*6, mlen*10, 365), labels=c("Born Jan-May","Born June-September","Born Oct-Dec"))
 d$birthcat <- cut(d$birthday+1, breaks=c(0, 91, 182, 273, 365), labels=c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec"))
 d <- d %>% group_by(birthcat) %>% mutate(meanZ=mean(whz), prev=mean(whz < -2))
 
@@ -97,7 +97,8 @@ d$studyseason <- factor(interaction(d$studyyear, d$monsoon))
 #Annotation dataframe
 ann_text <- data.frame(studyday = c(1,3,5)*182, whz = -1.2, fit = -1.2, lab = c("Year 1","Year 2", "Year 3"),
                        birthcat = factor("Born Oct-Dec",
-                                         levels = c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec")))
+                                         #levels = c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec")))
+                                         levels = c("Born Jan-May","Born June-September","Born Oct-Dec")))
 
 # Note: need to calculate WLZ change over seasons 
 # (Summarize in boxplots)
