@@ -115,8 +115,11 @@ calc.monthly.agecat <- function(d){
   return(d)
 }
 
-calc.ci.agecat <- function(d, range=3){
-  if(range==3){
+calc.ci.agecat <- function(d, range=3, birth="yes"){
+  # ----------------------------------------------
+  # first age interval includes birth
+  # ----------------------------------------------
+  if(range==3 & birth=="yes"){
     d = d %>%
       mutate(agecat=ifelse(agedays<=3*30.4167,"0-3 months",
                            ifelse(agedays>3*30.4167 & agedays<=6*30.4167,"3-6 months",
@@ -128,7 +131,7 @@ calc.ci.agecat <- function(d, range=3){
                                                                      ifelse(agedays>21*30.4167& agedays<=24*30.4167,"21-24 months",""))))))))) %>%
       mutate(agecat=factor(agecat,levels=c("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")))
   }
-  if(range==6){
+  if(range==6 & birth=="yes"){
     d = d %>%
       mutate(agecat=ifelse(agedays<=6*30.4167,"0-6 months",
                            ifelse(agedays>6*30.4167 & agedays<=12*30.4167,"6-12 months",
@@ -136,6 +139,31 @@ calc.ci.agecat <- function(d, range=3){
                                          ifelse(agedays>18*30.4167& agedays<=24*30.4167,"18-24 months",""))))) %>%
       mutate(agecat=factor(agecat,levels=c("0-6 months","6-12 months","12-18 months","18-24 months")))
   }
+  
+  # ----------------------------------------------
+  # first age interval excludes birth
+  # ----------------------------------------------
+  if(range==3 & birth=="no"){
+    d = d %>%
+      mutate(agecat=ifelse(agedays>1 & agedays<=3*30.4167,"0-3 months",
+                           ifelse(agedays>3*30.4167 & agedays<=6*30.4167,"3-6 months",
+                                  ifelse(agedays>6*30.4167 & agedays<=9*30.4167,"6-9 months",
+                                         ifelse(agedays>9*30.4167 & agedays<=12*30.4167,"9-12 months",
+                                                ifelse(agedays>12*30.4167 & agedays<=15*30.4167,"12-15 months",
+                                                       ifelse(agedays>15*30.4167 & agedays<=18*30.4167,"15-18 months",
+                                                              ifelse(agedays>18*30.4167 & agedays<=21*30.4167,"18-21 months",
+                                                                     ifelse(agedays>21*30.4167& agedays<=24*30.4167,"21-24 months",""))))))))) %>%
+      mutate(agecat=factor(agecat,levels=c("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")))
+  }
+  if(range==6 & birth=="no"){
+    d = d %>%
+      mutate(agecat=ifelse(agedays>1 & agedays<=6*30.4167,"0-6 months",
+                           ifelse(agedays>6*30.4167 & agedays<=12*30.4167,"6-12 months",
+                                  ifelse(agedays>12*30.4167 & agedays<=18*30.4167,"12-18 months",
+                                         ifelse(agedays>18*30.4167& agedays<=24*30.4167,"18-24 months",""))))) %>%
+      mutate(agecat=factor(agecat,levels=c("0-6 months","6-12 months","12-18 months","18-24 months")))
+  }
+  
   return(d)
 }
 
@@ -620,6 +648,8 @@ create_name = function(outcome, cutoff, measure, population,
     analysis_s = case_when(
       analysis == "primary" ~ "primary",
       analysis == "seasonality" ~ "season",
+      analysis == "seasonality by month" ~ "seasonbymonth",
+      analysis == "seasonality by age" ~ "seasonbyage",
       analysis == "monthly cohorts measured each month from 0 to 24" ~ "month24",
       analysis == "monthly cohorts" ~ "monthly",
       analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff",

@@ -170,7 +170,7 @@ whz.res$childseason_label <- paste0(whz.res$childseason, ", ", whz.res$age_label
 
 
 
-p <- ggplot(whz.res,aes(y=est,x=childseason_label)) +
+p <- ggplot(whz.res,aes(y=est,x=childseason)) +
   geom_errorbar(aes(color=birthcat, ymin=lb, ymax=ub), width = 0) +
   geom_point(aes(fill=birthcat, color=birthcat), size = 2) +
   geom_hline(yintercept = 0, linetype="dashed") +
@@ -179,9 +179,7 @@ p <- ggplot(whz.res,aes(y=est,x=childseason_label)) +
   scale_color_manual(values=tableau10[c(7:10)]) +
   xlab("Season change")+
   ylab("Mean WLZ change") +
-  # add space to the left and right of points on x axis
-  # to accommodate point estimate labels
-  #scale_x_discrete(expand = expand_scale(add = 1)) +
+  #scale_x_discrete(sec.axis = dup_axis(trans = ~., name = waiver(), breaks = waiver())) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
   theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
   theme(axis.text.x = element_text(size = 12, angle=45, hjust = 0.75, vjust=0.75)) +

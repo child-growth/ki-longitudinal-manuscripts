@@ -9,9 +9,10 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
+# reloading because some overlap with stunting
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
-source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
-source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
 load("U:/ucb-superlearner/data/stunting_data.RData")
 
@@ -20,8 +21,10 @@ d <- d %>% subset(., select = -c(tr))
 
 dprev <- calc.prev.agecat(d)
 dmon <- calc.monthly.agecat(d)
-d3 <- calc.ci.agecat(d, range = 3)
-d6 <- calc.ci.agecat(d, range = 6)
+d3 <- calc.ci.agecat(d, range = 3, birth="yes")
+d6 <- calc.ci.agecat(d, range = 6, birth="yes")
+d3_nobirth <- calc.ci.agecat(d, range = 3, birth="no")
+d6_nobirth <- calc.ci.agecat(d, range = 6, birth="no")
 
 agelst3 = list(
   "0-3 months",
@@ -179,6 +182,23 @@ ci_3 <- bind_rows(
 )
 
 #----------------------------------------
+# Incidence proportion 3 month intervals
+# exclude birth
+#----------------------------------------
+ci.data3.nobirth <- summary.stunt.incprop(d3_nobirth, agelist = agelst3, severe.stunted = F)
+ci.region3.nobirth <- d3_nobirth  %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3)$ci.res)
+ci.cohort3.nobirth <-
+  ci.data3.nobirth$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
+
+
+ci_3.nobirth <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data3.nobirth$ci.res),
+  data.frame(cohort = "pooled", ci.region3.nobirth),
+  ci.cohort3.nobirth
+) 
+
+#----------------------------------------
 # Incidence proportion 6 month intervals
 #----------------------------------------
 ci.data6 <- summary.stunt.incprop(d6, agelist = agelst6, severe.stunted = F)
@@ -252,6 +272,26 @@ cuminc3 <- bind_rows(
   data.frame(cohort = "pooled", ci.region3),
   ci.cohort3
 )
+
+
+#----------------------------------------
+# Cumulative Incidence  - 3 month intervals
+# exclude in birth interval
+#----------------------------------------
+ci.data3.nobirth <- summary.ci(d3_nobirth, agelist = agelst3)
+ci.region3.nobirth <- d3_nobirth  %>% group_by(region) %>% do(summary.ci(., agelist = agelst3)$ci.res)
+ci.cohort3.nobirth <-
+  ci.data3.nobirth$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
+
+
+cuminc3.nobirth <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data3.nobirth$ci.res),
+  data.frame(cohort = "pooled", ci.region3.nobirth),
+  ci.cohort3.nobirth
+)
+
+
 
 
 #----------------------------------------
@@ -384,10 +424,12 @@ shiny_desc_data <- bind_rows(
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Mean LAZ",  haz),
   data.frame(disease = "Stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ",  monthly.haz),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc3),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="no", severe="no", measure= "Cumulative incidence", cuminc3.nobirth),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc3),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci_3),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="no", severe="no", measure= "Incidence_proportion", ci_3.nobirth),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci_6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci3),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci6)
