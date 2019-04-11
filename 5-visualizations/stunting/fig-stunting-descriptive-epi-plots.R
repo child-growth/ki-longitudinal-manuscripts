@@ -119,7 +119,6 @@ prev_plot <- ki_desc_plot(d,
                    h2=72)
 prev_plot
 
-
 # define standardized plot names
 prev_plot_name = create_name(
   outcome = "stunting",
@@ -153,6 +152,20 @@ prev_plot <- ki_desc_plot(d,
                           h2=72)
 prev_plot
 
+
+# get N's for figure caption
+prev_n = d %>%
+  filter(disease == "Stunting" & 
+           measure == "Prevalence" & 
+           region!="Overall" &
+           age_range == "3 months" &
+           cohort == "pooled" &
+           severe == "no") %>% 
+  group_by(region) %>% 
+  summarise(min_study = min(nstudies, na.rm=TRUE), 
+            max_study = max(nstudies, na.rm=TRUE),
+            min_n = min(nmeas, na.rm=TRUE), 
+            max_n = max(nmeas, na.rm=TRUE))
 
 # define standardized plot names
 prev_plot_name = create_name(
@@ -223,6 +236,20 @@ ci_inc_plot <- ki_combo_plot(d,
 ci_inc_plot
 
 
+# get N's for figure caption
+inc_n = d %>%
+  filter(disease == "Stunting" & 
+           (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
+           region!="Overall" &
+           age_range == "3 months" &
+           cohort == "pooled" &
+           severe == "no") %>% 
+  group_by(region) %>% 
+  summarise(min_study = min(nstudies, na.rm=TRUE), 
+            max_study = max(nstudies, na.rm=TRUE),
+            min_n = min(nmeas, na.rm=TRUE), 
+            max_n = max(nmeas, na.rm=TRUE))
+
 # define standardized plot names
 ci_inc_plot_name = create_name(
   outcome = "stunting",
@@ -239,6 +266,60 @@ ggsave(ci_inc_plot, file=paste0("figures/stunting/fig-",ci_inc_plot_name,".png")
 
 saveRDS(d, file=paste0("results/figure-data/figdata-",ci_inc_plot_name,".RDS"))
 
+
+
+#-------------------------------------------------------------------------------------------
+# Stunting cumulative incidence + incidence proportion 
+# excluding birth
+#-------------------------------------------------------------------------------------------
+ci_inc_plot_nobirth <- ki_combo_plot(d,
+                             Disease="Stunting",
+                             Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                             Birth="no", 
+                             Severe="no", 
+                             Age_range="3 months", 
+                             Cohort="pooled",
+                             xlabel="Child age, months",
+                             h1=85,
+                             h2=90
+
+                             )
+
+geom_text_adjust_vec = c(c(2, rep(0, 7)), c(-2, rep(0, 7)), 
+                         c(2, rep(0, 15)), 
+                         c(2, rep(0, 15)), 
+                         c(2, rep(0, 15)))
+ci_inc_plot_nobirth
+
+# get N's for figure caption
+inc_n = d %>%
+  filter(disease == "Stunting" & 
+           (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
+           region!="Overall" &
+           age_range == "3 months" &
+           cohort == "pooled" &
+           severe == "no") %>% 
+  group_by(region) %>% 
+  summarise(min_study = min(nstudies, na.rm=TRUE), 
+            max_study = max(nstudies, na.rm=TRUE),
+            min_n = min(nmeas, na.rm=TRUE), 
+            max_n = max(nmeas, na.rm=TRUE))
+
+# define standardized plot names
+ci_inc_plot_nobirth_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "incidence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "sensitivity analysis excluding birth"
+)
+
+# save plot and underlying data
+ggsave(ci_inc_plot_nobirth, file=paste0("figures/stunting/fig-",ci_inc_plot_nobirth_name,".png"), width=14, height=3)
+
+saveRDS(d, file=paste0("results/figure-data/figdata-",ci_inc_plot_nobirth_name,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
