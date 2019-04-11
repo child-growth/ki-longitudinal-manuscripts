@@ -72,7 +72,6 @@ vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 
 # define color palette
 mypalette = c("#D87A16", "#0EA76A")
-tpalette = mypalette
 
 ####################################################################################
 # mean LAZ plots
@@ -94,7 +93,7 @@ plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) +
   scale_color_manual("Child sex", values = mypalette) + 
   scale_y_continuous(limits = c(-2.5, -0.25)) +
   xlab("Child age, months") + 
-  ylab("Mean LAZ") +
+  ylab("Mean length-for-age Z-score") +
   ggtitle("c\n")+
   theme(plot.title = element_text(hjust=0)) +
   theme(legend.position = c(.88, .83),
