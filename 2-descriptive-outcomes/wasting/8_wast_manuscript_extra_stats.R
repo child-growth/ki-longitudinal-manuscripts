@@ -17,9 +17,7 @@ d_noRec <- d_noRec %>% filter(measurefreq == "monthly")
 d_noBW_noRec <- d_noBW_noRec %>% filter(measurefreq == "monthly")
 
 
-
 #Number of episodes in persistently wasted kids
-
 df <- d %>% filter(agedays < 24 * 30.4167) %>% 
   group_by(studyid, country, subjid) %>% 
   mutate(pers_wast = 1*(mean(whz < (-2)) >= 0.5)) %>%
