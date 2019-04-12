@@ -413,9 +413,9 @@ stpgrid_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(filename=paste0("figures/stunting/fig-",stpgrid_name,".pdf"),
+ggsave(filename=paste0(fig_dir, "fig-",stpgrid_name,".pdf"),
        plot = stpgrid,device='pdf',width=12,height=9)
 saveRDS(list(dd = dd,
              dp = dp), 
-        file=paste0("results/figure-data/figdata-",stpgrid_name,".RDS"))
+        file=paste0(figdata_dir, "figdata-",stpgrid_name,".RDS"))
 

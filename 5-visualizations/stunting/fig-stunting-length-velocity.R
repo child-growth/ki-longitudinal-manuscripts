@@ -165,8 +165,8 @@ plot_laz_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz, file=paste0("figures/stunting/fig-",plot_laz_name,".png"), width=12, height=6)
-saveRDS(velplot_laz, file=paste0("results/figure-data/figdata-",plot_laz_name,".RDS"))
+ggsave(plot_laz, file=paste0(fig_dir, "fig-",plot_laz_name,".png"), width=12, height=6)
+saveRDS(velplot_laz, file=paste0(figdata_dir, "figdata-",plot_laz_name,".RDS"))
 
 
 #-------------------------------------
@@ -206,8 +206,8 @@ plot_laz_strat_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz_strat, file=paste0("figures/stunting/fig-",plot_laz_strat_name,".png"), width=12, height=6)
-saveRDS(velplot_laz_strat, file=paste0("results/figure-data/figdata-",plot_laz_strat_name,".RDS"))
+ggsave(plot_laz_strat, file=paste0(fig_dir, "fig-",plot_laz_strat_name,".png"), width=12, height=6)
+saveRDS(velplot_laz_strat, file=paste0(figdata_dir, "figdata-",plot_laz_strat_name,".RDS"))
 
 
 #-------------------------------------
@@ -268,16 +268,16 @@ plot_laz_cohort_afr_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz_cohort_asia, file=paste0("figures/stunting/fig-",plot_laz_cohort_asia_name,".png"), 
+ggsave(plot_laz_cohort_asia, file=paste0(fig_dir, "fig-",plot_laz_cohort_asia_name,".png"), 
        width=18, height=10)
-ggsave(plot_laz_cohort_latamer, file=paste0("figures/stunting/fig-",plot_laz_cohort_latamer_name,".png"), 
+ggsave(plot_laz_cohort_latamer, file=paste0(fig_dir, "fig-",plot_laz_cohort_latamer_name,".png"), 
        width=18, height=10)
-ggsave(plot_laz_cohort_afr, file=paste0("figures/stunting/fig-",plot_laz_cohort_afr_name,".png"), 
+ggsave(plot_laz_cohort_afr, file=paste0(fig_dir, "fig-",plot_laz_cohort_afr_name,".png"), 
        width=18, height=10)
 
-saveRDS(velplot_laz_asia, file=paste0("results/figure-data/figdata-",plot_laz_cohort_asia_name,".RDS"))
-saveRDS(velplot_laz_latamer, file=paste0("results/figure-data/figdata-",plot_laz_cohort_latamer_name,".RDS"))
-saveRDS(velplot_laz_afr, file=paste0("results/figure-data/figdata-",plot_laz_cohort_afr_name,".RDS"))
+saveRDS(velplot_laz_asia, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_asia_name,".RDS"))
+saveRDS(velplot_laz_latamer, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_latamer_name,".RDS"))
+saveRDS(velplot_laz_afr, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_afr_name,".RDS"))
 
 ####################################################################################
 # length velocity plots
@@ -350,9 +350,9 @@ plot_cm_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_cm, file=paste0("figures/stunting/fig-",plot_cm_name,".png"), 
+ggsave(plot_cm, file=paste0(fig_dir, "fig-",plot_cm_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm, file=paste0("results/figure-data/figdata-",plot_cm_name,".RDS"))
+saveRDS(velplot_cm, file=paste0(figdata_dir, "figdata-",plot_cm_name,".RDS"))
 
 #-------------------------------------
 # absolute length plot - stratified by region
@@ -398,9 +398,9 @@ plot_cm_strat_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_cm_strat, file=paste0("figures/stunting/fig-",plot_cm_strat_name,".png"), 
+ggsave(plot_cm_strat, file=paste0(fig_dir, "fig-",plot_cm_strat_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm_strat, file=paste0("results/figure-data/figdata-",plot_cm_strat_name,".RDS"))
+saveRDS(velplot_cm_strat, file=paste0(figdata_dir, "figdata-",plot_cm_strat_name,".RDS"))
 
 
 #-------------------------------------
@@ -477,16 +477,16 @@ plot_cm_cohort_afr_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_cm_cohort_asia, file=paste0("figures/stunting/fig-",plot_cm_cohort_asia_name,".png"), 
+ggsave(plot_cm_cohort_asia, file=paste0(fig_dir, "fig-",plot_cm_cohort_asia_name,".png"), 
        width=18, height=18)
-ggsave(plot_cm_cohort_latamer, file=paste0("figures/stunting/fig-",plot_cm_cohort_latamer_name,".png"), 
+ggsave(plot_cm_cohort_latamer, file=paste0(fig_dir, "fig-",plot_cm_cohort_latamer_name,".png"), 
        width=18, height=18)
-ggsave(plot_cm_cohort_afr, file=paste0("figures/stunting/fig-",plot_cm_cohort_afr_name,".png"), 
+ggsave(plot_cm_cohort_afr, file=paste0(fig_dir, "fig-",plot_cm_cohort_afr_name,".png"), 
        width=18, height=18)
 
-saveRDS(velplot_cm_asia, file=paste0("results/figure-data/figdata-",plot_cm_cohort_asia_name,".RDS"))
-saveRDS(velplot_cm_latamer, file=paste0("results/figure-data/figdata-",plot_cm_cohort_latamer_name,".RDS"))
-saveRDS(velplot_cm_afr, file=paste0("results/figure-data/figdata-",plot_cm_cohort_afr_name,".RDS"))
+saveRDS(velplot_cm_asia, file=paste0(figdata_dir, "figdata-",plot_cm_cohort_asia_name,".RDS"))
+saveRDS(velplot_cm_latamer, file=paste0(figdata_dir, "figdata-",plot_cm_cohort_latamer_name,".RDS"))
+saveRDS(velplot_cm_afr, file=paste0(figdata_dir, "figdata-",plot_cm_cohort_afr_name,".RDS"))
 
 
 ############################################################################
@@ -539,9 +539,9 @@ combined_plot_strat_name = create_name(
 #-------------------------------------
 # save overall plots together
 #-------------------------------------
-ggsave(combined_plot, file=paste0("figures/stunting/fig-", combined_plot_name,
+ggsave(combined_plot, file=paste0(fig_dir, "fig-", combined_plot_name,
         ".png"), width=10, height=8)
-ggsave(combined_plot_strat, file=paste0("figures/stunting/fig-",combined_plot_strat_name,
+ggsave(combined_plot_strat, file=paste0(fig_dir, "fig-",combined_plot_strat_name,
        ".png"), width=16, height=18)
 
 #-------------------------------------
@@ -553,7 +553,7 @@ saveRDS(
     velplot_laz = velplot_laz,
     meanlaz_overall = meanlaz_overall
   ),
-  file = paste0("results/figure-data/figdata-", combined_plot_name, ".RDS")
+  file = paste0(figdata_dir, "figdata-", combined_plot_name, ".RDS")
 )
 
 saveRDS(
@@ -562,5 +562,5 @@ saveRDS(
     velplot_laz_strat = velplot_laz_strat,
     meanlaz_strat = meanlaz_strat
   ),
-  file = paste0("results/figure-data/figdata-", combined_plot_strat_name, ".RDS")
+  file = paste0(figdata_dir, "figdata-", combined_plot_strat_name, ".RDS")
 )
