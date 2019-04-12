@@ -74,11 +74,6 @@ ggsave(p, file=paste0(here(),"/figures/wasting/birthwast_strat_growth_curve.png"
 
 
 
-d %>% group_by(subjid, born_wast) %>% slice(1) %>% group_by(born_wast) %>% summarize(mean(whz, na.rm=T))
-
-ggplot(d, aes(x=agedays, y=whz, group=born_wast, color=born_wast)) + geom_smooth() 
-
-
 
 
 
@@ -120,6 +115,16 @@ ir.res$ub <- ir.res$ub * 1000
 #Persistant wasting
 perswast.res <- d %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
 perswast.res
+
+#Region-specific
+d %>% filter(region=="Asia") %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
+perswast.region.res
+
+d %>% filter(region=="Africa") %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
+perswast.region.res
+
+d %>% filter(region=="Latin America") %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
+perswast.region.res
 
 
 #co-occurrent wasting and stunting

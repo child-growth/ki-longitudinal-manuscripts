@@ -70,6 +70,8 @@ vel <- vel %>% mutate(pct_15 = ifelse(ycat == 'haz', NA, pct_15))
 vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
 vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 
+# define color palette
+mypalette = c("#D87A16", "#0EA76A")
 
 #-------------------------------------
 # LAZ plot
@@ -83,7 +85,7 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.25,0.1), breaks=seq(-0.25,0.1,0.05), labels=seq(-0.25,0.1,0.05)) +
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
@@ -104,8 +106,8 @@ plot_laz_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz, file=paste0("figures/stunting/fig-",plot_laz_name,".png"), width=12, height=6)
-saveRDS(velplot_laz, file=paste0("results/figure-data/figdata-",plot_laz_name,".RDS"))
+ggsave(plot_laz, file=paste0(fig_dir, "fig-",plot_laz_name,".png"), width=12, height=6)
+saveRDS(velplot_laz, file=paste0(figdata_dir, "figdata-",plot_laz_name,".RDS"))
 
 #-------------------------------------
 # LAZ plot - stratified by region
@@ -117,7 +119,7 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.5,0.35), breaks=seq(-0.5,0.35,0.05), labels=seq(-0.5,0.35,0.05)) +
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
@@ -138,8 +140,8 @@ plot_laz_strat_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz_strat, file=paste0("figures/stunting/fig-",plot_laz_strat_name,".png"), width=12, height=6)
-saveRDS(velplot_laz_strat, file=paste0("results/figure-data/figdata-",plot_laz_strat_name,".RDS"))
+ggsave(plot_laz_strat, file=paste0(fig_dir, "fig-",plot_laz_strat_name,".png"), width=12, height=6)
+saveRDS(velplot_laz_strat, file=paste0(figdata_dir, "figdata-",plot_laz_strat_name,".RDS"))
 
 
 #-------------------------------------
@@ -151,7 +153,7 @@ plot_laz_cohort_asia <- ggplot(velplot_laz_asia, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
   geom_hline(yintercept = -0) +
@@ -171,9 +173,9 @@ plot_laz_cohort_asia_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz_cohort_asia, file=paste0("figures/stunting/fig-",plot_laz_cohort_asia_name,".png"), 
+ggsave(plot_laz_cohort_asia, file=paste0(fig_dir, "fig-",plot_laz_cohort_asia_name,".png"), 
        width=18, height=10)
-saveRDS(velplot_laz_asia, file=paste0("results/figure-data/figdata-",plot_laz_cohort_asia_name,".RDS"))
+saveRDS(velplot_laz_asia, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_asia_name,".RDS"))
 
 
 #-------------------------------------
@@ -185,7 +187,7 @@ plot_laz_cohort_latamer <- ggplot(velplot_laz_latamer, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
   geom_hline(yintercept = -0) +
@@ -204,9 +206,9 @@ plot_laz_cohort_latamer_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz_cohort_latamer, file=paste0("figures/stunting/fig-",plot_laz_cohort_latamer_name,".png"), 
+ggsave(plot_laz_cohort_latamer, file=paste0(fig_dir, "fig-",plot_laz_cohort_latamer_name,".png"), 
        width=18, height=10)
-saveRDS(velplot_laz_latamer, file=paste0("results/figure-data/figdata-",plot_laz_cohort_latamer_name,".RDS"))
+saveRDS(velplot_laz_latamer, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_latamer_name,".RDS"))
 
 #-------------------------------------
 # LAZ plot - european cohorts
@@ -217,7 +219,7 @@ plot_laz_cohort_eur <- ggplot(velplot_laz_eur, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
   geom_hline(yintercept = -0) +
@@ -236,9 +238,9 @@ plot_laz_cohort_eur_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz_cohort_eur, file=paste0("figures/stunting/fig-",plot_laz_cohort_eur_name,".png"), 
+ggsave(plot_laz_cohort_eur, file=paste0(fig_dir, "fig-",plot_laz_cohort_eur_name,".png"), 
        width=8, height=6)
-saveRDS(velplot_laz_eur, file=paste0("results/figure-data/figdata-",plot_laz_cohort_eur_name,".RDS"))
+saveRDS(velplot_laz_eur, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_eur_name,".RDS"))
 
 #-------------------------------------
 # LAZ plot - african cohorts
@@ -249,7 +251,7 @@ plot_laz_cohort_afr <- ggplot(velplot_laz_afr, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   xlab("Age in months") + 
   ylab("Length-for-age Z-score")+
   geom_hline(yintercept = -0) +
@@ -268,9 +270,9 @@ plot_laz_cohort_afr_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz_cohort_afr, file=paste0("figures/stunting/fig-",plot_laz_cohort_afr_name,".png"), 
+ggsave(plot_laz_cohort_afr, file=paste0(fig_dir, "fig-",plot_laz_cohort_afr_name,".png"), 
        width=18, height=10)
-saveRDS(velplot_laz_afr, file=paste0("results/figure-data/figdata-",plot_laz_cohort_afr_name,".RDS"))
+saveRDS(velplot_laz_afr, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_afr_name,".RDS"))
 
 
 
@@ -293,7 +295,7 @@ plot_cm <- ggplot(velplot_cm, aes(y=Mean,x=strata))+
   
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
   xlab("Age in months") +  
   ylab("Length (cm)") +
@@ -312,9 +314,9 @@ plot_cm_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_cm, file=paste0("figures/stunting/fig-",plot_cm_name,".png"), 
+ggsave(plot_cm, file=paste0(fig_dir, "fig-",plot_cm_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm, file=paste0("results/figure-data/figdata-",plot_cm_name,".RDS"))
+saveRDS(velplot_cm, file=paste0(figdata_dir, "figdata-",plot_cm_name,".RDS"))
 
 #-------------------------------------
 # absolute length plot - stratified by region
@@ -336,7 +338,7 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
   
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  alpha=0.5, size = 1) +
-  scale_color_manual(values=c(tableau10[4],tableau10[1]))+  
+  scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(0.3,4.3), breaks=seq(0.25,4.3,0.25), labels=seq(0.25,4.3,0.25)) +
   xlab("Age in months") +  
   ylab("Length (cm)") +
@@ -355,9 +357,9 @@ plot_cm_strat_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_cm_strat, file=paste0("figures/stunting/fig-",plot_cm_strat_name,".png"), 
+ggsave(plot_cm_strat, file=paste0(fig_dir, "fig-",plot_cm_strat_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm_strat, file=paste0("results/figure-data/figdata-",plot_cm_strat_name,".RDS"))
+saveRDS(velplot_cm_strat, file=paste0(figdata_dir, "figdata-",plot_cm_strat_name,".RDS"))
 
 
 #-------------------------------------
@@ -392,9 +394,9 @@ combined_plot_strat_name = create_name(
 #-------------------------------------
 # save plots
 #-------------------------------------
-ggsave(combined_plot, file=paste0("figures/stunting/fig-", combined_plot_name,
+ggsave(combined_plot, file=paste0(fig_dir, "fig-", combined_plot_name,
                                   ".png"), width=10, height=8)
-ggsave(combined_plot_strat, file=paste0("figures/stunting/fig-",combined_plot_strat_name,
+ggsave(combined_plot_strat, file=paste0(fig_dir, "fig-",combined_plot_strat_name,
                                         ".png"), width=16, height=18)
 
 
@@ -407,7 +409,7 @@ saveRDS(
     velplot_cm = velplot_cm,
     velplot_laz = velplot_laz
   ),
-  file = paste0("results/figure-data/figdata-", combined_plot_name, ".RDS")
+  file = paste0(figdata_dir, "figdata-", combined_plot_name, ".RDS")
 )
 
 saveRDS(
@@ -415,6 +417,6 @@ saveRDS(
     velplot_cm_strat = velplot_cm_strat,
     velplot_laz_strat = velplot_laz_strat
   ),
-  file = paste0("results/figure-data/figdata-", combined_plot_strat_name, ".RDS")
+  file = paste0(figdata_dir, "figdata-", combined_plot_strat_name, ".RDS")
 )
 

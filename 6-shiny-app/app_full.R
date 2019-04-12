@@ -1,8 +1,14 @@
 
 rm(list = ls())
-source(paste0(here::here(), "/0-config.R"))
+# source(paste0(here::here(), "/0-config.R"))
+require(here)
+require(stringr)
+require(dplyr)
+require(tidyr)
 
-
+# define paths
+fig_path = "figures/"
+figdata_path = "figure-data/"
 #------------------------------------------------
 # Data Loading
 #------------------------------------------------
@@ -17,15 +23,15 @@ source(paste0(here::here(), "/0-config.R"))
 # Inputs for Shiny App
 #------------------------------------------------
 
-#Plot parameters
-yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
-tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
-               "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
-tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
-               "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
-Ylab <- "Relative Risk"
-scaleFUN <- function(x) sprintf("%.2f", x)
-theme_set(theme_bw())
+# #Plot parameters
+# yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
+# tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
+#                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+# tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
+#                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+# Ylab <- "Relative Risk"
+# scaleFUN <- function(x) sprintf("%.2f", x)
+# theme_set(theme_bw())
 
 
 #------------------------------------------------
@@ -40,6 +46,7 @@ load_fig_files <- function(file_path){
   
   #create data.frame of variables contained in plot title
   df <- as.data.frame(str_split(data,"-", simplify=T), plotnames=data)
+  print(file_path)
   colnames(df) <- varnames
   df$plotnames <- data
   
@@ -138,9 +145,9 @@ transform_variables <- function(df){
 
 #load in names of pngs in figures file
 # change to figures directory (remove /mock_shiny)
-df <- load_fig_files(file_path=paste0(here::here(),"/figures/"))
+df <- load_fig_files(file_path=fig_path)
 df <- transform_variables(df)
-table_df <- load_fig_files(file_path = paste0(here::here(), '/results/figure-data/'))
+table_df <- load_fig_files(file_path = figdata_path)
 table_df <- transform_variables(table_df)
 df <- rbind(df, table_df)
 
@@ -189,6 +196,7 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  #          )),
                  tabPanel("Descriptive epidemiology",
                           fluidRow(
+                            h4("Note: this site is still under construction", align="center",style = "color:blue"),
                             column(4, selectInput("Outcome",
                                                   "1. Outcome:",
                                                   choices = unique(df$outcome))),
@@ -382,7 +390,7 @@ server <- function(input, output, session) {
   output$image <- renderImage({
     d <- selectedData()
     d_img <- d %>% filter(fig == 'fig')
-    file_path <- paste0(here::here(), '/figures/', d_img$plotnames)
+    file_path <- paste0(fig_path, d_img$plotnames)
     # Return a list containing the filename
     list(src = file_path,
            contentType = 'image/png',
@@ -411,7 +419,7 @@ server <- function(input, output, session) {
   output$tables_desc <- renderUI({
      d <- selectedData() 
      d_tbl <- d %>% filter(fig == 'figdata')
-     file_path <- paste0(here::here(), '/results/figure-data/', d_tbl$plotnames)
+     file_path <- paste0(figdata_path, d_tbl$plotnames)
      table_data <- readRDS(file_path)
      if (class(table_data) == 'list'){
        output <- unlist(multi_tables(table_data))
@@ -424,7 +432,7 @@ server <- function(input, output, session) {
   output$table_desc <- renderTable({
     d <- selectedData()
     d_tbl <- d %>% filter(fig == 'figdata')
-    file_path <- paste0(here::here(), '/results/figure-data/', d_tbl$plotnames)
+    file_path <- paste0(figdata_path, d_tbl$plotnames)
     table_data <- readRDS(file_path)
     if (class(table_data) == 'list'){
       return('')
