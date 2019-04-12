@@ -189,6 +189,7 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  #          )),
                  tabPanel("Descriptive epidemiology",
                           fluidRow(
+                            h4("Note: this site is still under construction", align="center",style = "color:blue"),
                             column(4, selectInput("Outcome",
                                                   "1. Outcome:",
                                                   choices = unique(df$outcome))),
