@@ -394,7 +394,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     ggtitle("") +
     
-    guides(color = FALSE) 
+    guides(color = FALSE, shape=guide_legend(ncol=3)) 
     
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
@@ -418,9 +418,9 @@ rec_plot <- rec_combo_plot(d,
                    Age_range=c("30 days","60 days","90 days"), 
                    Cohort="pooled",
                    xlabel="Age in months",
-                   ylabel='Percent recovered (95% CI)',
+                   ylabel='Percent recovered\n(95% CI)',
                    yrange=c(0,100),
-                   legend.pos = c(.95,.88))
+                   legend.pos = c(.1,.88))
 
 # define standardized plot names
 rec_plot_name = create_name(
