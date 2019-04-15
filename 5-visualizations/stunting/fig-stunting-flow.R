@@ -35,11 +35,11 @@ pink_green[5] = "#EA67AE"
 pink_green[4] = "#FFB7DC"
 
 #-----------------------------------------
-# create plot - stratified by region
+# create plot - overall
 #-----------------------------------------
 bar_plot_noRE = ggplot(plot_overall) +
   geom_bar(aes(x = agem, y = percent, fill = classif), 
-           stat="identity", width=0.5) +
+           stat="identity", width=0.5, col = "black") +
   scale_fill_manual("", values = pink_green) +
   scale_color_manual(values = c(NA, 'black'), guide=F) +
   scale_y_continuous(limits = c(0,101),
@@ -51,8 +51,7 @@ bar_plot_noRE = ggplot(plot_overall) +
         legend.text = element_text(size=12)) +
   xlab("Child age, months") + 
   ylab("Percentage of children (%)")  + 
-  guides(fill = guide_legend(nrow = 1)) +
-  facet_grid(~region)
+  guides(fill = guide_legend(nrow = 1)) 
 bar_plot_noRE
 
 #-----------------------------------------
@@ -60,7 +59,7 @@ bar_plot_noRE
 #-----------------------------------------
 bar_plot_noRE_region = ggplot(plot_region) +
   geom_bar(aes(x = agem, y = percent, fill = classif), 
-           stat="identity", width=0.5) +
+           stat="identity", width=0.5, col = "black") +
   scale_fill_manual("", values = pink_green) +
   scale_color_manual(values = c(NA, 'black'), guide=F) +
   scale_y_continuous(limits = c(0,101),
@@ -105,9 +104,9 @@ bar_plot_noRE_region_name = create_name(
 #-----------------------------------------
 # save plot and underlying data
 #-----------------------------------------
-ggsave(bar_plot_noRE, file=paste0(fig_dir, "fig-",
+ggsave(bar_plot_noRE, file=paste0(fig_dir, "stunting/fig-",
            bar_plot_noRE_name,".png"), width=10, height=4)
-ggsave(bar_plot_noRE_region, file=paste0(fig_dir, "fig-",
+ggsave(bar_plot_noRE_region, file=paste0(fig_dir, "stunting/fig-",
             bar_plot_noRE_region_name,".png"), width=15, height=4)
 
 saveRDS(plot_overall, file=paste0(figdata_dir, "figdata-",
