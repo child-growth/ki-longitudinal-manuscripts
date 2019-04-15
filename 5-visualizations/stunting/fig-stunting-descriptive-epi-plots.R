@@ -98,8 +98,35 @@ mean_laz_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(mean_laz_plot, file=paste0(fig_dir, "fig-",mean_laz_plot_name,".png"), width=10, height=4)
+ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,".png"), width=10, height=4)
 saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name,".RDS"))
+
+
+#-------------------------------------------------------------------------------------------
+# Mean LAZ by month - seattle april 2019 presentation figure
+#-------------------------------------------------------------------------------------------
+dfgates = df %>% filter(region!="Overall")
+
+orange = "#FF7F0E"
+green = "#2CA02C"
+
+mean_laz_plot_gates <- ggplot(dfgates,aes(y=est,x=agecat, group=region)) +
+  stat_smooth(aes(fill=region, color=region), se=F, span = 0.5) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
+                     limits = c(-2.5, 1.5)) + 
+  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
+  scale_fill_manual(values=c("black",orange, green), drop=TRUE, limits = levels(df$measure),
+                    name = 'Region') +
+  scale_color_manual(values=c("black",orange, green), drop=TRUE, limits = levels(df$measure), 
+                     name = 'Region') +
+  xlab("Child age, months")+
+  ylab("Length-for-age Z-score") +
+  ggtitle("") +
+  theme(legend.position="bottom") 
+
+# save plot and underlying data
+ggsave(mean_laz_plot_gates, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,"-gates.png"), width=5, height=4)
 
 
 
@@ -146,7 +173,7 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot, file=paste0(fig_dir, "fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 
@@ -154,36 +181,37 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 #-------------------------------------------------------------------------------------------
 # Stunting prevalence - 3 months - stratified by cohort
 #-------------------------------------------------------------------------------------------
-prev_plot <- ki_desc_plot(d,
-                          Disease="Stunting",
-                          Measure="Prevalence", 
-                          Birth="yes", 
-                          Severe="no", 
-                          Age_range="3 months", 
-                          Cohort="pooled",
-                          xlabel="Child age, months",
-                          ylabel='Point Prevalence (95% CI)',
-                          h1=69,
-                          h2=72)
-prev_plot
-
-
-# define standardized plot names
-prev_plot_name = create_name(
-  outcome = "stunting",
-  cutoff = 2,
-  measure = "prevalence",
-  population = "overall and region-stratified",
-  location = "",
-  age = "All ages",
-  analysis = "primary"
-)
-
-# save plot and underlying data
-ggsave(prev_plot, file=paste0(fig_dir, "fig-",prev_plot_name, ".png"), width=14, height=3)
-
-saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
-
+# Nolan please update with new cohort specific plot
+# prev_plot_cohort <- ki_desc_plot(d,
+#                           Disease="Stunting",
+#                           Measure="Prevalence", 
+#                           Birth="yes", 
+#                           Severe="no", 
+#                           Age_range="3 months", 
+#                           Cohort="pooled",
+#                           xlabel="Child age, months",
+#                           ylabel='Point Prevalence (95% CI)',
+#                           h1=69,
+#                           h2=72)
+# prev_plot
+# 
+# 
+# # define standardized plot names
+# prev_plot_cohort_name = create_name(
+#   outcome = "stunting",
+#   cutoff = 2,
+#   measure = "prevalence",
+#   population = "cohort-stratified",
+#   location = "",
+#   age = "All ages",
+#   analysis = "primary"
+# )
+# 
+# # save plot and underlying data
+# ggsave(prev_plot_cohort, file=paste0(fig_dir, "stunting/fig-",prev_plot_cohort_name, ".png"), width=14, height=3)
+# 
+# saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_cohort_name,".RDS"))
+# 
 
 
 
@@ -217,9 +245,46 @@ prev_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev, file=paste0(fig_dir, "fig-",prev_plot_sev_name, ".png"), width=14, height=3)
+ggsave(prev_plot_sev, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
+
+
+
+#-------------------------------------------------------------------------------------------
+# Stunting prevalence - severe - cohort specific
+#-------------------------------------------------------------------------------------------
+# Nolan please update with new cohort specific plot
+# prev_plot_sev_cohort <- ki_desc_plot(d,
+#                               Disease="Stunting",
+#                               Measure="Prevalence", 
+#                               Birth="yes", 
+#                               Severe="yes", 
+#                               Age_range="3 months", 
+#                               Cohort="pooled",
+#                               xlabel="Child age, months",
+#                               ylabel='Point Prevalence (95% CI)',
+#                               h1=69,
+#                               h2=72)
+# prev_plot_sev_cohort
+# 
+# 
+# # define standardized plot names
+# prev_plot_sev_cohort_name = create_name(
+#   outcome = "stunting",
+#   cutoff = 3,
+#   measure = "prevalence",
+#   population = "cohort-stratified",
+#   location = "",
+#   age = "All ages",
+#   analysis = "primary"
+# )
+# 
+# # save plot and underlying data
+# ggsave(prev_plot_sev_cohort, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_cohort_name, ".png"), width=14, height=3)
+# 
+# saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_cohort_name,".RDS"))
+
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion
@@ -263,11 +328,56 @@ ci_inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot, file=paste0(fig_dir, "fig-",ci_inc_plot_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 
-
+#-------------------------------------------------------------------------------------------
+# Stunting cumulative incidence + incidence proportion - cohort specific
+#-------------------------------------------------------------------------------------------
+# Nolan please update with new cohort specific plot
+# ci_inc_plot_cohort <- ki_combo_plot(d,
+#                              Disease="Stunting",
+#                              Measure=c("Cumulative incidence", "Incidence_proportion"), 
+#                              Birth="yes", 
+#                              Severe="no", 
+#                              Age_range="3 months", 
+#                              Cohort="pooled",
+#                              xlabel="Child age, months",
+#                              h1=85,
+#                              h2=90)
+# ci_inc_plot
+# 
+# 
+# # get N's for figure caption
+# inc_n = d %>%
+#   filter(disease == "Stunting" & 
+#            (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
+#            region!="Overall" &
+#            age_range == "3 months" &
+#            cohort == "pooled" &
+#            severe == "no") %>% 
+#   group_by(region) %>% 
+#   summarise(min_study = min(nstudies, na.rm=TRUE), 
+#             max_study = max(nstudies, na.rm=TRUE),
+#             min_n = min(nmeas, na.rm=TRUE), 
+#             max_n = max(nmeas, na.rm=TRUE))
+# 
+# # define standardized plot names
+# ci_inc_plot_cohort_name = create_name(
+#   outcome = "stunting",
+#   cutoff = 2,
+#   measure = "incidence",
+#   population = "cohort-stratified",
+#   location = "",
+#   age = "All ages",
+#   analysis = "primary"
+# )
+# 
+# # save plot and underlying data
+# ggsave(ci_inc_plot_cohort, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_cohort_name,".png"), width=14, height=3)
+# 
+# saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_cohort_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion 
@@ -317,7 +427,7 @@ ci_inc_plot_nobirth_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_nobirth, file=paste0(fig_dir, "fig-",ci_inc_plot_nobirth_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot_nobirth, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_nobirth_name,".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_nobirth_name,".RDS"))
 
@@ -351,7 +461,7 @@ ci_inc_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev, file=paste0(fig_dir, "fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot_sev, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
 
