@@ -42,10 +42,9 @@ bar_plot_noRE = ggplot(plot_overall) +
            stat="identity", width=0.5) +
   scale_fill_manual("", values = pink_green) +
   scale_color_manual(values = c(NA, 'black'), guide=F) +
-  # Why isn't this working? 
-  # scale_y_continuous(limits = c(0,100),
-  #                    breaks = seq(0,100,20),
-  #                    labels = seq(0,100,20)) +
+  scale_y_continuous(limits = c(0,101),
+                     breaks = seq(0,100,20),
+                     labels = seq(0,100,20)) +
   theme(axis.title.x = element_text(size=14),
         axis.title.y = element_text(size=14),
         legend.position = "bottom",
@@ -64,10 +63,9 @@ bar_plot_noRE_region = ggplot(plot_region) +
            stat="identity", width=0.5) +
   scale_fill_manual("", values = pink_green) +
   scale_color_manual(values = c(NA, 'black'), guide=F) +
-  # Why isn't this working? 
-  # scale_y_continuous(limits = c(0,100),
-  #                    breaks = seq(0,100,20),
-  #                    labels = seq(0,100,20)) +
+  scale_y_continuous(limits = c(0,101),
+                     breaks = seq(0,100,20),
+                     labels = seq(0,100,20)) +
   theme(axis.title.x = element_text(size=14),
         axis.title.y = element_text(size=14),
         legend.position = "bottom",
