@@ -143,8 +143,9 @@ prev_plot <- ki_desc_plot(d,
                    xlabel="Child age, months",
                    ylabel='Point Prevalence (95% CI)',
                    h1=69,
-                   h2=72)
-prev_plot
+                   h2=72,
+                   returnData=T)
+prev_plot$plot
 
 
 
@@ -173,9 +174,9 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
+saveRDS(prev_plot$data, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -192,8 +193,9 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 #                           xlabel="Child age, months",
 #                           ylabel='Point Prevalence (95% CI)',
 #                           h1=69,
-#                           h2=72)
-# prev_plot
+#                           h2=72,
+#                           returnData=T)
+# prev_plot$plot
 # 
 # 
 # # define standardized plot names
@@ -208,9 +210,9 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 # )
 # 
 # # save plot and underlying data
-# ggsave(prev_plot_cohort, file=paste0(fig_dir, "stunting/fig-",prev_plot_cohort_name, ".png"), width=14, height=3)
+# ggsave(prev_plot_cohort$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_cohort_name, ".png"), width=14, height=3)
 # 
-# saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_cohort_name,".RDS"))
+# saveRDS(prev_plot_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot_cohort_name,".RDS"))
 # 
 
 
@@ -229,8 +231,9 @@ prev_plot_sev <- ki_desc_plot(d,
                           xlabel="Child age, months",
                           ylabel='Point Prevalence (95% CI)',
                           h1=69,
-                          h2=72)
-prev_plot_sev
+                          h2=72,
+                          returnData=T)
+prev_plot_sev$plot
 
 
 # define standardized plot names
@@ -245,9 +248,9 @@ prev_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=3)
+ggsave(prev_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
+saveRDS(prev_plot_sev$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
 
 
 
@@ -265,8 +268,9 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
 #                               xlabel="Child age, months",
 #                               ylabel='Point Prevalence (95% CI)',
 #                               h1=69,
-#                               h2=72)
-# prev_plot_sev_cohort
+#                               h2=72,
+#                               returnData=T)
+# prev_plot_sev_cohort$plot
 # 
 # 
 # # define standardized plot names
@@ -281,9 +285,9 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
 # )
 # 
 # # save plot and underlying data
-# ggsave(prev_plot_sev_cohort, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_cohort_name, ".png"), width=14, height=3)
+# ggsave(prev_plot_sev_cohort$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_cohort_name, ".png"), width=14, height=3)
 # 
-# saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_cohort_name,".RDS"))
+# saveRDS(prev_plot_sev_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_cohort_name,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -298,8 +302,9 @@ ci_inc_plot <- ki_combo_plot(d,
                         Cohort="pooled",
                         xlabel="Child age, months",
                         h1=85,
-                        h2=90)
-ci_inc_plot
+                        h2=90,
+                        returnData=T)
+ci_inc_plot$plot
 
 
 # get N's for figure caption
@@ -328,9 +333,9 @@ ci_inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
+saveRDS(ci_inc_plot$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion - cohort specific
@@ -345,8 +350,9 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 #                              Cohort="pooled",
 #                              xlabel="Child age, months",
 #                              h1=85,
-#                              h2=90)
-# ci_inc_plot
+#                              h2=90,
+#                              returnData=T)
+# ci_inc_plot_cohort$plot
 # 
 # 
 # # get N's for figure caption
@@ -375,9 +381,9 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 # )
 # 
 # # save plot and underlying data
-# ggsave(ci_inc_plot_cohort, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_cohort_name,".png"), width=14, height=3)
+# ggsave(ci_inc_plot_cohort$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_cohort_name,".png"), width=14, height=3)
 # 
-# saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_cohort_name,".RDS"))
+# saveRDS(ci_inc_plot_cohort$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_cohort_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion 
@@ -392,15 +398,15 @@ ci_inc_plot_nobirth <- ki_combo_plot(d,
                              Cohort="pooled",
                              xlabel="Child age, months",
                              h1=85,
-                             h2=90
-
+                             h2=90,
+                             returnData=T
                              )
 
 geom_text_adjust_vec = c(c(2, rep(0, 7)), c(-2, rep(0, 7)), 
                          c(2, rep(0, 15)), 
                          c(2, rep(0, 15)), 
                          c(2, rep(0, 15)))
-ci_inc_plot_nobirth
+ci_inc_plot_nobirth$plot
 
 # get N's for figure caption
 inc_n = d %>%
@@ -427,9 +433,9 @@ ci_inc_plot_nobirth_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_nobirth, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_nobirth_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot_nobirth$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_nobirth_name,".png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_nobirth_name,".RDS"))
+saveRDS(ci_inc_plot_nobirth$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_nobirth_name,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -445,8 +451,9 @@ ci_inc_plot_sev <- ki_combo_plot(d,
                              Cohort="pooled",
                              xlabel="Child age, months",
                              h1=85,
-                             h2=90)
-ci_inc_plot_sev
+                             h2=90,
+                             returnData=T)
+ci_inc_plot_sev$plot
 
 
 # define standardized plot names
@@ -461,9 +468,9 @@ ci_inc_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
+saveRDS(ci_inc_plot_sev$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
 
 
 
