@@ -197,19 +197,19 @@ mean_laz_quantile_plot_latamer_name = create_name(
 # save plot and underlying data
 #------------------------------------------
 ggsave(mean_laz_quantile_plot, 
-       file=paste0(fig_dir, "fig-",mean_laz_quantile_plot_name,".png"), 
+       file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_name,".png"), 
        width=14, height=4)
 
 ggsave(mean_laz_quantile_plot_asia, 
-       file=paste0(fig_dir, "fig-",mean_laz_quantile_plot_asia_name,".png"), 
+       file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_asia_name,".png"), 
        width=14, height=10)
 
 ggsave(mean_laz_quantile_plot_afr, 
-       file=paste0(fig_dir, "fig-",mean_laz_quantile_plot_afr_name,".png"), 
+       file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_afr_name,".png"), 
        width=14, height=10)
 
 ggsave(mean_laz_quantile_plot_latamer, 
-       file=paste0(fig_dir, "fig-",mean_laz_quantile_plot_latamer_name,".png"), 
+       file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_latamer_name,".png"), 
        width=14, height=10)
 
 

@@ -108,7 +108,7 @@ mean_laz_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(mean_laz_plot, file=paste0(fig_dir, "fig-",mean_laz_plot_name,".png"), width=10, height=4)
+ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,".png"), width=10, height=4)
 saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name,".RDS"))
 
 
@@ -196,7 +196,7 @@ mean_laz_quantile_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(mean_laz_quantile_plot, 
-       file=paste0(fig_dir, "fig-",mean_laz_quantile_plot_name,".png"), 
+       file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_name,".png"), 
        width=14, height=4)
 
 saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_quantile_plot_name,".RDS"))
@@ -234,7 +234,7 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot, file=paste0(fig_dir, "fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 
@@ -270,7 +270,7 @@ prev_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev, file=paste0(fig_dir, "fig-",prev_plot_sev_name, ".png"), width=14, height=3)
+ggsave(prev_plot_sev, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
 
@@ -305,7 +305,7 @@ ci_inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot, file=paste0(fig_dir, "fig-",ci_inc_plot_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 
@@ -339,7 +339,7 @@ ci_inc_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev, file=paste0(fig_dir, "fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot_sev, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
 

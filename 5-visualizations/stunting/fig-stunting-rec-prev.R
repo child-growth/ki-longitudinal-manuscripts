@@ -128,10 +128,10 @@ meandiff_plot_name = create_name(
 # save plot and underlying data
 #---------------------------------------
 
-ggsave(stplot, file=paste0(fig_dir, "fig-",st_plot_name,".png"), 
+ggsave(stplot, file=paste0(fig_dir, "stunting/fig-",st_plot_name,".png"), 
        width=5, height=4)
 
-ggsave(meandiff_plot, file=paste0(fig_dir, "fig-",meandiff_plot_name,".png"), 
+ggsave(meandiff_plot, file=paste0(fig_dir, "stunting/fig-",meandiff_plot_name,".png"), 
        width=5, height=4)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",st_plot_name,".RDS"))

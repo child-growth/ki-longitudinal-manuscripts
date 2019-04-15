@@ -137,7 +137,7 @@ plot_laz_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz, file=paste0(fig_path, "fig-",plot_laz_name,".png"), width=12, height=6)
+ggsave(plot_laz, file=paste0(fig_path, "stunting/fig-",plot_laz_name,".png"), width=12, height=6)
 saveRDS(velplot_laz, file=paste0(figdata_path, "figdata-",plot_laz_name,".RDS"))
 
 ####################################################################################
@@ -211,7 +211,7 @@ plot_cm_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_cm, file=paste0(fig_path, "fig-",plot_cm_name,".png"), 
+ggsave(plot_cm, file=paste0(fig_path, "stunting/fig-",plot_cm_name,".png"), 
        width=10, height=8)
 saveRDS(velplot_cm, file=paste0(figdata_path, "figdata-",plot_cm_name,".RDS"))
 
@@ -238,7 +238,7 @@ combined_plot_name = create_name(
 #-------------------------------------
 # save overall plots together
 #-------------------------------------
-ggsave(combined_plot, file=paste0(fig_path, "fig-", combined_plot_name,
+ggsave(combined_plot, file=paste0(fig_path, "stunting/fig-", combined_plot_name,
                                   ".png"), width=10, height=8)
 #-------------------------------------
 # save input data 

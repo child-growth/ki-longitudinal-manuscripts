@@ -376,7 +376,7 @@ laz_ageplot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(laz_ageplot, file=paste0(fig_dir, "fig-",laz_ageplot_name,".png"), width=8, height=3)
+ggsave(laz_ageplot, file=paste0(fig_dir, "stunting/fig-",laz_ageplot_name,".png"), width=8, height=3)
 saveRDS(dhs_plotd_laz, file=paste0(figdata_dir, "figdata-",laz_ageplot_name,".RDS"))
 
 #---------------------------------------
@@ -500,7 +500,7 @@ laz_dplot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(laz_dplot, file=paste0(fig_dir, "fig-",laz_dplot_name,".png"), width=8, height=2)
+ggsave(laz_dplot, file=paste0(fig_dir, "stunting/fig-",laz_dplot_name,".png"), width=8, height=2)
 saveRDS(dhsden_plot_laz, file=paste0(figdata_dir, "figdata-",laz_dplot_name,".RDS"))
 
 
