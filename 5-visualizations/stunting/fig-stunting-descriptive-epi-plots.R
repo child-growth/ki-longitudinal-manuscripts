@@ -116,9 +116,9 @@ mean_laz_plot_gates <- ggplot(dfgates,aes(y=est,x=agecat, group=region)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
                      limits = c(-2.5, 1.5)) + 
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
-  scale_fill_manual(values=c("black",orange, green), drop=TRUE, limits = levels(df$measure),
+  scale_fill_manual(values=c(orange, "black",green), drop=TRUE, limits = levels(df$measure),
                     name = 'Region') +
-  scale_color_manual(values=c("black",orange, green), drop=TRUE, limits = levels(df$measure), 
+  scale_color_manual(values=c(orange, "black",green), drop=TRUE, limits = levels(df$measure), 
                      name = 'Region') +
   xlab("Child age, months")+
   ylab("Length-for-age Z-score") +
