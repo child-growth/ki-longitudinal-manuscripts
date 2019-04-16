@@ -72,8 +72,10 @@ prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
 prev.cohort=lapply((levels(prev.data$agecat)),function(x) 
   fit.escalc(data=prev.data,ni="nmeas", xi="nxprev",age=x,meas="PLO"))
 prev.cohort=as.data.frame(rbindlist(prev.cohort))
+#clean up output
 prev.cohort=cohort.format(prev.cohort,y=prev.cohort$yi,
                           lab=  levels(prev.data$agecat))
+
 
 
 #return list of underlying data, and overall and cohort-specific estimates
