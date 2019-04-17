@@ -116,15 +116,6 @@ ir.res$ub <- ir.res$ub * 1000
 perswast.res <- d %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
 perswast.res
 
-#Region-specific
-d %>% filter(region=="Asia") %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
-perswast.region.res
-
-d %>% filter(region=="Africa") %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
-perswast.region.res
-
-d %>% filter(region=="Latin America") %>% group_by(born_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
-perswast.region.res
 
 
 #co-occurrent wasting and stunting
@@ -140,3 +131,41 @@ res
 
 saveRDS(res, file = paste0(here(),"/results/bw_longterm_res.rds"))
 
+
+
+# #Region-specific
+# 
+# 
+# #Subset to monthly
+# d <- d_noBW %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167) %>%
+#   subset(., select = c(studyid, region, country, subjid, agedays, whz, haz, wasting_episode, wast_inc, wast_rec, pt_wast, wasting_duration))
+# 
+# #Mark children born or enrolled wasted
+# d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
+#   mutate(age_enrol = first(agedays)) %>%
+#   filter(age_enrol < 6 * 30.4167) %>%
+#   mutate(early_wast = 1*(whz < (-2) & agedays < 6 * 30.4167),
+#          early_wast=max(early_wast))
+# table(d$early_wast)
+# 
+# d <- calc.ci.agecat(d, range=6)
+# d <- d %>% filter(agecat!="0-6 months")
+# 
+# d$agecat <- "6-24 months"
+# d$agecat <- factor(d$agecat)
+# 
+# d %>% filter(region=="Asia") %>% group_by(early_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
+# 
+# d %>% filter(region=="Africa") %>% group_by(early_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
+# 
+# d %>% filter(region=="Latin America") %>% group_by(early_wast) %>% do(summary.perswast(., agelist = list("6-24 months"))$pers.res)
+# 
+# df <- d %>% filter(region=="Latin America")  %>% group_by(studyid, country, subjid) %>% 
+#   mutate(N=n()) %>% ungroup() %>%
+#   filter(N>=4) %>%
+#   group_by(studyid, country, agecat, subjid, early_wast) %>%
+#   filter(!is.na(agecat)) %>%
+#   summarise(perc_wast = mean(whz < (-2)), na.rm=T) %>%
+#   mutate(pers_wast = 1*(perc_wast>=.5)) %>% group_by(early_wast) %>%
+#   summarise(mean(pers_wast, na.rm=T), sum(pers_wast, na.rm=T))
+# df  
