@@ -337,6 +337,41 @@ ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,"
 
 saveRDS(ci_inc_plot$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 
+
+#-------------------------------------------------------------------------------------------
+# Stunting incidence proportion
+#-------------------------------------------------------------------------------------------
+inc_plot <- ip_plot(
+  d,
+  Disease = "Stunting",
+  Measure = "Incidence_proportion",
+  Birth = "yes",
+  Severe = "no",
+  Age_range = "3 months",
+  Cohort = "pooled",
+  xlabel = "Child age, months",
+  h1 = 85,
+  h2 = 90,
+  returnData = F
+)
+inc_plot
+
+
+# define standardized plot names
+inc_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "incidence only",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), width=14, height=3)
+
+
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion - cohort specific
 #-------------------------------------------------------------------------------------------
