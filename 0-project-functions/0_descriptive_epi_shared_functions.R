@@ -679,6 +679,7 @@ create_name = function(outcome, cutoff, measure, population,
     measure_s = case_when(
       measure == "prevalence" ~ "prev",
       measure == "incidence" ~ "inc",
+      measure == "incidence only" ~ "inconly",
       measure == "cumulative incidence" ~ "cuminc",
       measure == "incidence rate" ~ "ir",
       measure == "mean" ~ "mean",
