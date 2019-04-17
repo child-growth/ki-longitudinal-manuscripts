@@ -80,6 +80,7 @@ p2_name = create_name(
 
 # save plot and underlying data
 ggsave(p2, file=paste0("figures/wasting/fig-",p2_name,".png"), width=6, height=3)
+ggsave(p2, file=paste0("6-shiny-app/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
 
 
 
