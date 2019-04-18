@@ -45,51 +45,12 @@ source(paste0(here::here(), "/0-config.R"))
 # configure for a laptop (use only 3 cores)
 registerDoParallel(cores = 3)
 
-
-#----------------------------------
-# simulataneous CIs for GAMs
-# estimated by resampling the
-# Baysian posterior estimates of
-# the variance-covariance matrix
-# assuming that it is multivariate normal
-# the function below also estimates
-# the unconditional variance-covariance
-# matrix, Vb=vcov(x,unconditional=TRUE),
-# which allows for undertainty in the actual
-# estimated mean as well
-# (Marra & Wood 2012 Scandinavian Journal of Statistics,
-#  Vol. 39: 53–74, 2012, doi: 10.1111/j.1467-9469.2011.00760.x )
-# simultaneous CIs provide much better coverage than pointwise CIs
-# see: http://www.fromthebottomoftheheap.net/2016/12/15/simultaneous-interval-revisited/
-#----------------------------------
-gamCI <- function(m, newdata, nreps = 10000) {
-  require(mgcv)
-  require(dplyr)
-  Vb <- vcov(m, unconditional = TRUE)
-  pred <- predict(m, newdata, se.fit = TRUE)
-  fit <- pred$fit
-  se.fit <- pred$se.fit
-  BUdiff <- MASS::mvrnorm(n = nreps, mu = rep(0, nrow(Vb)), Sigma = Vb)
-  Cg <- predict(m, newdata, type = "lpmatrix")
-  simDev <- Cg %*% t(BUdiff)
-  absDev <- abs(sweep(simDev, 1, se.fit, FUN = "/"))
-  masd <- apply(absDev, 2L, max)
-  crit <- quantile(masd, prob = 0.95, type = 8)
-  pred <- data.frame(newdata, fit = pred$fit, se.fit = pred$se.fit)
-  pred <- mutate(pred,
-    uprP = fit + (2 * se.fit),
-    lwrP = fit - (2 * se.fit),
-    uprS = fit + (crit * se.fit),
-    lwrS = fit - (crit * se.fit)
-  )
-  return(pred)
-}
-
 #---------------------------------------
 # load cleaned DHS anthro data
 # created by 7_DHS-data-cleaning.R
 #---------------------------------------
 dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
+source("../shared/helper_sampling_weights.R")
 
 #---------------------------------------
 # compute weights per instructions from
@@ -121,133 +82,9 @@ dhsz <- dhsz %>%
 dhsz <- dhsz %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 
-#---------------------------------------
-#---------------------------------------
-# estimate z-scores by age
-#---------------------------------------
-#---------------------------------------
-
-#---------------------------------------
-# estimate mean z-scores by age
-# including all countries in each region
-#---------------------------------------
-dhsallfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
-  di <- dhsz %>% filter(region == rgn)
-  fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di)
-  newd <- data.frame(agem = 0:24)
-  # estimate approximate simultaneous confidence intervals
-  fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
-  dfit <- data.frame(measure = "LAZ", region = rgn, agem = 0:24, fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
-  dfit
-}
-
-# estimate a pooled fit, over all regions
-fitpool <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = dhsz)
-newd <- data.frame(agem = 0:24)
-fitpoolci <- gamCI(m = fitpool, newdata = newd, nreps = 1000)
-dhsall_pool <- data.frame(measure = "LAZ", region = "Overall", agem = 0:24, fit = fitpoolci$fit, fit_se = fitpoolci$se.fit, fit_lb = fitpoolci$lwrS, fit_ub = fitpoolci$uprS)
-
-
-dhsallfits <- bind_rows(dhsallfits, dhsall_pool) %>%
-  mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
-
-#---------------------------------------
-# for each region, do the cluster based pooling for each child age
-#---------------------------------------
-# The most conservative approach would be to center any single-PSU strata around
-# the sample grand mean rather than the stratum mean
-options(survey.lonely.psu = "adjust")
-# alternatively, most proprietary statistical software packages have single-PSU
-# strata make no contribution to the variance by default
-# options(survey.lonely.psu = "certainty")
-do_one_combination <- function(measure_here, region_here) {
-  # Complex sample design parameters
-  df_one_combination <- dhsz %>%
-    filter(measure == measure_here & region == region_here)
-  DHSdesign <- svydesign(
-    id = df_one_combination$cluster_no,
-    strata = df_one_combination$stratification,
-    weights = df_one_combination$wgt,
-    data = df_one_combination,
-    nest = TRUE
-  )
-  # tabulate indicator by region
-  df_survey <- svyby(~zscore, ~agem, DHSdesign, svymean, vartype = c("se", "ci"))
-  df_survey$measure <- measure_here
-  df_survey$region <- region_here
-  df_n <- df_one_combination %>% group_by(agem) %>% summarise(wgt_sum = sum(wgt))
-  df_survey <- dplyr::left_join(df_survey, df_n, by = "agem")
-  return(df_survey)
-}
-
-df_survey <- foreach(measure = unique(dhsz$measure), .combine = rbind) %:%
-  foreach(region = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
-    do_one_combination(measure_here = measure, region_here = region)
-  }
-# meta analysis using fixed effects or random effects based pooling
-fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
-  data <- filter(data, agecat == age)
-  fit <- NULL
-  try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = method, measure = "GEN"))
-  if (is.null(fit)) {
-    try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = "ML", measure = "GEN"))
-  }
-  if (is.null(fit)) {
-    try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = "DL", measure = "GEN"))
-  }
-  if (is.null(fit)) {
-    try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = "HE", measure = "GEN"))
-  }
-  out <- data %>%
-    ungroup() %>%
-    summarise(
-      nstudies = length(unique(studyid)),
-      nmeas = sum(data[[ni]][agecat == age])
-    ) %>%
-    mutate(
-      agecat = age, est = fit$beta, se = fit$se, lb = fit$ci.lb, ub = fit$ci.ub,
-      nmeas.f = paste0(
-        "N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE),
-        " ", nlab
-      ),
-      nstudy.f = paste0("N=", nstudies, " studies")
-    )
-  return(out)
-}
-
-df_random_effects <- list()
-for (measure_here in "HAZ") {
-  for (age_here in 0:24) {
-    df_random_effect <- fit.cont.rma(
-      data = df_survey %>%
-        mutate(variance = se^2, studyid = region, agecat = agem) %>%
-        filter(measure == measure_here),
-      age = age_here,
-      yi = "zscore",
-      vi = "variance",
-      ni = "wgt_sum",
-      nlab = "observations",
-      # method = "REML"
-      method = "FE"
-    )
-    df_random_effect$measure <- measure_here
-    df_random_effect$agem <- age_here
-    df_random_effect$region <- "Overall"
-    df_random_effects <- c(df_random_effects, list(df_random_effect))
-  }
-}
-df_random_effects <- do.call(rbind, df_random_effects)
-
-df_survey <- df_survey %>%
-  rename(fit = zscore, fit_lb = ci_l, fit_ub = ci_u, fit_se = se) %>%
-  select(measure, region, agem, fit, fit_se, fit_lb, fit_ub)
-df_random_effects <- df_random_effects %>%
-  rename(fit = est, fit_lb = lb, fit_ub = ub, fit_se = se) %>%
-  select(measure, region, agem, fit, fit_se, fit_lb, fit_ub)
-df_survey_output <- bind_rows(df_survey, df_random_effects) %>%
-  mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
-df_survey_output$measure <- "LAZ" # rename HAZ to LAZ
-
+# compute or load the DHS results
+# source("fig-DHS-plots-laz-compute.R")
+load(here::here("results", "DHS-stunting-by-region.rds"))
 #---------------------------------------
 # estimate mean z-scores by age
 # subset to countries that overlap the
