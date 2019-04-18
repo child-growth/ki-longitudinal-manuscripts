@@ -84,7 +84,6 @@ dhsz <- dhsz %>%
 
 dhsz <- dhsz %>%
   mutate(region = factor(region, levels = c("OVERALL", "SEARO", "AFRO", "PAHO")))
-
 # compute or load the DHS results
 # source("fig-DHS-plots-zscores-compute.R")
 dhsfits <- readRDS(here::here("results", "wasting-DHSandKI-by-region.rds"))

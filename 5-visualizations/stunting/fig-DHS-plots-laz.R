@@ -81,10 +81,9 @@ dhsz <- dhsz %>%
 
 dhsz <- dhsz %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
-
 # compute or load the DHS results
 # source("fig-DHS-plots-laz-compute.R")
-df_survey_output <- dhsfits(here::here("results", "DHS-stunting-by-region.rds"))
+df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
 #---------------------------------------
 # estimate mean z-scores by age
 # subset to countries that overlap the
@@ -176,7 +175,7 @@ dhs_plotd <- dhsfits %>%
   filter(dsource %in% c("ki cohorts", "DHS"))
 
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("tableau10")
+tableau10 <- tableau_color_pal("Tableau 10")
 pcols <- c("black", tableau10(10)[c(1, 2, 3)])
 
 blue <- 1
@@ -317,7 +316,7 @@ dhsden_plot <- dhsden %>%
 
 #---------------------------------------
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("tableau10")
+tableau10 <- tableau_color_pal("Tableau 10")
 pcols <- c("black", tableau10(10)[c(1:3)])
 
 #---------------------------------------

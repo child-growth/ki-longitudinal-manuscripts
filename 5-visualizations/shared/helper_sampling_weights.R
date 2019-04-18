@@ -45,7 +45,7 @@ fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
 do_metaanalysis <- function(df_survey, pool_over, method = "FE") {
   # method = "REML"
   dhs_pooled <- list()
-  for (measure_here in levels(dhsz$measure)) {
+  for (measure_here in unique(df_survey$measure)) {
     for (age_here in 0:24) {
       df_to_pool <- df_survey %>%
           mutate(variance = se^2, agecat = agem) %>%

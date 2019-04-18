@@ -20,6 +20,7 @@ df_survey <- foreach(measure_here = levels(dhsz$measure), .combine = rbind) %:%
     result_svymean
   }
 
+df_survey$se[df_survey$se <= 1e-1] <- 1e-1
 dhs_pooled <- do_metaanalysis(df_survey, pool_over = "region")
 dhs_pooled$region <- "OVERALL"
 
@@ -58,9 +59,9 @@ svymean_each_country <- svymean_each_country %>%
 dhs_pooled <- dhs_pooled %>%
   rename(fit = est, fit_lb = lb, fit_ub = ub, fit_se = se) %>%
   select(measure, country, agem, fit, fit_se, fit_lb, fit_ub)
-df_survey_output <- bind_rows(svymean_each_country, dhs_pooled) %>%
+df_survey_output_country <- bind_rows(svymean_each_country, dhs_pooled) %>%
   mutate(country = factor(country))
-saveRDS(df_survey_output, file = here::here("results", "DHS-wasting-by-country.rds"))
+saveRDS(df_survey_output_country, file = here::here("results", "DHS-wasting-by-country.rds"))
 
 #---------------------------------------
 # estimate mean z-scores by age
