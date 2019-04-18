@@ -35,8 +35,8 @@ d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "Monsoon", "Not monsoon")
 #Only GMS nepal has a group of children all measured at the same age throughout the year.
 
 
-p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region) + geom_smooth(aes(color=region), span=1, se=F, size=2) +
-  geom_smooth(aes(group=cohort), color="grey20", span=1, se=F,linetype=3, size=1) + xlab("Month") +
+p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region, scales="free_y") + geom_smooth(aes(color=region), span=1, se=F, size=2) +
+  geom_smooth(aes(group=cohort), color="grey20", span=1, se=F,linetype=3, size=1) + xlab("Month") + ylab("Mean WLZ") +
   scale_color_manual(values=tableau10, drop=TRUE, limits = levels(d$region)) +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
@@ -55,7 +55,7 @@ p1_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p1, file=paste0("figures/wasting/fig-",p1_name,".png"), width=12, height=8)
+ggsave(p1, file=paste0("figures/wasting/fig-",p1_name,".png"), width=6, height=3)
 
 
 
@@ -63,7 +63,7 @@ d <- d %>% filter(region=="South Asia")
 d <- d[d$agedays<730,]
 
 p2 <- ggplot(d[d$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color=tableau10[6], span=1, se=T, size=2) + 
-  ylab("WLZ") + xlab("Birth month") +
+  ylab("Mean WLZ") + xlab("Birth month") +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 p2
@@ -79,7 +79,8 @@ p2_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p2, file=paste0("figures/wasting/fig-",p2_name,".png"), width=8, height=5)
+ggsave(p2, file=paste0("figures/wasting/fig-",p2_name,".png"), width=6, height=3)
+ggsave(p2, file=paste0("6-shiny-app/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
 
 
 

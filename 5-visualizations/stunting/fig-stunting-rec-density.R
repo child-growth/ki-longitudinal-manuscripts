@@ -350,8 +350,8 @@ rec_histogram_plot_name = create_name(
 
 # save plot 
 
-ggsave(rec_histogram_plot, file=paste0("figures/stunting/fig-",rec_histogram_plot_name,
+ggsave(rec_histogram_plot, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,
        ".png"), width=8, height=5)
 
-saveRDS(plot_data_sub, file=paste0("results/figure-data/figdata-",rec_histogram_plot_name,".RDS"))
+saveRDS(plot_data_sub, file=paste0(figdata_dir, "figdata-",rec_histogram_plot_name,".RDS"))
 

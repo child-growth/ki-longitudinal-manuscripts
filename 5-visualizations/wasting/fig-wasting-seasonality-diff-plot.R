@@ -175,7 +175,7 @@ p <- ggplot(whz.res,aes(y=est,x=childseason)) +
   geom_point(aes(fill=birthcat, color=birthcat), size = 2) +
   geom_hline(yintercept = 0, linetype="dashed") +
   #geom_text(aes(x = childseason, y = rep(c(1.2,1),8), label = age_label), hjust = 1) +
-  #geom_text(aes(x = childseason, y = est+0.1, label = age_label), hjust = 1) +
+  geom_text(aes(x = childseason, y = 1.2, label = age_label), hjust = 0.5, size=4) +
   scale_color_manual(values=tableau10[c(7:10)]) +
   xlab("Season change")+
   ylab("Mean WLZ change") +

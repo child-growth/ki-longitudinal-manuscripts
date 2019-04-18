@@ -289,9 +289,25 @@ ir_noBW3 <- bind_rows(
 #rec.ir.data.d_noBW <- summary.ir(d_noBW, recovery = T)
 
 #Duration
-#dur.data <- summary.dur(d)
+d$agecat <- "0-24 months"
+dur.data <- summary.dur(d, agelist = list("0-24 months"))
+df <- d %>% group_by(studyid, subjid, episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration)) %>% filter(agedays < 30.6417 * 24)
+median(df$wasting_duration, na.rm=T)
+#Quantile CI's'
+sort(df$wasting_duration)[qbinom(c(.025,.975), length(df$wasting_duration), 0.5)]
 
 #Recovery within 30, 60, 90 days
+#Overall
+df <- d %>% filter(agedays < 30.4617 * 24)
+df$agecat <- "0-24 months"
+overall.rec.data30 <- summary.rec60(df, length = 30, agelist = c("0-24 months"))
+overall.rec.data60 <- summary.rec60(df, length = 60, agelist = c("0-24 months"))
+overall.rec.data90 <- summary.rec60(df, length = 90, agelist = c("0-24 months"))
+overall.rec.data30$ci.res
+overall.rec.data60$ci.res
+overall.rec.data90$ci.res
+
+#Age-strat
 d <- calc.ci.agecat(d, range = 6)
 rec.data30 <- summary.rec60( d, length = 30, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))
 rec.data60 <- summary.rec60( d, length = 60, agelist = c("0-6 months", "6-12 months", "12-18 months", "18-24 months"))

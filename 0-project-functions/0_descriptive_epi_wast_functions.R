@@ -303,7 +303,9 @@ summary.rec60 <- function(d, length=60, agelist=as.list(c("0-3 months","3-6 mont
 summary.perswast <- function(d, agelist=c("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")){
   
   
-  pers <- d %>%
+  pers <- d %>% group_by(studyid, country, subjid) %>% 
+    mutate(N=n()) %>% ungroup() %>%
+    filter(N>=4) %>%
     group_by(studyid, country, agecat, subjid) %>%
     filter(!is.na(agecat)) %>%
     summarise(perc_wast = mean(whz < (-2)), na.rm=T) %>%
@@ -416,32 +418,34 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, agelist=list("0-3 months","
 }
 
 
-summary.dur <- function(d, agelist){
-  
-  df <- d %>% 
-    group_by(studyid, region, country, agecat) %>% 
-    summarize(mean=mean(wasting_duration, na.rm=T), var=var(wasting_duration, na.rm=T), n=n()) %>%
-    mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se,
-           nmeas.f=paste0("N=",n," children"))
-  
-  pooled.vel=lapply(agelist,function(x) 
-    fit.cont.rma(data=df,yi="mean", vi="var", ni="n",age=x, nlab="children"))
-  pooled.vel=as.data.frame(rbindlist(pooled.vel))
-  
-  pooled.vel$est <- as.numeric(pooled.vel$est)
-  pooled.vel <- pooled.vel %>% 
-    mutate(country_cohort="pooled", pooled=1) %>% 
-    subset(., select = -c(se)) %>%
-    rename(strata=agecat, Mean=est, N=nmeas, Lower.95.CI=lb, Upper.95.CI=ub) %>% as.data.frame()
-  print(pooled.vel)
-  
-  cohort.df <- df %>% subset(., select = c(studyid, country, region, agecat, n, nmeas.f, mean, ci.lb, ci.ub)) %>%
-    rename(N=n, Mean=mean, Lower.95.CI=ci.lb, Upper.95.CI=ci.ub,
-           strata=agecat) %>%
-    mutate(pooled=0, nstudies=1)
-  
-  return(list(dur.data=df, dur.res=pooled.vel))
-}
+
+#NOTE: need to update with correct CI and meta-analysis for medians
+# summary.dur <- function(d, agelist){
+#   
+#   df <- d %>% 
+#     group_by(studyid, region, country, agecat) %>% 
+#     summarize(mean=mean(wasting_duration, na.rm=T), var=var(wasting_duration, na.rm=T), n=n()) %>%
+#     mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se,
+#            nmeas.f=paste0("N=",n," children"))
+#   
+#   pooled.vel=lapply(agelist,function(x) 
+#     fit.cont.rma(data=df,yi="mean", vi="var", ni="n",age=x, nlab="children"))
+#   pooled.vel=as.data.frame(rbindlist(pooled.vel))
+#   
+#   pooled.vel$est <- as.numeric(pooled.vel$est)
+#   pooled.vel <- pooled.vel %>% 
+#     mutate(country_cohort="pooled", pooled=1) %>% 
+#     subset(., select = -c(se)) %>%
+#     rename(strata=agecat, Mean=est, N=nmeas, Lower.95.CI=lb, Upper.95.CI=ub) %>% as.data.frame()
+#   print(pooled.vel)
+#   
+#   cohort.df <- df %>% subset(., select = c(studyid, country, region, agecat, n, nmeas.f, mean, ci.lb, ci.ub)) %>%
+#     rename(N=n, Mean=mean, Lower.95.CI=ci.lb, Upper.95.CI=ci.ub,
+#            strata=agecat) %>%
+#     mutate(pooled=0, nstudies=1)
+#   
+#   return(list(dur.data=df, dur.res=pooled.vel))
+# }
 
 
 
