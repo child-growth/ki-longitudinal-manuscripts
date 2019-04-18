@@ -31,7 +31,7 @@ dhs_pooled <- dhs_pooled %>%
   select(measure, region, agem, fit, fit_se, fit_lb, fit_ub)
 df_survey_output <- bind_rows(df_survey, dhs_pooled) %>%
   mutate(region = factor(region, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")))
-save(df_survey_output, file = here::here("results", "DHS-wasting-by-region.rds"))
+saveRDS(df_survey_output, file = here::here("results", "DHS-wasting-by-region.rds"))
 
 #---------------------------------------
 # repeat the analysis for country specific results
@@ -60,7 +60,7 @@ dhs_pooled <- dhs_pooled %>%
   select(measure, country, agem, fit, fit_se, fit_lb, fit_ub)
 df_survey_output <- bind_rows(svymean_each_country, dhs_pooled) %>%
   mutate(country = factor(country))
-save(df_survey_output, file = here::here("results", "DHS-wasting-by-country.rds"))
+saveRDS(df_survey_output, file = here::here("results", "DHS-wasting-by-country.rds"))
 
 #---------------------------------------
 # estimate mean z-scores by age
@@ -152,4 +152,4 @@ dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
     dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries", "DHS")),
     region = factor(region, levels = c("OVERALL", "AFRO", "SEARO", "PAHO"))
   )
-save(dhsfits, file = here::here("results", "wasting-DHSandKI-by-region.rds"))
+saveRDS(dhsfits, file = here::here("results", "wasting-DHSandKI-by-region.rds"))

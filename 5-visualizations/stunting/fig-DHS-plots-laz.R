@@ -84,7 +84,7 @@ dhsz <- dhsz %>%
 
 # compute or load the DHS results
 # source("fig-DHS-plots-laz-compute.R")
-load(here::here("results", "DHS-stunting-by-region.rds"))
+df_survey_output <- dhsfits(here::here("results", "DHS-stunting-by-region.rds"))
 #---------------------------------------
 # estimate mean z-scores by age
 # subset to countries that overlap the

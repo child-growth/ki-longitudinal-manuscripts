@@ -35,7 +35,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 # set up for parallel computing
 # configure for a laptop (use only 3 cores)
-registerDoParallel(cores = 8)
+registerDoParallel(cores = 4)
 source("../shared/helper_sampling_weights.R")
 
 #---------------------------------------
@@ -87,7 +87,7 @@ dhsz <- dhsz %>%
 
 # compute or load the DHS results
 # source("fig-DHS-plots-zscores-compute.R")
-load(here::here("results", "wasting-DHSandKI-by-region.rds"))
+dhsfits <- readRDS(here::here("results", "wasting-DHSandKI-by-region.rds"))
 #---------------------------------------
 # make z-score by age figure
 # after preliminary inspection, the

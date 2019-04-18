@@ -33,4 +33,4 @@ df_pooled <- df_pooled %>%
 df_survey_output <- bind_rows(df_survey, df_pooled) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 df_survey_output$measure <- "LAZ" # rename HAZ to LAZ
-save(df_survey_output, file = here::here("results", "DHS-stunting-by-region.rds"))
+saveRDS(df_survey_output, file = here::here("results", "DHS-stunting-by-region.rds"))
