@@ -11,7 +11,6 @@
 
 # Args/Options:
 # data: a data frame with variables studyid, country, agecat, and outcome-specific summary measures for ni and xi
-# age: the age category to calculate to
 # ni: name of the variable that is the total count of observations
 # xi:  name of the variable
 # measure: fed into rma() function; character string indicating the type of data supplied to the function. "PLO" by default for logit transformed proportion
@@ -19,13 +18,13 @@
 # method: fed into rma() function; haracter string specifying whether a fixed- ("FE") or a random/mixed-effects model ("REML") should be fitted.
 
 # random effects function, save results nicely
-fit.rma <- function(data, ni, xi, age = NULL, measure = "PLO", nlab = "", method = "REML") {
 
-  # Filter data to specific age category, if specified
-  if (!is.null(age)) {
-    data <- filter(data, agecat == age)
-  }
-
+# user filter age before feeding to function
+fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", nlab = "", method = "REML") {
+  mode_continuous <- !is.null(yi) | !is.null(vi)
+  mode_binary <- !is.null(xi)
+  if (mode_binary & mode_continuous) stop("can only do binary or continuous")
+  assert_that("age" %in% colnames(data))
   # check if measure=="PLO" - default for all parameters bounded between 0 and 1 (prevalence, cumulative incidence)
   # because then output needs back transformation
   if (measure == "PLO") {
@@ -40,79 +39,80 @@ fit.rma <- function(data, ni, xi, age = NULL, measure = "PLO", nlab = "", method
         ungroup() %>%
         mutate(nstudies = 1, nmeas = data[[ni]]) %>%
         mutate(
-          agecat = age, est = plogis(yi), lb = plogis(yi - 1.96 * se), ub = plogis(yi + 1.96 * se),
+          agecat = age,
+          est = plogis(yi),
+          lb = plogis(yi - 1.96 * se),
+          ub = plogis(yi + 1.96 * se),
           nmeas.f = paste0("N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE), " ", nlab),
           nstudy.f = paste0("N=", nstudies, " studies")
         ) %>%
         select(nstudies, nmeas, agecat, est, se, lb, ub, nmeas.f, nstudy.f) %>%
         as.tibble()
       rownames(out) <- NULL
-
       # If input is more than 1 row (multiple studies), pool across studies with rma() function from metafor package
     } else {
       # Check if 0 cases of the outcome
-      if (sum(data[[xi]]) == 0) {
-        # Use FE model if all 0 counts because no heterogeneity and rma.glmm fails
-        fit <- rma(data = data, ni = data[[ni]], xi = data[[xi]], method = "FE", measure = measure)
-      } else {
-
-        # fit meta-analysis model via chosen method
-        fit <- NULL
-        try(fit <- rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]], measure = measure))
-
-        # If random effects model fails to converge, try other methods:
-        if (is.null(fit)) {
-          method <- "ML"
-          try(fit <- rma(data = data, ni = data[[ni]], xi = data[[xi]], method = method, measure = measure))
-        }
-        if (is.null(fit)) {
-          method <- "DL"
-          try(fit <- rma(data = data, ni = data[[ni]], xi = data[[xi]], method = method, measure = measure))
-        }
-        if (is.null(fit)) {
-          method <- "HE"
-          try(fit <- rma(data = data, ni = data[[ni]], xi = data[[xi]], method = method, measure = measure))
-        }
-        # Print chosen method
-        cat("\nMethod chosen to fit RE model:", method, "\n")
+      # Use FE model if all 0 counts because no heterogeneity and rma.glmm fails
+      if (sum(data[[xi]]) == 0) method <- "FE"
+      fit <- NULL
+      if (mode_binary) {
+        try(fit <- rma(
+          data = data,
+          ni = data[[ni]],
+          method = method,
+          xi = data[[xi]],
+          measure = measure
+        ))
       }
-
+      if (mode_continuous) {
+        try(fit <- rma(
+          data = data,
+          yi = data[[yi]],
+          vi = data[[vi]],
+          # ni = data[[ni]],
+          method = method,
+          measure = measure
+        ))
+      }
       # Create formatted dataset to return
       out <- data %>%
         ungroup() %>%
         summarise(
           nstudies = length(unique(studyid)),
-          nmeas = sum(data[[ni]][agecat == age])
+          nmeas = sum(data[[ni]])
         ) %>%
-        # mutate(agecat=age,est=exp(fit$beta), se=fit$se, lb=exp(fit$beta-1.96*fit$se), ub=exp(fit$beta+1.96*fit$se),
         mutate(
-          agecat = age, est = plogis(fit$beta), se = fit$se, lb = plogis(fit$beta - 1.96 * fit$se), ub = plogis(fit$beta + 1.96 * fit$se),
+          agecat = age,
+          est = plogis(fit$beta),
+          se = fit$se,
+          lb = plogis(fit$beta - 1.96 * fit$se),
+          ub = plogis(fit$beta + 1.96 * fit$se),
           nmeas.f = paste0("N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE), " ", nlab),
           nstudy.f = paste0("N=", nstudies, " studies")
         ) %>%
         as.tibble()
       rownames(out) <- NULL
     }
-
-    # If measure other than PLO is chosen:
   } else {
-    if (measure != "IR") {
-      fit <- rma(ni = data[[ni]], xi = data[[xi]], method = method, measure = measure)
-    } else {
-      # If measure if IR for incidence rate, use `to="if0all"` argument to add .5 to all cells of the 2x2 table if one is 0 so rma() works
-      fit <- rma(
-        ti = data[[ni]], xi = data[[xi]],
-        method = method, measure = measure, to = "if0all"
-      )
-    }
+    # If measure other than PLO is chosen:
+    to <- "only0"
+    # If measure if IR for incidence rate, use `to="if0all"` argument to add .5 to all cells of the 2x2 table if one is 0 so rma() works
+    if (measure == "IR") to <- "if0all"
+    fit <- rma(
+      ni = data[[ni]], xi = data[[xi]], method = method, measure = measure, to = to
+    )
     out <- data %>%
       ungroup() %>%
       summarise(
         nstudies = length(unique(studyid)),
-        nmeas = sum(data[[ni]][agecat == age])
+        nmeas = sum(data[[ni]])
       ) %>%
       mutate(
-        agecat = age, est = fit$beta, se = fit$se, lb = fit$ci.lb, ub = fit$ci.ub,
+        agecat = age,
+        est = fit$beta,
+        se = fit$se,
+        lb = fit$ci.lb,
+        ub = fit$ci.ub,
         nmeas.f = paste0(
           "N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE),
           " ", nlab
@@ -123,60 +123,15 @@ fit.rma <- function(data, ni, xi, age = NULL, measure = "PLO", nlab = "", method
   return(out)
 }
 
+# it automatically figures out if you input continous data or binary data.
+# to recover the old continuous functionality
+# fit.cont.rma = fit.rma(data, yi, vi, ni, nlab, method, measure = "GEN")
 
+# fit.rma.rec.cohort is also combined into fit.rma
+# fit.rma.rec.cohort = fit.rma(data, ni, xi, measure = "PLO", nlab, method = "REML")
 
-
-##############################################
-# fit.cont.rma
-##############################################
-
-# Documentation: fit.cont.rma
-# Usage: fit.rma(data,age,yi,vi,ni,nlab, method = "REML")
-# Description: Take an input dataframe with each row summarizing the means and variances of a continious variable
-#             from a single cohort and then calculates the pooled mean and CI
-
-# Args/Options:
-# data: a data frame with variables studyid, country, agecat, and outcome-specific summary measures for ni and xi
-# age: the age category to calculate to
-# ni: name of the variable that is the total count of observations
-# yi:  name of the variable that is the mean of the outcome of interest
-# vi:  name of the variable that is the variance of the outcome of interest
-# nlab: optional label of the count of observations i.e. "children" to be appended to the formatted counts/
-# method: fed into rma() function; haracter string specifying whether a fixed- ("FE") or a random/mixed-effects model ("REML") should be fitted.
-
-fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
-  data <- filter(data, agecat == age)
-
-  fit <- NULL
-  try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = method, measure = "GEN"))
-  if (is.null(fit)) {
-    try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = "ML", measure = "GEN"))
-  }
-  if (is.null(fit)) {
-    try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = "DL", measure = "GEN"))
-  }
-  if (is.null(fit)) {
-    try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = "HE", measure = "GEN"))
-  }
-
-  out <- data %>%
-    ungroup() %>%
-    summarise(
-      nstudies = length(unique(studyid)),
-      nmeas = sum(data[[ni]][agecat == age])
-    ) %>%
-    mutate(
-      agecat = age, est = fit$beta, se = fit$se, lb = fit$ci.lb, ub = fit$ci.ub,
-      nmeas.f = paste0(
-        "N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE),
-        " ", nlab
-      ),
-      nstudy.f = paste0("N=", nstudies, " studies")
-    )
-  return(out)
-}
-
-
+# the original fit.rma
+# fit.rma(data, xi, ni, nlab, method, measure = "GEN")
 
 ##############################################
 # fit.escalc
@@ -196,57 +151,34 @@ fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
 # ci.lb = lower bound of 95% confidence interval
 # ci.ub = upper bound of 95% confidence interval
 
-fit.escalc <- function(data, age, ni, xi, meas) {
-  data <- filter(data, agecat == age)
+# user filter age themselves
 
-  if (meas == "PLO") {
-    data <- escalc(data = data, ni = data[[ni]], xi = data[[xi]], method = "REML", measure = "PLO", append = T)
+fit.escalc <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure, method = "REML") {
+  mode_continuous <- !is.null(yi) | !is.null(vi)
+  mode_binary <- !is.null(xi)
+  if (mode_binary & mode_continuous) stop("can only do binary or continuous")
+  # if (measure == "PR") measure <- "PLO"
+  if (mode_binary) {
+    data <- escalc(data = data, ni = data[[ni]], xi = data[[xi]], method = method, measure = measure, append = TRUE)
+  }
+  if (mode_continuous) {
+    data <- data.frame(data, escalc(data = data, ni = data[[ni]], yi = data[[yi]], vi = data[[vi]], method = method, measure = measure))
+  }
+  if (measure == "PLO") {
     data$se <- sqrt(data$vi)
     data$ci.lb <- plogis(data$yi - 1.96 * data$se)
     data$ci.ub <- plogis(data$yi + 1.96 * data$se)
     data$yi <- plogis(data$yi)
   } else {
-    if (meas == "PR") {
-      data <- escalc(data = data, ni = data[[ni]], xi = data[[xi]], method = "REML", measure = "PLO", append = T)
-    }
-
-    if (meas == "IR") {
-      data <- escalc(data = data, ti = data[[ni]], xi = data[[xi]], method = "REML", measure = "IR", append = T)
-    }
-
     data$se <- sqrt(data$vi)
     data$ci.lb <- data$yi - 1.96 * data$se
     data$ci.ub <- data$yi + 1.96 * data$se
   }
   return(data)
 }
-
-
-
-##############################################
-# fit.escalc.cont
-##############################################
-
-# fit.escalc for continious data
-
-fit.escalc.cont <- function(data, age, yi, vi, meas) {
-  data <- filter(data, agecat == age)
-
-  data <- data.frame(data, escalc(yi = data[[yi]], vi = data[[vi]], method = "REML", measure = "GEN"))
-
-  data$se <- sqrt(data$vi)
-  data$ci.lb <- data$yi - 1.96 * data$se
-  data$ci.ub <- data$yi + 1.96 * data$se
-
-  return(data)
-}
-
-
-
-
-
-
-
+# it automatically figures out if you input continous data or binary data.
+# to recover the old continuous functionality
+# fit.escalc.cont = fit.escalc(data, yi, vi, measure = "GEN", method = "REML")
 
 #---------------------------------------
 # rma wrapper function across a list of ages
@@ -312,86 +244,6 @@ run_rma_agem <- function(data, n_name, x_name, label, method) {
 
   return(res)
 }
-
-
-
-
-
-
-
-
-# random effects function, save results nicely
-# customized for stunting recovery cohort analysis
-# since it does not use age categories
-fit.rma.rec.cohort <- function(data, ni, xi, measure, nlab, method = "REML") {
-  fit <- NULL
-  try(fit <- rma(
-    data = data, ni = data[[ni]], method = method,
-    xi = data[[xi]], measure = "PLO"
-  ))
-  if (is.null(fit)) {
-    method <- "ML"
-    try(fit <- rma(
-      data = data, ni = data[[ni]], xi = data[[xi]],
-      method = method, measure = measure
-    ))
-  }
-  if (is.null(fit)) {
-    method <- "DL"
-    try(fit <- rma(
-      data = data, ni = data[[ni]], xi = data[[xi]],
-      method = method, measure = measure
-    ))
-  }
-  if (is.null(fit)) {
-    method <- "HE"
-    try(fit <- rma(
-      data = data, ni = data[[ni]], xi = data[[xi]],
-      method = method, measure = measure
-    ))
-  }
-  cat("\nMethod chosen to fit RE model:", method, "\n")
-
-  out <- data %>%
-    ungroup() %>%
-    summarise(
-      nstudies = length(unique(studyid)),
-      nmeas = sum(data[[ni]])
-    ) %>%
-    mutate(
-      est = plogis(fit$beta),
-      se = fit$se,
-      lb = plogis(fit$beta - qnorm(0.975) * fit$se),
-      ub = plogis(fit$beta + qnorm(0.975) * fit$se),
-      nmeas.f = paste0(
-        "N=", format(
-          sum(data[[ni]]),
-          big.mark = ",",
-          scientific = FALSE
-        ),
-        " ", nlab
-      ),
-      nstudy.f = paste0("N=", nstudies, " studies")
-    )
-
-  return(out)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
