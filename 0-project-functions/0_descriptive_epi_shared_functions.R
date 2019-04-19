@@ -737,7 +737,8 @@ create_name = function(outcome, cutoff, measure, population,
       analysis == "monthly cohorts" ~ "monthly",
       analysis == "exclude excluding COHORTS Guatemala and Content" ~ "exc_male_eff",
       analysis == "washout period sensitivity" ~ "ir_sense",
-      analysis == "sensitivity analysis excluding birth" ~ "nobirth"
+      analysis == "sensitivity analysis excluding birth" ~ "nobirth",
+      analysis == "primary - random effects" ~ "re"
     )
     
     # create figure name string using short versions of each feature
