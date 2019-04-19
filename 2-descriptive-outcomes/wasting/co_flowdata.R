@@ -23,6 +23,8 @@ d <- d %>% filter(measurefreq=="monthly")
 # drop variables we don't need
 d = d %>% select(studyid, subjid, country, measid, agedays, haz, whz, waz)
 
+
+
 # create reverse measid
 d = d %>% 
   group_by(studyid, country, subjid) %>%
@@ -49,6 +51,14 @@ d <- d %>%
 d %>% group_by(agecat) %>%
   summarise(min = min(agedays)/30.4167,
             max = max(agedays)/30.4167)
+
+#Number of children ever wasted and stunted
+d %>% mutate(co=ifelse(haz< (-2) & whz < (-2),1,0),
+             sevco=ifelse(haz< (-3) & whz < (-3),1,0)) %>% 
+     filter(!is.na(agecat)) %>%
+  group_by(studyid, country, subjid) %>%
+  summarize(everco=max(co), eversevco=max(sevco)) %>% ungroup() %>%
+  summarize(N=n(), sumco=sum(everco), sumsevco=sum(eversevco), propco=mean(everco), propsevco=mean(eversevco))
 
 
 flow_m = d %>%
