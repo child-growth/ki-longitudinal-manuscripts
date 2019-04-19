@@ -23,10 +23,10 @@ d <- d %>% filter(measurefreq=="monthly")
 # drop variables we don't need
 d = d %>% select(studyid, subjid, region, country, measid, agedays, haz)
 
-# create reverse measid
-d = d %>% 
-  group_by(studyid, country, subjid) %>%
-  mutate(revmeasid = rev(seq_along(agedays)))
+# # create reverse measid
+# d = d %>% 
+#   group_by(studyid, country, subjid) %>%
+#   mutate(revmeasid = rev(seq_along(agedays)))
 
 ##########################################
 # Define indicators of stunting at each time point
@@ -53,9 +53,14 @@ d %>% group_by(agecat) %>%
 # classify stunting status each month
 #--------------------------------------------------
 flow_m = d %>%
-  mutate(agem = agedays / 30.4167) %>%
+  mutate(agem = agedays / 30.4167, agem = round(agem)) %>%
+  group_by(studyid,country,subjid, region, agem) %>%
+    summarize(haz=mean(haz)) %>%
   group_by(studyid,country,subjid) %>%
-  
+  # # create reverse measid
+  mutate(measid = seq_along(agem),
+         revmeasid = rev(seq_along(agem))) %>%
+
   mutate(stunted=ifelse(haz< -2,1,0),
          lagstunted=lag(stunted),
          lageverstunted = lag(cummax(stunted))) %>%
@@ -100,10 +105,10 @@ flow_m = d %>%
 
 
 # drop measurements with ages over 24 months
-flow_m = flow_m %>% filter(!is.na(agecat)) 
+#flow_m = flow_m %>% filter(!is.na(agecat)) 
+flow_m = flow_m %>% filter(agem < 25) 
 
-# summarise within age months
-flow_m = flow_m %>% mutate(agem = round(agem))
+
 
 #--------------------------------------------------
 # check that indicators do not contain missing values
