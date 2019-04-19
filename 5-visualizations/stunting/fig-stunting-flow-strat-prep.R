@@ -7,6 +7,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 # load data
 stunt_data = readRDS(paste0(res_dir, "stuntflow.RDS"))
+stunt_data_pooled = readRDS(paste0(res_dir, "stuntflow_pooled.RDS"))
 
 # number of studies, countries, children included
 length(names(table(stunt_data$studyid)))
@@ -131,3 +132,13 @@ plot_region %>%
 
 saveRDS(plot_overall, file = paste0(res_dir, "stunt-flow-data-pooled.RDS"))
 saveRDS(plot_region, file = paste0(res_dir, "stunt-flow-data-region.RDS"))
+
+
+
+
+
+
+
+
+
+
