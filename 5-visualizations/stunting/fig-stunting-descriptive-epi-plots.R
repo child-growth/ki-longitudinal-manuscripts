@@ -174,7 +174,7 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=4)
 
 saveRDS(prev_plot$data, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 
@@ -248,7 +248,7 @@ prev_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=3)
+ggsave(prev_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=4)
 
 saveRDS(prev_plot_sev$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
 
@@ -333,7 +333,7 @@ ci_inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=14, height=4)
 
 saveRDS(ci_inc_plot$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 
@@ -468,7 +468,7 @@ ci_inc_plot_nobirth_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_nobirth$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_nobirth_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot_nobirth$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_nobirth_name,".png"), width=14, height=4)
 
 saveRDS(ci_inc_plot_nobirth$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_nobirth_name,".RDS"))
 
@@ -503,7 +503,7 @@ ci_inc_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=4)
 
 saveRDS(ci_inc_plot_sev$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
 
