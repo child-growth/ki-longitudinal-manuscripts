@@ -55,7 +55,7 @@ p <- ggplot(data=plotdf, aes(x=agedays, y=fit, group=born_wast, color=born_wast,
   geom_ribbon(aes(ymin=fit_lb, ymax=fit_ub), alpha=0.3, color=NA) +
   scale_color_manual(values=tableau10[c(5:6)], na.translate = F) + 
   scale_fill_manual(values=tableau10[c(5:6)], na.translate = F) + 
-  ylab("WLZ") + xlab("Age in months") +
+  ylab("Mean WLZ") + xlab("Age in months") +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 1:24*30.4167-15.2, labels = 1:24) +
@@ -72,6 +72,7 @@ p
 
 
 ggsave(p, file=paste0(here(),"/6-shiny-app/figures/wasting/birthwast_strat_growth_curve.png"), width=7, height=5)
+save(p, file=paste0(here::here(),"/figures/plot objects/birthwast_strat_growth_curve_object.Rdata"))
 
 
 p <- ggplot(data=plotdf, aes(x=agedays, y=fit, group=born_wast, color=born_wast,  fill=born_wast)) +

@@ -1,6 +1,6 @@
 
 rm(list = ls())
-# source(paste0(here::here(), "/0-config.R"))
+#source(paste0(here::here(), "/0-config.R"))
 require(here)
 require(stringr)
 require(dplyr)
@@ -38,7 +38,7 @@ figdata_path = "figure-data/"
 # Load all files
 #------------------------------------------------
 load_fig_files <- function(file_path){
-  data <- list.files(path=file_path, recursive = T)
+  data <- list.files(path=fig_path, recursive = T)
   #fig-OUTCOME-CUTOFF-MEASURE-POPULATION-LOCATION-AGE-ANALYSIS.pdf
   varnames <- c("fig", "outcome", "cutoff", "measure", "population", "location",
                 "age", "analysis")
@@ -65,79 +65,49 @@ load_fig_files <- function(file_path){
   return(df)
 }
 
+
+
 transform_variables <- function(df){
+  transformations = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vREmg4PurW2AKddhf1Mtj9dAyaeCeYPUpHurNUe3r0gVVeeLrkS3aU-4XlYhZ96iWsBpr-R9sDT8Alp/pub?gid=0&single=true&output=csv")
+  
   df <- df %>%
-    dplyr::mutate(outcome = case_when(
-      outcome == "stunt" ~ "stunting",
-      outcome == "wast" ~ "wasting",
-      outcome == "laz" ~ "LAZ",
-      outcome == "LAZ" ~ "LAZ",
-      outcome == "whz" ~ "WHZ",
-      outcome == "WHZ" ~ "WHZ",
-      outcome == 'wlz' ~ 'WHZ',
-      outcome == "stunt_laz" ~ "stunting and laz",
-      outcome == 'wast_wlz' ~ 'wasting and wlz',
-      outcome == 'co' ~ 'co-occurrence',
-      outcome == 'length' ~ 'length',
-      TRUE ~ as.character(outcome)
-      )
+    dplyr::mutate(outcome =
+                    transformations %>% 
+                    filter(variable.type == "outcome") %>% 
+                    filter(variable == outcome) %>% 
+                    select(description) %>%
+                    first()
     ) %>%
-    dplyr::mutate(measure = case_when(
-      measure == "prev" ~ "prevalence",
-      measure == "inc" ~ "incidence",
-      measure == "cuminc" ~ "cumulative incidence",
-      measure == "ir" ~ "incidence rate",
-      measure == "mean" ~ "mean",
-      measure == 'mean_dhs' ~ 'mean DHS',
-      measure == 'density_dhs' ~ 'density DHS',
-      measure == "vel" ~ "growth velocity",
-      measure == "laz_vel" ~ "LAZ velocity",
-      measure == "length_vel" ~ "length velocity",
-      measure == "heatmap" ~ "heatmap",
-      measure == 'rec' ~ 'recovery',
-      measure == "rec_dist" ~ "distribution after laz >= -2",
-      measure == "rec_laz" ~ "mean after LAZ rose above -2",
-      measure == "rec_prev" ~ "prevalence after LAZ rose above -2",
-      measure == "quant" ~ "quantile",
-      measure == "map" ~ "map",
-      measure == 'coflow' ~ 'wasting, stunting, and underweight co-occurrence',
-      measure == "flow" ~ "change in stunting status",
-      measure == 'perswast' ~ 'persistent wasting',
-      measure == 'co' ~ 'co-occurrence of wasting and stunting',
-      measure == 'uwt' ~ 'underweight',
-      measure == 'muac' ~ 'MUAC-based wasting',
-      TRUE ~ as.character(measure)
-    )) %>%
-    dplyr::mutate(population = case_when(
-      population == "overall" ~ "overall",
-      population == "overall_region" ~ "overall and region-stratified",
-      population == "region" ~ "region-stratified",
-      population == "cohort" ~ "cohort-stratified",
-      population == 'birth' ~ 'birth-stratified',
-      TRUE ~ as.character(population)
-    )) %>%
-    dplyr::mutate(age = case_when(
-      age == "allage" ~ "All ages",
-      age == 'birth' ~ 'Birth',
-      TRUE ~ as.character(age)
-    )) %>%
-    dplyr::mutate(location = case_when(
-      location == "" ~ "",
-      location == "asia" ~ "South Asia",
-      location == "eur" ~ "Europe",
-      location == "latamer" ~ "Latin America",
-      location == "africa" ~ "Africa",
-      TRUE ~ as.character(location)
-    )) %>%
-    dplyr::mutate(analysis = case_when(
-      analysis == "primary" ~ "primary",
-      analysis == 'season' ~ 'seasonality',
-      analysis == "month24" ~ "monthly cohorts measured each month from 0 to 24",
-      analysis == "monthly" ~ "monthly cohorts",
-      analysis == "exc_male_eff" ~ "exclude excluding COHORTS Guatemala and Content",
-      analysis == 'ir_sense' ~ 'washout period sensitivity',
-      TRUE ~ as.character(analysis)
-    ))
+    dplyr::mutate(measure = transformations %>% 
+                    filter(variable.type == "measure") %>% 
+                    filter(variable == measure) %>% 
+                    select(description) %>%
+                    first()
+    ) %>%
+    dplyr::mutate(population = transformations %>% 
+                    filter(variable.type == "population") %>% 
+                    filter(variable == population) %>% 
+                    select(description) %>%
+                    first()
+    ) %>%
+    dplyr::mutate(age = transformations %>% 
+                    filter(variable.type == "age") %>% 
+                    filter(variable == age) %>%
+                    select(description) %>%
+                    first()
+    ) %>%
+    dplyr::mutate(location = transformations %>% 
+                    filter(variable.type == "location") %>% 
+                    filter(variable == location) %>% 
+                    select(description) %>%
+                    first()
+    ) %>%
+    dplyr::mutate(analysis = transformations %>% 
+                    filter(variable.type == "analysis") %>% 
+                    filter(variable == analysis) %>%
+                    select(description) %>%
+                    first()
+    )
   
   return(df)
   

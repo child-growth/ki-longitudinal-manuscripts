@@ -155,7 +155,7 @@ prev_plot <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age in months",
+                   xlabel="Child age, months",
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,24),
                    returnData=T)
@@ -208,6 +208,9 @@ ci_plot_name = create_name(
 ggsave(ci_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
 
 saveRDS(ci_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",ci_plot_name,".RDS"))
+
+#Save plot objects for figure grid
+save(mean_wlz_plot, prev_plot, ci_plot, file=paste0(here::here(),"/figures/plot objects/fig2_plot_objects.Rdata"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -299,7 +302,7 @@ inc_plot <- inc_combo_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age in months",
+                   xlabel="Child age, months",
                    ylabel='Episodes per 1000\nperson-days at risk',
                    yrange=c(0,7.5),
                    legend.pos = c(.92,.8))
@@ -320,7 +323,7 @@ inc_plot_name = create_name(
 ggsave(inc_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
 saveRDS(inc_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",inc_plot_name,".RDS"))
-
+save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.Rdata"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -357,6 +360,8 @@ inc_plot_name = create_name(
 ggsave(inc_plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=3)
 
 ggsave(inc_plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
+
+
 
 
 #-------------------------------------------------------------------------------------------
@@ -455,7 +460,7 @@ rec_plot <- rec_combo_plot(d,
                    Severe="no", 
                    Age_range=c("30 days","60 days","90 days"), 
                    Cohort="pooled",
-                   xlabel="Age in months",
+                   xlabel="Child age, months",
                    ylabel='Percent recovered\n(95% CI)',
                    yrange=c(0,100),
                    legend.pos = c(.1,.88))
@@ -473,8 +478,10 @@ rec_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(rec_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=3)
-
 saveRDS(rec_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",rec_plot_name,".RDS"))
+
+save(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object.Rdata"))
+
 
 #Plot just the overall facet for presentation slide
 df <- d %>% filter(
@@ -497,7 +504,7 @@ p <- ggplot(df,aes(y=est,x=agecat)) +
   ), size = 3, position = position_dodge(0.5)) +
   scale_color_manual(values=tableau10[c(7,9,10)],  name = 'Measure', 
                      labels = c('30 days', '60 days', '90 days')) +
-  xlab("Age in months") + ylab("Percent recovered") +
+  xlab("Child age, months") + ylab("Percent recovered") +
   ggtitle('Recovery within 30, 60, or 90 days of wasting onset') +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
   theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
@@ -538,7 +545,7 @@ perswast_plot <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="6 months", 
                    Cohort="pooled",
-                   xlabel="Age in months",
+                   xlabel="Child age, months",
                    ylabel = 'Proportion (%)',
                    yrange=c(0,20),
                    returnData=T)
@@ -562,11 +569,7 @@ saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/f
 
 
 
-#-------------------------------------------------------------------------------------------
-# WLZ seasonality
-#-------------------------------------------------------------------------------------------
 
-#- Made in seperate script on GHAP
 
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
@@ -578,8 +581,8 @@ co_plot <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age in months",
-                   ylabel='Point prevalence (95% CI)',
+                   xlabel="Child age, months",
+                   ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
                    yrange=c(0,12),
                    returnData=T)
 
@@ -600,6 +603,8 @@ ggsave(co_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-
 
 saveRDS(co_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",co_plot_name,".RDS"))
 
+save(co_plot, file=paste0(here::here(),"/figures/plot objects/co_plot_object.Rdata"))
+
 
 #-------------------------------------------------------------------------------------------
 # Underweight prevalence 
@@ -611,7 +616,7 @@ underweight_plot <- ki_desc_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age in months",
+                   xlabel="Child age, months",
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,24))
 
@@ -739,7 +744,7 @@ ir_sens_plot <- rec_combo_plot(d.ir,
                      Severe="no", 
                      Age_range=c("30 days","60 days","90 days"), 
                      Cohort="pooled",
-                     xlabel="Age in months",
+                     xlabel="Child age, months",
                      ylabel='Episodes per 1000 person-days at risk',
                      yrange=c(0,4),
                      legend.pos = c(.95,.8))
@@ -775,7 +780,7 @@ sevwast_plot <- ki_desc_plot(d,
                    Severe="yes", 
                    Age_range="3 months", 
                    Cohort="pooled",
-                   xlabel="Age in months",
+                   xlabel="Child age, months",
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,10),
                    returnData=T)
