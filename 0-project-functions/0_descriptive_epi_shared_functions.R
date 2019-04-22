@@ -583,19 +583,20 @@ create_name <- function(outcome, cutoff, measure, population,
                         location, age, analysis) {
 
   # define short versions of each feature
-  outcome_s <- case_when(
-    outcome == "stunting" ~ "stunt",
-    outcome == "wasting" ~ "wast",
-    outcome == "LAZ" ~ "laz",
-    outcome == "laz" ~ "laz",
-    outcome == "WHZ" ~ "wlz",
-    outcome == "whz" ~ "wlz",
-    outcome == "wlz" ~ "wlz",
-    outcome == "length" ~ "length",
-    outcome == "stunting and laz" ~ "stunt_laz",
-    outcome == "wasting and wlz" ~ "wast_wlz",
-    outcome == "co-occurrence" ~ "co"
-  )
+
+    outcome_s <- case_when(
+      outcome == "stunting" ~ "stunt",
+      outcome == "wasting" ~ "wast",
+      outcome == "LAZ" ~ "laz",
+      outcome == "laz" ~ "laz",
+      outcome == "WHZ" ~ "wlz",
+      outcome == "whz" ~ "wlz",
+      outcome == "wlz" ~ "wlz",
+      outcome == "length" ~ "length",
+      outcome == "stunting and laz" ~ "stunt_laz",
+      outcome == "wasting and wlz" ~ "wast_wlz",
+      outcome == "co-occurrence" ~ "co"
+    )       
 
   cutoff_s <- cutoff
 

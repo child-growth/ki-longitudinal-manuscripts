@@ -97,7 +97,7 @@ d <- d %>%
     country == "TT" ~ "Trinidad and Tobago",
     country == "TZ7" ~ "Tanzania",
     country == "UG7" ~ "Uganda",
-    country == "VNT" ~ "Vermont",
+    country == "VNT" ~ "Vietnam",
     country == "ZA7" ~ "South Africa",
     country == "ZM6" ~ "Zambia",
     country == "ZW7" ~ "Zimbabwe"
@@ -127,9 +127,8 @@ d_haz_wide <- d %>% select(country, dataset, weight, cluster_no, psu, stratifica
 
 d_waz_wide <- d %>% select(country, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, waz_vars)
 
-d_whz_wide <- d %>% select(country, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, whz_vars) # 68 countries
+d_whz_wide <- d %>% select(country, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, whz_vars) # 58 countries
 
-# 68 countries
 
 #-------------------------------------------
 # Reshape from wide to long
@@ -201,9 +200,9 @@ d_waz_long <- d_waz_long %>% filter(agem <= 24)
 d_whz_long <- d_whz_long %>% filter(agem <= 24)
 
 # drop rows with missing values
-d_haz_long <- d_haz_long %>% filter(!is.na(agem) & !is.na(zscore)) # 51 countries!
-d_waz_long <- d_waz_long %>% filter(!is.na(agem) & !is.na(zscore))
-d_whz_long <- d_whz_long %>% filter(!is.na(agem) & !is.na(zscore))
+d_haz_long <- d_haz_long %>% filter(!is.na(agem) & !is.na(zscore)) #49 countries
+d_waz_long <- d_waz_long %>% filter(!is.na(agem) & !is.na(zscore)) #48 countries
+d_whz_long <- d_whz_long %>% filter(!is.na(agem) & !is.na(zscore)) #48 countries
 
 
 

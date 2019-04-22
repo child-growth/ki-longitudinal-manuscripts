@@ -176,7 +176,7 @@ p <- ggplot(whz.res,aes(y=est,x=childseason)) +
   geom_hline(yintercept = 0, linetype="dashed") +
   #geom_text(aes(x = childseason, y = rep(c(1.2,1),8), label = age_label), hjust = 1) +
   geom_text(aes(x = childseason, y = 1.2, label = age_label), hjust = 0.5, size=4) +
-  scale_color_manual(values=tableau10[c(7:10)]) +
+  scale_color_manual(values=tableau10[c(5,7,9,10)]) +
   xlab("Season change")+
   ylab("Mean WLZ change") +
   #scale_x_discrete(sec.axis = dup_axis(trans = ~., name = waiver(), breaks = waiver())) +
@@ -192,5 +192,6 @@ p
 
 ggsave(p, file=paste0(here(),"/figures/wasting/seasonal_trajectories_seasondiff.png"), width=14, height=5)
 
+save(p, file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_diff_plot.Rdata")
 
 

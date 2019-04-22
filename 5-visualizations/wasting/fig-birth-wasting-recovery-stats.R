@@ -21,7 +21,7 @@ d$measure_lab <- as.character(d$measure)
 # d$measure_lab[d$measure=="Persistent wasting"] <- "Persistent\nwasting" 
 # d$measure_lab[d$measure=="Wasting cumulative incidence"] <- "Wasting\ncumulative\nincidence" 
 # d$measure_lab[d$measure=="Wasting incidence rate"] <- "Wasting\nincidence\nrate" 
-# d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting" 
+d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting" 
 d$measure_lab <- factor(d$measure_lab)
 #d$measure_lab <- relevel(d$measure_lab, ref="Wasting\nincidence\nrate")
 d$measure_lab <- relevel(d$measure_lab, ref="Wasting incidence rate")
@@ -68,5 +68,6 @@ ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-",birthstrat_stat
 
 saveRDS(d, file=paste0("results/figure-data/figdata-",birthstrat_stats_plot_name,".RDS"))
 
+save(birthstrat_stats_plot, file=paste0(here::here(),"/figures/plot objects/birthstrat_stats_plot_object.Rdata"))
 
 

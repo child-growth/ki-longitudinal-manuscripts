@@ -111,13 +111,12 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                           Cohort="pooled",
                           xlabel="Age category",
-                          ylabel="Proportion (95% CI)",
+                          ylabel="Incidence proportion (95% CI)",
                           h1=0,
                           h2=3,
                           yrange=NULL,
                           dodge=0,
-                          returnData=F,
-                          geom_text_adjust_vec = 0){
+                          returnData=F){
   
   df <- d %>% filter(
     disease == Disease &
@@ -144,6 +143,11 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
+  # remove extra text from label at birth
+  # that overlaps between CI and IP
+  df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
+                                       measure=="Incidence_proportion", NA, est))
+  
   # remove N= labels for incidence proportion
   df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence_proportion', '', nmeas.f)) %>%
     mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
@@ -155,15 +159,24 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                   width = 0, position = position_dodge(dodge)) +
     geom_point(aes(shape=measure, fill=region, color=region
     ), size = 2, position = position_dodge(dodge)) +
-    geom_text(aes(x = agecat, y = est, label = round(est)), 
+    
+    geom_text(data=df[df$measure =='Incidence_proportion',], 
+              aes(x = agecat, y = est, label = round(est.f)),
               hjust = 1.5, 
               position = position_dodge(width = dodge),
-              vjust = geom_text_adjust_vec) +
+              vjust = 0.5) + 
+    
+    geom_text(data=df[df$measure =="Cumulative incidence",],              
+              aes(x = agecat, y = est, label = round(est.f)),
+              hjust = 1.5, 
+              position = position_dodge(width = dodge),
+              vjust = 0.5) + 
+    
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
-                       name = 'Measure', 
-                       labels = c('Cumulative Incidence', 'New Incident Cases')) + 
+                       name = 'Measure')+
+                       #labels = c('Cumulative Incidence', 'New Incident Cases')) + 
     scale_fill_manual(values=tableau11, guide = FALSE) +
     
     xlab(xlabel)+
