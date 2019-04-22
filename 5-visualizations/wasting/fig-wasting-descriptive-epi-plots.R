@@ -323,6 +323,7 @@ inc_plot_name = create_name(
 ggsave(inc_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
 saveRDS(inc_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",inc_plot_name,".RDS"))
+save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.Rdata"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -360,7 +361,6 @@ ggsave(inc_plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",in
 
 ggsave(inc_plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
 
-save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.Rdata"))
 
 
 
