@@ -582,7 +582,7 @@ co_plot <- ki_desc_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Child age, months",
-                   ylabel='Point prevalence (95% CI)',
+                   ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
                    yrange=c(0,12),
                    returnData=T)
 
