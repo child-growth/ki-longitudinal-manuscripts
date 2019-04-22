@@ -192,5 +192,6 @@ p
 
 ggsave(p, file=paste0(here(),"/figures/wasting/seasonal_trajectories_seasondiff.png"), width=14, height=5)
 
+save(p, file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_diff_plot.Rdata")
 
 
