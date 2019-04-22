@@ -30,35 +30,42 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                          Cohort="pooled",
                          xlabel="Age category",
                          ylabel="",
+                         Region=NULL,
                          h1=0,
                          h2=3,
                          yrange=NULL,
-                         returnData=F){
+                         returnData=F) {
+  
   df <- d %>% filter(
     disease == Disease &
       measure == Measure &
       birth == Birth &
       severe == Severe &
       age_range == Age_range &
-      cohort == Cohort &
       !is.na(region) & !is.na(agecat)
   )
   df <- droplevels(df)
   
+  if (!is.null(Region)) {
+    d <- d %>% filter(region == Region, cohort != "pooled")
+  } else {
+    d <- d %>% filter(cohort == Cohort)
+  }
+
   # remove N= from labels
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub('N=', '', nstudy.f))
-  
+
   # remove text from labels
   df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub(' studies', '', nstudy.f))
-  
-  # Remove 'months' from x axis labels  
+
+  # Remove 'months' from x axis labels
   df <- df %>% arrange(agecat)
   df$agecat <- as.character(df$agecat)
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
-  
+
 
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
@@ -71,22 +78,29 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     # add space to the left and right of points on x axis
     # to accommodate point estimate labels
     scale_x_discrete(expand = expand_scale(add = 1)) +
-    
+
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
      theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
-    
-    theme(axis.text.x = element_text(margin = 
+
+    theme(axis.text.x = element_text(margin =
                                        margin(t = 0, r = 0, b = 0, l = 0),
                                      size = 14)) +
     theme(axis.title.y = element_text(size = 14)) +
-    
-    ggtitle("") +
-    facet_grid(~region) 
-  
+
+    ggtitle("")
+
+  if (!is.null(Region)) {
+    p <- p + facet_grid(~cohort)
+  } else {
+    p <- p + facet_grid(~region)
+  }
+
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
   }
-  
+
+
+
   if(returnData){
     return(list(plot=p,data=df))
   }else{
