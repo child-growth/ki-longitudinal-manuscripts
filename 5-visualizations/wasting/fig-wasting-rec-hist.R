@@ -98,7 +98,7 @@ rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) +
    geom_point(aes(y = firstMedianRecZ)) +
    geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
   geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
-   ylab("Mean Weight-for-length Z-score within 3 months of recovery")+
+   ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
    xlab("Age at wasting episode onset")+
   # scale_y_discrete(expand = c(0.01, 0)) +
   # scale_x_continuous(breaks = seq(-5, 3.5, 1), 
