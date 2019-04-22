@@ -98,6 +98,7 @@ i<-100
 p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],])
 print(p)
 
+save(p, file=paste0(here::here(),"/figures/plot objects/ind_traj_plot_object.Rdata"))
 
 
 

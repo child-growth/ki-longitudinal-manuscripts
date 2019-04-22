@@ -68,5 +68,6 @@ ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-",birthstrat_stat
 
 saveRDS(d, file=paste0("results/figure-data/figdata-",birthstrat_stats_plot_name,".RDS"))
 
+save(birthstrat_stats_plot, file=paste0(here::here(),"/figures/plot objects/birthstrat_stats_plot_object.Rdata"))
 
 
