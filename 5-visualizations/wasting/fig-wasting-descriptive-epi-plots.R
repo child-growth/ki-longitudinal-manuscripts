@@ -209,6 +209,9 @@ ggsave(ci_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-
 
 saveRDS(ci_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",ci_plot_name,".RDS"))
 
+#Save plot objects for figure grid
+save(mean_wlz_plot, prev_plot, ci_plot, file=paste0(here::here(),"/figures/manuscript figure composites/wasting/fig2_plot_objects.Rdata"))
+
 
 #-------------------------------------------------------------------------------------------
 # Wasting incidence rate
@@ -320,7 +323,6 @@ inc_plot_name = create_name(
 ggsave(inc_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
 saveRDS(inc_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",inc_plot_name,".RDS"))
-
 
 
 #-------------------------------------------------------------------------------------------
@@ -473,8 +475,10 @@ rec_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(rec_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=3)
-
 saveRDS(rec_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",rec_plot_name,".RDS"))
+
+save(rec_plot, file=paste0(here::here(),"/figures/manuscript figure composites/wasting/rec_plot_object.Rdata"))
+
 
 #Plot just the overall facet for presentation slide
 df <- d %>% filter(
@@ -562,11 +566,7 @@ saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/f
 
 
 
-#-------------------------------------------------------------------------------------------
-# WLZ seasonality
-#-------------------------------------------------------------------------------------------
 
-#- Made in seperate script on GHAP
 
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
@@ -599,6 +599,8 @@ co_plot_name = create_name(
 ggsave(co_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
 
 saveRDS(co_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",co_plot_name,".RDS"))
+
+save(co_plot, file=paste0(here::here(),"/figures/manuscript figure composites/wasting/co_plot_object.Rdata"))
 
 
 #-------------------------------------------------------------------------------------------
