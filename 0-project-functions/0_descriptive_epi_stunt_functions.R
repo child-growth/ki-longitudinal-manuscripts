@@ -40,33 +40,15 @@ summary.prev.haz <- function(d, severe.stunted=F){
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
   prev.res=as.data.frame(rbindlist(prev.res))
-  prev.res[,4]=as.numeric(prev.res[,4])
-  prev.res[,6]=as.numeric(prev.res[,6])
-  prev.res[,7]=as.numeric(prev.res[,7])
+  prev.res$est=as.numeric(prev.res$est)
+  prev.res$lb=as.numeric(prev.res$lb)
+  prev.res$ub=as.numeric(prev.res$ub)
   prev.res = prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
   prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
-  
-  # estimate random effects in birth cohorts only
-  prev.res.birthcohorts=NULL
-  if("Birth" %in% unique(prev.data$agecat)){
-    birthcohorts<-prev.data$studyid[prev.data$agecat=="Birth"]
-    prev.res.birthcohorts=lapply((levels(prev.data$agecat)),function(x) 
-      fit.rma(data=prev.data[prev.data$studyid %in% birthcohorts, ],ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
-    prev.res.birthcohorts=as.data.frame(rbindlist(prev.res.birthcohorts))
-    
-    prev.res.birthcohorts[,4]=as.numeric(prev.res.birthcohorts[,4])
-    prev.res.birthcohorts[,6]=as.numeric(prev.res.birthcohorts[,6])
-    prev.res.birthcohorts[,7]=as.numeric(prev.res.birthcohorts[,7])
-    
-    prev.res.birthcohorts = prev.res.birthcohorts %>%
-      mutate(est=est*100,lb=lb*100,ub=ub*100)
-    prev.res.birthcohorts$agecat=factor(prev.res.birthcohorts$agecat,levels=levels(prev.data$agecat))
-    prev.res.birthcohorts$ptest.f=sprintf("%0.0f",prev.res.birthcohorts$est)
-  }
-  return(list(prev.data=prev.data, prev.res=prev.res, prev.res.birthcohorts=prev.res.birthcohorts, prev.cohort=prev.cohort))
+  return(list(prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort))
 }
 
 
@@ -172,7 +154,7 @@ summary.haz <- function(d){
   
   # cohort specific results
   haz.cohort=lapply((levels(haz.data$agecat)),function(x) 
-    fit.escalc.cont(data=haz.data,yi="meanhaz", vi="varhaz",age=x))
+    fit.escalc(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", measure="GEN",age=x))
   haz.cohort=as.data.frame(rbindlist(haz.cohort))
   haz.cohort=cohort.format(haz.cohort,y=haz.cohort$yi,
                            lab=  levels(haz.data$agecat), est="mean")
@@ -180,7 +162,7 @@ summary.haz <- function(d){
   
   # estimate random effects, format results
   haz.res=lapply((levels(haz.data$agecat)),function(x) 
-    fit.cont.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+    fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
   haz.res=as.data.frame(rbindlist(haz.res))
   haz.res[,4]=as.numeric(haz.res[,4])
   haz.res[,6]=as.numeric(haz.res[,6])
@@ -217,11 +199,11 @@ summary.haz.age.sex <- function(d){
   
   # cohort specific results stratified within grouping variables
   haz.cohort.female=lapply(levels(haz.data$agecat),function(x) 
-    fit.escalc.cont(data=haz.data %>% filter(sex == "Female"),
+    fit.escalc(data=haz.data %>% filter(sex == "Female"),
                         yi="meanhaz", vi="varhaz", age=x))
   
   haz.cohort.male=lapply(levels(haz.data$agecat),function(x) 
-    fit.escalc.cont(data=haz.data %>% filter(sex == "Male"),
+    fit.escalc(data=haz.data %>% filter(sex == "Male"),
                     yi="meanhaz", vi="varhaz", age=x))
   
   haz.cohort.female.df = as.data.frame(rbindlist(haz.cohort.female)) %>%
@@ -238,11 +220,11 @@ summary.haz.age.sex <- function(d){
   
   # estimate random effects, format results
   haz.res.female=lapply((levels(haz.data$agecat)),function(x) 
-    fit.cont.rma(data=haz.data %>% filter(sex == "Female"), 
+    fit.rma(data=haz.data %>% filter(sex == "Female"), 
                  ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
   
   haz.res.male=lapply((levels(haz.data$agecat)),function(x) 
-    fit.cont.rma(data=haz.data %>% filter(sex == "Male"), 
+    fit.rma(data=haz.data %>% filter(sex == "Male"), 
                  ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
   
   haz.df.female = as.data.frame(rbindlist(haz.res.female)) %>%
