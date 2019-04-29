@@ -18,7 +18,7 @@ try(df <- readRDS('results/rf results/RF_results_processed.rds'))
 #try(load("data/testdata.Rdata"))
 
 
-source("0-project-functions/0_wast_incfunctions.R")
+source("0-project-functions/0_wast_inc_functions.R")
 
 
 #------------------------------------------------
