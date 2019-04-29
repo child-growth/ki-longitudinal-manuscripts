@@ -37,12 +37,9 @@ Zscore <- "whz"
 # Prevalence
 #-------------------------------------------------------------------------------------
 
-#Summarize each strata (combination of cohort and agecat) to get input for rma()
 prev.summary <- cohort.summary(d=dprev, var=Zscore, point=T, continious=F, severe=F, minN=50, measure="Prevalence")
-  
-#Pool using REML overall and over region, plus get cohort specific prevalence estimates
-prev.res <- summarize_over_strata(cohort.sum=prev.summary, proportion=T, continious=F, measure = "PLO",  method = method_var,  region=T, cohort=T)
-  
+prev.res <- summarize_over_strata(cohort.sum=sev.prev.summary, proportion=T, continious=F, measure = "PLO",  method = method_var,  region=T, cohort=T)
+
 #-------------------------------------------------------------------------------------
 # Severe Prevalence
 #-------------------------------------------------------------------------------------
@@ -65,12 +62,12 @@ monthly.whz.summary <- cohort.summary(d=dmon, var=Zscore, point=T, continious=T,
 monthly.whz.res <- summarize_over_strata(cohort.sum=monthly.whz.summary, proportion=F, continious=T, measure = "GEN",  method = method_var,  region=T, cohort=T)
 
 #Get monthly whz quantiles
-quantile_d <- d %>% group_by(agecat, region) %>%
+quantile_d <- dmon %>% group_by(agecat, region) %>%
   mutate(fifth_perc = quantile(whz, probs = c(0.05))[[1]],
          fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
   select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
-quantile_d_overall <- d %>% group_by(agecat) %>%
+quantile_d_overall <- dmon %>% group_by(agecat) %>%
   mutate(fifth_perc = quantile(whz, probs = c(0.05))[[1]],
          fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
@@ -79,14 +76,15 @@ save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_dat
 
 
 #-------------------------------------------------------------------------------------
-# Prevalence
+# Cumulative incidence
 #-------------------------------------------------------------------------------------
 
+d6
+#  RUN OFF THE CALCULATED INCIDENCE ONSET, NOT Z-score
+ci.summary <- cohort.summary(d=d6, var=Zscore, ci=T, continious=F, severe=F, minN=50, measure="Cumulative incidence")
+ci.res <- summarize_over_strata(cohort.sum=ci.summary, proportion=T, continious=F, measure = "PLO",  method = method_var,  region=T, cohort=T)
 
 
-#Cumulative inc
-d <- calc.ci.agecat(d, range = 6)
-agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
 ci.data <- summary.ci(d, agelist = agelst)
 ci.region <- d %>% group_by(region) %>% do(summary.ci(., agelist = agelst)$ci.res)
 ci.cohort <-

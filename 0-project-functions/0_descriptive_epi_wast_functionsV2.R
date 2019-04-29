@@ -2,7 +2,7 @@
 
 
 # take mean of multiple measurements within age windows
-cohort.summary <- function(d, var, strata=c("region","studyid","country","agecat"), point=F, continious=F, severe=F, minN=50, measure=NULL){
+cohort.summary <- function(d, var, strata=c("region","studyid","country","agecat"), ci=F, continious=F, severe=F, minN=50, measure=NULL){
 
   cutoff <- ifelse(severe, -3, -2)
   
@@ -10,11 +10,17 @@ cohort.summary <- function(d, var, strata=c("region","studyid","country","agecat
   
   strata_sym <- syms(strata)
   
-  if(point){
+  if(!ci | continious){
     d <- d %>%
       filter(!is.na(agecat)) %>%
       group_by(!!!(strata_sym),subjid) %>%
       summarise(Y=mean(Y, na.rm=T))
+  }else{
+    d <- d %>%
+      filter(!is.na(agecat)) %>%
+      group_by(!!!(strata_sym),subjid) %>%
+      mutate(Y = ifelse(Y < cutoff, 1, 0)) %>%
+      summarise(Y = ifelse(sum(Y)>0, 1, 0))
   }
   
   # summarize measurements per study by age
@@ -29,14 +35,23 @@ cohort.summary <- function(d, var, strata=c("region","studyid","country","agecat
                 Var=var(Y)) %>%
       filter(N>=minN)
     }else{
+      if(ci){
       cohort.sum = d %>%
-        filter(!is.na(agecat) & !is.na(Y)) %>%
-        mutate(Y = ifelse(Y < cutoff, 1, 0)) %>%
         group_by(!!!(strata_sym)) %>%
         summarise(N=n(),
-                  Prev=mean(Y),
+                  Prop=mean(Y),
                   Ncases=sum(Y==1)) %>%
         filter(N>=minN) 
+      }else{
+        cohort.sum = d %>%
+          filter(!is.na(agecat) & !is.na(Y)) %>%
+          mutate(Y = ifelse(Y < cutoff, 1, 0)) %>%
+          group_by(!!!(strata_sym)) %>%        
+          summarise(N=n(),
+                  Prop=mean(Y),
+                  Ncases=sum(Y==1)) %>%
+        filter(N>=minN) 
+      }
     }
   
   cohort.sum$variable <- var
