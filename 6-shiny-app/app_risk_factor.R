@@ -13,7 +13,7 @@ library(xtable)
 
 # Load data
 try(setwd('/Users/sonali/Desktop/ki-longitudinal-manuscripts/'))
-try(setwd('C:/Users/andre/Documents/ki-longitudinal-manuscripts/'))
+try(setwd('C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/'))
 try(df <- readRDS('results/rf results/RF_results_processed.rds'))
 #try(load("data/testdata.Rdata"))
 
