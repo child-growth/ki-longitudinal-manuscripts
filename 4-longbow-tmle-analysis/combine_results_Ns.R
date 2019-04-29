@@ -48,25 +48,8 @@ Ndf <- Ndf_Ystrat %>% group_by(studyid, country, agecat, outcome_variable, inter
   summarize(min_n_cell=min(n_cell), n_cell=sum(n_cell), n=n[1]) %>%
   mutate(prev=n_cell/n)
 
+
 # save concatenated Ns
 save(Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns.rdata")
 
 
-
-
-
-
-load("adjusted_binary/adjusted_binary_results.rdata")
-adj_bin <- results
-load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/unadjusted_binary/unadjusted_binary_results.rdata")
-unadj_bin <- results
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/adjusted_velocity/adjusted_velocity_results.rdata")
-# adj_vel <- results
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/unadjusted_velocity/unadjusted_velocity_results.rdata")
-# unadj_vel <- results
-load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/wasting_analyses/wasting_results_full.rdata")
-wasting <- results
-load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/wasting_analyses/wasting_results.rdata")
-Zscores <- results
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/opttx_vim/adjusted_binary_results.rdata")
-# vim <- results
