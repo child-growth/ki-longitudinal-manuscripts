@@ -38,8 +38,8 @@ RMAest_raw <- rbind(RMAest, RMAest_region)
 
 #Re-order so increasing risk for all comparisons
 reorder_fun <- function(df){
-  df_sub <- df[df$ATE < 0,]
-  df <- df[df$ATE >= 0,]
+  df_sub <- df[df$ATE >= 0,]
+  df <- df[df$ATE < 0,]
   new_ref <- df$intervention_level
   df$intervention_level <- df$baseline_level
   df$baseline_level <- new_ref
@@ -58,28 +58,10 @@ RMAest_clean <- RMA_clean(RMAest)
 RMAest_max <- RMAest_clean %>% group_by(outcome_variable, region, intervention_variable) %>% filter(abs(ATE)==max(abs(ATE)))
 
 #Add reference level to labe
-RMAest_max$RFlabel_ref <- paste0(RMAest_max$RFlabel, ", ref: ", dhaz$baseline_level)
+RMAest_max$RFlabel_ref <- paste0(RMAest_max$RFlabel, ", ref: ", RMAest_max$baseline_level)
 
 
-# select only pooled
-dhaz <- RMAest_max %>% 
-  filter(outcome_variable == 'haz',
-         region=="Pooled",
-         agecat == '24 months') 
-dwhz <- RMAest_max %>% 
-  filter(outcome_variable == 'whz',
-         region=="Pooled",
-         agecat == '24 months') 
 
-#Region-specific
-dhaz_region <- RMAest_max %>% 
-  filter(outcome_variable == 'haz',
-         region!="Pooled",
-         agecat == '24 months') 
-dwhz_region <- RMAest_max %>% 
-  filter(outcome_variable == 'whz',
-         region!="Pooled",
-         agecat == '24 months') 
 
 yticks <- c( 0.5,0.6,0.7, 0.8,0.9, 1.00)
 yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
@@ -90,7 +72,7 @@ tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
 scaleFUN <- function(x) sprintf("%.1f", x)
 
 
-phaz <-  ggplot(dhaz, aes(x=reorder(RFlabel_ref, -ATE))) + 
+p <-  ggplot(dpool, aes(x=reorder(RFlabel_ref, ATE))) + 
   geom_point(aes(y=ATE,  color=RFtype), size = 4) +
   geom_linerange(aes(ymin=CI1, ymax=CI2, color=RFtype)) +
   coord_flip() +
@@ -108,73 +90,52 @@ phaz <-  ggplot(dhaz, aes(x=reorder(RFlabel_ref, -ATE))) +
                                    margin = margin(t = -20)),
         axis.title.x = element_text(margin = margin(t = 20))) +
   ggtitle("Exposures ranked by\naverage treatment effect") +guides(shape=FALSE)
-print(phaz)
+print(p)
 
 
-
-pwhz <-  ggplot(dwhz, aes(x=reorder(RFlabel_ref, -ATE))) + 
-  geom_point(aes(y=ATE,  color=RFtype), size = 4) +
-  geom_linerange(aes(ymin=CI1, ymax=CI2, color=RFtype)) +
-  coord_flip() +
-  labs(x = "Exposure", y = "Z-score difference") +
-  geom_hline(yintercept = 0) +
-  #scale_y_continuous(breaks=yticks, labels=scaleFUN) +
-  scale_shape_manual(values=c(21, 23)) +
-  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-  # scale_size_continuous(range = c(0, 0.5))+
-  theme(strip.background = element_blank(),
-        legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12, angle = 45, hjust = 1, 
-                                   margin = margin(t = -20)),
-        axis.title.x = element_text(margin = margin(t = 20))) +
-  ggtitle("Exposures ranked by\naverage treatment effect") +guides(shape=FALSE)
-print(pwhz)
+df <- RMAest_max
+df$outcome_variable <- gsub("haz", "HAZ", df$outcome_variable)
+df$outcome_variable <- gsub("whz", "WHZ", df$outcome_variable)
 
 
+i <- unique(df$region)[1]
+j <- unique(df$outcome_variable)[1]
+k <- unique(df$agecat)[1]
 
-
-#Region stratified plots
-phaz_region <-  ggplot(dhaz_region, aes(x=RFlabel)) + 
-  geom_point(aes(reorder(RFlabel, -ATE), y=ATE,  color=RFtype), size = 4) +
-  geom_linerange(aes(ymin=CI1, ymax=CI2, color=RFtype)) +
-  facet_wrap(~region, ncol=3) +
-  coord_flip(ylim = range(-1, 1)) +
-  labs(x = "Exposure", y = "Z-score difference") +
-  geom_hline(yintercept = 0) +
-  scale_shape_manual(values=c(21, 23)) +
-  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-  theme(strip.background = element_blank(),
-        legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12, angle = 45, hjust = 1, 
-                                   margin = margin(t = -20)),
-        axis.title.x = element_text(margin = margin(t = 20))) +
-  ggtitle("Exposures ranked by\naverage treatment effect") +guides(shape=FALSE)
-print(phaz_region)
-
-pwhz_region <-  ggplot(dwhz_region, aes(x=RFlabel)) + 
-  geom_point(aes(reorder(RFlabel, -ATE), y=ATE,  color=RFtype), size = 4) +
-  geom_linerange(aes(ymin=CI1, ymax=CI2, color=RFtype)) +
-  facet_wrap(~region, ncol=3) +
-  coord_flip(ylim = c(-1, 1)) +
-  labs(x = "Exposure", y = "Z-score difference") +
-  geom_hline(yintercept = 0) +
-  scale_shape_manual(values=c(21, 23)) +
-  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-  theme(strip.background = element_blank(),
-        legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12, angle = 45, hjust = 1, 
-                                   margin = margin(t = -20)),
-        axis.title.x = element_text(margin = margin(t = 20))) +
-  ggtitle("Exposures ranked by\naverage treatment effect") +guides(shape=FALSE)
-print(pwhz_region)
-
-
+for(i in unique(df$region)){
+  for(j in unique(df$outcome_variable)){
+    for(k in unique(df$agecat)){
+      
+      dpool <- df %>% 
+        filter(region==i,
+               outcome_variable==j,
+               agecat == k) %>%
+        filter(!is.na(intervention_variable))
+      
+      p <-  ggplot(dpool, aes(x=reorder(RFlabel, ATE))) + 
+        geom_point(aes(y=ATE,  color=RFtype), size = 4) +
+        geom_linerange(aes(ymin=CI1, ymax=CI2, color=RFtype)) +
+        coord_flip(ylim=c(0, 3)) +
+        labs(x = "Exposure", y = "Z-score difference") +
+        geom_hline(yintercept = 0) +
+        #scale_y_continuous(breaks=yticks, labels=scaleFUN) +
+        scale_shape_manual(values=c(21, 23)) +
+        scale_colour_manual(values=tableau10, name = "Exposure\nCategory", drop=F) +
+        # scale_size_continuous(range = c(0, 0.5))+
+        theme(strip.background = element_blank(),
+              legend.position="right",
+              axis.text.y = element_text(hjust = 1),
+              strip.text.x = element_text(size=12),
+              axis.text.x = element_text(size=12, 
+                                         margin = margin(t = -20)),
+              axis.title.x = element_text(margin = margin(t = 20))) +
+        ggtitle(paste0("Z-score difference\n", dpool$outcome_variable[1]," - ", dpool$agecat[1],", ", dpool$region[1])) + 
+        guides(color=FALSE, shape=FALSE)
+      
+      ggsave(p, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/Zscore_max_diff/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$agecat[1]), "-PAR.png"), height=10, width=8)
+    }    
+  }
+}
 
 
 
