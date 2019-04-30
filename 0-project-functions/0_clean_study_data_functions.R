@@ -372,7 +372,7 @@ name_labeling <- function(df){
 
 
 
-# for hgbd dataset
+# for hgbd metadataset
 make_region <- function(df){
   
   df$country <- as.character(df$country)
@@ -456,7 +456,7 @@ make_region <- function(df){
 
 
 
-# for hgbd dataset
+# for ghap dataset
 mark_region <- function(df){
   
   df$country <- as.character(df$country)

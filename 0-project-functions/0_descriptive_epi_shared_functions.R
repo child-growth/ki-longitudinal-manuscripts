@@ -8,6 +8,8 @@
 # Description: Take an input dataframe with each row summarizing the N's and cases from a single
 #             cohort and then calculated the parameter of interest specified by measure, pooled
 #             across all cohorts
+# age (optional): variable level to filter the data by, selecting a specific age category
+
 
 # Args/Options:
 # data: a data frame with variables studyid, country, agecat, and outcome-specific summary measures for ni and xi
@@ -19,12 +21,15 @@
 
 # random effects function, save results nicely
 
-# user filter age before feeding to function
-fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", nlab = "", method = "REML") {
+fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", nlab = "", method = "REML", age=NULL) {
+  if(!is.null(age)){
+    data <- data[data$agecat==age,]
+    data$age <- age
+  }
+  
   mode_continuous <- !is.null(yi) | !is.null(vi)
   mode_binary <- !is.null(xi)
   if (mode_binary & mode_continuous) stop("can only do binary or continuous")
-  assert_that("age" %in% colnames(data))
   # check if measure=="PLO" - default for all parameters bounded between 0 and 1 (prevalence, cumulative incidence)
   # because then output needs back transformation
   if (measure == "PLO") {
@@ -39,7 +44,6 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
         ungroup() %>%
         mutate(nstudies = 1, nmeas = data[[ni]]) %>%
         mutate(
-          agecat = age,
           est = plogis(yi),
           lb = plogis(yi - 1.96 * se),
           ub = plogis(yi + 1.96 * se),
@@ -82,7 +86,6 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           nmeas = sum(data[[ni]])
         ) %>%
         mutate(
-          agecat = age,
           est = plogis(fit$beta),
           se = fit$se,
           lb = plogis(fit$beta - 1.96 * fit$se),
@@ -98,9 +101,28 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
     to <- "only0"
     # If measure if IR for incidence rate, use `to="if0all"` argument to add .5 to all cells of the 2x2 table if one is 0 so rma() works
     if (measure == "IR") to <- "if0all"
-    fit <- rma(
-      ni = data[[ni]], xi = data[[xi]], method = method, measure = measure, to = to
-    )
+    
+    fit <- NULL
+    if (mode_binary) {
+      try(fit <- rma(
+        data = data,
+        ni = data[[ni]],
+        method = method,
+        xi = data[[xi]],
+        measure = measure,
+        to=to
+      ))
+    }
+    if (mode_continuous) {
+      try(fit <- rma(
+        data = data,
+        yi = data[[yi]],
+        vi = data[[vi]],
+        # ni = data[[ni]],
+        method = method,
+        measure = measure
+      ))
+    }
     out <- data %>%
       ungroup() %>%
       summarise(
@@ -108,7 +130,6 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
         nmeas = sum(data[[ni]])
       ) %>%
       mutate(
-        agecat = age,
         est = fit$beta,
         se = fit$se,
         lb = fit$ci.lb,
@@ -142,6 +163,7 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
 # Input:
 # meas: PR for prevalence, CI for cumulative incidence, and IR for incidence rate
 # PLO for log transformed prevalence (to prevent 95% CI outside 0 and 1).
+# age (optional): variable level to filter the data by, selecting a specific age category
 
 # Returns:
 # Inputted dataframe with appended columns
@@ -151,13 +173,12 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
 # ci.lb = lower bound of 95% confidence interval
 # ci.ub = upper bound of 95% confidence interval
 
-# user filter age themselves
-
-fit.escalc <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure, method = "REML") {
+fit.escalc <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure, method = "REML", age=NULL) {
+  if(!is.null(age)){data <- data[data$agecat==age,]}
+  
   mode_continuous <- !is.null(yi) | !is.null(vi)
   mode_binary <- !is.null(xi)
   if (mode_binary & mode_continuous) stop("can only do binary or continuous")
-  # if (measure == "PR") measure <- "PLO"
   if (mode_binary) {
     data <- escalc(data = data, ni = data[[ni]], xi = data[[xi]], method = method, measure = measure, append = TRUE)
   }
