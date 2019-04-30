@@ -47,9 +47,9 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df <- droplevels(df)
   
   if (!is.null(Region)) {
-    d <- d %>% filter(region == Region, cohort != "pooled")
+    df <- df %>% filter(region == Region, cohort != "pooled")
   } else {
-    d <- d %>% filter(cohort == Cohort)
+    df <- df %>% filter(cohort == Cohort)
   }
 
   # remove N= from labels
@@ -79,8 +79,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     # to accommodate point estimate labels
     scale_x_discrete(expand = expand_scale(add = 1)) +
 
-    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-     theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
 
     theme(axis.text.x = element_text(margin =
                                        margin(t = 0, r = 0, b = 0, l = 0),
@@ -90,9 +89,11 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     ggtitle("")
 
   if (!is.null(Region)) {
-    p <- p + facet_grid(~cohort)
+    p <- p + facet_wrap(~cohort) +
+      theme(strip.text = element_text(size=18, margin = margin(t = 0)))
   } else {
-    p <- p + facet_grid(~region)
+    p <- p + facet_grid(~region) +
+      theme(strip.text = element_text(size=6, margin = margin(t = 0))) 
   }
 
   if(!is.null(yrange)){
