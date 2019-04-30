@@ -1,6 +1,7 @@
 
 rm(list = ls())
 #source(paste0(here::here(), "/0-config.R"))
+library(shiny)
 require(here)
 require(stringr)
 require(dplyr)
@@ -65,53 +66,49 @@ load_fig_files <- function(file_path){
   return(df)
 }
 
-
-
 transform_variables <- function(df){
   transformations = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vREmg4PurW2AKddhf1Mtj9dAyaeCeYPUpHurNUe3r0gVVeeLrkS3aU-4XlYhZ96iWsBpr-R9sDT8Alp/pub?gid=0&single=true&output=csv")
   
   df <- df %>%
-    dplyr::mutate(outcome =
-                    transformations %>% 
+    dplyr::mutate(outcome = df %>% left_join(transformations, by = c("outcome" = "variable")) %>% 
+                    replace_na(list(variable.type = "outcome")) %>% 
                     filter(variable.type == "outcome") %>% 
-                    filter(variable == outcome) %>% 
-                    select(description) %>%
-                    first()
+                    pull("description")
+                  
     ) %>%
-    dplyr::mutate(measure = transformations %>% 
+    
+    dplyr::mutate(measure = df %>% left_join(transformations, by = c("measure" = "variable")) %>% 
+                    replace_na(list(variable.type = "measure")) %>% 
                     filter(variable.type == "measure") %>% 
-                    filter(variable == measure) %>% 
-                    select(description) %>%
-                    first()
+                    pull("description")
     ) %>%
-    dplyr::mutate(population = transformations %>% 
+    
+    dplyr::mutate(population = df %>% left_join(transformations, by = c("population" = "variable")) %>% 
+                    replace_na(list(variable.type = "population")) %>% 
                     filter(variable.type == "population") %>% 
-                    filter(variable == population) %>% 
-                    select(description) %>%
-                    first()
+                    pull("description")
     ) %>%
-    dplyr::mutate(age = transformations %>% 
+    dplyr::mutate(age = df %>% left_join(transformations, by = c("age" = "variable")) %>% 
+                    replace_na(list(variable.type = "age")) %>% 
                     filter(variable.type == "age") %>% 
-                    filter(variable == age) %>%
-                    select(description) %>%
-                    first()
+                    pull("description")
     ) %>%
-    dplyr::mutate(location = transformations %>% 
+    dplyr::mutate(location = df %>% left_join(transformations, by = c("location" = "variable")) %>% 
+                    replace_na(list(variable.type = "location")) %>% 
                     filter(variable.type == "location") %>% 
-                    filter(variable == location) %>% 
-                    select(description) %>%
-                    first()
+                    pull("description")
     ) %>%
-    dplyr::mutate(analysis = transformations %>% 
+    dplyr::mutate(analysis = df %>% left_join(transformations, by = c("analysis" = "variable")) %>% 
+                    replace_na(list(variable.type = "analysis")) %>% 
                     filter(variable.type == "analysis") %>% 
-                    filter(variable == analysis) %>%
-                    select(description) %>%
-                    first()
+                    pull("description")
     )
   
   return(df)
   
 }
+
+
 
 #load in names of pngs in figures file
 # change to figures directory (remove /mock_shiny)
@@ -128,6 +125,7 @@ df <- rbind(df, table_df)
 #------------------------------------------------
 # Build Shiny App
 #------------------------------------------------
+
 
 # Define UI for application that draws a forest plot
 ui <- navbarPage("HBGDki Results Dashboard",
@@ -164,6 +162,8 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  #            )
                  #            
                  #          )),
+                 #---> New blank tab
+                 tabPanel("Blank Tab for Documentation"),
                  tabPanel("Descriptive epidemiology",
                           fluidRow(
                             h4("Note: this site is still under construction", align="center",style = "color:blue"),
@@ -174,33 +174,36 @@ ui <- navbarPage("HBGDki Results Dashboard",
                             column(4, uiOutput('Region')),
                             column(4, uiOutput('OutcomeType')),
                             column(4, uiOutput('Population')),
-                            column(4, uiOutput('Analysis')),
-                            column(4, uiOutput('Age'))
+                            column(4, uiOutput('Age')),
+                            column(4, uiOutput('Analysis'))
                           ),
                           
+                          br(),
+                          br(),
                           
                           mainPanel(
                             width = 16,
-                            imageOutput("image", height=600),
-                            br(),
-                            br(),
-                            br(),
-                            # Create a new row for the table.
-                            fluidRow(
-                              #DT::dataTableOutput("table_desc")
-                              # tableOutput("table_desc")
-                              uiOutput('tables_desc')
-                            ),
-                            br(),
-                            br(),
-                            br(),
-                            # Create a new row for the table.
-                            fluidRow(
-                              #DT::dataTableOutput("table_desc")
-                              tableOutput("table_desc")
-                            )
-                            
-                          ))
+                            align = "center",
+                            imageOutput("image")))#, height=600)#,
+                 #br(),
+                 #br(),
+                 #br(),
+                 # Create a new row for the table.
+                 #fluidRow(
+                 #DT::dataTableOutput("table_desc")
+                 # tableOutput("table_desc")
+                 #  uiOutput('tables_desc')
+                 #),
+                 #br(),
+                 #br(),
+                 #br(),
+                 # Create a new row for the table.
+                 #fluidRow(
+                 #DT::dataTableOutput("table_desc")
+                 #  tableOutput("table_desc")
+                 #)
+                 
+                 #        ))
                  # tabPanel("Comparison",
                  #          fluidRow(
                  #            column(2, 
@@ -245,128 +248,128 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  #                   plotOutput("pooledPlotComparison", height=400)
                  #            )
                  #          ))
-                          )
-
+)
 
 
 # Define server logic required to draw the forest plot
 server <- function(input, output, session) {
-
+  
   # Adaptive input selections based on user input - avoids blank plots
+  
   output$Measure <- renderUI({
-    df <- df %>%
-      filter(outcome == input$Outcome) 
-
-    df <- df %>%
+    d <- df %>%
+      filter(outcome == input$Outcome) %>%
       drop_na(measure, location, severe, population, age, analysis)
-    df <- droplevels(df)
+    
+    d <- droplevels(d)
+    
     selectInput('Measure',
                 '2. Measure:',
-                unique(df$measure))
+                unique(d$measure))
   })
   
   output$Region <- renderUI({
-    df <- df[df$outcome == input$Outcome, ]
-    
-    df <- df %>%
+    d <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(measure == input$Measure) %>%
-      drop_na(severe, population, location, age, analysis)
-    df <- droplevels(df)
+      drop_na(location, severe, population, age, analysis)
+    
+    d <- droplevels(d)
+    
     selectInput('Region',
                 '3. Region:',
-                unique(df$location))
-
+                unique(d$location))
   })
+  
   output$OutcomeType <- renderUI({
-    df <- df %>%
+    d <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(measure == input$Measure) %>%
-      filter(location == input$Region)
-    
-    df <- df %>%
+      filter(location == input$Region) %>%
       drop_na(severe, population, age, analysis)
-    df <- droplevels(df)
+    
+    d <- droplevels(d)
     selectInput('OutcomeType',
                 '4. Outcome Type:',
-                choices = c('Not Severe', 'Severe'))
+                choices = unique(d$severe))
   })
   
   output$Population <- renderUI({
-    df <- df %>%
-      filter(outcome == input$Outcome) %>%
-      filter(location == input$Region) %>%
-      filter(measure == input$Measure)
-    
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-    df <- df %>%
-      drop_na(population, age, analysis)
-    df <- droplevels(df)
-    selectInput('Population',
-                '5. Population:',
-                unique(df$population))
-  })
-  output$Age <- renderUI({
-    df <- df %>%
+    d <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(location == input$Region) %>%
       filter(measure == input$Measure) %>%
-      filter(population == input$Population)
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-
-    df <- df %>%
-      drop_na(age, analysis)
-    df <- droplevels(df)
-    selectInput('Age',
-                '6. Age Range:',
-                unique(df$age))
+      filter(severe == input$OutcomeType) %>%
+      drop_na(population, age, analysis)
+    
+    d <- droplevels(d)
+    selectInput('Population',
+                '5. Population:',
+                unique(d$population))
   })
-  output$Analysis <- renderUI({
-    df <- df %>%
+  output$Age <- renderUI({
+    d <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(location == input$Region) %>%
       filter(measure == input$Measure) %>%
       filter(population == input$Population) %>%
-      filter(age == input$Age)
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-
-    df <- df %>%
+      filter(severe == input$OutcomeType) %>%
+      drop_na(age, analysis)
+    
+    d <- droplevels(d)
+    
+    selectInput('Age',
+                '6. Age Range:',
+                unique(d$age))
+  })
+  
+  output$Analysis <- renderUI({
+    d <- df %>%
+      filter(outcome == input$Outcome) %>%
+      filter(location == input$Region) %>%
+      filter(measure == input$Measure) %>%
+      filter(population == input$Population) %>%
+      filter(severe == input$OutcomeType) %>%
       drop_na(analysis)
-    df <- droplevels(df)
+    
+    d <- droplevels(d)
+    
     selectInput('Analysis',
                 '7. Analysis:',
-                choices = unique(df$analysis),
+                choices = unique(d$analysis),
                 selected = 'primary')
   })
   
-
+  
   
   selectedData <- reactive({
-    df <- df[df$outcome == input$Outcome, ]
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-    d <- df[df$age == input$Age, ]
-    d <- d[d$population == input$Population, ]
-    d <- d[d$measure == input$Measure, ]
-    d <- d[d$analysis == input$Analysis, ]
-    d <- d[d$location == input$Region, ]
+    d = df %>% filter(outcome == input$Outcome) %>%
+      filter(measure == input$Measure) %>%
+      filter(population == input$Population) %>%
+      filter(location == input$Region) %>%
+      filter(age == input$Age) %>%
+      filter(analysis == input$Analysis) %>%
+      filter(severe == input$OutcomeType)
+    
     d
   })
   
   # Image of first plot
   output$image <- renderImage({
     d <- selectedData()
-    d_img <- d %>% filter(fig == 'fig')
-    file_path <- paste0(fig_path, d_img$plotnames)
+    
+    d_img = d %>% select(plotnames)
+    
+    #d_img <- d %>% filter(fig == 'fig')
+    file_path <- paste0(fig_path, d_img[1, 1])
+    
     # Return a list containing the filename
     list(src = file_path,
-           contentType = 'image/png',
-           height = 600,
-           # width = 800,
-           alt = "This is alternate text")
+         contentType = 'image/png',
+         #height = 600,
+         width = 1200,
+         alt = "Image is loading")
+    
   }, deleteFile = FALSE)
   
   
@@ -387,18 +390,18 @@ server <- function(input, output, session) {
   }
   
   output$tables_desc <- renderUI({
-     d <- selectedData() 
-     d_tbl <- d %>% filter(fig == 'figdata')
-     file_path <- paste0(figdata_path, d_tbl$plotnames)
-     table_data <- readRDS(file_path)
-     if (class(table_data) == 'list'){
-       output <- unlist(multi_tables(table_data))
-       return(div(HTML(output), class = 'shiny-html-output'))
-     } else {
-       return('')
-     }
+    d <- selectedData() 
+    d_tbl <- d %>% filter(fig == 'figdata')
+    file_path <- paste0(figdata_path, d_tbl$plotnames)
+    table_data <- readRDS(file_path)
+    if (class(table_data) == 'list'){
+      output <- unlist(multi_tables(table_data))
+      return(div(HTML(output), class = 'shiny-html-output'))
+    } else {
+      return('')
+    }
   })
-   
+  
   output$table_desc <- renderTable({
     d <- selectedData()
     d_tbl <- d %>% filter(fig == 'figdata')
@@ -410,10 +413,9 @@ server <- function(input, output, session) {
       return(table_data)
     }
   })
-   
-
-   
 }
+
+
 
 
 
