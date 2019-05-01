@@ -7,6 +7,31 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
+#load covariates
+cov<-readRDS("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+
+#Check reference levels
+for(i in 3:ncol(cov)){
+  cat(colnames(cov)[i],":\n")
+  print(levels(cov[,i]))
+}
+
+#Set reference level to the lowest
+cov$trth2o <- relevel(cov$trth2o, ref="1")
+cov$cleanck <- relevel(cov$cleanck, ref="1")
+cov$impfloor <- relevel(cov$impfloor, ref="1")
+cov$earlybf <- relevel(cov$earlybf, ref="1")
+
+cov$impsan <- relevel(cov$impsan, ref="1")
+cov$safeh20 <- relevel(cov$safeh20, ref="1")
+cov$predfeed3 <- relevel(cov$predfeed3, ref="1")
+cov$exclfeed3 <- relevel(cov$exclfeed3, ref="1")
+cov$predfeed6 <- relevel(cov$predfeed6, ref="1")
+cov$exclfeed6 <- relevel(cov$exclfeed6, ref="1")
+cov$predfeed36 <- relevel(cov$predfeed36, ref="1")
+cov$exclfeed36 <- relevel(cov$exclfeed36, ref="1")
+cov$predexfd6 <- relevel(cov$predexfd6, ref="1")
+
 
 
 
@@ -14,19 +39,17 @@ source(paste0(here::here(), "/0-config.R"))
 #Stunting
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-# setwd("U:/UCB-SuperLearner/Stunting rallies/")
-setwd("U:/ucb-superlearner/Stunting rallies/")
+setwd("U:/ucb-superlearner/Manuscript analysis data/")
 
-#load covariates
-cov<-readRDS("FINAL_clean_covariates.rds")
 
 #load outcomes
-load("st_prev_rf_outcomes.rdata")
-load("st_meanZ_rf_outcomes.rdata")
-load("st_cuminc_rf_outcomes.rdata")
-load("st_cuminc_rf_outcomes_nobirth.rdata")
-load("st_rec_rf_outcomes.rdata")
-load("st_vel_rf_outcomes.rdata")
+load("st_prev_outcomes.rdata")
+load("st_meanZ_outcomes.rdata")
+load("st_cuminc_outcomes.rdata")
+load("st_cuminc_outcomes_nobirth.rdata")
+load("st_rec_outcomes.rdata")
+load("st_vel_outcomes.rdata")
+load("waz_vel_outcomes.RData")
 
 
 
@@ -43,7 +66,6 @@ vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
 meanHAZ$subjid <- as.character(meanHAZ$subjid)
 
 
-setwd("U:/ucb-superlearner/Wasting rallies/")
 
 
 #------------------------------------
@@ -271,24 +293,18 @@ save(d, Y, A,V, id, file="st_len_vel_rf.Rdata")
 #WASTING
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-
-
-setwd("U:/UCB-SuperLearner/Wasting rallies/")
-
-
 #Drop wasting risk factors
 cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
 
 
 #load outcomes
 load("wast_prev.RData")
-load("wast_meanZ.RData")
+load("wast_meanZ_outcomes.RData")
 load("wast_cuminc.rdata")
 load("wast_cuminc_nobirth.rdata")
 load("pers_wast.rdata")
 load("wast_rec.rdata")
-load("birthanthro_cuminc.rdata")
-load("waz_vel_rf_outcomes.RData")
+
 
 
 #convert subjid to character for the merge with covariate dataset
@@ -298,7 +314,6 @@ cuminc$subjid <- as.character(cuminc$subjid)
 cuminc_nobirth$subjid <- as.character(cuminc_nobirth$subjid)
 rec$subjid <- as.character(rec$subjid)
 pers_wast$subjid <- as.character(pers_wast$subjid)
-birthanthro_ci$subjid <- as.character(birthanthro_ci$subjid)
 vel_waz$subjid <- as.character(vel_waz$subjid)
 vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
 meanWHZ$subjid <- as.character(meanWHZ$subjid)
@@ -410,7 +425,7 @@ A<-c( "sex",              "gagebrth",      "birthwt",
 save(d, Y, A,V, id,  file="wast_prev_rf.Rdata")
 
 #------------------------------------
-# Create prevalence dataset
+# Create Z-score dataset
 #------------------------------------
 
 
@@ -494,20 +509,6 @@ A<-c( "sex",              "gagebrth",      "birthwt",
 
 save(d, Y, A,V, id, file="pers_wast_rf.Rdata")
 
-#------------------------------------
-# Create birth anthro dataset
-#------------------------------------
-
-#merge in covariates
-d <- left_join(birthanthro_ci, cov, by=c("studyid", "subjid", "country"))
-head(d)
-
-
-#Vector of outcome names
-Y<-c("ever_wasted", "ever_stunted")
-A<-c("born_wasted", "born_stunted")  
-
-save(d, Y, A,V, id,  file="birthanthro_rf.Rdata")
 
 
 
@@ -566,6 +567,45 @@ d <- d %>% rename(y_rate_wtkg=y_rate)
 
 save(d, Y, A,V, id, file="wast_wtkg_vel_rf.Rdata")
 
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# Co-occurrence
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+load("co_cuminc.rdata")
+
+
+#merge in covariates
+dim(cuminc)
+dim(cov)
+d <- left_join(cuminc, cov, by=c("studyid", "subjid", "country"))
+dim(d)
+
+
+#Vector of outcome names
+Y<-c("ever_co")
+
+#Vector of risk factor names
+A<-c( "sex",               "mage",          "mhtcm",         "mwtkg",        
+      "mbmi",          "single",        "fage",          "fhtcm",       
+      "nrooms",      "nchldlt5",    "nhh",              
+      "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
+      "feducyrs", "hfoodsec")  
+
+
+
+#Vector of covariate names
+W<-c("")
+
+#Subgroup variable
+V <- c("agecat")
+
+#clusterid ID variable
+id <- c("id")
+
+
+save(d, Y, A,V, id,  file="co_cuminc_rf.Rdata")
 
 
 

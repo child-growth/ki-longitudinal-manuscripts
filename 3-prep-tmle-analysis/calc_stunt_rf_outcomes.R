@@ -9,9 +9,9 @@
 #-----------------------------------
 
 rm(list=ls())
-library(tidyverse)
 
-
+source(paste0(here::here(), "/0-config.R"))
+source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
 load("U:/Data/Stunting/rf_stunting_data.RData")
@@ -24,49 +24,43 @@ load("U:/Data/Stunting/rf_stunting_data.RData")
 
 
 # define age windows
-d = d %>% 
-  #filter(agedays>1) %>%
-  mutate(agecat=ifelse(agedays<=6*30.4167,"6 months",
-                       ifelse(agedays>6*30.4167 & agedays<=12*30.4167,"12 months",
-                              ifelse(agedays>12*30.4167 & agedays<=18*30.4167,"18 months",
-                                     ifelse(agedays>12*30.4167& agedays<=24*30.4167,"24 months",""))))) %>%
-  mutate(agecat=factor(agecat,levels=c("6 months","12 months","18 months","24 months")))
+d6 <- calc.ci.agecat(d, range = 6, birth="yes")
 
 
-d <- d %>% ungroup() %>% arrange(studyid,country,subjid, agedays) %>%
+d6 <- d6 %>% ungroup() %>% arrange(studyid,country,subjid, agedays) %>%
   group_by(studyid,country,subjid, agecat) %>% 
   mutate(minhaz=min(haz)) %>% 
   ungroup() 
 
 
 #calculate any stunting from 0-6
-stunt_ci_0_6 = d %>% ungroup() %>%
-  filter(agecat=="6 months") %>%
+stunt_ci_0_6 = d6 %>% ungroup() %>%
+  filter(agecat=="0-6 months") %>%
   group_by(studyid,country,subjid) %>%
   #create variable with minhaz by age category, cumulatively
-  mutate(agecat="0-6 months", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), Nobs=n()) %>% slice(1) %>%
+  mutate(agecat="0-6 months", minhaz=min(haz), ever_stunted=ifelse(minhaz< (-2),1,0), ever_sstunted=ifelse(minhaz< (-3),1,0), Nobs=n()) %>% slice(1) %>%
   mutate(N=n()) %>%
   ungroup() 
 
 
-stunt_ci_6_24 = d %>% ungroup() %>% 
+stunt_ci_6_24 = d6 %>% ungroup() %>% 
   group_by(studyid,country,subjid) %>%
   arrange(studyid,country,subjid, agedays) %>% 
-  mutate(anystunt06 = 1*(agecat=="6 months" & minhaz < -2),
+  mutate(anystunt06 = 1*(agecat=="0-6 months" & minhaz < -2),
          anystunt06 = anystunt06[1]) %>% 
-  filter(agecat!="6 months" & !is.na(agecat) & anystunt06==0) %>%
-  mutate(agecat="6-24 months", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), Nobs=n()) %>% slice(1) %>%
+  filter(agecat!="0-6 months" & !is.na(agecat) & anystunt06==0) %>%
+  mutate(agecat="6-24 months", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), ever_sstunted=ifelse(minhaz< (-3),1,0), Nobs=n()) %>% slice(1) %>%
   mutate(N=n()) %>%
   ungroup() %>%
   select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,Nobs, N, anystunt06)
 
 
 #calculate any stunting from 0-24
-stunt_ci_0_24 = d %>% ungroup() %>%
+stunt_ci_0_24 = d6 %>% ungroup() %>%
   filter(!is.na(agecat)) %>%
   group_by(studyid,country,subjid) %>%
   #create variable with minhaz by age category, cumulatively
-  mutate(agecat="0-24 months", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), Nobs=n()) %>% slice(1) %>%
+  mutate(agecat="0-24 months", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), ever_sstunted=ifelse(minhaz< (-3),1,0), Nobs=n()) %>% slice(1) %>%
   mutate(N=n()) %>%
   ungroup() 
 
@@ -81,27 +75,27 @@ cuminc <- bind_rows(stunt_ci_0_6, stunt_ci_6_24, stunt_ci_0_24)
 #--------------------------------------
 
 
-stunt_ci_0_6_no_birth = d %>% ungroup() %>% 
+stunt_ci_0_6_no_birth = d6 %>% ungroup() %>% 
   arrange(studyid,country,subjid, agedays) %>% 
-  filter(agecat=="6 months" & !is.na(agecat)) %>%
+  filter(agecat=="0-6 months" & !is.na(agecat)) %>%
   group_by(studyid,country,subjid) %>%
   arrange(studyid,country,subjid, agedays) %>% 
   #mark if children were born stunted and drop
   mutate(start_stunt= as.numeric(first(haz) < -2)) %>%
   filter(start_stunt==0) %>% #drop children born wasted
-  mutate(agecat="0-6 months (no birth st.)", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), Nobs=n()) %>% slice(1) %>%
+  mutate(agecat="0-6 months (no birth st.)", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), ever_sstunted=ifelse(minhaz< (-3),1,0), Nobs=n()) %>% slice(1) %>%
   mutate(N=n()) %>%
   ungroup() %>%
   select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,Nobs,N)
 
-stunt_ci_0_24_no_birth = d %>% ungroup() %>% 
+stunt_ci_0_24_no_birth = d6 %>% ungroup() %>% 
   filter(!is.na(agecat)) %>%
   group_by(studyid,country,subjid) %>%
   arrange(studyid,country,subjid, agedays) %>% 
   #mark if children were born stunted and drop
   mutate(start_stunt= as.numeric(first(haz) < -2)) %>% 
   filter(start_stunt==0) %>% #drop children born wasted
-  mutate(agecat="0-24 months (no birth st.)", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), Nobs=n()) %>% slice(1) %>%
+  mutate(agecat="0-24 months (no birth st.)", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), ever_sstunted=ifelse(minhaz< (-3),1,0), Nobs=n()) %>% slice(1) %>%
   mutate(N=n()) %>%
   ungroup() %>%
   select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,Nobs,N)
@@ -125,21 +119,11 @@ table(cuminc_nobirth$ever_stunted[cuminc_nobirth$agecat=="0-24 months (no birth 
 #--------------------------------------
 
 # define age windows
-d = d %>% 
-  arrange(studyid,subjid,agedays) %>%
-  mutate(agecat=ifelse(agedays==1,"Birth",
-                       ifelse(agedays>2*30.4167 & agedays<4*30.4167,"3 months",
-                              ifelse(agedays>5*30.4167 & agedays<7*30.4167,"6 months",
-                                     ifelse(agedays>8*30.4167 & agedays<10*30.4167,"9 months",
-                                            ifelse(agedays>11*30.4167 & agedays<13*30.4167,"12 months",
-                                                   ifelse(agedays>17*30.4167 & agedays<19*30.4167,"18 months",
-                                                          ifelse(agedays>23*30.4167& agedays<25*30.4167,"24 months","")))))))) %>%
-  mutate(agecat=factor(agecat,levels=c("Birth","3 months","6 months","9 months",
-                                       "12 months","18 months","24 months"))) 
+dprev <- calc.prev.agecat(d)
 
 
 # take mean of multiple measurements within age window
-dmn <- d %>%
+dmn <- dprev %>%
   filter(!is.na(agecat)) %>%
   group_by(studyid,country,subjid,agecat) %>%
   summarise(haz=mean(haz)) %>%
@@ -149,8 +133,8 @@ dmn <- d %>%
 # export
 prev = dmn %>% 
   filter(agecat=="Birth" | agecat=="6 months" | agecat=="24 months") %>%
-select(studyid,subjid,country,agecat,
-       stunted, sstunted)
+  select(studyid,subjid,country,agecat,
+         stunted, sstunted)
 
 # save mean Z scores at each age
 meanHAZ = dmn %>% 
@@ -229,7 +213,7 @@ rev <- full_join(stunt.03, rec.24,by=c("studyid","country","subjid")) %>%
 #--------------------------------------
 # Format and subset the growth velocity dataset
 #--------------------------------------
-vel <- readRDS(file="U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt.rds")
+vel <- readRDS(file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")
 
 #Drop yearly studies
 vel <- vel[!vel$studyid %in% c(
@@ -274,10 +258,10 @@ vel_wtkg <- vel %>% filter(ycat=="wtkg") %>% subset(., select=c(studyid, country
 #--------------------------------------
 
 
-save(prev, file="U:/ucb-superlearner/Stunting rallies/st_prev_rf_outcomes.RData")
-save(meanHAZ, file="U:/ucb-superlearner/Stunting rallies/st_meanZ_rf_outcomes.RData")
-save(cuminc, file="U:/ucb-superlearner/Stunting rallies/st_cuminc_rf_outcomes.rdata")
-save(cuminc_nobirth, file="U:/ucb-superlearner/Stunting rallies/st_cuminc_rf_outcomes_nobirth.rdata")
-save(rev, file="U:/ucb-superlearner/Stunting rallies/st_rec_rf_outcomes.RData")
-save(vel_haz, vel_lencm, file="U:/ucb-superlearner/Stunting rallies/st_vel_rf_outcomes.RData")
-save(vel_waz, vel_wtkg, file="U:/ucb-superlearner/Wasting rallies/waz_vel_rf_outcomes.RData")
+save(prev, file="U:/ucb-superlearner/Manuscript analysis data/st_prev_outcomes.RData")
+save(meanHAZ, file="U:/ucb-superlearner/Manuscript analysis data/st_meanZ_outcomes.RData")
+save(cuminc, file="U:/ucb-superlearner/Manuscript analysis data/st_cuminc_outcomes.rdata")
+save(cuminc_nobirth, file="U:/ucb-superlearner/Manuscript analysis data/st_cuminc_outcomes_nobirth.rdata")
+save(rev, file="U:/ucb-superlearner/Manuscript analysis data/st_rec_outcomes.RData")
+save(vel_haz, vel_lencm, file="U:/ucb-superlearner/Manuscript analysis data/st_vel_outcomes.RData")
+save(vel_waz, vel_wtkg, file="U:/ucb-superlearner/Manuscript analysis data/waz_vel_outcomes.RData")

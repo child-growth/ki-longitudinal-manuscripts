@@ -32,7 +32,8 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 #---------------------------------------------
 # Specify the binary analyses
 #---------------------------------------------
-
+setwd("U:/ucb-superlearner/Manuscript analysis data/")
+load("st_prev_rf.Rdata")
 
 st_prev <- specify_rf_analysis(A=Avars, Y=c("stunted","sstunted"), file="st_prev_rf.Rdata")
 st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
@@ -72,11 +73,12 @@ cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                            "perdiar6", "perdiar24", 
                                            "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
                                            "predexfd6", "earlybf", "month"),
-                                      Y="ever_wasted", file="wast_cuminc_nobirth_rf.Rdata")
+                                      Y=c("ever_wasted", "ever_swasted"), file="wast_cuminc_nobirth_rf.Rdata")
 
 
 rec <- specify_rf_analysis(A=Avars, id="subjid", Y="wast_rec90d", file="wast_rec_rf.Rdata")
 pers_wast <- specify_rf_analysis(A=Avars, Y="pers_wast", file="pers_wast_rf.Rdata")
+pers_wast <- specify_rf_analysis(A=Avars, Y="ever_co", file="co_cuminc_rf.rdata")
 
 
 WHZ_quart_prev <- specify_rf_analysis(A="lag_WHZ_quart", Y="stunted", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
@@ -95,21 +97,26 @@ WHZ_quart_cuminc <- specify_rf_analysis(A="lag_WHZ_quart", Y="ever_stunted", W=c
                                                                                  "trth2o","cleanck","impfloor","impsan","safeh20"),
                                         file="stuntCI_whz_rf.Rdata")
 
-
+co_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
+                                   "mbmi",          "single",        "fage",          "fhtcm",       
+                                   "nrooms",      "nchldlt5",    "nhh",              
+                                   "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
+                                   "feducyrs", "hfoodsec"),
+                              Y="ever_co", file="co_cuminc_rf.Rdata")
 
 #bind together datasets
-analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, st_rec, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc)
+analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, st_rec, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, co_cuminc)
 table(analyses$file)
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
-save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/adjusted_binary_analyses.rdata.rdata")
+save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_binary_analyses.rdata")
 
 
 #Make unadjusted analysis set
 analyses$W <- NULL
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/unadjusted_binary_analyses.rdata"))
-save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/unadjusted_binary_analyses.rdata")
+save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/unadjusted_binary_analyses.rdata")
 
 
 
@@ -131,12 +138,12 @@ analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))
-save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/adjusted_continuous.rdata")
+save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_continuous.rdata")
 
 
 #Make unadjusted analysis set
 analyses$W <- NULL
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/unadjusted_continuous.rdata"))
-save(analyses, file="U:/sprint_7D_longbow/wasting_analyses/unadjusted_continuous.rdata")
+save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/unadjusted_continuous.rdata")
 
 
