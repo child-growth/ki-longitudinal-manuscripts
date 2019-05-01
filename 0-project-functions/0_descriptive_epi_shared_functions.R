@@ -600,6 +600,7 @@ mean95CI <- function(Y, id = rep(1:length(Y)), persontime = NULL, proportion = F
 
 # returns a string with a standardized naming convention
 #----------------------------------------------
+
 create_name = function(outcome, cutoff, measure, population, 
                        location, age, analysis){
   
@@ -608,40 +609,40 @@ create_name = function(outcome, cutoff, measure, population,
   # define short versions of each feature
   outcome_s = transformations %>% 
     filter(variable.type == "outcome") %>% 
-    filter(variable == outcome) %>% 
-    select(description) %>%
+    filter(description == outcome) %>% 
+    select(variable) %>%
     first()
   
   cutoff_s = cutoff
   
   measure_s = transformations %>% 
     filter(variable.type == "measure") %>% 
-    filter(variable == measure) %>% 
-    select(description) %>%
+    filter(description == measure) %>% 
+    select(variable) %>%
     first()
   
   population_s = transformations %>% 
     filter(variable.type == "population") %>% 
-    filter(variable == population) %>% 
-    select(description) %>%
+    filter(description == population) %>% 
+    select(variable) %>%
     first()
   
   location_s = transformations %>% 
     filter(variable.type == "location") %>% 
-    filter(variable == location) %>% 
-    select(description) %>%
+    filter(description == location) %>% 
+    select(variable) %>%
     first()
   
   age_s = transformations %>% 
     filter(variable.type == "age") %>% 
-    filter(variable == age) %>%
-    select(description) %>%
+    filter(description == age) %>%
+    select(variable) %>%
     first()
   
   analysis_s = transformations %>% 
     filter(variable.type == "analysis") %>% 
-    filter(variable == analysis) %>%
-    select(description) %>%
+    filter(description == analysis) %>%
+    select(variable) %>%
     first()
   
   # create figure name string using short versions of each feature

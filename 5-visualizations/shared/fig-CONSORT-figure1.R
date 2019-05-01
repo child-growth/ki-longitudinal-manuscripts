@@ -31,6 +31,7 @@ consort_ki <- consort_ki %>% select("Short_ID", "country", "nchild", "nobs", "St
                                     "included_ill", "included_small", "included_age", 
                                     "included_qc", "included_measurement_freq", "included_monthly") 
 
+
 consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild, study_id = Study_ID,
                                     short_desc = Short_Description) %>%  
                              filter(included_qc == 1) %>% 

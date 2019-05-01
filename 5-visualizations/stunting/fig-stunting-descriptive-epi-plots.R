@@ -183,37 +183,69 @@ saveRDS(prev_plot$data, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS
 # Stunting prevalence - 3 months - stratified by cohort
 #-------------------------------------------------------------------------------------------
 # Nolan please update with new cohort specific plot
-# prev_plot_cohort <- ki_desc_plot(d,
-#                           Disease="Stunting",
-#                           Measure="Prevalence", 
-#                           Birth="yes", 
-#                           Severe="no", 
-#                           Age_range="3 months", 
-#                           Cohort="pooled",
-#                           xlabel="Child age, months",
-#                           ylabel='Point Prevalence (95% CI)',
-#                           h1=69,
-#                           h2=72,
-#                           returnData=T)
-# prev_plot$plot
-# 
-# 
-# # define standardized plot names
-# prev_plot_cohort_name = create_name(
-#   outcome = "stunting",
-#   cutoff = 2,
-#   measure = "prevalence",
-#   population = "cohort-stratified",
-#   location = "",
-#   age = "All ages",
-#   analysis = "primary"
-# )
-# 
-# # save plot and underlying data
-# ggsave(prev_plot_cohort$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_cohort_name, ".png"), width=14, height=3)
-# 
-# saveRDS(prev_plot_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot_cohort_name,".RDS"))
-# 
+prev_plot_africa <- ki_desc_plot(d,
+                                 Disease="Stunting",
+                                 Measure="Prevalence",
+                                 Birth="yes",
+                                 Severe="no",
+                                 Age_range="3 months",
+                                 Cohort="pooled",
+                                 xlabel="Child age, months",
+                                 ylabel='Point Prevalence (95% CI)',
+                                 h1=69,
+                                 h2=72,
+                                 returnData=T,
+                                 Region="Africa")
+prev_plot_africa$plot
+
+prev_plot_lam <- ki_desc_plot(d,
+                                 Disease="Stunting",
+                                 Measure="Prevalence",
+                                 Birth="yes",
+                                 Severe="no",
+                                 Age_range="3 months",
+                                 Cohort="pooled",
+                                 xlabel="Child age, months",
+                                 ylabel='Point Prevalence (95% CI)',
+                                 h1=69,
+                                 h2=72,
+                                 returnData=T,
+                                 Region="Latin America")
+prev_plot_lam$plot
+
+prev_plot_sasia <- ki_desc_plot(d,
+                              Disease="Stunting",
+                              Measure="Prevalence",
+                              Birth="yes",
+                              Severe="no",
+                              Age_range="3 months",
+                              Cohort="pooled",
+                              xlabel="Child age, months",
+                              ylabel='Point Prevalence (95% CI)',
+                              h1=69,
+                              h2=72,
+                              returnData=T,
+                              Region="South Asia")
+prev_plot_sasia$plot
+
+# define standardized plot names: Africa
+prev_plot_africa_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "prevalence",
+  population = "cohort-stratified",
+  location = "Africa",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(prev_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-", "prev_plot_africa_name", ".png"), width=10, height=5)
+ggsave(prev_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-", "prev_plot_lam_name", ".png"), width=10, height=5)
+ggsave(prev_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-", "prev_plot_sasia_name", ".png"), width=10, height=5)
+
+saveRDS(prev_plot_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot_cohort_name,".RDS"))
+
 
 
 
@@ -257,37 +289,68 @@ saveRDS(prev_plot_sev$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_na
 #-------------------------------------------------------------------------------------------
 # Stunting prevalence - severe - cohort specific
 #-------------------------------------------------------------------------------------------
-# Nolan please update with new cohort specific plot
-# prev_plot_sev_cohort <- ki_desc_plot(d,
-#                               Disease="Stunting",
-#                               Measure="Prevalence", 
-#                               Birth="yes", 
-#                               Severe="yes", 
-#                               Age_range="3 months", 
-#                               Cohort="pooled",
-#                               xlabel="Child age, months",
-#                               ylabel='Point Prevalence (95% CI)',
-#                               h1=69,
-#                               h2=72,
-#                               returnData=T)
-# prev_plot_sev_cohort$plot
-# 
-# 
-# # define standardized plot names
-# prev_plot_sev_cohort_name = create_name(
-#   outcome = "stunting",
-#   cutoff = 3,
-#   measure = "prevalence",
-#   population = "cohort-stratified",
-#   location = "",
-#   age = "All ages",
-#   analysis = "primary"
-# )
-# 
-# # save plot and underlying data
-# ggsave(prev_plot_sev_cohort$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_cohort_name, ".png"), width=14, height=3)
-# 
-# saveRDS(prev_plot_sev_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_cohort_name,".RDS"))
+prev_plot_sev_africa <- ki_desc_plot(d,
+                              Disease="Stunting",
+                              Measure="Prevalence",
+                              Birth="yes",
+                              Severe="yes",
+                              Age_range="3 months",
+                              Cohort="pooled",
+                              xlabel="Child age, months",
+                              ylabel='Point Prevalence (95% CI)',
+                              h1=69,
+                              h2=72,
+                              returnData=T,
+                              Region="Africa")
+prev_plot_sev_africa$plot
+
+prev_plot_sev_lam <- ki_desc_plot(d,
+                                     Disease="Stunting",
+                                     Measure="Prevalence",
+                                     Birth="yes",
+                                     Severe="yes",
+                                     Age_range="3 months",
+                                     Cohort="pooled",
+                                     xlabel="Child age, months",
+                                     ylabel='Point Prevalence (95% CI)',
+                                     h1=69,
+                                     h2=72,
+                                     returnData=T,
+                                     Region="Latin America")
+prev_plot_sev_lam$plot
+
+prev_plot_sev_sasia <- ki_desc_plot(d,
+                                     Disease="Stunting",
+                                     Measure="Prevalence",
+                                     Birth="yes",
+                                     Severe="yes",
+                                     Age_range="3 months",
+                                     Cohort="pooled",
+                                     xlabel="Child age, months",
+                                     ylabel='Point Prevalence (95% CI)',
+                                     h1=69,
+                                     h2=72,
+                                     returnData=T,
+                                     Region="South Asia")
+prev_plot_sev_sasia$plot
+
+# define standardized plot names
+prev_plot_sev_cohort_name = create_name(
+  outcome = "stunting",
+  cutoff = 3,
+  measure = "prevalence",
+  population = "cohort-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(prev_plot_sev_africa$plot, file=paste0(fig_dir, "stunting/fig-","prev_plot_sev_africa_name", ".png"), width=10, height=5)
+ggsave(prev_plot_sev_lam$plot, file=paste0(fig_dir, "stunting/fig-","prev_plot_sev_lam_name", ".png"), width=10, height=5)
+ggsave(prev_plot_sev_sasia$plot, file=paste0(fig_dir, "stunting/fig-","prev_plot_sev_sasia_name", ".png"), width=10, height=5)
+
+saveRDS(prev_plot_sev_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_cohort_name,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -375,7 +438,7 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), wid
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion - cohort specific
 #-------------------------------------------------------------------------------------------
-# Nolan please update with new cohort specific plot
+# TODO: Nolan please update with new cohort specific plot -- this too? 
 # ci_inc_plot_cohort <- ki_combo_plot(d,
 #                              Disease="Stunting",
 #                              Measure=c("Cumulative incidence", "Incidence_proportion"), 

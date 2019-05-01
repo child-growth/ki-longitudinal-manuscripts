@@ -160,6 +160,44 @@ prev_plot <- ki_desc_plot(d,
                    yrange=c(0,24),
                    returnData=T)
 
+prev_plot_africa <- ki_desc_plot(d,
+                          Disease="Wasting",
+                          Measure="Prevalence", 
+                          Birth="yes", 
+                          Severe="no", 
+                          Age_range="3 months", 
+                          Cohort="pooled",
+                          xlabel="Child age, months",
+                          ylabel='Point prevalence (95% CI)',
+                          yrange=c(0,24),
+                          returnData=T,
+                          Region="Africa")
+
+prev_plot_lam <- ki_desc_plot(d,
+                                 Disease="Wasting",
+                                 Measure="Prevalence", 
+                                 Birth="yes", 
+                                 Severe="no", 
+                                 Age_range="3 months", 
+                                 Cohort="pooled",
+                                 xlabel="Child age, months",
+                                 ylabel='Point prevalence (95% CI)',
+                                 yrange=c(0,24),
+                                 returnData=T,
+                                 Region="Latin America")
+
+prev_plot_sasia <- ki_desc_plot(d,
+                                 Disease="Wasting",
+                                 Measure="Prevalence", 
+                                 Birth="yes", 
+                                 Severe="no", 
+                                 Age_range="3 months", 
+                                 Cohort="pooled",
+                                 xlabel="Child age, months",
+                                 ylabel='Point prevalence (95% CI)',
+                                 yrange=c(0,24),
+                                 returnData=T,
+                                 Region="South Asia")
 
 # define standardized plot names
 prev_plot_name = create_name(
@@ -174,6 +212,9 @@ prev_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(prev_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","prev_plot_africa", ".png"), width=10, height=5)
+ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
+ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
 
 saveRDS(prev_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",prev_plot_name,".RDS"))
 
@@ -550,6 +591,45 @@ perswast_plot <- ki_desc_plot(d,
                    yrange=c(0,20),
                    returnData=T)
 
+perswast_plot_africa <- ki_desc_plot(d,
+                              Disease="Wasting",
+                              Measure="Persistent wasting", 
+                              Birth="yes", 
+                              Severe="no", 
+                              Age_range="6 months", 
+                              Cohort="pooled",
+                              xlabel="Child age, months",
+                              ylabel = 'Proportion (%)',
+                              yrange=c(0,20),
+                              returnData=T,
+                              Region="Africa")
+
+perswast_plot_lam <- ki_desc_plot(d,
+                                     Disease="Wasting",
+                                     Measure="Persistent wasting", 
+                                     Birth="yes", 
+                                     Severe="no", 
+                                     Age_range="6 months", 
+                                     Cohort="pooled",
+                                     xlabel="Child age, months",
+                                     ylabel = 'Proportion (%)',
+                                     yrange=c(0,20),
+                                     returnData=T,
+                                     Region="Latin America")
+
+perswast_plot_sasia <- ki_desc_plot(d,
+                                     Disease="Wasting",
+                                     Measure="Persistent wasting", 
+                                     Birth="yes", 
+                                     Severe="no", 
+                                     Age_range="6 months", 
+                                     Cohort="pooled",
+                                     xlabel="Child age, months",
+                                     ylabel = 'Proportion (%)',
+                                     yrange=c(0,20),
+                                     returnData=T,
+                                     Region="South Asia")
+
 
 # define standardized plot names
 perswast_plot_name = create_name(
@@ -563,7 +643,9 @@ perswast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(perswast_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",perswast_plot_name, ".png"), width=14, height=3)
+ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","perswast_plot_africa", ".png"), width=10, height=5)
+ggsave(perswast_plot_lam$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","perswast_plot_lam", ".png"), width=10, height=5)
+ggsave(perswast_plot_sasia$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=10, height=5)
 
 saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",perswast_plot_name,".RDS"))
 
@@ -586,6 +668,44 @@ co_plot <- ki_desc_plot(d,
                    yrange=c(0,12),
                    returnData=T)
 
+co_plot_africa <- ki_desc_plot(d,
+                        Disease="co-occurrence",
+                        Measure="Prevalence", 
+                        Birth="yes", 
+                        Severe="no", 
+                        Age_range="3 months", 
+                        Cohort="pooled",
+                        xlabel="Child age, months",
+                        ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
+                        yrange=c(0,12),
+                        returnData=T,
+                        Region="Africa")
+
+co_plot_lam <- ki_desc_plot(d,
+                               Disease="co-occurrence",
+                               Measure="Prevalence", 
+                               Birth="yes", 
+                               Severe="no", 
+                               Age_range="3 months", 
+                               Cohort="pooled",
+                               xlabel="Child age, months",
+                               ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
+                               yrange=c(0,12),
+                               returnData=T,
+                               Region="Latin America")
+
+co_plot_sasia <- ki_desc_plot(d,
+                               Disease="co-occurrence",
+                               Measure="Prevalence", 
+                               Birth="yes", 
+                               Severe="no", 
+                               Age_range="3 months", 
+                               Cohort="pooled",
+                               xlabel="Child age, months",
+                               ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
+                               yrange=c(0,12),
+                               returnData=T,
+                               Region="South Asia")
 
 # define standardized plot names
 co_plot_name = create_name(
@@ -600,6 +720,9 @@ co_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(co_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
+ggsave(co_plot_africa$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","co_plot_africa", ".png"), width=10, height=5)
+ggsave(co_plot_lam$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","co_plot_lam", ".png"), width=10, height=5)
+ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","co_plot_sasia", ".png"), width=10, height=5)
 
 saveRDS(co_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",co_plot_name,".RDS"))
 
@@ -620,6 +743,42 @@ underweight_plot <- ki_desc_plot(d,
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,24))
 
+underweight_plot_africa <- ki_desc_plot(d,
+                                 Disease="Underweight",
+                                 Measure="Prevalence", 
+                                 Birth="yes", 
+                                 Severe="no", 
+                                 Age_range="3 months", 
+                                 Cohort="pooled",
+                                 xlabel="Child age, months",
+                                 ylabel='Point prevalence (95% CI)',
+                                 yrange=c(0,24),
+                                 Region="Africa")
+
+underweight_plot_lam <- ki_desc_plot(d,
+                                 Disease="Underweight",
+                                 Measure="Prevalence", 
+                                 Birth="yes", 
+                                 Severe="no", 
+                                 Age_range="3 months", 
+                                 Cohort="pooled",
+                                 xlabel="Child age, months",
+                                 ylabel='Point prevalence (95% CI)',
+                                 yrange=c(0,24),
+                                 Region="Latin America")
+
+underweight_plot_sasia <- ki_desc_plot(d,
+                                     Disease="Underweight",
+                                     Measure="Prevalence", 
+                                     Birth="yes", 
+                                     Severe="no", 
+                                     Age_range="3 months", 
+                                     Cohort="pooled",
+                                     xlabel="Child age, months",
+                                     ylabel='Point prevalence (95% CI)',
+                                     yrange=c(0,24),
+                                     Region="South Asia")
+
 # define standardized plot names
 underweight_plot_name = create_name(
   outcome = "wasting",
@@ -633,6 +792,9 @@ underweight_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(underweight_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",underweight_plot_name, ".png"), width=14, height=3)
+ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","underweight_plot_africa", ".png"), width=10, height=5)
+ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","underweight_plot_lam", ".png"), width=10, height=5)
+ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=10, height=5)
 
 saveRDS(underweight_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",underweight_plot_name,".RDS"))
 
