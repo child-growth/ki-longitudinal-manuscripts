@@ -36,29 +36,13 @@ RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervent
 RMAest_raw <- rbind(RMAest, RMAest_region)
 
 
-#Re-order so increasing risk for all comparisons
-reorder_fun <- function(df){
-  df_sub <- df[df$ATE >= 0,]
-  df <- df[df$ATE < 0,]
-  new_ref <- df$intervention_level
-  df$intervention_level <- df$baseline_level
-  df$baseline_level <- new_ref
-  df$ATE <- (-1) * df$ATE 
-  df$CI1 <- (-1) * df$CI1 
-  df$CI2 <- (-1) * df$CI2 
-  df <- bind_rows(df_sub, df)
-  return(df)
-}
-RMAest <- reorder_fun(RMAest_raw)
 
 #Clean up dataframe for plotting
-RMAest_clean <- RMA_clean(RMAest)
+RMAest_clean <- RMA_clean(RMAest_raw)
 
-#Grab the largest contrast for each variable
-RMAest_max <- RMAest_clean %>% group_by(outcome_variable, region, intervention_variable) %>% filter(abs(ATE)==max(abs(ATE)))
 
 #Add reference level to labe
-RMAest_max$RFlabel_ref <- paste0(RMAest_max$RFlabel, ", ref: ", RMAest_max$baseline_level)
+RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$baseline_level)
 
 
 
