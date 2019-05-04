@@ -1,34 +1,157 @@
 
 
 
+# take mean of multiple measurements within age windows
+cohort.summary <- function(d, var, strata=c("region","studyid","country","agecat"), ci=F, continious=F, severe=F, minN=50, measure=NULL){
+
+  cutoff <- ifelse(severe, -3, -2)
+  
+  colnames(d)[colnames(d)==var] <- "Y"
+  
+  strata_sym <- syms(strata)
+  
+  if(!ci | continious){
+    d <- d %>%
+      filter(!is.na(agecat)) %>%
+      group_by(!!!(strata_sym),subjid) %>%
+      summarise(Y=mean(Y, na.rm=T))
+  }else{
+    d <- d %>%
+      filter(!is.na(agecat)) %>%
+      group_by(!!!(strata_sym),subjid) %>%
+      mutate(Y = ifelse(Y < cutoff, 1, 0)) %>%
+      summarise(Y = ifelse(sum(Y)>0, 1, 0))
+  }
+  
+  # summarize measurements per study by age
+  # exclude time points if number of measurements per age
+  # in a study is < threshold
+  if(continious){
+    cohort.sum = d %>%
+      filter(!is.na(agecat) & !is.na(Y)) %>%
+      group_by(!!!(strata_sym)) %>%
+      summarise(N=n(),
+                Mean=mean(Y),
+                Var=var(Y)) %>%
+      filter(N>=minN)
+    }else{
+      if(ci){
+      cohort.sum = d %>%
+        group_by(!!!(strata_sym)) %>%
+        summarise(N=n(),
+                  Prop=mean(Y),
+                  Ncases=sum(Y==1)) %>%
+        filter(N>=minN) 
+      }else{
+        cohort.sum = d %>%
+          filter(!is.na(agecat) & !is.na(Y)) %>%
+          mutate(Y = ifelse(Y < cutoff, 1, 0)) %>%
+          group_by(!!!(strata_sym)) %>%        
+          summarise(N=n(),
+                  Prop=mean(Y),
+                  Ncases=sum(Y==1)) %>%
+        filter(N>=minN) 
+      }
+    }
+  
+  cohort.sum$variable <- var
+  
+  #Add measure label
+  if(!is.null(measure)){cohort.sum$measure <- measure}
+  
+  #Drop missing agecat levels
+  cohort.sum <- droplevels(cohort.sum)
+  return(cohort.sum)
+}
+
+# overall.res=lapply((levels(cohort.sum$agecat)),function(x) 
+#   fit.rma(data=cohort.sum, ni="N", xi="Ncases", nlab="children",age=NULL, method = method)
+# 
+# cohort.sum %>% group_by(agecat) %>%
+#   do(fit.rma(data=., ni="N", xi="Ncases", nlab="children",age=NULL, method = method)) %>%
+#   as.data.frame()
+# 
+# overall.res=lapply((levels(cohort.sum$agecat)),function(x) 
+#   )
+
+# fit.rma(data=cohort.sum, ni="N", yi="Mean", vi="Var", nlab="children",age=NULL, method = method, measure="GEN")
+# 
+# overall.res=cohort.sum %>% group_by(!!!(strata_sym)) %>%
+#   do(res = try(fit.rma(data=., ni="N", yi="Mean", vi="Var", nlab="children",age=NULL, method = method))) %>%
+#   as.data.frame()
+
+pool_over_agecat <- function(cohort.sum, strata=c("region","studyid","country","agecat"), proportion=F, continious=F, measure = "PLO",  method = "REML"){
+ 
+  #set up strata
+  strata_sym <- syms(strata)
+  
+  if(continious){
+    overall.res=cohort.sum %>% group_by(!!!(strata_sym)) %>%
+      do(fit.rma(data=., ni="N", yi="Mean", vi="Var", nlab="children",age=NULL, method = method, measure=measure)) %>%
+      as.data.frame()
+  }else{
+    overall.res=cohort.sum %>% group_by(!!!(strata_sym)) %>%
+      do(fit.rma(data=., ni="N", xi="Ncases", nlab="children",age=NULL, method = method, measure=measure)) %>%
+      as.data.frame()
+  }
+  
+  #format results
+  if(proportion){
+    overall.res = overall.res %>% mutate(est=est*100,lb=lb*100,ub=ub*100) 
+  }
+  overall.res$ptest.f = sprintf("%0.0f",overall.res$est)
+  
+  return(overall.res)
+}
+
+
+summarize_over_strata <- function(cohort.sum, strata=c("region","studyid","country","agecat"), proportion=F, continious=F, measure = "PLO",  method = "REML",  region=T, cohort=T){
+  
+  region.res <- NULL
+  cohort.res <- NULL
+  
+  #set up strata
+  strata_sym <- syms(strata)
+  
+  #Overall summary
+  overall.res <- pool_over_agecat(cohort.sum, proportion=proportion, strata=strata[!(strata %in% c("region","studyid","country"))], continious=continious, measure = measure,  method = method)
+  overall.res$region <- "Overall"
+  
+  # region specific results
+  if(region){
+    region.res  <- pool_over_agecat(cohort.sum, proportion=proportion, strata=strata[!(strata %in% c("studyid","country"))], continious=continious, measure = measure,  method = method)
+  }
+
+  # cohort specific results
+  if(cohort){
+    if(continious){
+      cohort.res=cohort.sum %>% 
+        do(fit.escalc(data=., ni="N", yi="Mean", vi="Var",age=NULL, method = method, measure = measure)) %>%
+        as.data.frame()
+    }else{
+      cohort.res=cohort.sum %>% 
+        do(fit.escalc(data=., ni="N", xi="Ncases",age=NULL, method = method, measure = measure)) %>%
+        as.data.frame()
+    }
+    cohort.res=cohort.format(cohort.res,y=cohort.res$yi,
+                             lab=  levels(cohort.sum$agecat))
+  }
+  
+ res <- bind_rows(overall.res, region.res, cohort.res)
+  
+ return(res)
+}
+
+
+
+
+
+
+
 
 summary.prev.whz <- function(d, severe.wasted=F){
   
-  # take mean of multiple measurements within age window
-  dmn <- d %>%
-    filter(!is.na(agecat)) %>%
-    group_by(studyid,country,subjid,agecat) %>%
-    summarise(whz=mean(whz, na.rm=T)) %>%
-    mutate(wasted=ifelse(whz< -2, 1,0),swasted=ifelse(whz< -3, 1,0))
-  
-  if(severe.wasted==T){
-    dmn$wasted <- dmn$swasted
-  }
-  
-  # count measurements per study by age
-  # exclude time points if number of measurements per age
-  # in a study is <50
-  prev.data = dmn %>%
-    filter(!is.na(agecat)) %>%
-    group_by(studyid,country,agecat) %>%
-    summarise(nmeas=sum(!is.na(whz)),
-              prev=mean(wasted),
-              nxprev=sum(wasted==1)) %>%
-    filter(nmeas>=50) 
-  
-  prev.data <- droplevels(prev.data)
-  
-  
+
   # cohort specific results
   prev.cohort=lapply((levels(prev.data$agecat)),function(x) 
     fit.escalc(data=prev.data,ni="nmeas", xi="nxprev",age=x,meas="PLO"))
@@ -48,25 +171,7 @@ summary.prev.whz <- function(d, severe.wasted=F){
   prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
-  
-  # estimate random effects in birth cohorts only
-  prev.res.birthcohorts=NULL
-  if("Birth" %in% unique(prev.data$agecat)){
-    birthcohorts<-prev.data$studyid[prev.data$agecat=="Birth"]
-    prev.res.birthcohorts=lapply((levels(prev.data$agecat)),function(x) 
-      fit.rma(data=prev.data[prev.data$studyid %in% birthcohorts, ],ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
-    prev.res.birthcohorts=as.data.frame(rbindlist(prev.res.birthcohorts))
-    
-    prev.res.birthcohorts[,4]=as.numeric(prev.res.birthcohorts[,4])
-    prev.res.birthcohorts[,6]=as.numeric(prev.res.birthcohorts[,6])
-    prev.res.birthcohorts[,7]=as.numeric(prev.res.birthcohorts[,7])
-    
-    prev.res.birthcohorts = prev.res.birthcohorts %>%
-      mutate(est=est*100,lb=lb*100,ub=ub*100)
-    prev.res.birthcohorts$agecat=factor(prev.res.birthcohorts$agecat,levels=levels(prev.data$agecat))
-    prev.res.birthcohorts$ptest.f=sprintf("%0.0f",prev.res.birthcohorts$est)
-  }
-  return(list(prev.data=prev.data, prev.res=prev.res, prev.res.birthcohorts=prev.res.birthcohorts, prev.cohort=prev.cohort))
+  return(list(prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort))
 }
 
 

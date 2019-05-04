@@ -1,8 +1,7 @@
 
 
 #-----------------------------------
-# Stunting analysis
-# Objective 1a
+# Co-occurrence analysis
 # Import data, subset to relevant variables
 #-----------------------------------
 rm(list=ls())

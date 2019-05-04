@@ -212,12 +212,13 @@ saveRDS(d, file=paste0(study, '.HHwealth.rds') )
 #---------
 # dvds
 #---------
-study<-"dvds"
-d<-readRDS(paste0("U:/data/",study,".rds")) %>% group_by(SUBJID) %>% arrange(AGEDAYS) %>% slice(1)
-cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
-varlist<-colnames(d)[colnames(d) %in% c("BED", "BICYCLE", "CAR", "CHAIR", "FAN", "FRIG", "MCYCLE", "NBEDROOM", "PHONE", "RADIO", "SEWING", "TABLE", "TV", "WATCH")]
-d<-assetPCA(d, varlist, reorder=T)
-saveRDS(d, file=paste0(study, '.HHwealth.rds') )
+# Note: dropped due to enrolling ill children
+# study<-"dvds"
+# d<-readRDS(paste0("U:/data/",study,".rds")) %>% group_by(SUBJID) %>% arrange(AGEDAYS) %>% slice(1)
+# cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+# varlist<-colnames(d)[colnames(d) %in% c("BED", "BICYCLE", "CAR", "CHAIR", "FAN", "FRIG", "MCYCLE", "NBEDROOM", "PHONE", "RADIO", "SEWING", "TABLE", "TV", "WATCH")]
+# d<-assetPCA(d, varlist, reorder=T)
+# saveRDS(d, file=paste0(study, '.HHwealth.rds') )
 
 
 #---------
@@ -438,7 +439,7 @@ saveRDS(d, file=paste0(study, '.HHwealth.rds') )
            "akup",
            "cmc",
            "cntt",
-           "dvds",
+           #"dvds",
            "gmsn",
            "ilnd",
            "ildm",
