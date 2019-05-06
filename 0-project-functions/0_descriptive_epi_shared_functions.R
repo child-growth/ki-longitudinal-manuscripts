@@ -1,4 +1,207 @@
 
+
+##############################################
+# cohort.summary
+##############################################
+
+# Documentation: cohort.summary
+# Usage: cohort.summary(d, var, strata=c("region","studyid","country","agecat"), ci=F, continious=F, severe=F, minN=50, measure=NULL)
+# Description: Take an input dataframe and summarize the N's and cases for each strata of each cohort
+#   -Prepares data for meta-analysis pooling with fit_rma() function
+
+
+# Args/Options:
+# data: a data frame with variables studyid, country, agecat, and outcome measure of Z-score or indicator for wasting or stunting
+# var: name of the variable that is used as or to calculate the outcome
+# strata: list of variables used to define strata to summarize, normally c("region","studyid","country","agecat") to get age-specific summaries by cohort 
+# ci: True if calculating summary over a range (cumulative incidence, incidence rate), false if calculating a point summary (prevalence, mean Z)
+# continious: True is summarizing continious outcome, false otherwise
+# severe: True to use -3, instead of -2 default, as the cutoff to define disease from a Z-score.
+# minN: Number of children needed to keep a strata to use in the pooled estimation, defaults to 50
+# measure: Optional character label to add to the output dataframe as a column of characters
+
+cohort.summary <- function(d, var, strata=c("region","studyid","country","agecat"), ci=F, continious=F, severe=F, minN=50, measure=NULL){
+  
+  cutoff <- ifelse(severe, -3, -2)
+  
+  colnames(d)[colnames(d)==var] <- "Y"
+  
+  strata_sym <- syms(strata)
+  
+  if(!ci | continious){
+    d <- d %>%
+      filter(!is.na(agecat)) %>%
+      group_by(!!!(strata_sym),subjid) %>%
+      summarise(Y=mean(Y, na.rm=T))
+  }else{
+    #Check if Y is binary
+    if(sum(!(d$Y %in% c(0,1)))>0){
+      d <- d %>%
+        filter(!is.na(agecat)) %>%
+        group_by(!!!(strata_sym),subjid) %>%
+        mutate(Y = ifelse(Y < cutoff, 1, 0)) %>%
+        summarise(Y = ifelse(sum(Y)>0, 1, 0))
+    }else{
+      d <- d %>%
+        filter(!is.na(agecat)) %>%
+        group_by(!!!(strata_sym),subjid) %>%
+        summarise(Y = ifelse(sum(Y)>0, 1, 0))
+    }
+  }
+  
+  # summarize measurements per study by age
+  # exclude time points if number of measurements per age
+  # in a study is < threshold
+  if(continious){
+    cohort.sum = d %>%
+      filter(!is.na(agecat) & !is.na(Y)) %>%
+      group_by(!!!(strata_sym)) %>%
+      summarise(N=n(),
+                Mean=mean(Y),
+                Var=var(Y)) %>%
+      filter(N>=minN)
+  }else{
+    if(ci){
+      cohort.sum = d %>%
+        group_by(!!!(strata_sym)) %>%
+        summarise(N=n(),
+                  Prop=mean(Y),
+                  Ncases=sum(Y==1)) %>%
+        filter(N>=minN) 
+    }else{
+      cohort.sum = d %>%
+        filter(!is.na(agecat) & !is.na(Y)) %>%
+        mutate(Y = ifelse(Y < cutoff, 1, 0)) %>%
+        group_by(!!!(strata_sym)) %>%        
+        summarise(N=n(),
+                  Prop=mean(Y),
+                  Ncases=sum(Y==1)) %>%
+        filter(N>=minN) 
+    }
+  }
+  
+  cohort.sum$variable <- var
+  
+  #Add measure label
+  if(!is.null(measure)){cohort.sum$measure <- measure}
+  
+  #Drop missing agecat levels
+  cohort.sum <- droplevels(cohort.sum)
+  return(cohort.sum)
+}
+
+
+##############################################
+# pool_over_agecat
+##############################################
+
+# Documentation: pool_over_agecat
+# Usage: pool_over_agecat(cohort.sum, strata=c("region","studyid","country","agecat"), proportion=F, continious=F, measure = "PLO",  method = "REML")
+# Description: Primarily used as a function within summarize_over_strata() as a wrapper function to fit.rma(). Take an input dataframe with each row summarizing the N's and cases from a single
+#             cohort and then calculated the parameter of interest specified by measure, pooled
+#             across specific agecats over all cohorts. Generalized to use any strata, not just agecat. 
+
+
+# Args/Options:
+# cohort.sum: a data frame outputted from cohort.summary, with each row summarizing a child age within a cohort.
+# strata: list of variables used to define strata to summarize, normally c("region","studyid","country","agecat") to get age-specific summaries by cohort 
+# proportion: if outcome is proportion, set to true to multiply point estimate and ci by 100 to bound between 0-100%
+# continious: True is summarizing continious outcome, false otherwise
+# measure: type of outcome parameter using naming conventions from the escalc function from the metafor package. Defaults to "PLO" for logit transformed proportion,
+#         other possible options GEN for general (used for means), or IR for incidence rate.
+# method: pooling method, defaults to REML for random effects fit with restricted maximum likelihood
+
+
+pool_over_agecat <- function(cohort.sum, strata=c("region","studyid","country","agecat"), proportion=F, continious=F, measure = "PLO",  method = "REML"){
+  
+  #set up strata
+  strata_sym <- syms(strata)
+  
+  if(continious){
+    overall.res=cohort.sum %>% group_by(!!!(strata_sym)) %>%
+      do(fit.rma(data=., ni="N", yi="Mean", vi="Var", nlab="children",age=NULL, method = method, measure=measure)) %>%
+      as.data.frame()
+  }else{
+    overall.res=cohort.sum %>% group_by(!!!(strata_sym)) %>%
+      do(fit.rma(data=., ni="N", xi="Ncases", nlab="children",age=NULL, method = method, measure=measure)) %>%
+      as.data.frame()
+  }
+  
+  #format results
+  if(proportion){
+    overall.res = overall.res %>% mutate(est=est*100,lb=lb*100,ub=ub*100) 
+  }
+  overall.res$ptest.f = sprintf("%0.0f",overall.res$est)
+  
+  return(overall.res)
+}
+
+##############################################
+# summarize_over_strata
+##############################################
+
+# Documentation: summarize_over_strata
+# Usage: summarize_over_strata(cohort.sum, strata=c("region","studyid","country","agecat"), proportion=F, continious=F, measure = "PLO",  method = "REML",  region=T, cohort=T)
+# Description: Primarily used as a function within summarize_over_strata() as a wrapper function to fit.rma(). Take an input dataframe with each row summarizing the N's and cases from a single
+#             cohort and then calculated the parameter of interest specified by measure, pooled
+#             across specific agecats over all cohorts. Generalized to use any strata, not just agecat. 
+
+
+# Args/Options:
+# cohort.sum: a data frame outputted from cohort.summary, with each row summarizing a child age within a cohort.
+# strata: list of variables used to define strata to summarize, normally c("region","studyid","country","agecat") to get age-specific summaries by cohort 
+# proportion: if outcome is proportion, set to true to multiply point estimate and ci by 100 to bound between 0-100%
+# continious: True is summarizing continious outcome, false otherwise
+# measure: type of outcome parameter using naming conventions from the escalc function from the metafor package. Defaults to "PLO" for logit transformed proportion,
+#         other possible options GEN for general (used for means), or IR for incidence rate.
+# method: pooling method, defaults to REML for random effects fit with restricted maximum likelihood
+# region: If true, pool by region as well as overall, and add to returned results data.frame
+# cohort: If true, calculate cohort-specific parameters, and add to returned results data.frame
+
+
+
+summarize_over_strata <- function(cohort.sum, strata=c("region","studyid","country","agecat"), proportion=F, continious=F, measure = "PLO",  method = "REML",  region=T, cohort=T){
+  
+  region.res <- NULL
+  cohort.res <- NULL
+  
+  #set up strata
+  strata_sym <- syms(strata)
+  
+  #Overall summary
+  overall.res <- pool_over_agecat(cohort.sum, proportion=proportion, strata=strata[!(strata %in% c("region","studyid","country"))], continious=continious, measure = measure,  method = method)
+  overall.res$region <- "Overall"
+  
+  # region specific results
+  if(region){
+    region.res  <- pool_over_agecat(cohort.sum, proportion=proportion, strata=strata[!(strata %in% c("studyid","country"))], continious=continious, measure = measure,  method = method)
+  }
+  
+  # cohort specific results
+  if(cohort){
+    if(continious){
+      cohort.res=cohort.sum %>% 
+        do(fit.escalc(data=., ni="N", yi="Mean", vi="Var",age=NULL, method = method, measure = measure)) %>%
+        as.data.frame()
+    }else{
+      cohort.res=cohort.sum %>% 
+        do(fit.escalc(data=., ni="N", xi="Ncases",age=NULL, method = method, measure = measure)) %>%
+        as.data.frame()
+    }
+    cohort.res=cohort.format(cohort.res,y=cohort.res$yi,
+                             lab=  levels(cohort.sum$agecat))
+  }
+  
+  res <- bind_rows(overall.res, region.res, cohort.res)
+  
+  return(res)
+}
+
+
+
+
+
+
 ##############################################
 # fit.rma
 ##############################################

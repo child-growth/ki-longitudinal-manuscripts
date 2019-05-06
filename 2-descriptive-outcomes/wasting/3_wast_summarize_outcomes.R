@@ -81,21 +81,8 @@ save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_dat
 
 
 #  RUN OFF THE CALCULATED INCIDENCE ONSET, NOT Z-score
-ci.summary <- cohort.summary(d=d6, var=Zscore, ci=T, continious=F, severe=F, minN=50, measure="Cumulative incidence")
+ci.summary <- cohort.summary(d=d6, var="wast_inc", ci=T, continious=F, severe=F, minN=50, measure="Cumulative incidence")
 ci.res <- summarize_over_strata(cohort.sum=ci.summary, proportion=T, continious=F, measure = "PLO",  method = method_var,  region=T, cohort=T)
-
-
-ci.data <- summary.ci(d, agelist = agelst)
-ci.region <- d %>% group_by(region) %>% do(summary.ci(., agelist = agelst)$ci.res)
-ci.cohort <-
-  ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
-  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
-
-ci <- bind_rows(
-  data.frame(cohort = "pooled", region = "Overall", ci.data$ci.res),
-  data.frame(cohort = "pooled", ci.region),
-  ci.cohort
-)
 
 #Cumulative inc 3 month intervals
 d3 <- calc.ci.agecat(d, range = 3)
