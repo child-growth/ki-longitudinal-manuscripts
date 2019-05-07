@@ -1,6 +1,8 @@
 
 
 rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
+library(here)
 
 
 load("U:/ucb-superlearner/Wasting rallies/adjustment_sets_list.Rdata")
@@ -106,6 +108,9 @@ co_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mht
 
 #bind together datasets
 analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, st_rec, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, co_cuminc)
+
+#TEMP
+analyses <- st_prev[c(1,2,5,10,11),]
 table(analyses$file)
 
 #Save analysis specification
@@ -134,7 +139,8 @@ whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 
 analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
-
+#TEMP
+analyses <- haz[c(1,2,5,10,11),]
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))
