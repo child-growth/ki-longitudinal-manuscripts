@@ -18,7 +18,7 @@ Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
 
 specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","country"), id="id", adj_sets=adjustment_sets){
   
-  analyses <- expand.grid(A=Avars,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
+  analyses <- expand.grid(A=A,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
   analyses$id <- id
   analyses$strata <- list(V)
   if(is.null(W)){analyses$W <- adj_sets[analyses$A]}else{
@@ -35,7 +35,8 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 # Specify the binary analyses
 #---------------------------------------------
 setwd("U:/ucb-superlearner/Manuscript analysis data/")
-load("st_prev_rf.Rdata")
+load("st_cuminc_rf.Rdata")
+table(d$ever_stunted, d$sex)
 
 st_prev <- specify_rf_analysis(A=Avars, Y=c("stunted","sstunted"), file="st_prev_rf.Rdata")
 st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
@@ -45,7 +46,7 @@ st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mht
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
-                                 Y="ever_stunted", file="st_cuminc_rf.Rdata")
+                                 Y=c("ever_stunted","ever_sstunted"), file="st_cuminc_rf.Rdata")
 
 st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
                                               "birthlen",       "vagbrth",       "hdlvry",    
@@ -55,7 +56,7 @@ st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                               "perdiar6", "perdiar24", 
                                               "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
                                               "predexfd6", "earlybf", "month"),
-                                         Y="ever_stunted", file="st_cuminc_nobirth_rf.Rdata")
+                                         Y=c("ever_stunted","ever_sstunted"), file="st_cuminc_nobirth_rf.Rdata")
 
 
 prev <- specify_rf_analysis(A=Avars, Y=c("wasted","swasted"), file="wast_prev_rf.Rdata")
@@ -110,7 +111,7 @@ co_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mht
 analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, st_rec, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, co_cuminc)
 
 #TEMP
-analyses <- st_prev[c(1,2,5,10,11),]
+analyses <- specify_rf_analysis(A=c( "sex"), Y="ever_stunted", file="st_cuminc_rf.Rdata")
 table(analyses$file)
 
 #Save analysis specification
@@ -140,7 +141,7 @@ whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
 #TEMP
-analyses <- haz[c(1,2,5,10,11),]
+analyses <- specify_rf_analysis(A=c( "sex"), Y="haz", file="st_meanZ_rf.Rdata")
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))
