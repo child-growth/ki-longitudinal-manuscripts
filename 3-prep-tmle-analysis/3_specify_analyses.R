@@ -37,6 +37,7 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 setwd("U:/ucb-superlearner/Manuscript analysis data/")
 load("st_cuminc_rf.Rdata")
 table(d$ever_stunted, d$sex)
+summary(d$id)
 
 st_prev <- specify_rf_analysis(A=Avars, Y=c("stunted","sstunted"), file="st_prev_rf.Rdata")
 st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
@@ -66,7 +67,7 @@ cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm"
                                    "nrooms",      "nchldlt5",    "nhh",              
                                    "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                    "feducyrs", "hfoodsec"),
-                              Y="ever_wasted", file="wast_cuminc_rf.Rdata")
+                              Y=c("ever_wasted", "ever_swasted"), file="wast_cuminc_rf.Rdata")
 
 cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
                                            "birthlen",       "vagbrth",       "hdlvry",    
@@ -81,7 +82,6 @@ cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
 
 rec <- specify_rf_analysis(A=Avars, id="subjid", Y="wast_rec90d", file="wast_rec_rf.Rdata")
 pers_wast <- specify_rf_analysis(A=Avars, Y="pers_wast", file="pers_wast_rf.Rdata")
-pers_wast <- specify_rf_analysis(A=Avars, Y="ever_co", file="co_cuminc_rf.rdata")
 
 
 WHZ_quart_prev <- specify_rf_analysis(A="lag_WHZ_quart", Y="stunted", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
@@ -109,9 +109,6 @@ co_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mht
 
 #bind together datasets
 analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, st_rec, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, co_cuminc)
-
-#TEMP
-analyses <- specify_rf_analysis(A=c( "sex"), Y="ever_stunted", file="st_cuminc_rf.Rdata")
 table(analyses$file)
 
 #Save analysis specification
@@ -140,8 +137,6 @@ whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 
 analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
-#TEMP
-analyses <- specify_rf_analysis(A=c( "sex"), Y="haz", file="st_meanZ_rf.Rdata")
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))
