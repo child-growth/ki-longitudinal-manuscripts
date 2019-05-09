@@ -116,8 +116,8 @@ plot_cols = rev(brewer.pal(n = 6, name = "PiYG"))
 #Colors 1 and 2 are never faltered and recovered
 
 #Stunting
-plot_cols[2] = viridis_cols[8]
-plot_cols[4] = viridis_cols[8]
+plot_cols[2] = tableau10[1]
+plot_cols[4] = tableau10[1]
 
 #Underweight
 #plot_cols[4] = tableau10[1]
@@ -127,8 +127,10 @@ plot_cols[3] = tableau10[2]
 plot_cols[5] = tableau10[2]
 
 #Combination of faltering:
-plot_cols[6] = tableau10[4]
-plot_cols[7] = tableau10[4]
+# plot_cols[6] = viridis_cols[8]
+# plot_cols[7] = viridis_cols[8]
+plot_cols[6] = tableau10[5]
+plot_cols[7] = tableau10[5]
 
 plot_cols2 <- plot_cols[c(1,2,3,6)]
 
@@ -137,14 +139,15 @@ p <- ggplot() +
   geom_point(data = df, aes(x=agedays, y=id, color=status2, alpha=severe, shape=severe)) +
   scale_color_manual("", values = plot_cols2, guide=guide_legend(title="Growth faltering")) +
   scale_shape_discrete(guide=guide_legend(title="Severity")) +
-  scale_alpha_discrete(range=c(0.25, 1), guide=guide_legend(title="Severity")) +
+  scale_alpha_discrete(range=c(0.5, 1), guide=guide_legend(title="Severity")) +
   coord_cartesian(xlim=c(0, 730)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
-  ylab("Child") + xlab("Age in months") +
+  ylab("Child") + xlab("Age in months") + theme_bw() +
   theme(axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
-        legend.position = c(0.8, 0.3))
+        plot.background = element_rect(fill = "white", color = NA),
+        legend.position = c(0.8, 0.3)) 
 print(p)
 
 
