@@ -22,11 +22,11 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 
 #Load data
-ns <- read.csv(paste0(here::here(),"/results/GHAP_n_u2_allstudies.csv"))
-incl <- read.csv(paste0(here::here(),"/results/HBGDki_CONSORT_inclusion.csv"))
+ns <- read.csv(paste0(here::here(),"/data/GHAP_n_u2_allstudies.csv"))
+incl <- read.csv(paste0(here::here(),"/data/HBGDki_CONSORT_inclusion.csv"))
 
 #Load naming codes
-cc <- read.csv(paste0(here::here(),"/results/country_codes.csv"))
+cc <- read.csv(paste0(here::here(),"/data/country_codes.csv"))
 
 head(ns)
 head(incl)
@@ -141,6 +141,20 @@ table(d$included_monthly)
 
 #Drop cross-sectional and non-qc rows
 d <- d %>% filter(included_qc==1)
+
+#Non-QC'ed study and most cross-sectional studies have already been dropped. Drop remaining cross-sectional studies
+d <- d %>% filter(nchild!=nobs)
+
+#Then mark the exclusions indicators for remaining 3 studies erroneously marked as cross-sectional:
+d[d$Short_ID=="gems",c("included_longitudinal","included_anthropometry","included_low_income", "included_small", "included_age")] <- 1
+d[d$Short_ID=="gmsa",c("included_longitudinal","included_anthropometry","included_low_income", "included_small", "included_age")] <- 1
+d[d$Short_ID=="mmam",c("included_longitudinal","included_anthropometry","included_low_income", "included_small", "included_age")] <- 1
+
+#Mark low income countries from multisite studies
+d$included_low_income[d$Short_ID %in% c("ib21", "ig21") & !(d$Country %in% c( "GBR", "ITA", "OMN", "GBR"))] <- 1
+
+table(d$measurefreq)
+
 
 #Save dataset
 saveRDS(d, paste0(here::here(),"/results/HBGDki_CONSORT_inclusion_Ns.rds"))
