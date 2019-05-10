@@ -153,6 +153,8 @@ d[d$Short_ID=="mmam",c("included_longitudinal","included_anthropometry","include
 #Mark low income countries from multisite studies
 d$included_low_income[d$Short_ID %in% c("ib21", "ig21") & !(d$Country %in% c( "GBR", "ITA", "OMN", "GBR"))] <- 1
 
+table(d$measurefreq)
+
 
 #Save dataset
 saveRDS(d, paste0(here::here(),"/results/HBGDki_CONSORT_inclusion_Ns.rds"))
