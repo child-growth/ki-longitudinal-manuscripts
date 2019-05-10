@@ -63,8 +63,6 @@ RMA_clean <- function(RMAest, outcome="binary",
   
   RMAest$RFlabel <- NA
   
-  RMAest$RFlabel <- NA
-  
   #Fix WHZ quartile RF levels
   RMAest$RFlabel[RMAest$RFlabel=="1" & RMAest$intervention_variable=="lag_WHZ_quart"] <- "WHZ Q1"
   RMAest$RFlabel[RMAest$RFlabel=="2" & RMAest$intervention_variable=="lag_WHZ_quart"] <- "WHZ Q2"
@@ -90,12 +88,12 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                "< 2500 g",">= 2500 g", 
                                                "2","3","4","5","6","7","8","9",  "10" , "11","12" ,
                                                "<32" , "[32-38)", ">=38",
+                                               "<20","[20-30)","<25","[25-30)",">=30",
                                                "Low", "Medium", "High",                    
                                                "<162 cm", "[162-167) cm" , ">=167 cm",
                                                "Preterm", "Early term", "Full or late term",           
                                                "Food Insecure", "Mildly Food Insecure", "Food Secure",               
                                                "Q1", "Q2", "Q3", "Q4",
-                                               "<25","[25-30)",">=30",                      
                                                "Underweight", "Normal weight", "Overweight or Obese",
                                                "<151 cm", "[151-155) cm", ">=155 cm",
                                                "<52 kg", "[52-58) kg", ">=58 kg",

@@ -1,8 +1,7 @@
 #-----------------------------------
 # study-inventory-heatmaps.R
 #
-# ben arnold (benarnold@berkeley.edu)
-# modified by jade benjamin-chung (jadebc@berkeley.edu)
+# andrew mertens (amertens@berkeley.edu)
 #
 # create a heatmap of data availability
 # for weight and height by study 

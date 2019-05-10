@@ -22,8 +22,9 @@ d <- dfull %>% filter(type=="PAR")
 prev <- dfull %>% filter(type=="E(Y)")
 
 #Drop unadjusted estimates
-d <- d %>% filter(adjustment_set!="" | intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon")
-prev <- prev %>% filter(adjustment_set!="" | intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon")
+d <- d %>% filter((adjustment_set!="unadjusted" & adjustment_set!="") | (intervention_variable %in% c("sex", "month", "brthmon") & adjustment_set=="unadjusted" ))
+prev <- prev %>% filter((adjustment_set!="unadjusted" & adjustment_set!="") | (intervention_variable %in% c("sex", "month", "brthmon") & adjustment_set=="unadjusted" ))
+
 
 #Subset to stunting prevalence
 unique(d$outcome_variable)
@@ -129,20 +130,7 @@ summary(df2$PAF.CI1)
 summary(df2$PAF.CI2)
 
 
-#Re-order so increasing risk for all comparisons
-# reorder_fun <- function(df){
-#   df_sub <- df[df$PAF >= 0,]
-#   df <- df[df$PAF < 0,]
-#   new_ref <- df$intervention_level
-#   df$intervention_level <- df$baseline_level
-#   df$baseline_level <- new_ref
-#   df$PAF <- (-1) * df$PAF
-#   df$CI1 <- (-1) * df$CI1
-#   df$CI2 <- (-1) * df$CI2
-#   df <- bind_rows(df_sub, df)
-#   return(df)
-# }
-# RMAest <- reorder_fun(RMAest_raw)
+
 RMAest <- df2
 
 #Clean up dataframe for plotting
@@ -175,8 +163,8 @@ df$outcome_variable <- gsub("stunted", "Stunted", df$outcome_variable)
 df$outcome_variable <- gsub("wasted", "Wasted", df$outcome_variable)
 
 i <- unique(df$region)[1]
-j <- unique(df$outcome_variable)[1]
-k <- unique(df$agecat)[1]
+j <- unique(df$outcome_variable)[2]
+k <- unique(df$agecat)[2]
 
 for(i in unique(df$region)){
   for(j in unique(df$outcome_variable)){
@@ -188,7 +176,7 @@ for(i in unique(df$region)){
                agecat == k) %>%
         filter(!is.na(intervention_variable))
       
-      ppar <-  ggplot(dpool, aes(x=reorder(RFlabel, PAF))) + 
+      ppar <-  ggplot(dpool, aes(x=reorder(RFlabel_ref, PAF))) + 
         geom_point(aes(y=PAF,  color=RFtype), size = 4) +
         geom_linerange(aes(ymin=PAF.CI1, ymax=PAF.CI2, color=RFtype)) +
         coord_flip(ylim=c(-50, 50)) +
@@ -216,10 +204,61 @@ for(i in unique(df$region)){
 
 
 
+#Make manuscript plots
+dpool <- df %>% ungroup() %>%
+  filter(region=="Pooled",
+         outcome_variable %in% c("Ever Stunted", "Ever Wasted" ),
+         agecat %in% c("6-24 months","0-24 months")) %>%
+  filter(!is.na(intervention_variable)) %>%
+  mutate(agecat=factor(agecat, levels=c("0-24 months","6-24 months"))) %>%
+  group_by(intervention_variable, intervention_level, outcome_variable) %>%
+  arrange(agecat) %>%
+  slice(1)
 
+ppaf_stunt <-  ggplot(dpool[dpool$outcome_variable=="Ever Stunted",], aes(x=reorder(RFlabel_ref, PAF))) + 
+  geom_point(aes(y=PAF,  color=RFtype), size = 4) +
+  geom_linerange(aes(ymin=PAF.CI1, ymax=PAF.CI2, color=RFtype)) +
+  coord_flip(ylim=c(-10, 40)) +
+  labs(x = "Exposure", y = "Attributable Fraction") +
+  geom_hline(yintercept = 0) +
+  #scale_y_continuous(breaks=yticks, labels=scaleFUN) +
+  scale_shape_manual(values=c(21, 23)) +
+  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
+  # scale_size_continuous(range = c(0, 0.5))+
+  theme(strip.background = element_blank(),
+        legend.position="right",
+        axis.text.y = element_text(hjust = 1),
+        strip.text.x = element_text(size=12),
+        axis.text.x = element_text(size=12, 
+                                   margin = margin(t = -20)),
+        axis.title.x = element_text(margin = margin(t = 20))) +
+  ggtitle(paste0("Population attributable fractions (%),\nCumulative incidence of stunting")) + 
+  guides(color=FALSE, shape=FALSE)
 
+ppaf_stunt
 
+ppaf_wast <-  ggplot(dpool[dpool$outcome_variable=="Ever Wasted",], aes(x=reorder(RFlabel_ref, PAF))) + 
+  geom_point(aes(y=PAF,  color=RFtype), size = 4) +
+  geom_linerange(aes(ymin=PAF.CI1, ymax=PAF.CI2, color=RFtype)) +
+  coord_flip(ylim=c(-10, 40)) +
+  labs(x = "Exposure", y = "Attributable Fraction") +
+  geom_hline(yintercept = 0) +
+  #scale_y_continuous(breaks=yticks, labels=scaleFUN) +
+  scale_shape_manual(values=c(21, 23)) +
+  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
+  # scale_size_continuous(range = c(0, 0.5))+
+  theme(strip.background = element_blank(),
+        legend.position="right",
+        axis.text.y = element_text(hjust = 1),
+        strip.text.x = element_text(size=12),
+        axis.text.x = element_text(size=12, 
+                                   margin = margin(t = -20)),
+        axis.title.x = element_text(margin = margin(t = 20))) +
+  ggtitle(paste0("Population attributable fractions (%),\nCumulative incidence of wasting")) + 
+  guides(color=FALSE, shape=FALSE)
 
+ppaf_wast
 
-
+ggsave(ppaf_stunt, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-stunt-ci-PAF.png"), height=10, width=8)
+ggsave(ppaf_wast, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-wast-ci-PAF.png"), height=10, width=8)
 
