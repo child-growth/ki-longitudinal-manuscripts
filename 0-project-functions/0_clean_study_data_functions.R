@@ -472,18 +472,21 @@ mark_region <- function(df){
       country=="BURKINA FASO"|
       country=="GUINEA-BISSAU"|
       country=="MALAWI"|
+      country=="MALI"|
+      country=="MOZAMBIQUE"|
       country=="SOUTH AFRICA"|
       country=="TANZANIA, UNITED REPUBLIC OF"|
       country=="TANZANIA"|
       country=="ZIMBABWE"|
       country=="GAMBIA"|
-      country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "Africa",
+      country=="CONGO, THE DEMOCRATIC REPUBLIC OF" ~ "Africa",
     country=="BRAZIL" | country=="GUATEMALA" |
-      country=="PERU"|country=='ECUADOR'   ~ "Latin America",
-    country=='UNITED STATES' | country=='UNITED KINGDOM'|country=='ITALY'|
-      # country=='NETHERLANDS'|
-      country=='BELARUS'~ 'N.America & Europe',
-    TRUE                                    ~ "Other"
+      country=="PERU"|country=='ECUADOR' | country=="MEXICO" |
+      country=="BELIZE" ~ "Latin America",
+    country=="UNITED STATES" | country=="UNITED KINGDOM" | country=="ITALY"|
+      country== "NETHERLANDS"|
+      country=="BELARUS" ~ "N.America & Europe",
+    TRUE ~ "Other"
   ))
  
   
@@ -491,6 +494,7 @@ mark_region <- function(df){
                       levels = c("Africa",
                                  "South Asia",
                                  "Latin America",
+                                 "N.America & Europe",
                                  "Other"))
   
   return(df)
