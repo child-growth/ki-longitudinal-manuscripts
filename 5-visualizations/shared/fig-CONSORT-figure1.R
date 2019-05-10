@@ -25,16 +25,25 @@ consort_ki <- readRDS("results/HBGDki_CONSORT_inclusion_Ns.rds")
 consort_ki <- consort_ki[!(consort_ki$Study_ID==""), ]
 consort_ki <- consort_ki[!is.na(consort_ki$Study_ID), ]
 
+consort_ki[consort_ki$Study_ID=="MAL-ED",]
+
 
 consort_ki <- consort_ki %>% select("Short_ID", "country", "nchild", "nobs", "Study_ID", "Short_Description", 
                                     "included", "included_longitudinal", "included_anthropometry", "included_low_income", 
                                     "included_ill", "included_small", "included_age", 
-                                    "included_qc", "included_measurement_freq", "included_monthly") 
+                                    "included_measurement_freq", "included_monthly") 
+
+#Non-QC'ed study and most cross-sectional studies have already been dropped. Drop remaining cross-sectional studies
+consort_ki <- consort_ki %>% filter(nchild!=nobs)
+
+#Then mark the exclusions indicators for remaining 3 studies erroneously marked as cross-sectional:
+consort_ki[consort_ki$Short_ID=="gems",c("included_longitudinal","included_anthropometry","included_low_income", "included_small", "included_age")] <- 1
+consort_ki[consort_ki$Short_ID=="gmsa",c("included_longitudinal","included_anthropometry","included_low_income", "included_small", "included_age")] <- 1
+consort_ki[consort_ki$Short_ID=="mmam",c("included_longitudinal","included_anthropometry","included_low_income", "included_small", "included_age")] <- 1
 
 
 consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild, study_id = Study_ID,
                                     short_desc = Short_Description) %>%  
-                             filter(included_qc == 1) %>% 
                              # use obs_count instead of subj_count for future
                              mutate(subject_count = as.integer(subject_count)) %>%
                              mutate(subject_count = case_when(is.na(subject_count) ~ as.double(0),
@@ -47,7 +56,6 @@ consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild,
                                     included_small = ifelse(is.na(included_small), 0, included_small),
                                     included_age = ifelse(is.na(included_age), 0, included_age),
                                     included_ill = ifelse(is.na(included_ill), 0, included_ill),
-                                    included_qc = ifelse(is.na(included_qc), 0, included_qc),
                                     included_measurement_freq = ifelse(is.na(included_measurement_freq), 0, included_measurement_freq)) %>% 
                              # recode inclusion_indicator to be stacked
                              mutate(included_anthropometry = case_when(
@@ -80,15 +88,15 @@ consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild,
                                         included_small == 1 &
                                         included_age == 1 ~ 1, 
                                         TRUE ~ 0),
-                                    included_qc = case_when( # replace this with quarterly
-                                        included_anthropometry == 1 & 
-                                        included_longitudinal == 1 &
-                                        included_low_income == 1 &
-                                        included_ill == 1 &
-                                        included_small == 1 &
-                                        included_age == 1 &
-                                        included_qc == 1 ~ 1, 
-                                        TRUE ~ 0),
+                                    # included_qc = case_when( # replace this with quarterly
+                                    #     included_anthropometry == 1 & 
+                                    #     included_longitudinal == 1 &
+                                    #     included_low_income == 1 &
+                                    #     included_ill == 1 &
+                                    #     included_small == 1 &
+                                    #     included_age == 1 &
+                                    #     included_qc == 1 ~ 1, 
+                                    #     TRUE ~ 0),
                                     included_measurement_freq = case_when(
                                         included_anthropometry == 1 & 
                                         included_longitudinal == 1 &
@@ -96,16 +104,20 @@ consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild,
                                         included_ill == 1 &
                                         included_small == 1 &
                                         included_age == 1 &
-                                        included_qc == 1 &
+                                        #included_qc == 1 &
                                         included_measurement_freq == 1 ~ 1, 
-                                      TRUE ~ 0)
-                             )
+                                      TRUE ~ 0))
+
 
 # didn't do do name labelling (no need to)
 
 # clean country labels and separate into regions
-consort_ki <- make_region(consort_ki)
-consort_ki <- clean_country(consort_ki)
+consort_ki <- mark_region(consort_ki)
+
+#Clean up country names
+consort_ki$country[consort_ki$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+consort_ki$country <- stringr::str_to_title(consort_ki$country)
+consort_ki <- mutate(consort_ki, cohort = paste0(short_desc,'-', country))
 
 # create tally of # of exclusions to sort by, for consistent plotting
 consort_ki <- consort_ki %>% mutate(inclusionTally = 
@@ -115,9 +127,10 @@ consort_ki <- consort_ki %>% mutate(inclusionTally =
                                     included_ill +
                                     included_small +
                                     included_age +
-                                    included_qc +
                                     included_measurement_freq)  
-consort_ki <- consort_ki %>% filter(inclusionTally > 0)
+
+table(consort_ki$inclusionTally)
+
 
 # wide to long format
 consort_ki_long <- consort_ki %>% gather('inclusion_metric', 'indicator', 
@@ -127,7 +140,7 @@ consort_ki_long <- consort_ki %>% gather('inclusion_metric', 'indicator',
                                          included_ill,
                                          included_small,
                                          included_age,
-                                         included_qc,
+                                         #included_qc,
                                          included_measurement_freq)
 
 # ordering/naming of exclusion reasons
@@ -138,7 +151,6 @@ consort_ki_long$inclusion_metric <- factor(consort_ki_long$inclusion_metric,
                                                  'included_ill',
                                                  'included_small',
                                                  'included_age',
-                                                 'included_qc',
                                                  'included_measurement_freq'))
 
 #########################################################################################

@@ -37,10 +37,10 @@ ns <- ns %>% rename(Study_ID=Study.ID, nchild=NCHILD_U2, nobs=NOBS_U2, country=C
 incl <- incl %>% select(Study_ID, Country, Short_ID.1, Short_Description, included,
                         included_anthropometry, included_longitudinal, included_low_income, 
                         included_small,included_age, included_ill, included_qc, included_measurement_freq) %>% 
-  rename(Short_ID=Short_ID.1)
+  rename(Short_ID=Short_ID.1) %>%
+  mutate(Country=as.character(Country))
 
 #Seperate inclusion criteria by country
-
 dim(incl)
 incl_long <- NULL
 for(i in 1:nrow(incl)){
@@ -55,6 +55,9 @@ for(i in 1:nrow(incl)){
 }
 dim(incl_long)
 
+#Remove spaces from country labels
+incl_long$Country <- gsub(" ", "", incl_long$Country)
+
 #merge in naming codes 
 incl_long <- left_join(incl_long, cc, by="Country")
 
@@ -63,7 +66,8 @@ incl_long <- left_join(incl_long, cc, by="Country")
 unique(ns$country)
 unique(incl_long$Country)
 unique(incl_long$country)
-incl_long <- incl_long %>% subset(., select = -c(Country))
+incl_long$Country[is.na(incl_long$country)]
+#incl_long <- incl_long %>% subset(., select = -c(Country))
 
 #remove grant identifiers from studyid
 ns$Study_ID <- gsub("^k.*?-" , "", ns$Study_ID)

@@ -21,7 +21,9 @@ unique(dfull$type)
 d <- dfull %>% filter(type=="RR")
 
 #Drop unadjusted estimates
-d <- d %>% filter(adjustment_set!="" | intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon")
+#mark unadjusted
+d$adjusted <- ifelse(d$adjustment_set=="unadjusted", 0, 1)
+d <- d %>% filter(adjusted == 1)
 
 #drop morbidity and mortality analysis
 d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")
@@ -80,6 +82,10 @@ RMAest_clean <- RMA_clean(RMAest_raw)
 
 #Add reference level to label
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
+
+#Save cleaned data
+saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+
 
 
 yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
