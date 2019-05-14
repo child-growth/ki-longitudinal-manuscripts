@@ -24,6 +24,12 @@ d <- bind_rows(
   #adj_bin, unadj_bin, 
   wasting, Zscores)
 
+
+#Drop duplicated (unadjusted sex and month variables)
+dim(d)
+d <- distinct(d)
+dim(d)
+
 saveRDS(d, paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 
 

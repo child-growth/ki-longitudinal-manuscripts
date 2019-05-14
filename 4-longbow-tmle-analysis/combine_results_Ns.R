@@ -49,7 +49,13 @@ Ndf <- Ndf_Ystrat %>% group_by(studyid, country, agecat, outcome_variable, inter
   mutate(prev=n_cell/n)
 
 
+#Grab total N's by pooled analysis
+N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, intervention_level) %>%
+  summarize(n_cell=sum(n_cell), n=sum(n)) %>%
+  mutate(prev=n_cell/n)
+
+
 # save concatenated Ns
-save(Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns.rdata")
+save(N_sums, Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns.rdata")
 
 

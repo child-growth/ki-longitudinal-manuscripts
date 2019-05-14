@@ -23,12 +23,10 @@ unique(dfull$type)
 d <- dfull %>% filter(type=="PAR")
 
 #mark unadjusted
-d$adjusted <- ifelse(d$adjustment_set!="unadjusted" & d$adjustment_set!="", 1, 0)
+d$adjusted <- ifelse(d$adjustment_set!="unadjusted" , 1, 0)
 
 #Drop unadjusted estimates
 d <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon") & adjusted==0))
-
-
                   
 #Subset to stunting prevalence
 unique(d$outcome_variable)
@@ -36,16 +34,18 @@ d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
                     outcome_variable=="y_rate_wtkg"|outcome_variable=="haz"|
                     outcome_variable=="whz")
 
-#Subset agecat
-# unique(d$agecat)
-# d <- d %>% filter(agecat %in% c("Birth","6 months","24 months"))
+#Keep just one breastfeeding indicator
+d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )) )
 
-table(d$studyid, d$intervention_variable)
+#Drop duplicated (unadjusted sex and month variables)
+dim(d)
+d <- distinct(d)
+dim(d)
 
-#Temp: drop father's age:
-#d <- d %>% filter(intervention_variable!="fage")
 
 d <- droplevels(d)
+
+
 
 pool.Zpar <- function(d){
   nstudies <- d %>% summarize(N=n())
@@ -78,36 +78,9 @@ RMAest_raw <- rbind(RMAest, RMAest_region)
 
 RMAest_raw <- RMAest_raw %>% filter(!is.na(PAR))
 
-# #Re-order so increasing risk for all comparisons
-# reorder_fun <- function(df){
-#   df_sub <- df[df$PAR >= 0,]
-#   df <- df[df$PAR < 0,]
-#   new_ref <- df$intervention_level
-#   df$intervention_level <- df$baseline_level
-#   df$baseline_level <- new_ref
-#   df$PAR <- (-1) * df$PAR
-#   df$CI1 <- (-1) * df$CI1
-#   df$CI2 <- (-1) * df$CI2
-#   df <- bind_rows(df_sub, df)
-#   return(df)
-# }
-# RMAest <- reorder_fun(RMAest_raw)
+max(RMAest_raw$Nstudies)
+RMAest_raw[RMAest_raw$Nstudies==max(RMAest_raw$Nstudies),]
 
-#Flip reference for binary variables where reference is high risk
-unique(RMAest_raw$intervention_variable)
-
-# relevel_vars <- c( "cleanck",          
-# "exclfeed3",     "exclfeed36",    "exclfeed6",              
-# "impfloor",      "impsan",            
-# "perdiar24",     "perdiar6",            "predexfd6",     "predfeed3",     "predfeed36",   
-# "predfeed6",     "safeh20","trth2o")
-# 
-# 
-# RMAest_raw$PAR[RMAest_raw$intervention_variable %in% relevel_vars] <- RMAest_raw$PAR[RMAest_raw$intervention_variable %in% relevel_vars] * (-1)
-# RMAest_raw$CI1[RMAest_raw$intervention_variable %in% relevel_vars] <- RMAest_raw$CI1[RMAest_raw$intervention_variable %in% relevel_vars] * (-1)
-# RMAest_raw$CI2[RMAest_raw$intervention_variable %in% relevel_vars] <- RMAest_raw$CI2[RMAest_raw$intervention_variable %in% relevel_vars] * (-1)
-# RMAest_raw$intervention_level[RMAest_raw$intervention_variable %in% relevel_vars] <- "Yes"
-# 
 
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest_raw, outcome="continuous")
@@ -124,6 +97,8 @@ yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 #hbgdki pallet
 tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+tableau10 <- rep("grey30",10)
+
 scaleFUN <- function(x) sprintf("%.1f", x)
 
 df <- RMAest_clean

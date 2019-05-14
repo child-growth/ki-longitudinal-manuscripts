@@ -9,7 +9,7 @@ source("5-visualizations/0-plot-themes.R")
 theme_set(theme_ki())
 
 #Load data
-dfull <- readRDS(paste0(here::here(),"/results/rf results/adjusted_continious_RF_results.rds"))
+dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
 #Mark region
@@ -17,12 +17,14 @@ dfull <- mark_region(dfull)
 
 d <- dfull %>% filter(type=="ATE")
 
-#Drop velocities
-d <- d %>% filter(outcome_variable=="haz" | outcome_variable=="whz")
-
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)
 
+#mark unadjusted
+d$adjusted <- ifelse(d$adjustment_set!="unadjusted" , 1, 0)
+
+#Drop unadjusted estimates
+d <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon") & adjusted==0))
 
 
 
@@ -44,6 +46,7 @@ RMAest_clean <- RMA_clean(RMAest_raw)
 #Add reference level to labe
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$baseline_level)
 
+saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_ATE_results.rds"))
 
 
 

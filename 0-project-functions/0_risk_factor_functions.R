@@ -75,10 +75,14 @@ RMA_clean <- function(RMAest, outcome="binary",
                "perdiar6","perdiar24","impsan","safeh20","trth2o","impfloor","cleanck")
   RMAest$intervention_level[RMAest$intervention_level=="0" & RMAest$intervention_variable %in% binvars] <- "No"
   RMAest$intervention_level[RMAest$intervention_level=="1" & RMAest$intervention_variable %in% binvars] <- "Yes"
+  RMAest$baseline_level[RMAest$baseline_level=="0" & RMAest$intervention_variable %in% binvars] <- "No"
+  RMAest$baseline_level[RMAest$baseline_level=="1" & RMAest$intervention_variable %in% binvars] <- "Yes"
   
   #Att birthweight grams
   RMAest$intervention_level[RMAest$intervention_level=="Low birth weight"] <- "< 2500 g"
   RMAest$intervention_level[RMAest$intervention_level=="Normal or high birthweight"] <- ">= 2500 g"
+  RMAest$baseline_level[RMAest$baseline_level=="Low birth weight"] <- "< 2500 g"
+  RMAest$baseline_level[RMAest$baseline_level=="Normal or high birthweight"] <- ">= 2500 g"
   
   unique(RMAest$intervention_level)
   RMAest$intervention_level <- gsub("Wealth ","",RMAest$intervention_level)
