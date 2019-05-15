@@ -10,11 +10,21 @@ theme_set(theme_ki())
 
 
 #Load mortality outcomes
-mort <- readRDS("U:/UCB-SuperLearner/Stunting rallies/mortality.rds")
+df <- mort <- readRDS("U:/UCB-SuperLearner/Stunting rallies/mortality.rds")
 mort <- mort %>% filter(!is.na(agedth))
+
+df <- df %>% filter(!(studyid %in% c("ki1055867-WomenFirst","ki1000301-DIVIDS","ki0047075b-MAL-ED", 
+                                     "ki1000304b-SAS-FoodSuppl", "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal"))) #drop studies qith too few outcomes
+length(unique(df$studyid[!is.na(df$dead),]))
+table(df$dead)
+df %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
+  summarize(sum(dead, na.rm=T), n())
+
+
+
+
 #  load full data
 d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
-
 
 
 #--------------------------------------------
@@ -24,6 +34,16 @@ d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
 #change names to lower case
 colnames(d) <- tolower(colnames(d))
 d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, whz, waz, muaz))
+
+#--------------------------------------------
+# Examine the number of obs and children in extra studies
+#--------------------------------------------
+
+df2 <- d %>% filter(studyid %in% c("ki1112895-Burkina Faso Zn","ki1000304-VITAMIN-A","ki1148112-iLiNS-DOSE","ki1148112-iLiNS-DYAD-M")) %>% filter(!is.na(haz)) %>%
+            filter(haz > (-6) & haz < 6, whz > (-5) & whz < 5)
+df2 %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
+  summarize(n())
+df2 %>%  summarize(n())
 
 
 #--------------------------------------------
