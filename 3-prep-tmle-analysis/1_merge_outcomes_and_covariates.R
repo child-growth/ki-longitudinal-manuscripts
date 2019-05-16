@@ -318,7 +318,10 @@ vel_waz$subjid <- as.character(vel_waz$subjid)
 vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
 meanWHZ$subjid <- as.character(meanWHZ$subjid)
 
-
+#Drop month to prevent duplicates
+cuminc <- cuminc %>% subset(., select = -c(month))
+cuminc_nobirth <- cuminc_nobirth %>% subset(., select = -c(month))
+pers_wast <- pers_wast %>% subset(., select = -c(month))
 
 #------------------------------------
 # Create cumulative incidence dataset
@@ -433,7 +436,6 @@ save(d, Y, A,V, id,  file="wast_prev_rf.Rdata")
 dim(meanWHZ)
 d <- left_join(meanWHZ, cov, by=c("studyid", "subjid", "country"))
 dim(d)
-
 
 #Vector of outcome names
 Y<-c("whz")
