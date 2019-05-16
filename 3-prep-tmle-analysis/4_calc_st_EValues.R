@@ -82,6 +82,25 @@ p <- ggplot(d, aes(x=RR, y=EVals)) + geom_point(alpha=0.1) + #geom_smooth(color=
     axis.text.x = element_text(size=12)) 
 p
 
+#Order variables by mean Evalue
+
+
+p <- ggplot(d, aes(x=paste0(intervention_variable, "-", intervention_level), y=EVals)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
+  #geom_abline(slope=1, intercept=0) +
+  geom_vline(aes(xintercept=1)) + geom_hline(aes(yintercept=1)) + 
+  #coord_equal(xlim = c(0.25,15), ylim = c(0.25,15)) +
+  scale_y_continuous(trans='log10') +
+  xlab("Adjusted RR") + ylab("E value") +
+  theme(
+    strip.text.x = element_text(size=12),
+    axis.text.x = element_text(size=12)) 
+p
+
+
+
+
+
+
 #Drop regionally pooled estimates, color pooled estimate
 head(d)
 
@@ -141,7 +160,7 @@ ggsave(p, file="C:/Users/andre/Dropbox/HBGDki figures/Stunting Webinar/EValue_de
 fivenum(d$EVals_lb)
 
 
-p <-  ggplot(df, aes(x=studyid)) + 
+p <-  ggplot(d, aes(x=studyid)) + 
   #geom_point(aes(y=RR, fill=region, color=region), size = 4, shape= ifelse(df$pooled==1,5,6)) +
   geom_point(aes(shape=pooled, y=RR, fill=region, color=region), size = 4) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=region)) +

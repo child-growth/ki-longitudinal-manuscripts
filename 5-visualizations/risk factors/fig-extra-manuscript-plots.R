@@ -33,6 +33,9 @@ d <- d %>% filter(intervention_variable %in% c("pers_wast","enwast","anywast06",
 d <- droplevels(d)
 
 
+df <- d %>% filter(intervention_variable=="lag_WHZ_quart")
+
+
 poolRR <- function(d){
   #nstudies=length(unique(d$studyid))
   nstudies <- d %>% summarize(N=n())

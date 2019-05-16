@@ -82,6 +82,24 @@ max(RMAest_raw$Nstudies)
 RMAest_raw[RMAest_raw$Nstudies==max(RMAest_raw$Nstudies),]
 
 
+#----------------------------------------------------------
+# Merge in Ns
+#----------------------------------------------------------
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_continious_rf_Ns.rdata")
+head(N_sums)
+head(RMAest_raw)
+
+unique(N_sums$intervention_level)
+unique(RMAest_raw$intervention_level)
+
+dim(RMAest_raw)
+d <- left_join(RMAest_raw, N_sums, by = c("agecat", "outcome_variable", "intervention_variable", "intervention_level"))
+dim(d)
+table(is.na(d$n))
+head(d)
+
+
+
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest_raw, outcome="continuous")
 table(is.na(RMAest_clean$intervention_level))
@@ -90,6 +108,11 @@ table(is.na(RMAest_clean$intervention_level))
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
 
 
+
+
+#----------------------------------------------------------
+# Plot
+#----------------------------------------------------------
 
 
 yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)

@@ -157,9 +157,19 @@ summary(df2$PAF)
 summary(df2$PAF.CI1)
 summary(df2$PAF.CI2)
 
-
-
 RMAest <- df2
+
+
+# #----------------------------------------------------------
+# # Merge in Ns
+# #----------------------------------------------------------
+# 
+# dim(RMAest)
+# d <- left_join(RMAest, N_sums, by = c("agecat", "intervention_variable", "intervention_level"))
+# dim(d)
+# table(is.na(d$n))
+# head(d)
+
 
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest)
