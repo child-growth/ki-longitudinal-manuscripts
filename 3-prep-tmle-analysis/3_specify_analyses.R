@@ -156,14 +156,11 @@ morbidity <- specify_rf_analysis(A=Avars_morbidity,
 
 
 
-#Morbidity analyses
 
 
 #bind together datasets
 analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
-#temp
-analyses <- cuminc_nobirth[cuminc_nobirth$A %in% c("predexfd6", "perdiar6","perdiar24"),]
-table(analyses$file)
+
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
@@ -180,6 +177,9 @@ save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/unadjusted_binary_
 #---------------------------------------------
 # Specify the continuous analyses
 #---------------------------------------------
+
+Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
+
 
 vel_haz <- specify_rf_analysis(A=Avars, Y="y_rate_haz", file="st_haz_vel_rf.Rdata")
 vel_lencm <- specify_rf_analysis(A=Avars, Y="y_rate_len", file="st_len_vel_rf.Rdata")

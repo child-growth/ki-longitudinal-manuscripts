@@ -104,7 +104,15 @@ for(i in 12:ncol(d)){
   for(j in 1:length(levels(df$Avar))){
     cat=levels(factor(df$Avar))[j]
     di <- filter(df, Avar==cat)
-    fiti <- mgcv::gam(whz~s(agedays,bs="cr", k=10),data=di)
+    fiti<-NULL
+    for(k in 1:10){
+      fitk <- mgcv::gam(whz~s(agedays,bs="cr", k=k),data=di)
+      if(is.null(fiti)){
+        fiti <- fitk
+      }else{
+        if(summary(fitk)$r.sq > summary(fiti)$r.sq){fiti <- fitk}
+      }
+    }
     range=min(di$agedays):max(di$agedays)
     agedays=1:(diff(range(range))+1)
     newd <- data.frame(agedays=range)
