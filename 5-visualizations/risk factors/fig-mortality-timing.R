@@ -55,10 +55,10 @@ d$subjid <- as.character(d$subjid)
 mort$subjid <- as.character(mort$subjid)
 
 dim(mort)
-df <- left_join(mort, d, by=c("studyid","country","subjid"))
-dim(df)
+df_full <- left_join(mort, d, by=c("studyid","country","subjid"))
+dim(df_full)
 
-df <- df %>% filter(!is.na(haz))
+df <- df_full %>% filter(!is.na(haz))
 
 
 unique(df$studyid)
@@ -80,7 +80,7 @@ df <- df %>% ungroup() %>% arrange(agedth) %>%
                     haz_change=lead(haz) - haz
                     ) %>%
             mutate(status = case_when(
-              sevstunt==0 & sevwast==0 & co==1   ~ "Co-occurrent wasting and stunting",
+              sevstunt==0 & sevwast==0 & co==1   ~ "Wasted and stunted",
               wast==1 & sevwast==0 & co==0   ~ "Wasted",
               wast==1 & sevwast==1   ~ "Severely wasted",
               stunt==1 & sevstunt==0 & co==0   ~ "Stunted",
@@ -98,18 +98,21 @@ df <- df %>% ungroup() %>% arrange(agedth) %>%
                                               # "Wasted+Stunted+Underweight"
                                               "Severely stunted",
                                               "Severely wasted",
-                                              "Co-occurrent wasting and stunting",
+                                              "Wasted and stunted",
                                               "Co-occurrent severe wasting and stunting"
   )))
 
 
 
 df$severe <- ifelse(df$status %in% c("Severely stunted", "Severely wasted", "Co-occurrent severe wasting and stunting"), "Severe", "Not severe")
+df$severe2 <- ifelse(df$status %in% c("Severely stunted", "Severely wasted", "Co-occurrent severe wasting and stunting", "Wasted and stunted"), "Severe", "Not severe")
+
 df$status2 <- "Not faltered"
 df$status2[grepl("asted",df$status)] <- "Wasted"
 df$status2[grepl("tunted",df$status)] <- "Stunted"
-df$status2[grepl("Co-occurrent",df$status)] <- "Co-occurrent wasting\nand stunting"
-df$status2 <- factor(df$status2, levels=c("Not faltered", "Stunted", "Wasted", "Co-occurrent wasting\nand stunting"))
+df$status2[df$status=="Wasted and stunted"] <- "Wasted and stunted"
+df$status2 <- factor(df$status2, levels=c("Not faltered", "Stunted", "Wasted", "Wasted and stunted"))
+table(df$status2)
 summary(df$haz_change)
 summary(df$whz_change)
 
@@ -161,7 +164,7 @@ df <- df %>% filter(agedth < 731) #%>%
 
 p <- ggplot() + 
   geom_point(data = df, aes(x=agedth, y=id), color="grey40") +
-  geom_point(data = df, aes(x=agedays, y=id, color=status2, alpha=severe, shape=severe)) +
+  geom_point(data = df, aes(x=agedays, y=id, color=status2, alpha=severe2, shape=severe)) +
   scale_color_manual("", values = plot_cols2, guide=guide_legend(title="Growth faltering")) +
   scale_shape_discrete(guide=guide_legend(title="Severity")) +
   scale_alpha_discrete(range=c(0.5, 1), guide=guide_legend(title="Severity")) +
