@@ -459,6 +459,6 @@ ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid.png"), width
 
 
 #Save plot objects
-
+save(p1, p2, p3, p4,  file=paste0(here(),"/figures/risk factor/rf_spline_objects.Rdata"))
 
 
