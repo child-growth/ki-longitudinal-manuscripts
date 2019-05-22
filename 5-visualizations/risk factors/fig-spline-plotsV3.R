@@ -303,18 +303,18 @@ plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>%
 plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
   
 
-Avar="Maternal weight"
+Avarwt="Maternal weight"
 
 p1 <- ggplot() + 
   geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
+  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
   xlab("Child age in months") + ylab("Mean WLZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
-  ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
+  ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = "right")
 print(p1)
 
@@ -389,18 +389,18 @@ plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>%
 plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
 
 
-Avar="Maternal weight"
+Avarwt="Maternal weight"
 
 p3 <- ggplot() + 
   geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_laz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
+  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
-  ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
+  ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = "right")
 print(p3)
 

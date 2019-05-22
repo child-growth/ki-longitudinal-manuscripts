@@ -178,7 +178,8 @@ print(p)
 
 ggsave(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing.png"), width=8, height=5)
 
-
+#Save plot object
+save(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing-plot-object.Rdata"))
 
 # p <- ggplot() + 
 #   geom_point(data = df, aes(x=agedth, y=id)) +
