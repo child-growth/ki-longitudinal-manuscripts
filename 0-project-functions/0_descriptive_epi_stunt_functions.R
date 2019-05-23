@@ -400,7 +400,7 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
   ci.res$agecat=levels(cuminc.data$agecat)
   
   
-  return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
+  return(list(ip.data=cuminc.data, ip.res=ci.res, ip.cohort=ci.cohort))
 }
 
 
