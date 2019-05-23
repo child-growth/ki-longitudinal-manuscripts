@@ -38,11 +38,14 @@ d <- d %>% filter(studyid %in% study24)
 
 dprev <- calc.prev.agecat(d)
 dmon <- calc.monthly.agecat(d)
-d3 <- calc.ci.agecat(d, range = 3)
-d6 <- calc.ci.agecat(d, range = 6)
+d3 <- calc.ci.agecat(d, range = 3, birth="yes")
+d6 <- calc.ci.agecat(d, range = 6, birth="yes")
+d3_birthstrat <- calc.ci.agecat(d, range = 3, birth="no")
+d6_birthstrat <- calc.ci.agecat(d, range = 6, birth="no")
 
 agelst3 = list(
-  "0-3 months",
+  "Birth",
+  "1 day-3 months",
   "3-6 months",
   "6-9 months",
   "9-12 months",
@@ -52,7 +55,13 @@ agelst3 = list(
   "21-24 months"
 )
 
-agelst6 = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
+agelst6 = list(
+  "Birth",
+  "1 day-6 months", 
+  "6-12 months", 
+  "12-18 months", 
+  "18-24 months"
+)
 
 
 #----------------------------------------
@@ -129,7 +138,7 @@ haz.vel <- bind_rows(
   haz.cohort.vel
 )
 
-saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity_monthly24.RDS"))
+saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity.RDS"))
 
 #----------------------------------------
 # monthly mean haz
@@ -150,11 +159,18 @@ monthly.haz <- bind_rows(
 #----------------------------------------
 # Get monthly HAZ quantiles
 #----------------------------------------
+quantile_d_cohort <- dmon %>% group_by(agecat, region, studyid) %>%
+  mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
+         fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
+         ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
+  select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+
 quantile_d <- dmon %>% group_by(agecat, region) %>%
   mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
          fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
-  select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+  mutate(studyid = "pooled") %>%
+  select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
 
 quantile_d_overall <- dmon %>% 
   group_by(agecat) %>%
@@ -162,9 +178,14 @@ quantile_d_overall <- dmon %>%
             fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
             ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
   mutate(region = "Overall") %>%
-  select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+  mutate(studyid = "pooled") %>%
+  select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
 
-save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_stunting_monthly24.Rdata"))
+# combine data
+quantiles <- bind_rows(quantile_d, quantile_d_overall,quantile_d_cohort)
+
+saveRDS(quantiles,
+        file = paste0(here(),"/results/quantile_data_stunting.RDS"))
 
 
 
@@ -183,6 +204,23 @@ ci_3 <- bind_rows(
   data.frame(cohort = "pooled", ci.region3),
   ci.cohort3
 )
+
+#----------------------------------------
+# Incidence proportion 3 month intervals
+# stratify by birth
+#----------------------------------------
+ci.data3.birthstrat <- summary.stunt.incprop(d3_birthstrat, agelist = agelst3, severe.stunted = F)
+ci.region3.birthstrat <- d3_birthstrat  %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3)$ci.res)
+ci.cohort3.birthstrat <-
+  ci.data3.birthstrat$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
+
+
+ci_3.birthstrat <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data3.birthstrat$ci.res),
+  data.frame(cohort = "pooled", ci.region3.birthstrat),
+  ci.cohort3.birthstrat
+) 
 
 #----------------------------------------
 # Incidence proportion 6 month intervals
@@ -258,6 +296,26 @@ cuminc3 <- bind_rows(
   data.frame(cohort = "pooled", ci.region3),
   ci.cohort3
 )
+
+
+#----------------------------------------
+# Cumulative Incidence  - 3 month intervals
+# exclude in birth interval
+#----------------------------------------
+ci.data3.birthstrat <- summary.ci(d3_birthstrat, agelist = agelst3)
+ci.region3.birthstrat <- d3_birthstrat  %>% group_by(region) %>% do(summary.ci(., agelist = agelst3)$ci.res)
+ci.cohort3.birthstrat <-
+  ci.data3.birthstrat$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
+
+
+cuminc3.birthstrat <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data3.birthstrat$ci.res),
+  data.frame(cohort = "pooled", ci.region3.birthstrat),
+  ci.cohort3.birthstrat
+)
+
+
 
 
 #----------------------------------------
@@ -381,7 +439,7 @@ sev.cuminc6 <- bind_rows(
 save(prev, sev.prev,  haz,  monthly.haz, 
      cuminc3, cuminc6, sev.cuminc3, sev.cuminc6, 
      ci_3, ci_6, sev.ci3, sev.ci6,  
-     file = paste0(here(), "/results/shiny_desc_data_stunting_objects_monthly24.Rdata"))
+     file = paste0(here(), "/results/shiny_desc_data_stunting_objects.Rdata"))
 
 
 shiny_desc_data <- bind_rows(
@@ -390,16 +448,19 @@ shiny_desc_data <- bind_rows(
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Mean LAZ",  haz),
   data.frame(disease = "Stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ",  monthly.haz),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc3),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="strat", severe="no", measure= "Cumulative incidence", cuminc3.birthstrat),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc3),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci_3),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="strat", severe="no", measure= "Incidence_proportion", ci_3.birthstrat),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci_6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci3),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci6)
   #data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence rate",  ir),
   #data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence rate",  sev.ir)
 )
+
 
 
 
@@ -411,7 +472,6 @@ shiny_desc_data$agecat <- factor(shiny_desc_data$agecat, levels=unique(shiny_des
 
 unique(shiny_desc_data$region)
 shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Africa", "Latin America", "Asia"))
-
 
 save(shiny_desc_data, file = paste0(here(),"/results/shiny_desc_data_stunting_objects_monthly24.Rdata"))
 

@@ -23,11 +23,12 @@ dprev <- calc.prev.agecat(d)
 dmon <- calc.monthly.agecat(d)
 d3 <- calc.ci.agecat(d, range = 3, birth="yes")
 d6 <- calc.ci.agecat(d, range = 6, birth="yes")
-d3_nobirth <- calc.ci.agecat(d, range = 3, birth="no")
-d6_nobirth <- calc.ci.agecat(d, range = 6, birth="no")
+d3_birthstrat <- calc.ci.agecat(d, range = 3, birth="no")
+d6_birthstrat <- calc.ci.agecat(d, range = 6, birth="no")
 
 agelst3 = list(
-  "0-3 months",
+  "Birth",
+  "1 day-3 months",
   "3-6 months",
   "6-9 months",
   "9-12 months",
@@ -37,7 +38,13 @@ agelst3 = list(
   "21-24 months"
 )
 
-agelst6 = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
+agelst6 = list(
+  "Birth",
+  "1 day-6 months", 
+  "6-12 months", 
+  "12-18 months", 
+  "18-24 months"
+)
 
 
 #----------------------------------------
@@ -183,19 +190,19 @@ ci_3 <- bind_rows(
 
 #----------------------------------------
 # Incidence proportion 3 month intervals
-# exclude birth
+# stratify by birth
 #----------------------------------------
-ci.data3.nobirth <- summary.stunt.incprop(d3_nobirth, agelist = agelst3, severe.stunted = F)
-ci.region3.nobirth <- d3_nobirth  %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3)$ci.res)
-ci.cohort3.nobirth <-
-  ci.data3.nobirth$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+ci.data3.birthstrat <- summary.stunt.incprop(d3_birthstrat, agelist = agelst3, severe.stunted = F)
+ci.region3.birthstrat <- d3_birthstrat  %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3)$ci.res)
+ci.cohort3.birthstrat <-
+  ci.data3.birthstrat$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 
-ci_3.nobirth <- bind_rows(
-  data.frame(cohort = "pooled", region = "Overall", ci.data3.nobirth$ci.res),
-  data.frame(cohort = "pooled", ci.region3.nobirth),
-  ci.cohort3.nobirth
+ci_3.birthstrat <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data3.birthstrat$ci.res),
+  data.frame(cohort = "pooled", ci.region3.birthstrat),
+  ci.cohort3.birthstrat
 ) 
 
 #----------------------------------------
@@ -278,17 +285,17 @@ cuminc3 <- bind_rows(
 # Cumulative Incidence  - 3 month intervals
 # exclude in birth interval
 #----------------------------------------
-ci.data3.nobirth <- summary.ci(d3_nobirth, agelist = agelst3)
-ci.region3.nobirth <- d3_nobirth  %>% group_by(region) %>% do(summary.ci(., agelist = agelst3)$ci.res)
-ci.cohort3.nobirth <-
-  ci.data3.nobirth$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+ci.data3.birthstrat <- summary.ci(d3_birthstrat, agelist = agelst3)
+ci.region3.birthstrat <- d3_birthstrat  %>% group_by(region) %>% do(summary.ci(., agelist = agelst3)$ci.res)
+ci.cohort3.birthstrat <-
+  ci.data3.birthstrat$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 
-cuminc3.nobirth <- bind_rows(
-  data.frame(cohort = "pooled", region = "Overall", ci.data3.nobirth$ci.res),
-  data.frame(cohort = "pooled", ci.region3.nobirth),
-  ci.cohort3.nobirth
+cuminc3.birthstrat <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data3.birthstrat$ci.res),
+  data.frame(cohort = "pooled", ci.region3.birthstrat),
+  ci.cohort3.birthstrat
 )
 
 
@@ -424,12 +431,12 @@ shiny_desc_data <- bind_rows(
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Mean LAZ",  haz),
   data.frame(disease = "Stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ",  monthly.haz),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc3),
-  data.frame(disease = "Stunting", age_range="3 months",   birth="no", severe="no", measure= "Cumulative incidence", cuminc3.nobirth),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="strat", severe="no", measure= "Cumulative incidence", cuminc3.birthstrat),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc3),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci_3),
-  data.frame(disease = "Stunting", age_range="3 months",   birth="no", severe="no", measure= "Incidence_proportion", ci_3.nobirth),
+  data.frame(disease = "Stunting", age_range="3 months",   birth="strat", severe="no", measure= "Incidence_proportion", ci_3.birthstrat),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence_proportion", ci_6),
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci3),
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ci6)
