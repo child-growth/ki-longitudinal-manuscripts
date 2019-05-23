@@ -13,21 +13,21 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 # adj_vel <- results
 # load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/unadjusted_velocity/unadjusted_velocity_results.rdata")
 # unadj_vel <- results
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_results_perswast.rdata")
-perswast <- results
+# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_results_perswast.rdata")
+# perswast <- results
 
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_results.rdata")
 wasting <- results
 # load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/wasting_results_cont.rdata")
 # wasting_cont_par <- results %>% filter(type=="PAR")
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/wasting_results_cont.rdata")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/wasting_results.rdata")
 Zscores <- results
 # load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/opttx_vim/adjusted_binary_results.rdata")
 # vim <- results
 
 d <- bind_rows(
   #adj_bin, unadj_bin, 
-  wasting, perswast, Zscores)
+  wasting, Zscores)
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -42,26 +42,33 @@ d <- mark_region(d)
 unique(d$outcome_variable)
 d$continuous <- ifelse(d$outcome_variable %in% c("haz","whz","y_rate_haz","y_rate_len","y_rate_wtkg"), 1, 0)
 
+#Drop non-included risk factors (treat h20, with very little variance, and secondry breastfeeding indicators)
+d <- d %>% filter(!(intervention_variable %in% c("trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )) )
+
 #----------------------------------------------------------
 # Merge in Ns
 #----------------------------------------------------------
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns.rdata")
-N_sums <- N_sums %>% filter(outcome_variable %in% c("ever_stunted","stunted")) %>%
-  subset(., select = - c(outcome_variable)) %>% 
-  mutate(continuous = 0)
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns_sub.rdata")
+N_sums_bin <- N_sums %>% mutate(continuous = 0)
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rdata")
+N_sums_cont <- N_sums %>% mutate(continuous = 1)
+N_sums <- rbind(N_sums_bin, N_sums_cont)
+
+
 dim(d)
 dim(N_sums)
-d <- left_join(d, N_sums, by = c("agecat", "intervention_variable", "intervention_level", "continuous"))
+d <- left_join(d, N_sums, by = c("agecat", "outcome_variable", "intervention_variable", "intervention_level", "continuous"))
 head(d)
 dim(d)
-table(is.na(d$n[d$continuous==0]))
-
+table(is.na(d$n[d$continuous==0 & d$type=="PAR"]))
+table(is.na(d$n[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months"]))
 
 
 
 
 
 #Harmonize agecat names for variables excluding faltering at birth
+d$agecat <- as.character(d$agecat)
 d$agecat[grepl("0-24 months",d$agecat)] <- "0-24 months"
 d$agecat[grepl("0-6 months",d$agecat)] <- "0-6 months"
 
