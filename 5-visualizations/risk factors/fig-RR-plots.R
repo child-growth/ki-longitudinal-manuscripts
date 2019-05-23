@@ -18,11 +18,6 @@ head(dfull)
 unique(dfull$type)
 d <- dfull %>% filter(type=="RR")
 
-#mark unadjusted
-d$adjusted <- ifelse(d$adjustment_set!="unadjusted" , 1, 0)
-
-#Drop unadjusted estimates
-d <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon") & adjusted==0))
 #drop morbidity and mortality analysis
 d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")
   

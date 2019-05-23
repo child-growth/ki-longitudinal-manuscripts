@@ -172,16 +172,19 @@ dd <- dd %>% group_by(region, risk_factor) %>% mutate(sumN=sum(N))
 dd <- dd %>% 
   group_by(region) %>%
   dplyr::arrange(-sumN, .by_group = TRUE) 
-dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
-dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
 dd$RFlabel <- factor(dd$RFlabel, levels = unique(dd$RFlabel))
 
-#aggregate N's for sidebar
-dhist_a <- dd %>% group_by(region, risk_factor) %>% summarize(N=sum(N))
-dhist_c <- dd %>% group_by(region, studycountry) %>% summarize(N=max(N))
+dd <- dd %>% 
+  group_by(region) %>%
+  dplyr::arrange(N, .by_group = TRUE) 
+dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
+dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
 
-#Mark missing presence as NA instead of 0
-#dd$presence[dd$presence==1] <- NA
+#aggregate N's for sidebar
+dhist_a <- dd %>% group_by(risk_factor) %>% summarize(N=sum(N)) %>% arrange(-N) %>% mutate(risk_factor=factor(risk_factor, levels=unique(risk_factor)))
+dhist_c <- dd %>% group_by(region, studycountry) %>% summarize(N=max(N)) %>% arrange(-N, .by_group = TRUE) %>% mutate(studycountry=factor(studycountry, levels=unique(studycountry)))
+
+
 
 #-----------------------------------
 # Plot heatmaps
@@ -278,9 +281,9 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000)) +
 
 
 # add margin around plots
-hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(1,0.25,4.75,0), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,1,0,11), "cm"))
+hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm")) #top, right, bottom, left
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0.675,0.25,4.84,0), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,0.57,0,10.4), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2,empty, 
@@ -289,13 +292,6 @@ rfhmgrid <- grid.arrange(nrfbar2,empty,
                         widths=c(100,20))
 
 # save plot 
-ggsave(filename=paste0("figures/risk factor/fig-rf-heatmap.pdf"),
+ggsave(filename=paste0("figures/manuscript figure composites/risk factor/fig-rf-heatmap.pdf"),
        plot = rfhmgrid,device='pdf',width=12,height=9)
 
-
-
-require(cowplot)
-
-bottom_row <- plot_grid(hm2, sidebar_c2, labels = c("",""), ncol = 2, align = 'v', axis = 'l')
-
-fig <- plot_grid(nrfbar2, bottom_row, labels = c("","",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
