@@ -53,30 +53,55 @@ summary.prev.haz <- function(d, severe.stunted=F){
 
 
 
-summary.ci <- function(d,  severe.stunted=F, 
+summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
                        agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
                                     "12-15 months","15-18 months","18-21 months","21-24 months")){
   
   
   # identify ever stunted children
-  evs = d %>%
-    filter(!is.na(agecat)) %>%
-    group_by(studyid,country,subjid) %>%
-    arrange(studyid,subjid) %>%
-    #create variable with minhaz by age category, cumulatively
-    mutate(minhaz=ifelse(agecat=="0-3 months",min(haz[agecat=="0-3 months"]),
-                         ifelse(agecat=="3-6 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"]),
-                                ifelse(agecat=="6-9 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
-                                       ifelse(agecat=="9-12 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
-                                              ifelse(agecat=="12-15 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
-                                                     ifelse(agecat=="15-18 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
-                                                            ifelse(agecat=="18-21 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
-                                                                   ifelse(agecat=="21-24 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
-                                                                          min(haz)))))))))) %>%
+  if(!birthstrat){
+
+    evs = d %>%
+      filter(!is.na(agecat)) %>%
+      group_by(studyid,country,subjid) %>%
+      arrange(studyid,subjid) %>%
+      #create variable with minhaz by age category, cumulatively
+      mutate(minhaz=ifelse(agecat=="0-3 months",min(haz[agecat=="0-3 months"]),
+                           ifelse(agecat=="3-6 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"]),
+                                  ifelse(agecat=="6-9 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                         ifelse(agecat=="9-12 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                ifelse(agecat=="12-15 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                       ifelse(agecat=="15-18 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                              ifelse(agecat=="18-21 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                     ifelse(agecat=="21-24 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                            min(haz))))))))))
+  }
+  
+  if(birthstrat){
+    
+    evs = d %>%
+      filter(!is.na(agecat)) %>%
+      group_by(studyid,country,subjid) %>%
+      arrange(studyid,subjid) %>%
+      #create variable with minhaz by age category, cumulatively
+      mutate(minhaz=ifelse(agecat=="Birth",min(haz[agecat=="Birth"]),
+                      ifelse(agecat=="1 day-3 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months"]),
+                           ifelse(agecat=="3-6 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"]),
+                                  ifelse(agecat=="6-9 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                         ifelse(agecat=="9-12 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                ifelse(agecat=="12-15 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                       ifelse(agecat=="15-18 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                              ifelse(agecat=="18-21 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                     ifelse(agecat=="21-24 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                            min(haz)))))))))))
+  }
+  
+  
     # create indicator for whether the child was ever stunted
     # by age category
+    evs = evs %>%  
     group_by(studyid,country,agecat,subjid) %>%
-    summarise(minhaz=min(minhaz)) 
+      summarise(minhaz=min(minhaz)) 
   
 
     if(!severe.stunted){
@@ -117,13 +142,10 @@ summary.ci <- function(d,  severe.stunted=F,
   ci.res=lapply((agelist),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
   ci.res=as.data.frame(rbindlist(ci.res))
-  ci.res[,4]=as.numeric(ci.res[,4])
-  ci.res[,6]=as.numeric(ci.res[,6])
-  ci.res[,7]=as.numeric(ci.res[,7])
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
-  
+  ci.res$agecat=levels(cuminc.data$agecat)
   
   return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
 }
@@ -368,19 +390,14 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
   ci.cohort=cohort.format(ci.cohort,y=ci.cohort$yi,
                           lab=  agelist)
   
-  
-  #fit.rma(data=cuminc.data,ni="N", xi="ncases",age="0-3 months",measure="PLO",nlab=" measurements")
-  
   # estimate random effects, format results
   ci.res=lapply((agelist),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
   ci.res=as.data.frame(rbindlist(ci.res))
-  # ci.res[,4]=as.numeric(ci.res[,4])
-  # ci.res[,6]=as.numeric(ci.res[,6])
-  # ci.res[,7]=as.numeric(ci.res[,7])
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
+  ci.res$agecat=levels(cuminc.data$agecat)
   
   
   return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
