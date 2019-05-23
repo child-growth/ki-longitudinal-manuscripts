@@ -48,7 +48,11 @@ library(survey)
 # define directories
 res_dir = paste0(here::here(),"/results/")
 data_dir = paste0(here::here(), "/data/")
-  
+
+# note: figures must be saved in same directory 
+# as shiny app in order to publish it
+fig_dir = paste0(here::here(),"/6-shiny-app/figures/")
+figdata_dir = paste0(here::here(),"/6-shiny-app/figure-data/")
 
 # source base functions  
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))

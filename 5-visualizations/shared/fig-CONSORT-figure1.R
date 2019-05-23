@@ -22,89 +22,96 @@ source(paste0(here::here(), "/0-config.R"))
 #                                                                                       #
 #########################################################################################
 consort_ki <- readRDS("results/HBGDki_CONSORT_inclusion_Ns.rds")
-consort_ki <- consort_ki[!(consort_ki$Study_ID==""), ]
-consort_ki <- consort_ki[!is.na(consort_ki$Study_ID), ]
-
+consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID))
 
 consort_ki <- consort_ki %>% select("Short_ID", "country", "nchild", "nobs", "Study_ID", "Short_Description", 
-                                    "included", "included_longitudinal", "included_anthropometry", "included_low_income", 
+                                    "included_longitudinal", "included_anthropometry", "included_low_income", 
                                     "included_ill", "included_small", "included_age", 
-                                    "included_qc", "included_measurement_freq", "included_monthly") %>%
+                                    "measurefreq") 
 
 consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild, study_id = Study_ID,
                                     short_desc = Short_Description) %>%  
-                             filter(included_qc == 1) %>% 
                              # use obs_count instead of subj_count for future
                              mutate(subject_count = as.integer(subject_count)) %>%
                              mutate(subject_count = case_when(is.na(subject_count) ~ as.double(0),
                                                               TRUE ~ as.double(subject_count))) %>%
                              # recode NA as 0
-                             mutate(included = ifelse(is.na(included), 0, included),
-                                    included_anthropometry = ifelse(is.na(included_anthropometry), 0, included_anthropometry),
+                             mutate(included_anthropometry = ifelse(is.na(included_anthropometry), 0, included_anthropometry),
                                     included_longitudinal = ifelse(is.na(included_longitudinal), 0, included_longitudinal),
                                     included_low_income = ifelse(is.na(included_low_income), 0, included_low_income),
                                     included_small = ifelse(is.na(included_small), 0, included_small),
                                     included_age = ifelse(is.na(included_age), 0, included_age),
                                     included_ill = ifelse(is.na(included_ill), 0, included_ill),
-                                    included_qc = ifelse(is.na(included_qc), 0, included_qc),
-                                    included_measurement_freq = ifelse(is.na(included_measurement_freq), 0, included_measurement_freq)) %>% 
+                                    included_quarterly = case_when(measurefreq == "quarterly" | measurefreq == "monthly" ~ 1, TRUE ~ 0),
+                                    included_monthly = case_when(measurefreq == "monthly" ~ 1, TRUE ~ 0)) %>% 
+  
+                             # drop measurefreq column because no longer needed
+                             select(-measurefreq) %>% 
+  
                              # recode inclusion_indicator to be stacked
                              mutate(included_anthropometry = case_when(
-                                        included_anthropometry == 1 & 
-                                        included_longitudinal == 1 ~ 1, 
+                                        included_longitudinal == 1 &
+                                        included_anthropometry == 1 ~ 1, 
                                         TRUE ~ 0),
                                     included_low_income = case_when(
-                                        included_anthropometry == 1 & 
                                         included_longitudinal == 1 &
+                                        included_anthropometry == 1 &
                                         included_low_income == 1 ~ 1, 
                                         TRUE ~ 0),
                                     included_ill = case_when(
-                                        included_anthropometry == 1 & 
                                         included_longitudinal == 1 &
+                                        included_anthropometry == 1 &
                                         included_low_income == 1 &
                                         included_ill == 1 ~ 1, 
                                         TRUE ~ 0),
                                     included_small = case_when(
-                                        included_anthropometry == 1 & 
                                         included_longitudinal == 1 &
+                                        included_anthropometry == 1 &
                                         included_low_income == 1 &
                                         included_ill == 1 &
                                         included_small == 1 ~ 1, 
                                         TRUE ~ 0),
                                     included_age = case_when(
-                                        included_anthropometry == 1 & 
                                         included_longitudinal == 1 &
+                                        included_anthropometry == 1 &
                                         included_low_income == 1 &
                                         included_ill == 1 &
                                         included_small == 1 &
                                         included_age == 1 ~ 1, 
                                         TRUE ~ 0),
-                                    included_qc = case_when( # replace this with quarterly
-                                        included_anthropometry == 1 & 
+                                    included_quarterly = case_when(
                                         included_longitudinal == 1 &
+                                        included_anthropometry == 1 &
                                         included_low_income == 1 &
                                         included_ill == 1 &
                                         included_small == 1 &
-                                        included_age == 1 &
-                                        included_qc == 1 ~ 1, 
+                                        included_age == 1 & 
+                                        included_quarterly == 1 ~ 1,
                                         TRUE ~ 0),
-                                    included_measurement_freq = case_when(
-                                        included_anthropometry == 1 & 
+                                    included_monthly = case_when(
                                         included_longitudinal == 1 &
+                                        included_anthropometry == 1 &
                                         included_low_income == 1 &
                                         included_ill == 1 &
                                         included_small == 1 &
                                         included_age == 1 &
-                                        included_qc == 1 &
-                                        included_measurement_freq == 1 ~ 1, 
-                                      TRUE ~ 0)
-                             )
-
-# didn't do do name labelling (no need to)
-
+                                        included_quarterly == 1 &
+                                        included_monthly == 1 ~ 1,
+                                        TRUE ~ 0))
+  
 # clean country labels and separate into regions
-consort_ki <- make_region(consort_ki)
-consort_ki <- clean_country(consort_ki)
+consort_ki <- mark_region(consort_ki)
+# for the heatmap, change South Asia to Asia
+consort_ki <- consort_ki %>% mutate(region = case_when(region == "South Asia" ~ "Asia",
+                                                       region == "N.America & Europe" ~ "N.America & Europe",
+                                                       region == "Africa" ~ "Africa",
+                                                       region == "Latin America" ~ "Latin America",
+                                                       region == "Other" ~ "Other"))
+
+# Clean up country names
+consort_ki$country[consort_ki$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+consort_ki$country <- stringr::str_to_title(consort_ki$country)
+consort_ki <- mutate(consort_ki, cohort = paste0(short_desc,'-', country))
 
 # create tally of # of exclusions to sort by, for consistent plotting
 consort_ki <- consort_ki %>% mutate(inclusionTally = 
@@ -114,9 +121,8 @@ consort_ki <- consort_ki %>% mutate(inclusionTally =
                                     included_ill +
                                     included_small +
                                     included_age +
-                                    included_qc +
-                                    included_measurement_freq)  
-consort_ki <- consort_ki %>% filter(inclusionTally > 0)
+                                    included_quarterly + 
+                                    included_monthly)  
 
 # wide to long format
 consort_ki_long <- consort_ki %>% gather('inclusion_metric', 'indicator', 
@@ -126,8 +132,8 @@ consort_ki_long <- consort_ki %>% gather('inclusion_metric', 'indicator',
                                          included_ill,
                                          included_small,
                                          included_age,
-                                         included_qc,
-                                         included_measurement_freq)
+                                         included_quarterly,
+                                         included_monthly)
 
 # ordering/naming of exclusion reasons
 consort_ki_long$inclusion_metric <- factor(consort_ki_long$inclusion_metric,
@@ -137,8 +143,8 @@ consort_ki_long$inclusion_metric <- factor(consort_ki_long$inclusion_metric,
                                                  'included_ill',
                                                  'included_small',
                                                  'included_age',
-                                                 'included_qc',
-                                                 'included_measurement_freq'))
+                                                 'included_quarterly',
+                                                 'included_monthly'))
 
 #########################################################################################
 # HEATMAP                                                                               #
@@ -217,7 +223,7 @@ hm
 #   - Change subject_count to # of obs!                                             #
 #####################################################################################
 
-sidebar <- ggplot(data = consort_ki_hm, aes(x = cohort, y = subject_count/8/1000)) +        # change this to obs/8000 once we have obs #
+sidebar <- ggplot(data = consort_ki_hm, aes(x = cohort, y = nobs/8/1000)) +        # change this to obs/8000 once we have obs #
   
   geom_bar(stat = "identity", fill = "gray60") +
   
@@ -287,8 +293,8 @@ consort_ki_bar$inclusion_metric <- factor(consort_ki_bar$inclusion_metric,
                                                       'included_ill',
                                                       'included_small',
                                                       'included_age',
-                                                      'included_qc',
-                                                      'included_measurement_freq',
+                                                      'included_quarterly',
+                                                      'included_monthly',
                                                       'extra1',
                                                       'extra2',
                                                       'extra3',
@@ -307,33 +313,41 @@ consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = 
 bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)) + 
   geom_bar(stat = 'identity', aes(fill = region)) +
   theme_grey(base_size = 10) +
-  scale_y_continuous(limits = c(0, 110), breaks = seq(0, 80, by = 20), 
-                     labels = seq(0, 80, by = 20)) +
+  scale_y_continuous(limits = c(0, 40), breaks = seq(0, 20, by = 5), 
+                     labels = seq(0, 20, by = 5)) +
   
   labs(y = 'Total Observations\n (x 10,000)') +
   # geom_text(aes(label = paste0(reason_excluded, ' (n=', floor(n/10000), ')')), 
   #                 position=position_dodge(width=0.9), vjust=-8, hjust = 0.1) +
   scale_fill_manual(values=c("#1F77B4", "#2CA02C", "#FF7F0E", "#D62728", "black")) +
   
-  # Add top inclusion category labels
-  annotate(geom = "text", x = 2.9, y = 90, label = "Longitudinal cohorts (n=86)", size = 2) +
-  annotate(geom = "text", x = 4.5, y = 83, label = "Includes anthropometry data (n=xx)", size = 2) +
-  annotate(geom = "text", x = 6.7, y = 76, label = "Located in low- or middle income countries (n=74)", size = 2) +
-  annotate(geom = "text", x = 7.9, y = 69, label = "Enrollment not restricted to acutely ill children (n=41)", size = 2) +
-  annotate(geom = "text", x = 7.8, y = 62, label = "Enrolled more than 200 children (n=36)", size = 2) +
-  annotate(geom = "text", x = 9.1, y = 55, label = "Enrolled children between ages 0-2 (n=xx)", size = 2) +
-  annotate(geom = "text", x = 9.8, y = 47, label = "Quarterly growth measurements (n=23)", size = 2) +
-  annotate(geom = "text", x = 10.7, y = 40, label = "Monthly growth measurements (n=xx)", size = 2) +
+  # Add top inclusion category labels, dynamically count n per study
+  annotate(geom = "text", x = 2.6, y = 35, 
+           label = paste0("Longitudinal cohorts (n=", sum(consort_ki_bar$inclusion_metric=="included_longitudinal"),")"), size = 2) +
+  annotate(geom = "text", x = 4.2, y = 32, 
+           label = paste0("Includes anthropometry data (n=", sum(consort_ki_bar$inclusion_metric=="included_anthropometry"),")"), size = 2) +
+  annotate(geom = "text", x = 6.2, y = 29, 
+           label = paste0("Located in low- or middle income countries (n=", sum(consort_ki_bar$inclusion_metric=="included_low_income"),")"), size = 2) +
+  annotate(geom = "text", x = 7.4, y = 26, 
+           label = paste0("Enrollment not restricted to acutely ill children (n=", sum(consort_ki_bar$inclusion_metric=="included_ill"),")"), size = 2) +
+  annotate(geom = "text", x = 7.4, y = 23, 
+           label = paste0("Enrolled more than 200 children (n=", sum(consort_ki_bar$inclusion_metric=="included_small"),")"), size = 2) +
+  annotate(geom = "text", x = 8.7, y = 20, 
+           label = paste0("Enrolled children between ages 0-2 (n=", sum(consort_ki_bar$inclusion_metric=="included_age"),")"), size = 2) +
+  annotate(geom = "text", x = 9.4, y = 17, 
+           label = paste0("Quarterly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_quarterly"),")"), size = 2) +
+  annotate(geom = "text", x = 10.3, y = 14, 
+           label = paste0("Monthly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_monthly"),")"), size = 2) +
   
   # Add vertical lines under labels
-  geom_segment(aes(x = 1, y = 64, xend = 1, yend = 85), color = "gray") +
-  geom_segment(aes(x = 2, y = 56, xend = 2, yend = 78), color = "gray") +
-  geom_segment(aes(x = 3, y = 45, xend = 3, yend = 71), color = "gray") +
-  geom_segment(aes(x = 4, y = 45, xend = 4, yend = 64), color = "gray") +
-  geom_segment(aes(x = 5, y = 45, xend = 5, yend = 57), color = "gray") +
-  geom_segment(aes(x = 6, y = 34, xend = 6, yend = 50), color = "gray") +
-  geom_segment(aes(x = 7, y = 34, xend = 7, yend = 42), color = "gray") +
-  geom_segment(aes(x = 8, y = 11, xend = 8, yend = 35), color = "gray") +
+  geom_segment(aes(x = 1, y = 20, xend = 1, yend = 33), color = "gray") +
+  geom_segment(aes(x = 2, y = 20, xend = 2, yend = 30), color = "gray") +
+  geom_segment(aes(x = 3, y = 19, xend = 3, yend = 27), color = "gray") +
+  geom_segment(aes(x = 4, y = 16, xend = 4, yend = 24), color = "gray") +
+  geom_segment(aes(x = 5, y = 16, xend = 5, yend = 21), color = "gray") +
+  geom_segment(aes(x = 6, y = 11, xend = 6, yend = 18), color = "gray") +
+  geom_segment(aes(x = 7, y = 8, xend = 7, yend = 15), color = "gray") +
+  geom_segment(aes(x = 8, y = 2, xend = 8, yend = 12), color = "gray") +
                     
   theme(
     # legend options
@@ -373,7 +387,7 @@ bar
 # add margin around plots
 hm = hm + theme(plot.margin = unit(c(0, 0.25, 0.7, 0.25), "cm"))
 sidebar = sidebar + theme(plot.margin = unit(c(0, 0.3, .25, 0.1), "cm"))
-bar = bar + theme(plot.margin = unit(c(1, 2.5, -.65, 9.7), "cm"))
+bar = bar + theme(plot.margin = unit(c(1, 1.9, -.65, 9.02), "cm"))
 
 grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
                         nrow = 2, ncol = 1,

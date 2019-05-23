@@ -134,7 +134,9 @@ p <- ggplot(d2, aes(x=as.numeric(intervention_variable))) +
           #axis.text.x = element_text(size=12, angle = 45, hjust = 1),
           text = element_text(size=16)) +
     ggtitle(paste0("")) + coord_cartesian(ylim=c(1,8))
+p
 ggsave(p, file="figures/mortality/Mortality_plot.png",  width=6, height=5.2)
+
 
 table(d2$intervention_variable)
 d2<-d2[!grepl("excluding",d2$intervention_variable),]
@@ -166,9 +168,41 @@ p <- ggplot(d2, aes(x=as.numeric(intervention_variable))) +
         axis.ticks.x=element_blank(),
         text = element_text(size=16)) +
   ggtitle(paste0("")) + coord_cartesian(ylim=c(1,8))
+p
+
+ggsave(p, file=paste0(here::here(),"/figures/risk factor/Mortality_plot_u6_faltering.png"),  width=6, height=5.2)
 
 
-ggsave(p, file="figures/mortality/Mortality_plot2.png",  width=6, height=5.2)
+#Simplified plot with no colors but with labels
+d4 <- d2
+d4$intervention_variable <- gsub(" under 6mo","",d4$intervention_variable)
+d4$intervention_variable <- gsub("Wasted and stunted","Wasted and\nstunted",d4$intervention_variable)
+d4$intervention_variable <- factor(d4$intervention_variable, levels=unique(d4$intervention_variable))
+p <- ggplot(d4, aes(x=intervention_variable)) +
+  geom_point(aes(y=RR), size=4, stroke = 1.5) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2)) +
+  geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
+  labs(x = "Measure of faltering in children under 6mo", y = "Adjusted Relative Risk") +
+  geom_hline(yintercept = 1) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
+  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_size_manual(values=c(4,5)) +
+  scale_shape_manual(name = "Shape", 
+                     labels = c("Moderate 0-6 months", 
+                                "Severe 0-6 months",
+                                "Moderate 0-24 months", 
+                                "Severe 0-24 months"),
+                     values=c(16,21,17,24)) +
+  theme(plot.title = element_text(hjust = 0.5),
+        strip.background = element_blank(),
+        legend.position="none",
+        strip.text.x = element_text(size=12),
+        axis.text.x = element_text(size=12, angle = 15, hjust = 0.5, vjust=0.5),
+        text = element_text(size=16)) +
+  ggtitle(paste0("")) + coord_cartesian(ylim=c(1,8))
+print(p)
+
+ggsave(p, file=paste0(here::here(),"/figures/risk factor/Mortality_plot_u6_faltering_simp.png"),  width=10, height=5.2)
 
 
 

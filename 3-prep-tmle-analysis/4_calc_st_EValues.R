@@ -1,36 +1,26 @@
 
 
 
-
-
 rm(list=ls())
-library(tidyverse)
-library(metafor)
+source(paste0(here::here(), "/0-config.R"))
+source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
+source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 library(EValue)
 
-load("C:/Users/andre/Documents/HBGDki/Results/sprint_7D_longbow-master/sprint_7D_longbow-master/adjusted_binary/adjusted_binary_results.Rdata")
-#load("C:/Users/andre/Downloads/sprint_7D_longbow-master/sprint_7D_longbow-master/unadjusted_binary/unadjusted_binary_results.rdata")
-
-d <- results
-unique(d$intervention_variable)
+#Plot themes
+source("5-visualizations/0-plot-themes.R")
+theme_set(theme_ki())
 
 
-#Subset to relative risks
-d <- d %>% filter(type=="RR")
 
+#Load data
+d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 
-#Subset to primary outcomes
-table(d$agecat)
-table(is.na(d$agecat))
-
-#d <- d %>% filter(agecat=="0-6 months"| agecat=="6 months"| agecat=="6-24 months"| agecat=="24 months")
-#d <- d %>% filter(!is.na(agecat) & agecat!="Birth")
-
-#Drop enrolled stunted as a RF for stunting
-d <- d %>% filter(intervention_variable!="enstunt")
+#Drop reference levels
+d <- d %>% filter(!(logRR.psi==1 & logSE==0 & RR==1))
 
 #Keep significant estimates
-d <- d %>% filter((ci_upper <1 & ci_lower <1) | (ci_upper >1 & ci_lower >1))
+#d <- d %>% filter((ci_upper <1 & ci_lower <1) | (ci_upper >1 & ci_lower >1))
 
 
 
@@ -44,18 +34,18 @@ evalues.RRvec <- function(d, pointest=T){
       if(d$intervention_level[i]== d$baseline_level[i]){
         res<-NA
       }else{
-      suppressMessages(res <- evalues.RR( d$estimate[i], d$ci_lower[i], d$ci_upper[i]))
+      suppressMessages(res <- evalues.RR( d$RR[i], d$RR.CI1[i], d$RR.CI2[i]))
       res<-res[2,1]
       }
     vec<-c(vec,res)
     }
   }else{
     for(i in 1:nrow(d)){
-      if(d$ci_lower[i] <= 1  & d$ci_upper[i] >= 1){
+      if(d$RR.CI1[i] <= 1  & d$RR.CI2[i] >= 1){
         res<-NA
       }else{
-        ci <- d$ci_lower[i]
-        if(1/d$ci_lower[i]>1/d$ci_upper[i]){ ci <- d$ci_upper[i]}
+        ci <- d$RR.CI1[i]
+        if(1/d$RR.CI1[i]>1/d$RR.CI2[i]){ ci <- d$RR.CI2[i]}
         suppressMessages(res <- evalues.RR(ci))
         res<-res[2,1]
       }
@@ -73,16 +63,14 @@ mean(d$EVals_lb, na.rm=T)
 summary(d$EVals, na.rm=T)
 summary(d$EVals_lb, na.rm=T)
 
-mean(d$estimate[!(d$ci_lower <= 1  & d$ci_upper >= 1)])
+mean(d$RR[!(d$RR.CI1 <= 1  & d$RR.CI2 >= 1)])
 
-2.2/1.52 #Need on average 50% stronger unmeasured confounding than point estimate to move estimates to null
-3.997/1.92 #Need on average 160% stronger unmeasured confounding than point estimate to make significant estimates insignificant
 
 #Flip RR
-d$estimate <- ifelse(d$estimate>1, d$estimate, 1/d$estimate )
+#d$estimate <- ifelse(d$estimate>1, d$estimate, 1/d$estimate )
 
 
-p <- ggplot(d, aes(x=estimate, y=EVals)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
+p <- ggplot(d, aes(x=RR, y=EVals)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
   #geom_abline(slope=1, intercept=0) +
   geom_vline(aes(xintercept=1)) + geom_hline(aes(yintercept=1)) + 
   #coord_equal(xlim = c(0.25,15), ylim = c(0.25,15)) +
@@ -94,7 +82,32 @@ p <- ggplot(d, aes(x=estimate, y=EVals)) + geom_point(alpha=0.1) + #geom_smooth(
     axis.text.x = element_text(size=12)) 
 p
 
+#Order variables by mean Evalue
 
+
+p <- ggplot(d, aes(x=paste0(intervention_variable, "-", intervention_level), y=EVals)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
+  #geom_abline(slope=1, intercept=0) +
+  geom_vline(aes(xintercept=1)) + geom_hline(aes(yintercept=1)) + 
+  #coord_equal(xlim = c(0.25,15), ylim = c(0.25,15)) +
+  scale_y_continuous(trans='log10') +
+  xlab("Adjusted RR") + ylab("E value") +
+  theme(
+    strip.text.x = element_text(size=12),
+    axis.text.x = element_text(size=12)) 
+p
+
+
+
+
+
+
+#Drop regionally pooled estimates, color pooled estimate
+head(d)
+
+#Make variable for level of 
+
+#Set NA EVals_lb to 1
+d$EVals_lb[is.na(d$EVals_lb)] <- 1
 
 
 
@@ -147,7 +160,7 @@ ggsave(p, file="C:/Users/andre/Dropbox/HBGDki figures/Stunting Webinar/EValue_de
 fivenum(d$EVals_lb)
 
 
-p <-  ggplot(df, aes(x=studyid)) + 
+p <-  ggplot(d, aes(x=studyid)) + 
   #geom_point(aes(y=RR, fill=region, color=region), size = 4, shape= ifelse(df$pooled==1,5,6)) +
   geom_point(aes(shape=pooled, y=RR, fill=region, color=region), size = 4) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=region)) +

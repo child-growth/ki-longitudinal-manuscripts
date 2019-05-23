@@ -165,7 +165,6 @@ study_label_transformation <- function(df){
   
   try(df <- mutate(df,cohort=paste0(short_description,'-',country)))
   
-  #Add regions with ugly Europe hack to change ordering
   df <- df %>% mutate(country = toupper(country))
   df <- df %>% mutate(region = case_when(
     country=="BANGLADESH" | country=="INDIA"|
@@ -368,3 +367,136 @@ name_labeling <- function(df){
       reason_excluded == 'Wrong age range' ~ 'Enrolled correct age range'
     ))
 }
+
+
+
+
+
+# for hgbd metadataset
+make_region <- function(df){
+  
+  df$country <- as.character(df$country)
+  
+  df <- df %>% mutate(region = case_when(
+    country == "AFG" ~ "Asia",
+    country == "AGO" ~ "Africa",
+    country == "BDI" ~ "Africa",
+    country == "BFA" ~ "Africa",
+    country == "BGD" ~ "Asia",
+    country == "BGD, BRA, IND, NPL, PER, PAK, ZAF, TZA" ~ "Other",
+    country == "BGD, IND, PAK" ~ "Other",
+    country == "BGD, MWI" ~ "Other",
+    country == "BGD, PAK, TZA, ZMB, GHA" ~ "Other",
+    country == "BLR" ~ "N.America & Europe",
+    country == "BLZ" ~ "N.America & Europe",
+    country == "BRA" ~ "Latin America",
+    country == "BRA, GBR, KEN, PAK, THA, ZAF " ~ "Other",
+    country == "BRA, GTM, IND, PHL, ZAF" ~ "Other",
+    country == "CHN" ~ "Asia",
+    country == "CIV" ~ "Africa",
+    country == "CMR" ~ "Africa",
+    country == "COD" ~ "Africa",
+    country == "COD, GTM, IND, PAK" ~ "Other",
+    country == "DNK" ~ "N.America & Europe",
+    country == "ECU" ~ "Latin America",
+    country == "EGY" ~ "Africa",
+    country == "ETH" ~ "Africa",
+    country == "GHA" ~ "Africa",
+    country == "GMB" ~ "Africa",
+    country == "GMB, MLI, MOZ, KEN, IND, BGD, PAK" ~ "Other",
+    country == "GTM" ~ "Latin America",
+    country == "IDN" ~ "Asia",
+    country == "IND" ~ "Asia",
+    country == "IRQ" ~ "Asia",
+    country == "KEN" ~ "Africa",
+    country == "KEN, CHN, GBR, IND, ITA, KEN, OMN, USA" ~ "Other",
+    country == "KHM" ~ "Asia",
+    country == "MDG" ~ "Africa",
+    country == "MEX" ~ "Latin America",
+    country == "MLI" ~ "Africa",
+    country == "MMR" ~ "Asia",
+    country == "MOZ" ~ "Africa",
+    country == "MWI" ~ "Africa",
+    country == "NER" ~ "Africa",
+    country == "NGA" ~ "Africa",
+    country == "NLD" ~ "N.America & Europe",
+    country == "NPL" ~ "Asia",
+    country == "PAK" ~ "Asia",
+    country == "PER" ~ "Latin America",
+    country == "PER, BRA, GNB, BGD" ~ "Other",
+    country == "PHL" ~ "Asia",
+    country == "RWA" ~ "Africa",
+    country == "SDN" ~ "Africa",
+    country == "SGP" ~ "Asia",
+    country == "SSD" ~ "Africa",
+    country == "TCD" ~ "Africa",
+    country == "TUR" ~ "N.America & Europe",
+    country == "TZA" ~ "Africa",
+    country == "UGA" ~ "Africa",
+    country == "USA" ~ "N.America & Europe",
+    country == "USA, GTM" ~ "Other",
+    country == "VNM" ~ "Asia",
+    country == "YEM" ~ "Africa",
+    country == "ZAF" ~ "Africa",
+    country == "ZMB" ~ "Africa",
+    country == "ZWE" ~ "Africa",
+    TRUE ~ "Other"
+  ))
+  
+  df$region <- factor(df$region, 
+                      levels = c("Africa",
+                                 "Asia",
+                                 "Latin America",
+                                 "N.America & Europe",
+                                 "Other"))
+  
+  return(df)
+}
+
+
+
+
+# for ghap dataset
+mark_region <- function(df){
+  
+  df$country <- as.character(df$country)
+  df <- df %>% mutate(country = toupper(country))
+  df <- df %>% mutate(region = case_when(
+    country=="BANGLADESH" | country=="INDIA"|
+      country=="NEPAL" | country=="PAKISTAN"|
+      country=="PHILIPPINES"| country=="CHINA"|
+      country=="THAILAND"|country=="SINGAPORE"|
+      country=='OMAN'~ "South Asia",
+    country=="KENYA"|
+      country=="GHANA"|
+      country=="BURKINA FASO"|
+      country=="GUINEA-BISSAU"|
+      country=="MALAWI"|
+      country=="MALI"|
+      country=="MOZAMBIQUE"|
+      country=="SOUTH AFRICA"|
+      country=="TANZANIA, UNITED REPUBLIC OF"|
+      country=="TANZANIA"|
+      country=="ZIMBABWE"|
+      country=="GAMBIA"|
+      country=="CONGO, THE DEMOCRATIC REPUBLIC OF" ~ "Africa",
+    country=="BRAZIL" | country=="GUATEMALA" |
+      country=="PERU"|country=='ECUADOR' | country=="MEXICO" |
+      country=="BELIZE" ~ "Latin America",
+    country=="UNITED STATES" | country=="UNITED KINGDOM" | country=="ITALY"|
+      country== "NETHERLANDS"|
+      country=="BELARUS" ~ "N.America & Europe",
+    TRUE ~ "Other"
+  ))
+ 
+  
+  df$region <- factor(df$region, 
+                      levels = c("Africa",
+                                 "South Asia",
+                                 "Latin America",
+                                 "N.America & Europe",
+                                 "Other"))
+  
+  return(df)
+}
+

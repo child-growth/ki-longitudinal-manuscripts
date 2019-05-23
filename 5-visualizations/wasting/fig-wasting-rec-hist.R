@@ -58,6 +58,12 @@ df <- df %>% group_by(agecat) %>% mutate(medianRecZ=median(recZ))
 pvals <- ki.ttest(data=df, y="recZ", levels="agecat", ref="Birth", comp=c("0-6 months", "6-12 months", "12-18 months"))
 pvals
 
+#Compare birth + 0-6 montsh to 6-18 months
+df$agecat2 <- as.character(df$agecat)
+df$agecat2 <- factor(ifelse(df$agecat2=="Birth"|df$agecat2=="0-6 months", "0-6","6-18"))
+pval <- ki.ttest(data=df, y="recZ", levels="agecat2", ref="0-6", comp=c("6-18"))
+pval
+
 
 # #Plot Z scores after recovery
 # rec_density_plot = ggplot(df,aes(x=recZ, fill = agecat)) + 
@@ -92,7 +98,7 @@ rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) +
    geom_point(aes(y = firstMedianRecZ)) +
    geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
   geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
-   ylab("Mean Weight-for-length Z-score within 3 months of recovery")+
+   ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
    xlab("Age at wasting episode onset")+
   # scale_y_discrete(expand = c(0.01, 0)) +
   # scale_x_continuous(breaks = seq(-5, 3.5, 1), 
@@ -101,8 +107,6 @@ rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) +
    scale_fill_manual(values=rep("grey30", 4)) +
    coord_cartesian(ylim=c(-3,2))
 rec_violin_plot
-
-ggsave(rec_violin_plot, file="U:/ki-longitudinal-manuscripts/figures/wasting/fig_wast_rec_dist_violin.png", width=8, height=5)
 
 
 # define standardized plot names
@@ -117,6 +121,7 @@ rec_violin_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_violin_plot, file=paste0("figures/wasting/fig-", rec_violin_name, ".png"), width=14, height=3)
+ggsave(rec_violin_plot, file=paste0("figures/wasting/fig-", rec_violin_name, ".png"), width=8, height=5)
 
+save(rec_violin_plot, file=paste0(here::here(),"/figures/plot objects/rec_violin_plot_object.Rdata"))
 

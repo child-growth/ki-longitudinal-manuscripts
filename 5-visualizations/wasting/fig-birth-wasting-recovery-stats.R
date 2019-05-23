@@ -21,7 +21,7 @@ d$measure_lab <- as.character(d$measure)
 # d$measure_lab[d$measure=="Persistent wasting"] <- "Persistent\nwasting" 
 # d$measure_lab[d$measure=="Wasting cumulative incidence"] <- "Wasting\ncumulative\nincidence" 
 # d$measure_lab[d$measure=="Wasting incidence rate"] <- "Wasting\nincidence\nrate" 
-# d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting" 
+d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting" 
 d$measure_lab <- factor(d$measure_lab)
 #d$measure_lab <- relevel(d$measure_lab, ref="Wasting\nincidence\nrate")
 d$measure_lab <- relevel(d$measure_lab, ref="Wasting incidence rate")
@@ -43,10 +43,10 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
                                    size = 12))+ #,
                                    #angle = 30, hjust = 0.5, vjust=0.5)) +
   theme(axis.title.y = element_text(size = 12)) +
-  ggtitle("Outcomes among children 6-24 months by birth status") +
+  ggtitle("Outcomes by birth status among children 6-24 months") +
   facet_wrap(~measure_lab, nrow=1, scales="free_y", strip.position = "left") +
   theme(strip.background = element_blank(), strip.placement = "outside")
-print(p)
+
 
 #ggsave(p, file=paste0(here::here(),"/figures/wasting/birthwast_stats_subplot.png"), width=7, height=3)
 
@@ -64,9 +64,10 @@ birthstrat_stats_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-",birthstrat_stats_plot_name,".png"), width=10, height=4)
+ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-",birthstrat_stats_plot_name,".png"), width=8, height=5)
 
 saveRDS(d, file=paste0("results/figure-data/figdata-",birthstrat_stats_plot_name,".RDS"))
 
+save(birthstrat_stats_plot, file=paste0(here::here(),"/figures/plot objects/birthstrat_stats_plot_object.Rdata"))
 
 

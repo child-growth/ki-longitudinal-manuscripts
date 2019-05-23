@@ -1,8 +1,15 @@
 
 rm(list = ls())
-source(paste0(here::here(), "/0-config.R"))
+#source(paste0(here::here(), "/0-config.R"))
+library(shiny)
+require(here)
+require(stringr)
+require(dplyr)
+require(tidyr)
 
-
+# define paths
+fig_path = "figures/"
+figdata_path = "figure-data/"
 #------------------------------------------------
 # Data Loading
 #------------------------------------------------
@@ -17,22 +24,22 @@ source(paste0(here::here(), "/0-config.R"))
 # Inputs for Shiny App
 #------------------------------------------------
 
-#Plot parameters
-yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
-tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
-               "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
-tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
-               "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
-Ylab <- "Relative Risk"
-scaleFUN <- function(x) sprintf("%.2f", x)
-theme_set(theme_bw())
+# #Plot parameters
+# yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
+# tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
+#                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+# tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
+#                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+# Ylab <- "Relative Risk"
+# scaleFUN <- function(x) sprintf("%.2f", x)
+# theme_set(theme_bw())
 
 
 #------------------------------------------------
 # Load all files
 #------------------------------------------------
 load_fig_files <- function(file_path){
-  data <- list.files(path=file_path, recursive = T)
+  data <- list.files(path=fig_path, recursive = T)
   #fig-OUTCOME-CUTOFF-MEASURE-POPULATION-LOCATION-AGE-ANALYSIS.pdf
   varnames <- c("fig", "outcome", "cutoff", "measure", "population", "location",
                 "age", "analysis")
@@ -40,6 +47,7 @@ load_fig_files <- function(file_path){
   
   #create data.frame of variables contained in plot title
   df <- as.data.frame(str_split(data,"-", simplify=T), plotnames=data)
+  print(file_path)
   colnames(df) <- varnames
   df$plotnames <- data
   
@@ -59,88 +67,54 @@ load_fig_files <- function(file_path){
 }
 
 transform_variables <- function(df){
+  transformations = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vREmg4PurW2AKddhf1Mtj9dAyaeCeYPUpHurNUe3r0gVVeeLrkS3aU-4XlYhZ96iWsBpr-R9sDT8Alp/pub?gid=0&single=true&output=csv")
+  
   df <- df %>%
-    dplyr::mutate(outcome = case_when(
-      outcome == "stunt" ~ "stunting",
-      outcome == "wast" ~ "wasting",
-      outcome == "laz" ~ "LAZ",
-      outcome == "LAZ" ~ "LAZ",
-      outcome == "whz" ~ "WHZ",
-      outcome == "WHZ" ~ "WHZ",
-      outcome == 'wlz' ~ 'WHZ',
-      outcome == "stunt_laz" ~ "stunting and laz",
-      outcome == 'wast_wlz' ~ 'wasting and wlz',
-      outcome == 'co' ~ 'co-occurrence',
-      outcome == 'length' ~ 'length',
-      TRUE ~ as.character(outcome)
-      )
+    dplyr::mutate(outcome = df %>% left_join(transformations, by = c("outcome" = "variable")) %>% 
+                    replace_na(list(variable.type = "outcome")) %>% 
+                    filter(variable.type == "outcome") %>% 
+                    pull("description")
+                  
     ) %>%
-    dplyr::mutate(measure = case_when(
-      measure == "prev" ~ "prevalence",
-      measure == "inc" ~ "incidence",
-      measure == "cuminc" ~ "cumulative incidence",
-      measure == "ir" ~ "incidence rate",
-      measure == "mean" ~ "mean",
-      measure == 'mean_dhs' ~ 'mean DHS',
-      measure == 'density_dhs' ~ 'density DHS',
-      measure == "vel" ~ "growth velocity",
-      measure == "laz_vel" ~ "LAZ velocity",
-      measure == "length_vel" ~ "length velocity",
-      measure == "heatmap" ~ "heatmap",
-      measure == 'rec' ~ 'recovery',
-      measure == "rec_dist" ~ "distribution after laz >= -2",
-      measure == "rec_laz" ~ "mean after LAZ rose above -2",
-      measure == "rec_prev" ~ "prevalence after LAZ rose above -2",
-      measure == "quant" ~ "quantile",
-      measure == "map" ~ "map",
-      measure == 'coflow' ~ 'wasting, stunting, and underweight co-occurrence',
-      measure == "flow" ~ "change in stunting status",
-      measure == 'perswast' ~ 'persistent wasting',
-      measure == 'co' ~ 'co-occurrence of wasting and stunting',
-      measure == 'uwt' ~ 'underweight',
-      measure == 'muac' ~ 'MUAC-based wasting',
-      TRUE ~ as.character(measure)
-    )) %>%
-    dplyr::mutate(population = case_when(
-      population == "overall" ~ "overall",
-      population == "overall_region" ~ "overall and region-stratified",
-      population == "region" ~ "region-stratified",
-      population == "cohort" ~ "cohort-stratified",
-      population == 'birth' ~ 'birth-stratified',
-      TRUE ~ as.character(population)
-    )) %>%
-    dplyr::mutate(age = case_when(
-      age == "allage" ~ "All ages",
-      age == 'birth' ~ 'Birth',
-      TRUE ~ as.character(age)
-    )) %>%
-    dplyr::mutate(location = case_when(
-      location == "" ~ "",
-      location == "asia" ~ "South Asia",
-      location == "eur" ~ "Europe",
-      location == "latamer" ~ "Latin America",
-      location == "africa" ~ "Africa",
-      TRUE ~ as.character(location)
-    )) %>%
-    dplyr::mutate(analysis = case_when(
-      analysis == "primary" ~ "primary",
-      analysis == 'season' ~ 'seasonality',
-      analysis == "month24" ~ "monthly cohorts measured each month from 0 to 24",
-      analysis == "monthly" ~ "monthly cohorts",
-      analysis == "exc_male_eff" ~ "exclude excluding COHORTS Guatemala and Content",
-      analysis == 'ir_sense' ~ 'washout period sensitivity',
-      TRUE ~ as.character(analysis)
-    ))
+    
+    dplyr::mutate(measure = df %>% left_join(transformations, by = c("measure" = "variable")) %>% 
+                    replace_na(list(variable.type = "measure")) %>% 
+                    filter(variable.type == "measure") %>% 
+                    pull("description")
+    ) %>%
+    
+    dplyr::mutate(population = df %>% left_join(transformations, by = c("population" = "variable")) %>% 
+                    replace_na(list(variable.type = "population")) %>% 
+                    filter(variable.type == "population") %>% 
+                    pull("description")
+    ) %>%
+    dplyr::mutate(age = df %>% left_join(transformations, by = c("age" = "variable")) %>% 
+                    replace_na(list(variable.type = "age")) %>% 
+                    filter(variable.type == "age") %>% 
+                    pull("description")
+    ) %>%
+    dplyr::mutate(location = df %>% left_join(transformations, by = c("location" = "variable")) %>% 
+                    replace_na(list(variable.type = "location")) %>% 
+                    filter(variable.type == "location") %>% 
+                    pull("description")
+    ) %>%
+    dplyr::mutate(analysis = df %>% left_join(transformations, by = c("analysis" = "variable")) %>% 
+                    replace_na(list(variable.type = "analysis")) %>% 
+                    filter(variable.type == "analysis") %>% 
+                    pull("description")
+    )
   
   return(df)
   
 }
 
+
+
 #load in names of pngs in figures file
 # change to figures directory (remove /mock_shiny)
-df <- load_fig_files(file_path=paste0(here::here(),"/figures/"))
+df <- load_fig_files(file_path=fig_path)
 df <- transform_variables(df)
-table_df <- load_fig_files(file_path = paste0(here::here(), '/results/figure-data/'))
+table_df <- load_fig_files(file_path = figdata_path)
 table_df <- transform_variables(table_df)
 df <- rbind(df, table_df)
 
@@ -151,6 +125,7 @@ df <- rbind(df, table_df)
 #------------------------------------------------
 # Build Shiny App
 #------------------------------------------------
+
 
 # Define UI for application that draws a forest plot
 ui <- navbarPage("HBGDki Results Dashboard",
@@ -187,8 +162,11 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  #            )
                  #            
                  #          )),
+                 #---> New blank tab
+                 tabPanel("Blank Tab for Documentation"),
                  tabPanel("Descriptive epidemiology",
                           fluidRow(
+                            h4("Note: this site is still under construction", align="center",style = "color:blue"),
                             column(4, selectInput("Outcome",
                                                   "1. Outcome:",
                                                   choices = unique(df$outcome))),
@@ -196,33 +174,36 @@ ui <- navbarPage("HBGDki Results Dashboard",
                             column(4, uiOutput('Region')),
                             column(4, uiOutput('OutcomeType')),
                             column(4, uiOutput('Population')),
-                            column(4, uiOutput('Analysis')),
-                            column(4, uiOutput('Age'))
+                            column(4, uiOutput('Age')),
+                            column(4, uiOutput('Analysis'))
                           ),
                           
+                          br(),
+                          br(),
                           
                           mainPanel(
                             width = 16,
-                            imageOutput("image", height=600),
-                            br(),
-                            br(),
-                            br(),
-                            # Create a new row for the table.
-                            fluidRow(
-                              #DT::dataTableOutput("table_desc")
-                              # tableOutput("table_desc")
-                              uiOutput('tables_desc')
-                            ),
-                            br(),
-                            br(),
-                            br(),
-                            # Create a new row for the table.
-                            fluidRow(
-                              #DT::dataTableOutput("table_desc")
-                              tableOutput("table_desc")
-                            )
-                            
-                          ))
+                            align = "center",
+                            imageOutput("image")))#, height=600)#,
+                 #br(),
+                 #br(),
+                 #br(),
+                 # Create a new row for the table.
+                 #fluidRow(
+                 #DT::dataTableOutput("table_desc")
+                 # tableOutput("table_desc")
+                 #  uiOutput('tables_desc')
+                 #),
+                 #br(),
+                 #br(),
+                 #br(),
+                 # Create a new row for the table.
+                 #fluidRow(
+                 #DT::dataTableOutput("table_desc")
+                 #  tableOutput("table_desc")
+                 #)
+                 
+                 #        ))
                  # tabPanel("Comparison",
                  #          fluidRow(
                  #            column(2, 
@@ -267,128 +248,128 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  #                   plotOutput("pooledPlotComparison", height=400)
                  #            )
                  #          ))
-                          )
-
+)
 
 
 # Define server logic required to draw the forest plot
 server <- function(input, output, session) {
-
+  
   # Adaptive input selections based on user input - avoids blank plots
+  
   output$Measure <- renderUI({
-    df <- df %>%
-      filter(outcome == input$Outcome) 
-
-    df <- df %>%
+    d <- df %>%
+      filter(outcome == input$Outcome) %>%
       drop_na(measure, location, severe, population, age, analysis)
-    df <- droplevels(df)
+    
+    d <- droplevels(d)
+    
     selectInput('Measure',
                 '2. Measure:',
-                unique(df$measure))
+                unique(d$measure))
   })
   
   output$Region <- renderUI({
-    df <- df[df$outcome == input$Outcome, ]
-    
-    df <- df %>%
+    d <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(measure == input$Measure) %>%
-      drop_na(severe, population, location, age, analysis)
-    df <- droplevels(df)
+      drop_na(location, severe, population, age, analysis)
+    
+    d <- droplevels(d)
+    
     selectInput('Region',
                 '3. Region:',
-                unique(df$location))
-
+                unique(d$location))
   })
+  
   output$OutcomeType <- renderUI({
-    df <- df %>%
+    d <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(measure == input$Measure) %>%
-      filter(location == input$Region)
-    
-    df <- df %>%
+      filter(location == input$Region) %>%
       drop_na(severe, population, age, analysis)
-    df <- droplevels(df)
+    
+    d <- droplevels(d)
     selectInput('OutcomeType',
                 '4. Outcome Type:',
-                choices = c('Not Severe', 'Severe'))
+                choices = unique(d$severe))
   })
   
   output$Population <- renderUI({
-    df <- df %>%
-      filter(outcome == input$Outcome) %>%
-      filter(location == input$Region) %>%
-      filter(measure == input$Measure)
-    
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-    df <- df %>%
-      drop_na(population, age, analysis)
-    df <- droplevels(df)
-    selectInput('Population',
-                '5. Population:',
-                unique(df$population))
-  })
-  output$Age <- renderUI({
-    df <- df %>%
+    d <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(location == input$Region) %>%
       filter(measure == input$Measure) %>%
-      filter(population == input$Population)
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-
-    df <- df %>%
-      drop_na(age, analysis)
-    df <- droplevels(df)
-    selectInput('Age',
-                '6. Age Range:',
-                unique(df$age))
+      filter(severe == input$OutcomeType) %>%
+      drop_na(population, age, analysis)
+    
+    d <- droplevels(d)
+    selectInput('Population',
+                '5. Population:',
+                unique(d$population))
   })
-  output$Analysis <- renderUI({
-    df <- df %>%
+  output$Age <- renderUI({
+    d <- df %>%
       filter(outcome == input$Outcome) %>%
       filter(location == input$Region) %>%
       filter(measure == input$Measure) %>%
       filter(population == input$Population) %>%
-      filter(age == input$Age)
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-
-    df <- df %>%
+      filter(severe == input$OutcomeType) %>%
+      drop_na(age, analysis)
+    
+    d <- droplevels(d)
+    
+    selectInput('Age',
+                '6. Age Range:',
+                unique(d$age))
+  })
+  
+  output$Analysis <- renderUI({
+    d <- df %>%
+      filter(outcome == input$Outcome) %>%
+      filter(location == input$Region) %>%
+      filter(measure == input$Measure) %>%
+      filter(population == input$Population) %>%
+      filter(severe == input$OutcomeType) %>%
       drop_na(analysis)
-    df <- droplevels(df)
+    
+    d <- droplevels(d)
+    
     selectInput('Analysis',
                 '7. Analysis:',
-                choices = unique(df$analysis),
+                choices = unique(d$analysis),
                 selected = 'primary')
   })
   
-
+  
   
   selectedData <- reactive({
-    df <- df[df$outcome == input$Outcome, ]
-    if(input$OutcomeType == 'Severe'){df <- df %>% filter(severe == 1)}
-    if(input$OutcomeType == 'Not Severe'){df <- df %>% filter(severe == 0)}
-    d <- df[df$age == input$Age, ]
-    d <- d[d$population == input$Population, ]
-    d <- d[d$measure == input$Measure, ]
-    d <- d[d$analysis == input$Analysis, ]
-    d <- d[d$location == input$Region, ]
+    d = df %>% filter(outcome == input$Outcome) %>%
+      filter(measure == input$Measure) %>%
+      filter(population == input$Population) %>%
+      filter(location == input$Region) %>%
+      filter(age == input$Age) %>%
+      filter(analysis == input$Analysis) %>%
+      filter(severe == input$OutcomeType)
+    
     d
   })
   
   # Image of first plot
   output$image <- renderImage({
     d <- selectedData()
-    d_img <- d %>% filter(fig == 'fig')
-    file_path <- paste0(here::here(), '/figures/', d_img$plotnames)
+    
+    d_img = d %>% select(plotnames)
+    
+    #d_img <- d %>% filter(fig == 'fig')
+    file_path <- paste0(fig_path, d_img[1, 1])
+    
     # Return a list containing the filename
     list(src = file_path,
-           contentType = 'image/png',
-           height = 600,
-           # width = 800,
-           alt = "This is alternate text")
+         contentType = 'image/png',
+         #height = 600,
+         width = 1200,
+         alt = "Image is loading")
+    
   }, deleteFile = FALSE)
   
   
@@ -409,22 +390,22 @@ server <- function(input, output, session) {
   }
   
   output$tables_desc <- renderUI({
-     d <- selectedData() 
-     d_tbl <- d %>% filter(fig == 'figdata')
-     file_path <- paste0(here::here(), '/results/figure-data/', d_tbl$plotnames)
-     table_data <- readRDS(file_path)
-     if (class(table_data) == 'list'){
-       output <- unlist(multi_tables(table_data))
-       return(div(HTML(output), class = 'shiny-html-output'))
-     } else {
-       return('')
-     }
+    d <- selectedData() 
+    d_tbl <- d %>% filter(fig == 'figdata')
+    file_path <- paste0(figdata_path, d_tbl$plotnames)
+    table_data <- readRDS(file_path)
+    if (class(table_data) == 'list'){
+      output <- unlist(multi_tables(table_data))
+      return(div(HTML(output), class = 'shiny-html-output'))
+    } else {
+      return('')
+    }
   })
-   
+  
   output$table_desc <- renderTable({
     d <- selectedData()
     d_tbl <- d %>% filter(fig == 'figdata')
-    file_path <- paste0(here::here(), '/results/figure-data/', d_tbl$plotnames)
+    file_path <- paste0(figdata_path, d_tbl$plotnames)
     table_data <- readRDS(file_path)
     if (class(table_data) == 'list'){
       return('')
@@ -432,10 +413,9 @@ server <- function(input, output, session) {
       return(table_data)
     }
   })
-   
-
-   
 }
+
+
 
 
 

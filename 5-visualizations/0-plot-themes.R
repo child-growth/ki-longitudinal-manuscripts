@@ -30,35 +30,42 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                          Cohort="pooled",
                          xlabel="Age category",
                          ylabel="",
+                         Region=NULL,
                          h1=0,
                          h2=3,
                          yrange=NULL,
-                         returnData=F){
+                         returnData=F) {
+  
   df <- d %>% filter(
     disease == Disease &
       measure == Measure &
       birth == Birth &
       severe == Severe &
       age_range == Age_range &
-      cohort == Cohort &
       !is.na(region) & !is.na(agecat)
   )
   df <- droplevels(df)
   
+  if (!is.null(Region)) {
+    df <- df %>% filter(region == Region, cohort != "pooled")
+  } else {
+    df <- df %>% filter(cohort == Cohort)
+  }
+
   # remove N= from labels
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub('N=', '', nstudy.f))
-  
+
   # remove text from labels
   df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub(' studies', '', nstudy.f))
-  
-  # Remove 'months' from x axis labels  
+
+  # Remove 'months' from x axis labels
   df <- df %>% arrange(agecat)
   df$agecat <- as.character(df$agecat)
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
-  
+
 
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
@@ -71,22 +78,30 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     # add space to the left and right of points on x axis
     # to accommodate point estimate labels
     scale_x_discrete(expand = expand_scale(add = 1)) +
-    
-    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-     theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
-    
-    theme(axis.text.x = element_text(margin = 
+
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
+
+    theme(axis.text.x = element_text(margin =
                                        margin(t = 0, r = 0, b = 0, l = 0),
                                      size = 14)) +
     theme(axis.title.y = element_text(size = 14)) +
-    
-    ggtitle("") +
-    facet_grid(~region) 
-  
+
+    ggtitle("")
+
+  if (!is.null(Region)) {
+    p <- p + facet_wrap(~cohort) +
+      theme(strip.text = element_text(size=18, margin = margin(t = 0)))
+  } else {
+    p <- p + facet_grid(~region) +
+      theme(strip.text = element_text(size=6, margin = margin(t = 0))) 
+  }
+
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
   }
-  
+
+
+
   if(returnData){
     return(list(plot=p,data=df))
   }else{
@@ -109,6 +124,118 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 # change 
 
 ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+                          Cohort="pooled",
+                          xlabel="Age category",
+                          ylabel="Incidence proportion (95% CI)",
+                          h1=0,
+                          h2=3,
+                          yrange=NULL,
+                          dodge=0,
+                          returnData=F){
+  
+  df <- d %>% filter(
+    disease == Disease &
+      measure %in% Measure &
+      birth == Birth &
+      severe == Severe &
+      age_range == Age_range &
+      cohort == Cohort &
+      !is.na(region) & !is.na(agecat)
+  )
+  df <- droplevels(df)
+  
+  # remove N= from labels
+  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub('N=', '', nstudy.f))
+  
+  # remove text from labels
+  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
+  
+  # Remove 'months' from x axis labels  
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  
+  # remove extra text from label at birth
+  # that overlaps between CI and IP
+  df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
+                                       measure=="Incidence_proportion", NA, est))
+  
+  # remove N= labels for incidence proportion
+  df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence_proportion', '', nmeas.f)) %>%
+    mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
+  
+  
+  p <- ggplot(df,aes(y=est,x=agecat)) +
+    geom_errorbar(aes(color=region, 
+                      group=interaction(measure, region), ymin=lb, ymax=ub), 
+                  width = 0, position = position_dodge(dodge)) +
+    geom_point(aes(shape=measure, fill=region, color=region
+    ), size = 2, position = position_dodge(dodge)) +
+    
+    geom_text(data=df[df$measure =='Incidence_proportion',], 
+              aes(x = agecat, y = est, label = round(est.f)),
+              hjust = 1.5, 
+              position = position_dodge(width = dodge),
+              vjust = 0.5) + 
+    
+    geom_text(data=df[df$measure =="Cumulative incidence",],              
+              aes(x = agecat, y = est, label = round(est.f)),
+              hjust = 1.5, 
+              position = position_dodge(width = dodge),
+              vjust = 0.5) + 
+    
+    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) +
+    scale_shape_manual(values = c(16, 17),
+                       name = 'Measure')+
+                       #labels = c('Cumulative Incidence', 'New Incident Cases')) + 
+    scale_fill_manual(values=tableau11, guide = FALSE) +
+    
+    xlab(xlabel)+
+    ylab(ylabel) +
+    
+    # add space to the left and right of points on x axis
+    # to accommodate point estimate labels
+    scale_x_discrete(expand = expand_scale(add = 1)) +
+    
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
+    
+    theme(axis.text.x = element_text(margin = 
+                                       margin(t = 0, r = 0, b = 0, l = 0),
+                                     size = 9)) +
+    theme(axis.title.x = element_text(margin = 
+                                        margin(t = 5, r = 0, b = 0, l = 0),
+                                      size = 14)) +
+    theme(axis.title.y = element_text(size = 14)) +
+    
+    ggtitle("") +
+    facet_grid(~region) +
+    
+    guides(color = FALSE) +
+    
+    theme(legend.position = c(.06,.83),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 8),
+          legend.background = element_blank(),
+          legend.margin = margin(0.5, 1.5, 0.5, 0.5),
+          legend.box.background = element_rect(colour = "black"))
+  
+  if(!is.null(yrange)){
+    p <- p + coord_cartesian(ylim=yrange)
+  }
+  
+  if(returnData){
+    return(list(plot=p,data=df))
+  }else{
+    return(p)
+  }
+}
+
+ip_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                           Cohort="pooled",
                           xlabel="Age category",
                           ylabel="Proportion (95% CI)",
@@ -161,9 +288,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
               vjust = geom_text_adjust_vec) +
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
-    scale_shape_manual(values = c(16, 17),
-                       name = 'Measure', 
-                       labels = c('Cumulative Incidence', 'New Incident Cases')) + 
+    scale_shape_manual(values = c(16, 17)) + 
     scale_fill_manual(values=tableau11, guide = FALSE) +
     
     xlab(xlabel)+
@@ -187,14 +312,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     ggtitle("") +
     facet_grid(~region) +
     
-    guides(color = FALSE) +
-    
-    theme(legend.position = c(.06,.83),
-          legend.title = element_blank(),
-          legend.text = element_text(size = 8),
-          legend.background = element_blank(),
-          legend.margin = margin(0.5, 1.5, 0.5, 0.5),
-          legend.box.background = element_rect(colour = "black"))
+    guides(color = FALSE) 
   
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)

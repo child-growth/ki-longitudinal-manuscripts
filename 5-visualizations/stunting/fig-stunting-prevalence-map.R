@@ -103,6 +103,6 @@ map_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(map_plot, file=paste0("figures/stunting/fig-",map_plot_name,".png"), width=9, height=4)
-saveRDS(d, file=paste0("results/figure-data/figdata-",map_plot_name,".RDS"))
+ggsave(map_plot, file=paste0(fig_dir, "stunting/fig-",map_plot_name,".png"), width=9, height=4)
+saveRDS(d, file=paste0(figdata_dir, "figdata-",map_plot_name,".RDS"))
 
