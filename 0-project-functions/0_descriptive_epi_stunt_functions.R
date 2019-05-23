@@ -45,7 +45,7 @@ summary.prev.haz <- function(d, severe.stunted=F){
   prev.res$ub=as.numeric(prev.res$ub)
   prev.res = prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
-  prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
+  prev.res$agecat=factor(levels(prev.data$agecat))
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
   return(list(prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort))
@@ -153,7 +153,7 @@ summary.haz <- function(d){
   haz.data <- droplevels(haz.data)
   
   # cohort specific results
-  haz.cohort=lapply((levels(haz.data$agecat)),function(x) 
+  haz.cohort=lapply(as.list(levels(haz.data$agecat)),function(x) 
     fit.escalc(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", measure="GEN",age=x))
   haz.cohort=as.data.frame(rbindlist(haz.cohort))
   haz.cohort=cohort.format(haz.cohort,y=haz.cohort$yi,
@@ -161,14 +161,11 @@ summary.haz <- function(d){
   
   
   # estimate random effects, format results
-  haz.res=lapply((levels(haz.data$agecat)),function(x) 
+  haz.res=lapply(as.list(levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
   haz.res=as.data.frame(rbindlist(haz.res))
-  haz.res[,4]=as.numeric(haz.res[,4])
-  haz.res[,6]=as.numeric(haz.res[,6])
-  haz.res[,7]=as.numeric(haz.res[,7])
-  haz.res$agecat=factor(haz.res$agecat,levels=levels(haz.data$agecat))
-  haz.res$ptest.f=sprintf("%0.0f",haz.res$est)
+  haz.res$agecat=factor(levels(haz.data$agecat))
+  haz.res$ptest.f=sprintf("%0.2f",haz.res$est)
   
   
   return(list(haz.data=haz.data, haz.res=haz.res, haz.cohort=haz.cohort))
@@ -200,11 +197,11 @@ summary.haz.age.sex <- function(d){
   # cohort specific results stratified within grouping variables
   haz.cohort.female=lapply(levels(haz.data$agecat),function(x) 
     fit.escalc(data=haz.data %>% filter(sex == "Female"),
-                        yi="meanhaz", vi="varhaz", age=x))
-  
+                        ni="nmeas",yi="meanhaz", vi="varhaz", age=x, measure = "GEN"))
+
   haz.cohort.male=lapply(levels(haz.data$agecat),function(x) 
     fit.escalc(data=haz.data %>% filter(sex == "Male"),
-                    yi="meanhaz", vi="varhaz", age=x))
+               ni="nmeas",yi="meanhaz", vi="varhaz", age=x, measure = "GEN"))
   
   haz.cohort.female.df = as.data.frame(rbindlist(haz.cohort.female)) %>%
     mutate(sex = "Female")
@@ -238,7 +235,7 @@ summary.haz.age.sex <- function(d){
   # haz.res[,4]=as.numeric(haz.res[,4])
   # haz.res[,6]=as.numeric(haz.res[,6])
   # haz.res[,7]=as.numeric(haz.res[,7])
-  haz.res$agecat=factor(haz.res$agecat)
+  haz.res$agecat=levels(haz.res$agecat)
   haz.res$sex=factor(haz.res$sex)
   
   haz.res$ptest.f=sprintf("%0.0f",haz.res$est)
@@ -378,9 +375,9 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
   ci.res=lapply((agelist),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
   ci.res=as.data.frame(rbindlist(ci.res))
-  ci.res[,4]=as.numeric(ci.res[,4])
-  ci.res[,6]=as.numeric(ci.res[,6])
-  ci.res[,7]=as.numeric(ci.res[,7])
+  # ci.res[,4]=as.numeric(ci.res[,4])
+  # ci.res[,6]=as.numeric(ci.res[,6])
+  # ci.res[,7]=as.numeric(ci.res[,7])
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
