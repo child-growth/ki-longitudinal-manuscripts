@@ -397,11 +397,6 @@ sev.cuminc6 <- bind_rows(
 
 
 
-save(prev, sev.prev,  haz,  monthly.haz, 
-     cuminc3, cuminc6, sev.cuminc3, sev.cuminc6, 
-     ip_3, ip_6, sev.ip3, sev.ip6,  
-     file = paste0(here(), "/results/shiny_desc_data_stunting_objects.Rdata"))
-
 
 shiny_desc_data <- bind_rows(
   data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
@@ -427,13 +422,13 @@ shiny_desc_data <- bind_rows(
 shiny_desc_data <- shiny_desc_data %>% subset(., select = -c(se, nmeas.f,  ptest.f))
 
 unique(shiny_desc_data$agecat)
-shiny_desc_data$agecat <- factor(shiny_desc_data$agecat, levels=unique(shiny_desc_data$agecat))
+shiny_desc_data$agecat <- as.factor(shiny_desc_data$agecat)
 
 unique(shiny_desc_data$region)
 shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Africa", "Latin America", "Asia"))
 
 
-save(shiny_desc_data, file = paste0(here(),"/results/shiny_desc_data_stunting_objects.Rdata"))
+save(shiny_desc_data, file = paste0(res_dir,"shiny_desc_data_stunting_objects.Rdata"))
 
 
 
