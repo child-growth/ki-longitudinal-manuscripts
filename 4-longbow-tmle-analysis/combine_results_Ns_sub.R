@@ -66,3 +66,7 @@ N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, inte
 save(N_sums, Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns_sub.rdata")
 
 
+
+#Table 1
+tab1 <- N_sums %>% filter(agecat=="0-24 months", outcome_variable=="ever_stunted")
+

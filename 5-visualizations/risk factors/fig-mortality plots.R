@@ -278,7 +278,7 @@ p3 <- ggplot(d2, aes(x=as.numeric(intervention_variable))) +
         #strip.text.x = element_text(size=12),
         #axis.text.x = element_text(size=12, angle = 45, hjust = 1),
         text = element_text(size=16)) +
-  ggtitle("Outcome: co-occurrent wasting and stunting at 18 months") + coord_cartesian(ylim=c(1,8))
+  ggtitle("Outcome: wasted and stunted at 18 months") + coord_cartesian(ylim=c(1,8))
 
 ggsave(p3, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-morbidity-co-RR.png", width=6, height=5.2)
 

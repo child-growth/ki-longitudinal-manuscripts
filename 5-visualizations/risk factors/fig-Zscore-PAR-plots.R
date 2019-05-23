@@ -196,41 +196,41 @@ save(pPAR_laz, pPAR_wlz, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-m
 
 
 
-# i <- unique(df$region)[1]
-# j <- unique(df$outcome_variable)[5]
-# k <- unique(df$agecat)[6]
-# 
-# for(i in unique(df$region)){
-#   for(j in unique(df$outcome_variable)){
-#     for(k in unique(df$agecat)){
-#       
-#       dpool <- df %>% 
-#         filter(region==i,
-#                outcome_variable==j,
-#                agecat == k) %>%
-#         filter(!is.na(intervention_variable))
-#       
-#       ppar <-  ggplot(dpool, aes(x=reorder(RFlabel_ref, -PAR))) + 
-#         geom_point(aes(y=-PAR,  color=RFtype), size = 4) +
-#         geom_linerange(aes(ymin=-CI1, ymax=-CI2, color=RFtype)) +
-#         coord_flip() +
-#         labs(x = "Exposure", y = "Difference in outcome after setting\nwhole population exposure to reference level") +
-#         geom_hline(yintercept = 0) +
-#         scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-#         theme(strip.background = element_blank(),
-#               legend.position="right",
-#               axis.text.y = element_text(hjust = 1),
-#               strip.text.x = element_text(size=12),
-#               axis.text.x = element_text(size=12, 
-#                                          margin = margin(t = -20)),
-#               axis.title.x = element_text(margin = margin(t = 20))) +
-#         ggtitle(paste0("Population attributable difference\n", dpool$outcome_variable[1]," - ", dpool$agecat[1],", ", dpool$region[1])) + 
-#         guides(color=FALSE, shape=FALSE)
-#       
-#       ggsave(ppar, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/Zscore-PAR/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$agecat[1]), "-Z-PAR.png"), height=10, width=8)
-#     }    
-#   }
-# }
+i <- unique(df$region)[1]
+j <- unique(df$outcome_variable)[5]
+k <- unique(df$agecat)[6]
+
+for(i in unique(df$region)){
+  for(j in unique(df$outcome_variable)){
+    for(k in unique(df$agecat)){
+
+      dpool <- df %>%
+        filter(region==i,
+               outcome_variable==j,
+               agecat == k) %>%
+        filter(!is.na(intervention_variable))
+
+      ppar <-  ggplot(dpool, aes(x=reorder(RFlabel_ref, -PAR))) +
+        geom_point(aes(y=-PAR,  color=RFtype), size = 4) +
+        geom_linerange(aes(ymin=-CI1, ymax=-CI2, color=RFtype)) +
+        coord_flip() +
+        labs(x = "Exposure", y = "Difference in outcome after setting\nwhole population exposure to reference level") +
+        geom_hline(yintercept = 0) +
+        scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
+        theme(strip.background = element_blank(),
+              legend.position="right",
+              axis.text.y = element_text(hjust = 1),
+              strip.text.x = element_text(size=12),
+              axis.text.x = element_text(size=12,
+                                         margin = margin(t = -20)),
+              axis.title.x = element_text(margin = margin(t = 20))) +
+        ggtitle(paste0("Population attributable difference\n", dpool$outcome_variable[1]," - ", dpool$agecat[1],", ", dpool$region[1])) +
+        guides(color=FALSE, shape=FALSE)
+
+      ggsave(ppar, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/Zscore-PAR/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$agecat[1]), "-Z-PAR.png"), height=10, width=8)
+    }
+  }
+}
 
 
 
