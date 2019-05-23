@@ -225,7 +225,7 @@ ip_3 <- bind_rows(
 #----------------------------------------
 ip.data3.birthstrat <- summary.stunt.incprop(d3_birthstrat, agelist = agelst3_birthstrat, severe.stunted = F)
 d3_birthstrat_grouped <- d3_birthstrat %>% group_by(region)
-ip.region3.birthstrat <- summary.stunt.incprop(d3_birthstrat_grouped, agelist = agelst3)$ip.res
+ip.region3.birthstrat <- summary.stunt.incprop(d3_birthstrat_grouped, agelist = agelst3_birthstrat)$ip.res
 ip.cohort3.birthstrat <-
   ip.data3.birthstrat$ip.cohort %>% 
   subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
@@ -325,7 +325,7 @@ cuminc3 <- bind_rows(
 #----------------------------------------
 ci.data3.birthstrat <- summary.ci(d3_birthstrat, birthstrat=TRUE, agelist = agelst3_birthstrat)
 d3_birthstrat_grouped <- d3_birthstrat %>% group_by(region)
-ci.region3.birthstrat <- summary.ci(d3_birthstrat_grouped, agelist = agelst3)$ci.res
+ci.region3.birthstrat <- summary.ci(d3_birthstrat_grouped, agelist = agelst3_birthstrat)$ci.res
 ci.cohort3.birthstrat <-
   ci.data3.birthstrat$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
