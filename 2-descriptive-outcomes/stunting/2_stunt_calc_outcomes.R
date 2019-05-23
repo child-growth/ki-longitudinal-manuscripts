@@ -208,8 +208,9 @@ ip.data3 <- summary.stunt.incprop(d3, agelist = agelst3, severe.stunted = F)
 d3_grouped <- d3 %>% group_by(region)
 ip.region3 <- summary.stunt.incprop(d3_grouped, agelist = agelst3)$ip.res
 ip.cohort3 <-
-  ip.data3$ip.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ip.lb,  ip.ub)) %>%
-  rename(est = yi,  lb = ip.lb,  ub = ip.ub, nmeas=nchild)
+  ip.data3$ip.cohort %>% 
+  subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 
 ip_3 <- bind_rows(
@@ -226,8 +227,9 @@ ip.data3.birthstrat <- summary.stunt.incprop(d3_birthstrat, agelist = agelst3_bi
 d3_birthstrat_grouped <- d3_birthstrat %>% group_by(region)
 ip.region3.birthstrat <- summary.stunt.incprop(d3_birthstrat_grouped, agelist = agelst3)$ip.res
 ip.cohort3.birthstrat <-
-  ip.data3.birthstrat$ip.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ip.lb,  ip.ub)) %>%
-  rename(est = yi,  lb = ip.lb,  ub = ip.ub, nmeas=nchild)
+  ip.data3.birthstrat$ip.cohort %>% 
+  subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 
 ip_3.birthstrat <- bind_rows(
@@ -243,8 +245,9 @@ ip.data6 <- summary.stunt.incprop(d6, agelist = agelst6, severe.stunted = F)
 d6_grouped <- d6  %>% group_by(region) 
 ip.region6 <- summary.stunt.incprop(d6_grouped, agelist = agelst6)$ip.res
 ip.cohort6 <-
-  ip.data6$ip.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ip.lb,  ip.ub)) %>%
-  rename(est = yi,  lb = ip.lb,  ub = ip.ub, nmeas=nchild)
+  ip.data6$ip.cohort %>%
+  subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 ip_6 <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", ip.data6$ip.res),
@@ -262,8 +265,9 @@ ip_6 <- bind_rows(
 sev.ip.data3 <- summary.stunt.incprop(d3, agelist = agelst3, severe.stunted = T)
 sev.ip.region3 <- summary.stunt.incprop(d3_grouped, agelist = agelst3, severe.stunted = T)$ip.res
 sev.ip.cohort3 <-
-  sev.ip.data3$ip.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ip.lb,  ip.ub)) %>%
-  rename(est = yi,  lb = ip.lb,  ub = ip.ub, nmeas=nchild)
+  sev.ip.data3$ip.cohort %>% 
+  subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 
 sev.ip3 <- bind_rows(
@@ -279,8 +283,9 @@ sev.ip3 <- bind_rows(
 sev.ip.data6 <- summary.stunt.incprop(d6, agelist = agelst6, severe.stunted = T)
 sev.ip.region6 <- summary.stunt.incprop(d6_grouped, agelist = agelst6, severe.stunted = T)$ip.res
 sev.ip.cohort6 <-
-  sev.ip.data6$ip.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ip.lb,  ip.ub)) %>%
-  rename(est = yi,  lb = ip.lb,  ub = ip.ub, nmeas=nchild)
+  sev.ip.data6$ip.cohort %>% 
+  subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
 
 
 sev.ip6 <- bind_rows(
