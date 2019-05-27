@@ -1,9 +1,27 @@
-
-
-
+##############################################
+# summary.prev.haz
+##############################################
+# Documentation: summary.prev.haz
+# Usage: summary.prev.haz(d, severe.stunted = F)
+# Description: Provides summary of studies, including count of measurements, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+# severe.stunted: a boolean, with default value FALSE. 
+#   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
+#   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+#
+# Output: A list of tables:
+#   - prev.data: includes the number of measurements, proportion/count of stunted children in each study for each age category
+#   - prev.res: estimated random effects and CI bounds of studies grouped by age category
+#   - prev.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.prev.haz <- function(d, severe.stunted=F){
-  
+  d = dprev
   # take mean of multiple measurements within age window
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
@@ -37,21 +55,44 @@ summary.prev.haz <- function(d, severe.stunted=F){
                             lab=  levels(prev.data$agecat))
   
   # estimate random effects, format results
-  prev.res=lapply((levels(prev.data$agecat)),function(x) 
-    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
+  prev.res=lapply((levels(prev.data$agecat)), function(x)
+    fit.rma(data=prev.data, ni="nmeas", xi="nxprev",age=x ,measure="PLO",nlab="children"))
   prev.res=as.data.frame(rbindlist(prev.res))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
   prev.res$ub=as.numeric(prev.res$ub)
   prev.res = prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
-  prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
+  prev.res$agecat= levels(prev.data$agecat) 
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
   return(list(prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort))
 }
 
-
+##############################################
+# summary.ci
+##############################################
+# Documentation: summary.ci
+# Usage: summary.ci(d, severe.stunted=F, 
+#                      agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
+#                                   "12-15 months","15-18 months","18-21 months","21-24 months"))
+# Description: Provides summary for cummulative indicidence of studies, including number of incident cases, estimate of random effeects, and results from specific cohorts
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+# severe.stunted: a boolean, with default value FALSE. 
+#   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
+#   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+# agelist: a list of strings that describe the ranges of each age category.
+#
+# Output: A list of tables:
+#   - cuminc.data: includes the number of measurements, number of incident cases in each study for each age category
+#   - ci.res: estimated random effects and CI bounds of studies grouped by age category
+#   - ci.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.ci <- function(d,  severe.stunted=F, 
                        agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
