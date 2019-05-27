@@ -12,20 +12,10 @@ theme_set(theme_ki())
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
-#Mark region
-dfull <- mark_region(dfull)
-
 d <- dfull %>% filter(type=="ATE")
 
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)
-
-#mark unadjusted
-d$adjusted <- ifelse(d$adjustment_set!="unadjusted" , 1, 0)
-
-#Drop unadjusted estimates
-d <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon") & adjusted==0))
-
 
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%

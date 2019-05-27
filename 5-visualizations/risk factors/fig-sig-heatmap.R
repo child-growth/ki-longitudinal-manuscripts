@@ -40,7 +40,7 @@ d <- d %>% filter(!(outcome_variable %in% c("ever_co", "wast_rec90d") & region!=
 
 #Drop secondary outcomes
 table(d$outcome_variable)
-d <- d %>% filter(outcome_variable %in% c("ever_stunted","stunted","ever_wasted","wasted","wast_rec90d","ever_co","haz","whz")) 
+d <- d %>% filter(outcome_variable %in% c("pers_wast","ever_stunted","stunted","ever_wasted","wasted","wast_rec90d","ever_co","haz","whz")) 
 d$outcome_variable <- gsub("haz", "LAZ", d$outcome_variable)
 d$outcome_variable <- gsub("whz", "WLZ", d$outcome_variable)
 d$outcome_variable <- gsub("stunted", "Stunted", d$outcome_variable)
@@ -49,7 +49,8 @@ d$outcome_variable <- gsub("wast_rec90d", "Recovery\nfrom wasting", d$outcome_va
 d$outcome_variable <- gsub("ever_co", "Stunted\nand wasted", d$outcome_variable)
 d$outcome_variable <- gsub("ever_Stunted", "Ever\nstunted", d$outcome_variable)
 d$outcome_variable <- gsub("ever_Wasted", "Ever\nwasted", d$outcome_variable)
-d <- d %>% mutate(outcome_variable=factor(outcome_variable, levels = c("LAZ","WLZ","Stunted","Wasted","Ever\nstunted","Ever\nwasted","Recovery\nfrom wasting","Stunted\nand wasted")))
+d$outcome_variable <- gsub("pers_wast", "Persistently\nwasted", d$outcome_variable)
+d <- d %>% mutate(outcome_variable=factor(outcome_variable, levels = c("LAZ","WLZ","Stunted","Wasted","Ever\nstunted","Ever\nwasted","Recovery\nfrom wasting","Stunted\nand wasted","Persistently\nwasted")))
 table(d$outcome_variable)
 levels(d$outcome_variable)
 
@@ -58,8 +59,9 @@ d$agecat <- gsub(" \\(no birth st.\\)", "", d$agecat)
 d$agecat <- gsub(" \\(no birth wast\\)", "", d$agecat)
 unique(d$agecat)
 
-#Keep just one breastfeeding indicator
-d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )) )
+#Drop exposures only used in secondary analyses
+unique(d$intervention_variable)
+d <- d %>% filter(!(intervention_variable %in% c("lag_WHZ_quart")))
 
 
 #Calculate P-values
@@ -123,8 +125,8 @@ d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfe
   #define a color for fonts
   textcol = "grey20"
   
-  
-  hm <- ggplot(d,aes(x=xvar, y=yvar, fill=pval_cat)) +
+#Pooled estimates only 
+  hm <- ggplot(d[d$region=="Pooled",],aes(x=xvar, y=agecat, fill=pval_cat)) +
     facet_grid(outcome_variable~., scales = "free_y", space="free") +
     geom_tile(colour="white",size=0.25) +
     scale_y_discrete(expand=c(0,0))+
@@ -150,11 +152,69 @@ d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfe
     scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="white")
     #scale_fill_brewer(type = "div", palette = "PuOr", direction = -1, aesthetics = "fill", na.value="white")
 print(hm)  
-  
+
+
+hm <- ggplot(d[d$region=="Pooled",],aes(x=intervention_level, y=agecat, fill=pval_cat)) +
+  facet_grid(outcome_variable~intervention_variable, scales = "free_y", space="free") +
+  geom_tile(colour="white",size=0.25) +
+  scale_y_discrete(expand=c(0,0))+
+  theme_grey(base_size=10) +
+  theme(
+    #aspect.ratio = 1,
+    legend.title=element_text(color=textcol,size=8),
+    legend.margin = margin(grid::unit(0.1,"cm")),
+    legend.text=element_text(colour=textcol,size=7,face="bold"),
+    legend.key.height=grid::unit(0.2,"cm"),
+    legend.key.width=grid::unit(1,"cm"),
+    legend.position = "right",
+    axis.text.x=element_text(size=8,colour=textcol,angle=45,hjust=1),
+    axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
+    axis.ticks=element_line(size=0.4),
+    plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
+    strip.text.x = element_text(size=10),
+    strip.text.y = element_text(angle=0,size=10),
+    plot.background=element_blank(),
+    panel.border=element_blank()
+  ) + 
+  labs(x="Exposure",y="",title="") +
+  scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="white")
+print(hm)  
 
 
   
 # save plot 
 ggsave(hm, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-sig-heatmap.png", height=10, width=14)
 
-    
+
+
+
+#Region stratified
+#Pooled estimates only 
+hm_strat <- ggplot(d[d$region!="Pooled",],aes(x=xvar, y=yvar, fill=pval_cat)) +
+  facet_grid(outcome_variable~., scales = "free_y", space="free") +
+  geom_tile(colour="white",size=0.25) +
+  scale_y_discrete(expand=c(0,0))+
+  theme_grey(base_size=10) +
+  theme(
+    #aspect.ratio = 1,
+    legend.title=element_text(color=textcol,size=8),
+    legend.margin = margin(grid::unit(0.1,"cm")),
+    legend.text=element_text(colour=textcol,size=7,face="bold"),
+    legend.key.height=grid::unit(0.2,"cm"),
+    legend.key.width=grid::unit(1,"cm"),
+    legend.position = "right",
+    axis.text.x=element_text(size=8,colour=textcol,angle=45,hjust=1),
+    axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
+    axis.ticks=element_line(size=0.4),
+    plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
+    strip.text.x = element_text(size=10),
+    strip.text.y = element_text(angle=0,size=10),
+    plot.background=element_blank(),
+    panel.border=element_blank()
+  ) + 
+  labs(x="Exposure",y="",title="") +
+  scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="white")
+
+# save plot 
+ggsave(hm_strat, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-sig-heatmap_regionstrat.png", height=10, width=14)
+
