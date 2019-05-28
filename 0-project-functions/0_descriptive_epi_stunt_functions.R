@@ -193,7 +193,24 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
 }
 
 
-
+##############################################
+# summary.haz
+##############################################
+# Documentation: summary.haz
+# Usage: summary.haz(d)
+# Description: Provides summary of studies, including count of measurements, mean HAZ, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+#
+# Output: A list of tables:
+#   - haz.data: includes the number of measurements, mean HAZ in each study for each age category
+#   - haz.res: estimated random effects and CI bounds of studies grouped by age category
+#   - haz.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.haz <- function(d){
   
@@ -234,6 +251,25 @@ summary.haz <- function(d){
   
   return(list(haz.data=haz.data, haz.res=haz.res, haz.cohort=haz.cohort))
 }
+
+##############################################
+# summary.haz.age.sex
+##############################################
+# Documentation: summary.haz.age.sex
+# Usage: summary.haz.age.sex(d)
+# Description: Provides summary of studies with age and sex categories, including count of measurements, mean HAZ, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+#
+# Output: A list of tables:
+#   - haz.data: includes the number of measurements, mean HAZ in each study for each pair of sex and age category
+#   - haz.res: estimated random effects and CI bounds of studies grouped by sex and age category
+#   - haz.cohort: estimated random effects and CI bounds for each specific cohort
 
 
 # summarize mean within age and sex categories
@@ -311,11 +347,25 @@ summary.haz.age.sex <- function(d){
   
 }
 
-
-
-
-
-
+##############################################
+# summary.rec.stunt
+# **NEVER USED**
+##############################################
+# Documentation: summary.rec.stunt
+# Usage: summary.rec.stunt(d)
+# Description: Provides summary of studies for recovered stunting, including count of measurements, mean HAZ, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+#
+# Output: A list of tables:
+#   - rev.data: includes the number of measurements, mean HAZ in each study for each age category
+#   - rev.res: estimated random effects and CI bounds of studies grouped by age category
+#   - rev.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.rec.stunt <- function(d){
   
@@ -389,6 +439,31 @@ summary.rec.stunt <- function(d){
   return(list(rev.data=rev.data, rev.res=fit.r, rec.cohort=rec.cohort))
 }
 
+##############################################
+# summary.stunt.incprop
+##############################################
+# Documentation: summary.stunt.incprop
+# Usage: summary.stunt.incprop(d, 
+#                              severe.stunted=F, 
+#                              agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
+#                                           "12-15 months","15-18 months","18-21 months","21-24 months"))
+# Description: Provides summary of studies for incidence proportions, including count of measurements, incidence proportions, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+# severe.stunted: a boolean, with default value FALSE. 
+#   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
+#   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+# agelist: a list of strings that describe the ranges of each age category.
+#
+# Output: A list of tables:
+#   - ip.data: includes the number of measurements, incidence proportions in each study for each age category
+#   - ip.res: estimated random effects and CI bounds of studies grouped by age category
+#   - ip.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")){
   
@@ -445,6 +520,33 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
   return(list(ip.data=cuminc.data, ip.res=ci.res, ip.cohort=ci.cohort))
 }
 
+
+##############################################
+# summary.stunt.ir
+# **Never Used**
+##############################################
+# Documentation: summary.stunt.ir
+# Usage: summary.stunt.ir(d, 
+#                              severe.stunted=F, 
+#                              agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
+#                                           "12-15 months","15-18 months","18-21 months","21-24 months"))
+# Description: Provides summary of studies for incidence ratios, including count of measurements, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+# severe.stunted: a boolean, with default value FALSE. 
+#   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
+#   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+# agelist: a list of strings that describe the ranges of each age category.
+#
+# Output: A list of tables:
+#   - ir.data: includes the number of measurements, incidence ratios in each study for each age category
+#   - ir.res: estimated random effects and CI bounds of studies grouped by age category
+#   - ir.cohort: estimated random effects and CI bounds for each specific cohort
 
 # Stunting incidence person-time calculation
 summary.stunt.ir <- function(d, agelist, sev_stunt=F){
@@ -547,9 +649,22 @@ summary.stunt.ir <- function(d, agelist, sev_stunt=F){
 }
 
 
+##############################################
+# rec.age
+# **Never Used**
+##############################################
+# Documentation: rec.age
+# Usage: rec.age(s.agem, r.agem, data)
+# Description: returns data with new indicators of stunting and recovery status in specified age intervals
+# Arguments/Options:
+# s.agem: cutoff age for stuning measurements. 
+#   - A child will be marked as stunted if they are observed as being stunted before s.agem
+# r.agem: cutoff age for recovery measurements. 
+#   - A child will be marked as recovered if they are observed as stunted before s.agem and observed as recovered after s.agem and before r.agem
+# data: a table containing rows of individuals in a study
+#
+# Output: rev: a table that shows the recovery and stunting status of individuals in the data, subset to only children who have been stunted
 
-
-# inputs:
 rec.age=function(s.agem,r.agem,data){
   # subset to stunted between birth and 3 months
   stunt <- data %>%
@@ -617,7 +732,22 @@ rec.age=function(s.agem,r.agem,data){
 }
 
 
-#Recovery summary measures pooling function
+##############################################
+# summary_rev_df
+##############################################
+# Documentation: summary_rev_df
+# Usage: summary_rev_df(d, Age="0-3 months")
+# Description: summarises stunting recovery in studies described by the data for a given age category.
+# Arguments/Options:
+# d: a table with the following columns
+#     - studyid
+#     - country
+#     - recovered
+# Age: a string describing an age category that exists in the data. 
+#     -Default value: "0-3 months"
+#
+# Output: res: a table summarizing studies by mean recovered, sum recovered, and count of measurements for a given age group
+
 summary_rev_df <- function(d, Age="0-3 months"){
   res=d %>%
     group_by(studyid,country) %>%
