@@ -176,13 +176,15 @@ dhs_plotd <- dhsfits %>%
 
 # standard region colors used in other plots
 tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black", tableau10(10)[c(1, 2, 3)])
+pcols <- c("black", tableau10(10)[c(1, 2, 5)])
 
 blue <- 1
 orange <- 2
-green <- 3
+green <- 5
 
 dhs_plotd_laz <- filter(dhs_plotd, measure == "LAZ")
+
+dhs_plotd_laz = dhs_plotd_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
 laz_ageplot <- ggplot(
   dhs_plotd_laz,
@@ -197,7 +199,7 @@ laz_ageplot <- ggplot(
   scale_color_manual(values = pcols, guide = FALSE) +
   scale_fill_manual(values = pcols, guide = FALSE) +
   scale_linetype_manual(values = c("solid", "dashed", "dotdash")) +
-  labs(x = "child age, months", y = "length-for-age z-score") +
+  labs(x="Child age, months",y="Length-for-age z-score") +
   coord_cartesian(ylim = c(-2, 0)) +
   theme_minimal() +
   theme(
@@ -213,7 +215,7 @@ laz_ageplot
 
 # define standardized plot names
 laz_ageplot_name <- create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "mean DHS",
   population = "overall and region-stratified",
@@ -323,15 +325,43 @@ pcols <- c("black", tableau10(10)[c(1:3)])
 # LAZ density by region
 #---------------------------------------
 dhsden_plot_laz <- filter(dhsden_plot, measure == "LAZ")
+
+ki_medians = readRDS(paste0("results/ki.zscore.medians.monthly.rds"))
+ki_medians = ki_medians[ki_medians$measure == "haz", c(1, 3)]
+ki_medians$dsource = "ki cohorts"
+
+ki_medians$region = recode_factor(ki_medians$region, 
+                                  OVERALL = "Overall", 
+                                  AFRO = "Africa", 
+                                  PAHO = "Latin America", 
+                                  SEARO = "South Asia")
+
+dhs_quantiles <- readRDS(paste0(here::here(),"/results/dhs.quantiles.rds"))
+dhs_medians = dhs_quantiles %>% filter(quantile == 50) %>% filter(measure == "haz")
+dhs_medians$region = recode_factor(dhs_medians$region, 
+                                   OVERALL = "Overall", 
+                                   AFRO = "Africa", 
+                                   PAHO = "Latin America", 
+                                   SEARO = "South Asia")
+names(dhs_medians)[2] = "median"
+dhs_medians = select(dhs_medians, c("region", "median"))
+dhs_medians$dsource = "DHS"
+medians = rbind(ki_medians, dhs_medians)
+
+dhsden_plot_laz = merge(x = dhsden_plot_laz, y = medians, by = c("region", "dsource"),  all.x = TRUE)
+dhsden_plot_laz = dhsden_plot_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+
 laz_dplot <- ggplot(data = dhsden_plot_laz, aes(x = x, y = y, color = region, linetype = dsource)) +
   facet_grid(~region) +
   geom_line() +
+  geom_point(aes(x = as.double(median), y = 0, shape = dsource)) +
   scale_color_manual(values = pcols, guide = FALSE) +
   scale_fill_manual(values = pcols, guide = FALSE) +
   scale_linetype_manual(values = c("solid", "dashed", "dotdash")) +
+  scale_shape_manual(values=c(19, 1))+
   scale_x_continuous(breaks = seq(-6, 6, by = 2)) +
   coord_cartesian(xlim = c(-6, 6), ylim = c(0, 0.4)) +
-  labs(y = "density", x = "length-for-age z-score") +
+  labs(y="Density",x="Length-for-age z-score")+
   theme_minimal() +
   theme(
     legend.position = "none",
@@ -342,7 +372,7 @@ laz_dplot
 
 # define standardized plot names
 laz_dplot_name <- create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "density DHS",
   population = "overall and region-stratified",
@@ -354,3 +384,14 @@ laz_dplot_name <- create_name(
 # save plot and underlying data
 ggsave(laz_dplot, file = paste0(fig_dir, "stunting/fig-", laz_dplot_name, ".png"), width = 8, height = 2)
 saveRDS(dhsden_plot_laz, file = paste0(figdata_dir, "figdata-", laz_dplot_name, ".RDS"))
+#############################################
+# Merge above plots into a single figure
+#############################################
+
+arrange_figures = grid.arrange(laz_dplot, 
+                               laz_ageplot, 
+                               nrow = 2, ncol = 1,
+                               heights = c(2, 2),
+                               widths= 8)
+
+ggsave(arrange_figures, file=paste0("figures/stunting/fig-DHS-LAZ.png"), width=8, height=4)
