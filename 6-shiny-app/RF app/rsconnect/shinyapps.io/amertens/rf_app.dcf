@@ -1,0 +1,10 @@
+name: rf_app
+title:
+username:
+account: amertens
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 954478
+bundleId: 2115116
+url: https://amertens.shinyapps.io/rf_app/
+when: 1559104560.89549

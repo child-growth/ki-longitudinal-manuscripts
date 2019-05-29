@@ -95,8 +95,10 @@ d <- d %>% filter(!(intervention_variable %in% c("lag_WHZ_quart")))
 # Plot heatmaps
 #-----------------------------------
   
+  d <- d %>% filter(!is.na(RFlabel))
+  
   #Concatenate variable and level for the x-axis
-  d$xvar <- paste0(d$intervention_variable,": ",d$intervention_level)
+  d$xvar <- paste0(d$RFlabel,": ",d$intervention_level)
   
   d <- d %>% group_by(intervention_variable) %>%
     mutate(mean_pval = mean(sig)) %>% ungroup() %>%    
@@ -151,35 +153,6 @@ d <- d %>% filter(!(intervention_variable %in% c("lag_WHZ_quart")))
     labs(x="Exposure",y="",title="") +
     scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="white")
     #scale_fill_brewer(type = "div", palette = "PuOr", direction = -1, aesthetics = "fill", na.value="white")
-print(hm)  
-
-
-hm <- ggplot(d[d$region=="Pooled",],aes(x=intervention_level, y=agecat, fill=pval_cat)) +
-  facet_grid(outcome_variable~intervention_variable, scales = "free_y", space="free") +
-  geom_tile(colour="white",size=0.25) +
-  scale_y_discrete(expand=c(0,0))+
-  theme_grey(base_size=10) +
-  theme(
-    #aspect.ratio = 1,
-    legend.title=element_text(color=textcol,size=8),
-    legend.margin = margin(grid::unit(0.1,"cm")),
-    legend.text=element_text(colour=textcol,size=7,face="bold"),
-    legend.key.height=grid::unit(0.2,"cm"),
-    legend.key.width=grid::unit(1,"cm"),
-    legend.position = "right",
-    axis.text.x=element_text(size=8,colour=textcol,angle=45,hjust=1),
-    axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
-    axis.ticks=element_line(size=0.4),
-    plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
-    strip.text.x = element_text(size=10),
-    strip.text.y = element_text(angle=0,size=10),
-    plot.background=element_blank(),
-    panel.border=element_blank()
-  ) + 
-  labs(x="Exposure",y="",title="") +
-  scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="white")
-print(hm)  
-
 
   
 # save plot 

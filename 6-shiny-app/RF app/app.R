@@ -6,19 +6,24 @@ library(metafor)
 library(shiny)
 library(DT)
 library(xtable)
+library(here)
 
 #------------------------------------------------
 # Data Loading
 #------------------------------------------------
 
 # Load data
-try(setwd('/Users/sonali/Desktop/ki-longitudinal-manuscripts/'))
-try(setwd('C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/'))
-try(df <- readRDS('results/rf results/RF_results_processed.rds'))
+# try(setwd('/Users/sonali/Desktop/ki-longitudinal-manuscripts/'))
+# try(setwd('C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/'))
+# try(df <- readRDS('results/rf results/RF_results_processed.rds'))
 #try(load("data/testdata.Rdata"))
 
 
-source("0-project-functions/0_wast_inc_functions.R")
+#source(paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/0-project-functions/0_wast_inc_functions.R"))
+
+#Load data
+df <- readRDS(paste0(here::here(),"/shiny_rf_results.rds"))
+#df <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 
 
 #------------------------------------------------
@@ -67,19 +72,14 @@ ui <- navbarPage("HBGDki Results Dashboard",
                                           'Exposure Variable:',
                                           choices = unique(df$intervention_variable)),
                               # selectInput('region',
-                              #             'Region:',
+                              #             'region:',
                               #             choices = c("All","Asia","Africa", "Latin America")),
+                              #uiOutput('parameter'),
                               uiOutput('region'),
                               uiOutput('outcome'),
                               uiOutput('age'),
-                              uiOutput('adjusted'),
-                              uiOutput('pool_method'),
-                              selectInput('bwstrat',
-                                          'Stratified by birthweight:',
-                                          choices = c("No", "Yes"))
-                              # radioButtons('adjusted',
-                              #              'Covariate adjustement:',
-                              #              choices = c("Adjusted","Unadjusted")),
+                              uiOutput('adjusted')#,
+                              #uiOutput('pool_method')
                               # radioButtons('pool_method',
                               #              'Pooling method:',
                               #              choices = c("Random","Fixed"))
@@ -123,25 +123,25 @@ server <- function(input, output, session) {
   output$region <- renderUI({
     df <- df %>%
       filter(intervention_variable == input$exposure) %>%
-      drop_na(Region, outcome_variable, agecat, unadjusted, pooled)
+      drop_na(region, outcome_variable, agecat, adjusted, pooled)
 
     selectInput('region',
-                'Region:',
+                'region:',
                 choices = c('All', 'Asia', 'Latin America', 'Africa', 'Europe'))
   })
   output$outcome <- renderUI({
     if (input$region == 'All'){
       df <- df %>%
-        filter(pooled == 0 | (pooled == 1 & Region == 'Pooled'))
+        filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
     } else {
       df <- df %>%
-        filter(Region == input$region)
+        filter(region == input$region)
     }
     df <- df %>%
       filter(intervention_variable == input$exposure) %>%
       # filter(ifelse(input$region == 'All', pooled == 0 | 
-      #                 (pooled == 1 & Region == 'Pooled'), Region == input$region)) %>%
-      drop_na(outcome_variable, agecat, unadjusted, pooled)
+      #                 (pooled == 1 & region == 'Pooled'), region == input$region)) %>%
+      drop_na(outcome_variable, agecat, adjusted, pooled)
     
     selectInput('outcome',
                 'Outcome:',
@@ -150,18 +150,18 @@ server <- function(input, output, session) {
   output$age <- renderUI({
     if (input$region == 'All'){
       df <- df %>%
-        filter(pooled == 0 | (pooled == 1 & Region == 'Pooled'))
+        filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
     } else {
       df <- df %>%
-        filter(Region == input$region)
+        filter(region == input$region)
     }
     
     df <- df %>%
       filter(intervention_variable == input$exposure) %>%
       # filter(ifelse(input$region == 'All', pooled == 0 | 
-      #                 (pooled == 1 & Region == 'Pooled'), Region == input$region)) %>%
+      #                 (pooled == 1 & region == 'Pooled'), region == input$region)) %>%
       filter(outcome_variable == input$outcome) %>%
-      drop_na(agecat, unadjusted, pooled)
+      drop_na(agecat, adjusted, pooled)
 
     selectInput('age',
                 'Age Category:',
@@ -170,19 +170,19 @@ server <- function(input, output, session) {
   output$adjusted <- renderUI({
     if (input$region == 'All'){
       df <- df %>%
-        filter(pooled == 0 | (pooled == 1 & Region == 'Pooled'))
+        filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
     } else {
       df <- df %>%
-        filter(Region == input$region)
+        filter(region == input$region)
     }
     
     df <- df %>%
       filter(intervention_variable == input$exposure) %>%
       # filter(ifelse(input$region == 'All', pooled == 0 | 
-      #                 (pooled == 1 & Region == 'Pooled'), Region == input$Region)) %>%
+      #                 (pooled == 1 & region == 'Pooled'), region == input$region)) %>%
       filter(outcome_variable == input$outcome) %>%
       filter(agecat == input$age) %>%
-      drop_na(unadjusted, pooled)
+      drop_na(adjusted, pooled)
 
     radioButtons('adjusted',
                  'Covariate adjustment:',
@@ -190,22 +190,22 @@ server <- function(input, output, session) {
   })
   output$pool_method <- renderUI({
     if (input$region == 'All'){
-      df <- df %>% filter(pooled == 0 | (pooled == 1 & Region == 'Pooled'))
+      df <- df %>% filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
     } else {
-      df <- df %>% filter(Region == input$region)
+      df <- df %>% filter(region == input$region)
     }
     if (input$adjusted == 'Unadjusted'){
-      df <- df %>% filter(unadjusted == 1)
+      df <- df %>% filter(adjusted == 1)
     } else {
-      df <- df %>% filter(unadjusted == 0)
+      df <- df %>% filter(adjusted == 0)
     }
     df <- df %>%
       filter(intervention_variable == input$exposure) %>%
       # filter(ifelse(input$region == 'All', pooled == 0 | 
-      #                 (pooled == 1 & Region == 'Pooled'), Region == input$Region)) %>%
+      #                 (pooled == 1 & region == 'Pooled'), region == input$region)) %>%
       filter(outcome_variable == input$outcome) %>%
       filter(agecat == input$age) %>%
-      # filter(ifelse(input$adjusted == 'Unadjusted', unadjusted == 1, unadjusted == 0)) %>%
+      # filter(ifelse(input$adjusted == 'Unadjusted', adjusted == 1, adjusted == 0)) %>%
       drop_na(pooled)
 
     radioButtons('pool_method',
@@ -217,21 +217,16 @@ server <- function(input, output, session) {
   
   selectedData <- reactive({
     df <- df[df$outcome_variable == input$outcome, ]
-    if(input$adjusted == 'Unadjusted'){df <- df %>% filter(unadjusted == 1)}
-    if(input$adjusted == 'Adjusted'){df <- df %>% filter(unadjusted == 0)}
-    if(input$region!="All"){df <- df[df$Region==input$region,]}
-    if(input$region=="All"){df <- df[df$pooled==0 | (df$pooled==1 & df$Region=="Pooled"),]}
-    if(input$pool_method=="Random"){df <- df[df$pooled==0 | df$studyid=="Pooled - Random"|df$studyid=="Pooled - Asia - RE"|df$studyid=="Pooled - Afica - RE"|df$studyid=="Pooled - Latin America - RE",]}
-    if(input$pool_method=="Fixed"){df <- df[df$pooled==0 | df$studyid=="Pooled - Fixed"|df$studyid=="Pooled - Asia - FE"|df$studyid=="Pooled - Afica - FE"|df$studyid=="Pooled - Latin America - FE",]}
+    if(input$adjusted == 'Unadjusted'){df <- df %>% filter(adjusted == 0)}
+    if(input$adjusted == 'Adjusted'){df <- df %>% filter(adjusted == 1)}
+    if(input$region!="All"){df <- df[df$region==input$region,]}
+    if(input$region=="All"){df <- df[df$pooled==0 | (df$pooled==1 & df$region=="Pooled"),]}
+    #if(input$pool_method=="Random"){df <- df[df$pooled==0 | df$studyid=="Pooled - Random"|df$studyid=="Pooled - Asia - RE"|df$studyid=="Pooled - Afica - RE"|df$studyid=="Pooled - Latin America - RE",]}
+    #if(input$pool_method=="Fixed"){df <- df[df$pooled==0 | df$studyid=="Pooled - Fixed"|df$studyid=="Pooled - Asia - FE"|df$studyid=="Pooled - Afica - FE"|df$studyid=="Pooled - Latin America - FE",]}
     df <- df[df$intervention_variable == input$exposure, ]
     df <- df[df$agecat == input$age, ]
     
-    if(input$bwstrat=="No"){
-      d <- df %>% filter(birthweight_strat=="0")
-    }else{
-      d <- df %>% filter(birthweight_strat!="0")
-    }
-    d
+    df
   })
   
   #Subset to data for forest vs. pooled plots
@@ -256,8 +251,8 @@ server <- function(input, output, session) {
   
    output$forestPlot <- renderPlot({
       p<-ggplot(selectedDataForest(), aes(x=studyid)) +
-        geom_point(aes(shape=pooled, y=RR, fill=Region, color=Region), size = 4) +
-        geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Region)) +
+        geom_point(aes(shape=pooled, y=RR, fill=region, color=region), size = 4) +
+        geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=region)) +
        coord_flip() +
        #facet_wrap(~intervention_level, ncol=1) +
         labs(x = "Cohort", y = Ylab) +
@@ -277,17 +272,10 @@ server <- function(input, output, session) {
         ggtitle(paste0("Forest plot of cohort-specific associations for\n",
                       input$outcome, " outcome and\n", input$age)) +guides(shape=FALSE)
      
-     if(input$bwstrat=="No"){
+    
        if(length(unique(df$intervention_variable))>1){
         p<-p+facet_wrap(~intervention_level, ncol=1) 
        }
-     }else{
-       if(length(unique(df$intervention_variable))>1){
-          p<-p+facet_grid(birthweight_strat~intervention_level) 
-       }else{
-         p<-p+facet_wrap(~birthweight_strat, ncol=1) 
-       }
-     }
      
      p
    })
