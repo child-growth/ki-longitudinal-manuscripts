@@ -50,7 +50,7 @@ registerDoParallel(cores = 3)
 # created by 7_DHS-data-cleaning.R
 #---------------------------------------
 dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
-source("../shared/helper_sampling_weights.R")
+source("5-visualizations/shared/helper_sampling_weights.R")
 
 #---------------------------------------
 # compute weights per instructions from
@@ -70,8 +70,7 @@ df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
 # ki cohorts
 #---------------------------------------
 dhssubfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
-  di <-  dfilter(dhszregion == rgn & inghap == 1)
-  di = dhsz[dhsz$region == rgn & dhsz$inghap == 1, ]
+  di <-  dhsz %>% filter(region == rgn & inghap == 1)
   fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di)
   newd <- data.frame(agem = 0:24)
   # estimate approximate simultaneous confidence intervals
