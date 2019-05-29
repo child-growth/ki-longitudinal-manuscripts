@@ -734,6 +734,7 @@ rec.age=function(s.agem,r.agem,data){
 
 ##############################################
 # summary_rev_df
+# **Never Used**
 ##############################################
 # Documentation: summary_rev_df
 # Usage: summary_rev_df(d, Age="0-3 months")

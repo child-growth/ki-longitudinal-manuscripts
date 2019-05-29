@@ -59,28 +59,8 @@ source("../shared/helper_sampling_weights.R")
 dhsz <- dhaz %>%
   mutate(wgt = weight / 1000000)
 
-#---------------------------------------
-# make a WHO region variable
-# flag countries that overlap with the
-# ki cohorts
-#
-# Note: Philippines (Western Pacific)
-# and Pakistan (Middle East) are classified
-# into SEARO
-#---------------------------------------
-dhsz$region <- rep(NA, nrow(dhsz))
-dhsz <- dhsz %>%
-  mutate(region = case_when(
-    country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" | country == "AF7" | country == "KH6" | country == "VNT" ~ "South Asia",
-    country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "Latin America",
-    is.na(region) ~ "Africa"
-  )) %>%
-  mutate(inghap = ifelse(
-    country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7", 1, 0
-  ))
 
-dhsz <- dhsz %>%
-  mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
+#---------------------------------------
 # compute or load the DHS results
 # source("fig-DHS-plots-laz-compute.R")
 df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
@@ -90,7 +70,8 @@ df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
 # ki cohorts
 #---------------------------------------
 dhssubfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
-  di <- dhsz %>% filter(region == rgn & inghap == 1)
+  di <-  dfilter(dhszregion == rgn & inghap == 1)
+  di = dhsz[dhsz$region == rgn & dhsz$inghap == 1, ]
   fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di)
   newd <- data.frame(agem = 0:24)
   # estimate approximate simultaneous confidence intervals
