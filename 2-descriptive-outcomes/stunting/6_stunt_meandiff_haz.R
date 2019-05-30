@@ -19,7 +19,19 @@ load("U:/ucb-superlearner/data/stunting_data.RData")
 
 head(d)
 d <- d %>% subset(., select = -c(tr))
-d <- calc.prev.agecat(d)
+
+# using growth velocity cutoffs
+d = d %>% 
+  mutate(agecat=ifelse(agedays<3*30.4167,"0-3",
+                       ifelse(agedays>=3*30.4167 & agedays<6*30.4167,"3-6",
+                              ifelse(agedays>=6*30.4167 & agedays<9*30.4167,"6-9",
+                                     ifelse(agedays>=9*30.4167 & agedays<12*30.4167,"9-12",
+                                            ifelse(agedays>=12*30.4167 & agedays<15*30.4167,"12-15",
+                                                   ifelse(agedays>=15*30.4167 & agedays<18*30.4167,"15-18",
+                                                          ifelse(agedays>=18*30.4167 & agedays<21*30.4167,"18-21",
+                                                                 ifelse(agedays>=21*30.4167& agedays<24*30.4167,"21-24",""))))))))) %>%
+  mutate(agecat=factor(agecat,levels=c("0-3","3-6","6-9","9-12",
+                                       "12-15","15-18","18-21","21-24"))) 
 
 d <- d %>%  filter(!is.na(agecat)) 
 
