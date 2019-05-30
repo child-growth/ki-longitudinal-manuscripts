@@ -106,8 +106,7 @@ sev.prev <- bind_rows(
 # mean haz
 #----------------------------------------
 haz.data <- summary.haz(dprev)
-haz.grouped=dprev  %>% group_by(region)
-haz.region <- summary.haz(haz.grouped)$haz.res
+haz.region <- dprev %>% group_by(region) %>% do(summary.haz(.)$haz.res)
 haz.cohort <-
   haz.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
   rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
@@ -133,8 +132,7 @@ d_vel = d %>%
   mutate(agecat=factor(agecat,levels=c("0-3","3-6","6-9","9-12",
                                        "12-15","15-18","18-21","21-24"))) 
 haz.data.vel <- summary.haz.age.sex(d_vel)
-d_vel.grouped <- d_vel  %>% group_by(region)
-haz.region.vel <-  summary.haz.age.sex(d_vel.grouped)$haz.res
+haz.region.vel <-  d_vel  %>% group_by(region) %>% do(summary.haz.age.sex(.)$haz.res)
 haz.cohort.vel <-
   haz.data.vel$haz.cohort %>% 
   subset(., select = c(cohort, region, agecat, sex, nmeas,  meanhaz, 
@@ -154,8 +152,7 @@ saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity.RDS"))
 #----------------------------------------
 dmon <- calc.monthly.agecat(d)
 monthly.haz.data <- summary.haz(dmon)
-dmon.grouped <- dmon  %>% group_by(region)
-monthly.haz.region <- summary.haz(dmon.grouped)$haz.res
+monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(.)$haz.res)
 monthly.haz.cohort <-
   monthly.haz.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
   rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
@@ -205,8 +202,7 @@ saveRDS(quantiles,
 # Incidence proportion 3 month intervals
 #----------------------------------------
 ip.data3 <- summary.stunt.incprop(d3, agelist = agelst3, severe.stunted = F)
-d3_grouped <- d3 %>% group_by(region)
-ip.region3 <- summary.stunt.incprop(d3_grouped, agelist = agelst3)$ip.res
+ip.region3 <- d3 %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3)$ip.res)
 ip.cohort3 <-
   ip.data3$ip.cohort %>% 
   subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
@@ -224,8 +220,7 @@ ip_3 <- bind_rows(
 # stratify by birth
 #----------------------------------------
 ip.data3.birthstrat <- summary.stunt.incprop(d3_birthstrat, agelist = agelst3_birthstrat, severe.stunted = F)
-d3_birthstrat_grouped <- d3_birthstrat %>% group_by(region)
-ip.region3.birthstrat <- summary.stunt.incprop(d3_birthstrat_grouped, agelist = agelst3_birthstrat)$ip.res
+ip.region3.birthstrat <- d3_birthstrat %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3_birthstrat)$ip.res)
 ip.cohort3.birthstrat <-
   ip.data3.birthstrat$ip.cohort %>% 
   subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
@@ -242,8 +237,7 @@ ip_3.birthstrat <- bind_rows(
 # Incidence proportion 6 month intervals
 #----------------------------------------
 ip.data6 <- summary.stunt.incprop(d6, agelist = agelst6, severe.stunted = F)
-d6_grouped <- d6  %>% group_by(region) 
-ip.region6 <- summary.stunt.incprop(d6_grouped, agelist = agelst6)$ip.res
+ip.region6 <- d6  %>% group_by(region)%>% do(summary.stunt.incprop(., agelist = agelst6)$ip.res)
 ip.cohort6 <-
   ip.data6$ip.cohort %>%
   subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
@@ -263,7 +257,7 @@ ip_6 <- bind_rows(
 # 3 month interval
 #----------------------------------------
 sev.ip.data3 <- summary.stunt.incprop(d3, agelist = agelst3, severe.stunted = T)
-sev.ip.region3 <- summary.stunt.incprop(d3_grouped, agelist = agelst3, severe.stunted = T)$ip.res
+sev.ip.region3 <- d3 %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst3, severe.stunted = T)$ip.res)
 sev.ip.cohort3 <-
   sev.ip.data3$ip.cohort %>% 
   subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
@@ -281,7 +275,7 @@ sev.ip3 <- bind_rows(
 # 6 month interval
 #----------------------------------------
 sev.ip.data6 <- summary.stunt.incprop(d6, agelist = agelst6, severe.stunted = T)
-sev.ip.region6 <- summary.stunt.incprop(d6_grouped, agelist = agelst6, severe.stunted = T)$ip.res
+sev.ip.region6 <- d6 %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = agelst6, severe.stunted = T)$ip.res)
 sev.ip.cohort6 <-
   sev.ip.data6$ip.cohort %>% 
   subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
@@ -304,7 +298,7 @@ sev.ip6 <- bind_rows(
 # Cumulative Incidence  - 3 month intervals
 #----------------------------------------
 ci.data3 <- summary.ci(d3, agelist = agelst3)
-ci.region3 <- summary.ci(d3_grouped, agelist = agelst3)$ci.res
+ci.region3 <- d3 %>% group_by(region) %>% do(summary.ci(., agelist = agelst3)$ci.res)
 ci.cohort3 <-
   ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
@@ -324,8 +318,7 @@ cuminc3 <- bind_rows(
 # stratify by birth 
 #----------------------------------------
 ci.data3.birthstrat <- summary.ci(d3_birthstrat, birthstrat=TRUE, agelist = agelst3_birthstrat)
-d3_birthstrat_grouped <- d3_birthstrat %>% group_by(region)
-ci.region3.birthstrat <- summary.ci(d3_birthstrat_grouped, agelist = agelst3_birthstrat)$ci.res
+ci.region3.birthstrat <- d3_birthstrat %>% group_by(region) %>% do(summary.ci(., agelist = agelst3_birthstrat)$ci.res)
 ci.cohort3.birthstrat <-
   ci.data3.birthstrat$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
@@ -344,7 +337,7 @@ cuminc3.birthstrat <- bind_rows(
 # Cumulative Incidence  - 6 month intervals
 #----------------------------------------
 ci.data6 <- summary.ci(d6, agelist = agelst6)
-ci.region6 <- summary.ci(d6_grouped, agelist = agelst6)$ci.res
+ci.region6 <- d6 %>% group_by(region) %>% do(summary.ci(., agelist = agelst6)$ci.res)
 ci.cohort6 <-
   ci.data6$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
@@ -363,8 +356,7 @@ cuminc6 <- bind_rows(
 # severe
 #----------------------------------------
 sev.ci.data3 <- summary.ci(d3, agelist = agelst3, severe.stunted = T)
-d3_grouped <- d3 %>% group_by(region)
-sev.ci.region3 <- summary.ci(d3_grouped, agelist = agelst3, severe.stunted = T)$ci.res
+sev.ci.region3 <- d3 %>% group_by(region) %>% do(summary.ci(., agelist = agelst3, severe.stunted = T)$ci.res)
 sev.ci.cohort3 <-
   sev.ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
@@ -382,7 +374,7 @@ sev.cuminc3 <- bind_rows(
 # severe
 #----------------------------------------
 sev.ci.data6 <- summary.ci(d6, agelist = agelst6)
-sev.ci.region6 <- summary.ci(d6_grouped, agelist = agelst6, severe.stunted = T)$ci.res
+sev.ci.region6 <- d6 %>% group_by(region) %>% do(summary.ci(., agelist = agelst6, severe.stunted = T)$ci.res)
 sev.ci.cohort6 <-
   sev.ci.data6$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
