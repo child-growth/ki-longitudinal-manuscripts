@@ -253,7 +253,7 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           nmeas.f = paste0("N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE), " ", nlab),
           nstudy.f = paste0("N=", nstudies, " studies")
         ) %>%
-        select(nstudies, nmeas, agecat, est, se, lb, ub, nmeas.f, nstudy.f) %>%
+        dplyr::select(nstudies, nmeas, agecat, est, se, lb, ub, nmeas.f, nstudy.f) %>%
         as.tibble()
       rownames(out) <- NULL
       # If input is more than 1 row (multiple studies), pool across studies with rma() function from metafor package
