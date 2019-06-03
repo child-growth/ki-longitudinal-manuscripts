@@ -243,7 +243,7 @@ summary.haz <- function(d){
   
   # estimate random effects, format results
   haz.res=lapply(as.list(levels(haz.data$agecat)),function(x) 
-    fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+    fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
   haz.res=as.data.frame(rbindlist(haz.res))
   haz.res$agecat=factor(levels(haz.data$agecat))
   haz.res$ptest.f=sprintf("%0.2f",haz.res$est)
@@ -318,11 +318,11 @@ summary.haz.age.sex <- function(d){
   # estimate random effects, format results
   haz.res.female=lapply((levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data %>% filter(sex == "Female"), 
-                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
   
   haz.res.male=lapply((levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data %>% filter(sex == "Male"), 
-                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
   
   haz.df.female = as.data.frame(rbindlist(haz.res.female)) %>%
     mutate(sex = "Female")
