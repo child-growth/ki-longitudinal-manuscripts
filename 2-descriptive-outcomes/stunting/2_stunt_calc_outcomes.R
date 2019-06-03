@@ -318,7 +318,8 @@ cuminc3 <- bind_rows(
 # stratify by birth 
 #----------------------------------------
 ci.data3.birthstrat <- summary.ci(d3_birthstrat, birthstrat=TRUE, agelist = agelst3_birthstrat)
-ci.region3.birthstrat <- d3_birthstrat %>% group_by(region) %>% do(summary.ci(., agelist = agelst3_birthstrat)$ci.res)
+ci.region3.birthstrat <- d3_birthstrat %>% group_by(region) %>%
+  do(summary.ci(., agelist = agelst3_birthstrat,  birthstrat=TRUE, severe.stunted=FALSE)$ci.res)
 ci.cohort3.birthstrat <-
   ci.data3.birthstrat$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
