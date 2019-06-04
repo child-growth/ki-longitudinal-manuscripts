@@ -8,13 +8,23 @@ source("5-visualizations/0-plot-themes.R")
 theme_set(theme_ki())
 
 
-
 #Load mortality outcomes
-mort <- readRDS("U:/UCB-SuperLearner/Stunting rallies/mortality.rds")
-mort <- mort %>% filter(!is.na(agedth))
-#  load full data
-d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
+df <- mort <- readRDS("U:/UCB-SuperLearner/Manuscript analysis data/mortality.rds")
+mort <- mort %>% filter(!is.na(agedth)) %>%
+  subset(., select = -c(agedays))
 
+df <- df %>% filter(!(studyid %in% c("ki1055867-WomenFirst","ki1000301-DIVIDS","ki0047075b-MAL-ED", 
+                                     "ki1000304b-SAS-FoodSuppl", "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal"))) #drop studies qith too few outcomes
+length(unique(df$studyid[!is.na(df$dead),]))
+table(df$dead)
+df %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
+  summarize(sum(dead, na.rm=T), n())
+
+
+
+
+#  load full data
+dfull<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
 
 
 #--------------------------------------------
@@ -22,8 +32,18 @@ d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
 #--------------------------------------------
 
 #change names to lower case
-colnames(d) <- tolower(colnames(d))
-d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, whz, waz, muaz))
+colnames(dfull) <- tolower(colnames(dfull))
+d<-dfull %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, whz, waz, muaz))
+
+#--------------------------------------------
+# Examine the number of obs and children in extra studies
+#--------------------------------------------
+
+df2 <- d %>% filter(studyid %in% c("ki1112895-Burkina Faso Zn","ki1000304-VITAMIN-A","ki1148112-iLiNS-DOSE","ki1148112-iLiNS-DYAD-M")) %>% filter(!is.na(haz)) %>%
+            filter(haz > (-6) & haz < 6, whz > (-5) & whz < 5)
+df2 %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
+  summarize(n())
+df2 %>%  summarize(n())
 
 
 #--------------------------------------------
@@ -32,12 +52,13 @@ d<-d %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, whz, waz
 
 #convert subjid to character for the merge with covariate dataset
 d$subjid <- as.character(d$subjid)
+mort$subjid <- as.character(mort$subjid)
 
 dim(mort)
-df <- left_join(mort, d, by=c("studyid","country","subjid"))
-dim(df)
+df_full <- left_join(mort, d, by=c("studyid","country","subjid"))
+dim(df_full)
 
-df <- df %>% filter(!is.na(haz))
+df <- df_full %>% filter(!is.na(haz))
 
 
 unique(df$studyid)
@@ -59,7 +80,7 @@ df <- df %>% ungroup() %>% arrange(agedth) %>%
                     haz_change=lead(haz) - haz
                     ) %>%
             mutate(status = case_when(
-              sevstunt==0 & sevwast==0 & co==1   ~ "Co-occurrent wasting and stunting",
+              sevstunt==0 & sevwast==0 & co==1   ~ "Wasted and stunted",
               wast==1 & sevwast==0 & co==0   ~ "Wasted",
               wast==1 & sevwast==1   ~ "Severely wasted",
               stunt==1 & sevstunt==0 & co==0   ~ "Stunted",
@@ -77,18 +98,21 @@ df <- df %>% ungroup() %>% arrange(agedth) %>%
                                               # "Wasted+Stunted+Underweight"
                                               "Severely stunted",
                                               "Severely wasted",
-                                              "Co-occurrent wasting and stunting",
+                                              "Wasted and stunted",
                                               "Co-occurrent severe wasting and stunting"
   )))
 
 
 
 df$severe <- ifelse(df$status %in% c("Severely stunted", "Severely wasted", "Co-occurrent severe wasting and stunting"), "Severe", "Not severe")
+df$severe2 <- ifelse(df$status %in% c("Severely stunted", "Severely wasted", "Co-occurrent severe wasting and stunting", "Wasted and stunted"), "Severe", "Not severe")
+
 df$status2 <- "Not faltered"
 df$status2[grepl("asted",df$status)] <- "Wasted"
 df$status2[grepl("tunted",df$status)] <- "Stunted"
-df$status2[grepl("Co-occurrent",df$status)] <- "Co-occurrent wasting\nand stunting"
-df$status2 <- factor(df$status2, levels=c("Not faltered", "Stunted", "Wasted", "Co-occurrent wasting\nand stunting"))
+df$status2[df$status=="Wasted and stunted"] <- "Wasted and stunted"
+df$status2 <- factor(df$status2, levels=c("Not faltered", "Stunted", "Wasted", "Wasted and stunted"))
+table(df$status2)
 summary(df$haz_change)
 summary(df$whz_change)
 
@@ -134,9 +158,13 @@ plot_cols[7] = tableau10[5]
 
 plot_cols2 <- plot_cols[c(1,2,3,6)]
 
+#drop deaths after 2 years
+df <- df %>% filter(agedth < 731) #%>% 
+  #mutate(id=paste0(studyid,subjid))
+
 p <- ggplot() + 
   geom_point(data = df, aes(x=agedth, y=id), color="grey40") +
-  geom_point(data = df, aes(x=agedays, y=id, color=status2, alpha=severe, shape=severe)) +
+  geom_point(data = df, aes(x=agedays, y=id, color=status2, alpha=severe2, shape=severe)) +
   scale_color_manual("", values = plot_cols2, guide=guide_legend(title="Growth faltering")) +
   scale_shape_discrete(guide=guide_legend(title="Severity")) +
   scale_alpha_discrete(range=c(0.5, 1), guide=guide_legend(title="Severity")) +
@@ -153,7 +181,8 @@ print(p)
 
 ggsave(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing.png"), width=8, height=5)
 
-
+#Save plot object
+save(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing-plot-object.Rdata"))
 
 # p <- ggplot() + 
 #   geom_point(data = df, aes(x=agedth, y=id)) +

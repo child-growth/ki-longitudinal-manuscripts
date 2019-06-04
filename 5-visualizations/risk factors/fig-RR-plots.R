@@ -14,16 +14,9 @@ theme_set(theme_ki())
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
-#Mark region
-dfull <- mark_region(dfull)
 
 unique(dfull$type)
 d <- dfull %>% filter(type=="RR")
-
-#Drop unadjusted estimates
-#mark unadjusted
-d$adjusted <- ifelse(d$adjustment_set=="unadjusted", 0, 1)
-d <- d %>% filter(adjusted == 1)
 
 #drop morbidity and mortality analysis
 d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")

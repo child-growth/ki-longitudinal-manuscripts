@@ -6,9 +6,9 @@ setwd(paste0(here(),"/results"))
 
 load("shiny_desc_data.Rdata")
 wast <- shiny_desc_data
-load("shiny_desc_data_stunting_objects.Rdata")
+load(paste0(res_dir,"shiny_desc_data_stunting_objects.Rdata"))
 stunt <- shiny_desc_data
-load("shiny_desc_data_stunting_objects_monthly24.Rdata")
+load(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.Rdata"))
 stunt_monthly24 <- shiny_desc_data
 load("co_desc_data.Rdata")
 

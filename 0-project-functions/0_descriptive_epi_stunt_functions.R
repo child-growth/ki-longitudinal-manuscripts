@@ -1,9 +1,27 @@
-
-
-
+##############################################
+# summary.prev.haz
+##############################################
+# Documentation: summary.prev.haz
+# Usage: summary.prev.haz(d, severe.stunted = F)
+# Description: Provides summary of studies, including count of measurements, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+# severe.stunted: a boolean, with default value FALSE. 
+#   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
+#   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+#
+# Output: A list of tables:
+#   - prev.data: includes the number of measurements, proportion/count of stunted children in each study for each age category
+#   - prev.res: estimated random effects and CI bounds of studies grouped by age category
+#   - prev.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.prev.haz <- function(d, severe.stunted=F){
-  
+  d = dprev
   # take mean of multiple measurements within age window
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
@@ -37,46 +55,95 @@ summary.prev.haz <- function(d, severe.stunted=F){
                             lab=  levels(prev.data$agecat))
   
   # estimate random effects, format results
-  prev.res=lapply((levels(prev.data$agecat)),function(x) 
-    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
+  prev.res=lapply((levels(prev.data$agecat)), function(x)
+    fit.rma(data=prev.data, ni="nmeas", xi="nxprev",age=x ,measure="PLO",nlab="children"))
   prev.res=as.data.frame(rbindlist(prev.res))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
   prev.res$ub=as.numeric(prev.res$ub)
   prev.res = prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
-  prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
+
+  prev.res$agecat=factor(levels(prev.data$agecat))
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
   return(list(prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort))
 }
 
+##############################################
+# summary.ci
+##############################################
+# Documentation: summary.ci
+# Usage: summary.ci(d, severe.stunted=F, 
+#                      agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
+#                                   "12-15 months","15-18 months","18-21 months","21-24 months"))
+# Description: Provides summary for cummulative indicidence of studies, including number of incident cases, estimate of random effeects, and results from specific cohorts
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+# severe.stunted: a boolean, with default value FALSE. 
+#   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
+#   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+# agelist: a list of strings that describe the ranges of each age category.
+#
+# Output: A list of tables:
+#   - cuminc.data: includes the number of measurements, number of incident cases in each study for each age category
+#   - ci.res: estimated random effects and CI bounds of studies grouped by age category
+#   - ci.cohort: estimated random effects and CI bounds for each specific cohort
 
-
-summary.ci <- function(d,  severe.stunted=F, 
+summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
                        agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
                                     "12-15 months","15-18 months","18-21 months","21-24 months")){
   
   
   # identify ever stunted children
-  evs = d %>%
-    filter(!is.na(agecat)) %>%
-    group_by(studyid,country,subjid) %>%
-    arrange(studyid,subjid) %>%
-    #create variable with minhaz by age category, cumulatively
-    mutate(minhaz=ifelse(agecat=="0-3 months",min(haz[agecat=="0-3 months"]),
-                         ifelse(agecat=="3-6 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"]),
-                                ifelse(agecat=="6-9 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
-                                       ifelse(agecat=="9-12 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
-                                              ifelse(agecat=="12-15 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
-                                                     ifelse(agecat=="15-18 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
-                                                            ifelse(agecat=="18-21 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
-                                                                   ifelse(agecat=="21-24 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
-                                                                          min(haz)))))))))) %>%
+  if(!birthstrat){
+
+    evs = d %>%
+      filter(!is.na(agecat)) %>%
+      group_by(studyid,country,subjid) %>%
+      arrange(studyid,subjid) %>%
+      #create variable with minhaz by age category, cumulatively
+      mutate(minhaz=ifelse(agecat=="0-3 months",min(haz[agecat=="0-3 months"]),
+                           ifelse(agecat=="3-6 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"]),
+                                  ifelse(agecat=="6-9 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                         ifelse(agecat=="9-12 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                ifelse(agecat=="12-15 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                       ifelse(agecat=="15-18 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                              ifelse(agecat=="18-21 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                     ifelse(agecat=="21-24 months",min(haz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                            min(haz))))))))))
+  }
+  
+  if(birthstrat){
+    
+    evs = d %>%
+      filter(!is.na(agecat)) %>%
+      group_by(studyid,country,subjid) %>%
+      arrange(studyid,subjid) %>%
+      #create variable with minhaz by age category, cumulatively
+      mutate(minhaz=ifelse(agecat=="Birth",min(haz[agecat=="Birth"]),
+                      ifelse(agecat=="1 day-3 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months"]),
+                           ifelse(agecat=="3-6 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"]),
+                                  ifelse(agecat=="6-9 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                         ifelse(agecat=="9-12 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                ifelse(agecat=="12-15 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                       ifelse(agecat=="15-18 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                              ifelse(agecat=="18-21 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                     ifelse(agecat=="21-24 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                            min(haz)))))))))))
+  }
+  
+  
     # create indicator for whether the child was ever stunted
     # by age category
+    evs = evs %>%  
     group_by(studyid,country,agecat,subjid) %>%
-    summarise(minhaz=min(minhaz)) 
+      summarise(minhaz=min(minhaz)) 
   
 
     if(!severe.stunted){
@@ -117,19 +184,33 @@ summary.ci <- function(d,  severe.stunted=F,
   ci.res=lapply((agelist),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
   ci.res=as.data.frame(rbindlist(ci.res))
-  ci.res[,4]=as.numeric(ci.res[,4])
-  ci.res[,6]=as.numeric(ci.res[,6])
-  ci.res[,7]=as.numeric(ci.res[,7])
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
-  
+  ci.res$agecat=levels(cuminc.data$agecat)
   
   return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
 }
 
 
-
+##############################################
+# summary.haz
+##############################################
+# Documentation: summary.haz
+# Usage: summary.haz(d)
+# Description: Provides summary of studies, including count of measurements, mean HAZ, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+#
+# Output: A list of tables:
+#   - haz.data: includes the number of measurements, mean HAZ in each study for each age category
+#   - haz.res: estimated random effects and CI bounds of studies grouped by age category
+#   - haz.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.haz <- function(d){
   
@@ -153,7 +234,7 @@ summary.haz <- function(d){
   haz.data <- droplevels(haz.data)
   
   # cohort specific results
-  haz.cohort=lapply((levels(haz.data$agecat)),function(x) 
+  haz.cohort=lapply(as.list(levels(haz.data$agecat)),function(x) 
     fit.escalc(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", measure="GEN",age=x))
   haz.cohort=as.data.frame(rbindlist(haz.cohort))
   haz.cohort=cohort.format(haz.cohort,y=haz.cohort$yi,
@@ -161,18 +242,34 @@ summary.haz <- function(d){
   
   
   # estimate random effects, format results
-  haz.res=lapply((levels(haz.data$agecat)),function(x) 
-    fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+  haz.res=lapply(as.list(levels(haz.data$agecat)),function(x) 
+    fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
   haz.res=as.data.frame(rbindlist(haz.res))
-  haz.res[,4]=as.numeric(haz.res[,4])
-  haz.res[,6]=as.numeric(haz.res[,6])
-  haz.res[,7]=as.numeric(haz.res[,7])
-  haz.res$agecat=factor(haz.res$agecat,levels=levels(haz.data$agecat))
-  haz.res$ptest.f=sprintf("%0.0f",haz.res$est)
+  haz.res$agecat=factor(levels(haz.data$agecat))
+  haz.res$ptest.f=sprintf("%0.2f",haz.res$est)
   
   
   return(list(haz.data=haz.data, haz.res=haz.res, haz.cohort=haz.cohort))
 }
+
+##############################################
+# summary.haz.age.sex
+##############################################
+# Documentation: summary.haz.age.sex
+# Usage: summary.haz.age.sex(d)
+# Description: Provides summary of studies with age and sex categories, including count of measurements, mean HAZ, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+#
+# Output: A list of tables:
+#   - haz.data: includes the number of measurements, mean HAZ in each study for each pair of sex and age category
+#   - haz.res: estimated random effects and CI bounds of studies grouped by sex and age category
+#   - haz.cohort: estimated random effects and CI bounds for each specific cohort
 
 
 # summarize mean within age and sex categories
@@ -200,11 +297,11 @@ summary.haz.age.sex <- function(d){
   # cohort specific results stratified within grouping variables
   haz.cohort.female=lapply(levels(haz.data$agecat),function(x) 
     fit.escalc(data=haz.data %>% filter(sex == "Female"),
-                        yi="meanhaz", vi="varhaz", age=x))
-  
+                        ni="nmeas",yi="meanhaz", vi="varhaz", age=x, measure = "GEN"))
+
   haz.cohort.male=lapply(levels(haz.data$agecat),function(x) 
     fit.escalc(data=haz.data %>% filter(sex == "Male"),
-                    yi="meanhaz", vi="varhaz", age=x))
+               ni="nmeas",yi="meanhaz", vi="varhaz", age=x, measure = "GEN"))
   
   haz.cohort.female.df = as.data.frame(rbindlist(haz.cohort.female)) %>%
     mutate(sex = "Female")
@@ -221,11 +318,11 @@ summary.haz.age.sex <- function(d){
   # estimate random effects, format results
   haz.res.female=lapply((levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data %>% filter(sex == "Female"), 
-                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
   
   haz.res.male=lapply((levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data %>% filter(sex == "Male"), 
-                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x))
+                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
   
   haz.df.female = as.data.frame(rbindlist(haz.res.female)) %>%
     mutate(sex = "Female")
@@ -238,7 +335,7 @@ summary.haz.age.sex <- function(d){
   # haz.res[,4]=as.numeric(haz.res[,4])
   # haz.res[,6]=as.numeric(haz.res[,6])
   # haz.res[,7]=as.numeric(haz.res[,7])
-  haz.res$agecat=factor(haz.res$agecat)
+  haz.res$agecat=levels(haz.res$agecat)
   haz.res$sex=factor(haz.res$sex)
   
   haz.res$ptest.f=sprintf("%0.0f",haz.res$est)
@@ -252,82 +349,31 @@ summary.haz.age.sex <- function(d){
 
 
 
-
-
-
-
-summary.rec.stunt <- function(d){
-  
-  # subset to stunted between birth and 3 months
-  stunt.24 <- d %>%
-    filter(agedays<=25*30.4167) %>%
-    # identify last two measurements prior to 24 months
-    group_by(studyid,country,subjid) %>%
-    mutate(rank=min_rank(-agedays)) %>%
-    # drop last 2 measurements prior to 24 m
-    filter(rank> 2) %>%
-    # create stunting indicator
-    mutate(measid=seq_along(subjid))  %>%
-    mutate(stunted=ifelse(haz< -2,1,0),
-           lagstunted=lag(stunted),
-           leadstunted=lead(stunted))  %>%
-    # unique stunting episode
-    mutate(sepisode=ifelse(lagstunted==0 & stunted==1 & leadstunted==1 |
-                             stunted==1 & measid==1,1,0)) %>%
-    # identify whether child had stunting episode by 24 months 
-    summarise(stunted24=max(sepisode,na.rm=TRUE))
-  
-  rec.24 <- d %>%
-    filter(agedays<=25*30.4167) %>%
-    # identify last two measurements prior to 24 months
-    group_by(studyid,country,subjid) %>%
-    mutate(rank=min_rank(-agedays)) %>%
-    # keep last two measurements 
-    filter(rank<= 2) %>%
-    # flag kids with 2 measurements not stunted
-    mutate(rec=ifelse(haz>= -2,1,0)) %>%
-    mutate(recsum=cumsum(rec)) %>%
-    # one row for each kid, indicator for recovered
-    summarise(maxrec=max(recsum)) %>%
-    mutate(rec24=ifelse(maxrec==2,1,0)) %>%
-    select(-c(maxrec))
-  
-  
-  rev <- full_join(stunt.24, rec.24,by=c("studyid","country","subjid")) %>%
-    # subset to kids who were stunted
-    filter(stunted24==1) %>%
-    mutate(srec24=ifelse(stunted24==1 & rec24==1,1,0)) %>%
-    mutate(snorec24=ifelse(stunted24==1 & rec24==0,1,0)) 
-  
-  rev = rev %>% mutate(stunted24s=ifelse(stunted24==1,"Stunted","Not stunted"))
-  rev = rev %>% mutate(rec24s=ifelse(rec24==1,"Recover","Not recover"))
-  
-  # prepare data for pooling 
-  rev.data <- rev %>%
-    group_by(studyid,country) %>%
-    summarise(mn.r=mean(srec24,na.rm=TRUE),
-              n.r=sum(srec24,na.rm=TRUE),
-              N.r=sum(!is.na(srec24)),
-              mn.s=mean(snorec24,na.rm=TRUE),
-              n.s=sum(snorec24,na.rm=TRUE),
-              N.s=sum(!is.na(snorec24))) %>%
-    mutate(agecat=as.factor("24 months")) %>%
-    filter(n.r!=0 & N.r!=0)
-  
-  
-  # estimate random effects, format results
-  fit.r=fit.rma(data=rev.data,ni="N.r", xi="n.r",age="24 months",measure="PLO",nlab="stunted children")
-  fit.r = fit.r %>%
-    mutate(est=est*100,lb=lb*100,ub=ub*100)
-  fit.r$ptest.f=sprintf("%0.0f",fit.r$est)
-  
-  # cohort specific results
-  rec.cohort=fit.escalc(data=rev.data,ni="N.r", xi="n.r",age="24 months",meas="PLO")
-  rec.cohort=cohort.format(rec.cohort, y=rec.cohort$yi,lab="24 months")
-  
-  return(list(rev.data=rev.data, rev.res=fit.r, rec.cohort=rec.cohort))
-}
-
+##############################################
+# summary.stunt.incprop
+##############################################
+# Documentation: summary.stunt.incprop
+# Usage: summary.stunt.incprop(d, 
+#                              severe.stunted=F, 
+#                              agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
+#                                           "12-15 months","15-18 months","18-21 months","21-24 months"))
+# Description: Provides summary of studies for incidence proportions, including count of measurements, incidence proportions, estimate of random effects, and cohort specific results.
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agecat
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+# severe.stunted: a boolean, with default value FALSE. 
+#   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
+#   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+# agelist: a list of strings that describe the ranges of each age category.
+#
+# Output: A list of tables:
+#   - ip.data: includes the number of measurements, incidence proportions in each study for each age category
+#   - ip.res: estimated random effects and CI bounds of studies grouped by age category
+#   - ip.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")){
   
@@ -371,206 +417,21 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
   ci.cohort=cohort.format(ci.cohort,y=ci.cohort$yi,
                           lab=  agelist)
   
-  
-  #fit.rma(data=cuminc.data,ni="N", xi="ncases",age="0-3 months",measure="PLO",nlab=" measurements")
-  
   # estimate random effects, format results
   ci.res=lapply((agelist),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
   ci.res=as.data.frame(rbindlist(ci.res))
-  ci.res[,4]=as.numeric(ci.res[,4])
-  ci.res[,6]=as.numeric(ci.res[,6])
-  ci.res[,7]=as.numeric(ci.res[,7])
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
+  ci.res$agecat=levels(cuminc.data$agecat)
   
   
-  return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
-}
-
-
-# Stunting incidence person-time calculation
-summary.stunt.ir <- function(d, agelist, sev_stunt=F){
-  
-  Cutoff= ifelse(sev_stunt, -3, -2)
-  
-  inc.prep = d %>%
-    filter(!is.na(agecat) & agedays>1) %>%
-    group_by(studyid,subjid) %>%
-    arrange(studyid,subjid,agedays) %>%
-    
-    # create id for measurement within person
-    mutate(measid=seq_along(subjid)) %>%
-    # duration between measurements 
-    mutate(agedayslag=lag(agedays)) %>%
-    mutate(agedayslag=ifelse(is.na(agedayslag),0,agedayslag)) %>%
-    mutate(deltat=ifelse(measid==1 & agecat=="Birth",0,agedays-agedayslag)) %>%
-    
-    # create indicator for whether haz at t < haz at t-1
-    mutate(hazlag=lag(haz)) %>%
-    mutate(newcase=ifelse(measid==1,ifelse(haz< Cutoff, 1,0),
-                          ifelse(hazlag>= Cutoff & haz< Cutoff,1,0))) %>%
-    mutate(newcaselag=lag(newcase))%>%
-    mutate(newcaselag=ifelse(measid==1,0,newcaselag))%>%
-    mutate(cnewcaselag=cumsum(newcaselag)) %>%
-    
-    # create at risk variable
-    mutate(atrisk=ifelse(cnewcaselag>=1,0,1)) %>%
-    # create inc case variable
-    mutate(inccase=ifelse(cnewcaselag>=1,0,newcase)) %>%
-    
-    # create delta t with half interval for row
-    # with incident case assuming it occurred halfway through
-    # the follow-up period
-    mutate(deltat_half=deltat/2) %>%
-    mutate(deltat2=ifelse(inccase==0,deltat,deltat_half)) %>%
-    
-    # create person days
-    mutate(pdays=atrisk*deltat2) %>%
-    
-    # clean up
-    select(-c(hazlag,newcase,newcaselag, cnewcaselag,agedayslag,
-              deltat,deltat_half))
-  
-  # manually calculate incident cases, person-time at risk at each time point
-  inc.prep %>%
-    group_by(agecat) %>%
-    summarise(inc.case=sum(inccase),ptar=sum(pdays)) %>%
-    mutate(cruderate=inc.case/ptar)
-  
-  
-  # count incident cases and sum person time at risk per study by age
-  # exclude time points if number of children per age
-  # in a study is <50  
-  inc.data = inc.prep %>%
-    group_by(studyid,country,agecat) %>%
-    summarise(ptar=sum(pdays),
-              ncase=sum(inccase),
-              nchild=length(unique(subjid)),
-              nstudy=length(unique(studyid))) %>%
-    filter(nchild>=50 & !is.na(agecat))
-  
-  
-  # cohort specific results
-  inc.cohort=lapply((agelist),function(x) 
-    fit.escalc(data=inc.data,ni="ptar", xi="ncase",age=x,meas="IR"))
-  inc.cohort=as.data.frame(rbindlist(inc.cohort))
-  inc.cohort$agecat=factor(inc.cohort$agecat,levels=
-                             c(agelist))
-  inc.cohort$yi.f=sprintf("%0.0f",inc.cohort$yi)
-  inc.cohort$cohort=paste0(inc.cohort$studyid,"-",inc.cohort$country)
-  inc.cohort = inc.cohort %>% mutate(region = ifelse(country=="BANGLADESH" | country=="INDIA"|
-                                                       country=="NEPAL" | country=="PAKISTAN"|
-                                                       country=="PHILIPPINES" ,"Asia",
-                                                     ifelse(country=="BURKINA FASO"|
-                                                              country=="GUINEA-BISSAU"|
-                                                              country=="MALAWI"|
-                                                              country=="SOUTH AFRICA"|
-                                                              country=="TANZANIA, UNITED REPUBLIC OF"|
-                                                              country=="ZIMBABWE"|
-                                                              country=="GAMBIA","Africa",
-                                                            ifelse(country=="BELARUS","Europe",
-                                                                   "Latin America"))))
-  
-  
-  # estimate random effects, format results
-  ir.res=lapply((agelist),function(x)
-    fit.rma(data=inc.data,ni="ptar", xi="ncase",age=x,measure="IR",nlab=" person-days"))
-  ir.res=as.data.frame(rbindlist(ir.res))
-  ir.res[,4]=as.numeric(ir.res[,4])
-  ir.res[,6]=as.numeric(ir.res[,6])
-  ir.res[,7]=as.numeric(ir.res[,7])
-  
-  ir.res$pt.f=paste0("N=",format(ir.res$nmeas,big.mark=",",scientific=FALSE),
-                     " person-days")
-  ir.res$ptest.f=sprintf("%0.02f",ir.res$est*1000)
-  
-  return(list(ir.data=inc.data, ir.res=ir.res, ir.cohort=inc.cohort))
-  
+  return(list(ip.data=cuminc.data, ip.res=ci.res, ip.cohort=ci.cohort))
 }
 
 
 
-
-# inputs:
-rec.age=function(s.agem,r.agem,data){
-  # subset to stunted between birth and 3 months
-  stunt <- data %>%
-    filter(agem<=s.agem) 
-  
-  if(s.agem>1){
-    # identify last two measurements prior to 24 months
-    stunt <- stunt %>%
-      group_by(studyid,country,subjid) %>%
-      mutate(rank=min_rank(-agedays)) %>%
-      # drop last 2 measurements prior to 24 m
-      filter(rank> 2) 
-  }
-  # create stunting indicator
-  stunt <- stunt %>%
-    mutate(measid=seq_along(subjid))  %>%
-    mutate(stunted=ifelse(haz< -2,1,0),
-           lagstunted=lag(stunted),
-           leadstunted=lead(stunted))  %>%
-    # unique stunting episode
-    mutate(sepisode=ifelse(lagstunted==0 & stunted==1 & leadstunted==1 |
-                             stunted==1 & measid==1,1,0)) %>%
-    # identify whether child had stunting episode by 24 months 
-    group_by(studyid,country,subjid) %>%
-    summarise(stunted=max(sepisode,na.rm=TRUE))
-  
-  rec.prev <- data %>%
-    filter(agem<=s.agem) %>%
-    # identify last two measurements prior to 24 months
-    group_by(studyid,country,subjid) %>%
-    mutate(rank=min_rank(-agedays)) %>%
-    # keep last two measurements 
-    filter(rank<= 2) %>%
-    # flag kids with 2 measurements not stunted
-    mutate(rec=ifelse(haz>= -2,1,0)) %>%
-    mutate(recsum=cumsum(rec)) %>%
-    # one row for each kid, indicator for recovered
-    summarise(maxrec=max(recsum)) %>%
-    mutate(rec.prev=ifelse(maxrec==2,1,0)) %>%
-    select(-c(maxrec))
-  
-  rec <- data %>%
-    filter(agem>s.agem & agem<=r.agem) %>%
-    # identify last two measurements prior to 24 months
-    group_by(studyid,country,subjid) %>%
-    mutate(rank=min_rank(-agedays)) %>%
-    # keep last two measurements 
-    filter(rank<= 2) %>%
-    # flag kids with 2 measurements not stunted
-    mutate(rec=ifelse(haz>= -2,1,0)) %>%
-    mutate(recsum=cumsum(rec)) %>%
-    # one row for each kid, indicator for recovered
-    summarise(maxrec=max(recsum)) %>%
-    mutate(rec=ifelse(maxrec==2,1,0)) %>%
-    select(-c(maxrec))
-  
-  rev <- full_join(stunt, rec,by=c("studyid","country","subjid")) 
-  rev <- full_join(rev, rec.prev,by=c("studyid","country","subjid")) %>%
-    # subset to kids who were stunted
-    filter(stunted==1) %>%
-    mutate(recovered=ifelse(stunted==1 & rec==1 & rec.prev==0,1,0)) %>%
-    select(-c(stunted,rec,rec.prev))
-  
-  return(rev)
-}
-
-
-#Recovery summary measures pooling function
-summary_rev_df <- function(d, Age="0-3 months"){
-  res=d %>%
-    group_by(studyid,country) %>%
-    summarise(mn=mean(recovered,na.rm=TRUE),
-              n=sum(recovered,na.rm=TRUE),
-              N=sum(!is.na(recovered))) %>%
-    mutate(agecat=Age)
-  return(res)
-}
 
 
 

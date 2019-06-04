@@ -166,22 +166,33 @@ dd$RFlabel[dd$risk_factor=="month"] <-  "Month of measurement"
 dd$RFlabel[dd$risk_factor=="brthmon"] <-  "Birth month"
 dd$RFlabel[dd$risk_factor=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 months"
 
+# dfull <- dd
+# dd <- dd %>% filter(N>0) 
 
 # Sort by size 
 dd <- dd %>% group_by(region, risk_factor) %>% mutate(sumN=sum(N))
 dd <- dd %>% 
   group_by(region) %>%
   dplyr::arrange(-sumN, .by_group = TRUE) 
-dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
-dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
 dd$RFlabel <- factor(dd$RFlabel, levels = unique(dd$RFlabel))
 
-#aggregate N's for sidebar
-dhist_a <- dd %>% group_by(region, risk_factor) %>% summarize(N=sum(N))
-dhist_c <- dd %>% group_by(region, studycountry) %>% summarize(N=max(N))
 
-#Mark missing presence as NA instead of 0
-#dd$presence[dd$presence==1] <- NA
+
+#aggregate N's for topbar
+dhist_a <- dd %>% group_by(risk_factor) %>% summarize(N=sum(N))  %>% mutate(risk_factor=factor(risk_factor, levels=unique(dd$risk_factor))) %>% arrange(risk_factor)
+
+
+dd <- dd %>% 
+  group_by(region, studycountry) %>% mutate(maxN=max(N, na.rm=T))%>%
+  group_by(region) %>%
+  dplyr::arrange(maxN, .by_group = TRUE) 
+dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
+dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
+
+#aggregate N's for sidebar
+dhist_c <- dd %>% group_by(region, studycountry) %>% summarize(N=max(N, na.rm=T))%>% mutate(studycountry=factor(studycountry, levels=unique(dd$studycountry))) %>% arrange(studycountry)
+
+
 
 #-----------------------------------
 # Plot heatmaps
@@ -214,15 +225,15 @@ hm <- ggplot(dd,aes(x=RFlabel,y=studycountry, fill=factor(presence))) +
     panel.border=element_blank()
   ) + 
   labs(x="Exposure",y="",title="b") +
-  scale_fill_manual(values = c("grey90","grey20"))
+  scale_fill_manual(values = c("grey90","grey30"))
 
 
 #-----------------------------------
 # n by risk factor top plot 
 #-----------------------------------
 nrfbar <- ggplot(dhist_a, aes(y = N/1000, x = risk_factor)) +
-  geom_bar(stat = "identity", fill='gray70') +  
-  #scale_x_continuous(breaks = seq(0,24,1), labels = seq(0,24,1)) +
+  geom_bar(stat = "identity") +  
+  scale_fill_manual(values=rep('gray70',7),na.value="grey90") +
   theme(
     # make background white
     panel.background = element_blank(),
@@ -234,10 +245,10 @@ nrfbar <- ggplot(dhist_a, aes(y = N/1000, x = risk_factor)) +
     panel.border = element_blank(),
     axis.title.y = element_text(size=10)
   ) +
-  scale_y_continuous(expand=c(0,0),limits=c(0,8),
-                     breaks=seq(0,8,by=2),labels=seq(0,8,by=2))+
+  scale_y_continuous(expand=c(0,0), limits=c(0,100),
+                     breaks=seq(0,100,by=20),labels=seq(0,100,by=20))+
   ylab("Sample size (1000's)") + xlab("") +
-  geom_hline(yintercept = seq(0,8,by=2),color='white',size=0.3) +
+  geom_hline(yintercept = seq(0,100,by=20),color='white',size=0.3) +
   ggtitle("a")
 
 
@@ -278,9 +289,9 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000)) +
 
 
 # add margin around plots
-hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(1,0.25,4.75,0), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,1,0,11), "cm"))
+hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm")) #top, right, bottom, left
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0.675,0.25,4.84,0), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,0.87,0,10.1), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2,empty, 
@@ -289,13 +300,6 @@ rfhmgrid <- grid.arrange(nrfbar2,empty,
                         widths=c(100,20))
 
 # save plot 
-ggsave(filename=paste0("figures/risk factor/fig-rf-heatmap.pdf"),
+ggsave(filename=paste0("figures/manuscript figure composites/risk factor/fig-rf-heatmap.pdf"),
        plot = rfhmgrid,device='pdf',width=12,height=9)
 
-
-
-require(cowplot)
-
-bottom_row <- plot_grid(hm2, sidebar_c2, labels = c("",""), ncol = 2, align = 'v', axis = 'l')
-
-fig <- plot_grid(nrfbar2, bottom_row, labels = c("","",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))

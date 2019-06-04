@@ -50,7 +50,7 @@ registerDoParallel(cores = 3)
 # created by 7_DHS-data-cleaning.R
 #---------------------------------------
 dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
-source("../shared/helper_sampling_weights.R")
+source("5-visualizations/shared/helper_sampling_weights.R")
 
 #---------------------------------------
 # compute weights per instructions from
@@ -59,28 +59,8 @@ source("../shared/helper_sampling_weights.R")
 dhsz <- dhaz %>%
   mutate(wgt = weight / 1000000)
 
-#---------------------------------------
-# make a WHO region variable
-# flag countries that overlap with the
-# ki cohorts
-#
-# Note: Philippines (Western Pacific)
-# and Pakistan (Middle East) are classified
-# into SEARO
-#---------------------------------------
-dhsz$region <- rep(NA, nrow(dhsz))
-dhsz <- dhsz %>%
-  mutate(region = case_when(
-    country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" | country == "AF7" | country == "KH6" | country == "VNT" ~ "South Asia",
-    country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "Latin America",
-    is.na(region) ~ "Africa"
-  )) %>%
-  mutate(inghap = ifelse(
-    country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7", 1, 0
-  ))
 
-dhsz <- dhsz %>%
-  mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
+#---------------------------------------
 # compute or load the DHS results
 # source("fig-DHS-plots-laz-compute.R")
 df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
@@ -90,7 +70,7 @@ df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
 # ki cohorts
 #---------------------------------------
 dhssubfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
-  di <- dhsz %>% filter(region == rgn & inghap == 1)
+  di <-  dhsz %>% filter(region == rgn & inghap == 1)
   fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di)
   newd <- data.frame(agem = 0:24)
   # estimate approximate simultaneous confidence intervals
@@ -176,13 +156,15 @@ dhs_plotd <- dhsfits %>%
 
 # standard region colors used in other plots
 tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black", tableau10(10)[c(1, 2, 3)])
+pcols <- c("black", tableau10(10)[c(1, 2, 5)])
 
 blue <- 1
 orange <- 2
-green <- 3
+green <- 5
 
 dhs_plotd_laz <- filter(dhs_plotd, measure == "LAZ")
+
+dhs_plotd_laz = dhs_plotd_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
 laz_ageplot <- ggplot(
   dhs_plotd_laz,
@@ -197,7 +179,7 @@ laz_ageplot <- ggplot(
   scale_color_manual(values = pcols, guide = FALSE) +
   scale_fill_manual(values = pcols, guide = FALSE) +
   scale_linetype_manual(values = c("solid", "dashed", "dotdash")) +
-  labs(x = "child age, months", y = "length-for-age z-score") +
+  labs(x="Child age, months",y="Length-for-age z-score") +
   coord_cartesian(ylim = c(-2, 0)) +
   theme_minimal() +
   theme(
@@ -213,7 +195,7 @@ laz_ageplot
 
 # define standardized plot names
 laz_ageplot_name <- create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "mean DHS",
   population = "overall and region-stratified",
@@ -323,15 +305,43 @@ pcols <- c("black", tableau10(10)[c(1:3)])
 # LAZ density by region
 #---------------------------------------
 dhsden_plot_laz <- filter(dhsden_plot, measure == "LAZ")
+
+ki_medians = readRDS(paste0("results/ki.zscore.medians.monthly.rds"))
+ki_medians = ki_medians[ki_medians$measure == "haz", c(1, 3)]
+ki_medians$dsource = "ki cohorts"
+
+ki_medians$region = recode_factor(ki_medians$region, 
+                                  OVERALL = "Overall", 
+                                  AFRO = "Africa", 
+                                  PAHO = "Latin America", 
+                                  SEARO = "South Asia")
+
+dhs_quantiles <- readRDS(paste0(here::here(),"/results/dhs.quantiles.rds"))
+dhs_medians = dhs_quantiles %>% filter(quantile == 50) %>% filter(measure == "haz")
+dhs_medians$region = recode_factor(dhs_medians$region, 
+                                   OVERALL = "Overall", 
+                                   AFRO = "Africa", 
+                                   PAHO = "Latin America", 
+                                   SEARO = "South Asia")
+names(dhs_medians)[2] = "median"
+dhs_medians = select(dhs_medians, c("region", "median"))
+dhs_medians$dsource = "DHS"
+medians = rbind(ki_medians, dhs_medians)
+
+dhsden_plot_laz = merge(x = dhsden_plot_laz, y = medians, by = c("region", "dsource"),  all.x = TRUE)
+dhsden_plot_laz = dhsden_plot_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+
 laz_dplot <- ggplot(data = dhsden_plot_laz, aes(x = x, y = y, color = region, linetype = dsource)) +
   facet_grid(~region) +
   geom_line() +
+  geom_point(aes(x = as.double(median), y = 0, shape = dsource)) +
   scale_color_manual(values = pcols, guide = FALSE) +
   scale_fill_manual(values = pcols, guide = FALSE) +
   scale_linetype_manual(values = c("solid", "dashed", "dotdash")) +
+  scale_shape_manual(values=c(19, 1))+
   scale_x_continuous(breaks = seq(-6, 6, by = 2)) +
   coord_cartesian(xlim = c(-6, 6), ylim = c(0, 0.4)) +
-  labs(y = "density", x = "length-for-age z-score") +
+  labs(y="Density",x="Length-for-age z-score")+
   theme_minimal() +
   theme(
     legend.position = "none",
@@ -342,7 +352,7 @@ laz_dplot
 
 # define standardized plot names
 laz_dplot_name <- create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "density DHS",
   population = "overall and region-stratified",
@@ -354,3 +364,14 @@ laz_dplot_name <- create_name(
 # save plot and underlying data
 ggsave(laz_dplot, file = paste0(fig_dir, "stunting/fig-", laz_dplot_name, ".png"), width = 8, height = 2)
 saveRDS(dhsden_plot_laz, file = paste0(figdata_dir, "figdata-", laz_dplot_name, ".RDS"))
+#############################################
+# Merge above plots into a single figure
+#############################################
+
+arrange_figures = grid.arrange(laz_dplot, 
+                               laz_ageplot, 
+                               nrow = 2, ncol = 1,
+                               heights = c(2, 2),
+                               widths= 8)
+
+ggsave(arrange_figures, file=paste0("figures/stunting/fig-DHS-LAZ.png"), width=8, height=4)

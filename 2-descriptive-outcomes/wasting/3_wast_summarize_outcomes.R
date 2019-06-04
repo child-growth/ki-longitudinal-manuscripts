@@ -26,6 +26,17 @@ d3_nobirth <- calc.ci.agecat(d_noBW, range = 3, birth="no")
 d6_nobirth <- calc.ci.agecat(d_noBW, range = 6, birth="no")
 
 
+
+
+
+#-------------------------------------------------------------------------------------
+# WARNING NOTE!
+#-------------------------------------------------------------------------------------
+
+#The cohort.summary() and summarize_over_strata() functions are new, streamlined
+#functions to make outcome estimation more flexible
+#They still need to be verified against old estimates and adapted for all outcomes
+
 #-------------------------------------------------------------------------------------
 # Set up global variables
 #-------------------------------------------------------------------------------------

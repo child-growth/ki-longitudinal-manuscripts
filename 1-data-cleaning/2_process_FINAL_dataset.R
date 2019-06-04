@@ -631,7 +631,7 @@ d$mage <- quantile_rf(d, d$W_mage, Acuts=c(0,20,30,max(d$W_mage, na.rm=T)))
 
 d$mhtcm <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,151,155,max(d$W_mhtcm, na.rm=T)), units="cm")
 d$mwtkg <- quantile_rf(d, d$W_mwtkg, Acuts=c(0,52,58,max(d$W_mwtkg, na.rm=T)), units="kg")
-d$mbmi <- quantile_rf(d, d$W_mbmi, Acuts=c(0,18.5,25,max(d$W_mbmi, na.rm=T)), labs=c("Underweight", "Normal weight", "Overweight or Obese"))
+d$mbmi <- quantile_rf(d, d$W_mbmi, Acuts=c(0,18.5,max(d$W_mbmi, na.rm=T)), labs=c("Underweight", "Normal weight"))
 d$fage <- quantile_rf(d, d$W_fage, Acuts=c(0,32,38,max(d$W_fage, na.rm=T)))
 d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,167,max(d$W_fhtcm, na.rm=T)), units="cm")
 
@@ -914,6 +914,7 @@ tabRF(d, "nchldlt5")
 saveRDS(d, file="FINAL_temp_clean_covariates.rds")
 
 saveRDS(d, file="U:/UCB-SuperLearner/Stunting rallies/FINAL_temp_clean_covariates.rds")
+saveRDS(d, file="U:/UCB-SuperLearner/Manuscript analysis data/FINAL_temp_clean_covariates.rds")
 
 save(iLiNS_Zinc_df, iLiNS_DYADM_df,
      file="int_studies_secondary_contrasts.Rdata")

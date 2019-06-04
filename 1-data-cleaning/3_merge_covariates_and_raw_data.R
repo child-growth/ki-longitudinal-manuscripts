@@ -53,8 +53,7 @@ quantile_rf <- function(A, labs=NULL, Acuts=NULL){
 
 #merge covariates with additional raw data covariates
 
-# setwd("U:/UCB-SuperLearner/Stunting rallies/")
-setwd("U:/ucb-superlearner/Stunting rallies/")
+setwd("U:/ucb-superlearner/Manuscript analysis data/")
 
 #load covariates
 d<-readRDS("FINAL_temp_clean_covariates.rds")
@@ -129,7 +128,7 @@ table(paste0(d$studyid, " ", d$country), d$perdiar24)
 
 #breastfeeding
 d <- left_join(d, bf, by=c("studyid", "country", "subjid"))
-
+table(d$exclfeed3)
 
 #Convert all columns to factors exceot continious adjustment vars
 for(i in 3:ncol(d)){
@@ -156,7 +155,7 @@ saveRDS(d, "FINAL_clean_covariates.rds")
 setwd("U:/data")
 load("int_studies_secondary_contrasts.Rdata")
 
-d <- readRDS("U:/ucb-superlearner/Stunting rallies/FINAL_clean_covariates.rds")
+d <- readRDS("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
 
 d <- d %>% filter(!is.na(tr))
 

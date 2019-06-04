@@ -253,14 +253,16 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           nmeas.f = paste0("N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE), " ", nlab),
           nstudy.f = paste0("N=", nstudies, " studies")
         ) %>%
-        select(nstudies, nmeas, agecat, est, se, lb, ub, nmeas.f, nstudy.f) %>%
+        subset(., select =c(nstudies, nmeas, agecat, est, se, lb, ub, nmeas.f, nstudy.f)) %>%
         as.tibble()
       rownames(out) <- NULL
       # If input is more than 1 row (multiple studies), pool across studies with rma() function from metafor package
     } else {
       # Check if 0 cases of the outcome
       # Use FE model if all 0 counts because no heterogeneity and rma.glmm fails
-      if (sum(data[[xi]]) == 0) method <- "FE"
+      if(!is.null(xi)){
+        if (sum(data[[xi]]) == 0) method <- "FE"
+      }
       fit <- NULL
       if (mode_binary) {
         try(fit <- rma(
@@ -641,7 +643,8 @@ calc.ci.agecat <- function(d, range = 3, birth = "yes") {
   # ----------------------------------------------
   if (range == 3 & birth == "no") {
     d <- d %>%
-      mutate(agecat = ifelse(agedays > 1 & agedays <= 3 * 30.4167, "0-3 months",
+      mutate(agecat = ifelse(agedays == 1, "Birth",
+       ifelse(agedays > 1 & agedays <= 3 * 30.4167, "1 day-3 months",
         ifelse(agedays > 3 * 30.4167 & agedays <= 6 * 30.4167, "3-6 months",
           ifelse(agedays > 6 * 30.4167 & agedays <= 9 * 30.4167, "6-9 months",
             ifelse(agedays > 9 * 30.4167 & agedays <= 12 * 30.4167, "9-12 months",
@@ -655,19 +658,20 @@ calc.ci.agecat <- function(d, range = 3, birth = "yes") {
             )
           )
         )
-      )) %>%
-      mutate(agecat = factor(agecat, levels = c("0-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months")))
+      ))) %>%
+      mutate(agecat = factor(agecat, levels = c("Birth","1 day-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months")))
   }
   if (range == 6 & birth == "no") {
     d <- d %>%
-      mutate(agecat = ifelse(agedays > 1 & agedays <= 6 * 30.4167, "0-6 months",
+      mutate(agecat = ifelse(agedays==1, "Birth",
+       ifelse(agedays > 1 & agedays <= 6 * 30.4167, "1 day-6 months",
         ifelse(agedays > 6 * 30.4167 & agedays <= 12 * 30.4167, "6-12 months",
           ifelse(agedays > 12 * 30.4167 & agedays <= 18 * 30.4167, "12-18 months",
             ifelse(agedays > 18 * 30.4167 & agedays <= 24 * 30.4167, "18-24 months", "")
           )
         )
-      )) %>%
-      mutate(agecat = factor(agecat, levels = c("0-6 months", "6-12 months", "12-18 months", "18-24 months")))
+      ))) %>%
+      mutate(agecat = factor(agecat, levels = c("Birth", "1 day-6 months", "6-12 months", "12-18 months", "18-24 months")))
   }
 
   return(d)

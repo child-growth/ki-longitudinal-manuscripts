@@ -5,13 +5,20 @@ library(longbowtools)
 library(progress)
 library(longbowRiskFactors)
 
-dir_path <- "C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/"
-setwd(paste0(dir_path,"unadjusted_binary/"))
 
-d <- as.data.frame(load_batch_results("obs_counts.rdata"))
+#d <- as.data.frame(load_batch_results("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_obs_counts.rdata"))
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_obs_counts.rdata")
+d <- obs_counts
 
 colnames(d)
-outcome_vars <- c("stunted",  "sstunted",    "ever_stunted", "s03rec24")
+outcome_vars <- c("stunted", "sstunted",            "ever_stunted",       
+                              "ever_sstunted",       "wasted",              "swasted",             "wast_rec90d",         "ever_wasted",        
+                              "ever_swasted",        "lag_WHZ_quart",       "pers_wast",           "ever_co",             "ever_wasted06",      
+                              "dead",                "ever_swasted06",      "pers_wasted06",       "ever_stunted06",      "ever_sstunted06",    
+                              "ever_swasted024",     "pers_wasted024",      "ever_stunted024",     "ever_wasted06_noBW",  "ever_swasted06_noBW",
+                              "ever_wasted024_noBW", "ever_swasted024_noBW","ever_underweight06",  "ever_sunderweight06", "ever_underweight024",
+                              "ever_sunderweight024","ever_co06",           "ever_co024",          "co_occurence",        "pers_wasted624",     
+                              "ever_wasted024",      "ever_sstunted024")
 
 exposure_vars <- c(
   "gagebrth",        "birthlen",      "enwast",        "vagbrth",      
@@ -25,6 +32,8 @@ exposure_vars <- c(
   "predfeed6",     "predexfd6",     "sex",          "brthmon",      
   "month",     "pers_wast",    "lag_WHZ_quart")
 
+
+d<-data.frame(d)
 exposures <- d[,which(colnames(d) %in% exposure_vars)]
 outcomes <- d[,which(colnames(d) %in% outcome_vars)]
 
@@ -49,7 +58,13 @@ Ndf <- Ndf_Ystrat %>% group_by(studyid, country, agecat, outcome_variable, inter
   mutate(prev=n_cell/n)
 
 
+#Grab total N's by pooled analysis
+N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, intervention_level) %>%
+  summarize(n_cell=sum(n_cell), n=sum(n)) %>%
+  mutate(prev=n_cell/n)
+
+
 # save concatenated Ns
-save(Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns.rdata")
+save(N_sums, Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns.rdata")
 
 

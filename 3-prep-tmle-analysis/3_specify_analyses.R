@@ -5,7 +5,7 @@ source(paste0(here::here(), "/0-config.R"))
 library(here)
 
 
-load("U:/ucb-superlearner/Wasting rallies/adjustment_sets_list.Rdata")
+load("U:/ucb-superlearner/Manuscript analysis data/adjustment_sets_list.Rdata")
 A <- names(adjustment_sets)
 
 Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
@@ -40,7 +40,7 @@ table(d$ever_stunted, d$sex)
 summary(d$id)
 
 st_prev <- specify_rf_analysis(A=Avars, Y=c("stunted","sstunted"), file="st_prev_rf.Rdata")
-st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
+#st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
 
 st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
                                       "mbmi",          "single",        "fage",          "fhtcm",       
@@ -107,9 +107,60 @@ co_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mht
                                    "feducyrs", "hfoodsec"),
                               Y="ever_co", file="co_cuminc_rf.Rdata")
 
+
+#Specify the mortality analyses
+load("mortality_adjustment_sets_list.Rdata")
+
+Avars <- c("ever_wasted06",
+           "ever_swasted06",
+           "pers_wasted06",
+           "ever_stunted06",
+           "ever_sstunted06",
+           "ever_wasted024",
+           "ever_swasted024",
+           "pers_wasted024",
+           "ever_stunted024",
+           "ever_sstunted024",
+           "ever_wasted06_noBW",
+           "ever_swasted06_noBW",
+           "ever_wasted024_noBW",
+           "ever_swasted024_noBW",
+           "ever_underweight06",
+           "ever_sunderweight06",
+           "ever_underweight024",
+           "ever_sunderweight024",
+           "ever_co06",
+           "ever_co024")
+
+mortality <- specify_rf_analysis(A=Avars, Y=c("dead"), 
+                                 V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality, 
+                                 file="stuntwast_mort.Rdata")
+
+Avars_morbidity <- c("ever_wasted06",
+                     "ever_swasted06",
+                     "pers_wasted06",
+                     "ever_stunted06",
+                     "ever_sstunted06",
+                     "ever_wasted06_noBW",
+                     "ever_swasted06_noBW",
+                     "ever_underweight06",
+                     "ever_sunderweight06",
+                     "ever_co06",
+                     "pers_wasted06")
+
+morbidity <- specify_rf_analysis(A=Avars_morbidity,
+                                 Y=c("co_occurence", "pers_wasted624"),
+                                 V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality,
+                                 file="stuntwast_morbidity.Rdata")
+
+
+
+
+
+
 #bind together datasets
-analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, st_rec, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, co_cuminc)
-table(analyses$file)
+analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
+
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
@@ -126,6 +177,9 @@ save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/unadjusted_binary_
 #---------------------------------------------
 # Specify the continuous analyses
 #---------------------------------------------
+
+Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
+
 
 vel_haz <- specify_rf_analysis(A=Avars, Y="y_rate_haz", file="st_haz_vel_rf.Rdata")
 vel_lencm <- specify_rf_analysis(A=Avars, Y="y_rate_len", file="st_len_vel_rf.Rdata")
@@ -147,5 +201,8 @@ save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_continuou
 analyses$W <- NULL
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/unadjusted_continuous.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/unadjusted_continuous.rdata")
+
+
+
 
 
