@@ -35,8 +35,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load length velocity data
-load(paste0(res_dir,"pool_vel.RData"))
-vel <- pooled_vel 
+vel <- readRDS(paste0(res_dir,"stunting/pool_vel.RDS"))
 
 meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocity.RDS"))
 
