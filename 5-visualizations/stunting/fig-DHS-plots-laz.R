@@ -69,7 +69,7 @@ df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
 # subset to countries that overlap the
 # ki cohorts
 #---------------------------------------
-dhssubfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
+dhssubfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind, .packages = "dplyr") %dopar% {
   di <-  dhsz %>% filter(region == rgn & inghap == 1)
   fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di)
   newd <- data.frame(agem = 0:24)
@@ -118,7 +118,7 @@ ghapd <- d %>%
 #---------------------------------------
 # fit smooths to GHAP data
 #---------------------------------------
-ghapfits <- foreach(rgn = levels(ghapd$region), .combine = rbind) %do% {
+ghapfits <- foreach(rgn = levels(ghapd$region), .combine = rbind, .packages = "dplyr") %do% {
   di <- ghapd %>% filter(region == rgn)
   fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di)
   newd <- data.frame(agem = 0:24)
@@ -257,6 +257,16 @@ dhssubden <- bind_rows(dhssubden, dhssubden_pool) %>%
 # region
 #---------------------------------------
 kiden <- readRDS(paste0(here(), "/results/ki.density.fits.quarterly.rds"))
+unique(kiden$region)
+
+kiden <- kiden %>%
+  mutate(region = case_when(
+    region == "SEARO" ~ "South Asia",
+    region == "PAHO" ~ "Latin America",
+    region == "AFRO" ~ "Africa",
+    region == "Overall" ~ "Overall")
+  )
+    
 kiden <- kiden %>%
   mutate(
     region = factor(region,
@@ -294,12 +304,13 @@ dhsden <- bind_rows(kiden, dhssubden, dhsallden) %>%
 # DHS overall estimates
 #---------------------------------------
 dhsden_plot <- dhsden %>%
-  filter(dsource %in% c("ki cohorts", "DHS"))
+  filter(dsource %in% c("DHS, ki countries", "DHS"))
+
 
 #---------------------------------------
 # standard region colors used in other plots
 tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black", tableau10(10)[c(1:3)])
+pcols <- c("black", tableau10(10)[c(1, 2, 5)])
 
 #---------------------------------------
 # LAZ density by region
@@ -308,7 +319,7 @@ dhsden_plot_laz <- filter(dhsden_plot, measure == "LAZ")
 
 ki_medians = readRDS(paste0("results/ki.zscore.medians.monthly.rds"))
 ki_medians = ki_medians[ki_medians$measure == "haz", c(1, 3)]
-ki_medians$dsource = "ki cohorts"
+ki_medians$dsource = "DHS, ki countries"
 
 ki_medians$region = recode_factor(ki_medians$region, 
                                   OVERALL = "Overall", 
@@ -374,4 +385,4 @@ arrange_figures = grid.arrange(laz_dplot,
                                heights = c(2, 2),
                                widths= 8)
 
-ggsave(arrange_figures, file=paste0("figures/stunting/fig-DHS-LAZ.png"), width=8, height=4)
+ggsave(arrange_figures, file=paste0(fig_dir, "/stunting/fig-DHS-LAZ.png"), width=8, height=4)
