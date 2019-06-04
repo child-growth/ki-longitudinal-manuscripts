@@ -87,6 +87,9 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop beca
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
 
+saveRDS(d, file = paste0("U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt_clean.RDS"))
+
+
 #Summarize N's in study
 d %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(N=n())
 
@@ -119,7 +122,6 @@ d <- d %>% rename(agecat = diffcat) %>%
   ),
   country_cohort=paste0(studyid," ", country))
 
-saveRDS(d, file = paste0("U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt_clean.RDS"))
 
 #----------------------------------------------------
 # age specific pooled results
