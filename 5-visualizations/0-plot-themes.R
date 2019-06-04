@@ -158,16 +158,40 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
+  # fix factor levels if birth strat
+  if (Birth == "strat") {
+    df <- df %>%
+      mutate(agecat = as.character(agecat)) %>%
+      mutate(agecat = ifelse(agecat=="1 day-3", "0-3", agecat)) %>%
+      mutate(agecat = factor(agecat, levels = c(
+        "Birth",
+        "0-3", 
+        "3-6",
+        "6-9",
+        "9-12",
+        "12-15",
+        "15-18",
+        "18-21",
+        "21-24"
+      )))
+  }
+  
+  
   # remove extra text from label at birth
   # that overlaps between CI and IP
-  df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
-                                       measure=="Incidence_proportion", NA, est))
-  
+  if(Birth!="strat"){
+    df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
+                                         measure=="Incidence_proportion", NA, est))
+  }else{
+    df <- df %>% mutate(est.f = ifelse(agecat=="Birth" & 
+                                         measure=="Incidence_proportion", NA, est))
+  }
+
   # remove N= labels for incidence proportion
   df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence_proportion', '', nmeas.f)) %>%
     mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
   
-  
+
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, 
                       group=interaction(measure, region), ymin=lb, ymax=ub), 
