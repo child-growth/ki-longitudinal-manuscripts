@@ -359,12 +359,12 @@ saveRDS(prev_plot_sev_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot
 ci_inc_plot <- ki_combo_plot(d,
                         Disease="Stunting",
                         Measure=c("Cumulative incidence", "Incidence_proportion"), 
-                        Birth="yes", 
+                        Birth="strat", 
                         Severe="no", 
                         Age_range="3 months", 
                         Cohort="pooled",
                         xlabel="Child age, months",
-                        h1=85,
+                        h1=90,
                         h2=90,
                         returnData=T)
 ci_inc_plot$plot
@@ -376,6 +376,7 @@ inc_n = d %>%
            (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
            region!="Overall" &
            age_range == "3 months" &
+           birth == "strat" & 
            cohort == "pooled" &
            severe == "no") %>% 
   group_by(region) %>% 
@@ -396,7 +397,7 @@ ci_inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=14, height=4)
+ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=16, height=4)
 
 saveRDS(ci_inc_plot$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 
