@@ -331,11 +331,7 @@ summary.haz.age.sex <- function(d){
     mutate(sex = "Male")
   
   haz.res=rbind(haz.df.female, haz.df.male)
-  
-  # haz.res[,4]=as.numeric(haz.res[,4])
-  # haz.res[,6]=as.numeric(haz.res[,6])
-  # haz.res[,7]=as.numeric(haz.res[,7])
-  haz.res$agecat=levels(haz.res$agecat)
+  haz.res$agecat=levels(haz.data$agecat)
   haz.res$sex=factor(haz.res$sex)
   
   haz.res$ptest.f=sprintf("%0.0f",haz.res$est)

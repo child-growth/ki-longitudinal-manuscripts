@@ -101,9 +101,9 @@ consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild,
   
 # clean country labels and separate into regions
 consort_ki <- mark_region(consort_ki)
-# for the heatmap, change South Asia to Asia
+# for the heatmap, change South Asia to Asia, N.America to North America
 consort_ki <- consort_ki %>% mutate(region = case_when(region == "South Asia" ~ "Asia",
-                                                       region == "N.America & Europe" ~ "N.America & Europe",
+                                                       region == "N.America & Europe" ~ "North America & Europe",
                                                        region == "Africa" ~ "Africa",
                                                        region == "Latin America" ~ "Latin America",
                                                        region == "Other" ~ "Other"))
@@ -168,7 +168,7 @@ consort_ki_hm <- consort_ki_hm %>% mutate(indicator_region = case_when(
                                   indicator == 1 & region == "Africa" ~ 1,
                                   indicator == 1 & region == "Asia" ~ 2,
                                   indicator == 1 & region == "Latin America" ~ 3,
-                                  indicator == 1 & region == "N.America & Europe" ~ 4,
+                                  indicator == 1 & region == "North America & Europe" ~ 4,
                                   indicator == 1 & region == "Other" ~ 5,
                                   indicator == 0 ~ 0))
 consort_ki_hm$indicator_region <- factor(consort_ki_hm$indicator_region, levels = c(0, 1, 2, 3, 4, 5))
@@ -191,7 +191,7 @@ hm <- ggplot(consort_ki_hm, aes(x = inclusion_metric, y = cohort)) +
   
   #set base size for all font elements
   theme_grey(base_size = 10) +
-  labs(x="Exclusion Reason",y="", title="") +
+  labs(x="Inclusion Reason",y="", title="") +
   #theme options
   theme(
     # hide legend
@@ -243,7 +243,7 @@ sidebar <- ggplot(data = consort_ki_hm, aes(x = cohort, y = nobs/8/1000)) +     
   #                    limits = c(0, 800000)) +
   
   # # add vertical lines
-  # geom_hline(yintercept = seq(0,740000,by=740000/6), color='white',size=0.5) +
+  #geom_hline(yintercept = seq(0,740000,by=740000/6), color='white',size=0.5) +
   
   theme_grey(base_size = 10) +
   labs(x = "",y="Total Observations (x1000)",title="Sample size") +
@@ -322,32 +322,32 @@ bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)
   scale_fill_manual(values=c("#1F77B4", "#2CA02C", "#FF7F0E", "#D62728", "black")) +
   
   # Add top inclusion category labels, dynamically count n per study
-  annotate(geom = "text", x = 2.6, y = 35, 
-           label = paste0("Longitudinal cohorts (n=", sum(consort_ki_bar$inclusion_metric=="included_longitudinal"),")"), size = 2) +
-  annotate(geom = "text", x = 4.2, y = 32, 
-           label = paste0("Includes anthropometry data (n=", sum(consort_ki_bar$inclusion_metric=="included_anthropometry"),")"), size = 2) +
-  annotate(geom = "text", x = 6.2, y = 29, 
-           label = paste0("Located in low- or middle income countries (n=", sum(consort_ki_bar$inclusion_metric=="included_low_income"),")"), size = 2) +
-  annotate(geom = "text", x = 7.4, y = 26, 
-           label = paste0("Enrollment not restricted to acutely ill children (n=", sum(consort_ki_bar$inclusion_metric=="included_ill"),")"), size = 2) +
-  annotate(geom = "text", x = 7.4, y = 23, 
-           label = paste0("Enrolled more than 200 children (n=", sum(consort_ki_bar$inclusion_metric=="included_small"),")"), size = 2) +
-  annotate(geom = "text", x = 8.7, y = 20, 
-           label = paste0("Enrolled children between ages 0-2 (n=", sum(consort_ki_bar$inclusion_metric=="included_age"),")"), size = 2) +
-  annotate(geom = "text", x = 9.4, y = 17, 
-           label = paste0("Quarterly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_quarterly"),")"), size = 2) +
-  annotate(geom = "text", x = 10.3, y = 14, 
-           label = paste0("Monthly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_monthly"),")"), size = 2) +
+  annotate(geom = "text", x = 3.2, y = 38, 
+           label = paste0("Longitudinal cohorts (n=", sum(consort_ki_bar$inclusion_metric=="included_longitudinal"),")"), size = 2.7) +
+  annotate(geom = "text", x = 4.9, y = 34, 
+           label = paste0("Includes anthropometry data (n=", sum(consort_ki_bar$inclusion_metric=="included_anthropometry"),")"), size = 2.7) +
+  annotate(geom = "text", x = 7.1, y = 30, 
+           label = paste0("Located in low- or middle income countries (n=", sum(consort_ki_bar$inclusion_metric=="included_low_income"),")"), size = 2.7) +
+  annotate(geom = "text", x = 8.3, y = 26, 
+           label = paste0("Enrollment not restricted to acutely ill children (n=", sum(consort_ki_bar$inclusion_metric=="included_ill"),")"), size = 2.7) +
+  annotate(geom = "text", x = 8.2, y = 22, 
+           label = paste0("Enrolled more than 200 children (n=", sum(consort_ki_bar$inclusion_metric=="included_small"),")"), size = 2.7) +
+  annotate(geom = "text", x = 9.6, y = 18, 
+           label = paste0("Enrolled children between ages 0-2 (n=", sum(consort_ki_bar$inclusion_metric=="included_age"),")"), size = 2.7) +
+  annotate(geom = "text", x = 10.2, y = 14, 
+           label = paste0("Quarterly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_quarterly"),")"), size = 2.7) +
+  annotate(geom = "text", x = 11.2, y = 10, 
+           label = paste0("Monthly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_monthly"),")"), size = 2.7) +
   
   # Add vertical lines under labels
-  geom_segment(aes(x = 1, y = 20, xend = 1, yend = 33), color = "gray") +
-  geom_segment(aes(x = 2, y = 20, xend = 2, yend = 30), color = "gray") +
+  geom_segment(aes(x = 1, y = 20, xend = 1, yend = 35), color = "gray") +
+  geom_segment(aes(x = 2, y = 20, xend = 2, yend = 31), color = "gray") +
   geom_segment(aes(x = 3, y = 19, xend = 3, yend = 27), color = "gray") +
   geom_segment(aes(x = 4, y = 16, xend = 4, yend = 24), color = "gray") +
-  geom_segment(aes(x = 5, y = 16, xend = 5, yend = 21), color = "gray") +
-  geom_segment(aes(x = 6, y = 11, xend = 6, yend = 18), color = "gray") +
-  geom_segment(aes(x = 7, y = 8, xend = 7, yend = 15), color = "gray") +
-  geom_segment(aes(x = 8, y = 2, xend = 8, yend = 12), color = "gray") +
+  geom_segment(aes(x = 5, y = 16, xend = 5, yend = 19), color = "gray") +
+  geom_segment(aes(x = 6, y = 11, xend = 6, yend = 16), color = "gray") +
+  geom_segment(aes(x = 7, y = 8, xend = 7, yend = 12), color = "gray") +
+  geom_segment(aes(x = 8, y = 2, xend = 8, yend = 8), color = "gray") +
                     
   theme(
     # legend options
