@@ -406,9 +406,27 @@ fit.escalc <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure, metho
 # to recover the old continuous functionality
 # fit.escalc.cont = fit.escalc(data, yi, vi, measure = "GEN", method = "REML")
 
-#---------------------------------------
-# rma wrapper function across a list of ages
-#---------------------------------------
+
+##############################################
+# run_rma
+##############################################
+
+
+# run fit.rma wrapper across a list of ages
+# Input:
+# data: 
+# n_name:
+# label:
+# method:
+
+# Returns:
+# est:
+# lb:
+# ub:
+# agecat:
+# ptest.f:
+# label:
+
 run_rma <- function(data, n_name, x_name, label, method) {
 
   # create age list
@@ -436,11 +454,26 @@ run_rma <- function(data, n_name, x_name, label, method) {
   return(res)
 }
 
+##############################################
+# run_rma_agem
+##############################################
 
-#---------------------------------------
-# rma wrapper function across a list of ages
-# for age in months
-#---------------------------------------
+
+# run fit.rma wrapper across a list of ages for age in months
+# Input:
+# data: 
+# n_name:
+# label:
+# method:
+
+# Returns:
+# est:
+# lb:
+# ub:
+# agecat:
+# ptest.f:
+# label:
+
 run_rma_agem <- function(data, n_name, x_name, label, method) {
 
   # create age list
@@ -472,8 +505,23 @@ run_rma_agem <- function(data, n_name, x_name, label, method) {
 }
 
 
+##############################################
+# run_rma_agem
+##############################################
 
-# ttest function across agecats
+# runs a ttest across agecats
+# Input
+# data: 
+# y:
+# levels:
+# ref:
+# comp:
+
+# Returns
+# pval < 0.05:
+# pval < 0.01:
+# pval < 0.001:
+
 ki.ttest <- function(data, y, levels, ref, comp) {
   pval <- NULL
   for (i in 1:length(comp)) {
@@ -491,8 +539,23 @@ ki.ttest <- function(data, y, levels, ref, comp) {
   return(pval)
 }
 
+##############################################
+# ki.glm
+##############################################
 
 # glm function across agecats
+# Input
+# data: 
+# y:
+# levels:
+# ref:
+# comp:
+
+# Returns
+# pval < 0.05:
+# pval < 0.01:
+# pval < 0.001:
+
 ki.glm <- function(data, y, levels, ref, comp) {
   diffdf <- NULL
   for (i in 1:length(comp)) {
@@ -518,6 +581,21 @@ ki.glm <- function(data, y, levels, ref, comp) {
   return(diffdf)
 }
 
+##############################################
+# gamCI
+##############################################
+
+# ?????????
+# Input
+# m:
+# newdata:
+# nreps: number of reps, default to 10000
+
+# Returns
+# uprP:
+# lwrP:
+# uprS:
+# lwrS:
 
 gamCI <- function(m, newdata, nreps = 10000) {
   require(mgcv)
@@ -542,6 +620,16 @@ gamCI <- function(m, newdata, nreps = 10000) {
   return(pred)
 }
 
+##############################################
+# mean_sd
+##############################################
+
+# calculate the mean and standard deviation of set of data
+# Input
+# x: data
+
+# Returns
+# string of mean of sd separated by a newline
 
 mean_sd <- function(x) {
   cat(
@@ -549,6 +637,18 @@ mean_sd <- function(x) {
     "  ", round(sd(x, na.rm = T), 3), "\n"
   )
 }
+
+##############################################
+# mean_sd
+##############################################
+
+# calculate ??
+# Input
+# x: data
+
+# Returns
+# ???
+
 N_perc <- function(x) {
   print(table(x))
   cat("\n")
