@@ -87,6 +87,9 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop beca
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
 
+saveRDS(d, file = paste0("U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt_clean.RDS"))
+
+
 #Summarize N's in study
 d %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(N=n())
 
@@ -128,17 +131,21 @@ RE_pool <- function(df, ycategory, gender){
   df <- df %>% filter(ycat==ycategory)
   df <- df %>% filter(sex==gender)
   
-  pooled.vel=lapply(list("0-3 months", "3-6 months",  "6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months"),function(x) 
-    fit.cont.rma(data=df,yi="mean", vi="var", ni="n",age=x, nlab="children"))
-  pooled.vel=as.data.frame(do.call(rbind, pooled.vel))
+  agecat = list("0-3 months", "3-6 months",  "6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")
   
+  pooled.vel=lapply(agecat,function(x) 
+    fit.rma(data=df, yi="mean", vi="var", ni="n", nlab="children",age=x, measure = "GEN"))
+
+  
+  pooled.vel=as.data.frame(do.call(rbind, pooled.vel))
+
   # age and region specific pooled results
-  asia.vel=lapply(list("0-3 months", "3-6 months",  "6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months"),function(x) 
-    fit.cont.rma(data=df[df$region=="Asia",],yi="mean", vi="var", ni="n",age=x, nlab="children"))
-  LA.vel=lapply(list("0-3 months", "3-6 months",  "6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months"),function(x) 
-    fit.cont.rma(data=df[df$region=="Latin America",],yi="mean", vi="var", ni="n",age=x, nlab="children"))
-  africa.vel=lapply(list("0-3 months", "3-6 months",  "6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months"),function(x) 
-    fit.cont.rma(data=df[df$region=="Africa",],yi="mean", vi="var", ni="n",age=x, nlab="children"))
+  asia.vel=lapply(agecat,function(x) fit.rma(data=df[df$region=="Asia",], 
+        yi="mean", vi="var", ni="n", nlab="children",age=x, measure = "GEN"))
+  LA.vel=lapply(agecat,function(x) fit.rma(data=df[df$region=="Latin America",],
+        yi="mean", vi="var", ni="n",age=x, nlab="children", measure = "GEN"))
+  africa.vel=lapply(agecat,function(x) fit.rma(data=df[df$region=="Africa",],
+        yi="mean", vi="var", ni="n",age=x, nlab="children", measure = "GEN"))
   
   asia.vel=as.data.frame(do.call(rbind, asia.vel))
   LA.vel=as.data.frame(do.call(rbind, LA.vel))
@@ -153,7 +160,9 @@ RE_pool <- function(df, ycategory, gender){
     data.frame(country_cohort="Pooled - Africa", pooled=1, region="Africa",africa.vel),
     data.frame(country_cohort="Pooled - Amer.", pooled=1, region="Latin America",LA.vel)
   ) %>% subset(., select = -c(se)) %>%
-    rename(strata=agecat, Mean=est, N=nmeas, Lower.95.CI=lb, Upper.95.CI=ub)
+    rename(Mean=est, N=nmeas, Lower.95.CI=lb, Upper.95.CI=ub)
+  
+  pooled.df$strata=as.character(unlist(agecat))
   
   cohort.df <- df %>% subset(., select = c(country_cohort, agecat, n, mean, ci.lb, ci.ub, region)) %>%
     rename(N=n, Mean=mean, Lower.95.CI=ci.lb, Upper.95.CI=ci.ub,
@@ -192,6 +201,7 @@ RE_pool <- function(df, ycategory, gender){
   
   return(plotdf)
 }
+
 
 
 #----------------------------------------------------
