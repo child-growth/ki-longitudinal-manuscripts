@@ -147,7 +147,7 @@ haz.vel <- bind_rows(
   haz.cohort.vel
 )
 
-saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity.RDS"))
+saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity_fe.RDS"))
 
 #----------------------------------------
 # monthly mean haz
@@ -194,7 +194,7 @@ quantile_d_overall <- dmon %>%
 quantiles <- bind_rows(quantile_d, quantile_d_overall,quantile_d_cohort)
 
 saveRDS(quantiles,
-     file = paste0(here(),"/results/quantile_data_stunting.RDS"))
+     file = paste0(here(),"/results/quantile_data_stunting_fe.RDS"))
 
 
 ######################################################################
