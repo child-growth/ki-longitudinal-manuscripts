@@ -14,6 +14,9 @@
 # severe.stunted: a boolean, with default value FALSE. 
 #   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
 #   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - prev.data: includes the number of measurements, proportion/count of stunted children in each study for each age category
@@ -89,6 +92,9 @@ summary.prev.haz <- function(d, severe.stunted=F, method="REML"){
 #   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
 #   - When set to TRUE, individuals are considered students when HAZ is less than 3.
 # agelist: a list of strings that describe the ranges of each age category.
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - cuminc.data: includes the number of measurements, number of incident cases in each study for each age category
@@ -206,13 +212,16 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
 #   - country
 #   - subjid
 #   - haz
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - haz.data: includes the number of measurements, mean HAZ in each study for each age category
 #   - haz.res: estimated random effects and CI bounds of studies grouped by age category
 #   - haz.cohort: estimated random effects and CI bounds for each specific cohort
 
-summary.haz <- function(d, method){
+summary.haz <- function(d, method="REML"){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -265,6 +274,9 @@ summary.haz <- function(d, method){
 #   - country
 #   - subjid
 #   - haz
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - haz.data: includes the number of measurements, mean HAZ in each study for each pair of sex and age category
@@ -273,7 +285,7 @@ summary.haz <- function(d, method){
 
 
 # summarize mean within age and sex categories
-summary.haz.age.sex <- function(d, method){
+summary.haz.age.sex <- function(d, method="REML"){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -365,6 +377,9 @@ summary.haz.age.sex <- function(d, method){
 #   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
 #   - When set to TRUE, individuals are considered students when HAZ is less than 3.
 # agelist: a list of strings that describe the ranges of each age category.
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - ip.data: includes the number of measurements, incidence proportions in each study for each age category
