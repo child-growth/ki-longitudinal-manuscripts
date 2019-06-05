@@ -126,7 +126,7 @@ d <- d %>% rename(agecat = diffcat) %>%
 #----------------------------------------------------
 # age specific pooled results
 #----------------------------------------------------
-RE_pool <- function(df, ycategory, gender){
+RE_pool <- function(df, ycategory, gender, method = "REML"){
   
   df <- df %>% filter(ycat==ycategory)
   df <- df %>% filter(sex==gender)
@@ -134,7 +134,8 @@ RE_pool <- function(df, ycategory, gender){
   agecat = list("0-3 months", "3-6 months",  "6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")
   
   pooled.vel=lapply(agecat,function(x) 
-    fit.rma(data=df, yi="mean", vi="var", ni="n", nlab="children",age=x, measure = "GEN"))
+    fit.rma(data=df, yi="mean", vi="var", ni="n", nlab="children",age=x,
+            measure = "GEN", method=method))
 
   
   pooled.vel=as.data.frame(do.call(rbind, pooled.vel))
@@ -219,6 +220,23 @@ pooled_vel <- rbind(
 
 saveRDS(pooled_vel, 
         file=paste0(res_dir,"stunting/pool_vel.RDS"))
+
+
+#----------------------------------------------------
+# pool results -- all quarterly studies -- fixed effects
+#----------------------------------------------------
+
+poolhaz_boys_fe <- RE_pool(d, ycategory="haz", gender="Male", method="FE")
+poolhaz_girls_fe <- RE_pool(d, ycategory="haz", gender="Female", method="FE")
+poollencm_boys_fe <- RE_pool(d, ycategory="lencm", gender="Male", method="FE")
+poollencm_girls_fe <- RE_pool(d, ycategory="lencm", gender="Female", method="FE")
+
+pooled_vel_fe <- rbind(
+  poolhaz_boys_fe, poolhaz_girls_fe, poollencm_boys_fe, poollencm_girls_fe
+)
+
+saveRDS(pooled_vel_fe, 
+        file=paste0(res_dir,"stunting/pool_vel_fe.RDS"))
 
 #----------------------------------------------------
 # pool results -- sensitivity analysis with monthly 
