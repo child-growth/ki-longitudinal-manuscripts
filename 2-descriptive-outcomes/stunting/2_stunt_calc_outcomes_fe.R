@@ -423,7 +423,7 @@ unique(shiny_desc_data$region)
 shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Africa", "Latin America", "Asia"))
 
 
-save(shiny_desc_data, file = paste0(res_dir,"shiny_desc_data_stunting_objects.Rdata"))
+saveRDS(shiny_desc_data, file = paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
 
 
 
