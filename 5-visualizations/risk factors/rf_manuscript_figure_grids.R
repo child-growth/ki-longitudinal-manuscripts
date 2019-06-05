@@ -8,10 +8,11 @@ source("5-visualizations/0-plot-themes.R")
 theme_set(theme_ki())
 
 require(cowplot)
+library(cowplot)
 
 #Figure 2 + 3
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/rf_paf_plot_objects.Rdata")
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/rf_Zpar_plot_objects.Rdata")
+load(paste0(here::here(), "/results/rf results/rf_paf_plot_objects.Rdata"))
+load(paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.Rdata"))
 
 p1 <- pPAR_laz + xlab("") + theme(axis.text = element_text(size=12))
 p2 <- pPAR_wlz + xlab("") + theme(axis.text = element_text(size=12))
@@ -28,14 +29,14 @@ ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/risk fact
 
 
 #Figure 4
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-severe-outcome-comps.Rdata")
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-age-strat-wast-plot-objects.Rdata")
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_spline_objects.Rdata")
+load(paste0(here::here(),"/results/fig-severe-outcome-comps.Rdata"))
+load(paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.Rdata"))
+load(paste0(here::here(), "/results/rf_spline_objects.Rdata"))
 
-p1 <- p1 + ggtitle("WLZ-maternal weight") + theme(legend.position = "bottom") + guides(color = guide_legend(nrow=3))
-p2 <- p2 + ggtitle("WLZ-maternal height") + theme(legend.position = "bottom") + guides(color = guide_legend(nrow=3))
-p3 <- p3 + ggtitle("LAZ-maternal weight") + theme(legend.position = "bottom") + guides(color = guide_legend(nrow=3))
-p4 <- p4 + ggtitle("LAZ-maternal height") + theme(legend.position = "bottom") + guides(color = guide_legend(nrow=3))
+p1 <- p1 + ggtitle("WLZ-maternal weight") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal weight", nrow=3))
+p2 <- p2 + ggtitle("WLZ-maternal height") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal height", nrow=3))
+p3 <- p3 + ggtitle("LAZ-maternal weight") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal weight", nrow=3))
+p4 <- p4 + ggtitle("LAZ-maternal height") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal height", nrow=3))
 
 
 Twoby1plot <- plot_grid(p4, p1, p3, p2, labels = "AUTO", ncol = 4, align = 'v', axis = 'l')
