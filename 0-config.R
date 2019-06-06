@@ -48,6 +48,7 @@ library(survey)
 # define directories
 res_dir = paste0(here::here(),"/results/")
 data_dir = paste0(here::here(), "/data/")
+ghapdata_dir = "U://ucb-superlearner/Manuscript analysis data/"
 
 # note: figures must be saved in same directory 
 # as shiny app in order to publish it
