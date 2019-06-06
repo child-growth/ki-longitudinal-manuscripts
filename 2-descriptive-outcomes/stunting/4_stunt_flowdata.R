@@ -211,6 +211,54 @@ stunt_pooled = bind_rows(pooled_newly,
                          pooled_never
 )
 
+#--------------------------------------------------
+# estimate fixed effects, format results
+#--------------------------------------------------
+pooled_newly_fe = run_rma_agem(data = stunt_agg, 
+                               n_name = "nchild", 
+                               x_name = "newly_stunted", 
+                               label = "Newly stunted",
+                               method = "FE")
+
+pooled_still_fe = run_rma_agem(data = stunt_agg, 
+                               n_name = "nchild", 
+                               x_name = "still_stunted", 
+                               label = "Still stunted",
+                               method = "FE")
+
+pooled_not_fe = run_rma_agem(data = stunt_agg, 
+                             n_name = "nchild", 
+                             x_name = "not_stunted", 
+                             label = "Not stunted",
+                             method = "FE")
+
+pooled_rec_fe = run_rma_agem(data = stunt_agg, 
+                             n_name = "nchild", 
+                             x_name = "recover",
+                             label = "Recovered",
+                             method = "FE")
+
+pooled_relapse_fe = run_rma_agem(data = stunt_agg, 
+                                 n_name = "nchild", 
+                                 x_name = "relapse",
+                                 label = "Stunting relapse",
+                                 method = "FE")
+
+pooled_never_fe = run_rma_agem(data = stunt_agg, 
+                               n_name = "nchild", 
+                               x_name = "never_stunted",
+                               label = "Never stunted",
+                               method = "FE")
+
+stunt_pooled_fe = bind_rows(pooled_newly_fe, 
+                            pooled_still_fe,
+                            pooled_rec_fe,
+                            pooled_relapse_fe,
+                            pooled_not_fe,
+                            pooled_never_fe
+)
+
+
 #----------------------------------------------
 # setting estimates to 0 at birth for
 # still, previously, relapse stunted
@@ -264,8 +312,33 @@ stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
                                  age_list = never_0,
                                  label = "Never stunted")
 
+stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_fe,
+                                    age_list = newly_0,
+                                    label = "Newly stunted")
+
+stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
+                                    age_list = still_0,
+                                    label = "Still stunted")
+
+stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
+                                    age_list = not_0,
+                                    label = "Not stunted")
+
+stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
+                                    age_list = rec_0,
+                                    label = "Recovered")
+
+stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
+                                    age_list = relapse_0,
+                                    label = "Stunting relapse")
+
+stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
+                                    age_list = never_0,
+                                    label = "Never stunted")
+
 
 saveRDS(flow_m, file=paste0(res_dir, "stuntflow.RDS"))
 saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stuntflow_pooled.RDS"))
+saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stuntflow_pooled_fe.RDS"))
 
 
