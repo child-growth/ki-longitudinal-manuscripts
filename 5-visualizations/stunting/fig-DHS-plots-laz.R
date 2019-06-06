@@ -40,6 +40,7 @@
 # source configuration file
 #---------------------------------------
 source(paste0(here::here(), "/0-config.R"))
+source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 
 # set up for parallel computing
 # configure for a laptop (use only 3 cores)
@@ -64,6 +65,26 @@ dhsz <- dhaz %>%
 # compute or load the DHS results
 # source("fig-DHS-plots-laz-compute.R")
 df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
+
+### TEMP DELETE LATER ### ### ### ### ### ### ### ### ### 
+dhsz$region <- rep(NA, nrow(dhsz))
+
+dhsz <- dhsz %>%
+  mutate(region = case_when(
+    country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" | country == "AF7" | country == "KH6" | country == "VNT" ~ "South Asia",
+    country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "Latin America",
+    is.na(region) ~ "Africa"
+  )) %>%
+  mutate(inghap = ifelse(
+    country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7", 1, 0
+  ))
+
+dhsz <- dhsz %>%
+  mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
+### END TEMP DELETE LATER ### ### ### ### ### ### ### 
+
+
+
 #---------------------------------------
 # estimate mean z-scores by age
 # subset to countries that overlap the
@@ -140,6 +161,11 @@ ghapfits <- ghapfits %>% mutate(dsource = "ki cohorts")
 dhssubfits <- dhssubfits %>% mutate(dsource = "DHS, ki countries")
 # dhsallfits <- dhsallfits %>% mutate(dsource="DHS") # std_err based on bootstrapping GAM
 dhsallfits <- df_survey_output %>% mutate(dsource = "DHS") # std_err based on survey_avg using sampling weight
+
+dhsfits <- dhsfits %>% mutate(dsource = as.character(dsource))
+ghapfits <- ghapfits %>% mutate(measure = as.character(measure))
+dhssubfits <- dhssubfits %>% mutate(measure = as.character(measure))
+
 dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
   mutate(dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries", "DHS")))
 
@@ -156,12 +182,12 @@ dhs_plotd <- dhsfits %>%
   filter(dsource %in% c("ki cohorts", "DHS"))
 
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black", tableau10(10)[c(1, 2, 5)])
+tableau10 <- tableau_color_pal("tableau10")
+pcols <- c("black", tableau10(10)[c(1, 2, 3)])
 
 blue <- 1
 orange <- 2
-green <- 5
+green <- 3
 
 dhs_plotd_laz <- filter(dhs_plotd, measure == "LAZ")
 
