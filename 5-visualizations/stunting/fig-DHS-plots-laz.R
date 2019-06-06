@@ -283,7 +283,8 @@ dhssubden <- bind_rows(dhssubden, dhssubden_pool) %>%
 # for z-scores, stratified by
 # region
 #---------------------------------------
-kiden <- readRDS(paste0(here(), "/results/ki.density.fits.quarterly.rds"))
+# kiden_old <- readRDS(paste0(here(), "/results/ki.density.fits.quarterly.rds"))
+kiden <- readRDS("~/Dropbox/HBGD/temp (1)/ki.density.fits.quarterly.rds")
 unique(kiden$region)
 
 kiden <- kiden %>%
@@ -336,8 +337,8 @@ dhsden_plot <- dhsden %>%
 
 #---------------------------------------
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black", tableau10(10)[c(1, 2, 5)])
+tableau10 <- tableau_color_pal("tableau10")
+pcols <- c("black", tableau10(10)[c(1, 2, 3)])
 
 #---------------------------------------
 # LAZ density by region
@@ -402,6 +403,7 @@ laz_dplot_name <- create_name(
 # save plot and underlying data
 ggsave(laz_dplot, file = paste0(fig_dir, "stunting/fig-", laz_dplot_name, ".png"), width = 8, height = 2)
 saveRDS(dhsden_plot_laz, file = paste0(figdata_dir, "figdata-", laz_dplot_name, ".RDS"))
+
 #############################################
 # Merge above plots into a single figure
 #############################################
@@ -409,7 +411,7 @@ saveRDS(dhsden_plot_laz, file = paste0(figdata_dir, "figdata-", laz_dplot_name, 
 arrange_figures = grid.arrange(laz_dplot, 
                                laz_ageplot, 
                                nrow = 2, ncol = 1,
-                               heights = c(2, 2),
+                               heights = c(2, 3),
                                widths= 8)
 
 ggsave(arrange_figures, file=paste0(fig_dir, "/stunting/fig-DHS-LAZ.png"), width=8, height=4)
