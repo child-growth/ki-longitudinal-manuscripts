@@ -3,9 +3,11 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
+
 #Load haz and whz data
 load("U:/ucb-superlearner/data/co-occurrence_data.RData")
 d <- d %>% subset(., select=-c(tr))
+
 
 
 #merge WLZ outcomes with covariates
@@ -308,10 +310,11 @@ Avarwt="Maternal weight"
 p1 <- ggplot() + 
   geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
+  scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
@@ -351,10 +354,11 @@ Avar="Maternal height"
 p2 <- ggplot() + 
   geom_line(data=plotdf_wlz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_wlz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
+  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avar)) +
+  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
+  scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
@@ -394,10 +398,11 @@ Avarwt="Maternal weight"
 p3 <- ggplot() + 
   geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_laz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
+  scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
@@ -435,10 +440,11 @@ Avar="Maternal height"
 p4 <- ggplot() + 
   geom_line(data=plotdf_laz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_laz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
+  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avar)) +
+  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
+  scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
@@ -460,5 +466,4 @@ ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid.png"), width
 
 #Save plot objects
 save(p1, p2, p3, p4,  file=paste0(here(),"/results/rf_spline_objects.Rdata"))
-
 
