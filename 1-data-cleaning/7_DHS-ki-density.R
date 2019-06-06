@@ -13,9 +13,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-
-
-load("U://ucb-superlearner/data/co-occurrence_data.RData")
+load("U://ucb-superlearner/Manuscript analysis data/co-occurrence_data.RData")
 
 #Subset to ages under 2 years.
 d <- d %>% filter(agedays < 24 * 30.4167)
