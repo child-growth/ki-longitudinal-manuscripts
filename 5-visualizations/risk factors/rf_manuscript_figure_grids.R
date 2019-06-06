@@ -8,7 +8,6 @@ source("5-visualizations/0-plot-themes.R")
 theme_set(theme_ki())
 
 require(cowplot)
-library(cowplot)
 
 #Figure 2 + 3
 load(paste0(here::here(), "/results/rf results/rf_paf_plot_objects.Rdata"))
@@ -33,16 +32,20 @@ load(paste0(here::here(),"/results/fig-severe-outcome-comps.Rdata"))
 load(paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.Rdata"))
 load(paste0(here::here(), "/results/rf_spline_objects.Rdata"))
 
-p1 <- p1 + ggtitle("WLZ-maternal weight") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal weight", nrow=3))
-p2 <- p2 + ggtitle("WLZ-maternal height") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal height", nrow=3))
-p3 <- p3 + ggtitle("LAZ-maternal weight") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal weight", nrow=3))
-p4 <- p4 + ggtitle("LAZ-maternal height") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal height", nrow=3))
-
+p1 <- p1 + ggtitle("Stratified by maternal weight") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal weight", nrow=3))
+p2 <- p2 + ggtitle("Stratified by maternal height") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal height", nrow=3))
+p3 <- p3 + ggtitle("Stratified by maternal weight") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal weight", nrow=3))
+p4 <- p4 + ggtitle("Stratified by maternal height") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal height", nrow=3))
 
 Twoby1plot <- plot_grid(p4, p1, p3, p2, labels = "AUTO", ncol = 4, align = 'v', axis = 'l')
 fig4 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","E","F"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
 ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig4.png"), width=14, height=18)
 
+wlz = plot_grid(p1, p2, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+ggsave(wlz, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig-wlz-maternal.png"), width=11, height=7)
+
+laz = plot_grid(p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+ggsave(laz, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig-laz-maternal.png"), width=11, height=7)
 
 
 #Figure 4 -alt
