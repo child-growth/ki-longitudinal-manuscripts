@@ -99,7 +99,8 @@ ghapd <- d %>%
     measure %in% c("Mean LAZ"),
     birth == "yes",
     age_range == "1 month",
-    cohort == "pooled"
+    cohort == "pooled",
+    analysis == "Primary"
   ) %>%
   mutate(
     measure = str_sub(measure, 6, 9),
