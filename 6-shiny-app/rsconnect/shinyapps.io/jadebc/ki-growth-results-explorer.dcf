@@ -1,0 +1,13 @@
+name: ki-growth-results-explorer
+title:
+username:
+account: jadebc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 860404
+bundleId: 2006292
+url: https://jadebc.shinyapps.io/ki-growth-results-explorer/
+when: 1555083687.31799
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: app.R|example_script_load_plot_names.R
