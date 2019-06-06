@@ -481,7 +481,7 @@ run_rma_agem <- function(data, n_name, x_name, label, method) {
 
   # apply fit.rma across age list
   res.list <- lapply(agelist, function(x)
-    fit.rma.rec.cohort(
+    fit.rma(
       data = data %>% filter(agem == x),
       ni = n_name, xi = x_name, measure = "PLO", nlab = "children",
       method = method
