@@ -166,6 +166,10 @@ analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cumi
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_binary_analyses.rdata")
 
+#Temporary subset for VIM
+# analyses <- analyses %>% filter(Y=="ever_stunted"|Y=="ever_wasted") %>% mutate(maximize=FALSE)
+# save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_binary_analyses_sub.rdata")
+
 
 #Make unadjusted analysis set
 analyses$W <- NULL
@@ -195,6 +199,10 @@ analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_continuous.rdata")
+
+#Temporary subset for VIM
+# analyses <- analyses %>% filter(Y=="haz"|Y=="whz") %>% mutate(maximize=TRUE)
+# save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_continuous_sub.rdata")
 
 
 #Make unadjusted analysis set

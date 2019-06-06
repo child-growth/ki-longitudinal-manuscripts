@@ -310,8 +310,8 @@ Avarwt="Maternal weight"
 p1 <- ggplot() + 
   geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avarwt)) +
-  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_color_manual(values=tableau10[c(10,9,6)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_fill_manual(values=tableau10[c(10,9,6)], name = paste0("Levels of\n ", Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
   scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) + 
@@ -398,8 +398,8 @@ Avarwt="Maternal weight"
 p3 <- ggplot() + 
   geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_laz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avarwt)) +
-  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_color_manual(values=tableau10[c(10,9,6)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_fill_manual(values=tableau10[c(10,9,6)], name = paste0("Levels of\n ", Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
   scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
