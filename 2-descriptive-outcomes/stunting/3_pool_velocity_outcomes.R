@@ -14,11 +14,11 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
-d <- readRDS(file="U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt.rds")
+d <- readRDS(file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")
 head(d)
 
 #Merge in sex
-cov<-readRDS("U:/UCB-SuperLearner/Stunting rallies/FINAL_temp_clean_covariates.rds")
+cov<-readRDS("U:/UCB-SuperLearner/Manuscript analysis data/FINAL_temp_clean_covariates.rds")
 cov <- subset(cov, select = c(studyid,subjid,country,sex))
 setDT(cov)
 
@@ -87,7 +87,7 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop beca
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
 
-saveRDS(d, file = paste0("U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt_clean.RDS"))
+saveRDS(d, file = paste0("U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt_clean.RDS"))
 
 
 #Summarize N's in study
@@ -100,7 +100,7 @@ table(d$diffcat)
 
 d <- d %>% rename(agecat = diffcat) %>%
   group_by(studyid, country, agecat, ycat, sex) %>%
-  summarize(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), n=n()) %>%
+  summarise(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), n=n()) %>%
   mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se) %>% 
   mutate(region = case_when(
     country=="BANGLADESH" | country=="INDIA"|

@@ -171,6 +171,6 @@ d <- d %>% mutate(region = case_when(
     country=="PERU"|country=='ECUADOR'   ~ "Latin America",
   TRUE                                    ~ "Other"))
 
-save(d,file="U://ucb-superlearner/data/co-occurrence_data.RData")
+save(d,file="U://ucb-superlearner/Manuscript analysis data/co-occurrence_data.RData")
 
 
