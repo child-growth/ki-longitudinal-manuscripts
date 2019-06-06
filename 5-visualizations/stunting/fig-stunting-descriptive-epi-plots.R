@@ -39,6 +39,17 @@ d$nmeas.f <- clean_nmeans(d$nmeas)
 # subset to primary analysis
 d <- d %>% filter(analysis == "Primary")
 
+# scale cohort-specific estimates
+d = d %>% mutate(
+  est = ifelse(disease=="Stunting"  & cohort!="pooled",
+               est*100, est),
+  lb = ifelse(disease=="Stunting"  & cohort!="pooled",
+               lb*100, lb),
+  ub = ifelse(disease=="Stunting"  & cohort!="pooled",
+               ub*100, ub)
+)
+
+
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month 
 #-------------------------------------------------------------------------------------------
@@ -182,7 +193,6 @@ saveRDS(prev_plot$data, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS
 #-------------------------------------------------------------------------------------------
 # Stunting prevalence - 3 months - stratified by cohort
 #-------------------------------------------------------------------------------------------
-# Nolan please update with new cohort specific plot
 prev_plot_africa <- ki_desc_plot(d,
                                  Disease="Stunting",
                                  Measure="Prevalence",
@@ -194,6 +204,7 @@ prev_plot_africa <- ki_desc_plot(d,
                                  ylabel='Point Prevalence (95% CI)',
                                  h1=69,
                                  h2=72,
+                                 strip.text.size=14,
                                  returnData=T,
                                  Region="Africa")
 prev_plot_africa$plot
@@ -209,6 +220,7 @@ prev_plot_lam <- ki_desc_plot(d,
                                  ylabel='Point Prevalence (95% CI)',
                                  h1=69,
                                  h2=72,
+                                 strip.text.size=14,
                                  returnData=T,
                                  Region="Latin America")
 prev_plot_lam$plot
@@ -224,11 +236,12 @@ prev_plot_sasia <- ki_desc_plot(d,
                               ylabel='Point Prevalence (95% CI)',
                               h1=69,
                               h2=72,
+                              strip.text.size=14,
                               returnData=T,
                               Region="South Asia")
 prev_plot_sasia$plot
 
-# define standardized plot names: Africa
+# define standardized plot names
 prev_plot_africa_name = create_name(
   outcome = "stunting",
   cutoff = 2,
@@ -239,12 +252,34 @@ prev_plot_africa_name = create_name(
   analysis = "primary"
 )
 
-# save plot and underlying data
-ggsave(prev_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-", "prev_plot_africa_name", ".png"), width=10, height=5)
-ggsave(prev_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-", "prev_plot_lam_name", ".png"), width=10, height=5)
-ggsave(prev_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-", "prev_plot_sasia_name", ".png"), width=10, height=5)
+prev_plot_latam_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "prevalence",
+  population = "cohort-stratified",
+  location = "Latin America",
+  age = "All ages",
+  analysis = "primary"
+)
 
-saveRDS(prev_plot_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot_cohort_name,".RDS"))
+prev_plot_sasia_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "prevalence",
+  population = "cohort-stratified",
+  location = "South Asia",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(prev_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_africa_name, ".png"), width=10, height=5)
+ggsave(prev_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_latam_name, ".png"), width=10, height=5)
+ggsave(prev_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sasia_name, ".png"), width=15, height=7)
+
+saveRDS(prev_plot_africa$data, file=paste0(figdata_dir, "figdata-",prev_plot_africa_name,".RDS"))
+saveRDS(prev_plot_lam$data, file=paste0(figdata_dir, "figdata-",prev_plot_latam_name,".RDS"))
+saveRDS(prev_plot_sasia$data, file=paste0(figdata_dir, "figdata-",prev_plot_sasia_name,".RDS"))
 
 
 
@@ -300,6 +335,7 @@ prev_plot_sev_africa <- ki_desc_plot(d,
                               ylabel='Point Prevalence (95% CI)',
                               h1=69,
                               h2=72,
+                              strip.text.size=14,
                               returnData=T,
                               Region="Africa")
 prev_plot_sev_africa$plot
@@ -315,6 +351,7 @@ prev_plot_sev_lam <- ki_desc_plot(d,
                                      ylabel='Point Prevalence (95% CI)',
                                      h1=69,
                                      h2=72,
+                                     strip.text.size=14,
                                      returnData=T,
                                      Region="Latin America")
 prev_plot_sev_lam$plot
@@ -330,28 +367,50 @@ prev_plot_sev_sasia <- ki_desc_plot(d,
                                      ylabel='Point Prevalence (95% CI)',
                                      h1=69,
                                      h2=72,
+                                     strip.text.size=14,
                                      returnData=T,
                                      Region="South Asia")
 prev_plot_sev_sasia$plot
 
 # define standardized plot names
-prev_plot_sev_cohort_name = create_name(
+prev_plot_sev_africa_name = create_name(
   outcome = "stunting",
   cutoff = 3,
   measure = "prevalence",
   population = "cohort-stratified",
-  location = "",
+  location = "Africa",
+  age = "All ages",
+  analysis = "primary"
+)
+
+prev_plot_sev_latam_name = create_name(
+  outcome = "stunting",
+  cutoff = 3,
+  measure = "prevalence",
+  population = "cohort-stratified",
+  location = "Latin America",
+  age = "All ages",
+  analysis = "primary"
+)
+
+prev_plot_sev_sasia_name = create_name(
+  outcome = "stunting",
+  cutoff = 3,
+  measure = "prevalence",
+  population = "cohort-stratified",
+  location = "South Asia",
   age = "All ages",
   analysis = "primary"
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev_africa$plot, file=paste0(fig_dir, "stunting/fig-","prev_plot_sev_africa_name", ".png"), width=10, height=5)
-ggsave(prev_plot_sev_lam$plot, file=paste0(fig_dir, "stunting/fig-","prev_plot_sev_lam_name", ".png"), width=10, height=5)
-ggsave(prev_plot_sev_sasia$plot, file=paste0(fig_dir, "stunting/fig-","prev_plot_sev_sasia_name", ".png"), width=10, height=5)
+ggsave(prev_plot_sev_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_africa_name, ".png"), width=10, height=5)
+ggsave(prev_plot_sev_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_latam_name, ".png"), width=10, height=5)
+ggsave(prev_plot_sev_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_sasia_name, ".png"), width=15, height=7)
 
-saveRDS(prev_plot_sev_cohort$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_cohort_name,".RDS"))
-
+saveRDS(prev_plot_sev_africa$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_africa_name,".RDS"))
+saveRDS(prev_plot_sev_lam$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_latam_name,".RDS"))
+saveRDS(prev_plot_sev_sasia$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_sasia_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion
@@ -435,54 +494,6 @@ inc_plot_name = create_name(
 # save plot and underlying data
 ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), width=14, height=3)
 
-
-#-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion - cohort specific
-#-------------------------------------------------------------------------------------------
-# TODO: Nolan please update with new cohort specific plot -- this too? 
-# ci_inc_plot_cohort <- ki_combo_plot(d,
-#                              Disease="Stunting",
-#                              Measure=c("Cumulative incidence", "Incidence_proportion"), 
-#                              Birth="yes", 
-#                              Severe="no", 
-#                              Age_range="3 months", 
-#                              Cohort="pooled",
-#                              xlabel="Child age, months",
-#                              h1=85,
-#                              h2=90,
-#                              returnData=T)
-# ci_inc_plot_cohort$plot
-# 
-# 
-# # get N's for figure caption
-# inc_n = d %>%
-#   filter(disease == "Stunting" & 
-#            (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
-#            region!="Overall" &
-#            age_range == "3 months" &
-#            cohort == "pooled" &
-#            severe == "no") %>% 
-#   group_by(region) %>% 
-#   summarise(min_study = min(nstudies, na.rm=TRUE), 
-#             max_study = max(nstudies, na.rm=TRUE),
-#             min_n = min(nmeas, na.rm=TRUE), 
-#             max_n = max(nmeas, na.rm=TRUE))
-# 
-# # define standardized plot names
-# ci_inc_plot_cohort_name = create_name(
-#   outcome = "stunting",
-#   cutoff = 2,
-#   measure = "incidence",
-#   population = "cohort-stratified",
-#   location = "",
-#   age = "All ages",
-#   analysis = "primary"
-# )
-# 
-# # save plot and underlying data
-# ggsave(ci_inc_plot_cohort$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_cohort_name,".png"), width=14, height=3)
-# 
-# saveRDS(ci_inc_plot_cohort$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_cohort_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion 
@@ -570,6 +581,103 @@ ci_inc_plot_sev_name = create_name(
 ggsave(ci_inc_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=4)
 
 saveRDS(ci_inc_plot_sev$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
+
+
+#-------------------------------------------------------------------------------------------
+# Stunting incidence - 3 months - stratified by cohort
+#-------------------------------------------------------------------------------------------
+
+ip_plot_africa <- ip_plot(
+  d,
+  Disease = "Stunting",
+  Measure = "Incidence_proportion",
+  Birth = "strat",
+  Severe = "no",
+  Age_range = "3 months",
+  Cohort = "pooled",
+  xlabel = "Child age, months",
+  ylabel = 'Incidence proportion (95% CI)',
+  h1 = 69,
+  h2 = 72,
+  returnData = T,
+  Region = "Africa"
+)
+ip_plot_africa$plot
+
+ip_plot_lam <- ip_plot(
+  d,
+  Disease = "Stunting",
+  Measure = "Incidence_proportion",
+  Birth = "strat",
+  Severe = "no",
+  Age_range = "3 months",
+  Cohort = "pooled",
+  xlabel = "Child age, months",
+  ylabel = 'Incidence proportion (95% CI)',
+  h1 = 69,
+  h2 = 72,
+  returnData = T,
+  Region = "Latin America"
+)
+ip_plot_lam$plot
+
+ip_plot_sasia <- ip_plot(
+  d,
+  Disease = "Stunting",
+  Measure = "Incidence_proportion",
+  Birth = "strat",
+  Severe = "no",
+  Age_range = "3 months",
+  Cohort = "pooled",
+  xlabel = "Child age, months",
+  ylabel = 'Incidence proportion (95% CI)',
+  h1 = 69,
+  h2 = 72,
+  returnData = T,
+  Region = "South Asia"
+)
+ip_plot_sasia$plot
+
+# define standardized plot names
+ip_plot_africa_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "incidence",
+  population = "cohort-stratified",
+  location = "Africa",
+  age = "All ages",
+  analysis = "primary"
+)
+
+ip_plot_latam_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "incidence",
+  population = "cohort-stratified",
+  location = "Latin America",
+  age = "All ages",
+  analysis = "primary"
+)
+
+ip_plot_sasia_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "incidence",
+  population = "cohort-stratified",
+  location = "South Asia",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(ip_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_africa_name, ".png"), width=10, height=5)
+ggsave(ip_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_latam_name, ".png"), width=10, height=5)
+ggsave(ip_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_sasia_name, ".png"), width=15, height=7)
+
+saveRDS(ip_plot_africa$data, file=paste0(figdata_dir, "figdata-",ip_plot_africa_name,".RDS"))
+saveRDS(ip_plot_lam$data, file=paste0(figdata_dir, "figdata-",ip_plot_latam_name,".RDS"))
+saveRDS(ip_plot_sasia$data, file=paste0(figdata_dir, "figdata-",ip_plot_sasia_name,".RDS"))
+
 
 
 

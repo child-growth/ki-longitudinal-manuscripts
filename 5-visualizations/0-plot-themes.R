@@ -33,6 +33,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                          Region=NULL,
                          h1=0,
                          h2=3,
+                         strip.text.size=18,
                          yrange=NULL,
                          returnData=F) {
   
@@ -90,7 +91,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 
   if (!is.null(Region)) {
     p <- p + facet_wrap(~cohort) +
-      theme(strip.text = element_text(size=18, margin = margin(t = 0)))
+      theme(strip.text = element_text(size=strip.text.size, margin = margin(t = 0)))
   } else {
     p <- p + facet_grid(~region) +
       theme(strip.text = element_text(size=6, margin = margin(t = 0))) 
@@ -345,16 +346,24 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   }
 }
 
-ip_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-                          Cohort="pooled",
-                          xlabel="Age category",
-                          ylabel="Proportion (95% CI)",
-                          h1=0,
-                          h2=3,
-                          yrange=NULL,
-                          dodge=0,
-                          returnData=F,
-                          geom_text_adjust_vec = 0){
+ip_plot <- function(d,
+                    Disease,
+                    Measure,
+                    Birth,
+                    Severe,
+                    Age_range,
+                    Cohort = "pooled",
+                    xlabel = "Age category",
+                    ylabel = "Proportion (95% CI)",
+                    h1 = 0,
+                    h2 = 3,
+                    yrange = NULL,
+                    dodge = 0,
+                    returnData = F,
+                    Region = NULL,
+                    strip.text.size=12,
+                    geom_text_adjust_vec = 0) {
+  
   
   df <- d %>% filter(
     disease == Disease &
@@ -362,10 +371,16 @@ ip_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
       birth == Birth &
       severe == Severe &
       age_range == Age_range &
-      cohort == Cohort &
+      # cohort == Cohort &
       !is.na(region) & !is.na(agecat)
   )
   df <- droplevels(df)
+  
+  if (!is.null(Region)) {
+    df <- df %>% filter(region == Region, cohort != "pooled")
+  } else {
+    df <- df %>% filter(cohort == Cohort)
+  }
   
   # remove N= from labels
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
@@ -427,6 +442,19 @@ ip_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
   }
+  
+  if (!is.null(Region)) {
+    p <- p + facet_wrap(~cohort) +
+      theme(strip.text = element_text(size=strip.text.size, margin = margin(t = 0)))
+  } else {
+    p <- p + facet_grid(~region) +
+      theme(strip.text = element_text(size=6, margin = margin(t = 0))) 
+  }
+  
+  if(!is.null(yrange)){
+    p <- p + coord_cartesian(ylim=yrange)
+  }
+  
   
   if(returnData){
     return(list(plot=p,data=df))
