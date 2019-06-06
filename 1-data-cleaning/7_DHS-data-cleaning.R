@@ -8,11 +8,7 @@
 
 source(paste0(here::here(), "/0-config.R"))
 
-
-#df <- read_rds(paste0(data_dir, "dhs-combined/", "dhs_data_combined.rds"))
-df <- read_rds("dhs_data_combined.rds")
-
-# df1 <- read_rds(paste0(data_dir, "AOIR71DT/AOIR71FL.DTA"))
+df <- readRDS(paste0(ghapdata_dir,"dhs_data_combined.rds"))
 
 #-------------------------------------------
 # Drop unnecessary variables and rename selected variables
