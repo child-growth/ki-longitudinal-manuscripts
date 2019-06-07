@@ -265,8 +265,7 @@ dhssubden <- bind_rows(dhssubden, dhssubden_pool) %>%
 # for z-scores, stratified by
 # region
 #---------------------------------------
-# kiden_old <- readRDS(paste0(here(), "/results/ki.density.fits.quarterly.rds"))
-kiden <- readRDS("~/Dropbox/HBGD/temp (1)/ki.density.fits.quarterly.rds")
+kiden <- readRDS(paste0(here(), "/results/ki.density.fits.quarterly.rds"))
 unique(kiden$region)
 
 kiden <- kiden %>%
