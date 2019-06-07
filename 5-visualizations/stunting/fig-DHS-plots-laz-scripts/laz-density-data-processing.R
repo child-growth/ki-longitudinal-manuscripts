@@ -143,7 +143,9 @@ dhsden_plot <- dhsden %>%
 
 dhsden_plot_laz <- filter(dhsden_plot, measure == "LAZ")
 
-### Add median points to data
+#---------------------------------------
+# Add median points to KI and DHS data
+#---------------------------------------
 ki_medians = readRDS(paste0("results/ki.zscore.medians.monthly.rds"))
 ki_medians = ki_medians[ki_medians$measure == "haz", c(1, 3)]
 ki_medians$dsource = "DHS, ki countries"
@@ -166,9 +168,15 @@ dhs_medians = select(dhs_medians, c("region", "median"))
 dhs_medians$dsource = "DHS"
 medians = rbind(ki_medians, dhs_medians)
 
+#---------------------------------------
+# Merge median data with cleaned density data
+#---------------------------------------
 dhsden_plot_laz = merge(x = dhsden_plot_laz, y = medians, by = c("region", "dsource"),  all.x = TRUE)
 dhsden_plot_laz = dhsden_plot_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
+#---------------------------------------
+# Save data for LAZ density plots
+#---------------------------------------
 laz_dplot_name <- create_name(
   outcome = "LAZ",
   cutoff = 2,

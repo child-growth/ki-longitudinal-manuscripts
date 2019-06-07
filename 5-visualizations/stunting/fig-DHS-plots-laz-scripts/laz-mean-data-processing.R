@@ -140,6 +140,10 @@ dhs_plotd_laz <- filter(dhs_plotd, measure == "LAZ")
 
 dhs_plotd_laz = dhs_plotd_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
+
+#---------------------------------------
+# Save data for LAZ mean by age plots
+#---------------------------------------
 laz_ageplot_name <- create_name(
   outcome = "LAZ",
   cutoff = 2,
