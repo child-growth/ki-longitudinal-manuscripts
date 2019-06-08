@@ -13,6 +13,8 @@
 #   0-config.R : configuration file
 #   clean-DHS-haz.rds  : clean DHS LAZ data
 #   ki.density.fits.quarterly.rds : KI kernel densities of Z-scores for quarterly cohorts
+#   ki.zscore.medians.monthly.rds : median values for monthly KI cohorts
+#   dhs.quantiles.rds : median values for DHS data
 
 # Outputs:
 #   figdata-laz-2-density_dhs-overall_region--allage-primary.RDS
