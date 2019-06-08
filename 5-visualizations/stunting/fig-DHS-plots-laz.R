@@ -313,7 +313,7 @@ dhsden <- bind_rows(kiden, dhssubden, dhsallden) %>%
 # DHS overall estimates
 #---------------------------------------
 dhsden_plot <- dhsden %>%
-  filter(dsource %in% c("DHS, ki countries", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS"))
 
 
 #---------------------------------------
@@ -328,7 +328,7 @@ dhsden_plot_laz <- filter(dhsden_plot, measure == "LAZ")
 
 ki_medians = readRDS(paste0("results/ki.zscore.medians.monthly.rds"))
 ki_medians = ki_medians[ki_medians$measure == "haz", c(1, 3)]
-ki_medians$dsource = "DHS, ki countries"
+ki_medians$dsource = "ki cohorts"
 
 ki_medians$region = recode_factor(ki_medians$region, 
                                   OVERALL = "Overall", 
