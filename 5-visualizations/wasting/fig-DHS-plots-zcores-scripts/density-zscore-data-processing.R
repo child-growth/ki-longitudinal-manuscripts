@@ -141,7 +141,7 @@ dhsden <- bind_rows(kiden, dhssubden, dhsallden) %>%
 # DHS overall estimates
 #---------------------------------------
 dhsden_plot <- dhsden %>%
-  filter(dsource %in% c("ki cohorts", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
 #####################
 # Add medians
@@ -173,7 +173,7 @@ dhs_medians =  dhs_medians %>% mutate(
 
 names(dhs_medians)[2] = "median"
 dhs_medians = select(dhs_medians, c("region", "measure", "median"))
-dhs_medians$dsource = "DHS"
+dhs_medians$dsource = "DHS, ki countries"
 
 medians = rbind(ki_medians, dhs_medians)
 

@@ -46,6 +46,6 @@ dhsfits <- dhsfits %>%
 # DHS overall estimates
 #---------------------------------------
 dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
 saveRDS(dhs_plotd, file = paste0(figdata_dir, "figdata-fig_dhs_ki_zscores_byage.RDS"))
