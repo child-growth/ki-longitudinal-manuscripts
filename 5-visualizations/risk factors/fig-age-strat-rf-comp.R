@@ -71,11 +71,12 @@ p_ageRR <- ggplot(plotdf, aes(x=intervention_level)) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(3, 2)]) +
   theme(strip.background = element_blank(),
-        legend.position="right",
+        legend.position=c(0.08, 0.93),
         axis.text.y = element_text(size=12),
         strip.text.x = element_text(size=10),
         axis.text.x = element_text(size=10, angle = 20, vjust = 0.5),
-        panel.spacing = unit(0, "lines")) 
+        panel.spacing = unit(0, "lines"),
+        legend.box.background = element_rect(colour = "black")) 
 
 
 ggsave(p_ageRR, file=paste0(here::here(), "/figures/risk factor/fig-age-strat-wast.png"), height=8, width=10)

@@ -4,17 +4,13 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/opttx_vim_results.rdata")
+vim <- results
 
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/adjusted_binary/adjusted_binary_results.rdata")
-# adj_bin <- results
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/unadjusted_binary/unadjusted_binary_results.rdata")
-# unadj_bin <- results
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/adjusted_velocity/adjusted_velocity_results.rdata")
-# adj_vel <- results
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/unadjusted_velocity/unadjusted_velocity_results.rdata")
-# unadj_vel <- results
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_results_perswast.rdata")
-# perswast <- results
+dim(vim)
+head(vim)
+
+
 
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_results.rdata")
 wasting <- results
@@ -81,11 +77,16 @@ unique(d$intervention_variable)
 atbirth <- c("vagbrth", "hdlvry", "trth2o", "safeh20", "cleanck", "impfloor", "impsan", "earlybf",  "enstunt", "enwast")
 postnatal <- c("anywast06", "pers_wast", "perdiar6","predexfd6")
 full2years <- "perdiar24"
+wastingvars <- c("anywast06", "pers_wast", "enwast")
+wasting_outcomevars <- c("wasted", "swasted", "wast_rec90d", "ever_wasted", "ever_swasted", "pers_wast", "ever_co" )
+
+      
 
 dim(d)
 d <- d %>% filter(!(intervention_variable %in% atbirth & agecat=="Birth"))
 d <- d %>% filter(!(intervention_variable %in% postnatal & agecat %in% c("Birth", "0-6 months",  "0-24 months")))
 d <- d %>% filter(!(intervention_variable %in% full2years & agecat!="24 months"))
+d <- d %>% filter(!(intervention_variable %in% wastingvars & outcome_variable %in% wasting_outcomevars))
 dim(d)
 
 

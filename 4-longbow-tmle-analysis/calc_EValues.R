@@ -15,16 +15,22 @@ theme_set(theme_ki())
 
 #Load data
 d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+#d <- readRDS(paste0(here::here(),"/6-shiny-app/RF app/shiny_rf_results.rds"))
+#d <- d %>% filter(type=="RR")
 
 #Drop reference levels
-d <- d %>% filter(!(logRR.psi==1 & logSE==0 & RR==1))
+d <- d %>% filter(!(logRR.psi==1 & logSE==0 & RR==1)) %>% rename(estimate = RR, ci_lower = RR.CI1, ci_upper = RR.CI2)
+#d <- d %>% filter(intervention_level != baseline_level)
+
 
 #Keep significant estimates
 #d <- d %>% filter((ci_upper <1 & ci_lower <1) | (ci_upper >1 & ci_lower >1))
 
+#d <- d %>% filter(outcome_variable %in% c("ever_stunted",   "ever_wasted"))
 
-
-head(d)
+# head(d)
+# d<-d %>% filter(ci_upper<1)
+# d<-d[1,]
 
 evalues.RRvec <- function(d, pointest=T){
   vec<-NULL
@@ -34,18 +40,19 @@ evalues.RRvec <- function(d, pointest=T){
       if(d$intervention_level[i]== d$baseline_level[i]){
         res<-NA
       }else{
-      suppressMessages(res <- evalues.RR( d$RR[i], d$RR.CI1[i], d$RR.CI2[i]))
+      suppressMessages(res <- evalues.RR(d$estimate[i], d$ci_lower[i], d$ci_upper[i]))
       res<-res[2,1]
       }
     vec<-c(vec,res)
     }
   }else{
     for(i in 1:nrow(d)){
-      if(d$RR.CI1[i] <= 1  & d$RR.CI2[i] >= 1){
+      if(d$ci_lower[i] <= 1  & d$ci_upper[i] >= 1){
         res<-NA
       }else{
-        ci <- d$RR.CI1[i]
-        if(1/d$RR.CI1[i]>1/d$RR.CI2[i]){ ci <- d$RR.CI2[i]}
+        
+        ci <-ifelse(abs(log(d$ci_upper[i]))<abs(log(d$ci_lower[i])), d$ci_upper[i], d$ci_lower[i])
+        
         suppressMessages(res <- evalues.RR(ci))
         res<-res[2,1]
       }
@@ -63,7 +70,10 @@ mean(d$EVals_lb, na.rm=T)
 summary(d$EVals, na.rm=T)
 summary(d$EVals_lb, na.rm=T)
 
-mean(d$RR[!(d$RR.CI1 <= 1  & d$RR.CI2 >= 1)])
+df <- d %>% filter(!is.na(EVals_lb))
+table(df$EVals_lb < df$EVals)
+
+#mean(d$RR[!(d$RR.CI1 <= 1  & d$RR.CI2 >= 1)])
 
 #d$EVals_lb[is.na(d$EVals_lb)] <- 1
 
@@ -71,47 +81,34 @@ mean(d$RR[!(d$RR.CI1 <= 1  & d$RR.CI2 >= 1)])
 #d$estimate <- ifelse(d$estimate>1, d$estimate, 1/d$estimate )
 
 
-p <- ggplot(d, aes(x=RR, y=EVals)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
-  #geom_abline(slope=1, intercept=0) +
-  geom_vline(aes(xintercept=1)) + geom_hline(aes(yintercept=1)) + 
-  #coord_equal(xlim = c(0.25,15), ylim = c(0.25,15)) +
-  scale_x_continuous(trans='log10') +
-  scale_y_continuous(trans='log10') +
-  xlab("Adjusted RR") + ylab("E value") +
-  theme(
-    strip.text.x = element_text(size=12),
-    axis.text.x = element_text(size=12)) 
-p
+# d <- d %>% group_by(RFlabel) %>% mutate(medianEval_lb = median(EVals_lb, na.rm=T)) %>% ungroup() %>% arrange(-medianEval_lb) %>%
+#   mutate(RFlabel = factor(RFlabel, levels=unique(RFlabel)))
+# d <- d %>% filter(!is.na(RFlabel))
 
-#Order variables by mean Evalue
+df <- d 
 
-
-p <- ggplot(d, aes(x=paste0(intervention_variable, "-", intervention_level), y=EVals)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
-  #geom_abline(slope=1, intercept=0) +
-  geom_vline(aes(xintercept=1)) + geom_hline(aes(yintercept=1)) + 
-  #coord_equal(xlim = c(0.25,15), ylim = c(0.25,15)) +
-  scale_y_continuous(trans='log10') +
-  xlab("Adjusted RR") + ylab("E value") +
-  theme(
-    strip.text.x = element_text(size=12),
-    axis.text.x = element_text(size=12)) 
-p
-
-
-d <- d %>% group_by(RFlabel) %>% mutate(medianEval_lb = median(EVals_lb, na.rm=T)) %>% ungroup() %>% arrange(-medianEval_lb) %>%
+df <- df %>% group_by(RFlabel) %>% mutate(medianEval_lb = median(EVals_lb, na.rm=T)) %>% ungroup() %>% arrange(-medianEval_lb) %>%
   mutate(RFlabel = factor(RFlabel, levels=unique(RFlabel)))
-d <- d %>% filter(!is.na(RFlabel))
+df <- df %>% filter(!is.na(RFlabel))
 
-p <- ggplot(d, aes(x=RFlabel, y=EVals_lb)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
+df$EVals_lb[is.na(df$EVals_lb)] <- 1
+
+
+pRR <- ggplot(df, aes(x=RR, y=EVals)) + geom_point(alpha=0.1)
+
+
+p <- ggplot(df, aes(x=RFlabel, y=EVals_lb)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
   geom_point(aes(y=medianEval_lb), color=tableau10[2], size=2) +
   geom_hline(aes(yintercept=1)) + 
-  coord_cartesian(ylim = c(1, 64)) +
+  coord_cartesian(ylim = c(1, 16)) +
   scale_y_continuous(trans='log10') +
-  xlab("Adjusted RR") + ylab("E value") +
+  xlab("Exposure") + ylab("E value") +
   theme(
-    axis.text.x = element_text(size=12, angle=90, vjust=1)) 
+    axis.text.x = element_text(size=12, angle=90)) 
 p
 
+
+#, vjust=1
 
 ggsave(p, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-Evalues.png"), height=10, width=8)
 

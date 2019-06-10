@@ -79,7 +79,7 @@ RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean
 #Save cleaned data
 saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 
-
+RMAest_clean <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 
 yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 

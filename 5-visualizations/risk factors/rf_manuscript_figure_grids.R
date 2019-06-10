@@ -32,30 +32,36 @@ load(paste0(here::here(),"/results/fig-severe-outcome-comps.Rdata"))
 load(paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.Rdata"))
 load(paste0(here::here(), "/results/rf_spline_objects.Rdata"))
 
-p1 <- p1 + ggtitle("Stratified by maternal weight") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal weight", nrow=3))
-p2 <- p2 + ggtitle("Stratified by maternal height") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal height", nrow=3))
-p3 <- p3 + ggtitle("Stratified by maternal weight") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal weight", nrow=3))
-p4 <- p4 + ggtitle("Stratified by maternal height") + theme(legend.position = c(0.05, 0.15)) + guides(color = guide_legend("Maternal height", nrow=3))
+pos = c(0.75,0.83)
+p1 <- p1 + ggtitle("") +  theme(legend.position ="none" ) +guides(color = guide_legend("Maternal weight", nrow=3))
+p2 <- p2 + ggtitle("") + theme(legend.position = "none") +guides(color = guide_legend("Maternal height", nrow=3))
+p3 <- p3 + ggtitle("") + theme(legend.position = pos) + guides(color = guide_legend("Maternal weight", nrow=3))
+p4 <- p4 + ggtitle("") +  theme(legend.position = pos) +guides(color = guide_legend("Maternal height", nrow=3))
 
-Twoby1plot <- plot_grid(p4, p1, p3, p2, labels = "AUTO", ncol = 4, align = 'v', axis = 'l')
-fig4 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","E","F"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
+#Titles
+titleA <- ggdraw() + draw_label("Stratified by maternal height", fontface='bold')
+titleB <- ggdraw() + draw_label("Stratified by maternal weight", fontface='bold')
+
+#Faceted plots
+Twoby1plotA <- plot_grid(p4, p2, labels = c("",""), ncol = 2)
+Twoby1plotB <- plot_grid(p3, p1, labels = c("",""), ncol = 2)
+
+Twoby1plotA_t <- plot_grid(titleA, Twoby1plotA, ncol=1, rel_heights=c(0.1, 1))
+Twoby1plotB_t <- plot_grid(titleB, Twoby1plotB, ncol=1, rel_heights=c(0.1, 1))
+
+
+Twoby1plot <- plot_grid(Twoby1plotA_t, Twoby1plotB_t, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+#Twoby1plot <- plot_grid(p4, p1, p3, p2, labels = "AUTO", ncol = 4, align = 'v', axis = 'l')
+fig4 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","C","D"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
 ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig4.png"), width=14, height=18)
 
-wlz = plot_grid(p1, p2, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-ggsave(wlz, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig-wlz-maternal.png"), width=11, height=7)
 
-laz = plot_grid(p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-ggsave(laz, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig-laz-maternal.png"), width=11, height=7)
-
-
-#Figure 4 -alt
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-wasting-prior-to-stunting-plot-objects.Rdata")
-p_earlywast <- p_earlywast + theme(axis.text.x=element_text(angle=45,vjust=0.5))
-# fig4 <- plot_grid(p_lagwhz, p_earlywast, labels = "AUTO", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
-# ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig4.png"), width=14, height=6)
 
 
 #Figure 5
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-wasting-prior-to-stunting-plot-objects.Rdata")
+p_earlywast <- p_earlywast + theme(axis.text.x=element_text(angle=45,vjust=0.5))
+
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mortality_plot_objects.Rdata")
 load(paste0(here::here(),"/figures/risk factor/fig-mortality-timing-plot-object.Rdata"))
 

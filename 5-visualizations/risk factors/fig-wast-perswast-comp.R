@@ -64,28 +64,38 @@ plotdf <- df %>%
   ),
   Outcome = factor(Outcome, levels=c("Stunted","Severely stunted","Wasted", "Severely wasted",  "Persistently wasted"))) %>%
   arrange(intervention_variable) %>%
-  group_by(intervention_variable, outcome_variable) %>% filter(RR==max(RR))
+  group_by(intervention_variable, outcome_variable)
 as.data.frame(plotdf)
 
-
-# XXXXXXX
-# Get dodge to work
-# Order outcomes
-# drop black from pallette
+plotdf$severe<-factor(ifelse(grepl("evere",plotdf$Outcome),1,0),levels=c("0","1"))
 
 
-pd <- position_dodge(0.4)
+#Keep only the high risk comparison
+unique(plotdf$intervention_level)
+plotdf <- plotdf %>% filter(intervention_level %in% c("Male","<52 kg","Low","Q1"))
+
+
+#Add comparison to facet lable
+unique(plotdf$RFlabel)
+plotdf$RFlabel_ref[plotdf$RFlabel=="Sex"] <- "Sex:\nboys vs girls (ref.)"
+plotdf$RFlabel_ref[plotdf$RFlabel=="Mother's weight"] <- "Mother's weight:\n<52 kg vs >=58 kg (ref.)"
+plotdf$RFlabel_ref[plotdf$RFlabel=="Mother's education"] <- "Mother's education:\nlow vs high (ref.)"
+plotdf$RFlabel_ref[plotdf$RFlabel=="HH wealth"] <- "HH wealth:\nQ1 vs Q4 (ref.)"
+
+
+
 
 p_severecomp <- ggplot(plotdf, aes(x=Outcome, group=intervention_level)) + 
-  geom_point(aes(y=RR, color=Outcome), size = 3, position = pd) +
+  geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
-                 alpha=0.5, size = 1, position = pd) +
-  facet_wrap(~RFlabel, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
-  labs(x = "Cumulative incidence of growth faltering outcome from birth to 24 months", y = "Cumulative incidence ratio\ncomparing highest to lowest risk strata") +
+                 alpha=0.5, size = 1) +
+  facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
+  labs(x = "Cumulative incidence of growth faltering outcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=rep(tableau10,4)) +
+  scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
+  scale_shape_manual(values=c(16,21)) +
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=12),
