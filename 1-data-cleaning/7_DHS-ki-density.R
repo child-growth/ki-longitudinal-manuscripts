@@ -17,19 +17,24 @@ source(paste0(here::here(), "/0-config.R"))
 load("U:/ucb-superlearner/data/stunting_data.RData")
 st = d
 rm(d)
-
-load(paste0(ghapdata_dir, "co-occurrence_data.RData"))
-
+load("U:/ucb-superlearner/data/wasting_data.RData")
+wst = d
+rm(d)
+load("U://ucb-superlearner/Manuscript analysis data/waz_data.RData")
+waz = d
+rm(d)
 
 #Subset to ages under 2 years.
-d <- d %>% filter(agedays < 24 * 30.4167)
+waz <- waz %>% filter(agedays < 24 * 30.4167)
+wst <- wst %>% filter(agedays < 24 * 30.4167)
 st <- st %>% filter(agedays < 24 * 30.4167)
 
 #Save Overall region
-d.overall <- d %>% mutate(region="Overall")
+waz.overall <- waz %>% mutate(region="Overall")
+wst.overall <- wst %>% mutate(region="Overall")
 st.overall <- st %>% mutate(region="Overall")
 
-d <- d %>% mutate(region = case_when(
+waz <- waz %>% mutate(region = case_when(
   country=="BANGLADESH" | country=="INDIA"|
     country=="NEPAL" | country=="PAKISTAN"|
     country=="PHILIPPINES"| country=="CHINA"|
@@ -50,7 +55,30 @@ d <- d %>% mutate(region = case_when(
     country=="PERU"|country=='ECUADOR'   ~ "PAHO",
   TRUE                                    ~ "Other"
 ))
-d <- d %>% filter(region!="Other")
+waz <- waz %>% filter(region!="Other")
+
+wst <- wst %>% mutate(region = case_when(
+  country=="BANGLADESH" | country=="INDIA"|
+    country=="NEPAL" | country=="PAKISTAN"|
+    country=="PHILIPPINES"| country=="CHINA"|
+    country=="THAILAND"|country=="SINGAPORE"|
+    country=='OMAN'~ "SEARO",
+  country=="KENYA"|
+    country=="GHANA"|
+    country=="BURKINA FASO"|
+    country=="GUINEA-BISSAU"|
+    country=="MALAWI"|
+    country=="SOUTH AFRICA"|
+    country=="TANZANIA, UNITED REPUBLIC OF"|
+    country=="TANZANIA"|
+    country=="ZIMBABWE"|
+    country=="GAMBIA"|
+    country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "AFRO",
+  country=="BRAZIL" | country=="GUATEMALA" |
+    country=="PERU"|country=='ECUADOR'   ~ "PAHO",
+  TRUE                                    ~ "Other"
+))
+wst <- wst %>% filter(region!="Other")
 
 st <- st %>% mutate(region = case_when(
   country=="BANGLADESH" | country=="INDIA"|
@@ -80,28 +108,34 @@ st <- st %>% filter(region!="Other")
 #---------------------------------------------------------
 
 #Function to estimate median by region and Z-score
-kimedian <- function(d, hazonly=FALSE){
+kimedian <- function(d, measure){
 
-  if(hazonly){
+  if(measure=="haz"){
     med_haz <- median(d$haz[d$haz > (-6) & d$haz < 6])
-
     res <- data.frame(measure="haz", median=c(med_haz))
-  }else{
-    med_haz <- median(d$haz[d$haz > (-6) & d$haz < 6])
-    med_whz <- median(d$whz[d$whz > (-5) & d$whz < 5])
-    med_waz <- median(d$waz[d$waz > (-5) & d$waz < 5])
-    res <- data.frame(measure=c("haz","whz","waz"), median=c(med_haz, med_whz, med_waz))
   }
-
+  if(measure=="whz"){
+    med_whz <- median(d$whz[d$whz > (-5) & d$whz < 5])
+    res <- data.frame(measure="whz", median=c(med_whz))
+  }
+  if(measure=="waz"){
+    med_waz <- median(d$waz[d$waz > (-5) & d$waz < 5])
+    res <- data.frame(measure="waz", median=c(med_waz))
+  }
     
   return(res)
 }
 
-medians_overall <- data.frame(region="Overall", kimedian(d))
-medians_overall_st <- data.frame(region="Overall", kimedian(st,hazonly=TRUE))
+medians_overall_waz <- data.frame(region="Overall", kimedian(waz, measure="waz"))
+medians_overall_wst <- data.frame(region="Overall", kimedian(wst, measure="whz"))
+medians_overall_st <- data.frame(region="Overall", kimedian(st, measure="haz"))
 
-medians_strat <- d %>% group_by(region) %>% do(kimedian(.)) %>% as.data.frame()
-medians.quarterly <- rbind(medians_overall, medians_strat)
+medians_strat_waz <- waz %>% group_by(region) %>% do(kimedian(., measure="waz")) %>% as.data.frame()
+medians_strat_wst <- wst %>% group_by(region) %>% do(kimedian(., measure="whz")) %>% as.data.frame()
+medians_strat_st <- st %>% group_by(region) %>% do(kimedian(., measure="haz")) %>% as.data.frame()
+medians.quarterly_waz <- rbind(medians_overall_waz, medians_strat_waz)
+medians.quarterly_wst <- rbind(medians_overall_wst, medians_strat_wst)
+medians.quarterly_st <- rbind(medians_overall_st, medians_strat_st)
 
 
 medians_strat_st <- st %>% group_by(region) %>% do(kimedian(.,hazonly=TRUE)) %>% as.data.frame()

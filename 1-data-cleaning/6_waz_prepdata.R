@@ -104,7 +104,7 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop beca
 # Subset to relevant variables
 #--------------------------------------------
 colnames(d)=tolower(colnames(d))
-d <- d %>% select(studyid, subjid, country, tr, agedays, haz, whz, waz, muaz, measurefreq)
+d <- d %>% select(studyid, subjid, country, tr, agedays, waz, measurefreq)
 
 nrow(d)
 
@@ -112,11 +112,10 @@ nrow(d)
 
 
 #--------------------------------------------
-# drop unrealistic HAZ and WHZ
+# drop unrealistic WAZ 
 #--------------------------------------------
 nrow(d)
-d = filter(d,haz >= -6 & haz <=6)
-d = filter(d,whz >= -5 & whz <=5)
+d = filter(d,waz >= -5 & waz <=5)
 nrow(d)
 
 #--------------------------------------------
@@ -172,10 +171,6 @@ d <- d %>% mutate(region = case_when(
   TRUE                                    ~ "Other"))
 
 
-#Save RF dataset
-save(d,file="U://ucb-superlearner/Manuscript analysis data/rf_co-occurrence_data.RData")
-
-
 #--------------------------------------------
 # drop trial arms with intervention impact on HAZ
 # -either based on published literature or analysis
@@ -191,6 +186,6 @@ d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]
 
 
 
-save(d,file="U://ucb-superlearner/Manuscript analysis data/co-occurrence_data.RData")
+save(d,file="U://ucb-superlearner/Manuscript analysis data/waz_data.RData")
 
 
