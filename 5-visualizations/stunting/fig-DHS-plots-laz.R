@@ -161,8 +161,10 @@ dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
 # DHS overall estimates
 #---------------------------------------
 dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
+dhs_plotd$region <- replace(dhs_plotd$region,is.na(dhs_plotd$region),"Overall")
+  
 # standard region colors used in other plots
 tableau10 <- tableau_color_pal("tableau10")
 pcols <- c("black", tableau10(10)[c(1, 2, 3)])
@@ -313,7 +315,7 @@ dhsden <- bind_rows(kiden, dhssubden, dhsallden) %>%
 # DHS overall estimates
 #---------------------------------------
 dhsden_plot <- dhsden %>%
-  filter(dsource %in% c("ki cohorts", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
 
 #---------------------------------------
@@ -345,7 +347,7 @@ dhs_medians$region = recode_factor(dhs_medians$region,
                                    SEARO = "South Asia")
 names(dhs_medians)[2] = "median"
 dhs_medians = select(dhs_medians, c("region", "median"))
-dhs_medians$dsource = "DHS"
+dhs_medians$dsource = "DHS, ki countries"
 medians = rbind(ki_medians, dhs_medians)
 
 dhsden_plot_laz = merge(x = dhsden_plot_laz, y = medians, by = c("region", "dsource"),  all.x = TRUE)

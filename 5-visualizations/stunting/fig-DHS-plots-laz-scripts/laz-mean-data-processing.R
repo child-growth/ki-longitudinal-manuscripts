@@ -134,7 +134,9 @@ dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
 # Filter for LAZ measures with data source of ki cohorts or DHS
 #---------------------------------------
 dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
+
+dhs_plotd$region <- replace(dhs_plotd$region,is.na(dhs_plotd$region),"Overall")
 
 dhs_plotd_laz <- filter(dhs_plotd, measure == "LAZ")
 

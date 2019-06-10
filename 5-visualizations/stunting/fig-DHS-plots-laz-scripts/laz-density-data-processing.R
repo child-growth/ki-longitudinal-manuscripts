@@ -141,7 +141,7 @@ dhsden <- bind_rows(kiden, dhssubden, dhsallden) %>%
 # DHS overall estimates
 #---------------------------------------
 dhsden_plot <- dhsden %>%
-  filter(dsource %in% c("ki cohorts", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
 dhsden_plot_laz <- filter(dhsden_plot, measure == "LAZ")
 
@@ -167,7 +167,7 @@ dhs_medians$region = recode_factor(dhs_medians$region,
                                    SEARO = "South Asia")
 names(dhs_medians)[2] = "median"
 dhs_medians = select(dhs_medians, c("region", "median"))
-dhs_medians$dsource = "DHS"
+dhs_medians$dsource = "DHS, ki countries"
 medians = rbind(ki_medians, dhs_medians)
 
 #---------------------------------------
