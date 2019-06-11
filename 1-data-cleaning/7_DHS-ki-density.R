@@ -5,6 +5,9 @@
 
 # This script plots Z-score densities for the 
 # KI cohort data 
+
+# Density curves and medians for
+# both stunting and wasting 
 #---------------------------------------
 
 #---------------------------------------
