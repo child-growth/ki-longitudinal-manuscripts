@@ -31,6 +31,7 @@ pcols <- c("black", tableau10(10)[c(1, 2, 3)])
 # Plot mean z-score by age
 ##################################
 dhs_plotd = read_rds(paste0(figdata_dir, "figdata-fig_dhs_ki_zscores_byage.RDS"))
+dhs_plotd$region = factor(dhs_plotd$region, levels = c("Overall", "Africa", "Latin America", "South Asia"))
 
 dhsp <- ggplot(data = dhs_plotd, aes(x = agem, y = fit, color = region, fill = region, linetype = dsource)) +
   facet_grid(measure ~ region) +
