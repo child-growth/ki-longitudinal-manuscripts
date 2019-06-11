@@ -66,11 +66,15 @@ load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mor
 load(paste0(here::here(),"/figures/risk factor/fig-mortality-timing-plot-object.Rdata"))
 
 
-# fig5 <- plot_grid(p, p1, p2, p3, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-# ggsave(fig5, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig5.png"), width=14, height=10)
+pos1 = c(0.1, 0.85)
+pos2 = c(0.5, 0.3)
+pos3 = c(0.55, 0.3)
+p1 <- p1 + theme(legend.position = pos1) #+guides(color = guide_legend("Maternal weight", nrow=3))
+p2 <- p2 + theme(legend.position = pos2) #+guides(color = guide_legend("Maternal height", nrow=3))
+p3 <- p3 + theme(legend.position = pos3) #+guides(color = guide_legend("Maternal height", nrow=3))
 
 fig5a <- plot_grid(p_lagwhz, p_earlywast, labels = "AUTO", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
-fig5b <- plot_grid(p, p1, p2, p3, labels = c("C","D","E","F"), ncol = 2, align = 'v', axis = 'l')
+fig5b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2, align = 'v', axis = 'l')
 fig5 <- plot_grid(fig5a, fig5b, labels = c("",""), ncol = 1, rel_heights = c(1,2))
 ggsave(fig5, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig5.png"), width=14, height=14)
 

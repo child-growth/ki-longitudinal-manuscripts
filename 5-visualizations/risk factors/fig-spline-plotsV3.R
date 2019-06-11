@@ -26,11 +26,6 @@ d <- subset(d, select = -c(id, arm, tr))
 dim(d)
 
 
-#d <- d %>% filter(studyid!="ki1119695-PROBIT")
-
-# Avar="sex"
-# Y="whz"
-
 #Adapted from: 
 #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
 
@@ -62,22 +57,10 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   
   # DEFINE THE AVERAGE RANGE, CENTERING POINT, DEGREE AND TYPE OF THE SPLINE
   # (THESE PARAMETERS CAN BE CHANGED BY THE USER FOR ADDITIONAL ANALYSES)
-  #cen <- 365
   bound <- c(1,730)
   degree <- 3
-  #type <- "bs"
   df <- 6
   
-  # DEFINE THE KNOTS AT agedays CORRESPONDING TO AVERAGE PERCENTILES
-  # But they all must be within every study range
-  # d %>% group_by(id) %>% summarise(minage=min(agedays), maxage=max(agedays)) %>% ungroup() %>% summarise(minage2=max(minage), maxage2=min(maxage), minage=mean(minage), maxage=mean(maxage))
-  # knotperc <- c(5,35,65,95)
-  # #knotperc <- c(10,35,65,90)
-  # knots <- quantile(d$agedays,knotperc/100,na.rm=T)
-  # knots[1] <-10
-  # knots <- c(183,365,548)
-  # knots <- c(300, 330)
-  # bound <- c(30,678)
   
   
   
@@ -99,22 +82,12 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
     # LOAD
     data <- d[d$id==unique(d$id)[i],]
     
-    #Can I pick knots by quanile here?
-    knots <- quantile(data$agedays,c(10,35,65,90)/100,na.rm=T)
-    #knots[1] <- ifelse(knots[1]==1,2,knots[1])
-    knots[1]<-knots[1]+5
-    #knots <- quantile(data$agedays,c(10,25,40,,75,90)/100,na.rm=T)
-    
+
     # CREATE THE SPLINE
-    # NB: KNOTS AND BOUNDARIES FIXED AT SAME VALUES
     bt <- onebasis(data$agedays,fun=type,
                    degree=degree, 
-                   df=df#,
-                   #knots=knots,
-                   #Bound=bound
-                   )
-    #summary.onebasis(bt)
-    
+                   df=df)
+
     # RUN THE MODEL
     #Note: add cv cross-validation
     model <- glm(Y ~ bt,family=gaussian(), data)
@@ -138,8 +111,6 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   # PERFORM MULTIVARIATE META-ANALYSIS
   ####################################################################
   
-  #Either stratify spline estimation by Avar and fit model with 1), or figure out how to feed in Avar in option 2)
-  
   
   # 1) MULTIVARIATE META-ANALYSIS
   if(overall){
@@ -156,9 +127,6 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
    return(cp)
   }else{
     
-  
-  # summary(mv)
-  
   # 2) MULTIVARIATE META-REGRESSION - Avar-level has to be study specific predictor
   Avar_lev<- stringr::str_split(rownames(ymat),"__", simplify=T)[,2]
   (mvlat <- mvmeta(ymat~Avar_lev,Slist,method="reml"))
@@ -176,11 +144,8 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   # BASIS USED TO PREDICT AGE, EQUAL TO THAT USED FOR ESTIMATION
   #   NOTE: INTERNAL AND BOUNDARY KNOTS PLACED AT SAME VALUES AS IN ESTIMATION
   tmean <- seq(bound[1],bound[2],length=30)
-  btmean <- onebasis(tmean,fun=type
-                     #,degree=degree,
-                     #knots=knots,
-                     #Bound=bound
-                     )
+  btmean <- onebasis(tmean,fun=type)
+                     
   
   ####################################################################
   # PREDICTION FROM MODELS
@@ -192,9 +157,6 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   # COMPUTE PREDICTION FOR MULTIVARIATE META-REGRESSION MODELS
   #   1ST STEP: PREDICT THE OUTCOME PARAMETERS FOR SPECIFIC VALUES OF META-PREDICTOR
   #   2ND STEP: PREDICT THE RELATIONSHIP AT CHOSEN VALUES GIVEN THE PARAMETERS
-
-  #XXXXX
-  #Note- prediction not working, Predict seperately for each factor level
         
   predAvar <- predict(mvlat,data.frame(Avar=factor(unique(d$Avar))),vcov=T)
   predlist <- list()

@@ -94,7 +94,6 @@ df <- df %>% filter(!is.na(RFlabel))
 df$EVals_lb[is.na(df$EVals_lb)] <- 1
 
 
-pRR <- ggplot(df, aes(x=RR, y=EVals)) + geom_point(alpha=0.1)
 
 
 p <- ggplot(df, aes(x=RFlabel, y=EVals_lb)) + geom_point(alpha=0.1) + #geom_smooth(color="red") +
@@ -108,11 +107,27 @@ p <- ggplot(df, aes(x=RFlabel, y=EVals_lb)) + geom_point(alpha=0.1) + #geom_smoo
 p
 
 
-#, vjust=1
 
 ggsave(p, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-Evalues.png"), height=10, width=8)
 
 
+
+#Compare point estimates to the Evalues
+
+#Flip protective point estimates
+d <- df %>% filter(EVals_lb!=1)
+d$estimate[d$estimate < 1] <- 1/d$estimate[d$estimate < 1]
+summary(d$estimate)
+
+
+pRR <- ggplot(d, aes(x=estimate, y=EVals)) + geom_point(alpha=0.1) + 
+  scale_x_continuous(trans='log10') +
+  scale_y_continuous(trans='log10') 
+
+table(d$estimate > d$EVals)
+prop.table(table(d$estimate > d$EVals_lb))
+summary(d$EVals_lb/d$estimate)
+summary(d$EVals_lb)
 
 
 # #Drop regionally pooled estimates, color pooled estimate
