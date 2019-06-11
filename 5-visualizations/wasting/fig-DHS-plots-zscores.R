@@ -101,7 +101,7 @@ dhsp <- ggplot(data = dhs_plotd, aes(x = agem, y = fit, color = region, fill = r
   scale_y_continuous(breaks = seq(-2, 1, by = 1)) +
   scale_color_manual(values = pcols, guide = FALSE) +
   scale_fill_manual(values = pcols, guide = FALSE) +
-  scale_linetype_manual(values = c("solid", "dashed", "dotdash")) +
+  scale_linetype_manual(values = c("solid", "dashed", "dotdash"), name="Data source:") +
   labs(x = "Child age, months", y = "Anthropometric z-score") +
   coord_cartesian(ylim = c(-2, 1)) +
   theme_minimal() +
