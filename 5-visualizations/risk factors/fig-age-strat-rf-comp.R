@@ -8,8 +8,6 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 source("5-visualizations/0-plot-themes.R")
 theme_set(theme_ki())
 
-
-
 #Load data
 d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 
@@ -67,22 +65,23 @@ p_ageRR <- ggplot(plotdf, aes(x=intervention_level)) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
                  alpha=0.5, size = 1, position = pd) +
   facet_wrap(RFlabel~agecat, scales="free_x") +   #,  labeller = label_wrap) +
-  labs(x = "Exposure level", y = "Relative risk of wasting incidence") +
+  labs(x = "Exposure level", y = "Adjusted relative risk") +
   geom_hline(yintercept = 1) +
-  geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
+  geom_text(aes(x=1, y=(min(plotdf$RR.CI1)), label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=rep(tableau10,4)) +
+  scale_colour_manual(values=tableau10[c(3, 2)]) +
   theme(strip.background = element_blank(),
-        legend.position="right",
+        legend.position=c(0.08, 0.93),
         axis.text.y = element_text(size=12),
         strip.text.x = element_text(size=10),
         axis.text.x = element_text(size=10, angle = 20, vjust = 0.5),
-        panel.spacing = unit(0, "lines")) 
+        panel.spacing = unit(0, "lines"),
+        legend.box.background = element_rect(colour = "black")) 
 
 
-ggsave(p_ageRR, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-age-strat-wast.png"), height=8, width=10)
+ggsave(p_ageRR, file=paste0(here::here(), "/figures/risk factor/fig-age-strat-wast.png"), height=8, width=10)
 
-save(p_ageRR, plotdf, file = c("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-age-strat-wast-plot-objects.Rdata"))
+save(p_ageRR, plotdf, file = paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.Rdata"))
 
 
 

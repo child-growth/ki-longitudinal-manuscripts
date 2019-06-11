@@ -40,6 +40,7 @@
 # source configuration file
 #---------------------------------------
 source(paste0(here::here(), "/0-config.R"))
+source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 
 # set up for parallel computing
 # configure for a laptop (use only 3 cores)
@@ -64,6 +65,9 @@ dhsz <- dhaz %>%
 # compute or load the DHS results
 # source("fig-DHS-plots-laz-compute.R")
 df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
+
+
+
 #---------------------------------------
 # estimate mean z-scores by age
 # subset to countries that overlap the
@@ -99,7 +103,8 @@ ghapd <- d %>%
     measure %in% c("Mean LAZ"),
     birth == "yes",
     age_range == "1 month",
-    cohort == "pooled"
+    cohort == "pooled",
+    analysis == "Primary"
   ) %>%
   mutate(
     measure = str_sub(measure, 6, 9),
@@ -139,6 +144,10 @@ ghapfits <- ghapfits %>% mutate(dsource = "ki cohorts")
 dhssubfits <- dhssubfits %>% mutate(dsource = "DHS, ki countries")
 # dhsallfits <- dhsallfits %>% mutate(dsource="DHS") # std_err based on bootstrapping GAM
 dhsallfits <- df_survey_output %>% mutate(dsource = "DHS") # std_err based on survey_avg using sampling weight
+
+ghapfits <- ghapfits %>% mutate(measure = as.character(measure))
+dhssubfits <- dhssubfits %>% mutate(measure = as.character(measure))
+
 dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
   mutate(dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries", "DHS")))
 
@@ -152,15 +161,17 @@ dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
 # DHS overall estimates
 #---------------------------------------
 dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
+dhs_plotd$region <- replace(dhs_plotd$region,is.na(dhs_plotd$region),"Overall")
+  
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black", tableau10(10)[c(1, 2, 5)])
+tableau10 <- tableau_color_pal("tableau10")
+pcols <- c("black", tableau10(10)[c(1, 2, 3)])
 
 blue <- 1
 orange <- 2
-green <- 5
+green <- 3
 
 dhs_plotd_laz <- filter(dhs_plotd, measure == "LAZ")
 
@@ -304,13 +315,13 @@ dhsden <- bind_rows(kiden, dhssubden, dhsallden) %>%
 # DHS overall estimates
 #---------------------------------------
 dhsden_plot <- dhsden %>%
-  filter(dsource %in% c("DHS, ki countries", "DHS"))
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
 
 #---------------------------------------
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("Tableau 10")
-pcols <- c("black", tableau10(10)[c(1, 2, 5)])
+tableau10 <- tableau_color_pal("tableau10")
+pcols <- c("black", tableau10(10)[c(1, 2, 3)])
 
 #---------------------------------------
 # LAZ density by region
@@ -319,7 +330,7 @@ dhsden_plot_laz <- filter(dhsden_plot, measure == "LAZ")
 
 ki_medians = readRDS(paste0("results/ki.zscore.medians.monthly.rds"))
 ki_medians = ki_medians[ki_medians$measure == "haz", c(1, 3)]
-ki_medians$dsource = "DHS, ki countries"
+ki_medians$dsource = "ki cohorts"
 
 ki_medians$region = recode_factor(ki_medians$region, 
                                   OVERALL = "Overall", 
@@ -336,7 +347,7 @@ dhs_medians$region = recode_factor(dhs_medians$region,
                                    SEARO = "South Asia")
 names(dhs_medians)[2] = "median"
 dhs_medians = select(dhs_medians, c("region", "median"))
-dhs_medians$dsource = "DHS"
+dhs_medians$dsource = "DHS, ki countries"
 medians = rbind(ki_medians, dhs_medians)
 
 dhsden_plot_laz = merge(x = dhsden_plot_laz, y = medians, by = c("region", "dsource"),  all.x = TRUE)
@@ -375,6 +386,7 @@ laz_dplot_name <- create_name(
 # save plot and underlying data
 ggsave(laz_dplot, file = paste0(fig_dir, "stunting/fig-", laz_dplot_name, ".png"), width = 8, height = 2)
 saveRDS(dhsden_plot_laz, file = paste0(figdata_dir, "figdata-", laz_dplot_name, ".RDS"))
+
 #############################################
 # Merge above plots into a single figure
 #############################################
@@ -382,7 +394,7 @@ saveRDS(dhsden_plot_laz, file = paste0(figdata_dir, "figdata-", laz_dplot_name, 
 arrange_figures = grid.arrange(laz_dplot, 
                                laz_ageplot, 
                                nrow = 2, ncol = 1,
-                               heights = c(2, 2),
+                               heights = c(2, 3),
                                widths= 8)
 
 ggsave(arrange_figures, file=paste0(fig_dir, "/stunting/fig-DHS-LAZ.png"), width=8, height=4)

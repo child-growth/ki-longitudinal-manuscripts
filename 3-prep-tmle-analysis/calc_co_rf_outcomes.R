@@ -12,7 +12,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 
-load("U://ucb-superlearner/data/co-occurrence_data.RData")
+load("U://ucb-superlearner/Manuscript analysis data/rf_co-occurrence_data.RData")
 
 
 #Drop TR so it doesn't affect merge with covariates

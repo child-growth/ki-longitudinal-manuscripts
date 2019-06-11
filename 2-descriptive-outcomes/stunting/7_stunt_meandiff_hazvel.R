@@ -15,11 +15,11 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 #-------------------------------------------
 # Load and pre-process data
 #-------------------------------------------
-d <- readRDS(file="U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt.rds")
+d <- readRDS(file=paste0(ghapdata_dir, "velocity_longfmt.rds"))
 head(d)
 
 #Merge in sex
-cov<-readRDS("U:/UCB-SuperLearner/Stunting rallies/FINAL_temp_clean_covariates.rds")
+cov<-readRDS(file=paste0(ghapdata_dir, "FINAL_temp_clean_covariates.rds"))
 cov <- subset(cov, select = c(studyid,subjid,country,sex))
 setDT(cov)
 
@@ -95,7 +95,7 @@ meandiff_sex_df_LAZ = meandiff_sex_df_LAZ %>% select(studyid, everything())
 
 fit_rma_diff = function(data, age){
   fit = rma(yi = yi,  sei = sei,
-            method="REML", data = data %>% filter(agecat==age))
+            method="FE", data = data %>% filter(agecat==age))
   out = data.frame(
     agecat = age,
     est = fit$beta,

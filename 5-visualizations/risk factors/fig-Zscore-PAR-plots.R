@@ -85,7 +85,15 @@ yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 #hbgdki pallet
 tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+
+# All dark grey
 tableau10 <- rep("grey30",10)
+
+# Different shades of grey
+tableau10 = c("grey50", "grey30")
+
+# Colors!
+tableau10 = c("#E377C2","#7F7F7F")
 
 scaleFUN <- function(x) sprintf("%.1f", x)
 
@@ -121,9 +129,21 @@ nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_pr
 RFlabel <- plotdf$RFlabel
 PAR <- plotdf$PAR
 
+plotdf$measure = "Population attributable difference"
+
+#copy existing data, offset by 0.1
+plotdf_copy = plotdf
+plotdf_copy$measure = "Variable importance measure"
+plotdf_copy$PAR = plotdf_copy$PAR + 0.1
+plotdf_copy$CI1 = plotdf_copy$CI1 + 0.1
+plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
+
+#append tables for single ggplot call
+plotdf = rbind(plotdf, plotdf_copy)
+
 pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) + 
-  geom_point(aes(y=-PAR,  color=RFtype), size = 4) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2, color=RFtype)) +
+  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
+  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
   coord_flip(ylim=c(-0.2, 0.55)) +
   labs(x = "Exposure", y = "Difference in LAZ after setting whole\npopulation exposure to reference level") +
   geom_hline(yintercept = 0) +
@@ -134,6 +154,7 @@ pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) +
                                          breaks = 1:length(nlab),
                                          labels = reorder(nlab, PAR))) +
   scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
+  scale_shape_manual(values=c(4, 19))+
   theme(strip.background = element_blank(),
         legend.position="right",
         axis.text.y = element_text(hjust = 1),
@@ -146,8 +167,6 @@ pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) +
 pPAR_laz
 
 
-
-
 plotdf <- dpool %>% filter(outcome_variable=="WLZ") %>%
   arrange(-PAR) %>%
   mutate(RFlabel_ref=factor(RFlabel, levels=unique(RFlabel)))
@@ -155,9 +174,21 @@ nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_pr
 RFlabel <- plotdf$RFlabel
 PAR <- plotdf$PAR
 
+plotdf$measure = "Population attributable difference"
+
+#copy existing data, offset by 0.1
+plotdf_copy = plotdf
+plotdf_copy$measure = "Variable importance measure"
+plotdf_copy$PAR = plotdf_copy$PAR + 0.1
+plotdf_copy$CI1 = plotdf_copy$CI1 + 0.1
+plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
+
+#append tables for single ggplot call
+plotdf = rbind(plotdf, plotdf_copy)
+
 pPAR_wlz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) + 
-  geom_point(aes(y=-PAR,  color=RFtype), size = 4) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2, color=RFtype)) +
+  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
+  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
   coord_flip(ylim=c(-0.2, 0.55)) +
   labs(x = "Exposure", y = "Difference in WLZ after setting whole\npopulation exposure to reference level") +
   geom_hline(yintercept = 0) +
@@ -168,6 +199,7 @@ pPAR_wlz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) +
                                          breaks = 1:length(nlab),
                                          labels = reorder(nlab, PAR))) +
   scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
+  scale_shape_manual(values=c(4, 19))+
   theme(strip.background = element_blank(),
         legend.position="right",
         axis.text.y = element_text(hjust = 1),

@@ -8,11 +8,7 @@
 
 source(paste0(here::here(), "/0-config.R"))
 
-
-#df <- read_rds(paste0(data_dir, "dhs-combined/", "dhs_data_combined.rds"))
-df <- read_rds("dhs_data_combined.rds")
-
-# df1 <- read_rds(paste0(data_dir, "AOIR71DT/AOIR71FL.DTA"))
+df <- readRDS(paste0(ghapdata_dir,"dhs_data_combined.rds"))
 
 #-------------------------------------------
 # Drop unnecessary variables and rename selected variables
@@ -27,7 +23,8 @@ d <- df %>%
     psu = hv021,
     stratification = hv023
   ) %>%
-  select("country", "weight", "dataset", "cluster_no", "psu", "stratification", grep("hc", colnames(df))) %>%
+  select("country", "weight", "dataset", "cluster_no", "psu", "stratification", 
+         grep("hc", colnames(df))) %>%
   select(-contains("sh"))
 
 d <- as.data.table(d)
@@ -38,10 +35,7 @@ d <- d %>%
     country == "BD6" | country == "IA6" | country == "ID6" | country == "LK" | country == "MM7" | country == "MV7" | country == "NP7" | country == "PH7" | country == "PK7" | country == "TH" | country == "TL7" | country == "AF7" | country == "KH6" | country == "VNT" ~ "South Asia",
     country == "BO5" | country == "BR3" | country == "CO7" | country == "DR6" | country == "EC" | country == "ES" | country == "GU6" | country == "GY5" | country == "HN6" | country == "HT7" | country == "MX" | country == "NC4" | country == "PE6" | country == "PY2" | country == "TT" ~ "Latin America",
     is.na(region) ~ "Africa"
-  )) %>%
-  mutate(inghap = ifelse(
-    country == "BD6" | country == "BF6" | country == "BR3" | country == "GM6" | country == "GU6" | country == "IA6" | country == "KE6" | country == "MW7" | country == "NP7" | country == "PE6" | country == "PH7" | country == "PK7" | country == "TZ7" | country == "ZA7" | country == "ZW7", 1, 0
-  ))
+  )) 
 
 d <- d %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
@@ -137,11 +131,11 @@ haz_vars <- colnames(df)[grep("hc70", colnames(df))]
 waz_vars <- colnames(df)[grep("hc71", colnames(df))]
 whz_vars <- colnames(df)[grep("hc72", colnames(df))]
 
-d_haz_wide <- d %>% select(country, region, inghap, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, haz_vars)
+d_haz_wide <- d %>% select(country, region, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, haz_vars)
 
-d_waz_wide <- d %>% select(country, region, inghap, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, waz_vars)
+d_waz_wide <- d %>% select(country, region, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, waz_vars)
 
-d_whz_wide <- d %>% select(country, region, inghap, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, whz_vars) # 58 countries
+d_whz_wide <- d %>% select(country, region, dataset, weight, cluster_no, psu, stratification, year_vars, age_vars, whz_vars) # 58 countries
 
 
 #-------------------------------------------
@@ -150,33 +144,30 @@ d_whz_wide <- d %>% select(country, region, inghap, dataset, weight, cluster_no,
 # reshape all the z-score measures to long
 # filter to non-missing obs
 dlz <- d_haz_wide %>%
-  select("agem", "country", "region", "inghap", "dataset", "weight", "cluster_no", "psu", "stratification", grep("hc70", colnames(d_haz_wide))) %>%
+  select("agem", "country", "region",  "dataset", "weight", "cluster_no", "psu", "stratification", grep("hc70", colnames(d_haz_wide))) %>%
   rename(zscore = hc70) %>%
-  # gather("zscore", -"country", -"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
   mutate(
     measure = "HAZ"
   ) %>%
-  select("agem", "country", "region", "inghap", "dataset", "weight", "cluster_no", "psu", "stratification", "measure", "zscore") %>%
+  select("agem", "country", "region", "dataset", "weight", "cluster_no", "psu", "stratification", "measure", "zscore") %>%
   filter(!is.na(zscore))
 
 dwz <- d_waz_wide %>%
-  select("agem", "country", "region", "inghap", "dataset", "weight", "cluster_no", "psu", "stratification", grep("hc71", colnames(d_waz_wide))) %>%
+  select("agem", "country", "region", "dataset", "weight", "cluster_no", "psu", "stratification", grep("hc71", colnames(d_waz_wide))) %>%
   rename(zscore = hc71) %>%
-  # gather("zscore", -"country", -"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
   mutate(
     measure = "WAZ"
   ) %>%
-  select("agem", "country", "region", "inghap", "dataset", "weight", "cluster_no", "psu", "stratification", "measure", "zscore") %>%
+  select("agem", "country", "region", "dataset", "weight", "cluster_no", "psu", "stratification", "measure", "zscore") %>%
   filter(!is.na(zscore))
 
 dwhz <- d_whz_wide %>%
-  select("agem", "country", "region", "inghap", "dataset", "weight", "cluster_no", "psu", "stratification", grep("hc72", colnames(d_whz_wide))) %>%
+  select("agem", "country", "region", "dataset", "weight", "cluster_no", "psu", "stratification", grep("hc72", colnames(d_whz_wide))) %>%
   rename(zscore = hc72) %>%
-  # gather("zscore", -"country", -"dataset", -"weight", -"cluster_no", -"psu", -"stratification") %>%
   mutate(
     measure = "WHZ"
   ) %>%
-  select("agem", "country", "region", "inghap", "dataset", "weight", "cluster_no", "psu", "stratification", "measure", "zscore") %>%
+  select("agem", "country", "region", "dataset", "weight", "cluster_no", "psu", "stratification", "measure", "zscore") %>%
   filter(!is.na(zscore))
 
 # Age columns start with "b". Data for to 20 children were recorded per woman.
@@ -218,7 +209,18 @@ d_haz_long <- d_haz_long %>% filter(!is.na(agem) & !is.na(zscore)) #49 countries
 d_waz_long <- d_waz_long %>% filter(!is.na(agem) & !is.na(zscore)) #48 countries
 d_whz_long <- d_whz_long %>% filter(!is.na(agem) & !is.na(zscore)) #48 countries
 
+# indicator for whether country is in ghap datasets
+ghap_countries = c("Bangladesh", "Burkina Faso", "Brazil", "Gambia",
+                   "Guatemala", "India", "Kenya", "Malawi", "Nepal", 
+                   "Peru", "Philippines", "Pakistan", "Tanzania",
+                   "South Africa", "Zimbabwe")
 
+d_haz_long = d_haz_long %>%
+  mutate(inghap = ifelse(country %in% ghap_countries, 1, 0 ))
+d_waz_long = d_waz_long %>%
+  mutate(inghap = ifelse(country %in% ghap_countries, 1, 0 ))
+d_whz_long = d_whz_long %>%
+  mutate(inghap = ifelse(country %in% ghap_countries, 1, 0 ))
 
 # Missing is indicated with 9999 or 99999
 # Outside acceptable range is indicated with 9998 or 99998

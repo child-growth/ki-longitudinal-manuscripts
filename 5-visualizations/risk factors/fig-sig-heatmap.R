@@ -88,8 +88,14 @@ d <- d %>% filter(!(intervention_variable %in% c("lag_WHZ_quart")))
   table(d$pval_cat)
   d$pval_cat <- factor(d$pval_cat, levels = c("<0.001 decrease risk", "<0.05 decrease risk", "<0.2 decrease risk", "0.2-1", "<0.2 increase risk", "<0.05 increase risk", "<0.001 increase risk"))
   
+
   
-  
+#-----------------------------------
+# Temporarily drop non-sensical combinations
+# (Will change upstream)
+#----------------------------------- 
+  unique(d$intervention_level)
+d <- d %>% filter(intervention_level != "Q4")
   
 #-----------------------------------
 # Plot heatmaps
@@ -130,7 +136,7 @@ d <- d %>% filter(!(intervention_variable %in% c("lag_WHZ_quart")))
 #Pooled estimates only 
   hm <- ggplot(d[d$region=="Pooled",],aes(x=xvar, y=agecat, fill=pval_cat)) +
     facet_grid(outcome_variable~., scales = "free_y", space="free") +
-    geom_tile(colour="white",size=0.25) +
+    geom_tile(colour="grey20",size=0.25) +
     scale_y_discrete(expand=c(0,0))+
     theme_grey(base_size=10) +
     theme(
@@ -148,15 +154,18 @@ d <- d %>% filter(!(intervention_variable %in% c("lag_WHZ_quart")))
       strip.text.x = element_text(size=10),
       strip.text.y = element_text(angle=0,size=10),
       plot.background=element_blank(),
-      panel.border=element_blank()
-    ) + 
+      panel.border=element_blank(),
+      strip.background = element_blank(),
+      panel.background=element_rect(fill="grey80", colour="grey80"),
+      panel.grid.major = element_blank(), panel.grid.minor = element_blank()
+    ) + guides(fill = guide_legend("P-value strength", ncol=1)) + 
     labs(x="Exposure",y="",title="") +
-    scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="white")
-    #scale_fill_brewer(type = "div", palette = "PuOr", direction = -1, aesthetics = "fill", na.value="white")
+    scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="grey20")
 
   
+  
 # save plot 
-ggsave(hm, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-sig-heatmap.png", height=10, width=14)
+ggsave(hm, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-sig-heatmap.png", height=8, width=14)
 
 
 
@@ -165,7 +174,7 @@ ggsave(hm, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/fig
 #Pooled estimates only 
 hm_strat <- ggplot(d[d$region!="Pooled",],aes(x=xvar, y=yvar, fill=pval_cat)) +
   facet_grid(outcome_variable~., scales = "free_y", space="free") +
-  geom_tile(colour="white",size=0.25) +
+  geom_tile(colour="grey20",size=0.25) +
   scale_y_discrete(expand=c(0,0))+
   theme_grey(base_size=10) +
   theme(
@@ -183,10 +192,14 @@ hm_strat <- ggplot(d[d$region!="Pooled",],aes(x=xvar, y=yvar, fill=pval_cat)) +
     strip.text.x = element_text(size=10),
     strip.text.y = element_text(angle=0,size=10),
     plot.background=element_blank(),
-    panel.border=element_blank()
-  ) + 
+    panel.border=element_blank(),
+    strip.background = element_blank(),
+    panel.background=element_rect(fill="grey80", colour="grey80"),
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank()
+  ) + guides(fill = guide_legend("P-value strength", ncol=1)) + 
   labs(x="Exposure",y="",title="") +
-  scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="white")
+  scale_fill_brewer(type = "div", palette = "Spectral", direction = -1, aesthetics = "fill", na.value="grey20")
+
 
 # save plot 
 ggsave(hm_strat, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-sig-heatmap_regionstrat.png", height=10, width=14)

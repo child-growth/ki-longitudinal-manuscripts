@@ -14,11 +14,11 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
-d <- readRDS(file="U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt.rds")
+d <- readRDS(file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")
 head(d)
 
 #Merge in sex
-cov<-readRDS("U:/UCB-SuperLearner/Stunting rallies/FINAL_temp_clean_covariates.rds")
+cov<-readRDS("U:/UCB-SuperLearner/Manuscript analysis data/FINAL_temp_clean_covariates.rds")
 cov <- subset(cov, select = c(studyid,subjid,country,sex))
 setDT(cov)
 
@@ -87,7 +87,7 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop beca
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
 
-saveRDS(d, file = paste0("U:/UCB-SuperLearner/Stunting rallies/velocity_longfmt_clean.RDS"))
+saveRDS(d, file = paste0("U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt_clean.RDS"))
 
 
 #Summarize N's in study
@@ -100,7 +100,7 @@ table(d$diffcat)
 
 d <- d %>% rename(agecat = diffcat) %>%
   group_by(studyid, country, agecat, ycat, sex) %>%
-  summarize(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), n=n()) %>%
+  summarise(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), n=n()) %>%
   mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se) %>% 
   mutate(region = case_when(
     country=="BANGLADESH" | country=="INDIA"|
@@ -126,7 +126,7 @@ d <- d %>% rename(agecat = diffcat) %>%
 #----------------------------------------------------
 # age specific pooled results
 #----------------------------------------------------
-RE_pool <- function(df, ycategory, gender){
+RE_pool <- function(df, ycategory, gender, method = "REML"){
   
   df <- df %>% filter(ycat==ycategory)
   df <- df %>% filter(sex==gender)
@@ -134,7 +134,8 @@ RE_pool <- function(df, ycategory, gender){
   agecat = list("0-3 months", "3-6 months",  "6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")
   
   pooled.vel=lapply(agecat,function(x) 
-    fit.rma(data=df, yi="mean", vi="var", ni="n", nlab="children",age=x, measure = "GEN"))
+    fit.rma(data=df, yi="mean", vi="var", ni="n", nlab="children",age=x,
+            measure = "GEN", method=method))
 
   
   pooled.vel=as.data.frame(do.call(rbind, pooled.vel))
@@ -219,6 +220,23 @@ pooled_vel <- rbind(
 
 saveRDS(pooled_vel, 
         file=paste0(res_dir,"stunting/pool_vel.RDS"))
+
+
+#----------------------------------------------------
+# pool results -- all quarterly studies -- fixed effects
+#----------------------------------------------------
+
+poolhaz_boys_fe <- RE_pool(d, ycategory="haz", gender="Male", method="FE")
+poolhaz_girls_fe <- RE_pool(d, ycategory="haz", gender="Female", method="FE")
+poollencm_boys_fe <- RE_pool(d, ycategory="lencm", gender="Male", method="FE")
+poollencm_girls_fe <- RE_pool(d, ycategory="lencm", gender="Female", method="FE")
+
+pooled_vel_fe <- rbind(
+  poolhaz_boys_fe, poolhaz_girls_fe, poollencm_boys_fe, poollencm_girls_fe
+)
+
+saveRDS(pooled_vel_fe, 
+        file=paste0(res_dir,"stunting/pool_vel_fe.RDS"))
 
 #----------------------------------------------------
 # pool results -- sensitivity analysis with monthly 

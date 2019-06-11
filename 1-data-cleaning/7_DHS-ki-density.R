@@ -13,17 +13,28 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-
-
-load("U://ucb-superlearner/data/co-occurrence_data.RData")
+# read in stunting outcome data 
+load("U:/ucb-superlearner/data/stunting_data.RData")
+st = d
+rm(d)
+load("U:/ucb-superlearner/data/wasting_data.RData")
+wst = d
+rm(d)
+load("U://ucb-superlearner/Manuscript analysis data/waz_data.RData")
+waz = d
+rm(d)
 
 #Subset to ages under 2 years.
-d <- d %>% filter(agedays < 24 * 30.4167)
+waz <- waz %>% filter(agedays < 24 * 30.4167)
+wst <- wst %>% filter(agedays < 24 * 30.4167)
+st <- st %>% filter(agedays < 24 * 30.4167)
 
 #Save Overall region
-d.overall <- d %>% mutate(region="Overall")
+waz.overall <- waz %>% mutate(region="Overall")
+wst.overall <- wst %>% mutate(region="Overall")
+st.overall <- st %>% mutate(region="Overall")
 
-d <- d %>% mutate(region = case_when(
+waz <- waz %>% mutate(region = case_when(
   country=="BANGLADESH" | country=="INDIA"|
     country=="NEPAL" | country=="PAKISTAN"|
     country=="PHILIPPINES"| country=="CHINA"|
@@ -44,27 +55,92 @@ d <- d %>% mutate(region = case_when(
     country=="PERU"|country=='ECUADOR'   ~ "PAHO",
   TRUE                                    ~ "Other"
 ))
-d <- d %>% filter(region!="Other")
+waz <- waz %>% filter(region!="Other")
+
+wst <- wst %>% mutate(region = case_when(
+  country=="BANGLADESH" | country=="INDIA"|
+    country=="NEPAL" | country=="PAKISTAN"|
+    country=="PHILIPPINES"| country=="CHINA"|
+    country=="THAILAND"|country=="SINGAPORE"|
+    country=='OMAN'~ "SEARO",
+  country=="KENYA"|
+    country=="GHANA"|
+    country=="BURKINA FASO"|
+    country=="GUINEA-BISSAU"|
+    country=="MALAWI"|
+    country=="SOUTH AFRICA"|
+    country=="TANZANIA, UNITED REPUBLIC OF"|
+    country=="TANZANIA"|
+    country=="ZIMBABWE"|
+    country=="GAMBIA"|
+    country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "AFRO",
+  country=="BRAZIL" | country=="GUATEMALA" |
+    country=="PERU"|country=='ECUADOR'   ~ "PAHO",
+  TRUE                                    ~ "Other"
+))
+wst <- wst %>% filter(region!="Other")
+
+st <- st %>% mutate(region = case_when(
+  country=="BANGLADESH" | country=="INDIA"|
+    country=="NEPAL" | country=="PAKISTAN"|
+    country=="PHILIPPINES"| country=="CHINA"|
+    country=="THAILAND"|country=="SINGAPORE"|
+    country=='OMAN'~ "SEARO",
+  country=="KENYA"|
+    country=="GHANA"|
+    country=="BURKINA FASO"|
+    country=="GUINEA-BISSAU"|
+    country=="MALAWI"|
+    country=="SOUTH AFRICA"|
+    country=="TANZANIA, UNITED REPUBLIC OF"|
+    country=="TANZANIA"|
+    country=="ZIMBABWE"|
+    country=="GAMBIA"|
+    country=='CONGO, THE DEMOCRATIC REPUBLIC OF' ~ "AFRO",
+  country=="BRAZIL" | country=="GUATEMALA" |
+    country=="PERU"|country=='ECUADOR'   ~ "PAHO",
+  TRUE                                    ~ "Other"
+))
+st <- st %>% filter(region!="Other")
 
 #---------------------------------------------------------
 # Calculate medians
 #---------------------------------------------------------
 
 #Function to estimate median by region and Z-score
-kimedian <- function(d){
+kimedian <- function(d, measure){
 
-  med_haz <- median(d$haz[d$haz > (-6) & d$haz < 6])
-  med_whz <- median(d$whz[d$whz > (-5) & d$whz < 5])
-  med_waz <- median(d$waz[d$waz > (-5) & d$waz < 5])
-  res <- data.frame(measure=c("haz","whz","waz"), median=c(med_haz, med_whz, med_waz))
+  if(measure=="haz"){
+    med_haz <- median(d$haz[d$haz > (-6) & d$haz < 6])
+    res <- data.frame(measure="haz", median=c(med_haz))
+  }
+  if(measure=="whz"){
+    med_whz <- median(d$whz[d$whz > (-5) & d$whz < 5])
+    res <- data.frame(measure="whz", median=c(med_whz))
+  }
+  if(measure=="waz"){
+    med_waz <- median(d$waz[d$waz > (-5) & d$waz < 5])
+    res <- data.frame(measure="waz", median=c(med_waz))
+  }
     
   return(res)
 }
 
-medians_overall <- data.frame(region="Overall", kimedian(d))
-medians_strat <- d %>% group_by(region) %>% do(kimedian(.)) %>% as.data.frame()
-medians.quarterly <- rbind(medians_overall, medians_strat)
+medians_overall_waz <- data.frame(region="Overall", kimedian(waz, measure="waz"))
+medians_overall_wst <- data.frame(region="Overall", kimedian(wst, measure="whz"))
+medians_overall_st <- data.frame(region="Overall", kimedian(st, measure="haz"))
+
+medians_strat_waz <- waz %>% group_by(region) %>% do(kimedian(., measure="waz")) %>% as.data.frame()
+medians_strat_wst <- wst %>% group_by(region) %>% do(kimedian(., measure="whz")) %>% as.data.frame()
+medians_strat_st <- st %>% group_by(region) %>% do(kimedian(., measure="haz")) %>% as.data.frame()
+medians.quarterly_waz <- rbind(medians_overall_waz, medians_strat_waz)
+medians.quarterly_wst <- rbind(medians_overall_wst, medians_strat_wst)
+medians.quarterly_st <- rbind(medians_overall_st, medians_strat_st)
+
+medians.quarterly <- bind_rows(medians.quarterly_waz, medians.quarterly_wst, medians.quarterly_st) %>%
+  arrange(region, measure)
 medians.quarterly
+
 
 #---------------------------------------------------------
 # Estimate densities
@@ -82,55 +158,66 @@ ki.density <- function(data, Region, Measure){
 
 
 
-
-
 set.seed(123)
-haz1 <- ki.density(d, Region="SEARO", Measure="haz")
-haz2 <- ki.density(d, Region="PAHO", Measure="haz")
-haz3 <- ki.density(d, Region="AFRO", Measure="haz")
-haz4 <- ki.density(d.overall, Region="Overall", Measure="haz")
+haz1 <- ki.density(st, Region="SEARO", Measure="haz")
+haz2 <- ki.density(st, Region="PAHO", Measure="haz")
+haz3 <- ki.density(st, Region="AFRO", Measure="haz")
+haz4 <- ki.density(st.overall, Region="Overall", Measure="haz")
 
-whz1 <- ki.density(d, Region="SEARO", Measure="whz")
-whz2 <- ki.density(d, Region="PAHO", Measure="whz")
-whz3 <- ki.density(d, Region="AFRO", Measure="whz")
-whz4 <- ki.density(d.overall, Region="Overall", Measure="whz")
+whz1 <- ki.density(wst, Region="SEARO", Measure="whz")
+whz2 <- ki.density(wst, Region="PAHO", Measure="whz")
+whz3 <- ki.density(wst, Region="AFRO", Measure="whz")
+whz4 <- ki.density(wst.overall, Region="Overall", Measure="whz")
 
-df <- d %>% filter(waz > (-5) & waz < 5)
-df2 <- d.overall %>% filter(waz > (-5) & waz < 5)
-waz1 <- ki.density(df, Region="SEARO", Measure="waz")
-waz2 <- ki.density(df, Region="PAHO", Measure="waz")
-waz3 <- ki.density(df, Region="AFRO", Measure="waz")
-waz4 <- ki.density(df2, Region="Overall", Measure="waz")
+waz1 <- ki.density(waz, Region="SEARO", Measure="waz")
+waz2 <- ki.density(waz, Region="PAHO", Measure="waz")
+waz3 <- ki.density(waz, Region="AFRO", Measure="waz")
+waz4 <- ki.density(waz.overall, Region="Overall", Measure="waz")
 
 resdf.quarterly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4)
 
-#Subset to monthly data 
-d.quart <- d %>% filter(measurefreq=="monthly")
-d.overall.quart <- d.overall %>% filter(measurefreq=="monthly")
 
-medians_overall <- data.frame(region="Overall", kimedian(d.overall.quart))
-medians_strat <- d.quart %>% group_by(region) %>% do(kimedian(.)) %>% as.data.frame()
-medians.monthly <- rbind(medians_overall, medians_strat)
+
+#Subset to monthly data 
+st.mon <- st %>% filter(measurefreq=="monthly")
+wst.mon <- wst %>% filter(measurefreq=="monthly")
+waz.mon <- waz %>% filter(measurefreq=="monthly")
+
+waz.overall.mon <- waz.overall %>% filter(measurefreq=="monthly")
+wst.overall.mon <- wst.overall %>% filter(measurefreq=="monthly")
+st.overall.mon <- st.overall %>% filter(measurefreq=="monthly")
+
+medians_overall.mon_st <- data.frame(region="Overall", kimedian(st.overall.mon, measure="haz"))
+medians_strat.mon_st <- st.mon %>% group_by(region) %>% do(kimedian(., measure="haz")) %>% as.data.frame()
+medians.monthly_st <- rbind(medians_overall_st, medians_strat_st)
+
+medians_overall.mon_wst <- data.frame(region="Overall", kimedian(wst.overall.mon, measure="whz"))
+medians_strat.mon_wst <- wst.mon %>% group_by(region) %>% do(kimedian(., measure="whz")) %>% as.data.frame()
+medians.monthly_wst <- rbind(medians_overall_wst, medians_strat_wst)
+
+medians_overall.mon_waz <- data.frame(region="Overall", kimedian(waz.overall.mon, measure="waz"))
+medians_strat.mon_waz <- waz.mon %>% group_by(region) %>% do(kimedian(., measure="waz")) %>% as.data.frame()
+medians.monthly_waz <- rbind(medians_overall_waz, medians_strat_waz)
+
+medians.monthly <- bind_rows(medians.monthly_waz, medians.monthly_wst, medians.monthly_st) %>%
+  arrange(region, measure)
 medians.monthly
 
-
 set.seed(123)
-haz1 <- ki.density(d.quart, Region="SEARO", Measure="haz")
-haz2 <- ki.density(d.quart, Region="PAHO", Measure="haz")
-haz3 <- ki.density(d.quart, Region="AFRO", Measure="haz")
-haz4 <- ki.density(d.overall.quart, Region="Overall", Measure="haz")
+haz1 <- ki.density(st.mon, Region="SEARO", Measure="haz")
+haz2 <- ki.density(st.mon, Region="PAHO", Measure="haz")
+haz3 <- ki.density(st.mon, Region="AFRO", Measure="haz")
+haz4 <- ki.density(st.overall.mon, Region="Overall", Measure="haz")
 
-whz1 <- ki.density(d.quart, Region="SEARO", Measure="whz")
-whz2 <- ki.density(d.quart, Region="PAHO", Measure="whz")
-whz3 <- ki.density(d.quart, Region="AFRO", Measure="whz")
-whz4 <- ki.density(d.overall.quart, Region="Overall", Measure="whz")
+whz1 <- ki.density(wst.mon, Region="SEARO", Measure="whz")
+whz2 <- ki.density(wst.mon, Region="PAHO", Measure="whz")
+whz3 <- ki.density(wst.mon, Region="AFRO", Measure="whz")
+whz4 <- ki.density(wst.overall.mon, Region="Overall", Measure="whz")
 
-df <- d.quart %>% filter(waz > (-5) & waz < 5)
-df2 <- d.overall.quart %>% filter(waz > (-5) & waz < 5)
-waz1 <- ki.density(df, Region="SEARO", Measure="waz")
-waz2 <- ki.density(df, Region="PAHO", Measure="waz")
-waz3 <- ki.density(df, Region="AFRO", Measure="waz")
-waz4 <- ki.density(df2, Region="Overall", Measure="waz")
+waz1 <- ki.density(waz.mon, Region="SEARO", Measure="waz")
+waz2 <- ki.density(waz.mon, Region="PAHO", Measure="waz")
+waz3 <- ki.density(waz.mon, Region="AFRO", Measure="waz")
+waz4 <- ki.density(waz.overall.mon, Region="Overall", Measure="waz")
 
 resdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4)
 
@@ -150,44 +237,39 @@ ki.quantiles <- function(data, Region, Measure){
 }
 
 
-haz1 <- ki.quantiles(d, Region="SEARO", Measure="haz")
-haz2 <- ki.quantiles(d, Region="PAHO", Measure="haz")
-haz3 <- ki.quantiles(d, Region="AFRO", Measure="haz")
-haz4 <- ki.quantiles(d.overall, Region="Overall", Measure="haz")
+haz1 <- ki.quantiles(st, Region="SEARO", Measure="haz")
+haz2 <- ki.quantiles(st, Region="PAHO", Measure="haz")
+haz3 <- ki.quantiles(st, Region="AFRO", Measure="haz")
+haz4 <- ki.quantiles(st.overall, Region="Overall", Measure="haz")
 
-whz1 <- ki.quantiles(d, Region="SEARO", Measure="whz")
-whz2 <- ki.quantiles(d, Region="PAHO", Measure="whz")
-whz3 <- ki.quantiles(d, Region="AFRO", Measure="whz")
-whz4 <- ki.quantiles(d.overall, Region="Overall", Measure="whz")
+whz1 <- ki.quantiles(wst, Region="SEARO", Measure="whz")
+whz2 <- ki.quantiles(wst, Region="PAHO", Measure="whz")
+whz3 <- ki.quantiles(wst, Region="AFRO", Measure="whz")
+whz4 <- ki.quantiles(wst.overall, Region="Overall", Measure="whz")
 
-df <- d %>% filter(waz > (-5) & waz < 5)
-df2 <- d.overall %>% filter(waz > (-5) & waz < 5)
-waz1 <- ki.quantiles(df, Region="SEARO", Measure="waz")
-waz2 <- ki.quantiles(df, Region="PAHO", Measure="waz")
-waz3 <- ki.quantiles(df, Region="AFRO", Measure="waz")
-waz4 <- ki.quantiles(df2, Region="Overall", Measure="waz")
+waz1 <- ki.quantiles(waz, Region="SEARO", Measure="waz")
+waz2 <- ki.quantiles(waz, Region="PAHO", Measure="waz")
+waz3 <- ki.quantiles(waz, Region="AFRO", Measure="waz")
+waz4 <- ki.quantiles(waz.overall, Region="Overall", Measure="waz")
 
 quantdf.quarterly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4)
 
 
-
 set.seed(123)
-haz1 <- ki.quantiles(d.quart, Region="SEARO", Measure="haz")
-haz2 <- ki.quantiles(d.quart, Region="PAHO", Measure="haz")
-haz3 <- ki.quantiles(d.quart, Region="AFRO", Measure="haz")
-haz4 <- ki.quantiles(d.overall.quart, Region="Overall", Measure="haz")
+haz1 <- ki.quantiles(st.mon, Region="SEARO", Measure="haz")
+haz2 <- ki.quantiles(st.mon, Region="PAHO", Measure="haz")
+haz3 <- ki.quantiles(st.mon, Region="AFRO", Measure="haz")
+haz4 <- ki.quantiles(st.overall.mon, Region="Overall", Measure="haz")
 
-whz1 <- ki.quantiles(d.quart, Region="SEARO", Measure="whz")
-whz2 <- ki.quantiles(d.quart, Region="PAHO", Measure="whz")
-whz3 <- ki.quantiles(d.quart, Region="AFRO", Measure="whz")
-whz4 <- ki.quantiles(d.overall.quart, Region="Overall", Measure="whz")
+whz1 <- ki.quantiles(wst.mon, Region="SEARO", Measure="whz")
+whz2 <- ki.quantiles(wst.mon, Region="PAHO", Measure="whz")
+whz3 <- ki.quantiles(wst.mon, Region="AFRO", Measure="whz")
+whz4 <- ki.quantiles(wst.overall.mon, Region="Overall", Measure="whz")
 
-df <- d.quart %>% filter(waz > (-5) & waz < 5)
-df2 <- d.overall.quart %>% filter(waz > (-5) & waz < 5)
-waz1 <- ki.quantiles(df, Region="SEARO", Measure="waz")
-waz2 <- ki.quantiles(df, Region="PAHO", Measure="waz")
-waz3 <- ki.quantiles(df, Region="AFRO", Measure="waz")
-waz4 <- ki.quantiles(df2, Region="Overall", Measure="waz")
+waz1 <- ki.quantiles(waz.mon, Region="SEARO", Measure="waz")
+waz2 <- ki.quantiles(waz.mon, Region="PAHO", Measure="waz")
+waz3 <- ki.quantiles(waz.mon, Region="AFRO", Measure="waz")
+waz4 <- ki.quantiles(waz.overall.mon, Region="Overall", Measure="waz")
 
 quantdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4)
 

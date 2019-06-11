@@ -14,13 +14,16 @@
 # severe.stunted: a boolean, with default value FALSE. 
 #   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
 #   - When set to TRUE, individuals are considered students when HAZ is less than 3.
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - prev.data: includes the number of measurements, proportion/count of stunted children in each study for each age category
 #   - prev.res: estimated random effects and CI bounds of studies grouped by age category
 #   - prev.cohort: estimated random effects and CI bounds for each specific cohort
 
-summary.prev.haz <- function(d, severe.stunted=F){
+summary.prev.haz <- function(d, severe.stunted=F, method="REML"){
   d = dprev
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -56,7 +59,7 @@ summary.prev.haz <- function(d, severe.stunted=F){
   
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)), function(x)
-    fit.rma(data=prev.data, ni="nmeas", xi="nxprev",age=x ,measure="PLO",nlab="children"))
+    fit.rma(data=prev.data, ni="nmeas", xi="nxprev",age=x ,measure="PLO",nlab="children", method=method))
   prev.res=as.data.frame(rbindlist(prev.res))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
@@ -89,6 +92,9 @@ summary.prev.haz <- function(d, severe.stunted=F){
 #   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
 #   - When set to TRUE, individuals are considered students when HAZ is less than 3.
 # agelist: a list of strings that describe the ranges of each age category.
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - cuminc.data: includes the number of measurements, number of incident cases in each study for each age category
@@ -97,7 +103,7 @@ summary.prev.haz <- function(d, severe.stunted=F){
 
 summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
                        agelist=list("0-3 months","3-6 months","6-9 months","9-12 months",
-                                    "12-15 months","15-18 months","18-21 months","21-24 months")){
+                                    "12-15 months","15-18 months","18-21 months","21-24 months"), method="REML"){
   
   
   # identify ever stunted children
@@ -182,7 +188,7 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
   
   # estimate random effects, format results
   ci.res=lapply((agelist),function(x)
-    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
+    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements", method=method))
   ci.res=as.data.frame(rbindlist(ci.res))
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)
@@ -206,13 +212,16 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
 #   - country
 #   - subjid
 #   - haz
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - haz.data: includes the number of measurements, mean HAZ in each study for each age category
 #   - haz.res: estimated random effects and CI bounds of studies grouped by age category
 #   - haz.cohort: estimated random effects and CI bounds for each specific cohort
 
-summary.haz <- function(d){
+summary.haz <- function(d, method="REML"){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -243,7 +252,7 @@ summary.haz <- function(d){
   
   # estimate random effects, format results
   haz.res=lapply(as.list(levels(haz.data$agecat)),function(x) 
-    fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
+    fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN", method=method))
   haz.res=as.data.frame(rbindlist(haz.res))
   haz.res$agecat=factor(levels(haz.data$agecat))
   haz.res$ptest.f=sprintf("%0.2f",haz.res$est)
@@ -265,6 +274,9 @@ summary.haz <- function(d){
 #   - country
 #   - subjid
 #   - haz
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - haz.data: includes the number of measurements, mean HAZ in each study for each pair of sex and age category
@@ -273,7 +285,7 @@ summary.haz <- function(d){
 
 
 # summarize mean within age and sex categories
-summary.haz.age.sex <- function(d){
+summary.haz.age.sex <- function(d, method="REML"){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -322,7 +334,7 @@ summary.haz.age.sex <- function(d){
   
   haz.res.male=lapply((levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data %>% filter(sex == "Male"), 
-                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
+                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN", method=method))
   
   haz.df.female = as.data.frame(rbindlist(haz.res.female)) %>%
     mutate(sex = "Female")
@@ -365,13 +377,16 @@ summary.haz.age.sex <- function(d){
 #   - When set to FALSE, individuals are considered stunted when HAZ is less than 2. 
 #   - When set to TRUE, individuals are considered students when HAZ is less than 3.
 # agelist: a list of strings that describe the ranges of each age category.
+# method: a string indicating the pooling method used by the rma function.
+#   - REML is for random effects
+#   - FE is for fixed effects
 #
 # Output: A list of tables:
 #   - ip.data: includes the number of measurements, incidence proportions in each study for each age category
 #   - ip.res: estimated random effects and CI bounds of studies grouped by age category
 #   - ip.cohort: estimated random effects and CI bounds for each specific cohort
 
-summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")){
+summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months"), method="REML"){
   
   threshold <- if_else(severe.stunted, -3, -2)
   
@@ -415,7 +430,7 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
   
   # estimate random effects, format results
   ci.res=lapply((agelist),function(x)
-    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
+    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements",method=method))
   ci.res=as.data.frame(rbindlist(ci.res))
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)

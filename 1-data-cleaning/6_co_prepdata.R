@@ -112,7 +112,7 @@ nrow(d)
 
 
 #--------------------------------------------
-# drop unrealistic HAZ
+# drop unrealistic HAZ and WHZ
 #--------------------------------------------
 nrow(d)
 d = filter(d,haz >= -6 & haz <=6)
@@ -171,6 +171,26 @@ d <- d %>% mutate(region = case_when(
     country=="PERU"|country=='ECUADOR'   ~ "Latin America",
   TRUE                                    ~ "Other"))
 
-save(d,file="U://ucb-superlearner/data/co-occurrence_data.RData")
+
+#Save RF dataset
+save(d,file="U://ucb-superlearner/Manuscript analysis data/rf_co-occurrence_data.RData")
+
+
+#--------------------------------------------
+# drop trial arms with intervention impact on HAZ
+# -either based on published literature or analysis
+# of effects on CI of Wasting by 24months of age
+#--------------------------------------------
+d=d[-which(d$studyid=="kiGH5241-JiVitA-4" & d$tr!="Control"),]
+d=d[-which(d$studyid=="ki1119695-PROBIT" & d$tr!="Control"),]
+d=d[-which(d$studyid=="ki1000304b-SAS-FoodSuppl" & d$tr!="Control"),]
+d=d[-which(d$studyid=="ki1112895-iLiNS-Zinc" & d$tr!="Control"),]
+d=d[-which(d$studyid=="ki1000304b-SAS-CompFeed" & d$tr!="Control"),]
+d=d[-which(d$studyid=="kiGH5241-JiVitA-3" & d$tr!="Control"),]
+d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]
+
+
+
+save(d,file="U://ucb-superlearner/Manuscript analysis data/co-occurrence_data.RData")
 
 

@@ -84,7 +84,7 @@ bar_plot_RE_name = create_name(
   population = "overall",
   location = "",
   age = "All ages",
-  analysis = "primary - random effects"
+  analysis = "random effects"
 )
 
 #-----------------------------------------

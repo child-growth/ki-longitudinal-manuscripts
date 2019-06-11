@@ -60,7 +60,7 @@ load_fig_files <- function(file_path){
   df$analysis <- gsub(".png","", df$analysis)
   df$analysis <- gsub(".RDS","", df$analysis)
   
-  df$severe <- ifelse(df$cutoff==3,1,0)
+  df$severe <- ifelse(df$cutoff==3,"Severe","Not severe")
   df <- df %>% select(-cutoff)
   
   return(df)
@@ -163,7 +163,24 @@ ui <- navbarPage("HBGDki Results Dashboard",
                  #            
                  #          )),
                  #---> New blank tab
-                 tabPanel("Blank Tab for Documentation"),
+                 tabPanel("Introduction",
+                          fluidRow(h3("Descriptive epidemiology of child stunting and wasting"), 
+                          "This site contains supporting figures for analyses of child stunting and wasting using the ki child growth databse. In the Descriptive Epidemiology tab, the dropdown menus can be used to select which figure to display."),
+                          h4("1. Outcome"), 
+                          "Type of outcome measured. This includes continuous measures of child growth (length-for-age Z-score (LAZ) and weight-for-length Z-score (WLZ)) as well as binary indicators of child growth (stunting, wasting, co-occurence).",
+                          h4("2. Measure"), 
+                          "For a given outcome, a specific type of measurement. For example for LAZ, this includes the mean LAZ and LAZ velocity.",
+                          h4("3. Region"), 
+                          "Geographic region (Africa, Latin America, South Asia)",
+                          h4("4. Outcome type"), 
+                          "Severe stunting or wasting (Z-score <-3) or not severe stunting or wasting (Z-score <-2)",
+                          h4("5. Population"), 
+                          "Combination of populations (overall, regional, or cohort-specific)",
+                          h4("6. Age range"), 
+                          "3-month and 6-month age-stratified analyses",
+                          h4("7. Analysis"), 
+                          "The primary analysis results are displayed as well as various sensitivity analyses."
+                          ),
                  tabPanel("Descriptive epidemiology",
                           fluidRow(
                             h4("Note: this site is still under construction", align="center",style = "color:blue"),

@@ -3,9 +3,11 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
+
 #Load haz and whz data
 load("U:/ucb-superlearner/data/co-occurrence_data.RData")
 d <- d %>% subset(., select=-c(tr))
+
 
 
 #merge WLZ outcomes with covariates
@@ -23,11 +25,6 @@ d <- d %>% filter(agedays < 24 * 30.4167)
 d <- subset(d, select = -c(id, arm, tr))
 dim(d)
 
-
-#d <- d %>% filter(studyid!="ki1119695-PROBIT")
-
-# Avar="sex"
-# Y="whz"
 
 #Adapted from: 
 #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
@@ -60,22 +57,10 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   
   # DEFINE THE AVERAGE RANGE, CENTERING POINT, DEGREE AND TYPE OF THE SPLINE
   # (THESE PARAMETERS CAN BE CHANGED BY THE USER FOR ADDITIONAL ANALYSES)
-  #cen <- 365
   bound <- c(1,730)
   degree <- 3
-  #type <- "bs"
   df <- 6
   
-  # DEFINE THE KNOTS AT agedays CORRESPONDING TO AVERAGE PERCENTILES
-  # But they all must be within every study range
-  # d %>% group_by(id) %>% summarise(minage=min(agedays), maxage=max(agedays)) %>% ungroup() %>% summarise(minage2=max(minage), maxage2=min(maxage), minage=mean(minage), maxage=mean(maxage))
-  # knotperc <- c(5,35,65,95)
-  # #knotperc <- c(10,35,65,90)
-  # knots <- quantile(d$agedays,knotperc/100,na.rm=T)
-  # knots[1] <-10
-  # knots <- c(183,365,548)
-  # knots <- c(300, 330)
-  # bound <- c(30,678)
   
   
   
@@ -97,22 +82,12 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
     # LOAD
     data <- d[d$id==unique(d$id)[i],]
     
-    #Can I pick knots by quanile here?
-    knots <- quantile(data$agedays,c(10,35,65,90)/100,na.rm=T)
-    #knots[1] <- ifelse(knots[1]==1,2,knots[1])
-    knots[1]<-knots[1]+5
-    #knots <- quantile(data$agedays,c(10,25,40,,75,90)/100,na.rm=T)
-    
+
     # CREATE THE SPLINE
-    # NB: KNOTS AND BOUNDARIES FIXED AT SAME VALUES
     bt <- onebasis(data$agedays,fun=type,
                    degree=degree, 
-                   df=df#,
-                   #knots=knots,
-                   #Bound=bound
-                   )
-    #summary.onebasis(bt)
-    
+                   df=df)
+
     # RUN THE MODEL
     #Note: add cv cross-validation
     model <- glm(Y ~ bt,family=gaussian(), data)
@@ -136,8 +111,6 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   # PERFORM MULTIVARIATE META-ANALYSIS
   ####################################################################
   
-  #Either stratify spline estimation by Avar and fit model with 1), or figure out how to feed in Avar in option 2)
-  
   
   # 1) MULTIVARIATE META-ANALYSIS
   if(overall){
@@ -154,9 +127,6 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
    return(cp)
   }else{
     
-  
-  # summary(mv)
-  
   # 2) MULTIVARIATE META-REGRESSION - Avar-level has to be study specific predictor
   Avar_lev<- stringr::str_split(rownames(ymat),"__", simplify=T)[,2]
   (mvlat <- mvmeta(ymat~Avar_lev,Slist,method="reml"))
@@ -174,11 +144,8 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   # BASIS USED TO PREDICT AGE, EQUAL TO THAT USED FOR ESTIMATION
   #   NOTE: INTERNAL AND BOUNDARY KNOTS PLACED AT SAME VALUES AS IN ESTIMATION
   tmean <- seq(bound[1],bound[2],length=30)
-  btmean <- onebasis(tmean,fun=type
-                     #,degree=degree,
-                     #knots=knots,
-                     #Bound=bound
-                     )
+  btmean <- onebasis(tmean,fun=type)
+                     
   
   ####################################################################
   # PREDICTION FROM MODELS
@@ -190,9 +157,6 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   # COMPUTE PREDICTION FOR MULTIVARIATE META-REGRESSION MODELS
   #   1ST STEP: PREDICT THE OUTCOME PARAMETERS FOR SPECIFIC VALUES OF META-PREDICTOR
   #   2ND STEP: PREDICT THE RELATIONSHIP AT CHOSEN VALUES GIVEN THE PARAMETERS
-
-  #XXXXX
-  #Note- prediction not working, Predict seperately for each factor level
         
   predAvar <- predict(mvlat,data.frame(Avar=factor(unique(d$Avar))),vcov=T)
   predlist <- list()
@@ -261,8 +225,8 @@ offset_fun <- function(d, Y="haz", Avar, cen=1){
 # p <- ggplot() + 
 #   geom_line(data=plotdf, aes(x=agedays, y=est, group=level, color=level), size=2) +
 #   geom_ribbon(data=plotdf, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-#   scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
-#   scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
+#   scale_color_manual(values=tableau10[c(10,9,7)], name = paste0( Avar)) +
+#   scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0( Avar)) +
 #   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
 #                      breaks = 0:24*30.41, labels = 0:24) +
 #   coord_cartesian(ylim=c(-2,1)) +
@@ -305,18 +269,20 @@ plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( 
 
 Avarwt="Maternal weight"
 
-p1 <- ggplot() + 
+p1 <- ggplot() +
   geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_color_manual(values=tableau10[c(10,9,6)], name = paste0( Avarwt)) +
+  scale_fill_manual(values=tableau10[c(10,9,6)], name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-                     breaks = 0:24*30.41, labels = 0:24) +
-  xlab("Child age in months") + ylab("Mean WLZ") + 
+                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) +
+  xlab("Child age in months") + ylab("Mean WLZ") +
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
-  theme(legend.position = "right")
+  theme(legend.position = c(0.8,0.9))
 print(p1)
+
 
 
 
@@ -351,14 +317,15 @@ Avar="Maternal height"
 p2 <- ggplot() + 
   geom_line(data=plotdf_wlz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_wlz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
+  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0( Avar)) +
+  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-                     breaks = 0:24*30.41, labels = 0:24) +
+                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
-  theme(legend.position = "right")
+  theme(legend.position = c(0.8,0.9))
 print(p2)
 
 
@@ -394,14 +361,15 @@ Avarwt="Maternal weight"
 p3 <- ggplot() + 
   geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_laz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avarwt)) +
+  scale_color_manual(values=tableau10[c(10,9,6)], name = paste0( Avarwt)) +
+  scale_fill_manual(values=tableau10[c(10,9,6)], name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-                     breaks = 0:24*30.41, labels = 0:24) +
+                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
-  theme(legend.position = "right")
+  theme(legend.position = c(0.8,0.9))
 print(p3)
 
 
@@ -435,15 +403,47 @@ Avar="Maternal height"
 p4 <- ggplot() + 
   geom_line(data=plotdf_laz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=2) +
   #geom_ribbon(data=plotdf_laz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
-  scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0("Levels of\n ", Avar)) +
+  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0( Avar)) +
+  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-                     breaks = 0:24*30.41, labels = 0:24) +
+                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
-  theme(legend.position = "right")
+  theme(legend.position = c(0.8,0.9))
 print(p4)
+
+
+
+
+
+# p1df <- rbind(data.frame(plotdf_wlz_mwtkg, measure="mwtkg"), data.frame(plotdf_wlz_mhtcm, measure="mhtcm"))
+# 
+# p1 <- ggplot() + 
+#   geom_line(data=p1df, aes(x=agedays, y=est, group=level, color=level), size=2) +
+#   facet_wrap(~measure) +
+#   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
+#   scale_color_manual(values=tableau10[c(10,9,6,5,7,8)], name = paste0( Avarwt)) +
+#   scale_fill_manual(values=tableau10[c(10,9,6,5,7,8)], name = paste0( Avarwt)) +
+#   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
+#                      breaks = 0:24*30.41, labels = 0:24) +
+#   scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) + 
+#   xlab("Child age in months") + ylab("Mean WLZ") + 
+#   #coord_cartesian(ylim=c(-2,1)) +
+#   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
+#   theme(legend.position = "right")
+# print(p1)
+
+
+
+
+
+
+
+
+
+
 
 #------------------------------------------------------------------------------------------------
 # Save plots
@@ -460,5 +460,4 @@ ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid.png"), width
 
 #Save plot objects
 save(p1, p2, p3, p4,  file=paste0(here(),"/results/rf_spline_objects.Rdata"))
-
 
