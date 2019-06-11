@@ -10,13 +10,13 @@ compute_ci_with_sampling_weights <- function(df) {
   DHSdesign <- svydesign(
     id = df$cluster_no,
     strata = df$stratification,
-    weights = df$wgt,
+    weights = df$weight,
     data = df,
     nest = TRUE
   )
   # tabulate indicator by region
   df_survey <- svyby(~zscore, ~agem, DHSdesign, svymean, vartype = c("se", "ci"))
-  df_n <- df %>% group_by(agem) %>% summarise(wgt_sum = sum(wgt))
+  df_n <- df %>% group_by(agem) %>% summarise(wgt_sum = sum(weight))
   df_survey <- dplyr::left_join(df_survey, df_n, by = "agem")
   return(df_survey)
 }
