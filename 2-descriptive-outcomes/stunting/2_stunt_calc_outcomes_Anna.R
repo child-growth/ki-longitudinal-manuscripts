@@ -72,13 +72,12 @@ agelst6_birthstrat = list(
 )
 
 calc_outcomes = function(data, calc_method, output_file_suffix){
-  
-  dprev <- calc.prev.agecat(data)
-  dmon <- calc.monthly.agecat(data)
-  d3 <- calc.ci.agecat(data, range = 3, birth="yes")
-  d6 <- calc.ci.agecat(data, range = 6, birth="yes")
-  d3_birthstrat <- calc.ci.agecat(data, range = 3, birth="no")
-  d6_birthstrat <- calc.ci.agecat(data, range = 6, birth="no")
+  dprev <<- calc.prev.agecat(d)
+  dmon <<- calc.monthly.agecat(data)
+  d3 <<- calc.ci.agecat(data, range = 3, birth="yes")
+  d6 <<- calc.ci.agecat(data, range = 6, birth="yes")
+  d3_birthstrat <<- calc.ci.agecat(data, range = 3, birth="no")
+  d6_birthstrat <<- calc.ci.agecat(data, range = 6, birth="no")
   
   ######################################################################
   # Prevalence
@@ -321,7 +320,6 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
 
 stunt_outcomes = calc_outcomes(d, "REML", "")
 saveRDS(stunt_outcomes, file = paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
-
 
 stunt_outcomes_monthly = calc_outcomes(monthly_d, "REML", "_monthly")
 saveRDS(stunt_outcomes_monthly, file =  paste0(res_dir, "shiny_desc_data_stunting_objects_monthly24.RDS"))
