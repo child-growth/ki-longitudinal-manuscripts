@@ -7,7 +7,7 @@ rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
 
-load("U://ucb-superlearner/data/co-occurrence_data.RData")
+load("U://ucb-superlearner/Manuscript analysis data//co-occurrence_data.RData")
 
 
 # load("U:/Data/Wasting/Wasting_inc_data.RData")

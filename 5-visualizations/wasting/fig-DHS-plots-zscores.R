@@ -262,8 +262,8 @@ dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, color = region, linetype =
   geom_point(aes(x = as.double(median), y = 0, shape = dsource)) +
   scale_color_manual(values = pcols, guide = FALSE) +
   scale_fill_manual(values = pcols, guide = FALSE) +
-  scale_linetype_manual(values = c("solid", "dashed", "dotdash")) +
-  scale_shape_manual(values=c(19, 1))+
+  scale_linetype_manual(values = c("solid", "dashed", "dotdash"), name="Data source:") +
+  scale_shape_manual(values=c(19, 1), name="Data source:")+
   scale_x_continuous(breaks = seq(-6, 6, by = 2)) +
   coord_cartesian(xlim = c(-6, 6), ylim = c(0, 0.4)) +
   labs(y = "Density", x = "Z-score") +
@@ -277,5 +277,5 @@ dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, color = region, linetype =
 dplot
 
 # output a file to png
-ggsave(dhsp, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_density.png"), width = 6, height = 5)
+ggsave(dplot, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_density.png"), width = 6, height = 5)
 
