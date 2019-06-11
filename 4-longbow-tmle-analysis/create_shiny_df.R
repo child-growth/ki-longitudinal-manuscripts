@@ -19,17 +19,22 @@ d$pooled <- 0
 
 
 dRR <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+dATE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results.rds"))
 
 head(d)
 head(dRR)
 
 dRR <- dRR %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0)
-
 dRR$adjusted = 1
 dRR$pooled = 1
 
+head(dATE)
+dATE <- dATE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=0)
+dATE$adjusted = 1
+dATE$pooled = 1
 
-df <- bind_rows(dRR, d)
+
+df <- bind_rows(dRR, dATE, d)
 
 df <- df %>% filter(type=="RR" | type=="ATE")
 df <- df %>% select("agecat","studyid","country","strata_label","adjustment_set","intervention_variable", "outcome_variable","type","parameter","intervention_level","baseline_level","region","continuous","adjusted", "pooled", "estimate",   "ci_lower", "ci_upper")
@@ -86,7 +91,7 @@ df <- df %>% select("agecat", "studyid", "country", "adjustment_set",
                     "intervention_level", "baseline_level", "region", "continuous", 
                     "adjusted", "pooled", "estimate", "ci_lower", "ci_upper", "RFlabel")
 
-saveRDS(df, paste0(here::here(),"/6-shiny-app/RF app/shiny_rf_results.rds"))
+saveRDS(df, paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 
 
 

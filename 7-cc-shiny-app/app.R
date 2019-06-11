@@ -14,7 +14,7 @@ library(here)
 
 
 #Load data
-df <- readRDS(paste0(here::here(),"/6-shiny-app/RF app/shiny_rf_results.rds"))
+df <- readRDS(paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 
 
 #------------------------------------------------
