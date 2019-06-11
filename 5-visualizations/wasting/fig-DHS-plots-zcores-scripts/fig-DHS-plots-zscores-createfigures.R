@@ -32,6 +32,7 @@ pcols <- c("black", tableau10(10)[c(1, 2, 3)])
 ##################################
 dhs_plotd = read_rds(paste0(figdata_dir, "figdata-fig_dhs_ki_zscores_byage.RDS"))
 dhs_plotd$region = factor(dhs_plotd$region, levels = c("Overall", "Africa", "Latin America", "South Asia"))
+dhs_plotd$measure[dhs_plotd$measure=="WHZ"] <- "WLZ"
 
 dhsp <- ggplot(data = dhs_plotd, aes(x = agem, y = fit, color = region, fill = region, linetype = dsource)) +
   facet_grid(measure ~ region) +
@@ -66,6 +67,9 @@ ggsave(dhsp, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_byage.png"), wid
 ##################################
 
 dhsden_plot = read_rds(paste0(figdata_dir, "figdata-fig_dhs_ki_zscores_density.RDS"))
+dhsden_plot$measure <- as.character(dhsden_plot$measure)
+dhsden_plot$measure[dhsden_plot$measure=="WHZ"] <- "WLZ"
+dhsden_plot$measure <- factor(dhsden_plot$measure, levels = c("LAZ", "WAZ", "WLZ"))
 
 dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, color = region, linetype = dsource)) +
   facet_grid(measure ~ region) +
