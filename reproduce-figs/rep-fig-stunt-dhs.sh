@@ -30,10 +30,8 @@ cd ../1-data-cleaning/
 cp ../runFileSaveLogs.py ../1-data-cleaning/
 
 # Run folder scripts and produce output
-# ./runFileSaveLogs -i "DHS-cleaning" 7_DHS-data-cleaning.R  7_DHS-data-cleaning-ghap.R 7_DHS-data-quantiles.R 7_DHS-ki-density.R
+# ./runFileSaveLogs -i "DHS-cleaning" 7_DHS-data-cleaning.R 7_DHS-ki-density.R
 R CMD BATCH 7_DHS-data-cleaning.R 
-R CMD BATCH 7_DHS-data-cleaning-ghap.R
-R CMD BATCH 7_DHS-data-quantiles.R
 R CMD BATCH 7_DHS-ki-density.R
 
 # Remove copied utility run script
