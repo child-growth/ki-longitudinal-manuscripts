@@ -72,8 +72,8 @@ dhsfits <- dhsfits %>%
     region == "AFRO" ~ "Africa",
     region == "OVERALL" ~ "Overall")
   ) %>% mutate(region = factor(region,
-    levels = c("Overall", "Africa", "South Asia", "Latin America"),
-    labels = c("Overall", "Africa", "South Asia", "Latin America")
+    levels = c("Overall", "Africa", "Latin America", "South Asia"),
+    labels = c("Overall", "Africa", "Latin America", "South Asia")
   ))
 #---------------------------------------
 # make z-score by age figure
