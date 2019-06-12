@@ -4,7 +4,6 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
-source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
@@ -13,70 +12,10 @@ theme_set(theme_ki())
 
 
 #Load data
-dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-head(dfull)
-
-
-unique(dfull$type)
-d <- dfull %>% filter(type=="PAR")
-
-#Subset to stunting prevalence
-unique(d$outcome_variable)
-d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
-                    outcome_variable=="y_rate_wtkg"|outcome_variable=="haz"|
-                    outcome_variable=="whz")
-
-
-d <- droplevels(d)
-
-
-
-pool.Zpar <- function(d){
-  nstudies <- d %>% summarize(N=n())
-  
-  fit<-NULL
-  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="GEN"))
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
-  
-  if(is.null(fit)){
-    est<-data.frame(PAR=NA, CI1=NA,  CI2=NA)
-  }else{
-    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
-    colnames(est)<-c("PAR","CI1","CI2")    
-  }
-  est$Nstudies <- nstudies$N
-  rownames(est) <- NULL
-  return(est)
-}
-
-RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
-  do(pool.Zpar(.)) %>% as.data.frame()
-RMAest$region <- "Pooled"
-
-RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
-  do(pool.Zpar(.)) %>% as.data.frame()
-
-RMAest_raw <- rbind(RMAest, RMAest_region)
-
-RMAest_raw <- RMAest_raw %>% filter(!is.na(PAR))
-
-
-
-
-#Clean up dataframe for plotting
-RMAest_clean <- RMA_clean(RMAest_raw, outcome="continuous")
-table(is.na(RMAest_clean$intervention_level))
-
-#Add reference level to label
-RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
-
-
-
+df <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
 
 #----------------------------------------------------------
-# Plot
+# Plot parameters
 #----------------------------------------------------------
 
 
@@ -97,7 +36,12 @@ tableau10 = c("#E377C2","#7F7F7F")
 
 scaleFUN <- function(x) sprintf("%.1f", x)
 
-df <- RMAest_clean
+
+
+#----------------------------------------------------------
+# Clean up plot dataframe
+#----------------------------------------------------------
+
 unique(df$outcome_variable)
 df$outcome_variable <- gsub("y_rate_haz", "HAZ velocity", df$outcome_variable)
 df$outcome_variable <- gsub("y_rate_len", "Length velocity", df$outcome_variable)
@@ -106,11 +50,6 @@ df$outcome_variable <- gsub("haz", "LAZ", df$outcome_variable)
 df$outcome_variable <- gsub("whz", "WLZ", df$outcome_variable)
 
 
-
-
-
-
-#Make manuscript plots
 dpool <- df %>% ungroup() %>%
   filter(region=="Pooled",
          outcome_variable %in% c("LAZ", "WLZ" ),
@@ -137,6 +76,40 @@ plotdf_copy$measure = "Variable importance measure"
 plotdf_copy$PAR = plotdf_copy$PAR + 0.1
 plotdf_copy$CI1 = plotdf_copy$CI1 + 0.1
 plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
+
+
+#----------------------------------------------------------
+# ANNA: CREATE PLOTS HERE
+# Plot margin tables
+#----------------------------------------------------------
+
+#Create data underlying LAZ side table
+# 3 columns (use these as column names) 1) "Total N", 2) "% shifted to reference", 3) "% shifted to optimal"
+# NOTE: VIM percent shifted now set to 0 until results are generated
+
+mtab_df <- dpool %>% filter(outcome_variable=="LAZ") %>%
+  arrange(-PAR) %>%
+  mutate(perc_ref= round((1-ref_prev)*100), perc_vim=0) %>%
+  subset(., select = c(n, perc_ref, perc_vim))
+
+#Formatting to do:
+# add comma to N (aka print 23,045 instead of 23045)
+
+#Use geom_tile() to create a plot with the appearrence of a table
+
+
+
+#Repeat for WLZ
+mtab_df <- dpool %>% filter(outcome_variable=="WLZ") %>%
+  arrange(-PAR) %>%
+  mutate(perc_ref= round((1-ref_prev)*100), perc_vim=0) %>%
+  subset(., select = c(n, perc_ref, perc_vim))
+
+#save the plots seperately (I'll combine together later)
+
+#----------------------------------------------------------
+# Plot PAR
+#----------------------------------------------------------
 
 #append tables for single ggplot call
 plotdf = rbind(plotdf, plotdf_copy)
