@@ -4,6 +4,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
+library(gtable)
 
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
@@ -87,7 +88,7 @@ plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
 # 3 columns (use these as column names) 1) "Total N", 2) "% shifted to reference", 3) "% shifted to optimal"
 # NOTE: VIM percent shifted now set to 0 until results are generated
 
-mtab_df <- dpool %>% filter(outcome_variable=="LAZ") %>%
+mtab_df_laz <- dpool %>% filter(outcome_variable=="LAZ") %>%
   arrange(-PAR) %>%
   mutate(perc_ref= round((1-ref_prev)*100), perc_vim=0) %>%
   subset(., select = c(n, perc_ref, perc_vim))
@@ -95,15 +96,69 @@ mtab_df <- dpool %>% filter(outcome_variable=="LAZ") %>%
 #Formatting to do:
 # add comma to N (aka print 23,045 instead of 23045)
 
-#Use geom_tile() to create a plot with the appearrence of a table
+mtab_df_laz$n = format(mtab_df_laz$n ,big.mark=",", trim=TRUE)
 
+#Use tableGrob to create a plot with the appearrence of a table
+
+mtab_df_laz_tbl <- tableGrob(mtab_df_laz,
+                             row = NULL,
+                             cols = c("N", "% shifted to \nreference", "% shifted to \noptimal"), 
+                             theme = ttheme_minimal(base_size =9))
+
+mtab_df_laz_tbl$heights <- unit(c(0.055, rep(0.025, nrow(mtab_df_laz_tbl) - 1)), "npc")
+mtab_df_laz_tbl$widths <- unit(rep(0.2, ncol(mtab_df_laz_tbl)), "npc")
+mtab_df_laz_tbl <- gtable_add_grob(mtab_df_laz_tbl,
+                                   grobs = segmentsGrob( # line across the bottom
+                                     x0 = unit(0,"npc"),
+                                     y0 = unit(0,"npc"),
+                                     x1 = unit(1,"npc"),
+                                     y1 = unit(0,"npc"),
+                                     gp = gpar(lwd = 2.0)),
+                                   t = 1, b = 1, l = 1, r = 3)
+
+grid.arrange(mtab_df_laz_tbl)
+
+grid.arrange(pPAR_laz, mtab_df_laz_tbl,
+             nrow = 1,
+             ncol = 2,
+             heights= 1, 
+             widths = c(1, 0.5))
 
 
 #Repeat for WLZ
-mtab_df <- dpool %>% filter(outcome_variable=="WLZ") %>%
+mtab_df_wlz <- dpool %>% filter(outcome_variable=="WLZ") %>%
   arrange(-PAR) %>%
   mutate(perc_ref= round((1-ref_prev)*100), perc_vim=0) %>%
   subset(., select = c(n, perc_ref, perc_vim))
+
+mtab_df_wlz$n = format(mtab_df_wlz$n ,big.mark=",", trim=TRUE)
+
+#Use tableGrob to create a plot with the appearrence of a table
+
+mtab_df_wlz_tbl <- tableGrob(mtab_df_wlz, 
+                             rows = NULL,
+                             cols = c("N", "% shifted to \nreference", "% shifted to \noptimal"), 
+                             theme = ttheme_minimal(base_size =9))
+
+mtab_df_wlz_tbl$heights <- unit(c(0.055, rep(0.025, nrow(mtab_df_wlz_tbl) - 1)), "npc")
+mtab_df_wlz_tbl$widths <- unit(rep(0.2, ncol(mtab_df_wlz_tbl)), "npc")
+
+mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
+                                   grobs = segmentsGrob( # line across the bottom
+                                     x0 = unit(0,"npc"),
+                                     y0 = unit(0,"npc"),
+                                     x1 = unit(1,"npc"),
+                                     y1 = unit(0,"npc"),
+                                     gp = gpar(lwd = 2.0)),
+                                   t = 1, b = 1, l = 1, r = 3)
+
+grid.arrange(mtab_df_wlz_tbl)
+
+grid.arrange(pPAR_wlz, mtab_df_wlz_tbl,
+             nrow = 1,
+             ncol = 2,
+             heights= 1, 
+             widths = c(1, 0.5))
 
 #save the plots seperately (I'll combine together later)
 
@@ -125,7 +180,7 @@ pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) +
                      expand = c(0,0.5),
                      sec.axis = sec_axis(~.,
                                          breaks = 1:length(nlab),
-                                         labels = reorder(nlab, PAR))) +
+                                         labels = rep("", length(nlab)))) +#reorder(nlab, PAR))) +
   scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
   scale_shape_manual(values=c(4, 19))+
   theme(strip.background = element_blank(),
@@ -170,7 +225,7 @@ pPAR_wlz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) +
                      expand = c(0,0.5),
                      sec.axis = sec_axis(~.,
                                          breaks = 1:length(nlab),
-                                         labels = reorder(nlab, PAR))) +
+                                         labels = rep("", length(nlab))))+#reorder(nlab, PAR))) +
   scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
   scale_shape_manual(values=c(4, 19))+
   theme(strip.background = element_blank(),
