@@ -9,7 +9,7 @@ compute_ci_with_sampling_weights <- function(df) {
   # Complex sample design parameters
   DHSdesign <- svydesign(
     id = df$cluster_no,
-    strata = as.numeric(df$stratification),
+    strata = as.factor(df$stratification),
     weights = df$weight,
     data = df,
     nest = TRUE

@@ -37,6 +37,7 @@ dhsz <- dhaz %>%
 
 df_survey <- foreach(measure_here = unique(dhsz$measure), .combine = rbind, .packages=c('tidyverse','survey')) %:%
   foreach(region_here = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
+    options(survey.lonely.psu = "adjust")
     df <- dhsz %>% filter(measure == measure_here & region == region_here)
     result_svymean <- compute_ci_with_sampling_weights(df)
     result_svymean$megasure <- measure_here
