@@ -12,15 +12,17 @@ require(cowplot)
 #Figure 2 + 3
 load(paste0(here::here(), "/results/rf results/rf_paf_plot_objects.Rdata"))
 load(paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.Rdata"))
+load(paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.Rdata"))
+
 
 p1 <- pPAR_laz + xlab("") + theme(axis.text = element_text(size=12))
 p2 <- pPAR_wlz + xlab("") + theme(axis.text = element_text(size=12))
 p3 <- ppaf_stunt + xlab("") + theme(axis.text = element_text(size=12))
 p4 <- ppaf_wast + xlab("") + theme(axis.text = element_text(size=12))
 
-
+ 
 #fig2 <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-fig2 <- plot_grid(p1, p2, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+fig2 <- plot_grid(p1, grid.arrange(mtab_df_laz_tbl), p2,  grid.arrange(mtab_df_wlz_tbl), labels = c("A","","B",""), ncol = 4, align = 'v', axis = 'l')
 ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig2.png"), width=14, height=8)
 
 fig3 <- plot_grid(p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
