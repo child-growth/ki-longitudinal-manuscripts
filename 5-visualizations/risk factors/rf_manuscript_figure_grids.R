@@ -22,7 +22,7 @@ p4 <- ppaf_wast + xlab("") + theme(axis.text = element_text(size=12))
 
  
 #fig2 <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-fig2 <- plot_grid(p1, grid.arrange(mtab_df_laz_tbl), p2,  grid.arrange(mtab_df_wlz_tbl), labels = c("A","","B",""), ncol = 4, align = 'v', axis = 'l')
+fig2 <- plot_grid(p1, grid.arrange(mtab_df_laz_tbl), p2,  grid.arrange(mtab_df_wlz_tbl), labels = c("A","","B",""), ncol = 4, align = 'v', axis = 'l', rel_widths=c(1, 0.5, 1, 0.5))
 ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig2.png"), width=14, height=8)
 
 fig3 <- plot_grid(p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')

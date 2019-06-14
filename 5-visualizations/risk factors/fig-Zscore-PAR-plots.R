@@ -19,11 +19,11 @@ par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_result
 head(vim)
 dim(par)
 
-par <- par %>% filter( agecat=="24 months", region=="Pooled")
-vim <- vim %>% filter(agecat=="24 months", region=="Pooled")
+par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR))
+vim <- vim %>% filter(agecat=="24 months", region=="Pooled", !is.na(PAR))
 
-vim2 <- vim %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel)) %>% mutate(measure="Population attributable difference")
-par2 <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, n_cell, n))  %>% mutate(measure="Variable importance measure")
+vim2 <- vim %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel)) %>% mutate(measure="Variable importance measure")
+par2 <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, n_cell, n))  %>% mutate(measure="Population attributable difference") 
 
 v <- unique(vim2$intervention_variable)
 p <- unique(par2$intervention_variable)
@@ -31,7 +31,13 @@ v[!(v %in% p)]
 p[!(p %in% v)]
 
 df <- bind_rows(par2, vim2)
+df <- df %>% filter(!is.na(PAR))
+df$measure <- factor(df$measure, levels = c("Population attributable difference","Variable importance measure"))
 
+# df <- df %>% group_by(intervention_variable) %>% summarize(N=n())
+# 
+# df[df$intervention_variable=="sex",]
+# df[df$intervention_variable=="earlybf",]
 
 #----------------------------------------------------------
 # Plot parameters
@@ -40,20 +46,8 @@ df <- bind_rows(par2, vim2)
 
 yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 
-#hbgdki pallet
-tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
-               "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
-
-# All dark grey
-tableau10 <- rep("grey30",10)
-
-# Different shades of grey
-tableau10 = c("grey50", "grey30")
-
-# Colors!
-tableau10 = c("#E377C2","#7F7F7F")
-
-scaleFUN <- function(x) sprintf("%.1f", x)
+# Colors
+color_vec = c("#7F7F7F", "#E377C2")
 
 
 
@@ -85,12 +79,13 @@ dpool <- df %>% ungroup() %>%
 #----------------------------------------------------------
 
 plotdf <- dpool %>% filter(outcome_variable=="LAZ") %>%
-  arrange(-PAR) %>%
-  mutate(RFlabel_ref=factor(RFlabel, levels=unique(RFlabel)))
-nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_prev)*100),"%) to ref: ",plotdf$intervention_level)
-RFlabel <- plotdf$RFlabel
-PAR <- plotdf$PAR
-plotdf$PAR2 <- ifelse(plotdf$measure=="Population attributable difference", PAR, NA)
+  arrange(measure, -PAR) 
+plotdf$RFlabel=factor(plotdf$RFlabel, levels=unique(plotdf$RFlabel))
+
+#nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_prev)*100),"%) to ref: ",plotdf$intervention_level)
+#RFlabel <- plotdf$RFlabel
+#PAR <- plotdf$PAR
+#plotdf$PAR2 <- ifelse(plotdf$measure=="Population attributable difference", PAR, NA)
 
 # plotdf$measure = "Population attributable difference"
 # 
@@ -103,20 +98,21 @@ plotdf$PAR2 <- ifelse(plotdf$measure=="Population attributable difference", PAR,
 
 
 
-pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR2))))) + 
+#pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR2))))) + 
+pPAR_laz <-  ggplot(plotdf, aes(x=RFlabel)) + 
   geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
   geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
   coord_flip(ylim=c(-0.2, 0.55)) +
   labs(x = "Exposure", y = "Difference in LAZ after setting whole\npopulation exposure to reference level") +
   geom_hline(yintercept = 0) +
-  scale_x_continuous(breaks = 1:length(RFlabel),
-                     labels = RFlabel,
-                     expand = c(0,0.5),
-                     sec.axis = sec_axis(~.,
-                                         breaks = 1:length(nlab),
-                                         labels = rep("", length(nlab)))) +#reorder(nlab, PAR))) +
-  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-  scale_shape_manual(values=c(4, 19))+
+  # scale_x_continuous(#breaks = 1:length(RFlabel),
+  #                    #labels = RFlabel,
+  #                    expand = c(0,0.5),
+  #                    sec.axis = sec_axis(~.,
+  #                                        breaks = 1:length(nlab),
+  #                                        labels = rep("", length(nlab)))) +#reorder(nlab, PAR))) +
+  scale_colour_manual(values=color_vec, name = "Exposure\nCategory") +
+  scale_shape_manual(values=c(19,4))+
   theme(strip.background = element_blank(),
         legend.position="right",
         axis.text.y = element_text(hjust = 1),
@@ -134,28 +130,24 @@ pPAR_laz
 #----------------------------------------------------------
 
 plotdf <- dpool %>% filter(outcome_variable=="WLZ") %>%
-  arrange(-PAR) %>%
-  mutate(RFlabel_ref=factor(RFlabel, levels=unique(RFlabel)))
-nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_prev)*100),"%) to ref: ",plotdf$intervention_level)
-RFlabel <- plotdf$RFlabel
-PAR <- plotdf$PAR
-plotdf$PAR2 <- ifelse(plotdf$measure=="Population attributable difference", PAR, NA)
+  arrange(measure, -PAR) 
+plotdf$RFlabel=factor(plotdf$RFlabel, levels=unique(plotdf$RFlabel))
 
 
-pPAR_wlz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) + 
+pPAR_wlz <-  ggplot(plotdf, aes(x=RFlabel)) + 
   geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
   geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
   coord_flip(ylim=c(-0.2, 0.55)) +
   labs(x = "Exposure", y = "Difference in WLZ after setting whole\npopulation exposure to reference level") +
   geom_hline(yintercept = 0) +
-  scale_x_continuous(breaks = 1:length(RFlabel),
-                     labels = RFlabel,
-                     expand = c(0,0.5),
-                     sec.axis = sec_axis(~.,
-                                         breaks = 1:length(nlab),
-                                         labels = rep("", length(nlab))))+#reorder(nlab, PAR))) +
-  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-  scale_shape_manual(values=c(4, 19))+
+  # scale_x_continuous(breaks = 1:length(RFlabel),
+  #                    labels = RFlabel,
+  #                    expand = c(0,0.5),
+  #                    sec.axis = sec_axis(~.,
+  #                                        breaks = 1:length(nlab),
+  #                                        labels = rep("", length(nlab))))+#reorder(nlab, PAR))) +
+  scale_colour_manual(values=color_vec, name = "Exposure\nCategory") +
+  scale_shape_manual(values=c(19, 4))+
   theme(strip.background = element_blank(),
         legend.position="right",
         axis.text.y = element_text(hjust = 1),
@@ -189,7 +181,7 @@ save(pPAR_laz, pPAR_wlz, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-m
 # NOTE: VIM percent shifted now set to 0 until results are generated
 
 mtab_df_laz <- dpool %>% filter(outcome_variable=="LAZ") %>%
-  arrange(-PAR) %>%
+  arrange(-PAR) %>% filter(measure=="Population attributable difference") %>%
   mutate(perc_ref= round((1-ref_prev)*100), perc_vim=0) %>%
   subset(., select = c(n, perc_ref, perc_vim))
 
@@ -227,7 +219,7 @@ mtab_df_laz_tbl <- gtable_add_grob(mtab_df_laz_tbl,
 
 #Repeat for WLZ
 mtab_df_wlz <- dpool %>% filter(outcome_variable=="WLZ") %>%
-  arrange(-PAR) %>%
+  arrange(-PAR) %>% filter(measure=="Population attributable difference") %>%
   mutate(perc_ref= round((1-ref_prev)*100), perc_vim=0) %>%
   subset(., select = c(n, perc_ref, perc_vim))
 
