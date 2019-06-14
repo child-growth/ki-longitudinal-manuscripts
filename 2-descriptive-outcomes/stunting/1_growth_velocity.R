@@ -4,26 +4,12 @@
 
 # growth velocity analysis
 ##########################################
-
-
-# FINAL dataset of all studies
-library(tidyverse)
-library(data.table)
-# install.packages("bit64")
-library(bit64)
-
-# options(repos = c(CRAN = "http://cran.rstudio.com/",
-#  deltarho = "http://packages.deltarho.org"))
-# install.packages("growthstandards")
-library(growthstandards)
-
-# source("U:/GHAP-Data-Management/HBGDki_functions.R")
-
-setwd("U:/")
-#setwd("U:/data/ucb-superlearner/Stunting rallies")
-gc()
+rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
 
 #Read rds file and drop unneeded columns
+# d<-fread("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+         
 d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T,
          colClasses = c(SUBJID = "integer64"),
          drop = c( "AGEIMPFL",  

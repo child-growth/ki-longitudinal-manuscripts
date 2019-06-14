@@ -18,7 +18,6 @@ library(ggrepel)
 library(ggthemes)
 library(maps)
 library(FField)
-library(data.table)
 library(ggjoy)
 library(ggridges)
 library(RColorBrewer)
@@ -43,7 +42,8 @@ library(xtable)
 library(foreach)
 library(doParallel)
 library(survey)
-
+# install.packages("bit64")
+library(bit64)
 
 # define directories
 res_dir = paste0(here::here(),"/results/")
