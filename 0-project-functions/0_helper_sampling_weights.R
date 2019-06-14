@@ -9,7 +9,7 @@ compute_ci_with_sampling_weights <- function(df) {
   # Complex sample design parameters
   DHSdesign <- svydesign(
     id = df$cluster_no,
-    strata = df$stratification,
+    strata = as.numeric(df$stratification),
     weights = df$weight,
     data = df,
     nest = TRUE
@@ -17,31 +17,31 @@ compute_ci_with_sampling_weights <- function(df) {
   # tabulate indicator by region
   df_survey <- svyby(~zscore, ~agem, DHSdesign, svymean, vartype = c("se", "ci"))
   df_n <- df %>% group_by(agem) %>% summarise(wgt_sum = sum(weight))
-  df_survey <- dplyr::left_join(df_survey, df_n, by = "agem")
+  df_survey <- dplyr::left_join(as.data.frame(df_survey), df_n, by = "agem")
   return(df_survey)
 }
 
 # meta analysis using fixed effects or random effects based pooling
-fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
-  data <- filter(data, agecat == age)
-  fit <- NULL
-  try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = method, measure = "GEN"))
-  out <- data %>%
-    ungroup() %>%
-    summarise(
-      nstudies = length(unique(studyid)),
-      nmeas = sum(data[[ni]][agecat == age])
-    ) %>%
-    mutate(
-      agecat = age, est = fit$beta, se = fit$se, lb = fit$ci.lb, ub = fit$ci.ub,
-      nmeas.f = paste0(
-        "N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE),
-        " ", nlab
-      ),
-      nstudy.f = paste0("N=", nstudies, " studies")
-    )
-  return(out)
-}
+# fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
+#   data <- filter(data, agecat == age)
+#   fit <- NULL
+#   try(fit <- rma(yi = data[[yi]], vi = data[[vi]], method = method, measure = "GEN"))
+#   out <- data %>%
+#     ungroup() %>%
+#     summarise(
+#       nstudies = length(unique(studyid)),
+#       nmeas = sum(data[[ni]][agecat == age])
+#     ) %>%
+#     mutate(
+#       agecat = age, est = fit$beta, se = fit$se, lb = fit$ci.lb, ub = fit$ci.ub,
+#       nmeas.f = paste0(
+#         "N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE),
+#         " ", nlab
+#       ),
+#       nstudy.f = paste0("N=", nstudies, " studies")
+#     )
+#   return(out)
+# }
 
 do_metaanalysis <- function(df_survey, pool_over, method = "FE") {
   # method = "REML"
@@ -52,7 +52,7 @@ do_metaanalysis <- function(df_survey, pool_over, method = "FE") {
           mutate(variance = se^2, agecat = agem) %>%
           filter(measure == measure_here)
       df_to_pool[, "studyid"] <- df_to_pool[, pool_over]
-      df_pooled <- fit.cont.rma(
+      df_pooled <- fit.rma(
         data = df_to_pool,
         age = age_here,
         yi = "zscore",
