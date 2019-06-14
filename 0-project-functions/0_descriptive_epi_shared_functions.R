@@ -235,7 +235,7 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
   if (mode_binary & mode_continuous) stop("can only do binary or continuous")
   # check if measure=="PLO" - default for all parameters bounded between 0 and 1 (prevalence, cumulative incidence)
   # because then output needs back transformation
-  if (measure == "PLO") {
+  if (measure == "PLO" & mode_binary) {
     # If only one row of the data, no need for pooling (single study, often seens when looping over agecats),
     # so just use the escalc() function that underlies RMA to calculate the parameter for the single study
     if (nrow(data) == 1) {

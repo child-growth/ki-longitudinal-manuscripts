@@ -3,7 +3,7 @@
 # source configuration file
 #---------------------------------------
 source(paste0(here::here(), "/0-config.R"))
-source("0-project-functions/0_wast_inc_functions.R")
+source("0-project-functions/0_helper_sampling_weights.R")
 
 #---------------------------------------
 # load cleaned DHS anthro data
