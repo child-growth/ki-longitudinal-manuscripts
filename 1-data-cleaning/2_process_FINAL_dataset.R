@@ -1,4 +1,15 @@
 
+#-----------------------------------------------------------------------------------------
+# Process FINAL dataset into a dataset of covariates to be used in the exposure/risk factor
+# analysis in the causes and consequences manuscript. 
+#
+# Output: Single dataset with one row per child and all baseline covariates
+#         Time-varying covariates and anthropometry measures processed in a seperate script.
+#
+# Author: Andrew Mertens (amertens@berkeley.edu)
+#-----------------------------------------------------------------------------------------
+
+
 
 # Instructions for downloading FINAL dataset
 
@@ -17,11 +28,7 @@
 rm(list=ls())
 library(tidyverse)
 library(data.table)
-# options(repos = c(CRAN = "http://cran.rstudio.com/",
-#  deltarho = "http://packages.deltarho.org"))
-# install.packages("growthstandards")
 library(growthstandards)
-
 
 
 setwd("U:/data")
@@ -29,7 +36,8 @@ gc()
 
 
 
-#Read rds file and drop unneeded columns
+#Read rds file and drop unneeded columns that Vishak extracted that are either used elsewhere or were too rare to include as exposures
+# (to avoid memory allocation issues)
 d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T,
          drop = c( "AGEIMPFL",  "WTKG",    "HTCM",    "LENCM",
                    "BAZ",     "HCAZ",    "MUAZ",    
@@ -107,8 +115,10 @@ d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="BRAZIL"),] #Drop because ye
 d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop because yearly but not an RCT
 
 
-#Temp
-#d <- d[d$measurefreq!="yearly",]
+#Drop yearly studies except for four with high quality mortality data used in the mortality analysis
+d <- d %>% filter(measurefreq!="yearly" | studyid %in% c("ki1148112-iLiNS-DOSE", "ki1148112-iLiNS-DYAD-M","ki1112895-Burkina Faso Zn", "ki1000304-VITAMIN-A" ))
+
+    
 
 #--------------------------------------------------------
 # Calculate longitudinal prevalence of wasting and stunting
@@ -121,32 +131,25 @@ lprev <- d %>% group_by(studyid, country, subjid) %>%
   filter(agedays<6*30.4167) %>%
   mutate(wast=as.numeric(whz < -2), stunt=as.numeric(haz < -2)) %>%
   summarize(wastprev06=mean(wast, na.rm=T), stuntprev06=mean(stunt, na.rm=T), anywast06=as.numeric(wastprev06>0), anystunt06=as.numeric(stuntprev06>0), 
-            pers_wast=as.numeric(wastprev06>=0.5), pers_stunt=as.numeric(stuntprev06>=0.5))
+            pers_wast=as.numeric(wastprev06>=0.5))
 head(lprev)
 
 table(lprev$anywast06)
 table(lprev$anystunt06)
 table(lprev$pers_wast)
-table(lprev$pers_stunt)
 
+#Merge in new variables
 lprev <- lprev %>% subset(., select = c(studyid, country,subjid, anywast06,  pers_wast))
+
 
 d <- left_join(d, lprev, by=c("studyid","country","subjid"))
 
-#--------------------------------------------------------
-#Code to keep monthly and quarterly studies
-#--------------------------------------------------------
-#d <- d %>% filter(measurefreq!="yearly")
-#NOTE: not run here because subsetting to correct studies is done
-#in the outcome datasets
-d <- d %>% subset(., select=-c(measurefreq))
-
 
 
 
 
 #--------------------------------------------------------
-#Calculate stunting and wastingat enrollment and keep one observation per child
+#Calculate stunting and wasting at enrollment and keep one observation per child
 #Also check if children without a recorded birthweight or birthlength have WAZ or HAZ in the first year of life
 #--------------------------------------------------------
 d <- d %>% group_by(studyid, subjid) %>% 
@@ -165,14 +168,18 @@ d$birthLAZ[d$agedays>3] <- NA
 d$birthWAZ[d$agedays>3] <- NA
 d$birthmeas_age <- 1
 d$birthmeas_age[d$agedays <= 3] <- d$agedays[d$agedays <= 3]
-d <- d %>% subset(., select=-c(agedays, haz, waz, whz))
+
+#Drop anthropometry measures (seperate long-form dataset used to )
+d <- d %>% subset(., select=-c(agedays, haz, waz, whz)) 
 
 table(d$studyid, d$enwast)
 table(d$studyid, d$enstunt)
 
 
 #--------------------------------------------------------
-#merge in household assets PCA wealth
+# Merge in household assets-based wealth index
+# (Calculated from first principal component of a PCA analysis)
+# of asset indicators
 #--------------------------------------------------------
 
 #convert subjid to character for the merge with covariate dataset
@@ -181,12 +188,15 @@ d$subjid <- as.character(d$subjid)
 #load in pca results
 load("U:/results/allGHAPstudies-HHwealth.Rdata")
 table(pca$STUDYID, pca$HHwealth_quart)
-#Note, only the COHORTS study has SES but no HH wealth quartile
+
+#Merge into main dataframe
 colnames(pca) <- tolower(colnames(pca))
 pca <- as.data.frame(pca)
 pca$subjid <-as.character(pca$subjid)
 d <- left_join(d, pca, by=c("studyid", "country", "subjid"))
 
+#Note, only the COHORTS study has SES categories from a PCA, but no/incomplete indicators to calculate PCA from
+#Clean and merge that data here:
 #merge in ses variable for COHORTS for all countries except INDIA. The other countries have wealth based on 
 #an asset-based PCA index, but India is based on father's occupation.
 d$hhwealth_quart <- as.character(d$hhwealth_quart)
@@ -201,10 +211,10 @@ chtses[chtses=="Upper"] <- "Wealth Q4"
 d$hhwealth_quart[is.na(d$hhwealth_quart) & d$studyid=="ki1135781-COHORTS" & d$country!="INDIA"] <-chtses
 d$hhwealth_quart <- factor(d$hhwealth_quart)
 
-#Check and make sure all merged
-#df <- d %>% filter(!is.na(hhwealth_quart)) %>% group_by(studyid, subjid) %>% slice(1)
-#table(pca$studyid, pca$hhwealth_quart)
-#table(df$studyid, df$hhwealth_quart)
+#Check and make sure all merged correctly
+df <- d %>% filter(!is.na(hhwealth_quart)) %>% group_by(studyid, subjid) %>% slice(1)
+table(pca$studyid, pca$hhwealth_quart)
+table(df$studyid, df$hhwealth_quart)
 
 
 
@@ -213,7 +223,8 @@ d$hhwealth_quart <- factor(d$hhwealth_quart)
 # Code Food security
 #--------------------------------------------------------------------------
 
-#Recode into 3 harmonized categories (so that all 3 levels are present across all studies)
+#Code into 3 harmonized categories (so that all 3 levels are present across all studies)
+# By recoding the levels from the HHS, HFAIS, and FAST scales into 3 categories
 unique(d$hfoodsec)
 
 d$temp <- NA
@@ -255,7 +266,9 @@ d$hfoodsec <- factor(d$hfoodsec, levels=c("Food Secure", "Mildly Food Insecure",
 d$gagebrth[d$studyid=="ki1113344-GMS-Nepal"] <- NA
 
 #parity
-#Combine parity and birthorder
+#Combine parity and birthorder to have sufficient data to analyze
+#Parity (which includes stillborns past a certain gestational age) is assumed
+#to approximate child birth order
 table(d$studyid, d$parity)
 table(d$studyid, d$brthordr)
 
@@ -265,7 +278,7 @@ d$parity[is.na(d$parity)] <- d$brthordr[is.na(d$parity)]
 #Fix 21 obs of 0 in ki1000304b-SAS-FoodSuppl
 d$parity[d$studyid=="ki1000304b-SAS-FoodSuppl" & d$parity==0] <- NA
 
-#Fix right shift of Tanzania child
+#Fix right shift of Tanzania child parity
 d$parity[d$studyid=="ki1066203-TanzaniaChild2" & d$parity==1] <- NA
 d$parity[d$studyid=="ki1066203-TanzaniaChild2"] <- d$parity[d$studyid=="ki1066203-TanzaniaChild2"] -1 
 table(d$studyid, d$parity)
@@ -274,7 +287,7 @@ table(d$studyid, d$parity)
 table(d$studyid, is.na(d$birthlen))
 table(d$studyid, is.na(d$birthwt))
 
-#sex must be "Male" or "Female"
+#sex must be "Male" or "Female" for growthstandards package
 table(d$sex)
 table(is.na(d$sex))
 
@@ -285,7 +298,7 @@ d$birthwt2[!is.finite(d$birthwt2)] <- NA
 
 
 
-#Check if children without a recorded birthweight or birthlength have WAZ or HAZ in the first year of life
+#Check if children without a recorded birthweight or birthlength have WAZ or HAZ in the first 3 days of life
 #and add into birthweight variable
 
 summary(d$birthlen)
@@ -304,18 +317,18 @@ table(d$studyid, is.na(d$birthlen))
 table(d$studyid, is.na(d$birthwt))
 
 #--------------------------------------------------------------------------
-# parent characteristics
+# parental characteristics
 #--------------------------------------------------------------------------
 
 #single mom
 table(d$studyid, d$single)
 
-#Note Jivita-4 single mother seems way too high
-#drop single mother in kiGH5241-JiVitA-4 until the raw data can be checked more thoroughly
+#Note Jivita-4 single mother is unbelievably high
+#drop single mother variable in kiGH5241-JiVitA-4 
 d$single[d$studyid=="kiGH5241-JiVitA-4"] <-NA
 
 
-#Calculate bmi from height and weight, and vice versa, for when 2 of 3 are measured
+#Calculate bmi from height and weight, and vice versa, for when only 2 of 3 are measured
 #bmi
 flag <- is.na(d$mbmi) & !is.na(d$mhtcm) & !is.na(d$mwtkg)
 d$mbmi[flag] <- d$mwtkg[flag] / (d$mhtcm[flag] / 100)^2
@@ -348,7 +361,8 @@ table(d$studyid, d$nchldlt5)
 
 #Need to shift full distribution by 1 in studies with 0 marked- 
 #  inconsistent marking of subject in the count across studies
-d$nchldlt5[d$studyid=="ki1148112-LCNI-5" & d$nchldlt5==0] <- NA #LCNI has 4 children marked as 0
+#  Some count number of other children, some number of total children
+d$nchldlt5[d$studyid=="ki1148112-LCNI-5" & d$nchldlt5==0] <- NA #LCNI has 4 children marked as 0 -drop as
 d$nchldlt5[d$studyid=="ki1000108-IRC"] <- d$nchldlt5[d$studyid=="ki1000108-IRC"] + 1
 d$nchldlt5[d$studyid=="ki1017093b-PROVIDE"] <- d$nchldlt5[d$studyid=="ki1017093b-PROVIDE"] + 1
 d$nchldlt5[d$studyid=="ki1017093c-NIH-Crypto"] <- d$nchldlt5[d$studyid=="ki1017093c-NIH-Crypto"] + 1
@@ -367,6 +381,7 @@ d$brthmon[is.na(d$brthmon)] <- ceiling(d$brthweek[is.na(d$brthmon)]/53 *12)
 
 #--------------------------------------------------------
 # create id variable for unit of independent observation
+# (At level of child for most studies, but some trials are cluster-randomized)
 #--------------------------------------------------------
 
 d$id <- NA
@@ -389,9 +404,6 @@ d$id[!(d$studyid %in% c("ki1112895-iLiNS-Zinc",
                                                                                    "ki1119695-PROBIT",
                                                                                    "ki1000304b-SAS-CompFeed"))]
 
-#No site id in the cohorts guatemala raw data
-#d$id[d$studyid=="ki1135781-COHORTS" & d$country=="GUATEMALA"] <-d$clustid[d$studyid=="ki1135781-COHORTS" & d$country=="GUATEMALA"]
-
 #use siteid from PROBIT
 d$id[d$studyid %in% c("ki1119695-PROBIT")] <-d$siteid[d$studyid %in% c("ki1119695-PROBIT")]
 
@@ -399,7 +411,8 @@ table(is.na(d$id))
 
 
 #--------------------------------------------------------
-# Classify intervention arms
+# Classify intervention arms (used in initially-planned analysis)
+# Of intervention effects that was scrapped, but also as adjustment variables
 #--------------------------------------------------------
 
 arms <- d %>% filter(arm!="") %>% group_by(studyid) %>% do(levels = unique(.$arm))
@@ -498,7 +511,7 @@ table(d$tr)
 
 
 #--------------------------------------------------------
-# Drop risk factors without enough studies or unneeded variables 
+# Drop risk factors without enough studies or unneeded/temporary variables 
 #--------------------------------------------------------
 
 colnames(d)
@@ -510,7 +523,8 @@ d <- subset(d, select = -c(siteid, region,  clustid, brthweek,   brthordr, ses, 
 
 
 #--------------------------------------------------------
-#Convert continious variables to quartiled categorical 
+# Convert continious variables to quartiled categorical 
+# variables for use as primary exposures
 #--------------------------------------------------------
 
 
@@ -572,35 +586,24 @@ quantile_rf <- function(data, A, labs=NULL, Acuts=NULL, units=NULL){
 }
 
 
+#A-priori categorical levels
+  #gestational age at birth
+  #<37 weeks = preterm
+  #37-38 weeks = early term
+  #39-40 weeks = full term (baseline)
+  #>=41 weeks = late/post term
+
+  #maternal BMI
+  #<18.5 = underweight
+  #>=18.5 and <25 = normal weight (baseline)
+  #>=25 and <30 = overweight
+  #>=30 = obese
 
 
-
-#gestational age at birth
-#<37 weeks = preterm
-#37-38 weeks = early term
-#39-40 weeks = full term (baseline)
-#>=41 weeks = late/post term
-#maternal BMI (is this measured when pregnant or not? if pregnant, then we may need to change these categories)
-#<18.5 = underweight
-#>=18.5 and <25 = normal weight (baseline)
-#>=25 and <30 = overweight
-#>=30 = obese
-#maternal height (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3095774/)
-#less than 145 cm
-#145-149.9 cm
-#150-154.9 cm
-#155-159.9 cm
-#160.0 cm or greater. (baseline)
-#maternal weight?
-#mother's/father's education
-#highest education level = baseline
-#father age
-#oldest = baseline
-#father height?
 
 class(d$gagebrth)
 
-#Save continious variables to use as risk factors
+#Save continious variables as seperate variables to use as adjustment covariates
 d$W_gagebrth <- d$gagebrth
 d$W_birthwt <- d$birthwt
 d$W_birthlen <- d$birthlen
@@ -638,11 +641,9 @@ d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,167,max(d$W_fhtcm, na.rm=T)),
 
 
 #Make education categorizing function that handles the irregular distribution across studies.
-#d<-dfull[dfull$studyid=="ki1000111-WASH-Kenya",]
-# d2 <- d
-# d <- d[d$studyid=="ki1066203-TanzaniaChild2",]
-#  d <- d[d$studyid=="ki0047075b-MAL-ED" & d$country=="BRAZIL",]
-# table(d$W_meducyrs[d$studyid=="ki1000109-EE" & d$country=="PAKISTAN"])
+# (As years of education is more country-specific, categorize within studies)
+# Function groups subjects into even categories from irregular distributions of education 
+# (just tertiling leads to sparsity/R errors)
 
 quantile_rf_edu <- function(d, Avar="meducyrs"){
   dfull <-d
