@@ -20,6 +20,7 @@ compute_ci_with_sampling_weights <- function(df) {
   df_survey <- dplyr::left_join(df_survey, df_n, by = "agem")
   return(df_survey)
 }
+
 # meta analysis using fixed effects or random effects based pooling
 fit.cont.rma <- function(data, age, yi, vi, ni, nlab, method = "REML") {
   data <- filter(data, agecat == age)

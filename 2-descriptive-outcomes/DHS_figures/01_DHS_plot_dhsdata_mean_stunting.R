@@ -1,8 +1,9 @@
+
 #---------------------------------------
 # source configuration file
 #---------------------------------------
 source(paste0(here::here(), "/0-config.R"))
-source("5-visualizations/shared/helper_sampling_weights.R")
+source("0-project-functions/0_wast_inc_functions.R")
 
 #---------------------------------------
 # load cleaned DHS anthro data
@@ -34,11 +35,11 @@ dhsz <- dhaz %>%
 # for each region, do the cluster based pooling for each child age
 #---------------------------------------
 
-df_survey <- foreach(measure_here = unique(dhsz$measure), .combine = rbind) %:%
+df_survey <- foreach(measure_here = unique(dhsz$measure), .combine = rbind, .packages=c('tidyverse','survey')) %:%
   foreach(region_here = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
     df <- dhsz %>% filter(measure == measure_here & region == region_here)
     result_svymean <- compute_ci_with_sampling_weights(df)
-    result_svymean$measure <- measure_here
+    result_svymean$megasure <- measure_here
     result_svymean$region <- region_here
     result_svymean
   }
