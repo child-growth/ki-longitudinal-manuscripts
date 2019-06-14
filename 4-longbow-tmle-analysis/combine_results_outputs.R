@@ -4,22 +4,22 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/opttx_vim_results.rdata")
-vim <- results
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_bin.rdata")
+vim_bin <- results
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_cont.rdata")
+vim_cont <- results
 
-dim(vim)
-head(vim)
+dim(vim_bin)
+head(vim_bin)
+
+dim(vim_cont)
+head(vim_cont)
 
 
-
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_results.rdata")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/binary_wasting_results.rdata")
 wasting <- results
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/wasting_results_cont.rdata")
-# wasting_cont_par <- results %>% filter(type=="PAR")
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/wasting_results.rdata")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/wasting_results.rdata")
 Zscores <- results
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/opttx_vim/adjusted_binary_results.rdata")
-# vim <- results
 
 d <- bind_rows(
   #adj_bin, unadj_bin, 
