@@ -408,8 +408,8 @@ shiny_desc_data <- bind_rows(
   data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ip6)
 )
 
-
-
+# check that all pooling used random effects
+assert_that(names(table(shiny_desc_data$method.used)) == "REML")
 
 
 shiny_desc_data <- shiny_desc_data %>% subset(., select = -c(se, nmeas.f,  ptest.f))
