@@ -2,8 +2,9 @@
 #---------------------------------------
 # source configuration file
 #---------------------------------------
+rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-source("0-project-functions/0_helper_sampling_weights.R")
+source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
 #---------------------------------------
 # load cleaned DHS anthro data

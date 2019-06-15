@@ -20,9 +20,22 @@ p2 <- pPAR_wlz + xlab("") + theme(axis.text = element_text(size=12))
 p3 <- ppaf_stunt + xlab("") + theme(axis.text = element_text(size=12))
 p4 <- ppaf_wast + xlab("") + theme(axis.text = element_text(size=12))
 
- 
+blank <- grid.rect(gp=gpar(col="white"))
+
+pPar_laz_title <- ggdraw() + draw_label("Population attributable difference in LAZ", fontface='bold',size = 12, hjust = 0.35)             
+pPar_laz_plot = grid.arrange(blank, pPar_laz_title, blank, p1, nrow = 4, heights = c(0.05, 1, 0.05, 20))
+pPar_laz_plot_tbl = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 1.1))
+pPar_laz_combined = plot_grid(pPar_laz_plot, pPar_laz_plot_tbl, ncol = 2, rel_widths = c(1, 0.6))
+pPar_laz_combined
+
+pPar_wlz_title <- ggdraw() + draw_label("Population attributable difference in WLZ", fontface='bold',size = 12, hjust = 0.35)             
+pPar_wlz_plot = grid.arrange(blank, pPar_wlz_title, blank, p2, nrow = 4, heights = c(0.05, 1, 0.05, 20))
+pPar_wlz_plot_tbl = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 1.1))
+pPar_wlz_combined = plot_grid(pPar_wlz_plot, pPar_wlz_plot_tbl, ncol = 2, rel_widths = c(1, 0.6))
+pPar_wlz_combined
+
 #fig2 <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-fig2 <- plot_grid(p1, grid.arrange(mtab_df_laz_tbl), p2,  grid.arrange(mtab_df_wlz_tbl), labels = c("A","","B",""), ncol = 4, align = 'v', axis = 'l', rel_widths=c(1, 0.5, 1, 0.5))
+fig2 <- plot_grid(pPar_laz_combined, pPar_wlz_combined, ncol = 2, labels = c("A", "B"), align = 'v', axis = 'l')
 ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig2.png"), width=14, height=8)
 
 fig3 <- plot_grid(p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')

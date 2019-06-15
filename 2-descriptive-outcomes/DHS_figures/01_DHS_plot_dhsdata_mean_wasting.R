@@ -1,4 +1,33 @@
 
+
+#---------------------------------------
+# source configuration file
+#---------------------------------------
+rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
+source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
+
+#---------------------------------------
+# load cleaned DHS anthro data
+# created by 7_DHS-data-cleaning.R
+#---------------------------------------
+dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
+dwhz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
+dwaz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
+
+# set up for parallel computing
+# configure for a laptop (use only 3 cores)
+registerDoParallel(cores = 3)
+
+#---------------------------------------
+# compute weights per instructions from
+# DHS
+#---------------------------------------
+dhsz <- rbind(dhaz, dwhz, dwaz)
+dhsz <- dhsz %>%
+  mutate(wgt = weight / 1000000)
+
+
 #---------------------------------------
 #---------------------------------------
 # estimate z-scores by age
@@ -14,7 +43,8 @@
 #---------------------------------------
 
 df_survey <- foreach(measure_here = levels(dhsz$measure), .combine = rbind) %:%
-  foreach(region_here = c("AFRO", "SEARO", "PAHO"), .combine = rbind) %dopar% {
+  foreach(region_here = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
+    options(survey.lonely.psu = "adjust")
     df <- dhsz %>% filter(measure == measure_here & region == region_here)
     result_svymean <- compute_ci_with_sampling_weights(df)
     result_svymean$measure <- measure_here
@@ -24,7 +54,7 @@ df_survey <- foreach(measure_here = levels(dhsz$measure), .combine = rbind) %:%
 
 df_survey$se[df_survey$se <= 1e-1] <- 1e-1
 dhs_pooled <- do_metaanalysis(df_survey, pool_over = "region")
-dhs_pooled$region <- "OVERALL"
+dhs_pooled$region <- "Overall"
 
 df_survey <- df_survey %>%
   rename(fit = zscore, fit_lb = ci_l, fit_ub = ci_u, fit_se = se) %>%
@@ -33,37 +63,38 @@ dhs_pooled <- dhs_pooled %>%
   rename(fit = est, fit_lb = lb, fit_ub = ub, fit_se = se) %>%
   select(measure, region, agem, fit, fit_se, fit_lb, fit_ub)
 df_survey_output <- bind_rows(df_survey, dhs_pooled) %>%
-  mutate(region = factor(region, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")))
+  mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 saveRDS(df_survey_output, file = here::here("results", "DHS-wasting-by-region.rds"))
 
 #---------------------------------------
 # repeat the analysis for country specific results
 #---------------------------------------
-
-svymean_each_country <- foreach(measure_here = levels(dhsz$measure), .combine = rbind) %:%
-  foreach(country_here = unique(dhsz$country), .combine = rbind, .errorhandling = "remove") %dopar% {
-    df <- dhsz %>% filter(measure == measure_here & country == country_here)
-    result_svymean <- compute_ci_with_sampling_weights(df)
-    result_svymean$measure <- measure_here
-    result_svymean$country <- country_here
-    result_svymean
-  }
-table(svymean_each_country$country, svymean_each_country$measure)
-
-# make sure there is no zero variance
-svymean_each_country$se[svymean_each_country$se <= 1e-1] <- 1e-1
-dhs_pooled <- do_metaanalysis(svymean_each_country, pool_over = "country")
-dhs_pooled$country <- "OVERALL"
-
-svymean_each_country <- svymean_each_country %>%
-  rename(fit = zscore, fit_lb = ci_l, fit_ub = ci_u, fit_se = se) %>%
-  select(measure, country, agem, fit, fit_se, fit_lb, fit_ub)
-dhs_pooled <- dhs_pooled %>%
-  rename(fit = est, fit_lb = lb, fit_ub = ub, fit_se = se) %>%
-  select(measure, country, agem, fit, fit_se, fit_lb, fit_ub)
-df_survey_output_country <- bind_rows(svymean_each_country, dhs_pooled) %>%
-  mutate(country = factor(country))
-saveRDS(df_survey_output_country, file = here::here("results", "DHS-wasting-by-country.rds"))
+# 
+# svymean_each_country <- foreach(measure_here = levels(dhsz$measure), .combine = rbind) %:%
+#   foreach(country_here = unique(dhsz$country), .combine = rbind, .errorhandling = "remove") %dopar% {
+#     options(survey.lonely.psu = "adjust")
+#     df <- dhsz %>% filter(measure == measure_here & country == country_here)
+#     result_svymean <- compute_ci_with_sampling_weights(df)
+#     result_svymean$measure <- measure_here
+#     result_svymean$country <- country_here
+#     result_svymean
+#   }
+# table(svymean_each_country$country, svymean_each_country$measure)
+# 
+# # make sure there is no zero variance
+# svymean_each_country$se[svymean_each_country$se <= 1e-1] <- 1e-1
+# dhs_pooled <- do_metaanalysis(svymean_each_country, pool_over = "country")
+# dhs_pooled$country <- "OVERALL"
+# 
+# svymean_each_country <- svymean_each_country %>%
+#   rename(fit = zscore, fit_lb = ci_l, fit_ub = ci_u, fit_se = se) %>%
+#   select(measure, country, agem, fit, fit_se, fit_lb, fit_ub)
+# dhs_pooled <- dhs_pooled %>%
+#   rename(fit = est, fit_lb = lb, fit_ub = ub, fit_se = se) %>%
+#   select(measure, country, agem, fit, fit_se, fit_lb, fit_ub)
+# df_survey_output_country <- bind_rows(svymean_each_country, dhs_pooled) %>%
+#   mutate(country = factor(country))
+# saveRDS(df_survey_output_country, file = here::here("results", "DHS-wasting-by-country.rds"))
 
 #---------------------------------------
 # estimate mean z-scores by age
@@ -71,7 +102,7 @@ saveRDS(df_survey_output_country, file = here::here("results", "DHS-wasting-by-c
 # ki cohorts
 #---------------------------------------
 dhssubfits <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %:%
-  foreach(rgn = c("AFRO", "SEARO", "PAHO"), .combine = rbind) %dopar% {
+  foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
     di <- dhsz %>% filter(measure == zmeas & region == rgn & inghap == 1)
     fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di)
     newd <- data.frame(agem = 0:24)
@@ -86,12 +117,12 @@ dhssub_pool <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %dopar% {
   fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di)
   newd <- data.frame(agem = 0:24)
   fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
-  dfit <- data.frame(measure = zmeas, region = "OVERALL", agem = 0:24, fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
+  dfit <- data.frame(measure = zmeas, region = "Overall", agem = 0:24, fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
   dfit
 }
 
 dhssubfits <- bind_rows(dhssubfits, dhssub_pool) %>%
-  mutate(region = factor(region, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")))
+  mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 
 
 #---------------------------------------
@@ -110,13 +141,7 @@ ghapd <- d %>%
   mutate(
     measure = str_sub(measure, 6, 8),
     measure = factor(measure, levels = c("LAZ", "WAZ", "WLZ"), labels = c("LAZ", "WAZ", "WHZ")),
-    whoregion = case_when(
-      region == "Africa" ~ "AFRO",
-      region == "South Asia" ~ "SEARO",
-      region == "Latin America" ~ "PAHO",
-      region == "Overall" ~ "OVERALL"
-    ),
-    whoregion = factor(whoregion, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")),
+    whoregion = factor(whoregion, levels = c("Overall", "Africa", "South Asia", "Latin America")),
     agecat2 = as.character(agecat),
     agems = str_trim(str_sub(agecat2, 1, 2)),
     agem = as.integer(
@@ -153,16 +178,11 @@ dhsallfits <- df_survey_output %>% mutate(dsource = "DHS") # std_err based on su
 dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
   mutate(
     dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries", "DHS")),
-    region = factor(region, levels = c("OVERALL", "AFRO", "SEARO", "PAHO"))
+    region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia"))
   )
 
 dhsfits <- dhsfits %>%
-  mutate(region = case_when(
-    region == "SEARO" ~ "South Asia",
-    region == "PAHO" ~ "Latin America",
-    region == "AFRO" ~ "Africa",
-    region == "OVERALL" ~ "Overall")
-  ) %>% mutate(region = factor(region,
+   mutate(region = factor(region,
                                levels = c("Overall", "Africa", "Latin America", "South Asia"),
                                labels = c("Overall", "Africa", "Latin America", "South Asia")
   ))
