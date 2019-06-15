@@ -119,7 +119,7 @@ pPAR_laz <-  ggplot(plotdf, aes(x=RFlabel)) +
         strip.text.x = element_text(size=12),
         axis.text.x = element_text(size=12),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  ggtitle(paste0("Population attributable difference in LAZ")) + 
+#  ggtitle(paste0("Population attributable difference in LAZ")) + 
   guides(color=FALSE, shape=FALSE)
 
 pPAR_laz
@@ -153,8 +153,9 @@ pPAR_wlz <-  ggplot(plotdf, aes(x=RFlabel)) +
         axis.text.y = element_text(hjust = 1),
         strip.text.x = element_text(size=12),
         axis.text.x = element_text(size=12),
-        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  ggtitle(paste0("Population attributable difference in WLZ")) + 
+        plot.margin = unit(c(0, 0, 0, 0), "cm"),
+        title = element_text(margin=margin(0,0,30,0))) +
+#  ggtitle(paste0("Population attributable difference in WLZ")) + 
   guides(color=FALSE, shape=FALSE)
 
 pPAR_wlz
@@ -163,10 +164,6 @@ ggsave(pPAR_laz, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-ma
 ggsave(pPAR_wlz, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-wlz-PAR.png"), height=10, width=8)
 
 save(pPAR_laz, pPAR_wlz, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/rf_Zpar_plot_objects.Rdata")
-
-
-
-
 
 
 
@@ -194,11 +191,11 @@ mtab_df_laz$n = format(mtab_df_laz$n ,big.mark=",", trim=TRUE)
 
 mtab_df_laz_tbl <- tableGrob(mtab_df_laz,
                              row = NULL,
-                             cols = c("N", "% shifted to \nreference", "% shifted to \noptimal"), 
-                             theme = ttheme_minimal(base_size =9))
+                             cols = c("N", "% shifted to \nreference", "% shifted to \noptimal"),
+                             theme = ttheme_minimal(base_size = 8, padding = unit(c(0, 0), "mm")))
 
-mtab_df_laz_tbl$heights <- unit(c(0.055, rep(0.025, nrow(mtab_df_laz_tbl) - 1)), "npc")
-mtab_df_laz_tbl$widths <- unit(rep(0.2, ncol(mtab_df_laz_tbl)), "npc")
+mtab_df_laz_tbl$heights <- unit(c(0.055, rep(0.0275, nrow(mtab_df_laz_tbl) - 1)), "npc")
+mtab_df_laz_tbl$widths <- unit(rep(0.25, ncol(mtab_df_laz_tbl)), "npc")
 mtab_df_laz_tbl <- gtable_add_grob(mtab_df_laz_tbl,
                                    grobs = segmentsGrob( # line across the bottom
                                      x0 = unit(0,"npc"),
@@ -208,7 +205,7 @@ mtab_df_laz_tbl <- gtable_add_grob(mtab_df_laz_tbl,
                                      gp = gpar(lwd = 2.0)),
                                    t = 1, b = 1, l = 1, r = 3)
 
-# grid.arrange(mtab_df_laz_tbl)
+grid.arrange(mtab_df_laz_tbl)
 # 
 # grid.arrange(pPAR_laz, mtab_df_laz_tbl,
 #              nrow = 1,
@@ -225,15 +222,13 @@ mtab_df_wlz <- dpool %>% filter(outcome_variable=="WLZ") %>%
 
 mtab_df_wlz$n = format(mtab_df_wlz$n ,big.mark=",", trim=TRUE)
 
-#Use tableGrob to create a plot with the appearrence of a table
-
 mtab_df_wlz_tbl <- tableGrob(mtab_df_wlz, 
                              rows = NULL,
                              cols = c("N", "% shifted to \nreference", "% shifted to \noptimal"), 
-                             theme = ttheme_minimal(base_size =9))
+                             theme = ttheme_minimal(base_size = 8, padding = unit(c(0, 0), "mm")))
 
-mtab_df_wlz_tbl$heights <- unit(c(0.055, rep(0.025, nrow(mtab_df_wlz_tbl) - 1)), "npc")
-mtab_df_wlz_tbl$widths <- unit(rep(0.2, ncol(mtab_df_wlz_tbl)), "npc")
+mtab_df_wlz_tbl$heights <- unit(c(0.055, rep(0.0275, nrow(mtab_df_wlz_tbl) - 1)), "npc")
+mtab_df_wlz_tbl$widths <- unit(rep(0.25, ncol(mtab_df_wlz_tbl)), "npc")
 
 mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
                                    grobs = segmentsGrob( # line across the bottom
@@ -244,6 +239,8 @@ mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
                                      gp = gpar(lwd = 2.0)),
                                    t = 1, b = 1, l = 1, r = 3)
 
+mtab_df_wlz_tbl = gtable_trim(mtab_df_wlz_tbl)
+
 grid.arrange(mtab_df_wlz_tbl)
 
 # grid.arrange(pPAR_wlz, mtab_df_wlz_tbl,
@@ -253,7 +250,7 @@ grid.arrange(mtab_df_wlz_tbl)
 #              widths = c(1, 0.5))
 
 #save the plots seperately 
-save(mtab_df_laz_tbl, mtab_df_wlz_tbl, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/rf_Zpar_margin_plot_objects.Rdata")
+save(mtab_df_laz_tbl, mtab_df_wlz_tbl, file=paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.Rdata"))
 
 
 
