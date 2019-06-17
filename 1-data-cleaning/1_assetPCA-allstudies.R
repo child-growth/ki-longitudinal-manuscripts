@@ -30,9 +30,10 @@ library(tmle)
 library(caret)
 
 #Open log
-#sink("U:/results/assetPCA-allstudies.txt")
+sink("U:/results/assetPCA-allstudies.txt")
 
-
+#Function to calculate PCA of asset based wealth by enrollment
+#Method based on: https://programming-r-pro-bro.blogspot.com/2011/10/principal-component-analysis-use.html
 
 assetPCA<-function(dfull, varlist, reorder=F ){
   
@@ -42,8 +43,7 @@ assetPCA<-function(dfull, varlist, reorder=F ){
   ret <- dfull %>%
     subset(select=c(varlist)) 
   
-  #PCA of asset based wealth by enrollment
-  #Method based on: https://programming-r-pro-bro.blogspot.com/2011/10/principal-component-analysis-use.html
+
   
   #Select assets
   ret<-as.data.frame(ret) 
@@ -209,17 +209,6 @@ varlist<-colnames(d)[colnames(d) %in% c("CAR", "FRIG", "LLPHONE", "NROOMS",  "RA
 d<-assetPCA(d, varlist, reorder=T)
 saveRDS(d, file=paste0(study, '.HHwealth.rds') )
 
-#---------
-# dvds
-#---------
-# Note: dropped due to enrolling ill children
-# study<-"dvds"
-# d<-readRDS(paste0("U:/data/",study,".rds")) %>% group_by(SUBJID) %>% arrange(AGEDAYS) %>% slice(1)
-# cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
-# varlist<-colnames(d)[colnames(d) %in% c("BED", "BICYCLE", "CAR", "CHAIR", "FAN", "FRIG", "MCYCLE", "NBEDROOM", "PHONE", "RADIO", "SEWING", "TABLE", "TV", "WATCH")]
-# d<-assetPCA(d, varlist, reorder=T)
-# saveRDS(d, file=paste0(study, '.HHwealth.rds') )
-
 
 #---------
 # gmsn
@@ -313,53 +302,6 @@ d7<- assetPCA(d[d$COUNTRY==unique(d$COUNTRY)[7],], varlist, reorder=F)
 
 d<-rbind(d1,d3,d4,d5,d6,d7)
 saveRDS(d, file=paste0(study, '.HHwealth.rds') )
-
-#---------
-# nbrt -no assets
-#---------
-# study<-"nbrt"
-# vars=c("SUBJID",
-#        "SITEID",
-#        "SEXN",
-#        "SEX",
-#        "AGEDAYS",
-#        "WTKG",
-#        "HTCM",
-#        "LENCM",
-#        "BMI",
-#        "MUACCM",
-#        "WAZ",
-#        "HAZ",
-#        "WHZ",
-#        "BAZ",
-#        "MUAZ",
-#        "HOMETOT",
-#        "BFEDFL",
-#        "LSSTLFL",
-#        "NUMLS",
-#        "SUMEP",
-#        "SUMDIAR",
-#        "SUMDAYS",
-#        "PCTDIAR",
-#        "MAGE",
-#        "MHTCM",
-#        "MWTKG",
-#        "MBMI",
-#        "MEDUCYRS",
-#        "CHICKEN",
-#        "COW",
-#        "DOGS",
-#        "GOAT",
-#        "INCTOT",
-#        "NPERSON")
-# d<-as.data.frame(bindGHAP_Fill(study, d=NULL, varlist=vars))
-# colnames(d)
-# varlist<-colnames(d)[c()]
-# d<-assetPCA(d, varlist, reorder=F)
-# saveRDS(d, file=paste0(study, '.HHwealth.rds') )
-
-
-
 
 
 #---------
@@ -472,6 +414,6 @@ saveRDS(d, file=paste0(study, '.HHwealth.rds') )
          pca<-d
          save(pca, file="U:/results/allGHAPstudies-HHwealth.Rdata")
          
-         #sink()
+         sink()
          
          
