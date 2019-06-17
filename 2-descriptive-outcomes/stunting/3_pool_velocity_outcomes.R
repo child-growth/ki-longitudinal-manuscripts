@@ -32,6 +32,7 @@ saveRDS(d, file = paste0("U:/UCB-SuperLearner/Manuscript analysis data/velocity_
 
 #Summarize N's in study
 d %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(N=n())
+d %>% group_by(studyid, country, subjid) %>% slice(1) %>%  group_by(studyid, country)  %>% summarize(N=n()) %>% as.data.frame()
 
 
 
@@ -40,8 +41,8 @@ table(d$diffcat)
 
 d <- d %>% rename(agecat = diffcat) %>%
   group_by(studyid, country, agecat, ycat, sex) %>%
-  summarise(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), n=n()) %>%
-  mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se) %>% 
+  summarise(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), sd=sd(y_rate, na.rm=T), n=n()) %>%
+  mutate(ci.lb=mean - 1.96 * sd, ci.ub=mean + 1.96 * sd) %>% 
   mutate(region = case_when(
     country=="BANGLADESH" | country=="INDIA"|
       country=="NEPAL" | country=="PAKISTAN"|
