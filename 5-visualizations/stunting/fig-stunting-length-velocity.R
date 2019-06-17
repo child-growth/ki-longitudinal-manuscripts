@@ -91,7 +91,7 @@ plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
                  position = position_dodge(width=0.5)) +
   scale_color_manual("Child sex", values = mypalette) + 
-  scale_y_continuous(limits = c(-2.5, -0.25)) +
+  scale_y_continuous(limits = c(-2.25, -0.5)) +
   xlab("Child age, months") + 
   ylab("Mean length-for-age Z-score") +
   ggtitle("c\n")+
@@ -120,7 +120,7 @@ meanlaz_strat = meanlaz %>%
 plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) + 
   geom_point(aes(col=sex), position = position_dodge(width=0.6), size=3) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
-                 position = position_dodge(width=0.6)) +
+                 position = position_dodge(width=0.6), size = 1.25) +
   scale_color_manual(values = mypalette) + 
   xlab("Child age, months") + 
   ylab("Mean LAZ\n ") +
@@ -142,9 +142,9 @@ velplot_laz = vel %>% filter(country_cohort=="Pooled - All" &
   mutate(sex = factor(sex))
 
 plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
-  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width = 0.5)) +
+  geom_point(aes(fill=sex, color=sex), size = 2, position = position_dodge(width = 0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 alpha=0.5, size = 1, position = position_dodge(width = 0.5)) +
+                 position = position_dodge(width = 0.5)) +
   scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.25,0.1), breaks=seq(-0.25,0.1,0.05), labels=seq(-0.25,0.1,0.05)) +
   xlab("Child age, months") +  
@@ -178,11 +178,11 @@ velplot_laz_strat = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
   mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
 
 plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=strata))+
-  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
+  geom_point(aes(fill=sex, color=sex), size = 2, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
+                  position = position_dodge(width=0.5), size=1.25) +
   scale_color_manual(values=mypalette)+  
-  scale_y_continuous(limits=c(-0.5,0.25), breaks=seq(-0.5,0.25,0.05), labels=seq(-0.5,0.25,0.05)) +
+  scale_y_continuous(limits=c(-0.4,0.2), breaks=seq(-0.4,0.2,0.05), labels=seq(-0.4,0.2,0.05)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
@@ -219,15 +219,15 @@ velplot_laz_afr = velplot_laz_strat %>% filter(region=="Africa")
 
 make_vel_laz_cohort_plot <- function(data){
   plot = ggplot(data, aes(y=Mean,x=strata))+
-    geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
+    geom_point(aes(fill=sex, color=sex), size = 2, position = position_dodge(width=0.5)) +
     geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                   alpha=0.5, size = 1, position = position_dodge(width=0.5)) +
+                   position = position_dodge(width=0.5)) +
     scale_color_manual(values=mypalette)+  
     xlab("Child age, months") +  
     ylab("Difference in length-for-age\nZ-score per month")+
     geom_hline(yintercept = -0) +
-    facet_wrap( ~  country_cohort) +
-    ggtitle("B) Monthly change in LAZ") +
+    facet_wrap( ~  country_cohort, scales = "free") +
+    ggtitle("Monthly change in LAZ") +
     theme(plot.title = element_text(hjust=0))
   return(plot)
 }
@@ -295,11 +295,11 @@ velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
          sexcol = ifelse(sex == "Male", "male_color2", "female_color2"))
 
 plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
-  geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3) +
-  # geom_line(aes(y = length_cm, group = msmt_type, color = linecol, linetype = msmt_type)) +
+  # geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3, shape = 4) +
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol, linetype = msmt_type)) +
 
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
-                 alpha=0.5, size = 1) +
+                 alpha=0.5) +
 
   scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
                                                                      "pct_50" = "solid",
@@ -366,16 +366,16 @@ velplot_cm_strat = vel %>%
   mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
 
 plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
-  geom_point(aes(color=sex), size = 3) +
-  geom_line(aes(y=Mean, group=sex, col=sex)) +
-  geom_line(aes(y=pct_50, group=sex)) +
-  geom_line(aes(y=pct_25, group=sex), linetype="dashed") +
-  geom_line(aes(y=pct_15, group=sex), linetype="dotted") +
+  # geom_point(aes(color=sex), size = 3) +
+  geom_line(aes(y=Mean, group=sex, col=sex), size = 1.1) +
+  geom_line(aes(y=pct_50, group=sex), size = 1.1) +
+  geom_line(aes(y=pct_25, group=sex), linetype="dashed", size = 1.1) +
+  geom_line(aes(y=pct_15, group=sex), linetype="dotted", size = 1.1) +
   
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 alpha=0.5, size = 1) +
+                 size=1.1) +
   scale_color_manual(values=mypalette)+  
-  scale_y_continuous(limits=c(0.3,4.2), breaks=seq(0.25,4.25,0.25), labels=seq(0.25,4.25,0.25)) +
+  scale_y_continuous(limits=c(0.5,3.875), breaks=seq(0.5,3.875,0.25), labels=seq(0.5,3.875,0.25)) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month")+
   facet_grid( sex~ region) +
@@ -419,19 +419,18 @@ velplot_cm_afr = velplot_cm_strat_cohort %>% filter(region=="Africa")
 
 make_vel_cm_cohort_plot <- function(data){
   plot <- ggplot(data, aes(y=Mean,x=strata))+
-    geom_point(aes(color=sex), size = 3) +
+    # geom_point(aes(color=sex), size = 3) +
     geom_line(aes(y=Mean, group=sex, col=sex)) +
     geom_line(aes(y=pct_50, group=sex)) +
     geom_line(aes(y=pct_25, group=sex), linetype="dashed") +
     geom_line(aes(y=pct_15, group=sex), linetype="dotted") +
     
     geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                   alpha=0.5, size = 1) +
+                   alpha=0.5) +
     scale_color_manual(values=mypalette)+  
-    scale_y_continuous(limits=c(0.3,4.2), breaks=seq(0.25,4.25,0.25), labels=seq(0.25,4.25,0.25)) +
     xlab("Child age, months") +  
     ylab("Difference in length (cm) per month")+
-    facet_wrap(sex ~ country_cohort) +
+    facet_wrap(sex ~ country_cohort, scales = "free") +
     ggtitle("a") +
     theme(plot.title = element_text(hjust=0, size = 16, face = "bold"),
           strip.text.x = element_text(size=16),
