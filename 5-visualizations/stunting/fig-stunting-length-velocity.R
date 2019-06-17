@@ -38,6 +38,7 @@ source(paste0(here::here(), "/0-config.R"))
 vel <- readRDS(paste0(res_dir,"stunting/pool_vel.RDS"))
 
 meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocity.RDS"))
+meanlaz = meanlaz %>% filter(method.used == "REML")
 
 # load who standard
 who_cm = readRDS(paste0(res_dir, "WHO_linear_growth_velocity_standard.RDS"))
@@ -154,9 +155,9 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
 
 # define standardized plot names
 plot_laz_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "overall",
   location = "",
   age = "All ages",
@@ -195,9 +196,9 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
 
 # define standardized plot names
 plot_laz_strat_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "region-stratified",
   location = "",
   age = "All ages",
@@ -237,9 +238,9 @@ plot_laz_cohort_latamer <- make_vel_laz_cohort_plot(velplot_laz_latamer)
 
 # define standardized plot names
 plot_laz_cohort_asia_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "cohort-stratified",
   location = "South Asia",
   age = "All ages",
@@ -247,9 +248,9 @@ plot_laz_cohort_asia_name = create_name(
 )
 
 plot_laz_cohort_latamer_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "cohort-stratified",
   location = "Latin America",
   age = "All ages",
@@ -257,9 +258,9 @@ plot_laz_cohort_latamer_name = create_name(
 )
 
 plot_laz_cohort_afr_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "cohort-stratified",
   location = "Africa",
   age = "All ages",
@@ -295,7 +296,7 @@ velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
 
 plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
   geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3) +
-  geom_line(aes(y = length_cm, group = msmt_type, color = linecol, linetype = msmt_type)) +
+  # geom_line(aes(y = length_cm, group = msmt_type, color = linecol, linetype = msmt_type)) +
 
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                  alpha=0.5, size = 1) +
@@ -339,7 +340,7 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
 
 # define standardized plot names
 plot_cm_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "length velocity",
   population = "overall",
@@ -387,7 +388,7 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
 
 # define standardized plot names
 plot_cm_strat_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "length velocity",
   population = "region-stratified",
@@ -492,19 +493,6 @@ saveRDS(velplot_cm_afr, file=paste0(figdata_dir, "figdata-",plot_cm_cohort_afr_n
 # combined LAZ and length plots
 ############################################################################
 # add margin around plots
-# plot_cm_strat = plot_cm_strat + theme(plot.margin = 
-#                                         unit(c(t = 0.1, r = 0.1, b = 0.1, l = 1.2), "cm"))
-# plot_laz_strat = plot_laz_strat + theme(plot.margin = 
-#                                           unit(c(t = 0.5, r = 0.7, b = 0.1, l = 0.2), "cm"))
-# plot_mean_laz_strat = plot_mean_laz_strat + theme(plot.margin = 
-#                                           unit(c(t = 0.1, r = 0.7, b = 0.1, l = 0.4), "cm"))
-
-
-# combined_plot = grid.arrange(plot_cm, plot_laz, plot_mean_laz, 
-#                               nrow = 3, heights = c(8, 4, 4))
-# combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
-#                                    nrow = 3, heights = c(10, 4, 4))
-
 combined_plot = grid.arrange(plot_cm, 
                              arrangeGrob(plot_laz, plot_mean_laz, 
                              ncol=2, nrow = 1))
