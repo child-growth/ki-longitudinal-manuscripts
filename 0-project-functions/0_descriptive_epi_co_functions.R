@@ -43,33 +43,16 @@ summary.prev.co <- function(d, severe=F){
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
   prev.res=as.data.frame(rbindlist(prev.res))
-  prev.res[,4]=as.numeric(prev.res[,4])
-  prev.res[,6]=as.numeric(prev.res[,6])
-  prev.res[,7]=as.numeric(prev.res[,7])
+  prev.res$est=as.numeric(prev.res$est)
+  prev.res$lb=as.numeric(prev.res$lb)
+  prev.res$ub=as.numeric(prev.res$ub)
   prev.res = prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
-  prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
+  prev.res$agecat=levels(prev.data$agecat)
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
   
-  # estimate random effects in birth cohorts only
-  prev.res.birthcohorts=NULL
-  if("Birth" %in% unique(prev.data$agecat)){
-    birthcohorts<-prev.data$studyid[prev.data$agecat=="Birth"]
-    prev.res.birthcohorts=lapply((levels(prev.data$agecat)),function(x) 
-      fit.rma(data=prev.data[prev.data$studyid %in% birthcohorts, ],ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
-    prev.res.birthcohorts=as.data.frame(rbindlist(prev.res.birthcohorts))
-    
-    prev.res.birthcohorts[,4]=as.numeric(prev.res.birthcohorts[,4])
-    prev.res.birthcohorts[,6]=as.numeric(prev.res.birthcohorts[,6])
-    prev.res.birthcohorts[,7]=as.numeric(prev.res.birthcohorts[,7])
-    
-    prev.res.birthcohorts = prev.res.birthcohorts %>%
-      mutate(est=est*100,lb=lb*100,ub=ub*100)
-    prev.res.birthcohorts$agecat=factor(prev.res.birthcohorts$agecat,levels=levels(prev.data$agecat))
-    prev.res.birthcohorts$ptest.f=sprintf("%0.0f",prev.res.birthcohorts$est)
-  }
-  return(list(prev.data=prev.data, prev.res=prev.res, prev.res.birthcohorts=prev.res.birthcohorts, prev.cohort=prev.cohort))
+  return(list(prev.data=prev.data, prev.res=prev.res,  prev.cohort=prev.cohort))
 }
 
 
@@ -112,33 +95,16 @@ summary.prev.haz <- function(d, severe.stunted=F){
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
   prev.res=as.data.frame(rbindlist(prev.res))
-  prev.res[,4]=as.numeric(prev.res[,4])
-  prev.res[,6]=as.numeric(prev.res[,6])
-  prev.res[,7]=as.numeric(prev.res[,7])
+  prev.res$est=as.numeric(prev.res$est)
+  prev.res$lb=as.numeric(prev.res$lb)
+  prev.res$ub=as.numeric(prev.res$ub)
   prev.res = prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
-  prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
+  prev.res$agecat=levels(prev.data$agecat)
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
-  
-  # estimate random effects in birth cohorts only
-  prev.res.birthcohorts=NULL
-  if("Birth" %in% unique(prev.data$agecat)){
-    birthcohorts<-prev.data$studyid[prev.data$agecat=="Birth"]
-    prev.res.birthcohorts=lapply((levels(prev.data$agecat)),function(x) 
-      fit.rma(data=prev.data[prev.data$studyid %in% birthcohorts, ],ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
-    prev.res.birthcohorts=as.data.frame(rbindlist(prev.res.birthcohorts))
-    
-    prev.res.birthcohorts[,4]=as.numeric(prev.res.birthcohorts[,4])
-    prev.res.birthcohorts[,6]=as.numeric(prev.res.birthcohorts[,6])
-    prev.res.birthcohorts[,7]=as.numeric(prev.res.birthcohorts[,7])
-    
-    prev.res.birthcohorts = prev.res.birthcohorts %>%
-      mutate(est=est*100,lb=lb*100,ub=ub*100)
-    prev.res.birthcohorts$agecat=factor(prev.res.birthcohorts$agecat,levels=levels(prev.data$agecat))
-    prev.res.birthcohorts$ptest.f=sprintf("%0.0f",prev.res.birthcohorts$est)
-  }
-  return(list(prev.data=prev.data, prev.res=prev.res, prev.res.birthcohorts=prev.res.birthcohorts, prev.cohort=prev.cohort))
+
+  return(list(prev.data=prev.data, prev.res=prev.res, prev.res.birthcohorts=prev.res.birthcohorts))
 }
 
 
@@ -193,23 +159,23 @@ summary.prev.muaz <- function(d, severe=F){
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
   prev.res=as.data.frame(rbindlist(prev.res))
-  prev.res[,4]=as.numeric(prev.res[,4])
-  prev.res[,6]=as.numeric(prev.res[,6])
-  prev.res[,7]=as.numeric(prev.res[,7])
+  prev.res$est=as.numeric(prev.res$est)
+  prev.res$lb=as.numeric(prev.res$lb)
+  prev.res$ub=as.numeric(prev.res$ub)
   prev.res = prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
-  prev.res$agecat=factor(prev.res$agecat,levels=levels(prev.data$agecat))
+  prev.res$agecat=levels(prev.data$agecat)
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
   m.prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="m.nxprev",age=x,measure="PLO",nlab="children"))
   m.prev.res=as.data.frame(rbindlist(m.prev.res))
-  m.prev.res[,4]=as.numeric(m.prev.res[,4])
-  m.prev.res[,6]=as.numeric(m.prev.res[,6])
-  m.prev.res[,7]=as.numeric(m.prev.res[,7])
+  m.prev.res$est=as.numeric(m.prev.res$est)
+  m.prev.res$lb=as.numeric(m.prev.res$lb)
+  m.prev.res$ub=as.numeric(m.prev.res$ub)
   m.prev.res = m.prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
-  m.prev.res$agecat=factor(m.prev.res$agecat,levels=levels(prev.data$agecat))
+  m.prev.res$agecat=levels(prev.data$agecat)
   m.prev.res$ptest.f=sprintf("%0.0f",m.prev.res$est)
   
   return(list(prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort, m.prev.res=m.prev.res, m.prev.cohort=m.prev.cohort))
@@ -234,13 +200,15 @@ summary.waz <- function(d){
     summarise(nmeas=sum(!is.na(waz)),
               meanwaz=mean(waz),
               varwaz=var(waz)) %>%
-    filter(nmeas>=50) 
+    filter(nmeas>=50)
+  
+  waz.data$agecat = factor(waz.data$agecat)
   
   waz.data <- droplevels(waz.data)
   
   # cohort specific results
   waz.cohort=lapply((levels(waz.data$agecat)),function(x) 
-    fit.escalc.cont(data=waz.data,yi="meanwaz", vi="varwaz",age=x))
+    fit.escalc(data=waz.data, ni="nmeas", yi="meanwaz", vi="varwaz",age=x, measure = "MN"))
   waz.cohort=as.data.frame(rbindlist(waz.cohort))
   waz.cohort=cohort.format(waz.cohort,y=waz.cohort$yi,
                            lab=  levels(waz.data$agecat), est="mean")
@@ -248,12 +216,12 @@ summary.waz <- function(d){
   
   # estimate random effects, format results
   waz.res=lapply((levels(waz.data$agecat)),function(x) 
-    fit.cont.rma(data=waz.data, ni="nmeas", yi="meanwaz", vi="varwaz", nlab="children",age=x))
+    fit.rma(data=waz.data, ni="nmeas", yi="meanwaz", vi="varwaz", nlab="children",age=x))
   waz.res=as.data.frame(rbindlist(waz.res))
-  waz.res[,4]=as.numeric(waz.res[,4])
-  waz.res[,6]=as.numeric(waz.res[,6])
-  waz.res[,7]=as.numeric(waz.res[,7])
-  waz.res$agecat=factor(waz.res$agecat,levels=levels(waz.data$agecat))
+  waz.res$est=as.numeric(waz.res$est)
+  waz.res$lb=as.numeric(waz.res$lb)
+  waz.res$ub=as.numeric(waz.res$ub)
+  waz.res$agecat=levels(waz.data$agecat)
   waz.res$ptest.f=sprintf("%0.0f",waz.res$est)
   
   

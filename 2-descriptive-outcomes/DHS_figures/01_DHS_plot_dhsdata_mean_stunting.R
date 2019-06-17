@@ -46,7 +46,12 @@ df_survey <- foreach(measure_here = unique(dhsz$measure), .combine = rbind, .pac
     result_svymean
   }
 
-df_survey$se[df_survey$se <= 1e-1] <- 1e-1
+#There are some (measure, region) pair with very few samples. Therefore the software will (honestly) compute the `se` to be zero. 
+#This will throw error down the pipeline when we do meta-analysis. #To avoid this, truncate lowest SE to the 5th percentile
+#df_survey$se[df_survey$se <= 1e-1] <- 1e-1
+quantile_se <- quantile(df_survey$se, prob = 0.05)
+df_survey$se[df_survey$se <= quantile_se] <- quantile_se
+
 dhs_pooled <- do_metaanalysis(df_survey, pool_over = "region")
 dhs_pooled$region <- "Overall"
 
@@ -91,13 +96,16 @@ dhssubfits <- bind_rows(dhssubfits, dhssub_pool) %>%
 # by age, and format the data for this analysis
 #---------------------------------------
 load(paste0(here::here(), "/results/desc_data_cleaned.Rdata"))
+d$region <- as.character(d$region)
+d$region[d$region=="Asia"] <- "South Asia"
+
 ghapd <- d %>%
   filter(
     measure %in% c("Mean LAZ"),
     birth == "yes",
     age_range == "1 month",
-    cohort == "pooled",
-    analysis == "Primary"
+    cohort == "pooled"#,
+    #analysis == "Primary"
   ) %>%
   mutate(
     measure = str_sub(measure, 6, 9),
@@ -112,6 +120,9 @@ ghapd <- d %>%
       )
     )
   )
+
+ghapd$region <- factor(ghapd$region)
+
 
 #---------------------------------------
 # fit smooths to GHAP data

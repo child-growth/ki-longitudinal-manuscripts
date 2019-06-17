@@ -171,8 +171,7 @@ saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity.RDS"))
 #----------------------------------------
 dmon <- calc.monthly.agecat(d)
 monthly.haz.data <- summary.haz(dmon)
-dmon.grouped <- dmon  %>% group_by(region)
-monthly.haz.region <- summary.haz(dmon.grouped)$haz.res
+monthly.haz.region <- dmon %>% group_by(region) %>% do(summary.haz(.)$haz.res)
 monthly.haz.cohort <-
   monthly.haz.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
   rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
@@ -417,7 +416,7 @@ sev.cuminc6 <- bind_rows(
 save(prev, sev.prev,  haz,  monthly.haz, 
      cuminc3, cuminc6, sev.cuminc3, sev.cuminc6, 
      ip_3, ip_6, sev.ip3, sev.ip6,  
-     file = paste0(here(), "/results/shiny_desc_data_stunting_objects.Rdata"))
+     file = paste0(here(), "/results/shiny_desc_data_stunting_objects_monthly24.Rdata"))
 
 
 shiny_desc_data <- bind_rows(

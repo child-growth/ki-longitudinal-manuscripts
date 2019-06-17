@@ -49,18 +49,31 @@ do_metaanalysis <- function(df_survey, pool_over, method = "FE") {
   for (measure_here in unique(df_survey$measure)) {
     for (age_here in 0:24) {
       df_to_pool <- df_survey %>%
-          mutate(variance = se^2, agecat = agem) %>%
-          filter(measure == measure_here)
+          #mutate(agecat = agem) %>%
+          filter(measure == measure_here,
+                 agem==age_here)
       df_to_pool[, "studyid"] <- df_to_pool[, pool_over]
-      df_pooled <- fit.rma(
-        data = df_to_pool,
-        age = age_here,
-        yi = "zscore",
-        vi = "variance",
-        ni = "wgt_sum",
-        nlab = "observations",
+      df_pooled <- rma(
+        yi = df_to_pool$zscore,
+        sei = df_to_pool$se,
+        ni = df_to_pool$wgt_sum,
+        measure="GEN",
         method = method
       )
+      df_pooled <- df_to_pool %>%
+        ungroup() %>%
+        summarise(
+          nmeas = sum(wgt_sum)
+        ) %>%
+        mutate(
+          est = df_pooled$beta,
+          se = df_pooled$se,
+          lb = df_pooled$ci.lb,
+          ub = df_pooled$ci.ub,
+          method.used=method
+        )
+      
+      
       df_pooled$measure <- measure_here
       df_pooled$agem <- age_here
       dhs_pooled <- c(dhs_pooled, list(df_pooled))

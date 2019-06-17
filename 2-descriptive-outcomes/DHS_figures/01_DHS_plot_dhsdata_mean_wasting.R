@@ -24,6 +24,7 @@ registerDoParallel(cores = 3)
 # DHS
 #---------------------------------------
 dhsz <- rbind(dhaz, dwhz, dwaz)
+dhsz$measure <- factor(dhsz$measure)
 dhsz <- dhsz %>%
   mutate(wgt = weight / 1000000)
 
@@ -42,7 +43,7 @@ dhsz <- dhsz %>%
 # for each measure and region, do the cluster based pooling for each child age
 #---------------------------------------
 
-df_survey <- foreach(measure_here = levels(dhsz$measure), .combine = rbind) %:%
+df_survey <- foreach(measure_here = levels(dhsz$measure), .combine = rbind, .packages=c('tidyverse','survey')) %:%
   foreach(region_here = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
     options(survey.lonely.psu = "adjust")
     df <- dhsz %>% filter(measure == measure_here & region == region_here)
@@ -52,7 +53,13 @@ df_survey <- foreach(measure_here = levels(dhsz$measure), .combine = rbind) %:%
     result_svymean
   }
 
-df_survey$se[df_survey$se <= 1e-1] <- 1e-1
+
+#There are some (measure, region) pair with very few samples. Therefore the software will (honestly) compute the `se` to be zero. 
+#This will throw error down the pipeline when we do meta-analysis. #To avoid this, truncate lowest SE to the 5th percentile
+#df_survey$se[df_survey$se <= 1e-1] <- 1e-1
+quantile_se <- quantile(df_survey$se, prob = 0.05)
+df_survey$se[df_survey$se <= quantile_se] <- quantile_se
+
 dhs_pooled <- do_metaanalysis(df_survey, pool_over = "region")
 dhs_pooled$region <- "Overall"
 
@@ -130,18 +137,22 @@ dhssubfits <- bind_rows(dhssubfits, dhssub_pool) %>%
 # by age, and format the data for this analysis
 #---------------------------------------
 load(paste0(here::here(), "/results/desc_data_cleaned.Rdata"))
-# load(paste0(here::here(),"/results/co_desc_data.Rdata"))
+d$region <- as.character(d$region)
+d$region[d$region=="Asia"] <- "South Asia"
+
+
 ghapd <- d %>%
   filter(
     measure %in% c("Mean LAZ - monthly cohorts", "Mean WAZ", "Mean WLZ"),
     birth == "yes",
     age_range == "1 month",
-    cohort == "pooled"
+    cohort == "pooled",
+    analysis %in% c("Primary","Cohorts monthly 0-24 m")
   ) %>%
   mutate(
     measure = str_sub(measure, 6, 8),
     measure = factor(measure, levels = c("LAZ", "WAZ", "WLZ"), labels = c("LAZ", "WAZ", "WHZ")),
-    whoregion = factor(whoregion, levels = c("Overall", "Africa", "South Asia", "Latin America")),
+    whoregion = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")),
     agecat2 = as.character(agecat),
     agems = str_trim(str_sub(agecat2, 1, 2)),
     agem = as.integer(
@@ -153,12 +164,14 @@ ghapd <- d %>%
     )
   )
 
+ghapd$region<-factor(ghapd$region)
+
 #---------------------------------------
 # fit smooths to GHAP data
 #---------------------------------------
 ghapfits <- foreach(zmeas = c("LAZ", "WAZ", "WHZ"), .combine = rbind) %:%
-  foreach(rgn = levels(ghapd$whoregion), .combine = rbind) %do% {
-    di <- ghapd %>% filter(measure == zmeas & whoregion == rgn)
+  foreach(rgn = levels(ghapd$region), .combine = rbind) %do% {
+    di <- ghapd %>% filter(measure == zmeas & region == rgn)
     fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di)
     newd <- data.frame(agem = 0:24)
     fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
@@ -190,6 +203,7 @@ dhsfits <- dhsfits %>%
 dhsfits <- dhsfits %>%
   filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
-dhs_plotd$measure[dhs_plotd$measure=="WHZ"] <- "WLZ"
+dhsfits$measure[dhsfits$measure=="WHZ"] <- "WLZ"
+dhsfits$measure[dhsfits$measure=="HAZ"] <- "LAZ"
 
 saveRDS(dhsfits, file = here::here("results", "wasting-DHSandKI-by-region.rds"))

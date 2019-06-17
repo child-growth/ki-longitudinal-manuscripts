@@ -7,18 +7,12 @@ rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
 
-load("U://ucb-superlearner/Manuscript analysis data//co-occurrence_data.RData")
+load("U://ucb-superlearner/Manuscript analysis data/co-occurrence_data.RData")
 
-
-# load("U:/Data/Wasting/Wasting_inc_data.RData")
-# load("U:/Data/Wasting/Wasting_inc_noRec_data.RData")
 
 
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
-# d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
-# d_noRec <- d_noRec %>% filter(measurefreq == "monthly")
-# d_noBW_noRec <- d_noBW_noRec %>% filter(measurefreq == "monthly")
 
 
 #Prevalence
@@ -99,61 +93,6 @@ monthly.waz <- bind_rows(
 
 
 
-#monthly mean haz
-d <- calc.monthly.agecat(d)
-monthly.data <- summary.haz(d)
-monthly.region <- d %>% group_by(region) %>% do(summary.haz(.)$haz.res)
-monthly.cohort <-
-  monthly.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
-  rename(est = meanwaz,  lb = ci.lb,  ub = ci.ub)
-
-monthly.haz <- bind_rows(
-  data.frame(cohort = "pooled", region = "Overall", monthly.data$haz.res),
-  data.frame(cohort = "pooled", monthly.region),
-  monthly.cohort
-)
-
-
-
-# #Cumulative inc
-# d <- calc.ci.agecat(d, range = 6)
-# agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
-# ci.data <- summary.ci(d, agelist = agelst)
-# ci.region <- d %>% group_by(region) %>% do(summary.ci(., agelist = agelst)$ci.res)
-# ci.cohort <-
-#   ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
-#   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
-# 
-# ci <- bind_rows(
-#   data.frame(cohort = "pooled", region = "Overall", ci.data$ci.res),
-#   data.frame(cohort = "pooled", ci.region),
-#   ci.cohort
-# )
-# 
-# #Cumulative inc 3 month intervals
-# d3 <- calc.ci.agecat(d, range = 3)
-# agelst3 = list(
-#   "0-3 months",
-#   "3-6 months",
-#   "6-9 months",
-#   "9-12 months",
-#   "12-15 months",
-#   "15-18 months",
-#   "18-21 months",
-#   "21-24 months"
-# )
-# ci.data3 <- summary.ci(d3, agelist = agelst3)
-# ci.region3 <- d3 %>% group_by(region) %>% do(summary.ci(., agelist = agelst3)$ci.res)
-# ci.cohort3 <-
-#   ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
-#   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
-# 
-# ci_3 <- bind_rows(
-#   data.frame(cohort = "pooled", region = "Overall", ci.data3$ci.res),
-#   data.frame(cohort = "pooled", ci.region3),
-#   ci.cohort3
-# )
-
 
 #Prevalence of wasting based on MUAC
 d <- calc.prev.agecat(d)
@@ -187,11 +126,10 @@ co_desc_data <- bind_rows(
   data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
   data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
   data.frame(disease = "Underweight", age_range="3 months",   birth="yes", severe="no", measure= "Mean WAZ",  waz),
-  data.frame(disease = "Stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ - monthly cohorts",  monthly.haz),
   data.frame(disease = "Underweight", age_range="1 month",   birth="yes", severe="no", measure= "Mean WAZ",  monthly.waz),
   data.frame(disease = "Underweight", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence",  underweight.prev),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC Prevalence",  muaz.prev),
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC  WHZ Prevalence",  m.whz.prev)
+  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC WHZ Prevalence",  m.whz.prev)
 )
 
 
