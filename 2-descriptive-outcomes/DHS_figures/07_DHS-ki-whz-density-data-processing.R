@@ -148,7 +148,7 @@ dhsden_plot <- dhsden %>%
 #####################
 # Add medians
 #####################
-ki_medians = readRDS(paste0("results/dhs/ki.zscore.medians.monthly.rds"))
+ki_medians = readRDS(paste0(here(),"/results/dhs/ki.zscore.medians.monthly.rds"))
 ki_medians$dsource = "ki cohorts"
 
 ki_medians$region = recode_factor(ki_medians$region, 

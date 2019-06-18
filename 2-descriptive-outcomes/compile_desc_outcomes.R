@@ -2,9 +2,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-setwd(paste0(here(),"/results"))
-
-load("shiny_desc_data.Rdata")
+load(paste0(res_dir,"shiny_desc_data.Rdata"))
 wast <- shiny_desc_data
 load(paste0(res_dir,"shiny_desc_data_stunting_objects.Rdata"))
 stunt <- shiny_desc_data
