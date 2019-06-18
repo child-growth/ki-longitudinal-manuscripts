@@ -1,4 +1,25 @@
+##########################################
+# ki longitudinal manuscripts
+# DHS analysis - mean LAZ, WLZ, and WHZ by age
 
+# This script reads in clean DHS z-score data and finds the mean LAZ, WLZ, and WHZ values by age. 
+# Data is prepared and saved to produce a figure that compares DHS estimates to those from
+# the KI cohorts in fig-DHS-plots-whz.R.
+
+# Inputs:
+#   0-config.R : configuration file
+#   0-project-functions/0_helper_sampling_weights.R
+#   clean-DHS-haz.rds  : clean DHS LAZ data
+#   clean-DHS-whz.rds  : clean DHS WHZ data
+#   clean-DHS-wlz.rds  : clean DHS WLZ data
+#   desc_data_cleaned.Rdata
+
+# Outputs:
+#   DHS-wasting-by-region.rds
+#   wasting-DHSandKI-by-region.rds
+#   figdata-fig_dhs_ki_zscores_byage.RDS
+
+##########################################
 
 #---------------------------------------
 # source configuration file

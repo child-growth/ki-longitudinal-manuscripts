@@ -1,3 +1,22 @@
+##########################################
+# ki longitudinal manuscripts
+# DHS analysis - density medians
+
+# This script cleans DHS quantile and KI median data.
+# Data is prepared and saved to produce a figure that compares DHS estimates to those from
+# the KI cohorts in fig-DHS-plots-laz.R and fig-DHS-plots-whz.R.
+
+# Inputs:
+#   0-config.R : configuration file
+#   dhs.quantiles.rds
+#   ki.zscore.medians.monthly.rds
+#   ki.zscore.medians.quarterly.rds
+
+# Outputs:
+#   dhs.ki.zscore.medians.quarterly.rds
+#   dhs.ki.zscore.medians.monthly.rds
+##########################################
+
 #---------------------------------------
 # source configuration file
 #---------------------------------------

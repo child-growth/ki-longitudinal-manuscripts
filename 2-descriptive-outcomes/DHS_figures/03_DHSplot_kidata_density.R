@@ -1,7 +1,10 @@
 ##########################################
-# KI DHS Analysis -- Density Calculation
+# ki longitudinal manuscripts
+# DHS analysis - KI densities
 
-# This script plots Z-score densities for the KI cohort data 
+# This script reads in clean KI cohort data and estimates kernel densities. 
+# Data is prepared and saved to produce a figure that compares DHS estimates to those from
+# the KI cohorts in fig-DHS-plots-laz.R and fig-DHS-plots-whz.R.
 
 # Inputs:
 #   0-config.R : configuration file
@@ -17,6 +20,7 @@
 #   ki.quantiles.monthly.rds
 #   ki.quantiles.quarterly.rds
 ##########################################
+
 
 #---------------------------------------
 # source configuration file

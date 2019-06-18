@@ -1,10 +1,30 @@
+##########################################
+# ki longitudinal manuscripts
+# DHS analysis - mean LAZ by age
 
+# This script reads in clean DHS z-score data and finds the mean LAZ values by age. 
+# Data is prepared and saved to produce a figure that compares DHS estimates to those from
+# the KI cohorts in fig-DHS-plots-laz.R
+
+# Inputs:
+#   0-config.R : configuration file
+#   0-project-functions/0_helper_sampling_weights.R
+#   clean-DHS-haz.rds  : clean DHS LAZ data
+#   desc_data_cleaned.Rdata
+
+# Outputs:
+#   DHS-stunting-by-region.rds
+#   stunting-DHSandKI-by-region.rds
+#   figdata-laz-2-mean_dhs-overall_region--allage-primary.RDS
+
+##########################################
 #---------------------------------------
 # source configuration file
 #---------------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))
 
 #---------------------------------------
 # load cleaned DHS anthro data

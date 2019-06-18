@@ -1,25 +1,21 @@
 ##########################################
 # ki longitudinal manuscripts
+# DHS analysis - DHS densities
 
 # This script reads in clean DHS z-score data and estimates kernel density of z-scores. 
 # Data is prepared and saved to produce a figure that compares DHS estimates to those from
-# the KI cohorts in the following scripts:
-#   - fig-DHS-plots-laz.R
-#   - fig-DHS-plots-scores.R
-
-# This script includes KI cohorts with measurement frequency at least monthly
+# the KI cohorts in fig-DHS-plots-laz.R and fig-DHS-plots-whz.R.
 
 # Inputs:
 #   0-config.R : configuration file
 #   clean-DHS-haz.rds : clean DHS LAZ data
 #   clean-DHS-waz.rds : clean DHS WAZ data
 #   clean-DHS-whz.rds : clean DHS WHZ data
-#   ki.density.fits.monthly.rds : KI kernel densities of Z-scores for monthly cohorts
-#   ki.zscore.medians.monthly.rds : median values for monthly KI cohorts
-#   dhs.quantiles.rds : median values for DHS data
 
 # Outputs:
-#   figdata-fig_dhs_ki_zscores_density.RDS
+#   dhs.density.all-countries.rds
+#   dhs.density.ki-countries.rds
+
 ##########################################
 
 #---------------------------------------
