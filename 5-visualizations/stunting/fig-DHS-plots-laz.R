@@ -29,10 +29,11 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
+pcols <- tableau11
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("tableau10")
-pcols <- c("black", tableau10(10)[c(1, 2, 3)])
-
+# tableau10 <- tableau_color_pal("Tableau 10")
+# pcols <- c("black", tableau10(10)[c(1, 2, 4)])
+# 
 blue <- 1
 orange <- 2
 green <- 3

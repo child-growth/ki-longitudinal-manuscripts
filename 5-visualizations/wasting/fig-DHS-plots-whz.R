@@ -25,8 +25,8 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
 # standard region colors used in other plots
-tableau10 <- tableau_color_pal("tableau10")
-pcols <- c("black", tableau10(10)[c(1, 2, 3)])
+pcols <- tableau11
+
 
 ##################################
 # Plot mean z-score by age
