@@ -405,22 +405,6 @@ table(d$impsan)
 dsan<-bind_rows(dsan, d)
 
 
-#-------------------------------
-# ilin-dyad-g 
-#-------------------------------
-
-
-
-# d<-read_sas("U:/data/iLins-Dyad-G/iLiNS-DYAD-G-201804/import/camf_long.sas7bdat")
-# head(d)
-# d<-read_sas("U:/data/iLins-Dyad-G/iLiNS-DYAD-G-201804/import/namf.sas7bdat")
-# head(d)
-# d<-read_sas("U:/data/iLins-Dyad-G/iLiNS-DYAD-G-201804/import/ws.sas7bdat")
-# head(d)
-
-
-#No sanitation data
-
 
 #-------------------------------
 # examine full dataset

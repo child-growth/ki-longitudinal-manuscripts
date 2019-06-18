@@ -41,7 +41,7 @@ df_survey <- foreach(measure_here = unique(dhsz$measure), .combine = rbind, .pac
     options(survey.lonely.psu = "adjust")
     df <- dhsz %>% filter(measure == measure_here & region == region_here)
     result_svymean <- compute_ci_with_sampling_weights(df)
-    result_svymean$megasure <- measure_here
+    result_svymean$measure <- measure_here
     result_svymean$region <- region_here
     result_svymean
   }
@@ -64,12 +64,10 @@ dhs_pooled <- dhs_pooled %>%
 df_survey_output <- bind_rows(df_survey, dhs_pooled) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 df_survey_output$measure <- "LAZ" # rename HAZ to LAZ
-saveRDS(df_survey_output, file = here::here("results", "DHS-stunting-by-region.rds"))
+saveRDS(df_survey_output, file = here::here("results/dhs", "DHS-stunting-by-region.rds"))
 
 #---------------------------------------
-# estimate mean z-scores by age
-# subset to countries that overlap the
-# ki cohorts
+# estimate spline fit to mean z-scores by age
 #---------------------------------------
 dhssubfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind, .packages = "dplyr") %dopar% {
   di <-  dhsz %>% filter(region == rgn & inghap == 1)
@@ -163,4 +161,36 @@ dhsfits <- filter(dhsfits, measure == "LAZ")
 
 dhsfits = dhsfits %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
-saveRDS(dhsfits, file = here::here("results", "stunting-DHSandKI-by-region.rds"))
+saveRDS(dhsfits, file = here::here("results/dhs", "stunting-DHSandKI-by-region.rds"))
+
+
+
+#---------------------------------------
+# Filter for LAZ measures with data source of ki cohorts or DHS
+#---------------------------------------
+
+
+dhs_plotd <- dhsfits %>%
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
+
+dhs_plotd$region <- replace(dhs_plotd$region,is.na(dhs_plotd$region),"Overall")
+
+dhs_plotd_laz <- filter(dhs_plotd, measure == "LAZ")
+
+dhs_plotd_laz = dhs_plotd_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+
+
+#---------------------------------------
+# Save data for LAZ mean by age plots
+#---------------------------------------
+laz_ageplot_name <- create_name(
+  outcome = "LAZ",
+  cutoff = 2,
+  measure = "mean DHS",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+saveRDS(dhs_plotd_laz, file = paste0(figdata_dir, "figdata-", laz_ageplot_name, ".RDS"))

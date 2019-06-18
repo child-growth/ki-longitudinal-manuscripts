@@ -24,11 +24,11 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-# read in stunting outcome data 
-load("U:/ucb-superlearner/data/stunting_data.RData")
+# read in outcome data 
+load("U:/ucb-superlearner/Manuscript analysis data/stunting_data.RData")
 st = d
 rm(d)
-load("U:/ucb-superlearner/data/wasting_data.RData")
+load("U:/ucb-superlearner/Manuscript analysis data/wasting_data.RData")
 wst = d
 rm(d)
 load("U://ucb-superlearner/Manuscript analysis data/waz_data.RData")
@@ -321,16 +321,16 @@ quantdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, w
 #---------------------------------------------------------
 
 #Save medians
-saveRDS(medians.monthly, file = paste0(here(),"/results/ki.zscore.medians.monthly.rds"))
-saveRDS(medians.quarterly, file = paste0(here(),"/results/ki.zscore.medians.quarterly.rds"))
+saveRDS(medians.monthly, file = paste0(here(),"/results/dhs/ki.zscore.medians.monthly.rds"))
+saveRDS(medians.quarterly, file = paste0(here(),"/results/dhs/ki.zscore.medians.quarterly.rds"))
 
 
 #Save densities
-saveRDS(resdf.monthly, file = paste0(here(),"/results/ki.density.fits.monthly.rds"))
-saveRDS(resdf.quarterly, file = paste0(here(),"/results/ki.density.fits.quarterly.rds"))
+saveRDS(resdf.monthly, file = paste0(here(),"/results/dhs/ki.density.fits.monthly.rds"))
+saveRDS(resdf.quarterly, file = paste0(here(),"/results/dhs/ki.density.fits.quarterly.rds"))
 
 
 #Save quantiles
-saveRDS(quantdf.monthly, file = paste0(here(),"/results/ki.quantiles.monthly.rds"))
-saveRDS(quantdf.quarterly, file = paste0(here(),"/results/ki.quantiles.quarterly.rds"))
+saveRDS(quantdf.monthly, file = paste0(here(),"/results/dhs/ki.quantiles.monthly.rds"))
+saveRDS(quantdf.quarterly, file = paste0(here(),"/results/dhs/ki.quantiles.quarterly.rds"))
 

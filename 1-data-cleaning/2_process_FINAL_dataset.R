@@ -917,5 +917,4 @@ saveRDS(d, file="FINAL_temp_clean_covariates.rds")
 saveRDS(d, file="U:/UCB-SuperLearner/Stunting rallies/FINAL_temp_clean_covariates.rds")
 saveRDS(d, file="U:/UCB-SuperLearner/Manuscript analysis data/FINAL_temp_clean_covariates.rds")
 
-save(iLiNS_Zinc_df, iLiNS_DYADM_df,
-     file="int_studies_secondary_contrasts.Rdata")
+

@@ -22,9 +22,9 @@
 #---------------------------------------
 # source configuration file
 #---------------------------------------
-
+rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-source("5-visualizations/shared/helper_sampling_weights.R")
+source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
 #---------------------------------------
 # load cleaned DHS anthro data
@@ -46,7 +46,7 @@ dhsz <- dhaz %>%
 #---------------------------------------
 # compute or load the DHS results
 # source("fig-DHS-plots-laz-compute.R")
-df_survey_output <- readRDS(here::here("results", "DHS-stunting-by-region.rds"))
+df_survey_output <- readRDS(here::here("results/dhs/", "DHS-stunting-by-region.rds"))
 
 #---------------------------------------
 # estimate mean z-scores by age

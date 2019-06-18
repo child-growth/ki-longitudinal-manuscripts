@@ -5,8 +5,7 @@ rm(list=ls())
 library(tidyverse)
 library(data.table)
 
-setwd("U:/data/Breastfeeding datasets")
-
+setwd("U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/")
 
 dir<-getwd()
 list.files(dir)
@@ -27,8 +26,6 @@ head(jvt4)
 head(mled)    	
 head(prbt)  
 
-#rename or combine columns
-
 
 
 #Combine raw data BF datasets
@@ -38,8 +35,6 @@ bf_df <- bind_rows(bf_df, gmsn)
 bf_df <- bind_rows(bf_df, jvt3)
 bf_df$visit <- as.character(bf_df$visit)
 bf_df <- bind_rows(bf_df, jvt4)
-#bf_df <- bind_rows(bf_df, mled)
-#bf_df <- bind_rows(bf_df, prbt)
 
 
 d <- bf_df
@@ -145,16 +140,11 @@ bf_3_6mo_raw <- bf_3_6mo
 
 
 
-
-
-
-
-
 #-------------------------------------------
 #read full data csv file
 #-------------------------------------------
 
-d<-fread("U:/data/FINAL/UCB Rally7/Main/adam/FINAL.csv", header = T)
+d<-fread("U:/ucb-superlearner/Manuscript analysis data/FINAL.csv", header = T)
 
 d <-d %>% filter(!is.na(AGEDAYS) & !is.na(WHZ)) %>%
   filter(WHZ > -5 & WHZ < 5) %>%
@@ -302,7 +292,7 @@ bf <- merge(bf, bf_3_6mo, by=c("studyid", "country", "subjid"), all.x=T, all.y=T
 
 
 
-#Merge in mal-ed and probit measures
+#Clean and merge in mal-ed and probit measures
 
 #prbt
 head(prbt)
@@ -422,8 +412,7 @@ table(bf$studyid, bf$predexfd6)
 #Subset to necessary variables
 bf <- bf %>% subset(., select = -c(predfeed6_2, exclfeed6_2))
 
-save(bf, file="U:/data/Raw Data Cleaning/BF_dataset.Rdata")
-
+save(bf, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/derived covariate datasets")
 
 
 

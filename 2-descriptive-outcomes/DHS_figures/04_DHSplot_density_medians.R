@@ -1,5 +1,11 @@
+#---------------------------------------
+# source configuration file
+#---------------------------------------
+rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
+
 # Find DHS medians
-dhs_quantiles <- readRDS(paste0(here::here(),"/results/dhs.quantiles.rds"))
+dhs_quantiles <- readRDS(paste0(here::here(),"/results/dhs/dhs.quantiles.rds"))
 dhs_medians = dhs_quantiles %>% filter(quantile == 50)
 dhs_medians$region = recode_factor(dhs_medians$region, 
                                    OVERALL = "Overall", 
@@ -16,8 +22,8 @@ dhs_medians = select(dhs_medians, c("region", "measure", "median"))
 dhs_medians$dsource = "DHS, ki countries"
 
 # Find KI medians, combine KI and DHS medians into a single table
-ki_medians_monthly = readRDS(paste0("results/ki.zscore.medians.monthly.rds"))
-ki_medians_quarterly = readRDS(paste0("results/ki.zscore.medians.quarterly.rds"))
+ki_medians_monthly = readRDS(paste0("results/dhs/ki.zscore.medians.monthly.rds"))
+ki_medians_quarterly = readRDS(paste0("results/dhs/ki.zscore.medians.quarterly.rds"))
 
 calc_medians = function(ki_medians){
   ki_medians$dsource = "ki cohorts"
@@ -37,5 +43,5 @@ calc_medians = function(ki_medians){
 medians_quarterly = calc_medians(ki_medians_quarterly) %>% rbind(., dhs_medians)
 medians_monthly = calc_medians(ki_medians_monthly) %>% rbind(., dhs_medians)
 
-saveRDS(medians_quarterly, file = paste0(here(),"/results/dhs.ki.zscore.medians.quarterly.rds"))
-saveRDS(medians_monthly, file = paste0(here(),"/results/dhs.ki.zscore.medians.monthly.rds"))
+saveRDS(medians_quarterly, file = paste0(here(),"/results/dhs/dhs.ki.zscore.medians.quarterly.rds"))
+saveRDS(medians_monthly, file = paste0(here(),"/results/dhs/dhs.ki.zscore.medians.monthly.rds"))

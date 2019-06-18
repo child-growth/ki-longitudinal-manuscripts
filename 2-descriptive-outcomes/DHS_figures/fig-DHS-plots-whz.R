@@ -20,8 +20,9 @@
 #---------------------------------------
 # source configuration file
 #---------------------------------------
+rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-source("5-visualizations/shared/helper_sampling_weights.R")
+source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
 # standard region colors used in other plots
 tableau10 <- tableau_color_pal("tableau10")
@@ -65,13 +66,13 @@ ggsave(dhsp, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_byage.png"), wid
 ##################################
 # Plot z-score density by region and measure
 ##################################
-kiden <- readRDS(paste0(here(), "/results/ki.density.fits.monthly.rds"))
+kiden <- readRDS(paste0(here(), "/results/dhs/ki.density.fits.monthly.rds"))
 kiden <- kiden %>% mutate(dsource = "ki cohorts")
 
-dhssubden = readRDS(paste0(here(),"/results/dhs.density.ki-countries.rds"))
+dhssubden = readRDS(paste0(here(),"/results/dhs/dhs.density.ki-countries.rds"))
 dhssubden <- dhssubden %>% mutate(dsource = "DHS, ki countries")
 
-medians = readRDS(paste0(here(),"/results/dhs.ki.zscore.medians.monthly.rds"))
+medians = readRDS(paste0(here(),"/results/dhs/dhs.ki.zscore.medians.monthly.rds"))
 
 dhsden_plot <- bind_rows(kiden, dhssubden) %>%
   mutate(

@@ -31,12 +31,13 @@
 #---------------------------------------
 # source configuration file
 #---------------------------------------
+rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # set up for parallel computing
 # configure for a laptop (use only 3 cores)
 registerDoParallel(cores = 3)
-source("5-visualizations/shared/helper_sampling_weights.R")
+source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
 #---------------------------------------
 # load cleaned DHS anthro data
@@ -64,7 +65,7 @@ dhsz <- dhsz %>%
 
 # compute or load the DHS results
 # source("fig-DHS-plots-zscores-compute.R")
-dhsfits <- readRDS(here::here("results", "wasting-DHSandKI-by-region.rds"))
+dhsfits <- readRDS(here::here("results/dhs/", "wasting-DHSandKI-by-region.rds"))
 dhsfits <- dhsfits %>%
   mutate(region = case_when(
     region == "SEARO" ~ "South Asia",
@@ -75,6 +76,7 @@ dhsfits <- dhsfits %>%
     levels = c("Overall", "Africa", "Latin America", "South Asia"),
     labels = c("Overall", "Africa", "Latin America", "South Asia")
   ))
+
 #---------------------------------------
 # make z-score by age figure
 # after preliminary inspection, the
@@ -172,7 +174,7 @@ dhssubden <- bind_rows(dhssubden, dhssubden_pool) %>%
 # for z-scores, stratified by
 # region
 #---------------------------------------
-kiden <- readRDS(paste0(here(), "/results/ki.density.fits.monthly.rds"))
+kiden <- readRDS(paste0(here(), "/results/dhs/ki.density.fits.monthly.rds"))
 kiden <- kiden %>%
   mutate(region = case_when(
     region == "SEARO" ~ "South Asia",
@@ -217,7 +219,7 @@ dhsden_plot <- dhsden %>%
 #####################
 # Add medians
 #####################
-ki_medians = readRDS(paste0("results/ki.zscore.medians.monthly.rds"))
+ki_medians = readRDS(paste0("results/dhs/ki.zscore.medians.monthly.rds"))
 ki_medians$dsource = "ki cohorts"
 
 ki_medians$region = recode_factor(ki_medians$region, 
@@ -230,7 +232,7 @@ ki_medians =  ki_medians %>% mutate(
   measure = factor(measure, levels = c("haz", "waz", "whz"), labels = c("LAZ", "WAZ", "WHZ"))
 )
 
-dhs_quantiles <- readRDS(paste0(here::here(),"/results/dhs.quantiles.rds"))
+dhs_quantiles <- readRDS(paste0(here::here(),"/results/dhs/dhs.quantiles.rds"))
 dhs_medians = dhs_quantiles %>% filter(quantile == 50)
 dhs_medians$region = recode_factor(dhs_medians$region, 
                                    OVERALL = "Overall", 

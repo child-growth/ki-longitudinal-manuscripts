@@ -360,22 +360,6 @@ table(d$safeh20)
 dh20<-bind_rows(dh20, d)
 
 
-#-------------------------------
-# ilin-dyad-g 
-#-------------------------------
-
-
-
-# d<-read_sas("U:/data/iLins-Dyad-G/iLiNS-DYAD-G-201804/import/camf_long.sas7bdat")
-# head(d)
-# d<-read_sas("U:/data/iLins-Dyad-G/iLiNS-DYAD-G-201804/import/namf.sas7bdat")
-# head(d)
-# d<-read_sas("U:/data/iLins-Dyad-G/iLiNS-DYAD-G-201804/import/ws.sas7bdat")
-# head(d)
-
-
-#No water data
-
 
 #-------------------------------
 #ki1113344-GMS-Nepal   

@@ -24,9 +24,10 @@
 #---------------------------------------
 # source configuration file
 #---------------------------------------
+rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
-source("5-visualizations/shared/helper_sampling_weights.R")
+source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
 # standard region colors used in other plots
 tableau10 <- tableau_color_pal("tableau10")
@@ -84,13 +85,13 @@ ggsave(laz_ageplot, file = paste0(fig_dir, "stunting/fig-", laz_ageplot_name, ".
 #############################################
 # Create LAZ Density Plot
 #############################################
-kiden <- readRDS(paste0(here(), "/results/ki.density.fits.quarterly.rds"))
+kiden <- readRDS(paste0(here(), "/results/dhs/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>% mutate(dsource = "ki cohorts")
 
-dhssubden = readRDS(paste0(here(),"/results/dhs.density.ki-countries.rds"))
+dhssubden = readRDS(paste0(here(),"/results/dhs/dhs.density.ki-countries.rds"))
 dhssubden <- dhssubden %>% mutate(dsource = "DHS, ki countries")
 
-medians = readRDS(paste0(here(),"/results/dhs.ki.zscore.medians.quarterly.rds")) %>% filter(measure == "LAZ")
+medians = readRDS(paste0(here(),"/results/dhs/dhs.ki.zscore.medians.quarterly.rds")) %>% filter(measure == "LAZ")
 
 dhsden_plot <- bind_rows(kiden, dhssubden) %>%
   mutate(
