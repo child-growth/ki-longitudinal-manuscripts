@@ -159,7 +159,10 @@ morbidity <- specify_rf_analysis(A=Avars_morbidity,
 
 
 #bind together datasets
-analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
+#analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
+
+#Temp subset to rerun
+analyses <- rbind(prev, rec, cuminc, cuminc_nobirth, pers_wast)
 
 
 #Save analysis specification
@@ -193,7 +196,10 @@ haz <- specify_rf_analysis(A=Avars, Y="haz", file="st_meanZ_rf.Rdata")
 whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 
 
-analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
+#analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
+
+#Temp subset to rerun
+analyses <- whz
 
 
 #Save analysis specification

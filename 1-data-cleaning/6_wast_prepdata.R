@@ -196,7 +196,7 @@ save(d,file="U:/Data/Wasting/int_wasting_data.RData")
 #Keep monthly and quarterly studies
 d <- d %>% filter(measurefreq!="yearly")
 
-save(d,file="U:/Data/Wasting/rf_wasting_data.RData")
+save(d,file="U:/ucb-superlearner/Manuscript analysis data/rf_wasting_data.RData")
 
 
 #--------------------------------------------

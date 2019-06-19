@@ -7,10 +7,7 @@ library(zoo)
 
 source("U:/Wasting/1-outcomes/0_wast_incfunctions.R")
 
-setwd("U:/ucb-superlearner/data/")
-load("Wasting_data.RData")
-
-
+load("U:/ucb-superlearner/Manuscript analysis data/rf_wasting_data.RData")
 
 
 dfull<-d
@@ -18,12 +15,14 @@ df <- d
 d <- df %>% group_by(studyid, country) %>% do(WastIncCalc(.))
 d_noBW <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., dropBornWasted=T))
 
-save(d, d_noBW, file="Wasting_inc_rf_data.RData")
+save(d, d_noBW, file="U:/ucb-superlearner/Manuscript analysis data/Wasting_inc_rf_data.RData")
 
 #subset to monthly cohorts for descriptive epi analysis
+load("U:/ucb-superlearner/Manuscript analysis data/wasting_data.RData")
+
 d <- d %>% filter(measurefreq=="monthly")
 d_noBW <- d_noBW %>% filter(measurefreq=="monthly")
-save(d, d_noBW, file="Wasting_inc_data.RData")
+save(d, d_noBW, file="U:/ucb-superlearner/Manuscript analysis data/Wasting_inc_data.RData")
 
 
 # Calc incidence with no recovery to see what proportion become wasted for the first time 
@@ -32,7 +31,7 @@ df <- df %>% filter(measurefreq=="monthly")
 d_noRec <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., washout=1000))
 d_noBW_noRec <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., dropBornWasted=T, washout=1000))
 
-save(d_noRec, d_noBW_noRec, file="Wasting_inc_noRec_data.RData")
+save(d_noRec, d_noBW_noRec, file="U:/ucb-superlearner/Manuscript analysis data/Wasting_inc_noRec_data.RData")
 
 
 
