@@ -1,6 +1,7 @@
 
 
 
+
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
@@ -22,8 +23,10 @@ par$intervention_level[par$intervention_level=="No"] <- "None"
 par$intervention_level[par$intervention_level=="Yes"] <- "All"
 par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("brthmon","month")] <- "Jan."
 
-par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
-  #mutate(RFlabel_ref = expression(bold(RFlabel)~' shifted to '~bold(intervention_level)))
+par_agestrat <- par %>% filter( agecat %in% c("Birth","6 months","24 months"), region=="Pooled", outcome_variable %in% c("haz", "whz"), !is.na(PAR)) %>%
+  mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
+
+par_regionstrat <- par %>% filter( agecat=="24 months", region!="Pooled", outcome_variable %in% c("haz", "whz"), !is.na(PAR)) %>%
   mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
 
 #Bold the intervention variable
@@ -32,8 +35,8 @@ par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
 #  as.expression(bold(par$RFlabel[1])~' shifted to '~bold(par$intervention_level[1]))
 #  as.expression(bquote(bold(par$RFlabel[1])))
 #  parse(text= paste("bold(par$RFlabel[", 1:7, "])", sep="") ) 
- 
- 
+
+
 unique(par$RFlabel_ref)
 
 df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref, n_cell, n)) %>% 
@@ -58,9 +61,6 @@ color_vec = c("#7F7F7F", "#E377C2")
 #----------------------------------------------------------
 
 unique(df$outcome_variable)
-df$outcome_variable <- gsub("y_rate_haz", "HAZ velocity", df$outcome_variable)
-df$outcome_variable <- gsub("y_rate_len", "Length velocity", df$outcome_variable)
-df$outcome_variable <- gsub("y_rate_wtkg", "Weight velocity", df$outcome_variable)
 df$outcome_variable <- gsub("haz", "LAZ", df$outcome_variable)
 df$outcome_variable <- gsub("whz", "WLZ", df$outcome_variable)
 
@@ -159,70 +159,5 @@ ggsave(pPAR_laz, file=paste0(here::here(), "/figures/risk factor/fig-laz-PAR.png
 ggsave(pPAR_wlz, file=paste0(here::here(), "/figures/risk factor/fig-wlz-PAR.png"), height=10, width=8)
 
 save(pPAR_laz, pPAR_wlz, file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.Rdata"))
-
-
-
-
-#----------------------------------------------------------
-# Plot margin tables
-#----------------------------------------------------------
-
-#Create data underlying LAZ side table
-mtab_df_laz <- plotdf_laz %>% arrange(PAR) %>%
-  mutate(perc_ref= round((1-ref_prev)*100)) %>%
-  subset(., select = c(n, perc_ref))
-
-# add comma to N (aka print 23,045 instead of 23045)
-mtab_df_laz$n = format(mtab_df_laz$n ,big.mark=",", trim=TRUE)
-
-#Use tableGrob to create a plot with the appearrence of a table
-mtab_df_laz_tbl <- tableGrob(mtab_df_laz,
-                             row = NULL,
-                             cols = c("N", "% shifted to \nreference"),
-                             theme = ttheme_minimal(base_size = 9, padding = unit(c(0, 0), "mm")))
-
-mtab_df_laz_tbl$heights <- unit(c(0.055, rep(0.0275, nrow(mtab_df_laz_tbl) - 1)), "npc")
-mtab_df_laz_tbl$widths <- unit(rep(0.25, ncol(mtab_df_laz_tbl)), "npc")
-mtab_df_laz_tbl <- gtable_add_grob(mtab_df_laz_tbl,
-                                   grobs = segmentsGrob( # line across the bottom
-                                     x0 = unit(0,"npc"),
-                                     y0 = unit(0,"npc"),
-                                     x1 = unit(1,"npc"),
-                                     y1 = unit(0,"npc"),
-                                     gp = gpar(lwd = 2.0)),
-                                   t = 1, b = 1, l = 1, r = 2)
-
-#grid.arrange(mtab_df_laz_tbl)
-
-
-
-#Repeat for WLZ
-mtab_df_wlz <- plotdf_wlz %>% arrange(PAR) %>%
-  mutate(perc_ref= round((1-ref_prev)*100)) %>%
-  subset(., select = c(n, perc_ref))
-
-mtab_df_wlz$n = format(mtab_df_wlz$n ,big.mark=",", trim=TRUE)
-
-mtab_df_wlz_tbl <- tableGrob(mtab_df_wlz, 
-                             rows = NULL,
-                             cols = c("N", "% shifted to \nreference"), 
-                             theme = ttheme_minimal(base_size = 9, padding = unit(c(0, 0), "mm")))
-
-mtab_df_wlz_tbl$heights <- unit(c(0.055, rep(0.0275, nrow(mtab_df_wlz_tbl) - 1)), "npc")
-mtab_df_wlz_tbl$widths <- unit(rep(0.25, ncol(mtab_df_wlz_tbl)), "npc")
-
-mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
-                                   grobs = segmentsGrob( # line across the bottom
-                                     x0 = unit(0,"npc"),
-                                     y0 = unit(0,"npc"),
-                                     x1 = unit(1,"npc"),
-                                     y1 = unit(0,"npc"),
-                                     gp = gpar(lwd = 2.0)),
-                                   t = 1, b = 1, l = 1, r = 2)
-
-#save the plots seperately 
-save(mtab_df_laz_tbl, mtab_df_wlz_tbl, file=paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.Rdata"))
-
-
 
 

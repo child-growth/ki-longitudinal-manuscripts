@@ -45,12 +45,12 @@ d$outcome_variable <- gsub("haz", "LAZ", d$outcome_variable)
 d$outcome_variable <- gsub("whz", "WLZ", d$outcome_variable)
 d$outcome_variable <- gsub("stunted", "Stunted", d$outcome_variable)
 d$outcome_variable <- gsub("wasted", "Wasted", d$outcome_variable)
-d$outcome_variable <- gsub("wast_rec90d", "Recovery\nfrom wasting", d$outcome_variable)
+d$outcome_variable <- gsub("wast_rec90d", "Recovery\nfrom\nwasting", d$outcome_variable)
 d$outcome_variable <- gsub("ever_co", "Stunted\nand wasted", d$outcome_variable)
 d$outcome_variable <- gsub("ever_Stunted", "Ever\nstunted", d$outcome_variable)
 d$outcome_variable <- gsub("ever_Wasted", "Ever\nwasted", d$outcome_variable)
 d$outcome_variable <- gsub("pers_wast", "Persistently\nwasted", d$outcome_variable)
-d <- d %>% mutate(outcome_variable=factor(outcome_variable, levels = c("LAZ","WLZ","Stunted","Wasted","Ever\nstunted","Ever\nwasted","Recovery\nfrom wasting","Stunted\nand wasted","Persistently\nwasted")))
+d <- d %>% mutate(outcome_variable=factor(outcome_variable, levels = c("LAZ","Stunted","Ever\nstunted","WLZ","Wasted","Ever\nwasted","Persistently\nwasted","Stunted\nand wasted", "Recovery\nfrom\nwasting")))
 table(d$outcome_variable)
 levels(d$outcome_variable)
 
@@ -180,7 +180,7 @@ textcol = "grey20"
 cols = rev(brewer.pal(n = 7, name = "Spectral"))
 
 levels(d$pval_cat) = c(levels(d$pval_cat), "Non-existent or rare contrast")
-agecat_with_ranges = levels(d$outcome_variable)[c(5:9)]
+agecat_with_ranges = c(  "Ever\nstunted", "Ever\nwasted", "Persistently\nwasted", "Stunted\nand wasted","Recovery\nfrom\nwasting")
 
 #Pooled estimates only 
 
@@ -230,7 +230,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
 hm  
   
 # save plot 
-ggsave(hm, file=paste0(here::here(),"/figures/risk factor/fig-sig-heatmap.png"), height=14, width=11)
+ggsave(hm, file=paste0(here::here(),"/figures/risk factor/fig-sig-heatmap.png"), height=14, width=11.5)
 
 
 #Region stratified
