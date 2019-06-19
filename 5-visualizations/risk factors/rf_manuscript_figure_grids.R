@@ -24,23 +24,24 @@ blank <- grid.rect(gp=gpar(col="white"))
 
 pPar_laz_plot = grid.arrange(blank, p1, nrow = 2, heights = c(0.9, 20))
 pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.65))
-pPar_laz_combined = plot_grid(pPar_laz_plot, pPar_laz_plot_table, ncol = 2, rel_widths = c(1, 0.6))
+pPar_laz_combined = plot_grid(pPar_laz_plot, pPar_laz_plot_table, ncol = 2, rel_widths = c(1, 0.4))
 pPar_laz_combined
 
 pPar_wlz_plot = grid.arrange(blank, p2, nrow = 2, heights = c(0.9, 20))
 pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.65))
-pPar_wlz_combined = plot_grid(pPar_wlz_plot, pPar_wlz_plot_table, ncol = 2, rel_widths = c(1, 0.6))
+pPar_wlz_combined = plot_grid(pPar_wlz_plot, pPar_wlz_plot_table, ncol = 2, rel_widths = c(1, 0.4))
 pPar_wlz_combined
 
 #fig2 <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
 fig2 <- plot_grid(pPar_laz_combined, pPar_wlz_combined, ncol = 2, labels = c("A", "B"), align = 'v', axis = 'l')
 ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig2.png"), width=16, height=8)
 
-fig3 <- plot_grid(p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig3.png"), width=14, height=8)
+
+ext_fig3 <- plot_grid(p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+ggsave(ext_fig3, file=paste0(here(),"/figures/manuscript figure composites/risk factor/extended_data_fig3.png"), width=14, height=8)
 
 
-#Figure 4
+#Figure 3
 load(paste0(here::here(),"/results/fig-severe-outcome-comps.Rdata"))
 load(paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.Rdata"))
 load(paste0(here::here(), "/results/rf_spline_objects.Rdata"))
@@ -64,14 +65,14 @@ Twoby1plotB_t <- plot_grid(titleB, Twoby1plotB, ncol=1, rel_heights=c(0.1, 1))
 
 
 Twoby1plot <- plot_grid(Twoby1plotA_t, Twoby1plotB_t, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-#Twoby1plot <- plot_grid(p4, p1, p3, p2, labels = "AUTO", ncol = 4, align = 'v', axis = 'l')
-fig4 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","C","D"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
-ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig4.png"), width=14, height=18)
+
+fig3 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","C","D"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
+ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig3.png"), width=14, height=18)
 
 
 
 
-#Figure 5
+#Figure 4
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-wasting-prior-to-stunting-plot-objects.Rdata")
 p_earlywast <- p_earlywast + theme(axis.text.x=element_text(angle=45,vjust=0.5))
 
@@ -86,9 +87,9 @@ p1 <- p1 + theme(legend.position = pos1) #+guides(color = guide_legend("Maternal
 p2 <- p2 + theme(legend.position = pos2) #+guides(color = guide_legend("Maternal height", nrow=3))
 p3 <- p3 + theme(legend.position = pos3) #+guides(color = guide_legend("Maternal height", nrow=3))
 
-fig5a <- plot_grid(p_lagwhz, p_earlywast, labels = "AUTO", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
-fig5b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2, align = 'v', axis = 'l')
-fig5 <- plot_grid(fig5a, fig5b, labels = c("",""), ncol = 1, rel_heights = c(1,2))
-ggsave(fig5, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig5.png"), width=14, height=14)
+fig4a <- plot_grid(p_lagwhz, p_earlywast, labels = "AUTO", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
+fig4b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2, align = 'v', axis = 'l')
+fig4 <- plot_grid(fig4a, fig4b, labels = c("",""), ncol = 1, rel_heights = c(1,2))
+ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig4.png"), width=14, height=14)
 
 

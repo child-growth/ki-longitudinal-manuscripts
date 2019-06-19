@@ -159,8 +159,13 @@ morbidity <- specify_rf_analysis(A=Avars_morbidity,
 
 
 #bind together datasets
-analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
+#analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
 
+#Temp subset to rerun
+#analyses <- rbind(prev, rec, cuminc, cuminc_nobirth, pers_wast)
+analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc)
+analyses <- analyses[analyses$A %in% c("perdiar6","perdiar24") | !grepl("stunt",analyses$Y),]
+table(analyses$file)
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
@@ -193,8 +198,13 @@ haz <- specify_rf_analysis(A=Avars, Y="haz", file="st_meanZ_rf.Rdata")
 whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 
 
-analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
+#analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
+#Temp subset to rerun
+#analyses <- whz
+analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
+analyses <- analyses[analyses$A %in% c("perdiar6","perdiar24") | analyses$Y=="whz",]
+table(analyses$file)
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))

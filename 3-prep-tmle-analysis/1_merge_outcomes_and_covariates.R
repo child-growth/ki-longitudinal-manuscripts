@@ -33,6 +33,11 @@ cov$exclfeed36 <- relevel(cov$exclfeed36, ref="1")
 cov$predexfd6 <- relevel(cov$predexfd6, ref="1")
 
 
+table(cov$studyid, cov$perdiar6)
+table(cov$studyid, cov$perdiar24)
+
+cov$perdiar6 <- relevel(cov$perdiar6, ref="0%")
+cov$perdiar24 <- relevel(cov$perdiar24, ref="0%")
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
