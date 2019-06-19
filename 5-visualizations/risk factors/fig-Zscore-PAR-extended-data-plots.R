@@ -29,135 +29,29 @@ par_agestrat <- par %>% filter( agecat %in% c("Birth","6 months","24 months"), r
 par_regionstrat <- par %>% filter( agecat=="24 months", region!="Pooled", outcome_variable %in% c("haz", "whz"), !is.na(PAR)) %>%
   mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
 
-#Bold the intervention variable
-# https://stackoverflow.com/questions/37758050/ggplot-displaying-expression-in-x-axis
-# 
-#  as.expression(bold(par$RFlabel[1])~' shifted to '~bold(par$intervention_level[1]))
-#  as.expression(bquote(bold(par$RFlabel[1])))
-#  parse(text= paste("bold(par$RFlabel[", 1:7, "])", sep="") ) 
-
-
-unique(par$RFlabel_ref)
-
-df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref, n_cell, n)) %>% 
-  filter(!is.na(PAR)) %>% mutate(measure="PAR")
 
 
 
-#----------------------------------------------------------
-# Plot parameters
-#----------------------------------------------------------
+### Anna, make 12 plots from the following data subsets (grouped together in panels of 3)
+
+#Extended data fig 3
+par_agestrat %>% filter(outcome_variable=="haz", agecat == "Birth")
+par_agestrat %>% filter(outcome_variable=="haz", agecat == "6 months")
+par_agestrat %>% filter(outcome_variable=="haz", agecat == "24 months")
+
+#Extended data fig 4
+par_agestrat %>% filter(outcome_variable=="whz", agecat == "Birth")
+par_agestrat %>% filter(outcome_variable=="whz", agecat == "6 months")
+par_agestrat %>% filter(outcome_variable=="whz", agecat == "24 months")
 
 
-yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+#Extended data fig 6
+par_agestrat %>% filter(outcome_variable=="haz", region == "Africa")
+par_agestrat %>% filter(outcome_variable=="haz", region == "Latin America")
+par_agestrat %>% filter(outcome_variable=="haz", region == "South Asia")
 
-# Colors
-color_vec = c("#7F7F7F", "#E377C2")
-
-
-
-#----------------------------------------------------------
-# Clean up plot dataframe
-#----------------------------------------------------------
-
-unique(df$outcome_variable)
-df$outcome_variable <- gsub("haz", "LAZ", df$outcome_variable)
-df$outcome_variable <- gsub("whz", "WLZ", df$outcome_variable)
-
-
-dpool <- df %>% ungroup() %>%
-  filter(outcome_variable %in% c("LAZ", "WLZ" ),
-         !is.na(intervention_variable)) %>%
-  mutate(ref_prev=n_cell/n) %>%
-  group_by(intervention_variable, 
-           outcome_variable) 
-
-#----------------------------------------------------------
-# Plot LAZ PAR
-#----------------------------------------------------------
-
-plotdf_laz <- dpool %>% filter(outcome_variable=="LAZ") %>%
-  arrange(-PAR) 
-rflevels = unique(plotdf_laz$RFlabel_ref)
-plotdf_laz$RFlabel_ref=factor(plotdf_laz$RFlabel_ref, levels=rflevels)
-
-#nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_prev)*100),"%) to ref: ",plotdf$intervention_level)
-#RFlabel <- plotdf$RFlabel_ref
-#PAR <- plotdf$PAR
-#plotdf$PAR2 <- ifelse(plotdf$measure=="Population attributable difference", PAR, NA)
-
-# plotdf$measure = "Population attributable difference"
-# 
-# #copy existing data, offset by 0.1
-# plotdf_copy = plotdf
-# plotdf_copy$measure = "Variable importance measure"
-# plotdf_copy$PAR = plotdf_copy$PAR + 0.1
-# plotdf_copy$CI1 = plotdf_copy$CI1 + 0.1
-# plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
-
-
-
-#pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel_ref, -PAR2))))) + 
-pPAR_laz <-  ggplot(plotdf_laz, aes(x=RFlabel_ref)) + 
-  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
-  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
-  coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(x = "Exposure, and to which level of exposure the cohorts are shifted", y = "Attributable difference in LAZ") +
-  geom_hline(yintercept = 0) +
-  # scale_x_continuous(#breaks = 1:length(RFlabel_ref),
-  #                    #labels = RFlabel_ref,
-  #                    expand = c(0,0.5),
-  #                    sec.axis = sec_axis(~.,
-  #                                        breaks = 1:length(nlab),
-  #                                        labels = rep("", length(nlab)))) +#reorder(nlab, PAR))) +
-  #scale_colour_manual(values=color_vec, name = "Exposure\nCategory") +
-  #scale_shape_manual(values=c(19,4))+
-  theme(strip.background = element_blank(),
-        legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12)) +
-  guides(color=FALSE, shape=FALSE)
-
-
-
-
-#----------------------------------------------------------
-# Plot WLZ PAR
-#----------------------------------------------------------
-
-plotdf_wlz <- dpool %>% filter(outcome_variable=="WLZ") %>%
-  arrange(-PAR) 
-rflevels = unique(plotdf_wlz$RFlabel_ref)
-plotdf_wlz$RFlabel_ref=factor(plotdf_wlz$RFlabel_ref, levels = rflevels)
-
-
-pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) + 
-  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
-  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
-  coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(x = "Exposure, and to which level of exposure the cohorts are shifted", y = "Attributable difference in WLZ") +
-  geom_hline(yintercept = 0) +
-  # scale_x_continuous(breaks = 1:length(RFlabel_ref),
-  #                    labels = RFlabel_ref,
-  #                    expand = c(0,0.5),
-  #                    sec.axis = sec_axis(~.,
-  #                                        breaks = 1:length(nlab),
-  #                                        labels = rep("", length(nlab))))+#reorder(nlab, PAR))) +
-  #scale_colour_manual(values=color_vec, name = "Exposure\nCategory") +
-  #scale_shape_manual(values=c(19, 4))+
-  theme(strip.background = element_blank(),
-        legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12),
-        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE)
-
-
-ggsave(pPAR_laz, file=paste0(here::here(), "/figures/risk factor/fig-laz-PAR.png"), height=10, width=8)
-ggsave(pPAR_wlz, file=paste0(here::here(), "/figures/risk factor/fig-wlz-PAR.png"), height=10, width=8)
-
-save(pPAR_laz, pPAR_wlz, file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.Rdata"))
-
+#Extended data fig 7
+par_agestrat %>% filter(outcome_variable=="whz", region == "Africa")
+par_agestrat %>% filter(outcome_variable=="whz", region == "Latin America")
+par_agestrat %>% filter(outcome_variable=="whz", region == "South Asia")
 

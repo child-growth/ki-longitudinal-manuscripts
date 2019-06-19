@@ -69,3 +69,23 @@ p <- ggplot(d, aes(x=-estimate, y=-VIM)) +
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   guides(color=FALSE, shape=FALSE)
 p
+
+
+
+
+
+p2 <- ggplot(d[d$outcome_variable=="whz",], aes(x=-estimate, y=-VIM)) + 
+  geom_point(size = 4, alpha=0.1) +
+  facet_wrap(~intervention_variable) +
+  labs(x = "PAR", y = "VIM") +
+  geom_abline(slope=1,intercept=0) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  theme(strip.background = element_blank(),
+        legend.position="right",
+        strip.text.x = element_text(size=12),
+        axis.text.x = element_text(size=12),
+        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  guides(color=FALSE, shape=FALSE)
+p2
+
