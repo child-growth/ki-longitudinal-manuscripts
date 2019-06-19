@@ -274,7 +274,7 @@ hm_strat <- ggplot(region_data,aes(x=xvar, y=yvar, fill=pval_cat)) +
     panel.background=element_rect(fill="grey80", colour="grey80"),
     panel.grid.major = element_blank(), panel.grid.minor = element_blank()
   ) + guides(fill = guide_legend("P-value strength", ncol=1)) + 
-  labs(x="Exposure",y="",title="") +
+  labs(x="Exposure",y="Age category",title="") +
   coord_flip()
 
 hm_strat
