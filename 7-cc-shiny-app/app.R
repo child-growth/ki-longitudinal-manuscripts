@@ -54,60 +54,79 @@ input <- input %>% mutate_all(as.character)
 
 # Define UI for application that draws a forest plot
 ui <- navbarPage("HBGDki Results Dashboard",
-                 tabPanel("Exposure analysis",
-                          titlePanel("Associations between child, parental, and household characteristics and wasting and stunting outcomes"),
-                          
-                          sidebarLayout(
-                            sidebarPanel(
-                              # Variables with dropdown selections for user input
-                              selectInput('exposure',
-                                          'Exposure Variable:',
-                                          choices = levels(df$intervention_variable)),
-                              selectInput('outcome',
-                                          'Outcome Variable:',
-                                          choices = levels(df$outcome_variable)),
-                              selectInput('age',
-                                          'Child age:',
-                                          choices = levels(df$agecat)),
-                              selectInput('parameter',
-                                          'Parameter:',
-                                          choices = levels(df$type)),
-                              selectInput('region',
-                                          'region:',
-                                          choices = c("All","Asia","Africa", "Latin America")),
-                              selectInput('adjusted',
-                                          'Adjusted:',
-                                          choices = c("Yes","No")),
-                              #uiOutput('parameter'),
-                              # uiOutput('region'),
-                              # uiOutput('outcome'),
-                              # uiOutput('age'),
-                              # uiOutput('adjusted')#,
-                              #uiOutput('pool_method')
-                              radioButtons('pool_method',
-                                           'Pooling method:',
-                                           choices = c("Random","Fixed"))
-                            ),
-                            
-                            # Show a plot of the selected exposure-outcome pair
-                            mainPanel(
-                              plotOutput("forestPlot", height=600),
-                              br(),
-                              br(),
-                              plotOutput("pooledPlot", height=600),
-                              br(),
-                              br(),
-                              br(),
-                              # Create a new row for the table.
-                              fluidRow(
-                                #DT::dataTableOutput("table")
-                                tableOutput("table")
-                              )
-                            )
-                            
-                          ))
-                   
-                          )
+          tabPanel("Exposure analysis",
+              titlePanel("Associations between child, parental, and household characteristics and wasting and stunting outcomes"),
+                
+              sidebarLayout(
+                  sidebarPanel(
+                    # Variables with dropdown selections for user input
+                  selectInput('exposure',
+                              'Exposure Variable:',
+                              choices = levels(df$intervention_variable)),
+                  selectInput('outcome',
+                              'Outcome Variable:',
+                              choices = levels(df$outcome_variable)),
+                  selectInput('age',
+                              'Child age:',
+                              choices = levels(df$agecat)),
+                  selectInput('parameter',
+                              'Parameter:',
+                              choices = levels(df$type)),
+                  selectInput('region',
+                              'region:',
+                              choices = c("All","Asia","Africa", "Latin America")),
+                  selectInput('adjusted',
+                              'Adjusted:',
+                              choices = c("Yes","No")),
+                    #uiOutput('parameter'),
+                    # uiOutput('region'),
+                    # uiOutput('outcome'),
+                    # uiOutput('age'),
+                    # uiOutput('adjusted')#,
+                    #uiOutput('pool_method')
+                  radioButtons('pool_method',
+                               'Pooling method:',
+                               choices = c("Random","Fixed"))
+                  ),
+                  
+                  # Show a plot of the selected exposure-outcome pair
+                  mainPanel(
+                    plotOutput("forestPlot", height=600),
+                    br(),
+                    br(),
+                    plotOutput("pooledPlot", height=600),
+                    br(),
+                    br(),
+                    br(),
+                    # Create a new row for the table.
+                    fluidRow(
+                      #DT::dataTableOutput("table")
+                      tableOutput("table")
+                    )
+                  )
+                  
+                )),
+          
+          tabPanel("Splines",
+             fluidRow(
+               column(4, selectInput("spline_outcome",
+                                     "Outcome Variable:",
+                                     choices = c("WHZ", "HAZ"))),
+               column(4, selectInput("spline_exposure",
+                                     "Exposure Variable:",
+                                     choices = levels(df$intervention_variable)))
+             ),
+             
+             br(),
+             br(),
+             
+             mainPanel(
+               width = 16,
+               align = "center",
+               imageOutput("image")
+             )
+          )
+)
                           
 
 
@@ -318,7 +337,24 @@ server <- function(input, output, session) {
      selectedData() 
    })
    
-
+   selected_plot = reactive({
+     outcome = tolower(input$spline_outcome)
+     exposure = input$spline_exposure
+     file_name = paste0("figures/risk factor/Splines/", outcome, "/", outcome, "_stat_by_", exposure, ".png")
+     file_name
+   })
+   
+   output$image <- renderImage({
+     file_path <- selected_plot()
+     
+     # Return a list containing the filename
+     list(src = file_path,
+          contentType = 'image/png',
+          #height = 600,
+          width = 1000,
+          alt = "Image is loading")
+     
+   }, deleteFile = FALSE)
    
 }
 
