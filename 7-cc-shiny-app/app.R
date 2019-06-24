@@ -16,6 +16,88 @@ library(here)
 #Load data
 df <- readRDS(paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 
+unique(df$intervention_variable)
+intervention_variable
+df  = df %>% mutate(intervention_variable = case_when(
+  intervention_variable == "sex" ~  "Sex",
+  intervention_variable == "enwast"~  "Enrolled wasted",
+  intervention_variable == "gagebrth"~  "Gestational age at birth",
+  intervention_variable == "predexfd6"~  "Excl/Pred breastfed <6mo.",
+  intervention_variable == "mage"~ "Mother's age",
+  intervention_variable == "mhtcm"~ "Mother's height" ,
+  intervention_variable == "mwtkg"~ "Mother's weight" ,
+  intervention_variable == "mbmi"~ "Mother's BMI" ,
+  intervention_variable == "meducyrs"~ "Mother's education" ,
+  intervention_variable == "feducyrs"~ "Father's education" ,
+  intervention_variable == "parity"~  "Birth order" ,
+  intervention_variable == "hfoodsec"~ "HH food security", 
+  intervention_variable == "nchldlt5"~   "# of children <5 in HH",
+  intervention_variable == "hhwealth_quart"~  "HH wealth" ,
+  intervention_variable == "fage"~ "Father's age" ,
+  intervention_variable == "fhtcm"~ "Father's height", 
+  intervention_variable == "birthwt"~ "Birth weight (kg)", 
+  intervention_variable == "birthlen"~ "Birth length (cm)", 
+  intervention_variable == "vagbrth"~ "Vaginal birth" ,
+  intervention_variable == "hdlvry"~ "Child delivered at home" ,
+  intervention_variable == "single"~ "Single parent" ,
+  intervention_variable == "nrooms"~ "# of rooms in HH", 
+  intervention_variable == "nhh"~ "# of people in HH" ,
+  intervention_variable == "anywast06"~ "Any wasting  <6 mo.", 
+  intervention_variable == "pers_wast"~ "Persistent wasting  <6 mo.", 
+  # intervention_variable == "trth2o"~ "Treats drinking water" ,
+  intervention_variable == "cleanck"~ "Clean cooking fuel usage", 
+  intervention_variable == "impfloor"~ "Improved floor" ,
+  intervention_variable == "impsan"~ "Improved sanitation", 
+  intervention_variable == "safeh20"~ "Safe water source" ,
+  intervention_variable == "perdiar6"~ "Diarrhea <6 mo. (% days)", 
+  intervention_variable == "perdiar24"~ "Diarrhea <24 mo.  (% days)", 
+  # intervention_variable == "earlybf"~ "Breastfed hour after birth", 
+  # intervention_variable == "predfeed3"~  "Predominant breastfeeding under 3 mo.",
+  # intervention_variable == "predfeed36"~  "Predominant breastfeeding from 3-6 mo.",
+  # intervention_variable == "predfeed6"~  "Predominant breastfeeding under 6 mo.",
+  # intervention_variable == "exclfeed3"~  "Exclusive breastfeeding under 3 mo.",
+  # intervention_variable == "exclfeed36"~  "Exclusive breastfeeding from 3-6 mo.",
+  # intervention_variable == "exclfeed6"~  "Exclusive breastfeeding under 6 mo.",
+  intervention_variable == "month"~  "Month of measurement",
+  intervention_variable == "brthmon"~  "Birth month",
+  intervention_variable == "lag_WHZ_quart"~  "Mean WHZ in the prior 3 mo."))
+
+df$intervention_variable <- factor(df$intervention_variable)
+
+df  = df %>% mutate(outcome_variable = case_when(
+  outcome_variable == "sstunted" ~ "Prevalence of severe stunting",
+  outcome_variable == "stunted" ~ "Prevalence of stunting",
+  outcome_variable == "ever_stunted" ~ "Cumulative incidence of stunting",
+  outcome_variable == "ever_sstunted" ~ "Cumulative incidence of severe stunting",
+  outcome_variable == "ever_wasted" ~ "Cumulative incidence of wasting",
+  outcome_variable == "pers_wast" ~ "Prevalence of persistent wasting",
+  outcome_variable == "wast_rec90d" ~ "Wasting recovery",
+  outcome_variable == "swasted" ~ "Prevalence of severe wasting",
+  outcome_variable == "wasted" ~ "Prevalence of wasting",
+  outcome_variable == "ever_co" ~ "Cumulative incidence of the co-occurance of stunting and wasting",
+  outcome_variable == "ever_swasted" ~ "Cumulative incidence of severe wasting",
+  outcome_variable == "dead" ~ "Deceased",
+  outcome_variable == "co_occurence" ~ "Prevalence of the co-occurance of stunting and wasting",
+  outcome_variable == "pers_wast624" ~ "Persistently wasted 624"
+))
+
+
+df$outcome_variable <- factor(df$outcome_variable)
+levels(df$outcome_variable) = c("Prevalence of stunting", "Prevalence of severe stunting",
+                                "Cumulative incidence of stunting", "Cumulative incidence of severe stunting",
+                                "Prevalence of wasting", "Prevalence of severe wasting",
+                                "Cumulative incidence of wasting", "Cumulative incidence of severe wasting",
+                                "Prevalence of persistent wasting", "Persistently wasted 624", 
+                                "Wasting recovery",
+                                "Prevalence of the co-occurance of stunting and wasting", 
+                                "Cumulative incidence of the co-occurance of stunting and wasting",
+                                "Deceased")
+
+df  = df %>% mutate(type = case_when(
+  type == "ATE" ~ "Average Treatment Effect",
+  type == "RR" ~ "Relative Risk"))
+
+df$type <- factor(df$type)
 
 #------------------------------------------------
 # Inputs for Shiny App
@@ -62,7 +144,7 @@ ui <- navbarPage("HBGDki Results Dashboard",
                     # Variables with dropdown selections for user input
                   selectInput('exposure',
                               'Exposure Variable:',
-                              choices = levels(df$intervention_variable)),
+                              choices = sort(levels(df$intervention_variable))),
                   selectInput('outcome',
                               'Outcome Variable:',
                               choices = levels(df$outcome_variable)),
