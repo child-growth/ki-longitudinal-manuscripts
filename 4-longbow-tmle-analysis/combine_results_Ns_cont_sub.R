@@ -52,32 +52,11 @@ Ndf <- cbind(Ns, exposure_df)
 
 #Always more laz than whz obs, so seperate bigger N's to laz
 Ndf_laz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level) %>% filter(n==max(n)) %>% mutate(outcome_variable="haz")
-Ndf_wlz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level) %>% filter(n==min(n)) %>% mutate(outcome_variable="whz")
-Ndf <- rbind(Ndf_laz, Ndf_wlz)
-
-#Grab total N's by pooled analysis
-N_sums <- Ndf %>% group_by(agecat, intervention_variable, intervention_level) %>%
-  summarize(n_cell=sum(n_cell), n=sum(n)) %>%
-  mutate(prev=n_cell/n)
+#Ndf_wlz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level) %>% filter(n==min(n)) %>% mutate(outcome_variable="whz")
 
 
-# save concatenated Ns
-save(N_sums, Ndf, Ns, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rdata")
-
-
-
-d1 <- Ndf_laz
-
-rm(list=ls())
-library(tidyverse)
-library(longbowtools)
-library(progress)
-library(longbowRiskFactors)
-
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/wasting_results.rdata")
-
-
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/wasting_obs_counts.rdata")
+#Calculate wlz N's seperately
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_wlz_obs_counts.rdata")
 d <- obs_counts
 colnames(d)
 
@@ -119,31 +98,21 @@ Ns <- d %>% subset(., select = c(studyid, country, agecat, n_cell, n))
 
 Ndf <- cbind(Ns, exposure_df)
 
-#Always more laz than whz obs, so seperate bigger N's to laz
-Ndf_laz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level) %>% filter(n==max(n)) %>% mutate(outcome_variable="haz")
-Ndf_wlz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level) %>% filter(n==min(n)) %>% mutate(outcome_variable="whz")
+Ndf_wlz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level)%>% filter(n==max(n)) %>% mutate(outcome_variable="whz")
+
+dim(Ndf_laz)
+dim(Ndf_wlz)
+
 Ndf <- rbind(Ndf_laz, Ndf_wlz)
 
 #Grab total N's by pooled analysis
-N_sums <- Ndf %>% group_by(agecat, intervention_variable, intervention_level) %>%
+N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, intervention_level) %>%
   summarize(n_cell=sum(n_cell), n=sum(n)) %>%
   mutate(prev=n_cell/n)
 
 
 # save concatenated Ns
 save(N_sums, Ndf, Ns, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rdata")
-
-
-
-d1 <- Ndf_laz %>% rename(l.n_cell=n_cell, l.n=n) %>% subset(., select = - c(outcome_variable))
-d2 <- Ndf_wlz %>% rename(w.n_cell=n_cell, w.n=n) %>% subset(., select = - c(outcome_variable))
-
-
-temp <- merge(d1, d2, by = c("agecat",    "intervention_variable", "intervention_level", "studyid",  "country"))
-temp <- temp %>% filter(l.n != w.n)
-temp <- temp %>% mutate(diff = l.n - w.n) %>% arrange(-diff)
-
-head(temp)
 
 
 

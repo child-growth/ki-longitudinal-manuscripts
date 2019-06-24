@@ -18,13 +18,25 @@ par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_result
 dim(par)
 
 par$intervention_level <- as.character(par$intervention_level)
+par$intervention_level[par$intervention_level=="Full or late term"] <- "Full/late term"
+par$intervention_level[par$intervention_level=="(0%, 5%]"] <- "(0%,5%]"
 par$intervention_level[par$intervention_level=="No"] <- "None"
 par$intervention_level[par$intervention_level=="Yes"] <- "All"
 par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("brthmon","month")] <- "Jan."
+par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("single")] <- "Partnered"
+par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("parity")] <- "Firstborn"
+par$intervention_level[par$intervention_level=="None" & par$intervention_variable %in% c("vagbrth")] <- "C-section"
+
+par$RFlabel[par$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
+par$RFlabel[par$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
+par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
+
+
 
 par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
   #mutate(RFlabel_ref = expression(bold(RFlabel)~' shifted to '~bold(intervention_level)))
-  mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
+  #mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
+  mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
 
 #Bold the intervention variable
 # https://stackoverflow.com/questions/37758050/ggplot-displaying-expression-in-x-axis
@@ -97,28 +109,20 @@ plotdf_laz$RFlabel_ref=factor(plotdf_laz$RFlabel_ref, levels=rflevels)
 
 
 
-#pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel_ref, -PAR2))))) + 
 pPAR_laz <-  ggplot(plotdf_laz, aes(x=RFlabel_ref)) + 
-  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
-  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
+  geom_point(aes(y=-PAR), color="grey30", size = 4) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30") +
   coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(x = "Exposure, and to which level of exposure the cohorts are shifted", y = "Attributable difference in LAZ") +
+  labs(#x = "Exposure, and to which level of exposure the cohorts are shifted",
+       x = "Exposure",
+       y = "Attributable difference in LAZ") +
   geom_hline(yintercept = 0) +
-  # scale_x_continuous(#breaks = 1:length(RFlabel_ref),
-  #                    #labels = RFlabel_ref,
-  #                    expand = c(0,0.5),
-  #                    sec.axis = sec_axis(~.,
-  #                                        breaks = 1:length(nlab),
-  #                                        labels = rep("", length(nlab)))) +#reorder(nlab, PAR))) +
-  #scale_colour_manual(values=color_vec, name = "Exposure\nCategory") +
-  #scale_shape_manual(values=c(19,4))+
   theme(strip.background = element_blank(),
         legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
+        axis.text.y = element_text(size=, hjust = 1),
         axis.text.x = element_text(size=12)) +
   guides(color=FALSE, shape=FALSE)
-
+pPAR_laz
 
 
 
@@ -133,23 +137,14 @@ plotdf_wlz$RFlabel_ref=factor(plotdf_wlz$RFlabel_ref, levels = rflevels)
 
 
 pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) + 
-  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
-  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
+  geom_point(aes(y=-PAR), color="grey30", size = 4) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30") +
   coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(x = "Exposure, and to which level of exposure the cohorts are shifted", y = "Attributable difference in WLZ") +
+  labs(x = "Exposure", y = "Attributable difference in WLZ") +
   geom_hline(yintercept = 0) +
-  # scale_x_continuous(breaks = 1:length(RFlabel_ref),
-  #                    labels = RFlabel_ref,
-  #                    expand = c(0,0.5),
-  #                    sec.axis = sec_axis(~.,
-  #                                        breaks = 1:length(nlab),
-  #                                        labels = rep("", length(nlab))))+#reorder(nlab, PAR))) +
-  #scale_colour_manual(values=color_vec, name = "Exposure\nCategory") +
-  #scale_shape_manual(values=c(19, 4))+
   theme(strip.background = element_blank(),
         legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
+        axis.text.y = element_text(size=10, hjust = 1),
         axis.text.x = element_text(size=12),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   guides(color=FALSE, shape=FALSE)
@@ -178,11 +173,11 @@ mtab_df_laz$n = format(mtab_df_laz$n ,big.mark=",", trim=TRUE)
 #Use tableGrob to create a plot with the appearrence of a table
 mtab_df_laz_tbl <- tableGrob(mtab_df_laz,
                              row = NULL,
-                             cols = c("N", "% shifted to \nreference"),
+                             cols = c("Total\nN", "% shifted\nto ref."),
                              theme = ttheme_minimal(base_size = 9, padding = unit(c(0, 0), "mm")))
 
 mtab_df_laz_tbl$heights <- unit(c(0.055, rep(0.0275, nrow(mtab_df_laz_tbl) - 1)), "npc")
-mtab_df_laz_tbl$widths <- unit(rep(0.25, ncol(mtab_df_laz_tbl)), "npc")
+mtab_df_laz_tbl$widths <- unit(c(0.25,0.35), "npc")
 mtab_df_laz_tbl <- gtable_add_grob(mtab_df_laz_tbl,
                                    grobs = segmentsGrob( # line across the bottom
                                      x0 = unit(0,"npc"),
@@ -203,13 +198,20 @@ mtab_df_wlz <- plotdf_wlz %>% arrange(PAR) %>%
 
 mtab_df_wlz$n = format(mtab_df_wlz$n ,big.mark=",", trim=TRUE)
 
+# mytheme <- gridExtra::ttheme_minimal(
+#   base_size = 9, padding = unit(c(0, 0), "mm"),
+#   core = list(padding=unit(c(0, 4), "mm"))
+# )
+
 mtab_df_wlz_tbl <- tableGrob(mtab_df_wlz, 
                              rows = NULL,
-                             cols = c("N", "% shifted to \nreference"), 
+                             cols = c("Total\nN", "% shifted\nto ref."),
                              theme = ttheme_minimal(base_size = 9, padding = unit(c(0, 0), "mm")))
 
-mtab_df_wlz_tbl$heights <- unit(c(0.055, rep(0.0275, nrow(mtab_df_wlz_tbl) - 1)), "npc")
-mtab_df_wlz_tbl$widths <- unit(rep(0.25, ncol(mtab_df_wlz_tbl)), "npc")
+
+mtab_df_wlz_tbl$heights <- unit(c(0.055, rep(0.03075, nrow(mtab_df_wlz_tbl) - 1)), "npc")
+#mtab_df_wlz_tbl$widths <- unit(rep(0.25, ncol(mtab_df_wlz_tbl)), "npc")
+mtab_df_wlz_tbl$widths <- unit(c(0.25,0.35), "npc")
 
 mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
                                    grobs = segmentsGrob( # line across the bottom
@@ -222,7 +224,6 @@ mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
 
 #save the plots seperately 
 save(mtab_df_laz_tbl, mtab_df_wlz_tbl, file=paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.Rdata"))
-
 
 
 

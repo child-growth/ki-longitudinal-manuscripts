@@ -21,20 +21,26 @@ par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_result
 dim(par)
 
 par$intervention_level <- as.character(par$intervention_level)
+par$intervention_level[par$intervention_level=="Full or late term"] <- "Full/late term"
+par$intervention_level[par$intervention_level=="(0%, 5%]"] <- "(0%,5%]"
 par$intervention_level[par$intervention_level=="No"] <- "None"
 par$intervention_level[par$intervention_level=="Yes"] <- "All"
 par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("brthmon","month")] <- "Jan."
+
+par$RFlabel[par$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
+par$RFlabel[par$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
+par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
+
 par$outcome_variable <- gsub("haz", "LAZ", par$outcome_variable)
 par$outcome_variable <- gsub("whz", "WLZ", par$outcome_variable)
 
-par <- par %>% subset(., select = c(outcome_variable, agecat, region, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref, n_cell, n)) %>% 
-  filter(!is.na(PAR)) %>% mutate(measure="PAR")
+par <- par %>% subset(., select = c(outcome_variable, agecat, region, intervention_variable, intervention_level, PAR, CI1, CI2, RFlabel, RFlabel_ref, n_cell, n)) %>% 
+  filter(!is.na(PAR)) %>% mutate(measure="PAR")  %>%
+  mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
 
-par_agestrat <- par %>% filter(agecat %in% c("Birth","6 months","24 months"), region=="Pooled", outcome_variable %in% c("LAZ", "WLZ"), !is.na(PAR)) %>%
-  mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
+par_agestrat <- par %>% filter(agecat %in% c("Birth","6 months","24 months"), region=="Pooled", outcome_variable %in% c("LAZ", "WLZ"), !is.na(PAR))  
 
-par_regionstrat <- par %>% filter(agecat=="24 months", region!="Pooled", outcome_variable %in% c("LAZ", "WLZ"), !is.na(PAR)) %>%
-  mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
+par_regionstrat <- par %>% filter(agecat=="24 months", region!="Pooled", outcome_variable %in% c("LAZ", "WLZ"), !is.na(PAR))  
 
 ### Anna, make 12 plots from the following data subsets (grouped together in panels of 3)
 
@@ -81,7 +87,7 @@ plot_laz_24 = plot_age("LAZ", "24 months")
 plot_laz_age = grid.arrange(plot_laz_birth, plot_laz_6, plot_laz_24, ncol = 2, nrow = 2,
                             top = textGrob("Attributable difference - LAZ, stratified by age",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_laz_age, file=paste0(here::here(), "/figures/risk factor/fig-laz-PAR-strat-age.png"), height=18, width=15)
+ggsave(plot_laz_age, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-laz-PAR-strat-age.png"), height=18, width=15)
 
 ### Plot WLZ, stratified by age
 plot_wlz_birth = plot_age("WLZ", "Birth")
@@ -91,7 +97,7 @@ plot_wlz_24 = plot_age("WLZ", "24 months")
 plot_wlz_age = grid.arrange(plot_wlz_birth, plot_wlz_6, plot_wlz_24, ncol = 2, nrow = 2,
                             top = textGrob("Attributable difference - WLZ, stratified by age",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_wlz_age, file=paste0(here::here(), "/figures/risk factor/fig-wlz-PAR-strat-age.png"), height=18, width=15)
+ggsave(plot_wlz_age, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-wlz-PAR-strat-age.png"), height=18, width=15)
 
 #######################
 # Region stratified plots
@@ -133,7 +139,7 @@ plot_laz_sa = plot_region("LAZ", "South Asia")
 plot_laz_region = grid.arrange(plot_laz_africa, plot_laz_la, plot_laz_sa, ncol = 2, nrow = 2,
                             top = textGrob("Attributable difference - LAZ, stratified by region",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_laz_region, file=paste0(here::here(), "/figures/risk factor/fig-laz-PAR-strat-region.png"), height=18, width=15)
+ggsave(plot_laz_region, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-laz-PAR-strat-region.png"), height=18, width=15)
 
 ### Plot WLZ, stratified by age
 plot_wlz_africa = plot_region("WLZ", "Africa")
@@ -143,5 +149,6 @@ plot_wlz_sa = plot_region("WLZ", "South Asia")
 plot_wlz_region = grid.arrange(plot_wlz_africa, plot_wlz_la, plot_wlz_sa, ncol = 2, nrow = 2,
                                top = textGrob("Attributable difference - WLZ, stratified by region",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_wlz_region, file=paste0(here::here(), "/figures/risk factor/fig-wlz-PAR-strat-region.png"), height=18, width=15)
+ggsave(plot_wlz_region, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-wlz-PAR-strat-region.png"), height=18, width=15)
+
 

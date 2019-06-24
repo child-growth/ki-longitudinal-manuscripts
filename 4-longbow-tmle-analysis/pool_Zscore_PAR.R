@@ -30,6 +30,8 @@ d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
 d <- droplevels(d)
 
 
+df <- d %>% filter(outcome_variable=="haz"| outcome_variable=="whz",
+                   agecat=="24 months")
 
 pool.Zpar <- function(d){
   nstudies <- d %>% summarize(N=n())
