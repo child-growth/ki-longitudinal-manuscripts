@@ -16,41 +16,8 @@ library(here)
 #Load data
 df <- readRDS(paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 
-transformations = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRXN1QYQd4OUSGe0eRAL6gCEJQmhA3HGddPxGTVhEy5Tdt8Tin-kGnh0naLXWcUe8Lop_B6r6cfnr6h/pub?gid=0&single=true&output=csv")
-
-df <- df %>%
-  dplyr::mutate(intervention_variable = df %>% left_join(transformations, by = c("intervention_variable" = "variable")) %>% 
-                  replace_na(list(variable.type = "exposure")) %>% 
-                  filter(variable.type == "exposure") %>% 
-                  pull("description")) %>%
-  
-  dplyr::mutate(outcome_variable = df %>% left_join(transformations, by = c("outcome_variable" = "variable")) %>% 
-                  replace_na(list(variable.type = "outcome")) %>% 
-                  filter(variable.type == "outcome") %>% 
-                  pull("description"))
 
 
-df$intervention_variable <- factor(df$intervention_variable)
-
-levels(df$outcome_variable) = c("Prevalence of stunting", "Prevalence of severe stunting",
-                                "Cumulative incidence of stunting", "Cumulative incidence of severe stunting",
-                                "Prevalence of wasting", "Prevalence of severe wasting",
-                                "Cumulative incidence of wasting", "Cumulative incidence of severe wasting",
-                                "Prevalence of persistent wasting", "Persistently wasted 624", 
-                                "Wasting recovery",
-                                "Prevalence of the co-occurance of stunting and wasting", 
-                                "Cumulative incidence of the co-occurance of stunting and wasting",
-                                "Deceased")
-
-df  = df %>% mutate(type = case_when(
-  type == "ATE" ~ "Average Treatment Effect",
-  type == "RR" ~ "Relative Risk"))
-
-df$type <- factor(df$type)
-
-levels(df$agecat) = append(levels(df$agecat), "Unspecified")
-levels(df$outcome_variable) = append(levels(df$outcome_variable), "Unspecified")
-df = df %>%replace_na(list(outcome_variable = "Unspecified", agecat = "Unspecified"))
 
 #------------------------------------------------
 # Inputs for Shiny App
@@ -58,6 +25,8 @@ df = df %>%replace_na(list(outcome_variable = "Unspecified", agecat = "Unspecifi
 
 #Plot parameters
 yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
+yticks_cont <- c(-20:20/10)
+
 tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
 tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
@@ -289,62 +258,71 @@ server <- function(input, output, session) {
   
   
   
-   output$forestPlot <- renderPlot({
-      p<-ggplot(selectedDataForest(), aes(x=studyid)) +
-        geom_point(aes(shape=pooled, y=estimate, fill=region, color=region), size = 4) +
-        geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=region)) +
-       coord_flip() +
-       #facet_wrap(~intervention_level, ncol=1) +
-        labs(x = "Cohort", y = Ylab) +
-        geom_hline(yintercept = 1) +
-        geom_vline(xintercept = 1.5, linetype=2) +
-        scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-        scale_shape_manual(values=c(21, 23)) +
-        scale_colour_manual(values=tableau11) +
-        scale_fill_manual(values=tableau11) +
-        scale_size_continuous(range = c(0.5, 1))+
-        theme(plot.title = element_text(hjust = 0.5),
-              strip.background = element_blank(),
-              legend.position="none",
-              strip.text.x = element_text(size=12),
-              axis.text.x = element_text(size=12, angle = 45, hjust = 1),
-              text = element_text(size=16)) +
-        ggtitle(paste0("Forest plot of cohort-specific associations for\n",
-                      input$outcome, " outcome and\n", input$age)) +guides(shape=FALSE)
-     
+  
+  output$forestPlot <- renderPlot({
+    df<-selectedDataForest()
+    p<-ggplot(df, aes(x=studyid)) +
+      geom_point(aes(shape=pooled, y=estimate, fill=region, color=region), size = 4) +
+      geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=region)) +
+      coord_flip() +
+      #facet_wrap(~intervention_level, ncol=1) +
+      labs(x = "Cohort", y = Ylab) +
+      geom_vline(xintercept = 1.5, linetype=2) +
+      scale_shape_manual(values=c(21, 23)) +
+      scale_colour_manual(values=tableau11) +
+      scale_fill_manual(values=tableau11) +
+      scale_size_continuous(range = c(0.5, 1))+
+      theme(plot.title = element_text(hjust = 0.5),
+            strip.background = element_blank(),
+            legend.position="none",
+            strip.text.x = element_text(size=12),
+            axis.text.x = element_text(size=12), #angle = 45, hjust = 1),
+            text = element_text(size=16)) +
+      ggtitle(paste0("Forest plot of cohort-specific associations for\n",
+                     input$outcome, " outcome and\n", input$age)) +guides(shape=FALSE)
     
-       if(length(unique(df$intervention_variable))>1){
-        p<-p+facet_wrap(~intervention_level, ncol=1) 
-       }
-     
-     p
-   })
-   
-   output$pooledPlot <- renderPlot({
-       ggplot(selectedDataPooled(), aes(x=intervention_level)) +
-       #ggplot(selectedDataForest(), aes(x=studyid)) +
-       geom_point(aes(y=estimate, fill=agecat, color=agecat), size = 4) +
-       geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=agecat),
-                      alpha=0.5, size = 3) +
-       labs(x = "Exposure category",
-            y = "Relative risk") +
-       geom_hline(yintercept = 1) +
-       #geom_text(aes(x=0.5, y=(max(df$RR.CI2))-.1, label=paste0("Studies: ",Nstudies)), size=3,  hjust=0) +
-       scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-       scale_fill_manual(values=rep(tableau10,4)) +
-       scale_colour_manual(values=rep(tableau10,4)) +
-       theme(plot.title = element_text(hjust = 0.5),
-             strip.background = element_blank(),
-             legend.position="none",
-             axis.text.y = element_text(size=12),
-             strip.text.x = element_text(size=10),
-             axis.text.x = element_text(size=9, angle = 20, hjust = 1),
-             panel.spacing = unit(0, "lines"),
-             text = element_text(size=16)) +
-       ggtitle(paste0("Pooled associations for\n", input$outcome, 
-                      " outcome and\n", input$age))
-    })
-   
+    
+    if(length(unique(df$intervention_variable))>1){
+      p<-p+facet_wrap(~intervention_level, ncol=1) 
+    }
+    if(df$continuous[1]==0){
+      p<-p+scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) + geom_hline(yintercept = 1) 
+    }else{
+      p<-p+scale_y_continuous(breaks=yticks_cont, labels=scaleFUN)  + geom_hline(yintercept = 0)
+    }
+    
+    p
+  })
+  
+  output$pooledPlot <- renderPlot({
+    df <- selectedDataPooled()
+    pooledp <- ggplot(df, aes(x=intervention_level)) +
+      geom_point(aes(y=estimate, fill=agecat, color=agecat), size = 4) +
+      geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=agecat),
+                     alpha=0.5, size = 3) +
+      labs(x = "Exposure category",
+           y = "Relative risk") +
+      #geom_text(aes(x=0.5, y=(max(df$RR.CI2))-.1, label=paste0("Studies: ",Nstudies)), size=3,  hjust=0) +
+      scale_fill_manual(values=rep(tableau10,4)) +
+      scale_colour_manual(values=rep(tableau10,4)) +
+      theme(plot.title = element_text(hjust = 0.5),
+            strip.background = element_blank(),
+            legend.position="none",
+            axis.text.y = element_text(size=12),
+            strip.text.x = element_text(size=10),
+            axis.text.x = element_text(size=9, angle = 20, hjust = 1),
+            panel.spacing = unit(0, "lines"),
+            text = element_text(size=16)) +
+      ggtitle(paste0("Pooled associations for\n", input$outcome, 
+                     " outcome and\n", input$age))
+    
+    if(df$continuous[1]==0){
+      pooledp <- pooledp+scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) + geom_hline(yintercept = 1) 
+    }else{
+      pooledp <- pooledp+scale_y_continuous(breaks=yticks_cont, labels=scaleFUN)  + geom_hline(yintercept = 0)
+    }
+    
+  })
    output$table <- renderTable({
      selectedData() 
    })

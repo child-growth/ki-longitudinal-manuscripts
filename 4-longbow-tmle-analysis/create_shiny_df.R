@@ -196,8 +196,45 @@ df  = df %>% mutate(type = case_when(
 df$type <- factor(df$type)
 
 
-df <- droplevels.data.frame(df)
-table(df$agecat, df$outcome_variable)
+
+# transformations = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRXN1QYQd4OUSGe0eRAL6gCEJQmhA3HGddPxGTVhEy5Tdt8Tin-kGnh0naLXWcUe8Lop_B6r6cfnr6h/pub?gid=0&single=true&output=csv")
+# 
+# df <- df %>%
+#   dplyr::mutate(intervention_variable = df %>% left_join(transformations, by = c("intervention_variable" = "variable")) %>% 
+#                   replace_na(list(variable.type = "exposure")) %>% 
+#                   filter(variable.type == "exposure") %>% 
+#                   pull("description")) %>%
+#   
+#   dplyr::mutate(outcome_variable = df %>% left_join(transformations, by = c("outcome_variable" = "variable")) %>% 
+#                   replace_na(list(variable.type = "outcome")) %>% 
+#                   filter(variable.type == "outcome") %>% 
+#                   pull("description"))
+# 
+# 
+# df$intervention_variable <- factor(df$intervention_variable)
+# 
+# levels(df$outcome_variable) = c("Prevalence of stunting", "Prevalence of severe stunting",
+#                                 "Cumulative incidence of stunting", "Cumulative incidence of severe stunting",
+#                                 "Prevalence of wasting", "Prevalence of severe wasting",
+#                                 "Cumulative incidence of wasting", "Cumulative incidence of severe wasting",
+#                                 "Prevalence of persistent wasting", "Persistently wasted 624", 
+#                                 "Wasting recovery",
+#                                 "Prevalence of the co-occurance of stunting and wasting", 
+#                                 "Cumulative incidence of the co-occurance of stunting and wasting",
+#                                 "Deceased")
+# 
+# df  = df %>% mutate(type = case_when(
+#   type == "ATE" ~ "Average Treatment Effect",
+#   type == "RR" ~ "Relative Risk"))
+# 
+# df$type <- factor(df$type)
+
+
+levels(df$agecat) = append(levels(df$agecat), "Unspecified")
+levels(df$outcome_variable) = append(levels(df$outcome_variable), "Unspecified")
+df = df %>%replace_na(list(outcome_variable = "Unspecified", agecat = "Unspecified"))
+
+
 
 saveRDS(df, paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 
