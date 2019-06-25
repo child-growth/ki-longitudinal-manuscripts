@@ -59,20 +59,20 @@ ui <- navbarPage("HBGDki Results Dashboard",
               sidebarLayout(
                   sidebarPanel(
                     # Variables with dropdown selections for user input
+                  selectInput('outcome',
+                                'Outcome Variable:', 
+                                choices = levels(droplevels(df$outcome_variable))),
                   selectInput('exposure',
                               'Exposure Variable:',
                               choices = sort(levels(droplevels(df$intervention_variable)))),
-                  selectInput('outcome',
-                              'Outcome Variable:',
-                              choices = levels(droplevels(df$outcome_variable))),
                   selectInput('age',
-                              'Child age:',
-                              choices = levels(droplevels(df$agecat))),
+                              'Child age:', ""),
+                              #choices = levels(droplevels(df$agecat))),
                   selectInput('parameter',
-                              'Parameter:',
+                              'Parameter:', 
                               choices = levels(droplevels(df$type))),
                   selectInput('region',
-                              'region:',
+                              'region:', ""),
                               choices = c("All","Asia","Africa", "Latin America")),
                   selectInput('adjusted',
                               'Adjusted:',
@@ -103,8 +103,7 @@ ui <- navbarPage("HBGDki Results Dashboard",
                       tableOutput("table")
                     )
                   )
-                  
-                )),
+                ),
           
           tabPanel("Splines",
              fluidRow(
@@ -235,6 +234,13 @@ server <- function(input, output, session) {
   #                choices = c("Random","Fixed"))
   # })
   
+  observeEvent(df, {
+    df <- df[df$outcome_variable == input$outcome, ]
+    updateSelectInput(session, "df", choices = unique(df$agecat))
+  })
+  
+  
+  
   
   
   selectedData <- reactive({
@@ -246,9 +252,11 @@ server <- function(input, output, session) {
     #if(input$pool_method=="Random"){df <- df[df$pooled==0 | df$studyid=="Pooled - Random"|df$studyid=="Pooled - Asia - RE"|df$studyid=="Pooled - Afica - RE"|df$studyid=="Pooled - Latin America - RE",]}
     #if(input$pool_method=="Fixed"){df <- df[df$pooled==0 | df$studyid=="Pooled - Fixed"|df$studyid=="Pooled - Asia - FE"|df$studyid=="Pooled - Afica - FE"|df$studyid=="Pooled - Latin America - FE",]}
     df <- df[df$intervention_variable == input$exposure, ]
-    df <- df[df$type == input$parameter, ]
-    df <- df[df$outcome_variable == input$outcome, ]
+    
     df <- df[df$agecat == input$age, ]
+    
+    df <- df[df$type == input$parameter, ]
+
     df <- df %>% filter(!is.na(estimate))
     df <- df %>% arrange(pooled, region, estimate)
     df$studyid <- factor(df$studyid, levels = unique(df$studyid))
