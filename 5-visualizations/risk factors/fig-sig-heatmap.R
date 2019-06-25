@@ -72,7 +72,7 @@ d$se[!is.na(d$logRR.psi)] <-  NA
 d$Z <- ifelse(!is.na(d$logRR.psi), d$logRR.psi/d$logSE, d$est/d$se)
 
 #calculate the P value: P = exp(-0.717×z - 0.416×z^2).
-d$pval <- exp(-0.71*abs(d$Z) - 0.416*d$Z^2)
+d$pval <- exp(-0.717*abs(d$Z) - 0.416*d$Z^2)
 summary(d$pval)
 
 d$sig <- ifelse(d$pval < 0.05, 1, 0)
@@ -274,7 +274,7 @@ hm_strat <- ggplot(region_data,aes(x=xvar, y=yvar, fill=pval_cat)) +
     panel.background=element_rect(fill="grey80", colour="grey80"),
     panel.grid.major = element_blank(), panel.grid.minor = element_blank()
   ) + guides(fill = guide_legend("P-value strength", ncol=1)) + 
-  labs(x="Exposure",y="Age category",title="") +
+  labs(x="Exposure and reference level",y="Age category",title="") +
   coord_flip()
 
 hm_strat

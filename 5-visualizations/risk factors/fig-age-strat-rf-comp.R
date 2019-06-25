@@ -60,10 +60,23 @@ plotdf = plotdf %>%
   mutate(RFlabel=replace(RFlabel, RFlabel=="Gestational age at birth", "Gestational\nage at birth"),
          RFlabel=replace(RFlabel, RFlabel=="Mother's education", "Mother's\neducation"), 
          RFlabel=replace(RFlabel, RFlabel=="Mother's height", "Mother's\nheight"), 
-         RFlabel=replace(RFlabel, RFlabel=="HH food security", "HH food security"))
+         RFlabel=replace(RFlabel, RFlabel=="HH food security", "HH food\nsecurity"),
+         intervention_level = as.character(intervention_level),
+         intervention_level=replace(intervention_level, intervention_level=="Food Secure", "Food\nSecure"),
+         intervention_level=replace(intervention_level, intervention_level=="Mildly Food Insecure", "Mildly Food\nInsecure"),
+         intervention_level=replace(intervention_level, intervention_level=="Food Insecure", "Food\nInsecure"),
+         intervention_level=replace(intervention_level, intervention_level=="Full or late term", "Full or\nlate term")
+         )
 
 plotdf <- plotdf %>% group_by(RFlabel, agecat) %>% mutate(max_Nstudies = max(Nstudies), min_Nstudies = min(Nstudies))
 plotdf$Outcome <- plotdf$outcome_variable 
+
+plotdf <- droplevels(plotdf)
+
+plotdf$intervention_level <- factor(plotdf$intervention_level, levels = c(
+  "1","2",  "3+",  "High", "Medium", "Low", 
+  "Full or\nlate term", "Early term", "Preterm", "Food\nSecure", "Mildly Food\nInsecure", "Food\nInsecure", 
+  "Q4", "Q3", "Q2", "Q1", ">=155 cm", "[151-155) cm", "<151 cm"))
 
 pd <- position_dodge(0.4)
 
@@ -80,9 +93,10 @@ p_ageRR <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_le
   labs(x = "Exposure level", y = "Adjusted CIR") +
   geom_hline(yintercept = 1) +
   geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.6, 2.1)) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.74,2.06)) +
+  #coord_cartesian(ylim = c(0.8,2)) +
   scale_colour_manual(values=tableau10[c(3, 2)]) +  
-  ggtitle("Ever stunted                                                                    Ever wasted")+
+  ggtitle("Ever stunted                                                                       Ever wasted")+
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=8, hjust = 1),
@@ -96,7 +110,7 @@ p_ageRR <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_le
   coord_flip()
   
 
-p_ageRR
+print(p_ageRR)
 
 ggsave(p_ageRR, file=paste0(here::here(), "/figures/risk factor/fig-age-strat-wast.png"), height=8, width=10)
 

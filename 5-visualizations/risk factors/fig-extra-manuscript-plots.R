@@ -118,7 +118,7 @@ p_earlywast <- ggplot(plotdf, aes(x=Xvar)) +
   geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
                  alpha=0.5, size = 1) +
-  labs(x = "Wasting exposure", y = "Cumulative incidence ratio: stunting 6-24mo.") +
+  labs(x = "Wasting exposure", y = "Cumulative incidence ratio:\nstunting 6-24 mo.") +
   geom_hline(yintercept = 1) +
   geom_text(aes(x=c(1, 2, 3), y=((plotdf$RR.CI2))+.02, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +

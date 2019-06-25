@@ -15,6 +15,11 @@ theme_set(theme_ki())
 #Load data
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_cont.rdata")
 head(results)
+haz <- results %>% filter(outcome_variable=="haz")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_sub.rdata")
+whz <- results %>% filter(outcome_variable=="whz")
+
+results <- rbind(haz, whz)
 
 
 unique(results$type)

@@ -7,10 +7,13 @@ library(longbowRiskFactors)
 
 
 #d <- as.data.frame(load_batch_results("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_obs_counts.rdata"))
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_obs_counts.rdata")
-d <- obs_counts
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/binary_wasting_obs_counts.rdata")
+dstunt <- obs_counts
 
-colnames(d)
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/wasting_obs_counts.rdata")
+dwast <- obs_counts
+
+colnames(dstunt)
 outcome_vars <- c("stunted","ever_stunted","wasted","ever_wasted")
 
 exposure_vars <- c(
@@ -25,10 +28,14 @@ exposure_vars <- c(
   "predfeed6",     "predexfd6",     "sex",          "brthmon",      
   "month",     "pers_wast",    "lag_WHZ_quart")
 
+dstunt <- data.frame(dstunt)
+dwast <- data.frame(dwast)
 
-d<-data.frame(d)
+#d<-d[!is.na(d$stunted)|!is.na(d$ever_stunted)|!is.na(d$wasted)|!is.na(d$ever_wasted),]
+dstunt<-dstunt[!is.na(dstunt$stunted)|!is.na(dstunt$ever_stunted),]
+dwast<-dwast[!is.na(dwast$wasted)|!is.na(dwast$ever_wasted),]
 
-d<-d[!is.na(d$stunted)|!is.na(d$ever_stunted)|!is.na(d$wasted)|!is.na(d$ever_wasted),]
+d <- rbind(dstunt, dwast)
 
 exposures <- d[,which(colnames(d) %in% exposure_vars)]
 outcomes <- d[,which(colnames(d) %in% outcome_vars)]
