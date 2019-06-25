@@ -241,4 +241,4 @@ saveRDS(df, paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 
 
 # library(rsconnect)
-# rsconnect::deployApp('C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/6-shiny-app/RF app')
+# rsconnect::deployApp('C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/7-cc-shiny-app/')
