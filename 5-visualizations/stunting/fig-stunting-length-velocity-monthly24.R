@@ -116,9 +116,10 @@ velplot_laz = vel %>% filter(country_cohort=="Pooled - All" &
 plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width = 0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 alpha=0.5, size = 1, position = position_dodge(width = 0.5)) +
+                 position = position_dodge(width = 0.5)) +
   scale_color_manual(values=mypalette)+  
-  scale_y_continuous(limits=c(-0.25,0.25), breaks=seq(-0.25,0.25,0.05), labels=seq(-0.25,0.25,0.05)) +
+  # scale_y_continuous(limits=c(-0.18,0.05), breaks=as.numeric(seq(-0.15,0.05,0.01)), 
+  #                    labels=as.numeric(seq(-0.15,0.05,0.01))) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
@@ -127,9 +128,9 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
 
 # define standardized plot names
 plot_laz_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "overall",
   location = "",
   age = "All ages",
@@ -137,8 +138,8 @@ plot_laz_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_laz, file=paste0(fig_path, "stunting/fig-",plot_laz_name,".png"), width=12, height=6)
-saveRDS(velplot_laz, file=paste0(figdata_path, "figdata-",plot_laz_name,".RDS"))
+ggsave(plot_laz, file=paste0(fig_dir, "stunting/fig-",plot_laz_name,".png"), width=12, height=6)
+saveRDS(velplot_laz, file=paste0(figdata_dir, "figdata-",plot_laz_name,".RDS"))
 
 ####################################################################################
 # length velocity plots
@@ -156,11 +157,10 @@ velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
          sexcol = ifelse(sex == "Male", "male_color2", "female_color2"))
 
 plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
-  geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3) +
+  # geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3) +
   geom_line(aes(y = length_cm, group = msmt_type, color = linecol, linetype = msmt_type)) +
   
-  geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
-                 alpha=0.5, size = 1) +
+  geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol)) +
   
   scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
                                                                      "pct_50" = "solid",
@@ -182,7 +182,7 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
                                                                   "female_color2" = mypalette[1], 
                                                                   "male_color2" = mypalette[2])) +
   
-  scale_y_continuous(limits=c(0,4), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
+  scale_y_continuous(limits=c(0.5,4), breaks=seq(0.5,4,0.25), labels=seq(0.5,4,0.25)) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month\n")+
   facet_wrap( ~ sex) +
@@ -201,7 +201,7 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
 
 # define standardized plot names
 plot_cm_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "length velocity",
   population = "overall",
@@ -211,9 +211,9 @@ plot_cm_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(plot_cm, file=paste0(fig_path, "stunting/fig-",plot_cm_name,".png"), 
+ggsave(plot_cm, file=paste0(fig_dir, "stunting/fig-",plot_cm_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm, file=paste0(figdata_path, "figdata-",plot_cm_name,".RDS"))
+saveRDS(velplot_cm, file=paste0(figdata_dir, "figdata-",plot_cm_name,".RDS"))
 
 ############################################################################
 # combined LAZ and length plots
@@ -238,7 +238,7 @@ combined_plot_name = create_name(
 #-------------------------------------
 # save overall plots together
 #-------------------------------------
-ggsave(combined_plot, file=paste0(fig_path, "stunting/fig-", combined_plot_name,
+ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-", combined_plot_name,
                                   ".png"), width=10, height=8)
 #-------------------------------------
 # save input data 
@@ -249,5 +249,5 @@ saveRDS(
     velplot_laz = velplot_laz,
     meanlaz_overall = meanlaz_overall
   ),
-  file = paste0(figdata_path, "figdata-", combined_plot_name, ".RDS")
+  file = paste0(figdata_dir, "figdata-", combined_plot_name, ".RDS")
 )

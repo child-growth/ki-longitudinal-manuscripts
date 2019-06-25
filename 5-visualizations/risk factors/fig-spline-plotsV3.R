@@ -269,11 +269,13 @@ plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( 
 
 Avarwt="Maternal weight"
 
+purple_color_gradient = c("#7644ff", "#b3adff", "#e4dbff")
+  
 p1 <- ggplot() +
-  geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
+  geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,6)], name = paste0( Avarwt)) +
-  scale_fill_manual(values=tableau10[c(10,9,6)], name = paste0( Avarwt)) +
+  scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
+  scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) +
@@ -281,6 +283,7 @@ p1 <- ggplot() +
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = c(0.8,0.9))
+
 print(p1)
 
 
@@ -314,11 +317,13 @@ plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>% mutate(level = factor(level, levels=c( 
 
 Avar="Maternal height"
 
+light_blue_color_gradient = c("#0fb3bf", "#83ced3", "#c5e0e2")
+
 p2 <- ggplot() + 
-  geom_line(data=plotdf_wlz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=2) +
+  geom_line(data=plotdf_wlz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_wlz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0( Avar)) +
-  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0( Avar)) +
+  scale_color_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
+  scale_fill_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) + 
@@ -359,10 +364,10 @@ plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c( 
 Avarwt="Maternal weight"
 
 p3 <- ggplot() + 
-  geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=2) +
+  geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_laz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(10,9,6)], name = paste0( Avarwt)) +
-  scale_fill_manual(values=tableau10[c(10,9,6)], name = paste0( Avarwt)) +
+  scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
+  scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
@@ -401,10 +406,10 @@ plotdf_laz_mhtcm <- plotdf_laz_mhtcm %>% mutate(level = factor(level, levels=c( 
 Avar="Maternal height"
 
 p4 <- ggplot() + 
-  geom_line(data=plotdf_laz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=2) +
+  geom_line(data=plotdf_laz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_laz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=tableau10[c(5,7,8)], name = paste0( Avar)) +
-  scale_fill_manual(values=tableau10[c(5,7,8)], name = paste0( Avar)) +
+  scale_color_manual(values =light_blue_color_gradient, name = paste0( Avar)) +
+  scale_fill_manual(values = light_blue_color_gradient, name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 

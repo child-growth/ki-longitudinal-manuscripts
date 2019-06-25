@@ -4,7 +4,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
-source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
+library(gtable)
 
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
@@ -13,91 +13,62 @@ theme_set(theme_ki())
 
 
 #Load data
-dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-head(dfull)
+par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
 
+dim(par)
 
-unique(dfull$type)
-d <- dfull %>% filter(type=="PAR")
+par$intervention_level <- as.character(par$intervention_level)
+par$intervention_level[par$intervention_level=="Full or late term"] <- "Full/late term"
+par$intervention_level[par$intervention_level=="(0%, 5%]"] <- "(0%,5%]"
+par$intervention_level[par$intervention_level=="No"] <- "None"
+par$intervention_level[par$intervention_level=="Yes"] <- "All"
+par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("brthmon","month")] <- "Jan."
+par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("single")] <- "Partnered"
+par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("parity")] <- "Firstborn"
+par$intervention_level[par$intervention_level=="None" & par$intervention_variable %in% c("vagbrth")] <- "C-section"
 
-#Subset to stunting prevalence
-unique(d$outcome_variable)
-d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
-                    outcome_variable=="y_rate_wtkg"|outcome_variable=="haz"|
-                    outcome_variable=="whz")
-
-
-d <- droplevels(d)
-
-
-
-pool.Zpar <- function(d){
-  nstudies <- d %>% summarize(N=n())
-  
-  fit<-NULL
-  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="GEN"))
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
-  
-  if(is.null(fit)){
-    est<-data.frame(PAR=NA, CI1=NA,  CI2=NA)
-  }else{
-    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
-    colnames(est)<-c("PAR","CI1","CI2")    
-  }
-  est$Nstudies <- nstudies$N
-  rownames(est) <- NULL
-  return(est)
-}
-
-RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
-  do(pool.Zpar(.)) %>% as.data.frame()
-RMAest$region <- "Pooled"
-
-RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
-  do(pool.Zpar(.)) %>% as.data.frame()
-
-RMAest_raw <- rbind(RMAest, RMAest_region)
-
-RMAest_raw <- RMAest_raw %>% filter(!is.na(PAR))
+par$RFlabel[par$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
+par$RFlabel[par$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
+par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 
 
+par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
+  #mutate(RFlabel_ref = expression(bold(RFlabel)~' shifted to '~bold(intervention_level)))
+  #mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
+  mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
 
-#Clean up dataframe for plotting
-RMAest_clean <- RMA_clean(RMAest_raw, outcome="continuous")
-table(is.na(RMAest_clean$intervention_level))
+#Bold the intervention variable
+# https://stackoverflow.com/questions/37758050/ggplot-displaying-expression-in-x-axis
+# 
+#  as.expression(bold(par$RFlabel[1])~' shifted to '~bold(par$intervention_level[1]))
+#  as.expression(bquote(bold(par$RFlabel[1])))
+#  parse(text= paste("bold(par$RFlabel[", 1:7, "])", sep="") ) 
+ 
+ 
+unique(par$RFlabel_ref)
 
-#Add reference level to label
-RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
-
+df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref, n_cell, n)) %>% 
+  filter(!is.na(PAR)) %>% mutate(measure="PAR")
 
 
 
 #----------------------------------------------------------
-# Plot
+# Plot parameters
 #----------------------------------------------------------
 
 
 yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 
-#hbgdki pallet
-tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
-               "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+# Colors
+color_vec = c("#7F7F7F", "#E377C2")
 
-# All dark grey
-tableau10 <- rep("grey30",10)
 
-# Different shades of grey
-tableau10 = c("grey50", "grey30")
 
-# Colors!
-tableau10 = c("#E377C2","#7F7F7F")
+#----------------------------------------------------------
+# Clean up plot dataframe
+#----------------------------------------------------------
 
-scaleFUN <- function(x) sprintf("%.1f", x)
-
-df <- RMAest_clean
 unique(df$outcome_variable)
 df$outcome_variable <- gsub("y_rate_haz", "HAZ velocity", df$outcome_variable)
 df$outcome_variable <- gsub("y_rate_len", "Length velocity", df$outcome_variable)
@@ -106,166 +77,153 @@ df$outcome_variable <- gsub("haz", "LAZ", df$outcome_variable)
 df$outcome_variable <- gsub("whz", "WLZ", df$outcome_variable)
 
 
-
-
-
-
-#Make manuscript plots
 dpool <- df %>% ungroup() %>%
-  filter(region=="Pooled",
-         outcome_variable %in% c("LAZ", "WLZ" ),
-         agecat %in% c("24 months")) %>%
-  filter(!is.na(intervention_variable)) %>%
+  filter(outcome_variable %in% c("LAZ", "WLZ" ),
+         !is.na(intervention_variable)) %>%
   mutate(ref_prev=n_cell/n) %>%
-  group_by(intervention_variable, intervention_level, outcome_variable) %>%
-  arrange(agecat) %>%
-  slice(1)
+  group_by(intervention_variable, 
+           outcome_variable) 
+
+#----------------------------------------------------------
+# Plot LAZ PAR
+#----------------------------------------------------------
+
+plotdf_laz <- dpool %>% filter(outcome_variable=="LAZ") %>%
+  arrange(-PAR) 
+rflevels = unique(plotdf_laz$RFlabel_ref)
+plotdf_laz$RFlabel_ref=factor(plotdf_laz$RFlabel_ref, levels=rflevels)
+
+#nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_prev)*100),"%) to ref: ",plotdf$intervention_level)
+#RFlabel <- plotdf$RFlabel_ref
+#PAR <- plotdf$PAR
+#plotdf$PAR2 <- ifelse(plotdf$measure=="Population attributable difference", PAR, NA)
+
+# plotdf$measure = "Population attributable difference"
+# 
+# #copy existing data, offset by 0.1
+# plotdf_copy = plotdf
+# plotdf_copy$measure = "Variable importance measure"
+# plotdf_copy$PAR = plotdf_copy$PAR + 0.1
+# plotdf_copy$CI1 = plotdf_copy$CI1 + 0.1
+# plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
 
 
-plotdf <- dpool %>% filter(outcome_variable=="LAZ") %>%
-  arrange(-PAR) %>%
-  mutate(RFlabel_ref=factor(RFlabel, levels=unique(RFlabel)))
-nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_prev)*100),"%) to ref: ",plotdf$intervention_level)
-RFlabel <- plotdf$RFlabel
-PAR <- plotdf$PAR
 
-plotdf$measure = "Population attributable difference"
-
-#copy existing data, offset by 0.1
-plotdf_copy = plotdf
-plotdf_copy$measure = "Variable importance measure"
-plotdf_copy$PAR = plotdf_copy$PAR + 0.1
-plotdf_copy$CI1 = plotdf_copy$CI1 + 0.1
-plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
-
-#append tables for single ggplot call
-plotdf = rbind(plotdf, plotdf_copy)
-
-pPAR_laz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) + 
-  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
-  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
+pPAR_laz <-  ggplot(plotdf_laz, aes(x=RFlabel_ref)) + 
+  geom_point(aes(y=-PAR), color="grey30", size = 4) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30") +
   coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(x = "Exposure", y = "Difference in LAZ after setting whole\npopulation exposure to reference level") +
+  labs(#x = "Exposure, and to which level of exposure the cohorts are shifted",
+       x = "Exposure",
+       y = "Attributable difference in LAZ") +
   geom_hline(yintercept = 0) +
-  scale_x_continuous(breaks = 1:length(RFlabel),
-                     labels = RFlabel,
-                     expand = c(0,0.5),
-                     sec.axis = sec_axis(~.,
-                                         breaks = 1:length(nlab),
-                                         labels = reorder(nlab, PAR))) +
-  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-  scale_shape_manual(values=c(4, 19))+
   theme(strip.background = element_blank(),
         legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12),
-        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  ggtitle(paste0("Population attributable difference in LAZ")) + 
+        axis.text.y = element_text(size=, hjust = 1),
+        axis.text.x = element_text(size=12)) +
   guides(color=FALSE, shape=FALSE)
-
 pPAR_laz
 
 
-plotdf <- dpool %>% filter(outcome_variable=="WLZ") %>%
-  arrange(-PAR) %>%
-  mutate(RFlabel_ref=factor(RFlabel, levels=unique(RFlabel)))
-nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_prev)*100),"%) to ref: ",plotdf$intervention_level)
-RFlabel <- plotdf$RFlabel
-PAR <- plotdf$PAR
 
-plotdf$measure = "Population attributable difference"
+#----------------------------------------------------------
+# Plot WLZ PAR
+#----------------------------------------------------------
 
-#copy existing data, offset by 0.1
-plotdf_copy = plotdf
-plotdf_copy$measure = "Variable importance measure"
-plotdf_copy$PAR = plotdf_copy$PAR + 0.1
-plotdf_copy$CI1 = plotdf_copy$CI1 + 0.1
-plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
+plotdf_wlz <- dpool %>% filter(outcome_variable=="WLZ") %>%
+  arrange(-PAR) 
+rflevels = unique(plotdf_wlz$RFlabel_ref)
+plotdf_wlz$RFlabel_ref=factor(plotdf_wlz$RFlabel_ref, levels = rflevels)
 
-#append tables for single ggplot call
-plotdf = rbind(plotdf, plotdf_copy)
 
-pPAR_wlz <-  ggplot(plotdf, aes(x=as.numeric(factor(reorder(RFlabel, -PAR))))) + 
-  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
-  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
+pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) + 
+  geom_point(aes(y=-PAR), color="grey30", size = 4) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30") +
   coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(x = "Exposure", y = "Difference in WLZ after setting whole\npopulation exposure to reference level") +
+  labs(x = "Exposure", y = "Attributable difference in WLZ") +
   geom_hline(yintercept = 0) +
-  scale_x_continuous(breaks = 1:length(RFlabel),
-                     labels = RFlabel,
-                     expand = c(0,0.5),
-                     sec.axis = sec_axis(~.,
-                                         breaks = 1:length(nlab),
-                                         labels = reorder(nlab, PAR))) +
-  scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-  scale_shape_manual(values=c(4, 19))+
   theme(strip.background = element_blank(),
         legend.position="right",
-        axis.text.y = element_text(hjust = 1),
-        strip.text.x = element_text(size=12),
+        axis.text.y = element_text(size=10, hjust = 1),
         axis.text.x = element_text(size=12),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  ggtitle(paste0("Population attributable difference in WLZ")) + 
   guides(color=FALSE, shape=FALSE)
 
-pPAR_wlz
 
-ggsave(pPAR_laz, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-laz-PAR.png"), height=10, width=8)
-ggsave(pPAR_wlz, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-wlz-PAR.png"), height=10, width=8)
+ggsave(pPAR_laz, file=paste0(here::here(), "/figures/risk factor/fig-laz-PAR.png"), height=10, width=8)
+ggsave(pPAR_wlz, file=paste0(here::here(), "/figures/risk factor/fig-wlz-PAR.png"), height=10, width=8)
 
-save(pPAR_laz, pPAR_wlz, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/rf_Zpar_plot_objects.Rdata")
-
+save(pPAR_laz, pPAR_wlz, file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.Rdata"))
 
 
 
 
+#----------------------------------------------------------
+# Plot margin tables
+#----------------------------------------------------------
+
+#Create data underlying LAZ side table
+mtab_df_laz <- plotdf_laz %>% arrange(PAR) %>%
+  mutate(perc_ref= round((1-ref_prev)*100)) %>%
+  subset(., select = c(n, perc_ref))
+
+# add comma to N (aka print 23,045 instead of 23045)
+mtab_df_laz$n = format(mtab_df_laz$n ,big.mark=",", trim=TRUE)
+
+#Use tableGrob to create a plot with the appearrence of a table
+mtab_df_laz_tbl <- tableGrob(mtab_df_laz,
+                             row = NULL,
+                             cols = c("Total\nN", "% shifted\nto ref."),
+                             theme = ttheme_minimal(base_size = 9, padding = unit(c(0, 0), "mm")))
+
+mtab_df_laz_tbl$heights <- unit(c(0.055, rep(0.0275, nrow(mtab_df_laz_tbl) - 1)), "npc")
+mtab_df_laz_tbl$widths <- unit(c(0.25,0.35), "npc")
+mtab_df_laz_tbl <- gtable_add_grob(mtab_df_laz_tbl,
+                                   grobs = segmentsGrob( # line across the bottom
+                                     x0 = unit(0,"npc"),
+                                     y0 = unit(0,"npc"),
+                                     x1 = unit(1,"npc"),
+                                     y1 = unit(0,"npc"),
+                                     gp = gpar(lwd = 2.0)),
+                                   t = 1, b = 1, l = 1, r = 2)
+
+#grid.arrange(mtab_df_laz_tbl)
 
 
 
+#Repeat for WLZ
+mtab_df_wlz <- plotdf_wlz %>% arrange(PAR) %>%
+  mutate(perc_ref= round((1-ref_prev)*100)) %>%
+  subset(., select = c(n, perc_ref))
+
+mtab_df_wlz$n = format(mtab_df_wlz$n ,big.mark=",", trim=TRUE)
+
+# mytheme <- gridExtra::ttheme_minimal(
+#   base_size = 9, padding = unit(c(0, 0), "mm"),
+#   core = list(padding=unit(c(0, 4), "mm"))
+# )
+
+mtab_df_wlz_tbl <- tableGrob(mtab_df_wlz, 
+                             rows = NULL,
+                             cols = c("Total\nN", "% shifted\nto ref."),
+                             theme = ttheme_minimal(base_size = 9, padding = unit(c(0, 0), "mm")))
 
 
+mtab_df_wlz_tbl$heights <- unit(c(0.055, rep(0.03075, nrow(mtab_df_wlz_tbl) - 1)), "npc")
+#mtab_df_wlz_tbl$widths <- unit(rep(0.25, ncol(mtab_df_wlz_tbl)), "npc")
+mtab_df_wlz_tbl$widths <- unit(c(0.25,0.35), "npc")
 
+mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
+                                   grobs = segmentsGrob( # line across the bottom
+                                     x0 = unit(0,"npc"),
+                                     y0 = unit(0,"npc"),
+                                     x1 = unit(1,"npc"),
+                                     y1 = unit(0,"npc"),
+                                     gp = gpar(lwd = 2.0)),
+                                   t = 1, b = 1, l = 1, r = 2)
 
-
-i <- unique(df$region)[1]
-j <- unique(df$outcome_variable)[5]
-k <- unique(df$agecat)[6]
-
-for(i in unique(df$region)){
-  for(j in unique(df$outcome_variable)){
-    for(k in unique(df$agecat)){
-
-      dpool <- df %>%
-        filter(region==i,
-               outcome_variable==j,
-               agecat == k) %>%
-        filter(!is.na(intervention_variable))
-
-      ppar <-  ggplot(dpool, aes(x=reorder(RFlabel_ref, -PAR))) +
-        geom_point(aes(y=-PAR,  color=RFtype), size = 4) +
-        geom_linerange(aes(ymin=-CI1, ymax=-CI2, color=RFtype)) +
-        coord_flip() +
-        labs(x = "Exposure", y = "Difference in outcome after setting\nwhole population exposure to reference level") +
-        geom_hline(yintercept = 0) +
-        scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-        theme(strip.background = element_blank(),
-              legend.position="right",
-              axis.text.y = element_text(hjust = 1),
-              strip.text.x = element_text(size=12),
-              axis.text.x = element_text(size=12,
-                                         margin = margin(t = -20)),
-              axis.title.x = element_text(margin = margin(t = 20))) +
-        ggtitle(paste0("Population attributable difference\n", dpool$outcome_variable[1]," - ", dpool$agecat[1],", ", dpool$region[1])) +
-        guides(color=FALSE, shape=FALSE)
-
-      ggsave(ppar, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/Zscore-PAR/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$agecat[1]), "-Z-PAR.png"), height=10, width=8)
-    }
-  }
-}
-
-
-
+#save the plots seperately 
+save(mtab_df_laz_tbl, mtab_df_wlz_tbl, file=paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.Rdata"))
 
 
 

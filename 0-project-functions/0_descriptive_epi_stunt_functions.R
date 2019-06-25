@@ -66,7 +66,7 @@ summary.prev.haz <- function(d, severe.stunted=F, method="REML"){
   prev.res$ub=as.numeric(prev.res$ub)
   prev.res = prev.res %>%
     mutate(est=est*100,lb=lb*100,ub=ub*100)
-
+  
   prev.res$agecat=factor(levels(prev.data$agecat))
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
@@ -108,7 +108,7 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
   
   # identify ever stunted children
   if(!birthstrat){
-
+    
     evs = d %>%
       filter(!is.na(agecat)) %>%
       group_by(studyid,country,subjid) %>%
@@ -133,31 +133,31 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
       arrange(studyid,subjid) %>%
       #create variable with minhaz by age category, cumulatively
       mutate(minhaz=ifelse(agecat=="Birth",min(haz[agecat=="Birth"]),
-                      ifelse(agecat=="1 day-3 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months"]),
-                           ifelse(agecat=="3-6 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"]),
-                                  ifelse(agecat=="6-9 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
-                                         ifelse(agecat=="9-12 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
-                                                ifelse(agecat=="12-15 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
-                                                       ifelse(agecat=="15-18 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
-                                                              ifelse(agecat=="18-21 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
-                                                                     ifelse(agecat=="21-24 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
-                                                                            min(haz)))))))))))
+                           ifelse(agecat=="1 day-3 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months"]),
+                                  ifelse(agecat=="3-6 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"]),
+                                         ifelse(agecat=="6-9 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                                ifelse(agecat=="9-12 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                       ifelse(agecat=="12-15 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                              ifelse(agecat=="15-18 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                                     ifelse(agecat=="18-21 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                            ifelse(agecat=="21-24 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                                   min(haz)))))))))))
   }
   
   
-    # create indicator for whether the child was ever stunted
-    # by age category
-    evs = evs %>%  
+  # create indicator for whether the child was ever stunted
+  # by age category
+  evs = evs %>%  
     group_by(studyid,country,agecat,subjid) %>%
-      summarise(minhaz=min(minhaz)) 
+    summarise(minhaz=min(minhaz)) 
   
-
-    if(!severe.stunted){
-      evs = evs %>% mutate(ever_stunted=ifelse(minhaz< -2,1,0))
-    }
-    if(severe.stunted){
-      evs = evs %>% mutate(ever_stunted=ifelse(minhaz< -3,1,0))
-    }
+  
+  if(!severe.stunted){
+    evs = evs %>% mutate(ever_stunted=ifelse(minhaz< -2,1,0))
+  }
+  if(severe.stunted){
+    evs = evs %>% mutate(ever_stunted=ifelse(minhaz< -3,1,0))
+  }
   
   
   # count incident cases per study by age
@@ -309,8 +309,8 @@ summary.haz.age.sex <- function(d, method="REML"){
   # cohort specific results stratified within grouping variables
   haz.cohort.female=lapply(levels(haz.data$agecat),function(x) 
     fit.escalc(data=haz.data %>% filter(sex == "Female"),
-                        ni="nmeas",yi="meanhaz", vi="varhaz", age=x, measure = "GEN"))
-
+               ni="nmeas",yi="meanhaz", vi="varhaz", age=x, measure = "GEN"))
+  
   haz.cohort.male=lapply(levels(haz.data$agecat),function(x) 
     fit.escalc(data=haz.data %>% filter(sex == "Male"),
                ni="nmeas",yi="meanhaz", vi="varhaz", age=x, measure = "GEN"))
@@ -322,7 +322,7 @@ summary.haz.age.sex <- function(d, method="REML"){
     mutate(sex = "Male")
   
   haz.cohort=rbind(haz.cohort.female.df, haz.cohort.male.df)
- 
+  
   haz.cohort=cohort.format(haz.cohort,y=haz.cohort$yi,
                            lab=  levels(haz.cohort$agecat), est="mean")
   
@@ -330,11 +330,13 @@ summary.haz.age.sex <- function(d, method="REML"){
   # estimate random effects, format results
   haz.res.female=lapply((levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data %>% filter(sex == "Female"), 
-                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN"))
+            ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, 
+            measure = "GEN", method = method))
   
   haz.res.male=lapply((levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data %>% filter(sex == "Male"), 
-                 ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN", method=method))
+            ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, 
+            measure = "GEN", method=method))
   
   haz.df.female = as.data.frame(rbindlist(haz.res.female)) %>%
     mutate(sex = "Female")

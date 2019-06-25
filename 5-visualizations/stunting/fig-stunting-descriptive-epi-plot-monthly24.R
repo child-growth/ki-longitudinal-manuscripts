@@ -98,7 +98,7 @@ mean_laz_plot <- ggplot(df,aes(y=est,x=agecat, group=region)) +
 
 # define standardized plot names
 mean_laz_plot_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "mean",
   population = "overall and region-stratified",
@@ -185,7 +185,7 @@ mean_laz_quantile_plot <- ggplot(df,aes(x = agecat, group = region)) +
 
 # define standardized plot names
 mean_laz_quantile_plot_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "quantile",
   population = "overall and region-stratified",

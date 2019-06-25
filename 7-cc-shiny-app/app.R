@@ -15,7 +15,50 @@ library(here)
 
 #Load data
 df <- readRDS(paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
+var_key = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRXN1QYQd4OUSGe0eRAL6gCEJQmhA3HGddPxGTVhEy5Tdt8Tin-kGnh0naLXWcUe8Lop_B6r6cfnr6h/pub?gid=0&single=true&output=csv")
 
+# Set order for outcome
+levels(df$outcome_variable) = c("Prevalence of stunting", "Prevalence of severe stunting",
+                                "Cumulative incidence of stunting", "Cumulative incidence of severe stunting",
+                                "Prevalence of wasting", "Prevalence of severe wasting",
+                                "Cumulative incidence of wasting", "Cumulative incidence of severe wasting",
+                                "Prevalence of persistent wasting", "Persistently wasted 624",
+                                "Wasting recovery",
+                                "Prevalence of the co-occurance of stunting and wasting",
+                                "Cumulative incidence of the co-occurance of stunting and wasting",
+                                "Deceased", "Unspecified")
+
+# Set order for exposure
+levels(df$intervention_variable) = c("# of children <5 in HH", "# of people in HH", "# of rooms in HH",           
+                                     "Any wasting <6 mo.", "Birth length (cm)", "Birth month",       
+                                     "Birth order", "Birth weight (kg)", "Breastfed hour after birth", 
+                                     "Child delivered at home", "Clean cooking fuel usage", "Diarrhea <24 mo. (% days)",
+                                     "Diarrhea <6 mo. (% days)", "Enrolled wasted", "Excl/Pred breastfed <6mo.",  
+                                     "Father's age", "Father's education", "Father's height",            
+                                     "Gestational age at birth", "HH food security", "HH wealth",                  
+                                     "Improved floor", "Improved sanitation", "Mean WHZ in the prior 3 mo.",
+                                     "Month of measurement", "Mother's age", "Mother's BMI",               
+                                     "Mother's education","Mother's height", "Mother's weight",            
+                                     "Persistent wasting <6 mo.", "Safe water source", "Sex",                        
+                                     "Single parent", "Vaginal birth")
+
+# Set order for parameter
+levels(df$type) = c("Average Treatment Effect", "Population Attributable Fraction",
+                    "Population Attributable Risk", "Relative Risk")
+
+# Set order for age category
+levels(df$agecat) = c("0-24 months", "Birth", "6 months", "24 months", "0-6 months", "6-24 months", "12 months",   
+                      "15 months", "18 months", "21 months", "3 months", "9 months", "3-6 months", "6-9 months",  
+                      "9-12 months", "12-15 months", "15-18 months", "Unspecified")
+
+levels(df$region) = c("Pooled", "South Asia", "Africa", "Latin America", "N.America & Europe")
+
+spline_variables =  list.files(path = "figures/risk factor/Splines/HAZ/")
+spline_variables <- data_frame(spline_vars = (spline_variables %>% gsub("haz_stat_by_", "", ., perl = TRUE) %>% gsub(".png", "", ., perl = TRUE)))
+spline_variables <- spline_variables %>% mutate(spline_vars = (spline_variables %>% left_join(var_key, by = c("spline_vars" = "variable")) %>%
+                                               replace_na(list(variable.type = "exposure")) %>%
+                                               filter(variable.type == "exposure") %>%
+                                               pull("description")))
 
 #------------------------------------------------
 # Inputs for Shiny App
@@ -23,6 +66,8 @@ df <- readRDS(paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 
 #Plot parameters
 yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
+yticks_cont <- c(-20:20/10)
+
 tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
 tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
@@ -60,30 +105,14 @@ ui <- navbarPage("HBGDki Results Dashboard",
                           sidebarLayout(
                             sidebarPanel(
                               # Variables with dropdown selections for user input
-                              selectInput('exposure',
-                                          'Exposure Variable:',
-                                          choices = levels(df$intervention_variable)),
                               selectInput('outcome',
                                           'Outcome Variable:',
                                           choices = levels(df$outcome_variable)),
-                              selectInput('age',
-                                          'Child age:',
-                                          choices = levels(df$agecat)),
-                              selectInput('parameter',
-                                          'Parameter:',
-                                          choices = levels(df$type)),
-                              selectInput('region',
-                                          'region:',
-                                          choices = c("All","Asia","Africa", "Latin America")),
-                              selectInput('adjusted',
-                                          'Adjusted:',
-                                          choices = c("Yes","No")),
-                              #uiOutput('parameter'),
-                              # uiOutput('region'),
-                              # uiOutput('outcome'),
-                              # uiOutput('age'),
-                              # uiOutput('adjusted')#,
-                              #uiOutput('pool_method')
+                              uiOutput('exposure'),
+                              uiOutput('parameter'),
+                              uiOutput('age'),
+                              uiOutput('region'),
+                              uiOutput('adjusted'),
                               radioButtons('pool_method',
                                            'Pooling method:',
                                            choices = c("Random","Fixed"))
@@ -105,132 +134,128 @@ ui <- navbarPage("HBGDki Results Dashboard",
                               )
                             )
                             
-                          ))
-                   
-                          )
+                          )),
+                 
+                 tabPanel("Splines",
+                          fluidRow(
+                            column(4, selectInput("spline_outcome",
+                                                  "Outcome Variable:",
+                                                  choices = c("WHZ", "HAZ"))),
+                            column(4, selectInput("spline_exposure",
+                                                  "Exposure Variable:",
+                                                  choices = unique(spline_variables$spline_vars)))
+                          ),
                           
-
-
-
-
-
-
-
-
+                          br(),
+                          br(),
+                          
+                          mainPanel(
+                            width = 16,
+                            align = "center",
+                            imageOutput("image")
+                          )
+                 )
+)
 
 
 
 
 # Define server logic required to draw the forest plot
 server <- function(input, output, session) {
-  # Adaptive input selections based on user input - avoids blank plots
-  # output$region <- renderUI({
-  #   df <- df %>%
-  #     filter(intervention_variable == input$exposure) %>%
-  #     drop_na(region, outcome_variable, agecat, adjusted, pooled)
-  # 
-  #   selectInput('region',
-  #               'region:',
-  #               choices = c('All', 'Asia', 'Latin America', 'Africa', 'Europe'))
-  # })
-  # output$outcome <- renderUI({
-  #   if (input$region == 'All'){
-  #     df <- df %>%
-  #       filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
-  #   } else {
-  #     df <- df %>%
-  #       filter(region == input$region)
-  #   }
-  #   df <- df %>%
-  #     filter(intervention_variable == input$exposure) %>%
-  #     # filter(ifelse(input$region == 'All', pooled == 0 | 
-  #     #                 (pooled == 1 & region == 'Pooled'), region == input$region)) %>%
-  #     drop_na(outcome_variable, agecat, adjusted, pooled)
-  #   
-  #   selectInput('outcome',
-  #               'Outcome:',
-  #               unique(df$outcome_variable))
-  # })
-  # output$age <- renderUI({
-  #   if (input$region == 'All'){
-  #     df <- df %>%
-  #       filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
-  #   } else {
-  #     df <- df %>%
-  #       filter(region == input$region)
-  #   }
-  #   
-  #   df <- df %>%
-  #     filter(intervention_variable == input$exposure) %>%
-  #     # filter(ifelse(input$region == 'All', pooled == 0 | 
-  #     #                 (pooled == 1 & region == 'Pooled'), region == input$region)) %>%
-  #     filter(outcome_variable == input$outcome) %>%
-  #     drop_na(agecat, adjusted, pooled)
-  # 
-  #   selectInput('age',
-  #               'Age Category:',
-  #               unique(df$agecat))
-  # })
-  # output$adjusted <- renderUI({
-  #   if (input$region == 'All'){
-  #     df <- df %>%
-  #       filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
-  #   } else {
-  #     df <- df %>%
-  #       filter(region == input$region)
-  #   }
-  #   
-  #   df <- df %>%
-  #     filter(intervention_variable == input$exposure) %>%
-  #     # filter(ifelse(input$region == 'All', pooled == 0 | 
-  #     #                 (pooled == 1 & region == 'Pooled'), region == input$region)) %>%
-  #     filter(outcome_variable == input$outcome) %>%
-  #     filter(agecat == input$age) %>%
-  #     drop_na(adjusted, pooled)
-  # 
-  #   radioButtons('adjusted',
-  #                'Covariate adjustment:',
-  #                choices = c('Adjusted', 'Unadjusted'))
-  # })
-  # output$pool_method <- renderUI({
-  #   if (input$region == 'All'){
-  #     df <- df %>% filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
-  #   } else {
-  #     df <- df %>% filter(region == input$region)
-  #   }
-  #   if (input$adjusted == 'Unadjusted'){
-  #     df <- df %>% filter(adjusted == 1)
-  #   } else {
-  #     df <- df %>% filter(adjusted == 0)
-  #   }
-  #   df <- df %>%
-  #     filter(intervention_variable == input$exposure) %>%
-  #     # filter(ifelse(input$region == 'All', pooled == 0 | 
-  #     #                 (pooled == 1 & region == 'Pooled'), region == input$region)) %>%
-  #     filter(outcome_variable == input$outcome) %>%
-  #     filter(agecat == input$age) %>%
-  #     # filter(ifelse(input$adjusted == 'Unadjusted', adjusted == 1, adjusted == 0)) %>%
-  #     drop_na(pooled)
-  # 
-  #   radioButtons('pool_method',
-  #                'Pooling method:',
-  #                choices = c("Random","Fixed"))
-  # })
+  #Adaptive input selections based on user input - avoids blank plots
+  output$exposure <- renderUI({
+    df <- df %>%
+      filter(outcome_variable == input$outcome)
+    
+    d <- df %>% drop_na(intervention_variable) %>% arrange(intervention_variable)
+    
+    selectInput('exposure',
+                'Exposure Variable:',
+                unique(d$intervention_variable))
+  })
+  
+  
+  output$parameter = renderUI({
+    df <- df %>%
+      filter(outcome_variable == input$outcome) %>% 
+      filter(intervention_variable == input$exposure) 
+    
+    d = df %>% drop_na(type) %>% arrange(type) 
+    
+    selectInput('parameter',
+                'Parameter:',
+                choices = unique(df$type))
+  })
+  
+
+  output$age <- renderUI({
+    df <- df %>%
+      filter(intervention_variable == input$exposure) %>%
+      filter(outcome_variable == input$outcome) %>% 
+      filter(type == input$parameter) 
+    
+    d <- df %>% arrange(agecat)
+    
+    selectInput('age',
+                'Age Category:',
+                unique(d$agecat))
+  })
+  
+  output$region <- renderUI({
+    df <- df %>%
+      filter(intervention_variable == input$exposure) %>%
+      filter(outcome_variable == input$outcome) %>% 
+      filter(type == input$parameter) %>% 
+      filter(agecat == input$age) 
+    
+    d = df %>% filter(region != "N.America & Europe") %>% drop_na(region) %>% arrange(region) 
+    remaining_regions = as.character(unique(d$region))
+    
+    selectInput('region',
+                'Region:',
+                choices = append(c("All"), remaining_regions))
+  })
+  
+  output$adjusted <- renderUI({
+    df <- df %>%
+      filter(intervention_variable == input$exposure) %>%
+      filter(outcome_variable == input$outcome) %>%
+      filter(type == input$parameter) %>%
+      filter(agecat == input$age)  
+    
+    if (input$region == 'All'){
+      df <- df %>%
+        filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
+    } else {
+      df <- df %>%
+        filter(region == input$region)
+    }
+    
+    df = df %>% mutate(adjusted = case_when(
+      adjusted == 1 ~ "Adjusted",
+      adjusted == 0 ~ "Unadjusted"))
+    
+    d = df %>% drop_na(adjusted) %>% arrange(adjusted)
+    
+
+    radioButtons('adjusted',
+                 'Covariate adjustment:',
+                 choices = unique(d$adjusted))
+  })
   
   
   
   selectedData <- reactive({
     df <- df[df$outcome_variable == input$outcome, ]
-    if(input$adjusted == 'No'){df <- df %>% filter(adjusted == 0)}
-    if(input$adjusted == 'Yes'){df <- df %>% filter(adjusted == 1)}
-    if(input$region!="All"){df <- df[df$region==input$region,]}
-    if(input$region=="All"){df <- df[df$pooled==0 | (df$pooled==1 & df$region=="Pooled"),]}
-    #if(input$pool_method=="Random"){df <- df[df$pooled==0 | df$studyid=="Pooled - Random"|df$studyid=="Pooled - Asia - RE"|df$studyid=="Pooled - Afica - RE"|df$studyid=="Pooled - Latin America - RE",]}
-    #if(input$pool_method=="Fixed"){df <- df[df$pooled==0 | df$studyid=="Pooled - Fixed"|df$studyid=="Pooled - Asia - FE"|df$studyid=="Pooled - Afica - FE"|df$studyid=="Pooled - Latin America - FE",]}
     df <- df[df$intervention_variable == input$exposure, ]
     df <- df[df$type == input$parameter, ]
-    df <- df[df$outcome_variable == input$outcome, ]
     df <- df[df$agecat == input$age, ]
+    if(input$region!="All"){df <- df[df$region==input$region,]}
+    if(input$region=="All"){df <- df[df$pooled==0 | (df$pooled==1 & df$region=="Pooled"),]}
+    if(input$adjusted == 'Unadjusted'){df <- df %>% filter(adjusted == 0)}
+    if(input$adjusted == 'Adjusted'){df <- df %>% filter(adjusted == 1)}
+    #if(input$pool_method=="Random"){df <- df[df$pooled==0 | df$studyid=="Pooled - Random"|df$studyid=="Pooled - Asia - RE"|df$studyid=="Pooled - Afica - RE"|df$studyid=="Pooled - Latin America - RE",]}
+    #if(input$pool_method=="Fixed"){df <- df[df$pooled==0 | df$studyid=="Pooled - Fixed"|df$studyid=="Pooled - Asia - FE"|df$studyid=="Pooled - Afica - FE"|df$studyid=="Pooled - Latin America - FE",]}
     df <- df %>% filter(!is.na(estimate))
     df <- df %>% arrange(pooled, region, estimate)
     df$studyid <- factor(df$studyid, levels = unique(df$studyid))
@@ -241,8 +266,10 @@ server <- function(input, output, session) {
   selectedDataForest <- reactive({
     
     d <- selectedData()
-     
-    d <- d %>% filter(baseline_level!=intervention_level) #drop reference level
+    
+    if (!all(is.na(d$baseline_level))){
+      d <- d %>% filter(baseline_level!=intervention_level) #drop reference level
+    }
     d <- droplevels(d)
     d$pooled <- factor(d$pooled)
     d
@@ -258,70 +285,100 @@ server <- function(input, output, session) {
   
   
   
-   output$forestPlot <- renderPlot({
-      p<-ggplot(selectedDataForest(), aes(x=studyid)) +
-        geom_point(aes(shape=pooled, y=estimate, fill=region, color=region), size = 4) +
-        geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=region)) +
-       coord_flip() +
-       #facet_wrap(~intervention_level, ncol=1) +
-        labs(x = "Cohort", y = Ylab) +
-        geom_hline(yintercept = 1) +
-        geom_vline(xintercept = 1.5, linetype=2) +
-        scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-        scale_shape_manual(values=c(21, 23)) +
-        scale_colour_manual(values=tableau11) +
-        scale_fill_manual(values=tableau11) +
-        scale_size_continuous(range = c(0.5, 1))+
+  
+  output$forestPlot <- renderPlot({
+    df<-selectedDataForest()
+    p<-ggplot(df, aes(x=studyid)) +
+      geom_point(aes(shape=pooled, y=estimate, fill=region, color=region), size = 4) +
+      geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=region)) +
+      coord_flip() +
+      #facet_wrap(~intervention_level, ncol=1) +
+      labs(x = "Cohort", y = Ylab) +
+      geom_vline(xintercept = 1.5, linetype=2) +
+      scale_shape_manual(values=c(21, 23)) +
+      scale_colour_manual(values=tableau11) +
+      scale_fill_manual(values=tableau11) +
+      scale_size_continuous(range = c(0.5, 1))+
+      theme(plot.title = element_text(hjust = 0.5),
+            strip.background = element_blank(),
+            legend.position="none",
+            strip.text.x = element_text(size=12),
+            axis.text.x = element_text(size=12), #angle = 45, hjust = 1),
+            text = element_text(size=16)) +
+      ggtitle(paste0("Forest plot of cohort-specific associations for\n",
+                     input$outcome, " outcome and\n", input$age)) +guides(shape=FALSE)
+    
+    
+    if(length(unique(df$intervention_variable))>1){
+      p<-p+facet_wrap(~intervention_level, ncol=1) 
+    }
+    if(df$continuous[1]==0){
+      p<-p+scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) + geom_hline(yintercept = 1) 
+    }else{
+      p<-p+scale_y_continuous(breaks=yticks_cont, labels=scaleFUN)  + geom_hline(yintercept = 0)
+    }
+    
+    p
+  })
+  
+  output$pooledPlot <- renderPlot({
+    df <- selectedDataPooled()
+    if (nrow(df) > 0){
+      pooledp <- ggplot(df, aes(x=intervention_level)) +
+        geom_point(aes(y=estimate, fill=agecat, color=agecat), size = 4) +
+        geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=agecat),
+                       alpha=0.5, size = 3) +
+        labs(x = "Exposure category",
+             y = "Relative risk") +
+        #geom_text(aes(x=0.5, y=(max(df$RR.CI2))-.1, label=paste0("Studies: ",Nstudies)), size=3,  hjust=0) +
+        scale_fill_manual(values=rep(tableau10,4)) +
+        scale_colour_manual(values=rep(tableau10,4)) +
         theme(plot.title = element_text(hjust = 0.5),
               strip.background = element_blank(),
               legend.position="none",
-              strip.text.x = element_text(size=12),
-              axis.text.x = element_text(size=12, angle = 45, hjust = 1),
+              axis.text.y = element_text(size=12),
+              strip.text.x = element_text(size=10),
+              axis.text.x = element_text(size=9, angle = 20, hjust = 1),
+              panel.spacing = unit(0, "lines"),
               text = element_text(size=16)) +
-        ggtitle(paste0("Forest plot of cohort-specific associations for\n",
-                      input$outcome, " outcome and\n", input$age)) +guides(shape=FALSE)
-     
+        ggtitle(paste0("Pooled associations for\n", input$outcome, 
+                       " outcome and\n", input$age))
+      
+      if(df$continuous[1]==0){
+        pooledp <- pooledp+scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) + geom_hline(yintercept = 1) 
+      }else{
+        pooledp <- pooledp+scale_y_continuous(breaks=yticks_cont, labels=scaleFUN)  + geom_hline(yintercept = 0)
+      }
+    } else {
+      pooledp = NULL
+    }
+    pooledp
+  })
+  output$table <- renderTable({
+    selectedData() 
+  })
+  
+  selected_plot = reactive({
+    var = var_key %>% filter(description == input$spline_exposure, variable.type == "exposure") %>% select(variable) %>% first()
+    outcome = tolower(input$spline_outcome)
+    exposure = var
+    file_name = paste0("figures/risk factor/Splines/", outcome, "/", outcome, "_stat_by_", exposure, ".png")
+    file_name
+  })
+  
+  output$image <- renderImage({
+    file_path <- selected_plot()
     
-       if(length(unique(df$intervention_variable))>1){
-        p<-p+facet_wrap(~intervention_level, ncol=1) 
-       }
-     
-     p
-   })
-   
-   output$pooledPlot <- renderPlot({
-       ggplot(selectedDataPooled(), aes(x=intervention_level)) +
-       #ggplot(selectedDataForest(), aes(x=studyid)) +
-       geom_point(aes(y=estimate, fill=agecat, color=agecat), size = 4) +
-       geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=agecat),
-                      alpha=0.5, size = 3) +
-       labs(x = "Exposure category",
-            y = "Relative risk") +
-       geom_hline(yintercept = 1) +
-       #geom_text(aes(x=0.5, y=(max(df$RR.CI2))-.1, label=paste0("Studies: ",Nstudies)), size=3,  hjust=0) +
-       scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-       scale_fill_manual(values=rep(tableau10,4)) +
-       scale_colour_manual(values=rep(tableau10,4)) +
-       theme(plot.title = element_text(hjust = 0.5),
-             strip.background = element_blank(),
-             legend.position="none",
-             axis.text.y = element_text(size=12),
-             strip.text.x = element_text(size=10),
-             axis.text.x = element_text(size=9, angle = 20, hjust = 1),
-             panel.spacing = unit(0, "lines"),
-             text = element_text(size=16)) +
-       ggtitle(paste0("Pooled associations for\n", input$outcome, 
-                      " outcome and\n", input$age))
-    })
-   
-   output$table <- renderTable({
-     selectedData() 
-   })
-   
-
-   
+    # Return a list containing the filename
+    list(src = file_path,
+         contentType = 'image/png',
+         #height = 600,
+         width = 1000,
+         alt = "Image is loading")
+    
+  }, deleteFile = FALSE)
+  
 }
-
 
 
 # Run the application 

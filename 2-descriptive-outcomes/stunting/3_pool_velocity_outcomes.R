@@ -15,6 +15,7 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functi
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
 d <- readRDS(file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")
+d$subjid <- as.character(d$subjid)
 head(d)
 
 #Merge in sex
@@ -26,72 +27,12 @@ dim(d)
 d <- left_join(d, cov, by=c("studyid", "subjid", "country"))
 dim(d)
 
-
-# Subset to study datasets
-#Drop studies Vishak added to data product that don't meet inclusion criteria
-d <- d[d$studyid!="ki1000301-DIVIDS" & d$studyid!="ki1055867-WomenFirst" & d$studyid!="ki1135782-INCAP",]
-
-#mark measure frequencies
-d$measurefreq <- NA
-
-d$measurefreq[d$studyid %in% c(
-  "ki0047075b-MAL-ED",   
-  "ki1000108-CMC-V-BCS-2002",              
-  "ki1000108-IRC",               
-  "ki1000109-EE",           
-  "ki1000109-ResPak",  
-  "ki1017093b-PROVIDE",  
-  "ki1066203-TanzaniaChild2",           
-  "ki1101329-Keneba",  
-  "ki1112895-Guatemala BSC",       
-  "ki1113344-GMS-Nepal",             
-  "ki1114097-CONTENT"
-)] <- "monthly"
-
-d$measurefreq[d$studyid %in% c(
-  "ki1112895-iLiNS-Zinc",  
-  "kiGH5241-JiVitA-3",          
-  "kiGH5241-JiVitA-4", 
-  "ki1148112-LCNI-5",          
-  "ki1017093-NIH-Birth",
-  "ki1017093c-NIH-Crypto",   
-  "ki1119695-PROBIT",         
-  "ki1000304b-SAS-CompFeed",   
-  "ki1000304b-SAS-FoodSuppl",   
-  "ki1126311-ZVITAMBO",   
-  "ki1114097-CMIN",                 
-  "ki1135781-COHORTS"
-)] <- "quarterly"
-
-d$measurefreq[d$studyid %in% c(
-  "ki1000110-WASH-Bangladesh",       
-  "ki1000111-WASH-Kenya",  
-  "ki1148112-iLiNS-DOSE",     
-  "ki1148112-iLiNS-DYAD-M", 
-  "ki1033518-iLiNS-DYAD-G",
-  "ki1000125-AgaKhanUniv",           
-  "ki1112895-Burkina Faso Zn",    
-  "ki1000304-VITAMIN-A",  
-  "ki1000304-Vitamin-B12",
-  "ki1000107-Serrinha-VitA",   
-  "ki1000304-EU",        
-  "ki1000304-ZnMort"
-)] <- "yearly"
-
-#Mark COHORTS and CMIN cohorts with different measurement frequency than quarterly
-d$measurefreq[d$studyid=="ki1114097-CMIN" & d$country=="BANGLADESH"] <- "monthly"
-d$measurefreq[d$studyid=="ki1114097-CMIN" & d$country=="PERU"] <- "monthly"
-d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="BRAZIL"),] #Drop because yearly but not an RCT
-d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop because yearly but not an RCT
-
-#Drop yearly
-d <- d %>% filter(measurefreq!="yearly")
-
 saveRDS(d, file = paste0("U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt_clean.RDS"))
 
 
 #Summarize N's in study
 d %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(N=n())
+d %>% group_by(studyid, country, subjid) %>% slice(1) %>%  group_by(studyid, country)  %>% summarize(N=n()) %>% as.data.frame()
 
 
 
@@ -100,8 +41,8 @@ table(d$diffcat)
 
 d <- d %>% rename(agecat = diffcat) %>%
   group_by(studyid, country, agecat, ycat, sex) %>%
-  summarise(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), n=n()) %>%
-  mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se) %>% 
+  summarise(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), sd=sd(y_rate, na.rm=T), n=n()) %>%
+  mutate(ci.lb=mean - 1.96 * sd, ci.ub=mean + 1.96 * sd) %>% 
   mutate(region = case_when(
     country=="BANGLADESH" | country=="INDIA"|
       country=="NEPAL" | country=="PAKISTAN"|
@@ -135,18 +76,18 @@ RE_pool <- function(df, ycategory, gender, method = "REML"){
   
   pooled.vel=lapply(agecat,function(x) 
     fit.rma(data=df, yi="mean", vi="var", ni="n", nlab="children",age=x,
-            measure = "GEN", method=method))
+            measure = "MN", method=method))
 
   
   pooled.vel=as.data.frame(do.call(rbind, pooled.vel))
 
   # age and region specific pooled results
   asia.vel=lapply(agecat,function(x) fit.rma(data=df[df$region=="Asia",], 
-        yi="mean", vi="var", ni="n", nlab="children",age=x, measure = "GEN"))
+        yi="mean", vi="var", ni="n", nlab="children",age=x, measure = "MN", method = method))
   LA.vel=lapply(agecat,function(x) fit.rma(data=df[df$region=="Latin America",],
-        yi="mean", vi="var", ni="n",age=x, nlab="children", measure = "GEN"))
+        yi="mean", vi="var", ni="n",age=x, nlab="children", measure = "MN", method = method))
   africa.vel=lapply(agecat,function(x) fit.rma(data=df[df$region=="Africa",],
-        yi="mean", vi="var", ni="n",age=x, nlab="children", measure = "GEN"))
+        yi="mean", vi="var", ni="n",age=x, nlab="children", measure = "MN", method = method))
   
   asia.vel=as.data.frame(do.call(rbind, asia.vel))
   LA.vel=as.data.frame(do.call(rbind, LA.vel))

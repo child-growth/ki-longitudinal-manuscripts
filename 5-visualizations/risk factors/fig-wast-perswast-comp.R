@@ -27,7 +27,7 @@ unique(d$intervention_variable)
 d <- droplevels(d)
 
 
-yticks <- c(0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 8)
+yticks <- c(1, 1.5, 2, 3, 4)
 
 #hbgdki pallet
 tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
@@ -83,27 +83,27 @@ plotdf$RFlabel_ref[plotdf$RFlabel=="Mother's education"] <- "Mother's education:
 plotdf$RFlabel_ref[plotdf$RFlabel=="HH wealth"] <- "HH wealth:\nQ1 vs Q4 (ref.)"
 
 
-
-
 p_severecomp <- ggplot(plotdf, aes(x=Outcome, group=intervention_level)) + 
   geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
                  alpha=0.5, size = 1) +
   facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
-  labs(x = "Cumulative incidence of growth faltering outcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
+  labs(x = "Cumulative incidence of growth faltering\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 4)) +
   scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
   scale_shape_manual(values=c(16,21)) +
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=12),
         strip.text.x = element_text(size=10),
-        axis.text.x = element_text(size=10, angle = 20, vjust = 1, hjust = 1),
-        panel.spacing = unit(0, "lines")) 
+        axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
+        panel.spacing = unit(0, "lines")) +
+  coord_flip()
 
+p_severecomp
 
-ggsave(p_severecomp, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-wast-perswast-comp.png"), height=8, width=10)
+ggsave(p_severecomp, file=paste0(here::here(),"/figures/risk factor/fig-wast-perswast-comp.png"), height=8, width=10)
 
-save(p_severecomp, file = c("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-severe-outcome-comps.Rdata"))
+save(p_severecomp, plotdf, file = paste0(here::here(), "/results/fig-severe-outcome-comps.Rdata"))

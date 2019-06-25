@@ -2,9 +2,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-setwd(paste0(here(),"/results"))
-
-load("shiny_desc_data.Rdata")
+load(paste0(res_dir,"shiny_desc_data.Rdata"))
 wast <- shiny_desc_data
 load(paste0(res_dir,"shiny_desc_data_stunting_objects.Rdata"))
 stunt <- shiny_desc_data
@@ -16,7 +14,7 @@ stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
 
 
 stunt <- stunt %>% mutate(analysis = "Primary")
-stunt_monthly24 <- stunt_monthly24 %>% mutate(analysis = "Cohorts monthly 0-24 m")
+stunt_monthly24 <- stunt_monthly24 %>% mutate(analysis = "Cohorts monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
 wast <- wast %>% mutate(analysis = "Primary")
 co_desc_data <- co_desc_data %>% mutate(analysis = "Primary")
 stunt_fe <- stunt_fe %>% mutate(analysis = "Fixed effects")
@@ -32,4 +30,10 @@ d$est[grepl("Incidence rate", d$measure)] <- d$est[grepl("Incidence rate", d$mea
 d$lb[grepl("Incidence rate", d$measure)] <- d$lb[grepl("Incidence rate", d$measure)] * 1000
 d$ub[grepl("Incidence rate", d$measure)] <- d$ub[grepl("Incidence rate", d$measure)] * 1000
 
+#Check for duplicates
+dim(d)
+d<-distinct(d)
+dim(d)
+
 save(d, file=paste0(here(),"/results/desc_data_cleaned.Rdata"))
+

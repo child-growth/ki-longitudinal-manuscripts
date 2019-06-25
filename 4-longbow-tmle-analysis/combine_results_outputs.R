@@ -4,26 +4,58 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/opttx_vim_results.rdata")
-vim <- results
+# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_bin.rdata")
+# vim_bin <- results
+# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_cont.rdata")
+# vim_cont <- results
+# 
+# dim(vim_bin)
+# head(vim_bin)
+# 
+# dim(vim_cont)
+# head(vim_cont)
+# 
 
-dim(vim)
-head(vim)
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/binary_wasting_results.rdata")
+stunting <- results %>% filter(outcome_variable %in% c("stunted", "sstunted", "ever_stunted", "ever_sstunted","dead", "co_occurence", "pers_wasted624")) %>%
+  filter(intervention_variable!="perdiar6" & intervention_variable!="perdiar24")
+
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_stunt_results.rdata")
+co_and_diarh <- results
+
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/wasting_results.rdata")
+HAZ <- results %>% filter(outcome_variable!="whz", intervention_variable!="perdiar6", intervention_variable!="perdiar24")
+
+#Rerun subset (temporary)
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_wast_results.rdata")
+wasting <- results %>% filter(intervention_variable!="birthlen")
+unique(wasting$outcome_variable)
+unique(wasting$agecat)
+
+load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/wasting_analyses/subset_wast_results_06nobw.rdata")
+wast06 <- results
+unique(wast06$outcome_variable)
+unique(wast06$agecat)
+wast06 <- wast06 %>% filter(agecat=="0-6 months (no birth wast)", intervention_variable!="birthlen")
+
+load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/wasting_analyses/subset_wast_birthlen.rdata")
+wast_birthlen <- results
+
+
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_wlz_results.rdata")
+WHZ <- results
+unique(WHZ$outcome_variable)
+
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_laz_diar.rdata")
+HAZ_diar <- results
+unique(HAZ_diar$intervention_variable)
 
 
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/binary_wasting_results.rdata")
-wasting <- results
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/wasting_results_cont.rdata")
-# wasting_cont_par <- results %>% filter(type=="PAR")
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/wasting rf results/wasting_results.rdata")
-Zscores <- results
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/opttx_vim/adjusted_binary_results.rdata")
-# vim <- results
 
 d <- bind_rows(
-  #adj_bin, unadj_bin, 
-  wasting, Zscores)
+  stunting, wasting, wast06,wast_birthlen, co_and_diarh,
+  HAZ, WHZ, HAZ_diar)
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -50,6 +82,9 @@ load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/contin
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
+
+df <- left_join(WHZ, N_sums_cont, by = c("agecat", "outcome_variable", "intervention_variable", "intervention_level"))
+head(df)
 
 dim(d)
 dim(N_sums)

@@ -13,6 +13,8 @@ simpleCap <- function(x){
 
 d_adj <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 d_unadj <- readRDS(paste0(here::here(),"/results/rf results/full_RF_unadj_results.rds"))
+d_adj$adjusted = 1
+d_unadj$adjusted = 0
 
 d <- rbind(d_adj, d_unadj)
 d$pooled <- 0
@@ -20,6 +22,8 @@ d$pooled <- 0
 
 dRR <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 dATE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results.rds"))
+dZ_PAR <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
+dPAF <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results.rds"))
 
 head(d)
 head(dRR)
@@ -29,14 +33,25 @@ dRR$adjusted = 1
 dRR$pooled = 1
 
 head(dATE)
-dATE <- dATE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=0)
+dATE <- dATE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1)
 dATE$adjusted = 1
 dATE$pooled = 1
 
+head(dZ_PAR)
+dZ_PAR <- dZ_PAR %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1)
+dZ_PAR$adjusted = 1
+dZ_PAR$pooled = 1
 
-df <- bind_rows(dRR, dATE, d)
+head(dPAF)
+dPAF <- dPAF %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0)
+dPAF$adjusted = 1
+dPAF$pooled = 1
 
-df <- df %>% filter(type=="RR" | type=="ATE")
+
+df <- bind_rows(dRR, dATE, dZ_PAR, dPAF, d)
+
+unique(df$type)
+df <- df %>% filter(type=="RR" | type=="ATE" | type=="PAR" | type=="PAF")
 df <- df %>% select("agecat","studyid","country","strata_label","adjustment_set","intervention_variable", "outcome_variable","type","parameter","intervention_level","baseline_level","region","continuous","adjusted", "pooled", "estimate",   "ci_lower", "ci_upper")
 
 
@@ -66,9 +81,10 @@ df$intervention_variable <- factor(df$intervention_variable, levels=c("birthwt",
                                                                       "predexfd6", "earlybf", "lag_WHZ_quart"))
 
 dput(as.character(unique(df$outcome_variable)))
-df$outcome_variable <- factor(df$outcome_variable, levels=c("ever_stunted","stunted", "sstunted",  "ever_sstunted", "wasted", 
-                                                            "swasted", "wast_rec90d", "ever_wasted", "ever_swasted", "pers_wast", 
-                                                            "ever_co", "dead", "co_occurence", "pers_wasted624"))
+df$outcome_variable <- factor(df$outcome_variable, c("sstunted", "stunted", "ever_stunted", "ever_co", "ever_wasted", 
+                                                     "wasted", "ever_swasted", "pers_wast", "wast_rec90d", "swasted", 
+                                                     "ever_sstunted", "y_rate_haz", "y_rate_len", "haz", "y_rate_wtkg", 
+                                                     "whz", "dead", "co_occurence", "pers_wasted624"))
 
 dput(as.character(unique(df$type)))
 df$type <- factor(df$type)
@@ -91,9 +107,49 @@ df <- df %>% select("agecat", "studyid", "country", "adjustment_set",
                     "intervention_level", "baseline_level", "region", "continuous", 
                     "adjusted", "pooled", "estimate", "ci_lower", "ci_upper", "RFlabel")
 
+transformations = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRXN1QYQd4OUSGe0eRAL6gCEJQmhA3HGddPxGTVhEy5Tdt8Tin-kGnh0naLXWcUe8Lop_B6r6cfnr6h/pub?gid=0&single=true&output=csv")
+
+df <- df %>%
+  dplyr::mutate(intervention_variable = df %>% left_join(transformations, by = c("intervention_variable" = "variable")) %>%
+                  replace_na(list(variable.type = "exposure")) %>%
+                  filter(variable.type == "exposure") %>%
+                  pull("description")) %>%
+
+  dplyr::mutate(outcome_variable = df %>% left_join(transformations, by = c("outcome_variable" = "variable")) %>%
+                  replace_na(list(variable.type = "outcome")) %>%
+                  filter(variable.type == "outcome") %>%
+                  pull("description"))
+
+
+df$intervention_variable <- factor(df$intervention_variable)
+
+levels(df$outcome_variable) = c("Prevalence of stunting", "Prevalence of severe stunting",
+                                "Cumulative incidence of stunting", "Cumulative incidence of severe stunting",
+                                "Prevalence of wasting", "Prevalence of severe wasting",
+                                "Cumulative incidence of wasting", "Cumulative incidence of severe wasting",
+                                "Prevalence of persistent wasting", "Persistently wasted 624",
+                                "Wasting recovery",
+                                "Prevalence of the co-occurance of stunting and wasting",
+                                "Cumulative incidence of the co-occurance of stunting and wasting",
+                                "Deceased")
+
+df  = df %>% mutate(type = case_when(
+  type == "ATE" ~ "Average Treatment Effect",
+  type == "RR" ~ "Relative Risk",
+  type == "PAR" ~ "Population Attributable Risk",
+  type == "PAF" ~ "Population Attributable Fraction"))
+
+df$type <- factor(df$type)
+
+
+levels(df$agecat) = append(levels(df$agecat), "Unspecified")
+levels(df$outcome_variable) = append(levels(df$outcome_variable), "Unspecified")
+df = df %>%replace_na(list(outcome_variable = "Unspecified", agecat = "Unspecified"))
+
+
 saveRDS(df, paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 
 
 
 # library(rsconnect)
-# rsconnect::deployApp('C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/6-shiny-app/RF app')
+# rsconnect::deployApp('C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/7-cc-shiny-app/')

@@ -196,7 +196,7 @@ save(d,file="U:/Data/Wasting/int_wasting_data.RData")
 #Keep monthly and quarterly studies
 d <- d %>% filter(measurefreq!="yearly")
 
-save(d,file="U:/Data/Wasting/rf_wasting_data.RData")
+save(d,file="U:/ucb-superlearner/Manuscript analysis data/rf_wasting_data.RData")
 
 
 #--------------------------------------------
@@ -217,6 +217,6 @@ d=d[-which(d$studyid=="kiGH5241-JiVitA-3" & d$tr!="Control"),]
 d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]
 
 
-save(d,file="U:/ucb-superlearner/data/wasting_data.RData")
+save(d,file="U:/ucb-superlearner/Manuscript analysis data/wasting_data.RData")
 
 

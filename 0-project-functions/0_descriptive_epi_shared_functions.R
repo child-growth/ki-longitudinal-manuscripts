@@ -235,7 +235,7 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
   if (mode_binary & mode_continuous) stop("can only do binary or continuous")
   # check if measure=="PLO" - default for all parameters bounded between 0 and 1 (prevalence, cumulative incidence)
   # because then output needs back transformation
-  if (measure == "PLO") {
+  if (measure == "PLO" & mode_binary) {
     # If only one row of the data, no need for pooling (single study, often seens when looping over agecats),
     # so just use the escalc() function that underlies RMA to calculate the parameter for the single study
     if (nrow(data) == 1) {
@@ -251,7 +251,8 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           lb = plogis(yi - 1.96 * se),
           ub = plogis(yi + 1.96 * se),
           nmeas.f = paste0("N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE), " ", nlab),
-          nstudy.f = paste0("N=", nstudies, " studies")
+          nstudy.f = paste0("N=", nstudies, " studies"),
+          method.used=method
         ) %>%
         subset(., select =c(nstudies, nmeas, agecat, est, se, lb, ub, nmeas.f, nstudy.f)) %>%
         as.tibble()
@@ -264,7 +265,7 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
         if (sum(data[[xi]]) == 0) method <- "FE"
       }
       fit <- NULL
-      if (mode_binary) {
+      method_fit <- method
         try(fit <- rma(
           data = data,
           ni = data[[ni]],
@@ -272,16 +273,23 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           xi = data[[xi]],
           measure = measure
         ))
-      }
-      if (mode_continuous) {
-        try(fit <- rma(
-          data = data,
-          yi = data[[yi]],
-          vi = data[[vi]],
-          # ni = data[[ni]],
-          method = method,
-          measure = measure
-        ))
+     if(is.null(fit)){try(fit <- rma(
+        data = data,
+        ni = data[[ni]],
+        method = "ML",
+        xi = data[[xi]],
+        measure = measure
+     ))
+       method_fit <- "ML"
+       }
+     if(is.null(fit)){try(fit <- rma(
+        data = data,
+        ni = data[[ni]],
+        method = "DL",
+        xi = data[[xi]],
+        measure = measure
+      ))
+        method_fit <- "DL"
       }
       # Create formatted dataset to return
       out <- data %>%
@@ -296,18 +304,55 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           lb = plogis(fit$beta - 1.96 * fit$se),
           ub = plogis(fit$beta + 1.96 * fit$se),
           nmeas.f = paste0("N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE), " ", nlab),
-          nstudy.f = paste0("N=", nstudies, " studies")
+          nstudy.f = paste0("N=", nstudies, " studies"),
+          method.used=method_fit
         ) %>%
         as.tibble()
       rownames(out) <- NULL
     }
   } else {
-    # If measure other than PLO is chosen:
-    to <- "only0"
-    # If measure if IR for incidence rate, use `to="if0all"` argument to add .5 to all cells of the 2x2 table if one is 0 so rma() works
-    if (measure == "IR") to <- "if0all"
     
+    if(measure == "IR"){
+        # If measure if IR for incidence rate, use `to="if0all"` argument to add .5 to all cells of the 2x2 table if one is 0 so rma() works
+        to <- "if0all"
+        fit <- NULL
+        method_fit <- method
+        try(fit <- rma(
+          data = data,
+          ti = data[[ni]],
+          method = method,
+          xi = data[[xi]],
+          measure = measure,
+          to=to
+        ))
+        if(is.null(fit)){try(fit <- rma(
+          data = data,
+          ti = data[[ni]],
+          method = "ML",
+          xi = data[[xi]],
+          measure = measure
+        ))
+          method_fit <- "ML"
+        }
+        if(is.null(fit)){try(fit <- rma(
+          data = data,
+          ti = data[[ni]],
+          method = "DL",
+          xi = data[[xi]],
+          measure = measure
+        ))
+          method_fit <- "DL"
+        }
+      
+    }else{
+      
+    
+    # If measure other than PLO or IR is chosen:
+    to <- "only0"
+
     fit <- NULL
+    method_fit <- method
+    
     if (mode_binary) {
       try(fit <- rma(
         data = data,
@@ -317,16 +362,53 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
         measure = measure,
         to=to
       ))
+      if(is.null(fit)){try(fit <- rma(
+        data = data,
+        ni = data[[ni]],
+        method = "ML",
+        xi = data[[xi]],
+        measure = measure
+      ))
+        method_fit <- "ML"
+      }
+      if(is.null(fit)){try(fit <- rma(
+        data = data,
+        ni = data[[ni]],
+        method = "DL",
+        xi = data[[xi]],
+        measure = measure
+      ))
+        method_fit <- "DL"
+      }
     }
     if (mode_continuous) {
       try(fit <- rma(
         data = data,
-        yi = data[[yi]],
-        vi = data[[vi]],
-        # ni = data[[ni]],
+        mi = data[[yi]],
+        sdi = sqrt(data[[vi]]),
+        ni = data[[ni]],
         method = method,
-        measure = measure
+        measure = "MN"
       ))
+      if(is.null(fit)){try(fit <- rma(
+        data = data,
+        mi = data[[yi]],
+        sdi = sqrt(data[[vi]]),
+        ni = data[[ni]],
+        method = "ML",
+        measure = "MN"))
+        method_fit <- "ML"
+      }
+      if(is.null(fit)){try(fit <- rma(
+        data = data,
+        mi = data[[yi]],
+        sdi = sqrt(data[[vi]]),
+        ni = data[[ni]],
+        method = "DL",
+        measure = "MN"))
+        method_fit <- "DL"
+      }
+    }
     }
     out <- data %>%
       ungroup() %>%
@@ -343,8 +425,10 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           "N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE),
           " ", nlab
         ),
-        nstudy.f = paste0("N=", nstudies, " studies")
+        nstudy.f = paste0("N=", nstudies, " studies"),
+        method.used=method_fit
       )
+    
   }
   return(out)
 }
@@ -384,11 +468,14 @@ fit.escalc <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure, metho
   mode_continuous <- !is.null(yi) | !is.null(vi)
   mode_binary <- !is.null(xi)
   if (mode_binary & mode_continuous) stop("can only do binary or continuous")
-  if (mode_binary) {
+  if(measure == "IR"){
+    data <- escalc(data = data, ti = data[[ni]], xi = data[[xi]], method = method, measure = measure, append = TRUE)
+  }
+  if (mode_binary & measure!="IR") {
     data <- escalc(data = data, ni = data[[ni]], xi = data[[xi]], method = method, measure = measure, append = TRUE)
   }
   if (mode_continuous) {
-    data <- data.frame(data, escalc(data = data, ni = data[[ni]], yi = data[[yi]], vi = data[[vi]], method = method, measure = measure))
+    data <- data.frame(data, escalc(data = data, ni = data[[ni]], mi = data[[yi]], sdi = sqrt(data[[vi]]), method = method, measure = "MN"))
   }
   if (measure == "PLO") {
     data$se <- sqrt(data$vi)
@@ -396,6 +483,7 @@ fit.escalc <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure, metho
     data$ci.ub <- plogis(data$yi + 1.96 * data$se)
     data$yi <- plogis(data$yi)
   } else {
+    
     data$se <- sqrt(data$vi)
     data$ci.lb <- data$yi - 1.96 * data$se
     data$ci.ub <- data$yi + 1.96 * data$se

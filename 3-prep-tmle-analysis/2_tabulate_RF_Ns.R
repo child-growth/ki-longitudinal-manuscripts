@@ -14,7 +14,6 @@ setwd("U:/UCB-SuperLearner/Wasting rallies/")
 cov<-readRDS("U:/ucb-superlearner/stunting rallies/FINAL_clean_covariates.rds")
 
 #load outcomes
-#load outcomes
 load("wast_prev.RData")
 load("wast_cuminc.rdata")
 load("wast_cuminc_nobirth.rdata")

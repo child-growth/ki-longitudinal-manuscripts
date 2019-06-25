@@ -110,15 +110,25 @@ allmetap(LRp$p, method="all")
 
 
 #Summarize change by 
-df <- d %>% group_by(studyid, country, subjid, birthcat, childseason, childseason_birthcat) %>% 
+df <- d %>% group_by(studyid, country, subjid, birthcat, childseason, childseason_birthcat) %>%
   summarize(age1=mean(agedays), wlz1=mean(whz)) %>%
   group_by(studyid, country, subjid, birthcat) %>% arrange(studyid, country, subjid, birthcat, age1) %>%
   mutate(age2=lead(age1), wlz2=lead(wlz1), wlz_diff=wlz2-wlz1) %>%
-  group_by(studyid, country, birthcat, childseason, childseason_birthcat) %>% 
+  group_by(studyid, country, birthcat, childseason, childseason_birthcat) %>%
   summarize(nmeas=sum(!is.na(wlz_diff)), meandiff=mean(wlz_diff, na.rm=T), vardiff=var(wlz_diff, na.rm=T),
             mean_age1=mean(age1, na.rm=T), mean_age2=mean(age2, na.rm=T)) %>%
   filter(!is.na(vardiff)) %>% filter(!is.na(childseason))
 df
+dim(df)
+
+# df <- d %>% group_by(studyid, country, birthcat, childseason, childseason_birthcat) %>% 
+#   summarize(age1=mean(agedays), wlz1=mean(whz), sd1=sd(whz), n1=n()) %>%
+#   group_by(studyid, country, birthcat) %>% arrange(studyid, country, birthcat, age1) %>%
+#   mutate(age2=lead(age1), wlz2=lead(wlz1), sd2=lead(sd1), n2=lead(n1)) %>% filter(!is.na(childseason)) #%>%
+#   #filter(!(n1 < 10 | n2 < 10))
+# df
+# dim(df)
+
 
 df <- droplevels(df)
 
@@ -126,15 +136,44 @@ df <- droplevels(df)
 #ki.ttest(data=df, y=, levels, ref, comp)
 
 #Pool seasonal changes across cohorts
+# fit.md.rma <- function(data,age,y1i,sd1i,n1i,y2i,sd2i,n2i){
+#   cat(age,"\n")
+#   data=filter(data,agecat==age)
+#   
+#   fit <- NULL
+#   try(fit <- rma(m1i=data[[y1i]], sd1i=data[[sd1i]], n1i=data[[n1i]],m2i=data[[y2i]], sd2i=data[[sd2i]], n2i=data[[n2i]], method="REML", measure = "MD"))
+#   if(is.null(fit)){try(fit <- rma(m1i=data[[y1i]], sd1i=data[[sd1i]], n1i=data[[n1i]],m2i=data[[y2i]], sd2i=data[[sd2i]], n2i=data[[n2i]], method="ML", measure = "MD"))}
+#   if(is.null(fit)){try(fit <- rma(m1i=data[[y1i]], sd1i=data[[sd1i]], n1i=data[[n1i]],m2i=data[[y2i]], sd2i=data[[sd2i]], n2i=data[[n2i]], method="DL", measure = "MD"))}
+#   if(is.null(fit)){try(fit <- rma(m1i=data[[y1i]], sd1i=data[[sd1i]], n1i=data[[n1i]],m2i=data[[y2i]], sd2i=data[[sd2i]], n2i=data[[n2i]], method="HE", measure = "MD"))}
+#   
+#   out = data %>%
+#     ungroup() %>%
+#     summarise(nstudies=length(unique(studyid)),
+#               nmeas_t1=sum(data[[n1i]][agecat==age]),
+#               nmeas_t2=sum(data[[n2i]][agecat==age])) %>%
+#     mutate(agecat=age, birthcat=data$birthcat[1], childseason=data$childseason[1], 
+#            mean_age1=data$age1[1], mean_age2=data$age2[1],
+#            est=fit$beta, se=fit$se, lb=fit$ci.lb, ub=fit$ci.ub)
+#   return(out)
+# }
+
+# estimate random effects, format results
+# df$agecat <- df$childseason_birthcat
+# whz.res=lapply((levels(df$childseason_birthcat)),function(x) 
+#   fit.md.rma(data=df, n1i="n1", y1i="wlz1", sd1i="sd1", n2i="n2", y2i="wlz2", sd2i="sd2",age=x))
+# whz.res=as.data.frame(rbindlist(whz.res))
+# whz.res
+
+
 fit.cont.rma <- function(data,age,yi,vi,ni,nlab){
   cat(age,"\n")
   data=filter(data,agecat==age)
   
   fit <- NULL
-  try(fit <- rma(yi=data[[yi]], vi=data[[vi]], method="REML", measure = "GEN"))
-  if(is.null(fit)){try(fit <- rma(yi=data[[yi]], vi=data[[vi]], method="ML", measure = "GEN"))}
-  if(is.null(fit)){try(fit <- rma(yi=data[[yi]], vi=data[[vi]], method="DL", measure = "GEN"))}
-  if(is.null(fit)){try(fit <- rma(yi=data[[yi]], vi=data[[vi]], method="HE", measure = "GEN"))}
+  try(fit <- rma(mi=data[[yi]], sdi=sqrt(data[[vi]]), ni=data[[ni]], method="REML", measure = "MN"))
+  if(is.null(fit)){try(fit <- rma(mi=data[[yi]], sdi=sqrt(data[[vi]]), ni=data[[ni]], method="ML", measure = "MN"))}
+  if(is.null(fit)){try(fit <- rma(mi=data[[yi]], sdi=sqrt(data[[vi]]), ni=data[[ni]], method="DL", measure = "MN"))}
+  if(is.null(fit)){try(fit <- rma(mi=data[[yi]], sdi=sqrt(data[[vi]]), ni=data[[ni]], method="HE", measure = "MN"))}
   
   out = data %>%
     ungroup() %>%
@@ -150,12 +189,17 @@ fit.cont.rma <- function(data,age,yi,vi,ni,nlab){
 }
 
 
+
+
+
 # estimate random effects, format results
-df$agecat <- df$childseason_birthcat
 whz.res=lapply((levels(df$childseason_birthcat)),function(x) 
-  fit.cont.rma(data=df, ni="nmeas", yi="meandiff", vi="vardiff", nlab="children",age=x))
+  fit.cont.rma(data=df, ni="nmeas", yi="meandiff", vi="vardiff",age=x, nlab="children"))
 whz.res=as.data.frame(rbindlist(whz.res))
-whz.res
+whz.res$childseason_birthcat = levels(df$childseason_birthcat)
+# whz.res$birthcat <- str_split(as.character(whz.res$childseason_birthcat), pattern="monsoon.", simplify = T)[,2]
+# whz.res$childseason <- str_split(as.character(whz.res$childseason_birthcat), pattern=".Born", simplify = T)[,1]
+# whz.res$childseason <- factor(whz.res$childseason, levels = unique(whz.res$childseason))
 
 whz.res$est=as.numeric(whz.res$est)
 whz.res$lb=as.numeric(whz.res$lb)

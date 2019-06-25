@@ -4,27 +4,11 @@
 
 # growth velocity analysis
 ##########################################
-
-
-# FINAL dataset of all studies
-library(tidyverse)
-library(data.table)
-# install.packages("bit64")
-library(bit64)
-
-# options(repos = c(CRAN = "http://cran.rstudio.com/",
-#  deltarho = "http://packages.deltarho.org"))
-# install.packages("growthstandards")
-library(growthstandards)
-
-# source("U:/GHAP-Data-Management/HBGDki_functions.R")
-
-setwd("U:/")
-#setwd("U:/data/ucb-superlearner/Stunting rallies")
-gc()
+rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
 
 #Read rds file and drop unneeded columns
-d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T,
+dfull<-fread("U:/ucb-superlearner/Manuscript analysis data/FINAL.csv", header = T,
          colClasses = c(SUBJID = "integer64"),
          drop = c( "AGEIMPFL",  
                    # "WTKG",    "HTCM",    "LENCM",       
@@ -49,8 +33,8 @@ d<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T,
          )
 )
 
-colnames(d) <- tolower(colnames(d))
-setkeyv(d, cols = c("country","studyid","subjid"))
+colnames(dfull) <- tolower(colnames(dfull))
+d<-dfull
 gc()
 
 #Drop studies Vishak added to data product that don't meet inclusion criteria
@@ -109,10 +93,14 @@ d$measurefreq[d$studyid=="ki1114097-CMIN" & d$country=="PERU"] <- "monthly"
 d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="BRAZIL"),] #Drop because yearly but not an RCT
 d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop because yearly but not an RCT
 
+#Drop yearly
+d <- d %>% filter(measurefreq!="yearly")
 
+d <- as.data.table(d)
+setkeyv(d, cols = c("country","studyid","subjid"))
 
 #--------------------------------------------------------
-# filter out obs with missing sex
+# filter out obs with missing sex
 # filter out person-time obs with missing both haz & waz
 #--------------------------------------------------------
 #sex must be "Male" or "Female"
@@ -120,12 +108,10 @@ table(d$sex)
 #set blank sex to missing
 d$sex[d$sex=="" | d$sex=="Unknown"]<-NA
 #drop kids missing sex
-d <- d[!is.na(sex), ]
+d <- d[!is.na(d$sex), ]
 # d <- d %>% filter(!is.na(sex)) %>% data.table
 #drop if both haz and waz are missing
-d <- d[!(is.na(haz) & is.na(waz)), ]
-# d[is.na(haz), ]
-# d[is.na(waz), ]
+d <- d[!(is.na(d$haz) & is.na(d$waz)), ]
 
 #--------------------------------------------------------------------------
 # birth characteristics
@@ -134,7 +120,7 @@ d <- d[!(is.na(haz) & is.na(waz)), ]
 #--------------------------------------------------------------------------
 table(d$studyid, is.na(d$birthlen))
 table(d$studyid, is.na(d$birthwt))
-dblenwt <- d[,list(birthwt=first(birthwt), birthlen=first(birthlen), sex=first(sex)), by = list(studyid, subjid)]
+dblenwt <- d[,list(birthwt=first(birthwt), birthlen=first(birthlen), sex=first(sex)), by = list(studyid, country, subjid)]
 dblenwt <- dblenwt[!(is.na(birthwt) & is.na(birthlen)), ]
 dblenwt[is.na(birthlen), ]
 dblenwt[is.na(birthwt), ]
@@ -237,5 +223,34 @@ diffcatlevs = paste0(t1vec, "-", t2vec, " months")
 dd_out[, "diffcat" := factor(diffcat, levels = diffcatlevs)]
 head(dd_out[["diffcat"]])
 
-saveRDS(dd_out, file="velocity_longfmt.rds")
+saveRDS(dd_out, file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt_rf.rds")
 
+#--------------------------------------------
+# drop trial arms with intervention impact on HAZ
+# -either based on published literature or analysis
+# of effects on CI of stunting by 24months of age
+#--------------------------------------------
+
+dd_sub <- as.data.frame(dd_out)
+
+df <- as.data.frame(d)
+df <- df %>% filter(agedays!=0) %>% subset(., select = c("studyid","subjid","tr")) %>% group_by(studyid, subjid) %>% slice(1)
+
+dim(dd_sub)
+dd_sub <- left_join(dd_sub, df, by=c("studyid","subjid"))
+dim(dd_sub)
+dd_sub$tr[is.na(dd_sub$tr)]<-""
+
+
+
+dim(dd_sub)
+dd_sub=dd_sub[!(dd_sub$studyid=="kiGH5241-JiVitA-4" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="ki1119695-PROBIT" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="ki1000304b-SAS-FoodSuppl" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="ki1112895-iLiNS-Zinc" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="ki1000304b-SAS-CompFeed" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="kiGH5241-JiVitA-3" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="ki1135781-COHORTS" & dd_sub$tr=="Other"),]
+dim(dd_sub)
+
+saveRDS(dd_sub, file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")

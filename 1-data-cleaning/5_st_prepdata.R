@@ -207,8 +207,7 @@ d=d[-which(d$studyid=="kiGH5241-JiVitA-3" & d$tr!="Control"),]
 d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]
 
 
-# save(d,file="U:/Data/Stunting/stunting_data.RData")
-save(d, file="U:/ucb-superlearner/data/stunting_data.RData")
+save(d, file="U:/ucb-superlearner/Manuscript analysis data/stunting_data.RData")
 
 
 

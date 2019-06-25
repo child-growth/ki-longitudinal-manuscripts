@@ -13,7 +13,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
-load("U:/ucb-superlearner/data/Wasting_inc_rf_data.RData")
+load("U:/ucb-superlearner/Manuscript analysis data/Wasting_inc_rf_data.RData")
 
 
 #Drop TR so it doesn't affect merge with covariates
@@ -108,7 +108,7 @@ cuminc <- bind_rows(wast_ci_0_6, wast_ci_6_24, wast_ci_0_24)
 #--------------------------------------
 
 # define age windows
-d6_nobirth <- calc.ci.agecat(d_noBW, range = 6, birth="no")
+d6_nobirth <- calc.ci.agecat(d_noBW, range = 6, birth="yes")
 
 
 wast_ci_0_6_no_birth = d6_nobirth %>% ungroup() %>% 
