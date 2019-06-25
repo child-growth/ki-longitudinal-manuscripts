@@ -14,51 +14,9 @@ library(here)
 
 
 #Load data
-df <- readRDS(paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
-var_key = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRXN1QYQd4OUSGe0eRAL6gCEJQmhA3HGddPxGTVhEy5Tdt8Tin-kGnh0naLXWcUe8Lop_B6r6cfnr6h/pub?gid=0&single=true&output=csv")
+df <- readRDS("shiny_rf_results.rds")
+spline_variables <- readRDS("spline_variables.rds")
 
-# Set order for outcome
-levels(df$outcome_variable) = c("Prevalence of stunting", "Prevalence of severe stunting",
-                                "Cumulative incidence of stunting", "Cumulative incidence of severe stunting",
-                                "Prevalence of wasting", "Prevalence of severe wasting",
-                                "Cumulative incidence of wasting", "Cumulative incidence of severe wasting",
-                                "Prevalence of persistent wasting", "Persistently wasted 624",
-                                "Wasting recovery",
-                                "Prevalence of the co-occurance of stunting and wasting",
-                                "Cumulative incidence of the co-occurance of stunting and wasting",
-                                "Deceased", "Unspecified")
-
-# Set order for exposure
-levels(df$intervention_variable) = c("# of children <5 in HH", "# of people in HH", "# of rooms in HH",           
-                                     "Any wasting <6 mo.", "Birth length (cm)", "Birth month",       
-                                     "Birth order", "Birth weight (kg)", "Breastfed hour after birth", 
-                                     "Child delivered at home", "Clean cooking fuel usage", "Diarrhea <24 mo. (% days)",
-                                     "Diarrhea <6 mo. (% days)", "Enrolled wasted", "Excl/Pred breastfed <6mo.",  
-                                     "Father's age", "Father's education", "Father's height",            
-                                     "Gestational age at birth", "HH food security", "HH wealth",                  
-                                     "Improved floor", "Improved sanitation", "Mean WHZ in the prior 3 mo.",
-                                     "Month of measurement", "Mother's age", "Mother's BMI",               
-                                     "Mother's education","Mother's height", "Mother's weight",            
-                                     "Persistent wasting <6 mo.", "Safe water source", "Sex",                        
-                                     "Single parent", "Vaginal birth")
-
-# Set order for parameter
-levels(df$type) = c("Average Treatment Effect", "Population Attributable Fraction",
-                    "Population Attributable Risk", "Relative Risk")
-
-# Set order for age category
-levels(df$agecat) = c("0-24 months", "Birth", "6 months", "24 months", "0-6 months", "6-24 months", "12 months",   
-                      "15 months", "18 months", "21 months", "3 months", "9 months", "3-6 months", "6-9 months",  
-                      "9-12 months", "12-15 months", "15-18 months", "Unspecified")
-
-levels(df$region) = c("Pooled", "South Asia", "Africa", "Latin America", "N.America & Europe")
-
-spline_variables =  list.files(path = "figures/risk factor/Splines/HAZ/")
-spline_variables <- data_frame(spline_vars = (spline_variables %>% gsub("haz_stat_by_", "", ., perl = TRUE) %>% gsub(".png", "", ., perl = TRUE)))
-spline_variables <- spline_variables %>% mutate(spline_vars = (spline_variables %>% left_join(var_key, by = c("spline_vars" = "variable")) %>%
-                                               replace_na(list(variable.type = "exposure")) %>%
-                                               filter(variable.type == "exposure") %>%
-                                               pull("description")))
 
 #------------------------------------------------
 # Inputs for Shiny App
@@ -171,7 +129,7 @@ server <- function(input, output, session) {
     
     selectInput('exposure',
                 'Exposure Variable:',
-                unique(d$intervention_variable))
+                levels(d$intervention_variable))
   })
   
   
@@ -184,7 +142,7 @@ server <- function(input, output, session) {
     
     selectInput('parameter',
                 'Parameter:',
-                choices = unique(df$type))
+                choices = levels(df$type))
   })
   
 
