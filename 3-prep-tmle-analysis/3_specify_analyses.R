@@ -100,11 +100,7 @@ WHZ_quart_cuminc <- specify_rf_analysis(A="lag_WHZ_quart", Y="ever_stunted", W=c
                                                                                  "trth2o","cleanck","impfloor","impsan","safeh20"),
                                         file="stuntCI_whz_rf.Rdata")
 
-co_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                   "mbmi",          "single",        "fage",          "fhtcm",       
-                                   "nrooms",      "nchldlt5",    "nhh",              
-                                   "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
-                                   "feducyrs", "hfoodsec"),
+co_cuminc <- specify_rf_analysis(A=Avars,
                               Y="ever_co", file="co_cuminc_rf.Rdata")
 
 
@@ -159,13 +155,14 @@ morbidity <- specify_rf_analysis(A=Avars_morbidity,
 
 
 #bind together datasets
-#analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
+analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
 
 #Temp subset to rerun
-#analyses <- rbind(prev, rec, cuminc, cuminc_nobirth, pers_wast)
-analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc)
-analyses <- analyses[analyses$A %in% c("perdiar6","perdiar24") | !grepl("stunt",analyses$Y),]
-table(analyses$file)
+#analyses <- analyses %>% filter(Y=="ever_co"| (A %in% c("perdiar24","perdiar6") & Y %in% c("stunted", "ever_stunted","ever_co")) | (Y %in% c("wasted","ever_co") & A=="birthlen"))
+analyses <- analyses %>% filter(Y %in% c("ever_wasted") & A=="birthlen")
+
+
+
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
@@ -203,7 +200,7 @@ whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 #Temp subset to rerun
 #analyses <- whz
 analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
-analyses <- analyses[analyses$A %in% c("perdiar6","perdiar24") | analyses$Y=="whz",]
+analyses <- analyses[analyses$A %in% c("perdiar6","perdiar24") & analyses$Y=="haz",]
 table(analyses$file)
 
 #Save analysis specification
