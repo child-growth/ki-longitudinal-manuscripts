@@ -15,23 +15,38 @@
 
 
 # Copy utility run script into this folder for concision in call
-cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/stunting
+# cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/stunting
 
 # Run folder scripts and produce output
 # skip 0-make-stunt-fakedata.R
 cd ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/stunting
-./runFileSaveLogs -i "descriptive-outcomes-stunting" \
-0-make-who-growth-vel.R \
-1_growth_velocity.R \
-2_stunt_calc_outcomes_monthly.R \
-2_stunt_calc_outcomes.R \
-3_pool_velocity_outcomes.R \
-4_stunt_flowdata.R \
-5_stunt_rec_cohort.R \
-6_stunt_meandiff_haz.R \
-7_stunt_meandiff_hazvel.R
+
+# ./runFileSaveLogs -i "2-descriptive-outcomes-stunting" \
+# 0-make-who-growth-vel.R \
+# 1_growth_velocity.R \
+# 2_stunt_calc_outcomes_Anna.R \
+# 2_stunt_calc_outcomes_fe.R \
+# 2_stunt_calc_outcomes_monthly.R \
+# 2_stunt_calc_outcomes.R \
+# 3_pool_velocity_outcomes.R \
+# 4_stunt_flowdata.R \
+# 5_stunt_rec_cohort.R \
+# 6_stunt_meandiff_haz.R \
+# 7_stunt_meandiff_hazvel.R
+
+R CMD BATCH 0-make-who-growth-vel.R 
+R CMD BATCH 1_growth_velocity.R
+R CMD BATCH 2_stunt_calc_outcomes_Anna.R 
+R CMD BATCH 2_stunt_calc_outcomes_fe.R 
+R CMD BATCH 2_stunt_calc_outcomes_monthly.R 
+R CMD BATCH 2_stunt_calc_outcomes.R 
+R CMD BATCH 3_pool_velocity_outcomes.R 
+R CMD BATCH 4_stunt_flowdata.R 
+R CMD BATCH 5_stunt_rec_cohort.R 
+R CMD BATCH 6_stunt_meandiff_haz.R 
+R CMD BATCH 7_stunt_meandiff_hazvel.R
 
 
 
 # Remove copied utility run script
-rm runFileSaveLogs
+# rm runFileSaveLogs

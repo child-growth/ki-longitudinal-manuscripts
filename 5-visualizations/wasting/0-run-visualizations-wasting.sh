@@ -15,26 +15,41 @@
 
 
 # Copy utility run script into this folder for concision in call
-cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualization/wasting
+# cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualization/wasting
 
 # Run folder scripts and produce output
-# run fig-DHS-plots-scores? in folder???                              ## IMPORTANT!! ##
 cd ~/ki-longitudinal-manuscripts/5-visualization/wasting
-./runFileSaveLogs -i "visualizations-wasting" \
-fig-birth-wasting-recovery-stats.R \
-fig-co-flow.R \
-fig-DHS-plots-zscores-compute.R \
-fig-DHS-plots-zscores.R \
-fig-DHS-quantile-plots-wasting.R \
-fig-pers-wasting.R \
-fig-wasting-classification-example.R \
-fig-wasting-descriptive-epi-plots.R \
-fig-wasting-prevalence-map.R \
-fig-wasting-rec-hist.R \
-fig-wasting-seasonality-diff-plot.R \
-fig-wasting-seasonality.R \
-fig-wasting-study-inventory-heatmap.R \
-manuscript_figure_grids.R
+
+# ./runFileSaveLogs -i "visualizations-wasting" \
+# fig-birth-wasting-recovery-stats.R \
+# fig-co-flow.R \
+# fig-DHS-plots-zscores-compute.R \
+# fig-DHS-plots-zscores.R \
+# fig-DHS-quantile-plots-wasting.R \
+# fig-pers-wasting.R \
+# fig-wasting-classification-example.R \
+# fig-wasting-descriptive-epi-plots.R \
+# fig-wasting-prevalence-map.R \
+# fig-wasting-rec-hist.R \
+# fig-wasting-seasonality-diff-plot.R \
+# fig-wasting-seasonality.R \
+# fig-wasting-study-inventory-heatmap.R \
+# manuscript_figure_grids.R
+
+R CMD BATCH fig-birth-wasting-recovery-stats.R 
+R CMD BATCH fig-co-flow.R 
+R CMD BATCH fig-DHS-plots-zscores-compute.R 
+R CMD BATCH fig-DHS-plots-zscores.R 
+R CMD BATCH fig-DHS-quantile-plots-wasting.R 
+R CMD BATCH fig-pers-wasting.R
+R CMD BATCH fig-wasting-classification-example.R 
+R CMD BATCH fig-wasting-descriptive-epi-plots.R 
+R CMD BATCH fig-wasting-prevalence-map.R 
+R CMD BATCH fig-wasting-rec-hist.R 
+R CMD BATCH fig-wasting-seasonality-diff-plot.R 
+R CMD BATCH fig-wasting-seasonality.R 
+R CMD BATCH fig-wasting-study-inventory-heatmap.R 
+R CMD BATCH manuscript_figure_grids.R
 
 # Remove copied utility run script
-rm runFileSaveLogs
+# rm runFileSaveLogs

@@ -15,16 +15,22 @@
 
 
 # Copy utility run script into this folder for concision in call
-cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualization/shared
+# cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualization/shared
 
 # Run folder scripts and produce output
 # run fig-DHS in folder???                                   
 cd ~/ki-longitudinal-manuscripts/5-visualization/shared
-./runFileSaveLogs -i "visualizations-shared" \
-dhs-quantile-plots.R \
-fig-CONSORT-figure1.R \
-fig-Zscore-spline-plots.R \
-helper_sampling_weights.R
+
+# ./runFileSaveLogs -i "visualizations-shared" \
+# dhs-quantile-plots.R \
+# fig-CONSORT-figure1.R \
+# fig-Zscore-spline-plots.R \
+# helper_sampling_weights.R
+
+R CMD BATCH dhs-quantile-plots.R 
+R CMD BATCH fig-CONSORT-figure1.R 
+R CMD BATCH fig-Zscore-spline-plots.R 
+R CMD BATCH helper_sampling_weights.R
 
 # Remove copied utility run script
-rm runFileSaveLogs
+# rm runFileSaveLogs

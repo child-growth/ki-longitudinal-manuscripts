@@ -15,20 +15,31 @@
 
 
 # Copy utility run script into this folder for concision in call
-cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/wasting
+# cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/wasting
 
 # Run folder scripts and produce output
 cd ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/wasting
-./runFileSaveLogs -i "clean-data" \
-2_wast_calcinc.R \
-2_wast_inc_cohort.R \
-3_birth_wast_outcomes.R \
-3_co_summarize_outcomes.R \
-3_wast_ummarize_outcomes.R \
-7_wast_ir_sensitivity.R \
-8_wast_manuscript_extra_stats.R \
-co_flowdata.R \
-wast_flowdata.R
+
+# ./runFileSaveLogs -i "descriptive-outcomes-wasting" \
+# 2_wast_calcinc.R \
+# 2_wast_inc_cohort.R \
+# 3_birth_wast_outcomes.R \
+# 3_co_summarize_outcomes.R \
+# 3_wast_summarize_outcomes.R \
+# 7_wast_ir_sensitivity.R \
+# 8_wast_manuscript_extra_stats.R \
+# co_flowdata.R \
+# wast_flowdata.R
+
+R CMD BATCH 2_wast_calcinc.R 
+R CMD BATCH 2_wast_inc_cohort.R 
+R CMD BATCH 3_birth_wast_outcomes.R 
+R CMD BATCH 3_co_summarize_outcomes.R 
+R CMD BATCH 3_wast_summarize_outcomes.R 
+R CMD BATCH 7_wast_ir_sensitivity.R 
+R CMD BATCH 8_wast_manuscript_extra_stats.R 
+R CMD BATCH co_flowdata.R 
+R CMD BATCH wast_flowdata.R
 
 # Remove copied utility run script
-rm runFileSaveLogs
+# rm runFileSaveLogs

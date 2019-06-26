@@ -29,7 +29,7 @@ def is_valid_directory(parser, arg):
         return arg
 
 parser.add_argument('-p', '--parallel', action='store_true', help="Runs the argument R scripts in parallel if specified")
-parser.add_argument("-l", "--logDirPrefix", help="The directory in which log files will be saved to.", default="/data/ki/ki-logs/", type=lambda logDirPrefix: is_valid_directory(parser, logDirPrefix))
+parser.add_argument("-l", "--logDirPrefix", help="The directory in which log files will be saved to.", default="/ki-logs", type=lambda logDirPrefix: is_valid_directory(parser, logDirPrefix))
 parser.add_argument("-i", "--identifier", help="Adds an identifier to the directory name where this is saved")
 parser.add_argument('filepaths', nargs='+', type=lambda filename: is_valid_file(parser, filename), help="The filepath(s) of the R scripts to be run")
 
