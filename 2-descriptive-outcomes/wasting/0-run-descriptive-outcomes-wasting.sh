@@ -18,7 +18,7 @@
 # cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/wasting
 
 # Run folder scripts and produce output
-cd ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/wasting
+# cd ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/wasting
 
 # ./runFileSaveLogs -i "descriptive-outcomes-wasting" \
 # 2_wast_calcinc.R \

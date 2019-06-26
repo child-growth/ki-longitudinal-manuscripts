@@ -18,7 +18,7 @@
 # cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualization/wasting
 
 # Run folder scripts and produce output
-cd ~/ki-longitudinal-manuscripts/5-visualization/wasting
+# cd ~/ki-longitudinal-manuscripts/5-visualization/wasting
 
 # ./runFileSaveLogs -i "visualizations-wasting" \
 # fig-birth-wasting-recovery-stats.R \

@@ -18,7 +18,7 @@
 # cp ~/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/runFileSaveLogs ~/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/1-data-cleaning
 
 # Run folder scripts and produce output
-cd ~/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/1-data-cleaning/
+# cd 1-data-cleaning/
 
 # ./runFileSaveLogs -i "clean-data" \
 # 1_assetPCA-allstudies.R \

@@ -18,8 +18,7 @@
 # cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualization/shared
 
 # Run folder scripts and produce output
-# run fig-DHS in folder???                                   
-cd ~/ki-longitudinal-manuscripts/5-visualization/shared
+# cd ~/ki-longitudinal-manuscripts/5-visualization/shared
 
 # ./runFileSaveLogs -i "visualizations-shared" \
 # dhs-quantile-plots.R \

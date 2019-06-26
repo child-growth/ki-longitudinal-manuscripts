@@ -18,8 +18,7 @@
 # cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualization/stunting
 
 # Run folder scripts and produce output
-# run fig-DHS in folder???                                   ## IMPORTANT!! ##
-cd ~/ki-longitudinal-manuscripts/5-visualization/stunting
+# cd ~/ki-longitudinal-manuscripts/5-visualization/stunting
 
 # ./runFileSaveLogs -i "visualizations-stunting" \
 # fig-DHS-plots-laz-compute.R \

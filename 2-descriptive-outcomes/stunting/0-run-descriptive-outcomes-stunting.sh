@@ -19,7 +19,7 @@
 
 # Run folder scripts and produce output
 # skip 0-make-stunt-fakedata.R
-cd ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/stunting
+# cd ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/stunting
 
 # ./runFileSaveLogs -i "2-descriptive-outcomes-stunting" \
 # 0-make-who-growth-vel.R \
