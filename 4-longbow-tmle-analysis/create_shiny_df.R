@@ -87,6 +87,7 @@ df <- df %>% select("agecat", "studyid", "country", "adjustment_set",
 
 var_key = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRXN1QYQd4OUSGe0eRAL6gCEJQmhA3HGddPxGTVhEy5Tdt8Tin-kGnh0naLXWcUe8Lop_B6r6cfnr6h/pub?gid=0&single=true&output=csv")
 
+intervention_levels = levels(df$intervention_variable)
 
 df <- df %>%
   dplyr::mutate(intervention_variable = df %>% left_join(var_key, by = c("intervention_variable" = "variable")) %>%
@@ -99,8 +100,8 @@ df <- df %>%
                   filter(variable.type == "outcome") %>%
                   pull("description"))
 
-
-
+df$intervention_variable = factor(df$intervention_variable)
+df$outcome_variable = factor(df$outcome_variable)
 
 # Set order for outcome
 outcome_levels = c("Prevalence of stunting", "Prevalence of severe stunting",
@@ -152,10 +153,6 @@ levels(df$region) = c("Pooled", "South Asia", "Africa", "Latin America", "N.Amer
 df = df %>% replace_na(list(outcome_variable = "Unspecified", agecat = "Unspecified"))
 
 
-
-
-
-
 spline_variables =  list.files(path = "figures/risk factor/Splines/HAZ/")
 spline_variables <- data_frame(spline_vars = (spline_variables %>% gsub("haz_stat_by_", "", ., perl = TRUE) %>% gsub(".png", "", ., perl = TRUE)))
 spline_variables <- spline_variables %>% mutate(spline_vars = (spline_variables %>% left_join(var_key, by = c("spline_vars" = "variable")) %>%
@@ -166,6 +163,7 @@ spline_variables <- spline_variables %>% mutate(spline_vars = (spline_variables 
 
 saveRDS(df, paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 saveRDS(spline_variables, paste0(here::here(),"/7-cc-shiny-app/spline_variables.rds"))
+saveRDS(var_key, paste0(here::here(),"/7-cc-shiny-app/var_key.rds"))
 
 
 

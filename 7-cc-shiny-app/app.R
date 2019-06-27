@@ -162,9 +162,10 @@ server <- function(input, output, session) {
       filter(intervention_variable == input$exposure) %>%
       filter(outcome_variable == input$outcome) %>% 
       filter(type == input$parameter) %>% 
-      filter(agecat == input$age) 
+      filter(agecat == input$age) %>% 
+      filter(region != "N.America & Europe") %>% 
+      drop_na(region)
     
-    d = df %>% filter(region != "N.America & Europe") %>% drop_na(region)
     remaining_regions = levels(df$region)[levels(df$region) %in% unique(df$region)]
     
     selectInput('region',
@@ -192,6 +193,8 @@ server <- function(input, output, session) {
       adjusted == 0 ~ "Unadjusted")) %>% 
       drop_na(adjusted) %>% 
       arrange(adjusted)
+    
+    levels(df$adjusted) = c("Unadjusted", "Adjusted")
     
 
     radioButtons('adjusted',
