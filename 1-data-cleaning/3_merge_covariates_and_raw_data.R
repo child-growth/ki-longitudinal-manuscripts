@@ -1,9 +1,10 @@
 
 
+#merge covariates with additional raw data covariates
 
 
 rm(list=ls())
-library(tidyverse)
+source(paste0(here::here(), "/0-config.R"))
 
 
 #quantiling functions
@@ -51,19 +52,16 @@ quantile_rf <- function(A, labs=NULL, Acuts=NULL){
 
 
 
-#merge covariates with additional raw data covariates
 
-setwd("U:/ucb-superlearner/Manuscript analysis data/")
 
 #load covariates
-d<-readRDS("FINAL_temp_clean_covariates.rds")
+d<-readRDS(paste0(ghapdata_dir,"FINAL_temp_clean_covariates.rds"))
 d$arm<-factor(d$arm)
 
-load("U:/data/Raw Data Cleaning/BF_dataset.Rdata")
-load("U:/data/Raw Data Cleaning/rawdiar_df.Rdata")
-load("U:/data/Raw Data Cleaning/improved_sanitation_dataset.Rdata")
-load("U:/data/Raw Data Cleaning/improved_water_dataset.Rdata")
-
+load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/BF_dataset.Rdata"))
+load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/rawdiar_df.Rdata"))
+load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/improved_sanitation_dataset.Rdata"))
+load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/improved_water_dataset.Rdata"))
 
 
 head(bf)
@@ -143,8 +141,38 @@ dim(d)
 d <- distinct(d, .keep_all=T )
 dim(d)
 
+#Drop one duplicated row from iLiNS-DYAD-M (all values the same except 
+# sanitation (iLiNS-DYAD-M), but iLiNS-DYAD-M only used in the mortality analysis)
+dim(d)
+d <- distinct(d, studyid, subjid, country, .keep_all = TRUE)
+dim(d)
+
+
+#Set reference level to the lowest risk level
+d$trth2o <- relevel(d$trth2o, ref="1")
+d$cleanck <- relevel(d$cleanck, ref="1")
+d$impfloor <- relevel(d$impfloor, ref="1")
+d$earlybf <- relevel(d$earlybf, ref="1")
+
+d$impsan <- relevel(d$impsan, ref="1")
+d$safeh20 <- relevel(d$safeh20, ref="1")
+d$predfeed3 <- relevel(d$predfeed3, ref="1")
+d$exclfeed3 <- relevel(d$exclfeed3, ref="1")
+d$predfeed6 <- relevel(d$predfeed6, ref="1")
+d$exclfeed6 <- relevel(d$exclfeed6, ref="1")
+d$predfeed36 <- relevel(d$predfeed36, ref="1")
+d$exclfeed36 <- relevel(d$exclfeed36, ref="1")
+d$predexfd6 <- relevel(d$predexfd6, ref="1")
+
+
+table(d$studyid, d$perdiar6)
+table(d$studyid, d$perdiar24)
+
+d$perdiar6 <- relevel(d$perdiar6, ref="0%")
+d$perdiar24 <- relevel(d$perdiar24, ref="0%")
+
 #Save dataset
-saveRDS(d, "FINAL_clean_covariates.rds")
+saveRDS(d, paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
 
 
