@@ -16,9 +16,7 @@ library(here)
 #Load data
 df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds")
 spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds")
-var_key <- readRDS("7-cc-shiny-app/var_key.rds")
-test = df %>% filter(outcome_variable == "Prevalence of stunting", 
-              intervention_variable == "# of children <5 in HH") 
+
 #------------------------------------------------
 # Inputs for Shiny App
 #------------------------------------------------
@@ -320,7 +318,7 @@ server <- function(input, output, session) {
   })
   
   selected_plot = reactive({
-    var = var_key %>% filter(description == input$spline_exposure, variable.type == "exposure") %>% select(variable) %>% first()
+    var = spline_variables %>% filter(spline_vars == input$spline_exposure) %>% select(spline_vars_raw) %>% first()
     outcome = tolower(input$spline_outcome)
     exposure = var
     file_name = paste0("figures/risk factor/Splines/", outcome, "/", outcome, "_stat_by_", exposure, ".png")
