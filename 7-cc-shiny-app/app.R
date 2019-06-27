@@ -14,10 +14,11 @@ library(here)
 
 
 #Load data
-df <- readRDS("shiny_rf_results.rds")
-spline_variables <- readRDS("spline_variables.rds")
-
-
+df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds")
+spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds")
+var_key <- readRDS("7-cc-shiny-app/var_key.rds")
+test = df %>% filter(outcome_variable == "Prevalence of stunting", 
+              intervention_variable == "# of children <5 in HH") 
 #------------------------------------------------
 # Inputs for Shiny App
 #------------------------------------------------
@@ -136,13 +137,12 @@ server <- function(input, output, session) {
   output$parameter = renderUI({
     df <- df %>%
       filter(outcome_variable == input$outcome) %>% 
-      filter(intervention_variable == input$exposure) 
-    
-    d = df %>% drop_na(type) %>% arrange(type) 
+      filter(intervention_variable == input$exposure) %>% 
+      drop_na(type)
     
     selectInput('parameter',
                 'Parameter:',
-                choices = levels(df$type))
+                choices = levels(df$type)[levels(df$type) %in% unique(df$type)])
   })
   
 
@@ -152,11 +152,9 @@ server <- function(input, output, session) {
       filter(outcome_variable == input$outcome) %>% 
       filter(type == input$parameter) 
     
-    d <- df %>% arrange(agecat)
-    
     selectInput('age',
                 'Age Category:',
-                unique(d$agecat))
+                levels(df$agecat)[levels(df$agecat) %in% unique(df$agecat)])
   })
   
   output$region <- renderUI({
@@ -166,8 +164,8 @@ server <- function(input, output, session) {
       filter(type == input$parameter) %>% 
       filter(agecat == input$age) 
     
-    d = df %>% filter(region != "N.America & Europe") %>% drop_na(region) %>% arrange(region) 
-    remaining_regions = as.character(unique(d$region))
+    d = df %>% filter(region != "N.America & Europe") %>% drop_na(region)
+    remaining_regions = levels(df$region)[levels(df$region) %in% unique(df$region)]
     
     selectInput('region',
                 'Region:',
@@ -191,14 +189,14 @@ server <- function(input, output, session) {
     
     df = df %>% mutate(adjusted = case_when(
       adjusted == 1 ~ "Adjusted",
-      adjusted == 0 ~ "Unadjusted"))
-    
-    d = df %>% drop_na(adjusted) %>% arrange(adjusted)
+      adjusted == 0 ~ "Unadjusted")) %>% 
+      drop_na(adjusted) %>% 
+      arrange(adjusted)
     
 
     radioButtons('adjusted',
                  'Covariate adjustment:',
-                 choices = unique(d$adjusted))
+                 choices = levels(df$adjusted)[levels(df$adjusted) %in% unique(df$adjusted)])
   })
   
   
@@ -228,6 +226,7 @@ server <- function(input, output, session) {
     if (!all(is.na(d$baseline_level))){
       d <- d %>% filter(baseline_level!=intervention_level) #drop reference level
     }
+    
     d <- droplevels(d)
     d$pooled <- factor(d$pooled)
     d
@@ -312,6 +311,7 @@ server <- function(input, output, session) {
     }
     pooledp
   })
+  
   output$table <- renderTable({
     selectedData() 
   })
