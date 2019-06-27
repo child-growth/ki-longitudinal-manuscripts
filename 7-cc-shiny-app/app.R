@@ -256,7 +256,7 @@ server <- function(input, output, session) {
     if(length(unique(df$intervention_level))>1){
       p<-p+facet_wrap(~intervention_level, ncol=1) +  
             ggtitle(paste0("Forest plot of cohort-specific associations for\n",
-                       input$outcome, " outcome and\n", input$age,"\nReference Level: ", reference_level))
+                       input$outcome, " outcome and\n", input$age,"\nBaseline Level: ", reference_level))
     } else {
       p = p + ggtitle(paste0("Forest plot of cohort-specific associations for\n",
                              input$outcome, " outcome and\n", input$age))
