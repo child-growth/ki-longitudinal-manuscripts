@@ -14,8 +14,8 @@ library(here)
 
 
 #Load data
-df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds")
-spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds")
+df <- readRDS("shiny_rf_results.rds")
+spline_variables <- readRDS("spline_variables.rds")
 
 #------------------------------------------------
 # Inputs for Shiny App

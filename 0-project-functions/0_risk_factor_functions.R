@@ -1,7 +1,123 @@
 
+#-----------------------------------------------------------------------------------------
+# Plotting functions
+#-----------------------------------------------------------------------------------------
+scaleFUN <- function(x) sprintf("%.2f", x)
+
+label_wrap <- function(variable, value) {
+  lapply(strwrap(as.character(value), width=20, simplify=FALSE), 
+         paste, collapse="\n")
+}  
+
+
+
+#-----------------------------------------------------------------------------------------
+# Meta-analysis function
+#-----------------------------------------------------------------------------------------
+
+poolRR <- function(d, method="REML"){
+  #nstudies=length(unique(d$studyid))
+  nstudies <- d %>% summarize(N=n())
+  
+  if(d$intervention_level[1] == d$baseline_level[1]){
+    est <- data.frame(logRR.psi=1, logSE=0, RR=1, RR.CI1=1, RR.CI2=1, Nstudies= nstudies$N)
+  }else{
+    
+    fit<-NULL
+    try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="RR"))
+    if(method=="REML"){
+      if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="RR"))}
+      if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="RR"))}
+      if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="RR"))}
+    }
+    if(is.null(fit)){
+      est<-data.frame(logRR.psi=NA, logSE=NA, RR=NA, RR.CI1=NA,  RR.CI2=NA)
+    }else{
+      
+      est<-data.frame(fit$b, fit$se)
+      colnames(est)<-c("logRR.psi","logSE")
+      
+      est$RR<-exp(est$logRR)
+      est$RR.CI1<-exp(est$logRR - 1.96 * est$logSE)
+      est$RR.CI2<-exp(est$logRR + 1.96 * est$logSE)
+      
+      est$Nstudies <- nstudies$N
+    }
+  }
+  
+  return(est)
+}
+
+
+pool.par <- function(d, method="REML"){
+  nstudies <- d %>% summarize(N=n())
+  
+  fit<-NULL
+  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="GEN"))
+  if(method=="REML"){
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
+  }
+  if(is.null(fit)){
+    est<-data.frame(PAR=NA, CI1=NA,  CI2=NA)
+  }else{
+    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
+    colnames(est)<-c("PAR","CI1","CI2")    
+  }
+  est$Nstudies <- nstudies$N
+  rownames(est) <- NULL
+  return(est)
+}
+
+
+pool.prev <- function(d, method="REML"){
+  nstudies <- d %>% summarize(N=n())
+  
+  fit<-NULL
+  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="GEN"))
+  if(method=="REML"){
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
+  }
+  if(is.null(fit)){
+    est<-data.frame(prev=NA, CI1=NA,  CI2=NA)
+  }else{
+    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
+    colnames(est)<-c("prev","CI1","CI2")    
+  }
+  est$Nstudies <- nstudies$N
+  rownames(est) <- NULL
+  return(est)
+}
+
+
+
+pool.Zpar <- function(d, method="REML"){
+  nstudies <- d %>% summarize(N=n())
+  
+  fit<-NULL
+  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="GEN"))
+  if(method=="REML"){
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
+    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
+  }
+  if(is.null(fit)){
+    est<-data.frame(PAR=NA, CI1=NA,  CI2=NA)
+  }else{
+    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
+    colnames(est)<-c("PAR","CI1","CI2")    
+  }
+  est$Nstudies <- nstudies$N
+  rownames(est) <- NULL
+  return(est)
+}
+
 
 #Pooled continious estimate function
-pool.cont <- function(d){
+pool.cont <- function(d, method="REML"){
   #nstudies=length(unique(d$studyid))
   nstudies <- d %>% summarize(N=n())
   
@@ -10,11 +126,12 @@ pool.cont <- function(d){
   }else{
     
     fit<-NULL
-    try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="GEN"))
-    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
-    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
-    if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
-    
+    try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="GEN"))
+    if(method=="REML"){
+      if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
+      if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
+      if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
+    }
     est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
     colnames(est)<-c("ATE","CI1","CI2")
     est$Nstudies <- nstudies$N
@@ -25,7 +142,9 @@ pool.cont <- function(d){
 
 
 
-
+#-----------------------------------------------------------------------------------------
+# Clean Longbow output
+#-----------------------------------------------------------------------------------------
 
 RMA_clean <- function(RMAest, outcome="binary",
                       agecatlevels=c("3 months prevalence", "3-6 months\ncumulative incidence", "0-6 months (no birth st.)\ncumulative incidence","0-6 months\ncumulative incidence",
@@ -225,10 +344,6 @@ RMA_clean <- function(RMAest, outcome="binary",
   
   return(RMAest)
 }
-
-
-
-
 
 
 
