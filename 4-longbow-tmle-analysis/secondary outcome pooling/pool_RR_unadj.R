@@ -11,7 +11,7 @@ theme_set(theme_ki())
 
 
 #Load data
-dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
+dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_unadj_results.rds"))
 head(dfull)
 
 
@@ -24,36 +24,6 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 
 #Subset agecat
 d <- droplevels(d)
-
-
-poolRR <- function(d){
-  #nstudies=length(unique(d$studyid))
-  nstudies <- d %>% summarize(N=n())
-  
-  if(d$intervention_level[1] == d$baseline_level[1]){
-    est <- data.frame(logRR.psi=1, logSE=0, RR=1, RR.CI1=1, RR.CI2=1, Nstudies= nstudies$N)
-  }else{
-    
-    fit<-NULL
-    try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="FE", measure="RR"))
-    
-    if(is.null(fit)){
-      est<-data.frame(logRR.psi=NA, logSE=NA, RR=NA, RR.CI1=NA,  RR.CI2=NA)
-    }else{
-      
-      est<-data.frame(fit$b, fit$se)
-      colnames(est)<-c("logRR.psi","logSE")
-      
-      est$RR<-exp(est$logRR)
-      est$RR.CI1<-exp(est$logRR - 1.96 * est$logSE)
-      est$RR.CI2<-exp(est$logRR + 1.96 * est$logSE)
-      
-      est$Nstudies <- nstudies$N
-    }
-  }
-  
-  return(est)
-}
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
@@ -74,4 +44,4 @@ RMAest_clean <- RMA_clean(RMAest_raw)
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
 
 #Save cleaned data
-saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds"))
+saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_RR_results_unadj.rds"))

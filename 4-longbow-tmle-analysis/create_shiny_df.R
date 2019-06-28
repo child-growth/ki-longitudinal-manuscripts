@@ -155,15 +155,15 @@ df = df %>% replace_na(list(outcome_variable = "Unspecified", agecat = "Unspecif
 
 spline_variables =  list.files(path = "figures/risk factor/Splines/HAZ/")
 spline_variables <- data_frame(spline_vars = (spline_variables %>% gsub("haz_stat_by_", "", ., perl = TRUE) %>% gsub(".png", "", ., perl = TRUE)))
+spline_variables$spline_vars_raw = spline_variables$spline_vars
 spline_variables <- spline_variables %>% mutate(spline_vars = (spline_variables %>% left_join(var_key, by = c("spline_vars" = "variable")) %>%
                                                                  replace_na(list(variable.type = "exposure")) %>%
                                                                  filter(variable.type == "exposure") %>%
                                                                  pull("description")))
-
+spline_variables
 
 saveRDS(df, paste0(here::here(),"/7-cc-shiny-app/shiny_rf_results.rds"))
 saveRDS(spline_variables, paste0(here::here(),"/7-cc-shiny-app/spline_variables.rds"))
-saveRDS(var_key, paste0(here::here(),"/7-cc-shiny-app/var_key.rds"))
 
 
 

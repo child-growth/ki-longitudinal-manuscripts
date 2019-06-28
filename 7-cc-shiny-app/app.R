@@ -14,11 +14,9 @@ library(here)
 
 
 #Load data
-df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds")
-spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds")
-var_key <- readRDS("7-cc-shiny-app/var_key.rds")
-test = df %>% filter(outcome_variable == "Prevalence of stunting", 
-              intervention_variable == "# of children <5 in HH") 
+df <- readRDS("shiny_rf_results.rds")
+spline_variables <- readRDS("spline_variables.rds")
+
 #------------------------------------------------
 # Inputs for Shiny App
 #------------------------------------------------
@@ -226,9 +224,9 @@ server <- function(input, output, session) {
     
     d <- selectedData()
     
-    if (!all(is.na(d$baseline_level))){
-      d <- d %>% filter(baseline_level!=intervention_level) #drop reference level
-    }
+    #if (!all(is.na(d$baseline_level))){
+    #  d <- d %>% filter(baseline_level!=intervention_level) #drop reference level
+    #}
     
     d <- droplevels(d)
     d$pooled <- factor(d$pooled)
@@ -242,16 +240,34 @@ server <- function(input, output, session) {
   })
   
   
-  
-  
-  
-  
   output$forestPlot <- renderPlot({
     df<-selectedDataForest()
+    reference_level = as.character(df %>% filter(ci_lower == 1.00 & ci_upper == 1.00) %>% 
+                                     select(intervention_level) %>% 
+                                     first())
+    df  = df %>% filter(!(ci_lower == 1.00 & ci_upper == 1.00))
+    
+  
     p<-ggplot(df, aes(x=studyid)) +
       geom_point(aes(shape=pooled, y=estimate, fill=region, color=region), size = 4) +
       geom_linerange(aes(ymin=ci_lower, ymax=ci_upper, color=region)) +
-      coord_flip() +
+      coord_flip() 
+    
+    if(length(unique(df$intervention_level))>1){
+      p<-p+facet_wrap(~intervention_level, ncol=1) +  
+            ggtitle(paste0("Forest plot of cohort-specific associations for\n",
+                       input$outcome, " outcome and\n", input$age,"\nBaseline Level: ", reference_level))
+    } else {
+      p = p + ggtitle(paste0("Forest plot of cohort-specific associations for\n",
+                             input$outcome, " outcome and\n", input$age))
+    }
+    if(df$continuous[1]==0){
+      p<-p+scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) + geom_hline(yintercept = 1) 
+    }else{
+      p<-p+scale_y_continuous(breaks=yticks_cont, labels=scaleFUN)  + geom_hline(yintercept = 0)
+    }
+    
+    p = p +
       #facet_wrap(~intervention_level, ncol=1) +
       labs(x = "Cohort", y = Ylab) +
       geom_vline(xintercept = 1.5, linetype=2) +
@@ -265,18 +281,7 @@ server <- function(input, output, session) {
             strip.text.x = element_text(size=12),
             axis.text.x = element_text(size=12), #angle = 45, hjust = 1),
             text = element_text(size=16)) +
-      ggtitle(paste0("Forest plot of cohort-specific associations for\n",
-                     input$outcome, " outcome and\n", input$age)) +guides(shape=FALSE)
-    
-    
-    if(length(unique(df$intervention_variable))>1){
-      p<-p+facet_wrap(~intervention_level, ncol=1) 
-    }
-    if(df$continuous[1]==0){
-      p<-p+scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) + geom_hline(yintercept = 1) 
-    }else{
-      p<-p+scale_y_continuous(breaks=yticks_cont, labels=scaleFUN)  + geom_hline(yintercept = 0)
-    }
+      guides(shape=FALSE)
     
     p
   })
@@ -320,7 +325,7 @@ server <- function(input, output, session) {
   })
   
   selected_plot = reactive({
-    var = var_key %>% filter(description == input$spline_exposure, variable.type == "exposure") %>% select(variable) %>% first()
+    var = spline_variables %>% filter(spline_vars == input$spline_exposure) %>% select(spline_vars) %>% first()
     outcome = tolower(input$spline_outcome)
     exposure = var
     file_name = paste0("figures/risk factor/Splines/", outcome, "/", outcome, "_stat_by_", exposure, ".png")
