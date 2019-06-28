@@ -7,91 +7,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Read rds file and drop unneeded columns
-dfull<-fread("U:/ucb-superlearner/Manuscript analysis data/FINAL.csv", header = T,
-         colClasses = c(SUBJID = "integer64"),
-         drop = c( "AGEIMPFL",  
-                   # "WTKG",    "HTCM",    "LENCM",       
-                   "WHZ",     "BAZ",     "HCAZ",    "MUAZ",    
-                   "REGCTRY", "REGCTYP", "CITYTOWN","LATITUDE","LONGITUD", "HHID",    "ARM", 
-                   "DEAD",    "AGEDTH",  "CAUSEDTH","FEEDING",
-                   "DURBRST", "BRTHYR",  
-                   "ENSTUNT",
-                   "FWTKG",    "FBMI",
-                   "BRFEED", 
-                   "SUMEP",   "SUMDIAR", "SUMDAYS",
-                   "PCTDIAR", "IMPSAN",  "SOAP",    "SAFEH2O", "TRTH2O",  "CLEANCK",
-                   "IMPFLOOR","H2OTIME",
-                   "CHICKEN", "COW",     "CATTLE",  "INCTOT", 
-                   "INCTOTU", "BFEDFL",  "EXBFEDFL","WEANFL",  "ANMLKFL", "PWMLKFL",
-                   "FORMLKFL","BOTTLEFL","H20FEDFL","OTHFEDFL","SLDFEDFL","NBFYES",  "EARLYBF", "CMFDINT", "DIARFL",  "LSSTLFL",
-                   "NUMLS",   "BLDSTLFL","DIARFL_R","LSSTFL_R","NUMLS_R", "BLDSTL_R",
-                   "DUR_R", 
-                   "BRTHWEEK", "BRTHMON", "PARITY", "VAGBRTH", "HDLVRY",
-                   "BRTHORDR", "MAGE", "MHTCM", "MWTKG", "MBMI",
-                   "MEDUCYRS", "SINGLE", "FAGE", "FHTCM", "FEDUCYRS", "NROOMS", "NHH", "NCHLDLT5", "SES", "HFOODSEC"
-         )
-)
-
-colnames(dfull) <- tolower(colnames(dfull))
-d<-dfull
-gc()
-
-#Drop studies Vishak added to data product that don't meet inclusion criteria
-d <- d[d$studyid!="ki1000301-DIVIDS" & d$studyid!="ki1055867-WomenFirst" & d$studyid!="ki1135782-INCAP"]
-
-#mark measure frequencies
-d$measurefreq <- NA
-
-d$measurefreq[d$studyid %in% c(
-  "ki0047075b-MAL-ED",   
-  "ki1000108-CMC-V-BCS-2002",              
-  "ki1000108-IRC",               
-  "ki1000109-EE",           
-  "ki1000109-ResPak",  
-  "ki1017093b-PROVIDE",  
-  "ki1066203-TanzaniaChild2",           
-  "ki1101329-Keneba",  
-  "ki1112895-Guatemala BSC",       
-  "ki1113344-GMS-Nepal",             
-  "ki1114097-CONTENT"
-)] <- "monthly"
-
-d$measurefreq[d$studyid %in% c(
-  "ki1112895-iLiNS-Zinc",  
-  "kiGH5241-JiVitA-3",          
-  "kiGH5241-JiVitA-4", 
-  "ki1148112-LCNI-5",          
-  "ki1017093-NIH-Birth",
-  "ki1017093c-NIH-Crypto",   
-  "ki1119695-PROBIT",         
-  "ki1000304b-SAS-CompFeed",   
-  "ki1000304b-SAS-FoodSuppl",   
-  "ki1126311-ZVITAMBO",   
-  "ki1114097-CMIN",                 
-  "ki1135781-COHORTS"
-)] <- "quarterly"
-
-d$measurefreq[d$studyid %in% c(
-  "ki1000110-WASH-Bangladesh",       
-  "ki1000111-WASH-Kenya",  
-  "ki1148112-iLiNS-DOSE",     
-  "ki1148112-iLiNS-DYAD-M", 
-  "ki1033518-iLiNS-DYAD-G",
-  "ki1000125-AgaKhanUniv",           
-  "ki1112895-Burkina Faso Zn",    
-  "ki1000304-VITAMIN-A",  
-  "ki1000304-Vitamin-B12",
-  "ki1000107-Serrinha-VitA",   
-  "ki1000304-EU",        
-  "ki1000304-ZnMort"
-)] <- "yearly"
-
-#Mark COHORTS and CMIN cohorts with different measurement frequency than quarterly
-d$measurefreq[d$studyid=="ki1114097-CMIN" & d$country=="BANGLADESH"] <- "monthly"
-d$measurefreq[d$studyid=="ki1114097-CMIN" & d$country=="PERU"] <- "monthly"
-d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="BRAZIL"),] #Drop because yearly but not an RCT
-d<- d[!(d$studyid=="ki1135781-COHORTS" & d$country=="SOUTH AFRICA"),] #Drop because yearly but not an RCT
+d <- readRDS(paste0(ghapdata_dir,"ki-manuscript-dataset.rds"))
 
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
@@ -115,24 +31,24 @@ d <- d[!(is.na(d$haz) & is.na(d$waz)), ]
 
 #--------------------------------------------------------------------------
 # birth characteristics
-# separate birthweight and birthlength
+# separate W_birthweight and W_birthlength
 # convert to waz / haz and add to main data set as a new row with "agedays=0"
 #--------------------------------------------------------------------------
-table(d$studyid, is.na(d$birthlen))
-table(d$studyid, is.na(d$birthwt))
-dblenwt <- d[,list(birthwt=first(birthwt), birthlen=first(birthlen), sex=first(sex)), by = list(studyid, country, subjid)]
-dblenwt <- dblenwt[!(is.na(birthwt) & is.na(birthlen)), ]
-dblenwt[is.na(birthlen), ]
-dblenwt[is.na(birthwt), ]
+table(d$studyid, is.na(d$W_birthlen))
+table(d$studyid, is.na(d$W_birthwt))
+dblenwt <- d[,list(W_birthwt=first(W_birthwt), W_birthlen=first(W_birthlen), sex=first(sex)), by = list(studyid, country, subjid)]
+dblenwt <- dblenwt[!(is.na(W_birthwt) & is.na(W_birthlen)), ]
+dblenwt[is.na(W_birthlen), ]
+dblenwt[is.na(W_birthwt), ]
 dblenwt[, agedays := 0]
-dblenwt[, waz := round(who_wtkg2zscore(agedays, birthwt/1000, sex = sex),2)]
-dblenwt[, haz := round(who_htcm2zscore(agedays, birthlen, sex = sex),2)]
+dblenwt[, waz := round(who_wtkg2zscore(agedays, W_birthwt/1000, sex = sex),2)]
+dblenwt[, haz := round(who_htcm2zscore(agedays, W_birthlen, sex = sex),2)]
 setkeyv(dblenwt, cols = c("country","studyid", "subjid", "agedays"))
 
 ## check things are matching with main haz/waz when agedays=1 was observed
 d[subjid==5444, ]
 dblenwt[subjid==5444, ]
-dblenwt[, birthwt := NULL][, birthlen := NULL]
+dblenwt[, W_birthwt := NULL][, W_birthlen := NULL]
 
 ## merge birth haz / waz into main dataset
 d <- merge(d, dblenwt, all=TRUE, by = c("country","studyid", "subjid","sex","agedays"))
@@ -148,7 +64,7 @@ d[haz < -6 | haz > 6, haz := NA]
 
 # convert waz / haz back to wtkg / lencm (that way everything is standardized and always matching)
 # save actual wtkg / lencm as back-up for comparison
-setnames(d, c("wtkg", "lencm"), c("wtkg.orig", "lencm.orig"))
+#setnames(d, c("wtkg", "lencm"), c("wtkg.orig", "lencm.orig"))
 d[agedays==0, wtkg := round(who_zscore2wtkg(agedays, waz, sex = sex),3)]
 d[agedays>0, wtkg := round(who_zscore2wtkg(agedays-1, waz, sex = sex),3)]
 d[agedays==0, lencm := round(who_zscore2htcm(agedays, haz, sex = sex),1)]
@@ -171,7 +87,7 @@ outvec = c("haz","waz","lencm","wtkg")
 # yname    ## outcome
 growth_velocity = function(d, t1mths, t2mths, yname = "haz", tgap = 14) {
   daysmth = 30.4167 ## average number of months in a year
-  setkeyv(d, cols = c("country","studyid", "subjid", "agedays"))
+  setkeyv(d, cols = c("country","studyid", "subjid", "sex","agedays"))
   t1 <- as.integer(round((daysmth)*t1mths,0))
   t1_int <- c(t1-tgap,t1+tgap)
   t2 <- as.integer(round((daysmth)*t2mths,0))
@@ -180,14 +96,14 @@ growth_velocity = function(d, t1mths, t2mths, yname = "haz", tgap = 14) {
   d_yt1 <- d[(agedays >= t1_int[1]) & (agedays <= t1_int[2]) & (!is.na(eval(as.name(yname)))), ]
   d_yt2 <- d[(agedays >= t2_int[1]) & (agedays <= t2_int[2]) & (!is.na(eval(as.name(yname)))), ]
   
-  dd_yt1 <- d_yt1[, list(t1agedays = agedays[which.min(abs(t1-agedays))], t1y = eval(as.name(yname))[which.min(abs(t1-agedays))]), by = list(country,studyid,subjid)]
-  dd_yt2 <- d_yt2[, list(t2agedays = agedays[which.min(abs(t2-agedays))], t2y = eval(as.name(yname))[which.min(abs(t2-agedays))]), by = list(country,studyid,subjid)]
+  dd_yt1 <- d_yt1[, list(t1agedays = agedays[which.min(abs(t1-agedays))], t1y = eval(as.name(yname))[which.min(abs(t1-agedays))]), by = list(country,studyid,subjid,sex)]
+  dd_yt2 <- d_yt2[, list(t2agedays = agedays[which.min(abs(t2-agedays))], t2y = eval(as.name(yname))[which.min(abs(t2-agedays))]), by = list(country,studyid,subjid,sex)]
   
   ## merge both time-points and auto drop when one of the measurements is missing 
   ## obtain a single dataset where both measurements must be present)
-  setkeyv(dd_yt1, cols = c("country","studyid","subjid"))
-  setkeyv(dd_yt2, cols = c("country","studyid","subjid"))
-  dd_diff <- merge(dd_yt1, dd_yt2, all=FALSE, by=c("country","studyid","subjid"))
+  setkeyv(dd_yt1, cols = c("country","studyid","subjid", "sex"))
+  setkeyv(dd_yt2, cols = c("country","studyid","subjid", "sex"))
+  dd_diff <- merge(dd_yt1, dd_yt2, all=FALSE, by=c("country","studyid","subjid", "sex"))
   dd_diff[is.na(t1y),]
   dd_diff[is.na(t2y),]
   ## calculate diff in agedays between (t1,t2), convert to months
@@ -223,7 +139,7 @@ diffcatlevs = paste0(t1vec, "-", t2vec, " months")
 dd_out[, "diffcat" := factor(diffcat, levels = diffcatlevs)]
 head(dd_out[["diffcat"]])
 
-saveRDS(dd_out, file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt_rf.rds")
+saveRDS(dd_out, file=paste0(ghapdata_dir,"velocity_longfmt_rf.rds"))
 
 #--------------------------------------------
 # drop trial arms with intervention impact on HAZ
@@ -253,4 +169,5 @@ dd_sub=dd_sub[!(dd_sub$studyid=="kiGH5241-JiVitA-3" & dd_sub$tr!="Control"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="ki1135781-COHORTS" & dd_sub$tr=="Other"),]
 dim(dd_sub)
 
-saveRDS(dd_sub, file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")
+saveRDS(dd_sub, file=paste0(ghapdata_dir,"velocity_longfmt.rds"))
+

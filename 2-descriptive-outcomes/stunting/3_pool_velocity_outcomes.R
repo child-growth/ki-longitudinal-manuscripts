@@ -14,20 +14,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
-d <- readRDS(file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")
-d$subjid <- as.character(d$subjid)
-head(d)
-
-#Merge in sex
-cov<-readRDS("U:/UCB-SuperLearner/Manuscript analysis data/FINAL_temp_clean_covariates.rds")
-cov <- subset(cov, select = c(studyid,subjid,country,sex))
-setDT(cov)
-
-dim(d)
-d <- left_join(d, cov, by=c("studyid", "subjid", "country"))
-dim(d)
-
-saveRDS(d, file = paste0("U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt_clean.RDS"))
+d <- readRDS(paste0(ghapdata_dir, "velocity_longfmt.rds"))
 
 
 #Summarize N's in study
