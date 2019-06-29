@@ -139,11 +139,11 @@ df  = df %>% mutate(type = case_when(
   type == "PAR" ~ "Population Attributable Risk",
   type == "PAF" ~ "Population Attributable Fraction"))
 
-df$type <- factor(df$type, levels = c("Average Treatment Effect", "Population Attributable Fraction",
-                                      "Population Attributable Risk", "Relative Risk"))
+df$type <- factor(df$type, levels = c("Relative Risk", "Average Treatment Effect", "Population Attributable Fraction",
+                                      "Population Attributable Risk"))
 
 # Set order for age category
-agecat_levels = c("0-24 months", "Birth", "6 months", "24 months", "0-6 months", "6-24 months", "12 months",
+agecat_levels = c("24 months", "0-24 months", "Birth", "6 months", "0-6 months", "6-24 months", "12 months",
                       "15 months", "18 months", "21 months", "3 months", "9 months", "3-6 months", "6-9 months",
                       "9-12 months", "12-15 months", "15-18 months", "Unspecified")
 df$agecat = factor(df$agecat, levels = unique(c(agecat_levels, !(levels(df$agecat) %in% agecat_levels))))
