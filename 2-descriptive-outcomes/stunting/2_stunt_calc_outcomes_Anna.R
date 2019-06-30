@@ -2,8 +2,27 @@
 # ki longitudinal manuscripts
 # stunting analysis
 
-# calculate mean LAZ, prevalence, incidence, 
-# and recovery 
+# Calculate mean LAZ, prevalence, incidence, 
+# and recovery, repeated for fixed effects models 
+# and sensitivity analysis in monthly cohorts
+# with measurements up to 24 months
+
+# Inputs:
+#   0-config.R : configuration file
+#   0_descriptive_epi_shared_functions.R
+#   0_descriptive_epi_stunt_functions.R
+#   stunting_data.RData
+
+# Outputs:
+#   meanlaz_velocity.RDS
+#   meanlaz_velocity_monthly.RDS
+#   meanlaz_velocity_fe.RDS
+#   quantile_data_stunting.RDS
+#   quantile_data_stunting_monthly.RDS
+#   quantile_data_stunting_fe.RDS
+#   shiny_desc_data_stunting_objects.RDS
+#   shiny_desc_data_stunting_objects_monthly.RDS
+#   shiny_desc_data_stunting_objects_fe.RDS
 ##########################################
 
 rm(list=ls())
@@ -194,7 +213,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   quantiles <- bind_rows(quantile_d, quantile_d_overall,quantile_d_cohort)
   
   saveRDS(quantiles,
-          file = paste0(here(),"/results/quantile_data_stunting_fe", output_file_suffix, ".RDS"))
+          file = paste0(here(),"/results/quantile_data_stunting", output_file_suffix, ".RDS"))
   
   ######################################################################
   # Incidence proportion
@@ -325,5 +344,5 @@ stunt_outcomes_monthly = calc_outcomes(monthly_d, "REML", "_monthly")
 saveRDS(stunt_outcomes_monthly, file =  paste0(res_dir, "shiny_desc_data_stunting_objects_monthly24.RDS"))
 
 stunt_outcomes_fe = calc_outcomes(d, "FE", "_fe")
-saveRDS(shiny_desc_data, file = paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
+saveRDS(stunt_outcomes_fe, file = paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
 
