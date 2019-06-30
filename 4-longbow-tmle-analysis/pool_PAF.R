@@ -4,6 +4,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
+source(paste0(here::here(), "/0-project-functions/0_longbow_results_pooling_functions.R"))
 
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
@@ -11,28 +12,7 @@ theme_set(theme_ki())
 
 
 #Load data
-dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-head(dfull)
-
-#Subset to primary outcomes
-unique(dfull$outcome_variable)
-d <- dfull %>% filter(outcome_variable=="stunted"|outcome_variable=="wasted"|
-                        outcome_variable=="ever_stunted"|outcome_variable=="ever_wasted"|
-                        outcome_variable=="pers_wast")
-
-#Drop month and birthmonth until VIM results can be included
-d <- d %>% filter(!(intervention_variable %in% c("month","brthmon")) )
-
-
-#Subset agecat
-unique(d$agecat)
-d <- d %>% filter(agecat %in% c("Birth","6 months","24 months",
-                                "0-24 months", "0-6 months", "6-24 months",
-                                "0-24 months (no birth st.)","0-6 months (no birth st.)",           
-                                "0-24 months (no birth wast)",
-                                "0-6 months (no birth wast)" ))
-d$agecat[grepl("0-24 months",d$agecat)] <- "0-24 months"
-d$agecat[grepl("0-6 months",d$agecat)] <- "0-6 months"
+d <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -48,29 +28,6 @@ dpaf <- d %>% filter(type=="PAF")
 d <- d %>% filter(type=="PAR")
 
 
-
-
-
-
-pool.par <- function(d){
-  nstudies <- d %>% summarize(N=n())
-  
-  fit<-NULL
-  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="GEN"))
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
-  
-  if(is.null(fit)){
-    est<-data.frame(PAR=NA, CI1=NA,  CI2=NA)
-  }else{
-    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
-    colnames(est)<-c("PAR","CI1","CI2")    
-  }
-  est$Nstudies <- nstudies$N
-  rownames(est) <- NULL
-  return(est)
-}
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.par(.)) %>% as.data.frame()
@@ -89,26 +46,6 @@ RMAest_raw <- rbind(RMAest, RMAest_region)
 
 
 #Calculate pooled prevalences
-pool.prev <- function(d){
-  nstudies <- d %>% summarize(N=n())
-  
-  fit<-NULL
-  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="GEN"))
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
-  
-  if(is.null(fit)){
-    est<-data.frame(prev=NA, CI1=NA,  CI2=NA)
-  }else{
-    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
-    colnames(est)<-c("prev","CI1","CI2")    
-  }
-  est$Nstudies <- nstudies$N
-  rownames(est) <- NULL
-  return(est)
-}
-
 Prev_est <- prev %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(pool.prev(.)) %>% as.data.frame()
 Prev_est$region <- "Pooled"

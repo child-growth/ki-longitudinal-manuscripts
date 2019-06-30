@@ -21,44 +21,28 @@
 # cd 1-data-cleaning/
 
 # ./runFileSaveLogs -i "clean-data" \
-# 1_assetPCA-allstudies.R \
-# 2_process_FINAL_dataset.R \
-# 2_process_mortality_data.R \
+# 1_process_FINAL_dataset.R \
+# 2_clean_FINAL_covariates.R \
 # 3_merge_covariates_and_raw_data.R \
-# 4_grab_study_metadata.R \
-# 5_st_prepdata.R \
-# 6_co_prepdata.R \
-# 6_wast_prepdata.R \
-# 6_waz_prepdata.R \
+# 4_create_master_dataset.R \
+# 5_process_mortality_data.R \
+# 6_anthro_prepdata.R \
 # 7_DHS-data-cleaning.R \
-# 7_DHS-data-quantiles.R \
-# 7_DHS-ki-density.R \
-# 8_GHAPStudyMetadata.R \
-# 9_GHAPStudyMetadata_stunting.R \
-# 10_seasonality_prepdata.R \
-# 11_icc_calc.R \
-# 12_create_CONSORT_dataset.R \
-# 13_simulate_test_dataset.R
+# 8_DHS-data-quantiles.R \
+# 9_seasonality_prepdata.R
+
 
 # TEMPORARY FIX
-R CMD BATCH 1_assetPCA-allstudies.R 
-R CMD BATCH 2_process_FINAL_dataset.R 
-R CMD BATCH 2_process_mortality_data.R 
-R CMD BATCH 3_merge_covariates_and_raw_data.R 
-R CMD BATCH 4_grab_study_metadata.R 
-R CMD BATCH 5_st_prepdata.R 
-R CMD BATCH 6_co_prepdata.R
-R CMD BATCH 6_wast_prepdata.R 
-R CMD BATCH 6_waz_prepdata.R 
-R CMD BATCH 7_DHS-data-cleaning.R 
-R CMD BATCH 7_DHS-data-quantiles.R 
-R CMD BATCH 7_DHS-ki-density.R 
-R CMD BATCH 8_GHAPStudyMetadata.R 
-R CMD BATCH 9_GHAPStudyMetadata_stunting.R 
-R CMD BATCH 10_seasonality_prepdata.R 
-R CMD BATCH 11_icc_calc.R 
-R CMD BATCH 12_create_CONSORT_dataset.R 
-R CMD BATCH 13_simulate_test_dataset.R
+R CMD BATCH 1_process_FINAL_dataset.R
+R CMD BATCH 2_clean_FINAL_covariates.R
+R CMD BATCH 3_merge_covariates_and_raw_data.R
+R CMD BATCH 4_create_master_dataset.R
+R CMD BATCH 5_process_mortality_data.R
+R CMD BATCH 6_anthro_prepdata.R
+R CMD BATCH 7_DHS-data-cleaning.R
+R CMD BATCH 8_DHS-data-quantiles.R
+R CMD BATCH 9_seasonality_prepdata.R
+
 
 # Remove copied utility run script
 # rm runFileSaveLogs

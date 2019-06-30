@@ -12,7 +12,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-load("U:/ucb-superlearner/data/stunting_data.RData")
+d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 

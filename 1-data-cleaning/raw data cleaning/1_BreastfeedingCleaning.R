@@ -186,7 +186,7 @@ saveRDS(ee, file="U:/ucb-superlearner/Manuscript analysis data/covariate creatio
 bfzn <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study rds datasets/bfzn.rds")
 colnames(bfzn) <- tolower(colnames(bfzn))
 head(bfzn)
-bfzn <- bfzn %>% select(studyid, country, subjid, agedays, visit)
+bfzn <- bfzn %>% select(studyid, country, subjid, agedays) 
 
 d<-read.xport("U:/ucb-superlearner/Manuscript analysis data/raw SAS datasets/BFZinc/dietch.xpt") 
 colnames(d) <- tolower(colnames(d))
