@@ -1,10 +1,27 @@
 
-library(tidyverse)
-library(haven)
-library(foreign)
-setwd("U:/ucb-superlearner/Manuscript analysis data/raw SAS datasets/")
-  
-  
+
+
+#----------------------------------------------------------
+# Script to read in breastfeeding variables from cohorts' raw 
+# SAS datafiles and merge with the harmonized ID variables
+# Resulting datasets are combined together and breastfeeding
+# variables are cleaned into harmonized definitions in the 
+# `3_BreastfeedingDatasetCreation.R` script
+#----------------------------------------------------------
+
+
+rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
+# library(tidyverse)
+# library(haven)
+# library(foreign)
+setwd(paste0(ghapdata_dir, "raw SAS datasets/"))
+
+#Set cohort data file path
+cohortdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/cohort datasets/")
+bfdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/Breastfeeding datasets/")
+
+
 
 #----------------------------------------------------------
 # ki0047075b-MAL-ED             60  38270
@@ -19,7 +36,7 @@ colnames(d)
 
 d <- d %>% select(pid, agedays, cumexc, cumpred, cumpart, cumnobf) %>% rename(subjido=pid)
 
-mled <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study rds datasets/mled.rds") 
+mled <- readRDS(paste0(cohortdata_dir, "mled.rds"))
 colnames(mled) <- tolower(colnames(mled))
 mled <- mled %>% select(studyid, country, subjid, subjido, agedays, visit)
 
@@ -27,7 +44,7 @@ mled <- left_join(mled, d, by=c("subjido", "agedays"))
 table(is.na(mled$cumexc))
 
 #save
-saveRDS(mled, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_mled.rds")
+saveRDS(mled, file=paste0(bfdata_dir, "bf_mled.rds"))
 
 
 #----------------------------------------------------------
@@ -65,7 +82,7 @@ saveRDS(mled, file="U:/ucb-superlearner/Manuscript analysis data/covariate creat
 #c2bmrf Infant formula milk	1" Yes" 2" No" 666"No Answer / Missing" 777"Not Applicable" 888"Unreachable" 999"Don't Know"
 #c2bmrg Weaning	1" Yes" 2" No" 666"No Answer / Missing" 777"Not Applicable" 888"Unreachable" 999"Don't Know"
 
-ee <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study rds datasets/ee.rds")
+ee <- readRDS(paste0(cohortdata_dir, "ee.rds"))
 colnames(ee) <- tolower(colnames(ee))
 head(ee)
 ee <- ee %>% select(studyid, country, subjid, agedays)
@@ -123,7 +140,7 @@ table(d$weanfl)
 ee <- left_join(ee, d, by=c("subjid","agedays"))
 table(ee$bfedfl)
 
-saveRDS(ee, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_ee.rds")
+saveRDS(ee, file=paste0(bfdata_dir, "bf_ee.rds"))
 
 #----------------------------------------------------------
 # ki1000304-EU                1523   1976
@@ -183,12 +200,12 @@ saveRDS(ee, file="U:/ucb-superlearner/Manuscript analysis data/covariate creatio
 # ki1112895-Burkina Faso Zn   5227   9778
 #----------------------------------------------------------
 
-bfzn <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study rds datasets/bfzn.rds")
+bfzn <- readRDS(paste0(cohortdata_dir, "bfzn.rds"))
 colnames(bfzn) <- tolower(colnames(bfzn))
 head(bfzn)
 bfzn <- bfzn %>% select(studyid, country, subjid, agedays) 
 
-d<-read.xport("U:/ucb-superlearner/Manuscript analysis data/raw SAS datasets/BFZinc/dietch.xpt") 
+d<-read.xport("BFZinc/dietch.xpt") 
 colnames(d) <- tolower(colnames(d))
 head(d)
 
@@ -249,7 +266,7 @@ table(d$bfedfl==1 & d$anmlkfl==0 & d$formlkfl==0 & d$othfedfl==0)
 
 #No exclusive or partial breastfeeding
 
-saveRDS(d, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_bfzn.rds")
+saveRDS(d, file=paste0(bfdata_dir, "bf_bfzn.rds"))
 
 #----------------------------------------------------------
 # ki1112895-Guatemala BSC     2474     71
@@ -261,7 +278,7 @@ saveRDS(d, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation
 # ki1113344-GMS-Nepal        12592     85
 #----------------------------------------------------------
 
-gmsn <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study rds datasets/gmsn.rds")
+gmsn <- readRDS(paste0(cohortdata_dir, "gmsn.rds"))
 colnames(gmsn) <- tolower(colnames(gmsn))
 gmsn <- gmsn %>% select(studyid, country, subjid, agedays, visit)
 gmsn$visit <- as.numeric(gsub("Month ","",gmsn$visit))
@@ -271,7 +288,7 @@ measuretimes <- as.character(c(3,6,9,12,15,18,21,24))
 colnames <- c("babyid", paste0(rep(bfvars, 8), rep(measuretimes, each=length(bfvars))))
 
 
-dfull<-read_sas("U:/data/GMS-Nepal-201606/raw/gms6.sas7bdat") 
+dfull<-read_sas("GMSN/gms6.sas7bdat") 
 #dfull <- dfull[,which(colnames(dfull) %in% colnames)]
 dfull <- dfull %>% select(colnames)
 colnames(dfull)
@@ -354,7 +371,7 @@ table(gmsn$visit, gmsn$bfedfl)
 
 
 #save
-saveRDS(gmsn, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_gmsn.rds")
+saveRDS(gmsn, file=paste0(bfdata_dir, "bf_gmsn.rds"))
 
 
 
