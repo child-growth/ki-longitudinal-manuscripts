@@ -16,7 +16,7 @@ source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_funct
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
 
-load("U:/ucb-superlearner/data/stunting_data.RData")
+d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
 head(d)
 d <- d %>% subset(., select = -c(tr))

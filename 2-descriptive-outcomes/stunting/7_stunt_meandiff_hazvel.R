@@ -18,15 +18,6 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 d <- readRDS(file=paste0(ghapdata_dir, "velocity_longfmt.rds"))
 head(d)
 
-#Merge in sex
-cov<-readRDS(file=paste0(ghapdata_dir, "FINAL_temp_clean_covariates.rds"))
-cov <- subset(cov, select = c(studyid,subjid,country,sex))
-setDT(cov)
-
-dim(d)
-d <- left_join(d, cov, by=c("studyid", "subjid", "country"))
-dim(d)
-
 d <- d %>% rename(agecat=diffcat)
 
 

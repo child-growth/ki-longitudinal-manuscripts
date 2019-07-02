@@ -14,8 +14,8 @@ library(here)
 
 
 #Load data
-df <- readRDS("shiny_rf_results.rds")
-spline_variables <- readRDS("spline_variables.rds")
+df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds")
+spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds")
 
 #------------------------------------------------
 # Inputs for Shiny App
@@ -192,7 +192,7 @@ server <- function(input, output, session) {
       drop_na(adjusted) %>% 
       arrange(adjusted)
     
-    levels(df$adjusted) = c("Unadjusted", "Adjusted")
+    levels(df$adjusted) = c( "Adjusted", "Unadjusted")
     
 
     radioButtons('adjusted',
@@ -272,9 +272,11 @@ server <- function(input, output, session) {
       labs(x = "Cohort", y = Ylab) +
       geom_vline(xintercept = 1.5, linetype=2) +
       scale_shape_manual(values=c(21, 23)) +
-      scale_colour_manual(values=tableau11) +
-      scale_fill_manual(values=tableau11) +
-      scale_size_continuous(range = c(0.5, 1))+
+      scale_colour_manual(limits = c("Pooled", "Africa", "Latin America", "South Asia"), 
+                           values= tableau11[1:4]) +
+      scale_fill_manual(limits = c("Pooled", "Africa", "Latin America", "South Asia"), 
+                        values= tableau11[1:4]) +
+      scale_size_continuous(range = c(min(df$ci_lower) - 0.05, max(df$ci_upper) + 0.05))+
       theme(plot.title = element_text(hjust = 0.5),
             strip.background = element_blank(),
             legend.position="none",

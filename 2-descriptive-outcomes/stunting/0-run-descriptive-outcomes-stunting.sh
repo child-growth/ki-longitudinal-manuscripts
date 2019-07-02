@@ -34,9 +34,7 @@
 # 6_stunt_meandiff_haz.R \
 # 7_stunt_meandiff_hazvel.R
 
-R CMD BATCH 0-make-who-growth-vel.R 
 R CMD BATCH 1_growth_velocity.R
-R CMD BATCH 2_stunt_calc_outcomes_Anna.R 
 R CMD BATCH 2_stunt_calc_outcomes_fe.R 
 R CMD BATCH 2_stunt_calc_outcomes_monthly.R 
 R CMD BATCH 2_stunt_calc_outcomes.R 

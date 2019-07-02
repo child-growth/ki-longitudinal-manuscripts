@@ -10,16 +10,17 @@ Zscores <- readRDS(paste0(ghapdata_dir, "FINAL_only_included_studies.rds"))
 #keep only Z-scores and mortality variables, and month of measurement
 dput(colnames(Zscores))
 Zscores <- Zscores %>% 
-  subset(., select = c(studyid, country, region, measurefreq, subjid, agedays, 
+  subset(., select = c(studyid, country, region, measurefreq, subjid, sex, agedays, 
                        waz, haz, whz, muaz, tr, month, brthweek,  dead, agedth, 
                        latitude, longitud, causedth))
+
 
 #load covariate dataset (one row per child)
 cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
 dput(colnames(cov))
 
-cov <- cov %>% subset(., select = c(studyid, subjid, sex, country, arm,  
+cov <- cov %>% subset(., select = c(studyid, subjid,  country, arm,  
                                     gagebrth, brthmon, parity, birthwt, birthlen, vagbrth, 
                                     hdlvry, mage, mhtcm, mwtkg, mbmi, meducyrs, single, 
                                     fage, fhtcm, feducyrs, trth2o, cleanck, impfloor, 
