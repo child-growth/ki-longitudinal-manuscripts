@@ -25,6 +25,25 @@ dATE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results.rds"
 dZ_PAR <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
 dPAF <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results.rds"))
 
+dRR_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds"))
+dATE_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_FE.rds"))
+#dZ_PAR_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_FE.rds"))
+dPAF_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_FE.rds"))
+
+#dRR_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_unadj_results.rds"))
+dATE_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_unadj.rds"))
+dZ_PAR_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_unadj.rds"))
+dPAF_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_unadj.rds"))
+
+#dRR_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_unadj_FE_results.rds"))
+dATE_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_unadj_FE.rds"))
+#dZ_PAR_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_unadj_FE.rds"))
+dPAF_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_unadj_FE.rds"))
+
+
+
+
+
 head(d)
 head(dRR)
 
@@ -54,6 +73,8 @@ unique(df$type)
 df <- df %>% filter(type=="RR" | type=="ATE" | type=="PAR" | type=="PAF")
 df <- df %>% select("agecat","studyid","country","strata_label","adjustment_set","intervention_variable", "outcome_variable","type","parameter","intervention_level","baseline_level","region","continuous","adjusted", "pooled", "estimate",   "ci_lower", "ci_upper")
 
+#Fill in attributable parameter baseline levels
+df$baseline_level[df$type=="PAR" | df$type=="PAF"] <- df$intervention_level[df$type=="PAR" | df$type=="PAF"]
 
 #Clean up dataframe 
 df <- RMA_clean(df)
@@ -119,17 +140,17 @@ df$outcome_variable = factor(df$outcome_variable, levels = unique(c(outcome_leve
 
 # Set order for exposure
 intervention_var_levels = c("# of children <5 in HH", "# of people in HH", "# of rooms in HH",
-                                     "Any wasting <6 mo.", "Birth length (cm)", "Birth month",
-                                     "Birth order", "Birth weight (kg)", "Breastfed hour after birth",
-                                     "Child delivered at home", "Clean cooking fuel usage", "Diarrhea <24 mo. (% days)",
-                                     "Diarrhea <6 mo. (% days)", "Enrolled wasted", "Excl/Pred breastfed <6mo.",
-                                     "Father's age", "Father's education", "Father's height",
-                                     "Gestational age at birth", "HH food security", "HH wealth",
-                                     "Improved floor", "Improved sanitation", "Mean WHZ in the prior 3 mo.",
-                                     "Month of measurement", "Mother's age", "Mother's BMI",
-                                     "Mother's education","Mother's height", "Mother's weight",
-                                     "Persistent wasting <6 mo.", "Safe water source", "Sex",
-                                     "Single parent", "Vaginal birth")
+                            "Any wasting <6 mo.", "Birth length (cm)", "Birth month",
+                            "Birth order", "Birth weight (kg)", "Breastfed hour after birth",
+                            "Child delivered at home", "Clean cooking fuel usage", "Diarrhea <24 mo. (% days)",
+                            "Diarrhea <6 mo. (% days)", "Enrolled wasted", "Excl/Pred breastfed <6mo.",
+                            "Father's age", "Father's education", "Father's height",
+                            "Gestational age at birth", "HH food security", "HH wealth",
+                            "Improved floor", "Improved sanitation", "Mean WHZ in the prior 3 mo.",
+                            "Month of measurement", "Mother's age", "Mother's BMI",
+                            "Mother's education","Mother's height", "Mother's weight",
+                            "Persistent wasting <6 mo.", "Safe water source", "Sex",
+                            "Single parent", "Vaginal birth")
 df$intervention_var_levels = factor(df$intervention_variable, levels = unique(c(intervention_var_levels, !(levels(df$intervention_variable) %in% intervention_var_levels))))
 
 # Set order for parameter
@@ -144,8 +165,8 @@ df$type <- factor(df$type, levels = c("Relative Risk", "Average Treatment Effect
 
 # Set order for age category
 agecat_levels = c("24 months", "0-24 months", "Birth", "6 months", "0-6 months", "6-24 months", "12 months",
-                      "15 months", "18 months", "21 months", "3 months", "9 months", "3-6 months", "6-9 months",
-                      "9-12 months", "12-15 months", "15-18 months", "Unspecified")
+                  "15 months", "18 months", "21 months", "3 months", "9 months", "3-6 months", "6-9 months",
+                  "9-12 months", "12-15 months", "15-18 months", "Unspecified")
 df$agecat = factor(df$agecat, levels = unique(c(agecat_levels, !(levels(df$agecat) %in% agecat_levels))))
 
 levels(df$region) = c("Pooled", "South Asia", "Africa", "Latin America", "N.America & Europe")

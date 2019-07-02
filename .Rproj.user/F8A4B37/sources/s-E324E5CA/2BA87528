@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1562018286965.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2BA87528",
+    "lastKnownWriteTime" : 1561674180,
+    "last_content_update" : 1561674180,
+    "path" : "U:/ki-longitudinal-manuscripts/1-data-cleaning/4_create_master_dataset.R",
+    "project_path" : "1-data-cleaning/4_create_master_dataset.R",
+    "properties" : {
+        "cursorPosition" : "18,65",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

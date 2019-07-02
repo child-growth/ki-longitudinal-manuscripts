@@ -28,7 +28,7 @@ library(tidyselect)
 # options(repos = c(CRAN = "http://cran.rstudio.com/",
 #                   deltarho = "http://packages.deltarho.org"))
 # install.packages("growthstandards")
-library(growthstandards)
+try(library(growthstandards))
 library(stringr)
 library(mgcv)
 library(grid)
@@ -36,6 +36,8 @@ library(lazyeval)
 library(rlang)
 library(scales)
 library(xtable)
+library(caret)
+
 
 # for parallel computing 
 # (will need to configure in each script)
@@ -44,6 +46,7 @@ library(doParallel)
 library(survey)
 # install.packages("bit64")
 library(bit64)
+
 
 # Define directories
 res_dir                         = paste0(here::here(),"/results/")
@@ -78,7 +81,6 @@ source(paste0(project_functions_dir, "0_descriptive_epi_wast_functions.R"))
 source(paste0(project_functions_dir, "0_descriptive_epi_co_functions.R")) # NP
 source(paste0(project_functions_dir, "0_helper_sampling_weights.R")) # NP
 source(paste0(project_functions_dir, "0_risk_factor_functions.R")) # NP
-source(paste0(project_functions_dir, "0_risk_factor_shared_functions.R")) # NP
 source(paste0(project_functions_dir, "0_wast_inc_functions.R")) # NP
 
 # Set theme
