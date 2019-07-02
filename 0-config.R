@@ -28,7 +28,7 @@ library(tidyselect)
 # options(repos = c(CRAN = "http://cran.rstudio.com/",
 #                   deltarho = "http://packages.deltarho.org"))
 # install.packages("growthstandards")
-library(growthstandards)
+try(library(growthstandards))
 library(stringr)
 library(mgcv)
 library(grid)
