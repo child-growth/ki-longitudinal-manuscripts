@@ -18,7 +18,7 @@
 # cp ~/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/runFileSaveLogs ~/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/1-data-cleaning
 
 # Run folder scripts and produce output
-# cd 1-data-cleaning/
+cd 1-data-cleaning/
 
 # ./runFileSaveLogs -i "clean-data" \
 # 1_process_FINAL_dataset.R \
@@ -33,35 +33,41 @@
 
 
 # TEMPORARY FIX
+echo $'\n### Running 1_process_FINAL_dataset.R...' >&1
+(time Rscript 1_process_FINAL_dataset.R >&1)
 
-echo $'\n### Running 1_process_FINAL_dataset.R...' >&2
-(time Rscript 1_process_FINAL_dataset.R >&2)
+R CMD BATCH 1_process_FINAL_dataset.R
 
-echo $'\n### Running 2_clean_FINAL_covariates.R...' >&2
-(time Rscript 2_clean_FINAL_covariates.R >&2)
+# echo $'\n### Running 1_process_FINAL_dataset.R...' >&2
+# (time Rscript 1_process_FINAL_dataset.R >&2)
+# 
+# echo $'\n### Running 2_clean_FINAL_covariates.R...' >&2
+# (time Rscript 2_clean_FINAL_covariates.R >&2)
+# 
+# # echo $'\n### Running 3_merge_covariates_and_raw_data.R...' >&2
+# # (time Rscript 3_merge_covariates_and_raw_data.R >&2)
+# # 
+# # echo $'\n### Running 4_create_master_dataset.R...' >&2
+# # (time Rscript 4_create_master_dataset.R >&2)
+# # 
+# # echo $'\n### Running 5_process_mortality_data.R...' >&2
+# # (time Rscript 5_process_mortality_data.R >&2)
+# # 
+# # echo $'\n### Running 6_anthro_prepdata.R...' >&2
+# # (time Rscript 6_anthro_prepdata.R >&2)
+# # 
+# # echo $'\n### Running 7_DHS-data-cleaning.R...' >&2
+# # (time Rscript 7_DHS-data-cleaning.R >&2)
+# # 
+# # echo $'\n### Running 8_DHS-data-quantiles.R...' >&2
+# # (time Rscript 8_DHS-data-quantiles.R >&2)
+# # 
+# # echo $'\n### Running 9_seasonality_prepdata.R...' >&2
+# # (time Rscript 9_seasonality_prepdata.R >&2)
+# 
+# echo $'\n--- Total time to run data-cleaning scripts:' >&2
 
-echo $'\n### Running 3_merge_covariates_and_raw_data.R...' >&2
-(time Rscript 3_merge_covariates_and_raw_data.R >&2)
-
-echo $'\n### Running 4_create_master_dataset.R...' >&2
-(time Rscript 4_create_master_dataset.R >&2)
-
-echo $'\n### Running 5_process_mortality_data.R...' >&2
-(time Rscript 5_process_mortality_data.R >&2)
-
-echo $'\n### Running 6_anthro_prepdata.R...' >&2
-(time Rscript 6_anthro_prepdata.R >&2)
-
-echo $'\n### Running 7_DHS-data-cleaning.R...' >&2
-(time Rscript 7_DHS-data-cleaning.R >&2)
-
-echo $'\n### Running 8_DHS-data-quantiles.R...' >&2
-(time Rscript 8_DHS-data-quantiles.R >&2)
-
-echo $'\n### Running 9_seasonality_prepdata.R...' >&2
-(time Rscript 9_seasonality_prepdata.R >&2)
-
-echo $'\n--- Total time to run data-cleaning scripts:' >&2
+# R CMD BATCH 1_process_FINAL_dataset.R
 
 
 # Remove copied utility run script
