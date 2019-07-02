@@ -31,12 +31,11 @@ cd 1-data-cleaning/
 # 8_DHS-data-quantiles.R \
 # 9_seasonality_prepdata.R
 
-
-# TEMPORARY FIX
-echo $'\n### Running 1_process_FINAL_dataset.R...' >&1
-(time Rscript 1_process_FINAL_dataset.R >&1)
-
 R CMD BATCH 1_process_FINAL_dataset.R
+
+# # TEMPORARY FIX
+# echo $'\n### Running 1_process_FINAL_dataset.R...' >&1
+# (time Rscript 1_process_FINAL_dataset.R >&1)
 
 # echo $'\n### Running 1_process_FINAL_dataset.R...' >&2
 # (time Rscript 1_process_FINAL_dataset.R >&2)
@@ -67,7 +66,7 @@ R CMD BATCH 1_process_FINAL_dataset.R
 # 
 # echo $'\n--- Total time to run data-cleaning scripts:' >&2
 
-# R CMD BATCH 1_process_FINAL_dataset.R
+R CMD BATCH 1_process_FINAL_dataset.R
 
 
 # Remove copied utility run script
