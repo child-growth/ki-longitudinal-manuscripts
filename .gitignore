@@ -3,5 +3,6 @@
 .Rapp.history
 .RData
 .Ruserdata
+.Rout
 .DS_Store
 data/
