@@ -17,7 +17,7 @@ label_wrap <- function(variable, value) {
 
 poolRR <- function(d, method="REML"){
   #nstudies=length(unique(d$studyid))
-  nstudies <- d %>% summarize(N=n())
+  nstudies <- d %>% summarise(N=n())
   
   if(d$intervention_level[1] == d$baseline_level[1]){
     est <- data.frame(logRR.psi=1, logSE=0, RR=1, RR.CI1=1, RR.CI2=1, Nstudies= nstudies$N)
@@ -50,7 +50,7 @@ poolRR <- function(d, method="REML"){
 
 
 pool.par <- function(d, method="REML"){
-  nstudies <- d %>% summarize(N=n())
+  nstudies <- d %>% summarise(N=n())
   
   fit<-NULL
   try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="GEN"))
@@ -72,7 +72,7 @@ pool.par <- function(d, method="REML"){
 
 
 pool.prev <- function(d, method="REML"){
-  nstudies <- d %>% summarize(N=n())
+  nstudies <- d %>% summarise(N=n())
   
   fit<-NULL
   try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="GEN"))
@@ -95,7 +95,7 @@ pool.prev <- function(d, method="REML"){
 
 
 pool.Zpar <- function(d, method="REML"){
-  nstudies <- d %>% summarize(N=n())
+  nstudies <- d %>% summarise(N=n())
   
   fit<-NULL
   try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="GEN"))
@@ -119,7 +119,7 @@ pool.Zpar <- function(d, method="REML"){
 #Pooled continious estimate function
 pool.cont <- function(d, method="REML"){
   #nstudies=length(unique(d$studyid))
-  nstudies <- d %>% summarize(N=n())
+  nstudies <- d %>% summarise(N=n())
   
   if(d$intervention_level[1] == d$baseline_level[1]){
     est <- data.frame(ATE=1, CI1=1, CI2=1, Nstudies= nstudies$N)

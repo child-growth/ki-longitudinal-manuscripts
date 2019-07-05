@@ -30,25 +30,6 @@ d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
 d <- droplevels(d)
 
 
-pool.Zpar <- function(d){
-  nstudies <- d %>% summarize(N=n())
-  
-  fit<-NULL
-  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="GEN"))
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
-  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
-  
-  if(is.null(fit)){
-    est<-data.frame(PAR=NA, CI1=NA,  CI2=NA)
-  }else{
-    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
-    colnames(est)<-c("PAR","CI1","CI2")    
-  }
-  est$Nstudies <- nstudies$N
-  rownames(est) <- NULL
-  return(est)
-}
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.Zpar(., method="FE")) %>% as.data.frame()

@@ -5,8 +5,8 @@ account: amertens
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 954478
-bundleId: 2177797
+bundleId: 2203906
 url: https://amertens.shinyapps.io/rf_app/
-when: 1561486362.912
+when: 1562358805.74966
 asMultiple: FALSE
 asStatic: FALSE

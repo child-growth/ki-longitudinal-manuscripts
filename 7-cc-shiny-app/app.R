@@ -14,15 +14,18 @@ library(here)
 
 
 #Load data
-df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds")
-spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds")
+# try(df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds"))
+# try(spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds"))
+try(df <- readRDS("shiny_rf_results.rds"))
+try(spline_variables <- readRDS("spline_variables.rds"))
 
 #------------------------------------------------
 # Inputs for Shiny App
 #------------------------------------------------
 
 #Plot parameters
-yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
+yticks <- c( 0.50, 0.75, 1.00, 1.33, 2.00, 4.00, 8.00)
+yticks2 <- c( 0.50, 0.75, 0.91, 1.00, 1.10, 1.33, 2.00, 4.00, 8.00)
 yticks_cont <- c(-20:20/10)
 
 tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
@@ -47,7 +50,7 @@ clean_agecat<-function(agecat){
   return(agecat)
 }
 
-input <- data.frame(exposure = "birthlen", outcome = "stunted", age = "6 months", parameter = "RR", region = "All", adjusted = "Yes")
+input <- data.frame(exposure = "birthlen", outcome = "stunted", age = "6 months", parameter = "RR", region = "All", adjusted = "Yes", RE=1, adjusted=1)
 input <- input %>% mutate_all(as.character)
 
 #------------------------------------------------
@@ -70,6 +73,9 @@ ui <- navbarPage("HBGDki Results Dashboard",
                               uiOutput('age'),
                               uiOutput('region'),
                               uiOutput('adjusted'),
+                              # radioButtons('adjusted',
+                              #              'Covariate adjustment:',
+                              #              choices = c("Adjusted","Unadjusted")),
                               radioButtons('pool_method',
                                            'Pooling method:',
                                            choices = c("Random","Fixed"))
@@ -171,13 +177,13 @@ server <- function(input, output, session) {
                 choices = append(c("All"), remaining_regions))
   })
   
-  output$adjusted <- renderUI({
+output$adjusted <- renderUI({
     df <- df %>%
       filter(intervention_variable == input$exposure) %>%
       filter(outcome_variable == input$outcome) %>%
       filter(type == input$parameter) %>%
-      filter(agecat == input$age)  
-    
+      filter(agecat == input$age)
+
     if (input$region == 'All'){
       df <- df %>%
         filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
@@ -185,20 +191,50 @@ server <- function(input, output, session) {
       df <- df %>%
         filter(region == input$region)
     }
-    
+
     df = df %>% mutate(adjusted = case_when(
       adjusted == 1 ~ "Adjusted",
-      adjusted == 0 ~ "Unadjusted")) %>% 
-      drop_na(adjusted) %>% 
+      adjusted == 0 ~ "Unadjusted")) %>%
+      drop_na(adjusted) %>%
       arrange(adjusted)
-    
+
     levels(df$adjusted) = c( "Adjusted", "Unadjusted")
-    
+
 
     radioButtons('adjusted',
                  'Covariate adjustment:',
                  choices = levels(df$adjusted)[levels(df$adjusted) %in% unique(df$adjusted)])
   })
+#   
+# output$RE <- renderUI({
+#     df <- df %>%
+#       filter(intervention_variable == input$exposure) %>%
+#       filter(outcome_variable == input$outcome) %>%
+#       filter(type == input$parameter) %>%
+#       filter(agecat == input$age)  %>%
+#       filter(RE== input$)
+#     
+#     if (input$region == 'All'){
+#       df <- df %>%
+#         filter(pooled == 0 | (pooled == 1 & region == 'Pooled'))
+#     } else {
+#       df <- df %>%
+#         filter(region == input$region)
+#     }
+#     
+#     df = df %>% mutate(adjusted = case_when(
+#       adjusted == 1 ~ "Adjusted",
+#       adjusted == 0 ~ "Unadjusted")) %>% 
+#       drop_na(adjusted) %>% 
+#       arrange(adjusted)
+#     
+#     levels(df$adjusted) = c( "Adjusted", "Unadjusted")
+#     
+#     
+#     radioButtons('adjusted',
+#                  'Covariate adjustment:',
+#                  choices = levels(df$adjusted)[levels(df$adjusted) %in% unique(df$adjusted)])
+#   })
   
   
   
@@ -211,6 +247,8 @@ server <- function(input, output, session) {
     if(input$region=="All"){df <- df[df$pooled==0 | (df$pooled==1 & df$region=="Pooled"),]}
     if(input$adjusted == 'Unadjusted'){df <- df %>% filter(adjusted == 0)}
     if(input$adjusted == 'Adjusted'){df <- df %>% filter(adjusted == 1)}
+    if(input$pool_method == 'Random'){df <- df %>% filter(pooled==0 | RE == 1)}
+    if(input$pool_method == 'Fixed'){df <- df %>% filter(pooled==0 | RE == 0)}
     #if(input$pool_method=="Random"){df <- df[df$pooled==0 | df$studyid=="Pooled - Random"|df$studyid=="Pooled - Asia - RE"|df$studyid=="Pooled - Afica - RE"|df$studyid=="Pooled - Latin America - RE",]}
     #if(input$pool_method=="Fixed"){df <- df[df$pooled==0 | df$studyid=="Pooled - Fixed"|df$studyid=="Pooled - Asia - FE"|df$studyid=="Pooled - Afica - FE"|df$studyid=="Pooled - Latin America - FE",]}
     df <- df %>% filter(!is.na(estimate))
@@ -297,7 +335,6 @@ server <- function(input, output, session) {
                        alpha=0.5, size = 3) +
         labs(x = "Exposure category",
              y = "Relative risk") +
-        #geom_text(aes(x=0.5, y=(max(df$RR.CI2))-.1, label=paste0("Studies: ",Nstudies)), size=3,  hjust=0) +
         scale_fill_manual(values=rep(tableau10,4)) +
         scale_colour_manual(values=rep(tableau10,4)) +
         theme(plot.title = element_text(hjust = 0.5),
@@ -312,7 +349,7 @@ server <- function(input, output, session) {
                        " outcome and\n", input$age))
       
       if(df$continuous[1]==0){
-        pooledp <- pooledp+scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) + geom_hline(yintercept = 1) 
+        pooledp <- pooledp+scale_y_continuous(breaks=yticks2, trans='log10', labels=scaleFUN) + geom_hline(yintercept = 1) 
       }else{
         pooledp <- pooledp+scale_y_continuous(breaks=yticks_cont, labels=scaleFUN)  + geom_hline(yintercept = 0)
       }
