@@ -1,11 +1,15 @@
 
 
-
-
-
 rm(list=ls())
-library("haven")
-library("tidyverse")
+source(paste0(here::here(), "/0-config.R"))
+library(haven)
+library(foreign)
+setwd(paste0(ghapdata_dir, "raw SAS datasets/"))
+
+#Set cohort data file path
+cohortdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/cohort datasets/")
+bfdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/Breastfeeding datasets/")
+
 
 
 #Improved water coding rules
@@ -36,7 +40,7 @@ library("tidyverse")
 
 
 #Function
-load_san <- function(filepath, var=NULL){
+load_wat <- function(filepath, var=NULL){
   
   d <- readRDS(filepath)
   print(tolower(colnames(d)))
@@ -64,13 +68,13 @@ dh20<-NULL
 #-------------------------------
 
 # e <- read.csv("U:/git/hbgd/ki0047075b/MALED-201707/adam/full_ki0047075b_MALED_201707.csv")
-# df<-load_san("U:/data/mled.rds")
+# df<-load_wat("U:/data/mled.rds")
 
 #may have to use compiled dataset values or search raw data
 
 
 #Load SES data
-d <- read.csv("U:/data/MALED-201501/import/WAMI_to24.csv")
+d <- read.csv("MALED/WAMI_to24.csv")
 head(d)
 
 table(d$fsewdrink)
@@ -87,7 +91,7 @@ d$safeh20[d$fsewdrink==8 ] <- NA
 table(d$safeh20)
 
 #Load ID data
-id <- readRDS("U:/data/mled.rds")
+id <- readRDS(paste0(cohortdata_dir,"mled.rds"))
 colnames(id) <- tolower(colnames(id))
 id <- id %>% 
   group_by(studyid, country, subjid) %>%
@@ -119,7 +123,7 @@ dh20<-bind_rows(dh20, d)
 # ki1000125-AgaKhanUniv       
 #-------------------------------
 
-d<-load_san("U:/data/akup.rds", "h2osrc")
+d<-load_wat("akup.rds", "h2osrc")
 #all improved
 d$safeh20<-1
 d$safeh20[(d$h2osrc=="Other")] <- NA
@@ -136,7 +140,7 @@ dh20<-bind_rows(dh20, d)
 # ki1000304-VITAMIN-A        
 #-------------------------------
 
-d<-load_san("U:/data/vita.rds", "h2osrc")
+d<-load_wat("U:/data/vita.rds", "h2osrc")
 d$safeh20<-1
 d$safeh20[d$h2osrc] 
 d$safeh20[d$h2osrc=="Water trucks"] <- 0
@@ -150,7 +154,7 @@ dh20<-bind_rows(dh20, d)
 # ki1000304-ZnMort          
 #-------------------------------
 
-d<-load_san("U:/data/zmrt.rds", "h2osrc")
+d<-load_wat("U:/data/zmrt.rds", "h2osrc")
 
 d$safeh20<-1
 d$safeh20[is.na(d$h2osrc)] <- NA
@@ -163,7 +167,7 @@ dh20<-bind_rows(dh20, d)
 # ki1000304b-SAS-FoodSuppl    
 #-------------------------------
 
-d<-load_san("U:/data/fspp.rds", "h2osrc")
+d<-load_wat("U:/data/fspp.rds", "h2osrc")
 
 d$safeh20<-1
 d$safeh20[is.na(d$h2osrc)] <- NA
@@ -185,7 +189,7 @@ dh20<-bind_rows(dh20, d)
 # ki1017093-NIH-Birth         
 #-------------------------------
 
-d<-load_san("U:/data/nbrt.rds", "h2osrcp")
+d<-load_wat("U:/data/nbrt.rds", "h2osrcp")
 
 
 d$safeh20<-1
@@ -201,7 +205,7 @@ dh20<-bind_rows(dh20, d)
 # ki1017093b-PROVIDE        
 #-------------------------------
 
-d<-load_san("U:/data/prvd.rds", "h2osrcp")
+d<-load_wat("U:/data/prvd.rds", "h2osrcp")
 
 
 
@@ -216,7 +220,7 @@ dh20<-bind_rows(dh20, d)
 # ki1017093c-NIH-Crypto      
 #-------------------------------
 
-d<-load_san("U:/data/ncry.rds", "h2osrc")
+d<-load_wat("U:/data/ncry.rds", "h2osrc")
 
 improved <- c("Septic tank or toilet", 
               "Water-sealed or slab latrine",
@@ -234,7 +238,7 @@ dh20<-bind_rows(dh20, d)
 # ki1112895-Burkina Faso Zn  
 #-------------------------------
 
-d<-load_san("U:/data/bfzn.rds", "h2osrcp")
+d<-load_wat("U:/data/bfzn.rds", "h2osrcp")
 
 #Check raw data to see source of var
 #"1: improved in all seasons
@@ -252,7 +256,7 @@ dh20<-bind_rows(dh20, d)
 # ki1114097-CONTENT            
 #-------------------------------
 
-d<-load_san("U:/data/cntt.rds", "h2osrcc")
+d<-load_wat("U:/data/cntt.rds", "h2osrcc")
 
 d$safeh20<-ifelse(d$h2osrcc=="Bottled water", 0, 1)
 d$safeh20[(d$h2osrcc=="Don't use Water for Feeding Child")] <- NA
@@ -266,7 +270,7 @@ dh20<-bind_rows(dh20, d)
 # ki1135781-COHORTS          
 #-------------------------------
 
-d<-load_san("U:/data/cort.rds", "h2oavail")
+d<-load_wat("U:/data/cort.rds", "h2oavail")
 
 
 # d<-read_sas("U:/data/COHORTS-201509/import/cohorts_sep22.sas7bdat")
@@ -280,7 +284,7 @@ d<-load_san("U:/data/cort.rds", "h2oavail")
 # ki1148112-iLiNS-DOSE       
 #-------------------------------
 
-d<-load_san("U:/data/ilnd.rds", "h2osrcp")
+d<-load_wat("U:/data/ilnd.rds", "h2osrcp")
 
 
 improved <- c("Borehole","Piped Water" ,  "Protected Well" )
@@ -297,7 +301,7 @@ dh20<-bind_rows(dh20, d)
 # ki1148112-iLiNS-DYAD-M       
 #-------------------------------
 
-d<-load_san("U:/data/ildm.rds", "h2osrcp")
+d<-load_wat("U:/data/ildm.rds", "h2osrcp")
 
 
 improved <- c("Borehole","Piped Water" ,  "Protected Well" )
@@ -316,7 +320,7 @@ dh20<-bind_rows(dh20, d)
 # ki1148112-LCNI-5      
 #-------------------------------
 
-d<-load_san("U:/data/lcn5.rds", "h2osrcp")
+d<-load_wat("U:/data/lcn5.rds", "h2osrcp")
 
 improved <- c("Borehole","Piped Water" ,  "Protected Well" )
 
@@ -332,7 +336,7 @@ dh20<-bind_rows(dh20, d)
 # kiGH5241-JiVitA-3     
 #-------------------------------
 
-d<-load_san("U:/data/jvt3.rds", "h2osrcp")
+d<-load_wat("U:/data/jvt3.rds", "h2osrcp")
 
 unimproved <- c("Surface/ring well" )
 
@@ -348,7 +352,7 @@ dh20<-bind_rows(dh20, d)
 # kiGH5241-JiVitA-4   
 #-------------------------------
 
-d<-load_san("U:/data/jvt4.rds", "h2osrcp")
+d<-load_wat("U:/data/jvt4.rds", "h2osrcp")
 
 unimproved <- c("Surface/ring well" )
 
@@ -365,7 +369,7 @@ dh20<-bind_rows(dh20, d)
 #ki1113344-GMS-Nepal   
 #-------------------------------
 
-d<-load_san("U:/data/gmsn.rds", "h2osrc")
+d<-load_wat("U:/data/gmsn.rds", "h2osrc")
 
 
 unimproved <- c("Private Well" )

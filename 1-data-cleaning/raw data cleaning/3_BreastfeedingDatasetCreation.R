@@ -108,7 +108,7 @@ mean(bf_3mo$exclfeed3, na.rm=T)
 table(bf_3mo$studyid, bf_3mo$predfeed3)
 table(bf_3mo$studyid, bf_3mo$exclfeed3)
 
-bf_3mo %>% group_by(studyid) %>% summarize(mean(predfeed6, na.rm=T), mean(exclfeed6, na.rm=T)) %>% as.data.frame()
+bf_3mo %>% group_by(studyid) %>% summarize(mean(predfeed3, na.rm=T), mean(exclfeed3, na.rm=T)) %>% as.data.frame()
 bf_3mo_raw <- bf_3mo
 
 
@@ -287,9 +287,12 @@ bf_6mo <- subset(bf_6mo, select = c(studyid, country, subjid, predfeed6, exclfee
 bf_3mo <- subset(bf_3mo, select = c(studyid, country, subjid, predfeed3, exclfeed3))
 bf_3_6mo <- subset(bf_3_6mo, select = c(studyid, country, subjid, predfeed36, exclfeed36))
 
+dim(bf_3mo)
+dim(bf_6mo)
 bf <- merge(bf_3mo, bf_6mo, by=c("studyid", "country", "subjid"), all.x=T, all.y=T)
+dim(bf)
 bf <- merge(bf, bf_3_6mo, by=c("studyid", "country", "subjid"), all.x=T, all.y=T)
-
+dim(bf)
 
 
 #Clean and merge in mal-ed and probit measures
@@ -412,7 +415,7 @@ table(bf$studyid, bf$predexfd6)
 #Subset to necessary variables
 bf <- bf %>% subset(., select = -c(predfeed6_2, exclfeed6_2))
 
-save(bf, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/derived covariate datasets")
+save(bf, file=paste0(ghapdata_dir, "covariate creation intermediate datasets/derived covariate datasets/BF_dataset.Rdata"))
 
 
 

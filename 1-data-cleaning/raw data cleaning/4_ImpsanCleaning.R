@@ -1,9 +1,17 @@
 
 rm(list=ls())
-library("haven")
-library("tidyverse")
+source(paste0(here::here(), "/0-config.R"))
+library(haven)
+library(foreign)
+setwd(paste0(ghapdata_dir, "raw SAS datasets/"))
+
+#Set cohort data file path
+cohortdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/cohort datasets/")
+bfdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/Breastfeeding datasets/")
 
 
+
+#-------------------
 #Improved sanitation coding rules
 #http://www.who.int/water_sanitation_health/monitoring/jmp2012/key_terms/en/
 
@@ -40,14 +48,11 @@ dsan<-NULL
 # ki0047075b-MAL-ED           
 #-------------------------------
 
-e <- read.csv("U:/git/hbgd/ki0047075b/MALED-201707/adam/full_ki0047075b_MALED_201707.csv")
-df<-load_san("U:/data/mled.rds")
-
-#may have to use compiled dataset values or search raw data
+# use raw data values to classify toilets
 
 
 #Load SES data
-d <- read.csv("U:/data/MALED-201501/import/WAMI_to24.csv")
+d <- read.csv("MALED/WAMI_to24.csv")
 head(d)
 
 d <- d %>% group_by(PID, Country_ID) %>% arrange(agedays) %>% slice(1) %>% ungroup()
@@ -64,7 +69,7 @@ d$impsan[d$fsetoilet==7 ] <- NA
 table(d$impsan)
 
 #Load ID data
-id <- readRDS("U:/data/mled.rds")
+id <- readRDS(paste0(cohortdata_dir,"mled.rds"))
 colnames(id) <- tolower(colnames(id))
 id <- id %>% 
   group_by(studyid, country, subjid) %>%
@@ -86,61 +91,27 @@ d<-d[!is.na(d$subjid),]
 
 d <- subset(d, select = -c(subjido))
 
-dsan<-bind_rows(dsan, d)
+dsan <- bind_rows(dsan, d)
 
 
 #-------------------------------
 # ki1000107-Serrinha-VitA     
 #-------------------------------
 
-d<-load_san("U:/data/svta.rds","sanitatn")
+d<-load_san(paste0(cohortdata_dir,"svta.rds"),"sanitatn")
 #Not enough information to determine in analysis dataset
 
-d<-read_sas("U:/git/hbgd/ki1000107/Serrinha-VitA/raw/final_dataset.sas7bdat")
+d<-read_sas("Serrinha-VitA/final_dataset.sas7bdat")
 head(d)
 table(d$toilet)
 
 #Insufficient info to clssify. Just toilet presence
 
 #-------------------------------
-# ki1000110-WASH-Bangladesh     
-#-------------------------------
-
-d<-load_san("U:/data/wsb.rds", "sanitatn")
-
-cat(paste(shQuote(unique(d$sanitatn)), collapse=", "))
-
-improved <- c("Own latrine|concrete slb", 
-              "Own latrine|concrete slb|potty",  "Own latrine|concrete slb|waterseal",
-              "Own latrine|concrete slb|waterseal|potty", "Own latrine|waterseal")
-
-missing <- c("NA")
-
-d$impsan<-ifelse(d$sanitatn %in% improved, 1, 0)
-d$impsan[d$sanitatn %in% missing] <- NA
-d$impsan[is.na(d$sanitatn)] <- NA
-table(d$impsan)
-
-dsan<-bind_rows(dsan, d)
-
-
-#-------------------------------
-# ki1000111-WASH-Kenya    
-#-------------------------------
-
-d<-load_san("U:/data/wsk.rds", "imprlat")
-table(d$imprlat)
-
-d$impsan <- as.numeric(d$imprlat)
-
-dsan<-bind_rows(dsan, d)
-
-
-#-------------------------------
 # ki1000125-AgaKhanUniv       
 #-------------------------------
 
-d<-load_san("U:/data/akup.rds", "sanitatn")
+d<-load_san(paste0(cohortdata_dir,"akup.rds"),"sanitatn")
 
 d$impsan<-ifelse(d$sanitatn=="Latrine with flush system", 1, 0)
 d$impsan[is.na(d$sanitatn)] <- NA
@@ -153,7 +124,7 @@ dsan<-bind_rows(dsan, d)
 # ki1000304-VITAMIN-A        
 #-------------------------------
 
-d<-load_san("U:/data/vita.rds", "sanitatn")
+d<-load_san(paste0(cohortdata_dir,"vita.rds"),"sanitatn")
 d$impsan<-ifelse(d$sanitatn=="Flush latrine", 1, 0)
 d$impsan[is.na(d$sanitatn)] <- NA
 table(d$impsan)
@@ -164,7 +135,7 @@ dsan<-bind_rows(dsan, d)
 # ki1000304-ZnMort          
 #-------------------------------
 
-d<-load_san("U:/data/zmrt.rds", "sanitatn")
+d<-load_san(paste0(cohortdata_dir,"zmrt.rds"),"sanitatn")
 
 d$impsan<-ifelse(d$sanitatn=="Family owns toilet", 1, 0)
 d$impsan[is.na(d$sanitatn)] <- NA
@@ -177,14 +148,14 @@ dsan<-bind_rows(dsan, d)
 # ki1000304b-SAS-FoodSuppl    
 #-------------------------------
 
-d<-load_san("U:/data/fspp.rds", "sanitatn")
+d<-load_san(paste0(cohortdata_dir,"fspp.rds"),"sanitatn")
 
 d$impsan<-ifelse(d$sanitatn=="Private latrine", 1, 0)
 d$impsan[is.na(d$sanitatn)] <- NA
 table(d$impsan)
 
 #Check raw data -only 1 in the clean
-d<-read_sas("U:/git/hbgd/ki1000304b/SAS-FoodSuppl/raw/f2_baseline.sas7bdat")
+d<-read_sas("SAS-FoodSuppl/f2_baseline.sas7bdat")
 head(d)
 table(d$m_defaec)
 
@@ -196,7 +167,7 @@ table(d$m_defaec)
 # ki1017093-NIH-Birth         
 #-------------------------------
 
-d<-load_san("U:/data/nbrt.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"nbrt.rds"),"sanitatn")
 
 improved <- c("Septic tank or toilet", 
               "Water-sealed or slab latrine")
@@ -213,7 +184,7 @@ dsan<-bind_rows(dsan, d)
 # ki1017093b-PROVIDE        
 #-------------------------------
 
-d<-load_san("U:/data/prvd.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"prvd.rds"),"sanitatn")
 
 
 improved <- c("Septic tank or toilet", 
@@ -230,7 +201,7 @@ dsan<-bind_rows(dsan, d)
 # ki1017093c-NIH-Crypto      
 #-------------------------------
 
-d<-load_san("U:/data/ncry.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"ncry.rds"),"sanitatn")
 
 improved <- c("Septic tank or toilet", 
               "Water-sealed or slab latrine",
@@ -248,7 +219,7 @@ dsan<-bind_rows(dsan, d)
 # ki1112895-Burkina Faso Zn  
 #-------------------------------
 
-d<-load_san("U:/data/bfzn.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"bfzn.rds"),"sanitatn")
 d$impsan <- as.numeric(d$sanitatn)
 d$impsan[d$sanitatn==9] <- NA
 
@@ -262,10 +233,10 @@ dsan<-bind_rows(dsan, d)
 # ki1114097-CONTENT            
 #-------------------------------
 
-d<-load_san("U:/data/cntt.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"cntt.rds"),"sanitatn")
 
 #Check raw data to see source of var
-d<-read.csv("U:/data/CONTENT-201511/adam/ADS_KI1114097_CONTENT_201511.csv")
+d<-read.csv("CONTENT/ADS_KI1114097_CONTENT_201511.csv")
 colnames(d) <- tolower(colnames(d))
 
 d <- d %>% 
@@ -288,12 +259,12 @@ dsan<-bind_rows(dsan, d)
 # ki1135781-COHORTS          
 #-------------------------------
 
-df<-load_san("U:/data/cort.rds")
+df <- readRDS(paste0(cohortdata_dir,"cort.rds"))
+colnames(df) <- tolower(colnames(df))
 df <- df %>% subset(., select =c(subjid,studyid,subjido, country)) %>% group_by(subjido) %>% slice(1)
+
 #Check raw data to find sanitation variable
-
-
-d<-read_sas("U:/data/COHORTS-201509/import/cohorts_sep22.sas7bdat")
+d<-read_sas("COHORTS/cohorts_sep22.sas7bdat")
 head(d)
 table(d$c3toilet)
 
@@ -324,25 +295,24 @@ dsan<-bind_rows(dsan, df)
 # ki1148112-iLiNS-DOSE       
 #-------------------------------
 
-d<-load_san("U:/data/ilnd.rds", "sanitatn")
-
+d <- load_san(paste0(cohortdata_dir,"ilnd.rds"),"sanitatn")
+  
 d$impsan <- ifelse(d$sanitatn=="Regular Pit Latrine",0,1)
 d$impsan[is.na(d$impsan)] <- NA
 table(d$impsan)
 
-dsan<-bind_rows(dsan, d)
+dsan <- bind_rows(dsan, d)
 
 
 #-------------------------------
 # ki1148112-iLiNS-DYAD-M       
 #-------------------------------
 
-d<-load_san("U:/data/ildm.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"ildm.rds"),"sanitatn")
 
-#mostly missing from 
-
+#mostly missing from cleaned dataset
 library(xlsx)
-df <- read.xlsx("U:/data/iLiNS-DYAD-M/import/export_form_13a_2016-01-19-1526.xlsx", sheetName="export_form_13a")
+df <- read.xlsx("ilins-dyad-m/export_form_13a_2016-01-19-1526.xlsx", sheetName="export_form_13a")
 table(df$SocSanitaryFac)
 table(df$SocSpecSanitary)
 
@@ -362,7 +332,7 @@ dsan<-bind_rows(dsan, d)
 # ki1148112-LCNI-5      
 #-------------------------------
 
-d<-load_san("U:/data/lcn5.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"lcn5.rds"),"sanitatn")
 
 
 d$impsan<-ifelse(d$sanitatn=="Vent.impr.pit latrine", 1, 0)
@@ -377,7 +347,7 @@ dsan<-bind_rows(dsan, d)
 # kiGH5241-JiVitA-3     
 #-------------------------------
 
-d<-load_san("U:/data/jvt3.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"jvt3.rds"),"sanitatn")
 
 improved <- c("Water sealed/slab", 
               "Flush toilet")
@@ -393,7 +363,7 @@ dsan<-bind_rows(dsan, d)
 # kiGH5241-JiVitA-4   
 #-------------------------------
 
-d<-load_san("U:/data/jvt4.rds", "sanitatn")
+d <- load_san(paste0(cohortdata_dir,"jvt4.rds"),"sanitatn")
 
 improved <- c("Water sealed/slab", 
               "Flush toilet")
@@ -414,9 +384,12 @@ table(dsan$studyid, dsan$impsan)
 
 head(dsan)
 
-dsan <- dsan %>% subset(., select = -c(agedays, sanitatn, imprlat, subjido))
+dsan <- dsan %>% subset(., select = -c(agedays, sanitatn, subjido))
 
-save(dsan, file="U:/data/Raw Data Cleaning/improved_sanitation_dataset.Rdata")
+save(dsan, file=paste0(ghapdata_dir, "covariate creation intermediate datasets/derived covariate datasets/improved_sanitation_dataset.Rdata"))
+
+
+
 
 
 
