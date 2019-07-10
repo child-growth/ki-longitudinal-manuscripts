@@ -252,9 +252,10 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           ub = plogis(yi + 1.96 * se),
           nmeas.f = paste0("N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE), " ", nlab),
           nstudy.f = paste0("N=", nstudies, " studies"),
-          method.used=method
+          method.used=method,
+          ptest.f = sprintf("%0.0f", est)
         ) %>%
-        subset(., select =c(nstudies, nmeas, agecat, est, se, lb, ub, nmeas.f, nstudy.f)) %>%
+        subset(., select =c(nstudies, nmeas, est, se, lb, ub, nmeas.f, nstudy.f, method.used, agecat, ptest.f)) %>%
         as.tibble()
       rownames(out) <- NULL
       # If input is more than 1 row (multiple studies), pool across studies with rma() function from metafor package

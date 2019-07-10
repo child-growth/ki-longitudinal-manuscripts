@@ -25,13 +25,14 @@ d_noBW$country <- stringr::str_to_title(d_noBW$country)
 d <- calc.prev.agecat(d)
 prev.data <- summary.prev.whz(d)
 prev.region <- d %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)
-prev.country <- d %>% group_by(country) %>% do(summary.prev.whz(.)$prev.res)
+prev.country <- d %>% group_by(country) %>% do(summary.prev.whz(.)$prev.res) %>% rename(region=country)
 prev.cohort <-
   prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
 
 prev <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
+  data.frame(cohort = "pooled", prev.country),
   data.frame(cohort = "pooled", prev.region),
   prev.cohort
 )

@@ -203,7 +203,7 @@ summarize_over_strata <- function(cohort.sum, strata=c("region","studyid","count
 
 
 
-summary.prev.whz <- function(d, severe.wasted=T){
+summary.prev.whz <- function(d, severe.wasted=F){
 
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
@@ -231,14 +231,14 @@ summary.prev.whz <- function(d, severe.wasted=T){
   # cohort specific results
   prev.cohort=lapply((levels(prev.data$agecat)),function(x)
     fit.escalc(data=prev.data,ni="nmeas", xi="nxprev",age=x,meas="PLO"))
-  prev.cohort=as.data.frame(rbindlist(prev.cohort))
+  prev.cohort=as.data.frame(rbindlist(prev.cohort, use.names=TRUE, fill=T))
   prev.cohort=cohort.format(prev.cohort,y=prev.cohort$yi,
                             lab=  levels(prev.data$agecat))
 
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)),function(x)
     fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
-  prev.res=as.data.frame(rbindlist(prev.res))
+  prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
   prev.res$ub=as.numeric(prev.res$ub)
