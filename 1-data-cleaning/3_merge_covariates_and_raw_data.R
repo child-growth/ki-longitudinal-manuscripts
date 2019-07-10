@@ -172,7 +172,7 @@ d$perdiar6 <- relevel(d$perdiar6, ref="0%")
 d$perdiar24 <- relevel(d$perdiar24, ref="0%")
 
 #Save dataset
-saveRDS(d, paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
+saveRDS(d, clean_covariates_path)
 
 
 

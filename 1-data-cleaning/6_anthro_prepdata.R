@@ -83,10 +83,10 @@ waz_rf <- waz_mort %>% filter(measurefreq!="yearly")
 co_rf <- co_mort %>% filter(measurefreq!="yearly")
 
 
-saveRDS(stunt_rf, paste0(ghapdata_dir, "rf_stunting_data.rds"))
-saveRDS(wast_rf, paste0(ghapdata_dir, "rf_wasting_data.rds"))
-saveRDS(waz_rf, paste0(ghapdata_dir, "rf_underweight_data.rds"))
-saveRDS(co_rf, paste0(ghapdata_dir, "rf_co_occurrence_data.rds"))
+saveRDS(stunt_rf, rf_stunting_data_path)
+saveRDS(wast_rf, rf_wasting_data_path)
+saveRDS(waz_rf, rf_underweight_path)
+saveRDS(co_rf, rf_co_occurrence_path)
 
 #--------------------------------------------
 # Subset to and save descriptive epi data
@@ -116,8 +116,8 @@ waz <- drop_int_arms(waz_rf)
 co <- drop_int_arms(co_rf) 
 
 
-saveRDS(stunt, paste0(ghapdata_dir, "stunting_data.rds"))
-saveRDS(wast, paste0(ghapdata_dir, "wasting_data.rds"))
-saveRDS(waz, paste0(ghapdata_dir, "underweight_data.rds"))
-saveRDS(co, paste0(ghapdata_dir, "co_occurrence_data.rds"))
+saveRDS(stunt, stunting_data_path)
+saveRDS(wast, wasting_data_path)
+saveRDS(waz, underweight_data_path)
+saveRDS(co, co_occurrence_data_path)
 

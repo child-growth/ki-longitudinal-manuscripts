@@ -163,5 +163,5 @@ gc()
 
 
 
-saveRDS(d, file=paste0(ghapdata_dir, "FINAL_only_included_studies.rds"))
+saveRDS(d, included_studies_path)
 gc()

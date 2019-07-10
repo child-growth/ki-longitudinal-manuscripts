@@ -811,6 +811,6 @@ tabRF(d, "nchldlt5")
 
 
 
-saveRDS(d, file=paste0(ghapdata_dir, "FINAL_temp_clean_covariates.rds"))
+saveRDS(d, temp_clean_covariates_path)
 
 

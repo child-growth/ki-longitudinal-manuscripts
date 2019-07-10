@@ -18,4 +18,4 @@ agedays <- rep(1:50*15,n/50)
 d <- data.frame(studyid, country, subjid, agedays, haz, whz)
 d <- d %>% arrange(studyid, country, subjid,agedays)
 
-saveRDS(d, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/data/simulated test data/testdata.rds")
+saveRDS(d, test_data_path)

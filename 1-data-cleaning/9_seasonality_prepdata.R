@@ -46,5 +46,5 @@ d$jday <- ((d$birthday + d$agedays)/364)%%1 * 364
 summary(d$jday)
 
 
-saveRDS(d, file=paste0(ghapdata_dir,"seasonality_data.rds"))
+saveRDS(d, seasonality_data_path)
 
