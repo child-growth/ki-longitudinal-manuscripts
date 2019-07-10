@@ -220,8 +220,8 @@ for(i in 1:nrow(df)){
 
 df[48,]
 
-saveRDS(df, "U:/results/Metadata/GHAP_metadata_stunting.RDS")
-saveRDS(df, "U:/ki-longitudinal-manuscripts/results/GHAP_metadata_stunting.RDS")
+saveRDS(df, metadata-GHAP_metadata_stunting_path)
+saveRDS(df, results-GHAP_metadata_stunting_path)
 getwd()
 
 df2 <- df %>% filter(status=="QC completed" & study_type=="Longitudinal" & anthropometric_data!="None" & country!="USA" & country!="NLD") %>% 
@@ -234,7 +234,7 @@ dim(df2)
 
 
 library(xlsx)
-write.xlsx(df2, "U:/results/Metadata/GHAP_metadata_stunting.xlsx")
+write.xlsx(df2, metadata-GHAP_metadata_stunting_xlsx_path)
 
 
 

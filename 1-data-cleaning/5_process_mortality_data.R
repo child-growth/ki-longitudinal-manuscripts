@@ -59,7 +59,7 @@ mort <- mort %>% group_by(cohort) %>% mutate(tot_dead=sum(dead, na.rm=T)) %>% fi
 table(mort$cohort, mort$dead)
 
 
-saveRDS(mort, file=paste0(ghapdata_dir,"mortality.rds"))
+saveRDS(mort, mortality_path)
 
 
 

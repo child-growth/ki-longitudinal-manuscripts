@@ -52,7 +52,7 @@ dim(d)
 
 table(d$studyid, d$tr)
 
-saveRDS(d, file=paste0(ghapdata_dir,"ki-manuscript-dataset.rds"))
+saveRDS(d, ki_manuscript_dataset_path)
 
 
 

@@ -28,9 +28,6 @@ source(paste0(here::here(), "/0-config.R"))
 #sink("U:/results/assetPCA-allstudies.txt")
 
 
-#Set cohort data file path
-cohortdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/cohort datasets/")
-deriveddata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/derived covariate datasets/")
 
 
 #Function to select one observation per child with asset data (some studies only have 
@@ -38,7 +35,7 @@ deriveddata_dir <- paste0(ghapdata_dir, "covariate creation intermediate dataset
 # the time-invariate baseline asset information filled in for all rows)
 read_asset_data <- function(study, varlist){
   
-  d <- readRDS(paste0(cohortdata_dir,study,".rds")) 
+  d <- readRDS(paste0(cohortdata_dir, study,".rds")) 
   
   d <- d %>% 
     group_by(SUBJID) %>% 

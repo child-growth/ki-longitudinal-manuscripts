@@ -51,7 +51,7 @@ for(i in 2:7){
 }
 
 
-saveRDS(fulldf, file=paste0(res_dir,"icc_res.rds"))
+saveRDS(fulldf, icc_res_path)
 
 
 

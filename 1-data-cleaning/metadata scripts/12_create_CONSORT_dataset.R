@@ -157,4 +157,4 @@ table(d$measurefreq)
 
 
 #Save dataset
-saveRDS(d, paste0(here::here(),"/results/HBGDki_CONSORT_inclusion_Ns.rds"))
+saveRDS(d, HBDGki_CONSORT_inclusion_Ns_path)

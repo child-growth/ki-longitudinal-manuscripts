@@ -229,6 +229,7 @@ d_whz_long = d_whz_long %>%
 
 
 # save cleaned data as RDS
-saveRDS(d_haz_long, file = (here::here("data", "clean-DHS-haz.rds")))
-saveRDS(d_waz_long, file = (here::here("data", "clean-DHS-waz.rds")))
-saveRDS(d_whz_long, file = (here::here("data", "clean-DHS-whz.rds")))
+saveRDS(d_haz_long, clean_DHS_haz_path)
+saveRDS(d_waz_long, clean_DHS_waz_path)
+saveRDS(d_whz_long, clean_DHS_whz_path)
+
