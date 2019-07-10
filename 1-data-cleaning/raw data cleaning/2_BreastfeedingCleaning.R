@@ -12,9 +12,8 @@
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-# library(tidyverse)
-# library(haven)
-# library(foreign)
+library(haven)
+library(foreign)
 setwd(paste0(ghapdata_dir, "raw SAS datasets/"))
 
 #Set cohort data file path
@@ -382,7 +381,7 @@ saveRDS(gmsn, file=paste0(bfdata_dir, "bf_gmsn.rds"))
 
 #Summary dataset already created. 
 
-d<-read_sas("U:/git/hbgd/ki1119695/PROBIT/import/PII/bf_dur_bf.sas7bdat")
+d <- read_sas("PROBIT/bf_dur_bf.sas7bdat") 
 colnames(d) <- tolower(colnames(d))
 head(d)
 
@@ -416,7 +415,7 @@ saveRDS(d, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation
 
 
 # Infant 1 Month Postpartum
-i1mop<-read_sas("U:/data/JiVitA-3/raw/hbgd_i1mop.sas7bdat") %>% select(hbgdkid,
+i1mop<-read_sas("JiVitA-3/raw/hbgd_i1mop.sas7bdat") %>% select(hbgdkid,
                                                                        i1sbfed,
                                                                        i1bftime,
                                                                        i1amilk,
@@ -493,7 +492,7 @@ table(i1mop$h20fedfl)
 table(is.na(i1mop$h20fedfl))
 
 # Infant 3 Month Postpartum
-i3mop<-read_sas("U:/data/JiVitA-3/raw/hbgd_i3mop.sas7bdat") %>% select(hbgdkid,
+i3mop<-read_sas("JiVitA-3/raw/hbgd_i3mop.sas7bdat") %>% select(hbgdkid,
                                                                        i3sbfed,
                                                                        i3bftime,
                                                                        i3amilk,
@@ -569,7 +568,7 @@ table(is.na(i3mop$othfedfl))
 table(i3mop$h20fedfl)
 table(is.na(i3mop$h20fedfl))
 # Infant 6 Month Postpartum 
-i6mop<-read_sas("U:/data/JiVitA-3/raw/hbgd_i6mop.sas7bdat") %>% select(hbgdkid,
+i6mop<-read_sas("JiVitA-3/raw/hbgd_i6mop.sas7bdat") %>% select(hbgdkid,
                                                                        i6sbfed,
                                                                        i6sbfedm,
                                                                        i6bftime,
@@ -655,7 +654,7 @@ table(is.na(i6mop$h20fedfl))
 
 
 # Infant 12 Month Postpartum
-i12mop<-read_sas("U:/data/JiVitA-3/raw/hbgd_i12mop.sas7bdat") %>% select(hbgdkid, i12sbfed,
+i12mop<-read_sas("JiVitA-3/raw/hbgd_i12mop.sas7bdat") %>% select(hbgdkid, i12sbfed,
                                                                          i12sbfed,
                                                                          i12bftime,
                                                                          i12amilk,
@@ -753,7 +752,7 @@ table(is.na(i12mop$othfedfl))
 
 
 # Child 24 Month Postpartum 
-c24mop<-read_sas("U:/data/JiVitA-3/raw/hbgd_c24mop.sas7bdat")  %>% select(hbgdkid, c24sbfed,
+c24mop<-read_sas("JiVitA-3/raw/hbgd_c24mop.sas7bdat")  %>% select(hbgdkid, c24sbfed,
                                                                           c24sbfed,
                                                                           c24bftime,
                                                                           c24amilk,
@@ -882,7 +881,7 @@ saveRDS(jvta3, file="U:/ucb-superlearner/Manuscript analysis data/covariate crea
 
 
 #Infant Birth Assessment Form (IBAF)
-#IBAF<-read_sas("U:/data/JiVitA-3/raw/hbgd_ibaf.sas7bdat")
+#IBAF<-read_sas("JiVitA-3/raw/hbgd_ibaf.sas7bdat")
 #CHILDUID Child UID
 # IBBFED  Have you ever breastfed this child since birth (Including colostrum)? 0= No
 # 1= Yes 
@@ -927,7 +926,7 @@ saveRDS(jvta3, file="U:/ucb-superlearner/Manuscript analysis data/covariate crea
 # 9=Don’t know 
 
 #Infant 3 Month Interview Form (I3MOI) 
-i3mop<-read_sas("U:/data/JiVitA-4/raw/hbgd_i3moi.sas7bdat")  %>% select(hbgdkid,
+i3mop<-read_sas("JiVitA-4/raw/hbgd_i3moi.sas7bdat")  %>% select(hbgdkid,
                                                                         i3sbfed,
                                                                         i3bftime,
                                                                         i3amilk,   i3pmilk,  i3omilk, 
@@ -992,7 +991,7 @@ table(is.na(i3mop$othfedfl))
 
 
 #Child Enrollment Interview (CEI)  (6 months)
-cemop<-read_sas("U:/data/JiVitA-4/raw/hbgd_cei.sas7bdat")  %>% select(hbgdkid,
+cemop<-read_sas("JiVitA-4/raw/hbgd_cei.sas7bdat")  %>% select(hbgdkid,
                                                                       cesbfed,
                                                                       cebftime,
                                                                       ceamilk,
@@ -1052,7 +1051,7 @@ table(is.na(cemop$othfedfl))
 
 #Child 9-Month Interview (C9MOI)
 
-c9mop<-read_sas("U:/data/JiVitA-4/raw/hbgd_c9moi.sas7bdat")  %>% select(hbgdkid,
+c9mop<-read_sas("JiVitA-4/raw/hbgd_c9moi.sas7bdat")  %>% select(hbgdkid,
                                                                         c9sbfed,
                                                                         c9bftime,
                                                                         c9amilk,
@@ -1111,7 +1110,7 @@ table(c9mop$othfedfl)
 table(is.na(c9mop$othfedfl))
 
 #Child 12-Month Interview (C12MOI) 
-c12mop<-read_sas("U:/data/JiVitA-4/raw/hbgd_c12moi.sas7bdat")  %>% select(hbgdkid,
+c12mop<-read_sas("JiVitA-4/raw/hbgd_c12moi.sas7bdat")  %>% select(hbgdkid,
                                                                           c12sbfed,
                                                                           c12bftime,
                                                                           c12amilk,
@@ -1174,7 +1173,7 @@ table(is.na(c12mop$othfedfl))
 
 
 #Child 15-Month Interview (C15MOI)
-c15mop<-read_sas("U:/data/JiVitA-4/raw/hbgd_c15moi.sas7bdat")  %>% select(hbgdkid,
+c15mop<-read_sas("JiVitA-4/raw/hbgd_c15moi.sas7bdat")  %>% select(hbgdkid,
                                                                           c15sbfed,
                                                                           c15bftime,
                                                                           c15amilk,
@@ -1235,7 +1234,7 @@ table(c15mop$othfedfl)
 table(is.na(c15mop$othfedfl))
 
 #Child 18-Month Interview (C18MOI)
-c18mop<-read_sas("U:/data/JiVitA-4/raw/hbgd_c18moi.sas7bdat")  %>% select(hbgdkid,
+c18mop<-read_sas("JiVitA-4/raw/hbgd_c18moi.sas7bdat")  %>% select(hbgdkid,
                                                                           c18bf,
                                                                           c18bftime,
                                                                           c18amilk,
@@ -1296,7 +1295,7 @@ table(c18mop$othfedfl)
 table(is.na(c18mop$othfedfl))
 
 #Child 24-Month Interview (C24MOI)
-c24mop<-read_sas("U:/data/JiVitA-4/raw/hbgd_c24moi.sas7bdat")  %>% select(hbgdkid,
+c24mop<-read_sas("JiVitA-4/raw/hbgd_c24moi.sas7bdat")  %>% select(hbgdkid,
                                                                           c24bf,
                                                                           c24bftime,
                                                                           c24amilk,
@@ -1376,7 +1375,6 @@ jvta4 <- jvta4 %>% select(studyid, country, subjid, agedays, visit) %>% mutate(s
 
 jvta4 <- left_join(jvta4, d, by=c("subjido", "visit"))
 table(jvta4$bfedfl)
-table(d$temp)
 
 
 #save

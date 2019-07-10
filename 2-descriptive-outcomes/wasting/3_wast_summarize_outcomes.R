@@ -6,10 +6,7 @@ rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
-
-load("U:/ucb-superlearner/data/Wasting_inc_data.RData")
-load("U:/ucb-superlearner/data/Wasting_inc_noRec_data.RData")
-
+load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
@@ -17,11 +14,18 @@ d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 # d_noRec <- d_noRec %>% filter(measurefreq == "monthly")
 # d_noBW_noRec <- d_noBW_noRec %>% filter(measurefreq == "monthly")
 
+#clean country names
+d$country[d$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+d_noBW$country[d_noBW$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+d$country <- stringr::str_to_title(d$country)
+d_noBW$country <- stringr::str_to_title(d_noBW$country)
+
 
 #Prevalence
 d <- calc.prev.agecat(d)
 prev.data <- summary.prev.whz(d)
 prev.region <- d %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)
+prev.country <- d %>% group_by(country) %>% do(summary.prev.whz(.)$prev.res)
 prev.cohort <-
   prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)

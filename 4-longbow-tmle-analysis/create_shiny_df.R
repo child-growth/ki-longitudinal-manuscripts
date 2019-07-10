@@ -18,6 +18,7 @@ d_unadj$adjusted = 0
 
 d <- rbind(d_adj, d_unadj)
 d$pooled <- 0
+d$RE <- 2
 
 
 dRR <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
@@ -27,17 +28,17 @@ dPAF <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results.rds"
 
 dRR_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds"))
 dATE_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_FE.rds"))
-#dZ_PAR_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_FE.rds"))
+dZ_PAR_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_FE.rds"))
 dPAF_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_FE.rds"))
 
-#dRR_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_unadj_results.rds"))
+dRR_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results_unadj.rds"))
 dATE_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_unadj.rds"))
 dZ_PAR_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_unadj.rds"))
 dPAF_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_unadj.rds"))
 
-#dRR_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_unadj_FE_results.rds"))
+dRR_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results_unadj_FE.rds"))
 dATE_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_unadj_FE.rds"))
-#dZ_PAR_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_unadj_FE.rds"))
+dZ_PAR_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_unadj_FE.rds"))
 dPAF_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_unadj_FE.rds"))
 
 
@@ -47,31 +48,55 @@ dPAF_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_res
 head(d)
 head(dRR)
 
-dRR <- dRR %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0)
-dRR$adjusted = 1
-dRR$pooled = 1
+dRR <- dRR %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 1, pooled = 1, RE = 1)
+dRR_unadj <- dRR_unadj %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 0, pooled = 1, RE = 1)
+dRR_FE <- dRR_FE %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 1, pooled = 1, RE = 0)
+dRR_unadj_FE <- dRR_unadj_FE %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 0, pooled = 1, RE = 0)
+
 
 head(dATE)
-dATE <- dATE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1)
-dATE$adjusted = 1
-dATE$pooled = 1
+dATE <- dATE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 1, pooled = 1, RE = 1)
+dATE_unadj <- dATE_unadj %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 0, pooled = 1, RE = 1)
+dATE_FE <- dATE_FE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 1, pooled = 1, RE = 0)
+dATE_unadj_FE <- dATE_unadj_FE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 0, pooled = 1, RE = 0)
+
 
 head(dZ_PAR)
-dZ_PAR <- dZ_PAR %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1)
-dZ_PAR$adjusted = 1
-dZ_PAR$pooled = 1
+dZ_PAR <- dZ_PAR %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 1, pooled = 1, RE = 1)
+dZ_PAR_unadj <- dZ_PAR_unadj %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 0, pooled = 1, RE = 1)
+dZ_PAR_FE <- dZ_PAR_FE %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 1, pooled = 1, RE = 0)
+dZ_PAR_unadj_FE <- dZ_PAR_unadj_FE %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 0, pooled = 1, RE = 0)
 
 head(dPAF)
-dPAF <- dPAF %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0)
-dPAF$adjusted = 1
-dPAF$pooled = 1
+dPAF <- dPAF %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 1, pooled = 1, RE = 1)
+dPAF_unadj <- dPAF_unadj %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 0, pooled = 1, RE = 1)
+dPAF_FE <- dPAF_FE %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 1, pooled = 1, RE = 0)
+dPAF_unadj_FE <- dPAF_unadj_FE %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 0, pooled = 1, RE = 0)
 
 
-df <- bind_rows(dRR, dATE, dZ_PAR, dPAF, d)
+
+df <- bind_rows(dRR, 
+                dATE, 
+                dZ_PAR, 
+                dPAF, 
+                dRR_unadj, 
+                dATE_unadj, 
+                dZ_PAR_unadj, 
+                dPAF_unadj, 
+                dRR_FE, 
+                dATE_FE, 
+                dZ_PAR_FE, 
+                dPAF_FE, 
+                dRR_unadj_FE, 
+                dATE_unadj_FE, 
+                dZ_PAR_unadj_FE, 
+                dPAF_unadj_FE, 
+                d) 
+                
 
 unique(df$type)
 df <- df %>% filter(type=="RR" | type=="ATE" | type=="PAR" | type=="PAF")
-df <- df %>% select("agecat","studyid","country","strata_label","adjustment_set","intervention_variable", "outcome_variable","type","parameter","intervention_level","baseline_level","region","continuous","adjusted", "pooled", "estimate",   "ci_lower", "ci_upper")
+df <- df %>% select("agecat","studyid","country","strata_label","adjustment_set","intervention_variable", "outcome_variable","type","parameter","intervention_level","baseline_level","region","continuous","RE","adjusted", "pooled", "estimate",   "ci_lower", "ci_upper")
 
 #Fill in attributable parameter baseline levels
 df$baseline_level[df$type=="PAR" | df$type=="PAF"] <- df$intervention_level[df$type=="PAR" | df$type=="PAF"]
@@ -101,7 +126,7 @@ head(df)
 df <- df %>% select("agecat", "studyid", "country", "adjustment_set", 
                     "intervention_variable", "outcome_variable", "type", 
                     "intervention_level", "baseline_level", "region", "continuous", 
-                    "adjusted", "pooled", "estimate", "ci_lower", "ci_upper", "RFlabel")
+                    "adjusted", "RE", "pooled", "estimate", "ci_lower", "ci_upper", "RFlabel")
 
 
 
@@ -125,10 +150,10 @@ df$intervention_variable = factor(df$intervention_variable)
 df$outcome_variable = factor(df$outcome_variable)
 
 # Set order for outcome
-outcome_levels = c("Prevalence of stunting", "Prevalence of severe stunting",
-                   "Cumulative incidence of stunting", "Cumulative incidence of severe stunting",
-                   "Prevalence of wasting", "Prevalence of severe wasting",
+outcome_levels = c("Cumulative incidence of stunting", "Cumulative incidence of severe stunting",
                    "Cumulative incidence of wasting", "Cumulative incidence of severe wasting",
+                   "Prevalence of stunting", "Prevalence of severe stunting",
+                   "Prevalence of wasting", "Prevalence of severe wasting",
                    "Prevalence of persistent wasting", "Persistently wasted 624",
                    "Wasting recovery",
                    "Prevalence of the co-occurance of stunting and wasting",
@@ -139,9 +164,9 @@ df$outcome_variable = factor(df$outcome_variable, levels = unique(c(outcome_leve
 
 
 # Set order for exposure
-intervention_var_levels = c("# of children <5 in HH", "# of people in HH", "# of rooms in HH",
+intervention_var_levels = c("Birth weight (kg)", "Sex", "# of children <5 in HH", "# of people in HH", "# of rooms in HH",
                             "Any wasting <6 mo.", "Birth length (cm)", "Birth month",
-                            "Birth order", "Birth weight (kg)", "Breastfed hour after birth",
+                            "Birth order","Breastfed hour after birth",
                             "Child delivered at home", "Clean cooking fuel usage", "Diarrhea <24 mo. (% days)",
                             "Diarrhea <6 mo. (% days)", "Enrolled wasted", "Excl/Pred breastfed <6mo.",
                             "Father's age", "Father's education", "Father's height",
@@ -149,9 +174,9 @@ intervention_var_levels = c("# of children <5 in HH", "# of people in HH", "# of
                             "Improved floor", "Improved sanitation", "Mean WHZ in the prior 3 mo.",
                             "Month of measurement", "Mother's age", "Mother's BMI",
                             "Mother's education","Mother's height", "Mother's weight",
-                            "Persistent wasting <6 mo.", "Safe water source", "Sex",
+                            "Persistent wasting <6 mo.", "Safe water source", 
                             "Single parent", "Vaginal birth")
-df$intervention_var_levels = factor(df$intervention_variable, levels = unique(c(intervention_var_levels, !(levels(df$intervention_variable) %in% intervention_var_levels))))
+df$intervention_variable = factor(df$intervention_variable, levels = unique(c(intervention_var_levels, !(levels(df$intervention_variable) %in% intervention_var_levels))))
 
 # Set order for parameter
 df  = df %>% mutate(type = case_when(
@@ -164,7 +189,7 @@ df$type <- factor(df$type, levels = c("Relative Risk", "Average Treatment Effect
                                       "Population Attributable Risk"))
 
 # Set order for age category
-agecat_levels = c("24 months", "0-24 months", "Birth", "6 months", "0-6 months", "6-24 months", "12 months",
+agecat_levels = c("0-24 months", "24 months",  "Birth", "6 months", "0-6 months", "6-24 months", "12 months",
                   "15 months", "18 months", "21 months", "3 months", "9 months", "3-6 months", "6-9 months",
                   "9-12 months", "12-15 months", "15-18 months", "Unspecified")
 df$agecat = factor(df$agecat, levels = unique(c(agecat_levels, !(levels(df$agecat) %in% agecat_levels))))
