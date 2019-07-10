@@ -35,8 +35,6 @@
 # 7_stunt_meandiff_hazvel.R
 
 R CMD BATCH 1_growth_velocity.R
-R CMD BATCH 2_stunt_calc_outcomes_fe.R 
-R CMD BATCH 2_stunt_calc_outcomes_monthly.R 
 R CMD BATCH 2_stunt_calc_outcomes.R 
 R CMD BATCH 3_pool_velocity_outcomes.R 
 R CMD BATCH 4_stunt_flowdata.R 
