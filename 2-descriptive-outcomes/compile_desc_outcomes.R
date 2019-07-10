@@ -4,13 +4,12 @@ source(paste0(here::here(), "/0-config.R"))
 
 load(paste0(res_dir,"shiny_desc_data.Rdata"))
 wast <- shiny_desc_data
-load(paste0(res_dir,"shiny_desc_data_stunting_objects.Rdata"))
-stunt <- shiny_desc_data
-load(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.Rdata"))
-stunt_monthly24 <- shiny_desc_data
+stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
+stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.Rdata"))
+stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
+
 load("co_desc_data.Rdata")
 
-stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
 
 
 stunt <- stunt %>% mutate(analysis = "Primary")
