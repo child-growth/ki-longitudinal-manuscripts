@@ -2,10 +2,9 @@
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-library(here)
 
 
-load("U:/ucb-superlearner/Manuscript analysis data/adjustment_sets_list.Rdata")
+load(paste0(ghapdata_dir,"adjustment_sets_list.Rdata"))
 A <- names(adjustment_sets)
 
 Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
@@ -34,7 +33,7 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 #---------------------------------------------
 # Specify the binary analyses
 #---------------------------------------------
-setwd("U:/ucb-superlearner/Manuscript analysis data/")
+setwd(ghapdata_dir)
 load("st_cuminc_rf.Rdata")
 table(d$ever_stunted, d$sex)
 summary(d$id)
@@ -157,20 +156,11 @@ morbidity <- specify_rf_analysis(A=Avars_morbidity,
 #bind together datasets
 analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
 
-#Temp subset to rerun
-#analyses <- analyses %>% filter(Y=="ever_co"| (A %in% c("perdiar24","perdiar6") & Y %in% c("stunted", "ever_stunted","ever_co")) | (Y %in% c("wasted","ever_co") & A=="birthlen"))
-analyses <- analyses %>% filter(Y %in% c("ever_wasted") & A=="birthlen")
-
-
 
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_binary_analyses.rdata")
-
-#Temporary subset for VIM
-# analyses <- analyses %>% filter(Y=="ever_stunted"|Y=="ever_wasted") %>% mutate(maximize=FALSE)
-# save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_binary_analyses_sub.rdata")
 
 
 #Make unadjusted analysis set
@@ -195,21 +185,14 @@ haz <- specify_rf_analysis(A=Avars, Y="haz", file="st_meanZ_rf.Rdata")
 whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 
 
-#analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
-#Temp subset to rerun
-#analyses <- whz
 analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
-analyses <- analyses[analyses$A %in% c("perdiar6","perdiar24") & analyses$Y=="haz",]
-table(analyses$file)
+
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))
 save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_continuous.rdata")
 
-#Temporary subset for VIM
-# analyses <- analyses %>% filter(Y=="haz"|Y=="whz") %>% mutate(maximize=TRUE)
-# save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_continuous_sub.rdata")
 
 
 #Make unadjusted analysis set

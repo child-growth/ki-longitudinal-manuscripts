@@ -8,7 +8,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #load covariates
-cov<-readRDS("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
 #Check reference levels
 for(i in 3:ncol(cov)){
@@ -44,7 +44,7 @@ cov$perdiar24 <- relevel(cov$perdiar24, ref="0%")
 #Stunting
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-setwd("U:/ucb-superlearner/Manuscript analysis data/")
+setwd(ghapdata_dir)
 
 
 #load outcomes
