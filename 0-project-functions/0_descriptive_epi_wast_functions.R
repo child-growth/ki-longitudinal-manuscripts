@@ -252,9 +252,10 @@ summary.prev.whz <- function(d, severe.wasted=F){
 
 
 
-summary.ci <- function(d, severe.wasted = F){
+summary.ci <- function(d, severe.wasted = F, age.range){
   cutoff <- ifelse(severe.wasted,-3,-2)
 
+  if(age.range == 3){
   # identify ever wasted children
   evs = d %>%
     filter(!is.na(agecat) & !is.na(whz)) %>%
@@ -276,7 +277,27 @@ summary.ci <- function(d, severe.wasted = F){
     summarise(minwhz=min(minwhz)) %>% ungroup() %>%
     mutate(ever_wasted=ifelse(minwhz< cutoff,1,0),
            agecat=factor(agecat))
-
+  }
+  
+  if(age.range == 6){
+    # identify ever wasted children
+    evs = d %>%
+      filter(!is.na(agecat) & !is.na(whz)) %>%
+      group_by(studyid,country,subjid) %>%
+      arrange(studyid,subjid) %>%
+      #create variable with minwhz by age category, cumulatively
+      mutate(minwhz=ifelse(agecat=="0-6 months",min(whz[agecat=="0-6 months"]),
+                           ifelse(agecat=="6-12 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"]),
+                                  ifelse(agecat=="12-18 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"|agecat=="12-18 months"]),
+                                         ifelse(agecat=="18-24 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"|agecat=="12-18 months"|agecat=="18-24 months"]),
+                                                                            min(whz)))))) %>%
+      # create indicator for whether the child was ever wasted
+      # by age category
+      group_by(studyid,country,agecat,subjid) %>%
+      summarise(minwhz=min(minwhz)) %>% ungroup() %>%
+      mutate(ever_wasted=ifelse(minwhz< cutoff,1,0),
+             agecat=factor(agecat))
+  }
 
   # count incident cases per study by age
   # exclude time points if number of measurements per age
@@ -295,14 +316,14 @@ summary.ci <- function(d, severe.wasted = F){
   # cohort specific results
   ci.cohort=lapply(levels(cuminc.data$agecat),function(x)
     fit.escalc(data=cuminc.data,ni="N", xi="ncases",age=x,meas="PLO"))
-  ci.cohort=as.data.frame(do.call(rbind, ci.cohort))
+  ci.cohort=as.data.frame(rbindlist(ci.cohort, use.names=TRUE, fill=T))
   ci.cohort=cohort.format(ci.cohort,y=ci.cohort$yi,
                           lab=  levels(cuminc.data$agecat))
 
   # estimate random effects, format results
   ci.res=lapply(levels(cuminc.data$agecat),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
-  ci.res=as.data.frame(rbindlist(ci.res))
+  ci.res=as.data.frame(rbindlist(ci.res, use.names=TRUE, fill=T))
   ci.res$est=as.numeric(ci.res$est)
   ci.res$lb=as.numeric(ci.res$lb)
   ci.res$ub=as.numeric(ci.res$ub)
@@ -310,7 +331,6 @@ summary.ci <- function(d, severe.wasted = F){
     mutate(est=est*100,lb=lb*100,ub=ub*100)
   ci.res$agecat=factor(levels(cuminc.data$agecat))
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
-
 
   return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
 }
@@ -342,7 +362,7 @@ summary.whz <- function(d){
   # cohort specific results
   whz.cohort=lapply((levels(whz.data$agecat)),function(x)
     fit.escalc(data=whz.data, yi="meanwhz", vi="varwhz", ni="nmeas", measure="MN", age=x))
-  whz.cohort=as.data.frame(rbindlist(whz.cohort))
+  whz.cohort=as.data.frame(rbindlist(whz.cohort, use.names=TRUE, fill=T))
   whz.cohort=cohort.format(whz.cohort,y=whz.cohort$yi,
                            lab=  levels(whz.data$agecat), est="mean")
 
@@ -350,7 +370,7 @@ summary.whz <- function(d){
   # estimate random effects, format results
   whz.res=lapply((levels(whz.data$agecat)),function(x)
     fit.rma(data=whz.data, ni="nmeas", yi="meanwhz", vi="varwhz", nlab="children", measure="MN",age=x))
-  whz.res=as.data.frame(rbindlist(whz.res))
+  whz.res=as.data.frame(rbindlist(whz.res, use.names=TRUE, fill=T))
   whz.res$est=as.numeric(whz.res$est)
   whz.res$lb=as.numeric(whz.res$lb)
   whz.res$ub=as.numeric(whz.res$ub)
@@ -399,7 +419,7 @@ summary.incprop <- function(d, recovery=F, severe.wasted=F){
   # cohort specific results
   ci.cohort=lapply(levels(cuminc.data$agecat),function(x)
     fit.escalc(data=cuminc.data,ni="N", xi="ncases",age=x,meas="PLO"))
-  ci.cohort=as.data.frame(do.call(rbind, ci.cohort))
+  ci.cohort=as.data.frame(rbindlist(ci.cohort, use.names=TRUE, fill=T))
   ci.cohort=cohort.format(ci.cohort,y=ci.cohort$yi,
                           lab=  levels(cuminc.data$agecat))
 
@@ -409,7 +429,7 @@ summary.incprop <- function(d, recovery=F, severe.wasted=F){
   # estimate random effects, format results
   ci.res=lapply(levels(cuminc.data$agecat),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
-  ci.res=as.data.frame(rbindlist(ci.res))
+  ci.res=as.data.frame(rbindlist(ci.res, use.names=TRUE, fill=T))
   ci.res$est=as.numeric(ci.res$est)
   ci.res$lb=as.numeric(ci.res$lb)
   ci.res$ub=as.numeric(ci.res$ub)
@@ -458,14 +478,14 @@ summary.rec60 <- function(d, length=60){
   # cohort specific results
   ci.cohort=lapply(levels(cuminc.data$agecat),function(x)
     fit.escalc(data=cuminc.data,ni="N", xi="ncases",age=x,meas="PLO"))
-  ci.cohort=as.data.frame(rbindlist(ci.cohort))
+  ci.cohort=as.data.frame(rbindlist(ci.cohort, use.names=TRUE, fill=T))
   ci.cohort=cohort.format(ci.cohort,y=ci.cohort$yi,
                           lab=levels(cuminc.data$agecat))
 
   # estimate random effects, format results
   ci.res=lapply(levels(cuminc.data$agecat),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
-  ci.res=as.data.frame(rbindlist(ci.res))
+  ci.res=as.data.frame(rbindlist(ci.res, use.names=TRUE, fill=T))
   ci.res$est=as.numeric(ci.res$est)
   ci.res$lb=as.numeric(ci.res$lb)
   ci.res$ub=as.numeric(ci.res$ub)
@@ -504,19 +524,19 @@ summary.perswast <- function(d){
       N=sum(length(pers_wast))) %>%
     filter(N>=50)
 
-
+  pers.data <- droplevels(pers.data)
 
   # cohort specific results
   pers.cohort=lapply(levels(pers.data$agecat),function(x)
     fit.escalc(data=pers.data,ni="N", xi="ncases",age=x,meas="PLO"))
-  pers.cohort=as.data.frame(rbindlist(pers.cohort))
+  pers.cohort=as.data.frame(rbindlist(pers.cohort, use.names=TRUE, fill=T))
   pers.cohort=cohort.format(pers.cohort,y=pers.cohort$yi,
                             lab=  levels(pers.data$agecat))
 
   # estimate random effects, format results
   pers.res=lapply(levels(pers.data$agecat),function(x)
     fit.rma(data=pers.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
-  pers.res=as.data.frame(rbindlist(pers.res))
+  pers.res=as.data.frame(rbindlist(pers.res, use.names=TRUE, fill=T))
   pers.res$est=as.numeric(pers.res$est)
   pers.res$lb=as.numeric(pers.res$lb)
   pers.res$ub=as.numeric(pers.res$ub)
@@ -531,7 +551,9 @@ summary.perswast <- function(d){
 }
 
 
-summary.ir <- function(d, recovery=F, sev.wasting=F, agelist=list("0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")){
+
+summary.ir <- function(d, recovery=F, sev.wasting=F){
+  
   if(recovery==T){
     d$wast_inc <- d$wast_rec
     d$pt_wast <- d$pt_wast_rec
@@ -559,15 +581,16 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, agelist=list("0-3 months","
               nstudy=length(unique(studyid))) %>%
     filter(nchild>=5 & ptar>125 & !is.na(agecat))
 
+  inc.data <- droplevels(inc.data)
 
 
 
   # cohort specific results
-  inc.cohort=lapply((agelist),function(x)
+  inc.cohort=lapply(levels(inc.data$agecat),function(x)
     fit.escalc(data=inc.data,ni="ptar", xi="ncase",age=x,meas="IR"))
-  inc.cohort=as.data.frame(rbindlist(inc.cohort))
+  inc.cohort=as.data.frame(rbindlist(inc.cohort, use.names=TRUE, fill=T))
   inc.cohort$agecat=factor(inc.cohort$agecat,levels=
-                             c(agelist))
+                             levels(inc.data$agecat))
   inc.cohort$yi.f=sprintf("%0.0f",inc.cohort$yi)
   inc.cohort$cohort=paste0(inc.cohort$studyid,"-",inc.cohort$country)
   inc.cohort = inc.cohort %>% mutate(region = ifelse(country=="BANGLADESH" | country=="INDIA"|
@@ -584,10 +607,11 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, agelist=list("0-3 months","
                                                                    "Latin America"))))
 
 
+  
   # estimate random effects, format results
-  ir.res=lapply((agelist),function(x)
+  ir.res=lapply(levels(inc.data$agecat),function(x)
     fit.rma(data=inc.data,ni="ptar", xi="ncase",age=x,measure="IR",nlab=" person-days"))
-  ir.res=as.data.frame(rbindlist(ir.res))
+  ir.res=as.data.frame(rbindlist(ir.res, use.names=TRUE, fill=T))
   ir.res$est=as.numeric(ir.res$est)
   ir.res$lb=as.numeric(ir.res$lb)
   ir.res$ub=as.numeric(ir.res$ub)
