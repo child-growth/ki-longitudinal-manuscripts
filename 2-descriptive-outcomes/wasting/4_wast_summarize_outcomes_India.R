@@ -82,19 +82,19 @@ monthly.whz <- bind_rows(
 )
 
 #Get monthly whz quantiles
-quantile_d <- d %>% group_by(agecat, region) %>%
-  mutate(fifth_perc = quantile(whz, probs = c(0.05))[[1]],
-         fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
-         ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
-  select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
-quantile_d_overall <- d %>% group_by(agecat) %>%
-  mutate(fifth_perc = quantile(whz, probs = c(0.05))[[1]],
-         fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
-         ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
-  select(agecat, fifth_perc, fiftieth_perc, ninetyfifth_perc)
-save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_wasting.Rdata"))
-
-
+# quantile_d <- d %>% group_by(agecat, region) %>%
+#   mutate(fifth_perc = quantile(whz, probs = c(0.05))[[1]],
+#          fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
+#          ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
+#   select(agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+# quantile_d_overall <- d %>% group_by(agecat) %>%
+#   mutate(fifth_perc = quantile(whz, probs = c(0.05))[[1]],
+#          fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
+#          ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
+#   select(agecat, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+# save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_data_wasting.Rdata"))
+# 
+# 
 
 
 #Cumulative inc

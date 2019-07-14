@@ -357,13 +357,13 @@ rec30<- bind_rows(
 )
 rec60<- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", rec.data60$ci.res),
-  data.frame(cohort = "pooled", rec30.country),
+  data.frame(cohort = "pooled", rec60.country),
   data.frame(cohort = "pooled", rec60.region),
   rec60.cohort
 )
 rec90<- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", rec.data90$ci.res),
-  data.frame(cohort = "pooled", rec30.country),
+  data.frame(cohort = "pooled", rec90.country),
   data.frame(cohort = "pooled", rec90.region),
   rec90.cohort
 )
