@@ -22,6 +22,9 @@ d_noBW <- d_noBW %>% filter(measurefreq=="monthly")
 save(d, d_noBW, file=paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
 
+
+
+
 # Calc incidence with no recovery to see what proportion become wasted for the first time 
 # before and after 6 months
 # df <- df %>% filter(measurefreq=="monthly")

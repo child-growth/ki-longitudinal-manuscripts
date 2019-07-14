@@ -7,7 +7,7 @@ rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
 
-load("U://ucb-superlearner/Manuscript analysis data/co-occurrence_data.RData")
+d <- readRDS(paste0(ghapdata_dir, "rf_co_occurrence_data.rds"))
 
 
 
@@ -19,12 +19,15 @@ d <- d %>% filter(measurefreq == "monthly")
 d <- calc.prev.agecat(d)
 prev.data <- summary.prev.co(d)
 prev.region <- d %>% group_by(region) %>% do(summary.prev.co(.)$prev.res)
+prev.country <- d %>% group_by(country) %>% do(summary.prev.co(.)$prev.res) %>% rename(region=country)
+
 prev.cohort <-
   prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
 
 prev <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
+  data.frame(cohort = "pooled", prev.country),
   data.frame(cohort = "pooled", prev.region),
   prev.cohort
 )
@@ -33,6 +36,8 @@ prev <- bind_rows(
 sev.prev.data <- summary.prev.co(d, severe = T)
 sev.prev.region <-
   d %>% group_by(region) %>% do(summary.prev.co(., severe = T)$prev.res)
+sev.prev.country <- d %>% group_by(country) %>% do(summary.prev.co(., severe = T)$prev.res) %>% rename(region=country)
+
 sev.prev.cohort <-
   sev.prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
@@ -40,6 +45,7 @@ sev.prev.cohort <-
 sev.prev <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", sev.prev.data$prev.res),
   data.frame(cohort = "pooled", sev.prev.region),
+  data.frame(cohort = "pooled", sev.prev.country),
   sev.prev.cohort
 )
 
@@ -66,6 +72,8 @@ underweight.prev <- bind_rows(
 #mean waz
 waz.data <- summary.waz(d)
 waz.region <- d %>% group_by(region) %>% do(summary.waz(.)$waz.res)
+waz.country <- d %>% group_by(country) %>% do(summary.waz(.)$waz.res) %>% rename(region=country)
+
 waz.cohort <-
   waz.data$waz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanwaz,  ci.lb,  ci.ub)) %>%
   rename(est = meanwaz,  lb = ci.lb,  ub = ci.ub)
@@ -73,6 +81,7 @@ waz.cohort <-
 waz <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", waz.data$waz.res),
   data.frame(cohort = "pooled", waz.region),
+  data.frame(cohort = "pooled", waz.country),
   waz.cohort
 )
 
@@ -81,6 +90,8 @@ waz <- bind_rows(
 d <- calc.monthly.agecat(d)
 monthly.data <- summary.waz(d)
 monthly.region <- d %>% group_by(region) %>% do(summary.waz(.)$waz.res)
+monthly.country <- d %>% group_by(country) %>% do(summary.waz(.)$waz.res) %>% rename(region=country)
+
 monthly.cohort <-
   monthly.data$waz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanwaz,  ci.lb,  ci.ub)) %>%
   rename(est = meanwaz,  lb = ci.lb,  ub = ci.ub)
@@ -88,6 +99,7 @@ monthly.cohort <-
 monthly.waz <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", monthly.data$waz.res),
   data.frame(cohort = "pooled", monthly.region),
+  data.frame(cohort = "pooled", monthly.country),
   monthly.cohort
 )
 
@@ -98,6 +110,8 @@ monthly.waz <- bind_rows(
 d <- calc.prev.agecat(d)
 m.prev.data <- summary.prev.muaz(d)
 m.prev.region <- d %>% group_by(region) %>% do(summary.prev.muaz(.)$m.prev.res)
+m.prev.country <- d %>% filter(!is.na(muaz)) %>% group_by(country) %>% do(summary.prev.muaz(.)$m.prev.res) %>% rename(region=country)
+
 m.prev.cohort <-
   m.prev.data$m.prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
@@ -105,6 +119,7 @@ m.prev.cohort <-
 muaz.prev <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", m.prev.data$m.prev.res),
   data.frame(cohort = "pooled", m.prev.region),
+  data.frame(cohort = "pooled", m.prev.country),
   m.prev.cohort
 )
 
@@ -145,7 +160,6 @@ co_desc_data$region <- factor(co_desc_data$region, levels=c("Overall", "Africa",
 
 
 
-save(co_desc_data, file = "U:/Data/Wasting/co_desc_data.Rdata")
 save(co_desc_data, file = paste0(here(),"/results/co_desc_data.Rdata"))
 
 

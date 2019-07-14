@@ -1,18 +1,14 @@
 
 
-
+#Calculate wasting outcomes using quarterly measured cohorts
 
 rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
-load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
+load(paste0(ghapdata_dir, "Wasting_inc_rf_data.RData"))
 
-#Subset to monthly
-d <- d %>% filter(measurefreq == "monthly")
-d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
-# d_noRec <- d_noRec %>% filter(measurefreq == "monthly")
-# d_noBW_noRec <- d_noBW_noRec %>% filter(measurefreq == "monthly")
+
 
 #clean country names
 d$country[d$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
@@ -104,8 +100,8 @@ save(quantile_d, quantile_d_overall, file = paste0(here(),"/results/quantile_dat
 #Cumulative inc
 # d <- calc.ci.agecat(d, range = 6)
 # agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
-# ci.data <- summary.ci(d, agelist = agelst)
-# ci.region <- d %>% group_by(region) %>% do(summary.ci(., agelist = agelst)$ci.res)
+# ci.data <- summary.ci(d)
+# ci.region <- d %>% group_by(region) %>% do(summary.ci(.)$ci.res)
 # ci.cohort <-
 #   ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
 #   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -211,7 +207,7 @@ sev.ci <- bind_rows(
 #rec.data <- summary.ci(d, recovery = T)
 
 #Incidence rate
-ir.data <- summary.ir(d, agelist = agelst)
+ir.data <- summary.ir(d)
 ir.region <- d %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.country <- d %>% group_by(country) %>% do(summary.ir(.)$ir.res) %>% rename(region=country)
 ir.cohort <-
@@ -271,7 +267,7 @@ agelst3 = list(
   "18-21 months",
   "21-24 months"
 )
-ir.data <- summary.ir(d, agelist = agelst3)
+ir.data <- summary.ir(d3)
 ir.region <- d %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.country <- d %>% group_by(country) %>% do(summary.ir(.)$ir.res) %>% rename(region=country)
 ir.cohort <-
@@ -419,8 +415,8 @@ save(perswast024, file = paste0(here(),"/results/persistent_wasting024.Rdata"))
 #   "18-21 months",
 #   "21-24 months"
 # )
-# ci.data3 <- summary.ci(d3, agelist = agelst3)
-# ci.region3 <- d3 %>% group_by(region) %>% do(summary.ci(., agelist = agelst3)$ci.res)
+# ci.data3 <- summary.ci(d33)
+# ci.region3 <- d3 %>% group_by(region) %>% do(summary.ci(.3)$ci.res)
 # ci.cohort3 <-
 #   ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
 #   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -433,8 +429,8 @@ save(perswast024, file = paste0(here(),"/results/persistent_wasting024.Rdata"))
 # 
 # 
 # #Cumulative inc of severe wasting
-# sev.ci.data <- summary.ci(d3, agelist = agelst3, severe.wasted = T)
-# sev.ci.region <- d3 %>% group_by(region) %>% do(summary.ci(., agelist = agelst3, severe.wasted = T)$ci.res)
+# sev.ci.data <- summary.ci(d33, severe.wasted = T)
+# sev.ci.region <- d3 %>% group_by(region) %>% do(summary.ci(.3, severe.wasted = T)$ci.res)
 # sev.ci.cohort <-
 #   sev.ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
 #   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -449,8 +445,8 @@ save(perswast024, file = paste0(here(),"/results/persistent_wasting024.Rdata"))
 # 
 # #Incidence rate
 # d_noRec <- calc.ci.agecat(d_noRec, range = 6)
-# ir.data <- summary.ir(d_noRec, agelist = agelst)
-# ir.region <- d_noRec %>% group_by(region) %>% do(summary.ir(., agelist = agelst)$ir.res)
+# ir.data <- summary.ir(d_noRec)
+# ir.region <- d_noRec %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 # ir.cohort <-
 #   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
 #   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -505,7 +501,7 @@ regions = c("Overall", "Africa", "Latin America", "Asia")
 shiny_desc_data$region <- factor(shiny_desc_data$region, levels= c(regions, unique(shiny_desc_data$region)[!(unique(shiny_desc_data$region) %in% regions)]))
 
 
-save(shiny_desc_data, file = paste0(here(),"/results/shiny_desc_data.Rdata"))
+save(shiny_desc_data, file = paste0(here(),"/results/India_desc_data.Rdata"))
 
 
 

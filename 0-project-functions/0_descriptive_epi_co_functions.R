@@ -35,14 +35,14 @@ summary.prev.co <- function(d, severe=F){
   # cohort specific results
   prev.cohort=lapply((levels(prev.data$agecat)),function(x) 
     fit.escalc(data=prev.data,ni="nmeas", xi="nxprev",age=x,meas="PLO"))
-  prev.cohort=as.data.frame(rbindlist(prev.cohort))
+  prev.cohort=as.data.frame(rbindlist(prev.cohort, use.names=TRUE, fill=T))
   prev.cohort=cohort.format(prev.cohort,y=prev.cohort$yi,
                             lab=  levels(prev.data$agecat))
   
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
-  prev.res=as.data.frame(rbindlist(prev.res))
+  prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
   prev.res$ub=as.numeric(prev.res$ub)
@@ -87,14 +87,14 @@ summary.prev.haz <- function(d, severe.stunted=F){
   # cohort specific results
   prev.cohort=lapply((levels(prev.data$agecat)),function(x) 
     fit.escalc(data=prev.data,ni="nmeas", xi="nxprev",age=x,meas="PLO"))
-  prev.cohort=as.data.frame(rbindlist(prev.cohort))
+  prev.cohort=as.data.frame(rbindlist(prev.cohort, use.names=TRUE, fill=T))
   prev.cohort=cohort.format(prev.cohort,y=prev.cohort$yi,
                             lab=  levels(prev.data$agecat))
   
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
-  prev.res=as.data.frame(rbindlist(prev.res))
+  prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
   prev.res$ub=as.numeric(prev.res$ub)
@@ -113,6 +113,8 @@ summary.prev.muaz <- function(d, severe=F){
   
   d <- d %>% filter(!is.na(muaz)) %>% filter(muaz > (-5) & muaz < 5)
   
+  d <- droplevels(d)
+
   # take mean of multiple measurements within age window
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
@@ -148,8 +150,8 @@ summary.prev.muaz <- function(d, severe=F){
     fit.escalc(data=prev.data,ni="nmeas", xi="nxprev",age=x,meas="PLO"))
   m.prev.cohort=lapply((levels(prev.data$agecat)),function(x) 
     fit.escalc(data=prev.data,ni="nmeas", xi="m.nxprev",age=x,meas="PLO"))
-  prev.cohort=as.data.frame(rbindlist(prev.cohort))
-  m.prev.cohort=as.data.frame(rbindlist(m.prev.cohort))
+  prev.cohort=as.data.frame(rbindlist(prev.cohort, use.names=TRUE, fill=T))
+  m.prev.cohort=as.data.frame(rbindlist(m.prev.cohort, use.names=TRUE, fill=T))
   prev.cohort=cohort.format(prev.cohort,y=prev.cohort$yi,
                             lab=  levels(prev.data$agecat))
   m.prev.cohort=cohort.format(m.prev.cohort,y=m.prev.cohort$yi,
@@ -158,7 +160,7 @@ summary.prev.muaz <- function(d, severe=F){
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
-  prev.res=as.data.frame(rbindlist(prev.res))
+  prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
   prev.res$ub=as.numeric(prev.res$ub)
@@ -169,7 +171,7 @@ summary.prev.muaz <- function(d, severe=F){
   
   m.prev.res=lapply((levels(prev.data$agecat)),function(x) 
     fit.rma(data=prev.data,ni="nmeas", xi="m.nxprev",age=x,measure="PLO",nlab="children"))
-  m.prev.res=as.data.frame(rbindlist(m.prev.res))
+  m.prev.res=as.data.frame(rbindlist(m.prev.res, use.names=TRUE, fill=T))
   m.prev.res$est=as.numeric(m.prev.res$est)
   m.prev.res$lb=as.numeric(m.prev.res$lb)
   m.prev.res$ub=as.numeric(m.prev.res$ub)
@@ -209,7 +211,7 @@ summary.waz <- function(d){
   # cohort specific results
   waz.cohort=lapply((levels(waz.data$agecat)),function(x) 
     fit.escalc(data=waz.data, ni="nmeas", yi="meanwaz", vi="varwaz",age=x, measure = "MN"))
-  waz.cohort=as.data.frame(rbindlist(waz.cohort))
+  waz.cohort=as.data.frame(rbindlist(waz.cohort, use.names=TRUE, fill=T))
   waz.cohort=cohort.format(waz.cohort,y=waz.cohort$yi,
                            lab=  levels(waz.data$agecat), est="mean")
   
@@ -217,7 +219,7 @@ summary.waz <- function(d){
   # estimate random effects, format results
   waz.res=lapply((levels(waz.data$agecat)),function(x) 
     fit.rma(data=waz.data, ni="nmeas", yi="meanwaz", vi="varwaz", nlab="children",age=x))
-  waz.res=as.data.frame(rbindlist(waz.res))
+  waz.res=as.data.frame(rbindlist(waz.res, use.names=TRUE, fill=T))
   waz.res$est=as.numeric(waz.res$est)
   waz.res$lb=as.numeric(waz.res$lb)
   waz.res$ub=as.numeric(waz.res$ub)
