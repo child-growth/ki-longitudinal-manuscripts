@@ -522,7 +522,9 @@ summary.perswast <- function(d){
       nstudy=length(unique(studyid)),
       ncases=sum(pers_wast, na.rm=T),
       N=sum(length(pers_wast))) %>%
-    filter(N>=50)
+    filter(N>=50) 
+  
+  pers.data$agecat = factor(pers.data$agecat)
 
   pers.data <- droplevels(pers.data)
 
