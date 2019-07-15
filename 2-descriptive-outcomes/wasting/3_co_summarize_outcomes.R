@@ -9,10 +9,15 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.
 
 d <- readRDS(paste0(ghapdata_dir, "rf_co_occurrence_data.rds"))
 
-
-
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
+
+
+#clean country names
+d$country[d$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+d_noBW$country[d_noBW$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+d$country <- stringr::str_to_title(d$country)
+d_noBW$country <- stringr::str_to_title(d_noBW$country)
 
 
 #Prevalence
@@ -51,12 +56,13 @@ sev.prev <- bind_rows(
 
 #Underweight Prevalence
 summary(d$whz)
-df <- d %>% rename(whz=waz)
+df <- d %>% subset(., select = -c(whz)) %>% rename(whz=waz)
 summary(df$whz)
 
-d <- calc.prev.agecat(d)
-prev.data <-  summary.prev.whz(d)
-prev.region <- d %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)
+df <- calc.prev.agecat(df)
+prev.data <-  summary.prev.whz(df)
+prev.region <- df %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)
+prev.country <- df %>% group_by(country) %>% do(summary.prev.whz(.)$prev.res) %>% rename(region=country)
 prev.cohort <-
   prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
@@ -64,6 +70,7 @@ prev.cohort <-
 underweight.prev <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
   data.frame(cohort = "pooled", prev.region),
+  data.frame(cohort = "pooled", prev.country),
   prev.cohort
 )
 
@@ -125,6 +132,7 @@ muaz.prev <- bind_rows(
 
 #make wasting comparison in same subset
 prev.region <- d %>% group_by(region) %>% do(summary.prev.muaz(.)$prev.res)
+prev.country <- d %>% filter(!is.na(muaz)) %>% group_by(country) %>% do(summary.prev.muaz(.)$prev.res) %>% rename(region=country)
 prev.cohort <-
   m.prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
@@ -132,6 +140,7 @@ prev.cohort <-
 m.whz.prev <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", m.prev.data$prev.res),
   data.frame(cohort = "pooled", prev.region),
+  data.frame(cohort = "pooled", prev.country),
   prev.cohort
 )
 
@@ -156,8 +165,8 @@ unique(co_desc_data$agecat)
 co_desc_data$agecat <- factor(co_desc_data$agecat, levels=unique(co_desc_data$agecat))
 
 unique(co_desc_data$region)
-co_desc_data$region <- factor(co_desc_data$region, levels=c("Overall", "Africa", "Latin America", "Asia", "Pakistan"))
-
+regions = c("Overall", "Africa", "Latin America", "Asia")
+co_desc_data$region <- factor(co_desc_data$region, levels= c(regions, unique(co_desc_data$region)[!(unique(co_desc_data$region) %in% regions)]))
 
 
 save(co_desc_data, file = paste0(here(),"/results/co_desc_data.Rdata"))
