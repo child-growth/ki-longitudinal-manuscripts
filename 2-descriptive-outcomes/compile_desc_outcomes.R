@@ -8,7 +8,7 @@ stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
 stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.Rdata"))
 stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
 
-load("co_desc_data.Rdata")
+load(paste0(res_dir,"co_desc_data.Rdata"))
 
 
 
@@ -21,7 +21,9 @@ stunt_fe <- stunt_fe %>% mutate(analysis = "Fixed effects")
 d <- bind_rows(stunt, stunt_monthly24, stunt_fe, wast, co_desc_data)
 d$agecat <- factor(d$agecat, levels=unique(d$agecat))
 d$region[d$region=="Asia" & !is.na(d$region)] <- "South Asia"
-d$region <- factor(d$region, levels=c("Overall","Africa","Latin America", "South Asia"))
+
+regions = c("Overall","Africa","Latin America", "South Asia")
+d$region <- factor(d$region, levels= c(regions, unique(d$region)[!(unique(d$region) %in% regions)]))
 
 
 #Convert incidence rate to per 1000 days
