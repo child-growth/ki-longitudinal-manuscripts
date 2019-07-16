@@ -14,8 +14,8 @@ library(here)
 
 
 #Load data
-# try(df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds"))
-# try(spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds"))
+#try(df <- readRDS("7-cc-shiny-app/shiny_rf_results.rds"))
+#try(spline_variables <- readRDS("7-cc-shiny-app/spline_variables.rds"))
 try(df <- readRDS("shiny_rf_results.rds"))
 try(spline_variables <- readRDS("spline_variables.rds"))
 
@@ -177,7 +177,7 @@ server <- function(input, output, session) {
                 choices = append(c("All"), remaining_regions))
   })
   
-output$adjusted <- renderUI({
+  output$adjusted <- renderUI({
     df <- df %>%
       filter(intervention_variable == input$exposure) %>%
       filter(outcome_variable == input$outcome) %>%
@@ -364,7 +364,7 @@ output$adjusted <- renderUI({
   })
   
   selected_plot = reactive({
-    var = spline_variables %>% filter(spline_vars == input$spline_exposure) %>% select(spline_vars) %>% first()
+    var = spline_variables %>% filter(spline_vars == input$spline_exposure) %>% select(spline_vars_raw) %>% first()
     outcome = tolower(input$spline_outcome)
     exposure = var
     file_name = paste0("figures/risk factor/Splines/", outcome, "/", outcome, "_stat_by_", exposure, ".png")
