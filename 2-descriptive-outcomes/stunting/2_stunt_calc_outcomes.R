@@ -358,4 +358,3 @@ saveRDS(stunt_outcomes_monthly, file =  paste0(res_dir, "shiny_desc_data_stuntin
 
 stunt_outcomes_fe = calc_outcomes(data = d, calc_method = "FE", output_file_suffix = "_fe")
 saveRDS(stunt_outcomes_fe, file = paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
-
