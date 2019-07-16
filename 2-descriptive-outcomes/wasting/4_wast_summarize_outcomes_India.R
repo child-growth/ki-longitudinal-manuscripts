@@ -9,19 +9,11 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_function
 load(paste0(ghapdata_dir, "Wasting_inc_rf_data.RData"))
 
 
-
-#clean country names
-d$country[d$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
-d_noBW$country[d_noBW$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
-d$country <- stringr::str_to_title(d$country)
-d_noBW$country <- stringr::str_to_title(d_noBW$country)
-
-
 #Prevalence
 d <- calc.prev.agecat(d)
 prev.data <- summary.prev.whz(d)
 prev.region <- d %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)
-prev.country <- d %>% group_by(country) %>% do(summary.prev.whz(.)$prev.res) %>% rename(region=country)
+prev.country <- d %>% group_by(region, country) %>% do(summary.prev.whz(.)$prev.res)
 prev.cohort <-
   prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
@@ -36,7 +28,7 @@ prev <- bind_rows(
 #Severe wasting prevalence
 sev.prev.data <- summary.prev.whz(d, severe.wasted = T)
 sev.prev.region <- d %>% group_by(region) %>% do(summary.prev.whz(., severe.wasted = T)$prev.res)
-sev.prev.country <- d %>% group_by(country) %>% do(summary.prev.whz(., severe.wasted = T)$prev.res) %>% rename(region=country)
+sev.prev.country <- d %>% group_by(region, country) %>% do(summary.prev.whz(., severe.wasted = T)$prev.res)
 
 sev.prev.cohort <-
   sev.prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
@@ -52,7 +44,7 @@ sev.prev <- bind_rows(
 #mean whz
 whz.data <- summary.whz(d)
 whz.region <- d %>% group_by(region) %>% do(summary.whz(.)$whz.res)
-whz.country <- d %>% group_by(country) %>% do(summary.whz(.)$whz.res) %>% rename(region=country)
+whz.country <- d %>% group_by(region, country) %>% do(summary.whz(.)$whz.res)
 whz.cohort <-
   whz.data$whz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanwhz,  ci.lb,  ci.ub)) %>%
   rename(est = meanwhz,  lb = ci.lb,  ub = ci.ub)
@@ -69,7 +61,7 @@ whz <- bind_rows(
 d <- calc.monthly.agecat(d)
 monthly.data <- summary.whz(d)
 monthly.region <- d %>% group_by(region) %>% do(summary.whz(.)$whz.res)
-monthly.country <- d %>% group_by(country) %>% do(summary.whz(.)$whz.res) %>% rename(region=country)
+monthly.country <- d %>% group_by(region, country) %>% do(summary.whz(.)$whz.res)
 monthly.cohort <-
   monthly.data$whz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanwhz,  ci.lb,  ci.ub)) %>%
   rename(est = meanwhz,  lb = ci.lb,  ub = ci.ub)
@@ -117,7 +109,7 @@ d3 <- calc.ci.agecat(d, range = 3)
 
 ci.data3 <- summary.ci(d3, age.range=3)
 ci.region3 <- d3 %>% group_by(region) %>% do(summary.ci(., age.range=3)$ci.res)
-ci.country3 <- d3 %>% group_by(country) %>% do(summary.ci(., age.range=3)$ci.res) %>% rename(region=country)
+ci.country3 <- d3 %>% group_by(region, country) %>% do(summary.ci(., age.range=3)$ci.res)
 ci.cohort3 <-
   ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -132,7 +124,7 @@ ci_3 <- bind_rows(
 #Incidence proportions 3 month intervals
 ip.data3 <- summary.incprop(d3)
 ip.region3 <- d3 %>% group_by(region) %>% do(summary.incprop(.)$ci.res)
-ip.country3 <- d3 %>% group_by(country) %>% do(summary.incprop(.)$ci.res) %>% rename(region=country)
+ip.country3 <- d3 %>% group_by(region, country) %>% do(summary.incprop(.)$ci.res)
 ip.cohort3 <-
   ip.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -149,7 +141,7 @@ ip_3 <- bind_rows(
 d_noBW <- calc.ci.agecat(d_noBW, range = 6)
 ci.data.nobirth <- summary.ci(d_noBW, age.range=6)
 ci.region.nobirth <- d %>% group_by(region) %>% do(summary.ci(., age.range=6)$ci.res)
-ci.country.nobirth <- d %>% group_by(country) %>% do(summary.ci(., age.range=6)$ci.res) %>% rename(region=country)
+ci.country.nobirth <- d %>% group_by(region, country) %>% do(summary.ci(., age.range=6)$ci.res)
 ci.cohort.nobirth <-
   ci.data.nobirth$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -166,7 +158,7 @@ ci_nobw <- bind_rows(
 d3 <- calc.ci.agecat(d_noBW)
 ci.data.nobirth3 <- summary.ci(d3, age.range=3)
 ci.region.nobirth3 <- d3 %>% group_by(region) %>% do(summary.ci(., age.range=3)$ci.res)
-ci.country.nobirth3 <- d3 %>% group_by(country) %>% do(summary.ci(., age.range=3)$ci.res) %>% rename(region=country)
+ci.country.nobirth3 <- d3 %>% group_by(region, country) %>% do(summary.ci(., age.range=3)$ci.res)
 ci.cohort.nobirth3 <-
   ci.data.nobirth3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -188,7 +180,7 @@ d <- calc.ci.agecat(d, range = 6)
 agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
 sev.ci.data <- summary.ci(d=d,  severe.wasted = T, age.range=6)
 sev.ci.region <- d %>% group_by(region) %>% do(summary.ci(., severe.wasted = T, age.range=6)$ci.res)
-sev.ci.country <- d %>% group_by(country) %>% do(summary.ci(., severe.wasted = T, age.range=6)$ci.res) %>% rename(region=country)
+sev.ci.country <- d %>% group_by(region, country) %>% do(summary.ci(., severe.wasted = T, age.range=6)$ci.res)
 sev.ci.cohort <-
   sev.ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -209,7 +201,7 @@ sev.ci <- bind_rows(
 #Incidence rate
 ir.data <- summary.ir(d)
 ir.region <- d %>% group_by(region) %>% do(summary.ir(.)$ir.res)
-ir.country <- d %>% group_by(country) %>% do(summary.ir(.)$ir.res) %>% rename(region=country)
+ir.country <- d %>% group_by(region, country) %>% do(summary.ir(.)$ir.res)
 ir.cohort <-
   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -224,7 +216,7 @@ ir <- bind_rows(
 #Incidence rate - no birth wasting
 ir.data.nobirth <- summary.ir(d_noBW)
 ir.region.nobirth <- d_noBW %>% group_by(region) %>% do(summary.ir(.)$ir.res)
-ir.country.nobirth <- d_noBW %>% group_by(country) %>% do(summary.ir(.)$ir.res) %>% rename(region=country)
+ir.country.nobirth <- d_noBW %>% group_by(region, country) %>% do(summary.ir(.)$ir.res)
 ir.cohort.nobirth <-
   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -239,7 +231,7 @@ ir_noBW <- bind_rows(
 #Incidence rate - severe wasting
 sev.ir.data <- summary.ir(d, sev.wasting = T)
 sev.ir.region <- d %>% group_by(region) %>% do(summary.ir(., sev.wasting = T)$ir.res)
-sev.ir.country <- d %>% group_by(country) %>% do(summary.ir(., sev.wasting = T)$ir.res) %>% rename(region=country)
+sev.ir.country <- d %>% group_by(region, country) %>% do(summary.ir(., sev.wasting = T)$ir.res)
 sev.ir.cohort <-
   sev.ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -269,7 +261,7 @@ agelst3 = list(
 )
 ir.data <- summary.ir(d3)
 ir.region <- d %>% group_by(region) %>% do(summary.ir(.)$ir.res)
-ir.country <- d %>% group_by(country) %>% do(summary.ir(.)$ir.res) %>% rename(region=country)
+ir.country <- d %>% group_by(region, country) %>% do(summary.ir(.)$ir.res)
 ir.cohort <-
   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -285,7 +277,7 @@ ir3 <- bind_rows(
 d_noBW <- calc.ci.agecat(d_noBW, range = 3)
 ir.data.nobirth <- summary.ir(d_noBW)
 ir.region.nobirth <- d_noBW %>% group_by(region) %>% do(summary.ir(.)$ir.res)
-ir.country.nobirth <- d_noBW %>% group_by(country) %>% do(summary.ir(.)$ir.res) %>% rename(region=country)
+ir.country.nobirth <- d_noBW %>% group_by(region, country) %>% do(summary.ir(.)$ir.res)
 ir.cohort.nobirth <-
   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -331,9 +323,9 @@ rec.data90 <- summary.rec60( d, length = 90)
 rec30.region <- d %>% group_by(region) %>% do(summary.rec60( ., length = 30)$ci.res)
 rec60.region <- d %>% group_by(region) %>% do(summary.rec60( ., length = 60)$ci.res)
 rec90.region <- d %>% group_by(region) %>% do(summary.rec60( ., length = 90)$ci.res)
-rec30.country <- d %>% group_by(country) %>% do(summary.rec60( ., length = 30)$ci.res) %>% rename(region=country)
-rec60.country <- d %>% group_by(country) %>% do(summary.rec60( ., length = 60)$ci.res) %>% rename(region=country)
-rec90.country <- d %>% group_by(country) %>% do(summary.rec60( ., length = 90)$ci.res) %>% rename(region=country)
+rec30.country <- d %>% group_by(region, country) %>% do(summary.rec60( ., length = 30)$ci.res)
+rec60.country <- d %>% group_by(region, country) %>% do(summary.rec60( ., length = 60)$ci.res)
+rec90.country <- d %>% group_by(region, country) %>% do(summary.rec60( ., length = 90)$ci.res)
 
 rec30.cohort <-
   rec.data30$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
@@ -367,7 +359,7 @@ rec90<- bind_rows(
 #Persistant wasting
 perswast.data <- summary.perswast(d)
 perswast.region <- d %>% group_by(region) %>% do(summary.perswast(.)$pers.res)
-perswast.country <- d %>% group_by(country) %>% do(summary.perswast(.)$pers.res) %>% rename(region=country)
+perswast.country <- d %>% group_by(region, country) %>% do(summary.perswast(.)$pers.res)
 perswast.cohort <-
   perswast.data$pers.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -383,7 +375,7 @@ perswast <- bind_rows(
 df<- d %>% mutate(agecat="0-24 months")
 perswast.data <- summary.perswast(df)
 perswast.region <- df %>% group_by(region) %>% do(summary.perswast(.)$pers.res)
-perswast.country <- df %>% group_by(country) %>% do(summary.perswast(.)$pers.res) %>% rename(region=country)
+perswast.country <- df %>% group_by(region, country) %>% do(summary.perswast(.)$pers.res)
 perswast.cohort <-
   perswast.data$pers.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -463,7 +455,8 @@ save(perswast024, file = paste0(here(),"/results/persistent_wasting024_India.Rda
 
 
 
-shiny_desc_data <- bind_rows(
+
+wasting_desc_data <- bind_rows(
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Mean WLZ",  whz),
@@ -488,20 +481,38 @@ shiny_desc_data <- bind_rows(
   # data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence rate - no recovery", ir_noRec)
 )
 
+wasting_desc_data <- droplevels(wasting_desc_data)
+
+
+wasting_desc_data <- wasting_desc_data %>% subset(., select = -c(se, nmeas.f,  ptest.f, pt.f))
+
+unique(wasting_desc_data$agecat)
+wasting_desc_data$agecat <- factor(wasting_desc_data$agecat, levels=unique(wasting_desc_data$agecat))
+
+unique(wasting_desc_data$region)
+wasting_desc_data$region[wasting_desc_data$region=="Asia"] <- "South Asia"
+wasting_desc_data$region <- factor(wasting_desc_data$region, levels=c("Overall", "Africa", "Latin America", "South Asia"))
+
+#Add in variable for level of pooling
+wasting_desc_data <- wasting_desc_data %>% 
+  mutate(pooling = case_when(
+    cohort != "pooled" ~ "no pooling",
+    cohort == "pooled" & !is.na(country) ~ "country",
+    region != "Overall" ~ "regional",
+    region == "Overall" ~ "overall"
+  ))
+
+table(wasting_desc_data$pooling)
+table(is.na(wasting_desc_data$pooling))
+
+
+#clean country names
+wasting_desc_data$country[wasting_desc_data$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+wasting_desc_data$country <- stringr::str_to_title(wasting_desc_data$country)
 
 
 
-shiny_desc_data <- shiny_desc_data %>% subset(., select = -c(se, nmeas.f,  ptest.f, pt.f))
-
-unique(shiny_desc_data$agecat)
-shiny_desc_data$agecat <- factor(shiny_desc_data$agecat, levels=unique(shiny_desc_data$agecat))
-
-unique(shiny_desc_data$region)
-regions = c("Overall", "Africa", "Latin America", "Asia")
-shiny_desc_data$region <- factor(shiny_desc_data$region, levels= c(regions, unique(shiny_desc_data$region)[!(unique(shiny_desc_data$region) %in% regions)]))
-
-
-save(shiny_desc_data, file = paste0(here(),"/results/India_desc_data.Rdata"))
+save(wasting_desc_data, file = paste0(here(),"/results/India_desc_data.Rdata"))
 
 
 
