@@ -36,5 +36,5 @@ dim(d)
 d<-distinct(d)
 dim(d)
 
-save(d, file=paste0(here(),"/results/desc_data_cleaned.Rdata"))
+saveRDS(d, file=paste0(here(),"/results/desc_data_cleaned.rds"))
 
