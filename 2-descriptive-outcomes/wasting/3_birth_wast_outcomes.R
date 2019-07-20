@@ -8,12 +8,12 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_function
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
 
 
-load("U:/ucb-superlearner/data/Wasting_inc_data.RData")
+load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
 
 #Subset to monthly
 d <- d_noBW %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167) %>%
-  subset(., select = c(studyid, region, country, subjid, agedays, whz, haz, wasting_episode, wast_inc, wast_rec, pt_wast, wasting_duration))
+  subset(., select = c(studyid, region, country, subjid, agedays, whz, wasting_episode, wast_inc, wast_rec, pt_wast, wasting_duration))
 
 #Mark children born or enrolled wasted
 d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
@@ -31,6 +31,7 @@ dim(d)
 
 # estimate a pooled fit, over birth wasting status
 plotdf <- NULL
+set.seed(12345)
 for(i in 1:length(unique(d$born_wast))){
   cat=unique(d$born_wast)[i]
   di <- filter(d, born_wast==cat)

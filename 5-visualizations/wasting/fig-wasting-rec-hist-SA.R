@@ -11,16 +11,16 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_function
 load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
 
-d <- d_noBW %>% filter(measurefreq=="monthly")
+d <- d_noBW %>% filter(measurefreq=="monthly") %>% filter(region=="South Asia")
 
 d <- d %>% filter(agedays < 24 * 30.4167)
 
 # Get the mean Z-score after recovery
 df <- d %>% select(studyid, country, region, subjid, wasting_episode, episode_id, agedays, wast_rec, whz) %>% group_by(studyid, country, subjid) %>%
-      mutate(wasting_episode = lag(wasting_episode),
-              l1=lead(whz), l2=lead(whz, 2), l3=lead(whz, 3), l4=lead(whz, 4),
-                   a1=lead(agedays)-agedays, a2=lead(agedays, 2)-agedays, 
-                   a3=lead(agedays, 3)-agedays, a4=lead(agedays, 4)-agedays) %>% 
+  mutate(wasting_episode = lag(wasting_episode),
+         l1=lead(whz), l2=lead(whz, 2), l3=lead(whz, 3), l4=lead(whz, 4),
+         a1=lead(agedays)-agedays, a2=lead(agedays, 2)-agedays, 
+         a3=lead(agedays, 3)-agedays, a4=lead(agedays, 4)-agedays) %>% 
   filter(wast_rec==1)
 
 df$l1[df$a1 > 3 * 30.4167] <- NA       
@@ -33,10 +33,10 @@ summary(df$l3)
 summary(df$l4) # No l4
 
 df <- df %>% group_by(studyid, country, subjid) %>%
-            mutate(NRecObs=sum(!is.na(l1), !is.na(l2), !is.na(l3), !is.na(l4))) %>%
-            filter(NRecObs>0) %>%
-            mutate(recSum=sum(l1,l2,l3,l4, na.rm=T),
-                   recZ = recSum/NRecObs)
+  mutate(NRecObs=sum(!is.na(l1), !is.na(l2), !is.na(l3), !is.na(l4))) %>%
+  filter(NRecObs>0) %>%
+  mutate(recSum=sum(l1,l2,l3,l4, na.rm=T),
+         recZ = recSum/NRecObs)
 summary(df$recSum)
 summary(df$NRecObs)
 summary(df$recZ)
@@ -90,23 +90,49 @@ pval
 df <- df %>% group_by(agecat) %>% 
   mutate(firstMedianRecZ=medianRecZ,
          firstMedianRecZ=ifelse(studyid==first(studyid) & 
-                                subjid==first(subjid) &
-                                agedays==first(agedays), firstMedianRecZ,NA))
+                                  subjid==first(subjid) &
+                                  agedays==first(agedays), firstMedianRecZ,NA))
 
 rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) + 
   geom_violin(alpha=0.5) + 
-   geom_point(aes(y = firstMedianRecZ)) +
-   geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
+  geom_point(aes(y = firstMedianRecZ)) +
+  geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
   geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
-   ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
-   xlab("Age at wasting episode onset")+
-  # scale_y_discrete(expand = c(0.01, 0)) +
-  # scale_x_continuous(breaks = seq(-5, 3.5, 1), 
-  #                    labels = seq(-5, 3.5, 1)) +
-   geom_hline(yintercept = -2, linetype="dashed") +
-   scale_fill_manual(values=rep("grey30", 4)) +
-   coord_cartesian(ylim=c(-3,2))
+  ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
+  xlab("Age at wasting episode onset")+
+  geom_hline(yintercept = -2, linetype="dashed") +
+  scale_fill_manual(values=rep("grey30", 4)) +
+  coord_cartesian(ylim=c(-3,2))
 rec_violin_plot
+
+
+#clean country names
+df$country[df$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+df$country <- stringr::str_to_title(df$country)
+df <- df %>% group_by(agecat,country) %>% 
+  mutate(medianRecZ=median(recZ),
+         firstMedianRecZ=medianRecZ,
+         firstMedianRecZ=ifelse(studyid==first(studyid) & 
+                                  subjid==first(subjid) &
+                                  agedays==first(agedays), firstMedianRecZ,NA))
+df$agecat <- gsub("months","mo", df$agecat)
+df$agecat <- factor(df$agecat, levels = c("Birth", "0-6 mo", "6-12 mo", "12-18 mo"))
+df$country <- factor(df$country, levels = c( "India", "Bangladesh", "Pakistan", "Nepal"))
+
+rec_violin_plot_country = ggplot(df,aes(x=agecat, y=recZ, fill = country)) + 
+  geom_violin(alpha=0.5) + 
+  geom_point(aes(y = firstMedianRecZ)) +
+  geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
+  #geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
+  ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
+  xlab("Age at wasting episode onset")+
+  geom_hline(yintercept = -2, linetype="dashed") +
+  #scale_fill_manual(values=rep("grey30", 4)) +
+  scale_fill_manual(values=tableau11[-1]) +
+  coord_cartesian(ylim=c(-3,2)) + 
+  facet_wrap(~country) #+
+  #theme(axis.text.x = element_text(angle = 25, hjust = 0))
+rec_violin_plot_country
 
 
 # define standardized plot names
@@ -115,13 +141,11 @@ rec_violin_name = create_name(
   cutoff = 2,
   measure = "recovery",
   population = "overall",
-  location = "",
+  location = "South Asia",
   age = "All ages",
   analysis = "primary"
 )
 
 # save plot and underlying data
-ggsave(rec_violin_plot, file=paste0("figures/wasting/fig-", rec_violin_name, ".png"), width=8, height=5)
-
-save(rec_violin_plot, file=paste0(here::here(),"/figures/plot objects/rec_violin_plot_object.Rdata"))
+ggsave(rec_violin_plot_country, file=paste0("figures/India/wasting/fig-", rec_violin_name, ".png"), width=12, height=8)
 
