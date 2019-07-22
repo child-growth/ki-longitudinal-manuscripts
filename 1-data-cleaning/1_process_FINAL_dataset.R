@@ -31,7 +31,9 @@ source(paste0(here::here(), "/0-config.R"))
 #Read rds file and drop unneeded columns that Vishak extracted that are either used elsewhere in covariate creation or 
 # were too rare to include as exposures (to avoid memory allocation issues)
 d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
-         drop = c( "AGEIMPFL",  "WTKG",    "HTCM",    "LENCM", "BAZ", "HCAZ",      
+         drop = c( "AGEIMPFL",  "WTKG",    
+                   #"HTCM",    "LENCM", 
+                   "BAZ", "HCAZ",      
                    "REGCTRY", "REGCTYP", "CITYTOWN", "HHID",    
                    "FEEDING", "DURBRST", "BRTHYR", "ENSTUNT", "FWTKG", "FBMI",
                    "BRFEED", "SUMEP",   "SUMDIAR", "SUMDAYS",
@@ -52,54 +54,6 @@ dim(d)
 d <- d[!(studyid %in% c("ki1000301-DIVIDS", "ki1055867-WomenFirst", "ki1135782-INCAP"))]
 dim(d)
 gc()
-
-#mark measure frequencies
-# d$measurefreq <- NA
-# 
-# d$measurefreq[d$studyid %in% c(
-#   "ki0047075b-MAL-ED",   
-#   "ki1000108-CMC-V-BCS-2002",              
-#   "ki1000108-IRC",               
-#   "ki1000109-EE",           
-#   "ki1000109-ResPak",  
-#   "ki1017093b-PROVIDE",  
-#   "ki1066203-TanzaniaChild2",           
-#   "ki1101329-Keneba",  
-#   "ki1112895-Guatemala BSC",       
-#   "ki1113344-GMS-Nepal",             
-#   "ki1114097-CONTENT"
-# )] <- "monthly"
-# 
-# d$measurefreq[d$studyid %in% c(
-#   "ki1112895-iLiNS-Zinc",  
-#   "kiGH5241-JiVitA-3",          
-#   "kiGH5241-JiVitA-4", 
-#   "ki1148112-LCNI-5",          
-#   "ki1017093-NIH-Birth",
-#   "ki1017093c-NIH-Crypto",   
-#   "ki1119695-PROBIT",         
-#   "ki1000304b-SAS-CompFeed",   
-#   "ki1000304b-SAS-FoodSuppl",   
-#   "ki1126311-ZVITAMBO",   
-#   "ki1114097-CMIN",                 
-#   "ki1135781-COHORTS"
-# )] <- "quarterly"
-# 
-# d$measurefreq[d$studyid %in% c(
-#   "ki1000110-WASH-Bangladesh",       
-#   "ki1000111-WASH-Kenya",  
-#   "ki1148112-iLiNS-DOSE",     
-#   "ki1148112-iLiNS-DYAD-M", 
-#   "ki1033518-iLiNS-DYAD-G",
-#   "ki1000125-AgaKhanUniv",           
-#   "ki1112895-Burkina Faso Zn",    
-#   "ki1000304-VITAMIN-A",  
-#   "ki1000304-Vitamin-B12",
-#   "ki1000107-Serrinha-VitA",   
-#   "ki1000304-EU",        
-#   "ki1000304-ZnMort"
-# )] <- "yearly"
-
 
 
 monthly_vec <- c("ki0047075b-MAL-ED",   
