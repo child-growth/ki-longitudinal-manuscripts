@@ -111,7 +111,7 @@ bar_plot_RE_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(bar_plot_RE, file=paste0("figures/wasting/fig-",bar_plot_RE_name,"-India.png"), width=10, height=4)
+ggsave(bar_plot_RE, file=paste0("figures/India/fig-",bar_plot_RE_name,"-India.png"), width=10, height=4)
 
 saveRDS(plot_data_pooled, file=paste0("6-shiny-app/figure-data/figdata-",bar_plot_RE_name,"-India.RDS"))
 
