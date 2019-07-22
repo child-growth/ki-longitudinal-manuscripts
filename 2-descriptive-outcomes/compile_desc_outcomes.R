@@ -2,10 +2,9 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-load(paste0(res_dir,"shiny_desc_data.Rdata"))
-wast <- shiny_desc_data
+wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS"))
 stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
-stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.Rdata"))
+stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.RDS"))
 stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
 
 load(paste0(res_dir,"co_desc_data.Rdata"))
@@ -22,8 +21,7 @@ d <- bind_rows(stunt, stunt_monthly24, stunt_fe, wast, co_desc_data)
 d$agecat <- factor(d$agecat, levels=unique(d$agecat))
 d$region[d$region=="Asia" & !is.na(d$region)] <- "South Asia"
 
-regions = c("Overall","Africa","Latin America", "South Asia")
-d$region <- factor(d$region, levels= c(regions, unique(d$region)[!(unique(d$region) %in% regions)]))
+d$region <- factor(d$region, levels=  c("Overall","Africa","Latin America", "South Asia"))
 
 
 #Convert incidence rate to per 1000 days
@@ -33,6 +31,10 @@ d$ub[grepl("Incidence rate", d$measure)] <- d$ub[grepl("Incidence rate", d$measu
 
 #Check for duplicates
 dim(d)
+# Return all duplicated elements
+dups <- d %>% filter(duplicated(.) | duplicated(., fromLast = TRUE))
+head(dups)
+#drop duplicated analyses
 d<-distinct(d)
 dim(d)
 
