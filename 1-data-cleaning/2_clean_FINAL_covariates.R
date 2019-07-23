@@ -15,7 +15,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-d <- readRDS(paste0(ghapdata_dir, "FINAL_only_included_studies.rds"))
+d <- readRDS(included_studies_path)
 
 
 
@@ -415,7 +415,7 @@ table(d$tr)
 #--------------------------------------------------------
 
 colnames(d)
-d <- subset(d, select = -c(siteid, region,  clustid, brthweek,   brthordr, 
+d <- subset(d, select = -c(siteid,  clustid, brthweek,   brthordr, 
                            ses, birthlen2, birthwt2, 
                            birthmeas_age, birthLAZ, birthWAZ))
 

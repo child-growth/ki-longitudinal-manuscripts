@@ -116,6 +116,10 @@ wast <- drop_int_arms(wast_rf)
 waz <- drop_int_arms(waz_rf) 
 co <- drop_int_arms(co_rf) 
 
+stunt <- droplevels(stunt)
+wast <- droplevels(wast)
+waz <- droplevels(waz)
+co <- droplevels(co)
 
 saveRDS(stunt, stunting_data_path)
 saveRDS(wast, wasting_data_path)

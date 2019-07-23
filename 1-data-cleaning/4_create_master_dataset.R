@@ -5,7 +5,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #load longform anthropometry and mortality data
-Zscores <- readRDS(paste0(ghapdata_dir, "FINAL_only_included_studies.rds"))
+Zscores <- readRDS(included_studies_path)
 
 
 # Check how many at-birth measurements have
@@ -19,10 +19,13 @@ table(df$country, 1*(df$lencm < 45))
 #keep only Z-scores and mortality variables, and month of measurement
 dput(colnames(Zscores))
 Zscores <- Zscores %>% 
-  subset(., select = c(studyid, country, region, measurefreq, subjid, sex, agedays, 
+  subset(., select = c(studyid, country, measurefreq, subjid, sex, agedays, 
                        waz, haz, whz, muaz, tr, month, brthweek,  dead, agedth, 
                        latitude, longitud, causedth))
 
+#mark regions 
+Zscores <- mark_region(Zscores)
+table(Zscores$region)
 
 #load covariate dataset (one row per child)
 cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
