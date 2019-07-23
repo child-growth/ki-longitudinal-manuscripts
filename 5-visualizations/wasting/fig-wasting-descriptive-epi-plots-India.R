@@ -152,7 +152,7 @@ mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
 # )
 # 
 # # save plot and underlying data
-# ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/India/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=6)
+# ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/India/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=5)
 
 
 
@@ -269,7 +269,7 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",prev_plot_name, ".png"), width=14, height=6)
+ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",prev_plot_name, ".png"), width=14, height=5)
 
 
 
@@ -438,7 +438,7 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",ci_plot_name, ".png"), width=14, height=6)
+ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",ci_plot_name, ".png"), width=14, height=5)
 
 
 
@@ -549,7 +549,7 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",inc_plot_name, ".png"), width=14, height=6)
+ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",inc_plot_name, ".png"), width=14, height=5)
 
 
 
@@ -667,7 +667,7 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",rec_plot_name, ".png"), width=14, height=6)
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",rec_plot_name, ".png"), width=14, height=5)
 
 
 #-------------------------------------------------------------------------------------------
@@ -749,7 +749,7 @@ co_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",co_plot_name, ".png"), width=14, height=6)
+ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",co_plot_name, ".png"), width=14, height=5)
 
 
 
@@ -779,7 +779,7 @@ underweight_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",underweight_plot_name, ".png"), width=14, height=6)
+ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",underweight_plot_name, ".png"), width=14, height=5)
 
 
 #-------------------------------------------------------------------------------------------
@@ -908,7 +908,7 @@ sevwast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=6)
+ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=5)
 
 
 

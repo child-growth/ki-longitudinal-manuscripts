@@ -40,7 +40,7 @@ theme_set(theme_ki())
 load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
 
 #Quantile data (object: quantile_d)
-load(paste0(here::here(),"/results/quantile_data_stunting_monthly24.Rdata"))
+quantile_d <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_monthly24.rds"))
 
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
@@ -116,7 +116,8 @@ saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name,".RDS"))
 # Mean LAZ by month with quantiles
 #-------------------------------------------------------------------------------------------
 
-df <- bind_rows(quantile_d, quantile_d_overall)
+#df <- bind_rows(quantile_d, quantile_d_overall)
+df <- quantile_d
 
 df$agecat <- factor(df$agecat, 
                     levels=c("Two weeks", "One month",
