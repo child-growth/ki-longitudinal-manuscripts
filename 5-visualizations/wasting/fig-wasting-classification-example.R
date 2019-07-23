@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source("5-visualizations/0-plot-themes.R")
 theme_set(theme_ki())
 
-load("U:/ucb-superlearner/data/Wasting_inc_data.RData")
+load(paste0(ghapdata_dir,"/Wasting_inc_data.RData"))
 
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
@@ -100,13 +100,10 @@ print(p)
 
 save(p, file=paste0(here::here(),"/figures/plot objects/ind_traj_plot_object.Rdata"))
 
+ggsave(p, file=paste0(here(),"/figures/wasting/individual_traj.png"),width=8,height=5)    
 
 
-pdf(paste0(here(),"/figures/wasting/individual_traj.pdf"),width=8,height=5)    
 
-  print(p)
-  
-dev.off()
 
 
 
