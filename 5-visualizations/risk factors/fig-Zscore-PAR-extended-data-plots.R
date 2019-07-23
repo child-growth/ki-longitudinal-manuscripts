@@ -141,7 +141,7 @@ plot_laz_region = grid.arrange(plot_laz_africa, plot_laz_la, plot_laz_sa, ncol =
 
 ggsave(plot_laz_region, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-laz-PAR-strat-region.png"), height=18, width=15)
 
-### Plot WLZ, stratified by age
+### Plot WLZ, stratified by region
 plot_wlz_africa = plot_region("WLZ", "Africa")
 plot_wlz_la = plot_region("WLZ", "Latin America")
 plot_wlz_sa = plot_region("WLZ", "South Asia")
@@ -151,4 +151,8 @@ plot_wlz_region = grid.arrange(plot_wlz_africa, plot_wlz_la, plot_wlz_sa, ncol =
 
 ggsave(plot_wlz_region, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-wlz-PAR-strat-region.png"), height=18, width=15)
 
+
+#Save just South Asia plot for UNICEF presentation
+p <- plot_wlz_sa %+% ggtitle("Population attributable difference\nin WLZ at 24 months") %+% coord_flip(ylim=c(-0.2,0.5), expand=F)
+ggsave(p, file=paste0(here::here(), "/figures/India/wasting/fig-wlz-PAR-South-Asia.png"), height=8, width=18)
 

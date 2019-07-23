@@ -12,9 +12,12 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-readRDS("U:/ucb-superlearner/Manuscript analysis data/co_occurrence_data.rds")
+d = readRDS("U:/ucb-superlearner/Manuscript analysis data/co_occurrence_data.rds")
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
+
+# subsetting to South Asia
+d = d %>% filter(region == "South Asia")
 
 # since this will include recovery, 
 # subsetting to monthly cohorts
@@ -335,7 +338,7 @@ healthy_0 = as.character(summary$agem[summary$healthy==0])
 #                                  label = "Never stunted")
 
 
-saveRDS(flow_m, file=paste0(res_dir, "co_flow.RDS"))
-saveRDS(co_pooled, file=paste0(res_dir, "co_flow_pooled.RDS"))
+saveRDS(flow_m, file=paste0(res_dir, "co_flow_India.RDS"))
+saveRDS(co_pooled, file=paste0(res_dir, "co_flow_pooled_India.RDS"))
 
 

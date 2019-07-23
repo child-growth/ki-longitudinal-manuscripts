@@ -5,12 +5,13 @@ source(paste0(here::here(), "/0-config.R"))
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
 theme_set(theme_ki())
-tableau11 <- tableau11[c(2:5,1,6:11)]
+
+tableau11 <- tableau11[c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "Black",
+                         "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")]
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
-load(paste0(here::here(),"/results/quantile_data_wasting.Rdata"))
-
+load(paste0(here::here(),"/results/India_desc_data.Rdata"))
+d <- wasting_desc_data
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 d$nstudy.f <- gsub("N=","",d$nstudy.f)
@@ -25,56 +26,58 @@ d$region <- as.character(d$region)
 d$region[d$pooling=="country" & !is.na(d$pooling)] <- d$country[d$pooling=="country" & !is.na(d$pooling)]
 table(d$region)
 
+
 #Drop non-asian countries
 #d <- d %>% filter(region %in% c("Overall", "South Asia", "Africa", "Latin America", "India", "Bangladesh", "Pakistan", "Nepal"))
 d <- d %>% filter(region %in% c("South Asia", "India", "Bangladesh", "Pakistan", "Nepal"))
 d <- droplevels(d)
 #d$region <- factor(d$region, levels = c("Overall", "South Asia", "Africa", "Latin America", "India", "Bangladesh", "Pakistan", "Nepal"))
 d$region <- factor(d$region, levels = c("India", "Bangladesh", "Pakistan", "Nepal", "South Asia"))
+table(d$region)
 
 #-------------------------------------------------------------------------------------------
 # Mean WLZ by month 
 #-------------------------------------------------------------------------------------------
 
-df <- d %>% filter(
-  disease == "Wasting" &
-    measure == "Mean WLZ" &
-    birth == "yes" &
-    severe == "no" &
-    age_range == "1 month" &
-    cohort == "pooled"
-)
-df <- droplevels(df)
+# df <- d %>% filter(
+#   disease == "Wasting" &
+#     measure == "Mean WLZ" & 
+#     birth == "yes" &
+#     severe == "no" &
+#     age_range == "1 month" &
+#     cohort == "pooled" 
+# )
+# df <- droplevels(df)
+# 
+# df <- df %>% 
+#   arrange(agecat) %>%
+#   filter(!is.na(agecat)) %>%
+#   filter(!is.na(region)) %>%
+#   mutate(agecat = as.character(agecat)) %>%
+#   mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
+#   mutate(agecat = gsub(" month", "", agecat)) %>%
+#   mutate(agecat = gsub(" months", "", agecat)) %>%
+#   mutate(agecat = gsub("s", "", agecat)) %>%
+#   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
+#   mutate(agecat = as.numeric(agecat)) 
 
-df <- df %>%
-  arrange(agecat) %>%
-  filter(!is.na(agecat)) %>%
-  filter(!is.na(region)) %>%
-  mutate(agecat = as.character(agecat)) %>%
-  mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
-  mutate(agecat = gsub(" month", "", agecat)) %>%
-  mutate(agecat = gsub(" months", "", agecat)) %>%
-  mutate(agecat = gsub("s", "", agecat)) %>%
-  mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
-  mutate(agecat = as.numeric(agecat))
 
-
-p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-  stat_smooth(aes(fill=region, color=region), se=F, span = 1) +
-  geom_hline(yintercept = 0, colour = "black") +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10),
-                     limits = c(-1.5, 0)) +
-  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
-  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$region),
-                    name = 'Region') +
-  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$region),
-                     name = 'Region') +
-  xlab("Child age, months")+
-  ylab("Weight-for-length Z-score") +
-  ggtitle("") +
-  theme(legend.position="right")
-
-ggsave(p, file=here::here("/figures/India/wasting/WLZ_by_region.png"), width=10, height=4)
+# p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
+#   stat_smooth(aes(fill=region, color=region), se=F, span = 1) +
+#   geom_hline(yintercept = 0, colour = "black") +
+#   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
+#                      limits = c(-1, 0.5)) + 
+#   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
+#   scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+#                     name = 'Region') +
+#   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
+#                      name = 'Region') +
+#   xlab("Child age, months")+
+#   ylab("Weight-for-length Z-score") +
+#   ggtitle("") +
+#   theme(legend.position="right")
+# 
+# ggsave(p, file=here::here(),"/figures/India/wasting/WLZ_by_region.png", width=10, height=4)
 
 
 
@@ -82,62 +85,62 @@ ggsave(p, file=here::here("/figures/India/wasting/WLZ_by_region.png"), width=10,
 # Mean WLZ by month with quantiles
 #-------------------------------------------------------------------------------------------
 
-quantile_d_overall <- quantile_d_overall %>% mutate(region="Overall")
-df <- rbind(quantile_d_overall, quantile_d)
-
-df$agecat <- factor(df$agecat,
-                    levels=c("Two weeks", "One month",
-                             paste0(2:24," months")))
-
-df <- df %>%
-  arrange(agecat) %>%
-  filter(region!="Europe")
-df <-droplevels(df)
-
-df <- df %>%
-  ungroup(agecat) %>%
-  arrange(agecat) %>%
-  filter(!is.na(agecat)) %>%
-  filter(!is.na(region)) %>%
-  mutate(agecat = as.character(agecat)) %>%
-  mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
-  mutate(agecat = gsub(" month", "", agecat)) %>%
-  mutate(agecat = gsub(" months", "", agecat)) %>%
-  mutate(agecat = gsub("s", "", agecat)) %>%
-  mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
-  mutate(agecat = as.numeric(agecat)) %>%
-  gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "WLZ") #%>%
-  #mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
-
-# NEED TO ADD LEGEND
-
-mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
-
-  geom_smooth(aes(y = WLZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
-  facet_wrap(~region, nrow=2) +
-  geom_hline(yintercept = 0, colour = "black") +
-  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-  scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=TRUE, limits = levels(df$measure),
-                     name = 'Region') +
-  scale_linetype_manual(name = "interval", values = c("fiftieth_perc" = "solid",
-                                                      "ninetyfifth_perc" = "dashed",
-                                                      "fifth_perc" = "dotted"),
-                        breaks = c("fiftieth_perc",
-                                   "ninetyfifth_perc",
-                                   "fifth_perc"),
-                        labels = c("Mean", "95th percentile", "5th percentile")) +
-  xlab("Child age, months") +
-  ylab("Weight-for-length Z-score") +
-  ggtitle("") +
-  theme(strip.text = element_text(margin=margin(t=5))) +
-  guides(linetype = guide_legend(override.aes = list(col = 'black'),
-                                 keywidth = 3, keyheight = 1),
-         colour = FALSE) +
-  theme(legend.position = "bottom",
-        legend.title = element_blank(),
-        legend.background = element_blank(),
-        legend.box.background = element_rect(colour = "black"))
+# quantile_d_overall <- quantile_d_overall %>% mutate(region="Overall")
+# df <- rbind(quantile_d_overall, quantile_d)
+# 
+# df$agecat <- factor(df$agecat, 
+#                     levels=c("Two weeks", "One month",
+#                              paste0(2:24," months")))
+# 
+# df <- df %>% 
+#   arrange(agecat) %>%
+#   filter(region!="Europe")
+# df <-droplevels(df)
+# 
+# df <- df %>% 
+#   ungroup(agecat) %>%
+#   arrange(agecat) %>%
+#   filter(!is.na(agecat)) %>%
+#   filter(!is.na(region)) %>%
+#   mutate(agecat = as.character(agecat)) %>%
+#   mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
+#   mutate(agecat = gsub(" month", "", agecat)) %>%
+#   mutate(agecat = gsub(" months", "", agecat)) %>%
+#   mutate(agecat = gsub("s", "", agecat)) %>%
+#   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
+#   mutate(agecat = as.numeric(agecat)) %>%
+#   gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "WLZ") #%>% 
+#   #mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+# 
+# # NEED TO ADD LEGEND
+# 
+# mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
+#   
+#   geom_smooth(aes(y = WLZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
+#   facet_wrap(~region, nrow=2) +
+#   geom_hline(yintercept = 0, colour = "black") +
+#   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
+#   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
+#   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=TRUE, limits = levels(df$measure), 
+#                      name = 'Region') +
+#   scale_linetype_manual(name = "interval", values = c("fiftieth_perc" = "solid",
+#                                                       "ninetyfifth_perc" = "dashed",
+#                                                       "fifth_perc" = "dotted"),
+#                         breaks = c("fiftieth_perc",
+#                                    "ninetyfifth_perc",
+#                                    "fifth_perc"),
+#                         labels = c("Mean", "95th percentile", "5th percentile")) +
+#   xlab("Child age, months") +
+#   ylab("Weight-for-length Z-score") +
+#   ggtitle("") +
+#   theme(strip.text = element_text(margin=margin(t=5))) +
+#   guides(linetype = guide_legend(override.aes = list(col = 'black'), 
+#                                  keywidth = 3, keyheight = 1),
+#          colour = FALSE) +
+#   theme(legend.position = "bottom",
+#         legend.title = element_blank(),
+#         legend.background = element_blank(),
+#         legend.box.background = element_rect(colour = "black"))
 # 
 # 
 # # define standardized plot names
@@ -152,20 +155,20 @@ mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
 # )
 # 
 # # save plot and underlying data
-# ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/India/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=6)
+# ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",mean_wlz_plot_name,"_India_quart.png"), width=14, height=6)
 
 
 
 ki_india_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-         Cohort="pooled",
-         xlabel="Age category",
-         ylabel="",
-         Region=NULL,
-         h1=0,
-         h2=3,
-         strip.text.size=18,
-         yrange=NULL,
-         returnData=F) {
+                          Cohort="pooled",
+                          xlabel="Age category",
+                          ylabel="",
+                          Region=NULL,
+                          h1=0,
+                          h2=3,
+                          strip.text.size=18,
+                          yrange=NULL,
+                          returnData=F) {
   
   df <- d %>% filter(
     disease == Disease &
@@ -245,16 +248,16 @@ ki_india_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 # Wasting prevalence
 #-------------------------------------------------------------------------------------------
 prev_plot <- ki_india_plot(d,
-                          Disease="Wasting",
-                          Measure="Prevalence", 
-                          Birth="yes", 
-                          Severe="no", 
-                          Age_range="3 months", 
-                          Cohort="pooled",
-                          xlabel="Child age, months",
-                          ylabel='Point prevalence (95% CI)',
-                          yrange=c(0,30),
-                          returnData=T)
+                           Disease="Wasting",
+                           Measure="Prevalence", 
+                           Birth="yes", 
+                           Severe="no", 
+                           Age_range="3 months", 
+                           Cohort="pooled",
+                           xlabel="Child age, months",
+                           ylabel='Point prevalence (95% CI)',
+                           yrange=c(0,30),
+                           returnData=T)
 
 
 # define standardized plot names
@@ -269,7 +272,7 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",prev_plot_name, ".png"), width=14, height=6)
+ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",prev_plot_name, "_India_quart.png"), width=14, height=6)
 
 
 
@@ -280,14 +283,14 @@ ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",pr
 
 
 ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-         Cohort="pooled",
-         xlabel="Age category",
-         ylabel="Incidence proportion (95% CI)",
-         h1=0,
-         h2=3,
-         yrange=NULL,
-         dodge=0,
-         returnData=F){
+                          Cohort="pooled",
+                          xlabel="Age category",
+                          ylabel="Incidence proportion (95% CI)",
+                          h1=0,
+                          h2=3,
+                          yrange=NULL,
+                          dodge=0,
+                          returnData=F){
   
   df <- d %>% filter(
     disease == Disease &
@@ -438,7 +441,7 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",ci_plot_name, ".png"), width=14, height=6)
+ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",ci_plot_name, "_India_quart.png"), width=14, height=6)
 
 
 
@@ -452,7 +455,7 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                            ylabel="",
                            yrange=c(0,90),
                            legend.pos = c(.9,.32)){
-
+  
   df <- d %>% filter(
     disease == Disease &
       measure == Measure &
@@ -464,26 +467,26 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   )
   df <- df %>% filter(birth=="yes" | agecat=="0-3 months")
   df <- droplevels(df)
-
-
+  
+  
   #Keep N studies and children from only one study
   df$nmeas.f[df$age_range!="30 days"] <- NA
   df$nstudy.f[df$age_range!="30 days"] <- NA
-
+  
   # remove N= from labels
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub('N=', '', nstudy.f))
-
+  
   # remove text from labels
   df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub(' studies', '', nstudy.f))
-
+  
   # Remove 'months' from x axis labels
   df <- df %>% arrange(agecat)
   df$agecat <- as.character(df$agecat)
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
-
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     facet_wrap(~region, nrow=1) +
     geom_errorbar(aes(color=region,
@@ -507,11 +510,11 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                                       size = 15)) +
     theme(axis.title.y = element_text(size = 15)) +
     ggtitle("") + guides(color = FALSE)
-
+  
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
   }
-
+  
   p <- p +  theme(legend.position = legend.pos,
                   legend.title = element_blank(),
                   legend.background = element_blank(),
@@ -549,7 +552,7 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",inc_plot_name, ".png"), width=14, height=6)
+ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",inc_plot_name, "_India_quart.png"), width=14, height=6)
 
 
 
@@ -667,7 +670,7 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",rec_plot_name, ".png"), width=14, height=6)
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",rec_plot_name, "_India_quart.png"), width=14, height=6)
 
 
 #-------------------------------------------------------------------------------------------
@@ -675,16 +678,16 @@ ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",rec
 #-------------------------------------------------------------------------------------------
 
 perswast_plot <- ki_india_plot(d,
-                              Disease="Wasting",
-                              Measure="Persistent wasting", 
-                              Birth="yes", 
-                              Severe="no", 
-                              Age_range="6 months", 
-                              Cohort="pooled",
-                              xlabel="Child age, months",
-                              ylabel = 'Proportion (%)',
-                              yrange=c(0,20),
-                              returnData=T)
+                               Disease="Wasting",
+                               Measure="Persistent wasting", 
+                               Birth="yes", 
+                               Severe="no", 
+                               Age_range="6 months", 
+                               Cohort="pooled",
+                               xlabel="Child age, months",
+                               ylabel = 'Proportion (%)',
+                               yrange=c(0,20),
+                               returnData=T)
 
 
 
@@ -700,7 +703,7 @@ perswast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/India/wasting/fig-","perswast_plot", ".png"), width=10, height=5)
+ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-","perswast_plot", "_India_quart.png"), width=10, height=5)
 
 
 
@@ -725,16 +728,16 @@ ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/India/wasting/fig-
 # Prevalence of co-occurrence
 #-------------------------------------------------------------------------------------------
 co_plot <- ki_india_plot(d,
-                        Disease="co-occurrence",
-                        Measure="Prevalence", 
-                        Birth="yes", 
-                        Severe="no", 
-                        Age_range="3 months", 
-                        Cohort="pooled",
-                        xlabel="Child age, months",
-                        ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
-                        yrange=c(0,12),
-                        returnData=T)
+                         Disease="co-occurrence",
+                         Measure="Prevalence", 
+                         Birth="yes", 
+                         Severe="no", 
+                         Age_range="3 months", 
+                         Cohort="pooled",
+                         xlabel="Child age, months",
+                         ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
+                         yrange=c(0,12),
+                         returnData=T)
 
 
 # define standardized plot names
@@ -749,7 +752,7 @@ co_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",co_plot_name, ".png"), width=14, height=6)
+ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",co_plot_name, "_India_quart.png"), width=14, height=6)
 
 
 
@@ -757,15 +760,15 @@ ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",co_p
 # Underweight prevalence 
 #-------------------------------------------------------------------------------------------
 underweight_plot <- ki_india_plot(d,
-                                 Disease="Underweight",
-                                 Measure="Prevalence", 
-                                 Birth="yes", 
-                                 Severe="no", 
-                                 Age_range="3 months", 
-                                 Cohort="pooled",
-                                 xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24))
+                                  Disease="Underweight",
+                                  Measure="Prevalence", 
+                                  Birth="yes", 
+                                  Severe="no", 
+                                  Age_range="3 months", 
+                                  Cohort="pooled",
+                                  xlabel="Child age, months",
+                                  ylabel='Point prevalence (95% CI)',
+                                  yrange=c(0,24))
 
 # define standardized plot names
 underweight_plot_name = create_name(
@@ -779,7 +782,7 @@ underweight_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",underweight_plot_name, ".png"), width=14, height=6)
+ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",underweight_plot_name, "_India_quart.png"), width=14, height=6)
 
 
 #-------------------------------------------------------------------------------------------
@@ -872,7 +875,7 @@ muac_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(muac_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",muac_plot_name, ".png"), width=14, height=5)
+ggsave(muac_plot[[1]], file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",muac_plot_name, "_India_quart.png"), width=14, height=5)
 
 
 
@@ -884,16 +887,16 @@ ggsave(muac_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",mu
 #-------------------------------------------------------------------------------------------
 
 sevwast_plot <- ki_india_plot(d,
-                             Disease="Wasting",
-                             Measure="Prevalence", 
-                             Birth="yes", 
-                             Severe="yes", 
-                             Age_range="3 months", 
-                             Cohort="pooled",
-                             xlabel="Child age, months",
-                             ylabel='Point prevalence (95% CI)',
-                             yrange=c(0,15),
-                             returnData=T)
+                              Disease="Wasting",
+                              Measure="Prevalence", 
+                              Birth="yes", 
+                              Severe="yes", 
+                              Age_range="3 months", 
+                              Cohort="pooled",
+                              xlabel="Child age, months",
+                              ylabel='Point prevalence (95% CI)',
+                              yrange=c(0,15),
+                              returnData=T)
 
 
 # define standardized plot names
@@ -908,7 +911,7 @@ sevwast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=6)
+ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/India/wasting - quarterly cohorts/fig-",sevwast_plot_name, "_India_quart.png"), width=14, height=6)
 
 
 
