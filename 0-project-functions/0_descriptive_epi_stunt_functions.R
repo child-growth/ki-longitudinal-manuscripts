@@ -24,8 +24,8 @@
 #   - prev.cohort: estimated random effects and CI bounds for each specific cohort
 
 summary.prev.haz <- function(d, severe.stunted=F, method="REML"){
-  d = dprev
-  # take mean of multiple measurements within age window
+
+    # take mean of multiple measurements within age window
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
     group_by(studyid,country,subjid,agecat) %>%
