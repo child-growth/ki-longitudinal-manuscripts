@@ -32,7 +32,7 @@ source(paste0(here::here(), "/0-config.R"))
 theme_set(theme_ki())
 
 #Load data
-load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
