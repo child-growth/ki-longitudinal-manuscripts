@@ -345,7 +345,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   
   shiny_desc_data$agecat <- as.factor(shiny_desc_data$agecat)
   
-  shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Africa", "Latin America", "Asia"))
+  shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Africa", "Latin America", "South Asia"))
     
   return(shiny_desc_data)
 }
