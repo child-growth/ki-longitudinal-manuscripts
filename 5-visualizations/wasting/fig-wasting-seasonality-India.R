@@ -39,7 +39,7 @@ p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~country, scales="free_y", nrow
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 
-ggsave(p1, file=paste0("figures/India/wasting/seasonality-wlz-India.png"),  width=6, height=3)
+ggsave(p1, file=paste0("figures/India/wasting/seasonality-wlz-India.png"),  width=10, height=5)
 
 
 
@@ -70,7 +70,7 @@ p2 <- ggplot(d[d$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color="grey
 
 
 # save plot 
-ggsave(p2, file=paste0("figures/India/wasting/seasonality-birth-wlz-India.png"),  width=6, height=3)
+ggsave(p2, file=paste0("figures/India/wasting/seasonality-birth-wlz-India.png"),  width=4, height=5)
 
 
 
