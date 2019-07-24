@@ -18,10 +18,7 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 #-------------------------------------------
 # Load and pre-process raw stunting data
 #-------------------------------------------
-# d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
-
-# TEMPORARY - for working off ghap
-d <- readRDS(paste0(here::here(), "/data/simulated test data/testdata.rds"))
+d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
 #----------------------------------------
 # subset to monthly cohorts
@@ -46,7 +43,7 @@ age_list = list("Birth", "3 months", "6 months", "Never")
 dmon_incage <- lapply(age_list, function(x) 
   calc.monthly.agecat(d = d_st %>% filter(stunt_inc_age == x)))
 
-### ANNA request 1: please update this code chunk to run over the list dmon_incage instead of dmon
+### ANNA: please update this code chunk to run over the list dmon_incage instead of dmon
 monthly.haz.data   <-  summary.haz(dmon, method = calc_method)
 monthly.haz.region <-  dmon  %>% group_by(region) %>%
                                  do(summary.haz(., method = calc_method)$haz.res)
@@ -59,11 +56,9 @@ monthly.haz <- bind_rows(
   data.frame(cohort = "pooled", monthly.haz.region),
   monthly.haz.cohort
 )
-### ANNA end of update request 1 
-
 
 #######################################################################
 # save data
 #######################################################################
-# saveRDS(ANNA_ADD_NAME, file = paste0(res_dir, "laz_age_incage.RDS"))
+# saveRDS(ANNA_ADD_NAME, file = paste0(res_dir, "meanlaz_age_incage.RDS"))
  
