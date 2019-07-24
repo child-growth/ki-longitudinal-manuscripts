@@ -38,7 +38,7 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
                                    size = 12))+ #,
                                    #angle = 30, hjust = 0.5, vjust=0.5)) +
   theme(axis.title.y = element_text(size = 12)) +
-  ggtitle("Outcomes by birth status among children 6-24 months") +
+  ggtitle("Outcomes among children 6-24 months, stratified by birthweight") +
   facet_wrap(~measure_lab, nrow=1, scales="free_y", strip.position = "left") +
   theme(strip.background = element_blank(), strip.placement = "outside")
 
