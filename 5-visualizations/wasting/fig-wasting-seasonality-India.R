@@ -63,7 +63,7 @@ d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "Monsoon", "Not monsoon")
 d <- d[d$agedays<730,]
 
 p2 <- ggplot(d[d$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color="grey20", span=1, se=T, size=2) + 
-  ylab("Mean WLZ") + xlab("Birth month") +
+  ylab("WLZ") + xlab("Birth month") + ggtitle("Mean WLZ at birth") +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 
