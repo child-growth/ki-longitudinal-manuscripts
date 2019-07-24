@@ -50,7 +50,7 @@ ggsave(p1, file=paste0("figures/India/wasting/seasonality-wlz-India.png"),  widt
 
 
 
-d <- d %>% filter(country=="INDIA")
+d <- d %>% filter(country=="India")
 
 d$cohort <- paste0(d$studyid, " ", d$country)
 
