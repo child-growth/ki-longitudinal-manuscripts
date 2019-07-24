@@ -285,14 +285,6 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
     )
     return(cuminc)
   }
-  
-  
-  
-  cuminc3.birthstrat <- bind_rows(
-    data.frame(cohort = "pooled", region = "Overall", ci.data3.birthstrat$ci.res),
-    data.frame(cohort = "pooled", ci.region3.birthstrat),
-    ci.cohort3.birthstrat
-  )
     
   #----------------------------------------
   # Cumulative Incidence  - 3 month intervals
@@ -320,7 +312,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   # Cumulative Incidence  - 6 month intervals
   # severe
   #----------------------------------------
-  sev.cuminc6.1 <- calc_ci(d6, agelst6, birth_strat = FALSE, severe = TRUE)
+  sev.cuminc6 <- calc_ci(d6, agelst6, birth_strat = FALSE, severe = TRUE)
   
   shiny_desc_data <- bind_rows(
     data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
