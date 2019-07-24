@@ -2,7 +2,7 @@
 # ki longitudinal manuscripts
 # stunting analysis
 
-# calculate mean difference in LAZ by age
+# calculate mean LAZ by age
 # by strata of age of incident stunting
 ##########################################
 
