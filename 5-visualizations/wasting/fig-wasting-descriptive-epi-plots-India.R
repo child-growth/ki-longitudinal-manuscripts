@@ -1,6 +1,7 @@
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))
 
 #Plot themes
 source("5-visualizations/0-plot-themes.R")
@@ -144,8 +145,9 @@ mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"))
 
-# # save plot and underlying data
- ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/India/wasting/fig-monthly-WLZ-SA.png"), width=14, height=5)
+# save plot and underlying data
+ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/India/wasting/fig-monthly-WLZ-SA.png"), width=14, height=5)
+
 
 
 
@@ -262,7 +264,7 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",prev_plot_name, ".png"), width=14, height=5)
+ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",prev_plot_name, ".png"), width=14, height=6)
 
 
 
@@ -280,7 +282,10 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
          h2=3,
          yrange=NULL,
          dodge=0,
-         returnData=F){
+         returnData=F,
+         showLegend = T,
+         overlapping_labels=T,
+         high){
   
   df <- d %>% filter(
     disease == Disease &
@@ -328,12 +333,16 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   
   # remove extra text from label at birth
   # that overlaps between CI and IP
-  if(Birth!="strat"){
-    df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
-                                         measure=="Incidence_proportion", NA, est))
-  }else{
-    df <- df %>% mutate(est.f = ifelse(agecat=="Birth" & 
-                                         measure=="Incidence_proportion", NA, est))
+  if (overlapping_labels){
+    if(Birth!="strat"){
+      df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
+                                           measure=="Incidence_proportion", NA, est))
+    }else{
+      df <- df %>% mutate(est.f = ifelse(agecat=="Birth" & 
+                                           measure=="Incidence_proportion", NA, est))
+    }
+  } else{
+    df <- df %>% mutate(est.f = est)
   }
   
   # remove N= labels for incidence proportion
@@ -388,14 +397,16 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     ggtitle("") +
     facet_wrap(~region, nrow=1) +
     
-    guides(color = FALSE) +
+    guides(color = FALSE) 
     
-    theme(legend.position = c(.06,.83),
+  if(showLegend){
+    p = p + theme(legend.position = c(.06,.83),
           legend.title = element_blank(),
           legend.text = element_text(size = 8),
           legend.background = element_blank(),
           legend.margin = margin(0.5, 1.5, 0.5, 0.5),
           legend.box.background = element_rect(colour = "black"))
+  }
   
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
@@ -408,7 +419,6 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   }
 }
 
-
 ci_plot <- ki_combo_plot(d,
                          Disease="Wasting",
                          Measure=c("Cumulative incidence", "Incidence_proportion"), 
@@ -417,7 +427,7 @@ ci_plot <- ki_combo_plot(d,
                          Age_range="3 months", 
                          Cohort="pooled",
                          xlabel="Child age, months",
-                         yrange=c(0,70),
+                         yrange=c(0,73),
                          returnData=T)
 
 ci_plot_name = create_name(
@@ -431,8 +441,34 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",ci_plot_name, ".png"), width=14, height=5)
+ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",ci_plot_name, ".png"), width=14, height=6)
 
+
+ip_plot <- ki_combo_plot(d,
+                         Disease="Wasting",
+                         Measure="Incidence_proportion", 
+                         Birth="yes", 
+                         Severe="no", 
+                         Age_range="3 months", 
+                         Cohort="pooled",
+                         xlabel="Child age, months",
+                         yrange=c(0,55),
+                         returnData=T, 
+                         showLegend = F, 
+                         overlapping_labels = F)
+
+ip_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "incidence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "India"
+)
+
+# save plot and underlying data
+ggsave(ip_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",ip_plot_name, ".png"), width=14, height=6)
 
 
 #-------------------------------------------------------------------------------------------
@@ -542,7 +578,7 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",inc_plot_name, ".png"), width=14, height=5)
+ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",inc_plot_name, ".png"), width=14, height=6)
 
 
 
@@ -660,7 +696,7 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",rec_plot_name, ".png"), width=14, height=5)
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",rec_plot_name, ".png"), width=14, height=6)
 
 
 #-------------------------------------------------------------------------------------------
@@ -762,7 +798,7 @@ co_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",co_plot_name, ".png"), width=14, height=5)
+ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",co_plot_name, ".png"), width=14, height=6)
 
 
 
@@ -792,7 +828,7 @@ underweight_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",underweight_plot_name, ".png"), width=14, height=5)
+ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",underweight_plot_name, ".png"), width=14, height=6)
 
 
 #-------------------------------------------------------------------------------------------
@@ -921,7 +957,7 @@ sevwast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=5)
+ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=6)
 
 
 

@@ -444,7 +444,89 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
 }
 
 
+##############################################
+# summary.stunt.incprop
+##############################################
+# Documentation: create_stunting_age_indicators
+# Usage: create_stunting_age_indicators(data)
+# Description: Adds a column to a dataframe with an indicator for 
+#              whether the child was stunted at birth, had an incident
+#              stunting episode after birth but by 3 months, 
+#              had an incident stunting episode after birth but by 6 months, 
+#              or was never stunted 
+# Arguments/Options:
+# d: a data set that contains the following attributes:
+#   - agedays
+#   - studyid
+#   - country
+#   - subjid
+#   - haz
+#
+# Output: A data frame with the indicator described above
 
+create_stunting_age_indicators = function(data){
+  
+  #Calculate onset of stunting
+  data_st <- data %>% group_by(studyid, country, subjid) %>% 
+    # create age categories
+    mutate(agecat = case_when(
+      agedays == 0 ~ "Birth",
+      agedays >0 & agedays<= 30.4167*3 ~ "3 months",
+      agedays >0 & agedays<= 30.4167*6 ~ "6 months",
+      TRUE ~ ""
+    )) %>%
+    # create id for each measurement within child
+    mutate(measid = seq(subjid)) %>%
+    # create indicator for stunting
+    mutate(stunt= haz < -2, 
+           stuntid = ifelse(stunt, measid, 9999),
+           stunt_inc = 1 * (stunt & stuntid==min(stuntid))) %>%
+    select(-c(stunt, stuntid)) 
+  
+  # check that incident stunting only occurs 
+  # once per child
+  test_inc = data_st %>% group_by(studyid, country, subjid) %>%
+    summarise(max_inc = sum(stunt_inc))
+  assert_that(max(test_inc$max_inc)==1, 
+              msg = "Check coding of incidence; some children have 
+                     more than one incident stunting episode")
+  
+  # create age-specific stunting indicators
+  data_st <- data_st %>% 
+    filter(stunt_inc==1) %>%
+    mutate(
+      stunt_inc_birth = ifelse(stunt_inc == 1 & agecat == "Birth", 1, 0),
+      stunt_inc_3m = ifelse(stunt_inc == 1 & agecat == "3 months", 1, 0),
+      stunt_inc_6m = ifelse(stunt_inc == 1 & agecat == "6 months", 1, 0)
+    )
+  
+  # create never stunted category
+  data_st <- data_st %>%
+    group_by(studyid, country, subjid) %>%
+    mutate(max_haz = max(haz)) %>%
+    mutate(stunt_never = ifelse(max_haz > -2, 1, 0)) %>%
+    select(-max_haz)
+  
+  # check that incident stunting categories do not overlap
+  test_inc_cat <- data_st %>% 
+    mutate(sum_cats = stunt_inc_birth + stunt_inc_3m + stunt_inc_6m + stunt_never) 
+  
+  assert_that(max(test_inc_cat$sum_cats) == 1,
+              msg = "Check coding of incidence; some children have
+                     more than one incident stunting indicator variable")
+  
+  data_st = data_st %>% 
+    mutate(stunt_inc_age = case_when(
+      stunt_inc_birth == 1 ~ "Birth",
+      stunt_inc_3m == 1 ~ "3 months",
+      stunt_inc_6m == 1 ~ "6 months",
+      stunt_never == 1 ~ "Never"
+    )) %>%
+    select(-c(measid, stunt_inc, agecat, stunt_inc_birth,
+              stunt_inc_3m, stunt_inc_6m, stunt_never))
+  
+  return(data_st)
+}
 
 
 
