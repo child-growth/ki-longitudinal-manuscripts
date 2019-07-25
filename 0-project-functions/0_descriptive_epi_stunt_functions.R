@@ -481,7 +481,7 @@ create_stunting_age_indicators = function(data){
     mutate(stunt= haz < -2, 
            stuntid = ifelse(stunt, measid, 9999),
            stunt_inc = 1 * (stunt & stuntid==min(stuntid))) %>%
-    select(-c(stunt, stuntid)) 
+    select(-c(stunt, stuntid, whz, measid)) 
   
   # check that incident stunting only occurs 
   # once per child
@@ -505,16 +505,16 @@ create_stunting_age_indicators = function(data){
     group_by(studyid, country, subjid) %>%
     mutate(min_haz = min(haz)) %>%
     mutate(stunt_never = ifelse(min_haz > -2, 1, 0)) %>%
-    select(-min_haz)
+    select(-c(min_haz, stunt_inc))
   
   # merge data frames with stunting indicators
-  data_st_ind <- full_join(data_st, data_never_st, by = c("studyid", "countryid","subjid"))
+  data_st_ind <- full_join(data_st, data_never_st, by = c("studyid", "country","subjid", "agedays","agecat","haz"))
   
   # check that incident stunting categories do not overlap
   test_inc_cat <- data_st_ind %>% 
     mutate(sum_cats = stunt_inc_birth + stunt_inc_3m + stunt_inc_6m + stunt_never) 
   
-  assert_that(max(test_inc_cat$sum_cats) == 1,
+  assert_that(max(test_inc_cat$sum_cats[!is.na(test_inc_cat$sum_cats)]) == 1,
               msg = "Check coding of incidence; some children have
                      more than one incident stunting indicator variable")
   
@@ -525,7 +525,7 @@ create_stunting_age_indicators = function(data){
       stunt_inc_6m == 1 ~ "6 months",
       stunt_never == 1 ~ "Never"
     )) %>%
-    select(-c(measid, stunt_inc, agecat, stunt_inc_birth,
+    select(-c(stunt_inc, agecat, stunt_inc_birth,
               stunt_inc_3m, stunt_inc_6m))
   
   return(data_st_ind)
