@@ -467,7 +467,7 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
 create_stunting_age_indicators = function(data){
   
   #Calculate onset of stunting
-  data_st <- data %>% group_by(studyid, country, subjid) %>% 
+  data_processed <- data %>% group_by(studyid, country, subjid) %>% 
     # create age categories
     mutate(agecat = case_when(
       agedays == 1 ~ "Birth",
@@ -485,14 +485,14 @@ create_stunting_age_indicators = function(data){
   
   # check that incident stunting only occurs 
   # once per child
-  test_inc = data_st %>% group_by(studyid, country, subjid) %>%
+  test_inc = data_processed %>% group_by(studyid, country, subjid) %>%
     summarise(max_inc = sum(stunt_inc))
   assert_that(max(test_inc$max_inc)==1, 
               msg = "Check coding of incidence; some children have 
                      more than one incident stunting episode")
   
   # create age-specific stunting indicators
-  data_st <- data_st %>% 
+  data_st <- data_processed %>% 
     filter(stunt_inc==1) %>%
     mutate(
       stunt_inc_birth = ifelse(stunt_inc == 1 & agecat == "Birth", 1, 0),
@@ -501,21 +501,24 @@ create_stunting_age_indicators = function(data){
     )
   
   # create never stunted category
-  data_st <- data_st %>%
+  data_never_st <- data_processed %>%
     group_by(studyid, country, subjid) %>%
     mutate(min_haz = min(haz)) %>%
     mutate(stunt_never = ifelse(min_haz > -2, 1, 0)) %>%
     select(-min_haz)
   
+  # merge data frames with stunting indicators
+  data_st_ind <- full_join(data_st, data_never_st, by = c("studyid", "countryid","subjid"))
+  
   # check that incident stunting categories do not overlap
-  test_inc_cat <- data_st %>% 
+  test_inc_cat <- data_st_ind %>% 
     mutate(sum_cats = stunt_inc_birth + stunt_inc_3m + stunt_inc_6m + stunt_never) 
   
   assert_that(max(test_inc_cat$sum_cats) == 1,
               msg = "Check coding of incidence; some children have
                      more than one incident stunting indicator variable")
   
-  data_st = data_st %>% 
+  data_st_ind = data_st_ind %>% 
     mutate(stunt_inc_age = case_when(
       stunt_inc_birth == 1 ~ "Birth",
       stunt_inc_3m == 1 ~ "3 months",
@@ -525,7 +528,7 @@ create_stunting_age_indicators = function(data){
     select(-c(measid, stunt_inc, agecat, stunt_inc_birth,
               stunt_inc_3m, stunt_inc_6m))
   
-  return(data_st)
+  return(data_st_ind)
 }
 
 
