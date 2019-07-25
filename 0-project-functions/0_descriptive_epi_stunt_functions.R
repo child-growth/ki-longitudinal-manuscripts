@@ -470,9 +470,9 @@ create_stunting_age_indicators = function(data){
   data_st <- data %>% group_by(studyid, country, subjid) %>% 
     # create age categories
     mutate(agecat = case_when(
-      agedays == 0 ~ "Birth",
-      agedays >0 & agedays<= 30.4167*3 ~ "3 months",
-      agedays >0 & agedays<= 30.4167*6 ~ "6 months",
+      agedays == 1 ~ "Birth",
+      agedays >1 & agedays<= 30.4167*3 ~ "3 months",
+      agedays >30.4167*3 & agedays<= 30.4167*6 ~ "6 months",
       TRUE ~ ""
     )) %>%
     # create id for each measurement within child
@@ -503,9 +503,9 @@ create_stunting_age_indicators = function(data){
   # create never stunted category
   data_st <- data_st %>%
     group_by(studyid, country, subjid) %>%
-    mutate(max_haz = max(haz)) %>%
-    mutate(stunt_never = ifelse(max_haz > -2, 1, 0)) %>%
-    select(-max_haz)
+    mutate(min_haz = min(haz)) %>%
+    mutate(stunt_never = ifelse(min_haz > -2, 1, 0)) %>%
+    select(-min_haz)
   
   # check that incident stunting categories do not overlap
   test_inc_cat <- data_st %>% 
@@ -523,7 +523,7 @@ create_stunting_age_indicators = function(data){
       stunt_never == 1 ~ "Never"
     )) %>%
     select(-c(measid, stunt_inc, agecat, stunt_inc_birth,
-              stunt_inc_3m, stunt_inc_6m, stunt_never))
+              stunt_inc_3m, stunt_inc_6m))
   
   return(data_st)
 }
