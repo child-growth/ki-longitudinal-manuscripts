@@ -46,6 +46,7 @@ RMAest_raw <- RMAest_raw %>% filter(!is.na(PAR))
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest_raw, outcome="continuous")
 table(is.na(RMAest_clean$intervention_level))
+table(is.na(RMAest_clean$intervention_variable))
 
 #Add reference level to label
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)

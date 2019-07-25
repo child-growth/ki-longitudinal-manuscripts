@@ -83,7 +83,7 @@ ggsave(p, file=here::here("/figures/India/wasting/WLZ_by_region.png"), width=10,
 #-------------------------------------------------------------------------------------------
 
 quantile_d_overall <- quantile_d_overall %>% mutate(region="Overall")
-df <- rbind(quantile_d_overall, quantile_d)
+df <- bind_rows(quantile_d_overall, quantile_d_country, quantile_d)
 
 df$agecat <- factor(df$agecat,
                     levels=c("Two weeks", "One month",
@@ -91,7 +91,15 @@ df$agecat <- factor(df$agecat,
 
 df <- df %>%
   arrange(agecat) %>%
-  filter(region!="Europe")
+  filter(region=="South Asia")
+df$country <- stringr::str_to_title(df$country)
+df$region <- as.character(df$region)
+df$region[!is.na(df$country)] <- df$country[!is.na(df$country)]
+table(df$region)
+
+df$region <- factor(df$region, levels=c("India", "Bangladesh", "Pakistan", "Nepal", "South Asia"))
+
+
 df <-droplevels(df)
 
 df <- df %>%
@@ -109,17 +117,14 @@ df <- df %>%
   gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "WLZ") #%>%
   #mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
-# NEED TO ADD LEGEND
 
 mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
-
   geom_smooth(aes(y = WLZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
-  facet_wrap(~region, nrow=2) +
+  facet_wrap(~region, nrow=1) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-  scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=TRUE, limits = levels(df$measure),
-                     name = 'Region') +
+  scale_color_manual(values=tableau11, name = 'Region') +
   scale_linetype_manual(name = "interval", values = c("fiftieth_perc" = "solid",
                                                       "ninetyfifth_perc" = "dashed",
                                                       "fifth_perc" = "dotted"),
@@ -138,21 +143,9 @@ mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
         legend.title = element_blank(),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"))
-# 
-# 
-# # define standardized plot names
-# mean_wlz_plot_name = create_name(
-#   outcome = "wlz",
-#   cutoff = 2,
-#   measure = "mean",
-#   population = "overall and region-stratified",
-#   location = "",
-#   age = "All ages",
-#   analysis = "India"
-# )
-# 
+
 # # save plot and underlying data
-# ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/India/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=5)
+ ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/India/wasting/fig-monthly-WLZ-SA.png"), width=14, height=5)
 
 
 
@@ -564,7 +557,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                            xlabel="Age at wasting episode onset",
                            ylabel="",
                            yrange=c(0,90),
-                           legend.pos = c(.9,.32),
+                           legend.pos = c(.85,.32),
                            facet=T){
   
   df <- d %>% filter(
@@ -653,7 +646,7 @@ rec_plot <- rec_combo_plot(d,
                            ylabel='Percent recovered\n(95% CI)',
                            facet=T,
                            yrange=c(0,100),
-                           legend.pos = c(.1,.95))
+                           legend.pos = c(.1,.9))
 
 # define standardized plot names
 rec_plot_name = create_name(
@@ -674,51 +667,71 @@ ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/India/wasting/fig-",rec
 # Persistent Wasting 
 #-------------------------------------------------------------------------------------------
 
-perswast_plot <- ki_india_plot(d,
-                              Disease="Wasting",
-                              Measure="Persistent wasting", 
-                              Birth="yes", 
-                              Severe="no", 
-                              Age_range="6 months", 
-                              Cohort="pooled",
-                              xlabel="Child age, months",
-                              ylabel = 'Proportion (%)',
-                              yrange=c(0,20),
-                              returnData=T)
-
-
-
-# define standardized plot names
-perswast_plot_name = create_name(
-  outcome = "wasting",
-  cutoff = 2,
-  measure = "persistent wasting",
-  population = "overall and region-stratified",
-  location = "",
-  age = "All ages",
-  analysis = "India"
-)
-
-# save plot and underlying data
-ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/India/wasting/fig-","perswast_plot", ".png"), width=10, height=5)
-
-
-
-# load(paste0(here(),"/results/persistent_wasting024.Rdata"))
+# perswast_plot <- ki_india_plot(d,
+#                               Disease="Wasting",
+#                               Measure="Persistent wasting", 
+#                               Birth="yes", 
+#                               Severe="no", 
+#                               Age_range="6 months", 
+#                               Cohort="pooled",
+#                               xlabel="Child age, months",
+#                               ylabel = 'Proportion (%)',
+#                               yrange=c(0,20),
+#                               returnData=T)
 # 
-# head(perswast024)
 # 
-# perswast024_plot <- ki_india_plot(perswast024,
-#                                Disease="Wasting",
-#                                Measure="Persistent wasting", 
-#                                Birth="yes", 
-#                                Severe="no", 
-#                                Age_range="6 months", 
-#                                Cohort="pooled",
-#                                xlabel="Child age, months",
-#                                ylabel = 'Proportion (%)',
-#                                yrange=c(0,20),
-#                                returnData=T)
+# 
+# # define standardized plot names
+# perswast_plot_name = create_name(
+#   outcome = "wasting",
+#   cutoff = 2,
+#   measure = "persistent wasting",
+#   population = "overall and region-stratified",
+#   location = "",
+#   age = "All ages",
+#   analysis = "India"
+# )
+# 
+# # save plot and underlying data
+# ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/India/wasting/fig-","perswast_plot", ".png"), width=10, height=5)
+
+
+
+load(paste0(here(),"/results/persistent_wasting024.Rdata"))
+
+head(perswast024)
+
+#clean country names
+perswast024$country[perswast024$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+perswast024$country <- stringr::str_to_title(perswast024$country)
+
+perswast024$region <- as.character(perswast024$region)
+perswast024$region[perswast024$cohort=="pooled" & !is.na(perswast024$country)] <- perswast024$country[perswast024$cohort=="pooled" & !is.na(perswast024$country)]
+perswast024 <- perswast024 %>% filter(region %in% c("South Asia", "India", "Bangladesh", "Pakistan", "Nepal"))
+table(perswast024$region)
+
+perswast024 <- droplevels(perswast024)
+perswast024$region <- factor(perswast024$region, levels = c("India", "Bangladesh", "Pakistan", "Nepal", "South Asia"))
+table(perswast024$region)
+
+
+p <- ggplot(perswast024,aes(y=est,x=region)) +
+  geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
+  geom_point(aes(fill=region, color=region), size = 2) +
+  geom_text(aes(x = region, y = est, label = round(est)), hjust = 1.5) +
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+  xlab("") +
+  ylab("Proportion (%)") +
+  scale_x_discrete(expand = expand_scale(add = 1)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
+  theme(axis.text.x = element_text(margin = margin(t = 0, r = 0, b = 0, l = 0),
+                                   #angle=20, vjust=0.5,
+                                   size = 14)) +
+  theme(axis.title.y = element_text(size = 14)) +
+  ggtitle("") + coord_cartesian(ylim=c(0,20))
+
+ggsave(p, file=paste0(here::here(),"/figures/India/wasting/fig-","perswast_plot", ".png"), width=10, height=5)
+
 
 
 #-------------------------------------------------------------------------------------------

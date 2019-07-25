@@ -230,7 +230,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$intervention_variable <- factor(RMAest$intervention_variable,
                                          levels=c("sex","birthlen","birthwt", "gagebrth",
                                                   "hdlvry","vagbrth",
-                                                  "enwast","anywast06","pers_wast",
+                                                  "enwast","enstunt","anywast06","pers_wast",
                                                   "earlybf","predexfd6",
                                                   "predfeed3","predfeed36","predfeed6",
                                                   "exclfeed3","exclfeed36","exclfeed6",
@@ -252,6 +252,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   
   RMAest$RFlabel[RMAest$intervention_variable=="sex"] <-  "Sex"
   RMAest$RFlabel[RMAest$intervention_variable=="enwast"] <-  "Enrolled wasted"
+  RMAest$RFlabel[RMAest$intervention_variable=="enstunt"] <-  "Enrolled stunted"
   RMAest$RFlabel[RMAest$intervention_variable=="gagebrth"] <-  "Gestational age at birth"
   RMAest$RFlabel[RMAest$intervention_variable=="predexfd6"] <-  "Excl/Pred breastfed <6mo."
   RMAest$RFlabel[RMAest$intervention_variable=="mage"] <- "Mother's age" 

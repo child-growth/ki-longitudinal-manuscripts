@@ -42,9 +42,7 @@ par_agestrat <- par %>% filter(agecat %in% c("Birth","6 months","24 months"), re
 
 par_regionstrat <- par %>% filter(agecat=="24 months", region!="Pooled", outcome_variable %in% c("LAZ", "WLZ"), !is.na(PAR))  
 
-### Anna, make 12 plots from the following data subsets (grouped together in panels of 3)
 
-#Extended data fig 3
 
 #######################
 # Age stratified plots
