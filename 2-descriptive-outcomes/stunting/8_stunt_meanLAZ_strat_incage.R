@@ -33,6 +33,7 @@ d <- d %>% filter(measurefreq == "monthly")
 # at birth, after birth to 3 months, 
 # after 3 months to 6 months, never
 #----------------------------------------
+
 d_st = create_stunting_age_indicators(data = d)
 
 #----------------------------------------
@@ -47,7 +48,8 @@ meanlaz = function(age){
   dmon = calc.monthly.agecat(d = d_st %>% filter(stunt_inc_age == age))
   #dmon = calc.monthly.agecat(d = d_st %>% filter(stunt_inc_age == "3 months"))
   
-  monthly.haz.data   <-  summary.haz(data = dmon)
+  #monthly.haz.data   <-  summary.haz(data = dmon)
+  monthly.haz.data   <-  summary.haz(d = dmon)
   monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(.)$haz.res)
   monthly.haz.cohort <-  monthly.haz.data$haz.cohort %>% 
     subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
@@ -62,7 +64,7 @@ meanlaz = function(age){
   return (monthly.haz)
 }
 
-meanlaz_age_incage = lapply(age_list, meanlaz)
+meanlaz_age_incage = lapply(age_list, function(x) meanlaz(age=x))
 
 
 #######################################################################

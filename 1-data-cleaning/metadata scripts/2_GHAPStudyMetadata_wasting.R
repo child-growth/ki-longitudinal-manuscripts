@@ -10,7 +10,7 @@ library(stringr)
 
 set_git_base_path("U:/git")
 get_git_base_path()
-setwd("U:/data/")
+#setwd("U:/data/")
 
 #astudies <- as.data.frame(get_study_list_anthro())
 astudies <- as.data.frame(get_study_list())

@@ -478,10 +478,12 @@ create_stunting_age_indicators = function(data){
     # create id for each measurement within child
     mutate(measid = seq(subjid)) %>%
     # create indicator for stunting
-    mutate(stunt= haz < -2, 
+    mutate(stunt= haz < (-2), 
            stuntid = ifelse(stunt, measid, 9999),
-           stunt_inc = 1 * (stunt & stuntid==min(stuntid))) %>%
-    select(-c(stunt, stuntid, whz, measid)) 
+           stunt_inc = 1 * (stunt & stuntid==min(stuntid)))
+  
+  data_processed <- data_processed[,-which(colnames(data_processed) %in% c("stunt", "stuntid", "whz", "measid"))]
+
   
   # check that incident stunting only occurs 
   # once per child
@@ -508,7 +510,7 @@ create_stunting_age_indicators = function(data){
     select(-c(min_haz, stunt_inc))
   
   # merge data frames with stunting indicators
-  data_st_ind <- full_join(data_st, data_never_st, by = c("studyid", "country","subjid", "agedays","agecat","haz"))
+  data_st_ind <- full_join(data_st, data_never_st, by = c("studyid", "region", "measurefreq", "country","subjid", "sex", "agedays","agecat","haz"))
   
   # check that incident stunting categories do not overlap
   test_inc_cat <- data_st_ind %>% 
