@@ -905,7 +905,7 @@ cohort.format <- function(df, lab, y, est = "NA") {
   df <- df %>% mutate(region = case_when(
     country == "BANGLADESH" | country == "INDIA" |
       country == "NEPAL" | country == "PAKISTAN" |
-      country == "PHILIPPINES" ~ "Asia",
+      country == "PHILIPPINES" ~ "South Asia",
     country == "KENYA" |
       country == "GHANA" |
       country == "BURKINA FASO" |
