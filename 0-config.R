@@ -36,7 +36,6 @@ library(lazyeval)
 library(rlang)
 library(scales)
 library(xtable)
-library(caret)
 
 
 # for parallel computing 
