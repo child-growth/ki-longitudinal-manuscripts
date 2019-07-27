@@ -17,12 +17,14 @@ levels(plotdf$stunt_inc_age) = c("Birth", "3 months", "6 months", "Never")
 plotdf %>% filter(stunt_inc_age != "Never")
 
 mean_laz_plot <- ggplot(plotdf,aes(y=est,x=agemonths, group=stunt_inc_age, color=stunt_inc_age)) +
-  geom_line(size = 1) +
+  stat_smooth(aes(fill=stunt_inc_age, color=stunt_inc_age), se=F, span = 0.5) + 
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(limits = c(-3.1, 0)) + 
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
   xlab("Child age, months")+
   ylab("Length-for-age Z-score") +
+  scale_fill_manual(values=tableau10, drop=TRUE, limits = levels(plotdf$stunt_inc_age), 
+                     name = 'Age of Incident Stunting') +
   scale_color_manual(values=tableau10, drop=TRUE, limits = levels(plotdf$stunt_inc_age), 
                      name = 'Age of Incident Stunting') +
   ggtitle("") +
