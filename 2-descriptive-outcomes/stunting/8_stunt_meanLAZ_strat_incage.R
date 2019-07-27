@@ -41,16 +41,11 @@ d_st = create_stunting_age_indicators(data = d)
 #----------------------------------------
 age_list = list("Birth", "3 months", "6 months", "Never")
 
-# dmon_incage <- lapply(age_list, function(x) 
-#   calc.monthly.agecat(d = d_st %>% filter(stunt_inc_age == x)))
-
 meanlaz = function(age){ 
   dmon = calc.monthly.agecat(d = d_st %>% filter(stunt_inc_age == age))
-  #dmon = calc.monthly.agecat(d = d_st %>% filter(stunt_inc_age == "3 months"))
-  
-  #monthly.haz.data   <-  summary.haz(data = dmon)
+
   monthly.haz.data   <-  summary.haz(d = dmon)
-  monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(.)$haz.res)
+  monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(., nmeas_threshold = 10)$haz.res)
   monthly.haz.cohort <-  monthly.haz.data$haz.cohort %>% 
     subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
     rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
@@ -61,14 +56,18 @@ meanlaz = function(age){
     monthly.haz.cohort
   )
   
+  monthly.haz$stunt_inc_age = age
+  
   return (monthly.haz)
 }
 
 meanlaz_age_incage = lapply(age_list, function(x) meanlaz(age=x))
 
+meanlaz_age_incage = bind_rows(meanlaz_age_incage[1], meanlaz_age_incage[2], meanlaz_age_incage[3], meanlaz_age_incage[4])
+
 
 #######################################################################
 # save data
 #######################################################################
-# saveRDS(meanlaz_age_incage, file = paste0(res_dir, "meanlaz_age_incage.RDS"))
+saveRDS(meanlaz_age_incage, file = paste0(res_dir, "meanlaz_age_incage.RDS"))
  

@@ -221,7 +221,7 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
 #   - haz.res: estimated random effects and CI bounds of studies grouped by age category
 #   - haz.cohort: estimated random effects and CI bounds for each specific cohort
 
-summary.haz <- function(d, method="REML"){
+summary.haz <- function(d, method="REML", nmeas_threshold = 50){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -231,14 +231,14 @@ summary.haz <- function(d, method="REML"){
   
   # count measurements per study by age
   # exclude time points if number of measurements per age
-  # in a study is <50
+  # in a study is < nmeans_threshold
   haz.data = dmn %>%
     filter(!is.na(agecat)) %>%
     group_by(studyid,country,agecat) %>%
     summarise(nmeas=sum(!is.na(haz)),
               meanhaz=mean(haz),
               varhaz=var(haz)) %>%
-    filter(nmeas>=50) 
+    filter(nmeas>=nmeas_threshold) 
   
   haz.data <- droplevels(haz.data)
   
@@ -465,7 +465,6 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
 # Output: A data frame with the indicator described above
 
 create_stunting_age_indicators = function(data){
-  
   #Calculate onset of stunting
   data_processed <- data %>% group_by(studyid, country, subjid) %>% 
     # create age categories
@@ -500,8 +499,9 @@ create_stunting_age_indicators = function(data){
       stunt_inc_birth = ifelse(stunt_inc == 1 & agecat == "Birth", 1, 0),
       stunt_inc_3m = ifelse(stunt_inc == 1 & agecat == "3 months", 1, 0),
       stunt_inc_6m = ifelse(stunt_inc == 1 & agecat == "6 months", 1, 0)
-    )
-  
+    ) %>% 
+    select(c("studyid", "subjid", "country", "region", "measurefreq", "tr", "sex", "stunt_inc_birth", "stunt_inc_3m", "stunt_inc_6m"))
+
   # create never stunted category
   data_never_st <- data_processed %>%
     group_by(studyid, country, subjid) %>%
@@ -510,8 +510,8 @@ create_stunting_age_indicators = function(data){
     select(-c(min_haz, stunt_inc))
   
   # merge data frames with stunting indicators
-  data_st_ind <- full_join(data_st, data_never_st, by = c("studyid", "region", "measurefreq", "country","subjid", "sex", "agedays","agecat","haz"))
-  
+  data_st_ind <- left_join(data_never_st, data_st, by = c("studyid", "subjid", "country", "region", "measurefreq", "tr", "sex"))
+
   # check that incident stunting categories do not overlap
   test_inc_cat <- data_st_ind %>% 
     mutate(sum_cats = stunt_inc_birth + stunt_inc_3m + stunt_inc_6m + stunt_never) 
@@ -527,8 +527,8 @@ create_stunting_age_indicators = function(data){
       stunt_inc_6m == 1 ~ "6 months",
       stunt_never == 1 ~ "Never"
     )) %>%
-    select(-c(stunt_inc, agecat, stunt_inc_birth,
-              stunt_inc_3m, stunt_inc_6m))
+    select(-c(agecat, stunt_inc_birth,
+              stunt_inc_3m, stunt_inc_6m, stunt_never))
   
   return(data_st_ind)
 }
