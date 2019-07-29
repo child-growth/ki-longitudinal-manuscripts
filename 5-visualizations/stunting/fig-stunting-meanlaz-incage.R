@@ -4,6 +4,15 @@
 
 # plot mean LAZ by age
 # by strata of age of incident stunting
+
+# Inputs:
+#   - 0-config.R
+#   - meanlaz_age_incage.RDS
+#   - meanlaz_age_incage_monthly.RDS
+
+# Outputs:
+#   - fig-meanlaz_age_incage.png
+#   - fig-meanlaz_age_incage_monthly.png
 ##########################################
 
 rm(list = ls())
