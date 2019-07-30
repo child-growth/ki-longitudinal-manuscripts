@@ -67,12 +67,18 @@ plot_mean_laz = function(data){
 }
 
 plot_nmeas = function(data){
-  plotdf_N = data %>% group_by(stunt_inc_age, agemonths) %>% summarise(N = nmeas)
+  plotdf_N = data %>% 
+    group_by(stunt_inc_age, agemonths) %>% 
+    summarise(N = nmeas) %>% mutate(
+    agemonths = ifelse(agemonths==0.5, 0, agemonths)
+  )
+  
   plotN = ggplot(plotdf_N, aes(x = agemonths, y = N, group=stunt_inc_age, color=stunt_inc_age)) + 
-    geom_col(aes(fill=stunt_inc_age, color=stunt_inc_age)) + 
+    geom_col(aes(fill=stunt_inc_age, color=stunt_inc_age), width=0.5) + 
     xlab("Child age, months") +
     ylab("N") +
-    scale_x_continuous(limits = c(0,15.25), breaks = seq(0,15.25,2), labels = seq(0,15.25,2)) +
+    scale_x_continuous(limits = c(-1,16), breaks = seq(0,15,1), labels = seq(0,15,1),
+                       expand = c(0,0)) +
     scale_fill_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
                       name = 'Age of stunting onset') +
     scale_color_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
@@ -86,7 +92,7 @@ plot_nmeas = function(data){
 # Create figure w/ all data
 ###############################
 mean_laz_line_plot = plot_mean_laz(data = plotdf)
-nmeas_plot = plot_nmeas(data = plotdf)
+nmeas_plot = plot_nmeas(data = plotdf_nmeas)
 
 mean_laz_plot = grid.arrange(mean_laz_line_plot,
                              nmeas_plot,
