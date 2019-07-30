@@ -4,6 +4,15 @@
 
 # plot mean LAZ by age
 # by strata of age of incident stunting
+
+# Inputs:
+#   - 0-config.R
+#   - meanlaz_age_incage.RDS
+#   - meanlaz_age_incage_monthly.RDS
+
+# Outputs:
+#   - fig-meanlaz_age_incage.png
+#   - fig-meanlaz_age_incage_monthly.png
 ##########################################
 
 rm(list = ls())
@@ -13,6 +22,7 @@ plotdf = readRDS(paste0(res_dir, "meanlaz_age_incage.RDS"))
 plotdf_monthly = readRDS(paste0(res_dir, "meanlaz_age_incage_monthly.RDS"))
 
 prep_data = function(data){
+  data$agecat <- as.character(data$agecat)
   data = data %>%
     filter(!is.na(agecat)) %>%
     mutate(agecat = if_else(agecat == "Two weeks", "0.5 months", agecat)) %>% 
@@ -20,7 +30,7 @@ prep_data = function(data){
     mutate(agemonths = str_replace(agecat, " months", "")) %>%
     mutate(agemonths = as.numeric(agemonths)) 
   
-  levels(data$stunt_inc_age) = c("Birth", "3 months", "6 months", "Never")
+  levels(data$stunt_inc_age) = list("Birth", "0-3 months", "3-6 months", "6-9 months","9-12 months", "12-15 months", "Never")
   return (data)
 }
 
@@ -30,17 +40,22 @@ plotdf = plotdf %>% filter(cohort == "pooled", region == "Overall")
 plotdf_monthly = prep_data(plotdf_monthly)
 plotdf_monthly = plotdf_monthly %>% filter(cohort == "pooled", region == "Overall")
 
+###################################
+# Generate plots
+###################################
+cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 plot_mean_laz = function(data){
   mean_laz_plot <- ggplot(data,aes(y=est,x=agemonths, group=stunt_inc_age, color=stunt_inc_age)) +
     stat_smooth(aes(fill=stunt_inc_age, color=stunt_inc_age), se=F, span = 0.5) + 
     geom_hline(yintercept = 0, colour = "black") +
-    scale_y_continuous(limits = c(min(plotdf$est) - 0.01, 0)) + 
-    scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
+    scale_y_continuous(limits = c(min(plotdf$est) - 0.01, max(plotdf$est) + 0.01)) + 
+    scale_x_continuous(limits = c(0,15), breaks = seq(0,15,2), labels = seq(0,15,2)) + 
     xlab("Child age, months")+
     ylab("Mean length-for-age Z-score") +
-    scale_fill_manual(values=tableau10, drop=TRUE, limits = levels(data$stunt_inc_age), 
+    scale_fill_manual(values=cbPalette, drop=TRUE, limits = levels(data$stunt_inc_age), 
                        name = 'Age of stunting onset') +
-    scale_color_manual(values=tableau10, drop=TRUE, limits = levels(data$stunt_inc_age), 
+    scale_color_manual(values=cbPalette, drop=TRUE, limits = levels(data$stunt_inc_age), 
                        name = 'Age of stunting onset') +
     ggtitle("") +
     theme(legend.position="bottom")
@@ -54,10 +69,10 @@ plot_nmeas = function(data){
     geom_col(aes(fill=stunt_inc_age, color=stunt_inc_age)) + 
     xlab("Child age, months") +
     ylab("N") +
-    scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
-    scale_fill_manual(values=tableau10, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
+    scale_x_continuous(limits = c(0,15.25), breaks = seq(0,15.25,2), labels = seq(0,15.25,2)) +
+    scale_fill_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
                       name = 'Age of stunting onset') +
-    scale_color_manual(values=tableau10, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
+    scale_color_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
                        name = 'Age of stunting onset')
   
   return(plotN)

@@ -4,6 +4,16 @@
 
 # calculate mean LAZ by age
 # by strata of age of incident stunting
+
+# Inputs:
+#   - 0-config.R
+#   - 0_descriptive_epi_shared_functions.R
+#   - 0_descriptive_epi_stunt_functions.R
+#   - stunting_data.rds
+
+# Outputs:
+#   - meanlaz_age_incage.RDS
+#   - meanlaz_age_incage_monthly.RDS
 ##########################################
 
 rm(list=ls())
@@ -18,28 +28,41 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 #-------------------------------------------
 # Load and pre-process raw stunting data
 #-------------------------------------------
+
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
-#######################################################################
-# Analyze data
-#######################################################################
+#----------------------------------------
+# subset to monthly cohorts, drop data after 15 months
+#----------------------------------------
+
+d_st <- d %>% filter(measurefreq == "monthly") %>% filter(agedays <= 30.4167*15.5)
+
 #----------------------------------------
 # Create indicator for incident stunting
 # at birth, after birth to 3 months, 
 # after 3 months to 6 months, never
 #----------------------------------------
 
-d_st = create_stunting_age_indicators(data = d)
+d_st = create_stunting_age_indicators(data = d_st)
 
 #----------------------------------------
-# subset to monthly cohorts
+# subset to studies that have monthly measurement
+# up to 24 months
 #----------------------------------------
-d_st_monthly <- d_st %>% filter(measurefreq == "monthly")
+study24 = c("ki0047075b-MAL-ED", "ki1000108-CMC-V-BCS-2002", "ki1000108-IRC", 
+            "ki1101329-Keneba", "ki1113344-GMS-Nepal", "ki1114097-CMIN", 
+            "ki1114097-CONTENT", "ki1017093b-PROVIDE")
+
+d_st_monthly <- d_st %>% filter(studyid %in% study24)
+
+#######################################################################
+# Analyze data
+#######################################################################
 
 #----------------------------------------
 # monthly mean haz within incident age categories
 #----------------------------------------
-age_list = list("Birth", "3 months", "6 months", "Never")
+age_list = list("Never", "Birth", "0-3 months", "3-6 months", "6-9 months","9-12 months", "12-15 months")
 
 meanlaz = function(data, age){ 
   dmon = calc.monthly.agecat(d = data %>% filter(stunt_inc_age == age))
@@ -66,10 +89,10 @@ meanlaz = function(data, age){
 #######################################################################
 
 meanlaz_age_incage = lapply(age_list, function(x) meanlaz(data = d_st, age=x))
-meanlaz_age_incage = bind_rows(meanlaz_age_incage[1], meanlaz_age_incage[2], meanlaz_age_incage[3], meanlaz_age_incage[4])
+meanlaz_age_incage = as.data.frame(do.call(rbind, meanlaz_age_incage))
 saveRDS(meanlaz_age_incage, file = paste0(res_dir, "meanlaz_age_incage.RDS"))
 
 meanlaz_age_incage_monthly = lapply(age_list, function(x) meanlaz(data = d_st_monthly, age=x))
-meanlaz_age_incage_monthly = bind_rows(meanlaz_age_incage_monthly[1], meanlaz_age_incage_monthly[2], meanlaz_age_incage_monthly[3], meanlaz_age_incage_monthly[4])
+meanlaz_age_incage_monthly = as.data.frame(do.call(rbind, meanlaz_age_incage_monthly))
 saveRDS(meanlaz_age_incage_monthly, file = paste0(res_dir, "meanlaz_age_incage_monthly.RDS"))
  
