@@ -456,7 +456,7 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
 #              or was never stunted 
 # Arguments/Options:
 # d: a data set that contains the following attributes:
-#   - agedays
+#   - agedays OR agecat
 #   - studyid
 #   - country
 #   - subjid
@@ -464,16 +464,19 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
 #
 # Output: A data frame with the indicator described above
 
-create_stunting_age_indicators = function(data){
+create_stunting_age_indicators = function(data, create_agecats = TRUE){
+  # create age categories, if needed
+  if (create_agecats){
+    data = create_age_categories(data)
+  } else {
+    data = data %>% 
+      group_by(studyid, country, subjid, sex, agecat) %>%
+      mutate(haz = t1y) %>% 
+      select(c(studyid, country, subjid, sex, agecat, haz, region, tr, measurefreq))
+  }
+
   #Calculate onset of stunting
   data_processed <- data %>% group_by(studyid, country, subjid) %>% 
-    # create age categories
-    mutate(agecat = case_when(
-      agedays == 1 ~ "Birth",
-      agedays >1 & agedays<= 30.4167*3 ~ "3 months",
-      agedays >30.4167*3 & agedays<= 30.4167*6 ~ "6 months",
-      TRUE ~ ""
-    )) %>%
     # create id for each measurement within child
     mutate(measid = seq(subjid)) %>%
     # create indicator for stunting
@@ -483,7 +486,6 @@ create_stunting_age_indicators = function(data){
   
   data_processed <- data_processed[,-which(colnames(data_processed) %in% c("stunt", "stuntid", "whz", "measid"))]
 
-  
   # check that incident stunting only occurs 
   # once per child
   test_inc = data_processed %>% group_by(studyid, country, subjid) %>%
@@ -497,16 +499,19 @@ create_stunting_age_indicators = function(data){
     filter(stunt_inc==1) %>%
     mutate(
       stunt_inc_birth = ifelse(stunt_inc == 1 & agecat == "Birth", 1, 0),
-      stunt_inc_3m = ifelse(stunt_inc == 1 & agecat == "3 months", 1, 0),
-      stunt_inc_6m = ifelse(stunt_inc == 1 & agecat == "6 months", 1, 0)
+      stunt_inc_3m = ifelse(stunt_inc == 1 & agecat == "0-3 months", 1, 0),
+      stunt_inc_6m = ifelse(stunt_inc == 1 & agecat == "3-6 months", 1, 0),
+      stunt_inc_9m = ifelse(stunt_inc == 1 & agecat == "6-9 months", 1, 0),
+      stunt_inc_12m = ifelse(stunt_inc == 1 & agecat == "9-12 months", 1, 0),
+      stunt_inc_15m = ifelse(stunt_inc == 1 & agecat == "12-15 months", 1, 0)
     ) %>% 
-    select(c("studyid", "subjid", "country", "region", "measurefreq", "tr", "sex", "stunt_inc_birth", "stunt_inc_3m", "stunt_inc_6m"))
+    select(c("studyid", "subjid", "country", "region", "measurefreq", "tr", "sex", "stunt_inc_birth", "stunt_inc_3m", "stunt_inc_6m", "stunt_inc_9m", "stunt_inc_12m", "stunt_inc_15m"))
 
   # create never stunted category
   data_never_st <- data_processed %>%
     group_by(studyid, country, subjid) %>%
     mutate(min_haz = min(haz)) %>%
-    mutate(stunt_never = ifelse(min_haz > -2, 1, 0)) %>%
+    mutate(stunt_never = ifelse(min_haz >= -2, 1, 0)) %>%
     select(-c(min_haz, stunt_inc))
   
   # merge data frames with stunting indicators
@@ -514,7 +519,7 @@ create_stunting_age_indicators = function(data){
 
   # check that incident stunting categories do not overlap
   test_inc_cat <- data_st_ind %>% 
-    mutate(sum_cats = stunt_inc_birth + stunt_inc_3m + stunt_inc_6m + stunt_never) 
+    mutate(sum_cats = stunt_inc_birth + stunt_inc_3m + stunt_inc_6m + stunt_inc_9m + stunt_inc_12m + stunt_never) 
   
   assert_that(max(test_inc_cat$sum_cats[!is.na(test_inc_cat$sum_cats)]) == 1,
               msg = "Check coding of incidence; some children have
@@ -523,16 +528,33 @@ create_stunting_age_indicators = function(data){
   data_st_ind = data_st_ind %>% 
     mutate(stunt_inc_age = case_when(
       stunt_inc_birth == 1 ~ "Birth",
-      stunt_inc_3m == 1 ~ "3 months",
-      stunt_inc_6m == 1 ~ "6 months",
+      stunt_inc_3m == 1 ~ "0-3 months",
+      stunt_inc_6m == 1 ~ "3-6 months",
+      stunt_inc_9m == 1 ~ "6-9 months",
+      stunt_inc_12m == 1 ~ "9-12 months",
+      stunt_inc_15m == 1 ~ "12-15 months",
       stunt_never == 1 ~ "Never"
     )) %>%
     select(-c(agecat, stunt_inc_birth,
-              stunt_inc_3m, stunt_inc_6m, stunt_never))
-  
+              stunt_inc_3m, stunt_inc_6m, stunt_inc_9m, stunt_inc_12m, stunt_inc_15m, stunt_never))
+
   return(data_st_ind)
 }
 
+create_age_categories = function(data){
+  data_with_agecat = data %>% group_by(studyid, country, subjid) %>% 
+    # create age categories
+    mutate(agecat = case_when(
+      agedays == 1 ~ "Birth",
+      agedays >1 & agedays<= 30.4167*3 ~ "0-3 months",
+      agedays >30.4167*3 & agedays<= 30.4167*6 ~ "3-6 months",
+      agedays >30.4167*6 & agedays<= 30.4167*9 ~ "6-9 months",
+      agedays >30.4167*9 & agedays<= 30.4167*12 ~ "9-12 months",
+      agedays >30.4167*12 & agedays<= 30.4167*15 ~ "12-15 months",
+      TRUE ~ ""
+    ))
+  return (data_with_agecat)
+}
 
 
 
