@@ -47,10 +47,13 @@ cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 
 plot_mean_laz = function(data){
   mean_laz_plot <- ggplot(data,aes(y=est,x=agemonths, group=stunt_inc_age, color=stunt_inc_age)) +
-    stat_smooth(aes(fill=stunt_inc_age, color=stunt_inc_age), se=F, span = 0.5) + 
+    geom_ribbon(aes(ymin = lb, ymax = ub, fill = stunt_inc_age), alpha = 0.5, color = NA)+
+    geom_line(aes(fill=stunt_inc_age, color=stunt_inc_age), se=F, span = 0.5) + 
     geom_hline(yintercept = 0, colour = "black") +
-    scale_y_continuous(limits = c(min(plotdf$est) - 0.01, max(plotdf$est) + 0.01)) + 
-    scale_x_continuous(limits = c(0,15), breaks = seq(0,15,2), labels = seq(0,15,2)) + 
+    scale_y_continuous(limits = c(min(plotdf$est) - 0.5, max(plotdf$est) + 0.5),
+                       expand = c(0, 0)) + 
+    scale_x_continuous(limits = c(0,15), breaks = seq(0,15,1), labels = seq(0,15,1),
+                       expand = c(0, 0)) + 
     xlab("Child age, months")+
     ylab("Mean length-for-age Z-score") +
     scale_fill_manual(values=cbPalette, drop=TRUE, limits = levels(data$stunt_inc_age), 
@@ -58,7 +61,7 @@ plot_mean_laz = function(data){
     scale_color_manual(values=cbPalette, drop=TRUE, limits = levels(data$stunt_inc_age), 
                        name = 'Age of stunting onset') +
     ggtitle("") +
-    theme(legend.position="bottom")
+    theme(legend.position="none")
   
   return(mean_laz_plot)
 }
@@ -73,7 +76,8 @@ plot_nmeas = function(data){
     scale_fill_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
                       name = 'Age of stunting onset') +
     scale_color_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
-                       name = 'Age of stunting onset')
+                       name = 'Age of stunting onset')+
+    theme(legend.position="bottom")
   
   return(plotN)
 }
@@ -87,7 +91,7 @@ nmeas_plot = plot_nmeas(data = plotdf)
 mean_laz_plot = grid.arrange(mean_laz_line_plot,
                              nmeas_plot,
                              nrow = 2,
-                             heights = c(4, 1.25))
+                             heights = c(5, 3))
 
 ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"), width=10, height=6)
 
