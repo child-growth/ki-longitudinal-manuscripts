@@ -74,7 +74,7 @@ wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m0, wastprev_m1, w
                       meanWHZ_m11, meanWHZ_m12, meanWHZ_m13, meanWHZ_m14,
                       meanWHZ_m15, meanWHZ_m16, meanWHZ_m17, meanWHZ_m18,
                       meanWHZ_m19, meanWHZ_m20, meanWHZ_m21, meanWHZ_m22,
-                      meanWHZ_m23, meanWHZ_m24)
+                      meanWHZ_m23, meanWHZ_m24, start_year)
 md <- merge(md, wmd, by=c('study_id', 'cohortnum'), all = TRUE)
 
 #drop mal-ed Pakistan
