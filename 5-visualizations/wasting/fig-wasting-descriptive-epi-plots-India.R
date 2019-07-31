@@ -92,14 +92,14 @@ df$agecat <- factor(df$agecat,
 
 df <- df %>%
   arrange(agecat) %>%
-  filter(region=="South Asia")
+  filter(region=="South Asia" | region=="Africa")
 df$country <- stringr::str_to_title(df$country)
 df$region <- as.character(df$region)
 df$region[!is.na(df$country)] <- df$country[!is.na(df$country)]
 table(df$region)
 
-df$region <- factor(df$region, levels=c("India", "Bangladesh", "Pakistan", "Nepal", "South Asia"))
-
+df$region <- factor(df$region, levels=c("India", "Bangladesh", "Pakistan", "Nepal", "Africa"))
+df <- df %>% filter(!is.na(region))
 
 df <-droplevels(df)
 
