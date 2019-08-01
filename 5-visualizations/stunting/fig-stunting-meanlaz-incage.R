@@ -95,6 +95,13 @@ plot_nmeas = function(data){
 ###############################
 mean_laz_line_plot = plot_mean_laz(data = plotdf)
 nmeas_plot = plot_nmeas(data = plotdf)
+blank = ggplot() + theme_void()
+
+mean_laz_line_plot = grid.arrange(blank,
+                                  mean_laz_line_plot,
+                                  blank, 
+                                  ncol = 3,
+                                  widths = c(1.3, 16.2, 1))
 
 mean_laz_plot = grid.arrange(mean_laz_line_plot,
                              nmeas_plot,
@@ -108,10 +115,18 @@ ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"
 #####################################
 mean_laz_line_plot_monthly = plot_mean_laz(data = plotdf_monthly)
 nmeas_plot_monthly = plot_nmeas(data = plotdf_monthly)
+blank = ggplot() + theme_void()
+
+mean_laz_line_plot_monthly = grid.arrange(blank,
+                                          mean_laz_line_plot_monthly,
+                                          blank, 
+                                          ncol = 3,
+                                          widths = c(1.3, 16.2, 1))
 
 mean_laz_plot_monthly = grid.arrange(mean_laz_line_plot_monthly,
                              nmeas_plot_monthly,
                              nrow = 2,
-                             heights = c(4, 1.25))
+                             heights = c(5, 3))
+
 ggsave(mean_laz_plot_monthly, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_monthly.png"), width=10, height=6)
 
