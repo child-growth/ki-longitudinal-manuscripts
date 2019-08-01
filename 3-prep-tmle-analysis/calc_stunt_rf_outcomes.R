@@ -14,7 +14,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
-load("U:/Data/Stunting/rf_stunting_data.RData")
+d <- readRDS(rf_stunting_data_path)
 
 #--------------------------------------
 # Calculate cumulative incidence of

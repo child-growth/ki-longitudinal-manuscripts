@@ -20,14 +20,13 @@ cov <- cov %>% subset(., select= -c(pers_wast, enwast, anywast06))
 
 
 #Load wasting measures
-load("wast_int_outcomes.rdata")
+load("mort_exposures.rdata")
 
 wast_ci_0_6 <- wast_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_wasted06, ever_swasted06, pers_wasted06, ever_stunted06, ever_sstunted06)) 
-wast_ci_0_24 <- wast_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_wasted024, ever_swasted024, pers_wasted024, ever_stunted024, ever_sstunted024))
+wast_ci_6_24 <- wast_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_wasted624, ever_swasted624, pers_wasted624, ever_stunted624, ever_sstunted624))
 wast_ci_0_6_no_birth <- wast_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_wasted06_noBW, ever_swasted06_noBW)) 
-wast_ci_0_24_no_birth <- wast_ci_0_24_no_birth %>% subset(., select=c(studyid,country,subjid,ever_wasted024_noBW, ever_swasted024_noBW))
 underweight_ci_0_6 <- underweight_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_underweight06, ever_sunderweight06)) 
-underweight_ci_0_24 <- underweight_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_underweight024, ever_sunderweight024))
+underweight_ci_6_24 <- underweight_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_underweight624, ever_sunderweight624))
 
 #convert subjid to character for the merge with mortality dataset
 mort$subjid <- as.character(mort$subjid)

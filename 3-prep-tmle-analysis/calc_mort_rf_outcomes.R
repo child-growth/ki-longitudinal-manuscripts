@@ -1,14 +1,17 @@
 
-setwd("U:/UCB-SuperLearner/Manuscript analysis data/")
+
+rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
 
 mort <- readRDS(paste0(ghapdata_dir,"mortality.rds"))
 
 
 #load outcomes
-load("wast_prev.RData")
-load("wast_cuminc.rdata")
-load("wast_cuminc_nobirth.rdata")
-load("pers_wast.rdata")
+load(paste0(ghapdata_dir,"wast_prev.RData"))
+load(paste0(ghapdata_dir,"wast_cuminc.rdata"))
+load(paste0(ghapdata_dir,"wast_cuminc_nobirth.rdata"))
+load(paste0(ghapdata_dir,"pers_wast.rdata"))
+
 
 cuminc_nobirth <- cuminc_nobirth %>% 
   rename(ever_wasted_no_birth=ever_wasted) %>% mutate(agecat=as.character(agecat)) %>%
@@ -39,9 +42,9 @@ d <- bind_rows(d, prev)
 setwd("U:/ucb-superlearner/Manuscript analysis data/")
 
 #load outcomes
-load("st_prev_rf_outcomes.rdata")
-load("st_cuminc_rf_outcomes.rdata")
-load("st_cuminc_rf_outcomes_nobirth.rdata")
+load("st_prev_outcomes.rdata")
+load("st_cuminc_outcomes.rdata")
+load("st_cuminc_outcomes_nobirth.rdata")
 
 
 prev$subjid <- as.character(prev$subjid)

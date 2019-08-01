@@ -13,7 +13,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
-load("U:/ucb-superlearner/Manuscript analysis data/Wasting_inc_rf_data.RData")
+load(paste0(ghapdata_dir,"Wasting_inc_rf_data.RData"))
 
 
 #Drop TR so it doesn't affect merge with covariates
@@ -214,7 +214,6 @@ wast_rec_0_24 = d6 %>% ungroup() %>%
   mutate(agecat="0-24 months") %>% ungroup() 
 
 rec <- bind_rows(wast_rec_0_6, wast_rec_6_24, wast_rec_0_24)
-
 
 
 #--------------------------------------
