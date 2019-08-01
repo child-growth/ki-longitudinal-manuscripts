@@ -26,8 +26,8 @@ source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
 #-----------------------------------
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
-md <- readRDS('results/GHAP_metadata_stunting.rds')
-wmd <- readRDS('results/GHAP_metadata_wasting.RDS')
+md <- readRDS(here('results/GHAP_metadata_stunting.rds'))
+wmd <- readRDS(here('results/GHAP_metadata_wasting.RDS'))
 
 #Drop non-included studies
 md <- mark_measure_freq(md)

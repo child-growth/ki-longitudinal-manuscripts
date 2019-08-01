@@ -22,6 +22,14 @@ d_noBW <- d_noBW %>% filter(measurefreq=="monthly")
 save(d, d_noBW, file=paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
 
+load(paste0(ghapdata_dir, "mortality_anthro_data.RData"))
+d_mort <- wast_mort %>% group_by(studyid, country) %>% do(WastIncCalc(.))
+d_mort_noBW <- wast_mort %>% group_by(studyid, country) %>% do(WastIncCalc(., dropBornWasted=T))
+d_waz_mort <- waz_mort %>% subset(., select = -c(haz, whz, muaz)) %>% rename(whz=waz) %>% 
+              group_by(studyid, country) %>% do(WastIncCalc(.)) 
+d_waz_mort <- d_waz_mort %>% rename(waz=whz, underweight_inc = wast_inc, sunderweight_inc = sevwast_inc)
+
+save(d_mort, d_mort_noBW, d_waz_mort, file=paste0(ghapdata_dir, "Wasting_mort_inc_data.RData"))
 
 
 

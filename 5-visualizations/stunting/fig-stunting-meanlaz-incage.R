@@ -46,6 +46,8 @@ plotdf_monthly = plotdf_monthly %>% filter(cohort == "pooled", region == "Overal
 cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 plot_mean_laz = function(data){
+  data = data %>% mutate(agemonths = ifelse(agemonths == 0.5, 0, agemonths))
+  
   mean_laz_plot <- ggplot(data,aes(y=est,x=agemonths, group=stunt_inc_age, color=stunt_inc_age)) +
     geom_ribbon(aes(ymin = lb, ymax = ub, fill = stunt_inc_age), alpha = 0.5, color = NA)+
     geom_line(aes(fill=stunt_inc_age, color=stunt_inc_age), se=F, span = 0.5) + 
@@ -92,7 +94,7 @@ plot_nmeas = function(data){
 # Create figure w/ all data
 ###############################
 mean_laz_line_plot = plot_mean_laz(data = plotdf)
-nmeas_plot = plot_nmeas(data = plotdf_nmeas)
+nmeas_plot = plot_nmeas(data = plotdf)
 
 mean_laz_plot = grid.arrange(mean_laz_line_plot,
                              nmeas_plot,

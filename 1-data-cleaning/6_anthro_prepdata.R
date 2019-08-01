@@ -12,7 +12,8 @@ source(paste0(here::here(), "/0-config.R"))
 #--------------------------------------------
 
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
-
+dim(d)
+length(unique(paste0(d$studyid,d$country,d$subjid)))
 
 
 #--------------------------------------------
@@ -38,12 +39,15 @@ table(d$studyid,d$country)
 # drop unrealistic measures depending on 
 # anthropometry measure
 #--------------------------------------------
+nobs <- nrow(d)
 stunt_mort <- d %>% filter(haz >= -6 & haz <=6) %>%
   subset(., select = - c(whz, waz, muaz)) %>%
   arrange(studyid,subjid,agedays) %>%
   group_by(studyid,subjid) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
+#Observations dropped
+nobs - nrow(stunt_mort)
 
 wast_mort <- d %>% filter(whz >= -5 & whz <=5) %>%
   subset(., select = - c(haz, waz, muaz)) %>%
@@ -51,18 +55,22 @@ wast_mort <- d %>% filter(whz >= -5 & whz <=5) %>%
   group_by(studyid,subjid) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
+nobs - nrow(wast_mort)
 
 waz_mort <- d %>% filter(waz >= -5 & waz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   group_by(studyid,subjid) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
+nobs - nrow(waz_mort)
 
 co_mort <- d %>% filter(haz >= -6 & haz <=6 & whz >= -5 & whz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   group_by(studyid,subjid) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
+nobs - nrow(co_mort)
+
 
 #--------------------------------------------
 # Save datasets with yearly studies for 

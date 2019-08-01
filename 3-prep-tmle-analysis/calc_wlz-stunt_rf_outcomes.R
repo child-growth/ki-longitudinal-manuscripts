@@ -10,8 +10,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
-
-load("U://ucb-superlearner/Manuscript analysis data/rf_co-occurrence_data.RData")
+d <- readRDS(rf_co_occurrence_path)
 
 
 #Subset analysis to monthly studies
