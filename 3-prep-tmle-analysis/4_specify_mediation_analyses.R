@@ -17,7 +17,7 @@ adjustment_sets <- list(
          "single",
          "W_nrooms","W_nhh","W_nchldlt5",
          "trth2o","cleanck","impfloor","impsan","safeh20",
-         "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity"),   
+         "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),   
   
   fage=c("arm","W_mage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
          "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
@@ -25,14 +25,14 @@ adjustment_sets <- list(
          "W_nrooms","W_nhh","W_nchldlt5",
          "brthmon",
          "trth2o","cleanck","impfloor","impsan","safeh20",
-         "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity"),     
+         "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),     
   
   mhtcm=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
           "W_fhtcm",
           "single",
           "W_nrooms",
           "trth2o","cleanck","impfloor","impsan","safeh20",
-          "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity"),    
+          "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),    
   
   mwtkg=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
           "W_fhtcm",
@@ -40,7 +40,7 @@ adjustment_sets <- list(
           "W_nrooms","W_nhh","W_nchldlt5",
           "brthmon","W_parity",
           "trth2o","cleanck","impfloor","impsan","safeh20",
-          "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity"),
+          "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),
   
   mbmi=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
          "W_fhtcm",
@@ -48,20 +48,20 @@ adjustment_sets <- list(
          "W_nrooms","W_nhh","W_nchldlt5",
          "brthmon","W_parity",
          "trth2o","cleanck","impfloor","impsan","safeh20",
-         "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity"),      
+         "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),      
   
   single=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
            "W_nrooms","W_nhh","W_nchldlt5",
            "trth2o","cleanck","impfloor","impsan","safeh20",
-           "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity"),    
+           "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),    
   
   fhtcm=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
           "W_mhtcm","W_mwtkg","W_bmi",
           "single",
           "W_nrooms",
           "trth2o","cleanck","impfloor","impsan","safeh20",
-          "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity"),     
+          "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),     
   
   meducyrs=c("arm", "W_mage", "W_fage", "feducyrs", "hhwealth_quart",
              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
@@ -69,7 +69,7 @@ adjustment_sets <- list(
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
              "trth2o","cleanck","impfloor","impsan","safeh20",
-             "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity"),
+             "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),
   
   feducyrs=c("arm", "W_mage", "W_fage", "meducyrs",  "hhwealth_quart", 
              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
@@ -77,7 +77,7 @@ adjustment_sets <- list(
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
              "trth2o","cleanck","impfloor","impsan","safeh20",
-             "W_gagebrth","W_birthwt","W_birthlen","enstunt","enwast","vagbrth","hdlvry","parity")
+             "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity")
 )
 
 
@@ -109,8 +109,8 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 
 
 
-haz <- specify_rf_analysis(A=Avars, Y="haz", file="st_meanZ_rf.Rdata")
-whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
+haz <- specify_rf_analysis(A=Avars, Y="haz", file="mediation_HAZ.Rdata")
+whz <- specify_rf_analysis(A=Avars, Y="whz", file="mediation_WHZ.Rdata")
 
 
 
@@ -118,8 +118,8 @@ analyses <- rbind(haz, whz)
 
 
 #Save analysis specification
-save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/mediation.rdata"))
-save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/mediation.rdata")
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/mediation.RData"))
+save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/mediation.RData")
 
 
 
