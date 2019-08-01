@@ -46,17 +46,24 @@ dim(d)
 summary(d$maxage)
 summary(d$maxage[d$dead==1])
 
+#Create a mortality after 6 month variable
+d$dead624 <- d$dead 
+d$dead624[d$agedth < 6*30.4167 | (is.na(d$agedth) & d$maxage<6*30.4167)] <- NA
+table(d$dead)
+table(d$dead624)
 
 d$subjid <- as.character(d$subjid)
 
 
 mort <- d
 mort$dead[is.na(mort$dead)] <-0
+mort$dead624[is.na(mort$dead624)] <-0
 mort$cohort <- paste0(mort$studyid," ", mort$country)
 
 #drop cohorts with no mortality info
 mort <- mort %>% group_by(cohort) %>% mutate(tot_dead=sum(dead, na.rm=T)) %>% filter(tot_dead>0)
 table(mort$cohort, mort$dead)
+table(mort$cohort, mort$dead624)
 
 
 saveRDS(mort, mortality_path)

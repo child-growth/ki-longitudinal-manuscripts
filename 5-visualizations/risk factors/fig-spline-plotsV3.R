@@ -5,7 +5,7 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_function
 
 
 #Load haz and whz data
-load("U:/ucb-superlearner/data/co-occurrence_data.RData")
+d <- readRDS(rf_co_occurrence_path)
 d <- d %>% subset(., select=-c(tr))
 
 
@@ -216,33 +216,6 @@ offset_fun <- function(d, Y="haz", Avar, cen=1){
 
 
 
-
-
-# predlist <- spline_meta(d, Y="whz", Avar="mwtkg")
-# 
-# plotdf <- create_plotdf(predlist)
-# 
-# p <- ggplot() + 
-#   geom_line(data=plotdf, aes(x=agedays, y=est, group=level, color=level), size=2) +
-#   geom_ribbon(data=plotdf, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-#   scale_color_manual(values=tableau10[c(10,9,7)], name = paste0( Avar)) +
-#   scale_fill_manual(values=tableau10[c(10,9,7)], name = paste0( Avar)) +
-#   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-#                      breaks = 0:24*30.41, labels = 0:24) +
-#   coord_cartesian(ylim=c(-2,1)) +
-#   xlab("Child age in months") + ylab("Mean LAZ") + 
-#   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
-#   theme(legend.position = "right")
-# print(p)
-
-
-#Spot check by comparing to individual cohorts
-# pstrat <- ggplot(d, aes(x=agedays, y=whz, group=mwtkg, color=mwtkg)) +
-#    geom_smooth()+
-#   facet_wrap(~country) + theme_bw()
-# pstrat
-
-
 #------------------------------------------------------------------------------------------------
 # WLZ- maternal weight
 #------------------------------------------------------------------------------------------------
@@ -278,7 +251,7 @@ p1 <- ggplot() +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) +
+  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") +
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
@@ -326,7 +299,7 @@ p2 <- ggplot() +
   scale_fill_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) + 
+  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
@@ -421,28 +394,91 @@ print(p4)
 
 
 
+#------------------------------------------------------------------------------------------------
+# LAZ- maternal BMI
+#------------------------------------------------------------------------------------------------
+
+#Normal weight   Underweight 
+
+predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="haz", Avar="mbmi", overall=T, cen=1)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
+predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="haz", Avar="mbmi", overall=T, cen=1)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
+
+plotdf_laz_mbmi <- rbind(plotdf1,plotdf2)
+
+offsetZ_laz_mbmi <- offset_fun(d, Y="haz", Avar="mbmi", cen=1)
 
 
-# p1df <- rbind(data.frame(plotdf_wlz_mwtkg, measure="mwtkg"), data.frame(plotdf_wlz_mhtcm, measure="mhtcm"))
-# 
-# p1 <- ggplot() + 
-#   geom_line(data=p1df, aes(x=agedays, y=est, group=level, color=level), size=2) +
-#   facet_wrap(~measure) +
-#   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-#   scale_color_manual(values=tableau10[c(10,9,6,5,7,8)], name = paste0( Avarwt)) +
-#   scale_fill_manual(values=tableau10[c(10,9,6,5,7,8)], name = paste0( Avarwt)) +
-#   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-#                      breaks = 0:24*30.41, labels = 0:24) +
-#   scale_y_continuous(limits=c(-0.8, 0.4), breaks = seq(-0.8, 0.4, 0.2), labels = seq(-0.8, 0.4, 0.2)) + 
-#   xlab("Child age in months") + ylab("Mean WLZ") + 
-#   #coord_cartesian(ylim=c(-2,1)) +
-#   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
-#   theme(legend.position = "right")
-# print(p1)
+plotdf_laz_mbmi <- left_join(plotdf_laz_mbmi, offsetZ_laz_mbmi, by="level")
+plotdf_laz_mbmi <- plotdf_laz_mbmi %>% 
+  mutate(est= est + offset,
+         ci.lb= ci.lb + offset,
+         ci.ub= ci.ub + offset)
+
+plotdf_laz_mbmi <- plotdf_laz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
+
+
+Avarwt="Maternal BMI"
+
+brown_color_gradient = c(tableau10[6], "#c99a6b")
+
+p5 <- ggplot() +
+  geom_line(data=plotdf_laz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
+  scale_color_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
+  scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
+  scale_x_continuous(limits=c(1,730), expand = c(0, 0),
+                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
+  xlab("Child age in months") + ylab("Mean LAZ") +
+  #coord_cartesian(ylim=c(-2,1)) +
+  ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
+  theme(legend.position = c(0.8,0.9))
+
+print(p5)
 
 
 
 
+#------------------------------------------------------------------------------------------------
+# WLZ- maternal BMI
+#------------------------------------------------------------------------------------------------
+
+predlist1 <- predlist2 <- predlist3 <- NULL
+
+table(d$mbmi)
+predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=1)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
+predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=1)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
+
+plotdf_wlz_mbmi <- rbind(plotdf1,plotdf2)
+
+offsetZ_wlz_mbmi <- offset_fun(d, Y="whz", Avar="mbmi", cen=1)
+
+
+plotdf_wlz_mbmi <- left_join(plotdf_wlz_mbmi, offsetZ_wlz_mbmi, by="level")
+plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% 
+  mutate(est= est + offset,
+         ci.lb= ci.lb + offset,
+         ci.ub= ci.ub + offset)
+
+plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
+
+Avar="Maternal BMI"
+
+p6 <- ggplot() + 
+  geom_line(data=plotdf_wlz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
+  scale_color_manual(values=brown_color_gradient, name = paste0( Avar)) +
+  scale_fill_manual(values=brown_color_gradient, name = paste0( Avar)) +
+  scale_x_continuous(limits=c(1,730), expand = c(0, 0),
+                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
+  xlab("Child age in months") + ylab("Mean WLZ") + 
+  #coord_cartesian(ylim=c(-2,1)) +
+  ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
+  theme(legend.position = c(0.8,0.9))
+print(p6)
 
 
 
@@ -458,11 +494,11 @@ print(p4)
 # Combine plot objects
 
 require(cowplot)
-p_grid <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+p_grid <- plot_grid(p1, p2, p3, p4, p5, p6, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
 
 ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid.png"), width=14, height=14)
 
 
 #Save plot objects
-save(p1, p2, p3, p4,  file=paste0(here(),"/results/rf_spline_objects.Rdata"))
+save(p1, p2, p3, p4, p5, p6,  file=paste0(here(),"/results/rf_spline_objects.Rdata"))
 

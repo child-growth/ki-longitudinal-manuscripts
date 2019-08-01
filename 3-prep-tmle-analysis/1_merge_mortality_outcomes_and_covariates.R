@@ -34,8 +34,8 @@ co_ci_6_24 <- co_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_co62
 
 #convert subjid to character for the merge with mortality dataset
 mort$subjid <- as.character(mort$subjid)
-wast_ci_0_6$subjid <- as.character(wast_ci_0_6$subjid)
-wast_ci_6_24$subjid <- as.character(wast_ci_6_24$subjid)
+stunt_ci_0_6$subjid <- as.character(stunt_ci_0_6$subjid)
+stunt_ci_6_24$subjid <- as.character(stunt_ci_6_24$subjid)
 wast_ci_0_6$subjid <- as.character(wast_ci_0_6$subjid)
 wast_ci_6_24$subjid <- as.character(wast_ci_6_24$subjid)
 wast_ci_0_6_no_birth$subjid <- as.character(wast_ci_0_6_no_birth$subjid)
@@ -56,6 +56,11 @@ d <- full_join(d, wast_ci_0_6_no_birth, by=c("studyid","country","subjid"))
 dim(d)
 head(d)
 
+#Join in stunting measures
+d <- full_join(d, stunt_ci_0_6, by=c("studyid","country","subjid"))
+d <- full_join(d, stunt_ci_6_24, by=c("studyid","country","subjid"))
+dim(d)
+head(d)
 
 
 
@@ -71,15 +76,16 @@ table(d$ever_wasted06_noBW)
 
 
 table(d$ever_underweight06)
-table(d$ever_underweight024)
+table(d$ever_underweight624)
 
 
 #merge co-occurrence measures
-d <- full_join(d, CI_06, by=c("studyid","subjid"))
-d <- full_join(d, CI_024, by=c("studyid","subjid"))
+d <- full_join(d, co_ci_0_6, by=c("studyid","subjid"))
+d <- full_join(d, co_ci_6_24, by=c("studyid","subjid"))
 dim(d)
 
 #Merge in covariates
+cov <- cov %>% subset(., select = -c(dead, agedth, causedth))
 dim(d)
 df <- merge(as.data.frame(d), cov, by=c("studyid", "subjid", "country"), all.x = T, all.y = F)
 dim(df)
@@ -87,7 +93,8 @@ head(df)
 
 
 # Merge in mortality information
-dim(d)
+dim(df)
+dim(mort)
 d <- left_join(df, mort, by=c("studyid",  "country", "subjid"))
 dim(d)
 
@@ -95,27 +102,25 @@ dim(d)
 table(d$ever_wasted06, d$dead)
 table(d$ever_swasted06, d$dead)
 table(d$pers_wasted06, d$dead)
-table(d$ever_wasted024, d$dead)
-table(d$ever_swasted024, d$dead)
-table(d$pers_wasted024, d$dead)
+table(d$ever_wasted624, d$dead)
+table(d$ever_swasted624, d$dead)
+table(d$pers_wasted624, d$dead)
 
 table(d$ever_stunted06, d$dead)
 table(d$ever_sstunted06, d$dead)
-table(d$ever_stunted024, d$dead)
-table(d$ever_sstunted024, d$dead)
+table(d$ever_stunted624, d$dead)
+table(d$ever_sstunted624, d$dead)
 
 table(d$ever_wasted06_noBW, d$dead)
 table(d$ever_swasted06_noBW, d$dead)
-table(d$ever_wasted024_noBW, d$dead)
-table(d$ever_swasted024_noBW, d$dead)
 
 table(d$ever_underweight06, d$dead)
 table(d$ever_sunderweight06, d$dead)
-table(d$ever_underweight024, d$dead)
-table(d$ever_sunderweight024, d$dead)
+table(d$ever_underweight624, d$dead)
+table(d$ever_sunderweight624, d$dead)
 
 table(d$ever_co06, d$dead)
-table(d$ever_co024, d$dead)
+table(d$ever_co624, d$dead)
 
 
 #Drop studies with no mortality information
@@ -127,21 +132,19 @@ Avars <- c("ever_wasted06",
            "pers_wasted06",
            "ever_stunted06",
            "ever_sstunted06",
-           "ever_wasted024",
-           "ever_swasted024",
-           "pers_wasted024",
-           "ever_stunted024",
-           "ever_sstunted024",
+           "ever_wasted624",
+           "ever_swasted624",
+           "pers_wasted624",
+           "ever_stunted624",
+           "ever_sstunted624",
            "ever_wasted06_noBW",
            "ever_swasted06_noBW",
-           "ever_wasted024_noBW",
-           "ever_swasted024_noBW",
            "ever_underweight06",
            "ever_sunderweight06",
-           "ever_underweight024",
-           "ever_sunderweight024",
+           "ever_underweight624",
+           "ever_sunderweight624",
            "ever_co06",
-           "ever_co024")
+           "ever_co624")
 
 for(i in Avars){
   d[,i] <- factor(d[,i])
@@ -162,15 +165,16 @@ pers_wast_6_24 <- pers_wast_6_24 %>% subset(., select = c( studyid, subjid, coun
 dim(co_prev18)
 dim(pers_wast_6_24)
 d <- full_join(co_prev18, pers_wast_6_24, by=c("studyid","country","subjid"))
+df2 <- df %>% subset(., select = -c(country.x, country.y, pers_wasted624))
 dim(d)
-dim(df)
-d <- full_join(d, df, by=c("studyid","country","subjid"))
+dim(df2)
+d <- full_join(d, df2, by=c("studyid","country","subjid"))
 dim(d)
 
 #Drop the exposures (24 months) that aren't needed
 d <- d %>% subset(., select = -c(
-  ever_wasted024,      ever_swasted024,     pers_wasted024,      ever_stunted024,     ever_sstunted024, 
-  ever_wasted024_noBW, ever_swasted024_noBW, ever_underweight024, ever_sunderweight024, ever_co024))
+  ever_wasted624,      ever_swasted624,     pers_wasted624,      ever_stunted624,     ever_sstunted624, 
+  ever_underweight624, ever_sunderweight624, ever_co624))
 
 
 #Check mortality variation for all exposures
@@ -206,7 +210,9 @@ Avars_morbidity <- c("ever_wasted06",
                      "ever_co06",
                      "pers_wasted06")
 
+d <- as.data.frame(d)
 for(i in Avars_morbidity){
+  print(i)
   d[,i] <- factor(d[,i])
 }
 
