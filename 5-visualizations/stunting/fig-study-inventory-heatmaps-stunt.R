@@ -27,7 +27,7 @@ source(paste0(here::here(), "/0-config.R"))
 #-----------------------------------
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
-md <- readRDS('results/GHAP_metadata_stunting.RDS')
+md <- readRDS(here('results/GHAP_metadata_stunting.RDS'))
 
 #Drop non-included studies
 md <- mark_measure_freq(md)

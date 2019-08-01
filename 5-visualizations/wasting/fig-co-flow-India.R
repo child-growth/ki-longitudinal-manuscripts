@@ -44,25 +44,23 @@ pink_green = rev(brewer.pal(n = 8, name = "PiYG"))
 pink_green[3] = viridis_cols[8]
 
 #Underweight
-pink_green[4] = tableau10[1]
+pink_green[4] = "#3bd1d6"
 
-#Wasting
-pink_green[5] = tableau10[4]
 
 #Combination of faltering:
 
 #Stunted + underweight
 # colfunc1 <- colorRampPalette(c(pink_green[3], pink_green[4]))
 # pink_green[6] = colfunc1(3)[2]
-pink_green[6] = "#3bd1d6"
+pink_green[5] = tableau10[1]
 
 #Wasted + underweight
-# colfunc2 <- colorRampPalette(c(pink_green[5], pink_green[4]))
-# pink_green[7] = colfunc2(3)[2]
-pink_green[7] = tableau10[5]
-  
-#Black for all 3 conditions:
-pink_green[8] = tableau11[1]
+colfunc2 <- colorRampPalette(c(tableau10[4], "black"))
+
+#Wasting
+pink_green[6] = "#ff504a"
+pink_green[7] = colfunc2(5)[2]
+pink_green[8] = colfunc2(5)[4]
 
   
 
@@ -79,9 +77,9 @@ plot_data_pooled = co_pool %>%
   mutate(classif = factor(classif, levels = c("Never faltered", 
                                               "Recovered",
                                               "Stunted",
-                                              "Underweight",       
+                                              "Underweight", 
+                                              "Stunted+Underweight",
                                               "Wasted",                                             
-                                              "Stunted+Underweight",                                              
                                               "Wasted+Underweight",                                             
                                               "Wasted+Stunted+Underweight"
   )))
@@ -91,7 +89,7 @@ plot_data_pooled = co_pool %>%
 bar_plot_RE = ggplot(plot_data_pooled) +
   geom_bar(aes(x = agem, y = est*100, fill = classif), colour="black", stat="identity", width=0.5) +
   scale_fill_manual("", values = pink_green) +
-  theme(legend.position = "bottom") +
+  theme(legend.position = "right") +
   xlab("Child age, months") + ylab("Percentage of children") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 5))
 bar_plot_RE
@@ -113,7 +111,4 @@ bar_plot_RE_name = create_name(
 # save plot and underlying data
 ggsave(bar_plot_RE, file=paste0("figures/India/fig-",bar_plot_RE_name,"-India.png"), width=10, height=4)
 
-saveRDS(plot_data_pooled, file=paste0("6-shiny-app/figure-data/figdata-",bar_plot_RE_name,"-India.RDS"))
-
-save(bar_plot_RE, file=paste0(here::here(),"/figures/plot objects/co_flow_object-India.Rdata"))
 

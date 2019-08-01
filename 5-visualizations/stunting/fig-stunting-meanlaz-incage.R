@@ -46,11 +46,16 @@ plotdf_monthly = plotdf_monthly %>% filter(cohort == "pooled", region == "Overal
 cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 plot_mean_laz = function(data){
+  data = data %>% mutate(agemonths = ifelse(agemonths == 0.5, 0, agemonths))
+  
   mean_laz_plot <- ggplot(data,aes(y=est,x=agemonths, group=stunt_inc_age, color=stunt_inc_age)) +
-    stat_smooth(aes(fill=stunt_inc_age, color=stunt_inc_age), se=F, span = 0.5) + 
+    geom_ribbon(aes(ymin = lb, ymax = ub, fill = stunt_inc_age), alpha = 0.5, color = NA)+
+    geom_line(aes(fill=stunt_inc_age, color=stunt_inc_age), se=F, span = 0.5) + 
     geom_hline(yintercept = 0, colour = "black") +
-    scale_y_continuous(limits = c(min(plotdf$est) - 0.01, max(plotdf$est) + 0.01)) + 
-    scale_x_continuous(limits = c(0,15), breaks = seq(0,15,2), labels = seq(0,15,2)) + 
+    scale_y_continuous(limits = c(min(data$est) - 0.5, max(data$est) + 0.5),
+                       expand = c(0, 0)) + 
+    scale_x_continuous(limits = c(0,15), breaks = seq(0,15,1), labels = seq(0,15,1),
+                       expand = c(0, 0)) + 
     xlab("Child age, months")+
     ylab("Mean length-for-age Z-score") +
     scale_fill_manual(values=cbPalette, drop=TRUE, limits = levels(data$stunt_inc_age), 
@@ -58,22 +63,29 @@ plot_mean_laz = function(data){
     scale_color_manual(values=cbPalette, drop=TRUE, limits = levels(data$stunt_inc_age), 
                        name = 'Age of stunting onset') +
     ggtitle("") +
-    theme(legend.position="bottom")
+    theme(legend.position="none")
   
   return(mean_laz_plot)
 }
 
 plot_nmeas = function(data){
-  plotdf_N = data %>% group_by(stunt_inc_age, agemonths) %>% summarise(N = nmeas)
+  plotdf_N = data %>% 
+    group_by(stunt_inc_age, agemonths) %>% 
+    summarise(N = nmeas) %>% mutate(
+    agemonths = ifelse(agemonths==0.5, 0, agemonths)
+  )
+  
   plotN = ggplot(plotdf_N, aes(x = agemonths, y = N, group=stunt_inc_age, color=stunt_inc_age)) + 
-    geom_col(aes(fill=stunt_inc_age, color=stunt_inc_age)) + 
+    geom_col(aes(fill=stunt_inc_age, color=stunt_inc_age), width=0.5) + 
     xlab("Child age, months") +
     ylab("N") +
-    scale_x_continuous(limits = c(0,15.25), breaks = seq(0,15.25,2), labels = seq(0,15.25,2)) +
+    scale_x_continuous(limits = c(-1,16), breaks = seq(0,15,1), labels = seq(0,15,1),
+                       expand = c(0,0)) +
     scale_fill_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
                       name = 'Age of stunting onset') +
     scale_color_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
-                       name = 'Age of stunting onset')
+                       name = 'Age of stunting onset')+
+    theme(legend.position="bottom")
   
   return(plotN)
 }
@@ -87,7 +99,7 @@ nmeas_plot = plot_nmeas(data = plotdf)
 mean_laz_plot = grid.arrange(mean_laz_line_plot,
                              nmeas_plot,
                              nrow = 2,
-                             heights = c(4, 1.25))
+                             heights = c(5, 3))
 
 ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"), width=10, height=6)
 
