@@ -22,44 +22,46 @@ cov <- cov %>% subset(., select= -c(pers_wast, enwast, anywast06))
 #Load wasting measures
 load("mort_exposures.rdata")
 
-wast_ci_0_6 <- wast_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_wasted06, ever_swasted06, pers_wasted06, ever_stunted06, ever_sstunted06)) 
-wast_ci_6_24 <- wast_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_wasted624, ever_swasted624, pers_wasted624, ever_stunted624, ever_sstunted624))
+stunt_ci_0_6 <- stunt_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_stunted06, ever_sstunted06)) 
+stunt_ci_6_24 <- stunt_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_stunted624, ever_sstunted624))
+wast_ci_0_6 <- wast_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_wasted06, ever_swasted06, pers_wasted06)) 
+wast_ci_6_24 <- wast_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_wasted624, ever_swasted624, pers_wasted624))
 wast_ci_0_6_no_birth <- wast_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_wasted06_noBW, ever_swasted06_noBW)) 
 underweight_ci_0_6 <- underweight_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_underweight06, ever_sunderweight06)) 
 underweight_ci_6_24 <- underweight_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_underweight624, ever_sunderweight624))
+co_ci_0_6 <- co_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_co06)) 
+co_ci_6_24 <- co_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_co624))
 
 #convert subjid to character for the merge with mortality dataset
 mort$subjid <- as.character(mort$subjid)
 wast_ci_0_6$subjid <- as.character(wast_ci_0_6$subjid)
-wast_ci_0_24$subjid <- as.character(wast_ci_0_24$subjid)
+wast_ci_6_24$subjid <- as.character(wast_ci_6_24$subjid)
+wast_ci_0_6$subjid <- as.character(wast_ci_0_6$subjid)
+wast_ci_6_24$subjid <- as.character(wast_ci_6_24$subjid)
 wast_ci_0_6_no_birth$subjid <- as.character(wast_ci_0_6_no_birth$subjid)
-wast_ci_0_24_no_birth$subjid <- as.character(wast_ci_0_24_no_birth$subjid)
 underweight_ci_0_6$subjid <- as.character(underweight_ci_0_6$subjid)
-underweight_ci_0_24$subjid <- as.character(underweight_ci_0_24$subjid)
+underweight_ci_6_24$subjid <- as.character(underweight_ci_6_24$subjid)
+co_ci_0_6$subjid <- as.character(co_ci_0_6$subjid)
+co_ci_6_24$subjid <- as.character(co_ci_6_24$subjid)
 
 dim(wast_ci_0_6)
-dim(wast_ci_0_24)
-d <- full_join(wast_ci_0_6, wast_ci_0_24, by=c("studyid","country","subjid"))
+dim(wast_ci_6_24)
+d <- full_join(wast_ci_0_6, wast_ci_6_24, by=c("studyid","country","subjid"))
 dim(d)
 head(d)
+
 
 #Join in no birth wasting measures
 d <- full_join(d, wast_ci_0_6_no_birth, by=c("studyid","country","subjid"))
-d <- full_join(d, wast_ci_0_24_no_birth, by=c("studyid","country","subjid"))
 dim(d)
 head(d)
 
-#sanity check measures
-table(d$ever_wasted06)
-table(d$ever_wasted06_noBW)
 
-table(d$ever_wasted024)
-table(d$ever_wasted024_noBW)
 
 
 #Join in underweight measures
 d <- full_join(d, underweight_ci_0_6, by=c("studyid","country","subjid"))
-d <- full_join(d, underweight_ci_0_24, by=c("studyid","country","subjid"))
+d <- full_join(d, underweight_ci_6_24, by=c("studyid","country","subjid"))
 dim(d)
 head(d)
 
@@ -67,16 +69,12 @@ head(d)
 table(d$ever_wasted06)
 table(d$ever_wasted06_noBW)
 
-table(d$ever_wasted024)
-table(d$ever_wasted024_noBW)
 
 table(d$ever_underweight06)
 table(d$ever_underweight024)
 
 
-#Load co-occurrence measures
-load("U:/ucb-superlearner/Manuscript analysis data/co_prev_mortality.RData")
-dim(d)
+#merge co-occurrence measures
 d <- full_join(d, CI_06, by=c("studyid","subjid"))
 d <- full_join(d, CI_024, by=c("studyid","subjid"))
 dim(d)
