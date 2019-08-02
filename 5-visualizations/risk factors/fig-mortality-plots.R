@@ -161,41 +161,28 @@ d2$intervention_variable <- as.character(d2$intervention_variable)
 d2 <- d2 %>% arrange(RR)
 d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
 
-p1 <- ggplot(d2, aes(x=as.numeric(intervention_variable))) +
-  geom_point(aes(y=RR, color=Measure, shape=factor(type)), size=4, stroke = 1.5) +
+d2 = d2 %>% mutate(type = gsub("No", "Moderate", type)) %>% mutate(type = gsub("Yes", "Severe", type))
+d2 = d2 %>% mutate(outcome_label = paste(Measure, ", ", type, sep = ""))
+
+p1 <- ggplot(d2, aes(x=outcome_label)) +
+  geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
+  #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
   labs(x = "", y = "Relative risk") +
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-  #scale_fill_manual(values=tableau11[c(5,1)]) +
   scale_size_manual(values=c(4,5)) +
-  scale_shape_manual(name = "Shape", 
-                     labels = c("Moderate 0-6 months", 
-                                "Severe 0-6 months",
-                                "Moderate 0-24 months", 
-                                "Severe 0-24 months"),
-                     values=c(16,21,17,24)) +
   theme(plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        legend.position=c(0.3, 0.82),
-        axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        #strip.text.x = element_text(size=12),
-        #axis.text.x = element_text(size=12, angle = 45, hjust = 1),
-        text = element_text(size=16),
-        legend.title = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.3, "cm"),
-        legend.key.width = unit(0.3,"cm"),
-        legend.spacing = unit(0.1, 'cm')) + 
-  guides(shape=guide_legend(ncol=2), color=guide_legend(ncol=2))+
-  ggtitle("Outcome: mortality") + coord_cartesian(ylim=c(1,9))
+        text = element_text(size=16), 
+        legend.position = "none") + 
+  ggtitle("Outcome: mortality") + coord_cartesian(ylim=c(1,9)) + 
+  coord_flip()
 
-ggsave(p1, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-mortality-RR.png", width=6, height=5.2)
+p1
+ggsave(p1, file="figures/risk factor/fig-mortality-RR.png", width=10, height=5.2)
 
 
 
@@ -209,44 +196,29 @@ d2$intervention_variable <- as.character(d2$intervention_variable)
 d2 <- d2 %>% arrange(RR)
 d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
 
-p2 <- ggplot(d2, aes(x=as.numeric(intervention_variable))) +
-  geom_point(aes(y=RR, color=Measure, shape=factor(type)), size=4, stroke = 1.5) +
+d2 = d2 %>% mutate(type = gsub("No", "Moderate", type)) %>% mutate(type = gsub("Yes", "Severe", type))
+d2 = d2 %>% mutate(outcome_label = paste(Measure, ", ", type, sep = ""))
+
+
+p2 <- ggplot(d2, aes(x=outcome_label)) +
+  geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
+  #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
   labs(x = "", y = "Relative Risk") +
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_size_manual(values=c(4,5)) +
-  scale_shape_manual(name = "Shape", 
-                     labels = c("Moderate 0-6 months", 
-                                "Severe 0-6 months",
-                                "Moderate 0-24 months", 
-                                "Severe 0-24 months"),
-                     values=c(16,21,17,24)) +
   theme(plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        legend.position=c(0.3, 0.82),
-        axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        #strip.text.x = element_text(size=12),
-        #axis.text.x = element_text(size=12, angle = 45, hjust = 1),
-        text = element_text(size=16),
-        legend.title = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.3, "cm"),
-        legend.key.width = unit(0.3,"cm"),
-        legend.spacing = unit(0.1, 'cm')) + 
-  guides(shape=guide_legend(ncol=2), color=guide_legend(ncol=2))+
-  ggtitle("Outcome: persistent wasting from 6-24 months")+ coord_cartesian(ylim=c(1,8))
+        legend.position="none",
+        text = element_text(size=16)) + 
+  ggtitle("Outcome: persistent wasting from 6-24 months")+ 
+  coord_cartesian(ylim=c(1,8))+
+  coord_flip()
 
-ggsave(p2, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-morbidity-perswast-RR.png", width=6, height=5.2)
-
-
-
-
+ggsave(p2, file="/figures/risk factor/fig-morbidity-perswast-RR.png", width=10, height=5.2)
 
 
 
@@ -260,10 +232,13 @@ d2$intervention_variable <- as.character(d2$intervention_variable)
 d2 <- d2 %>% arrange(RR)
 d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
 
-p3 <- ggplot(d2, aes(x=as.numeric(intervention_variable))) +
-  geom_point(aes(y=RR, color=Measure, shape=factor(type)), size=4, stroke = 1.5) +
+d2 = d2 %>% mutate(type = gsub("No", "Moderate", type)) %>% mutate(type = gsub("Yes", "Severe", type))
+d2 = d2 %>% mutate(outcome_label = paste(Measure, ", ", type, sep = ""))
+
+p3 <- ggplot(d2, aes(x=outcome_label)) +
+  geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
+  #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
   labs(x = "", y = "Relative Risk") +
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
@@ -271,31 +246,15 @@ p3 <- ggplot(d2, aes(x=as.numeric(intervention_variable))) +
   scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
   #scale_fill_manual(values=tableau11[c(5,1)]) +
   scale_size_manual(values=c(4,5)) +
-  scale_shape_manual(name = "Shape", 
-                     labels = c("Moderate 0-6 months", 
-                                "Severe 0-6 months",
-                                "Moderate 0-24 months", 
-                                "Severe 0-24 months"),
-                     values=c(16,21,17,24)) +
   theme(plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        legend.position=c(0.3, 0.82),
-        axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        #strip.text.x = element_text(size=12),
-        #axis.text.x = element_text(size=12, angle = 45, hjust = 1),
-        text = element_text(size=16),
-        legend.title = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.3, "cm"),
-        legend.key.width = unit(0.3,"cm"),
-        legend.spacing = unit(0.1, 'cm')) + 
-  guides(shape=guide_legend(ncol=2), color=guide_legend(ncol=2))+
-  ggtitle("Outcome: wasted and stunted at 18 months") + coord_cartesian(ylim=c(1,8))
+        legend.position = "none",
+        text = element_text(size=16))+
+  ggtitle("Outcome: wasted and stunted at 18 months") + coord_cartesian(ylim=c(1,8)) +
+  coord_flip()
 
-ggsave(p3, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-morbidity-co-RR.png", width=6, height=5.2)
+ggsave(p3, file="figures/risk factor/fig-morbidity-co-RR.png", width=10, height=5.2)
 
 
 #Save plot objects
-save(p1, p2, p3, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mortality_plot_objects.Rdata")
+save(p1, p2, p3, file="results/rf_mortality_plot_objects.Rdata")
