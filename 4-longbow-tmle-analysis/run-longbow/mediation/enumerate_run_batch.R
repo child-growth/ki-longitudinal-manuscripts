@@ -11,15 +11,13 @@ library(here)
 
 # 1. enumerate analysis
 
-setwd(here("ki-longitudinal-manuscripts","4-longbow-tmle-analysis","run-longbow","mediation"))
+setwd(here("4-longbow-tmle-analysis","run-longbow","mediation"))
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
+default_params$script_params$count_Y <- FALSE
 
-load(here("ki-longitudinal-manuscripts","4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
-analyses <- analyses
-# load("wasting_unadjusted_binary_analyses.rdata")
-# analyses_2 <- analyses
-# analyses <- rbindlist(list(analyses_1, analyses_2), fill=TRUE)
+load(here("4-longbow-tmle-analysis","analysis specification","mediation.RData"))
+analyses
 
 analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
 
@@ -34,39 +32,40 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
   return(analysis_params)
 })
 
-writeLines(toJSON(enumerated_analyses[[1]]),"single_bin_analysis.json")
-writeLines(toJSON(enumerated_analyses),"all_bin_analyses.json")
+writeLines(toJSON(enumerated_analyses[[1]]),"single_mediation_analyses.json")
+writeLines(toJSON(enumerated_analyses),"all_mediation_analyses.json")
 
 
 
 # 2. run batch
 
-configure_cluster(here("ki-longitudinal-manuscripts","0-project-functions","cluster_credentials.json"))
+try(configure_cluster(here("ki-longitudinal-manuscripts","0-project-functions","cluster_credentials.json")))
+try(configure_cluster("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/0-project-functions/cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
-# inputs <- "inputs_template.json"
-inputs <- "single_bin_analysis.json"
+#inputs <- "inputs_template.json"
+#inputs <- "single_bin_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
-bin_batch_inputs <- "all_bin_analyses.json"
-bin_batch_id <-  run_on_longbow(rmd_filename, bin_batch_inputs, provision = FALSE)
+med_batch_inputs <- "all_mediation_analyses.json"
+med_batch_id <-  run_on_longbow(rmd_filename, med_batch_inputs, provision = FALSE)
 
 # wait for the batch to finish and track progress
-wait_for_batch(bin_batch_id)
+wait_for_batch(med_batch_id)
 
 # download the longbow outputs
-get_batch_results(bin_batch_id, results_folder="results_bin_birthlen")
-length(dir("results_bin_birthlen"))
+get_batch_results(med_batch_id, results_folder="results")
+length(dir("results"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results_bin_birthlen")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin_birthlen")
+results <- load_batch_results("results.rdata", results_folder = "results")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results")
 
 # save concatenated results
-filename1 <- paste(paste('subset_wast_birthlen',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('subset_wast_birthlen_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
-save(results, file=here("ki-longitudinal-manuscripts","results","rf results","raw longbow results",filename1))
-save(obs_counts, file=here("ki-longitudinal-manuscripts","results","rf results","raw longbow results",filename2))
+filename1 <- paste(paste('mediation',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename2 <- paste(paste('mediation_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
+
+

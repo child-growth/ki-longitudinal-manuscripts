@@ -258,6 +258,6 @@ adjustment_sets_mortality <- list(
   ever_co024=cov)
 
 
-save(adjustment_sets_mortality, file="mortality_adjustment_sets_list.Rdata")
+save(adjustment_sets_mortality, file=here("data/mortality_adjustment_sets_list.Rdata"))
 
 
