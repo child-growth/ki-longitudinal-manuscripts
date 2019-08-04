@@ -80,7 +80,7 @@ plot_nmeas = function(data){
     xlab("Child age, months") +
     ylab("N") +
     scale_x_continuous(limits = c(-1,16), breaks = seq(0,15,1), labels = seq(0,15,1),
-                       expand = c(0,0)) +
+                       expand = c(0,-0.5)) +
     scale_fill_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
                       name = 'Age of stunting onset') +
     scale_color_manual(values=cbPalette, drop=TRUE, limits = levels(plotdf_N$stunt_inc_age), 
@@ -101,7 +101,7 @@ mean_laz_line_plot = grid.arrange(blank,
                                   mean_laz_line_plot,
                                   blank, 
                                   ncol = 3,
-                                  widths = c(1.3, 16.2, 1))
+                                  widths = c(0.75, 16, 0.5))
 
 mean_laz_plot = grid.arrange(mean_laz_line_plot,
                              nmeas_plot,
@@ -121,7 +121,7 @@ mean_laz_line_plot_monthly = grid.arrange(blank,
                                           mean_laz_line_plot_monthly,
                                           blank, 
                                           ncol = 3,
-                                          widths = c(1.3, 16.2, 1))
+                                          widths = c(0.75, 16, 0.5))
 
 mean_laz_plot_monthly = grid.arrange(mean_laz_line_plot_monthly,
                              nmeas_plot_monthly,
