@@ -65,7 +65,6 @@ adjustment_sets <- list(
   
   meducyrs=c("arm", "W_mage", "W_fage", "feducyrs", "hhwealth_quart",
              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
-             "W_gagebrth","W_birthwt","W_birthlen",
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
              "trth2o","cleanck","impfloor","impsan","safeh20",
@@ -73,7 +72,6 @@ adjustment_sets <- list(
   
   feducyrs=c("arm", "W_mage", "W_fage", "meducyrs",  "hhwealth_quart", 
              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
-             "W_gagebrth","W_birthwt","W_birthlen",
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
              "trth2o","cleanck","impfloor","impsan","safeh20",
