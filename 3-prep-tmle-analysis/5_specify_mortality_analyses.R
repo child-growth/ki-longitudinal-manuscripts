@@ -45,7 +45,7 @@ Avars <- c("ever_wasted06",
            "ever_co06",
            "ever_co624")
 
-mortality <- specify_rf_analysis(A=Avars, Y=c("dead", "dead624"), 
+mortality <- specify_rf_analysis(A=Avars, Y=c("dead", "dead624", "dead0plus", "dead6plus"), 
                                  V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality, 
                                  file="stuntwast_mort.Rdata")
 

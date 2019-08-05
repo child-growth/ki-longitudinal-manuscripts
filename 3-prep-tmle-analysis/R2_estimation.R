@@ -39,6 +39,7 @@ d <- d %>% group_by(studyid, country) %>%
 table(d$studyid, d$sum_miss)
 
 d <- d %>% filter(sum_miss<2)
+table(d$studyid)
 
 
 #Set up SL components
@@ -80,6 +81,8 @@ sl <- make_learner(Lrnr_sl,
 ## Estimate R2 within each cohort and outcome
 
 SL_R2 <- function(dat, outcome="haz", covars){
+  
+  dat <- dat[!is.na(dat[,outcome]),]
 
   # define covars
   covars <- colnames(dat)[which(names(dat) %in% covars)]
