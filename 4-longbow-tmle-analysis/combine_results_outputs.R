@@ -51,14 +51,20 @@ HAZ_diar <- results
 unique(HAZ_diar$intervention_variable)
 
 #mortality results
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/mortality_2019-08-04.rdata")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/mortality_2019-08-05.rdata")
 mort <- results
 head(mort)
 unique(mort$intervention_variable)
 unique(mort$outcome_variable)
+table(mort$studyid, mort$outcome_variable)
+
+
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/unadj_mortality_2019-08-05.rdata")
+mort_unadj <- results
+
 
 d <- bind_rows(
-  stunting, wasting, wast06,wast_birthlen, co_and_diarh, mort,
+  stunting, wasting, wast06,wast_birthlen, co_and_diarh, mort, mort_unadj,
   HAZ, WHZ, HAZ_diar)
 
 

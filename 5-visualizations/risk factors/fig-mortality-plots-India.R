@@ -91,10 +91,7 @@ RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, base
 saveRDS(RMAest, paste0(here::here(),"/results/rf results/pooled_mortality_RR_results.rds"))
 
 
-RMAest <- readRDS(paste0(here::here(),"/results/rf results/pooled_mortality_RR_results.rds"))
-
-d <- RMAest %>% filter( intervention_level != baseline_level)
-
+d <- RMAest 
 
 
 

@@ -8,14 +8,14 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load mediation results
 load(here("/results/rf results/raw longbow results/mediation_2019-08-01.rdata"))
-md <- results %>% filter(type=="ATE") %>% mutate(analysis="mediation")
+md <- results %>% filter(type=="ATE") %>% mutate(analysis="med")
 head(md)
 
 #load primary results
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
-dfull <- dfull %>% filter(type=="ATE", adjustment_set!="unadjusted") %>% mutate(analysis="primary")
+dfull <- dfull %>% filter(type=="ATE", adjustment_set!="unadjusted") %>% mutate(analysis="prim")
 
 d <- bind_rows(dfull, md)
 
@@ -39,8 +39,8 @@ d$num_birth_vars <- ifelse(grepl("parity",d$adjustment_set), d$num_birth_vars + 
 table(d$num_birth_vars, d$analysis)
 
 #Subset to cohorts measuring suffiicient birth covariates
-df <- d %>% filter(num_birth_vars>2 | analysis=="primary")
-med_studies <- unique(df$studyid[df$analysis=="mediation"])
+df <- d %>% filter(num_birth_vars>3 | analysis=="prim")
+med_studies <- unique(df$studyid[df$analysis=="med"])
 
 d <- d %>% filter(studyid %in% med_studies)
 
@@ -49,9 +49,9 @@ d <- d %>% filter(studyid %in% med_studies)
 d <- d %>% filter(ci_lower !=  ci_upper)
 
 #Compare cohort-specific estimates
-plotdf <- d %>% filter(agecat=="24 months") %>% select(strata_label, intervention_variable, outcome_variable, intervention_level, analysis, estimate) %>% spread(analysis, estimate)
+plotdf <- d %>% filter(agecat=="6 months") %>% select(strata_label, intervention_variable, outcome_variable, intervention_level, analysis, estimate) %>% spread(analysis, estimate)
 head(plotdf)
-ggplot(plotdf, aes(x=primary, y=mediation)) + 
+ggplot(plotdf, aes(x=prim, y=med)) + 
   geom_point() + 
   coord_cartesian(xlim=c(-1.5, 1.5), ylim=c(-1.5, 1.5)) + geom_abline(intercept = 0, slope = 1) 
 
@@ -67,7 +67,7 @@ head(RMAest)
 RMAest_clean <- RMA_clean(RMAest)
 head(RMAest_clean)
 
-p <- ggplot(RMAest_clean %>% filter(agecat=="24 months", CI1!=CI2), 
+p <- ggplot(RMAest_clean %>% filter(agecat=="6 months", CI1!=CI2), 
        aes(x=paste0(intervention_level," ",analysis), y=ATE, color=analysis)) +
       geom_point() + 
       geom_linerange(aes(ymin=CI1 , ymax=CI2)) + 
@@ -75,6 +75,6 @@ p <- ggplot(RMAest_clean %>% filter(agecat=="24 months", CI1!=CI2),
 print(p)
 
 #Make a plot of differences
-plotdf <- plotdf %>% mutate(diff=primary-mediation)
+plotdf <- plotdf %>% mutate(diff=prim-med)
 summary(plotdf$diff)
 

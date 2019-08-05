@@ -1,0 +1,155 @@
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/e9df839e-cf92-461f-bc50-16cef4b4e5ee/b210ba3e-a183-42a4-ab1e-e4c49b8dc9f3
+cd /tmp;tar xvzf tmpbrgh8c6u.tar.gz --strip 1;cd /tmp/e9df839e-cf92-461f-bc50-16cef4b4e5ee;pip install requests --user;export TLAPP_TOKEN=dQX0IV62yB;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/48156/append_log/;screen -d -m python x.py;sleep 1
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/provision.sh
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/ensure_git_dataset.sh
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/inputs.json
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/wrapper.sh
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/x.py
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/script.Rmd
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/runner.R
+tmpbrgh8c6u/e9df839e-cf92-461f-bc50-16cef4b4e5ee/b210ba3e-a183-42a4-ab1e-e4c49b8dc9f3/
+Requirement already satisfied: requests in /opt/anaconda2/lib/python2.7/site-packages
+You are using pip version 9.0.1, however version 19.2.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+{"job": {"status": "running", "created_at": "2019-08-05T19:59:53.114", "results_url": "/jobs/48156/", "jobs": []}}Making sure longbowtools package is available for runner
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
+> 
+> 
+Installing pandoc
+pandoc-2.3.1/
+pandoc-2.3.1/bin/
+pandoc-2.3.1/bin/pandoc
+pandoc-2.3.1/bin/pandoc-citeproc
+pandoc-2.3.1/share/
+pandoc-2.3.1/share/man/
+pandoc-2.3.1/share/man/man1/
+pandoc-2.3.1/share/man/man1/pandoc.1.gz
+pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
+Running provision script
+skipping provisioning because this is a child job
+Making sure longbowtools package is available for runner
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
+> 
+> 
+Starting analysis
+
+
+processing file: REPORT.Rmd
+  |                                                                         |                                                                 |   0%  |                                                                         |..                                                               |   3%
+  ordinary text without R code
+
+  |                                                                         |....                                                             |   6%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                         |......                                                           |   9%
+  ordinary text without R code
+
+  |                                                                         |........                                                         |  12%
+label: params (with options) 
+List of 2
+ $ warning: logi FALSE
+ $ message: logi FALSE
+
+Loading required package: graphics
+ever_wasted624c("sex", "month", "arm", "brthmon", "vagbrth", "hdlvry", "single", "trth2o", "cleanck", "impfloor", "earlybf", "hfoodsec", "enstunt", "hhwealth_quart", "W_gagebrth", "W_birthwt", "W_birthlen", "W_mage", "W_mhtcm", "W_mwtkg", "W_mbmi", "W_fage", "W_fhtcm", "W_meducyrs", "W_feducyrs", "W_nrooms", "W_nhh", "W_nchldlt5", "W_parity", "impsan", "safeh20", "W_perdiar24", "predexfd6")dead624idc("studyid", "country")
+TRUETRUEFALSENULL
+  |                                                                         |..........                                                       |  16%
+  ordinary text without R code
+
+  |                                                                         |............                                                     |  19%
+label: preprocessing
+  |                                                                         |..............                                                   |  22%
+   inline R code fragments
+
+  |                                                                         |................                                                 |  25%
+label: print_adjustment_set (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |..................                                               |  28%
+  ordinary text without R code
+
+  |                                                                         |....................                                             |  31%
+label: print_strata_variables (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |......................                                           |  34%
+  ordinary text without R code
+
+  |                                                                         |........................                                         |  38%
+label: data_summary
+  |                                                                         |..........................                                       |  41%
+  ordinary text without R code
+
+  |                                                                         |............................                                     |  44%
+label: print_strata (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |..............................                                   |  47%
+  ordinary text without R code
+
+  |                                                                         |................................                                 |  50%
+label: drop_strata (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |...................................                              |  53%
+  ordinary text without R code
+
+  |                                                                         |.....................................                            |  56%
+label: stratified_tmle (with options) 
+List of 1
+ $ message: logi FALSE
+
+tmle for:	studyid: ki1000304-VITAMIN-A, country: INDIA
+tmle for:	studyid: ki1101329-Keneba, country: GAMBIA
+tmle for:	studyid: ki1112895-Burkina Faso Zn, country: BURKINA FASO
+tmle for:	studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
+tmle for:	studyid: kiGH5241-JiVitA-3, country: BANGLADESH
+tmle for:	studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+  |                                                                         |.......................................                          |  59%
+
