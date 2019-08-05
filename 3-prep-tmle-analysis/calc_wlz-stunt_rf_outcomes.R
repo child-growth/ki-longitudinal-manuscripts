@@ -215,3 +215,7 @@ save(d, Y, A, W, V, id, file="stuntprev_whz_rf.Rdata")
 d <- left_join(stuntCI_whz, cov, by=c("studyid", "subjid", "country"))
 Y<-c("ever_stunted")
 save(d, Y, A, W, V, id, file="stuntCI_whz_rf.Rdata")
+
+
+
+#growth velocity

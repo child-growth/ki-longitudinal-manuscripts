@@ -123,6 +123,35 @@ table(d$ever_co06, d$dead)
 table(d$ever_co624, d$dead)
 
 
+calc_RR <- function(d1, d2){
+  tab <- table(d1, d2)
+  (tab[1,1] * tab[2*2])/(tab[1,2] * tab[2*1])
+}
+
+calc_RR(d$ever_wasted06, d$dead)
+calc_RR(d$ever_swasted06, d$dead)
+calc_RR(d$pers_wasted06, d$dead)
+calc_RR(d$ever_wasted624, d$dead)
+calc_RR(d$ever_swasted624, d$dead)
+calc_RR(d$pers_wasted624, d$dead)
+
+calc_RR(d$ever_stunted06, d$dead)
+calc_RR(d$ever_sstunted06, d$dead)
+calc_RR(d$ever_stunted624, d$dead)
+calc_RR(d$ever_sstunted624, d$dead)
+
+calc_RR(d$ever_wasted06_noBW, d$dead)
+calc_RR(d$ever_swasted06_noBW, d$dead)
+
+calc_RR(d$ever_underweight06, d$dead)
+calc_RR(d$ever_sunderweight06, d$dead)
+calc_RR(d$ever_underweight624, d$dead)
+calc_RR(d$ever_sunderweight624, d$dead)
+
+calc_RR(d$ever_co06, d$dead)
+calc_RR(d$ever_co624, d$dead)
+
+
 #Drop studies with no mortality information
 d <- d %>% filter(tot_dead>0)
 
@@ -244,21 +273,19 @@ adjustment_sets_mortality <- list(
   pers_wasted06=cov,
   ever_stunted06=cov,
   ever_sstunted06=cov,
-  ever_wasted024=cov,
-  ever_swasted024=cov,
-  pers_wasted024=cov,
-  ever_stunted024=cov,
-  ever_sstunted024=cov,
+  ever_wasted624=cov,
+  ever_swasted624=cov,
+  pers_wasted624=cov,
+  ever_stunted624=cov,
+  ever_sstunted624=cov,
   ever_wasted06_noBW=cov,
   ever_swasted06_noBW=cov,
-  ever_wasted024_noBW=cov,
-  ever_swasted024_noBW=cov,
   ever_underweight06=cov,
   ever_sunderweight06=cov,
-  ever_underweight024=cov,
-  ever_sunderweight024=cov,
+  ever_underweight624=cov,
+  ever_sunderweight624=cov,
   ever_co06=cov,
-  ever_co024=cov)
+  ever_co624=cov)
 
 
 save(adjustment_sets_mortality, file=here("data/mortality_adjustment_sets_list.Rdata"))
