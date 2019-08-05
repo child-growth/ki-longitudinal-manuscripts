@@ -165,16 +165,19 @@ pers_wast_6_24 <- pers_wast_6_24 %>% subset(., select = c( studyid, subjid, coun
 dim(co_prev18)
 dim(pers_wast_6_24)
 d <- full_join(co_prev18, pers_wast_6_24, by=c("studyid","country","subjid"))
-df2 <- df %>% subset(., select = -c(country.x, country.y, pers_wasted624))
+
+
+#Drop the exposures (24 months) that aren't needed
+df2 <- df %>% subset(., select = -c(country.x, country.y, pers_wasted624,
+  ever_wasted624,      ever_swasted624,     ever_stunted624,     ever_sstunted624, 
+  ever_underweight624, ever_sunderweight624, ever_co624))
+
 dim(d)
 dim(df2)
 d <- full_join(d, df2, by=c("studyid","country","subjid"))
 dim(d)
 
-#Drop the exposures (24 months) that aren't needed
-d <- d %>% subset(., select = -c(
-  ever_wasted624,      ever_swasted624,     pers_wasted624,      ever_stunted624,     ever_sstunted624, 
-  ever_underweight624, ever_sunderweight624, ever_co624))
+
 
 
 #Check mortality variation for all exposures
