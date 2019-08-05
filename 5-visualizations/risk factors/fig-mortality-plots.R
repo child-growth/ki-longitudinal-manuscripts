@@ -45,6 +45,17 @@ d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="dead624" | outco
 table(d$outcome_variable)
 d <- droplevels(d)
 
+#drop reference levels
+d <- d %>% filter( ci_lower !=  ci_upper)
+
+summary(d$estimate)
+d<- d %>% filter(!(studyid %in% c("ki0047075b-MAL-ED", "ki1000304b-SAS-FoodSuppl",  "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal")))
+summary(d$estimate)
+
+d <- d[d$estimate >  .5, ]
+d <- d[d$estimate <   20, ]
+summary(d$estimate)
+
 
 poolRR <- function(d){
   #nstudies=length(unique(d$studyid))
@@ -99,7 +110,7 @@ d <- RMAest %>% filter( intervention_level != baseline_level)
 d <- droplevels(d)
 
 table(d$outcome_variable)
-d$outcome_variable <- factor(d$outcome_variable, levels=c("dead","dead524","pers_wasted624","co_occurence"))
+d$outcome_variable <- factor(d$outcome_variable, levels=c("dead","dead624","pers_wasted624","co_occurence"))
 levels(d$outcome_variable) <- c("Mortality","Mortality 6-24mo","Persistently wasted from 6-24 months","Wasted and stunted at 18 months")
 table(d$outcome_variable)
 
