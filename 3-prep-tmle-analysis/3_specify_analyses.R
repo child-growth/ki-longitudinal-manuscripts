@@ -185,8 +185,18 @@ haz <- specify_rf_analysis(A=Avars, Y="haz", file="st_meanZ_rf.Rdata")
 whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 
 
+#WLZ preceding growth velocity
+WHZ_quart_vel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+                                                                                 "vagbrth","hdlvry",
+                                                                                 "single",
+                                                                                 "W_nrooms","W_nhh","W_nchldlt5",
+                                                                                 "month","brthmon","W_parity",
+                                                                                 "trth2o","cleanck","impfloor","impsan","safeh20"),
+                                        file="laz_vel_whz_rf.Rdata")
 
-analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
+
+
+analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz, WHZ_quart_vel)
 
 
 #Save analysis specification
