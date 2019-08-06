@@ -41,15 +41,7 @@ table(d$studyid, d$sum_miss)
 d <- d %>% filter(sum_miss<2)
 table(d$studyid)
 
-#Drop missingness
-node_list <- list(
-  W=covars,
-  A=NULL,
-  Y=c("haz","whz")
-)
 
-processed <- process_missing(data=d, node_list,  max_p_missing = 0.5)
-processed_d <- processed$d
 
 
 
@@ -94,6 +86,15 @@ sl <- make_learner(Lrnr_sl,
 SL_R2 <- function(dat, outcome="haz", covars){
   
   dat <- dat[!is.na(dat[,outcome]),]
+  
+  #Drop missingness
+  node_list <- list(
+    W=covars,
+    A=NULL,
+    Y=outcome
+  )
+  processed <- process_missing(data=dat, node_list,  max_p_missing = 0.5)
+  dat <- processed$data
   
   # define covars
   covars <- colnames(dat)[which(names(dat) %in% covars)]
