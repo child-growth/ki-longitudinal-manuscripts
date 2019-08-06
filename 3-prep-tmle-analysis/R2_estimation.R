@@ -22,7 +22,7 @@ whz <- d %>% filter(agecat=="24 months", !is.na(whz))
 
 
 #Pick prediction variables and subset to studies that measure all variables
-covars <- c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")
+covars <- c("parity", "W_birthlen", "W_meducyrs", "W_nrooms", "W_mwtkg")
 
 haz <- haz %>% group_by(studyid, country) %>% 
   mutate(N=n(),
@@ -45,11 +45,51 @@ whz <- whz %>% group_by(studyid, country) %>%
   )
 
 
-haz <- haz %>% filter(sum_miss<2)
-whz <- whz %>% filter(sum_miss<2)
+haz <- haz %>% filter(sum_miss<2) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars))
+whz <- whz %>% filter(sum_miss<2) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars))
+
+#Add NA's to factors
+haz$parity <- addNA(haz$parity)
+whz$parity <- addNA(whz$parity)
+
+#Impute median by cohort and add missingness indicator to continious
+haz <- haz %>% group_by(studyid, country) %>%
+  mutate(
+    birthlen_miss=ifelse(is.na(W_birthlen),1,0),
+    meducyrs_miss=ifelse(is.na(W_meducyrs),1,0),
+    nrooms_miss=ifelse(is.na(W_nrooms),1,0),
+    mwtkg_miss=ifelse(is.na(W_mwtkg),1,0),
+    W_birthlen=ifelse(is.na(W_birthlen),median(W_birthlen, na.rm=T),W_birthlen),
+    W_meducyrs=ifelse(is.na(W_meducyrs),median(W_meducyrs, na.rm=T),W_meducyrs),
+    W_nrooms=ifelse(is.na(W_nrooms),median(W_nrooms, na.rm=T),W_nrooms),
+    W_mwtkg=ifelse(is.na(W_mwtkg),median(W_mwtkg, na.rm=T),W_mwtkg)) %>% ungroup() %>%
+  mutate(
+    W_birthlen=ifelse(is.na(W_birthlen),median(W_birthlen, na.rm=T),W_birthlen),
+    W_meducyrs=ifelse(is.na(W_meducyrs),median(W_meducyrs, na.rm=T),W_meducyrs),
+    W_nrooms=ifelse(is.na(W_nrooms),median(W_nrooms, na.rm=T),W_nrooms),
+    W_mwtkg=ifelse(is.na(W_mwtkg),median(W_mwtkg, na.rm=T),W_mwtkg)    
+  )
+
+whz <- whz %>% group_by(studyid, country) %>%
+  mutate(
+    birthlen_miss=ifelse(is.na(W_birthlen),1,0),
+    meducyrs_miss=ifelse(is.na(W_meducyrs),1,0),
+    nrooms_miss=ifelse(is.na(W_nrooms),1,0),
+    mwtkg_miss=ifelse(is.na(W_mwtkg),1,0),
+    W_birthlen=ifelse(is.na(W_birthlen),median(W_birthlen, na.rm=T),W_birthlen),
+    W_meducyrs=ifelse(is.na(W_meducyrs),median(W_meducyrs, na.rm=T),W_meducyrs),
+    W_nrooms=ifelse(is.na(W_nrooms),median(W_nrooms, na.rm=T),W_nrooms),
+    W_mwtkg=ifelse(is.na(W_mwtkg),median(W_mwtkg, na.rm=T),W_mwtkg)) %>% ungroup() %>%
+  mutate(
+    W_birthlen=ifelse(is.na(W_birthlen),median(W_birthlen, na.rm=T),W_birthlen),
+    W_meducyrs=ifelse(is.na(W_meducyrs),median(W_meducyrs, na.rm=T),W_meducyrs),
+    W_nrooms=ifelse(is.na(W_nrooms),median(W_nrooms, na.rm=T),W_nrooms),
+    W_mwtkg=ifelse(is.na(W_mwtkg),median(W_mwtkg, na.rm=T),W_mwtkg)    
+  )
 
 
-
+#Add missing indicators to covariates
+covars <- c("parity", "W_birthlen", "W_meducyrs", "W_nrooms", "W_mwtkg", "birthlen_miss", "meducyrs_miss", "nrooms_miss", "mwtkg_miss")
 
 
 #Set up SL components
