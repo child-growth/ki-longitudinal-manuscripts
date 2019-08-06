@@ -81,6 +81,7 @@ d <- full_join(d, co_ci_0_6, by=c("studyid","country", "subjid"))
 dim(d)
 
 #Merge in covariates
+cov <- cov %>% subset(., select = - c(dead, agedth, causedth))
 dim(d)
 df <- merge(as.data.frame(d), cov, by=c("studyid", "subjid", "country"), all.x = T, all.y = F)
 dim(df)
@@ -118,10 +119,10 @@ table(d$ever_co06, d$dead)
 #table(d$ever_co624, d$dead)
 
 
-# calc_RR <- function(d1, d2){
-#   tab <- table(d1, d2)
-#   (tab[1,1] * tab[2*2])/(tab[1,2] * tab[2*1])
-# }
+calc_RR <- function(d1, d2){
+  tab <- table(d1, d2)
+  (tab[1,1] * tab[2*2])/(tab[1,2] * tab[2*1])
+}
 # 
 # calc_RR(d$ever_wasted06, d$dead)
 # calc_RR(d$ever_swasted06, d$dead)
@@ -211,8 +212,13 @@ table(d$ever_swasted06, d$pers_wasted624)
 table(d$pers_wasted06, d$pers_wasted624)
 table(d$ever_stunted06, d$pers_wasted624)
 table(d$ever_wasted06_noBW, d$pers_wasted624)
-table(d$ever_underweight06, d$pers_wasted624)
 table(d$ever_co06, d$pers_wasted624)
+
+table(d$ever_underweight06, d$pers_wasted624)
+table(d$ever_sunderweight06, d$pers_wasted624)
+calc_RR(d$ever_underweight06, d$pers_wasted624)
+calc_RR(d$ever_sunderweight06, d$pers_wasted624)
+
 
 
 table(d$ever_wasted06, d$co_occurence)
@@ -223,7 +229,16 @@ table(d$ever_wasted06_noBW, d$co_occurence)
 table(d$ever_underweight06, d$co_occurence)
 table(d$ever_co06, d$co_occurence)
 
+table(d$ever_underweight06, d$co_occurence)
+table(d$ever_sunderweight06, d$co_occurence)
 
+calc_RR(d$ever_underweight06, d$co_occurence)
+calc_RR(d$ever_sunderweight06, d$co_occurence)
+
+res1 <- d %>% group_by(studyid, country) %>% do(res=try(calc_RR(.$ever_underweight06, .$co_occurence))) %>% as.data.frame() %>% mutate(res=as.numeric(res))
+res2 <- d %>% group_by(studyid, country) %>% do(res=try(calc_RR(.$ever_sunderweight06, .$co_occurence))) %>% as.data.frame() %>% mutate(res=as.numeric(res))
+res <- merge(res1, res2, by=c("studyid","country"))
+res
 
 #Set exposures to factors
 Avars_morbidity <- c("ever_wasted06",

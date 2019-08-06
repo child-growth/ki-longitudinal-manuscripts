@@ -168,7 +168,7 @@ p <- ggplot() +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
   scale_y_continuous( expand = c(0, 0), breaks = 1, labels = "",
-    sec.axis = sec_axis(~./2243, name = "Cumulative mortality", 
+    sec.axis = sec_axis(~./2243, name = "Cumulative deaths from birth to 24 months", 
                                          labels = function(b) { paste0(round(b * 100, 0), "%")})) +
   ylab("Child") + xlab("Age in months") + theme_bw() +
   theme(#axis.text.y = element_blank(),
