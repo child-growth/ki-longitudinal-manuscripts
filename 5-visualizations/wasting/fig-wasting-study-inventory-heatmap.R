@@ -133,6 +133,7 @@ dd <- shorten_descriptions(dd)
 # # simplify Tanzania label
 dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
 
+
 # make a study-country label, and make the monthly variable into a factor
 # including an anonymous label (temporary) for sharing with WHO
 dd <- mutate(dd,
@@ -502,9 +503,9 @@ nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
 
 # add margin around plots
 wastphm2 = wastphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-wpbar2 = wpbar + theme(plot.margin = unit(c(1.575,0.3,1.825,0.1), "cm"))
-nbar2 = nbar + theme(plot.margin = unit(c(1.575,0.25,1.825,0.1), "cm"))
-nagebar2 = nagebar + theme(plot.margin = unit(c(0.25,0.31,0,3.2), "cm"))
+wpbar2 = wpbar + theme(plot.margin = unit(c(1.275,0.3,1.55,0.1), "cm"))
+nbar2 = nbar + theme(plot.margin = unit(c(1.275,0.25,1.55,0.1), "cm"))
+nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.13,-0.1,4.05), "cm"))
 empty <- grid::textGrob("") 
 
 awstpgrid <- grid.arrange(nagebar2,empty, empty,
