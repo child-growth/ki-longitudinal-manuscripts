@@ -20,19 +20,18 @@ table(df$dead)
 df %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
   summarize(sum(dead, na.rm=T), n())
 
-
+head(df)
 
 
 #  load full data
-dfull<-fread("U:/data/Stunting/Full-compiled-data/FINAL.csv", header = T)
+dfull <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
+
 
 
 #--------------------------------------------
 # Subset to  just identifying and haz data
 #--------------------------------------------
 
-#change names to lower case
-colnames(dfull) <- tolower(colnames(dfull))
 d<-dfull %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, whz, waz, muaz))
 
 #--------------------------------------------
@@ -59,10 +58,6 @@ df_full <- left_join(mort, d, by=c("studyid","country","subjid"))
 dim(df_full)
 
 df <- df_full %>% filter(!is.na(haz))
-
-
-unique(df$studyid)
-df <- df %>% filter(!(studyid %in% c("ki1055867-WomenFirst","ki1000301-DIVIDS")))
 
 df <- df %>% filter(agedays <= agedth)
 
@@ -153,26 +148,30 @@ plot_cols[5] = tableau10[2]
 #Combination of faltering:
 # plot_cols[6] = viridis_cols[8]
 # plot_cols[7] = viridis_cols[8]
-plot_cols[6] = tableau10[5]
-plot_cols[7] = tableau10[5]
+plot_cols[6] = tableau10[7]
+plot_cols[7] = tableau10[7]
 
 plot_cols2 <- plot_cols[c(1,2,3,6)]
 
 #drop deaths after 2 years
 df <- df %>% filter(agedth < 731) #%>% 
   #mutate(id=paste0(studyid,subjid))
+max(as.numeric(df$id))
 
 p <- ggplot() + 
-  geom_point(data = df, aes(x=agedth, y=id), color="grey40") +
-  geom_point(data = df, aes(x=agedays, y=id, color=status2, alpha=severe2, shape=severe)) +
+  geom_point(data = df, aes(x=agedth, y=as.numeric(id)), color="grey40") +
+  geom_point(data = df, aes(x=agedays, y=as.numeric(id), color=status2, alpha=severe2, shape=severe)) +
   scale_color_manual("", values = plot_cols2, guide=guide_legend(title="Growth faltering")) +
   scale_shape_discrete(guide=guide_legend(title="Severity")) +
   scale_alpha_discrete(range=c(0.5, 1), guide=guide_legend(title="Severity")) +
   coord_cartesian(xlim=c(0, 730)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
+  scale_y_continuous( expand = c(0, 0), breaks = 1, labels = "",
+    sec.axis = sec_axis(~./2243, name = "Cumulative mortality", 
+                                         labels = function(b) { paste0(round(b * 100, 0), "%")})) +
   ylab("Child") + xlab("Age in months") + theme_bw() +
-  theme(axis.text.y = element_blank(),
+  theme(#axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         plot.background = element_rect(fill = "white", color = NA),
         legend.position = c(0.8, 0.3)) 
