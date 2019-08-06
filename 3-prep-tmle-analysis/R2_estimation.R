@@ -158,7 +158,7 @@ SL_R2 <- function(dat, outcome="haz", covars){
   sl_fit <- sl$train(washb_task)
   yhat_full <- sl_fit$predict_fold(washb_task,"validation")
   
-  
+
   n= nrow(dat)
   y= dat[,Y_index]
   

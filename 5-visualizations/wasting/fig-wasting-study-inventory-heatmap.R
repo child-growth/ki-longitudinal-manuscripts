@@ -20,6 +20,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Function source
 source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
+source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 
 
 
@@ -132,11 +133,12 @@ dd <- shorten_descriptions(dd)
 # # simplify Tanzania label
 dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
 
+
 # make a study-country label, and make the monthly variable into a factor
 # including an anonymous label (temporary) for sharing with WHO
 dd <- mutate(dd,
              country=str_to_title(str_to_lower(countrycohort)), 
-             studycountry=paste0(short_description,', ',country)) 
+             studycountry=paste0(short_description,', ', country, ' - ', start_year)) 
 
 #Add regions with ugly Europe hack to change ordering
 dd <- dd %>% mutate(country = toupper(country))
@@ -501,9 +503,9 @@ nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
 
 # add margin around plots
 wastphm2 = wastphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-wpbar2 = wpbar + theme(plot.margin = unit(c(1.575,0.3,1.825,0.1), "cm"))
-nbar2 = nbar + theme(plot.margin = unit(c(1.575,0.25,1.825,0.1), "cm"))
-nagebar2 = nagebar + theme(plot.margin = unit(c(0.25,0.31,0,3.2), "cm"))
+wpbar2 = wpbar + theme(plot.margin = unit(c(1.275,0.3,1.55,0.1), "cm"))
+nbar2 = nbar + theme(plot.margin = unit(c(1.275,0.25,1.55,0.1), "cm"))
+nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.13,-0.1,4.05), "cm"))
 empty <- grid::textGrob("") 
 
 awstpgrid <- grid.arrange(nagebar2,empty, empty,
@@ -525,7 +527,7 @@ awstpgrid_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name,".pdf"),
+ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name, ".pdf"),
        plot = awstpgrid,device='pdf',width=12,height=9)
 saveRDS(list(dd = dd,
              dp = dp), 
