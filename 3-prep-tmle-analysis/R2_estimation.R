@@ -14,19 +14,17 @@ library("SuperLearner")
 
 #Load and clean data
 load(paste0(ghapdata_dir, "st_meanZ_rf.Rdata"))
-haz <- d
+haz <- d %>% filter(agecat=="24 months", !is.na(haz)) 
 load(paste0(ghapdata_dir, "wast_meanZ_rf.Rdata"))
-whz <- d
+whz <- d %>% filter(agecat=="24 months", !is.na(whz))
 
-d<-bind_rows(haz, whz)
 
-d <- d %>% filter(agecat=="24 months")
 
 
 #Pick prediction variables and subset to studies that measure all variables
 covars <- c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")
 
-d <- d %>% group_by(studyid, country) %>% 
+haz <- haz %>% group_by(studyid, country) %>% 
   mutate(N=n(),
          miss_parity = 1*(sum(is.na(parity))==N),
          miss_birthlen = 1*(sum(is.na(birthlen))==N),
@@ -36,10 +34,19 @@ d <- d %>% group_by(studyid, country) %>%
          sum_miss= miss_parity + miss_birthlen + miss_meducyrs + miss_nrooms + miss_mwtkg 
          )
 
-table(d$studyid, d$sum_miss)
+whz <- whz %>% group_by(studyid, country) %>% 
+  mutate(N=n(),
+         miss_parity = 1*(sum(is.na(parity))==N),
+         miss_birthlen = 1*(sum(is.na(birthlen))==N),
+         miss_meducyrs = 1*(sum(is.na(meducyrs))==N),
+         miss_nrooms = 1*(sum(is.na(nrooms))==N),
+         miss_mwtkg = 1*(sum(is.na(mwtkg))==N),
+         sum_miss= miss_parity + miss_birthlen + miss_meducyrs + miss_nrooms + miss_mwtkg 
+  )
 
-d <- d %>% filter(sum_miss<2)
-table(d$studyid)
+
+haz <- haz %>% filter(sum_miss<2)
+whz <- whz %>% filter(sum_miss<2)
 
 
 
@@ -81,11 +88,11 @@ sl <- make_learner(Lrnr_sl,
 
 
 
-## Estimate R2 within each cohort and outcome
+## Function to estimate R2 within each cohort and outcome
 
 SL_R2 <- function(dat, outcome="haz", covars){
   
-  dat <- dat[!is.na(dat[,outcome]),]
+  Y_index = which(colnames(dat) == outcome)
   
   #Drop missingness
   node_list <- list(
@@ -113,7 +120,7 @@ SL_R2 <- function(dat, outcome="haz", covars){
   
   
   n= nrow(dat)
-  y= dat[,outcome]
+  y= dat[,Y_index]
   
   mse_full <- 1/n * sum((yhat_full-y)^2)
   
@@ -156,8 +163,8 @@ SL_R2 <- function(dat, outcome="haz", covars){
 # res_haz <- d %>% group_by(studyid, country) %>% do(res = SL_R2(dat=.,  outcome="haz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
 # res_whz <- d %>% group_by(studyid, country) %>% do(res = SL_R2(dat=.,  outcome="whz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
 
-res_haz <- d %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="haz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
-res_whz <- d %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="whz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
+res_haz <- haz %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="haz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
+res_whz <- whz %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="whz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
 
 
 #Save results
