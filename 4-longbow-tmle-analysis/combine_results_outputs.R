@@ -59,12 +59,9 @@ unique(mort$outcome_variable)
 table(mort$studyid, mort$outcome_variable)
 
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/unadj_mortality_2019-08-05.rdata")
-mort_unadj <- results
-
 
 d <- bind_rows(
-  stunting, wasting, wast06,wast_birthlen, co_and_diarh, mort, mort_unadj,
+  stunting, wasting, wast06,wast_birthlen, co_and_diarh, mort, 
   HAZ, WHZ, HAZ_diar)
 
 
