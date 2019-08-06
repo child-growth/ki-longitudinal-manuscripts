@@ -20,7 +20,7 @@ shorten_descriptions <- function(dd){
   dd$short_description[dd$study_id=='WASH-Bangladesh'] <- 'WASH Benefits RCT'
   dd$short_description[dd$study_id=='WASH-Kenya'] <- 'Zn Supp + Infant Mort.'
   dd$short_description[dd$study_id=='EU'] <- 'Zn Supp RCT'
-  dd$short_description[dd$study_id=='IRC'] <- 'Immune Response Crypto '
+  dd$short_description[dd$study_id=='IRC'] <- 'Immune Response Crypto'
   dd$short_description[dd$study_id=='JiVitA-3'] <- 'JiVitA-3'
   dd$short_description[dd$study_id=='JiVitA-4'] <- 'JiVitA-4'
   

@@ -18,6 +18,7 @@
 # "figdata-stunt_laz-2-heatmap-overall--allage-primary.RDS"
 ##########################################
 
+
 #-----------------------------------
 # preamble
 #-----------------------------------
@@ -28,6 +29,9 @@ source(paste0(here::here(), "/0-config.R"))
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
 md <- readRDS('results/GHAP_metadata_stunting.RDS')
+
+#Function source
+source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 
 #Drop non-included studies
 md <- mark_measure_freq(md)
@@ -93,7 +97,7 @@ dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
 # including an anonymous label (temporary) for sharing with WHO
 dd <- mutate(dd,
              country=str_to_title(str_to_lower(countrycohort)), 
-             studycountry=paste0(short_description,', ',country)) 
+             studycountry=paste0(short_description,', ', country, ' - ', start_year)) 
 
 #Add regions with ugly Europe hack to change ordering
 dd <- dd %>% mutate(country = toupper(country))
@@ -390,9 +394,9 @@ nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
 
 # add margin around plots
 stphm = stphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-stpbar = stpbar + theme(plot.margin = unit(c(0,0.3,0.25,0.1), "cm"))
-nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.25,0.1), "cm"))
-nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.125,0,3.5), "cm"))
+stpbar = stpbar + theme(plot.margin = unit(c(0,0.3,0.50,0.2), "cm"))
+nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.50,0.2), "cm"))
+nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.1,0,4.4), "cm"))
 empty <- grid::textGrob("") 
 
 # arrange components into single plot
