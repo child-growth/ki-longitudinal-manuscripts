@@ -20,6 +20,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Function source
 source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
+source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 
 
 
@@ -74,7 +75,7 @@ wmd <- wmd %>% select(study_id, cohortnum, wastprev, wastprev_m0, wastprev_m1, w
                       meanWHZ_m11, meanWHZ_m12, meanWHZ_m13, meanWHZ_m14,
                       meanWHZ_m15, meanWHZ_m16, meanWHZ_m17, meanWHZ_m18,
                       meanWHZ_m19, meanWHZ_m20, meanWHZ_m21, meanWHZ_m22,
-                      meanWHZ_m23, meanWHZ_m24, start_year)
+                      meanWHZ_m23, meanWHZ_m24)
 md <- merge(md, wmd, by=c('study_id', 'cohortnum'), all = TRUE)
 
 #drop mal-ed Pakistan
@@ -136,7 +137,7 @@ dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
 # including an anonymous label (temporary) for sharing with WHO
 dd <- mutate(dd,
              country=str_to_title(str_to_lower(countrycohort)), 
-             studycountry=paste0(short_description,', ',country)) 
+             studycountry=paste0(short_description,', ', country, ' - ', start_year)) 
 
 #Add regions with ugly Europe hack to change ordering
 dd <- dd %>% mutate(country = toupper(country))
@@ -525,7 +526,7 @@ awstpgrid_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name,".pdf"),
+ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name, ".pdf"),
        plot = awstpgrid,device='pdf',width=12,height=9)
 saveRDS(list(dd = dd,
              dp = dp), 
