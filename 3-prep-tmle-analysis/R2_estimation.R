@@ -41,6 +41,17 @@ table(d$studyid, d$sum_miss)
 d <- d %>% filter(sum_miss<2)
 table(d$studyid)
 
+#Drop missingness
+node_list <- list(
+  W=covars,
+  A=NULL,
+  Y=c("haz","whz")
+)
+
+processed <- process_missing(data=d, node_list,  max_p_missing = 0.5)
+processed_d <- processed$d
+
+
 
 #Set up SL components
 lrnr_glm <- make_learner(Lrnr_glm)
@@ -83,7 +94,7 @@ sl <- make_learner(Lrnr_sl,
 SL_R2 <- function(dat, outcome="haz", covars){
   
   dat <- dat[!is.na(dat[,outcome]),]
-
+  
   # define covars
   covars <- colnames(dat)[which(names(dat) %in% covars)]
   
@@ -131,7 +142,7 @@ SL_R2 <- function(dat, outcome="haz", covars){
   CI_up <- psi + 1.96*se
   CI_low <- psi - 1.96*se
   
-  R2 <- 1 - mse
+  R2 <- 1 - psi
   R2.ci1 <- 1 - CI_up
   R2.ci2 <- 1 - CI_low
   
@@ -141,8 +152,11 @@ SL_R2 <- function(dat, outcome="haz", covars){
 
 
 #Apply function to all cohorts that measure the covariates of interest
-res_haz <- d %>% group_by(studyid, country) %>% do(res = SL_R2(dat=.,  outcome="haz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
-res_whz <- d %>% group_by(studyid, country) %>% do(res = SL_R2(dat=.,  outcome="whz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
+# res_haz <- d %>% group_by(studyid, country) %>% do(res = SL_R2(dat=.,  outcome="haz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
+# res_whz <- d %>% group_by(studyid, country) %>% do(res = SL_R2(dat=.,  outcome="whz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
+
+res_haz <- d %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="haz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
+res_whz <- d %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="whz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
 
 
 #Save results
