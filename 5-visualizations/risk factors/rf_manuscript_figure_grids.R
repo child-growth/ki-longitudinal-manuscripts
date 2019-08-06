@@ -71,9 +71,9 @@ pos = c(0,0.2)
 
 p1 <- p1 + ggtitle("") +  theme(legend.position ="none" ) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
 p2 <- p2 + ggtitle("") + theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
-p3 <- p3 + ggtitle("") + theme(legend.position = pos) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
-p4 <- p4 + ggtitle("") +  theme(legend.position = pos) +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
-p5 <- p5 + ggtitle("") + theme(legend.position = pos) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p3 <- p3 + ggtitle("") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p4 <- p4 + ggtitle("") +  theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p5 <- p5 + ggtitle("") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
 p6 <- p6 + ggtitle("") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
 
 
@@ -98,6 +98,11 @@ Twoby1plot <- plot_grid(Twoby1plotA_t, Twoby1plotB_t, Twoby1plotC_t, labels = "A
 fig3 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","D","E"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
 ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig3.png"), width=14, height=18)
 
+
+
+
+
+
 #Figure 4
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-wasting-prior-to-stunting-plot-objects.Rdata")
 #p_earlywast <- p_earlywast + theme(axis.text.x=element_text(angle=45,vjust=0.5))
@@ -109,12 +114,12 @@ load(paste0(here::here(),"/figures/risk factor/fig-mortality-timing-plot-object.
 pos1 = c(0.25, 0.8)
 pos2 = c(0.77, 0.3)
 pos3 = c(0.77, 0.3)
-p1 <- p1 + theme(legend.position = pos1) #+guides(color = guide_legend("Maternal weight", nrow=3))
-p2 <- p2 + theme(legend.position = pos2) #+guides(color = guide_legend("Maternal height", nrow=3))
-p3 <- p3 + theme(legend.position = pos3) #+guides(color = guide_legend("Maternal height", nrow=3))
+p1 <- p1 + theme(legend.position = "none") #+guides(color = guide_legend("Maternal weight", nrow=3))
+p2 <- p2 + theme(legend.position = "none") #+guides(color = guide_legend("Maternal height", nrow=3))
+p3 <- p3 + theme(legend.position = "none") #+guides(color = guide_legend("Maternal height", nrow=3))
 
 fig4a <- plot_grid(p_lagwhz, p_earlywast, labels = "AUTO", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
-fig4b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2, align = 'v', axis = 'l')
+fig4b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2) #, align = 'v', axis = 'l')
 fig4 <- plot_grid(fig4a, fig4b, labels = c("",""), ncol = 1, rel_heights = c(1,2))
 ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig4.png"), width=14, height=14)
 

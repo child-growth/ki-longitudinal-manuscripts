@@ -1,4 +1,5 @@
 
+library(tidyverse)
 library(data.table)
 library(longbowtools)
 library(jsonlite)
@@ -18,6 +19,8 @@ default_params$script_params$count_Y <- FALSE
 
 load(here("4-longbow-tmle-analysis","analysis specification","mediation.RData"))
 analyses
+
+analyses <- analyses %>% filter(A %in% c("fhtcm","mhtcm","mwtkg","mbmi"))
 
 analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
 
@@ -67,5 +70,7 @@ obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results")
 # save concatenated results
 filename1 <- paste(paste('mediation',Sys.Date( ),sep='_'),'rdata',sep='.')
 filename2 <- paste(paste('mediation_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
+save(results, file=here("results","rf results","raw longbow results",filename1))
+save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
 
 

@@ -56,7 +56,7 @@ summary(d$estimate)
 sumRR <- d %>% group_by(outcome_variable, intervention_variable) %>% summarize(RR= exp(mean(untransformed_estimate))) %>% as.data.frame()
 sumRR
 
-df <- d %>% filter(intervention_variable=="ever_swasted06") %>% filter(outcome_variable=="dead") 
+df <- d %>% filter(intervention_variable=="ever_sunderweight06"|intervention_variable=="ever_underweight06") %>% filter(outcome_variable!="dead") 
 df
 
 # d<- d %>% filter(!(studyid %in% c("ki0047075b-MAL-ED", "ki1000304b-SAS-FoodSuppl",  "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal")))
@@ -195,7 +195,7 @@ d2 = d2 %>% mutate(Measure=tolower(Measure),
   type = gsub(" 0-6 months", "", type))
   
 d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
-                   outcome_label = gsub("Moderately persistently wasteds", "Persistently wasted", outcome_label), 
+                   outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
@@ -308,7 +308,7 @@ d2 = d2 %>% mutate(Measure=tolower(Measure),
                    type = gsub(" 0-6 months", "", type))
 
 d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
-                   outcome_label = gsub("Moderately persistently wasteds", "Persistently wasted", outcome_label), 
+                   outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
@@ -328,7 +328,7 @@ p2 <- ggplot(d2, aes(x=outcome_label)) +
         strip.background = element_blank(),
         legend.position="none",
         text = element_text(size=16)) + 
-  ggtitle("Outcome: persistent wasting from 6-24 months")+ 
+  ggtitle("Outcome: persistent wasting\nfrom 6-24 months")+ 
   coord_cartesian(ylim=c(1,8))+
   coord_flip()
 
@@ -351,7 +351,7 @@ d2 = d2 %>% mutate(Measure=tolower(Measure),
                    type = gsub(" 0-6 months", "", type))
 
 d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
-                   outcome_label = gsub("Moderately persistently wasteds", "Persistently wasted", outcome_label), 
+                   outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
@@ -371,7 +371,7 @@ p3 <- ggplot(d2, aes(x=outcome_label)) +
         strip.background = element_blank(),
         legend.position = "none",
         text = element_text(size=16))+
-  ggtitle("Outcome: wasted and stunted at 18 months") + coord_cartesian(ylim=c(1,8)) +
+  ggtitle("Outcome: wasted and\nstunted at 18 months") + coord_cartesian(ylim=c(1,8)) +
   coord_flip()
 
 ggsave(p3, file=here("/figures/risk factor/fig-morbidity-co-RR.png"), width=10, height=5.2)

@@ -95,8 +95,8 @@ p_ageRR <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_le
   geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.74,2.06)) +
   #coord_cartesian(ylim = c(0.8,2)) +
-  scale_colour_manual(values=tableau10[c(3, 2)]) +  
-  ggtitle("Ever stunted                                                                       Ever wasted")+
+  scale_colour_manual(values=tableau10[c(2,3)]) +  
+  ggtitle("Stunting incidence                                                                Wasting incidence")+
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=8, hjust = 1),

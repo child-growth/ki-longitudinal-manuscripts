@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load mediation results
-load(here("/results/rf results/raw longbow results/mediation_2019-08-01.rdata"))
+load(here("/results/rf results/raw longbow results/mediation_2019-08-06.rdata"))
 md <- results %>% filter(type=="ATE") %>% mutate(analysis="med")
 head(md)
 
@@ -67,7 +67,10 @@ head(RMAest)
 RMAest_clean <- RMA_clean(RMAest)
 head(RMAest_clean)
 
-p <- ggplot(RMAest_clean %>% filter(agecat=="6 months", CI1!=CI2), 
+int_vars <- c("mhtcm", "mwtkg", "mbmi", "fhtcm")
+plotdf <- RMAest_clean %>% filter(agecat=="6 months", CI1!=CI2, intervention_variables %in% int_vars)
+
+p <- ggplot(plotdf, 
        aes(x=paste0(intervention_level,"\n",analysis), y=ATE, color=analysis)) +
       geom_point() + 
       geom_linerange(aes(ymin=CI1 , ymax=CI2)) + 
