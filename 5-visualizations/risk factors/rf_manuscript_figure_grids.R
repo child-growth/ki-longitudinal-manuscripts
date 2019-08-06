@@ -65,14 +65,16 @@ load(paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.Rdata"))
 load(paste0(here::here(), "/results/rf_spline_objects.Rdata"))
 
 #pos = c(0.75,0.83) #For 2 panels
-pos = c(0.45,0.83)
-pos = c(0.35,0.2)
-p1 <- p1 + ggtitle("") +  theme(legend.position ="none" ) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(1,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = 0:6*4)
-p2 <- p2 + ggtitle("") + theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(1,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = 0:6*4)
-p3 <- p3 + ggtitle("") + theme(legend.position = pos) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_x_continuous(limits=c(1,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = 0:6*4) + theme(legend.key = element_blank())
-p4 <- p4 + ggtitle("") +  theme(legend.position = pos) +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(1,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = 0:6*4) + theme(legend.key = element_blank())
-p5 <- p5 + ggtitle("") + theme(legend.position = pos) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(1,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = 0:6*4) + theme(legend.key = element_blank())
-p6 <- p6 + ggtitle("") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(1,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = 0:6*4)
+#pos = c(0.45,0.83)
+#pos = c(0.35,0.2)
+pos = c(0,0.2)
+
+p1 <- p1 + ggtitle("") +  theme(legend.position ="none" ) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+p2 <- p2 + ggtitle("") + theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+p3 <- p3 + ggtitle("") + theme(legend.position = pos) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p4 <- p4 + ggtitle("") +  theme(legend.position = pos) +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p5 <- p5 + ggtitle("") + theme(legend.position = pos) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p6 <- p6 + ggtitle("") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
 
 
 
@@ -95,9 +97,6 @@ Twoby1plot <- plot_grid(Twoby1plotA_t, Twoby1plotB_t, Twoby1plotC_t, labels = "A
 
 fig3 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","D","E"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
 ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig3.png"), width=14, height=18)
-
-
-
 
 #Figure 4
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-wasting-prior-to-stunting-plot-objects.Rdata")

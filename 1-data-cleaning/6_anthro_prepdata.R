@@ -48,6 +48,7 @@ stunt_mort <- d %>% filter(haz >= -6 & haz <=6) %>%
   mutate(measid=seq_along(subjid)) 
 #Observations dropped
 nobs - nrow(stunt_mort)
+nobs - nrow(stunt_mort[stunt_mort$measure_freq!="yearly",])
 
 wast_mort <- d %>% filter(whz >= -5 & whz <=5) %>%
   subset(., select = - c(haz, waz, muaz)) %>%
@@ -56,6 +57,7 @@ wast_mort <- d %>% filter(whz >= -5 & whz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
 nobs - nrow(wast_mort)
+nobs - nrow(wast_mort[wast_mort$measure_freq!="yearly",])
 
 waz_mort <- d %>% filter(waz >= -5 & waz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
@@ -63,6 +65,7 @@ waz_mort <- d %>% filter(waz >= -5 & waz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
 nobs - nrow(waz_mort)
+nobs - nrow(waz_mort[waz_mort$measure_freq!="yearly",])
 
 co_mort <- d %>% filter(haz >= -6 & haz <=6 & whz >= -5 & whz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
@@ -70,6 +73,7 @@ co_mort <- d %>% filter(haz >= -6 & haz <=6 & whz >= -5 & whz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
 nobs - nrow(co_mort)
+nobs - nrow(co_mort[co_mort$measure_freq!="yearly",])
 
 
 #--------------------------------------------
