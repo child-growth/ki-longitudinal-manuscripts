@@ -43,8 +43,7 @@ unique(dfull$type)
 d <- dfull %>% filter(type=="RR")
 
 #keep only morbidity and mortality analysis
-d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="dead624" | outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
-#d <- d %>% filter(outcome_variable=="dead") 
+d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="dead0plus" | outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
 
 table(d$outcome_variable)
 d <- droplevels(d)
@@ -57,7 +56,8 @@ summary(d$estimate)
 sumRR <- d %>% group_by(outcome_variable, intervention_variable) %>% summarize(RR= exp(mean(untransformed_estimate))) %>% as.data.frame()
 sumRR
 
-df <- d %>% filter(intervention_variable=="ever_wasted06")
+df <- d %>% filter(intervention_variable=="ever_swasted06") %>% filter(outcome_variable=="dead") 
+df
 
 # d<- d %>% filter(!(studyid %in% c("ki0047075b-MAL-ED", "ki1000304b-SAS-FoodSuppl",  "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal")))
 # summary(d$estimate)
@@ -118,8 +118,8 @@ d <- RMAest
 d <- droplevels(d)
 
 table(d$outcome_variable)
-d$outcome_variable <- factor(d$outcome_variable, levels=c("dead","dead624","pers_wasted624","co_occurence"))
-levels(d$outcome_variable) <- c("Mortality","Mortality 6-24mo","Persistently wasted from 6-24 months","Wasted and stunted at 18 months")
+d$outcome_variable <- factor(d$outcome_variable, levels=c("dead","dead0plus","pers_wasted624","co_occurence"))
+levels(d$outcome_variable) <- c("Mortality","All mortality","Persistently wasted from 6-24 months","Wasted and stunted at 18 months")
 table(d$outcome_variable)
 
 d$RFlabel <- NA
@@ -176,6 +176,9 @@ table(d$BW)
 d$intervention_variable <- factor(d$RFlabel)
 
 
+#Drop 6-24 month outcomes
+d <- d %>% filter(agerange!="6-24 months")
+
 
 i<- levels(d$outcome_variable)[1]
 
@@ -186,8 +189,15 @@ d2$intervention_variable <- as.character(d2$intervention_variable)
 d2 <- d2 %>% arrange(RR)
 d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
 
-d2 = d2 %>% mutate(type = gsub("No", "Moderate", type)) %>% mutate(type = gsub("Yes", "Severe", type))
-d2 = d2 %>% mutate(outcome_label = paste(Measure, ", ", type, sep = ""))
+d2 = d2 %>% mutate(Measure=tolower(Measure),
+  type = gsub("No", "Moderately", type),
+  type = gsub("Yes", "Severely", type),
+  type = gsub(" 0-6 months", "", type))
+  
+d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
+                   outcome_label = gsub("Moderately persistently wasteds", "Persistently wasted", outcome_label), 
+                   outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
+                   outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
 p1 <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
@@ -271,7 +281,7 @@ p_mortsens <- ggplot(d2, aes(x=outcome_label)) +
         strip.background = element_blank(),
         text = element_text(size=16), 
         legend.position = "none") + 
-  ggtitle("Outcome: mortality 6-24 mo") + coord_cartesian(ylim=c(1,9)) + 
+  ggtitle("Outcome: all mortality") + coord_cartesian(ylim=c(1,9)) + 
   coord_flip()
 
 print(p_mortsens)

@@ -51,7 +51,7 @@ HAZ_diar <- results
 unique(HAZ_diar$intervention_variable)
 
 #mortality results
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/mortality_2019-08-05.rdata")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/mortality_2019-08-06.rdata")
 mort <- results
 head(mort)
 unique(mort$intervention_variable)

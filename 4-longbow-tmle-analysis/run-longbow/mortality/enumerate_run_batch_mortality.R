@@ -70,3 +70,5 @@ filename1 <- paste(paste('mortality',Sys.Date( ),sep='_'),'rdata',sep='.')
 filename2 <- paste(paste('mortality_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
 save(results, file=here("results","rf results","raw longbow results",filename1))
 save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+
+

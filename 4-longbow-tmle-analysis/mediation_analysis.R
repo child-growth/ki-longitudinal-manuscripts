@@ -68,11 +68,15 @@ RMAest_clean <- RMA_clean(RMAest)
 head(RMAest_clean)
 
 p <- ggplot(RMAest_clean %>% filter(agecat=="6 months", CI1!=CI2), 
-       aes(x=paste0(intervention_level," ",analysis), y=ATE, color=analysis)) +
+       aes(x=paste0(intervention_level,"\n",analysis), y=ATE, color=analysis)) +
       geom_point() + 
       geom_linerange(aes(ymin=CI1 , ymax=CI2)) + 
       facet_wrap(RFlabel~outcome_variable, scales="free")
 print(p)
+
+
+ggsave(p, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-mediation.png", width=14, height=6)
+
 
 #Make a plot of differences
 plotdf <- plotdf %>% mutate(diff=prim-med)
