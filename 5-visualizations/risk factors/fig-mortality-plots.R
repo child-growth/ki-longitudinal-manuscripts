@@ -203,7 +203,7 @@ p1 <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-  labs(x = "", y = "Relative risk") +
+  labs(y = "Relative risk of mortality by 24 months", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
@@ -213,7 +213,8 @@ p1 <- ggplot(d2, aes(x=outcome_label)) +
         strip.background = element_blank(),
         text = element_text(size=16), 
         legend.position = "none") + 
-  ggtitle("Outcome: mortality") + coord_cartesian(ylim=c(1,9)) + 
+  #ggtitle("Outcome: mortality") + 
+  coord_cartesian(ylim=c(1,9)) + 
   coord_flip()
 
 print(p1)
@@ -239,7 +240,7 @@ ggsave(p1, file="figures/risk factor/fig-mortality-RR.png", width=10, height=5.2
 # #   geom_point(aes(y=RR, color=Measure, shape=factor(type)), size=4, stroke = 1.5) +
 # #   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
 # #   geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-# #   labs(x = "", y = "Relative risk") +
+# #   labs(y = "", x = "Exposure 0-6 months") +
 # #   geom_hline(yintercept = 1) +
 # #   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
 # #   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
@@ -271,7 +272,7 @@ ggsave(p1, file="figures/risk factor/fig-mortality-RR.png", width=10, height=5.2
 #   geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
 #   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
 #   #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-#   labs(x = "", y = "Relative risk") +
+#   labs(y = "", x = "Exposure 0-6 months") +
 #   geom_hline(yintercept = 1) +
 #   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
 #   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
@@ -318,7 +319,7 @@ p2 <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-  labs(x = "", y = "Relative Risk") +
+  labs(y = "Relative risk of persistent wasting from 6-24mo", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
@@ -328,7 +329,7 @@ p2 <- ggplot(d2, aes(x=outcome_label)) +
         strip.background = element_blank(),
         legend.position="none",
         text = element_text(size=16)) + 
-  ggtitle("Outcome: persistent wasting\nfrom 6-24 months")+ 
+  #ggtitle("Outcome: persistent wasting\nfrom 6-24 months")+ 
   coord_cartesian(ylim=c(1,8))+
   coord_flip()
 
@@ -360,7 +361,7 @@ p3 <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-  labs(x = "", y = "Relative Risk") +
+  labs(y = "Relative risk of being wasted + stunted at 18mo", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
@@ -371,7 +372,8 @@ p3 <- ggplot(d2, aes(x=outcome_label)) +
         strip.background = element_blank(),
         legend.position = "none",
         text = element_text(size=16))+
-  ggtitle("Outcome: wasted and\nstunted at 18 months") + coord_cartesian(ylim=c(1,8)) +
+  #ggtitle("Outcome: wasted and\nstunted at 18 months") + 
+  coord_cartesian(ylim=c(1,8)) +
   coord_flip()
 
 ggsave(p3, file=here("/figures/risk factor/fig-morbidity-co-RR.png"), width=10, height=5.2)

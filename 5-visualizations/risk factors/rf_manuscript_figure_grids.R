@@ -117,6 +117,7 @@ pos3 = c(0.77, 0.3)
 p1 <- p1 + theme(legend.position = "none") #+guides(color = guide_legend("Maternal weight", nrow=3))
 p2 <- p2 + theme(legend.position = "none") #+guides(color = guide_legend("Maternal height", nrow=3))
 p3 <- p3 + theme(legend.position = "none") #+guides(color = guide_legend("Maternal height", nrow=3))
+p <- p +  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 fig4a <- plot_grid(p_lagwhz, p_earlywast, labels = "AUTO", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
 fig4b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2) #, align = 'v', axis = 'l')

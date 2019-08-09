@@ -68,20 +68,45 @@ RMAest_clean <- RMA_clean(RMAest)
 head(RMAest_clean)
 
 int_vars <- c("mhtcm", "mwtkg", "mbmi", "fhtcm")
-plotdf <- RMAest_clean %>% filter(agecat=="6 months", CI1!=CI2, intervention_variables %in% int_vars)
+plotdf <- RMAest_clean %>% filter(agecat=="6 months", CI1!=CI2, intervention_variable %in% int_vars)
+plotdf$intervention_variable <- factor(plotdf$intervention_variable , levels= rev(c("fhtcm", "mhtcm", "mbmi", "mwtkg")))
+plotdf$Analysis <- ifelse(plotdf$analysis=="prim", "Primary", "Mediation")
+plotdf <- plotdf %>% arrange(intervention_variable) %>% mutate(RFlabel2 = paste0(RFlabel,"\nref: ",baseline_level),
+                                                               RFlabel2 = factor(RFlabel2, levels=unique(RFlabel2)))
 
-p <- ggplot(plotdf, 
-       aes(x=paste0(intervention_level,"\n",analysis), y=ATE, color=analysis)) +
-      geom_point() + 
-      geom_linerange(aes(ymin=CI1 , ymax=CI2)) + 
-      facet_wrap(RFlabel~outcome_variable, scales="free")
-print(p)
+outcomes <- c(
+  `haz` = "",
+  `whz` = "")
+
+pd <- position_dodge(0.4)
 
 
-ggsave(p, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-mediation.png", width=14, height=6)
+p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))) + 
+  geom_point(aes(y=ATE, color=Analysis), size = 3, position = pd) +
+  geom_linerange(aes(ymin=CI1, ymax=CI2, color=Analysis),
+                 alpha=0.5, size = 1, position = pd) +
+  facet_grid(RFlabel2 ~ outcome_variable, scales="free", 
+             labeller = labeller(outcome_variable = outcomes), 
+             switch = "y")+
+  labs(x = "Exposure level", y = "Adjusted Z-score difference") +
+  geom_hline(yintercept = 0) +
+  scale_y_continuous(limits = c(-1, 0.55), expand = c(0,0)) +
+  scale_colour_manual(values=tableau10[c(2,3)]) +  
+  ggtitle("LAZ                                                       WLZ")+
+  theme(strip.background = element_blank(),
+        legend.position=c(0.07, 0.84),
+        axis.text.y = element_text(size=8, hjust = 1),
+        strip.text.x = element_text(size=8, face = "bold"),
+        strip.text.y = element_text(size=8, angle = 180, face = "bold"),
+        strip.placement = "outside",
+        axis.text.x = element_text(size=10, vjust = 0.5),
+        panel.spacing = unit(0, "lines"),
+        legend.box.background = element_rect(colour = "black")#, 
+        #title = element_text(margin=margin(0,0,-10,0))
+        ) +
+  guides(color=guide_legend(ncol=1))+
+  coord_flip()
 
+ggsave(p, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-mediation.png", width=10, height=6)
 
-#Make a plot of differences
-plotdf <- plotdf %>% mutate(diff=prim-med)
-summary(plotdf$diff)
 
