@@ -29,15 +29,11 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # read in outcome data 
-load("U:/ucb-superlearner/Manuscript analysis data/stunting_data.RData")
-st = d
-rm(d)
-load("U:/ucb-superlearner/Manuscript analysis data/wasting_data.RData")
-wst = d
-rm(d)
-load("U://ucb-superlearner/Manuscript analysis data/waz_data.RData")
-waz = d
-rm(d)
+st = readRDS(rf_stunting_data_path)
+wst = readRDS(rf_wasting_data_path)
+waz = readRDS(rf_underweight_path)
+
+
 
 #Subset to ages under 2 years.
 waz <- waz %>% filter(agedays < 24 * 30.4167)

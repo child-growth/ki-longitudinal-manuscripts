@@ -9,7 +9,6 @@ source(paste0(here::here(), "/0-config.R"))
 
 #load covariates
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
-cov <- cov %>% subset(., select=-c(htcm,lencm))
 
 #Check reference levels
 for(i in 3:ncol(cov)){
@@ -332,10 +331,7 @@ vel_waz$subjid <- as.character(vel_waz$subjid)
 vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
 meanWHZ$subjid <- as.character(meanWHZ$subjid)
 
-#Drop month to prevent duplicates
-cuminc <- cuminc %>% subset(., select=-c(month))
-cuminc_nobirth <- cuminc_nobirth %>% subset(., select = -c(month))
-pers_wast <- pers_wast %>% subset(., select = -c(month))
+
 
 #------------------------------------
 # Create cumulative incidence dataset
@@ -895,4 +891,5 @@ adjustment_sets <- list(
             "trth2o","cleanck","impfloor","impsan","safeh20")
 )
 save(adjustment_sets, file="adjustment_sets_list.Rdata")
+save(adjustment_sets, file=here("/results/adjustment_sets_list.Rdata"))
 

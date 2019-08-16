@@ -60,7 +60,7 @@ wast_mort <- d %>% filter(whz >= -5 & whz <=5) %>%
 nobs - nrow(wast_mort)
 nobsq - nrow(wast_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167))
 
-waz_mort <- d %>% filter(waz >= -5 & waz <=5) %>%
+waz_mort <- d %>% filter(waz >= -6 & waz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   group_by(studyid,subjid) %>%
   arrange(studyid,subjid,agedays) %>%
