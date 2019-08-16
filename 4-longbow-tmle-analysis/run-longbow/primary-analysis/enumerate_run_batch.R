@@ -11,11 +11,11 @@ library(here)
 
 # 1. enumerate analysis
 
-setwd(here("ki-longitudinal-manuscripts","4-longbow-tmle-analysis","run-longbow","primary-analysis"))
+setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
 
-load(here("ki-longitudinal-manuscripts","4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
+load(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
 analyses <- analyses
 # load("wasting_unadjusted_binary_analyses.rdata")
 # analyses_2 <- analyses
@@ -41,7 +41,7 @@ writeLines(toJSON(enumerated_analyses),"all_bin_analyses.json")
 
 # 2. run batch
 
-configure_cluster(here("ki-longitudinal-manuscripts","0-project-functions","cluster_credentials.json"))
+configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
 # inputs <- "inputs_template.json"
@@ -58,15 +58,15 @@ bin_batch_id <-  run_on_longbow(rmd_filename, bin_batch_inputs, provision = FALS
 wait_for_batch(bin_batch_id)
 
 # download the longbow outputs
-get_batch_results(bin_batch_id, results_folder="results_bin_birthlen")
-length(dir("results_bin_birthlen"))
+get_batch_results(bin_batch_id, results_folder="results_bin")
+length(dir("results_bin"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results_bin_birthlen")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin_birthlen")
+results <- load_batch_results("results.rdata", results_folder = "results_bin")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin")
 
 # save concatenated results
-filename1 <- paste(paste('subset_wast_birthlen',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('subset_wast_birthlen_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
-save(results, file=here("ki-longitudinal-manuscripts","results","rf results","raw longbow results",filename1))
-save(obs_counts, file=here("ki-longitudinal-manuscripts","results","rf results","raw longbow results",filename2))
+filename1 <- paste(paste('results_bin',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename2 <- paste(paste('results_bin_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
+save(results, file=here("results","rf results","raw longbow results",filename1))
+save(obs_counts, file=here("results","rf results","raw longbow results",filename2))

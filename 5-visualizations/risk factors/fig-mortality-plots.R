@@ -380,4 +380,4 @@ ggsave(p3, file=here("/figures/risk factor/fig-morbidity-co-RR.png"), width=10, 
 
 
 #Save plot objects
-save(p1, p2, p3, file="results/rf_mortality_plot_objects.Rdata")
+save(p1, p2, p3, file=here("results/rf_mortality_plot_objects.Rdata"))
