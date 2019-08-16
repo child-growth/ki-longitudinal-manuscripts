@@ -9,11 +9,6 @@ library(gtable)
 require(cowplot)
 
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
-
 
 #Load data
 par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
@@ -148,9 +143,4 @@ plot_wlz_region = grid.arrange(plot_wlz_africa, plot_wlz_la, plot_wlz_sa, ncol =
                                top = textGrob("Attributable difference - WLZ, stratified by region",gp=gpar(fontsize=26,font=2)))
 
 ggsave(plot_wlz_region, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-wlz-PAR-strat-region.png"), height=18, width=15)
-
-
-#Save just South Asia plot for UNICEF presentation
-p <- plot_wlz_sa %+% ggtitle("Population attributable difference\nin WLZ at 24 months") %+% coord_flip(ylim=c(-0.2,0.5), expand=F)
-ggsave(p, file=paste0(here::here(), "/figures/India/wasting/fig-wlz-PAR-South-Asia.png"), height=8, width=18)
 

@@ -4,7 +4,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 
-load(paste0(ghapdata_dir,"adjustment_sets_list.Rdata"))
+load(here("/results/adjustment_sets_list.Rdata"))
 A <- names(adjustment_sets)
 
 Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
@@ -33,10 +33,6 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 #---------------------------------------------
 # Specify the binary analyses
 #---------------------------------------------
-setwd(ghapdata_dir)
-load("st_cuminc_rf.Rdata")
-table(d$ever_stunted, d$sex)
-summary(d$id)
 
 st_prev <- specify_rf_analysis(A=Avars, Y=c("stunted","sstunted"), file="st_prev_rf.Rdata")
 #st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
@@ -154,7 +150,7 @@ morbidity <- specify_rf_analysis(A=Avars_morbidity,
 
 
 #bind together datasets
-analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc, mortality, morbidity)
+analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc)
 
 
 
@@ -196,7 +192,10 @@ WHZ_quart_vel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm","s
 
 
 
-analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz, WHZ_quart_vel)
+#analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz, WHZ_quart_vel)
+
+#primary outcomes subset
+analyses <- rbind(haz, whz, WHZ_quart_vel)
 
 
 #Save analysis specification

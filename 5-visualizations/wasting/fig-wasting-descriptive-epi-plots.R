@@ -45,22 +45,22 @@ df <- df %>%
   mutate(agecat = as.numeric(agecat)) 
 
 
-# p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-#   stat_smooth(aes(fill=region, color=region), se=F, span = 1) +
-#   geom_hline(yintercept = 0, colour = "black") +
-#   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
-#                      limits = c(-1, 0.5)) + 
-#   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
-#   scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-#                     name = 'Region') +
-#   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-#                      name = 'Region') +
-#   xlab("Child age, months")+
-#   ylab("Weight-for-length Z-score") +
-#   ggtitle("") +
-#   theme(legend.position="right")
-# 
-# ggsave(p, file=here::here(),"/6-shiny-app/figures/wasting/WLZ_by_region.png", width=10, height=4)
+p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
+  stat_smooth(aes(fill=region, color=region), se=F, span = 1) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10),
+                     limits = c(-1, 0.5)) +
+  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
+  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                    name = 'Region') +
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                     name = 'Region') +
+  xlab("Child age, months")+
+  ylab("Weight-for-length Z-score") +
+  ggtitle("") +
+  theme(legend.position="right")
+
+ggsave(p, file=here::here(),"/6-shiny-app/figures/wasting/WLZ_by_region.png", width=10, height=4)
 
 
 
