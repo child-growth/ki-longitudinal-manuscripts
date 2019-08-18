@@ -193,12 +193,6 @@ WHZ_quart_vel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm","s
 
 
 #analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz, WHZ_quart_vel)
-<<<<<<< HEAD
-=======
-
-#primary outcomes subset
-analyses <- rbind(haz, whz, WHZ_quart_vel)
->>>>>>> 99d9e8127e12e61d2c737329daccbd3fb8342280
 
 #primary outcomes subset
 analyses <- rbind(haz, whz, WHZ_quart_vel)

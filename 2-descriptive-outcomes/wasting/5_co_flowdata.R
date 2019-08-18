@@ -12,7 +12,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-readRDS("U:/ucb-superlearner/Manuscript analysis data/co_occurrence_data.rds")
+d <- readRDS("U:/ucb-superlearner/Manuscript analysis data/co_occurrence_data.rds")
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 
