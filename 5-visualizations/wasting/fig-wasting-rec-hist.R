@@ -121,7 +121,7 @@ rec_violin_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_violin_plot, file=paste0("figures/wasting/fig-", rec_violin_name, ".png"), width=8, height=5)
+ggsave(rec_violin_plot, file=paste0(here(),"/figures/wasting/fig-", rec_violin_name, ".png"), width=8, height=5)
 
 save(rec_violin_plot, file=paste0(here::here(),"/figures/plot objects/rec_violin_plot_object.Rdata"))
 

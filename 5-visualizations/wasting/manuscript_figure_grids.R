@@ -4,9 +4,6 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
 require(cowplot)
 
 #Figure 2
@@ -45,10 +42,6 @@ fig4_c <- plot_grid(birthstrat_curve, birthstrat_stats_plot, labels = c("E","F")
 
 fig4 <- plot_grid(fig4_a, inc_plot[[1]], rec_plot[[1]], fig4_c, labels = c("","B","D",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
 ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig4.png"), width=14, height=14)
-
-#save individual trajectory seperately for UNICEF presentation
-ggsave(ind_traj, file=paste0(here::here(),"/figures/India/wasting/individual_trajectory.png"), width=10, height=6)
-
 
 #Figure 5
 load(here("/figures/plot objects/co_plot_object.Rdata"))

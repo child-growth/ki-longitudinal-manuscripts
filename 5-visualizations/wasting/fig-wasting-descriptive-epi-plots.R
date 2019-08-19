@@ -2,12 +2,8 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
 #Load data
-load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 load(paste0(here::here(),"/results/quantile_data_wasting.Rdata"))
 
 
@@ -381,7 +377,7 @@ inc_plot <- ip_plot(
   xlabel = "Child age, months",
   h1 = 85,
   h2 = 90,
-  returnData = F
+  returnData = T
 )
 inc_plot
 

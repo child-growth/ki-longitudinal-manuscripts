@@ -5,13 +5,10 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
+library(lmtest)
 
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
+d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 
-
-
-d <- readRDS("U:/ucb-superlearner/data/seasonality_data.rds")
 
 d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
@@ -190,7 +187,7 @@ fit.cont.rma <- function(data,age,yi,vi,ni,nlab){
 
 
 
-
+df$agecat <- df$childseason_birthcat
 
 # estimate random effects, format results
 whz.res=lapply((levels(df$childseason_birthcat)),function(x) 
