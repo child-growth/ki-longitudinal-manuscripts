@@ -8,7 +8,7 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_function
 
 
 load(paste0(ghapdata_dir, "Wasting_inc_rf_data.RData"))
-load("U:/ucb-superlearner/data/Wasting_inc_sens_data.RData")
+load(paste0(ghapdata_dir, "Wasting_inc_sens_data.RData"))
 
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
