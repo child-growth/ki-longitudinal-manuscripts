@@ -338,7 +338,7 @@ summary.ci <- function(d, severe.wasted = F, age.range){
 
 
 
-summary.whz <- function(d){
+summary.whz <- function(d, N_filter=50){
 
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -355,7 +355,7 @@ summary.whz <- function(d){
     summarise(nmeas=sum(!is.na(whz)),
               meanwhz=mean(whz),
               varwhz=var(whz)) %>%
-    filter(nmeas>=50)
+    filter(nmeas>=N_filter)
 
   whz.data <- droplevels(whz.data)
 
@@ -501,7 +501,7 @@ summary.rec60 <- function(d, length=60){
 
 
 
-summary.perswast <- function(d){
+summary.perswast <- function(d, N_filter=50){
 
 
   pers <- d %>% group_by(studyid, country, subjid) %>%
@@ -522,7 +522,7 @@ summary.perswast <- function(d){
       nstudy=length(unique(studyid)),
       ncases=sum(pers_wast, na.rm=T),
       N=sum(length(pers_wast))) %>%
-    filter(N>=50) 
+    filter(N>=N_filter) 
   
   pers.data$agecat = factor(pers.data$agecat)
 
@@ -554,7 +554,7 @@ summary.perswast <- function(d){
 
 
 
-summary.ir <- function(d, recovery=F, sev.wasting=F){
+summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filter=125){
   
   if(recovery==T){
     d$wast_inc <- d$wast_rec
@@ -581,7 +581,7 @@ summary.ir <- function(d, recovery=F, sev.wasting=F){
               ncase=sum(wast_inc, na.rm=T),
               nchild=length(unique(subjid)),
               nstudy=length(unique(studyid))) %>%
-    filter(nchild>=5 & ptar>125 & !is.na(agecat))
+    filter(nchild>=Nchild_filter & ptar>ptime_filter & !is.na(agecat))
 
   inc.data <- droplevels(inc.data)
 

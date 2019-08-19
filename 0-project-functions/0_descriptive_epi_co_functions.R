@@ -2,7 +2,7 @@
 
 
 
-summary.prev.co <- function(d, severe=F){
+summary.prev.co <- function(d, severe=F, N_filter=50){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -27,7 +27,7 @@ summary.prev.co <- function(d, severe=F){
     summarise(nmeas=sum(!is.na(whz)),
               prev=mean(wasted==1 & stunted==1, na.rm=T),
               nxprev=sum(wasted==1 & stunted==1, na.rm=T)) %>%
-    filter(nmeas>=50) 
+    filter(nmeas>=N_filter) 
   
   prev.data <- droplevels(prev.data)
   

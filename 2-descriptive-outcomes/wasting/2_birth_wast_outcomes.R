@@ -12,6 +12,8 @@ load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 co <- readRDS(paste0(ghapdata_dir, "rf_co_occurrence_data.rds"))
 
 
+age_cutoff = 1
+
 
 #Subset to monthly
 d <- d_noBW %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167) %>%
@@ -20,21 +22,20 @@ d <- d_noBW %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167
 #Mark children born or enrolled wasted
 d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
        mutate(age_enrol = first(agedays)) %>%
-       filter(age_enrol == 1) %>%
+       filter(age_enrol == age_cutoff) %>%
        mutate(born_wast = 1 * (first(whz) < (-2)))# %>%
        #filter(born_wast==1 | sum(wast_inc)>0) #Subset to only children who experiences wasting
 table(d$born_wast)
 
 #Subset to co-occurrence to monthly
 co <- co %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167) %>%
-  filter(region=="South Asia") %>%
   subset(., select = c(studyid, region, country, subjid, agedays, whz, haz, sex))
 
 #Mark children born or enrolled wasted
 co <- co %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
   mutate(age_enrol = first(agedays),
          first_whz = first(whz)) %>%
-  filter(age_enrol == 1) %>%
+  filter(age_enrol == age_cutoff) %>%
   mutate(born_wast = 1 * (first_whz < (-2)))
 
 #Drop children who never recovered from wasting at birth
@@ -86,25 +87,25 @@ co$agecat <- "6-24 months"
 co$agecat <- factor(co$agecat)
 
 #mean whz
-whz.res <- d %>% group_by(born_wast) %>% do(summary.whz(.)$whz.res)
+whz.res <- d %>% group_by(born_wast) %>% do(summary.whz(., N_filter=1)$whz.res)
 whz.res
 
 #Incidence rate
-ir.res <- d %>% group_by(born_wast) %>% do(summary.ir(.)$ir.res)
+ir.res <- d %>% group_by(born_wast) %>% do(summary.ir(., Nchild_filter=1, ptime_filter=1)$ir.res)
 ir.res$est <- ir.res$est * 1000
 ir.res$lb <- ir.res$lb * 1000
 ir.res$ub <- ir.res$ub * 1000
-
+ir.res
 
 
 #Persistant wasting
-perswast.res <- d %>% group_by(born_wast) %>% do(summary.perswast(.)$pers.res)
+perswast.res <- d %>% group_by(born_wast) %>% do(summary.perswast(., N_filter=1)$pers.res)
 perswast.res
 
 
 
 #co-occurrent wasting and stunting
-co.res <- co %>% group_by(born_wast) %>% do(summary.prev.co(.)$prev.res)
+co.res <- co %>% group_by(born_wast) %>% do(summary.prev.co(., N_filter=1)$prev.res)
 co.res
 
 
