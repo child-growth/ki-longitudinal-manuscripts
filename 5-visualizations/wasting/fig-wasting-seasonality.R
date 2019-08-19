@@ -6,14 +6,9 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
 
 
-
-
-
-d <- readRDS("U:/ucb-superlearner/data/seasonality_data.rds")
+d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 
 d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
@@ -55,7 +50,7 @@ p1_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p1, file=paste0("figures/wasting/fig-",p1_name,".png"), width=6, height=3)
+ggsave(p1, file=paste0(here(),"/figures/wasting/fig-",p1_name,".png"), width=6, height=3)
 
 
 
@@ -79,8 +74,8 @@ p2_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p2, file=paste0("figures/wasting/fig-",p2_name,".png"), width=6, height=3)
-ggsave(p2, file=paste0("6-shiny-app/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
+ggsave(p2, file=paste0(here(),"/figures/wasting/fig-",p2_name,".png"), width=6, height=3)
+ggsave(p2, file=paste0(here(),"/6-shiny-app/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
 
 
 
@@ -204,7 +199,7 @@ p3_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p3, file=paste0("figures/wasting/fig-",p3_name,".png"), width=8, height=5)
+ggsave(p3, file=paste0(here(),"/figures/wasting/fig-",p3_name,".png"), width=8, height=5)
 
 
 
@@ -247,7 +242,7 @@ p4_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p4, file=paste0("figures/wasting/fig-",p4_name,".png"), width=8, height=5)
+ggsave(p4, file=paste0(here(),"/figures/wasting/fig-",p4_name,".png"), width=8, height=5)
 
 
 #Save plot objects
