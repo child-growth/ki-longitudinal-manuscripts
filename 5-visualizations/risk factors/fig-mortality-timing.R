@@ -3,10 +3,6 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
 
 #Load mortality outcomes
 df <- mort <- readRDS("U:/UCB-SuperLearner/Manuscript analysis data/mortality.rds")
@@ -15,7 +11,7 @@ mort <- mort %>% filter(!is.na(agedth)) %>%
 
 df <- df %>% filter(!(studyid %in% c("ki1055867-WomenFirst","ki1000301-DIVIDS","ki0047075b-MAL-ED", 
                                      "ki1000304b-SAS-FoodSuppl", "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal"))) #drop studies qith too few outcomes
-length(unique(df$studyid[!is.na(df$dead),]))
+length(unique(df$studyid[!is.na(df$dead)]))
 table(df$dead)
 df %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
   summarize(sum(dead, na.rm=T), n())
