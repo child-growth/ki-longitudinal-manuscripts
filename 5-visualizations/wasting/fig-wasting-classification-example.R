@@ -4,8 +4,6 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
 
 load(paste0(ghapdata_dir,"/Wasting_inc_data.RData"))
 
@@ -107,11 +105,11 @@ ggsave(p, file=paste0(here(),"/figures/wasting/individual_traj.png"),width=8,hei
 
 
 
-pdf(paste0(here(),"/figures/wasting/individual_traj_maled_set.pdf"),width=8,height=5)    
-for(i in 1:length(unique(df$subjid))){   
-  p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],])
-  print(p)
-  
-}
-dev.off()
+# pdf(paste0(here(),"/figures/wasting/individual_traj_maled_set.pdf"),width=8,height=5)    
+# for(i in 1:length(unique(df$subjid))){   
+#   p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],])
+#   print(p)
+#   
+# }
+# dev.off()
 

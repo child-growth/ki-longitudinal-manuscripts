@@ -34,7 +34,7 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
   scale_color_manual(values=tableau10[c(5:6)]) + 
   scale_fill_manual(values=tableau10[c(5:6)]) + 
   theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
-  theme(axis.text.x = element_text(margin = 
+  theme(axis.text.x = element_text(margin =  
                                      margin(t = 0, r = 0, b = 0, l = 0),
                                    size = 12))+ #,
                                    #angle = 30, hjust = 0.5, vjust=0.5)) +
