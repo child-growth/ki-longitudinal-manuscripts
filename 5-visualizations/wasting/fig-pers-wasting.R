@@ -1,12 +1,7 @@
 
 
 rm(list=ls())
-library(tidyverse)
-library(here)
-
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
+source(paste0(here::here(), "/0-config.R"))
 
 #Load data
 load(paste0(here(),"/results/persistent_wasting024.Rdata"))
@@ -41,5 +36,5 @@ p <- ggplot(d,aes(y=est,x=region)) +
   theme(axis.title.y = element_text(size = 12)) 
 p
 
-ggsave(p, file="figures/wasting/pooled_pers024.png", width=8, height=5)
+ggsave(p, file=here("/figures/wasting/pooled_pers024.png"), width=8, height=5)
 

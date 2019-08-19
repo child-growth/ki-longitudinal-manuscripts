@@ -8,9 +8,9 @@ theme_set(theme_ki())
 #Load data
 get_file_path <- function(x)
   file.path(here::here(), x)
-ki.monthly <- readRDS(get_file_path("results/ki.quantiles.monthly.rds"))
-ki.quarterly<- readRDS(get_file_path("results/ki.quantiles.quarterly.rds"))
-dhs <- readRDS(get_file_path("results/dhs.quantiles.rds"))
+ki.monthly <- readRDS(get_file_path("results/dhs/ki.quantiles.monthly.rds"))
+ki.quarterly<- readRDS(get_file_path("results/dhs/ki.quantiles.quarterly.rds"))
+dhs <- readRDS(get_file_path("results/dhs/dhs.quantiles.rds"))
 
 #rename variables to unique names for the merge
 ki.monthly <- ki.monthly %>% rename(ki.zscore.monthly = zscore)

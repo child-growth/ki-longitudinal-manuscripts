@@ -2,9 +2,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
+
 
 #Load data
 load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
@@ -60,7 +58,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=here::here(),"/6-shiny-app/figures/wasting/WLZ_by_region.png", width=10, height=4)
+ggsave(p, file=here("/6-shiny-app/figures/wasting/WLZ_by_region.png"), width=10, height=4)
 
 
 
