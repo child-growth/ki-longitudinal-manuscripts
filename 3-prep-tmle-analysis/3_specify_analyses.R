@@ -190,11 +190,19 @@ WHZ_quart_vel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm","s
                                                                                  "trth2o","cleanck","impfloor","impsan","safeh20"),
                                         file="laz_vel_whz_rf.Rdata")
 
+WHZ_quart_lenvel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+                                                                        "vagbrth","hdlvry",
+                                                                        "single",
+                                                                        "W_nrooms","W_nhh","W_nchldlt5",
+                                                                        "month","brthmon","W_parity",
+                                                                        "trth2o","cleanck","impfloor","impsan","safeh20"),
+                                        file="len_vel_whz_rf.Rdata")
+
 
 
 #analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz, WHZ_quart_vel)
 #primary outcomes subset
-analyses <- rbind(haz, whz, WHZ_quart_vel)
+analyses <- rbind(haz, whz)
 
 
 #Save analysis specification
@@ -209,6 +217,10 @@ save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specificati
 save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/unadjusted_continuous.rdata")
 
 
+#lagged WLZ analysis 
+analyses <- rbind(WHZ_quart_lenvel, WHZ_quart_vel)
 
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous_lagwhz.rdata"))
+save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/adjusted_continuous_lagwhz.rdata")
 
 

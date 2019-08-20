@@ -33,7 +33,9 @@ vel <- vel %>% filter(measurefreq=="monthly")
 vel_haz <- vel %>% filter(ycat=="haz") %>% subset(., select=c(studyid, country, subjid, y_rate, diffcat)) %>%
   rename(agecat = diffcat)
 
-
+#Get only length velocity from growth velocity dataset, and format names
+vel_lencm <- vel %>% filter(ycat=="lencm") %>% subset(., select=c(studyid, country, subjid, y_rate, diffcat)) %>%
+  rename(agecat = diffcat)
 
 
 #--------------------------------
@@ -195,6 +197,10 @@ table(stuntprev_whz$agecat, stuntprev_whz$lag_WHZ_quart, stuntprev_whz$stunted)
 #--------------------------------
 vel_haz_whz <- left_join(vel_haz, d_whzcat, by=c("studyid","country","subjid", "agecat"))
 vel_haz_whz <- vel_haz_whz %>% filter(!is.na(WHZ_quart))
+
+vel_lencm_whz <- left_join(vel_lencm, d_whzcat, by=c("studyid","country","subjid", "agecat"))
+vel_lencm_whz <- vel_lencm_whz %>% filter(!is.na(WHZ_quart))
+
 
 #--------------------------------
 # Merge stunting datasets and covariates

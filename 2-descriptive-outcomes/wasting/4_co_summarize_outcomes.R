@@ -165,7 +165,7 @@ unique(co_desc_data$agecat)
 co_desc_data$agecat <- factor(co_desc_data$agecat, levels=unique(co_desc_data$agecat))
 
 unique(co_desc_data$region)
-regions = c("Overall", "Africa", "Latin America", "Asia")
+regions = c("Overall", "Africa", "Latin America", "South Asia")
 co_desc_data$region <- factor(co_desc_data$region, levels= c(regions, unique(co_desc_data$region)[!(unique(co_desc_data$region) %in% regions)]))
 
 
