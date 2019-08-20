@@ -41,7 +41,7 @@ quantile$agecat <- factor(quantile$agecat,
 quantile <- quantile %>% 
   arrange(agecat) %>%
   filter(region!="Europe")
-quantile <-droplevels(quantile)
+quantile <- droplevels(quantile)
 
 quantile <- quantile %>% 
   ungroup(agecat) %>%

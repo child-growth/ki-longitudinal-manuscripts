@@ -13,6 +13,12 @@ d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
 
+#Count number of children
+d %>% filter(agedays < 24 * 30.4167) %>%
+  group_by(studyid, country, subjid) %>% 
+  group_by(region) %>%
+  summarize(nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))), nstudies = length(unique(paste0(studyid, country))))
+
 
 d$cohort <- paste0(d$studyid, " ", d$country)
 
@@ -56,6 +62,12 @@ ggsave(p1, file=paste0(here(),"/figures/wasting/fig-",p1_name,".png"), width=6, 
 
 d <- d %>% filter(region=="South Asia")
 d <- d[d$agedays<730,]
+
+#Count number of children
+d %>% filter(agedays==1) %>%
+  group_by(studyid, country, subjid) %>% slice(1) %>%
+  group_by(region) %>%
+  summarize(nchild=n(), nstudies = length(unique(paste0(studyid, country))))
 
 p2 <- ggplot(d[d$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color="grey20", span=1, se=T, size=2) + 
   ylab("Mean WLZ") + xlab("Birth month") +

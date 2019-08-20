@@ -6,6 +6,9 @@ source(paste0(here::here(), "/0-config.R"))
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 load(paste0(here::here(),"/results/quantile_data_wasting.Rdata"))
 
+#subset to regional and overall pooled estimates
+d <- d %>% filter(cohort=="pooled", pooling!="country")
+  
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 d$nstudy.f <- gsub("N=","",d$nstudy.f)

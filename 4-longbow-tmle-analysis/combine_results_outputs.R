@@ -6,58 +6,13 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 load(here("/results/rf results/raw longbow results/results_cont_2019-08-16.rdata"))
 Zscores <- results
 
+load(here("/results/rf results/raw longbow results/results_bin_2019-08-17.rdata"))
+bin <- results
 
+load(here("/results/rf results/raw longbow results/mortality_2019-08-18.rdata"))
+mort <- results
 
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/binary_wasting_results.rdata")
-# stunting <- results %>% filter(outcome_variable %in% c("stunted", "sstunted", "ever_stunted", "ever_sstunted")) %>%
-#   filter(intervention_variable!="perdiar6" & intervention_variable!="perdiar24")
-# 
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_stunt_results.rdata")
-# co_and_diarh <- results
-# 
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/wasting_results.rdata")
-# HAZ <- results %>% filter(outcome_variable!="whz", intervention_variable!="perdiar6", intervention_variable!="perdiar24")
-# 
-# #Rerun subset (temporary)
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_wast_results.rdata")
-# wasting <- results %>% filter(intervention_variable!="birthlen")
-# unique(wasting$outcome_variable)
-# unique(wasting$agecat)
-# 
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/wasting_analyses/subset_wast_results_06nobw.rdata")
-# wast06 <- results
-# unique(wast06$outcome_variable)
-# unique(wast06$agecat)
-# wast06 <- wast06 %>% filter(agecat=="0-6 months (no birth wast)", intervention_variable!="birthlen")
-# 
-# load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/wasting_analyses/subset_wast_birthlen.rdata")
-# wast_birthlen <- results
-# 
-# 
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_wlz_results.rdata")
-# WHZ <- results
-# unique(WHZ$outcome_variable)
-# 
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_laz_diar.rdata")
-# HAZ_diar <- results
-# unique(HAZ_diar$intervention_variable)
-# 
-# #mortality results
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/mortality_2019-08-06.rdata")
-# mort <- results
-# head(mort)
-# unique(mort$intervention_variable)
-# unique(mort$outcome_variable)
-# table(mort$studyid, mort$outcome_variable)
-
-
-
-# d <- bind_rows(
-#   stunting, wasting, wast06,wast_birthlen, co_and_diarh, mort, 
-#   HAZ, WHZ, HAZ_diar)
-
-d <- bind_rows(
-  Zscores)
+d <- bind_rows(Zscores, bin, mort)
 
 
 #Drop duplicated (unadjusted sex and month variables)

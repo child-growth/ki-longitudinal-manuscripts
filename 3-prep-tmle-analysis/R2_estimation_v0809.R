@@ -10,6 +10,7 @@ library("skimr")
 library("data.table")
 library("SuperLearner")
 
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
 
 
 #Load and clean data
@@ -312,11 +313,9 @@ save(res_haz, res_whz, file=here::here("results",filename))
 
 
 
-"Pool R2"
+#"Pool R2"
+#load(here("results/R2_results_2019-08-09.rdata"))
 
-
-
-source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
 
 
 # Calculate pooled cs-R2 for haz dataset

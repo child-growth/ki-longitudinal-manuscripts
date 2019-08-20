@@ -105,8 +105,15 @@ LRp
 library(metap)
 allmetap(LRp$p, method="all")
 
+#Count number of children
+d %>% filter(agedays < 24 * 30.4167) %>%
+  group_by(studyid, country, subjid) %>% 
+  group_by(region) %>%
+  summarize(nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))), nstudies = length(unique(paste0(studyid, country))))
 
-#Summarize change by 
+
+
+#Summarize change by monsoon season 
 df <- d %>% group_by(studyid, country, subjid, birthcat, childseason, childseason_birthcat) %>%
   summarize(age1=mean(agedays), wlz1=mean(whz)) %>%
   group_by(studyid, country, subjid, birthcat) %>% arrange(studyid, country, subjid, birthcat, age1) %>%
@@ -128,6 +135,7 @@ dim(df)
 
 
 df <- droplevels(df)
+
 
 #T-test of differences over seasonal change, by birth cohorts 
 #ki.ttest(data=df, y=, levels, ref, comp)
@@ -189,6 +197,9 @@ fit.cont.rma <- function(data,age,yi,vi,ni,nlab){
 
 df$agecat <- df$childseason_birthcat
 
+
+
+
 # estimate random effects, format results
 whz.res=lapply((levels(df$childseason_birthcat)),function(x) 
   fit.cont.rma(data=df, ni="nmeas", yi="meandiff", vi="vardiff",age=x, nlab="children"))
@@ -216,7 +227,7 @@ p <- ggplot(whz.res,aes(y=est,x=childseason)) +
   geom_point(aes(fill=birthcat, color=birthcat), size = 2) +
   geom_hline(yintercept = 0, linetype="dashed") +
   #geom_text(aes(x = childseason, y = rep(c(1.2,1),8), label = age_label), hjust = 1) +
-  geom_text(aes(x = childseason, y = 1.2, label = age_label), hjust = 0.5, size=4) +
+  geom_text(aes(x = childseason, y = 0.9, label = age_label), hjust = 0.5, size=4) +
   scale_color_manual(values=tableau10[c(5,7,9,10)]) +
   xlab("Season change")+
   ylab("Mean WLZ change") +

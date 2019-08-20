@@ -1,9 +1,6 @@
 rm(list = ls())
 source(file.path(here::here(), "0-config.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
 
 #Load data
 get_file_path <- function(x)

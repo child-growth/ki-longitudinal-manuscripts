@@ -74,8 +74,11 @@ mort$dead624[mort$dead624==2] <- NA
 #keep variable with mortality after 24 months
 mort$dead0plus <- mort$dead
 mort$dead6plus <- mort$dead624
-mort$dead[mort$keep==0] <- NA
-mort$dead624[mort$keep==0] <- NA
+#mark death as 0 if child died after 24 months
+mort$dead[mort$keep==0] <- 0
+mort$dead624[mort$keep==0] <- 0
+
+prop.table(table(mort$dead))
 
 mort$cohort <- paste0(mort$studyid," ", mort$country)
 

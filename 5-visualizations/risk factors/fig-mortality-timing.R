@@ -177,22 +177,7 @@ print(p)
 ggsave(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing.png"), width=8, height=5)
 
 #Save plot object
-save(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing-plot-object.Rdata"))
+save(p, file=paste0(here::here(),"/results/fig-mortality-timing-plot-object.Rdata"))
 
-# p <- ggplot() + 
-#   geom_point(data = df, aes(x=agedth, y=id)) +
-#   #geom_point(data = df, aes(x=agedays, y=id, color=status), alpha=0.5) +
-#   geom_line(data = df, aes(x=agedays, y=id, color=whz_change_cat, group=id)) +
-#   #scale_color_manual("", values = plot_cols) +
-#   coord_cartesian(xlim=c(0, 730)) +
-#   ylab("") + xlab("Age in months") +
-#   theme(axis.text.y = element_blank(),
-#         axis.ticks.y = element_blank(),
-#         legend.position = c(0.8, 0.3))+
-#   scale_color_viridis(na.value="grey90", option = "C", discrete = T,
-#                       direction = -1,
-#                       end = 0.8,
-#                       guide=guide_legend(title="Mean WLZ",title.vjust = 1,
-#                                          label.position="bottom",label.hjust=0.5,nrow=1))
-# print(p)
+
 

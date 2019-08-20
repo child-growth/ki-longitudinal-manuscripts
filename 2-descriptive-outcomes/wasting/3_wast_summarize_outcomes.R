@@ -257,7 +257,7 @@ sev.ir <- bind_rows(
 
 
 #Incidence rate - 3 month intervals
-d <- calc.ci.agecat(d, range = 3)
+d3 <- calc.ci.agecat(d, range = 3)
 agelst3 = list(
   "0-3 months",
   "3-6 months",
@@ -269,8 +269,8 @@ agelst3 = list(
   "21-24 months"
 )
 ir.data <- summary.ir(d3)
-ir.region <- d %>% group_by(region) %>% do(summary.ir(.)$ir.res)
-ir.country <- d %>% group_by(region, country) %>% do(summary.ir(.)$ir.res) 
+ir.region <- d3 %>% group_by(region) %>% do(summary.ir(.)$ir.res)
+ir.country <- d3 %>% group_by(region, country) %>% do(summary.ir(.)$ir.res) 
 ir.cohort <-
   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)

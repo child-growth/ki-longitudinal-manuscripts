@@ -235,7 +235,7 @@ save(d, Y, A, W, V, id, file="stuntprev_whz_rf.Rdata")
 
 
 #CI outcomes
-
+stuntCI_whz <- stuntCI_whz %>% subset(., select = -c(sex))
 d <- left_join(stuntCI_whz, cov, by=c("studyid", "subjid", "country"))
 Y<-c("ever_stunted")
 save(d, Y, A, W, V, id, file="stuntCI_whz_rf.Rdata")
@@ -243,7 +243,6 @@ save(d, Y, A, W, V, id, file="stuntCI_whz_rf.Rdata")
 
 
 #growth velocity
-
 vel_haz_whz2 <- vel_haz_whz %>% subset(., select = -c(tr, sex))
 d <- left_join(vel_haz_whz2, cov, by=c("studyid", "subjid", "country"))
 Y<-c("y_rate")

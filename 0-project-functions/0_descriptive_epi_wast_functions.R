@@ -554,6 +554,10 @@ summary.perswast <- function(d, N_filter=50){
 
 
 
+
+
+
+
 summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filter=125){
   
   if(recovery==T){
@@ -582,7 +586,6 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filt
               nchild=length(unique(subjid)),
               nstudy=length(unique(studyid))) %>%
     filter(nchild>=Nchild_filter & ptar>ptime_filter & !is.na(agecat))
-
   inc.data <- droplevels(inc.data)
 
 
@@ -617,7 +620,8 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filt
   ir.res$est=as.numeric(ir.res$est)
   ir.res$lb=as.numeric(ir.res$lb)
   ir.res$ub=as.numeric(ir.res$ub)
-
+  ir.res$agecat=levels(inc.data$agecat)
+  
   ir.res$pt.f=paste0("N=",format(ir.res$nmeas,big.mark=",",scientific=FALSE),
                      " person-days")
   ir.res$ptest.f=sprintf("%0.02f",ir.res$est*1000)

@@ -35,7 +35,10 @@ load(here("/figures/plot objects/birthstrat_stats_plot_object.Rdata"))
 load(here("/figures/plot objects/birthwast_strat_growth_curve_object.Rdata"))
 birthstrat_curve<-p
 load(here("/figures/plot objects/ind_traj_plot_object.Rdata"))
-ind_traj<-p
+ind_traj <- p
+colors <-  c("green", "orange", "red", "grey80", "grey40")
+names(colors) = c("Not wasted", "Wasted", "Severe wasted", "Born wasted", "Born severe wasted")
+
 
 fig4_a <- plot_grid(ind_traj, rec_violin_plot, labels = c("A","C"), ncol = 2, align = 'v', axis = 'l')
 fig4_c <- plot_grid(birthstrat_curve, birthstrat_stats_plot, labels = c("E","F"), ncol = 2, align = 'v', axis = 'l')
