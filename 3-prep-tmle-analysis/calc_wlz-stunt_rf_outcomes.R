@@ -196,10 +196,10 @@ table(stuntprev_whz$agecat, stuntprev_whz$lag_WHZ_quart, stuntprev_whz$stunted)
 # Merge velocity and WHZ quartiles.
 #--------------------------------
 vel_haz_whz <- left_join(vel_haz, d_whzcat, by=c("studyid","country","subjid", "agecat"))
-vel_haz_whz <- vel_haz_whz %>% filter(!is.na(WHZ_quart))
+vel_haz_whz <- vel_haz_whz %>% filter(!is.na(lag_WHZ_quart))
 
 vel_lencm_whz <- left_join(vel_lencm, d_whzcat, by=c("studyid","country","subjid", "agecat"))
-vel_lencm_whz <- vel_lencm_whz %>% filter(!is.na(WHZ_quart))
+vel_lencm_whz <- vel_lencm_whz %>% filter(!is.na(lag_WHZ_quart))
 
 
 #--------------------------------
@@ -254,3 +254,7 @@ d <- left_join(vel_haz_whz2, cov, by=c("studyid", "subjid", "country"))
 Y<-c("y_rate")
 save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"laz_vel_whz_rf.Rdata"))
 
+vel_lencm_whz2 <- vel_lencm_whz %>% subset(., select = -c(tr, sex))
+d <- left_join(vel_lencm_whz2, cov, by=c("studyid", "subjid", "country"))
+Y<-c("y_rate")
+save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"len_vel_whz_rf.Rdata"))
