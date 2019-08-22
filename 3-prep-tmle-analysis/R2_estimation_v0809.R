@@ -314,7 +314,7 @@ save(res_haz, res_whz, file=here::here("results",filename))
 
 
 #"Pool R2"
-#load(here("results/R2_results_2019-08-09.rdata"))
+load(here("results/R2_results_2019-08-09.rdata"))
 
 
 
