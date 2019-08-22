@@ -4,8 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-#Plot themes
-theme_set(theme_ki())
+
 
 #Plot parameters
 yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
@@ -15,7 +14,6 @@ tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
 Ylab <- "Relative Risk"
 scaleFUN <- function(x) sprintf("%.0f", x)
-theme_set(theme_bw())
 
 
 clean_nmeans<-function(nmeas){
@@ -38,7 +36,7 @@ head(dfull)
 
 
 unique(dfull$type)
-d <- dfull %>% filter(type=="RR")
+d <- dfull %>% filter(type=="RR", adjusted==1)
 
 #keep only morbidity and mortality analysis
 d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
@@ -90,21 +88,14 @@ saveRDS(RMAest, paste0(here::here(),"/results/rf results/pooled_mortality_RR_res
 
 
 d <- RMAest
-
-
-
-
-# d <- d %>% filter(intervention_level==1) %>% 
-#   filter(unadjusted==0 | intervention_variable=="ever_wasted024" | intervention_variable=="ever_sstunted024") %>%
-#   filter(pooled == 1)
-# d$pooled <- factor(d$pooled)
 d <- droplevels(d)
 
 table(d$outcome_variable)
-d$outcome_variable <- factor(d$outcome_variable, levels=c("pers_wasted624","co_occurence","dead"))
-levels(d$outcome_variable) <- c("Relative risk of persistent wasting from 6-24mo",  
-                                "Relative risk of being wasted + stunted at 18mo",
-                                "Relative risk of mortality by 24 months")
+d$outcome_variable <- factor(d$outcome_variable, levels=c("dead", "pers_wasted624", "co_occurence"))
+levels(d$outcome_variable) <- c("Relative risk of\nmortality by 24 months",
+                                "Relative risk of\npersistent wasting from 6-24mo",  
+                                "Relative risk of concurrent\nwasting and stunting at 18mo"
+                                )
 table(d$outcome_variable)
 
 
@@ -181,8 +172,11 @@ d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
+d2$severe<-factor(ifelse(grepl("evere",d2$Outcome),1,0),levels=c("0","1"))
+
+
 pmort <- ggplot(d2, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure), size=3, stroke = 1.5) +
+  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
   labs(y = "", x = "Exposure 0-6 months") +
@@ -191,6 +185,7 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_size_manual(values=c(4,5)) +
+  scale_shape_manual(values=c(16,21)) +
   theme(strip.placement = "outside",
         panel.spacing = unit(0, "lines"),
         plot.title = element_text(hjust = 0.5),
@@ -203,7 +198,7 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
     #expand=c(0,0)) 
 
 
-ggsave(pmort, file="figures/risk factor/fig-mort+morb-RR.png", width=14, height=5.2)
+ggsave(pmort, file=here("/figures/risk factor/fig-mort+morb-RR.png"), width=14, height=5.2)
 
 #Save plot object
 save(pmort, file=here("results/rf_mort+morb_plot_object.Rdata"))

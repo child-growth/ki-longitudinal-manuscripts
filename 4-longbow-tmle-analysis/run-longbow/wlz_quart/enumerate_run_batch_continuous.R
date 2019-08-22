@@ -18,11 +18,11 @@ default_params <- fromJSON(inputs)
 default_params$script_params$count_Y <- FALSE
 
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
-load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
-analyses <- analyses %>% filter(A=="lag_WHZ_quart")
+load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous_lagwhz.rdata"))
 
 analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-
+analyses <- analyses %>% filter(file == "Manuscript analysis data/len_vel_whz_rf.Rdata")
+  
 i=1
 enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
   analysis <- analyses[i,]

@@ -21,9 +21,9 @@ ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/wasting/f
 load(here("/figures/plot objects/season_diff_plot.Rdata"))
 load(here("/figures/plot objects/season_plots.Rdata"))
 
-Twoby1plot <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+TwobyTwoplot <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
 
-fig3 <- plot_grid(Twoby1plot, p, labels = c("","E"), ncol = 1, align = 'h', axis = 'l', rel_heights = c(2, 1))
+fig3 <- plot_grid(TwobyTwoplot, pdiff, labels = c("","E"), ncol = 1, align = 'h', axis = 'l', rel_heights = c(2, 1))
 
 ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig3.png"), width=14, height=14)
 

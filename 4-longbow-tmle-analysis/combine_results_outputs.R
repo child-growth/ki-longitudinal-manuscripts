@@ -12,7 +12,25 @@ bin <- results
 load(here("/results/rf results/raw longbow results/mortality_2019-08-18.rdata"))
 mort <- results
 
-d <- bind_rows(Zscores, bin, mort)
+load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-08-19.rdata"))
+Zscores_unadj <- results
+
+load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
+lagwhz <- results
+
+
+d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz)
+
+#Drop nchild and merge in new results
+d <- d %>% filter(intervention_variable!="nchldlt5")
+load(here("/results/rf results/raw longbow results/results_nchild_cont_2019-08-21.rdata"))
+Zscores_nchild <- results
+
+load(here("/results/rf results/raw longbow results/results_nchild_bin_2019-08-21.rdata"))
+bin_nchild <- results
+
+
+d <- bind_rows(d, Zscores_nchild, bin_nchild)
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -28,7 +46,7 @@ unique(d$outcome_variable)
 d$continuous <- ifelse(d$outcome_variable %in% c("haz","whz","y_rate_haz","y_rate_len","y_rate_wtkg"), 1, 0)
 
 #Drop non-included risk factors (treat h20, with very little variance, and secondry breastfeeding indicators)
-d <- d %>% filter(!(intervention_variable %in% c("trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )) )
+d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )) )
 
 #----------------------------------------------------------
 # Merge in Ns
@@ -39,9 +57,6 @@ load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/contin
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
-
-df <- left_join(WHZ, N_sums_cont, by = c("agecat", "outcome_variable", "intervention_variable", "intervention_level"))
-head(df)
 
 dim(d)
 dim(N_sums)

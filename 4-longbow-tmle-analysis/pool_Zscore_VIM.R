@@ -6,20 +6,14 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
 
 
 #Load data
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_cont.rdata")
-head(results)
-haz <- results %>% filter(outcome_variable=="haz")
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_sub.rdata")
-whz <- results %>% filter(outcome_variable=="whz")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_2019-08-18.rdata")
+results_full <- results %>% filter(intervention_variable!="nchldlt5")
 
-results <- rbind(haz, whz)
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_nchild_results_2019-08-21.rdata")
+results <- rbind(results_full, results)
 
 
 unique(results$type)

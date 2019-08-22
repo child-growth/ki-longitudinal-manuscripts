@@ -3,11 +3,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
-
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
 library(cowplot)
-theme_set(theme_ki())
 
 
 
@@ -170,50 +166,6 @@ save(pPAF_stunt, pPAF_wast, file="C:/Users/andre/Documents/HBGDki/ki-longitudina
 plot_PAF = plot_grid(pPAF_stunt, pPAF_wast, labels = c("A","B"), ncol = 2, nrow = 1)
 
 ggsave(plot_PAF, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-PAF.png"), height=14, width=14)
-
-
-
-
-
-
-# i <- unique(df$region)[1]
-# j <- unique(df$outcome_variable)[2]
-# k <- unique(df$agecat)[2]
-# 
-# for(i in unique(df$region)){
-#   for(j in unique(df$outcome_variable)){
-#     for(k in unique(df$agecat)){
-# 
-#       dpool <- df %>%
-#         filter(region==i,
-#                outcome_variable==j,
-#                agecat == k) %>%
-#         filter(!is.na(intervention_variable))
-# 
-#       pPAF <-  ggplot(dpool, aes(x=reorder(RFlabel_ref, PAF))) +
-#         geom_point(aes(y=PAF,  color=RFtype), size = 4) +
-#         geom_linerange(aes(ymin=PAF.PAF.CI1, ymax=PAF.PAF.CI2, color=RFtype)) +
-#         coord_flip(ylim=c(-50, 50)) +
-#         labs(x = "Exposure", y = "Attributable Fraction") +
-#         geom_hline(yintercept = 0) +
-#         #scale_y_continuous(breaks=yticks, labels=scaleFUN) +
-#         scale_shape_manual(values=c(21, 23)) +
-#         scale_colour_manual(values=tableau10, name = "Exposure\nCategory") +
-#         # scale_size_continuous(range = c(0, 0.5))+
-#         theme(strip.background = element_blank(),
-#               legend.position="right",
-#               axis.text.y = element_text(hjust = 1),
-#               strip.text.x = element_text(size=12),
-#               axis.text.x = element_text(size=12,
-#                                          margin = margin(t = -20)),
-#               axis.title.x = element_text(margin = margin(t = 20))) +
-#         ggtitle(paste0("Population attributable fractions (%)\n", dpool$outcome_variable[1]," - ", dpool$agecat[1],", ", dpool$region[1])) +
-#         guides(color=FALSE, shape=FALSE)
-# 
-#       ggsave(pPAF, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/PAF/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$agecat[1]), "-PAF.png"), height=10, width=8)
-#     }
-#   }
-# }
 
 
 

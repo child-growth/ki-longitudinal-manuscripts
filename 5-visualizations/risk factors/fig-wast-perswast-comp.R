@@ -5,12 +5,6 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
-
-
 #Load data
 d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 
@@ -91,7 +85,7 @@ p_severecomp <- ggplot(plotdf, aes(x=Outcome, group=intervention_level)) +
   labs(x = "Cumulative incidence of growth faltering\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 4)) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
   scale_shape_manual(values=c(16,21)) +
   theme(strip.background = element_blank(),
