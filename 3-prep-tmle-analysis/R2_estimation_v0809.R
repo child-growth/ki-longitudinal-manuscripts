@@ -367,3 +367,11 @@ pooled_r2_whz  <- 1-pooled_mse_whz
 #Print the results
 
 print(c(pooled_r2_haz , pooled_r2_whz))
+
+
+
+
+
+
+# Pool R2 directly  for haz dataset
+
