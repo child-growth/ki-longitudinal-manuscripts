@@ -55,8 +55,8 @@ df$diff <- (df$estimate.x -df$estimate.y)
 df$abs_diff <- abs(df$estimate.x -df$estimate.y)
 
 
-mean(df$diff)
-ave_abs_diff = round(mean(df$abs_diff),2)
+mean(df$diff, na.rm=T)
+ave_abs_diff = round(mean(df$abs_diff, na.rm=T),2)
 
 p <-  ggplot(df, aes(x=num_cov , y=diff)) + 
   geom_point(size = 4, alpha=0.25) + geom_smooth(se=F) +
