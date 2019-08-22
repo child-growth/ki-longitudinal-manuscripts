@@ -83,7 +83,7 @@ unique(d$agecat)
 d$agecat <- factor(d$agecat, levels=unique(d$agecat))
 
 unique(d$region)
-d$region <- factor(d$region, levels=c("Overall", "Africa", "Latin America", "Asia", "Pakistan"))
+d$region <- factor(d$region, levels=c("Overall", "Africa", "Latin America", "South Asia"))
 
 
 saveRDS(d, file = paste0(here(),"/results/wast_ir_sens_data.rds"))
