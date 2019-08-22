@@ -21,6 +21,7 @@ d %>% filter(agedays < 24 * 30.4167) %>%
 
 
 d$cohort <- paste0(d$studyid, " ", d$country)
+length(unique(d$cohort))
 
 d$month <- floor(d$jday/30.417) + 1
 table(d$month)

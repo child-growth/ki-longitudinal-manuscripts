@@ -584,9 +584,10 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filt
     summarise(ptar=sum(pt_wast, na.rm=T),
               ncase=sum(wast_inc, na.rm=T),
               nchild=length(unique(subjid)),
-              nstudy=length(unique(studyid))) %>%
+              nstudy=length(unique(paste0(studyid, country)))) %>%
     filter(nchild>=Nchild_filter & ptar>ptime_filter & !is.na(agecat))
   inc.data <- droplevels(inc.data)
+  print(inc.data)
 
 
 

@@ -222,7 +222,7 @@ whz.res$childseason_label <- paste0(whz.res$childseason, ", ", whz.res$age_label
 
 
 
-p <- ggplot(whz.res,aes(y=est,x=childseason)) +
+pdiff <- ggplot(whz.res,aes(y=est,x=childseason)) +
   geom_errorbar(aes(color=birthcat, ymin=lb, ymax=ub), width = 0) +
   geom_point(aes(fill=birthcat, color=birthcat), size = 2) +
   geom_hline(yintercept = 0, linetype="dashed") +
@@ -239,11 +239,11 @@ p <- ggplot(whz.res,aes(y=est,x=childseason)) +
   ggtitle("") +
   facet_grid(~birthcat, scales="free_x") #+
   #scale_x_discrete(aes(labels= season_change)) 
-p
+pdiff
 
 
-ggsave(p, file=paste0(here(),"/figures/wasting/seasonal_trajectories_seasondiff.png"), width=14, height=5)
+ggsave(pdiff, file=paste0(here(),"/figures/wasting/seasonal_trajectories_seasondiff.png"), width=14, height=5)
 
-save(p, file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_diff_plot.Rdata")
+save(pdiff, file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_diff_plot.Rdata")
 
 

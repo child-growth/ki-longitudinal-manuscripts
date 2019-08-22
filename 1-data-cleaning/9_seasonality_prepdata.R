@@ -23,6 +23,8 @@ d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 d<-d %>% subset(., select=c(studyid, subjid, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
 
 d <- d %>% filter(agedays < 24 * 30.4167)
+
+table(d$studyid, is.na(d$brthweek))
 d <- d %>% filter(!is.na(brthweek))
 
 #convert subjid to character for the merge with covariate dataset
