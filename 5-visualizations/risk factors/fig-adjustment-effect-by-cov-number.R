@@ -4,9 +4,6 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
 
 #Load data
 dfull_adj <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
@@ -71,5 +68,5 @@ p <-  ggplot(df, aes(x=num_cov , y=diff)) +
   ggtitle("Difference between unadjusted and adjusted\nestimates of differences in LAZ and WLZ outcomes") 
 
 
-ggsave(p, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-adjusted-unadjusted-differences.png", height=8, width=8)
+ggsave(p, file=here("/figures/risk factor/fig-adjusted-unadjusted-differences.png"), height=8, width=8)
 

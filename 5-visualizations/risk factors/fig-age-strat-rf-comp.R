@@ -4,9 +4,6 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
 
 #Load data
 d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
@@ -93,7 +90,7 @@ p_ageRR <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_le
   labs(x = "Exposure level", y = "Adjusted CIR") +
   geom_hline(yintercept = 1) +
   geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.74,2.06)) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.73,2.06)) +
   #coord_cartesian(ylim = c(0.8,2)) +
   scale_colour_manual(values=tableau10[c(2,3)]) +  
   ggtitle("Stunting incidence                                                                Wasting incidence")+

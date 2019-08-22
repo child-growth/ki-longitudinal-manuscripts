@@ -9,6 +9,10 @@ library(longbowRiskFactors)
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/results_bin_obs_counts_2019-08-17.rdata")
 d <- obs_counts
 
+#Temp: merge in nchild N's
+d <- d %>% filter(is.na(nchldlt5)) %>% mutate(pers_wast=as.numeric(as.character(pers_wast)))
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/results_nchild_bin_obs_counts_2019-08-21.rdata")
+d <- bind_rows(d, obs_counts)
 
 outcome_vars <- c("stunted","ever_stunted","wasted","ever_wasted")
 

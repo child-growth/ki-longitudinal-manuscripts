@@ -3,10 +3,6 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
 #Load data
 ate <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results.rds")) 
 rr <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))

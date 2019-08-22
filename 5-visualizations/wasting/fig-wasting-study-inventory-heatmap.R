@@ -27,8 +27,8 @@ source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"
 #-----------------------------------
 # load the meta-data table from Andrew (GHAP_metadata)
 #-----------------------------------
-md <- readRDS(here('results/GHAP_metadata_stunting.rds'))
-wmd <- readRDS(here('results/GHAP_metadata_wasting.RDS'))
+md <- readRDS(here('/results/GHAP_metadata_stunting.rds'))
+wmd <- readRDS(here('/results/GHAP_metadata_wasting.RDS'))
 
 #Drop non-included studies
 md <- mark_measure_freq(md)
@@ -531,4 +531,4 @@ ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name, ".pdf"),
        plot = awstpgrid,device='pdf',width=12,height=9)
 saveRDS(list(dd = dd,
              dp = dp), 
-        file=paste0("results/figure-data/figdata-",awstpgrid_name,".RDS"))
+        file=here(paste0("6-shiny-app/figure-data/figdata-",awstpgrid_name,".RDS")))
