@@ -15,6 +15,7 @@ results_full <- results %>% filter(intervention_variable!="nchldlt5")
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_nchild_results_2019-08-21.rdata")
 results <- rbind(results_full, results)
 
+saveRDS(results, paste0(here::here(),"/results/rf results/full_VIM_results.rds"))
 
 unique(results$type)
 d <- results %>% filter(type=="PAR")
