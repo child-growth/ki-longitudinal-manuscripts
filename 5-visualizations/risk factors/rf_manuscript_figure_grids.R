@@ -100,7 +100,10 @@ ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/risk fact
 #Figure 4
 load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-wasting-prior-to-stunting-plot-objects.Rdata")
 #p_earlywast <- p_earlywast + theme(axis.text.x=element_text(angle=45,vjust=0.5))
-p_lagwhz <- p_lagwhz + scale_y_continuous(breaks=c(0.25, 0.5, 1, 1.5), trans='log10')
+#p_lagwhz <- p_lagwhz + scale_y_continuous(breaks=c(0.25, 0.5, 1, 1.5), trans='log10')
+
+load(here("/results/fig-WLZ-quart-len-vel.rdata"))
+
 
 #load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mortality_plot_objects.Rdata")
 load(here("results/rf_mort+morb_plot_object.Rdata"))
@@ -116,7 +119,7 @@ p <- p + theme(legend.position = c(0.9, 0.35))
 # p3 <- p3 + theme(legend.position = "none") #+guides(color = guide_legend("Maternal height", nrow=3))
 p <- p +  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
-fig4a <- plot_grid(p_lagwhz, p_earlywast, labels = "AUTO", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
+fig4a <- plot_grid(plen_lagwhz, p_earlywast, labels = "AUTO", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
 # fig4b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2) #, align = 'v', axis = 'l')
 # fig4 <- plot_grid(fig4a, fig4b, labels = c("",""), ncol = 1, rel_heights = c(1,2))
 fig4  <- plot_grid(fig4a, pmort, p, labels = c("","C","D"), ncol = 1, rel_heights = c(1,1.5,1))
