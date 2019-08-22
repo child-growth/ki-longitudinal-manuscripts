@@ -5,7 +5,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Load data
 load(paste0(here(),"/results/persistent_wasting024.Rdata"))
-d <- perswast024 %>% filter(cohort=="pooled")
+d <- perswast024 %>% filter(cohort=="pooled", is.na(country))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 d$nstudy.f <- gsub("N=","",d$nstudy.f)

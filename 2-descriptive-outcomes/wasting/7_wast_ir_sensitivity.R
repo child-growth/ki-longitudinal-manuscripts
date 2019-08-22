@@ -22,13 +22,11 @@ d90 <- calc.ci.agecat(d90, range = 6)
 
 
 
-agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
-
 
 
 #Incidence rate - 30 days
-ir.data <- summary.ir(d30, agelist = agelst)
-ir.region <- d30 %>% group_by(region) %>% do(summary.ir(., agelist = agelst)$ir.res)
+ir.data <- summary.ir(d30)
+ir.region <- d30 %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.cohort <-
   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -41,8 +39,8 @@ ir30 <- bind_rows(
 
 
 #Incidence rate - 60 days
-ir.data <- summary.ir(d, agelist = agelst)
-ir.region <- d %>% group_by(region) %>% do(summary.ir(., agelist = agelst)$ir.res)
+ir.data <- summary.ir(d)
+ir.region <- d %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.cohort <-
   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -55,8 +53,8 @@ ir60 <- bind_rows(
 
 
 #Incidence rate - 90 days
-ir.data <- summary.ir(d90, agelist = agelst)
-ir.region <- d90 %>% group_by(region) %>% do(summary.ir(., agelist = agelst)$ir.res)
+ir.data <- summary.ir(d90)
+ir.region <- d90 %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.cohort <-
   ir.data$ir.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
