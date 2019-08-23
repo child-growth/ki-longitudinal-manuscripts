@@ -368,6 +368,8 @@ print(c(pooled_r2_haz , pooled_r2_whz))
 
 
 
+
+
 "Pool R2 (direct method, with CI)"
 
 
@@ -397,3 +399,32 @@ print(c(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_CIu_haz))
 
 
 
+
+# Calculate pooled cs-R2 for whz dataset
+
+nstudies <- whz %>% summarise(N=n())
+
+res_whz_new <- merge(res_whz,nstudies ,by=c("studyid","country")) %>%
+  mutate(r2_var=r2_se^2)
+
+
+
+
+pooled_r2_whz <-fit.rma (data=res_whz_new, ni="N", yi="r2", vi= "r2_var",
+                         age=NULL, method = "FE", measure="MN")
+
+
+pooled_r2_CIu_whz <- as.matrix(pooled_r2_whz$est) + 1.96*pooled_r2_whz$se
+pooled_r2_CIl_whz <- as.matrix(pooled_r2_whz$est) - 1.96*pooled_r2_whz$se
+
+print(c(pooled_r2_whz$est,pooled_r2_CIl_whz, pooled_r2_CIu_whz))
+
+
+r2_results <- data.frame(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_CIu_haz,
+                           pooled_r2_whz$est,pooled_r2_CIl_whz, pooled_r2_CIu_whz)
+
+
+
+filename <- paste(paste('R2_results',Sys.Date( ),sep='_'),'rdata',sep='.')
+
+save(res_haz, res_whz, file=here::here("results",filename))
