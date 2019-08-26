@@ -10,7 +10,6 @@ library("skimr")
 library("data.table")
 library("SuperLearner")
 
-source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
 
 
 #Load and clean data
@@ -276,7 +275,7 @@ SL_R2 <- function(dat, outcome, covars){
   
   
   return(data.frame(r2_lm =R2_lm, r2=R2, r2.ci1=R2.ci1, r2.ci2=R2.ci2, mse=psi, mse.ci1=CI_low, mse.ci2=CI_up,
-                    mse_full=mse_full, se_mse_full=se_mse_full, mse_null= mse_null, se_mse_null=se_mse_null))
+                    mse_full=mse_full, se_mse_full=se_mse_full, mse_null= mse_null, se_mse_null=se_mse_null, r2_se=se))
 
 }
 
@@ -290,11 +289,6 @@ res_haz <- haz %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="haz"
 res_whz <- whz %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="whz", covars=covars))
 
 
-res_haz1 <-  SL_R2(dat=haz1,  outcome="haz", covars=covars)
-res_haz3 <-  SL_R2(dat=haz3,  outcome="haz", covars=covars)
-res_haz4 <-  SL_R2(dat=haz4,  outcome="haz", covars=covars)
-
-res_haz8 <-  SL_R2(dat=haz8,  outcome="haz", covars=covars)
 
 #Save results
 
@@ -313,9 +307,11 @@ save(res_haz, res_whz, file=here::here("results",filename))
 
 
 
-#"Pool R2"
-load(here("results/R2_results_2019-08-09.rdata"))
+"Pool R2"
 
+
+
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
 
 
 # Calculate pooled cs-R2 for haz dataset
@@ -373,5 +369,62 @@ print(c(pooled_r2_haz , pooled_r2_whz))
 
 
 
-# Pool R2 directly  for haz dataset
 
+"Pool R2 (direct method, with CI)"
+
+
+
+source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
+
+
+# Calculate pooled cs-R2 for haz dataset
+
+nstudies <- haz %>% summarise(N=n())
+
+res_haz_new <- merge(res_haz,nstudies ,by=c("studyid","country")) %>%
+  mutate(r2_var=r2_se^2)
+
+
+
+
+pooled_r2_haz <-fit.rma (data=res_haz_new, ni="N", yi="r2", vi= "r2_var",
+                               age=NULL, method = "FE", measure="MN")
+
+
+pooled_r2_CIu_haz <- as.matrix(pooled_r2_haz$est) + 1.96*pooled_r2_haz$se
+pooled_r2_CIl_haz <- as.matrix(pooled_r2_haz$est) - 1.96*pooled_r2_haz$se
+
+print(c(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_CIu_haz))
+
+
+
+
+
+# Calculate pooled cs-R2 for whz dataset
+
+nstudies <- whz %>% summarise(N=n())
+
+res_whz_new <- merge(res_whz,nstudies ,by=c("studyid","country")) %>%
+  mutate(r2_var=r2_se^2)
+
+
+
+
+pooled_r2_whz <-fit.rma (data=res_whz_new, ni="N", yi="r2", vi= "r2_var",
+                         age=NULL, method = "FE", measure="MN")
+
+
+pooled_r2_CIu_whz <- as.matrix(pooled_r2_whz$est) + 1.96*pooled_r2_whz$se
+pooled_r2_CIl_whz <- as.matrix(pooled_r2_whz$est) - 1.96*pooled_r2_whz$se
+
+print(c(pooled_r2_whz$est,pooled_r2_CIl_whz, pooled_r2_CIu_whz))
+
+
+r2_results <- data.frame(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_CIu_haz,
+                           pooled_r2_whz$est,pooled_r2_CIl_whz, pooled_r2_CIu_whz)
+
+
+
+filename <- paste(paste('R2_results',Sys.Date( ),sep='_'),'rdata',sep='.')
+
+save(res_haz, res_whz, file=here::here("results",filename))
