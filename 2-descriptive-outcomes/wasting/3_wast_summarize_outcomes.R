@@ -13,6 +13,37 @@ d <- d %>% filter(measurefreq == "monthly")
 d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 
 
+#Overall absolute counts
+df <- d %>% filter(agedays < 24 *30.4167) %>%
+            mutate(wast = 1*(whz < -2),
+                   sevwast = 1*(whz < -3))
+table(df$wast)
+prop.table(table(df$wast))
+table(df$sevwast)
+prop.table(table(df$sevwast))
+
+
+#Number wasted by 3 months
+df2 <- df %>% filter(agedays < 3 *30.4167) %>% group_by(studyid, country, subjid) %>% mutate(anywast = 1*(min(whz) < -2)) %>% slice(1)
+table(df2$anywast)
+prop.table(table(df2$anywast))
+
+
+#Wasting recovery
+df2 <- d %>% group_by(studyid, country, subjid) %>% mutate(wast=max(wast_inc), rec=max(wast_rec)) %>% 
+              filter(wast==1)
+table(df2$rec)
+prop.table(table(df2$rec))
+
+
+#Severe wasting recovery
+df2 <- d %>% group_by(studyid, country, subjid) %>% mutate(wast=max(sevwast_inc), rec=max(sevwast_rec)) %>% 
+  filter(wast==1)
+table(df2$rec)
+prop.table(table(df2$rec))
+
+
+
 #Prevalence
 d <- calc.prev.agecat(d)
 prev.data <- summary.prev.whz(d)

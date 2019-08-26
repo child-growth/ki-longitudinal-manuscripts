@@ -14,7 +14,7 @@ df <- df %>% filter(!(studyid %in% c("ki1055867-WomenFirst","ki1000301-DIVIDS","
 length(unique(df$studyid[!is.na(df$dead)]))
 table(df$dead)
 df %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
-  summarize(sum(dead, na.rm=T), n())
+  summarize(sum(dead, na.rm=T), n(), length(unique(paste0(studyid,country))))
 
 head(df)
 
@@ -110,6 +110,11 @@ summary(df$whz_change)
 df$haz_change_cat <- cut(df$haz_change, breaks = c(-100,-1,1,100), labels = c("> 1 SD decrease","< 1 SD change","> 1 SD increase"))
 df$whz_change_cat <- cut(df$whz_change, breaks = c(-100,-1,1,100), labels = c("> 1 SD decrease","< 1 SD change","> 1 SD increase"))
 
+
+df %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
+  summarize(sum(dead, na.rm=T), n(), length(unique(paste0(studyid,country))))
+
+
 #-----------------------------------------
 # define hybrid color palette
 #   -Get colors from co-occurrence flow plot
@@ -150,34 +155,36 @@ plot_cols[7] = tableau10[7]
 plot_cols2 <- plot_cols[c(1,2,3,6)]
 
 #drop deaths after 2 years
-df <- df %>% filter(agedth < 731) #%>% 
-  #mutate(id=paste0(studyid,subjid))
-max(as.numeric(df$id))
+df <- df %>% filter(agedth < 731) 
+df$id = as.numeric(df$id)
+summary(df$id)
 
-p <- ggplot() + 
-  geom_point(data = df, aes(x=agedth, y=as.numeric(id)), color="grey40") +
-  geom_point(data = df, aes(x=agedays, y=as.numeric(id), color=status2, alpha=severe2, shape=severe)) +
+p <- ggplot(df) +
+  geom_point(aes(x=agedth, y=(id)), color="grey40") +
+  geom_point(aes(x=agedays, y=(id), color=status2, alpha=severe2, shape=severe)) + 
   scale_color_manual("", values = plot_cols2, guide=guide_legend(title="Growth faltering")) +
   scale_shape_discrete(guide=guide_legend(title="Severity")) +
   scale_alpha_discrete(range=c(0.5, 1), guide=guide_legend(title="Severity")) +
   coord_cartesian(xlim=c(0, 730)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
-  scale_y_continuous( expand = c(0, 0), breaks = 1, labels = "",
-    sec.axis = sec_axis(~./2243, name = "Cumulative deaths from birth to 24 months", 
-                                         labels = function(b) { paste0(round(b * 100, 0), "%")})) +
-  ylab("Child") + xlab("Age in months") + theme_bw() +
+  scale_y_continuous( expand = c(0, 0), breaks = c(1:10)*224.3, labels = rep("",10),
+                      sec.axis = sec_axis(~./2243, name = "Cumulative deaths from birth to 24 months", 
+                                          labels = function(b) { paste0(round(b * 100, 0), "%")})) +
+  ylab("Child") + xlab("Age in months") + #theme_classic() +
   theme(#axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        plot.background = element_rect(fill = "white", color = NA),
-        legend.position = c(0.8, 0.3)) 
+    axis.ticks.y = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA),
+    legend.position = c(0.8, 0.3)) 
 print(p)
+
 
 
 ggsave(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing.png"), width=8, height=5)
 
 #Save plot object
 save(p, file=paste0(here::here(),"/results/fig-mortality-timing-plot-object.Rdata"))
+
 
 
 

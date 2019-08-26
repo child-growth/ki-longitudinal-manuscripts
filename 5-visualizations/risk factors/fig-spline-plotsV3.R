@@ -311,6 +311,11 @@ print(p2)
 # LAZ- maternal weight
 #------------------------------------------------------------------------------------------------
 
+df <- d %>% filter(!is.na(mwtkg)) %>% filter(agedays < 24* 30.4167)
+dim(df)
+df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(n(), Nstudies=length(unique(paste0(studyid, country))))
+
+
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 
@@ -355,6 +360,11 @@ print(p3)
 # LAZ- maternal height
 #------------------------------------------------------------------------------------------------
 
+df <- d %>% filter(!is.na(mhtcm)) %>% filter(agedays < 24* 30.4167)
+dim(df)
+df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(n(), Nstudies=length(unique(paste0(studyid, country))))
+
+
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="haz", Avar="mhtcm", overall=T)
@@ -397,6 +407,10 @@ print(p4)
 #------------------------------------------------------------------------------------------------
 # LAZ- maternal BMI
 #------------------------------------------------------------------------------------------------
+
+df <- d %>% filter(!is.na(mbmi))
+dim(df)
+df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(n(), Nstudies=unique(paste0(studyid, country)))
 
 #Normal weight   Underweight 
 

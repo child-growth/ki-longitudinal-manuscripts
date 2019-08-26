@@ -21,6 +21,20 @@ d$country <- stringr::str_to_title(d$country)
 waz$country[waz$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
 waz$country <- stringr::str_to_title(waz$country)
 
+
+
+#Overall absolute counts
+df <- d %>% filter(agedays < 24 *30.4167) %>%
+  mutate(co = 1*(whz < (-2) & haz < (-2)),
+         sevco = 1*(whz < (-3) & haz < (-3))) %>%
+  group_by(studyid, country, subjid) %>%
+  mutate(co=max(co), sevco=max(sevco)) %>% slice(1)
+table(df$co)
+prop.table(table(df$co))
+table(df$sevco)
+prop.table(table(df$sevco))
+
+
 #Prevalence
 d <- calc.prev.agecat(d)
 prev.data <- summary.prev.co(d)
