@@ -173,7 +173,7 @@ p <- ggplot(df) +
                                           labels = function(b) { paste0(round(b * 100, 0), "%")})) +
   ylab("Child") + xlab("Age in months") + #theme_classic() +
   theme(#axis.text.y = element_blank(),
-    axis.ticks.y = element_blank(),
+    #axis.ticks.y = element_blank(),
     plot.background = element_rect(fill = "white", color = NA),
     legend.position = c(0.8, 0.3)) 
 print(p)
