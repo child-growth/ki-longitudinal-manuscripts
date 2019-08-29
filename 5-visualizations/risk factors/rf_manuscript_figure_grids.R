@@ -98,7 +98,7 @@ ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/risk fact
 
 
 #Figure 4
-load(here("/results/fig-wasting-prior-to-stunting-plot-objects.Rdata"))
+load(here("results/fig-wasting-prior-to-stunting-plot-objects.Rdata"))
 #p_earlywast <- p_earlywast + theme(axis.text.x=element_text(angle=45,vjust=0.5))
 #p_lagwhz <- p_lagwhz + scale_y_continuous(breaks=c(0.25, 0.5, 1, 1.5), trans='log10')
 

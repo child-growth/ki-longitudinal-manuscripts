@@ -177,6 +177,13 @@ for(i in Avars){
 }
 
 
+#Summarize number of cohorts and children,
+d %>% filter(tot_dead>10) %>% #group_by(studyid, country) %>% 
+  summarize(ncohort=length(unique(paste0(studyid, country))), 
+  nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))),
+  ndeath=sum(dead), missage=sum(is.na(agedth)))
+
+
 saveRDS(d, file="U:/UCB-SuperLearner/Manuscript analysis data/stuntwast_mort.rds")
 save(d, file="U:/UCB-SuperLearner/Manuscript analysis data/stuntwast_mort.Rdata")
 
@@ -203,6 +210,21 @@ dim(df)
 d <- full_join(d, df, by=c("studyid","country","subjid"))
 dim(d)
 
+
+#Summarize number of cohorts and children,
+d %>% mutate(cohort= paste0(studyid, country)) %>% group_by(cohort) %>%
+  mutate(Ncases=sum(pers_wasted624, na.rm=T)) %>%
+  filter(!is.na(pers_wasted624), Ncases > 5) %>% ungroup() %>% 
+  summarize(ncohort=length(unique(paste0(studyid, country))), 
+            nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))),
+            n_pers=sum(pers_wasted624, na.rm=T))
+
+d %>% mutate(cohort= paste0(studyid, country)) %>% group_by(cohort) %>%
+  mutate(Ncases=sum(co_occurence, na.rm=T)) %>%
+  filter(!is.na(co_occurence), Ncases > 5) %>% ungroup() %>% 
+  summarize(ncohort=length(unique(paste0(studyid, country))), 
+            nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))),
+            n_co=sum(co_occurence, na.rm=T))
 
 
 
