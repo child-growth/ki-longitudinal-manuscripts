@@ -22,7 +22,7 @@ d <- d_noBW %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167
 #Mark children born or enrolled wasted
 d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
        mutate(age_enrol = first(agedays)) %>%
-       filter(age_enrol == age_cutoff) %>%
+       filter(age_enrol <= age_cutoff) %>%
        mutate(born_wast = 1 * (first(whz) < (-2)))# %>%
        #filter(born_wast==1 | sum(wast_inc)>0) #Subset to only children who experiences wasting
 table(d$born_wast)
@@ -35,7 +35,7 @@ co <- co %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167) %
 co <- co %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
   mutate(age_enrol = first(agedays),
          first_whz = first(whz)) %>%
-  filter(age_enrol == age_cutoff) %>%
+  filter(age_enrol <= age_cutoff) %>%
   mutate(born_wast = 1 * (first_whz < (-2)))
 
 #Drop children who never recovered from wasting at birth
