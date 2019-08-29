@@ -37,7 +37,7 @@ source(paste0(here::here(), "/0-config.R"))
 theme_set(theme_ki())
 
 #Load data
-load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
 #Quantile data (object: quantile_d)
 quantile_d <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_monthly24.rds"))
