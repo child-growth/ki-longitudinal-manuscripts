@@ -212,7 +212,7 @@ saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_quantile_plot_name,".RD
 #-------------------------------------------------------------------------------------------
 prev_plot <- ki_desc_plot(d,
                    Disease="Stunting",
-                   Measure="Prevalence", 
+                   Measure="Prevalence - monthly cohorts", 
                    Birth="yes", 
                    Severe="no", 
                    Age_range="3 months", 
@@ -220,7 +220,8 @@ prev_plot <- ki_desc_plot(d,
                    xlabel="Child age, months",
                    ylabel='Point Prevalence (95% CI)',
                    h1=69,
-                   h2=72)
+                   h2=72,
+                   returnData=T)
 prev_plot
 
 # define standardized plot names
@@ -237,7 +238,7 @@ prev_plot_name = create_name(
 # save plot and underlying data
 ggsave(prev_plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
+saveRDS(prev_plot[[2]], file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 
 
 
