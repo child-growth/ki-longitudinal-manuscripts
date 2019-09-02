@@ -52,6 +52,8 @@ unique(wmd$study_id)
 md <- md[!(md$study_id=="COHORTS" & (md$countrycohort=="BRAZIL"|md$countrycohort=="SOUTH AFRICA")),] 
 wmd <- wmd[!(wmd$study_id=="COHORTS" & (wmd$countrycohort=="BRAZIL"|wmd$countrycohort=="SOUTH AFRICA")),] 
 
+
+
 md <- md[(md$study_id %in% wmd$study_id),]
 wmd <- wmd[(wmd$study_id %in% md$study_id),]
 unique(wmd$study_id)
@@ -293,17 +295,17 @@ dd <- dd[dd$study_id %in% monthlystudies,]
 
 
 #Drop CMIN GUINEA-BISSAU and BRAZIL for insufficient measure frequency
-
-dp <- dp[!(dp$studycountry %in% c("CMIN, Brazil", "CMIN, Guinea-Bissau")),]
-dd <- dd[!(dd$studycountry %in% c("CMIN, Brazil", "CMIN, Guinea-Bissau")),]
-# dp <- droplevels(dp)
-# dd <- droplevels(dd)
+levels(dp$studycountry)
+dp <- dp[!(dp$studycountry %in% c("CMIN, Brazil - 1985", "CMIN, Guinea-Bissau - 1985")),]
+dd <- dd[!(dd$studycountry %in% c("CMIN, Brazil - 1985", "CMIN, Guinea-Bissau - 1985")),]
+dp <- droplevels(dp)
+dd <- droplevels(dd)
 
 
 # Sort by wasting prevalence
 dp <- dp %>% 
   group_by(region) %>%
-  dplyr::arrange(desc(wastprev), .by_group = TRUE)
+  dplyr::arrange((wastprev), .by_group = TRUE)
 dp$studycountry <- sapply(dp$studycountry, function(x) as.character(x))
 dp$studycountry <- factor(dp$studycountry, levels = unique(dp$studycountry))
 
