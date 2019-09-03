@@ -6,6 +6,10 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 
+
+library(tidyverse)
+library(dplyr)
+
 #NOTE
 #Haodong, can you merge the following data into the primary dataset `d`
 #Then, instead of faceting plot one by region, can you group the seasonality index into low, med, and high and facet by that?
@@ -14,27 +18,69 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 #after doing that, and then hearing back from others on the team, we can change the splines to match up seasonal peaks in rain
 rain <- read.csv(here("/data/monthly_rainfall.csv"))
 
+colnames(rain)[1] <- "studyid"
+rain <- rain[-c(22, 23, 24), ]
+rain$country <- as.character(rain$country)
+rain <- mutate_at(rain,.vars="country",.funs=toupper)
+rain$country[rain$country=="TANZANIA "] <- "TANZANIA, UNITED REPUBLIC OF"
+studyid<- c("ki1113344-GMS-Nepal","ki1000109-ResPak","ki1000108-IRC","ki1000109-EE","ki1000108-CMC-V-BCS-2002",
+             "ki0047075b-MAL-ED","ki1114097-CMIN","ki0047075b-MAL-ED","NA","ki0047075b-MAL-ED",
+             "ki1101329-Keneba","NA","ki1066203-TanzaniaChild2","ki0047075b-MAL-ED","ki0047075b-MAL-ED",
+             "ki1112895-Guatemala BSC","NA","ki0047075b-MAL-ED","ki1114097-CMIN","ki0047075b-MAL-ED","ki1114097-CONTENT")
+
+rain$studyid <- studyid
+
+rain <- rain[-c(9, 12, 17), ]
+
+rain <- rain %>%
+  mutate(index_cat = case_when(cohort_index >= 0.8  ~ "High", 
+                               cohort_index >=0.5 & cohort_index < 0.8  ~ "Med",
+                               cohort_index < 0.5 ~ "Low"))
+
+rain$index_cat <- factor(rain$index_cat, levels=c("High", "Med", "Low"))
+
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 
-d$region[d$region=="Asia"] <- "South Asia"
-d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
+df <- left_join(d, rain, by=c("studyid", "country"))
+
 
 #Count number of children
-d %>% filter(agedays < 24 * 30.4167) %>%
+df %>% filter(agedays < 24 * 30.4167) %>%
   group_by(studyid, country, subjid) %>% 
-  group_by(region) %>%
+  group_by(index_cat) %>%
   summarize(nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))), nstudies = length(unique(paste0(studyid, country))))
 
 
-d$cohort <- paste0(d$studyid, " ", d$country)
-length(unique(d$cohort))
+df$cohort <- paste0(df$studyid, " ", df$country)
+length(unique(df$cohort))
 
-d$month <- floor(d$jday/30.417) + 1
-table(d$month)
+df$month <- floor(df$jday/30.417) + 1
+table(df$month)
 
 #Monsoon is assumed to be May-October 
-d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "Monsoon", "Not monsoon"))
+df$monsoon <- factor(ifelse(df$month > 5 & df$month < 10, "Monsoon", "Not monsoon"))
+
+# 
+# 
+# d$region[d$region=="Asia"] <- "South Asia"
+# d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
+# 
+# #Count number of children
+# d %>% filter(agedays < 24 * 30.4167) %>%
+#   group_by(studyid, country, subjid) %>% 
+#   group_by(region) %>%
+#   summarize(nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))), nstudies = length(unique(paste0(studyid, country))))
+# 
+# 
+# d$cohort <- paste0(d$studyid, " ", d$country)
+# length(unique(d$cohort))
+# 
+# d$month <- floor(d$jday/30.417) + 1
+# table(d$month)
+# 
+# #Monsoon is assumed to be May-October 
+# d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "Monsoon", "Not monsoon"))
 
 
 #Check if children are measured spread throughout the year by cohort
@@ -44,9 +90,9 @@ d$monsoon <- factor(ifelse(d$month > 5 & d$month < 10, "Monsoon", "Not monsoon")
 #Only GMS nepal has a group of children all measured at the same age throughout the year.
 
 
-p1 <- ggplot(d, aes(x=jday, y=whz)) + facet_wrap(~region, scales="free_y") + geom_smooth(aes(color=region), span=1, se=F, size=2) +
+p1 <- ggplot(df, aes(x=jday, y=whz)) + facet_wrap(~index_cat, scales="free_y") + geom_smooth(aes(color=index_cat), span=1, se=F, size=2) +
   geom_smooth(aes(group=cohort), color="grey20", span=1, se=F,linetype=3, size=1) + xlab("Month of the year") + ylab("Mean WLZ") +
-  scale_color_manual(values=rep("grey20",3), drop=TRUE, limits = levels(d$region)) +
+  scale_color_manual(values=rep("grey20",3), drop=TRUE, limits = levels(df$index_cat)) +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 
