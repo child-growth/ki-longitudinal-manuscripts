@@ -55,7 +55,7 @@ d <- d %>% filter(analysis == "Cohorts monthly 0-24 m")
 
 df <- d %>% filter(
   disease == "Stunting" &
-    measure == "Mean LAZ" &
+    measure == "Mean LAZ - monthly cohorts" &
     birth == "yes" &
     severe == "no" &
     age_range == "1 month" &
@@ -248,7 +248,7 @@ saveRDS(prev_plot[[2]], file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS
 #-------------------------------------------------------------------------------------------
 prev_plot_sev <- ki_desc_plot(d,
                               Disease="Stunting",
-                              Measure="Prevalence", 
+                              Measure="Prevalence - monthly cohorts", 
                               Birth="yes", 
                               Severe="yes", 
                               Age_range="3 months", 
