@@ -8,7 +8,7 @@
 # sensitivity analysis that subsets cohorts to those with 
 # monthly measurements each month from 0 to 24 months
 
-# inputs: desc_data_cleaned.Rdata, quantile_data_stunting_monthly24.Rdata
+# inputs: desc_data_cleaned.RDS, quantile_data_stunting_monthly24.RDS
 
 # outputs: 
 # fig-laz-2-mean-overall_region--allage-month24.png
@@ -75,7 +75,7 @@ df <- df %>%
   mutate(agecat = gsub("s", "", agecat)) %>%
   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
   mutate(agecat = as.numeric(agecat)) 
-  
+
 
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month 
@@ -151,7 +151,7 @@ df <- df %>%
     region == "Latin America" ~ "PAHO"
   )) %>%
   mutate(region_who = factor(region_who, levels = c("OVERALL", "AFRO", "SEARO", "PAHO")))
-  
+
 mean_laz_quantile_plot <- ggplot(df,aes(x = agecat, group = region)) +
   
   geom_smooth(aes(y = LAZ, color = region, group = interval, linetype = interval), se = F, span = 0.5) +
@@ -161,12 +161,12 @@ mean_laz_quantile_plot <- ggplot(df,aes(x = agecat, group = region)) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,6), labels = seq(0,24,6)) + 
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
-
+  
   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=TRUE, limits = levels(df$measure), 
                      name = 'Region') +
   scale_linetype_manual(name = "interval", values = c("fiftieth_perc" = "solid",
-                                   "ninetyfifth_perc" = "dashed",
-                                   "fifth_perc" = "dotted"),
+                                                      "ninetyfifth_perc" = "dashed",
+                                                      "fifth_perc" = "dotted"),
                         breaks = c("fiftieth_perc",
                                    "ninetyfifth_perc",
                                    "fifth_perc"),
@@ -177,7 +177,7 @@ mean_laz_quantile_plot <- ggplot(df,aes(x = agecat, group = region)) +
   theme(strip.text = element_text(margin=margin(t=5))) +
   guides(linetype = guide_legend(override.aes = list(col = 'black'), 
                                  keywidth = 3, keyheight = 1),
-           colour = FALSE) +
+         colour = FALSE) +
   theme(legend.position = "bottom",
         legend.title = element_blank(),
         legend.background = element_blank(),
@@ -211,17 +211,16 @@ saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_quantile_plot_name,".RD
 # Stunting prevalence
 #-------------------------------------------------------------------------------------------
 prev_plot <- ki_desc_plot(d,
-                   Disease="Stunting",
-                   Measure="Prevalence - monthly cohorts", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="3 months", 
-                   Cohort="pooled",
-                   xlabel="Child age, months",
-                   ylabel='Point Prevalence (95% CI)',
-                   h1=69,
-                   h2=72,
-                   returnData=T)
+                          Disease="Stunting",
+                          Measure="Prevalence - monthly cohorts", 
+                          Birth="yes", 
+                          Severe="no", 
+                          Age_range="3 months", 
+                          Cohort="pooled",
+                          xlabel="Child age, months",
+                          ylabel='Point Prevalence (95% CI)',
+                          h1=69,
+                          h2=72)
 prev_plot
 
 # define standardized plot names
@@ -236,9 +235,9 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot[[1]], file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
 
-saveRDS(prev_plot[[2]], file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
+saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
 
 
 
@@ -272,7 +271,7 @@ prev_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=3)
+ggsave(prev_plot_sev[[1]], file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
 
@@ -282,15 +281,15 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
 #-------------------------------------------------------------------------------------------
 
 ci_inc_plot <- ki_combo_plot(d,
-                        Disease="Stunting",
-                        Measure=c("Cumulative incidence", "Incidence_proportion"), 
-                        Birth="yes", 
-                        Severe="no", 
-                        Age_range="3 months", 
-                        Cohort="pooled",
-                        xlabel="Child age, months",
-                        h1=85,
-                        h2=90)
+                             Disease="Stunting",
+                             Measure=c("Cumulative incidence - monthly cohorts", "Incidence_proportion - monthly cohorts"), 
+                             Birth="yes", 
+                             Severe="no", 
+                             Age_range="3 months", 
+                             Cohort="pooled",
+                             xlabel="Child age, months",
+                             h1=85,
+                             h2=90)
 ci_inc_plot
 
 
@@ -318,7 +317,7 @@ saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
 
 ci_inc_plot_sev <- ki_combo_plot(d,
                                  Disease="Stunting",
-                                 Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                                 Measure=c("Cumulative incidence - monthly cohorts", "Incidence_proportion - monthly cohorts"), 
                                  Birth="yes", 
                                  Severe="yes", 
                                  Age_range="3 months", 
@@ -332,7 +331,7 @@ ci_inc_plot_sev
 # define standardized plot names
 ci_inc_plot_sev_name = create_name(
   outcome = "stunting",
-  cutoff = 2,
+  cutoff = 3,
   measure = "incidence",
   population = "overall and region-stratified",
   location = "",
@@ -344,12 +343,4 @@ ci_inc_plot_sev_name = create_name(
 ggsave(ci_inc_plot_sev, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
 
 saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
-
-
-
-
-
-
-
-
 
