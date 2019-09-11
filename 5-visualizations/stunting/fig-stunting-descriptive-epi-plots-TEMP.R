@@ -12,63 +12,59 @@
 # inputs: desc_data_cleaned.RDS, quantile_data_stunting_monthly24.RDS
 
 # outputs: 
-# fig-laz-2-mean-overall_region--allage-primary.png           1
-# fig-laz-2-mean-overall_region--allage-month24.png           2
-# fig-laz-2-mean-overall_region--allage-primary-gates.png     3
-# fig-laz-2-quant-overall_region--allage-month24.png          4 
-# fig-stunt-2-prev-overall_region--allage-month24.png         5
-# fig-stunt-2-prev-overall_region--allage-primary.png         6
-# fig-stunt-2-prev-overall_region--allage-fe.png              7
-# fig-stunt-2-prev-overall_region--allage-primary.png         8
-# fig-stunt-2-prev-cohort-latamer--allage-primary.png         9
-# fig-stunt-2-prev-cohort-africa--allage-primary.png          10
-# fig-stunt-2-prev-cohort-asia--allage-primary.png            11
-# fig-stunt-3-prev-overall_region--allage-primary.png         12
-# fig-stunt-3-prev-overall_region--allage-month24.png         13
-# fig-stunt-3-prev-overall_region--allage-fe.png              14
-# fig-stunt-3-prev-cohort-africa-allage-primary.png           15
-# fig-stunt-3-prev-cohort-latamer-allage-primary.png          16
-# fig-stunt-3-prev-cohort-asia-allage-primary.png             17
-
+# fig-laz-2-mean-overall_region--allage-primary.png
+# fig-laz-2-mean-overall_region--allage-month24.png
+# fig-laz-2-mean-overall_region--allage-primary-gates.png
+# fig-laz-2-quant-overall_region--allage-month24.png
+# fig-stunt-2-prev-overall_region--allage-month24.png
+# fig-stunt-2-prev-overall_region--allage-primary.png
+# fig-stunt-2-prev-overall_region--allage-fe.png
+# fig-stunt-2-prev-cohort-africa--allage-primary.png
+# fig-stunt-2-prev-cohort-latamer--allage-primary.png
+# fig-stunt-2-prev-cohort-asia--allage-primary.png
+# fig-stunt-3-prev-overall_region--allage-primary.png
+# fig-stunt-3-prev-overall_region--allage-month24.png
+# fig-stunt-3-prev-overall_region--allage-fe.png
+# fig-stunt-3-prev-cohort-africa-allage-primary.png
+# fig-stunt-3-prev-cohort-latamer-allage-primary.png
+# fig-stunt-3-prev-cohort-asia-allage-primary.png
+# fig-stunt-2-inc-overall_region--allage-primary.png
 # fig-stunt-2-inc-overall_region--allage-month24.png
-# fig-stunt-2-inc-overall_region--allage-fe.png
+# fig-stunt-2-inc-overall_region--allage-fe.png 
+# fig-stunt-2-inc_only-overall_region--allage-primary.png
+# fig-stunt-3-inc-overall_region--allage-primary.png
 # fig-stunt-3-inc-overall_region--allage-month24.png
 # fig-stunt-3-inc-overall_region--allage-fe.png
+# fig-stunt-2-inc-cohort--africa-allage-primary.png
+# fig-stunt-2-inc-cohort--latamer-allage-primary.png
+# fig-stunt-2-inc-cohort--asia-allage-primary.png
+
 
 # figdata-laz-2-mean-overall_region--allage-month24.RDS
+# figdata-laz-2-mean-overall_region--allage-primary.RDS
 # figdata-laz-2-quant-overall_region--allage-month24.RDS
 # figdata-stunt-2-prev-overall_region--allage-month24.RDS
+# figdata-stunt-2-prev-overall_region--allage-primary.RDS
 # figdata-stunt-2-prev-overall_region--allage-fe.RDS
+# figdata-stunt-2-prev-cohort-africa-allage-primary.RDS
+# figdata-stunt-2-prev-cohort-latamer-allage-primary.RDS
+# figdata-stunt-2-prev-cohort-asia-allage-primary.RDS
+# figdata-stunt-3-prev-overall_region--allage-primary.RDS
 # figdata-stunt-3-prev-overall_region--allage-month24.RDS
 # figdata-stunt-3-prev-overall_region--allage-fe.RDS
+# figdata-stunt-3-prev-cohort-africa-allage-primary.RDS
+# figdata-stunt-3-prev-cohort-latamer-allage-primary.RDS
+# figdata-stunt-3-prev-cohort-asia-allage-primary.RDS
+# figdata-stunt-2-inc-overall_region--allage-primary.RDS
 # figdata-stunt-2-inc-overall_region--allage-month24.RDS
 # figdata-stunt-2-inc-overall_region--allage-fe.RDS
+# figdata-stunt-3-inc-overall_region--allage-primary.RDS
 # figdata-stunt-3-inc-overall_region--allage-month24.RDS
 # figdata-stunt-3-inc-overall_region--allage-fe.RDS
+# figdata-stunt-2-inc-cohort-africa-allage-primary.RDS
+# figdata-stunt-2-inc-cohort-latamer-allage-primary.RDS
+# figdata-stunt-2-inc-cohort-asia-allage-primary.RDS
 
-# ---
-
-# fig-stunt-2-inc-overall_region--allage-primary.png
-# fig-stunt-3-inc-overall_region--allage-primary.png
-# ---
-# fig-laz-2-mean-overall_region--allage-primary.png
-# fig-stunt-2-prev-overall_region--allage-primary.png
-# fig-stunt-2-prev-cohort-latamer--allage-primary.png
-# fig-stunt-2-prev-cohort-africa--allage-primary.png
-# fig-stunt-3-prev-overall_region--allage-primary.png
-# fig-stunt-2-prev-cohort-asia-allage-primary.png
-# fig-stunt-2-inc-overall_region--allage-primary.png
-# fig-stunt-3-inc-overall_region--allage-primary.png
-# fig-stunt-2-inc-cohort-latamer-allage-primary.png
-# fig-stunt-2-inc-cohort-asia-allage-primary.png
-# fig-stunt-2-inc-cohort-africa-allage-primary.png
-
-
-# figdata-laz-2-mean-overall_region--allage-primary.RDS
-# figdata-stunt-2-prev-overall_region--allage-primary.RDS
-# figdata-stunt-3-prev-overall_region--allage-primary.RDS
-# figdata-stunt-2-inc-overall_region--allage-primary.RDS
-# figdata-stunt-3-inc-overall_region--allage-primary.RDS
 
 ##########################################
 
@@ -649,7 +645,7 @@ inc_plot
 inc_plot_name = create_name(
   outcome = "stunting",
   cutoff = 2,
-  measure = "incidence only", #incidence only ???
+  measure = "incidence only",
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
@@ -664,7 +660,7 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), wid
 # Stunting cumulative incidence + incidence proportion 
 # excluding birth (primary)
 #-------------------------------------------------------------------------------------------
-# ci_inc_plot_nobirth <- plot_ci_inc(d_primary, birth="no", sev="no", returnData=T) #h1=85
+# ci_inc_plot_nobirth <- plot_ci_inc(d_primary, birth="strat", sev="no", returnData=T) #h1=85
 
 # geom_text_adjust_vec = c(c(2, rep(0, 7)), c(-2, rep(0, 7)),
 #                          c(2, rep(0, 15)),
@@ -673,7 +669,7 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), wid
 # ci_inc_plot_nobirth$plot
 
 # # get N's for figure caption
-# inc_n_primary_excl_birth = d_primary %>% # is this okay as a name
+# inc_n_primary_excl_birth = d_primary %>% 
 #   filter(disease == "Stunting" &
 #            (measure == "Cumulative incidence" | measure== "Incidence_proportion") &
 #            age_range == "3 months" &
@@ -713,8 +709,7 @@ saveRDS(ci_inc_plot_sev_primary$data, file=paste0(figdata_dir, "figdata-",ci_inc
 ci_inc_plot_sev_monthly <- plot_ci_inc(d_monthly, 
                                        meas=c("Cumulative incidence - monthly cohorts", "Incidence_proportion - monthly cohorts"),
                                        birth="yes", 
-                                       sev="yes"
-                                       ) 
+                                       sev="yes") 
 ci_inc_plot_sev_monthly
 
 
@@ -730,7 +725,7 @@ saveRDS(d_monthly, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name_mont
 # Stunting cumulative incidence + incidence proportion - severe (fixed effects)
 #-------------------------------------------------------------------------------------------
 
-ci_inc_plot_sev_fe <- plot_ci_inc(d_fe, birth="yes", sev="yes", returnData=T) #h1=85,
+ci_inc_plot_sev_fe <- plot_ci_inc(d_fe, birth="yes", sev="yes", returnData=T)
 ci_inc_plot_sev_fe$plot
 
 
