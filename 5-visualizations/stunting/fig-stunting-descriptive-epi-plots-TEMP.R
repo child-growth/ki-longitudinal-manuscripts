@@ -657,39 +657,6 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), wid
 
 
 #-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion 
-# excluding birth (primary)
-#-------------------------------------------------------------------------------------------
-# ci_inc_plot_nobirth <- plot_ci_inc(d_primary, birth="strat", sev="no", returnData=T) #h1=85
-
-# geom_text_adjust_vec = c(c(2, rep(0, 7)), c(-2, rep(0, 7)),
-#                          c(2, rep(0, 15)),
-#                          c(2, rep(0, 15)),
-#                          c(2, rep(0, 15)))
-# ci_inc_plot_nobirth$plot
-
-# # get N's for figure caption
-# inc_n_primary_excl_birth = d_primary %>% 
-#   filter(disease == "Stunting" &
-#            (measure == "Cumulative incidence" | measure== "Incidence_proportion") &
-#            age_range == "3 months" &
-#            cohort == "pooled" &
-#            severe == "no") %>%
-#   group_by(region) %>%
-#   summarise(min_study = min(nstudies, na.rm=TRUE),
-#             max_study = max(nstudies, na.rm=TRUE),
-#             min_n = min(nmeas, na.rm=TRUE),
-#             max_n = max(nmeas, na.rm=TRUE))
-
-# # define standardized plot names
-# ci_inc_plot_nobirth_name = name_inc_plots(cut=2, pop=pop_list$o, loc="",
-#                                           ana="sensitivity analysis excluding birth")
-
-# # save plot and underlying data
-# save_plot_data(ci_inc_plot_nobirth$plot, ci_inc_plot_nobirth_name, ci_inc_plot_nobirth$data, 14, 4)
-
-
-#-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion - severe (primary)
 #-------------------------------------------------------------------------------------------
 ci_inc_plot_sev_primary <- plot_ci_inc(d_primary, birth="yes", sev="yes", returnData=T) #h1=85,
