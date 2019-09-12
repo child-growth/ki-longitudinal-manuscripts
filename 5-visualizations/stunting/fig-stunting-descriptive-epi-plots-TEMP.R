@@ -11,61 +11,6 @@
 
 # inputs: desc_data_cleaned.RDS, quantile_data_stunting_monthly24.RDS
 
-# outputs: 
-# fig-laz-2-mean-overall_region--allage-primary.png
-# fig-laz-2-mean-overall_region--allage-month24.png
-# fig-laz-2-mean-overall_region--allage-primary-gates.png
-# fig-laz-2-quant-overall_region--allage-month24.png
-# fig-stunt-2-prev-overall_region--allage-month24.png
-# fig-stunt-2-prev-overall_region--allage-primary.png
-# fig-stunt-2-prev-overall_region--allage-fe.png
-# fig-stunt-2-prev-cohort-africa--allage-primary.png
-# fig-stunt-2-prev-cohort-latamer--allage-primary.png
-# fig-stunt-2-prev-cohort-asia--allage-primary.png
-# fig-stunt-3-prev-overall_region--allage-primary.png
-# fig-stunt-3-prev-overall_region--allage-month24.png
-# fig-stunt-3-prev-overall_region--allage-fe.png
-# fig-stunt-3-prev-cohort-africa-allage-primary.png
-# fig-stunt-3-prev-cohort-latamer-allage-primary.png
-# fig-stunt-3-prev-cohort-asia-allage-primary.png
-# fig-stunt-2-inc-overall_region--allage-primary.png
-# fig-stunt-2-inc-overall_region--allage-month24.png
-# fig-stunt-2-inc-overall_region--allage-fe.png 
-# fig-stunt-2-inc_only-overall_region--allage-primary.png
-# fig-stunt-3-inc-overall_region--allage-primary.png
-# fig-stunt-3-inc-overall_region--allage-month24.png
-# fig-stunt-3-inc-overall_region--allage-fe.png
-# fig-stunt-2-inc-cohort--africa-allage-primary.png
-# fig-stunt-2-inc-cohort--latamer-allage-primary.png
-# fig-stunt-2-inc-cohort--asia-allage-primary.png
-
-
-# figdata-laz-2-mean-overall_region--allage-month24.RDS
-# figdata-laz-2-mean-overall_region--allage-primary.RDS
-# figdata-laz-2-quant-overall_region--allage-month24.RDS
-# figdata-stunt-2-prev-overall_region--allage-month24.RDS
-# figdata-stunt-2-prev-overall_region--allage-primary.RDS
-# figdata-stunt-2-prev-overall_region--allage-fe.RDS
-# figdata-stunt-2-prev-cohort-africa-allage-primary.RDS
-# figdata-stunt-2-prev-cohort-latamer-allage-primary.RDS
-# figdata-stunt-2-prev-cohort-asia-allage-primary.RDS
-# figdata-stunt-3-prev-overall_region--allage-primary.RDS
-# figdata-stunt-3-prev-overall_region--allage-month24.RDS
-# figdata-stunt-3-prev-overall_region--allage-fe.RDS
-# figdata-stunt-3-prev-cohort-africa-allage-primary.RDS
-# figdata-stunt-3-prev-cohort-latamer-allage-primary.RDS
-# figdata-stunt-3-prev-cohort-asia-allage-primary.RDS
-# figdata-stunt-2-inc-overall_region--allage-primary.RDS
-# figdata-stunt-2-inc-overall_region--allage-month24.RDS
-# figdata-stunt-2-inc-overall_region--allage-fe.RDS
-# figdata-stunt-3-inc-overall_region--allage-primary.RDS
-# figdata-stunt-3-inc-overall_region--allage-month24.RDS
-# figdata-stunt-3-inc-overall_region--allage-fe.RDS
-# figdata-stunt-2-inc-cohort-africa-allage-primary.RDS
-# figdata-stunt-2-inc-cohort-latamer-allage-primary.RDS
-# figdata-stunt-2-inc-cohort-asia-allage-primary.RDS
-
-
 ##########################################
 
 #-----------------------------------
