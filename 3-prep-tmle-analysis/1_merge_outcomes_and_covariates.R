@@ -79,7 +79,10 @@ meanHAZ$subjid <- as.character(meanHAZ$subjid)
 
 #merge in covariates
 cuminc <- cuminc %>% subset(., select = -c(tr))
-d <- left_join(cuminc, cov, by=c("studyid", "subjid", "country"))
+
+d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc)))], 
+               by=c("studyid", "subjid", "country"))
+
 head(d)
 
 
@@ -117,7 +120,8 @@ save(d, Y, A,V, id,  file="st_cuminc_rf.Rdata")
 cuminc_nobirth <- cuminc_nobirth %>% subset(., select = -c(tr))
 cuminc_nobirth <- bind_rows(cuminc_nobirth, cuminc[cuminc$agecat=="6-24 months",])
 
-d <- left_join(cuminc_nobirth, cov, by=c("studyid", "subjid", "country"))
+d <- left_join(cuminc_nobirth, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
+               by=c("studyid", "subjid", "country"))
 head(d)
 
 
@@ -205,6 +209,11 @@ A<-c( "sex",              "gagebrth",      "birthwt",
 
 
 save(d, Y, A,V, id,  file="st_meanZ_rf.Rdata")
+
+#save subset for the mediation analysis
+d <- d %>% filter(agecat!="Birth")
+d <- droplevels(d)
+save(d, file="mediation_HAZ.Rdata")
 
 
 #------------------------------------
@@ -322,10 +331,7 @@ vel_waz$subjid <- as.character(vel_waz$subjid)
 vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
 meanWHZ$subjid <- as.character(meanWHZ$subjid)
 
-#Drop month to prevent duplicates
-cuminc <- cuminc %>% subset(., select = -c(month))
-cuminc_nobirth <- cuminc_nobirth %>% subset(., select = -c(month))
-pers_wast <- pers_wast %>% subset(., select = -c(month))
+
 
 #------------------------------------
 # Create cumulative incidence dataset
@@ -334,8 +340,10 @@ pers_wast <- pers_wast %>% subset(., select = -c(month))
 #merge in covariates
 dim(cuminc)
 dim(cov)
-d <- left_join(cuminc, cov, by=c("studyid", "subjid", "country"))
+d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc)))], 
+               by=c("studyid", "subjid", "country"))
 dim(d)
+
 
 
 #Vector of outcome names
@@ -372,7 +380,8 @@ save(d, Y, A,V, id,  file="wast_cuminc_rf.Rdata")
 cuminc_nobirth <- bind_rows(cuminc_nobirth, cuminc[cuminc$agecat=="6-24 months",])
 
 dim(cuminc_nobirth)
-d <- left_join(cuminc_nobirth, cov, by=c("studyid", "subjid", "country"))
+d <- left_join(cuminc_nobirth, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
+               by=c("studyid", "subjid", "country"))
 dim(d)
 
 
@@ -459,6 +468,11 @@ A<-c( "sex",              "gagebrth",      "birthwt",
 
 save(d, Y, A,V, id,  file="wast_meanZ_rf.Rdata")
 
+#Save subset for mediation analysis
+d <- d %>% filter(agecat!="Birth")
+d <- droplevels(d)
+save(d, file="mediation_WHZ.Rdata")
+
 
 #------------------------------------
 # Create recovery dataset
@@ -466,7 +480,8 @@ save(d, Y, A,V, id,  file="wast_meanZ_rf.Rdata")
 
 #merge in covariates
 dim(rec)
-d <- left_join(rec, cov, by=c("studyid", "subjid", "country"))
+d <- left_join(rec, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(rec)))], 
+               by=c("studyid", "subjid", "country"))
 dim(d)
 
 
@@ -492,7 +507,10 @@ save(d, Y, A,V, id,  file="wast_rec_rf.Rdata")
 
 #merge in covariates
 dim(pers_wast)
-d <- left_join(pers_wast, cov, by=c("studyid", "subjid", "country"))
+d <- left_join(pers_wast, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(pers_wast)))], 
+               by=c("studyid", "subjid", "country"))
+
+
 dim(d)
 
 #Add empty columns for wasting outcomes to help longbow run
@@ -585,7 +603,9 @@ load("co_cuminc.rdata")
 #merge in covariates
 dim(cuminc)
 dim(cov)
-d <- left_join(cuminc, cov, by=c("studyid", "subjid", "country"))
+d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc)))], 
+               by=c("studyid", "subjid", "country"))
+
 dim(d)
 
 
@@ -871,4 +891,5 @@ adjustment_sets <- list(
             "trth2o","cleanck","impfloor","impsan","safeh20")
 )
 save(adjustment_sets, file="adjustment_sets_list.Rdata")
+save(adjustment_sets, file=here("/results/adjustment_sets_list.Rdata"))
 

@@ -4,9 +4,6 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
 require(cowplot)
 
 #Figure 2
@@ -24,9 +21,9 @@ ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/wasting/f
 load(here("/figures/plot objects/season_diff_plot.Rdata"))
 load(here("/figures/plot objects/season_plots.Rdata"))
 
-Twoby1plot <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+TwobyTwoplot <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
 
-fig3 <- plot_grid(Twoby1plot, p, labels = c("","E"), ncol = 1, align = 'h', axis = 'l', rel_heights = c(2, 1))
+fig3 <- plot_grid(TwobyTwoplot, pdiff, labels = c("","E"), ncol = 1, align = 'h', axis = 'l', rel_heights = c(2, 1))
 
 ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig3.png"), width=14, height=14)
 
@@ -38,17 +35,16 @@ load(here("/figures/plot objects/birthstrat_stats_plot_object.Rdata"))
 load(here("/figures/plot objects/birthwast_strat_growth_curve_object.Rdata"))
 birthstrat_curve<-p
 load(here("/figures/plot objects/ind_traj_plot_object.Rdata"))
-ind_traj<-p
+ind_traj <- p
+colors <-  c("green", "orange", "red", "grey80", "grey40")
+names(colors) = c("Not wasted", "Wasted", "Severe wasted", "Born wasted", "Born severe wasted")
+
 
 fig4_a <- plot_grid(ind_traj, rec_violin_plot, labels = c("A","C"), ncol = 2, align = 'v', axis = 'l')
 fig4_c <- plot_grid(birthstrat_curve, birthstrat_stats_plot, labels = c("E","F"), ncol = 2, align = 'v', axis = 'l')
 
 fig4 <- plot_grid(fig4_a, inc_plot[[1]], rec_plot[[1]], fig4_c, labels = c("","B","D",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
 ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig4.png"), width=14, height=14)
-
-#save individual trajectory seperately for UNICEF presentation
-ggsave(ind_traj, file=paste0(here::here(),"/figures/India/wasting/individual_trajectory.png"), width=10, height=6)
-
 
 #Figure 5
 load(here("/figures/plot objects/co_plot_object.Rdata"))

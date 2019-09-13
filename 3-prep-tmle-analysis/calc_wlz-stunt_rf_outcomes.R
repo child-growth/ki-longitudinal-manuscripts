@@ -10,12 +10,32 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
-
-load("U://ucb-superlearner/Manuscript analysis data/rf_co-occurrence_data.RData")
+d <- readRDS(rf_co_occurrence_path)
 
 
 #Subset analysis to monthly studies
 d <- d %>% filter(measurefreq=="monthly")
+
+
+
+
+#--------------------------------------
+# Format and subset the growth velocity dataset
+#--------------------------------------
+vel <- readRDS(file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")
+
+vel<- mark_measure_freq(vel)
+
+vel <- vel %>% filter(measurefreq=="monthly")
+
+
+#Get only HAZ change from growth velocity dataset, and format names
+vel_haz <- vel %>% filter(ycat=="haz") %>% subset(., select=c(studyid, country, subjid, y_rate, diffcat)) %>%
+  rename(agecat = diffcat)
+
+#Get only length velocity from growth velocity dataset, and format names
+vel_lencm <- vel %>% filter(ycat=="lencm") %>% subset(., select=c(studyid, country, subjid, y_rate, diffcat)) %>%
+  rename(agecat = diffcat)
 
 
 #--------------------------------
@@ -172,6 +192,15 @@ stuntprev_whz <- left_join(dprev, dprev_whzcat, by=c("studyid","country","subjid
 table(stuntprev_whz$agecat, stuntprev_whz$lag_WHZ_quart, stuntprev_whz$stunted)
 
 
+#--------------------------------
+# Merge velocity and WHZ quartiles.
+#--------------------------------
+vel_haz_whz <- left_join(vel_haz, d_whzcat, by=c("studyid","country","subjid", "agecat"))
+vel_haz_whz <- vel_haz_whz %>% filter(!is.na(lag_WHZ_quart))
+
+vel_lencm_whz <- left_join(vel_lencm, d_whzcat, by=c("studyid","country","subjid", "agecat"))
+vel_lencm_whz <- vel_lencm_whz %>% filter(!is.na(lag_WHZ_quart))
+
 
 #--------------------------------
 # Merge stunting datasets and covariates
@@ -179,7 +208,7 @@ table(stuntprev_whz$agecat, stuntprev_whz$lag_WHZ_quart, stuntprev_whz$stunted)
 
 
 #load covariates
-cov<-readRDS("FINAL_clean_covariates.rds")
+cov<-readRDS(paste0(ghapdata_dir, "FINAL_clean_covariates.rds"))
 
 #Merge in covariates
 d <- left_join(stuntprev_whz, cov, by=c("studyid", "subjid", "country"))
@@ -212,7 +241,20 @@ save(d, Y, A, W, V, id, file="stuntprev_whz_rf.Rdata")
 
 
 #CI outcomes
-
+stuntCI_whz <- stuntCI_whz %>% subset(., select = -c(sex))
 d <- left_join(stuntCI_whz, cov, by=c("studyid", "subjid", "country"))
 Y<-c("ever_stunted")
 save(d, Y, A, W, V, id, file="stuntCI_whz_rf.Rdata")
+
+
+
+#growth velocity
+vel_haz_whz2 <- vel_haz_whz %>% subset(., select = -c(tr, sex))
+d <- left_join(vel_haz_whz2, cov, by=c("studyid", "subjid", "country"))
+Y<-c("y_rate")
+save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"laz_vel_whz_rf.Rdata"))
+
+vel_lencm_whz2 <- vel_lencm_whz %>% subset(., select = -c(tr, sex))
+d <- left_join(vel_lencm_whz2, cov, by=c("studyid", "subjid", "country"))
+Y<-c("y_rate")
+save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"len_vel_whz_rf.Rdata"))

@@ -1,0 +1,110 @@
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/bc3a2fc9-ecc7-42fa-b448-840df6eca170/e7a0def7-7eb3-421d-88c6-8f32e8f35809
+cd /tmp;tar xvzf tmpvbo1gcgl.tar.gz --strip 1;cd /tmp/bc3a2fc9-ecc7-42fa-b448-840df6eca170;pip install requests --user;export TLAPP_TOKEN=dQX0IV62yB;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/51202/append_log/;screen -d -m python x.py;sleep 1
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/ensure_git_dataset.sh
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/inputs.json
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/x.py
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/runner.R
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/e7a0def7-7eb3-421d-88c6-8f32e8f35809/
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/provision.sh
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/script.Rmd
+tmpvbo1gcgl/bc3a2fc9-ecc7-42fa-b448-840df6eca170/wrapper.sh
+Requirement already satisfied: requests in /opt/anaconda2/lib/python2.7/site-packages
+You are using pip version 9.0.1, however version 19.2.2 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+{"job": {"status": "running", "created_at": "2019-08-16T16:12:16.979", "results_url": "/jobs/51202/", "jobs": []}}Making sure longbowtools package is available for runner
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
+> 
+> 
+Installing pandoc
+pandoc-2.3.1/
+pandoc-2.3.1/bin/
+pandoc-2.3.1/bin/pandoc
+pandoc-2.3.1/bin/pandoc-citeproc
+pandoc-2.3.1/share/
+pandoc-2.3.1/share/man/
+pandoc-2.3.1/share/man/man1/
+pandoc-2.3.1/share/man/man1/pandoc.1.gz
+pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
+Running provision script
+skipping provisioning because this is a child job
+Making sure longbowtools package is available for runner
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
+> 
+> 
+Starting analysis
+
+
+processing file: REPORT.Rmd
+  |                                                                         |                                                                 |   0%  |                                                                         |..                                                               |   3%
+  ordinary text without R code
+
+  |                                                                         |....                                                             |   6%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                         |......                                                           |   9%
+  ordinary text without R code
+
+  |                                                                         |........                                                         |  12%
+label: params (with options) 
+List of 2
+ $ warning: logi FALSE
+ $ message: logi FALSE
+
+Loading required package: graphics
+hdlvryc("arm", "sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec", "W_mhtcm", "W_mwtkg", "W_mbmi", "W_fhtcm", "single", "W_nrooms", "W_nhh", "W_nchldlt5", "brthmon", "W_parity", "trth2o", "cleanck", "impfloor", "impsan", "safeh20")ever_sstuntedidc("agecat", "studyid", "country")
+TRUETRUEFALSENULL
+  |                                                                         |..........                                                       |  16%
+  ordinary text without R code
+
+  |                                                                         |............                                                     |  19%
+label: preprocessing
+Quitting from lines 83-127 (REPORT.Rmd) 
+Error in `[.data.table`(filtered, , no_missing, with = FALSE) : 
+  column(s) not found: NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+Calls: run_internal ... eval -> eval -> process_missing -> [ -> [.data.table
+
+Execution halted
+Running analysis failed
+{"status": "error"}

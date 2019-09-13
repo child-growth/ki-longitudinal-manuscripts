@@ -638,7 +638,7 @@ table(paste0(d$studyid," ", d$country), d$nchldlt5)
 
 nchild5<-NA
 nchild5[d$nchldlt5==1] <- "1"
-nchild5[d$nchldlt5>2] <- "2+"
+nchild5[d$nchldlt5>=2] <- "2+"
 d$nchldlt5 <- as.factor(nchild5)
 table(d$nchldlt5)
 table(paste0(d$studyid," ", d$country), d$nchldlt5)

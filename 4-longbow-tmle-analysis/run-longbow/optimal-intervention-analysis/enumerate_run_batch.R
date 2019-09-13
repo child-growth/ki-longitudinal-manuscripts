@@ -14,7 +14,7 @@ library(here)
 
 # 1. enumerate analysis
 
-setwd(here("ki-longitudinal-manuscripts","4-longbow-tmle-analysis","run-longbow","optimal-intervention-analysis"))
+setwd(here("4-longbow-tmle-analysis","run-longbow","optimal-intervention-analysis"))
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
 
@@ -25,9 +25,11 @@ default_params <- fromJSON(inputs)
 
 # # Continious
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
-load(here("ki-longitudinal-manuscripts","4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
+load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
 analyses$count_Y <- FALSE
 analyses$maximize <- TRUE
+
+analyses <- analyses %>% filter(Y %in% c("haz","whz"))
 
 #analyses_2 <- analyses
 #analyses <- rbindlist(list(analyses_2, analyses_1), fill=TRUE)
@@ -57,7 +59,7 @@ writeLines(toJSON(enumerated_analyses),"all_analyses.json")
 
 # 2. run batch
 
-configure_cluster(here("ki-longitudinal-manuscripts","0-project-functions","cluster_credentials.json"))
+configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 
 rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX")
@@ -75,17 +77,17 @@ batch_id <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
 wait_for_batch(batch_id)
 
 # download the longbow outputs
-get_batch_results(batch_id, results_folder="results_sub")
-length(dir("results_sub"))
+get_batch_results(batch_id, results_folder="results")
+length(dir("results"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata","results_sub")
-obs_counts <- load_batch_results("obs_counts.rdata","results_sub")
+results <- load_batch_results("results.rdata","results")
+obs_counts <- load_batch_results("obs_counts.rdata","results")
 
 # save concatenated results
-filename1 <- paste(paste('opttx_vim_results_sub',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('opttx_vim_obs_counts_sub',Sys.Date( ),sep='_'),'rdata',sep='.')
-save(results, file=here("ki-longitudinal-manuscripts","results","rf results","raw longbow results",filename1))
-save(obs_counts, file=here("ki-longitudinal-manuscripts","results","rf results","raw longbow results",filename2))
+filename1 <- paste(paste('opttx_vim_results',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename2 <- paste(paste('opttx_vim_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
+save(results, file=here("results","rf results","raw longbow results",filename1))
+save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
 
 

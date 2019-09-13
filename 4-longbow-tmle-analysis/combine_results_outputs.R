@@ -3,59 +3,34 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
+load(here("/results/rf results/raw longbow results/results_cont_2019-08-16.rdata"))
+Zscores <- results
 
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_bin.rdata")
-# vim_bin <- results
-# load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_cont.rdata")
-# vim_cont <- results
-# 
-# dim(vim_bin)
-# head(vim_bin)
-# 
-# dim(vim_cont)
-# head(vim_cont)
-# 
+load(here("/results/rf results/raw longbow results/results_bin_2019-08-17.rdata"))
+bin <- results
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/binary_wasting_results.rdata")
-stunting <- results %>% filter(outcome_variable %in% c("stunted", "sstunted", "ever_stunted", "ever_sstunted","dead", "co_occurence", "pers_wasted624")) %>%
-  filter(intervention_variable!="perdiar6" & intervention_variable!="perdiar24")
+load(here("/results/rf results/raw longbow results/mortality_2019-08-18.rdata"))
+mort <- results
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_stunt_results.rdata")
-co_and_diarh <- results
+load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-08-19.rdata"))
+Zscores_unadj <- results
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/wasting_results.rdata")
-HAZ <- results %>% filter(outcome_variable!="whz", intervention_variable!="perdiar6", intervention_variable!="perdiar24")
-
-#Rerun subset (temporary)
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_wast_results.rdata")
-wasting <- results %>% filter(intervention_variable!="birthlen")
-unique(wasting$outcome_variable)
-unique(wasting$agecat)
-
-load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/wasting_analyses/subset_wast_results_06nobw.rdata")
-wast06 <- results
-unique(wast06$outcome_variable)
-unique(wast06$agecat)
-wast06 <- wast06 %>% filter(agecat=="0-6 months (no birth wast)", intervention_variable!="birthlen")
-
-load("C:/Users/andre/Documents/HBGDki/sprint_7D_longbow/wasting_analyses/subset_wast_birthlen.rdata")
-wast_birthlen <- results
+load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
+lagwhz <- results
 
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_wlz_results.rdata")
-WHZ <- results
-unique(WHZ$outcome_variable)
+d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz)
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/subset_laz_diar.rdata")
-HAZ_diar <- results
-unique(HAZ_diar$intervention_variable)
+#Drop nchild and merge in new results
+d <- d %>% filter(intervention_variable!="nchldlt5")
+load(here("/results/rf results/raw longbow results/results_nchild_cont_2019-08-21.rdata"))
+Zscores_nchild <- results
+
+load(here("/results/rf results/raw longbow results/results_nchild_bin_2019-08-21.rdata"))
+bin_nchild <- results
 
 
-
-
-d <- bind_rows(
-  stunting, wasting, wast06,wast_birthlen, co_and_diarh,
-  HAZ, WHZ, HAZ_diar)
+d <- bind_rows(d, Zscores_nchild, bin_nchild)
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -71,7 +46,7 @@ unique(d$outcome_variable)
 d$continuous <- ifelse(d$outcome_variable %in% c("haz","whz","y_rate_haz","y_rate_len","y_rate_wtkg"), 1, 0)
 
 #Drop non-included risk factors (treat h20, with very little variance, and secondry breastfeeding indicators)
-d <- d %>% filter(!(intervention_variable %in% c("trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )) )
+d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )) )
 
 #----------------------------------------------------------
 # Merge in Ns
@@ -82,9 +57,6 @@ load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/contin
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
-
-df <- left_join(WHZ, N_sums_cont, by = c("agecat", "outcome_variable", "intervention_variable", "intervention_level"))
-head(df)
 
 dim(d)
 dim(N_sums)
@@ -136,14 +108,6 @@ d_unadj <- d %>% filter(adjusted==0)
 
 saveRDS(d_adj, paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 saveRDS(d_unadj, paste0(here::here(),"/results/rf results/full_RF_unadj_results.rds"))
-
-
-# df <- d %>% filter(outcome_variable=="ever_wasted")
-# df <- droplevels(df)
-# unique(df$intervention_variable)
-# df <- df %>% filter(intervention_variable=="predexfd6")
-
-
 
 
 

@@ -82,19 +82,20 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
 
-    theme(axis.text.x = element_text(margin =
+    theme(
+      axis.text.x = element_text(margin =
                                        margin(t = 0, r = 0, b = 0, l = 0),
                                      size = 14)) +
     theme(axis.title.y = element_text(size = 14)) +
 
     ggtitle("")
 
-  if (!is.null(Region)) {
+  if(!is.null(Region)) {
     p <- p + facet_wrap(~cohort) +
       theme(strip.text = element_text(size=strip.text.size, margin = margin(t = 0)))
-  } else {
+  }else {
     p <- p + facet_grid(~region) +
-      theme(strip.text = element_text(size=6, margin = margin(t = 0))) 
+      theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
   }
 
   if(!is.null(yrange)){
@@ -106,7 +107,7 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   if(returnData){
     return(list(plot=p,data=df))
   }else{
-    return(p)
+    return(list(plot=p))
   }
 }
 

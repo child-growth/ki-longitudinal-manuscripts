@@ -2,10 +2,6 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
 #Load data
 d <- readRDS(paste0(here::here(),"/results/bw_longterm_res.rds"))
 
@@ -38,7 +34,7 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
   scale_color_manual(values=tableau10[c(5:6)]) + 
   scale_fill_manual(values=tableau10[c(5:6)]) + 
   theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
-  theme(axis.text.x = element_text(margin = 
+  theme(axis.text.x = element_text(margin =  
                                      margin(t = 0, r = 0, b = 0, l = 0),
                                    size = 12))+ #,
                                    #angle = 30, hjust = 0.5, vjust=0.5)) +
@@ -66,7 +62,7 @@ birthstrat_stats_plot_name = create_name(
 # save plot and underlying data
 ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-",birthstrat_stats_plot_name,".png"), width=8, height=5)
 
-saveRDS(d, file=paste0("results/figure-data/figdata-",birthstrat_stats_plot_name,".RDS"))
+saveRDS(d, file=paste0(here(), "results/figure-data/figdata-",birthstrat_stats_plot_name,".RDS"))
 
 save(birthstrat_stats_plot, file=paste0(here::here(),"/figures/plot objects/birthstrat_stats_plot_object.Rdata"))
 

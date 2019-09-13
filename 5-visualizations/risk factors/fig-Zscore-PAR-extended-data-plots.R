@@ -9,27 +9,30 @@ library(gtable)
 require(cowplot)
 
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
-
 
 #Load data
 par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
 
 dim(par)
 
+unique(par$intervention_level)
+unique(par$intervention_variable)
 par$intervention_level <- as.character(par$intervention_level)
 par$intervention_level[par$intervention_level=="Full or late term"] <- "Full/late term"
 par$intervention_level[par$intervention_level=="(0%, 5%]"] <- "(0%,5%]"
 par$intervention_level[par$intervention_level=="No"] <- "None"
 par$intervention_level[par$intervention_level=="Yes"] <- "All"
 par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("brthmon","month")] <- "Jan."
+par$intervention_level[par$intervention_level=="0" & par$intervention_variable %in% c("single")] <- "Partnered"
+par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("parity")] <- "Firstborn"
+par$intervention_level[par$intervention_level=="None" & par$intervention_variable %in% c("vagbrth")] <- "C-section"
+par$intervention_level[par$intervention_level=="None" & par$intervention_variable %in% c("hdlvry")] <- "No"
 
 par$RFlabel[par$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
 par$RFlabel[par$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
 par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
+
+
 
 par$outcome_variable <- gsub("haz", "LAZ", par$outcome_variable)
 par$outcome_variable <- gsub("whz", "WLZ", par$outcome_variable)
@@ -148,9 +151,4 @@ plot_wlz_region = grid.arrange(plot_wlz_africa, plot_wlz_la, plot_wlz_sa, ncol =
                                top = textGrob("Attributable difference - WLZ, stratified by region",gp=gpar(fontsize=26,font=2)))
 
 ggsave(plot_wlz_region, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-wlz-PAR-strat-region.png"), height=18, width=15)
-
-
-#Save just South Asia plot for UNICEF presentation
-p <- plot_wlz_sa %+% ggtitle("Population attributable difference\nin WLZ at 24 months") %+% coord_flip(ylim=c(-0.2,0.5), expand=F)
-ggsave(p, file=paste0(here::here(), "/figures/India/wasting/fig-wlz-PAR-South-Asia.png"), height=8, width=18)
 

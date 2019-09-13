@@ -17,12 +17,14 @@
 
 
 
+
 #------------------------------------
 # Household asset PCA
 #------------------------------------
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+library(caret)
 
 #Open log
 #sink("U:/results/assetPCA-allstudies.txt")

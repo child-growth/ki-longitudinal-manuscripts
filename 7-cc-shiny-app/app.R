@@ -367,7 +367,7 @@ server <- function(input, output, session) {
     var = spline_variables %>% filter(spline_vars == input$spline_exposure) %>% select(spline_vars_raw) %>% first()
     outcome = tolower(input$spline_outcome)
     exposure = var
-    file_name = paste0("figures/risk factor/Splines/", outcome, "/", outcome, "_stat_by_", exposure, ".png")
+    file_name = paste0("figures/Splines/", outcome, "/", outcome, "_stat_by_", exposure, ".png")
     file_name
   })
   

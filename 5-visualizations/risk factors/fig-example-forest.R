@@ -4,17 +4,15 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
+
 
 #Load data
 dpool <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds")) %>% 
   filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region!="N.America & Europe") %>%
   mutate(pooled=1)
 dFE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds")) %>% 
-  filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled") %>%
-        mutate(pooled=1, region="Pooled - FE")
+  filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled - FE") %>%
+        mutate(pooled=1)
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds")) %>% 
   filter(type=="RR",  intervention_variable=="sex", outcome_variable=="ever_stunted", ci_lower != ci_upper, agecat=="0-24 months") %>%
   mutate(pooled=0) %>%

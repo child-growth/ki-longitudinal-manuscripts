@@ -6,20 +6,22 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
 
 
-
-
-
-d <- readRDS("U:/ucb-superlearner/data/seasonality_data.rds")
+d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 
 d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
 
+#Count number of children
+d %>% filter(agedays < 24 * 30.4167) %>%
+  group_by(studyid, country, subjid) %>% 
+  group_by(region) %>%
+  summarize(nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))), nstudies = length(unique(paste0(studyid, country))))
+
 
 d$cohort <- paste0(d$studyid, " ", d$country)
+length(unique(d$cohort))
 
 d$month <- floor(d$jday/30.417) + 1
 table(d$month)
@@ -55,12 +57,18 @@ p1_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p1, file=paste0("figures/wasting/fig-",p1_name,".png"), width=6, height=3)
+ggsave(p1, file=paste0(here(),"/figures/wasting/fig-",p1_name,".png"), width=6, height=3)
 
 
 
 d <- d %>% filter(region=="South Asia")
 d <- d[d$agedays<730,]
+
+#Count number of children
+d %>% filter(agedays==1) %>%
+  group_by(studyid, country, subjid) %>% slice(1) %>%
+  group_by(region) %>%
+  summarize(nchild=n(), nstudies = length(unique(paste0(studyid, country))))
 
 p2 <- ggplot(d[d$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color="grey20", span=1, se=T, size=2) + 
   ylab("Mean WLZ") + xlab("Birth month") +
@@ -79,8 +87,8 @@ p2_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p2, file=paste0("figures/wasting/fig-",p2_name,".png"), width=6, height=3)
-ggsave(p2, file=paste0("6-shiny-app/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
+ggsave(p2, file=paste0(here(),"/figures/wasting/fig-",p2_name,".png"), width=6, height=3)
+ggsave(p2, file=paste0(here(),"/6-shiny-app/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
 
 
 
@@ -204,7 +212,7 @@ p3_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p3, file=paste0("figures/wasting/fig-",p3_name,".png"), width=8, height=5)
+ggsave(p3, file=paste0(here(),"/figures/wasting/fig-",p3_name,".png"), width=8, height=5)
 
 
 
@@ -247,7 +255,7 @@ p4_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p4, file=paste0("figures/wasting/fig-",p4_name,".png"), width=8, height=5)
+ggsave(p4, file=paste0(here(),"/figures/wasting/fig-",p4_name,".png"), width=8, height=5)
 
 
 #Save plot objects

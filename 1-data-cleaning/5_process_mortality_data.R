@@ -26,6 +26,13 @@ summary(d$maxage)
 table(d$dead)
 table(d$causedth)
 
+table(1*!is.na(d$dead),is.na(d$agedth))
+table(1*!is.na(d$dead),(d$causedth==""))
+
+#mark dead if have a cause or age death
+d$agedth[!is.na(d$agedth) & is.na(d$dead)]
+d$dead[!is.na(d$agedth) & is.na(d$dead)] <- 1
+
 
 table(d$studyid, d$dead)
 table(d$studyid, d$agedth>0)
@@ -39,24 +46,48 @@ table(d$studyid, d$dead)
 #Drop mortality after 24 months
 summary(d$maxage)
 dim(d)
-d <- d %>% filter(agedth <= 730 | is.na(agedth))
-d <- d %>% filter(maxage <= 730 | is.na(dead))
+table(d$dead)
+# d <- d %>% filter(agedth <= 730 | is.na(agedth))
+# d <- d %>% filter(maxage <= 730 | is.na(dead))
+d <- d %>% mutate(keep=1*(agedth <= 730 | is.na(agedth) & (maxage <= 730 | is.na(dead))))
 dim(d)
+table(d$dead)
+table(d$keep)
+
 
 summary(d$maxage)
 summary(d$maxage[d$dead==1])
 
+#Create a mortality after 6 month variable
+d$dead624 <- d$dead 
+d$dead624[d$agedth < 6*30.4167 | (is.na(d$agedth) & d$maxage<6*30.4167)] <- 2
+table(d$dead)
+table(d$dead624)
 
 d$subjid <- as.character(d$subjid)
 
 
 mort <- d
 mort$dead[is.na(mort$dead)] <-0
+mort$dead624[is.na(mort$dead624)] <-0
+mort$dead624[mort$dead624==2] <- NA
+#keep variable with mortality after 24 months
+mort$dead0plus <- mort$dead
+mort$dead6plus <- mort$dead624
+#mark death as 0 if child died after 24 months
+mort$dead[mort$keep==0] <- 0
+mort$dead624[mort$keep==0] <- 0
+
+prop.table(table(mort$dead))
+
 mort$cohort <- paste0(mort$studyid," ", mort$country)
 
 #drop cohorts with no mortality info
 mort <- mort %>% group_by(cohort) %>% mutate(tot_dead=sum(dead, na.rm=T)) %>% filter(tot_dead>0)
 table(mort$cohort, mort$dead)
+table(mort$cohort, mort$dead624)
+table(mort$cohort, mort$dead0plus)
+table(mort$cohort, mort$dead6plus)
 
 
 saveRDS(mort, mortality_path)

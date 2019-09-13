@@ -4,19 +4,16 @@
 rm(list=ls())
 library(tidyverse)
 library(data.table)
+source(paste0(here::here(), "/0-config.R"))
 
-setwd("U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/")
 
-dir<-getwd()
-list.files(dir)
-
-bfzn <- readRDS("bf_bfzn.rds")    
-ee <- readRDS("bf_ee.rds")
-gmsn <- readRDS("bf_gmsn.rds")
-jvt3 <- readRDS("bf_jvt3.rds") 
-jvt4 <- readRDS("bf_jvt4.rds")
-mled <- readRDS("bf_mled.rds") 
-prbt <- readRDS("bf_prbt.rds")   
+bfzn <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_bfzn.rds"))  
+ee <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_ee.rds"))
+gmsn <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_gmsn.rds"))
+jvt3 <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt3.rds"))
+jvt4 <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt4.rds"))
+mled <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_mled.rds")) 
+prbt <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_prbt.rds"))   
 
 head(bfzn)    	
 head(ee)    	

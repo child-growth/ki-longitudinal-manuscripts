@@ -2,20 +2,20 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
-
 #Load data
-load(paste0(here::here(),"/results/desc_data_cleaned.Rdata"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 load(paste0(here::here(),"/results/quantile_data_wasting.Rdata"))
 
+#subset to regional and overall pooled estimates
+d <- d %>% filter(cohort=="pooled", pooling!="country" | is.na(pooling))
+  
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 d$nstudy.f <- gsub("N=","",d$nstudy.f)
 d$nmeas.f <- gsub("N=","",d$nmeas.f)
 d$nstudy.f <- gsub(" studies","",d$nstudy.f)
 d$nmeas.f <- gsub(" children","",d$nmeas.f)
+
 
 
 #-------------------------------------------------------------------------------------------
@@ -45,22 +45,22 @@ df <- df %>%
   mutate(agecat = as.numeric(agecat)) 
 
 
-# p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
-#   stat_smooth(aes(fill=region, color=region), se=F, span = 1) +
-#   geom_hline(yintercept = 0, colour = "black") +
-#   scale_y_continuous(breaks = scales::pretty_breaks(n = 10), 
-#                      limits = c(-1, 0.5)) + 
-#   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
-#   scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-#                     name = 'Region') +
-#   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure), 
-#                      name = 'Region') +
-#   xlab("Child age, months")+
-#   ylab("Weight-for-length Z-score") +
-#   ggtitle("") +
-#   theme(legend.position="right")
-# 
-# ggsave(p, file=here::here(),"/6-shiny-app/figures/wasting/WLZ_by_region.png", width=10, height=4)
+p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
+  stat_smooth(aes(fill=region, color=region), se=F, span = 1) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10),
+                     limits = c(-1, 0.5)) +
+  scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
+  scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                    name = 'Region') +
+  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                     name = 'Region') +
+  xlab("Child age, months")+
+  ylab("Weight-for-length Z-score") +
+  ggtitle("") +
+  theme(legend.position="right")
+
+ggsave(p, file=here::here("/6-shiny-app/figures/wasting/WLZ_by_region.png"), width=10, height=4)
 
 
 
@@ -310,7 +310,7 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     scale_fill_manual(values=tableau11, guide = FALSE) +
     xlab(xlabel) + ylab(ylabel) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    theme(strip.text = element_text(size=22, margin = margin(t = 5))) +
+    theme(strip.text = element_text(size=20, margin = margin(t = 5))) +
     theme(axis.text.x = element_text(margin = 
                                        margin(t = 0, r = 0, b = 0, l = 0),
                                      size = 10)) +
@@ -381,7 +381,7 @@ inc_plot <- ip_plot(
   xlabel = "Child age, months",
   h1 = 85,
   h2 = 90,
-  returnData = F
+  returnData = T
 )
 inc_plot
 
@@ -665,7 +665,7 @@ co_plot <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
-                   yrange=c(0,12),
+                   yrange=c(0,11),
                    returnData=T)
 
 co_plot_africa <- ki_desc_plot(d,
@@ -741,7 +741,8 @@ underweight_plot <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Point prevalence (95% CI)',
-                   yrange=c(0,24))
+                   returnData = T,
+                   yrange=c(0,45))
 
 underweight_plot_africa <- ki_desc_plot(d,
                                  Disease="Underweight",
@@ -896,7 +897,7 @@ saveRDS(muac_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figda
 # Comparison of washout period for incidence rate.
 #-------------------------------------------------------------------------------------------
 
-d.ir<-readRDS(paste0(here::here(),"/6-shiny-app/wast_ir_sens_data.rds"))
+d.ir<-readRDS(paste0(here::here(),"/results/wast_ir_sens_data.rds"))
 
 
 ir_sens_plot <- rec_combo_plot(d.ir,
@@ -909,7 +910,7 @@ ir_sens_plot <- rec_combo_plot(d.ir,
                      xlabel="Child age, months",
                      ylabel='Episodes per 1000 person-days at risk',
                      yrange=c(0,4),
-                     legend.pos = c(.95,.8))
+                     legend.pos = c(.1,.85))
 
 # define standardized plot names
 ir_sens_plot_name = create_name(

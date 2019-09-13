@@ -53,7 +53,7 @@ library(epiR)
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
 
-load("U://ucb-superlearner/data/co-occurrence_data.RData")
+d <- readRDS(paste0(ghapdata_dir,"co_occurrence_data.rds"))
 
 d <- d %>% filter(measurefreq=="monthly")
 

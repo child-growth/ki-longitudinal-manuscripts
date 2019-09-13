@@ -6,9 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 library(gtable)
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
+
 
 
 
@@ -17,15 +15,18 @@ par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_result
 
 dim(par)
 
+unique(par$intervention_level)
+unique(par$intervention_variable)
 par$intervention_level <- as.character(par$intervention_level)
 par$intervention_level[par$intervention_level=="Full or late term"] <- "Full/late term"
 par$intervention_level[par$intervention_level=="(0%, 5%]"] <- "(0%,5%]"
 par$intervention_level[par$intervention_level=="No"] <- "None"
 par$intervention_level[par$intervention_level=="Yes"] <- "All"
 par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("brthmon","month")] <- "Jan."
-par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("single")] <- "Partnered"
+par$intervention_level[par$intervention_level=="0" & par$intervention_variable %in% c("single")] <- "Partnered"
 par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("parity")] <- "Firstborn"
 par$intervention_level[par$intervention_level=="None" & par$intervention_variable %in% c("vagbrth")] <- "C-section"
+par$intervention_level[par$intervention_level=="None" & par$intervention_variable %in% c("hdlvry")] <- "No"
 
 par$RFlabel[par$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
 par$RFlabel[par$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"

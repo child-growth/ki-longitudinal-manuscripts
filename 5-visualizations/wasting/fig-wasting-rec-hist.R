@@ -50,7 +50,9 @@ df <- df %>% filter(agecat!="18-24 months")
 df$agecat <- factor(df$agecat, levels=c("Birth", "0-6 months", "6-12 months", "12-18 months"))
 table(df$agecat)
 
-df <- df %>% group_by(agecat) %>% mutate(medianRecZ=median(recZ))
+df <- df %>% group_by(agecat) %>% mutate(medianRecZ=median(recZ), 
+                                         IQR1 = quantile(whz, probs = c(0.25))[[1]],
+                                         IQR2 = quantile(whz, probs = c(0.75))[[1]])
 
 
 
@@ -94,9 +96,9 @@ df <- df %>% group_by(agecat) %>%
                                 agedays==first(agedays), firstMedianRecZ,NA))
 
 rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) + 
-  geom_violin(alpha=0.5) + 
-   geom_point(aes(y = firstMedianRecZ)) +
-   geom_text(aes(y=firstMedianRecZ+0.2,  label=(round(firstMedianRecZ,2)))) +
+  geom_violin(alpha=0.5, draw_quantiles = c(0.25, 0.5, 0.75)) + 
+   #geom_point(aes(y = firstMedianRecZ)) +
+   geom_text(aes(y=firstMedianRecZ+0.1,  label=(round(firstMedianRecZ,2)))) +
   geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
    ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
    xlab("Age at wasting episode onset")+
@@ -121,7 +123,7 @@ rec_violin_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_violin_plot, file=paste0("figures/wasting/fig-", rec_violin_name, ".png"), width=8, height=5)
+ggsave(rec_violin_plot, file=paste0(here(),"/figures/wasting/fig-", rec_violin_name, ".png"), width=8, height=5)
 
 save(rec_violin_plot, file=paste0(here::here(),"/figures/plot objects/rec_violin_plot_object.Rdata"))
 

@@ -5,13 +5,10 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
+library(lmtest)
 
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
+d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 
-
-
-d <- readRDS("U:/ucb-superlearner/data/seasonality_data.rds")
 
 d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
@@ -108,8 +105,15 @@ LRp
 library(metap)
 allmetap(LRp$p, method="all")
 
+#Count number of children
+d %>% filter(agedays < 24 * 30.4167) %>%
+  group_by(studyid, country, subjid) %>% 
+  group_by(region) %>%
+  summarize(nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))), nstudies = length(unique(paste0(studyid, country))))
 
-#Summarize change by 
+
+
+#Summarize change by monsoon season 
 df <- d %>% group_by(studyid, country, subjid, birthcat, childseason, childseason_birthcat) %>%
   summarize(age1=mean(agedays), wlz1=mean(whz)) %>%
   group_by(studyid, country, subjid, birthcat) %>% arrange(studyid, country, subjid, birthcat, age1) %>%
@@ -131,6 +135,7 @@ dim(df)
 
 
 df <- droplevels(df)
+
 
 #T-test of differences over seasonal change, by birth cohorts 
 #ki.ttest(data=df, y=, levels, ref, comp)
@@ -190,6 +195,9 @@ fit.cont.rma <- function(data,age,yi,vi,ni,nlab){
 
 
 
+df$agecat <- df$childseason_birthcat
+
+
 
 
 # estimate random effects, format results
@@ -214,12 +222,12 @@ whz.res$childseason_label <- paste0(whz.res$childseason, ", ", whz.res$age_label
 
 
 
-p <- ggplot(whz.res,aes(y=est,x=childseason)) +
+pdiff <- ggplot(whz.res,aes(y=est,x=childseason)) +
   geom_errorbar(aes(color=birthcat, ymin=lb, ymax=ub), width = 0) +
   geom_point(aes(fill=birthcat, color=birthcat), size = 2) +
   geom_hline(yintercept = 0, linetype="dashed") +
   #geom_text(aes(x = childseason, y = rep(c(1.2,1),8), label = age_label), hjust = 1) +
-  geom_text(aes(x = childseason, y = 1.2, label = age_label), hjust = 0.5, size=4) +
+  geom_text(aes(x = childseason, y = 0.9, label = age_label), hjust = 0.5, size=4) +
   scale_color_manual(values=tableau10[c(5,7,9,10)]) +
   xlab("Season change")+
   ylab("Mean WLZ change") +
@@ -231,11 +239,11 @@ p <- ggplot(whz.res,aes(y=est,x=childseason)) +
   ggtitle("") +
   facet_grid(~birthcat, scales="free_x") #+
   #scale_x_discrete(aes(labels= season_change)) 
-p
+pdiff
 
 
-ggsave(p, file=paste0(here(),"/figures/wasting/seasonal_trajectories_seasondiff.png"), width=14, height=5)
+ggsave(pdiff, file=paste0(here(),"/figures/wasting/seasonal_trajectories_seasondiff.png"), width=14, height=5)
 
-save(p, file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_diff_plot.Rdata")
+save(pdiff, file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_diff_plot.Rdata")
 
 
