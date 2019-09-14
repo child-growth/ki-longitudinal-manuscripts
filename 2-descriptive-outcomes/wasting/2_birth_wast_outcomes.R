@@ -40,8 +40,10 @@ co <- co %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
 
 #Drop children who never recovered from wasting at birth
 dim(d)
-d <- d %>% filter(!(born_wast==1 & sum(wast_rec)==0))
+length(unique(paste0(d$studyid,d$subjid)))
+d <- d %>% group_by(studyid, subjid) %>% filter(!(born_wast==1 & sum(wast_rec)==0))
 dim(d)
+length(unique(paste0(d$studyid,d$subjid)))
 
 
 # estimate a pooled fit, over birth wasting status
@@ -118,5 +120,6 @@ res
 saveRDS(res, file = paste0(here(),"/results/bw_longterm_res.rds"))
 
 
+d<-readRDS(paste0(here(),"/results/bw_longterm_res.rds"))
 
 

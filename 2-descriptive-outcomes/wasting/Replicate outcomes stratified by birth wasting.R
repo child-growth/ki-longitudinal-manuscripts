@@ -9,14 +9,15 @@ d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
 co <- d  %>% 
   filter(measurefreq == "monthly") %>% 
-  group_by(studyid,country,subjid) %>%
+  filter(whz > -5 & whz < 5) %>%
+  filter(haz > -6 & haz < 6) %>%
+  group_by(studyid,country,subjid) %>% arrange(agedays) %>%
   filter(agedays[1] == 1) %>%
   mutate(nofirstmwhz=ifelse(is.na(whz[agedays==1]),1,0)) %>%
   mutate(born_wast = 1 * (first(whz) < (-2))) %>%
   ungroup() %>%
-  filter(nofirstmwhz==0) %>%
-  filter(whz > -5 & whz < 5) %>%
-  filter(haz > -6 & haz < 6)
+  filter(nofirstmwhz==0) 
+
 
 co <- calc.monthly.agecat(co)
 
@@ -26,15 +27,18 @@ co <- calc.monthly.agecat(co)
 #1 Panel E
 
 df <- d  %>% 
-  filter(measurefreq == "monthly") %>% 
-  group_by(studyid,country,subjid) %>%
+  filter(measurefreq == "monthly") %>%
+  filter(whz > -5 & whz < 5) %>% 
+  group_by(studyid,country,subjid) %>% arrange(agedays) %>%
   filter(agedays[1] == 1) %>%
   mutate(nofirstmwhz=ifelse(is.na(whz[agedays==1]),1,0)) %>%
   mutate(born_wast = 1 * (first(whz) < (-2))) %>%
   ungroup() %>%
-  filter(nofirstmwhz==0) %>%
-  filter(whz > -5 & whz < 5)
-  
+  filter(nofirstmwhz==0) 
+dim(df)
+table(df$born_wast)
+table(df$born_wast[df$agedays<730])
+
 df <- calc.monthly.agecat(df)
 
 
