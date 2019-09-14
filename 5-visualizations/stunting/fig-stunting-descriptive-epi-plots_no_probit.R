@@ -27,12 +27,21 @@
 #-----------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+expand_scale = function(mult = 0, add = 0) {
+  stopifnot(is.numeric(mult) && is.numeric(add))
+  stopifnot((length(mult) %in% 1:2) && (length(add) %in% 1:2))
+  
+  mult <- rep(mult, length.out = 2)
+  add <- rep(add, length.out = 2)
+  c(mult[1], add[1], mult[2], add[2])
+}
 
 #Plot themes
 theme_set(theme_ki())
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
+#d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned_no_probit.rds"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
@@ -109,8 +118,8 @@ mean_laz_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,".png"), width=10, height=4)
-saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name,".RDS"))
+ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,"_no_probit.png"), width=10, height=4)
+saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name,"_no_probit.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -137,7 +146,7 @@ mean_laz_plot_gates <- ggplot(dfgates,aes(y=est,x=agecat, group=region)) +
   theme(legend.position="bottom") 
 
 # save plot and underlying data
-ggsave(mean_laz_plot_gates, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,"-gates.png"), width=5, height=4)
+ggsave(mean_laz_plot_gates, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,"-gates_no_probit.png"), width=5, height=4)
 
 
 
@@ -185,9 +194,9 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=4)
+ggsave(prev_plot$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, "_no_probit.png"), width=14, height=4)
 
-saveRDS(prev_plot$data, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
+saveRDS(prev_plot$data, file=paste0(figdata_dir, "figdata-",prev_plot_name,"_no_probit.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -273,13 +282,13 @@ prev_plot_sasia_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_africa_name, ".png"), width=10, height=5)
-ggsave(prev_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_latam_name, ".png"), width=10, height=5)
-ggsave(prev_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sasia_name, ".png"), width=15, height=7)
+ggsave(prev_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_africa_name, "_no_probit.png"), width=10, height=5)
+ggsave(prev_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_latam_name, "_no_probit.png"), width=10, height=5)
+ggsave(prev_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sasia_name, "_no_probit.png"), width=15, height=7)
 
-saveRDS(prev_plot_africa$data, file=paste0(figdata_dir, "figdata-",prev_plot_africa_name,".RDS"))
-saveRDS(prev_plot_lam$data, file=paste0(figdata_dir, "figdata-",prev_plot_latam_name,".RDS"))
-saveRDS(prev_plot_sasia$data, file=paste0(figdata_dir, "figdata-",prev_plot_sasia_name,".RDS"))
+saveRDS(prev_plot_africa$data, file=paste0(figdata_dir, "figdata-",prev_plot_africa_name,"_no_probit.RDS"))
+saveRDS(prev_plot_lam$data, file=paste0(figdata_dir, "figdata-",prev_plot_latam_name,"_no_probit.RDS"))
+saveRDS(prev_plot_sasia$data, file=paste0(figdata_dir, "figdata-",prev_plot_sasia_name,"_no_probit.RDS"))
 
 
 
@@ -315,9 +324,9 @@ prev_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=4)
+ggsave(prev_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, "_no_probit.png"), width=14, height=4)
 
-saveRDS(prev_plot_sev$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
+saveRDS(prev_plot_sev$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,"_no_probit.RDS"))
 
 
 
@@ -404,13 +413,13 @@ prev_plot_sev_sasia_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_africa_name, ".png"), width=10, height=5)
-ggsave(prev_plot_sev_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_latam_name, ".png"), width=10, height=5)
-ggsave(prev_plot_sev_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_sasia_name, ".png"), width=15, height=7)
+ggsave(prev_plot_sev_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_africa_name, "_no_probit.png"), width=10, height=5)
+ggsave(prev_plot_sev_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_latam_name, "_no_probit.png"), width=10, height=5)
+ggsave(prev_plot_sev_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_sasia_name, "_no_probit.png"), width=15, height=7)
 
-saveRDS(prev_plot_sev_africa$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_africa_name,".RDS"))
-saveRDS(prev_plot_sev_lam$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_latam_name,".RDS"))
-saveRDS(prev_plot_sev_sasia$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_sasia_name,".RDS"))
+saveRDS(prev_plot_sev_africa$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_africa_name,"_no_probit.RDS"))
+saveRDS(prev_plot_sev_lam$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_latam_name,"_no_probit.RDS"))
+saveRDS(prev_plot_sev_sasia$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_sasia_name,"_no_probit.RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion
@@ -456,9 +465,9 @@ ci_inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=16, height=4)
+ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,"_no_probit.png"), width=16, height=4)
 
-saveRDS(ci_inc_plot$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
+saveRDS(ci_inc_plot$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,"_no_probit.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -492,7 +501,7 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), width=14, height=3)
+ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,"_no_probit.png"), width=14, height=3)
 
 
 #-------------------------------------------------------------------------------------------
@@ -543,9 +552,9 @@ ci_inc_plot_nobirth_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_nobirth$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_nobirth_name,".png"), width=14, height=4)
+ggsave(ci_inc_plot_nobirth$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_nobirth_name,"_no_probit.png"), width=14, height=4)
 
-saveRDS(ci_inc_plot_nobirth$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_nobirth_name,".RDS"))
+saveRDS(ci_inc_plot_nobirth$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_nobirth_name,"_no_probit.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -578,9 +587,9 @@ ci_inc_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=4)
+ggsave(ci_inc_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,"_no_probit.png"), width=14, height=4)
 
-saveRDS(ci_inc_plot_sev$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
+saveRDS(ci_inc_plot_sev$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,"_no_probit.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -670,13 +679,13 @@ ip_plot_sasia_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ip_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_africa_name, ".png"), width=10, height=5)
-ggsave(ip_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_latam_name, ".png"), width=10, height=5)
-ggsave(ip_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_sasia_name, ".png"), width=15, height=7)
+ggsave(ip_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_africa_name, "_no_probit.png"), width=10, height=5)
+ggsave(ip_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_latam_name, "_no_probit.png"), width=10, height=5)
+ggsave(ip_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_sasia_name, "_no_probit.png"), width=15, height=7)
 
-saveRDS(ip_plot_africa$data, file=paste0(figdata_dir, "figdata-",ip_plot_africa_name,".RDS"))
-saveRDS(ip_plot_lam$data, file=paste0(figdata_dir, "figdata-",ip_plot_latam_name,".RDS"))
-saveRDS(ip_plot_sasia$data, file=paste0(figdata_dir, "figdata-",ip_plot_sasia_name,".RDS"))
+saveRDS(ip_plot_africa$data, file=paste0(figdata_dir, "figdata-",ip_plot_africa_name,"_no_probit.RDS"))
+saveRDS(ip_plot_lam$data, file=paste0(figdata_dir, "figdata-",ip_plot_latam_name,"_no_probit.RDS"))
+saveRDS(ip_plot_sasia$data, file=paste0(figdata_dir, "figdata-",ip_plot_sasia_name,"_no_probit.RDS"))
 
 
 
