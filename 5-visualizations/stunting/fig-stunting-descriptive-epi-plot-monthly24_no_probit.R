@@ -8,22 +8,22 @@
 # sensitivity analysis that subsets cohorts to those with 
 # monthly measurements each month from 0 to 24 months
 
-# inputs: desc_data_cleaned.RDS, quantile_data_stunting_monthly24.RDS
+# inputs: desc_data_cleaned_no_probit.RDS, quantile_data_stunting_monthly24_no_probit.RDS
 
 # outputs: 
-# fig-laz-2-mean-overall_region--allage-month24.png
-# fig-laz-2-quant-overall_region--allage-month24.png
-# fig-stunt-2-prev-overall_region--allage-month24.png
-# fig-stunt-3-prev-overall_region--allage-month24.png
-# fig-stunt-2-inc-overall_region--allage-month24.png
-# fig-stunt-3-inc-overall_region--allage-month24.png
+# fig-laz-2-mean-overall_region--allage-month24_no_probit.png
+# fig-laz-2-quant-overall_region--allage-month24_no_probit.png
+# fig-stunt-2-prev-overall_region--allage-month24_no_probit.png
+# fig-stunt-3-prev-overall_region--allage-month24_no_probit.png
+# fig-stunt-2-inc-overall_region--allage-month24_no_probit.png
+# fig-stunt-3-inc-overall_region--allage-month24_no_probit.png
 
-# figdata-laz-2-mean-overall_region--allage-month24.RDS
-# figdata-laz-2-quant-overall_region--allage-month24.RDS
-# figdata-stunt-2-prev-overall_region--allage-month24.RDS
-# figdata-stunt-3-prev-overall_region--allage-month24.RDS
-# figdata-stunt-2-inc-overall_region--allage-month24.RDS
-# figdata-stunt-3-inc-overall_region--allage-month24.RDS
+# figdata-laz-2-mean-overall_region--allage-month24_no_probit.RDS
+# figdata-laz-2-quant-overall_region--allage-month24_no_probit.RDS
+# figdata-stunt-2-prev-overall_region--allage-month24_no_probit.RDS
+# figdata-stunt-3-prev-overall_region--allage-month24_no_probit.RDS
+# figdata-stunt-2-inc-overall_region--allage-month24_no_probit.RDS
+# figdata-stunt-3-inc-overall_region--allage-month24_no_probit.RDS
 
 ##########################################
 
@@ -32,15 +32,24 @@
 #-----------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+expand_scale = function(mult = 0, add = 0) {
+  stopifnot(is.numeric(mult) && is.numeric(add))
+  stopifnot((length(mult) %in% 1:2) && (length(add) %in% 1:2))
+  
+  mult <- rep(mult, length.out = 2)
+  add <- rep(add, length.out = 2)
+  c(mult[1], add[1], mult[2], add[2])
+}
 
 #Plot themes
 theme_set(theme_ki())
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
+#d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned_no_probit.RDS"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned_no_probit.RDS"))
 
 #Quantile data (object: quantile_d)
-quantile_d <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_monthly24.rds"))
+quantile_d <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_monthly24_no_probit_no_probit.RDS"))
 
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
@@ -108,8 +117,8 @@ mean_laz_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,".png"), width=10, height=4)
-saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name,".RDS"))
+ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name,"_no_probit.png"), width=10, height=4)
+saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name,"_no_probit.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -197,10 +206,10 @@ mean_laz_quantile_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(mean_laz_quantile_plot, 
-       file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_name,".png"), 
+       file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_name,"_no_probit.png"), 
        width=14, height=4)
 
-saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_quantile_plot_name,".RDS"))
+saveRDS(df, file=paste0(figdata_dir, "figdata-",mean_laz_quantile_plot_name,"_no_probit.RDS"))
 
 
 
@@ -235,9 +244,9 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, "_no_probit.png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,".RDS"))
+saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_name,"_no_probit.RDS"))
 
 
 
@@ -271,9 +280,9 @@ prev_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, ".png"), width=14, height=3)
+ggsave(prev_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, "_no_probit.png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,".RDS"))
+saveRDS(d, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,"_no_probit.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -306,9 +315,9 @@ ci_inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,"_no_probit.png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,".RDS"))
+saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,"_no_probit.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -340,7 +349,7 @@ ci_inc_plot_sev_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,".png"), width=14, height=3)
+ggsave(ci_inc_plot_sev, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,"_no_probit.png"), width=14, height=3)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,".RDS"))
+saveRDS(d, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,"_no_probit.RDS"))
 
