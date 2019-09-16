@@ -3,12 +3,15 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS"))
-stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
-stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.RDS"))
-stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
+# stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
+# stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.RDS"))
+# stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
+
+stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_no_probit.RDS"))
+stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24_no_probit.RDS"))
+stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe_no_probit.RDS"))
 
 load(paste0(res_dir,"co_desc_data.Rdata"))
-
 
 
 stunt <- stunt %>% mutate(analysis = "Primary")
@@ -38,5 +41,5 @@ head(dups)
 d<-distinct(d)
 dim(d)
 
-saveRDS(d, file=paste0(here(),"/results/desc_data_cleaned.rds"))
+saveRDS(d, file=paste0(here(),"/results/desc_data_cleaned_no_probit.rds"))
 
