@@ -67,7 +67,10 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
 
-
+  if (min(df$lb) < 0) {
+    print("Warning: some lower bounds < 0")
+  }
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
     geom_point(aes(fill=region, color=region), size = 2) +
@@ -153,6 +156,9 @@ ki_desc_plot_fe <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
+  if (min(df$lb) < 0) {
+    print("Warning: some lower bounds < 0")
+  }
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
@@ -280,6 +286,10 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
   
 
+  if (min(df$lb) < 0) {
+    print("Warning: some lower bounds < 0")
+  }
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     geom_errorbar(aes(color=region, 
                       group=interaction(measure, region), ymin=lb, ymax=ub), 

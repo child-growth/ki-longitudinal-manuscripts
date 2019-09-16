@@ -22,14 +22,12 @@ source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-e
 #Plot themes
 theme_set(theme_ki())
 
-#Quantile data (object: quantile_d)
-quantile_d <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_monthly24.RDS"))
+#Quantile data (object: df_quantile)
+df_quantile <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_monthly24.RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month with quantiles
 #-------------------------------------------------------------------------------------------
-
-df_quantile <- quantile_d
 
 df_quantile$agecat <- factor(df_quantile$agecat,
                              levels=c("Two weeks", "One month",
