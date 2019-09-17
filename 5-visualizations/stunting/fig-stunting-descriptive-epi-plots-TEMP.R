@@ -90,6 +90,11 @@ df_monthly <- filter_df(d_monthly, "Mean LAZ - monthly cohorts")
 #-------------------------------------------------------------------------------------------
 
 plot_mean_laz <- function(df) {
+  
+    check_cohorts(data = df_primary, 
+                check_column = "region", 
+                values_list = c("Overall", "Africa", "South Asia", "Latin America"))
+    
   plt <- ggplot(df,aes(y=est,x=agecat, group=region)) +
     stat_smooth(aes(fill=region, color=region), se=F, span = 0.5) +
     geom_hline(yintercept = 0, colour = "black") +
