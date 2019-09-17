@@ -120,3 +120,36 @@ source(paste0(project_functions_dir, "0_wast_inc_functions.R")) # NP
 # Set theme
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 theme_set(theme_ki())
+
+##################################
+# list of features for unit testing
+
+stunting_cohorts = c("ki0047075b-MAL-ED",
+                     "ki1000108-CMC-V-BCS-2002", 
+                     "ki1000108-IRC", 
+                     "ki1000109-EE",
+                     "ki1000109-ResPak", 
+                     "ki1000304b-SAS-CompFeed", 
+                     "ki1000304b-SAS-FoodSuppl",
+                     "ki1017093-NIH-Birth",
+                     "ki1017093b-PROVIDE",
+                     "ki1017093c-NIH-Crypto",
+                     "ki1066203-TanzaniaChild2",
+                     "ki1101329-Keneba",
+                     "ki1112895-Guatemala BSC",
+                     "ki1112895-iLiNS-Zinc",
+                     "ki1113344-GMS-Nepal",
+                     "ki1114097-CMIN",
+                     "ki1114097-CONTENT",
+                     "ki1119695-PROBIT",
+                     "ki1126311-ZVITAMBO",
+                     "ki1135781-COHORTS",
+                     "ki1148112-LCNI-5",
+                     "kiGH5241-JiVitA-3",
+                     "kiGH5241-JiVitA-4"
+)
+
+
+##################################
+# source unit testing scripts
+source(paste0(here::here(), "/00-unit/tests/1-unit-test-stunting-figs.R"))
