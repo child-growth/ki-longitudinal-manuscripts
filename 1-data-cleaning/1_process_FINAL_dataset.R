@@ -31,7 +31,7 @@ source(paste0(here::here(), "/0-config.R"))
 #Read rds file and drop unneeded columns that Vishak extracted that are either used elsewhere in covariate creation or 
 # were too rare to include as exposures (to avoid memory allocation issues)
 d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
-         drop = c( "AGEIMPFL",  "WTKG", "REGION",   
+         drop = c( "AGEIMPFL",  #"WTKG", "REGION",   
                    #"HTCM",    "LENCM", 
                    "BAZ", "HCAZ",      
                    "REGCTRY", "REGCTYP", "CITYTOWN", "HHID",    

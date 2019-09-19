@@ -148,8 +148,12 @@ df <- df %>% mutate(
 table(!is.na(df$month), df$rain_quartile)
 
 
+#Drop observations without a month variable
+df <- df %>% filter(rain_quartile!="")
+df <- droplevels(df)
 
-
+#Set reference levels
+df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-max rain", "Pre-max rain", "Max rain"))
 
 #Set up dataset for longbow analysis
 df <- filter(df, agedays < 24 * 30.4167)
@@ -197,10 +201,10 @@ W <- NULL
 
 
 #save analysis dataset
-save(d, W, file = paste0(ghapdata_dir, "seasonality_rf.Rdata"))
+save(d, file = paste0(ghapdata_dir, "seasonality_rf.Rdata"))
 
 #Specify analysis
-specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","country"), id="id", adj_sets=adjustment_sets){
+specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country"), id="id", adj_sets=adjustment_sets){
   
   analyses <- expand.grid(A=A,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
   analyses$id <- id
