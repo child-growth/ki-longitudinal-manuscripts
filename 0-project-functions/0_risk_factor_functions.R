@@ -122,7 +122,7 @@ pool.cont <- function(d, method="REML"){
   nstudies <- d %>% summarise(N=n())
   
   if(d$intervention_level[1] == d$baseline_level[1]){
-    est <- data.frame(ATE=1, CI1=1, CI2=1, Nstudies= nstudies$N)
+    est <- data.frame(ATE=0, CI1=0, CI2=0, Nstudies= nstudies$N)
   }else{
     
     fit<-NULL
