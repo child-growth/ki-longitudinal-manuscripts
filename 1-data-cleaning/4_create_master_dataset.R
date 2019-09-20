@@ -20,7 +20,7 @@ table(df$country, 1*(df$lencm < 45))
 dput(colnames(Zscores))
 Zscores <- Zscores %>% 
   subset(., select = c(studyid, country, measurefreq, subjid, sex, agedays, 
-                       waz, haz, whz, muaz, tr, month, brthweek,  dead, agedth, 
+                       waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, month, brthweek,  dead, agedth, 
                        latitude, longitud, causedth))
 
 #mark regions 
