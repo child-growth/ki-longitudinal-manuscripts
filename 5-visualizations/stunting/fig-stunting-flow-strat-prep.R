@@ -114,7 +114,6 @@ format_plot_data = function(data, group_vars = NULL){
   # fix region
   if("region" %in% colnames(plot_data)){
     plot_data = plot_data %>%
-      mutate(region = ifelse(region == "Asia", "South Asia", region)) %>%
       mutate(region = factor(region, levels = c("Africa",
                                                 "Latin America", "South Asia")))
   }

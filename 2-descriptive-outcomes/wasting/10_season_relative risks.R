@@ -66,10 +66,10 @@ df$seasonality_category <- factor(df$seasonality_category, levels=c("Pooled","Hi
 df$intervention_level <- factor(df$intervention_level, levels=c("Opposite max rain",  "Pre-max rain", "Max rain", "Post-max rain"))
 
 
-p <- ggplot(df, aes(y=ATE,x=intervention_level)) +
+p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   geom_errorbar(aes(color=seasonality_category, ymin=CI1, ymax=CI2), width = 0) +
   geom_point(aes(fill=seasonality_category, color=seasonality_category), size = 2) +
-  scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+  scale_color_manual(values=tableau11[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure)) +
   geom_hline(yintercept = 0) +
   xlab("3-month quarter of the year,\ngrouped by rainfall")+
   ylab("WLZ difference") +
@@ -82,12 +82,13 @@ p <- ggplot(df, aes(y=ATE,x=intervention_level)) +
                                  margin(t = 0, r = 0, b = 0, l = 0),
                                size = 14, angle = 45, hjust = 1, vjust =1)) +
   theme(axis.title.y = element_text(size = 14)) +
-  ggtitle("") + facet_grid(~seasonality_category) +
+  ggtitle("") + facet_wrap(~seasonality_category, ncol=1) +
     theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
 
-print(p)
+print(p_seasonRR)
 
-ggsave(p, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=10, height=6)
+save(p_seasonRR, file = here("/figures/plot objects/season_RR_plot.Rdata"))
+ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=6, height=14)
 
 
 
