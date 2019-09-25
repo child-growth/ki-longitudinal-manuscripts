@@ -113,6 +113,7 @@ source(paste0(project_functions_dir, "0_descriptive_epi_co_functions.R")) # NP
 source(paste0(project_functions_dir, "0_helper_sampling_weights.R")) # NP
 source(paste0(project_functions_dir, "0_risk_factor_functions.R")) # NP
 source(paste0(project_functions_dir, "0_wast_inc_functions.R")) # NP
+source(paste0(project_functions_dir, "0_descriptive_epi_figure_unit_tests.R"))
 
 # Set theme
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))

@@ -134,11 +134,15 @@ mean_laz_plot_name_monthly = create_name(
 )
 
 # save plot and underlying data
-ggsave(mean_laz_plot_primary, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name_primary,".png"), width=10, height=4) 
-ggsave(mean_laz_plot_monthly, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name_monthly,".png"), width=10, height=4)
+if (test_desc_epi_figure(df_primary)) {
+  saveRDS(df_primary, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name_primary,".RDS"))
+  ggsave(mean_laz_plot_primary, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name_primary,".png"), width=10, height=4) 
+}
 
-saveRDS(df_primary, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name_primary,".RDS"))
-saveRDS(df_monthly, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name_monthly,".RDS"))
+if (test_desc_epi_figure(mean_laz_plot_monthly)) {
+  saveRDS(df_monthly, file=paste0(figdata_dir, "figdata-",mean_laz_plot_name_monthly,".RDS"))
+  ggsave(mean_laz_plot_monthly, file=paste0(fig_dir, "stunting/fig-",mean_laz_plot_name_monthly,".png"), width=10, height=4)
+}
 
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month - seattle april 2019 presentation figure
