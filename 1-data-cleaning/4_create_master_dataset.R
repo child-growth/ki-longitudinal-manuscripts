@@ -10,7 +10,7 @@ Zscores <- readRDS(included_studies_path)
 
 # Check how many at-birth measurements have
 # length < 45cm and therefore no Z-scores
-df <- Zscores %>% filter(agedays==1)
+df <- Zscores %>% filter(agedays <= 7)
 dim(df)
 mean(df$lencm < 45, na.rm=T)*100
 table(1*(df$lencm < 45), is.na(df$whz))

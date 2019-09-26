@@ -104,9 +104,6 @@ d$W_perdiar24 <- d$perdiar24
 summary(d$perdiar6)
 summary(d$perdiar24)
 
-# d$perdiar6 <- quantile_rf(d$perdiar6, labs=c("Q1","Q2","Q3","Q4"))
-# d$perdiar24 <- quantile_rf(d$perdiar24, labs=c("Q1","Q2","Q3","Q4"))
-
 #Cut diarrhea at standard points. Quartiling by overall distribution leads to sparsity
 d$perdiar6 <- as.character(cut(d$W_perdiar6, breaks=c(0, 0.05, 1), include.lowest=F, 
                                labels = c("(0%, 5%]",">5%")))

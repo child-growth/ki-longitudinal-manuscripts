@@ -460,8 +460,8 @@ make_region <- function(df){
 mark_region <- function(df){
   
   df$country <- as.character(df$country)
-  df <- df %>% mutate(country = toupper(country))
-  df <- df %>% mutate(region = case_when(
+  df <- df %>% mutate(country = toupper(country),
+                      region = case_when(
     country=="BANGLADESH" | country=="INDIA"|
       country=="NEPAL" | country=="PAKISTAN"|
       country=="PHILIPPINES"| country=="CHINA"|

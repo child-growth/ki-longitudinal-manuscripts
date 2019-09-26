@@ -10,6 +10,7 @@ require(cowplot)
 
 #Figure 3 alt
 load(here("/figures/plot objects/season_diff_plot.Rdata"))
+load(here("/figures/plot objects/season_RR_plot.Rdata"))
 load(here("/figures/plot objects/season_plots.Rdata"))
 plot_list <- readRDS(paste0(here(),"/results/rain_seasonality_plot_objects.rds"))
 
@@ -25,7 +26,7 @@ left_plot <- plot_grid(
   labels = rep("", 18), ncol = 2, align = 'v', axis = 'l')
 
 #Right plot
-right_plot <- plot_grid(p2, p3, p4, pdiff, labels = c("B","C","D","E"), ncol = 1, align = 'v', axis = 'l')
+right_plot <- plot_grid(p_seasonRR, p2, labels = c("B","C"), ncol = 1, align = 'v', axis = 'l')
 
 
 fig3 <- plot_grid(left_plot, right_plot, labels = c("A",""), ncol = 2, align = 'h', axis = 'l', rel_heights = c(1, 1))

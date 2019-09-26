@@ -133,14 +133,14 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
       arrange(studyid,subjid) %>%
       #create variable with minhaz by age category, cumulatively
       mutate(minhaz=ifelse(agecat=="Birth",min(haz[agecat=="Birth"]),
-                           ifelse(agecat=="1 day-3 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months"]),
-                                  ifelse(agecat=="3-6 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"]),
-                                         ifelse(agecat=="6-9 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
-                                                ifelse(agecat=="9-12 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
-                                                       ifelse(agecat=="12-15 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
-                                                              ifelse(agecat=="15-18 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
-                                                                     ifelse(agecat=="18-21 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
-                                                                            ifelse(agecat=="21-24 months",min(haz[agecat=="Birth" | agecat=="1 day-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                           ifelse(agecat=="7 days-3 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months"]),
+                                  ifelse(agecat=="3-6 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"]),
+                                         ifelse(agecat=="6-9 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                                ifelse(agecat=="9-12 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                       ifelse(agecat=="12-15 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                              ifelse(agecat=="15-18 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                                     ifelse(agecat=="18-21 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                            ifelse(agecat=="21-24 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
                                                                                    min(haz)))))))))))
   }
   
