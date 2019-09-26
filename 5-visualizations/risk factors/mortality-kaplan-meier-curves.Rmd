@@ -1,0 +1,66 @@
+---
+title: "KI Kaplan-Meier Survival Curves"
+author: "Andrew Mertens"
+date: "September 23, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source(paste0(here::here(), "/0-config.R"))
+library(survminer)
+load(file=paste0(here::here(),"/figures/plot objects/kaplan_meier_objects.Rdata"))
+
+```
+
+
+### Wasting under 6mo
+
+```{r, echo=FALSE, warning=F}
+p1
+```
+
+
+### Severe wasting under 6mo
+
+```{r, echo=FALSE, warning=F}
+p2
+```
+
+### Persistent wasting under 6mo
+
+```{r, echo=FALSE, warning=F}
+p3
+```
+
+### Stunting under 6mo
+
+```{r, echo=FALSE, warning=F}
+p4
+```
+
+### Severe stunting under 6mo
+
+```{r, echo=FALSE, warning=F}
+p5
+```
+
+### Underweight under 6mo
+
+```{r, echo=FALSE, warning=F}
+p6
+```
+
+### Severe underweight under 6mo
+
+```{r, echo=FALSE, warning=F}
+p7
+```
+
+### Wasted and stunted under 6mo
+
+```{r, echo=FALSE, warning=F}
+p8
+```
+
+

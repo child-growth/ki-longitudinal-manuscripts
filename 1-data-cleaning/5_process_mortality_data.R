@@ -90,6 +90,8 @@ table(mort$cohort, mort$dead0plus)
 table(mort$cohort, mort$dead6plus)
 
 
+mort <- subset(mort, select = c(studyid, country, subjid,  dead, agedth, causedth, dead624, dead0plus, dead6plus))
+
 saveRDS(mort, mortality_path)
 
 
