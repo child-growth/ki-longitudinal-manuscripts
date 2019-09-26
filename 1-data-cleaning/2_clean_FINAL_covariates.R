@@ -63,11 +63,11 @@ d <- d %>% group_by(studyid, subjid) %>%
 
 table(is.na(d$birthwt), d$agedays>1)
 
-#keep where anthro is measured on first 3 days (from Parul), but birth anthro is not recorded
-d$birthLAZ[d$agedays>3] <- NA 
-d$birthWAZ[d$agedays>3] <- NA
+#keep where anthro is measured on first 7 days, but birth anthro is not recorded
+d$birthLAZ[d$agedays>7] <- NA 
+d$birthWAZ[d$agedays>7] <- NA
 d$birthmeas_age <- 1
-d$birthmeas_age[d$agedays <= 3] <- d$agedays[d$agedays <= 3]
+d$birthmeas_age[d$agedays <= 7] <- d$agedays[d$agedays <= 7]
 
 #Drop anthropometry measures (seperate long-form dataset used to calculate anthropometry outcomes)
 d <- d %>% subset(., select=-c(agedays, haz, waz, whz)) 
@@ -180,7 +180,7 @@ d$parity[d$studyid=="ki1000304b-SAS-FoodSuppl" & d$parity==0] <- NA
 
 #Fix right shift of Tanzania child parity
 d$parity[d$studyid=="ki1066203-TanzaniaChild2" & d$parity==1] <- NA
-d$parity[d$studyid=="ki1066203-TanzaniaChild2"] <- d$parity[d$studyid=="ki1066203-TanzaniaChild2"] -1 
+d$parity[d$studyid=="ki1066203-TanzaniaChild2"] <- d$parity[d$studyid=="ki1066203-TanzaniaChild2"] - 1  
 table(d$studyid, d$parity)
 
 #Convert birth Zscore to absolute units
@@ -321,10 +321,8 @@ arms
 
 d$tr <- NA
 
-
 d$tr[d$studyid=="ki1000107-Serrinha-VitA" & d$arm=="Placebo"] <- "Control"
 d$tr[d$studyid=="ki1000107-Serrinha-VitA" & d$arm=="Vitamin A"] <- "VitA"
-
 
 d$tr[(d$studyid=="ki1000110-WASH-Bangladesh" | d$studyid=="ki1000111-WASH-Kenya")] <- "Other"
 d$tr[(d$studyid=="ki1000110-WASH-Bangladesh" | d$studyid=="ki1000111-WASH-Kenya") & (d$arm=="Control" | d$arm=="Passive Control")] <- "Control"
@@ -406,8 +404,6 @@ d$tr[d$studyid=="kiGH5241-JiVitA-4"] <- "Other"
 d$tr[d$studyid=="kiGH5241-JiVitA-4" & d$arm=="CFC"] <- "Control"
 d$tr[d$studyid=="kiGH5241-JiVitA-4" & d$arm=="Plumpy Doz"] <- "LNS"
 
-table(d$studyid, d$tr)
-table(d$tr)
 
 
 #--------------------------------------------------------

@@ -75,14 +75,12 @@ WastIncCalc<-function(d, washout=60, dropBornWasted=F, stunt=F){
   require(tidyverse)
   require(zoo)  
   
-  #Filter out extreme or missing whz values
+  #Filter out missing whz values
   if(stunt==F){
-    d <- d %>%  ungroup() %>% filter(!is.na(whz)) %>%
-      filter(whz > (-5) & whz < 5)
+    d <- d %>%  ungroup() %>% filter(!is.na(whz)) 
   }else{
     d$whz <- d$haz
-    d <- d %>%  ungroup() %>% filter(!is.na(whz)) %>%
-      filter(whz >= (-6) & whz <= 6)    
+    d <- d %>%  ungroup() %>% filter(!is.na(whz)) 
   }
   #Remove duplicate ages
   ndropped <- nrow(d[duplicated(cbind(d$subjid, d$agedays)), ])
@@ -127,17 +125,11 @@ WastIncCalc<-function(d, washout=60, dropBornWasted=F, stunt=F){
   #                                        delta_age = next_midpoint-midpoint_age)
   d$delta_age[d$firstmeasure] <-d$agedays[d$firstmeasure]
   
-  #Length of each observation period
-  # d <- d %>% group_by(subjid) %>% 
-  #   mutate(
-  #     next_midpoint = lead(midpoint_age)
-  #   )
-  
+  #Length of each observation period  
   #Assume 30 day period after final measurement (so midpoint will be 15 days after final measure)
   d$last_midpoint[d$firstmeasure] <- 0
   d$next_midpoint[is.na(d$next_midpoint)] <- d$agedays[is.na(d$next_midpoint)] + 15
   d$period_length <- (d$next_midpoint - d$midpoint_age)
-  
   
   
   N <- nrow(d)
@@ -222,10 +214,7 @@ WastIncCalc<-function(d, washout=60, dropBornWasted=F, stunt=F){
   #   }
   # }
   # table(d$wast_inc)
-  
-  
-  #d <- subset(d, select = -c(sum_wast_inc,sum_wast_rec))
-  
+    
   #Indicate length of incident episodes
   d$wasting_episode <- rep(NA, nrow(d))
   d$wasting_episode[d$wast_inc==1] <- "Wasted"
@@ -339,8 +328,7 @@ WastIncCalc<-function(d, washout=60, dropBornWasted=F, stunt=F){
   d <- d  %>% group_by(subjid, sev_episode_ID) %>%
     mutate(sev_incident_age = min(midpoint_age),
            sev_maxage=max(agedays))
-  
-  
+
   
   d_sev_episode <- d %>% 
     subset(., select=c(subjid, sev_episode_ID, sev_incident_age)) %>%
@@ -424,10 +412,6 @@ WastIncCalc<-function(d, washout=60, dropBornWasted=F, stunt=F){
   #sum(d$pt_wast + d$pt_wast_rec + pt_washout, na.rm=T) #Should be 35800 in the test data.
   sum(d$pt_wast + d$pt_wast_rec, na.rm=T) #Should be 35800 in the test data.
   
-  # df<- d %>% subset(., select=c(subjid,whz,agedays,midpoint_age,delta_age,next_midpoint,period_length,past_wast,future_wast,wast_inc,wast_rec_inc,wast_risk,wast_rec_risk,wasting_episode,born_wast_inc,wast_washout,episode_ID,pt_wast,pt_wast_rec,pt_washout))
-  # write.table(df, "C:/Users/andre/Downloads/mydata.txt", sep="\t")
-  #df <- d %>% subset(., select=c(agedays, midpoint_age, pt_wast, pt_wast_rec, pt_washout))
-  
   #Drop intermediate variables
   d <- subset(d, select = -c(agelag, wastlag, sevwastlag, midpoint_age, wastchange, sevwastchange, past_wast, past_sevwast,
                              future_wast, future_sevwast,  sevwast_falter, sevwasting_episode_lag, sev_incident_age, sev_maxage,
@@ -435,11 +419,8 @@ WastIncCalc<-function(d, washout=60, dropBornWasted=F, stunt=F){
                              incident_time_into_period, delta_age
   )) %>%
     ungroup() %>% as.data.frame()
-  # if(dropBornWasted==T){
-  #   d <- subset(d, select = -c(born_wast_inc, born_sevwast_inc)) %>%
-  #     ungroup() %>% as.data.frame()      
-  # }
-  
+
+
   #merge back in other columns
   d <- merge(d, othercolumns, by=c("subjid", "agedays"))
   

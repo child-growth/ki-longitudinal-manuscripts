@@ -153,33 +153,9 @@ RMA_clean <- function(RMAest, outcome="binary",
                                      "0-24 months (no birth st.)","6-24 months\ncumulative incidence","0-24 months (no birth st.)\ncumulative incidence","0-24 months\ncumulative incidence","24 months prevalence")){
   
   
-  # #Make sure Nstudies is constant across RF levels
-  # RMAest <- RMAest %>% group_by(agecat, intervention_variable) %>%
-  #   mutate(Nstudies=paste0("N studies: ",max(Nstudies)),
-  #          Nstudies=ifelse(intervention_level==first(intervention_level),Nstudies,"")) %>% ungroup()
-  
-  
-  #Order factors for plotting
-  table(RMAest$agecat)
-  
+  #Order factors for plotting  
   RMAest <- droplevels(RMAest)
-  # RMAest$agecat <- as.character(RMAest$agecat)
-  # 
-  # if(outcome=="velocity"){
-  #   RMAest$agecat[grepl("-",RMAest$agecat)] <- paste0(RMAest$agecat[grepl("-",RMAest$agecat)],"\nvelocity")
-  # }else{
-  #   if(outcome=="pers_wasted"){
-  #     RMAest$agecat[grepl("-",RMAest$agecat)] <- paste0(RMAest$agecat[grepl("-",RMAest$agecat)],"\npersistant wasting")
-  #   }else{
-  #     RMAest$agecat[grepl("-",RMAest$agecat)] <- paste0(RMAest$agecat[grepl("-",RMAest$agecat)],"\ncumulative incidence")
-  #     RMAest$agecat[!grepl("-",RMAest$agecat)] <- paste0(RMAest$agecat[!grepl("-",RMAest$agecat)]," prevalence")
-  #   }
-  # }
-  # #RMAest$agecat[grepl(" \\(no birth st\\.\\)\\\ncumulative incidence",RMAest$agecat)] <- "cumulative incidence\n(no birth stunting)"
-  # 
-  # 
-  # RMAest$agecat <- factor(RMAest$agecat, levels=agecatlevels)
-  
+
   RMAest$RFlabel <- NA
   
   #Fix WHZ quartile RF levels

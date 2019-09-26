@@ -757,7 +757,7 @@ N_perc <- function(x) {
 calc.prev.agecat <- function(d) {
   d <- d %>%
     arrange(studyid, subjid, agedays) %>%
-    mutate(agecat = ifelse(agedays == 1, "Birth",
+    mutate(agecat = ifelse(agedays <= 7, "Birth",
       ifelse(agedays > 2 * 30.4167 & agedays < 4 * 30.4167, "3 months",
         ifelse(agedays > 5 * 30.4167 & agedays < 7 * 30.4167, "6 months",
           ifelse(agedays > 8 * 30.4167 & agedays < 10 * 30.4167, "9 months",
@@ -832,8 +832,8 @@ calc.ci.agecat <- function(d, range = 3, birth = "yes") {
   # ----------------------------------------------
   if (range == 3 & birth == "no") {
     d <- d %>%
-      mutate(agecat = ifelse(agedays == 1, "Birth",
-       ifelse(agedays > 1 & agedays <= 3 * 30.4167, "1 day-3 months",
+      mutate(agecat = ifelse(agedays <= 7, "Birth",
+       ifelse(agedays > 8 & agedays <= 3 * 30.4167, "7 days-3 months",
         ifelse(agedays > 3 * 30.4167 & agedays <= 6 * 30.4167, "3-6 months",
           ifelse(agedays > 6 * 30.4167 & agedays <= 9 * 30.4167, "6-9 months",
             ifelse(agedays > 9 * 30.4167 & agedays <= 12 * 30.4167, "9-12 months",
@@ -848,19 +848,19 @@ calc.ci.agecat <- function(d, range = 3, birth = "yes") {
           )
         )
       ))) %>%
-      mutate(agecat = factor(agecat, levels = c("Birth","1 day-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months")))
+      mutate(agecat = factor(agecat, levels = c("Birth","7 days-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months")))
   }
   if (range == 6 & birth == "no") {
     d <- d %>%
       mutate(agecat = ifelse(agedays==1, "Birth",
-       ifelse(agedays > 1 & agedays <= 6 * 30.4167, "1 day-6 months",
+       ifelse(agedays > 1 & agedays <= 6 * 30.4167, "7 days-6 months",
         ifelse(agedays > 6 * 30.4167 & agedays <= 12 * 30.4167, "6-12 months",
           ifelse(agedays > 12 * 30.4167 & agedays <= 18 * 30.4167, "12-18 months",
             ifelse(agedays > 18 * 30.4167 & agedays <= 24 * 30.4167, "18-24 months", "")
           )
         )
       ))) %>%
-      mutate(agecat = factor(agecat, levels = c("Birth", "1 day-6 months", "6-12 months", "12-18 months", "18-24 months")))
+      mutate(agecat = factor(agecat, levels = c("Birth", "7 days-6 months", "6-12 months", "12-18 months", "18-24 months")))
   }
 
   return(d)
