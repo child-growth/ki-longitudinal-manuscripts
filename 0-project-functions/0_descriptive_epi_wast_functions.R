@@ -203,7 +203,7 @@ summarize_over_strata <- function(cohort.sum, strata=c("region","studyid","count
 
 
 
-summary.prev.whz <- function(d, severe.wasted=F){
+summary.prev.whz <- function(d, severe.wasted=F, method="REML"){
 
   dmn <- d %>%
     filter(!is.na(agecat)) %>%
@@ -252,7 +252,7 @@ summary.prev.whz <- function(d, severe.wasted=F){
 
 
 
-summary.ci <- function(d, severe.wasted = F, age.range){
+summary.ci <- function(d, severe.wasted = F, age.range, method="REML"){
   cutoff <- ifelse(severe.wasted,-3,-2)
 
   if(age.range == 3){
@@ -322,7 +322,7 @@ summary.ci <- function(d, severe.wasted = F, age.range){
 
   # estimate random effects, format results
   ci.res=lapply(levels(cuminc.data$agecat),function(x)
-    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
+    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements", method=method))
   ci.res=as.data.frame(rbindlist(ci.res, use.names=TRUE, fill=T))
   ci.res$est=as.numeric(ci.res$est)
   ci.res$lb=as.numeric(ci.res$lb)
@@ -338,7 +338,7 @@ summary.ci <- function(d, severe.wasted = F, age.range){
 
 
 
-summary.whz <- function(d, N_filter=50){
+summary.whz <- function(d, N_filter=50, method="REML"){
 
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -369,7 +369,7 @@ summary.whz <- function(d, N_filter=50){
 
   # estimate random effects, format results
   whz.res=lapply((levels(whz.data$agecat)),function(x)
-    fit.rma(data=whz.data, ni="nmeas", yi="meanwhz", vi="varwhz", nlab="children", measure="MN",age=x))
+    fit.rma(data=whz.data, ni="nmeas", yi="meanwhz", vi="varwhz", nlab="children", measure="MN",age=x, method=method))
   whz.res=as.data.frame(rbindlist(whz.res, use.names=TRUE, fill=T))
   whz.res$est=as.numeric(whz.res$est)
   whz.res$lb=as.numeric(whz.res$lb)
@@ -385,7 +385,7 @@ summary.whz <- function(d, N_filter=50){
 
 
 
-summary.incprop <- function(d, recovery=F, severe.wasted=F){
+summary.incprop <- function(d, recovery=F, severe.wasted=F, method="REML"){
 
   if(recovery==T){
     d$wast_inc <- d$wast_rec
@@ -423,12 +423,9 @@ summary.incprop <- function(d, recovery=F, severe.wasted=F){
   ci.cohort=cohort.format(ci.cohort,y=ci.cohort$yi,
                           lab=  levels(cuminc.data$agecat))
 
-
-  #fit.rma(data=cuminc.data,ni="N", xi="ncases",age="0-3 months",measure="PLO",nlab=" measurements")
-
   # estimate random effects, format results
   ci.res=lapply(levels(cuminc.data$agecat),function(x)
-    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
+    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements", method=method))
   ci.res=as.data.frame(rbindlist(ci.res, use.names=TRUE, fill=T))
   ci.res$est=as.numeric(ci.res$est)
   ci.res$lb=as.numeric(ci.res$lb)
@@ -446,7 +443,7 @@ summary.incprop <- function(d, recovery=F, severe.wasted=F){
 
 
 
-summary.rec60 <- function(d, length=60){
+summary.rec60 <- function(d, length=60, method="REML"){
 
   if(length==30){d$wast_inc <- d$wast_rec30d}
   if(length==60){d$wast_inc <- d$wast_rec60d}
@@ -484,7 +481,7 @@ summary.rec60 <- function(d, length=60){
 
   # estimate random effects, format results
   ci.res=lapply(levels(cuminc.data$agecat),function(x)
-    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
+    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements", method=method))
   ci.res=as.data.frame(rbindlist(ci.res, use.names=TRUE, fill=T))
   ci.res$est=as.numeric(ci.res$est)
   ci.res$lb=as.numeric(ci.res$lb)
@@ -501,7 +498,7 @@ summary.rec60 <- function(d, length=60){
 
 
 
-summary.perswast <- function(d, N_filter=50){
+summary.perswast <- function(d, N_filter=50, method="REML"){
 
 
   pers <- d %>% group_by(studyid, country, subjid) %>%
@@ -537,7 +534,7 @@ summary.perswast <- function(d, N_filter=50){
 
   # estimate random effects, format results
   pers.res=lapply(levels(pers.data$agecat),function(x)
-    fit.rma(data=pers.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements"))
+    fit.rma(data=pers.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements", method=method))
   pers.res=as.data.frame(rbindlist(pers.res, use.names=TRUE, fill=T))
   pers.res$est=as.numeric(pers.res$est)
   pers.res$lb=as.numeric(pers.res$lb)
@@ -558,7 +555,7 @@ summary.perswast <- function(d, N_filter=50){
 
 
 
-summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filter=125){
+summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filter=125, method="REML"){
   
   if(recovery==T){
     d$wast_inc <- d$wast_rec
@@ -599,24 +596,11 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filt
                              levels(inc.data$agecat))
   inc.cohort$yi.f=sprintf("%0.0f",inc.cohort$yi)
   inc.cohort$cohort=paste0(inc.cohort$studyid,"-",inc.cohort$country)
-  inc.cohort = inc.cohort %>% mutate(region = ifelse(country=="BANGLADESH" | country=="INDIA"|
-                                                       country=="NEPAL" | country=="PAKISTAN"|
-                                                       country=="PHILIPPINES" ,"Asia",
-                                                     ifelse(country=="BURKINA FASO"|
-                                                              country=="GUINEA-BISSAU"|
-                                                              country=="MALAWI"|
-                                                              country=="SOUTH AFRICA"|
-                                                              country=="TANZANIA, UNITED REPUBLIC OF"|
-                                                              country=="ZIMBABWE"|
-                                                              country=="GAMBIA","Africa",
-                                                            ifelse(country=="BELARUS","Europe",
-                                                                   "Latin America"))))
-
 
   
   # estimate random effects, format results
   ir.res=lapply(levels(inc.data$agecat),function(x)
-    fit.rma(data=inc.data,ni="ptar", xi="ncase",age=x,measure="IR",nlab=" person-days"))
+    fit.rma(data=inc.data,ni="ptar", xi="ncase",age=x,measure="IR",nlab=" person-days", method=method))
   ir.res=as.data.frame(rbindlist(ir.res, use.names=TRUE, fill=T))
   ir.res$est=as.numeric(ir.res$est)
   ir.res$lb=as.numeric(ir.res$lb)
@@ -629,40 +613,5 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filt
 
   return(list(ir.data=inc.data, ir.res=ir.res, ir.cohort=inc.cohort))
 }
-
-
-
-# #NOTE: need to update with correct CI and meta-analysis for medians
-# summary.dur <- function(d, agelist){
-# 
-#   df <- d %>%
-#     group_by(studyid, region, country, agecat) %>%
-#     summarize(mean=mean(wasting_duration, na.rm=T), var=var(wasting_duration, na.rm=T), n=n()) %>%
-#     mutate(se=sqrt(var), ci.lb=mean - 1.96 * se, ci.ub=mean + 1.96 * se,
-#            nmeas.f=paste0("N=",n," children"))
-# 
-#   pooled.vel=lapply(agelist,function(x)
-#     fit.rma(data=df,yi="mean", vi="var", ni="n",age=x, nlab="children"))
-#   pooled.vel=as.data.frame(rbindlist(pooled.vel))
-# 
-#   pooled.vel$est <- as.numeric(pooled.vel$est)
-#   pooled.vel <- pooled.vel %>%
-#     mutate(country_cohort="pooled", pooled=1) %>%
-#     subset(., select = -c(se)) %>%
-#     rename(strata=agecat, Mean=est, N=nmeas, Lower.95.CI=lb, Upper.95.CI=ub) %>% as.data.frame()
-#   print(pooled.vel)
-# 
-#   cohort.df <- df %>% subset(., select = c(studyid, country, region, agecat, n, nmeas.f, mean, ci.lb, ci.ub)) %>%
-#     rename(N=n, Mean=mean, Lower.95.CI=ci.lb, Upper.95.CI=ci.ub,
-#            strata=agecat) %>%
-#     mutate(pooled=0, nstudies=1)
-# 
-#   return(list(dur.data=df, dur.res=pooled.vel))
-# }
-# 
-# 
-
-
-
 
 

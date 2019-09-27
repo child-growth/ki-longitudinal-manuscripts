@@ -12,7 +12,7 @@ load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 co <- readRDS(paste0(ghapdata_dir, "rf_co_occurrence_data.rds"))
 
 
-age_cutoff = 1
+age_cutoff = 7
 
 
 #Subset to monthly
@@ -23,8 +23,7 @@ d <- d_noBW %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167
 d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
        mutate(age_enrol = first(agedays)) %>%
        filter(age_enrol <= age_cutoff) %>%
-       mutate(born_wast = 1 * (first(whz) < (-2)))# %>%
-       #filter(born_wast==1 | sum(wast_inc)>0) #Subset to only children who experiences wasting
+       mutate(born_wast = 1 * (first(whz) < (-2))) 
 table(d$born_wast)
 
 #Subset to co-occurrence to monthly
