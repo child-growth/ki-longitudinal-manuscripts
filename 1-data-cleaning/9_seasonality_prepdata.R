@@ -30,8 +30,8 @@ d <- d %>% filter(!is.na(brthweek))
 #convert subjid to character for the merge with covariate dataset
 d$subjid <- as.character(d$subjid)
 
-
-d <- d %>% filter(measurefreq=="monthly")
+#drop yearly studies
+d <- d %>% filter(measurefreq!="yearly")
 
 #Has Z-score data
 d <- d %>% filter(!is.na(whz)) %>% filter(whz < 5 & whz > (-5))

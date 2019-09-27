@@ -9,6 +9,8 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
+d <- d %>% filter(measurefreq=="monthly")
+
 
 d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))

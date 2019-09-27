@@ -61,12 +61,12 @@ d <- d %>% group_by(studyid, subjid) %>%
   #keep one observation per child
   slice(1) 
 
-table(is.na(d$birthwt), d$agedays>1)
+table(is.na(d$birthwt), d$agedays > 7)
 
 #keep where anthro is measured on first 7 days, but birth anthro is not recorded
 d$birthLAZ[d$agedays>7] <- NA 
 d$birthWAZ[d$agedays>7] <- NA
-d$birthmeas_age <- 1
+d$birthmeas_age <- NA
 d$birthmeas_age[d$agedays <= 7] <- d$agedays[d$agedays <= 7]
 
 #Drop anthropometry measures (seperate long-form dataset used to calculate anthropometry outcomes)

@@ -50,7 +50,6 @@ gc()
 
 #Drop studies Vishak added to data product that don't meet inclusion criteria
 dim(d)
-#d <- d[d$studyid!="ki1000301-DIVIDS" & d$studyid!="ki1055867-WomenFirst" & d$studyid!="ki1135782-INCAP",]
 d <- d[!(studyid %in% c("ki1000301-DIVIDS", "ki1055867-WomenFirst", "ki1135782-INCAP"))]
 dim(d)
 gc()

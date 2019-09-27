@@ -70,7 +70,7 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   geom_errorbar(aes(color=seasonality_category, ymin=CI1, ymax=CI2), width = 0) +
   geom_point(aes(fill=seasonality_category, color=seasonality_category), size = 2) +
   scale_color_manual(values=tableau11[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure)) +
-  geom_hline(yintercept = 0) +
+  geom_hline(yintercept = 0) + coord_flip() +
   xlab("3-month quarter of the year,\ngrouped by rainfall")+
   ylab("WLZ difference") +
   # add space to the left and right of points on x axis

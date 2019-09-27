@@ -8,7 +8,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 library(lmtest)
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
-
+d <- d %>% filter(measurefreq=="monthly")
 
 d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
@@ -30,9 +30,7 @@ d <- d %>% filter(region=="South Asia")
 
 
 mlen <- 30.417
-#d$birthcat <- cut(d$birthday+1, breaks=c(0, mlen*3, mlen*6, mlen*9, 365), labels=c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec"))
 d$birthcat <- cut(d$birthmonth, breaks=c(0, 3, 6, 9, 365), labels=c("Born Jan-Mar","Born Apr-June","Born Jul-Sept","Born Oct-Dec"))
-#d$birthcat <- cut(d$birthday+1, breaks=c(0, mlen*6, mlen*10, 365), labels=c("Born Jan-May","Born June-September","Born Oct-Dec"))
 table(d$birthcat)
 
 d <- d %>% group_by(birthcat) %>% mutate(meanZ=mean(whz), prev=mean(whz < -2))

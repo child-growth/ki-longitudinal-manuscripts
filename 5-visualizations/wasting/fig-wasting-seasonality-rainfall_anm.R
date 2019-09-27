@@ -11,6 +11,7 @@ require(cowplot)
 rain <- read.csv(here("/data/monthly_rainfall.csv"))
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
+d <- d %>% filter(measurefreq=="monthly")
 head(rain)
 head(d)
 
