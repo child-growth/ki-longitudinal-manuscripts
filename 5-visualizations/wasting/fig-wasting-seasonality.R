@@ -12,7 +12,6 @@ d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 d <- d %>% filter(measurefreq=="monthly")
 
 
-d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region, levels=c("Africa", "Latin America", "South Asia"))
 
 #Count number of children
@@ -179,10 +178,8 @@ rectd=data.frame(x1=30.4617*c(5,17,29), x2=30.4617*c(10,22,34), y1=rep(-1.25, 3)
 
 p3 <- ggplot() +
   geom_rect(data=rectd, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill=shade, color=shade, alpha=1) +
-  #geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
   geom_line(data=plotdf, aes(x=studyday, y=fit, group=birthcat, color=birthcat,  fill=birthcat), size=2) +
   geom_ribbon(data=plotdf, aes(x=studyday, y=fit, ymin=fit_lb, ymax=fit_ub, group=birthcat, color=birthcat,  fill=birthcat), alpha=0.3, color=NA) +
-  #geom_point(data=plotdf, aes(x=xpos, y=fit, shape=agem, group=birthcat, color=birthcat,  fill=birthcat), size=4, stroke = 2) +
   scale_shape_manual(values=c(0,1,2), na.translate = F) +
   scale_color_manual(values=tableau10[c(5,7,9,10)], na.translate = F) + 
   scale_fill_manual(values=tableau10[c(5,7,9,10)], na.translate = F) + 
@@ -190,43 +187,24 @@ p3 <- ggplot() +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(limits=c(1,1086), expand = c(0, 0),
                      breaks = 1:18*30.41*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),3)) +
-  #geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") +
   coord_cartesian(ylim=c(-1.25, 0)) +
-  guides(color=guide_legend(ncol=2)
-         #, shape=guide_legend(ncol=2)
-         ) + #guides(color = FALSE) + 
+  guides(color=guide_legend(ncol=2)) + 
   theme(legend.position = c(.78,.9),
          legend.title = element_blank(),
          legend.background = element_blank(),
          legend.box.background = element_rect(colour = "black"),
          legend.text=element_text(size=rel(1)))
-p3
 
-
-p3_name = create_name(
-  outcome = "wasting",
-  cutoff = 2,
-  measure = "mean",
-  population = "birth-stratified",
-  location = "South Asia",
-  age = "All ages",
-  analysis = "seasonality by month"
-)
 
 # save plot and underlying data
-ggsave(p3, file=paste0(here(),"/figures/wasting/fig-",p3_name,".png"), width=8, height=5)
+ggsave(p3, file=paste0(here(),"/figures/wasting/fig-birthmont-strat-seasonality-by-month.png"), width=8, height=5)
 
 
 
 #Compare birth trajectories by child age rather than calendar time
 p4 <- ggplot() +
-  #geom_rect(data=rectd, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill=shade, color=shade, alpha=1) +
-  #geom_smooth(aes(color=birthcat), span=1, se=F, size=2) +
   geom_line(data=plotdf, aes(x=agedays, y=fit, group=birthcat, color=birthcat,  fill=birthcat), size=2, linetype="solid") +
-  #geom_line(data=plotdf[plotdf$monsoon=="Not monsoon",], aes(x=agedays, y=fit, group=birthcat, color=birthcat,  fill=birthcat), size=2, linetype="solid") +
-  #geom_line(data=plotdf[plotdf$monsoon=="Monsoon",], aes(x=agedays, y=fit, group=birthcat, color=birthcat,  fill=birthcat), size=2, linetype="dashed") +
   geom_ribbon(data=plotdf, aes(x=agedays, y=fit, ymin=fit_lb, ymax=fit_ub, group=birthcat, color=birthcat,  fill=birthcat), alpha=0.3, color=NA) +
-  #geom_point(data=plotdf, aes(x=xpos, y=fit, shape=agem, group=birthcat, color=birthcat,  fill=birthcat), size=4, stroke = 2) +
   scale_shape_manual(values=c(0,1,2), na.translate = F) +
   scale_color_manual(values=tableau10[c(5,7,9,10)], na.translate = F) + 
   scale_fill_manual(values=tableau10[c(5,7,9,10)], na.translate = F) + 
@@ -234,30 +212,16 @@ p4 <- ggplot() +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
-  #geom_text(data = ann_text,label =  c("Year 1","Year 2", "Year 3"), color="grey30") +
   coord_cartesian(ylim=c(-1.25, 0)) +
-  guides(color=guide_legend(ncol=2)
-         #, shape=guide_legend(ncol=2)
-  ) + #guides(color = FALSE) + 
+  guides(color=guide_legend(ncol=2)) + 
   theme(legend.position = c(.78,.9),
         legend.title = element_blank(),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"),
         legend.text=element_text(size=rel(1)))
-p4
-
-p4_name = create_name(
-  outcome = "wasting",
-  cutoff = 2,
-  measure = "mean",
-  population = "birth-stratified",
-  location = "South Asia",
-  age = "All ages",
-  analysis = "seasonality by age"
-)
 
 # save plot and underlying data
-ggsave(p4, file=paste0(here(),"/figures/wasting/fig-",p4_name,".png"), width=8, height=5)
+ggsave(p4, file=paste0(here(),"/figures/wasting/fig-birthmont-strat-seasonality-by-age.png"), width=8, height=5)
 
 
 #Save plot objects
