@@ -18,19 +18,12 @@ Zscores_unadj <- results
 load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
 lagwhz <- results
 
-
-d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz)
-
-#Drop nchild and merge in new results
-d <- d %>% filter(intervention_variable!="nchldlt5")
-load(here("/results/rf results/raw longbow results/results_nchild_cont_2019-08-21.rdata"))
-Zscores_nchild <- results
-
-load(here("/results/rf results/raw longbow results/results_nchild_bin_2019-08-21.rdata"))
-bin_nchild <- results
+load(here("results","rf results","raw longbow results","seasonality_results_2019-09-17.rdata"))
+season <- results
 
 
-d <- bind_rows(d, Zscores_nchild, bin_nchild)
+d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, season)
+
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -45,8 +38,8 @@ d <- mark_region(d)
 unique(d$outcome_variable)
 d$continuous <- ifelse(d$outcome_variable %in% c("haz","whz","y_rate_haz","y_rate_len","y_rate_wtkg"), 1, 0)
 
-#Drop non-included risk factors (treat h20, with very little variance, and secondry breastfeeding indicators)
-d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )) )
+#Drop non-included risk factors (treat h20, with very little variance, month and birth month, and secondry breastfeeding indicators)
+d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36","brthmon","month")) )
 
 #----------------------------------------------------------
 # Merge in Ns
@@ -102,7 +95,7 @@ dim(d)
 d$adjusted <- ifelse(d$adjustment_set!="unadjusted" , 1, 0)
 
 #Seperate unadjusted estimates
-d_adj <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon") & adjusted==0))
+d_adj <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | intervention_variable=="rain_quartile") & adjusted==0))
 d_unadj <- d %>% filter(adjusted==0)
 
 

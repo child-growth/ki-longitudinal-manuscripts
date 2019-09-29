@@ -26,7 +26,8 @@ left_plot <- plot_grid(
   labels = rep("", 18), ncol = 2, align = 'v', axis = 'l')
 
 #Right plot
-right_plot <- plot_grid(p_seasonRR, p2, labels = c("B","C"), ncol = 1, align = 'v', axis = 'l')
+#p_seasonRR <- p_seasonRR + coord_flip() + 
+right_plot <- plot_grid(p_seasonRR, p2, labels = c("B","C"), ncol = 1, rel_heights = c(1.5, 1))
 
 
 fig3 <- plot_grid(left_plot, right_plot, labels = c("A",""), ncol = 2, align = 'h', axis = 'l', rel_heights = c(1, 1))

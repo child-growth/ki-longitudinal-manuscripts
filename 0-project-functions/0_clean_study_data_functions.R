@@ -1,6 +1,6 @@
 # shorten the description for a few studies
 shorten_descriptions <- function(dd){
-  dd$short_description[dd$study_id=='CONTENT'] <- 'Eval of Negl. Enteric Inf'
+  dd$short_description[dd$study_id=='CONTENT'] <- 'CONTENT'
   dd$short_description[dd$study_id=='LCNI-5'] <- 'Lungwena Child Nutr RCT'
   dd$short_description[dd$study_id=='Burkina Faso Zn'] <- 'Zinc RCT'
   dd$short_description[dd$study_id=='AgaKhanUniv'] <- 'Aga Khan Nutr RCT'

@@ -173,7 +173,14 @@ summarize_dist = function(data, age_recov){
                 prev=mean(stunted),
                 nxprev=sum(stunted==1))
     
-    re = fit.rma.rec.cohort(
+    # re = fit.rma.rec.cohort(
+    #   data = prev.cohort,
+    #   ni = "nmeas",
+    #   xi = "nxprev",
+    #   measure = "PLO",
+    #   nlab = "children"
+    # )
+    re = fit.rma(
       data = prev.cohort,
       ni = "nmeas",
       xi = "nxprev",
@@ -212,8 +219,6 @@ summarize_dist = function(data, age_recov){
       res[i,10] = as.character(as.numeric(meanlaz$lb))
       res[i,11] = as.character(as.numeric(meanlaz$ub))
     }
-
-    
   }
   
   res = as.data.frame(res)
@@ -339,7 +344,7 @@ rec_histogram_plot = ggplot(plot_data_sub,
 
 # define standardized plot names
 rec_histogram_plot_name = create_name(
-  outcome = "laz",
+  outcome = "LAZ",
   cutoff = 2,
   measure = "distribution after laz >= -2",
   population = "overall",

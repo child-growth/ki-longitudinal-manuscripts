@@ -471,7 +471,7 @@ stpbar <- sidebar +
 # number of obs side bar plot
 nbar <- sidebar +
   aes(y=nmeas/1000,fill=wpcat) +
-  labs(x = "",y="Sample size (1000s)",title="c") +
+  labs(x = "",y="N measurements (1000s)",title="c") +
   scale_y_continuous(expand=c(0,0),limits=c(0,50),
                      breaks=seq(0,50,by=10),labels=seq(0,50,by=10)) +
   geom_hline(yintercept = seq(0,50,by=10),color='white',size=0.3)
@@ -497,7 +497,7 @@ nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
   ) +
   scale_y_continuous(expand=c(0,0),limits=c(0,12),
                      breaks=seq(0,12,by=2),labels=seq(0,12,by=2))+
-  ylab("Sample size (1000s)") + xlab("") +
+  ylab("N measurements (1000s)") + xlab("") +
   geom_hline(yintercept = seq(0,12,by=2),color='white',size=0.3) +
   ggtitle("a")
 
