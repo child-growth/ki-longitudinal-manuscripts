@@ -8,11 +8,14 @@ source(paste0(here::here(), "/0-config.R"))
 
 df <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
+#Temp subset to just maled
+df <- df %>% filter(studyid == "ki0047075b-MAL-ED")
 
 d <- df  %>% 
   filter(haz > -6 & haz < 6) %>% 
   filter(measurefreq!="yearly") %>%
-  filter(agedays < 24*30.4167+15.20835) 
+  filter(agedays < 24*30.4167+15.20835) %>%
+  subset(., select = c(studyid, country, subjid, agedays, haz, whz))
   
 
 
@@ -84,7 +87,7 @@ diffhazfunc <- function(dat)  {
     
     if (as.numeric(3*i) %in% dat$agemonth==TRUE & as.numeric(3*(i-1)) %in% dat$agemonth==TRUE ) {
       
-      diffhaz[i] = dat$whz[dat$agemonth==3*i]-dat$whz[dat$agemonth==3*(i-1)]
+      diffhaz[i] = dat$haz[dat$agemonth==3*i]-dat$haz[dat$agemonth==3*(i-1)]
       
     } else {
       
@@ -105,22 +108,22 @@ diffhazfunc <- function(dat)  {
 
 
 
-dwhz <- d %>% mutate(diffwhz0_3=NA,diffwhz3_6=NA,diffwhz6_9=NA,diffwhz9_12=NA,
-                          diffwhz12_15=NA,diffwhz15_18=NA,diffwhz18_21=NA,diffwhz21_24=NA) %>% 
-  group_by(studyid,country,subjid) %>% 
-  do(diffwhzfunc(.))
+# dwhz <- d %>% mutate(diffwhz0_3=NA,diffwhz3_6=NA,diffwhz6_9=NA,diffwhz9_12=NA,
+#                           diffwhz12_15=NA,diffwhz15_18=NA,diffwhz18_21=NA,diffwhz21_24=NA) %>% 
+#   group_by(studyid,country,subjid) %>% 
+#   do(diffwhzfunc(.))
 
 
 
-dall <- dwhz %>% mutate(diffhaz0_3=NA,diffhaz3_6=NA,diffhaz6_9=NA,diffhaz9_12=NA,
+dall <- d %>% mutate(diffhaz0_3=NA,diffhaz3_6=NA,diffhaz6_9=NA,diffhaz9_12=NA,
                       diffhaz12_15=NA,diffhaz15_18=NA,diffhaz18_21=NA,diffhaz21_24=NA) %>% 
-  group_by(studyid,country,subjid) %>% 
-  do(diffhazfunc(.))
+  group_by(studyid,country,subjid, agemonth) %>% 
+  filter(abs(agedays - agemonth * 30.4167) == min(abs(agedays - agemonth * 30.4167))) %>% 
+  do(diffhazfunc(.)) %>% slice(1)
 
 
 
 
-view(dall)
 
 
 
@@ -155,12 +158,13 @@ view(dall)
 
 
 
+#Compare to primary growth velocity estimates:
+velsub <- vel %>% filter(ycat == "haz", studyid == "ki0047075b-MAL-ED", diffcat=="0-3 months")
+head(velsub)
 
 
-
-
-
-
+df <- dall %>% subset(., select = c(studyid, country, subjid,  diffhaz0_3, diffhaz3_6)) %>% filter(!is.na(diffhaz0_3))
+head(df)
 
 
 

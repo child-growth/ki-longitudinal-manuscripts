@@ -20,9 +20,7 @@ p2 <- ggplot(df, aes(x=agedays)) + geom_histogram() + facet_wrap(~studyid, scale
 
 
 #https://stackoverflow.com/questions/7714677/scatterplot-with-too-many-points
-
 ggplot(d,aes(x=lencm, y=wtkg)) + geom_point(alpha = 0.1)
-
 ggplot(d,aes(x=lencm, y=wtkg)) + stat_binhex()
 
 
@@ -60,4 +58,21 @@ p <- ggplot(d,aes(x=agedays, y=wtkg)) + geom_point(alpha = 0.05) +
   geom_who(x_seq = seq(0, 730, by = 1),  y_var = "wtkg")  +
   coord_cartesian(xlim=c(0, 730))+ facet_wrap(~sex)
 ggsave(p, file = here::here("/figures/shared/waz_QA.png"), width=8, height=4)
+
+
+
+#Cohort-stratified plots
+d$cohort <- paste0(d$studyid, " ", d$country)
+p <- ggplot(d,aes(x=agedays, y=lencm)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 730, by = 1),  y_var = "htcm") +
+  coord_cartesian(xlim=c(0, 730)) + facet_wrap(cohort~sex)
+ggsave(p, file = here::here("/figures/shared/laz_QA_cohort.png"), width=8, height=4)
+
+
+
+
+p <- ggplot(d,aes(x=agedays, y=wtkg)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 730, by = 1),  y_var = "wtkg")  +
+  coord_cartesian(xlim=c(0, 730))+ facet_wrap(cohort~sex)
+ggsave(p, file = here::here("/figures/shared/waz_QA_cohort.png"), width=8, height=4)
 

@@ -16,5 +16,20 @@ summaryd<-d %>% filter(agedays < 24 * 30.4167) %>%
   group_by(studyid, country) %>% 
   summarize(nobs=n(), nchild=length(unique(paste0(subjid))))
 
+summaryd
 
 
+
+
+
+stunt <- readRDS(stunting_data_path)
+stunt %>% 
+  group_by(studyid, country) %>% 
+  summarize(nobs=n(), nchild=length(unique(paste0(subjid))))
+
+
+
+wast <- readRDS(wasting_data_path)
+wast %>% filter(measurefreq=="monthly") %>%
+  group_by(studyid, country) %>% 
+  summarize(nobs=n(), nchild=length(unique(paste0(subjid))))
