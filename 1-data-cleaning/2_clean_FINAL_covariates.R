@@ -46,6 +46,11 @@ dim(d)
 
 
 
+#--------------------------------------------------------
+# Calculate birth month from birth week if birthmonth is missing
+#--------------------------------------------------------
+
+d$brthmon[is.na(d$brthmon)] <- ceiling(d$brthweek[is.na(d$brthmon)]/4.42)
 
 #--------------------------------------------------------
 #Calculate stunting and wasting at enrollment and keep one observation per child

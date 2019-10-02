@@ -27,6 +27,7 @@ Zscores <- Zscores %>%
 Zscores <- mark_region(Zscores)
 table(Zscores$region)
 
+
 #load covariate dataset (one row per child)
 cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
@@ -61,9 +62,17 @@ d <- d %>% filter(!is.na(haz) | !is.na(whz) | !is.na(waz) | !is.na(muaz))
 dim(d)
 
 
+#Fill in missing month of measurement for cohorts that measure birth month  
+table(is.na(d$month), is.na(d$brthmon))
+table(is.na(d$month))
+d$month[is.na(d$month)] <- ceiling((as.numeric(d$brthmon[is.na(d$month)]) + d$agedays[is.na(d$month)]/30.4167)%%12) 
+table(is.na(d$month))
+table(d$month)
 
-table(d$studyid, d$tr)
 
+
+
+# Save dataset
 saveRDS(d, ki_manuscript_dataset_path)
 
 
