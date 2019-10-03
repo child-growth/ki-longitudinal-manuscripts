@@ -90,28 +90,30 @@ ee <- ee %>% select(studyid, country, subjid, agedays)
 
 
 
+
+
+
+
 d<-read_sas("EE/c2b_en.sas7bdat")
 colnames(d) <- tolower(colnames(d))
 head(d)
 
 
 
-d <- d %>% select(c1bfrmno,
-                  c2bageyy,
-                  c2bagemm,
-                  c2bagedd,
+d <- d %>% select(c2bfrmno,
+                  c2bage,
                   c2bmre,
                   c2bmrf,
                   c2bmrg) %>%
   mutate(
-    agedays=round(365.25 * c2bageyy + 365.25*c2bagemm/12 + c2bagedd) + 1,
+    agedays=c2bage,
     nbfyes=NA,
     anmlkfl=NA,
     pwmlkfl=NA,
     h20fedfl=NA, 
     othfedfl=NA
   ) %>%
-  rename(subjid = c1bfrmno)
+  rename(subjid = c2bfrmno)
 
 d$bfedfl <- NA
 d$formlkfl <- NA
