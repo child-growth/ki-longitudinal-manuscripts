@@ -1,4 +1,4 @@
-# Assessment of potential secular trends {#exclude-PROBIT}
+# Primary analyses excluding the PROBIT study {#exclude-PROBIT}
 
 ---
 output:
@@ -10,7 +10,7 @@ fontsize: 9pt
 
 \raggedright
 
-This study included cohorts that measured child growth from 1969 to 2014. To assess potential secular trends, we plotted the mean length-for-age Z-score (LAZ) over time. The plot below shows the individual observations from included studies over this range of years. There does not appear to be a secular trend in LAZ. 
+xxx
 
 ```{r setup, include=FALSE}
 library(knitr)
@@ -24,7 +24,7 @@ source("0-config.R")
 
 
 ```{r prev-re, echo = FALSE}
-include_graphics(paste0(here::here(), "/figures/shared/laz_secular_trend.png"))
+#include_graphics(paste0(here::here(), "/figures/shared/laz_secular_trend.png"))
 ```
 
 
