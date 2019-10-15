@@ -24,7 +24,7 @@
 <meta name="author" content="Jade Benjamin-Chung et al." />
 
 
-<meta name="date" content="2019-10-07" />
+<meta name="date" content="2019-10-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -68,18 +68,15 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a></li>
 <li class="chapter" data-level="2" data-path="fixed-effects.html"><a href="fixed-effects.html"><i class="fa fa-check"></i><b>2</b> Sensitivity analysis using fixed effects</a><ul>
-<li class="chapter" data-level="2.1" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-prevalence"><i class="fa fa-check"></i><b>2.1</b> Age-specific prevalence</a></li>
-<li class="chapter" data-level="2.2" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-incidence"><i class="fa fa-check"></i><b>2.2</b> Age-specific incidence</a></li>
-<li class="chapter" data-level="2.3" data-path="fixed-effects.html"><a href="fixed-effects.html#relationship-between-laz-and-stunting-status"><i class="fa fa-check"></i><b>2.3</b> Relationship between LAZ and stunting status</a></li>
-<li class="chapter" data-level="2.4" data-path="fixed-effects.html"><a href="fixed-effects.html#linear-growth-velocity"><i class="fa fa-check"></i><b>2.4</b> Linear growth velocity</a></li>
+<li class="chapter" data-level="2.1" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-incidence"><i class="fa fa-check"></i><b>2.1</b> Age-specific incidence</a></li>
+<li class="chapter" data-level="2.2" data-path="fixed-effects.html"><a href="fixed-effects.html#relationship-between-laz-and-stunting-status"><i class="fa fa-check"></i><b>2.2</b> Relationship between LAZ and stunting status</a></li>
+<li class="chapter" data-level="2.3" data-path="fixed-effects.html"><a href="fixed-effects.html#linear-growth-velocity"><i class="fa fa-check"></i><b>2.3</b> Linear growth velocity</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="secular-trends.html"><a href="secular-trends.html"><i class="fa fa-check"></i><b>3</b> Assessment of potential secular trends</a></li>
-<li class="chapter" data-level="4" data-path="exclude-PROBIT.html"><a href="exclude-PROBIT.html"><i class="fa fa-check"></i><b>4</b> Assessment of potential secular trends</a></li>
-<li class="chapter" data-level="5" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>5</b> Applications</a><ul>
-<li class="chapter" data-level="5.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>5.1</b> Example one</a></li>
-<li class="chapter" data-level="5.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>5.2</b> Example two</a></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="chapter" data-level="4" data-path="exclude-PROBIT.html"><a href="exclude-PROBIT.html"><i class="fa fa-check"></i><b>4</b> Primary analyses excluding the PROBIT study</a></li>
+<li class="chapter" data-level="5" data-path="severe-stunting.html"><a href="severe-stunting.html"><i class="fa fa-check"></i><b>5</b> Severe stunting analyses</a></li>
+<li class="chapter" data-level="6" data-path="gestational.html"><a href="gestational.html"><i class="fa fa-check"></i><b>6</b> Analyses of gestational age</a></li>
+<li class="chapter" data-level="7" data-path="age-meas.html"><a href="age-meas.html"><i class="fa fa-check"></i><b>7</b> Analyses of age at first measurement</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -105,7 +102,7 @@
 <h1><span class="header-section-number">Chapter 3</span> Assessment of potential secular trends</h1>
 
 <p>This study included cohorts that measured child growth from 1969 to 2014. To assess potential secular trends, we plotted the mean length-for-age Z-score (LAZ) over time. The plot below shows the individual observations from included studies over this range of years. There does not appear to be a secular trend in LAZ.</p>
-<p><img src="/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/shared/laz_secular_trend.png" width="1200" /></p>
+<p><img src="/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/figures/shared/laz_secular_trend.png" width="1200" /></p>
 
 </div>
             </section>
@@ -159,6 +156,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

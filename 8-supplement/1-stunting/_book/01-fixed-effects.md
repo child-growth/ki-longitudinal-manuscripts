@@ -13,38 +13,24 @@ fontsize: 9pt
 
 The primary analyses presented in this manuscript pooled across individual studies using random effects. Inferences about estimates from fixed effects models are restricted to only the included studies.[^1] The random effects approach was more conservative in the presence of study heterogeneity, as evidenced by larger confidence intervals around each point estimates. Overall, the inference from results produced by each method was similar. 
 
-```{r setup, include=FALSE}
-library(knitr)
-knitr::opts_chunk$set(echo = TRUE)
-# source(paste0(here::here(), "/0-config.R"))
-setwd("../../")
-source("0-config.R")
-```
-The working dir is `r paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-primary.png")`.
+
+The working dir is /Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png.
 ## Age-specific prevalence
 
-```{r prev-re, echo = FALSE}
-include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-primary.png"))
-```
+<img src="/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png" width="4200" />
 **Figure 1a.  Age-specific stunting prevalence overall and stratified by region and pooled using random effects. ** Age-specific stunting prevalence overall and stratified by region. The “Overall” panel includes 22 studies (N=53,194); the “Africa” panel includes 7 studies (N=15,756); the “Latin America” panel includes 5 studies (N=2,205); and the “South Asia” panel includes 15 studies (N=28,492). Results were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals. 
 
-```{r prev-fe, echo = FALSE}
-include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-fe.png"))
-```
+<img src="/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-prev-overall_region--allage-fe.png" width="4200" />
 **Figure 1b.  Age-specific stunting prevalence overall and stratified by region and pooled using fixed effects. ** Results include data from cohorts that measured children at least quarterly. We pooled estimates across studies using inverse variance weighted fixed effects models. Results shown in both panels were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals.
 
 
 ## Age-specific incidence
 
 
-```{r inc-re, echo = FALSE}
-include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region--allage-primary.png"))
-```
+<img src="/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-inc-overall_region--allage-primary.png" width="4800" />
 **Figure 2a.  Age-specific stunting incidence (cumulative and new cases) overall and stratified by region and pooled using random effects.** ) "0-3" includes ages from age 2 days up to 3 months. The “Overall” panel includes 23 studies (N=60,356); the “Africa” panel includes 7 studies (N=19,859); the “Latin America” panel includes 5 studies (N=2,163); and the “South Asia” panel includes 15 studies (N=30,358). Results shown in both panels include data from cohorts that measured children at least quarterly. We pooled estimates across studies using random effects models fit with restricted maximum likelihood estimation.  Results were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals. 
 
-```{r inc-fe, echo = FALSE}
-include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region--allage-fe.png"))
-```
+<img src="/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-inc-overall_region--allage-fe.png" width="4800" />
 **Figure 2b.  Age-specific stunting incidence (cumulative and new cases) overall and stratified by region and pooled using fixed effects.** Results include data from cohorts that measured children at least quarterly. We pooled estimates across studies using inverse variance weighted fixed effects models. Results shown in both panels were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals.
 
 ## Relationship between LAZ and stunting status
