@@ -170,7 +170,7 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
       nstudy=length(unique(studyid)),
       ncases=sum(ever_stunted),
       N=sum(length(ever_stunted))) %>%
-    filter(N>=5)
+    filter(N>=50)
   
   cuminc.data <- droplevels(cuminc.data)
   agelist <- agelist[agelist %in% levels(cuminc.data$agecat)]

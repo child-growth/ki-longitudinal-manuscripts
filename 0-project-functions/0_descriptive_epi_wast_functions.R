@@ -252,7 +252,7 @@ summary.prev.whz <- function(d, severe.wasted=F, method="REML"){
 
 
 
-summary.ci <- function(d, severe.wasted = F, age.range, method="REML"){
+summary.wast.ci <- function(d, severe.wasted = F, age.range, method="REML"){
   cutoff <- ifelse(severe.wasted,-3,-2)
 
   if(age.range == 3){
@@ -309,7 +309,7 @@ summary.ci <- function(d, severe.wasted = F, age.range, method="REML"){
       nstudy=length(unique(studyid)),
       ncases=sum(ever_wasted),
       N=sum(length(ever_wasted))) %>%
-    filter(N>=5)
+    filter(N>=50)
 
   cuminc.data <- droplevels(cuminc.data)
 

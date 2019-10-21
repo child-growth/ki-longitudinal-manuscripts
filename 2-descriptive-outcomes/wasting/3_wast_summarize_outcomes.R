@@ -132,8 +132,8 @@ save(quantile_d, quantile_d_country, quantile_d_overall, file = paste0(here(),"/
 #Cumulative inc
 # d <- calc.ci.agecat(d, range = 6)
 # agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
-# ci.data <- summary.ci(d)
-# ci.region <- d %>% group_by(region) %>% do(summary.ci(.)$ci.res)
+# ci.data <- summary.wast.ci(d)
+# ci.region <- d %>% group_by(region) %>% do(summary.wast.ci(.)$ci.res)
 # ci.cohort <-
 #   ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
 #   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -147,9 +147,9 @@ save(quantile_d, quantile_d_country, quantile_d_overall, file = paste0(here(),"/
 #Cumulative inc 3 month intervals
 d3 <- calc.ci.agecat(d, range = 3)
 
-ci.data3 <- summary.ci(d3, age.range=3)
-ci.region3 <- d3 %>% group_by(region) %>% do(summary.ci(., age.range=3)$ci.res)
-ci.country3 <- d3 %>% group_by(region, country) %>% do(summary.ci(., age.range=3)$ci.res) 
+ci.data3 <- summary.wast.ci(d3, age.range=3)
+ci.region3 <- d3 %>% group_by(region) %>% do(summary.wast.ci(., age.range=3)$ci.res)
+ci.country3 <- d3 %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=3)$ci.res) 
 ci.cohort3 <-
   ci.data3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -179,9 +179,9 @@ ip_3 <- bind_rows(
 
 #Cumulative inc, no birth
 d_noBW <- calc.ci.agecat(d_noBW, range = 6)
-ci.data.nobirth <- summary.ci(d_noBW, age.range=6)
-ci.region.nobirth <- d %>% group_by(region) %>% do(summary.ci(., age.range=6)$ci.res)
-ci.country.nobirth <- d %>% group_by(region, country) %>% do(summary.ci(., age.range=6)$ci.res) 
+ci.data.nobirth <- summary.wast.ci(d_noBW, age.range=6)
+ci.region.nobirth <- d %>% group_by(region) %>% do(summary.wast.ci(., age.range=6)$ci.res)
+ci.country.nobirth <- d %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=6)$ci.res) 
 ci.cohort.nobirth <-
   ci.data.nobirth$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -196,9 +196,9 @@ ci_nobw <- bind_rows(
 
 #Cumulative inc 3 month intervals
 d3 <- calc.ci.agecat(d_noBW)
-ci.data.nobirth3 <- summary.ci(d3, age.range=3)
-ci.region.nobirth3 <- d3 %>% group_by(region) %>% do(summary.ci(., age.range=3)$ci.res)
-ci.country.nobirth3 <- d3 %>% group_by(region, country) %>% do(summary.ci(., age.range=3)$ci.res) 
+ci.data.nobirth3 <- summary.wast.ci(d3, age.range=3)
+ci.region.nobirth3 <- d3 %>% group_by(region) %>% do(summary.wast.ci(., age.range=3)$ci.res)
+ci.country.nobirth3 <- d3 %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=3)$ci.res) 
 ci.cohort.nobirth3 <-
   ci.data.nobirth3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
@@ -218,9 +218,9 @@ ci_nobw3 <- bind_rows(
 #Cumulative inc of severe wasting
 d <- calc.ci.agecat(d, range = 6)
 agelst = list("0-6 months", "6-12 months", "12-18 months", "18-24 months")
-sev.ci.data <- summary.ci(d=d,  severe.wasted = T, age.range=6)
-sev.ci.region <- d %>% group_by(region) %>% do(summary.ci(., severe.wasted = T, age.range=6)$ci.res)
-sev.ci.country <- d %>% group_by(region, country) %>% do(summary.ci(., severe.wasted = T, age.range=6)$ci.res) 
+sev.ci.data <- summary.wast.ci(d=d,  severe.wasted = T, age.range=6)
+sev.ci.region <- d %>% group_by(region) %>% do(summary.wast.ci(., severe.wasted = T, age.range=6)$ci.res)
+sev.ci.country <- d %>% group_by(region, country) %>% do(summary.wast.ci(., severe.wasted = T, age.range=6)$ci.res) 
 sev.ci.cohort <-
   sev.ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)

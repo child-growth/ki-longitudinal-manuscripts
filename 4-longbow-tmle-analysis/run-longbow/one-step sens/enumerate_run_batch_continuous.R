@@ -33,8 +33,8 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
   return(analysis_params)
 })
 
-writeLines(toJSON(enumerated_analyses[[1]]),"single_cont_analysis.json")
-writeLines(toJSON(enumerated_analyses),"all_cont_analyses.json")
+writeLines(toJSON(enumerated_analyses[[1]]),"single_1step_analysis.json")
+writeLines(toJSON(enumerated_analyses),"all_1step_analyses.json")
 
 
 # 2. run batch
@@ -42,29 +42,28 @@ writeLines(toJSON(enumerated_analyses),"all_cont_analyses.json")
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
-# inputs <- "inputs_template.json"
-inputs <- "single_cont_analysis.json"
+inputs <- "single_1step_analysis.json"
 
 #run test/provisioning job
 run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
-batch_inputs <- "all_cont_analyses.json"
-batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
+batch_inputs <- "all_1step_analyses.json"
+batch_id_1step <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
 
 # wait for the batch to finish and track progress
-wait_for_batch(batch_id_cont)
+wait_for_batch(batch_id_1step)
 
 # download the longbow outputs
-get_batch_results(batch_id_cont, results_folder="results_cont")
-length(dir("results_cont"))
+get_batch_results(batch_id_1step, results_folder="results_1step")
+length(dir("results_1step"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results_cont")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_cont")
+results <- load_batch_results("results.rdata", results_folder = "results_1step")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_1step")
 
 # save concatenated results
-filename1 <- paste(paste('results_cont',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('results_cont_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename1 <- paste(paste('results_1step',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename2 <- paste(paste('results_1step_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
 save(results, file=here("results","rf results","raw longbow results",filename1))
 save(obs_counts, file=here("results","rf results","raw longbow results",filename2))

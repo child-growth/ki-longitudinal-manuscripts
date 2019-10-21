@@ -524,7 +524,7 @@ d$W_parity <- d$parity
 
 #Overall a-priori quantiles
 d$gagebrth <- quantile_rf(d, d$W_gagebrth, Acuts=c(0,260,274,max(d$W_gagebrth, na.rm=T)), labs=c("Preterm", "Early term", "Full or late term"))
-d$birthwt <- quantile_rf(d, d$W_birthwt, Acuts=c(0,2500,max(d$W_birthwt, na.rm=T)), labs=c("Low birth weight", "Normal or high birthweight"))
+d$birthwt <- quantile_rf(d, d$W_birthwt, Acuts=c(0,2500,max(d$W_birthwt, na.rm=T)), labs=c("Low birthweight", "Normal or high birthweight"))
 d$birthlen <- quantile_rf(d, d$W_birthlen, Acuts=c(0,48, 50, max(d$W_birthlen, na.rm=T)), units="cm")
 
 d$W_mage[d$studyid=="ki1112895-Burkina Faso Zn"] <- d$W_mage[d$studyid=="ki1112895-Burkina Faso Zn"] -1 # Fix Ages in Burkino Faso Zinc, which are the upper limit of age ranges
