@@ -6,11 +6,10 @@ The primary analyses presented in this manuscript pooled across individual studi
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
 # source(paste0(here::here(), "/0-config.R"))
-setwd("~/Documents/CRG/ki/ki-longitudinal-manuscripts/")
+setwd("../../")
 source("0-config.R")
-
 ```
-
+The working dir is `r paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-primary.png")`.
 ## Age-specific prevalence
 
 ```{r prev-re, echo = FALSE}
