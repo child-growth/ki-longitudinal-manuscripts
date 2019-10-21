@@ -76,10 +76,10 @@ df2 <- d %>%
   filter(studyid == "ki1101329-Keneba") %>%
   filter(sex=="Male")
 
-p_kenaba <- ggplot(d, aes(x=agedays, y=htcm)) + geom_point(alpha = 0.5) +
+p_kenaba <- ggplot(d, aes(x=agedays, y=htcm)) + geom_point(alpha = 0.25, shape = 1) +
   geom_who(x_seq = seq(0, 730, by = 1), shade = tableau10[3],  y_var = "htcm") +
-  xlab("Age in days") + ylab("Height (cm)") + ggtitle("Height across age in male children\nfrom MRC Kenaba cohort") +
-  coord_cartesian(xlim=c(0, 120), ylim = c(30, 90)) #+ facet_wrap(~sex)
+  xlab("Age in days") + ylab("Length (cm)") + ggtitle("Length across age in male children\nfrom MRC Kenaba cohort") +
+  coord_cartesian(xlim=c(0, 120), ylim = c(35, 85)) #+ facet_wrap(~sex)
 
 
   
