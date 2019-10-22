@@ -112,11 +112,16 @@ saveRDS(co_rf, rf_co_occurrence_path)
 # of effects on CI of stunting by 24months of age
 #--------------------------------------------
 
+d %>% filter(tr!="", !is.na(haz)) %>% group_by(studyid, country, tr) %>% 
+  summarize(mn_haz=mean(haz), sd=sd(haz)) %>% 
+  mutate(ci.lb = mn_haz-1.96*sd, ci.ub = mn_haz+1.96*sd) %>%
+  as.data.frame()
+
 drop_int_arms <- function(d){
   d=d[-which(d$studyid=="kiGH5241-JiVitA-4" & d$tr!="Control"),]
   d=d[-which(d$studyid=="ki1119695-PROBIT" & d$tr!="Control"),]
   d=d[-which(d$studyid=="ki1000304b-SAS-FoodSuppl" & d$tr!="Control"),]
-  d=d[-which(d$studyid=="ki1112895-iLiNS-Zinc" & d$tr!="Control"),]
+  d=d[-which(d$studyid=="ki1112895-iLiNS-Zinc" & d$tr!="Control"),]country
   d=d[-which(d$studyid=="ki1000304b-SAS-CompFeed" & d$tr!="Control"),]
   d=d[-which(d$studyid=="kiGH5241-JiVitA-3" & d$tr!="Control"),]
   d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]

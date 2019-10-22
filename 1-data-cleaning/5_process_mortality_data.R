@@ -34,12 +34,17 @@ d$agedth[!is.na(d$agedth) & is.na(d$dead)]
 d$dead[!is.na(d$agedth) & is.na(d$dead)] <- 1
 
 
-table(d$studyid, d$dead)
 table(d$studyid, d$agedth>0)
+table(d$studyid, d$dead)
+table(d$dead)
 
-
-d <- d %>% group_by(studyid, country, subjid) %>% mutate(dead=1*(max(dead)>0 | (agedth>0) | (!is.na(causedth) & causedth!="")), agedth=max(agedth)) %>% slice(1)
+#make sure dead is time-static and subset to 1 observation
+d <- d %>% 
+  group_by(studyid, country, subjid) %>%
+  mutate(dead=1*(max(dead)>0 | (agedth>0) | (!is.na(causedth) & causedth!="")), agedth=max(agedth)) %>% 
+  slice(1)
 dim(d)
+table(d$dead)
 table(d$studyid, d$dead)
 
 
@@ -47,16 +52,14 @@ table(d$studyid, d$dead)
 summary(d$maxage)
 dim(d)
 table(d$dead)
-# d <- d %>% filter(agedth <= 730 | is.na(agedth))
-# d <- d %>% filter(maxage <= 730 | is.na(dead))
-d <- d %>% mutate(keep=1*(agedth <= 730 | is.na(agedth) & (maxage <= 730 | is.na(dead))))
+
+#Mark deaths not over 24 months to keep
+d <- d %>% mutate(keep=1*(agedth <= 730 | is.na(agedth) & ((maxage <= 730 & dead==1) | dead!=1)))
 dim(d)
 table(d$dead)
 table(d$keep)
 
 
-summary(d$maxage)
-summary(d$maxage[d$dead==1])
 
 #Create a mortality after 6 month variable
 d$dead624 <- d$dead 

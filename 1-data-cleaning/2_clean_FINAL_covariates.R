@@ -14,6 +14,8 @@
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+library(growthstandards)
+
 
 d <- readRDS(included_studies_path)
 
@@ -29,8 +31,9 @@ lprev <- d %>% group_by(studyid, country, subjid) %>%
   filter(measurefreq=="monthly") %>%
   filter(agedays<6*30.4167) %>%
   mutate(wast=as.numeric(whz < -2), stunt=as.numeric(haz < -2)) %>%
-  summarize(wastprev06=mean(wast, na.rm=T), stuntprev06=mean(stunt, na.rm=T), anywast06=as.numeric(wastprev06>0), anystunt06=as.numeric(stuntprev06>0), 
-            pers_wast=as.numeric(wastprev06>=0.5))
+  summarize(N=n(), wastprev06=mean(wast, na.rm=T), stuntprev06=mean(stunt, na.rm=T), anywast06=as.numeric(wastprev06>0), anystunt06=as.numeric(stuntprev06>0), 
+            pers_wast=as.numeric(wastprev06>=0.5)) %>%
+  mutate(pers_wast=ifelse(N>=4,pers_wast,NA))
 head(lprev)
 
 table(lprev$anywast06)
@@ -50,7 +53,9 @@ dim(d)
 # Calculate birth month from birth week if birthmonth is missing
 #--------------------------------------------------------
 
+table(d$brthmon)
 d$brthmon[is.na(d$brthmon)] <- ceiling(d$brthweek[is.na(d$brthmon)]/4.42)
+table(d$brthmon)
 
 #--------------------------------------------------------
 #Calculate stunting and wasting at enrollment and keep one observation per child
@@ -130,6 +135,7 @@ table(df$studyid, df$hhwealth_quart)
 
 #Code into 3 harmonized categories (so that all 3 levels are present across all studies)
 # By recoding the levels from the HHS, HFAIS, and FAST scales into 3 categories
+table(d$studyid, d$hfoodsec)
 unique(d$hfoodsec)
 
 d$temp <- NA
@@ -151,6 +157,7 @@ d$temp[d$hfoodsec=="Moderately Food Insecure Access"] <- "Food Insecure"
 d$temp[d$hfoodsec=="Severely Food Insecure Access"] <- "Food Insecure"
 d$temp[d$hfoodsec=="Food Secure"] <- "Food Secure"
 
+table(d$studyid[!is.na(d$temp)], d$temp[!is.na(d$temp)])
 
 
 d$hfoodsec <- d$temp
@@ -174,8 +181,8 @@ d$gagebrth[d$studyid=="ki1113344-GMS-Nepal"] <- NA
 #Combine parity and birthorder to have sufficient data to analyze
 #Parity (which includes stillborns past a certain gestational age) is assumed
 #to approximate child birth order
-table(d$studyid, d$parity)
-table(d$studyid, d$brthordr)
+table(d$studyid[!is.na(d$parity)], d$parity[!is.na(d$parity)])
+table(d$studyid[!is.na(d$brthordr)], d$brthordr[!is.na(d$brthordr)])
 
 d$parity[is.na(d$parity)] <- d$brthordr[is.na(d$parity)]
 
@@ -203,7 +210,7 @@ d$birthwt2[!is.finite(d$birthwt2)] <- NA
 
 
 
-#Check if children without a recorded birthweight or birthlength have WAZ or HAZ in the first 3 days of life
+#Check if children without a recorded birthweight or birthlength have WAZ or HAZ in the first 7 days of life
 #and add into birthweight variable
 
 summary(d$birthlen)
@@ -226,7 +233,7 @@ table(d$studyid, is.na(d$birthwt))
 #--------------------------------------------------------------------------
 
 #single mom
-table(d$studyid, d$single)
+table(d$studyid[!is.na(d$single)], d$single[!is.na(d$single)])
 
 #Note Jivita-4 single mother is unbelievably high
 #drop single mother variable in kiGH5241-JiVitA-4 
@@ -246,6 +253,9 @@ d$mwtkg[flag] <- d$mbmi[flag] * (d$mhtcm[flag] / 100)^2
 flag <- is.na(d$mhtcm) & !is.na(d$mwtkg) & !is.na(d$mbmi)
 d$mhtcm[flag] <- sqrt(d$mwtkg[flag] / d$mbmi[flag]) * 100
 
+summary(d$mbmi)
+summary(d$mwtkg)
+summary(d$mhtcm)
 
 #drop maternal weight and bmi in kiGH5241-JiVitA-3 as it is measured during pregnancy
 d$mbmi[d$studyid=="kiGH5241-JiVitA-3"] <-NA
@@ -262,7 +272,7 @@ d$nrooms[d$nrooms==0] <- NA
 
 #check the number of children < 5 and set to missing if 0
 table(d$nchldlt5)
-table(d$studyid, d$nchldlt5)
+table(d$studyid[!is.na(d$nchldlt5)], d$nchldlt5[!is.na(d$nchldlt5)])
 
 #Need to shift full distribution by 1 in studies with 0 marked- 
 #  inconsistent marking of subject in the count across studies
@@ -416,7 +426,7 @@ d$tr[d$studyid=="kiGH5241-JiVitA-4" & d$arm=="Plumpy Doz"] <- "LNS"
 #--------------------------------------------------------
 
 colnames(d)
-d <- subset(d, select = -c(siteid,  clustid, brthweek,   brthordr, 
+d <- subset(d, select = -c(brthweek,   brthordr, 
                            ses, birthlen2, birthwt2, 
                            birthmeas_age, birthLAZ, birthWAZ))
 
@@ -527,7 +537,9 @@ d$gagebrth <- quantile_rf(d, d$W_gagebrth, Acuts=c(0,260,274,max(d$W_gagebrth, n
 d$birthwt <- quantile_rf(d, d$W_birthwt, Acuts=c(0,2500,max(d$W_birthwt, na.rm=T)), labs=c("Low birthweight", "Normal or high birthweight"))
 d$birthlen <- quantile_rf(d, d$W_birthlen, Acuts=c(0,48, 50, max(d$W_birthlen, na.rm=T)), units="cm")
 
-d$W_mage[d$studyid=="ki1112895-Burkina Faso Zn"] <- d$W_mage[d$studyid=="ki1112895-Burkina Faso Zn"] -1 # Fix Ages in Burkino Faso Zinc, which are the upper limit of age ranges
+# Fix Ages in Burkino Faso Zinc so they are categorized correctly by the function, which are based on these categories:
+#Categories: <20 years old; 20-29 years old; 30-39 years old; 40-49 years old; 50+ years old
+d$W_mage[d$studyid=="ki1112895-Burkina Faso Zn" & d$W_mage==20] <- 18
 d$mage <- quantile_rf(d, d$W_mage, Acuts=c(0,20,30,max(d$W_mage, na.rm=T)))
 
 d$mhtcm <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,151,155,max(d$W_mhtcm, na.rm=T)), units="cm")
@@ -536,6 +548,7 @@ d$mbmi <- quantile_rf(d, d$W_mbmi, Acuts=c(0,18.5,max(d$W_mbmi, na.rm=T)), labs=
 d$fage <- quantile_rf(d, d$W_fage, Acuts=c(0,32,38,max(d$W_fage, na.rm=T)))
 d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,167,max(d$W_fhtcm, na.rm=T)), units="cm")
 
+ 
 
 
 #Make education categorizing function that handles the irregular distribution across studies.

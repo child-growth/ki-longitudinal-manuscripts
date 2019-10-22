@@ -7,3 +7,4 @@
 *.gitignore
 *.rdata
 .gitignore
+.httr-oauth
