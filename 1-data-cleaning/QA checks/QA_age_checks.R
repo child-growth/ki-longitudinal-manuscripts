@@ -25,12 +25,16 @@ check_ages <- function(df, measure_times, tolerance=30){ #tolerance is number of
   
   #get number of unique children in study
   n_children <- df$n_children[1]
+  cat(paste0("Total children: ", n_children, "\n"))
   
   for(i in measure_times){
     #Number of children within a month of age
-    perc_kids_measured = mean(abs(df$agedays -i) <= tolerance)
+    total_kids_measured = sum(abs(df$agedays -i) <= tolerance)
+    cat(paste0("N children at agedays=",round(i,0),": ", total_kids_measured, "\n"))
+    
+    perc_kids_measured = total_kids_measured/n_children
     assert_that(perc_kids_measured >= 0.5, msg = paste0("Less than 50% of measures within a month of agedays==",i))
-    assert_that(perc_kids_measured >= 0.8, msg = paste0("Less than 80% of measures within a month of agedays==",i))
+    #assert_that(perc_kids_measured >= 0.8, msg = paste0("Less than 80% of measures within a month of agedays==",i))
   }
   
   cat("Enough measurements at all ages")
