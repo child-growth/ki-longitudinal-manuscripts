@@ -1,0 +1,314 @@
+\documentclass[9pt,]{book}
+\usepackage[]{mathpazo}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Longitudinal analysis of early childhood stunting in low-resource settings},
+            pdfauthor={Jade Benjamin-Chung et al.},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{natbib}
+\bibliographystyle{apalike}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Longitudinal analysis of early childhood stunting in low-resource
+settings}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jade Benjamin-Chung et al.}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2019-10-14}
+
+\usepackage{booktabs}
+\usepackage{amsthm}
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=8pt plus 2pt minus 4pt
+  \thm@postskip=\thm@preskip
+}
+\makeatother
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\chapter{Overview}\label{overview}
+
+\textbf{Recommended citation:} Benjamin-Chung J, et al. 2020.
+Longitudinal analyses of early childhood stunting in low-resource
+settings. \emph{Journal Name}. doi.
+
+Add a description of what this book is
+
+\chapter{Sensitivity analysis using fixed effects}\label{fixed-effects}
+
+\raggedright
+
+The primary analyses presented in this manuscript pooled across
+individual studies using random effects. Inferences about estimates from
+fixed effects models are restricted to only the included
+studies.\footnote{Hedges, L. V. \& Vevea, J. L. Fixed- and
+  random-effects models in meta-analysis. Psychol. Methods 3, 486--504
+  (1998).} The random effects approach was more conservative in the
+presence of study heterogeneity, as evidenced by larger confidence
+intervals around each point estimates. Overall, the inference from
+results produced by each method was similar.
+
+The working dir is
+/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-prev-overall\_region--allage-primary.png.
+\#\# Age-specific prevalence
+
+\includegraphics[width=58.33in]{/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary}
+\textbf{Figure 1a. Age-specific stunting prevalence overall and
+stratified by region and pooled using random effects. } Age-specific
+stunting prevalence overall and stratified by region. The ``Overall''
+panel includes 22 studies (N=53,194); the ``Africa'' panel includes 7
+studies (N=15,756); the ``Latin America'' panel includes 5 studies
+(N=2,205); and the ``South Asia'' panel includes 15 studies (N=28,492).
+Results were estimated from data in up to 23 cohorts. The number of
+children per estimate ranged from approximately 6,000 to 1.7 million.
+Vertical bars indicate 95\% confidence intervals.
+
+\includegraphics[width=58.33in]{/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-prev-overall_region--allage-fe}
+\textbf{Figure 1b. Age-specific stunting prevalence overall and
+stratified by region and pooled using fixed effects. } Results include
+data from cohorts that measured children at least quarterly. We pooled
+estimates across studies using inverse variance weighted fixed effects
+models. Results shown in both panels were estimated from data in up to
+23 cohorts. The number of children per estimate ranged from
+approximately 6,000 to 1.7 million. Vertical bars indicate 95\%
+confidence intervals.
+
+\section{Age-specific incidence}\label{age-specific-incidence}
+
+\includegraphics[width=66.67in]{/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-inc-overall_region--allage-primary}
+\textbf{Figure 2a. Age-specific stunting incidence (cumulative and new
+cases) overall and stratified by region and pooled using random
+effects.} ) ``0-3'' includes ages from age 2 days up to 3 months. The
+``Overall'' panel includes 23 studies (N=60,356); the ``Africa'' panel
+includes 7 studies (N=19,859); the ``Latin America'' panel includes 5
+studies (N=2,163); and the ``South Asia'' panel includes 15 studies
+(N=30,358). Results shown in both panels include data from cohorts that
+measured children at least quarterly. We pooled estimates across studies
+using random effects models fit with restricted maximum likelihood
+estimation. Results were estimated from data in up to 23 cohorts. The
+number of children per estimate ranged from approximately 6,000 to 1.7
+million. Vertical bars indicate 95\% confidence intervals.
+
+\includegraphics[width=66.67in]{/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-inc-overall_region--allage-fe}
+\textbf{Figure 2b. Age-specific stunting incidence (cumulative and new
+cases) overall and stratified by region and pooled using fixed effects.}
+Results include data from cohorts that measured children at least
+quarterly. We pooled estimates across studies using inverse variance
+weighted fixed effects models. Results shown in both panels were
+estimated from data in up to 23 cohorts. The number of children per
+estimate ranged from approximately 6,000 to 1.7 million. Vertical bars
+indicate 95\% confidence intervals.
+
+\section{Relationship between LAZ and stunting
+status}\label{relationship-between-laz-and-stunting-status}
+
+FIGURE TO BE ADDED
+
+\textbf{Relationship between LAZ and stunting status pooled using fixed
+effects models.} Percentage of children stunted and not stunted by age.
+``Never stunted'': children with LAZ \(\ge\) --2 at previous ages and
+the current age. ``Still not stunted'': children who were previously
+recovered with LAZ \(\ge\) --2 at the current age. ``No longer
+stunted'': children with LAZ \textless{} --2 at the previous age and LAZ
+\(\ge\)--2 at the current age. ``Newly stunted'': children whose LAZ was
+previously always \(\ge\) --2 and with LAZ \textless{} --2 at the
+current age. ``Stunting relapse'': children who were previously stunted
+with LAZ \(\ge\) --2 at the previous age and LAZ \textless{} --2 at the
+current age. ``Still stunted'': children whose LAZ was \textless{} --2
+at the previous and current age. Analyses in b and c includes data from
+12 cohorts with at least monthly measurement, 10 countries, and 11,394
+children. Results shown in all panels were pooled across studies using
+inverse variance weighted fixed effects models and include data subset
+to ages up to 15 months because in most cohorts, measurements were less
+frequent above 15 months.
+
+FIGURE TO BE ADDED
+
+\textbf{Relationship between LAZ and stunting status pooled using fixed
+effects models.} Percentage of children stunted and not stunted by age.
+``Never stunted'': children with LAZ \(\ge\) --2 at previous ages and
+the current age. ``Still not stunted'': children who were previously
+recovered with LAZ \(\ge\) --2 at the current age. ``No longer
+stunted'': children with LAZ \textless{} --2 at the previous age and LAZ
+\(\ge\)--2 at the current age. ``Newly stunted'': children whose LAZ was
+previously always \(\ge\) --2 and with LAZ \textless{} --2 at the
+current age. ``Stunting relapse'': children who were previously stunted
+with LAZ \(\ge\) --2 at the previous age and LAZ \textless{} --2 at the
+current age. ``Still stunted'': children whose LAZ was \textless{} --2
+at the previous and current age. Analyses in b and c includes data from
+12 cohorts with at least monthly measurement, 10 countries, and 11,394
+children. Results shown in all panels were pooled across studies using
+inverse variance weighted fixed effects models and include data subset
+to ages up to 15 months because in most cohorts, measurements were less
+frequent above 15 months.
+
+\section{Linear growth velocity}\label{linear-growth-velocity}
+
+FIGURE TO BE ADDED
+
+\textbf{Figure 4a. Within-child difference in length in centimeters per
+month stratified by age and sex pooled using random effects.} Dotted
+black line indicates 15th percentile of the WHO Growth Velocity
+Standards; dashed black line indicates the 25th percentile; solid black
+line indicates the 50th percentile. Colored lines indicate and vertical
+bars indicate 95\% confidence intervals for ki cohorts. Using pooled
+random effects models, differences were statistically significant
+between sexes at ages 0-3, 3-6, 12-15, 15-18, and 18-21 months.
+
+FIGURE TO BE ADDED
+
+\textbf{Figure 4b. Within-child difference in length in centimeters per
+month stratified by age and sex pooled using fixed effects.} Dotted
+black line indicates 15th percentile of the WHO Growth Velocity
+Standards; dashed black line indicates the 25th percentile; solid black
+line indicates the 50th percentile. Colored lines indicate and vertical
+bars indicate 95\% confidence intervals for ki cohorts.
+
+FIGURE TO BE ADDED
+
+\textbf{Figure 4c. Within-child difference in length-for-age Z-score per
+month by age and sex pooled using random effects.} Using pooled random
+effects models, differences were statistically significant between sexes
+at ages 0-3, 3-6, 6-9, 9-12, 18-21, and 21-24 months.
+
+FIGURE TO BE ADDED
+
+\textbf{Figure 4d. Within-child difference in length-for-age Z-score per
+month by age and sex. }
+
+FIGURE TO BE ADDED
+
+\textbf{Figure 4e. Mean length-for-age Z-score by age and sex pooled
+using random effects.} Differences by sex were statistically significant
+in each age group. Results shown in all panels were derived from 23 ki
+cohorts in 15 countries that measured children at least quarterly (n =
+77,129 children) and pooled using random effects models fit with
+restricted maximum likelihood estimation.
+
+FIGURE TO BE ADDED
+
+\textbf{Figure 4f. Mean length-for-age Z-score by age and sex.} Results
+shown in all panels were derived from 23 ki cohorts in 15 countries that
+measured children at least quarterly (n = 77,129 children) and pooled
+using inverse variance weighted fixed effects models. 95\% confidence
+intervals are included in plots but for certain estimates are not
+visible because they are very close to the pooled point estimate.
+
+\chapter{Assessment of potential secular trends}\label{secular-trends}
+
+\raggedright
+
+This study included cohorts that measured child growth from 1969 to
+2014. To assess potential secular trends, we plotted the mean
+length-for-age Z-score (LAZ) over time. The plot below shows the
+individual observations from included studies over this range of years.
+There does not appear to be a secular trend in LAZ.
+
+\includegraphics[width=33.33in]{/Users/Nolan/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/figures/shared/laz_secular_trend}
+
+\chapter{Primary analyses excluding the PROBIT
+study}\label{exclude-PROBIT}
+
+\raggedright
+
+xxx
+
+\chapter{Severe stunting analyses}\label{severe-stunting}
+
+\raggedright
+
+xxx
+
+\chapter{Analyses of gestational age}\label{gestational}
+
+\raggedright
+
+xxx
+
+\chapter{Analyses of age at first measurement}\label{age-meas}
+
+\raggedright
+
+xxx
+
+\bibliography{book.bib,packages.bib}
+
+
+\end{document}
