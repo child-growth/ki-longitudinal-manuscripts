@@ -8,7 +8,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load longbow results
-load(here("results","rf results","raw longbow results","seasonality_results_2019-09-17.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_results_2019-10-27.rdata"))
 
 #Load seasonality index and prep for merge
 rain <- read.csv(here("/data/monthly_rainfall.csv"))

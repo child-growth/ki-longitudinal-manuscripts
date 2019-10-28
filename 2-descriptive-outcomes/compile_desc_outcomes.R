@@ -5,8 +5,7 @@ wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS"))
 stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
 stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.RDS"))
 stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
-
-load(paste0(res_dir,"co_desc_data.Rdata"))
+co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.RDS"))
 
 
 
