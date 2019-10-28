@@ -77,9 +77,13 @@ who_cm_girls <- data.frame(
 )
 
 who_cm_boys$sex <- 'Male'
-who_cm_boys$strata <- unique(vel$strata)
+who_cm_boys$strata <- c("0-3", "3-6", "6-9",
+                        "9-12", "12-15", "15-18",
+                        "18-21", "21-24")
 who_cm_girls$sex <- 'Female'
-who_cm_girls$strata <- unique(vel$strata)
+who_cm_girls$strata <- c("0-3", "3-6", "6-9",
+                         "9-12", "12-15", "15-18",
+                         "18-21", "21-24")
 
 who_cm <- rbind(who_cm_girls, who_cm_boys)
 
