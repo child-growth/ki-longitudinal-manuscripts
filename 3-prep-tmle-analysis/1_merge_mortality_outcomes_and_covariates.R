@@ -149,7 +149,7 @@ calc_RR <- function(d1, d2){
 
 
 #Drop studies with no mortality information
-d <- d %>% filter(tot_dead>0)
+d <- d %>% group_by(studyid, country) %>% mutate(tot_dead = sum(dead)) %>% filter(tot_dead>0) %>% ungroup() %>% as.data.frame()
 
 #Set exposures to factors
 Avars <- c("ever_wasted06",
@@ -173,6 +173,7 @@ Avars <- c("ever_wasted06",
            )
 
 for(i in Avars){
+  print(i)
   d[,i] <- factor(d[,i])
 }
 
