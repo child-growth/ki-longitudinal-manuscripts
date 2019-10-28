@@ -224,5 +224,4 @@ analyses <- specify_rf_analysis(A="rain_quartile", Y="whz", file="seasonality_rf
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/seasonality_analyses.rdata"))
-save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/seasonality_analyses.rdata")
 

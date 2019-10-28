@@ -60,9 +60,9 @@ birthstrat_stats_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-",birthstrat_stats_plot_name,".png"), width=8, height=5)
+ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-birth-stratified-outcomes.png"), width=8, height=5)
 
-saveRDS(d, file=paste0(here(), "results/figure-data/figdata-",birthstrat_stats_plot_name,".RDS"))
+saveRDS(d, file=paste0(here(), "/results/figure-data/figdata-birth-stratified-outcomes.RDS"))
 
 save(birthstrat_stats_plot, file=paste0(here::here(),"/figures/plot objects/birthstrat_stats_plot_object.Rdata"))
 

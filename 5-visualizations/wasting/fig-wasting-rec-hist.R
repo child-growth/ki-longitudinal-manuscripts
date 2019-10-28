@@ -4,7 +4,6 @@
 #-----------------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-source("U:/Wasting/1-outcomes/0_wast_incfunctions.R")
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 

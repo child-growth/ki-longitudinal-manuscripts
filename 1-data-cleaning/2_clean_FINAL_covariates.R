@@ -187,12 +187,15 @@ table(d$studyid[!is.na(d$brthordr)], d$brthordr[!is.na(d$brthordr)])
 d$parity[is.na(d$parity)] <- d$brthordr[is.na(d$parity)]
 
 
-#Fix 21 obs of 0 in ki1000304b-SAS-FoodSuppl
-d$parity[d$studyid=="ki1000304b-SAS-FoodSuppl" & d$parity==0] <- NA
+#Shift obs in ki1000304b-SAS-FoodSuppl to make 1==firstborn
+d$parity[d$studyid=="ki1000304b-SAS-FoodSuppl"] <- d$parity[d$studyid=="ki1000304b-SAS-FoodSuppl"] + 1   
 
-#Fix right shift of Tanzania child parity
+#Fix right shift of Tanzania child, Kenaba, iLiNS-DYAD-M, and Jivita-3 parity
 d$parity[d$studyid=="ki1066203-TanzaniaChild2" & d$parity==1] <- NA
 d$parity[d$studyid=="ki1066203-TanzaniaChild2"] <- d$parity[d$studyid=="ki1066203-TanzaniaChild2"] - 1  
+d$parity[d$studyid=="ki1101329-Keneba"] <- d$parity[d$studyid=="ki1101329-Keneba"] - 1  
+d$parity[d$studyid=="ki1148112-iLiNS-DYAD-M"] <- d$parity[d$studyid=="ki1148112-iLiNS-DYAD-M"] - 1  
+d$parity[d$studyid=="kiGH5241-JiVitA-3"] <- d$parity[d$studyid=="kiGH5241-JiVitA-3"] - 1  
 table(d$studyid, d$parity)
 
 #Convert birth Zscore to absolute units
@@ -278,6 +281,7 @@ table(d$studyid[!is.na(d$nchldlt5)], d$nchldlt5[!is.na(d$nchldlt5)])
 #  inconsistent marking of subject in the count across studies
 #  Some count number of other children, some number of total children
 d$nchldlt5[d$studyid=="ki1148112-LCNI-5" & d$nchldlt5==0] <- NA #LCNI has 4 children marked as 0 -drop as
+d$nchldlt5[d$studyid=="ki1148112-iLiNS-DOSE" & d$nchldlt5==0] <- NA #ilins-DOSE has 3 children marked as 0 -drop as
 d$nchldlt5[d$studyid=="ki1000108-IRC"] <- d$nchldlt5[d$studyid=="ki1000108-IRC"] + 1
 d$nchldlt5[d$studyid=="ki1017093b-PROVIDE"] <- d$nchldlt5[d$studyid=="ki1017093b-PROVIDE"] + 1
 d$nchldlt5[d$studyid=="ki1017093c-NIH-Crypto"] <- d$nchldlt5[d$studyid=="ki1017093c-NIH-Crypto"] + 1
@@ -508,9 +512,6 @@ quantile_rf <- function(data, A, labs=NULL, Acuts=NULL, units=NULL){
   #>=30 = obese
 
 
-
-class(d$gagebrth)
-
 #Save continious variables as seperate variables to use as adjustment covariates
 d$W_gagebrth <- d$gagebrth
 d$W_birthwt <- d$birthwt
@@ -663,7 +664,6 @@ table(d$parity)
 table(paste0(d$studyid," ", d$country), d$parity)
 
 parity<-NA
-parity[d$parity==0] <- NA 
 parity[d$parity==1] <- "1"
 parity[d$parity==2] <- "2"
 parity[d$parity>2] <- "3+"

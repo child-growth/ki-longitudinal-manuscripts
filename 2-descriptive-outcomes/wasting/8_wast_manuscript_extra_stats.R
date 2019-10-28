@@ -6,7 +6,9 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
-load("U:/ucb-superlearner/data/Wasting_inc_data.RData")
+load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
+
+
 
 
 #Subset to monthly

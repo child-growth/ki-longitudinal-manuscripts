@@ -60,7 +60,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=here::here("/6-shiny-app/figures/wasting/WLZ_by_region.png"), width=10, height=4)
+ggsave(p, file=here::here("/figures/wasting/WLZ_by_region.png"), width=10, height=4)
 
 
 
@@ -139,8 +139,8 @@ mean_wlz_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(mean_wlz_plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=3)
-saveRDS(df, file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",mean_wlz_plot_name,".RDS"))
+ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=3)
+saveRDS(df, file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",mean_wlz_plot_name,".RDS"))
 
 
 
@@ -211,12 +211,12 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
-ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","prev_plot_africa", ".png"), width=10, height=5)
-ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
-ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
+ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_africa", ".png"), width=10, height=5)
+ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
+ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
 
-saveRDS(prev_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",prev_plot_name,".RDS"))
+saveRDS(prev_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",prev_plot_name,".RDS"))
 
 
 
@@ -246,9 +246,9 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
+ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
 
-saveRDS(ci_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",ci_plot_name,".RDS"))
+saveRDS(ci_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",ci_plot_name,".RDS"))
 
 #Save plot objects for figure grid
 save(mean_wlz_plot, prev_plot, ci_plot, file=paste0(here::here(),"/figures/plot objects/fig2_plot_objects.Rdata"))
@@ -361,9 +361,9 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
+ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
-saveRDS(inc_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",inc_plot_name,".RDS"))
+saveRDS(inc_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",inc_plot_name,".RDS"))
 save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.Rdata"))
 
 
@@ -398,9 +398,9 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=3)
+ggsave(inc_plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=3)
 
-ggsave(inc_plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
+ggsave(inc_plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
 
 
 
@@ -518,8 +518,8 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=3)
-saveRDS(rec_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",rec_plot_name,".RDS"))
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=3)
+saveRDS(rec_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",rec_plot_name,".RDS"))
 
 save(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object.Rdata"))
 
@@ -571,9 +571,9 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",rec_plot_name, ".png"), width=8, height=5)
+ggsave(p, file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=8, height=5)
 
-saveRDS(df, file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",rec_plot_name,".RDS"))
+saveRDS(df, file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",rec_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Persistent Wasting 
@@ -643,11 +643,11 @@ perswast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","perswast_plot_africa", ".png"), width=10, height=5)
-ggsave(perswast_plot_lam$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","perswast_plot_lam", ".png"), width=10, height=5)
-ggsave(perswast_plot_sasia$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=10, height=5)
+ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","perswast_plot_africa", ".png"), width=10, height=5)
+ggsave(perswast_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","perswast_plot_lam", ".png"), width=10, height=5)
+ggsave(perswast_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=10, height=5)
 
-saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",perswast_plot_name,".RDS"))
+saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",perswast_plot_name,".RDS"))
 
 
 
@@ -719,12 +719,12 @@ co_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
-ggsave(co_plot_africa$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","co_plot_africa", ".png"), width=10, height=5)
-ggsave(co_plot_lam$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","co_plot_lam", ".png"), width=10, height=5)
-ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","co_plot_sasia", ".png"), width=10, height=5)
+ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
+ggsave(co_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_plot_africa", ".png"), width=10, height=5)
+ggsave(co_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_plot_lam", ".png"), width=10, height=5)
+ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_plot_sasia", ".png"), width=10, height=5)
 
-saveRDS(co_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",co_plot_name,".RDS"))
+saveRDS(co_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",co_plot_name,".RDS"))
 
 save(co_plot, file=paste0(here::here(),"/figures/plot objects/co_plot_object.Rdata"))
 
@@ -792,12 +792,12 @@ underweight_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(underweight_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",underweight_plot_name, ".png"), width=14, height=3)
-ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","underweight_plot_africa", ".png"), width=10, height=5)
-ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","underweight_plot_lam", ".png"), width=10, height=5)
-ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=10, height=5)
+ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",underweight_plot_name, ".png"), width=14, height=3)
+ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","underweight_plot_africa", ".png"), width=10, height=5)
+ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","underweight_plot_lam", ".png"), width=10, height=5)
+ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=10, height=5)
 
-saveRDS(underweight_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",underweight_plot_name,".RDS"))
+saveRDS(underweight_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",underweight_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Wasting prevalence -MUAC based
@@ -889,9 +889,9 @@ muac_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(muac_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",muac_plot_name, ".png"), width=14, height=5)
+ggsave(muac_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",muac_plot_name, ".png"), width=14, height=5)
 
-saveRDS(muac_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",muac_plot_name,".RDS"))
+saveRDS(muac_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",muac_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Comparison of washout period for incidence rate.
@@ -924,9 +924,9 @@ ir_sens_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ir_sens_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",ir_sens_plot_name, ".png"), width=14, height=5)
+ggsave(ir_sens_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ir_sens_plot_name, ".png"), width=14, height=5)
 
-saveRDS(ir_sens_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",ir_sens_plot_name,".RDS"))
+saveRDS(ir_sens_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",ir_sens_plot_name,".RDS"))
 
 
 
@@ -961,8 +961,8 @@ sevwast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/6-shiny-app/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
+ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
 
-saveRDS(sevwast_plot[[2]], file=paste0(here::here(),"/6-shiny-app/figure-data/figdata-",sevwast_plot_name,".RDS"))
+saveRDS(sevwast_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",sevwast_plot_name,".RDS"))
 
 

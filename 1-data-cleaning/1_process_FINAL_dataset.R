@@ -31,12 +31,14 @@ source(paste0(here::here(), "/0-config.R"))
 #Read rds file and drop unneeded columns that Vishak extracted that are either used elsewhere in covariate creation or 
 # were too rare to include as exposures (to avoid memory allocation issues)
 #d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
-d<-fread("H:/GHAP/QuantSci/HBGD/rally-007/Manoj/Main/adam/FINAL.csv", header = T,
+d<-fread("H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv", header = T,
          drop = c( "AGEIMPFL",  #"WTKG", "REGION",   
                    #"HTCM",    "LENCM", 
                    "BAZ", "HCAZ",      
-                   "REGCTRY", "REGCTYP", "CITYTOWN", "HHID",    
-                   "FEEDING", "DURBRST", "BRTHYR", "ENSTUNT", "FWTKG", "FBMI",
+                   "REGCTRY", "REGCTYP", #"CITYTOWN",
+                   "HHID",    
+                   "FEEDING", "DURBRST", #"BRTHYR", 
+                   "ENSTUNT", "FWTKG", "FBMI",
                    "BRFEED", "SUMEP",   "SUMDIAR", "SUMDAYS",
                    "PCTDIAR", "IMPSAN",  "SOAP",    "SAFEH2O", "H2OTIME",
                    "CHICKEN", "COW",     "CATTLE",  "INCTOT", 
@@ -103,11 +105,11 @@ gc()
 
 
 
-#Mark COHORTS and CMIN cohorts with different measurement frequency than quarterly
-d[studyid=="ki1114097-CMIN" & country %in% c("BANGLADESH", "PERU"), measurefreq := "monthly"]
+#Drop CMIN cohorts with less than 200 children
+d <- d[!(studyid=="ki1114097-CMIN" & country != "BANGLADESH")]
 gc()
 
-#Mark yearly cohorts
+#Mark yearly COHORTS
 d <- d[studyid=="ki1135781-COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
 gc()
 

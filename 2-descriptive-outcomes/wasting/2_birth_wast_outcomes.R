@@ -119,6 +119,5 @@ res
 saveRDS(res, file = paste0(here(),"/results/bw_longterm_res.rds"))
 
 
-d<-readRDS(paste0(here(),"/results/bw_longterm_res.rds"))
 
 

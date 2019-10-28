@@ -10,7 +10,7 @@ mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
 mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
 
 #Load cohort data and calc wasting prev by study
-load("U:/ucb-superlearner/data/Wasting_data.RData")
+d <- readRDS(paste0(ghapdata_dir, "wasting_data.rds"))
 d <- d %>% filter(measurefreq=="monthly")
 
 d$cohort <- paste0(d$studyid,"-",d$country)

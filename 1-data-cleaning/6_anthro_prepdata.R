@@ -120,8 +120,8 @@ d %>% filter(tr!="", !is.na(haz)) %>% group_by(studyid, country, tr) %>%
 drop_int_arms <- function(d){
   d=d[-which(d$studyid=="kiGH5241-JiVitA-4" & d$tr!="Control"),]
   d=d[-which(d$studyid=="ki1119695-PROBIT" & d$tr!="Control"),]
-  d=d[-which(d$studyid=="ki1000304b-SAS-FoodSuppl" & d$tr!="Control"),]
-  d=d[-which(d$studyid=="ki1112895-iLiNS-Zinc" & d$tr!="Control"),]country
+  #d=d[-which(d$studyid=="ki1000304b-SAS-FoodSuppl" & d$tr!="Control"),]
+  d=d[-which(d$studyid=="ki1112895-iLiNS-Zinc" & d$tr!="Control"),]
   d=d[-which(d$studyid=="ki1000304b-SAS-CompFeed" & d$tr!="Control"),]
   d=d[-which(d$studyid=="kiGH5241-JiVitA-3" & d$tr!="Control"),]
   d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]

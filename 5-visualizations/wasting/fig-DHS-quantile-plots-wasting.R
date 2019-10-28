@@ -21,7 +21,7 @@ d <- merge(dhs, ki.monthly,
 d <- merge(d, ki.quarterly,
   by = c("quantile", "region", "measure"))
 
-tableau10 <- tableau_color_pal("Tableau 10")
+tableau10 <- tableau_color_pal("tableau10")
 pcols <- c("black", tableau10(10)[c(1:3)])
 
 d2 <- d %>%
