@@ -183,7 +183,7 @@ regions = c("Overall", "Africa", "Latin America", "South Asia")
 co_desc_data$region <- factor(co_desc_data$region, levels= c(regions, unique(co_desc_data$region)[!(unique(co_desc_data$region) %in% regions)]))
 
 
-save(co_desc_data, file = paste0(here(),"/results/co_desc_data.Rdata"))
+saveRDS(co_desc_data, file = paste0(here(),"/results/co_desc_data.rds"))
 
 
 
