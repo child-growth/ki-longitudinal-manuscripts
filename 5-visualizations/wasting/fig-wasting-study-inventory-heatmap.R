@@ -22,7 +22,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 
-
+md <- readRDS(file=here("results/KI_metadata_wasting.RDS"))
 
 #-----------------------------------
 # load the meta-data table from Andrew (GHAP_metadata)
