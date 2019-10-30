@@ -26,60 +26,12 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #-----------------------------------
-# load the meta-data table from Andrew (GHAP_metadata)
+# load the meta-data table 
 #-----------------------------------
-md <- readRDS(here('results/GHAP_metadata_stunting.RDS'))
+dd <- readRDS(here('results/KI_metadata_stunting.RDS'))
 
 #Function source
 source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
-
-#Drop non-included studies
-md <- mark_measure_freq(md)
-table(md$measurefreq)
-
-md <- md %>% filter(measurefreq!="yearly" & !is.na(measurefreq))
-
-unique(md$study_id)
-
-#drop yearly COHORTS
-md <- md[!(md$study_id=="COHORTS" & (md$countrycohort=="BRAZIL"|md$countrycohort=="SOUTH AFRICA")),] 
-
-dim(md)
-md$countrycohort[is.na(md$countrycohort)] <- "singlecohort"
-
-
-#drop mal-ed Pakistan
-md <- md[!(md$study_id=="MAL-ED" & md$countrycohort=="singlecohort"),]
-dim(md)
-
-
-# convert stunting prevalence and numsubj to numeric
-md$stuntprev <- as.numeric(md$stuntprev)
-md$numsubj <- as.numeric(md$numsubj)
-for(i in 0:24){
-  ni <- paste("n",i,sep="")
-  wi <- paste("stuntprev_m",i,sep="")
-  md[ni] <- as.numeric(md[,c(ni)])
-  md[wi] <- as.numeric(md[,c(wi)])
-}
-
-
-# convert mean HAZ to numeric
-for(i in 0:24){
-  wi <- paste("meanHAZ_m",i,sep="")
-  md[wi] <- as.numeric(md[,c(wi)])
-}
-
-
-# calculate the total number of measurements
-md$nmeas <- rowSums(md[,paste('n',0:24,sep='')],na.rm=TRUE)
-
-dd <- md
-
-
-
-
-
 
 
 #-----------------------------------
@@ -88,118 +40,69 @@ dd <- md
 
 
 # shorten the description for a few studies
+
+
+# shorten the description for a few studies
 dd <- shorten_descriptions(dd)
+table(dd$studyid, is.na(dd$short_description))
+
 
 # # simplify Tanzania label
-dd$countrycohort[dd$countrycohort=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
+dd$country[dd$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
 
 # make a study-country label, and make the monthly variable into a factor
 # including an anonymous label (temporary) for sharing with WHO
+dd <- ungroup(dd)
 dd <- mutate(dd,
-             country=str_to_title(str_to_lower(countrycohort)), 
+             country=str_to_title(str_to_lower(country)), 
              studycountry=paste0(short_description,', ', country, ' - ', start_year)) 
 
-#Add regions with ugly Europe hack to change ordering
-dd <- dd %>% mutate(country = toupper(country))
-dd <- dd %>% mutate(region = case_when(
-  country=="BANGLADESH" | country=="INDIA"|
-    country=="NEPAL" | country=="PAKISTAN"|
-    country=="PHILIPPINES"                   ~ "South Asia", 
-  country=="KENYA"|
-    country=="GHANA"|
-    country=="BURKINA FASO"|
-    country=="GUINEA-BISSAU"|
-    country=="MALAWI"|
-    country=="SOUTH AFRICA"|
-    country=="TANZANIA, UNITED REPUBLIC OF"|
-    country=="TANZANIA"|
-    country=="ZIMBABWE"|
-    country=="GAMBIA"                       ~ "Africa",
-  country=="BELARUS"                      ~ "",
-  country=="BRAZIL" | country=="GUATEMALA" |
-    country=="PERU"                         ~ "Latin America",
-  TRUE                                    ~ "Other"
-))
-
-dd$region <- as.character(dd$region)
+dd$region[dd$region=="N.America & Europe"] <- ""
 dd$region <- factor(dd$region, levels=c("South Asia","Africa","Latin America",""))
 
 
 
-dd$studycountry[dd$studycountry=="Tanzania Child 2, Tanzania"] <- "Tanzania Child 2" 
+dd$country[dd$country=="Tanzania Child 2, Tanzania"] <- "Tanzania Child 2" 
 
 dd <- mutate(dd,
-             studycountry = factor(studycountry,
-                                   levels=unique(studycountry[order(region,stuntprev)]), 
+             country = factor(country,
+                                   levels=unique(country[order(region,stuntprev)]), 
                                    ordered=TRUE))
 
 # categorize stunting prevalence
 dd$stpcat <- cut(dd$stuntprev,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
 dd$stpcat <- factor(dd$stpcat)
-
-
-#-----------------------------------
-# Create a long format dataset
-# for ggplot2
-#-----------------------------------
-
-# gather N measurements by month data into long format
-dnsubj <- select(dd,study_id,country,studycountry,region,stuntprev,starts_with('n')) %>%
-  select(-neurocog_data,-nutrition,-notes,-num_countries,-numcountry,-numsubj,-numobs,-nmeas) %>%
-  gather(age,nobs,-study_id,-country,-studycountry,-region,-stuntprev) %>%
-  mutate(age=as.integer(str_sub(age,2,-1)),nobs=as.integer(nobs)) %>%
-  select(study_id,country,studycountry,region,stuntprev,age,nobs) %>%
-  filter(age>=0 & age <=24 ) %>%
-  arrange(region,stuntprev) 
-
-# gather stunting prev by month data into long format
-dstuntp <- select(dd,study_id,country,studycountry,starts_with('stuntprev_m')) %>%
-  gather(age,stp,-study_id,-country,-studycountry) %>%
-  mutate(age=as.integer(str_sub(age,12,-1))) %>%
-  select(study_id,country,studycountry,age,stp) %>%
-  filter(age>=0 & age <=24 )
-
-# gather meanLAZ by month data into long format
-dhaz <- select(dd,study_id,country,studycountry,starts_with('meanHAZ_m')) %>%
-  gather(age,haz,-study_id,-country,-studycountry) %>%
-  mutate(age=as.integer(str_sub(age,10,-1))) %>%
-  select(study_id,country,studycountry,age,haz) %>%
-  filter(age>=0 & age <=24 )
-
-
-# join the long tables together and sort countries by measure_freq and stunting prev
-dim(dnsubj)
-dim(dstuntp)
-dp <- left_join(dnsubj,dstuntp,by=c('study_id','studycountry','age'))
-dim(dp)
-dp <- left_join(dp,dhaz,by=c('study_id','studycountry','age'))
-dim(dp)
-
-# categorize stunting prevalence, set stunting prevalence category estimates to missing if n<50
-dp$stpcat <- cut(dp$stp,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
-dp$stpcat <- factor(dp$stpcat)
-dp$stpcat[dp$nobs<50 | is.nan(dp$stp)] <- NA
+dd$stpcat[dd$N<50] <- NA
 
 # categorize number of observations
 N_breaks <- c(1,50, 100, 250, 500, 750, 1000, 1500, 2000, 100000)
-dp$ncat <- cut(dp$nobs,
+dd$ncat <- cut(dd$N,
                breaks=N_breaks,
                labels=c('<50','50-100','100-250','250-500','500-750','750-1000','1000-1500','1500-2000','>2000'))
-dp$ncat <- factor(dp$ncat)
+dd$ncat <- factor(dd$ncat)
 
 # categorize mean HAZ
-summary(dp$haz)
-dp$hazcat <- cut(dp$haz,breaks=c(-5, -3, -2.5, -2,-1.5,-1,-0.5,0,5), 
+summary(dd$meanhaz)
+dd$hazcat <- cut(dd$meanhaz,breaks=c(-5, -3, -2.5, -2,-1.5,-1,-0.5,0,5), 
                  labels=c("<= -3","(-3,-2.5]", "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",  "(-0.5,0]", ">0" ))
-table(dp$hazcat)
-dp$hazcat<- factor(dp$hazcat)
-dp$hazcat[dp$nobs<50 | is.nan(dp$hazcat)] <- NA
+table(dd$hazcat)
+dd$hazcat<- factor(dd$hazcat)
+dd$hazcat[dd$N<50] <- NA
 
-dp$hazcatnew = as.character(dp$hazcat)
-dp$hazcatnew = ifelse(is.na(dp$hazcat), "Fewer than 50\nobservations", dp$hazcatnew)
-dp$hazcatnew<- factor(dp$hazcatnew, levels = c("<= -3","(-3,-2.5]",
+dd$hazcatnew = as.character(dd$hazcat)
+dd$hazcatnew = ifelse(is.na(dd$hazcat), "Fewer than 50\nobservations", dd$hazcatnew)
+dd$hazcatnew<- factor(dd$hazcatnew, levels = c("<= -3","(-3,-2.5]",
                               "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",
                               "(-0.5,0]", ">0", "Fewer than 50\nobservations"))
+
+
+
+#Make cohort-specific summary dataset
+dp <- dd %>% group_by(studycountry) %>% slice(1) %>%
+  select(studycountry, region, overall_nmeas, overall_stuntprev)
+
+
+
 
 
 #-----------------------------------
@@ -228,7 +131,7 @@ dp$hazcatnew<- factor(dp$hazcatnew, levels = c("<= -3","(-3,-2.5]",
 textcol <- "grey20"
 
 # heat map plot scheme
-hm <- ggplot(dp,aes(x=age,y=studycountry)) +
+hm <- ggplot(dd,aes(x=as.numeric(agecat),y=studycountry)) +
   # facet over measurement frequency
   facet_grid(region~.,scales='free_y',space='free_y') +
   #add border white colour of line thickness 0.25
@@ -279,7 +182,7 @@ hm <- ggplot(dp,aes(x=age,y=studycountry)) +
 
 
 # side bar plot scheme
-sidebar <- ggplot(data = dd, aes(x = studycountry)) + 
+sidebar <- ggplot(data = dp, aes(x = studycountry)) + 
   geom_bar(stat = "identity") +
   coord_flip() + 
   facet_grid(region~.,scales='free_y',space='free_y') +
@@ -328,7 +231,7 @@ sidebar <- ggplot(data = dd, aes(x = studycountry)) +
 #-----------------------------------
 # heat map
 viridis_cols = c(viridis(
-  n = length(levels(dp$hazcatnew)) - 1,
+  n = length(levels(dd$hazcatnew)) - 1,
   alpha = 1,
   begin = 0,
   end = 0.8,
@@ -352,17 +255,17 @@ stphm <- hm +
 # number of obs side bar plot
 #-----------------------------------
 nbar <- sidebar +
-  aes(y=nmeas/1000,fill=stpcat) +
+  aes(y=overall_nmeas/1000,fill=region) +
   labs(x = "",y="N measurements (1000s)",title="c") +
-  scale_y_continuous(expand=c(0,0),limits=c(0,125),
-                     breaks=seq(0,125,by=25),labels=seq(0,125,by=25)) +
-  geom_hline(yintercept = seq(0,125,by=25),color='white',size=0.3)
+  scale_y_continuous(expand=c(0,0),limits=c(0,80),
+                     breaks=seq(0,80,by=20),labels=seq(0,80,by=20)) +
+  geom_hline(yintercept = seq(0,80,by=20),color='white',size=0.3)
 
 #-----------------------------------
 # stunting prevalence side bar plot
 #-----------------------------------
 stpbar <- sidebar +
-  aes(y=stuntprev,fill=stpcat) +
+  aes(y=overall_stuntprev*100,fill=region) +
   # labs(x = "",y="Overall Prevalence (%)",title="Stunting") +
   labs(x = "",y="Stunting Prevalence (%)",title="d") +
   scale_y_continuous(expand=c(0,0),limits=c(0,70),
@@ -372,7 +275,7 @@ stpbar <- sidebar +
 #-----------------------------------
 # n by age top plot 
 #-----------------------------------
-nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
+nagebar <- ggplot(dd, aes(y = N/1000, x = as.numeric(agecat))) +
   geom_bar(stat = "identity", fill='gray70') +  
   scale_x_continuous(breaks = seq(1,24,1), labels = seq(1,24,1)) +
   theme(
@@ -389,7 +292,7 @@ nagebar <- ggplot(dp, aes(y = nobs/1000, x = age)) +
     axis.title.y = element_text(size=10)
   ) +
   ylab("N measurements (1000s)") + xlab("") +
-  geom_hline(yintercept = seq(0,80,by=10),color='white',size=0.3) +
+  geom_hline(yintercept = seq(0,60,by=10),color='white',size=0.3) +
   ggtitle("a")
 
 # add margin around plots

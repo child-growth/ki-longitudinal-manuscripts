@@ -40,7 +40,7 @@ df <- left_join(df, start_year, by=c("studyid", "country"))
 df$studyid<- gsub("^k.*?-" , "", df$studyid)
 head(df)
 
-#transform to wide format
+df$region <- as.character(df$region)
 
 
 saveRDS(df, file=here("results/KI_metadata_wasting.RDS"))

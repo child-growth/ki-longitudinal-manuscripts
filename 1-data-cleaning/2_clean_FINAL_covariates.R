@@ -20,7 +20,6 @@ library(growthstandards)
 d <- readRDS(included_studies_path)
 
 
-
 #--------------------------------------------------------
 # Calculate longitudinal prevalence of wasting and stunting
 # in the first 6 months.
