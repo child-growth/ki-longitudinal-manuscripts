@@ -74,7 +74,7 @@ agelst6 = list(
 
 agelst3_birthstrat = list(
   "Birth",
-  "1 day-3 months",
+  "8 days-3 months",
   "3-6 months",
   "6-9 months",
   "9-12 months",
@@ -86,7 +86,7 @@ agelst3_birthstrat = list(
 
 agelst6_birthstrat = list(
   "Birth",
-  "1 day-6 months", 
+  "8 days-6 months", 
   "6-12 months", 
   "12-18 months", 
   "18-24 months"
