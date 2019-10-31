@@ -67,7 +67,8 @@ monthly_vec <- c("ki0047075b-MAL-ED",
   "ki1066203-TanzaniaChild2",           
   "ki1101329-Keneba",  
   "ki1112895-Guatemala BSC",       
-  "ki1113344-GMS-Nepal",             
+  "ki1113344-GMS-Nepal",    
+  "ki1114097-CMIN",                 
   "ki1114097-CONTENT")
 
 quarterly_vec <- c("ki1112895-iLiNS-Zinc",  
@@ -80,7 +81,6 @@ quarterly_vec <- c("ki1112895-iLiNS-Zinc",
   "ki1000304b-SAS-CompFeed",   
   "ki1000304b-SAS-FoodSuppl",   
   "ki1126311-ZVITAMBO",   
-  "ki1114097-CMIN",                 
   "ki1135781-COHORTS")
 
 yearly_vec <- c("ki1000110-WASH-Bangladesh",       
