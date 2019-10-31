@@ -67,7 +67,7 @@ deriveddata_dir                   = paste0(ghapdata_dir, "covariate creation int
 # note: figures must be saved in same directory 
 # as shiny app in order to publish it
 fig_dir                           = paste0(here::here(),"/figures/")
-figdata_dir                       = paste0(here::here(),"/figure-data/")
+figdata_dir                       = paste0(here::here(),"/figures/figure-data/")
     
 #################################
 # Data Cleaning Scripts

@@ -4,10 +4,10 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load country mediods
-# mediods <- read.csv('data/non-secure data/country_centroids/country_centroids_primary.csv', header=T, sep = "\t")
-# head(mediods)
-# mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
-# mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
+mediods <- read.csv('data/non-secure data/country_centroids/country_centroids_primary.csv', header=T, sep = "\t")
+head(mediods)
+mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
+mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
 
 #Load cohort data and calc wasting prev by study
 d <- readRDS(paste0(ghapdata_dir, "wasting_data.rds"))
@@ -25,11 +25,11 @@ df <- d %>% filter(!is.na(whz)) %>% group_by(studyid,cohort) %>%
             country=first(country)) 
 
 #need to merge in all coordinates
-#df <- left_join(df, mediods, by="country")
+df <- left_join(df, mediods, by="country")
 
 
-# df$lat <- df$LAT
-# df$long <- df$LONG
+df$lat[is.na(df$lat)] <- df$LAT[is.na(df$lat)]
+df$long[is.na(df$long)] <- df$LONG[is.na(df$long)]
 
 world <- map_data('world')
 
@@ -59,8 +59,8 @@ d$lat[d$country=="BRAZIL"] <- -4.5
 #latitude and longitude swiched for two India cohorts
 d$long[d$studyid=="CMC-V-BCS-2002"] <- 80
 d$long[d$studyid=="IRC"] <- 79
-d$lat[d$studyid=="CMC-V-BCS-2002"] <- 13
-d$lat[d$studyid=="IRC"] <- 12
+d$lat[d$studyid=="CMC-V-BCS-2002"] <- 15
+d$lat[d$studyid=="IRC"] <- 14
 
 
 
@@ -72,7 +72,7 @@ summary(d$n)
 d$Ncat <- cut(d$n, include.lowest = T, breaks = c(0,5000,7500,10000,100000), labels=c("<5,000","5,000-7,500","7,500-10,000",">10,000"))
 table(d$Ncat)
 
-d <- d %>% rename(`Number of observations`=Ncat, `Wasting Prevalence (%)`=wastcat) %>% arrange(country)
+d <- d %>% arrange(desc(Ncat)) %>% rename(`Number of observations`=Ncat, `Wasting Prevalence (%)`=wastcat) 
 
 
 
@@ -82,13 +82,11 @@ d <- d %>% rename(`Number of observations`=Ncat, `Wasting Prevalence (%)`=wastca
 map_plot <- ggplot(world, aes(long, lat)) +
   geom_map(map=world, aes(map_id=region), fill=NA, color="grey20") +
   coord_quickmap() + theme_bw() + coord_cartesian(xlim=c(-90,120), ylim=c(-36,50)) +
-  #geom_point(aes(x = x, y = y, size = `Number of observations`, 
   geom_point(aes(x = long, y = lat, size = `Number of observations`, 
                  fill=`Wasting Prevalence (%)`), 
              data = d, alpha = 0.8, pch = 21, color = 'grey20') +
   scale_color_viridis(discrete=T) + 
   scale_fill_viridis(discrete=T) + 
-  #scale_size(range = c(2,7)) +
   xlab("Longitude") + ylab("Latitude") +
   theme(strip.background = element_blank(),
         strip.text.x = element_text(size=12),
