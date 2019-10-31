@@ -20,7 +20,7 @@ table(df$country, 1*(df$lencm < 45))
 dput(colnames(Zscores))
 Zscores <- Zscores %>% 
   subset(., select = c(studyid, country, measurefreq, subjid, sex, agedays, 
-                       waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, month, brthweek,  dead, agedth, 
+                       waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, month, brthweek, brthyr,  dead, agedth, 
                        latitude, longitud, causedth))
 
 #mark regions 
@@ -71,9 +71,18 @@ table(d$month)
 
 
 
-
 # Save dataset
 saveRDS(d, ki_manuscript_dataset_path)
 
 
+# Creae dataset of study start years
+start_year <- d %>% group_by(studyid, country) %>% summarize(start_year = min(brthyr))
+
+#fill in start year for studies missing birth year
+start_year$start_year[start_year$studyid=="ki1017093-NIH-Birth"] <- 2008
+start_year$start_year[start_year$studyid=="ki1017093b-PROVIDE"] <- 2011
+start_year$start_year[start_year$studyid=="ki1017093c-NIH-Crypto"] <- 2014
+start_year$start_year[start_year$studyid=="ki1112895-Burkina Faso Zn"] <- 2010
+
+saveRDS(start_year, here("/data/study_start_years.rds"))
 
