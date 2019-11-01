@@ -294,10 +294,10 @@ nagebar <- ggplot(dd, aes(y = N/1000, x = as.numeric(agecat))) +
 
 
 # add margin around plots
-wastphm2 = wastphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-wpbar2 = wpbar + theme(plot.margin = unit(c(1.275,0.3,1.55,0.1), "cm"))
-nbar2 = nbar + theme(plot.margin = unit(c(1.275,0.25,1.55,0.1), "cm"))
-nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.13,-0.1,4.05), "cm"))
+wastphm2 = wastphm + theme(plot.margin = unit(c(0, 0.25, 0, 0.25), "cm"))
+wpbar2 = wpbar + theme(plot.margin = unit(c(1.1,0.3,1.08,0.1), "cm"))
+nbar2 = nbar + theme(plot.margin = unit(c(1.1,0.25,1.08,0.1), "cm"))
+nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.13, -0.9 ,4.05), "cm"))
 empty <- grid::textGrob("")
 
 awstpgrid <- grid.arrange(nagebar2,empty, empty,
@@ -320,7 +320,7 @@ awstpgrid_name = create_name(
 
 # save plot and underlying data
 ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name, ".pdf"),
-       plot = awstpgrid,device='pdf',width=12,height=9)
+      plot = awstpgrid,device='pdf',width=12,height=8)
 saveRDS(list(dd = dd,
              dp = dp),
         file=here(paste0("6-shiny-app/figure-data/figdata-",awstpgrid_name,".RDS")))
