@@ -2,25 +2,16 @@
 
 
 rm(list=ls())
-library(tidyverse)
-library(data.table)
+source(paste0(here::here(), "/0-config.R"))
 library(xlsx)
 library(haven)
 
+#source("U:/GHAP-Data-Management/HBGDki_functions.R")
 
-source("U:/GHAP-Data-Management/HBGDki_functions.R")
-
-
-setwd("U:/data")
 
 #read csv file
-d<-fread("U:/data/FINAL/UCB Rally7/Main/adam/FINAL.csv", header = T)
-
-
-#Read rds file
-#d<- readRDS("FINAL.rds")
-
-
+d<-fread("H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv", header = T)
+         
 
 gc()
 
@@ -28,8 +19,8 @@ colnames(d) <- tolower(colnames(d))
 colnames(d)
 
 #Drop un-needed columns
+#d <- d %>% subset(., select=c(studyid, country, subjid, agedays, visitnum, diarfl,diarfl_r, dur_r))
 d <- d %>% subset(., select=c(studyid, subjid, agedays, diarfl,diarfl_r, dur_r))
-
 
 #Drop studies Vishak added to data product that don't meet inclusion criteria
 dim(d)
@@ -37,9 +28,9 @@ d <- d[d$studyid!="ki1000301-DIVIDS" & d$studyid!="ki1055867-WomenFirst" & d$stu
 dim(d)
 
 #Replace diar flag with 1-day recall 
-table(dfull$studyid, !is.na(dfull$diarfl))
+table(d$studyid, !is.na(d$diarfl))
 d$diarfl[is.na(d$diarfl) & !is.na(d$diarfl_r) & d$dur_r==1] <- d$diarfl_r[is.na(d$diarfl) & !is.na(d$diarfl_r) & d$dur_r==1]
-table(dfull$studyid, !is.na(dfull$diarfl))
+table(d$studyid, !is.na(d$diarfl))
 
 
 #drop unneeded variables
@@ -66,8 +57,7 @@ dfull <- d
 
 
 #aga khan
-
-d <- read_sas("U:/data/AgaKhanUniv/raw/childmorbidityandimmunization.sas7bdat")
+d <- read_sas(paste0(ghapdata_dir, "/raw SAS datasets/AgaKhanUniv/childmorbidityandimmunization.sas7bdat"))
 head(d)
 d$subjido <- gsub("C-Y-C-","",d$frmid)
 d$subjido <- gsub("I-Y-C-","",d$subjido)
@@ -78,9 +68,11 @@ d$agedays<- round(d$age*30.42)
 #a1: During the last 24 hours, has <child> have more than 3 liquid stools (diarrhea)
 table(d$a1)
 
-akup<-readRDS("U:/data/akup.rds")
+#akup<-readRDS("U:/data/akup.rds")
+akup <- read.csv(paste0(ghapdata_dir,"cleaned individual study datasets/FULL_ki1000125_AgaKhanUniv.csv"))
 colnames(akup) <- tolower(colnames(akup))
 akup$visitnum <- as.numeric(akup$visitnum )
+akup$subjido <- as.character(akup$subjido)
 head(akup)
 
 akup <- left_join(akup, d, by=c("subjido","visitnum"))
@@ -102,6 +94,7 @@ table(akup$a1)
 akup <- akup %>% subset(., select = c(subjid, agedays.x, studyid, a1)) %>% 
                  rename(agedays = agedays.x, diarfl2 = a1)
 
+gc()
 dfull$diarfl[dfull$studyid=="ki1000125-AgaKhanUniv"] <- NA
 
 akup$subjid <- as.numeric(akup$subjid)
