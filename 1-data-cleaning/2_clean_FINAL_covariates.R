@@ -49,12 +49,18 @@ dim(d)
 
 
 #--------------------------------------------------------
-# Calculate birth month from birth week if birthmonth is missing
+# Calculate birth month and month from birth week if birthmonth is missing
 #--------------------------------------------------------
 
 table(d$brthmon)
 d$brthmon[is.na(d$brthmon)] <- ceiling(d$brthweek[is.na(d$brthmon)]/4.42)
 table(d$brthmon)
+
+#fill in missing month if brthmonth is present
+table(d$month)
+d$month[is.na(d$month) & !is.na(d$brthmon)] <- floor(d$brthmon[is.na(d$month) & !is.na(d$brthmon)] + d$agedays[is.na(d$month)& !is.na(d$brthmon)]/30.4167) %% 12 +1
+table(d$month)
+
 
 #--------------------------------------------------------
 #Calculate stunting and wasting at enrollment and keep one observation per child
@@ -175,6 +181,9 @@ d$hfoodsec <- factor(d$hfoodsec, levels=c("Food Secure", "Mildly Food Insecure",
 
 # drop gestational age in studies with no variations (measured it at the month level)
 d$gagebrth[d$studyid=="ki1113344-GMS-Nepal"] <- NA
+#drop gestational age in study where GA is mother reported and unbelievably high (93% preterm)
+d$gagebrth[d$studyid=="ki1000304b-SAS-CompFeed"] <- NA
+
 
 #parity
 #Combine parity and birthorder to have sufficient data to analyze
@@ -289,12 +298,6 @@ d$nchldlt5[d$studyid=="ki1148112-iLiNS-DYAD-M"] <- d$nchldlt5[d$studyid=="ki1148
 d$nchldlt5[d$studyid=="kiGH5241-JiVitA-3"] <- d$nchldlt5[d$studyid=="kiGH5241-JiVitA-3"] + 1
 
 
-#--------------------------------------------------------------------------
-# birthmonth
-#--------------------------------------------------------------------------
-
-#Calculate birthmonth from brthweek where brthmonth is missing
-d$brthmon[is.na(d$brthmon)] <- ceiling(d$brthweek[is.na(d$brthmon)]/53 *12)
 
 
 #--------------------------------------------------------
