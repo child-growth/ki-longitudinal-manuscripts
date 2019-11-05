@@ -245,13 +245,12 @@ summary(diar_24mo$perdiar24)
 
 diar <- merge(diar_6mo, diar_24mo, by=c("studyid","subjid"), all.x = T, all.y = T)
 
-save(diar, file="U:/data/Raw Data Cleaning/rawdiar_df.Rdata")
+save(diar, file=paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/rawdiar_df.Rdata"))
 
 table(diar$studyid)
 summary(diar$perdiar6)
 summary(diar_6mo$perdiar6)
 
 summary(diar$perdiar24)
-
 
 

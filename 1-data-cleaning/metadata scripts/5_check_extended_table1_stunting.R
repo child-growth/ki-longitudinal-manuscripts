@@ -23,13 +23,19 @@ summaryd
 
 
 stunt <- readRDS(stunting_data_path)
-stunt %>% 
+stunt_tab1 <- stunt %>% 
   group_by(studyid, country) %>% 
-  summarize(nobs=n(), nchild=length(unique(paste0(subjid))))
-
+  summarize(nobs=n(), nchild=length(unique(paste0(subjid)))) %>%
+  as.data.frame()
+stunt_tab1
 
 
 wast <- readRDS(wasting_data_path)
-wast %>% filter(measurefreq=="monthly") %>%
+wast_tab1 <- wast %>% filter(measurefreq=="monthly") %>%
   group_by(studyid, country) %>% 
-  summarize(nobs=n(), nchild=length(unique(paste0(subjid))))
+  summarize(nobs=n(), nchild=length(unique(paste0(subjid))))%>%
+  as.data.frame()
+wast_tab1
+
+saveRDS(stunt_tab1, file=here("/results/stunt_table1.rds"))
+saveRDS(wast_tab1, file=here("/results/stunt_table1.rds"))

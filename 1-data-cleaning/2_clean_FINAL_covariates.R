@@ -101,11 +101,10 @@ table(d$studyid, d$enstunt)
 d$subjid <- as.character(d$subjid)
 
 #load in pca results
-load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/allGHAPstudies-HHwealth.Rdata"))
-table(pca$STUDYID, pca$HHwealth_quart)
+pca <- readRDS(paste0(deriveddata_dir,"allGHAPstudies-HHwealth.rds"))
+table(pca$studyid, pca$hhwealth_quart)
 
 #Merge into main dataframe
-colnames(pca) <- tolower(colnames(pca))
 pca <- as.data.frame(pca)
 pca$subjid <-as.character(pca$subjid)
 d <- left_join(d, pca, by=c("studyid", "country", "subjid"))
