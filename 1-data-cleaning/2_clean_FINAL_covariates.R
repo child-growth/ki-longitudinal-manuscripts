@@ -18,7 +18,7 @@ library(growthstandards)
 
 
 d <- readRDS(included_studies_path)
-
+d$subjid <- as.integer(d$subjid)
 
 #--------------------------------------------------------
 # Calculate longitudinal prevalence of wasting and stunting
@@ -52,6 +52,19 @@ dim(d)
 # Calculate birth month and month from birth week if birthmonth is missing
 #--------------------------------------------------------
 
+#Merge in birthmonth from provide
+provide <- readRDS(paste0(ghapdata_dir, "covariate creation intermediate datasets/derived covariate datasets/PROVIDE_birthmonth.rds"))
+provide$studyid <- "ki1017093b-PROVIDE"
+
+unique(d$studyid)
+table(is.na(d$brthmon[d$studyid=="ki1017093b-PROVIDE"]))
+d <- left_join(d, provide, by = c("studyid", "subjid"))
+d$brthmon[d$studyid=="ki1017093b-PROVIDE"] <- d$birthmon_provide[d$studyid=="ki1017093b-PROVIDE"]
+table(is.na(d$brthmon[d$studyid=="ki1017093b-PROVIDE"]))
+d <- d %>% subset(., select = -c(birthmon_provide))
+
+
+#fill in missing birthmonth
 table(d$brthmon)
 d$brthmon[is.na(d$brthmon)] <- ceiling(d$brthweek[is.na(d$brthmon)]/4.42)
 table(d$brthmon)

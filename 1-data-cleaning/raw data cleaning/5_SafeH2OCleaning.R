@@ -246,9 +246,10 @@ d<-load_wat("bfzn.rds", "h2osrcp")
 
 d$safeh20 <- ifelse(as.numeric(d$h2osrcp)==1,1,0)
 d$safeh20[d$h2osrcp==9] <- NA
-d$safeh20[(d$h2osrcp=="")] <- NA
+d$safeh20[is.na(d$h2osrcp)] <- NA
 table(d$safeh20)
 
+d$h2osrcp <- as.character(d$h2osrcp)
 dh20<-bind_rows(dh20, d)
 
 

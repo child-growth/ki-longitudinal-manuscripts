@@ -24,6 +24,11 @@ d<-d %>% subset(., select=c(studyid, subjid, country, region, agedays, measurefr
 
 d <- d %>% filter(agedays < 24 * 30.4167)
 
+#Fill in birth week as middle of the month from birthmonth from PROVIDE datasets
+d$brthweek[d$studyid=="ki1017093b-PROVIDE"] <- round(as.numeric(d$brthmon[d$studyid=="ki1017093b-PROVIDE"]) * 4.3333 - 2.167)
+table(d$brthweek[d$studyid=="ki1017093b-PROVIDE"])
+
+
 table(d$studyid, is.na(d$brthweek))
 d <- d %>% filter(!is.na(brthweek))
 

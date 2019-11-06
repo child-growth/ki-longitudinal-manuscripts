@@ -68,8 +68,7 @@ d$agedays<- round(d$age*30.42)
 #a1: During the last 24 hours, has <child> have more than 3 liquid stools (diarrhea)
 table(d$a1)
 
-#akup<-readRDS("U:/data/akup.rds")
-akup <- read.csv(paste0(ghapdata_dir,"cleaned individual study datasets/FULL_ki1000125_AgaKhanUniv.csv"))
+akup <- readRDS(paste0(cohortdata_dir,"akup.rds"))
 colnames(akup) <- tolower(colnames(akup))
 akup$visitnum <- as.numeric(akup$visitnum )
 akup$subjido <- as.character(akup$subjido)
@@ -106,9 +105,8 @@ dfull$diarfl[!is.na(dfull$diarfl2)] <- dfull$diarfl2[!is.na(dfull$diarfl2)]
 dfull<-dfull[,1:4]
 
 
-
 #Ilins Dose
-d <- read_sas("U:/data/iLiNS-DOSE/raw/morbid18tab.sas7bdat")
+d <- read_sas(paste0(ghapdata_dir,"raw SAS datasets/iLiNS-DOSE/morbid18tab.sas7bdat"))
 head(d)
 
 table(d$HomNumberStool)
@@ -117,7 +115,7 @@ d$HomNumberStool[d$HomNumberStool==99] <- NA
 table(d$HomNumberStool>2) #diarrhea defined by 3 or more loose stools
 
 
-ilnd<-readRDS("U:/data/ilnd.rds")
+ilnd <- readRDS(paste0(cohortdata_dir,"ilnd.rds"))
 colnames(ilnd) <- tolower(colnames(ilnd))
 #ilnd$visitnum <- as.numeric(ilnd$visitnum )
 head(ilnd)
@@ -139,7 +137,7 @@ table(ilnd$diarfl)
 
 
 #Tanzania child
-d <- read_sas("U:/data/TanzaniaChild2/import/childnurse.sas7bdat")
+d <- read_sas(paste0(ghapdata_dir,"raw SAS datasets/TanzaniaChild2/childnurse.sas7bdat"))
 head(d)
 colnames(d) <- tolower(colnames(d))
 
@@ -149,9 +147,10 @@ mean(d$cndt, na.rm=T)
 
 table(d$cchadm) #visit number
 
-d <- d %>% rename(subjid=idno2, visitnum=cchadm, diarfl=cndt) %>% mutate(subjid=as.numeric(subjid)) %>% select(subjid, visitnum, diarfl)
+d <- d %>% rename(visitnum=cchadm, diarfl=cndt) %>% mutate(subjid=as.numeric(subjid)) %>% select(subjid, visitnum, diarfl)
 
-tzc2<-readRDS("U:/data/tzc2.rds")
+tzc2 <- readRDS(paste0(cohortdata_dir,"tzc2.rds"))
+
 colnames(tzc2) <- tolower(colnames(tzc2))
 tzc2<- tzc2 %>% select(studyid, subjid, visitnum, country, agedays)
 head(tzc2)
