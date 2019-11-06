@@ -4,12 +4,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 library(haven)
 library(foreign)
-setwd(paste0(ghapdata_dir, "raw SAS datasets/"))
-
-#Set cohort data file path
-cohortdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/cohort datasets/")
-bfdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/Breastfeeding datasets/")
-
+setwd(paste0(ghapdata_dir, "cleaned individual study datasets/"))
 
 
 #Improved water coding rules
@@ -74,9 +69,8 @@ dh20<-NULL
 
 
 #Load SES data
-d <- read.csv("MALED/WAMI_to24.csv")
+d <- read.csv(paste0(ghapdata_dir, "/raw SAS datasets/MALED/WAMI_to24.csv"))
 head(d)
-
 table(d$fsewdrink)
 
 #Coding
@@ -126,6 +120,7 @@ dh20<-bind_rows(dh20, d)
 d<-load_wat("akup.rds", "h2osrc")
 #all improved
 d$safeh20<-1
+d$safeh20[(d$h2osrc=="")] <- NA
 d$safeh20[(d$h2osrc=="Other")] <- NA
 table(d$safeh20)
 
@@ -142,7 +137,6 @@ dh20<-bind_rows(dh20, d)
 
 d<-load_wat("vita.rds", "h2osrc")
 d$safeh20<-1
-d$safeh20[d$h2osrc] 
 d$safeh20[d$h2osrc=="Water trucks"] <- 0
 d$safeh20[is.na(d$h2osrc)] <- NA
 
@@ -157,6 +151,7 @@ dh20<-bind_rows(dh20, d)
 d<-load_wat("zmrt.rds", "h2osrc")
 
 d$safeh20<-1
+d$safeh20[(d$h2osrc=="")] <- NA
 d$safeh20[is.na(d$h2osrc)] <- NA
 table(d$safeh20)
 
@@ -170,6 +165,7 @@ dh20<-bind_rows(dh20, d)
 d<-load_wat("fspp.rds", "h2osrc")
 
 d$safeh20<-1
+d$safeh20[(d$h2osrc=="")] <- NA
 d$safeh20[is.na(d$h2osrc)] <- NA
 table(d$safeh20)
 
@@ -193,6 +189,7 @@ d<-load_wat("nbrt.rds", "h2osrcp")
 
 
 d$safeh20<-1
+d$safeh20[(d$h2osrcp=="")] <- NA
 d$safeh20[(d$h2osrcp)=="Well"] <- 0
 d$safeh20[is.na(d$h2osrcp)] <- NA
 table(d$safeh20)
@@ -210,6 +207,7 @@ d<-load_wat("prvd.rds", "h2osrcp")
 
 
 d$safeh20<-1
+d$safeh20[(d$h2osrcp=="")] <- NA
 d$safeh20[is.na(d$h2osrcp)] <- NA
 table(d$safeh20)
 
@@ -228,7 +226,8 @@ improved <- c("Septic tank or toilet",
               "Poor flash","Flash toilet")
 
 d$safeh20<-1
-d$safeh20[is.na(d$h2osrcp)] <- NA
+d$safeh20[(d$h2osrc=="")] <- NA
+d$safeh20[is.na(d$h2osrc)] <- NA
 table(d$safeh20)
 
 dh20<-bind_rows(dh20, d)
@@ -247,6 +246,7 @@ d<-load_wat("bfzn.rds", "h2osrcp")
 
 d$safeh20 <- ifelse(as.numeric(d$h2osrcp)==1,1,0)
 d$safeh20[d$h2osrcp==9] <- NA
+d$safeh20[(d$h2osrcp=="")] <- NA
 table(d$safeh20)
 
 dh20<-bind_rows(dh20, d)
@@ -261,6 +261,7 @@ d<-load_wat("cntt.rds", "h2osrcc")
 d$safeh20<-ifelse(d$h2osrcc=="Bottled water", 0, 1)
 d$safeh20[(d$h2osrcc=="Don't use Water for Feeding Child")] <- NA
 d$safeh20[is.na(d$h2osrcc)] <- NA
+d$safeh20[(d$h2osrcc=="")] <- NA
 table(d$safeh20)
 
 dh20<-bind_rows(dh20, d)
@@ -291,6 +292,7 @@ improved <- c("Borehole","Piped Water" ,  "Protected Well" )
 
 d$safeh20<-ifelse(d$h2osrcp %in% improved, 1, 0)
 d$safeh20[is.na(d$h2osrcp)] <- NA
+d$safeh20[(d$h2osrcp=="")] <- NA
 table(d$safeh20)
 
 
@@ -308,6 +310,7 @@ improved <- c("Borehole","Piped Water" ,  "Protected Well" )
 
 d$safeh20<-ifelse(d$h2osrcp %in% improved, 1, 0)
 d$safeh20[is.na(d$h2osrcp)] <- NA
+d$safeh20[(d$h2osrcp=="")] <- NA
 table(d$safeh20)
 
 
@@ -326,6 +329,7 @@ improved <- c("Borehole","Piped Water" ,  "Protected Well" )
 
 d$safeh20<-ifelse(d$h2osrcp %in% improved, 1, 0)
 d$safeh20[is.na(d$h2osrcp)] <- NA
+d$safeh20[(d$h2osrcp=="")] <- NA
 table(d$safeh20)
 
 
@@ -343,6 +347,7 @@ unimproved <- c("Surface/ring well" )
 
 d$safeh20<-ifelse(d$h2osrcp %in% unimproved, 0, 1)
 d$safeh20[is.na(d$h2osrcp)] <- NA
+d$safeh20[(d$h2osrcp=="")] <- NA
 table(d$safeh20)
 
 dh20<-bind_rows(dh20, d)
@@ -356,9 +361,10 @@ d<-load_wat("jvt4.rds", "h2osrcp")
 
 unimproved <- c("Surface/ring well" )
 
-
 d$safeh20<-ifelse(d$h2osrcp %in% unimproved, 0, 1)
 d$safeh20[is.na(d$h2osrcp)] <- NA
+d$safeh20[(d$h2osrcp=="Other")] <- NA
+d$safeh20[(d$h2osrcp=="")] <- NA
 table(d$safeh20)
 
 dh20<-bind_rows(dh20, d)
@@ -377,6 +383,7 @@ unimproved <- c("Private Well" )
 
 d$safeh20<-ifelse(d$h2osrc %in% unimproved, 0, 1)
 d$safeh20[is.na(d$h2osrc)] <- NA
+d$safeh20[(d$h2osrc=="")] <- NA
 table(d$safeh20)
 
 
@@ -401,4 +408,4 @@ table(dh20$studyid, dh20$safeh20)
 
 dh20 <- dh20 %>% subset(., select = -c(agedays))
 
-save(dh20, file="U:/data/Raw Data Cleaning/improved_water_dataset.Rdata")
+save(dh20, file=paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/improved_water_dataset.Rdata"))

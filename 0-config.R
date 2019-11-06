@@ -61,7 +61,7 @@ shiny_app_dir                     = here::here("6-shiny-app")
 cc_shiny_app_dir                  = here::here("7-cc-shiny-app")
 
 #Set cohort data file path
-cohortdata_dir                    = paste0(ghapdata_dir, "covariate creation intermediate datasets/cohort datasets/")
+cohortdata_dir                    = paste0(ghapdata_dir, "cleaned individual study datasets/")
 deriveddata_dir                   = paste0(ghapdata_dir, "covariate creation intermediate datasets/derived covariate datasets/")
 
 # note: figures must be saved in same directory 
