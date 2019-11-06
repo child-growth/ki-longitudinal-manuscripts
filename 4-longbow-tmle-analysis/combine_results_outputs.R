@@ -3,22 +3,25 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-load(here("/results/rf results/raw longbow results/results_cont_2019-08-16.rdata"))
+
+Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <- season <- NULL
+
+load(here("/results/rf results/raw longbow results/results_cont_2019-10-30.rdata"))
 Zscores <- results
 
-load(here("/results/rf results/raw longbow results/results_bin_2019-08-17.rdata"))
-bin <- results
-
-load(here("/results/rf results/raw longbow results/mortality_2019-08-18.rdata"))
-mort <- results
-
-load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-08-19.rdata"))
-Zscores_unadj <- results
-
-load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
-lagwhz <- results
-
-load(here("results","rf results","raw longbow results","seasonality_results_2019-09-17.rdata"))
+# load(here("/results/rf results/raw longbow results/results_bin_2019-08-17.rdata"))
+# bin <- results
+# 
+# load(here("/results/rf results/raw longbow results/mortality_2019-08-18.rdata"))
+# mort <- results
+# 
+# load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-08-19.rdata"))
+# Zscores_unadj <- results
+# 
+# load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
+# lagwhz <- results
+# 
+load(here("results","rf results","raw longbow results","seasonality_results_2019-10-27.rdata"))
 season <- results
 
 
@@ -59,6 +62,9 @@ dim(d)
 table(is.na(d$n[d$continuous==0 & d$type=="PAR"]))
 table(is.na(d$n[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months"]))
 
+
+df <- d[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months",]
+df[is.na(df$n) & !is.na(df$estimate),]
 
 
 
