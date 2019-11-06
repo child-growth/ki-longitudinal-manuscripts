@@ -1,0 +1,36 @@
+[1] "File Name: st_vel_outcomes.RData"
+[1] "Dimensions:"
+[1] 169172      5
+[1] "--------------------------------------"
+[1] "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   169172 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   169172 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   169172 character character 
+[1] "--------------------------------------"
+[1] "Column: y_rate"
+[1] "Class: numeric"
+[1] "Summary:"
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-2.74054 -0.20055 -0.05233 -0.06507  0.09094  2.92000 
+[1] "--------------------------------------"
+[1] "Column: agecat"
+[1] "Class: factor"
+[1] "Summary:"
+  0-3 months   3-6 months   6-9 months  9-12 months 12-15 months 15-18 months 18-21 months 21-24 months 
+       40425        35108        28279        26931        12056        10797         8527         7049 
+[1] "--------------------------------------"

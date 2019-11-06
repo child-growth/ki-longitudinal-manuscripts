@@ -6,14 +6,10 @@ library(progress)
 library(longbowRiskFactors)
 
 
-load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-08-16.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-10-30.rdata"))
 
 d <- obs_counts
 
-#Temp: merge in nchild N's
-d <- d %>% filter(is.na(nchldlt5)) 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/results_nchild_cont_obs_counts_2019-08-21.rdata")
-d <- bind_rows(d, obs_counts)
 
 exposure_vars <- c(
   "gagebrth",        "birthlen",      "enwast",        "vagbrth",      

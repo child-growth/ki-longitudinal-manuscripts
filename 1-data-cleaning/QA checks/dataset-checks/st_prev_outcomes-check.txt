@@ -1,0 +1,42 @@
+[1] "File Name: st_prev_outcomes.RData"
+[1] "Dimensions:"
+[1] 179215      6
+[1] "--------------------------------------"
+[1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   179215 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   179215 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   179215 character character 
+[1] "--------------------------------------"
+[1] "Column: agecat"
+[1] "Class: factor"
+[1] "Summary:"
+    Birth  3 months  6 months  9 months 12 months 15 months 18 months 21 months 24 months 
+    74808         0     69477         0         0         0         0         0     34930 
+[1] "--------------------------------------"
+[1] "Column: stunted"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.2238  0.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: sstunted"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.06863 0.00000 1.00000 
+[1] "--------------------------------------"

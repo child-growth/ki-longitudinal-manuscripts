@@ -1,0 +1,886 @@
+[1] "File Name: FINAL_clean_covariates.rds"
+[1] "Dimensions:"
+[1] 109270     83
+[1] "--------------------------------------"
+[1] "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: sex"
+[1] "Class: factor"
+[1] "Summary:"
+Female   Male 
+ 53960  55310 
+[1] "--------------------------------------"
+[1] "Column: month"
+[1] "Class: factor"
+[1] "Summary:"
+    1     2     3     4     5     6     7     8     9    10    11    12  NA's 
+ 8568  7943  6989  6841  6667  6355  7270  7919  8504  8027  7612  9274 17301 
+[1] "--------------------------------------"
+[1] "Column: wtkg"
+[1] "Class: factor"
+[1] "Summary:"
+      3     2.8     3.2     3.1     2.9     2.7     3.3     3.4     3.5     2.5     2.6     3.6     3.7     2.4     3.8 
+   2723    2221    2169    2068    2061    1975    1831    1702    1685    1585    1574    1305    1163    1099    1051 
+      4     2.3     3.9     4.1     2.2     4.2    2.75    3.25    2.95    3.15     4.3    2.85    3.35     4.5    3.05 
+    943     884     866     657     616     611     594     539     513     506     502     499     470     465     462 
+   2.65    3.45    2.74    2.55     2.1    2.84     4.4    2.56    2.68    2.62    2.76       2    2.64    2.78    2.66 
+    436     426     423     421     408     405     405     401     397     393     392     384     384     381     373 
+   2.82    2.72    3.55    2.87    2.73    2.88    2.58    2.67    2.63    2.71    2.69    3.02    2.48    2.45    2.52 
+    372     370     367     366     365     365     362     360     359     355     354     354     353     352     350 
+   3.04    2.98    2.77    2.86    2.59    3.06    2.92    2.96    2.53    3.65    2.61    2.81    2.44    2.54    2.79 
+    350     345     344     343     342     342     339     337     333     332     331     329     328     327     326 
+   3.75    2.47    2.43    2.57    2.42    2.83    2.51    2.89     4.6    3.12    2.37    2.91    2.49    2.41    2.99 
+    326     325     323     322     321     319     317     315     314     313     311     311     309     305     304 
+   2.46    2.94    2.39    2.97    2.34    2.38    3.01    3.08 (Other)    NA's 
+    303     303     299     298     294     294     291     288   50137     208 
+[1] "--------------------------------------"
+[1] "Column: htcm"
+[1] "Class: factor"
+[1] "Summary:"
+     46    48.5    47.5    46.5    45.5      48      45      47      49    49.5    44.5    48.4    48.6      44    47.1 
+    115      80      72      71      60      54      49      47      45      44      39      34      29      28      27 
+   48.1    48.3    46.3      50    50.5    47.3    46.4    49.1    43.5      51    47.6    48.8    48.9    49.4    46.8 
+     26      26      24      24      24      22      20      19      18      18      17      17      17      17      16 
+   47.4      43    49.3    47.2    46.1    46.6    47.8    51.5    48.2    46.9    47.9    49.6      42    46.2    49.9 
+     16      14      14      13      12      12      12      12      11      10      10      10       9       9       9 
+   50.3    50.6    41.5    42.5    49.2    50.1    50.2    52.5    85.1    50.4    52.2    82.3      87    88.6      41 
+      9       9       8       8       8       8       8       8       8       7       7       7       7       7       6 
+   48.7    49.8    51.1      80    81.7    83.2      86      89   105.4      40    45.3    45.6    46.7    49.7    50.7 
+      6       6       6       6       6       6       6       6       6       5       5       5       5       5       5 
+   50.8    51.4      52    52.3    53.5      78    78.4    78.5    79.1    82.1    85.5    88.7    89.3    89.5      92 
+      5       5       5       5       5       5       5       5       5       5       5       5       5       5       5 
+   92.4   106.5    40.5    45.1    50.9    51.3      53    78.6 (Other)    NA's 
+      5       5       4       4       4       4       4       4     764  106926 
+[1] "--------------------------------------"
+[1] "Column: lencm"
+[1] "Class: factor"
+[1] "Summary:"
+     50      52      51      49      48      53      54      47      55      46    47.5    49.5      56    48.5    48.2 
+   5204    3943    3866    3713    2945    2942    2426    2196    1796    1423    1293    1289    1274    1257    1095 
+   47.2    46.5      45    48.1    47.1    47.3    47.6    49.2    46.2    48.3    49.1    48.6    46.1      57    50.5 
+   1074    1039    1020     983     946     874     855     854     840     840     826     818     811     800     798 
+   47.8    48.4    47.4    48.7    46.6    46.7    46.3    50.1    47.7    46.4    49.6    45.5    46.8    49.4    51.5 
+    787     756     733     720     719     689     682     682     674     668     662     656     649     638     629 
+   48.8    50.2    45.6    49.3    49.8    45.1    49.7    47.9    45.3    48.9    45.2    45.7    44.5    45.4      58 
+    621     607     600     598     595     551     548     518     499     497     492     482     479     478     476 
+   46.9      44    50.4    52.5    49.9    50.3    45.8    51.2    50.6    45.9    53.5    51.1    54.5    51.4    50.8 
+    464     457     451     450     441     428     427     419     406     377     364     355     336     322     321 
+   52.1    44.6    44.1    44.9    44.2    51.3    44.8    50.7    52.2    69.1    44.3    51.6      59    68.1    52.3 
+    321     310     292     290     288     282     276     276     276     268     267     266     264     264     256 
+   53.2    70.1      60    44.7    52.4    55.5      43    44.4 (Other)    NA's 
+    256     256     252     248     246     245     244     241   26298    2345 
+[1] "--------------------------------------"
+[1] "Column: hcircm"
+[1] "Class: factor"
+[1] "Summary:"
+     35      34      36      33      37      32      38    34.5    33.5    32.5    33.4    35.5    33.2    34.2    33.1 
+   5438    5277    4764    3357    2542    1844    1710    1685    1662    1290    1251    1193    1177    1145    1114 
+   34.1    33.6      39    34.4    32.4    33.3    32.6    36.5    34.3    34.6    33.7    32.2    32.1    35.2      31 
+   1052    1021    1008     913     905     902     878     873     869     849     848     846     835     803     802 
+   32.3    33.8    31.5    32.8    35.1    32.7    35.4    35.6    34.8    37.5    32.9    34.7    36.1    33.9    31.6 
+    789     787     751     750     746     695     692     668     659     603     583     582     557     549     543 
+   31.4      40    36.2    35.3    35.8    31.2    35.7    31.7    31.1    31.8    31.9    36.4    34.9    38.5    30.5 
+    540     526     516     498     471     465     459     452     449     447     435     412     370     363     342 
+   36.3    31.3    35.9      42    36.6      41    42.5      30    41.5    37.1    37.2    36.7    40.5    36.8    39.5 
+    340     338     332     314     304     300     295     293     273     268     268     262     259     256     249 
+   30.4    37.4      43    30.1    30.6    42.1    43.5    30.7    41.6    37.3    42.3    30.8    30.9    36.9    42.2 
+    245     244     243     229     221     203     202     198     194     191     190     188     188     187     182 
+   42.6    37.6    42.7    30.2    40.1    37.8    41.2    41.3 (Other)    NA's 
+    181     177     174     173     167     165     162     161    7172   27730 
+[1] "--------------------------------------"
+[1] "Column: muaccm"
+[1] "Class: factor"
+[1] "Summary:"
+    9.5      10     9.2     9.1     9.6     9.4     9.3    10.1       9     9.8      13     9.7    10.2     9.9      12 
+   1642    1616    1462    1425    1423    1413    1374    1354    1297    1274    1222    1220    1182    1106    1081 
+   10.4    10.5    10.3     8.9    10.6      14    13.5     8.8     8.7      11     8.6     8.5    12.5    13.1    10.7 
+   1013     976     953     925     871     850     845     835     828     815     762     733     720     611     592 
+   14.5    13.6     8.4    12.6    10.8    11.2    13.7    13.2    11.5    13.4    14.1    13.3    12.7    12.4     8.3 
+    569     565     556     550     547     545     542     541     540     519     492     475     461     459     455 
+   14.2    13.8    12.9    12.2    12.8    11.1    12.1     8.2    11.6    11.4    11.3    12.3    13.9    14.3    10.9 
+    453     442     434     431     431     430     424     423     420     413     409     409     402     390     385 
+   14.4     8.1    14.6      15    11.7    11.8       8    11.9    14.7    15.1     7.8    14.8    14.9    15.5    15.2 
+    379     376     345     342     323     316     313     263     251     235     232     222     216     201     184 
+    7.9    15.4    15.3     7.7    15.6     7.5     7.6    15.7      16     7.4    15.8    16.1     7.3       7    15.9 
+    151     140     137     133     115     108     105      91      84      83      76      66      63      62      59 
+    7.1     7.2    16.2    16.5    16.3    16.4    16.6     6.7 (Other)    NA's 
+     57      57      46      40      36      33      31      25     251   56491 
+[1] "--------------------------------------"
+[1] "Column: muaz"
+[1] "Class: factor"
+[1] "Summary:"
+   -0.5   -0.79   -0.95   -0.59   -0.22   -0.47   -0.24   -0.51    -0.9   -0.21   -1.47   -1.44   -1.13   -0.98    -0.7 
+     86      85      84      76      76      72      71      70      69      68      67      67      67      67      67 
+  -0.68   -0.65   -0.97   -0.94   -0.67   -1.45   -1.43   -1.05   -0.41   -0.06   -0.78   -0.57   -0.08   -0.71   -0.18 
+     67      67      66      66      66      65      65      65      65      65      64      64      64      63      63 
+  -0.96   -0.66   -0.54   -0.52   -0.49   -0.48   -1.08   -0.85   -0.56   -0.25   -1.33   -1.14    -0.6   -0.39    -0.3 
+     62      62      61      61      61      61      60      60      60      60      59      59      59      59      59 
+  -0.11    0.03   -1.26   -1.15   -1.04   -0.89   -0.86   -0.05   -1.16   -1.11   -0.77   -0.62   -0.58   -0.46   -0.34 
+     59      59      58      58      58      58      58      58      57      57      57      57      57      57      57 
+  -0.31    -0.1   -1.39   -1.28   -1.18      -1   -0.93   -0.28   -0.15   -0.07   -1.46   -0.81   -0.53   -0.32   -1.37 
+     57      57      56      56      56      56      56      56      56      56      55      55      55      55      54 
+  -1.24   -1.17   -0.99   -0.84    -0.4   -0.27   -0.23   -0.13   -0.03    0.28    0.33   -1.74    -1.2    -0.8   -0.76 
+     54      54      54      54      54      54      54      54      54      54      54      53      53      53      53 
+  -0.61   -0.37   -0.09    0.24   -1.54   -1.32   -1.02   -1.01 (Other)    NA's 
+     53      53      53      53      52      52      52      52   10067   93306 
+[1] "--------------------------------------"
+[1] "Column: siteid"
+[1] "Class: factor"
+[1] "Summary:"
+      1       3       2       4       7       6       8      29      18      16      12      19       5      17      27 
+  55660    9851    5150    4342    2838    2653    2222    1505    1303    1239    1220    1193    1189    1168    1091 
+     28      26      15      25      24     120     121      23      22      20      14      34      33      21      31 
+    963     925     788     665     660     608     560     535     518     513     467     467     465     432     425 
+     32     105       9     510     102      13     130     517     523      11      30     123     515     103     512 
+    422     378     366     357     351     341     318     305     298     253     249     247     206     195     183 
+    513     534       0     110     111     504     531     112     505     132     514     101     113     519     518 
+    171     148     120     113     109     105     102      98      96      95      94      92      92      90      89 
+    511     508     104     502     530     525     131     529     133     503     506     527     526     532     122 
+     88      86      85      75      75      74      73      73      71      66      64      61      56      51      50 
+    516     520     509     501     533     528     507      60     522      42      44      10      35      37      45 
+     44      37      35      34      34      22      20      17      17      15      14      12      12      12      12 
+     51      57      59      50      47      54      55      99      38 (Other) 
+     12      12      12      11      10      10      10      10       9      91 
+[1] "--------------------------------------"
+[1] "Column: ctrycd"
+[1] "Class: factor"
+[1] "Summary:"
+  BFA   BGD   BLR   BRA   GMB   GTM   IND   MWI   NPL   PAK   PER   PHL   TZA   ZAF   ZWE 
+10899 35446 16898   233  2954  2341 14286  3976   938   664   518  3058  2658   314 14087 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: factor"
+[1] "Summary:"
+                  BANGLADESH                      BELARUS                       BRAZIL                 BURKINA FASO 
+                       35446                        16898                          233                        10899 
+                      GAMBIA                    GUATEMALA                        INDIA                       MALAWI 
+                        2954                         2341                        14286                         3976 
+                       NEPAL                     PAKISTAN                         PERU                  PHILIPPINES 
+                         938                          664                          518                         3058 
+                SOUTH AFRICA TANZANIA, UNITED REPUBLIC OF                     ZIMBABWE 
+                         314                         2658                        14087 
+[1] "--------------------------------------"
+[1] "Column: region"
+[1] "Class: factor"
+[1] "Summary:"
+       Africa     East Asia        Europe Latin America    South Asia 
+        34888          3058         16898          3092         51334 
+[1] "--------------------------------------"
+[1] "Column: citytown"
+[1] "Class: factor"
+[1] "Summary:"
+                                                        AMANA                      AMTULBAI1 
+                         26301                              1                            823 
+                      BAKTAPUR                      CEBU CITY                          DHAKA 
+                           240                           3058                           1329 
+                     FARIDABAD                      FORTALEZA                      GAIBANDHA 
+                          1533                            233                          32815 
+                GUATEMALA CITY                         HARARE                        IQUITOS 
+                           315                          14087                            303 
+                        JALASI                        KARACHI                         KENEBA 
+                             1                            284                           2954 
+                      KIZUIANI                          KOCHE                           LIMA 
+                             1                              4                            215 
+                      LUNGWENA                       MAGOMENI                        MALINDI 
+                           453                            953                            255 
+                      MANGOCHI                        MATIARI                          MBULU 
+                          2972                            380                            262 
+                        MIRPUR                       MIRZAPUR                      MUHIMBILI 
+                           765                            258                              1 
+                       NAMWERA                      NEW DELHI NUEVA GUATEMALA DE LA ASUNCIÓN 
+                           291                          11301                           2026 
+                   OUAGADOUGOU                        RAMBUDA                     RANGI TATU 
+                          3266                            314                              1 
+                    ROUNDTABLE                          SINZA                    SOUTH DELHI 
+                             2                            597                            418 
+                    TABATA 'A'                        TANDALE                         TEMEKE 
+                             2                              1                              4 
+                       VELLORE 
+                           251 
+[1] "--------------------------------------"
+[1] "Column: latitude"
+[1] "Class: factor"
+[1] "Summary:"
+ -22.8 -14.49 -14.37 -14.35 -14.32 -14.27 -14.21 -12.04   -6.8  -3.75  -3.51   -3.2  10.31  11.14  12.33  12.92  13.33 
+   314   2972    255    291      4    453      1    215   2396    303    262    233   3058   7633   3266    251   2954 
+ 14.63  14.82  17.86     23  23.81   24.1  24.94  25.25   25.6  26.84  27.67   28.4  28.48  28.52   28.7   53.9  78.93 
+   315   2026  14087    629   1465    258    284  32815    380    698    240   1533    418   3806   7495  16898    783 
+  NA's 
+   279 
+[1] "--------------------------------------"
+[1] "Column: longitud"
+[1] "Class: factor"
+[1] "Summary:"
+-90.49 -90.46 -77.03 -73.25 -38.54 -16.01  -4.93  -1.67  12.85  27.57   30.4  31.03  35.13  35.25  35.26  35.28  35.32 
+   315   2026    215    303    233   2954   7633   3266    783  16898    314  14087      4   3425      1    255    262 
+ 35.48   39.1  67.09  68.45   77.1  77.18  77.23  77.31  79.13  85.43  86.01   89.5     90  90.09  90.33  90.37  90.41 
+   291   2396    284    380   7495    418   3806   1533    251    240    698  32815    629    258    500    265    700 
+123.53   NA's 
+  3058    279 
+[1] "--------------------------------------"
+[1] "Column: clustid"
+[1] "Class: factor"
+[1] "Summary:"
+      7      29       6      17      18      26       8       4      16      27      19      15       2      25      23 
+   1230    1226    1205    1156     981     960     952     886     834     756     732     603     595     555     549 
+     28       1      33      34       5     510      31      20      24      14     523      13      32     517      21 
+    534     529     514     488     477     418     416     404     404     391     367     357     352     348     334 
+      9      11      12     515      22     512     534     513     531       3     504     530     503     505     502 
+    314     285     281     276     265     255     239     213     197     188     184     172     161     157     155 
+    511     519     508     514     518     529     525     506     532     527     492     501     528     533     449 
+    152     152     151     148     146     145     140     138     123     114     113     108     108     104     101 
+    507     520     526     536     557     270     339     397     577     340     546     568      84     576     559 
+    101     100     100      97      97      92      91      91      91      89      89      89      88      88      87 
+    389     496     497     580     522      48     117     574     593      98     271     376     431     444     447 
+     86      86      86      86      85      84      84      84      84      83      83      83      83      83      83 
+    558      99     178     335     544     550     588     150 (Other)    NA's 
+     83      82      82      82      82      82      82      81   26365   54758 
+[1] "--------------------------------------"
+[1] "Column: arm"
+[1] "Class: factor"
+[1] "Summary:"
+                                            50,000 IU nippled + 400,000 IU Oval        50,000 IU nippled + Placebo Oval 
+                                  19967                                    3524                                    3522 
+                              a.LNS-Zn0                               b.LNS-Zn5                                     BSC 
+                                    612                                     620                                      65 
+                             c.LNS-Zn10                                     CFC                                Chickpea 
+                                    612                                    1436                                     842 
+                                Control                       Control (no Zinc)                           Control group 
+                                   4283                                    1215                                    8127 
+                           d.LNS-TabZn5                               e.Control                      Experimental group 
+                                    625                                     797                                    8771 
+                   Food supplementation  Intermittent Zinc: 10 mg/d for 10 days                            Intervention 
+                                    104                                    2136                                    1600 
+    Iron and folic acid supplementation                         Iron Folic Acid                            Likuni Phala 
+                                    400                                   13560                                     209 
+   Lipid-based nutrient supplementation                                LNS-10gM                                LNS-20gM 
+                                    400                                     321                                     322 
+                             LNS-20gNoM                                LNS-40gM                              LNS-40gNoM 
+                                    322                                     322                                     324 
+                                Milk FS                               MNT + BSC                               MNT + WPC 
+                                    212                                      64                                      65 
+ Multiple micronutrient supplementation                 Multiple Micronutrients                      Multivitamin Alone 
+                                    405                                   13811                                     596 
+                        No intervention               No Rotarix + No IPV (175)       No Rotarix + With IPV Boost (175) 
+                                    106                                     175                                     175 
+                Nutritional counselling       Placebo nippled + 400,000 IU Oval          Placebo nippled + Placebo Oval 
+                                    104                                    3524                                    3517 
+                             Plumpy Doz               Preventive Zinc: 7 mg/day                             Rice Lentil 
+                                   1491                                    2131                                     825 
+                 Rotarix + No IPV (175)          Rotarix + With IPV Boost (175)                                  Soy FS 
+                                    175                                     175                                     210 
+                      Standard(Control) Therapeutic Zinc: 20 mg/day for 10 days                              Visitation 
+                                    209                                    2151                                     104 
+                              Vitamin A                                     WPC                                   WSB++ 
+                                   1894                                      65                                     850 
+                    Zinc + Multivitamin                              Zinc Alone 
+                                    602                                     596 
+[1] "--------------------------------------"
+[1] "Column: tr"
+[1] "Class: factor"
+[1] "Summary:"
+ Control      LNS Maternal    Other     VitA     Zinc     NA's 
+   33955     5993    23387     6454    12464     7616    19401 
+[1] "--------------------------------------"
+[1] "Column: gagebrth"
+[1] "Class: factor"
+[1] "Summary:"
+Full or late term           Preterm        Early term              NA's 
+            27969              9906             18878             52517 
+[1] "--------------------------------------"
+[1] "Column: dead"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+39255  2557 67458 
+[1] "--------------------------------------"
+[1] "Column: agedth"
+[1] "Class: factor"
+[1] "Summary:"
+      3       4       2       5       6      10       8       7      17      34      86      97      18      24      82 
+     89      51      39      34      28      24      23      19      16      14      14      14      13      13      13 
+     90       9      11      19      80      13      16      33      66      76      77      92     105     135      12 
+     13      12      12      12      12      11      11      11      11      11      11      11      11      11      10 
+     20      29      72      74      75      91     101     111       1      14      25      31      64      87     115 
+     10      10      10      10      10      10      10      10       9       9       9       9       9       9       9 
+    144      26      38      40      42      53      79      83      84      98     100     106     126      22      23 
+      9       8       8       8       8       8       8       8       8       8       8       8       8       7       7 
+     36      37      45      60      62      63      67      73      81      95     109     119     169     184     202 
+      7       7       7       7       7       7       7       7       7       7       7       7       7       7       7 
+    248     265      15      21      30      32      35      39      52      61      68      69      85      88      94 
+      7       7       6       6       6       6       6       6       6       6       6       6       6       6       6 
+    102     104     112     124     134     207     242     270 (Other)    NA's 
+      6       6       6       6       6       6       6       6    1274  106915 
+[1] "--------------------------------------"
+[1] "Column: causedth"
+[1] "Class: factor"
+[1] "Summary:"
+                                                                                            
+                                                                                     108085 
+                                                                             ARI /Pneumonia 
+                                                                                        431 
+                                                                                  Uncertain 
+                                                                                        188 
+                                                  ARI /Pneumonia/Malnutrition (m, k or m-k) 
+                                                                                         93 
+                                                  ARI /Pneumonia/Diarrhoea /Gastroenteritis 
+                                                                                         70 
+                       ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                         50 
+                                                                 Diarrhoea /Gastroenteritis 
+                                                                                         37 
+                                                                                 Meningitis 
+                                                                                         25 
+                                      Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                         21 
+                                                                             Acute Diarrhea 
+                                                                                         17 
+                                                                  ARI /Pneumonia/Meningitis 
+                                                                                         14 
+                                                           Non-specific /generalised sepsis 
+                                                                                         11 
+                                            ARI /Pneumonia/Non-specific /generalised sepsis 
+                                                                                         10 
+                                                   Acute Lower Respiratory Infection (ALRI) 
+                                                                                          9 
+                    ARI /Pneumonia/Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                          9 
+                                   Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                          9 
+                                                                                   Censored 
+                                                                                          8 
+                                                                       Uncertain/Other:SIDS 
+                                                                                          8 
+                                                Persistent Diarrhea or Persistent Dysentery 
+                                                                                          7 
+                                                                               Tuberculosis 
+                                                                                          7 
+                                                       Uncertain/Malnutrition (m, k or m-k) 
+                                                                                          7 
+                                               ARI /Pneumonia/Chronic /Persistent diarrhoea 
+                                                                                          6 
+                                                                Accident or poisoning:BURNS 
+                                                                                          5 
+                                                                                  Dysentery 
+                                                                                          5 
+                                                                   ARI /Pneumonia/Dysentery 
+                                                                                          4 
+                                                       Dysentery/Malnutrition (m, k or m-k) 
+                                                                                          4 
+                                                                                 Septicemia 
+                                                                                          4 
+                                                                   ARI /Pneumonia/Other:CCF 
+                                                                                          3 
+                                                                ARI /Pneumonia/Tuberculosis 
+                                                                                          3 
+                                     ARI /Pneumonia/Tuberculosis/Malnutrition (m, k or m-k) 
+                                                                                          3 
+                                                                    Congenital Malformation 
+                                                                                          3 
+                                                                               Malnutrition 
+                                                                                          3 
+                                                      Meningitis/Malnutrition (m, k or m-k) 
+                                                                                          3 
+                                                    Tuberculosis/Diarrhoea /Gastroenteritis 
+                                                                                          3 
+                         Tuberculosis/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                          3 
+                                                             Accident or poisoning:DROWNING 
+                                                                                          2 
+                                                                            Acute Dysentery 
+                                                                                          2 
+                                          ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malaria 
+                                                                                          2 
+                                       ARI /Pneumonia/Diarrhoea /Gastroenteritis/Meningitis 
+                                                                                          2 
+                                                        ARI /Pneumonia/Dysentery/Meningitis 
+                                                                                          2 
+                                                                     ARI /Pneumonia/Malaria 
+                                                                                          2 
+                                Non-specific /generalised sepsis/Malnutrition (m, k or m-k) 
+                                                                                          2 
+                                                    Tuberculosis/Malnutrition (m, k or m-k) 
+                                                                                          2 
+                                                                         Accident or Injury 
+                                                                                          1 
+                                                          Accident or poisoning:HEAD INJURY 
+                                                                                          1 
+                                                               Accident or poisoning:INJURY 
+                                                                                          1 
+                                                                  Accident or poisoning:RTA 
+                                                                                          1 
+                                                           Accident or poisoning:SNAKE BITE 
+                                                                                          1 
+             ARI /Pneumonia/Diarrhoea /Gastroenteritis/Accident or poisoning:MUTI POISONING 
+                                                                                          1 
+               ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malaria/Malnutrition (m, k or m-k) 
+                                                                                          1 
+ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CONG HEART DIS 
+                                                                                          1 
+                             ARI /Pneumonia/Malnutrition (m, k or m-k)/Other:CEREBRAL PALSY 
+                                                                                          1 
+                               ARI /Pneumonia/Malnutrition (m, k or m-k)/Other:CLEFT PALATE 
+                                                                                          1 
+                                       ARI /Pneumonia/Meningitis/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                                 ARI /Pneumonia/Meningitis/Non-specific /generalised sepsis 
+                                                                                          1 
+                                                         ARI /Pneumonia/Meningitis/Other:CP 
+                                                                                          1 
+              ARI /Pneumonia/Non-specific /generalised sepsis/Other specific infection:SKIN 
+                                                                                          1 
+    ARI /Pneumonia/Non-specific /generalised sepsis/Other specific infection:SKIN ABSCESSES 
+                                                                                          1 
+            ARI /Pneumonia/Other specific infection/Malnutrition (m, k or m-k):SKIN ABSCESS 
+                                                                                          1 
+                                         ARI /Pneumonia/Other specific infection:CELLULITIS 
+                                                                                          1 
+                                        ARI /Pneumonia/Other specific infection:SEPTICAEMIA 
+                                                                                          1 
+                                               ARI /Pneumonia/Other specific infection:SK1N 
+                                                                                          1 
+                                               ARI /Pneumonia/Other specific infection:SKIN 
+                                                                                          1 
+                                     ARI /Pneumonia/Other specific infection:VARICELLA DISS 
+                                                                                          1 
+                                                            ARI /Pneumonia/Other:ASPIRATION 
+                                                                                          1 
+                                                              ARI /Pneumonia/Other:BLEEDING 
+                                                                                          1 
+                                                            ARI /Pneumonia/Other:CONG HEART 
+                                                                                          1 
+                                                                    ARI /Pneumonia/Other:CP 
+                                                                                          1 
+                                                        ARI /Pneumonia/Other:DOWNS SYNDROME 
+                                                                                          1 
+                                                        ARI /Pneumonia/Other:ENCEPHALOPATHY 
+                                                                                          1 
+                                                           ARI /Pneumonia/Other:PDA AND RVH 
+                                                                                          1 
+                                     ARI /Pneumonia/Tuberculosis/Diarrhoea /Gastroenteritis 
+                                                                                          1 
+          ARI /Pneumonia/Tuberculosis/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                                                      ARI /Pneumonia/Tuberculosis/Dysentery 
+                                                                                          1 
+                                                              Chronic /Persistent diarrhoea 
+                                                                                          1 
+     Chronic /Persistent diarrhoea/Other specific infection/Malnutrition (m, k or m-k):SKIN 
+                                                                                          1 
+      Chronic /Persistent diarrhoea/Other specific infection/Malnutrition (m, k or m-k):UTI 
+                                                                                          1 
+                                          Chronic /Persistent diarrhoea/Other:CONGENITAL HT 
+                                                                                          1 
+        Diarrhoea /Gastroenteritis/Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                                                         Diarrhoea /Gastroenteritis/Malaria 
+                                                                                          1 
+                              Diarrhoea /Gastroenteritis/Malaria/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                 Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k)/Other:TRISOMY 21 CCF 
+                                                                                          1 
+                           Diarrhoea /Gastroenteritis/Meningitis/Malnutrition (m, k or m-k) 
+                                                                                          1 
+         Diarrhoea /Gastroenteritis/Other specific infection/Malnutrition (m, k or m-k):UT1 
+                                                                                          1 
+                            Diarrhoea /Gastroenteritis/Other specific infection:CHICKEN POX 
+                                                                                          1 
+                                                Diarrhoea /Gastroenteritis/Other:FITS CAUSE 
+                                                                                          1 
+                                             Diarrhoea /Gastroenteritis/Other:HYDROCEPHALUS 
+                                                                                          1 
+                                                       Malnutrition (m, k or m-k)/Other:CCF 
+                                                                                          1 
+                                                                         Meningitis/Malaria 
+                                                                                          1 
+                              Meningitis/Non-specific /generalised sepsis/Other:KERNICTERUS 
+                                                                                          1 
+ Non-specific /generalised sepsis/Other specific infection/Other:NEONATALSEPSIS:KERNICTERUS 
+                                                                                          1 
+                    Non-specific /generalised sepsis/Other specific infection:OSTEOMYELITIS 
+                                                                                          1 
+                                          Non-specific /generalised sepsis/Other:CONGENITAL 
+                                                                                          1 
+                                      Non-specific /generalised sepsis/Other:DBSTRUCTED GUT 
+                                                                                          1 
+                                          Non-specific /generalised sepsis/Other:HYPOTHEMIA 
+                                                                                          1 
+                                         Non-specific /generalised sepsis/Other:HYPOTHERMIA 
+                                                                                          1 
+                                            Non-specific /generalised sepsis/Other:JAUNDICE 
+                                                                                          1 
+                                         Non-specific /generalised sepsis/Other:KERNICTERUS 
+                                                                                          1 
+                                       Non-specific /generalised sepsis/Other:POLYCYTHAEMIA 
+                                                                                          1 
+                                                                                    (Other) 
+                                                                                         30 
+[1] "--------------------------------------"
+[1] "Column: brthyr"
+[1] "Class: factor"
+[1] "Summary:"
+ 1969  1983  1987  1988  1989  1990  1991  1992  1993  1994  1995  1996  1997  1998  1999  2000  2001  2002  2003  2004 
+ 9521  3058    64   108    98    85    72   121   171   485  3409  5378 13136  6950  7559  1075   157   354   315   163 
+ 2005  2006  2007  2008  2009  2010  2011  2012  2013  NA's 
+  127   171   805  7543 13909 15112  7840  7721   284  3479 
+[1] "--------------------------------------"
+[1] "Column: brthmon"
+[1] "Class: factor"
+[1] "Summary:"
+    1     2     3     4     5     6     7     8     9    10    11    12  NA's 
+ 7803  7473  8409  7026  6578  6657  7583  8535  8820  8779  8546  9023 14038 
+[1] "--------------------------------------"
+[1] "Column: parity"
+[1] "Class: factor"
+[1] "Summary:"
+    1     2    3+  NA's 
+21780 18756 25816 42918 
+[1] "--------------------------------------"
+[1] "Column: birthwt"
+[1] "Class: factor"
+[1] "Summary:"
+Normal or high birthweight            Low birthweight                       NA's 
+                     68304                      17333                      23633 
+[1] "--------------------------------------"
+[1] "Column: birthlen"
+[1] "Class: factor"
+[1] "Summary:"
+   >=50 cm     <48 cm [48-50) cm       NA's 
+     29520      30596      20148      29006 
+[1] "--------------------------------------"
+[1] "Column: vagbrth"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+ 5763 62369 41138 
+[1] "--------------------------------------"
+[1] "Column: hdlvry"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+10120  8194 90956 
+[1] "--------------------------------------"
+[1] "Column: mage"
+[1] "Class: factor"
+[1] "Summary:"
+[20-30)     <20    >=30    NA's 
+  59252   21166   18578   10274 
+[1] "--------------------------------------"
+[1] "Column: mhtcm"
+[1] "Class: factor"
+[1] "Summary:"
+    >=155 cm      <151 cm [151-155) cm         NA's 
+       42101        24732        14697        27740 
+[1] "--------------------------------------"
+[1] "Column: mwtkg"
+[1] "Class: factor"
+[1] "Summary:"
+   >=58 kg     <52 kg [52-58) kg       NA's 
+     22241      12595      10951      63483 
+[1] "--------------------------------------"
+[1] "Column: mbmi"
+[1] "Class: factor"
+[1] "Summary:"
+Normal weight   Underweight          NA's 
+        40980          3254         65036 
+[1] "--------------------------------------"
+[1] "Column: meducyrs"
+[1] "Class: factor"
+[1] "Summary:"
+  High    Low Medium   NA's 
+ 26921  36471  32085  13793 
+[1] "--------------------------------------"
+[1] "Column: single"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+45570  3202 60498 
+[1] "--------------------------------------"
+[1] "Column: fage"
+[1] "Class: factor"
+[1] "Summary:"
+   >=38     <32 [32-38)    NA's 
+   2648   19508    4647   82467 
+[1] "--------------------------------------"
+[1] "Column: fhtcm"
+[1] "Class: factor"
+[1] "Summary:"
+    >=167 cm      <162 cm [162-167) cm         NA's 
+       13635         1200         1805        92630 
+[1] "--------------------------------------"
+[1] "Column: feducyrs"
+[1] "Class: factor"
+[1] "Summary:"
+  High    Low Medium   NA's 
+ 17566  29699  33425  28580 
+[1] "--------------------------------------"
+[1] "Column: trth2o"
+[1] "Class: factor"
+[1] "Summary:"
+     1      0   NA's 
+   952   1186 107132 
+[1] "--------------------------------------"
+[1] "Column: cleanck"
+[1] "Class: factor"
+[1] "Summary:"
+     1      0   NA's 
+  4968   3705 100597 
+[1] "--------------------------------------"
+[1] "Column: impfloor"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+ 6482 31507 71281 
+[1] "--------------------------------------"
+[1] "Column: nrooms"
+[1] "Class: factor"
+[1] "Summary:"
+   4+     1     2     3  NA's 
+ 3363 27519 13135  4969 60284 
+[1] "--------------------------------------"
+[1] "Column: nhh"
+[1] "Class: factor"
+[1] "Summary:"
+3 or less       4-5       6-7        8+      NA's 
+      795      1697       946       574    105258 
+[1] "--------------------------------------"
+[1] "Column: nchldlt5"
+[1] "Class: factor"
+[1] "Summary:"
+    1    2+  NA's 
+22668 15009 71593 
+[1] "--------------------------------------"
+[1] "Column: earlybf"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+13571 37916 57783 
+[1] "--------------------------------------"
+[1] "Column: hfoodsec"
+[1] "Class: factor"
+[1] "Summary:"
+         Food Secure Mildly Food Insecure        Food Insecure                 NA's 
+               13690                 8915                 5758                80907 
+[1] "--------------------------------------"
+[1] "Column: measurefreq"
+[1] "Class: factor"
+[1] "Summary:"
+  monthly quarterly    yearly 
+    10593     84102     14575 
+[1] "--------------------------------------"
+[1] "Column: anywast06"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+ 7635  2427 99208 
+[1] "--------------------------------------"
+[1] "Column: pers_wast"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+ 8923   440 99907 
+[1] "--------------------------------------"
+[1] "Column: enstunt"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1 
+88886 20384 
+[1] "--------------------------------------"
+[1] "Column: enwast"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+87046 14687  7537 
+[1] "--------------------------------------"
+[1] "Column: hhwealth_quart"
+[1] "Class: factor"
+[1] "Summary:"
+Wealth Q4 Wealth Q1 Wealth Q2 Wealth Q3      NA's 
+    11668     11445     11154     11531     63472 
+[1] "--------------------------------------"
+[1] "Column: id"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1   11494   23726   23149   35040   42787 
+[1] "--------------------------------------"
+[1] "Column: W_gagebrth"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  144.0   266.0   273.0   272.4   280.0   340.0   52517 
+[1] "--------------------------------------"
+[1] "Column: W_birthwt"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    620    2565    2920    2964    3300    9998   23633 
+[1] "--------------------------------------"
+[1] "Column: W_birthlen"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  21.80   46.80   48.80   48.84   51.00   69.40   29006 
+[1] "--------------------------------------"
+[1] "Column: W_mage"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   9.00   20.00   24.00   24.49   28.00   70.00   10274 
+[1] "--------------------------------------"
+[1] "Column: W_mhtcm"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   41.0   149.7   155.1   155.7   161.9   199.0   27740 
+[1] "--------------------------------------"
+[1] "Column: W_mwtkg"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  30.00   51.07   57.35   59.35   65.00  168.00   63483 
+[1] "--------------------------------------"
+[1] "Column: W_mbmi"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  12.40   20.32   22.31   23.12   24.97  892.33   65036 
+[1] "--------------------------------------"
+[1] "Column: W_fage"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  14.00   24.00   27.00   28.71   32.00   80.00   82467 
+[1] "--------------------------------------"
+[1] "Column: W_fhtcm"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  130.0   169.0   174.0   173.7   179.0   205.0   92630 
+[1] "--------------------------------------"
+[1] "Column: W_meducyrs"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  0.000   2.000   7.000   6.769  11.000  24.000   13793 
+[1] "--------------------------------------"
+[1] "Column: W_feducyrs"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  0.000   3.000   9.000   7.793  12.000  27.000   28580 
+[1] "--------------------------------------"
+[1] "Column: W_nrooms"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1.00    1.00    1.00    1.74    2.00   77.00   60284 
+[1] "--------------------------------------"
+[1] "Column: W_nhh"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1.00    4.00    5.00    5.35    6.00   20.00  105258 
+[1] "--------------------------------------"
+[1] "Column: W_nchldlt5"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1.00    1.00    1.00    1.47    2.00   11.00   71593 
+[1] "--------------------------------------"
+[1] "Column: W_parity"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1.00    1.00    2.00    2.47    3.00   19.00   42918 
+[1] "--------------------------------------"
+[1] "Column: impsan"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+31305 26428 51537 
+[1] "--------------------------------------"
+[1] "Column: safeh20"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+43625  5565 60080 
+[1] "--------------------------------------"
+[1] "Column: perdiar6"
+[1] "Class: factor"
+[1] "Summary:"
+      0% (0%, 5%]      >5%     NA's 
+    1856     1301     1278   104835 
+[1] "--------------------------------------"
+[1] "Column: perdiar24"
+[1] "Class: factor"
+[1] "Summary:"
+      0% (0%, 5%]      >5%     NA's 
+    2637     7679     2743    96211 
+[1] "--------------------------------------"
+[1] "Column: W_perdiar6"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.02    0.04    0.06    0.62  104835 
+[1] "--------------------------------------"
+[1] "Column: W_perdiar24"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.01    0.02    0.04    0.04    1.00   96211 
+[1] "--------------------------------------"
+[1] "Column: predfeed3"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+24737  3596 80937 
+[1] "--------------------------------------"
+[1] "Column: exclfeed3"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+27102  4419 77749 
+[1] "--------------------------------------"
+[1] "Column: predfeed6"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+26406  8851 74013 
+[1] "--------------------------------------"
+[1] "Column: exclfeed6"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+27623 11052 70595 
+[1] "--------------------------------------"
+[1] "Column: predfeed36"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+20779  7135 81356 
+[1] "--------------------------------------"
+[1] "Column: exclfeed36"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+21310  9240 78720 
+[1] "--------------------------------------"
+[1] "Column: predexfd6"
+[1] "Class: factor"
+[1] "Summary:"
+    1     0  NA's 
+27893 10782 70595 
+[1] "--------------------------------------"

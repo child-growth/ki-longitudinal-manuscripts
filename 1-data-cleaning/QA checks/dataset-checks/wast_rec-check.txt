@@ -1,0 +1,300 @@
+[1] "File Name: wast_rec.rdata"
+[1] "Dimensions:"
+[1] 61344    49
+[1] "--------------------------------------"
+[1] "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+    61344 character character 
+[1] "--------------------------------------"
+[1] "Column: agedays"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    1.0     1.0    91.0   167.9   304.0   730.0 
+[1] "--------------------------------------"
+[1] "Column: whz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -5.000  -2.860  -2.420  -2.621  -2.180  -2.010 
+[1] "--------------------------------------"
+[1] "Column: wast"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
+[1] "--------------------------------------"
+[1] "Column: sevwast"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.2025  0.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: firstmeasure"
+[1] "Class: logical"
+[1] "Summary:"
+   Mode   FALSE    TRUE 
+logical   35068   26276 
+[1] "--------------------------------------"
+[1] "Column: last_midpoint"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00    0.00    0.50   94.66  144.00  717.00 
+[1] "--------------------------------------"
+[1] "Column: period_length"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00   24.00   46.00   70.14   91.00  697.50 
+[1] "--------------------------------------"
+[1] "Column: sevwast_inc"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.2025  0.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: wast_inc"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
+[1] "--------------------------------------"
+[1] "Column: sevwast_rec"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: wast_rec"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: wast_risk"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
+[1] "--------------------------------------"
+[1] "Column: sevwast_risk"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
+[1] "--------------------------------------"
+[1] "Column: wast_rec_risk"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: sevwast_rec_risk"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: wasting_episode"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+    61344 character character 
+[1] "--------------------------------------"
+[1] "Column: born_wast_inc"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: wast_washout"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: episode_id"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  2.000   2.000   2.000   2.311   2.000  10.000 
+[1] "--------------------------------------"
+[1] "Column: incident_age"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    0.5     0.5    53.5   139.5   273.6   728.0 
+[1] "--------------------------------------"
+[1] "Column: maxage"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    1.0     4.0   113.0   236.8   379.0  1852.0 
+[1] "--------------------------------------"
+[1] "Column: duration"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    1.0    28.5    59.5   101.0   120.0  1691.0   13212 
+[1] "--------------------------------------"
+[1] "Column: wasting_duration"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    1.0    28.5    59.5   101.0   120.0  1691.0   13212 
+[1] "--------------------------------------"
+[1] "Column: born_sevwast_inc"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: sevwasting_episode"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+    61344 character character 
+[1] "--------------------------------------"
+[1] "Column: sev_episode_id"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.000   1.000   1.275   1.000   7.000 
+[1] "--------------------------------------"
+[1] "Column: sevwasting_duration"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    1.5    26.0    49.5    96.5    99.0  1643.0   51366 
+[1] "--------------------------------------"
+[1] "Column: wast_rec90d"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  1.0000  0.5042  1.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: wast_rec60d"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.3972  1.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: wast_rec30d"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.2092  0.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: sevwast_inc90d"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.03176 0.00000 1.00000 
+[1] "--------------------------------------"
+[1] "Column: sevwast_inc60d"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.02002 0.00000 1.00000 
+[1] "--------------------------------------"
+[1] "Column: sevwast_inc30d"
+[1] "Class: numeric"
+[1] "Summary:"
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+0.000000 0.000000 0.000000 0.007434 0.000000 1.000000 
+[1] "--------------------------------------"
+[1] "Column: end_recovery"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.1309  0.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: pt_wast"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.50    0.50   29.50   44.87   80.50  363.50 
+[1] "--------------------------------------"
+[1] "Column: pt_sevwast"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.50    0.50   29.50   44.87   80.50  363.50 
+[1] "--------------------------------------"
+[1] "Column: pt_wast_rec"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: pt_sevwast_rec"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: pt_washout"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+    61344 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+    61344 character character 
+[1] "--------------------------------------"
+[1] "Column: region"
+[1] "Class: factor"
+[1] "Summary:"
+            Africa         South Asia      Latin America N.America & Europe              Other 
+             14370              37140                972               8862                  0 
+[1] "--------------------------------------"
+[1] "Column: measurefreq"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+    61344 character character 
+[1] "--------------------------------------"
+[1] "Column: sex"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+    61344 character character 
+[1] "--------------------------------------"
+[1] "Column: latitude"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -22.80   17.86   25.25   26.99   28.70   78.93     380 
+[1] "--------------------------------------"
+[1] "Column: longitud"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -90.49   27.57   77.10   58.49   89.50  123.53     380 
+[1] "--------------------------------------"
+[1] "Column: measid"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.000   2.000   3.638   5.000  45.000 
+[1] "--------------------------------------"
+[1] "Column: agecat"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+    61344 character character 
+[1] "--------------------------------------"

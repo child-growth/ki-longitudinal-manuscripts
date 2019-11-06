@@ -1,0 +1,6 @@
+[1] "File Name: mort_exposures.RData"
+[1] "Dimensions:"
+NULL
+[1] "--------------------------------------"
+[1] "Class of Data: NULL"
+[1] "--------------------------------------"

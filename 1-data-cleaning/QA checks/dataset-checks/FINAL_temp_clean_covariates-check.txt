@@ -1,0 +1,426 @@
+[1] "File Name: FINAL_temp_clean_covariates.rds"
+[1] "Dimensions:"
+[1] 109270     70
+[1] "--------------------------------------"
+[1] "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: sex"
+[1] "Class: factor"
+[1] "Summary:"
+Female   Male 
+ 53960  55310 
+[1] "--------------------------------------"
+[1] "Column: month"
+[1] "Class: factor"
+[1] "Summary:"
+    1     2     3     4     5     6     7     8     9    10    11    12  NA's 
+ 8568  7943  6989  6841  6667  6355  7270  7919  8504  8027  7612  9274 17301 
+[1] "--------------------------------------"
+[1] "Column: wtkg"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.61    2.70    3.17    3.92    4.10   71.80     208 
+[1] "--------------------------------------"
+[1] "Column: htcm"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  36.00   47.00   49.10   64.33   83.40  173.40  106926 
+[1] "--------------------------------------"
+[1] "Column: lencm"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  21.80   47.50   50.00   52.64   54.00   95.30    2345 
+[1] "--------------------------------------"
+[1] "Column: hcircm"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  11.00   33.00   34.50   35.07   36.20   54.20   27730 
+[1] "--------------------------------------"
+[1] "Column: muaccm"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   4.80    9.40   10.40   11.01   12.80   21.50   56491 
+[1] "--------------------------------------"
+[1] "Column: muaz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  -5.67   -1.45   -0.70   -0.72    0.02    4.16   93306 
+[1] "--------------------------------------"
+[1] "Column: siteid"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    0.0     1.0     1.0    24.5     8.0   534.0 
+[1] "--------------------------------------"
+[1] "Column: ctrycd"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: region"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: citytown"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: latitude"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -22.80   17.86   25.25   24.57   28.52   78.93     279 
+[1] "--------------------------------------"
+[1] "Column: longitud"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -90.49   27.57   39.10   50.56   89.50  123.53     279 
+[1] "--------------------------------------"
+[1] "Column: clustid"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      1      24     178     229     438     596   54758 
+[1] "--------------------------------------"
+[1] "Column: arm"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: tr"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: gagebrth"
+[1] "Class: factor"
+[1] "Summary:"
+Full or late term           Preterm        Early term              NA's 
+            27969              9906             18878             52517 
+[1] "--------------------------------------"
+[1] "Column: dead"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.00    0.06    0.00    1.00   67458 
+[1] "--------------------------------------"
+[1] "Column: agedth"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   -8.0    40.0   131.0   247.9   339.0  6668.0  106915 
+[1] "--------------------------------------"
+[1] "Column: causedth"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: brthyr"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1969    1997    2007    2001    2010    2013    3479 
+[1] "--------------------------------------"
+[1] "Column: brthmon"
+[1] "Class: factor"
+[1] "Summary:"
+    1     2     3     4     5     6     7     8     9    10    11    12  NA's 
+ 7803  7473  8409  7026  6578  6657  7583  8535  8820  8779  8546  9023 14038 
+[1] "--------------------------------------"
+[1] "Column: parity"
+[1] "Class: factor"
+[1] "Summary:"
+    1     2    3+  NA's 
+21780 18756 25816 42918 
+[1] "--------------------------------------"
+[1] "Column: birthwt"
+[1] "Class: factor"
+[1] "Summary:"
+Normal or high birthweight            Low birthweight                       NA's 
+                     68304                      17333                      23633 
+[1] "--------------------------------------"
+[1] "Column: birthlen"
+[1] "Class: factor"
+[1] "Summary:"
+   >=50 cm     <48 cm [48-50) cm       NA's 
+     29520      30596      20148      29006 
+[1] "--------------------------------------"
+[1] "Column: vagbrth"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+ 5763 62369 41138 
+[1] "--------------------------------------"
+[1] "Column: hdlvry"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+10120  8194 90956 
+[1] "--------------------------------------"
+[1] "Column: mage"
+[1] "Class: factor"
+[1] "Summary:"
+[20-30)     <20    >=30    NA's 
+  59252   21166   18578   10274 
+[1] "--------------------------------------"
+[1] "Column: mhtcm"
+[1] "Class: factor"
+[1] "Summary:"
+    >=155 cm      <151 cm [151-155) cm         NA's 
+       42101        24732        14697        27740 
+[1] "--------------------------------------"
+[1] "Column: mwtkg"
+[1] "Class: factor"
+[1] "Summary:"
+   >=58 kg     <52 kg [52-58) kg       NA's 
+     22241      12595      10951      63483 
+[1] "--------------------------------------"
+[1] "Column: mbmi"
+[1] "Class: factor"
+[1] "Summary:"
+Normal weight   Underweight          NA's 
+        40980          3254         65036 
+[1] "--------------------------------------"
+[1] "Column: meducyrs"
+[1] "Class: factor"
+[1] "Summary:"
+  High    Low Medium   NA's 
+ 26921  36471  32085  13793 
+[1] "--------------------------------------"
+[1] "Column: single"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1  NA's 
+45570  3202 60498 
+[1] "--------------------------------------"
+[1] "Column: fage"
+[1] "Class: factor"
+[1] "Summary:"
+   >=38     <32 [32-38)    NA's 
+   2648   19508    4647   82467 
+[1] "--------------------------------------"
+[1] "Column: fhtcm"
+[1] "Class: factor"
+[1] "Summary:"
+    >=167 cm      <162 cm [162-167) cm         NA's 
+       13635         1200         1805        92630 
+[1] "--------------------------------------"
+[1] "Column: feducyrs"
+[1] "Class: factor"
+[1] "Summary:"
+  High    Low Medium   NA's 
+ 17566  29699  33425  28580 
+[1] "--------------------------------------"
+[1] "Column: trth2o"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.00    0.45    1.00    1.00  107132 
+[1] "--------------------------------------"
+[1] "Column: cleanck"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    1.00    0.57    1.00    1.00  100597 
+[1] "--------------------------------------"
+[1] "Column: impfloor"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.00    0.17    0.00    1.00   71281 
+[1] "--------------------------------------"
+[1] "Column: nrooms"
+[1] "Class: factor"
+[1] "Summary:"
+   4+     1     2     3  NA's 
+ 3363 27519 13135  4969 60284 
+[1] "--------------------------------------"
+[1] "Column: nhh"
+[1] "Class: factor"
+[1] "Summary:"
+3 or less       4-5       6-7        8+      NA's 
+      795      1697       946       574    105258 
+[1] "--------------------------------------"
+[1] "Column: nchldlt5"
+[1] "Class: factor"
+[1] "Summary:"
+    1    2+  NA's 
+22668 15009 71593 
+[1] "--------------------------------------"
+[1] "Column: earlybf"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.00    0.26    1.00    1.00   57783 
+[1] "--------------------------------------"
+[1] "Column: hfoodsec"
+[1] "Class: factor"
+[1] "Summary:"
+         Food Secure Mildly Food Insecure        Food Insecure                 NA's 
+               13690                 8915                 5758                80907 
+[1] "--------------------------------------"
+[1] "Column: measurefreq"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: anywast06"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.00    0.24    0.00    1.00   99208 
+[1] "--------------------------------------"
+[1] "Column: pers_wast"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.00    0.05    0.00    1.00   99907 
+[1] "--------------------------------------"
+[1] "Column: enstunt"
+[1] "Class: factor"
+[1] "Summary:"
+    0     1 
+88886 20384 
+[1] "--------------------------------------"
+[1] "Column: enwast"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  0.000   0.000   0.000   0.144   0.000   1.000    7537 
+[1] "--------------------------------------"
+[1] "Column: hhwealth_quart"
+[1] "Class: factor"
+[1] "Summary:"
+Wealth Q4 Wealth Q1 Wealth Q2 Wealth Q3      NA's 
+    11668     11445     11154     11531     63472 
+[1] "--------------------------------------"
+[1] "Column: id"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   109270 character character 
+[1] "--------------------------------------"
+[1] "Column: W_gagebrth"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  144.0   266.0   273.0   272.4   280.0   340.0   52517 
+[1] "--------------------------------------"
+[1] "Column: W_birthwt"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    620    2565    2920    2964    3300    9998   23633 
+[1] "--------------------------------------"
+[1] "Column: W_birthlen"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  21.80   46.80   48.80   48.84   51.00   69.40   29006 
+[1] "--------------------------------------"
+[1] "Column: W_mage"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   9.00   20.00   24.00   24.49   28.00   70.00   10274 
+[1] "--------------------------------------"
+[1] "Column: W_mhtcm"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   41.0   149.7   155.1   155.7   161.9   199.0   27740 
+[1] "--------------------------------------"
+[1] "Column: W_mwtkg"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  30.00   51.07   57.35   59.35   65.00  168.00   63483 
+[1] "--------------------------------------"
+[1] "Column: W_mbmi"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  12.40   20.32   22.31   23.12   24.97  892.33   65036 
+[1] "--------------------------------------"
+[1] "Column: W_fage"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  14.00   24.00   27.00   28.71   32.00   80.00   82467 
+[1] "--------------------------------------"
+[1] "Column: W_fhtcm"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  130.0   169.0   174.0   173.7   179.0   205.0   92630 
+[1] "--------------------------------------"
+[1] "Column: W_meducyrs"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  0.000   2.000   7.000   6.769  11.000  24.000   13793 
+[1] "--------------------------------------"
+[1] "Column: W_feducyrs"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  0.000   3.000   9.000   7.793  12.000  27.000   28580 
+[1] "--------------------------------------"
+[1] "Column: W_nrooms"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1.00    1.00    1.00    1.74    2.00   77.00   60284 
+[1] "--------------------------------------"
+[1] "Column: W_nhh"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1.00    4.00    5.00    5.35    6.00   20.00  105258 
+[1] "--------------------------------------"
+[1] "Column: W_nchldlt5"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1.00    1.00    1.00    1.47    2.00   11.00   71593 
+[1] "--------------------------------------"
+[1] "Column: W_parity"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1.00    1.00    2.00    2.47    3.00   19.00   42918 
+[1] "--------------------------------------"

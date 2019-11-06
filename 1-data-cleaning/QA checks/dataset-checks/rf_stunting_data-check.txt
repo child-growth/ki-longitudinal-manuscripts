@@ -1,0 +1,78 @@
+[1] "File Name: rf_stunting_data.rds"
+[1] "Dimensions:"
+[1] 770620     12
+[1] "--------------------------------------"
+[1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   770620 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   770620 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   770620 character character 
+[1] "--------------------------------------"
+[1] "Column: region"
+[1] "Class: factor"
+[1] "Summary:"
+            Africa         South Asia      Latin America N.America & Europe              Other 
+            175752             382606              38292             173970                  0 
+[1] "--------------------------------------"
+[1] "Column: measurefreq"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   770620 character character 
+[1] "--------------------------------------"
+[1] "Column: tr"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   770620 character character 
+[1] "--------------------------------------"
+[1] "Column: sex"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   770620 character character 
+[1] "--------------------------------------"
+[1] "Column: agedays"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    1.0    92.0   275.0   479.8   552.0  6955.0 
+[1] "--------------------------------------"
+[1] "Column: haz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  -6.00   -1.99   -1.09   -1.03   -0.11    6.00 
+[1] "--------------------------------------"
+[1] "Column: latitude"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -22.80   17.86   25.25   28.46   53.90   78.93    5417 
+[1] "--------------------------------------"
+[1] "Column: longitud"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -90.49   27.57   35.25   47.99   89.50  123.53    5417 
+[1] "--------------------------------------"
+[1] "Column: measid"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   3.000   5.000   7.092   9.000  70.000 
+[1] "--------------------------------------"
