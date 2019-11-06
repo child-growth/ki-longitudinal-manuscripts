@@ -1,0 +1,108 @@
+[1] "File Name: seasonality_data.rds"
+[1] "Dimensions:"
+[1] 521012     17
+[1] "--------------------------------------"
+[1] "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   521012 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   521012 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   521012 character character 
+[1] "--------------------------------------"
+[1] "Column: region"
+[1] "Class: factor"
+[1] "Summary:"
+            Africa         South Asia      Latin America N.America & Europe              Other 
+            159488             216282              21422             123820                  0 
+[1] "--------------------------------------"
+[1] "Column: agedays"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    1.0    64.0   188.0   229.8   369.0   730.0 
+[1] "--------------------------------------"
+[1] "Column: measurefreq"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   521012 character character 
+[1] "--------------------------------------"
+[1] "Column: month"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   3.000   7.000   6.551  10.000  12.000 
+[1] "--------------------------------------"
+[1] "Column: whz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-4.9900 -1.1000 -0.2600 -0.2494  0.6000  4.9900 
+[1] "--------------------------------------"
+[1] "Column: haz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-9.9000 -1.8500 -0.9800 -0.9031 -0.0200 20.4700 
+[1] "--------------------------------------"
+[1] "Column: waz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-9.6700 -1.6300 -0.7900 -0.7599  0.1100 11.3000 
+[1] "--------------------------------------"
+[1] "Column: latitude"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -22.80   17.86   25.25   27.66   53.90   78.93    5372 
+[1] "--------------------------------------"
+[1] "Column: longitud"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -90.49   27.57   31.03   42.46   89.50   90.37    5372 
+[1] "--------------------------------------"
+[1] "Column: brthweek"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   14.00   29.00   27.55   41.00   53.00 
+[1] "--------------------------------------"
+[1] "Column: brthmon"
+[1] "Class: factor"
+[1] "Summary:"
+    1     2     3     4     5     6     7     8     9    10    11    12 
+39976 40463 44522 38008 35805 37869 45910 49941 46826 47204 46522 47966 
+[1] "--------------------------------------"
+[1] "Column: birthday"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   -7.0    91.0   196.0   185.8   280.0   364.0 
+[1] "--------------------------------------"
+[1] "Column: studyday"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   -6.0   260.0   389.0   415.6   561.0  1094.0 
+[1] "--------------------------------------"
+[1] "Column: jday"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    0.0    87.0   183.0   181.6   275.0   363.0 
+[1] "--------------------------------------"

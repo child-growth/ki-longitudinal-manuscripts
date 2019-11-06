@@ -1,0 +1,156 @@
+[1] "File Name: dhs_data_combined.rds"
+[1] "Dimensions:"
+[1] 7142466      25
+[1] "--------------------------------------"
+[1] "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: hhid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+  7142466 character character 
+[1] "--------------------------------------"
+[1] "Column: hv000"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+  7142466 character character 
+[1] "--------------------------------------"
+[1] "Column: hv001"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1     267     743   82452  161137  360482 
+[1] "--------------------------------------"
+[1] "Column: hv005"
+[1] "Class: numeric"
+[1] "Summary:"
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+       0   448803   781930   984326  1247354 38954801 
+[1] "--------------------------------------"
+[1] "Column: hv007"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      2    2013    2015    1957    2016    2073 
+[1] "--------------------------------------"
+[1] "Column: hv021"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1     267     743   82452  161137  360482 
+[1] "--------------------------------------"
+[1] "Column: hv023"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      0      13      42   12424   22822   64023  145815 
+[1] "--------------------------------------"
+[1] "Column: hv103"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ 0.0000  1.0000  1.0000  0.9679  1.0000  9.0000    1551 
+[1] "--------------------------------------"
+[1] "Column: hc1"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      0      14      30      30      44      59 6500413 
+[1] "--------------------------------------"
+[1] "Column: hc1a"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      0     453     911     912    1368    1826 7046710 
+[1] "--------------------------------------"
+[1] "Column: hc10"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      0     837    2780    3725    6153    9999 6541383 
+[1] "--------------------------------------"
+[1] "Column: hc11"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   -400    -138     -59     508      29    9999 6541383 
+[1] "--------------------------------------"
+[1] "Column: hc12"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   4995    8765    9471   14621   10311   99999 6541383 
+[1] "--------------------------------------"
+[1] "Column: hc13"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      0       0       0       0       0       9 6501822 
+[1] "--------------------------------------"
+[1] "Column: hc15"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      0       1       2       2       2       9 6525915 
+[1] "--------------------------------------"
+[1] "Column: hc16"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      1       7      15      18      23      99 6508471 
+[1] "--------------------------------------"
+[1] "Column: hc17"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      1       9      16      16      23      32 6506010 
+[1] "--------------------------------------"
+[1] "Column: hc18"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      1       3       5       6       8      12 6506010 
+[1] "--------------------------------------"
+[1] "Column: hc19"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   2001    2013    2015    2014    2016    2073 6506010 
+[1] "--------------------------------------"
+[1] "Column: hc70"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   -600    -238    -136     461     -21    9999 6543912 
+[1] "--------------------------------------"
+[1] "Column: hc71"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   -599    -194    -108     457     -16    9999 6549990 
+[1] "--------------------------------------"
+[1] "Column: hc72"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   -500    -130     -38     541      57    9999 6549802 
+[1] "--------------------------------------"
+[1] "Column: dataset"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+  7142466 character character 
+[1] "--------------------------------------"
+[1] "Column: shv005"
+[1] "Class: numeric"
+[1] "Summary:"
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
+       0   582291   857360   968960  1236836 26111445  4172554 
+[1] "--------------------------------------"
+[1] "Column: shc16"
+[1] "Class: haven_labelled"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+      1       7      14      15      23      31 7134378 
+[1] "--------------------------------------"

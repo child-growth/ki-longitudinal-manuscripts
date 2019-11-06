@@ -1,0 +1,42 @@
+[1] "File Name: wast_prev.RData"
+[1] "Dimensions:"
+[1] 170495      6
+[1] "--------------------------------------"
+[1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   170495 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   170495 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   170495 character character 
+[1] "--------------------------------------"
+[1] "Column: agecat"
+[1] "Class: factor"
+[1] "Summary:"
+    Birth  3 months  6 months  9 months 12 months 15 months 18 months 21 months 24 months 
+    67574         0     69273         0         0         0         0         0     33648 
+[1] "--------------------------------------"
+[1] "Column: wasted"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.1105  0.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: swasted"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.02629 0.00000 1.00000 
+[1] "--------------------------------------"

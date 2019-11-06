@@ -1,0 +1,6 @@
+[1] "File Name: st_cuminc_nobirth_rf.Rdata"
+[1] "Dimensions:"
+NULL
+[1] "--------------------------------------"
+[1] "Class of Data: character"
+[1] "--------------------------------------"
