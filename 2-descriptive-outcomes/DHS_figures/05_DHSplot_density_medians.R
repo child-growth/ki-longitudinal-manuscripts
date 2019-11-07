@@ -24,7 +24,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # Find DHS medians
-dhs_quantiles <- readRDS(paste0(here::here(),"/results/dhs/dhs.quantiles.rds"))
+dhs_quantiles <- readRDS(dhs_quantiles_path)
 dhs_medians = dhs_quantiles %>% filter(quantile == 50)
 dhs_medians$region = recode_factor(dhs_medians$region, 
                                    OVERALL = "Overall", 

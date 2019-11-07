@@ -545,8 +545,8 @@ create_age_categories = function(data){
   data_with_agecat = data %>% group_by(studyid, country, subjid) %>% 
     # create age categories
     mutate(agecat = case_when(
-      agedays == 1 ~ "Birth",
-      agedays >1 & agedays<= 30.4167*3 ~ "0-3 months",
+      agedays <= 7 ~ "Birth",
+      agedays >7 & agedays<= 30.4167*3 ~ "0-3 months",
       agedays >30.4167*3 & agedays<= 30.4167*6 ~ "3-6 months",
       agedays >30.4167*6 & agedays<= 30.4167*9 ~ "6-9 months",
       agedays >30.4167*9 & agedays<= 30.4167*12 ~ "9-12 months",

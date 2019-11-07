@@ -66,9 +66,10 @@ age_list = list("Never", "Birth", "0-3 months", "3-6 months", "6-9 months","9-12
 
 meanlaz = function(data, age){ 
   dmon = calc.monthly.agecat(d = data %>% filter(stunt_inc_age == age))
-
+  dmon <- droplevels(dmon)
+  
   monthly.haz.data   <-  summary.haz(d = dmon)
-  monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(., nmeas_threshold = 10)$haz.res)
+  monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(., nmeas_threshold = 5)$haz.res)
   monthly.haz.cohort <-  monthly.haz.data$haz.cohort %>% 
     subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
     rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)

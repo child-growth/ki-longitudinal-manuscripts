@@ -2,7 +2,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS"))
+#wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS"))
 # stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
 # stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.RDS"))
 # stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
@@ -11,16 +11,14 @@ stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_no_probit.RDS")
 stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24_no_probit.RDS"))
 stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe_no_probit.RDS"))
 
-load(paste0(res_dir,"co_desc_data.Rdata"))
-
 
 stunt <- stunt %>% mutate(analysis = "Primary")
 stunt_monthly24 <- stunt_monthly24 %>% mutate(analysis = "Cohorts monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
-wast <- wast %>% mutate(analysis = "Primary")
-co_desc_data <- co_desc_data %>% mutate(analysis = "Primary")
+#wast <- wast %>% mutate(analysis = "Primary")
+#co_desc_data <- co_desc_data %>% mutate(analysis = "Primary")
 stunt_fe <- stunt_fe %>% mutate(analysis = "Fixed effects")
 
-d <- bind_rows(stunt, stunt_monthly24, stunt_fe, wast, co_desc_data)
+d <- bind_rows(stunt, stunt_monthly24, stunt_fe)
 d$agecat <- factor(d$agecat, levels=unique(d$agecat))
 d$region[d$region=="Asia" & !is.na(d$region)] <- "South Asia"
 
