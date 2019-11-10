@@ -22,14 +22,13 @@ rain$region <- factor(rain$region, levels = c("South Asia","Africa","Latin Ameri
 rain$country <- tolower(rain$country)
 d$country <- tolower(d$country)
 colnames(rain)[1] <- "studyid"
+rain$studyid <- as.character(rain$studyid)
+rain$studyid[rain$studyid == "ki1017093b-PROVIDE "] <-  "ki1017093b-PROVIDE"
 d$country[d$country=="tanzania, united republic of"] <- "tanzania"
 
 #remove grant identifiers from studyid
 d$studyid <- gsub("^k.*?-" , "", d$studyid)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
-
-#drop PROVIDE from rain dataset (no date in KI data)
-rain <- filter(rain, studyid!="PROVIDE ")
 
 #Transform rain dataset
 rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
@@ -65,66 +64,9 @@ df <- d
 rain <- rain2
 cohort_name <- cohorts[[1]]
 
+
+
 #Rain_plot function
-# rain_plot <- function(df, rain, cohort_name){
-#   rain_sub <- filter(rain, cohort == cohort_name)
-#   dsub <- filter(df, cohort == cohort_name)
-#   
-#   #add
-#   cohort_name <- paste0(cohort_name,"\nSeasonality index: ", round(rain_sub$cohort_index[1],2))
-#   
-#   rainmax = max(rain_sub$rain)
-#   
-#   # estimate spline fit to mean z-scores by day of the year
-#   fiti <- mgcv::gam(whz ~ s(jday, bs = "cr"), data = dsub)
-#   newd <- data.frame(jday = 0:364)
-#   # estimate approximate simultaneous confidence intervals
-#   fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
-#   dfit <- data.frame(jday = 0:364, region=dsub$region[1], fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
-#   
-#   shift<-min(dfit$fit_lb)
-#   Zpeak<-ifelse(min(dfit$fit_lb)<0, abs(min(dfit$fit_lb)), max(dfit$fit_ub-shift))
-#   conv_shift<-ifelse(min(dfit$fit_lb)<0, max(dfit$fit_ub), 0)
-#   #shift<-max(dfit$fit_ub)
-#   conversion_factor <- rainmax/(Zpeak+conv_shift)
-#   #conv_shift<-ifelse(min(dfit$fit_lb)<0, min(dfit$fit_lb), 0)
-#   #conversion_factor <- 577.9106
-#   
-#   summary(rain_sub$rain)
-#   summary((dfit$fit-shift))
-#   summary((dfit$fit-shift)*conversion_factor)
-#   
-#   p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
-#     geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=region), size=2) +
-#     geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
-#                                  y=(fit-shift)*conversion_factor, 
-#                                  ymin=(fit_lb-shift)*conversion_factor,  
-#                                  ymax=(fit_ub-shift)*conversion_factor, 
-#                                  color=NULL, fill=region), alpha=0.3) +
-#     scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "Mean WLZ")) +
-#     ylab("Rainfall (mm)") + xlab("Month") +
-#     scale_fill_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
-#     scale_color_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
-#     scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
-#                      labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
-#     ggtitle(cohort_name) + theme(legend.position = "none")
-# 
-#   print(p)
-#   
-#   return(p)
-# }
-# 
-# 
-# 
-# 
-# plot_list=list()
-# for(i in 1:length(cohorts)){
-#   plot_list[[i]] <- rain_plot(df=d, rain=rain2, cohort_name=cohorts[i])
-# }
-
-
-
-#Updated plotting function for maing grid
 rain_plot <- function(df, rain, cohort_name){
   rain_sub <- filter(rain, cohort == cohort_name)
   dsub <- filter(df, cohort == cohort_name)
@@ -194,6 +136,7 @@ rain_plot <- function(df, rain, cohort_name){
 
 plot_list=list()
 for(i in 1:length(cohorts)){
+  print(cohorts[i])
   plot_list[[i]] <- rain_plot(df=d, rain=rain2, cohort_name=cohorts[i])
 }
 

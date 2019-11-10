@@ -98,7 +98,7 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
 plot_laz_name = create_name(
   outcome = "laz",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "overall",
   location = "",
   age = "All ages",
@@ -132,7 +132,7 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
 plot_laz_strat_name = create_name(
   outcome = "laz",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "region-stratified",
   location = "",
   age = "All ages",
@@ -165,7 +165,7 @@ ggsave(plot_laz_cohort_asia, file="figures/stunting/fig_stunt_vel_cm_asia_sub.pn
 plot_laz_cohort_asia_name = create_name(
   outcome = "laz",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "cohort-stratified",
   location = "South Asia",
   age = "All ages",
@@ -198,7 +198,7 @@ plot_laz_cohort_latamer <- ggplot(velplot_laz_latamer, aes(y=Mean,x=strata))+
 plot_laz_cohort_latamer_name = create_name(
   outcome = "laz",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "cohort-stratified",
   location = "Latin America",
   age = "All ages",
@@ -230,7 +230,7 @@ plot_laz_cohort_eur <- ggplot(velplot_laz_eur, aes(y=Mean,x=strata))+
 plot_laz_cohort_eur_name = create_name(
   outcome = "laz",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "cohort-stratified",
   location = "Europe",
   age = "All ages",
@@ -262,7 +262,7 @@ plot_laz_cohort_afr <- ggplot(velplot_laz_afr, aes(y=Mean,x=strata))+
 plot_laz_cohort_afr_name = create_name(
   outcome = "laz",
   cutoff = 2,
-  measure = "laz velocity",
+  measure = "LAZ velocity",
   population = "cohort-stratified",
   location = "Africa",
   age = "All ages",

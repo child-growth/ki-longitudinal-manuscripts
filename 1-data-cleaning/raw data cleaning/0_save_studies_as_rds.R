@@ -154,7 +154,7 @@ saveRDS(tzc2, file=paste0(cohortdata_dir, study, '.rds') )
 # EE
 #---------
 study<-"EE"
-EE<-read.csv(paste0(cohortdata_dir,"/adam versions/full_ki1000109_EE.csv")) 
+EE<-read.csv(paste0(cohortdata_dir,"/adam versions/EE/full_ki1000109_EE.csv")) 
 
 
 saveRDS(EE, file=paste0(cohortdata_dir, study, '.rds') )
@@ -233,4 +233,18 @@ fspp<-read.csv(paste0(cohortdata_dir,"/adam versions/sas-foodsupp/full_ki1000304
 
 
 saveRDS(fspp, file=paste0(cohortdata_dir, study, '.rds') )
+
+
+#-------------------------------
+# ki1000304b-SAS-CompFeed   
+#-------------------------------
+
+study<-"cpfd"
+cpfd<-read.csv(paste0(cohortdata_dir,"adam versions/sas-compfeed/ads_full.csv")) 
+
+
+saveRDS(cpfd, file=paste0(cohortdata_dir, study, '.rds') )
+
+
+
 

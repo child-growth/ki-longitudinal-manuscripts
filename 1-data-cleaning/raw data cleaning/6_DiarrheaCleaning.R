@@ -105,6 +105,11 @@ dfull$diarfl[!is.na(dfull$diarfl2)] <- dfull$diarfl2[!is.na(dfull$diarfl2)]
 dfull<-dfull[,1:4]
 
 
+
+
+
+
+
 #Ilins Dose
 d <- read_sas(paste0(ghapdata_dir,"raw SAS datasets/iLiNS-DOSE/morbid18tab.sas7bdat"))
 head(d)
@@ -177,6 +182,7 @@ res <-diar_df %>%
   filter(agedays < 30.4167*6) %>% filter(!is.na(diarfl)) %>%
   group_by(studyid, subjid) %>%
   summarise(n=n(), prev=mean(diarfl, na.rm=T)) %>% 
+  filter(n >= 100) %>% #Drop if less than 100 obs 
   ungroup() %>%
   group_by(studyid) %>%
   summarise(num_obs=sum(n), mean_obs=mean(n), mean_prev=mean(prev) *100) %>%
@@ -187,35 +193,17 @@ res2 <-diar_df %>%
   filter(agedays < 30.4167*24) %>% filter(!is.na(diarfl)) %>%
   group_by(studyid, subjid) %>%
   summarise(n=n(), prev=mean(diarfl, na.rm=T)) %>% 
+  filter(n >= 100) %>% #Drop if less than 100 obs 
   ungroup() %>%
   group_by(studyid) %>%
-  summarise(num_ons=sum(n), mean_obs=mean(n), mean_prev=mean(prev) *100) %>%
+  summarise(num_obs=sum(n), mean_obs=mean(n), mean_prev=mean(prev) *100) %>%
   as.data.frame()
 knitr::kable(res2, digits=1)
 
 
-#Drop studies without correct survellance information or with too few measurements (<100)
-diar_df <- diar_df %>% 
-  #Inaccurate non-case data
-  filter(studyid!="ki1000108-CMC-V-BCS-2002" &
-                                studyid!="ki1000108-IRC" &
-                                studyid!="ki1112895-Burkina Faso Zn" &
-                                studyid!="ki1113344-GMS-Nepal" &
-                                studyid!="ki1148112-iLiNS-DYAD-M ")# %>%
-  #Too few observations
-  # filter(studyid!="ki1148112-iLiNS-DOSE " &
-  #          studyid!="ki1148112-LCNI-5" &
-  #          studyid!="ki1000125-AgaKhanUniv" &
-  #          studyid!="ki1000304-EU" &
-  #          studyid!="ki1148112-iLiNS-DOSE" &
-  #          studyid!="ki1148112-iLiNS-DYAD-M" &
-  #          studyid!="ki1000304-VITAMIN-A" &
-  #          studyid!="ki1000304-ZnMort" &
-  #          studyid!="ki1000304b-SAS-CompFeed" &
-  #          studyid!="ki1066203-TanzaniaChild2" &
-  #          studyid!="ki1126311-ZVITAMBO" )
-
-
+#Drop CMC and IRC, which have 10 and 2 children with enough obs, and unrealisticly high prevalence 
+#(probable incorrect mapping/recording of healthy observations)
+diar_df$diarfl[diar_df$studyid=="ki1000108-CMC-V-BCS-2002" | diar_df$studyid=="ki1000108-IRC"] <- NA
 
 #Summarize under 6 month  diarrhea
 diar_6mo <- diar_df %>% #filter(!is.na(predfeed_fl)) %>% 
@@ -225,7 +213,6 @@ diar_6mo <- diar_df %>% #filter(!is.na(predfeed_fl)) %>%
   ungroup() %>% group_by(studyid) %>% mutate(meanN=mean(n)) %>% filter(meanN >= 100) %>% #Set as NA if less than 100 obs under 6 months
   ungroup() %>% group_by(studyid,subjid) %>% slice(1) %>% subset(., select = -c(n, meanN, agedays, diarfl))
 summary(diar_6mo$perdiar6)
-
 
 
 
@@ -253,3 +240,5 @@ summary(diar_6mo$perdiar6)
 summary(diar$perdiar24)
 
 
+table(diar$studyid, diar$perdiar6 < 0.05)
+table(diar$studyid, diar$perdiar24< 0.05)

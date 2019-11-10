@@ -48,6 +48,7 @@ dim(d)
 
 
 
+
 #--------------------------------------------------------
 # Calculate birth month and month from birth week if birthmonth is missing
 #--------------------------------------------------------
@@ -267,10 +268,21 @@ table(d$studyid, is.na(d$birthwt))
 #single mom
 table(d$studyid[!is.na(d$single)], d$single[!is.na(d$single)])
 
-#Note Jivita-4 single mother is unbelievably high
-#drop single mother variable in kiGH5241-JiVitA-4 
-d$single[d$studyid=="kiGH5241-JiVitA-4"] <-NA
 
+#Merge in post-birth weight measures for jivita-3 and sas-compfeed
+load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/maternal_weight_dataset.Rdata"))
+head(mat_weight)
+mat_weight <- mat_weight %>% rename(post_birth_weight=mwtkg)
+mat_weight$subjid <- as.character(mat_weight$subjid)
+
+d <- left_join(d, mat_weight, by = c("studyid", "subjid"))
+summary(mat_weight$post_birth_weight)
+summary(d$post_birth_weight)
+d$mwtkg[!is.na(d$post_birth_weight)] <- d$post_birth_weight[!is.na(d$post_birth_weight)]
+
+#Set BMI to missing for these studies, then recalculate below
+d$mbmi[!is.na(d$post_birth_weight)] <- NA
+d <- d %>% subset(., select = -c(post_birth_weight))
 
 #Calculate bmi from height and weight, and vice versa, for when only 2 of 3 are measured
 #bmi
@@ -289,9 +301,6 @@ summary(d$mbmi)
 summary(d$mwtkg)
 summary(d$mhtcm)
 
-#drop maternal weight and bmi in kiGH5241-JiVitA-3 as it is measured during pregnancy
-d$mbmi[d$studyid=="kiGH5241-JiVitA-3"] <-NA
-d$mwtkg[d$studyid=="kiGH5241-JiVitA-3"] <-NA
 
 table(d$studyid, !is.na(d$mbmi))
 
