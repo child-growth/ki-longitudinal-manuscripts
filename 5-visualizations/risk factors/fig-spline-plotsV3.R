@@ -14,7 +14,7 @@ d <- d %>% subset(., select=-c(tr))
 cov<-readRDS("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
 
 
-cov <- cov %>% subset(., select=-c( month, W_gagebrth,    W_birthwt,     W_birthlen,   
+cov <- cov %>% subset(., select=-c( region, month, W_gagebrth,    W_birthwt,     W_birthlen,   
                                     W_mage,        W_mhtcm,       W_mwtkg,       W_mbmi,        W_fage,        W_fhtcm,       W_meducyrs,    W_feducyrs,   
                                     W_nrooms,      W_nhh,         W_nchldlt5,    W_parity,         
                                     W_perdiar6,    W_perdiar24))
