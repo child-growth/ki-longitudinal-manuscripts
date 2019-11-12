@@ -508,7 +508,7 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,"_no_probit.
 # Stunting cumulative incidence + incidence proportion 
 # excluding birth
 #-------------------------------------------------------------------------------------------
-ci_inc_plot_strat <- ki_combo_plot(d,
+ci_inc_plot_nobirth <- ki_combo_plot(d,
                              Disease="Stunting",
                              Measure=c("Cumulative incidence", "Incidence_proportion"), 
                              Birth="strat", 
@@ -525,7 +525,7 @@ geom_text_adjust_vec = c(c(2, rep(0, 7)), c(-2, rep(0, 7)),
                          c(2, rep(0, 15)), 
                          c(2, rep(0, 15)), 
                          c(2, rep(0, 15)))
-ci_inc_plot_strat$plot
+ci_inc_plot_nobirth$plot
 
 # get N's for figure caption
 inc_n = d %>%

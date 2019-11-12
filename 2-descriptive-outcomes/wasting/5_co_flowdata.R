@@ -12,7 +12,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-d <- readRDS("U:/ucb-superlearner/Manuscript analysis data/co_occurrence_data.rds")
+d <- readRDS(paste0(ghapdata_dir,"/co_occurrence_data.rds"))
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 
@@ -92,72 +92,10 @@ flow_m = d %>%
                             (stunted==0 & wasted==0 & underwt==0 & co==0 & su==0 & wu==0), 1, 0),
          healthy=ifelse((lageverstunted==0 & lageverwasted==0 & lageverunderwt==0 & lageversu==0 & lageverwu==0 & lageverco==0) &
                             (stunted==0 & wasted==0 & underwt==0 & co==0 & su==0 & wu==0), 1, 0))
-# %>%
-#   
-#   mutate(newly_stunted = ifelse(stunted==1 & 
-#                                   lageverstunted == 0 , 1, 0),
-#          
-#          recover =       ifelse(stunted==0 &
-#                                   lagstunted==1 &
-#                                   lageverstunted==1, 1, 0),
-#          
-#          never_stunted =       ifelse(stunted==0 &
-#                                         lagstunted==0 &
-#                                         lageverstunted==0, 1, 0)) %>%
-#   
-#   # recoding indicators at first measurement since lag is NA
-#   mutate(newly_stunted = ifelse(stunted==1 & measid==1, 1, newly_stunted),
-#          
-#          never_stunted = ifelse(stunted==0 & measid==1, 1, never_stunted),
-#          
-#          recover = ifelse(stunted==0 & measid==1, 0, recover)) %>%
-#   
-#   # code relapse 
-#   mutate(everrecover = cummax(recover),
-#          evernew = cummax(newly_stunted),
-#          
-#          relapse =       ifelse(stunted==1 &
-#                                   lageverstunted==1 &
-#                                   lagstunted==0 &
-#                                   everrecover==1, 1, 0),
-#          
-#          still_stunted = ifelse(stunted==1 & 
-#                                   evernew==1 &
-#                                   lagstunted==1, 1, 0),
-#          
-#          not_stunted =   ifelse(stunted==0 & 
-#                                   lagstunted==0 &
-#                                   everrecover==1, 1, 0))  %>%
-#   
-#   # recode still stunted at first measurement  
-#   mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
 
 
 
 
-
-
-# rec.prev[rec.prev$subjid==103,-c(1:5, 7,10:11, 14)]
-# rec.prev[rec.prev$subjid==103,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
-# # age 3-6 should be still stunted
-# # age 12-15 months should be not stunted
-# 
-# # what to do with the last row of 103?
-# # id 108 meas id 12
-# rec.prev[rec.prev$subjid==108,-c(1:5, 7,9:11, 13:14)][1:10,]
-# rec.prev[rec.prev$subjid==108,-c(1:5, 7,9:11, 13:14)][11:24,]
-# rec.prev[rec.prev$subjid==108,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][1:10,]
-# rec.prev[rec.prev$subjid==108,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][11:24,]
-# 
-# rec.prev[rec.prev$subjid==2,-c(1:5, 7)][1:8,]
-# rec.prev[rec.prev$subjid==2,-c(1:5, 7)][9:24,]
-# rec.prev[rec.prev$subjid==2,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][1:8,]
-# rec.prev[rec.prev$subjid==2,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][9:24,]
-# 
-# rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11)][1:9,]
-# rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11,14)][10:23,]
-# rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
-# rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","new_age","never_stunted","nev_age")][1:9,]
 
 
 # drop measurements with ages over 24 months
@@ -167,12 +105,12 @@ flow_m = flow_m %>% filter(!is.na(agecat))
 flow_m = flow_m %>% mutate(agem = round(agem))
 
 # check that indicators do not contain missing values
-assert_that(names(table(is.na(flow_m$newly_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$recover)))=="FALSE")
-assert_that(names(table(is.na(flow_m$relapse)))=="FALSE")
-assert_that(names(table(is.na(flow_m$still_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$not_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$never_stunted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$stunted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$wasted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$underwt)))=="FALSE")
+assert_that(names(table(is.na(flow_m$co)))=="FALSE")
+assert_that(names(table(is.na(flow_m$su)))=="FALSE")
+assert_that(names(table(is.na(flow_m$wu)))=="FALSE")
 
 # check for multiple categories
 flow_m = flow_m %>% mutate(sum = stunted+wasted+underwt+wu+su+co+recovered+healthy)
@@ -293,46 +231,6 @@ co_0 = as.character(summary$agem[summary$co==0])
 recovered_0 = as.character(summary$agem[summary$recovered==0])
 healthy_0 = as.character(summary$agem[summary$healthy==0])
 
-
-# # function to replace est, se, lb, ub, est.f if
-# # no observations in summary
-# replace_zero = function(data, age_list, label){
-#   
-#   if(length(age_list)>0){
-#     
-#     data$est[data$label==label & data$agecat %in% age_list] = 0
-#     data$ptest.f[data$label==label & data$agecat %in% age_list] = "0"
-#     data$se[data$label==label & data$agecat %in% age_list] = 0
-#     data$lb[data$label==label & data$agecat %in% age_list] = 0
-#     data$ub[data$label==label & data$agecat %in% age_list] = 0
-#     
-#   }
-#   return(data)
-# }
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled,
-#                                  age_list = newly_0,
-#                                  label = "Newly stunted")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = still_0,
-#                                  label = "Still stunted")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = not_0,
-#                                  label = "Not stunted")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = rec_0,
-#                                  label = "Recovered")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = relapse_0,
-#                                  label = "Stunting relapse")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = never_0,
-#                                  label = "Never stunted")
 
 
 saveRDS(flow_m, file=paste0(res_dir, "co_flow.RDS"))

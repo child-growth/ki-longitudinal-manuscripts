@@ -41,8 +41,8 @@ dhs_medians = select(dhs_medians, c("region", "measure", "median"))
 dhs_medians$dsource = "DHS, ki countries"
 
 # Find KI medians, combine KI and DHS medians into a single table
-ki_medians_monthly = readRDS(paste0("results/dhs/ki.zscore.medians.monthly.rds"))
-ki_medians_quarterly = readRDS(paste0("results/dhs/ki.zscore.medians.quarterly.rds"))
+ki_medians_monthly = readRDS(paste0(here("results/dhs/ki.zscore.medians.monthly.rds")))
+ki_medians_quarterly = readRDS(paste0(here("results/dhs/ki.zscore.medians.quarterly.rds")))
 
 calc_medians = function(ki_medians){
   ki_medians$dsource = "ki cohorts"

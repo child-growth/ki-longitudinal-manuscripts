@@ -235,7 +235,7 @@ V <- c("agecat")
 #clusterid ID variable
 id <- c("id")
 
-save(d, Y, A, W, V, id, file="stuntprev_whz_rf.Rdata")
+save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"stuntprev_whz_rf.Rdata"))
 
 
 
@@ -243,7 +243,7 @@ save(d, Y, A, W, V, id, file="stuntprev_whz_rf.Rdata")
 stuntCI_whz <- stuntCI_whz %>% subset(., select = -c(sex))
 d <- left_join(stuntCI_whz, cov, by=c("studyid", "subjid", "country"))
 Y<-c("ever_stunted")
-save(d, Y, A, W, V, id, file="stuntCI_whz_rf.Rdata")
+save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"stuntCI_whz_rf.Rdata"))
 
 
 

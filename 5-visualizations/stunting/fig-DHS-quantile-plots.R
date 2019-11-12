@@ -10,7 +10,7 @@ get_file_path <- function(x)
   file.path(here::here(), x)
 ki.monthly <- readRDS(get_file_path("results/dhs/ki.quantiles.monthly.rds"))
 ki.quarterly<- readRDS(get_file_path("results/dhs/ki.quantiles.quarterly.rds"))
-dhs <- readRDS(get_file_path("results/dhs/dhs.quantiles.rds"))
+dhs <- readRDS(get_file_path("results/dhs/dhs_quantiles.rds"))
 
 #rename variables to unique names for the merge
 ki.monthly <- ki.monthly %>% rename(ki.zscore.monthly = zscore)
