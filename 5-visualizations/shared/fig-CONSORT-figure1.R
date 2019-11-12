@@ -21,13 +21,18 @@ source(paste0(here::here(), "/0-config.R"))
 # Load in HBGD Data from Andrew                                                         #
 #                                                                                       #
 #########################################################################################
-consort_ki <- readRDS("results/HBGDki_CONSORT_inclusion_Ns.rds")
+consort_ki <- readRDS("data/HBGDki_CONSORT_inclusion_Ns.rds")
 consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID))
 
 consort_ki <- consort_ki %>% select("Short_ID", "country", "nchild", "nobs", "Study_ID", "Short_Description", 
                                     "included_longitudinal", "included_anthropometry", "included_low_income", 
                                     "included_ill", "included_small", "included_age", 
                                     "measurefreq") 
+
+#Fix included small in CMIN non-bangladesh cohorts
+consort_ki <- consort_ki %>% mutate(included_small=ifelse(Study_ID=="CMIN" & country != "BANGLADESH", 0, included_small))
+
+
 
 consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild, study_id = Study_ID,
                                     short_desc = Short_Description) %>%  
