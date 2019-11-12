@@ -314,7 +314,7 @@ save(res_haz, res_whz, file=here::here("results",filename))
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
 
 
-# Calculate pooled cs-R2 for haz dataset
+# Calculate pooled cv-R2 for haz dataset
 
 nstudies <- haz %>% summarise(N=n())
 
@@ -336,7 +336,7 @@ pooled_mse_haz <- as.matrix(pooled_mse_full_haz$est)/as.matrix(pooled_mse_null_h
 pooled_r2_haz  <- 1-pooled_mse_haz 
 
 
-# Calculate pooled cs-R2 for whz dataset 
+# Calculate pooled cv-R2 for whz dataset 
 
 nstudies <- whz %>% summarise(N=n())
 
@@ -377,7 +377,7 @@ print(c(pooled_r2_haz , pooled_r2_whz))
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
 
 
-# Calculate pooled cs-R2 for haz dataset
+# Calculate pooled cv-R2 for haz dataset
 
 nstudies <- haz %>% summarise(N=n())
 
@@ -400,7 +400,7 @@ print(c(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_CIu_haz))
 
 
 
-# Calculate pooled cs-R2 for whz dataset
+# Calculate pooled cv-R2 for whz dataset
 
 nstudies <- whz %>% summarise(N=n())
 
@@ -420,11 +420,11 @@ pooled_r2_CIl_whz <- as.matrix(pooled_r2_whz$est) - 1.96*pooled_r2_whz$se
 print(c(pooled_r2_whz$est,pooled_r2_CIl_whz, pooled_r2_CIu_whz))
 
 
-r2_results <- data.frame(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_CIu_haz,
+pooled_r2_results <- data.frame(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_CIu_haz,
                            pooled_r2_whz$est,pooled_r2_CIl_whz, pooled_r2_CIu_whz)
 
 
 
-filename <- paste(paste('R2_results',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename <- paste(paste('pooled_R2_results',Sys.Date( ),sep='_'),'rdata',sep='.')
 
-save(res_haz, res_whz, file=here::here("results",filename))
+save(pooled_r2_results, file=here::here("results",filename))
