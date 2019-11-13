@@ -113,7 +113,7 @@ bar_plot_RE_name = create_name(
 # save plot and underlying data
 ggsave(bar_plot_RE, file=paste0("figures/wasting/fig-",bar_plot_RE_name,".png"), width=10, height=4)
 
-saveRDS(plot_data_pooled, file=paste0("figures/figure-data/figdata-",bar_plot_RE_name,".RDS"))
+saveRDS(plot_data_pooled, file=paste0("figures/wasting/figure-data/figdata-",bar_plot_RE_name,".RDS"))
 
 save(bar_plot_RE, file=paste0(here::here(),"/figures/plot objects/co_flow_object.Rdata"))
 
