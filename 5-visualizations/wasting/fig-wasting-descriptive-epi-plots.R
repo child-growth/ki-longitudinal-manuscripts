@@ -170,8 +170,9 @@ prev_plot_africa <- ki_desc_plot(d,
                           xlabel="Child age, months",
                           ylabel='Point prevalence (95% CI)',
                           yrange=c(0,24),
-                          returnData=T,
-                          Region="Africa")
+                          Region="Africa",
+                          returnData=T
+                          )
 
 prev_plot_lam <- ki_desc_plot(d,
                                  Disease="Wasting",
@@ -361,9 +362,9 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
+ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
-saveRDS(inc_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",inc_plot_name,".RDS"))
+saveRDS(inc_plot$data, file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",inc_plot_name,".RDS"))
 save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.Rdata"))
 
 
@@ -398,18 +399,12 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=3)
-
-ggsave(inc_plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
-
-
+ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
 
 
 #-------------------------------------------------------------------------------------------
 # Wasting recovery
 #-------------------------------------------------------------------------------------------
-
-
 
 rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                           Cohort="pooled",
@@ -518,7 +513,7 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=3)
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=4.5)
 saveRDS(rec_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",rec_plot_name,".RDS"))
 
 save(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object.Rdata"))
@@ -800,7 +795,7 @@ ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/f
 saveRDS(underweight_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",underweight_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
-# Wasting prevalence -MUAC based
+# Wasting prevalence - MUAC based
 #-------------------------------------------------------------------------------------------
 
 ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range, 
@@ -929,9 +924,6 @@ ggsave(ir_sens_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ir_se
 saveRDS(ir_sens_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",ir_sens_plot_name,".RDS"))
 
 
-
-
-
 #-------------------------------------------------------------------------------------------
 # Severe Wasting prevalence
 #-------------------------------------------------------------------------------------------
@@ -964,5 +956,4 @@ sevwast_plot_name = create_name(
 ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
 
 saveRDS(sevwast_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",sevwast_plot_name,".RDS"))
-
 
