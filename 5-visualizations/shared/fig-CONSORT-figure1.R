@@ -399,6 +399,6 @@ grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
                         heights = c(120, 1200))
 
 # save plot and underlying data
-ggsave(filename="figures/fig-consort.pdf",
+ggsave(filename="figures/shared/fig-consort.pdf",
        plot = grid,device='pdf',width=9,height=20,limitsize = FALSE)
 
