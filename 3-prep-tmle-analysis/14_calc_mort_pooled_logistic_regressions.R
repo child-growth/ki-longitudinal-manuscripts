@@ -95,10 +95,10 @@ poissonRB <- function(fmla,dat,print=TRUE) {
 irr <- poissonRB(fmla="dead~wast",dat=d)
 
 
-library(tmle)
-library(SuperLearner)
-
-
-lib=c("SL.glm") 
-test<-tmle(Y=dat$wast, A=dat$ELEC, W=data.frame(W1=rep(1, nrow(dat)),W2=rep(1, nrow(dat))), Q.SL.library=lib , g.SL.library=lib)
-test
+# library(tmle)
+# library(SuperLearner)
+# 
+# 
+# lib=c("SL.glm") 
+# test<-tmle(Y=dat$wast, A=dat$ELEC, W=data.frame(W1=rep(1, nrow(dat)),W2=rep(1, nrow(dat))), Q.SL.library=lib , g.SL.library=lib)
+# test

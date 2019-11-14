@@ -132,6 +132,6 @@ ggsave(p_earlywast, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal
 
 
 
-save(p_lagwhz, p_earlywast, plotdf, file = c("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-wasting-prior-to-stunting-plot-objects.Rdata"))
+save(p_lagwhz, p_earlywast, plotdf, file = c("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/figure-data/fig-wasting-prior-to-stunting-plot-objects.Rdata"))
 
 

@@ -1,0 +1,97 @@
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/c44038d4-935c-41d0-8249-bffaa50525e9/9567e4a0-d47d-4787-bf8f-8b25b901696f
+cd /tmp;tar xvzf tmpi6m3ixj7.tar.gz --strip 1;cd /tmp/c44038d4-935c-41d0-8249-bffaa50525e9;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/52673/append_log/;screen -d -m python x.py;sleep 1
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/runner.R
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/inputs.json
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/provision.sh
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/script.Rmd
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/wrapper.sh
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/9567e4a0-d47d-4787-bf8f-8b25b901696f/
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/x.py
+tmpi6m3ixj7/c44038d4-935c-41d0-8249-bffaa50525e9/ensure_git_dataset.sh
+Requirement already satisfied: requests in /opt/anaconda2/lib/python2.7/site-packages
+You are using pip version 9.0.1, however version 19.3.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+{"job": {"status": "running", "created_at": "2019-11-11T22:49:28.408", "results_url": "/jobs/52673/", "jobs": []}}Making sure longbowtools package is available for runner
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
+> 
+> 
+Installing pandoc
+pandoc-2.3.1/
+pandoc-2.3.1/bin/
+pandoc-2.3.1/bin/pandoc
+pandoc-2.3.1/bin/pandoc-citeproc
+Running provision script
+skipping provisioning because this is a child job
+Making sure longbowtools package is available for runner
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
+> 
+> 
+Starting analysis
+
+
+processing file: REPORT.Rmd
+  |                                                                         |                                                                 |   0%  |                                                                         |..                                                               |   4%
+  ordinary text without R code
+
+  |                                                                         |.....                                                            |   8%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                         |........                                                         |  12%
+  ordinary text without R code
+
+  |                                                                         |..........                                                       |  15%
+label: params (with options) 
+List of 2
+ $ warning: logi FALSE
+ $ message: logi FALSE
+
+Loading required package: graphics
+Quitting from lines 58-84 (REPORT.Rmd) 
+Error in get_tl_nodes() : Column(s) missing from data: enwast
+Calls: run_internal ... withCallingHandlers -> withVisible -> eval -> eval -> get_tl_nodes
+
+Execution halted
+Running analysis failed
+{"status": "error"}
