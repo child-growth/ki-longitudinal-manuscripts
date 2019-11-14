@@ -140,7 +140,7 @@ mean_wlz_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=3)
-saveRDS(df, file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",mean_wlz_plot_name,".RDS"))
+saveRDS(df, file=paste0(here::here(),figdata_dir_wasting,"figdata-",mean_wlz_plot_name,".RDS"))
 
 
 
@@ -170,8 +170,9 @@ prev_plot_africa <- ki_desc_plot(d,
                           xlabel="Child age, months",
                           ylabel='Point prevalence (95% CI)',
                           yrange=c(0,24),
-                          returnData=T,
-                          Region="Africa")
+                          Region="Africa",
+                          returnData=T
+                          )
 
 prev_plot_lam <- ki_desc_plot(d,
                                  Disease="Wasting",
@@ -216,7 +217,7 @@ ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","
 ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
 ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
 
-saveRDS(prev_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",prev_plot_name,".RDS"))
+saveRDS(prev_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",prev_plot_name,".RDS"))
 
 
 
@@ -248,7 +249,7 @@ ci_plot_name = create_name(
 # save plot and underlying data
 ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
 
-saveRDS(ci_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",ci_plot_name,".RDS"))
+saveRDS(ci_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",ci_plot_name,".RDS"))
 
 #Save plot objects for figure grid
 save(mean_wlz_plot, prev_plot, ci_plot, file=paste0(here::here(),"/figures/plot objects/fig2_plot_objects.Rdata"))
@@ -361,9 +362,9 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
+ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
-saveRDS(inc_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",inc_plot_name,".RDS"))
+saveRDS(inc_plot$data, file=paste0(here::here(),figdata_dir_wasting,"figdata-",inc_plot_name,".RDS"))
 save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.Rdata"))
 
 
@@ -398,18 +399,12 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=3)
-
-ggsave(inc_plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
-
-
+ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
 
 
 #-------------------------------------------------------------------------------------------
 # Wasting recovery
 #-------------------------------------------------------------------------------------------
-
-
 
 rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                           Cohort="pooled",
@@ -518,8 +513,8 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=3)
-saveRDS(rec_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",rec_plot_name,".RDS"))
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=4.5)
+saveRDS(rec_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",rec_plot_name,".RDS"))
 
 save(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object.Rdata"))
 
@@ -573,7 +568,7 @@ rec_plot_name = create_name(
 # save plot and underlying data
 ggsave(p, file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=8, height=5)
 
-saveRDS(df, file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",rec_plot_name,".RDS"))
+saveRDS(df, file=paste0(here::here(),figdata_dir_wasting,"figdata-",rec_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Persistent Wasting 
@@ -647,7 +642,7 @@ ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig
 ggsave(perswast_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","perswast_plot_lam", ".png"), width=10, height=5)
 ggsave(perswast_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=10, height=5)
 
-saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",perswast_plot_name,".RDS"))
+saveRDS(perswast_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",perswast_plot_name,".RDS"))
 
 
 
@@ -724,7 +719,7 @@ ggsave(co_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","co
 ggsave(co_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_plot_lam", ".png"), width=10, height=5)
 ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_plot_sasia", ".png"), width=10, height=5)
 
-saveRDS(co_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",co_plot_name,".RDS"))
+saveRDS(co_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",co_plot_name,".RDS"))
 
 save(co_plot, file=paste0(here::here(),"/figures/plot objects/co_plot_object.Rdata"))
 
@@ -797,10 +792,10 @@ ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/
 ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","underweight_plot_lam", ".png"), width=10, height=5)
 ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=10, height=5)
 
-saveRDS(underweight_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",underweight_plot_name,".RDS"))
+saveRDS(underweight_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",underweight_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
-# Wasting prevalence -MUAC based
+# Wasting prevalence - MUAC based
 #-------------------------------------------------------------------------------------------
 
 ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range, 
@@ -891,7 +886,7 @@ muac_plot_name = create_name(
 # save plot and underlying data
 ggsave(muac_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",muac_plot_name, ".png"), width=14, height=5)
 
-saveRDS(muac_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",muac_plot_name,".RDS"))
+saveRDS(muac_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",muac_plot_name,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Comparison of washout period for incidence rate.
@@ -926,10 +921,7 @@ ir_sens_plot_name = create_name(
 # save plot and underlying data
 ggsave(ir_sens_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ir_sens_plot_name, ".png"), width=14, height=5)
 
-saveRDS(ir_sens_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",ir_sens_plot_name,".RDS"))
-
-
-
+saveRDS(ir_sens_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",ir_sens_plot_name,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -963,6 +955,5 @@ sevwast_plot_name = create_name(
 # save plot and underlying data
 ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
 
-saveRDS(sevwast_plot[[2]], file=paste0(here::here(),"/figures/wasting/figure-data/figdata-",sevwast_plot_name,".RDS"))
-
+saveRDS(sevwast_plot[[2]], file=paste0(here::here(),figdata_dir_wasting,"figdata-",sevwast_plot_name,".RDS"))
 

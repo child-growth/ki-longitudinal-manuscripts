@@ -67,7 +67,8 @@ deriveddata_dir                   = paste0(ghapdata_dir, "covariate creation int
 # note: figures must be saved in same directory 
 # as shiny app in order to publish it
 fig_dir                           = paste0(here::here(),"/figures/")
-figdata_dir                       = paste0(here::here(),"/figures/figure-data/")
+figdata_dir_stunting              = paste0(here::here(),"/figures/stunting/figure-data/")
+figdata_dir_wasting               = paste0(here::here(),"/figures/wasting/figure-data/")
     
 #################################
 # Data Cleaning Scripts
@@ -82,8 +83,8 @@ rf_underweight_path               = paste0(ghapdata_dir, "rf_underweight_data.rd
 rf_co_occurrence_path             = paste0(ghapdata_dir, "rf_co_occurrence_data.rds")
 stunting_data_path                = paste0(ghapdata_dir, "stunting_data.rds")
 wasting_data_path                 = paste0(ghapdata_dir, "wasting_data.rds")
-underweight_data_path               = paste0(ghapdata_dir, "underweight_data.rds")
-co_occurrence_data_path              = paste0(ghapdata_dir, "co_occurrence_data.rds")
+underweight_data_path             = paste0(ghapdata_dir, "underweight_data.rds")
+co_occurrence_data_path           = paste0(ghapdata_dir, "co_occurrence_data.rds")
 clean_DHS_haz_path                  = paste0(data_dir, "clean-DHS-haz.rds")
 clean_DHS_waz_path                  = paste0(data_dir, "clean-DHS-waz.rds")
 clean_DHS_whz_path                  = paste0(data_dir, "clean-DHS-whz.rds")

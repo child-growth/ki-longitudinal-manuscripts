@@ -89,8 +89,7 @@ p2_name = create_name(
 
 # save plot and underlying data
 ggsave(p2, file=paste0(here(),"/figures/wasting/fig-",p2_name,".png"), width=6, height=3)
-ggsave(p2, file=paste0(here(),"/6-shiny-app/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
-
+ggsave(p2, file=paste0(here(),"/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
 
 
 
@@ -129,8 +128,6 @@ d$studyseason <- factor(d$studyseason)
 d$studyseason_birthcat <- factor(interaction(d$studyseason, d$birthcat))
 table(d$studyseason_birthcat)
 table(d$birthcat, d$studyseason)
-
-
 
 
 
