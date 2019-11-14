@@ -35,13 +35,6 @@ table(d$studyid)
 table(d$studyid,d$country)
 
 
-#--------------------------------------------
-# Drop Kenaba at-birth data
-#--------------------------------------------
-
-dim(d)
-d <- d %>% filter(!(studyid=="ki1101329-Keneba" & agedays==1))
-dim(d)
 
 #--------------------------------------------
 # order data, create measurement id, and 
