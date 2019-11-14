@@ -141,7 +141,7 @@ for(i in 1:length(cohorts)){
 }
 
 #Save plot objects
-saveRDS(plot_list, file=paste0(here(),"/results/rain_seasonality_plot_objects.rds"))
+saveRDS(plot_list, file=paste0(here(),"/figures/plot objects/rain_seasonality_plot_objects.rds"))
 
 
 

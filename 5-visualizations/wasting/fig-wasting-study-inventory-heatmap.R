@@ -323,4 +323,4 @@ ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name, ".pdf"),
       plot = awstpgrid,device='pdf',width=12,height=8)
 saveRDS(list(dd = dd,
              dp = dp),
-        file=here(paste0("6-shiny-app/figure-data/figdata-",awstpgrid_name,".RDS")))
+        file=here(paste0(figdata_dir_wasting,"figdata-",awstpgrid_name,".RDS")))
