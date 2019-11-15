@@ -167,7 +167,6 @@ ki_desc_plot_fe <- function(d, Disease, Measure, Birth, Severe, Age_range,
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    
     # add space to the left and right of points on x axis
     # to accommodate point estimate labels
     scale_x_discrete(expand = expand_scale(add = 1)) +
@@ -178,7 +177,6 @@ ki_desc_plot_fe <- function(d, Disease, Measure, Birth, Severe, Age_range,
                                        margin(t = 0, r = 0, b = 0, l = 0),
                                      size = 10)) +
     theme(axis.title.y = element_text(size = 12)) +
-    
     ggtitle("")
   
   if (!is.null(Region)) {
