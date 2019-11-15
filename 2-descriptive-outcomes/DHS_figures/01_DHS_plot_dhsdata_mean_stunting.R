@@ -213,4 +213,4 @@ laz_ageplot_name <- create_name(
   analysis = "primary"
 )
 
-saveRDS(dhs_plotd_laz, file = paste0(figdata_dir, "figdata-", laz_ageplot_name, ".RDS"))
+saveRDS(dhs_plotd_laz, file = paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))

@@ -3,8 +3,6 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 
-source(here("2-descriptive-outcomes/compile_desc_outcomes.R"))
-source(here("2-descriptive-outcomes/compile_desc_outcomes_no_probit.R"))
 
 
 source(here("2-descriptive-outcomes/DHS_figures/01_DHS_plot_dhsdata_mean_stunting.R"))
