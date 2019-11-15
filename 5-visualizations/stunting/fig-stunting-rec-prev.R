@@ -134,6 +134,6 @@ ggsave(stplot, file=paste0(fig_dir, "stunting/fig-",st_plot_name,".png"),
 ggsave(meandiff_plot, file=paste0(fig_dir, "stunting/fig-",meandiff_plot_name,".png"), 
        width=5, height=4)
 
-saveRDS(d, file=paste0(figdata_dir, "figdata-",st_plot_name,".RDS"))
-saveRDS(md_data, file=paste0(figdata_dir, "figdata-",meandiff_plot_name,".RDS"))
+saveRDS(d, file=paste0(figdata_dir_stunting, "figdata-",st_plot_name,".RDS"))
+saveRDS(md_data, file=paste0(figdata_dir_stunting, "figdata-",meandiff_plot_name,".RDS"))
 

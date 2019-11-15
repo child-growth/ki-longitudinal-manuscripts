@@ -93,5 +93,5 @@ bar_plot_RE_name = create_name(
 ggsave(bar_plot_RE, file=paste0(fig_dir, "stunting/fig-",
                                   bar_plot_RE_name,".png"), width=10, height=4)
 
-saveRDS(pooled, file=paste0(figdata_dir, "figdata-",
+saveRDS(pooled, file=paste0(figdata_dir_stunting, "figdata-",
                                   bar_plot_RE_name,".RDS"))

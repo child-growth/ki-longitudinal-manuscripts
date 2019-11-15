@@ -110,5 +110,5 @@ ggsave(mean_laz_quantile_plot,
        file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_name,".png"),
        width=14, height=4)
 
-saveRDS(df_quantile, file=paste0(figdata_dir, "figdata-",mean_laz_quantile_plot_name,".RDS"))
+saveRDS(df_quantile, file=paste0(figdata_dir_stunting, "figdata-",mean_laz_quantile_plot_name,".RDS"))
 

@@ -216,7 +216,7 @@ ggsave(mean_laz_quantile_plot_latamer,
 saveRDS(
   quantile_region,
   file = paste0(
-    figdata_dir, "figdata-",
+    figdata_dir_stunting, "figdata-",
     mean_laz_quantile_plot_name,
     ".RDS"
   )
@@ -224,7 +224,7 @@ saveRDS(
 saveRDS(
   quantile_cohort_asia,
   file = paste0(
-    figdata_dir, "figdata-",
+    figdata_dir_stunting, "figdata-",
     mean_laz_quantile_plot_asia_name,
     ".RDS"
   )
@@ -232,7 +232,7 @@ saveRDS(
 saveRDS(
   quantile_cohort_afr,
   file = paste0(
-    figdata_dir, "figdata-",
+    figdata_dir_stunting, "figdata-",
     mean_laz_quantile_plot_afr_name,
     ".RDS"
   )
@@ -240,7 +240,7 @@ saveRDS(
 saveRDS(
   quantile_cohort_latamer,
   file = paste0(
-    figdata_dir, "figdata-",
+    figdata_dir_stunting, "figdata-",
     mean_laz_quantile_plot_latamer_name,
     ".RDS"
   )

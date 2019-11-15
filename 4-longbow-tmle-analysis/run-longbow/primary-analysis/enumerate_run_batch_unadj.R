@@ -58,15 +58,15 @@ bin_batch_id <-  run_on_longbow(rmd_filename, bin_batch_inputs, provision = FALS
 wait_for_batch(bin_batch_id)
 
 # download the longbow outputs
-get_batch_results(bin_batch_id, results_folder="results_bin")
-length(dir("results_bin"))
+get_batch_results(bin_batch_id, results_folder="results_bin_unadj")
+length(dir("results_bin_unadj"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results_bin")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin")
+results <- load_batch_results("results.rdata", results_folder = "results_bin_unadj")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin_unadj")
 
 # save concatenated results
-filename1 <- paste(paste('results_bin',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('results_bin_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename1 <- paste(paste('results_bin_unadj',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename2 <- paste(paste('results_bin_unadj_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
 save(results, file=here("results","rf results","raw longbow results",filename1))
 save(obs_counts, file=here("results","rf results","raw longbow results",filename2))

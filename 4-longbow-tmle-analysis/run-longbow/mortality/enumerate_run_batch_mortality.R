@@ -44,11 +44,8 @@ try(configure_cluster(here("ki-longitudinal-manuscripts","0-project-functions","
 try(configure_cluster("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/0-project-functions/cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
-#inputs <- "inputs_template.json"
-#inputs <- "single_bin_analysis.json"
 
-#run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+
 
 # send the batch to longbow (with provisioning disabled)
 mort_batch_inputs <- "all_mortality_analyses.json"

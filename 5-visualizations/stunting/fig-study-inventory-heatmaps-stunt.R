@@ -324,5 +324,5 @@ ggsave(filename=paste0(fig_dir, "stunting/fig-",stpgrid_name,".pdf"),
        plot = stpgrid,device='pdf',width=12,height=9)
 saveRDS(list(dd = dd,
              dp = dp), 
-        file=paste0(figdata_dir, "figdata-",stpgrid_name,".RDS"))
+        file=paste0(figdata_dir_stunting, "figdata-",stpgrid_name,".RDS"))
 

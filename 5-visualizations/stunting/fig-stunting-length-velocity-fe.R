@@ -168,7 +168,7 @@ plot_laz_name = create_name(
 
 # save plot and underlying data
 ggsave(plot_laz, file=paste0(fig_dir, "stunting/fig-",plot_laz_name,".png"), width=12, height=6)
-saveRDS(velplot_laz, file=paste0(figdata_dir, "figdata-",plot_laz_name,".RDS"))
+saveRDS(velplot_laz, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_name,".RDS"))
 
 
 #-------------------------------------
@@ -209,7 +209,7 @@ plot_laz_strat_name = create_name(
 
 # save plot and underlying data
 ggsave(plot_laz_strat, file=paste0(fig_dir, "stunting/fig-",plot_laz_strat_name,".png"), width=12, height=6)
-saveRDS(velplot_laz_strat, file=paste0(figdata_dir, "figdata-",plot_laz_strat_name,".RDS"))
+saveRDS(velplot_laz_strat, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_strat_name,".RDS"))
 
 
 ####################################################################################
@@ -284,7 +284,7 @@ plot_cm_name = create_name(
 # save plot and underlying data
 ggsave(plot_cm, file=paste0(fig_dir, "stunting/fig-",plot_cm_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm, file=paste0(figdata_dir, "figdata-",plot_cm_name,".RDS"))
+saveRDS(velplot_cm, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_name,".RDS"))
 
 #-------------------------------------
 # absolute length plot - stratified by region
@@ -331,7 +331,7 @@ plot_cm_strat_name = create_name(
 # save plot and underlying data
 ggsave(plot_cm_strat, file=paste0(fig_dir, "stunting/fig-",plot_cm_strat_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm_strat, file=paste0(figdata_dir, "figdata-",plot_cm_strat_name,".RDS"))
+saveRDS(velplot_cm_strat, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_strat_name,".RDS"))
 
 
 ############################################################################
@@ -386,7 +386,7 @@ saveRDS(
     velplot_laz = velplot_laz,
     meanlaz_overall = meanlaz_overall
   ),
-  file = paste0(figdata_dir, "figdata-", combined_plot_name, ".RDS")
+  file = paste0(figdata_dir_stunting, "figdata-", combined_plot_name, ".RDS")
 )
 
 saveRDS(
@@ -395,5 +395,5 @@ saveRDS(
     velplot_laz_strat = velplot_laz_strat,
     meanlaz_strat = meanlaz_strat
   ),
-  file = paste0(figdata_dir, "figdata-", combined_plot_strat_name, ".RDS")
+  file = paste0(figdata_dir_stunting, "figdata-", combined_plot_strat_name, ".RDS")
 )
