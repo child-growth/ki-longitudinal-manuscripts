@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <- season <- NULL
 
-load(here("/results/rf results/raw longbow results/results_cont_2019-10-30.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_2019-11-13.rdata"))
 Zscores <- results
 
 # load(here("/results/rf results/raw longbow results/results_bin_2019-08-17.rdata"))
