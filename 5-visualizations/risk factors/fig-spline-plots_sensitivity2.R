@@ -27,7 +27,7 @@ d <- d %>% filter(agedays < 24 * 30.4167)
 d <- subset(d, select = -c(id, arm, tr))
 dim(d)
 
-
+d <- droplevels(d)
 
 
 
@@ -38,13 +38,13 @@ dim(d)
 purple_color_gradient = c("#7644ff", "#b3adff", "#e4dbff")
 Avarwt="Maternal weight"
 
-p1 <- ggplot(data=d) +
+p1 <- ggplot(data=d[!is.na(d$mwtkg),]) +
   geom_smooth(aes(x=agedays, y=whz, group=mwtkg, color=mwtkg), size=1.25, se=F) +
   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
+  #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = c(0.8,0.9))
@@ -59,13 +59,13 @@ print(p1)
 Avar="Maternal height"
 light_blue_color_gradient = c("#0fb3bf", "#83ced3", "#c5e0e2")
 
-p2 <- ggplot(data=d) +
+p2 <- ggplot(data=d[!is.na(d$mhtcm),]) +
   geom_smooth(aes(x=agedays, y=whz, group=mhtcm, color=mhtcm), size=1.25, se=F) +
   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
+  #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = c(0.8,0.9))
@@ -79,13 +79,13 @@ print(p2)
 
 Avarwt="Maternal weight"
 
-p3 <- ggplot(data=d) +
+p3 <- ggplot(data=d[!is.na(d$mwtkg),]) +
   geom_smooth(aes(x=agedays, y=haz, group=mwtkg, color=mwtkg), size=1.25, se=F) +
   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
+  #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = c(0.8,0.9))
@@ -100,13 +100,13 @@ print(p3)
 
 Avar="Maternal height"
 
-p4 <- ggplot(data=d) +
+p4 <- ggplot(data=d[!is.na(d$mhtcm),]) +
   geom_smooth(aes(x=agedays, y=haz, group=mhtcm, color=mhtcm), size=1.25, se=F) +
   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
+  #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = c(0.8,0.9))
@@ -125,13 +125,13 @@ Avarwt="Maternal BMI"
 
 brown_color_gradient = c(tableau10[6], "#c99a6b")
 
-p5 <- ggplot(data=d) +
+p5 <- ggplot(data=d[!is.na(d$mbmi),]) +
   geom_smooth(aes(x=agedays, y=haz, group=mbmi, color=mbmi), size=1.25, se=F) +
   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
+  #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean WLZ") +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = c(0.8,0.9))
@@ -146,7 +146,7 @@ print(p5)
 # WLZ- maternal BMI
 #------------------------------------------------------------------------------------------------
 
-p6 <- ggplot(data=d) +
+p6 <- ggplot(data=d[!is.na(d$mbmi),]) +
   geom_smooth(aes(x=agedays, y=whz, group=mbmi, color=mbmi), size=1.25, se=F) +
   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
@@ -171,5 +171,5 @@ print(p6)
 #------------------------------------------------------------------------------------------------
 
 #Save plot objects
-save(p1, p2, p3, p4, p5, p6,  file=paste0(here(),"/figures/risk-factor/figure-data/rf_spline_sens_objects2.Rdata"))
+save(p1, p2, p3, p4, p5, p6,  file=paste0(here(),"/figures/plot objects/risk factor/rf_spline_sens_objects2.Rdata"))
 
