@@ -44,7 +44,7 @@ d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
-# subset to primary analysis
+# subset to probit analysis
 d <- d %>% filter(analysis == "No Probit")
 
 # scale cohort-specific estimates

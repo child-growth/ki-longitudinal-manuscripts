@@ -42,11 +42,11 @@ expand_scale = function(mult = 0, add = 0) {
 theme_set(theme_ki())
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned_no_probit.RDS"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
-# subset to fixed effects analysis
+# subset to probit analysis
 d <- d %>% filter(analysis == "No Probit - Fixed effects")
 
 #-------------------------------------------------------------------------------------------

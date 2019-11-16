@@ -45,5 +45,4 @@ source(here("5-visualizations/stunting/fig-DHS-plots-laz.R"))
 source(here("5-visualizations/stunting/fig-DHS-quantile-plots.R"))
 #No probit
 source(here("5-visualizations/stunting/fig-stunting-descriptive-epi-plots_no_probit.R"))
-source(here("5-visualizations/stunting/fig-stunting-descriptive-epi-plot-monthly24_no_probit.R"))
 source(here("5-visualizations/stunting/fig-stunting-descriptive-epi-plots-fe_no_probit.R"))

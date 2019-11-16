@@ -5,18 +5,18 @@ source(paste0(here::here(), "/0-config.R"))
 
 
 #Load mortality outcomes
-mort <- readRDS("U:/UCB-SuperLearner/Manuscript analysis data/mortality.rds")
+mort <- readRDS(paste0(ghapdata_dir,"mortality.rds"))
 
 
 #load covariates
-cov <- readRDS("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+cov <- readRDS(paste0(ghapdata_dir,"/FINAL_clean_covariates.rds"))
 cov$country <- as.character(cov$country)
 #Drop wasting risk factors
 cov <- cov %>% subset(., select= -c(pers_wast, enwast, anywast06))
 
 
 #Load wasting measures
-load("mort_exposures.rdata")
+load(paste0(ghapdata_dir,"mort_exposures.rdata"))
 
 stunt_ci_0_6 <- stunt_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_stunted06, ever_sstunted06)) 
 #stunt_ci_6_24 <- stunt_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_stunted624, ever_sstunted624))
@@ -160,7 +160,7 @@ d %>% filter(tot_dead>10) %>% #group_by(studyid, country) %>%
   ndeath=sum(dead), missage=sum(is.na(agedth)))
 
 
-saveRDS(d, file="U:/UCB-SuperLearner/Manuscript analysis data/stuntwast_mort.rds")
+save(d, file=paste(ghapdata_dir,"stuntwast_mort.Rdata"))
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -248,7 +248,7 @@ for(i in Avars_morbidity){
 }
 
 
-save(d, file="U:/UCB-SuperLearner/Manuscript analysis data/stuntwast_morbidity.Rdata")
+save(d, file=paste(ghapdata_dir,"stuntwast_morbidity.Rdata"))
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
