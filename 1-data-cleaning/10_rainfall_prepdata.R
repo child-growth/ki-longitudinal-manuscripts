@@ -41,20 +41,57 @@ source(paste0(here::here(), "/0-config.R"))
  yrs$max_yr <- round(yrs$max_yr, 0)
  yrs$country[yrs$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
  
- study_rain <- NULL
+ rain <- NULL
  for(i in 1:nrow(yrs)){
    study <- yrs[i,]
    d_sub <- d %>% filter(country == study$country, YEAR >= study$start_year & YEAR <= study$max_yr)
    #Get average of rain over the study period
    study_ave_rain <- d_sub[,-c(1:2)] %>% summarise_all(funs(mean))
    res <- data.frame(study, study_ave_rain)
-   study_rain <- rbind( study_rain, res)
+   rain <- rbind( rain, res)
  }
  
  #Drop cohorts not used in the rain analysis
- study_rain <- study_rain %>% filter(!is.na(JAN))
+ rain <- rain %>% filter(!is.na(JAN))
  
- saveRDS(study_rain, file = here("data/cohort_rain_data.rds"))
+ 
+ #Clean up rain dataset
+ colnames(rain) <- tolower(colnames(rain))
+ colnames(rain)[c(7:18)] <- str_to_title(colnames(rain)[c(7:18)])
+ 
+ #Calculate seasonal index
+ rain <- rain %>% 
+   mutate(ann = (Jan+ Feb+ Mar+ Apr+ May+ Jun+ Jul+ Aug+ Sep+ Oct+ Nov+ Dec),
+          ave_month=ann/12,
+          abs_Jan = abs(Jan-ave_month), 
+          abs_Feb = abs(Feb-ave_month), 
+          abs_Mar = abs(Mar-ave_month), 
+          abs_Apr = abs(Apr-ave_month), 
+          abs_May = abs(May-ave_month), 
+          abs_Jun = abs(Jun-ave_month), 
+          abs_Jul = abs(Jul-ave_month), 
+          abs_Aug = abs(Aug-ave_month), 
+          abs_Sep = abs(Sep-ave_month), 
+          abs_Oct = abs(Oct-ave_month), 
+          abs_Nov = abs(Nov-ave_month), 
+          abs_Dec = abs(Dec-ave_month), 
+          cohort_index =  1/ann  * (abs_Jan+
+                                      abs_Feb+ abs_Mar+
+                                      abs_Apr+ abs_May+
+                                      abs_Jun+ abs_Jul+
+                                      abs_Aug+ abs_Sep+
+                                      abs_Oct+ abs_Nov+
+                                      abs_Dec)) %>%
+   subset(., select = -c(ave_month, abs_Jan,
+                           abs_Feb, abs_Mar,
+                           abs_Apr, abs_May,
+                           abs_Jun, abs_Jul,
+                           abs_Aug, abs_Sep,
+                           abs_Oct, abs_Nov,
+                           abs_Dec))
+ summary(rain$cohort_index)
+ 
+ saveRDS(rain, file = here("data/cohort_rain_data.rds"))
  
  
  

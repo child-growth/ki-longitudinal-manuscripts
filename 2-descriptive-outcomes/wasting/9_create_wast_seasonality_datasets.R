@@ -30,33 +30,6 @@ d$country[d$country=="tanzania, united republic of"] <- "tanzania"
 d$studyid <- gsub("^k.*?-" , "", d$studyid)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
 
-colnames(rain) <- tolower(colnames(rain))
-colnames(rain)[c(7:18)] <- str_to_title(colnames(rain)[c(7:18)])
-
-#Calculate seasonal index
-rain <- rain %>% 
-  mutate(ann = (Jan+ Feb+ Mar+ Apr+ May+ Jun+ Jul+ Aug+ Sep+ Oct+ Nov+ Dec),
-    ave_month=ann/12,
-    abs_Jan = abs(Jan-ave_month), 
-    abs_Feb = abs(Feb-ave_month), 
-    abs_Mar = abs(Mar-ave_month), 
-    abs_Apr = abs(Apr-ave_month), 
-    abs_May = abs(May-ave_month), 
-    abs_Jun = abs(Jun-ave_month), 
-    abs_Jul = abs(Jul-ave_month), 
-    abs_Aug = abs(Aug-ave_month), 
-    abs_Sep = abs(Sep-ave_month), 
-    abs_Oct = abs(Oct-ave_month), 
-    abs_Nov = abs(Nov-ave_month), 
-    abs_Dec = abs(Dec-ave_month), 
-    cohort_index =  1/ann  * (abs_Jan+
-                              abs_Feb+ abs_Mar+
-                              abs_Apr+ abs_May+
-                              abs_Jun+ abs_Jul+
-                              abs_Aug+ abs_Sep+
-                              abs_Oct+ abs_Nov+
-                                abs_Dec))
-summary(rain$cohort_index)
 
 #Transform rain dataset
 rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan", "Feb", "Mar", "Apr", "May",
