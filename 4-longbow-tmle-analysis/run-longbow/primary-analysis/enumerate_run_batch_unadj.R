@@ -15,7 +15,7 @@ setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
 
-load(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
+load(here("4-longbow-tmle-analysis","analysis specification","unadjusted_binary_analyses.rdata"))
 analyses <- analyses
 # load("wasting_unadjusted_binary_analyses.rdata")
 # analyses_2 <- analyses
@@ -48,7 +48,7 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 inputs <- "single_bin_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 bin_batch_inputs <- "all_bin_analyses.json"

@@ -47,6 +47,11 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 
 
 
+#run test/provisioning job
+inputs <- "single_mortality_analyses.json"
+run_on_longbow(rmd_filename, inputs, provision = TRUE)
+
+
 # send the batch to longbow (with provisioning disabled)
 mort_batch_inputs <- "all_mortality_analyses.json"
 mort_batch_id <-  run_on_longbow(rmd_filename, mort_batch_inputs, provision = FALSE)

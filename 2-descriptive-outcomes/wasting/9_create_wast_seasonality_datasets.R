@@ -11,6 +11,7 @@ library(RcppRoll)
 
 
 rain <- read.csv(here("/data/monthly_rainfall.csv"))
+rain2 <- readRDS(here("/data/cohort_rain_data.rds"))
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 head(rain)
