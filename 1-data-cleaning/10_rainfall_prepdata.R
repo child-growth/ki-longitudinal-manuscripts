@@ -39,7 +39,7 @@ source(paste0(here::here(), "/0-config.R"))
  
  yrs <- readRDS(here("data/study_start_years.rds"))
  yrs$max_yr <- round(yrs$max_yr, 0)
- 
+ yrs$country[yrs$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
  
  study_rain <- NULL
  for(i in 1:nrow(yrs)){
