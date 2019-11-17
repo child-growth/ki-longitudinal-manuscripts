@@ -255,7 +255,7 @@ ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_na
 saveRDS(ci_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,".RDS"))
 
 #Save plot objects for figure grid
-save(mean_wlz_plot, prev_plot, ci_plot, file=paste0(here::here(),"/figures/plot objects/fig2_plot_objects.Rdata"))
+saveRDS(list(mean_wlz_plot, prev_plot, ci_plot), file=paste0(here::here(),"/figures/plot objects/fig2_plot_objects.rds"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -368,7 +368,7 @@ inc_plot_name = create_name(
 ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
 saveRDS(inc_plot$data, file=paste0(figdata_dir_wasting,"figdata-",inc_plot_name,".RDS"))
-save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.Rdata"))
+saveRDS(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.rds"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -519,7 +519,7 @@ rec_plot_name = create_name(
 ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=4.5)
 saveRDS(rec_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",rec_plot_name,".RDS"))
 
-save(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object.Rdata"))
+saveRDS(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object.rds"))
 
 
 #Plot just the overall facet for presentation slide
@@ -724,7 +724,7 @@ ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_
 
 saveRDS(co_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",co_plot_name,".RDS"))
 
-save(co_plot, file=paste0(here::here(),"/figures/plot objects/co_plot_object.Rdata"))
+saveRDS(co_plot, file=paste0(here::here(),"/figures/plot objects/co_plot_object.rds"))
 
 
 #-------------------------------------------------------------------------------------------
