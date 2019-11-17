@@ -60,8 +60,8 @@ ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/wasting/f
 # ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig3.png"), width=14, height=14)
 
 #Figure 4
-load(here("/figures/plot objects/rec_plot_object.Rdata"))
-load(here("/figures/plot objects/inc_plot_object.Rdata"))
+rec_plot <- readRDS(here("/figures/plot objects/rec_plot_object.rds"))
+inc_plot <- readRDS(here("/figures/plot objects/inc_plot_object.rds"))
 
 rec_violin_plot <- readRDS(here("/figures/plot objects/rec_violin_plot_object.rds"))
 birthstrat_stats_plot <- readRDS(here("/figures/plot objects/birthstrat_stats_plot_object.rds"))
