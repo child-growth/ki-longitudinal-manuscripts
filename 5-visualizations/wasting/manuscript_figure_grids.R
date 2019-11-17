@@ -9,10 +9,10 @@ require(cowplot)
 
 
 #Figure 3 alt
-load(here("/figures/plot objects/season_diff_plot.Rdata"))
+#load(here("/figures/plot objects/season_diff_plot.Rdata"))
 load(here("/figures/plot objects/season_RR_plot.Rdata"))
-load(here("/figures/plot objects/season_plots.Rdata"))
-plot_list <- readRDS(paste0(here(),"/results/rain_seasonality_plot_objects.rds"))
+seasonbirth_plot_list <- readRDS(paste0(here(),"/figures/plot objects/season_plots.RDS"))
+plot_list <- readRDS(paste0(here(),"/figures/plot objects/rain_seasonality_plot_objects.rds"))
 
 #Left plot
 left_plot <- plot_grid(
@@ -27,7 +27,7 @@ left_plot <- plot_grid(
 
 #Right plot
 #p_seasonRR <- p_seasonRR + coord_flip() + 
-right_plot <- plot_grid(p_seasonRR, p2, labels = c("B","C"), ncol = 1, rel_heights = c(1.5, 1))
+right_plot <- plot_grid(p_seasonRR, seasonbirth_plot_list[[2]], labels = c("B","C"), ncol = 1, rel_heights = c(1.5, 1))
 
 
 fig3 <- plot_grid(left_plot, right_plot, labels = c("A",""), ncol = 2, align = 'h', axis = 'l', rel_heights = c(1, 1))
@@ -61,13 +61,13 @@ ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/wasting/f
 
 #Figure 4
 load(here("/figures/plot objects/rec_plot_object.Rdata"))
-load(here("/figures/plot objects/rec_violin_plot_object.Rdata"))
 load(here("/figures/plot objects/inc_plot_object.Rdata"))
-load(here("/figures/plot objects/birthstrat_stats_plot_object.Rdata"))
-load(here("/figures/plot objects/birthwast_strat_growth_curve_object.Rdata"))
-birthstrat_curve<-p
-load(here("/figures/plot objects/ind_traj_plot_object.Rdata"))
-ind_traj <- p
+
+rec_violin_plot <- readRDS(here("/figures/plot objects/rec_violin_plot_object.rds"))
+birthstrat_stats_plot <- readRDS(here("/figures/plot objects/birthstrat_stats_plot_object.rds"))
+birthstrat_curve <- readRDS(here("/figures/plot objects/birthwast_strat_growth_curve_object.rds"))
+ind_traj <- readRDS(here("/figures/plot objects/ind_traj_plot_object.rds"))
+
 colors <-  c("green", "orange", "red", "grey80", "grey40")
 names(colors) = c("Not wasted", "Wasted", "Severe wasted", "Born wasted", "Born severe wasted")
 
@@ -78,9 +78,10 @@ fig4_c <- plot_grid(birthstrat_curve, birthstrat_stats_plot, labels = c("E","F")
 fig4 <- plot_grid(fig4_a, inc_plot[[1]], rec_plot[[1]], fig4_c, labels = c("","B","D",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
 ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig4.png"), width=14, height=14)
 
+
 #Figure 5
 load(here("/figures/plot objects/co_plot_object.Rdata"))
-load(here("/figures/plot objects/co_flow_object.Rdata"))
+bar_plot_RE <- readRDS(here("/figures/plot objects/co_flow_object.rds"))
 
 co_p <- co_plot[[1]]
 co_p <- co_p + theme(legend.position = "none")

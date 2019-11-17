@@ -67,7 +67,7 @@ rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX
 inputs <- "single_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_analyses.json"

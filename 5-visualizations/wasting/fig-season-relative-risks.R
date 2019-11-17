@@ -8,23 +8,24 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load longbow results
-load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_results_2019-11-17.rdata"))
 
 #Load seasonality index and prep for merge
-rain <- read.csv(here("/data/monthly_rainfall.csv"))
+rain <- readRDS(here("/data/cohort_rain_data.rds"))
 rain <- rain %>% subset(., select = c(studyid, country, cohort_index)) %>% 
   rename(season_index = cohort_index) %>%
+  arrange(season_index) %>%
   mutate(seasonality_category = 
            case_when(
              season_index >= 0.8 ~ "High seasonality",
-             season_index < 0.5 ~ "Low seasonality",
+             season_index < 0.6 ~ "Low seasonality",
              TRUE ~ "Medium seasonality"),
          seasonality_category = factor(seasonality_category, levels=c("High seasonality", "Medium seasonality", "Low seasonality")))
 table(rain$seasonality_category)
 
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
 rain$country <- as.character(rain$country)
-rain$country[rain$country=="Tanzania "] <- "Tanzania"
+rain$country <- str_to_title(rain$country)
 
 #Merge resulta and seasonality index
 d <- left_join(results, rain, by = c("studyid","country"))
