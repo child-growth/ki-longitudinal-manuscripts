@@ -10,15 +10,15 @@ require(cowplot)
 library(RcppRoll)
 
 
-rain <- read.csv(here("/data/monthly_rainfall.csv"))
-rain2 <- readRDS(here("/data/cohort_rain_data.rds"))
+#rain <- read.csv(here("/data/monthly_rainfall.csv"))
+rain <- readRDS(here("/data/cohort_rain_data.rds"))
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
 head(rain)
 head(d)
 
-rain$country <- toupper(rain$country)
-rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
+# rain$country <- toupper(rain$country)
+# rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
 rain <- mark_region(rain)
 rain$region <- factor(rain$region, levels = c("South Asia","Africa","Latin America"))
 rain$country <- tolower(rain$country)
@@ -30,12 +30,37 @@ d$country[d$country=="tanzania, united republic of"] <- "tanzania"
 d$studyid <- gsub("^k.*?-" , "", d$studyid)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
 
-#drop PROVIDE from rain dataset (no date in KI data)
-rain <- filter(rain, studyid!="PROVIDE ")
+colnames(rain) <- tolower(colnames(rain))
+colnames(rain)[c(7:18)] <- str_to_title(colnames(rain)[c(7:18)])
+
+#Calculate seasonal index
+rain <- rain %>% 
+  mutate(ann = (Jan+ Feb+ Mar+ Apr+ May+ Jun+ Jul+ Aug+ Sep+ Oct+ Nov+ Dec),
+    ave_month=ann/12,
+    abs_Jan = abs(Jan-ave_month), 
+    abs_Feb = abs(Feb-ave_month), 
+    abs_Mar = abs(Mar-ave_month), 
+    abs_Apr = abs(Apr-ave_month), 
+    abs_May = abs(May-ave_month), 
+    abs_Jun = abs(Jun-ave_month), 
+    abs_Jul = abs(Jul-ave_month), 
+    abs_Aug = abs(Aug-ave_month), 
+    abs_Sep = abs(Sep-ave_month), 
+    abs_Oct = abs(Oct-ave_month), 
+    abs_Nov = abs(Nov-ave_month), 
+    abs_Dec = abs(Dec-ave_month), 
+    cohort_index =  1/ann  * (abs_Jan+
+                              abs_Feb+ abs_Mar+
+                              abs_Apr+ abs_May+
+                              abs_Jun+ abs_Jul+
+                              abs_Aug+ abs_Sep+
+                              abs_Oct+ abs_Nov+
+                                abs_Dec))
+summary(rain$cohort_index)
 
 #Transform rain dataset
-rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
-                                      "Jun_pre", "Jul_pre", "Aug_pre", "Sep_pre", "Oct_pre", "Nov_pre", "Dec_pre"))
+rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan", "Feb", "Mar", "Apr", "May",
+                                      "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
 
 rain$country <- str_to_title(rain$country)
 d$country <- str_to_title(d$country)

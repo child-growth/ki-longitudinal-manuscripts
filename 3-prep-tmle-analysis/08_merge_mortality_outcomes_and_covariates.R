@@ -160,7 +160,7 @@ d %>% filter(tot_dead>10) %>% #group_by(studyid, country) %>%
   ndeath=sum(dead), missage=sum(is.na(agedth)))
 
 
-save(d, file=paste(ghapdata_dir,"stuntwast_mortality.Rdata"))
+save(d, file=paste0(ghapdata_dir,"stuntwast_mortality.Rdata"))
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -248,7 +248,7 @@ for(i in Avars_morbidity){
 }
 
 
-save(d, file=paste(ghapdata_dir,"stuntwast_morbidity.Rdata"))
+save(d, file=paste0(ghapdata_dir,"stuntwast_morbidity.Rdata"))
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
