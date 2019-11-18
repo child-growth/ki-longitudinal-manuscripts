@@ -168,7 +168,7 @@ print(p6)
 #------------------------------------------------------------------------------------------------
 
 #Save plot objects
-save(p1, p2, p3, p4, p5, p6,  file=paste0(here(),"/figures/plot objects/risk factor/rf_spline_sens_objects3.Rdata"))
+saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot objects/risk factor/rf_spline_sens_objects3.RDS"))
 
 
 
