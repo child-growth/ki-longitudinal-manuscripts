@@ -4,28 +4,35 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <- season <- NULL
+Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- season <- NULL
 
-load(here("/results/rf results/raw longbow results/results_cont_2019-11-13.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_2019-11-17.rdata"))
 Zscores <- results
 
-# load(here("/results/rf results/raw longbow results/results_bin_2019-08-17.rdata"))
-# bin <- results
-# 
-# load(here("/results/rf results/raw longbow results/mortality_2019-08-18.rdata"))
-# mort <- results
-# 
-# load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-08-19.rdata"))
-# Zscores_unadj <- results
-# 
+load(here("/results/rf results/raw longbow results/results_bin_2019-11-16.rdata"))
+bin <- results
+
+load(here("/results/rf results/raw longbow results/mortality_2019-11-16.rdata"))
+mort <- results
+
+load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-11-16.rdata"))
+Zscores_unadj <- results
+
+load(here("/results/rf results/raw longbow results/results_bin_unadj_2019-11-16.rdata"))
+bin_unadj <- results
+
 # load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
 # lagwhz <- results
-# 
-load(here("results","rf results","raw longbow results","seasonality_results_2019-10-27.rdata"))
+
+load(here("/results/rf results/raw longbow results/vel_wlz_quart_2019-11-17.rdata"))
+velocity <- results
+
+load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
 season <- results
 
 
-d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, season)
+d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, velocity, season)
+
 
 
 

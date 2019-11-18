@@ -3,15 +3,17 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
+#source(here("4-longbow-tmle-analysis/combine_results_Ns.R"))
+source(here("4-longbow-tmle-analysis/combine_results_Ns_cont_sub.R"))
+source(here("4-longbow-tmle-analysis/combine_results_Ns_sub.R"))
+source(here("4-longbow-tmle-analysis/create_shiny_df.R"))
+
+source(here("4-longbow-tmle-analysis/combine_results_outputs.R"))
+
 
 
 source(here("4-longbow-tmle-analysis/calc_EValues.R"))
-source(here("4-longbow-tmle-analysis/combine_results_Ns.R"))
-source(here("4-longbow-tmle-analysis/combine_results_Ns_cont_sub.R"))
-source(here("4-longbow-tmle-analysis/combine_results_Ns_cont_sub_new.R"))
-source(here("4-longbow-tmle-analysis/combine_results_Ns_sub.R"))
-source(here("4-longbow-tmle-analysis/combine_results_outputs.R"))
-source(here("4-longbow-tmle-analysis/create_shiny_df.R"))
+
 source(here("4-longbow-tmle-analysis/mediation_analysis.R"))
 source(here("4-longbow-tmle-analysis/pool_ATE.R"))
 source(here("4-longbow-tmle-analysis/pool_PAF.R"))

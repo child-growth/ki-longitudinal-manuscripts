@@ -18,10 +18,9 @@ setwd(here("4-longbow-tmle-analysis","run-longbow","optimal-intervention-analysi
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
 
-# # Binary
-# load('../Manuscript analysis/adjusted_binary_analyses_sub.rdata')
-# analyses$count_Y <- TRUE
-# analyses_1 <- analyses
+#Load existing results
+load(here("results/rf results/raw longbow results/opttx_vim_results_2019-11-18.rdata"))   
+
 
 # # Continious
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
@@ -29,7 +28,12 @@ load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuou
 analyses$count_Y <- FALSE
 analyses$maximize <- TRUE
 
-analyses <- analyses %>% filter(Y %in% c("whz"))
+
+#Subset analysis to jobs not yet run
+analyses <- analyses %>% filter(Y %in% c("whz","haz"))
+analyses <- analyses %>% filter((Y == "whz" & !(A %in% results$intervention_variable[results$outcome_variable=="whz"])) |
+                                (Y == "haz" & !(A %in% results$intervention_variable[results$outcome_variable=="haz"])))
+table(analyses$A, analyses$Y)
 
 #analyses_2 <- analyses
 #analyses <- rbindlist(list(analyses_2, analyses_1), fill=TRUE)
@@ -52,8 +56,7 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
   return(analysis_params)
 })
 
-writeLines(toJSON(enumerated_analyses[[10]]),"single_analysis.json")
-writeLines(toJSON(enumerated_analyses),"all_analyses.json")
+writeLines(toJSON(enumerated_analyses),"sub_analyses.json")
 
 
 
@@ -65,13 +68,11 @@ configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX")
 
-inputs <- "single_analysis.json"
 
-#run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+
 
 # send the batch to longbow (with provisioning disabled)
-batch_inputs <- "all_analyses.json"
+batch_inputs <- "sub_analyses.json"
 batch_id <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
 
 # wait for the batch to finish and track progress
