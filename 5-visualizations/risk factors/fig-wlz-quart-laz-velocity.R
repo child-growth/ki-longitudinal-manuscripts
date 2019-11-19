@@ -6,9 +6,11 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-load(file=here("results","rf results","raw longbow results","vel_wlz_quart_2019-08-20.rdata"))
 
-d <- results %>% filter(type=="ATE")
+results <- readRDS(here("/results/rf results/full_RF_results.rds"))
+
+
+d <- results %>% filter(type=="ATE", intervention_variable=="lag_WHZ_quart")
 
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)
@@ -45,5 +47,6 @@ plen_lagwhz <- ggplot(plen_plotdf, aes(x=intervention_level)) +
 
 ggsave(plen_lagwhz, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-WLZ-quart-len-vel.png"), height=4, width=10)
 
-save(plen_lagwhz, plen_plotdf, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/fig-WLZ-quart-len-vel.rdata"))
+saveRDS(plen_lagwhz, file=here("figures/plot objects/risk factor/fig-WLZ-quart-len-vel.rds"))
+saveRDS(plen_plotdf, file=here("figures/risk factor/figure-data/fig-WLZ-quart-len-vel.rds"))
 

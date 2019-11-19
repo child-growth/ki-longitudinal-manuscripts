@@ -6,7 +6,7 @@ library(progress)
 library(longbowRiskFactors)
 
 
-load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-11-17.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-11-18.rdata"))
 
 d <- obs_counts
 

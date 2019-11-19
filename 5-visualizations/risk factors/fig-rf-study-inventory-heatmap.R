@@ -28,8 +28,8 @@ textcol = "grey20"
 #-----------------------------------
 # load the risk factor presence and N's
 #-----------------------------------
-rfp <- readRDS('results/cov_presence.rds')
-rfn <- readRDS('results/cov_N.rds')
+rfp <- readRDS(here('results/cov_presence.rds'))
+rfn <- readRDS(here('results/cov_N.rds'))
 
 # gather rf presence by study into long format
 rfp <- rfp %>% 
