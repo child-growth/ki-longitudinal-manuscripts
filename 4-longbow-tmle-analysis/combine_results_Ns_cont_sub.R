@@ -11,6 +11,11 @@ load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-
 d <- obs_counts
 
 
+load(here("/results/rf results/raw longbow results/seasonality_results_obs_counts_2019-11-15.rdata"))
+
+d2 <- obs_counts
+
+
 exposure_vars <- c(
   "gagebrth",        "birthlen",      "enwast",        "vagbrth",      
   "hdlvry",        "fage",          "mwtkg",         "mbmi",          "fhtcm",        

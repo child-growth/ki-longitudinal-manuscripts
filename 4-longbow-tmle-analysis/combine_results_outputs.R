@@ -60,6 +60,7 @@ load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/contin
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
+#merge in seasonal N's
 
 dim(d)
 dim(N_sums)

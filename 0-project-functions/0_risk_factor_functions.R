@@ -220,7 +220,8 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                   "impsan","safeh20","trth2o",
                                                   "impfloor","cleanck",
                                                   "brthmon" ,"month",
-                                                  "lag_WHZ_quart"))   
+                                                  "lag_WHZ_quart",
+                                                  "rain_quartile"))   
   
   
   #Add variable labels
@@ -269,6 +270,9 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFlabel[RMAest$intervention_variable=="month"] <-  "Month of measurement"
   RMAest$RFlabel[RMAest$intervention_variable=="brthmon"] <-  "Birth month"
   RMAest$RFlabel[RMAest$intervention_variable=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 mo."
+  RMAest$RFlabel[RMAest$intervention_variable=="rain_quartile"] <-  "Mean WHZ in the prior 3 mo."
+  
+  
   
   RMAest$intervention_variable <- factor(RMAest$intervention_variable)
   
@@ -315,6 +319,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFtype[RMAest$intervention_variable=="exclfeed6"] <-  "Breastfeeding"
   RMAest$RFtype[RMAest$intervention_variable=="month"] <-  "Time"
   RMAest$RFtype[RMAest$intervention_variable=="brthmon"] <-  "Time"
+  RMAest$RFtype[RMAest$intervention_variable=="rain_quartile"] <-  "Time"
   RMAest$RFtype[RMAest$intervention_variable=="enwast"] <-  "Postnatal child health"
   RMAest$RFtype[RMAest$intervention_variable=="anywast06"] <-  "Postnatal child health"
   RMAest$RFtype[RMAest$intervention_variable=="pers_wast"] <-  "Postnatal child health"
