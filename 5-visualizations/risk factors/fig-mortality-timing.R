@@ -6,8 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Load mortality outcomes
 df <- mort <- readRDS("U:/UCB-SuperLearner/Manuscript analysis data/mortality.rds")
-mort <- mort %>% filter(!is.na(agedth)) %>%
-  subset(., select = -c(agedays))
+mort <- mort %>% filter(!is.na(agedth))
 
 df <- df %>% filter(!(studyid %in% c("ki1055867-WomenFirst","ki1000301-DIVIDS","ki0047075b-MAL-ED", 
                                      "ki1000304b-SAS-FoodSuppl", "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal"))) #drop studies qith too few outcomes
