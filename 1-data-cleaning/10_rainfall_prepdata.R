@@ -16,6 +16,12 @@ source(paste0(here::here(), "/0-config.R"))
  pr <- read.table(here("data/non-secure data/rain_data/crucy.v3.23.1901.2014.Peru.pre.per"), header=T, skip = 3)
  sa <- read.table(here("data/non-secure data/rain_data/crucy.v3.23.1901.2014.South_Africa.pre.per"), header=T, skip = 3)
  tz <- read.table(here("data/non-secure data/rain_data/crucy.v3.23.1901.2014.Tanzania.pre.per"), header=T, skip = 3)
+ zw <- read.table(here("data/non-secure data/rain_data/crucy.v3.23.1901.2014.Zimbabwe.pre.per"), header=T, skip = 3)
+ ph <- read.table(here("data/non-secure data/rain_data/crucy.v3.23.1901.2014.Philippines.pre.per"), header=T, skip = 3)
+ bl <- read.table(here("data/non-secure data/rain_data/crucy.v3.23.1901.2014.Belarus.pre.per"), header=T, skip = 3)
+ bf <- read.table(here("data/non-secure data/rain_data/crucy.v3.23.1901.2014.Burkina_Faso.pre.per"), header=T, skip = 3)
+ mw <- read.table(here("data/non-secure data/rain_data/crucy.v3.23.1901.2014.Malawi.pre.per"), header=T, skip = 3)
+ 
 
  d <- rbind(
    data.frame(country="BANGLADESH", bd),
@@ -27,7 +33,12 @@ source(paste0(here::here(), "/0-config.R"))
    data.frame(country="PAKISTAN", pk),
    data.frame(country="PERU", pr),
    data.frame(country="SOUTH AFRICA", sa),
-   data.frame(country="TANZANIA", tz)
+   data.frame(country="TANZANIA", tz),
+   data.frame(country="ZIMBABWE", zw),
+   data.frame(country="PHILIPPINES", ph),
+   data.frame(country="BELARUS", bl),
+   data.frame(country="MALAWI", mw),
+   data.frame(country="BURKINA FASO", bf)
  )
  
  saveRDS(d, file = here("data/full_rain_data.rds"))
@@ -52,6 +63,7 @@ source(paste0(here::here(), "/0-config.R"))
  }
  
  #Drop cohorts not used in the rain analysis
+ rain[is.na(rain$JAN),]
  rain <- rain %>% filter(!is.na(JAN))
  
  
