@@ -14,6 +14,13 @@ library(RcppRoll)
 rain <- readRDS(here("/data/cohort_rain_data.rds"))
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
+#subset to monthly cohorts
+d <- d %>% filter(measurefreq=="monthly")
+
+#drop outliers 
+d <- d %>% filter(!is.na(whz)) %>% filter(whz < 5 & whz > (-5))
+
+
 head(rain)
 head(d)
 
@@ -59,7 +66,8 @@ d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
                   cohort=factor(cohort, levels=unique(rain_long$cohort)))
 
 rain_long <- droplevels(rain_long)
-cohorts=levels(rain_long$cohort)
+d <- droplevels(d)
+cohorts=levels(d$cohort)
 
 
 

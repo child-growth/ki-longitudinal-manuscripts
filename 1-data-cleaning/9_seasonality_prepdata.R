@@ -39,7 +39,7 @@ d$subjid <- as.character(d$subjid)
 d <- d %>% filter(measurefreq!="yearly")
 
 #Has Z-score data
-d <- d %>% filter(!is.na(whz)) %>% filter(whz < 5 & whz > (-5))
+d <- d %>% filter(!is.na(whz) | !is.na(haz)) 
 
 #estimate birthday
 d$birthday <- d$brthweek *7 - 7 #Minus 7 days so week 1 starts at 0 and week 53 is day 364
