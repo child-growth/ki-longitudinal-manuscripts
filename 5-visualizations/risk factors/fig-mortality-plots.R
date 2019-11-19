@@ -4,8 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-#Plot themes
-theme_set(theme_ki())
+
 
 #Plot parameters
 yticks <- c( 0.50, 1.00, 2.00, 4.00, 8.00)
@@ -14,8 +13,7 @@ tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
 tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
 Ylab <- "Relative Risk"
-scaleFUN <- function(x) sprintf("%.2f", x)
-theme_set(theme_bw())
+scaleFUN <- function(x) sprintf("%.0f", x)
 
 
 clean_nmeans<-function(nmeas){
@@ -36,11 +34,9 @@ clean_agecat<-function(agecat){
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
-#dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_unadj_results.rds"))
-
 
 unique(dfull$type)
-d <- dfull %>% filter(type=="RR")
+d <- dfull %>% filter(type=="RR", adjusted==1)
 
 #keep only morbidity and mortality analysis
 d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
@@ -50,21 +46,6 @@ d <- droplevels(d)
 
 #drop reference levels
 d <- d %>% filter( ci_lower !=  ci_upper)
-
-summary(d$estimate)
-
-sumRR <- d %>% group_by(outcome_variable, intervention_variable) %>% summarize(RR= exp(mean(untransformed_estimate))) %>% as.data.frame()
-sumRR
-
-df <- d %>% filter(intervention_variable=="ever_sunderweight06"|intervention_variable=="ever_underweight06") %>% filter(outcome_variable!="dead") 
-df
-
-# d<- d %>% filter(!(studyid %in% c("ki0047075b-MAL-ED", "ki1000304b-SAS-FoodSuppl",  "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal")))
-# summary(d$estimate)
-# 
-# d <- d[d$estimate >  .5, ]
-# d <- d[d$estimate <   20, ]
-# summary(d$estimate)
 
 
 poolRR <- function(d){
@@ -107,20 +88,16 @@ saveRDS(RMAest, paste0(here::here(),"/results/rf results/pooled_mortality_RR_res
 
 
 d <- RMAest
-
-
-
-
-# d <- d %>% filter(intervention_level==1) %>% 
-#   filter(unadjusted==0 | intervention_variable=="ever_wasted024" | intervention_variable=="ever_sstunted024") %>%
-#   filter(pooled == 1)
-# d$pooled <- factor(d$pooled)
 d <- droplevels(d)
 
 table(d$outcome_variable)
-d$outcome_variable <- factor(d$outcome_variable, levels=c("dead","pers_wasted624","co_occurence"))
-levels(d$outcome_variable) <- c("Mortality","Persistently wasted from 6-24 months","Wasted and stunted at 18 months")
+d$outcome_variable <- factor(d$outcome_variable, levels=c("dead", "pers_wasted624", "co_occurence"))
+levels(d$outcome_variable) <- c("Relative risk of\nmortality by 24 months",
+                                "Relative risk of\npersistent wasting from 6-24mo",  
+                                "Relative risk of concurrent\nwasting and stunting at 18mo"
+                                )
 table(d$outcome_variable)
+
 
 d$RFlabel <- NA
 d$RFlabel[d$intervention_variable=="ever_wasted06"] <- "Wasted under 6mo" 
@@ -177,16 +154,12 @@ d$intervention_variable <- factor(d$RFlabel)
 
 
 #Drop 6-24 month outcomes
-d <- d %>% filter(agerange!="6-24 months")
+d2 <- d %>% filter(agerange!="6-24 months")
 
-
-i<- levels(d$outcome_variable)[1]
-
-d2 <- d %>% filter(outcome_variable==i, BW=="")
 d2<-droplevels(d2)
 
 d2$intervention_variable <- as.character(d2$intervention_variable)
-d2 <- d2 %>% arrange(RR)
+d2 <- d2 %>% arrange(outcome_variable, RR)
 d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
 
 d2 = d2 %>% mutate(Measure=tolower(Measure),
@@ -199,185 +172,37 @@ d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
-p1 <- ggplot(d2, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
+d2$severe<-factor(ifelse(grepl("evere",d2$RFlabel),1,0),levels=c("0","1"))
+
+
+pmort <- ggplot(d2, aes(x=outcome_label)) +
+  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-  labs(y = "Relative risk of mortality by 24 months", x = "Exposure 0-6 months") +
-  geom_hline(yintercept = 1) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
+  #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
+  labs(y = "", x = "Exposure 0-6 months") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_size_manual(values=c(4,5)) +
-  theme(plot.title = element_text(hjust = 0.5),
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.placement = "outside",
+        panel.spacing = unit(0, "lines"),
+        plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
         text = element_text(size=16), 
         legend.position = "none") + 
-  #ggtitle("Outcome: mortality") + 
-  coord_cartesian(ylim=c(1,9)) + 
-  coord_flip()
-
-print(p1)
-ggsave(p1, file="figures/risk factor/fig-mortality-RR.png", width=10, height=5.2)
+  facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
+  #coord_cartesian(ylim=c(1,9)) + 
+  coord_flip(ylim=c(1,9))
+    #expand=c(0,0)) 
 
 
+ggsave(pmort, file=here("/figures/risk factor/fig-mort+morb-RR.png"), width=14, height=5.2)
 
+#Save plot object
+save(pmort, file=here("results/rf_mort+morb_plot_object.Rdata"))
 
-
-
-# i<- levels(d$outcome_variable)[2]
-# 
-# d2 <- d %>% filter(outcome_variable==i, BW=="")
-# d2<-droplevels(d2)
-# 
-# d2$intervention_variable <- as.character(d2$intervention_variable)
-# d2 <- d2 %>% arrange(RR)
-# d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
-# 
-# d2 = d2 %>% mutate(type = gsub("No", "Moderate", type)) %>% mutate(type = gsub("Yes", "Severe", type))
-# d2 = d2 %>% mutate(outcome_label = paste(Measure, ", ", type, sep = ""))
-# # p_mortsens <- ggplot(d2, aes(x=as.numeric(intervention_variable))) +
-# #   geom_point(aes(y=RR, color=Measure, shape=factor(type)), size=4, stroke = 1.5) +
-# #   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-# #   geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-# #   labs(y = "", x = "Exposure 0-6 months") +
-# #   geom_hline(yintercept = 1) +
-# #   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-# #   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
-# #   scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-# #   scale_size_manual(values=c(4,5)) +
-# #   scale_shape_manual(name = "Shape", 
-# #                      labels = c("Moderate 0-6 months", 
-# #                                 "Severe 0-6 months",
-# #                                 "Moderate 0-24 months", 
-# #                                 "Severe 0-24 months"),
-# #                      values=c(16,21,17,24)) +
-# #   theme(plot.title = element_text(hjust = 0.5),
-# #         strip.background = element_blank(),
-# #         legend.position=c(0.3, 0.82),
-# #         axis.title.x=element_blank(),
-# #         axis.text.x=element_blank(),
-# #         axis.ticks.x=element_blank(),
-# #         text = element_text(size=16),
-# #         legend.title = element_text(size = 8),
-# #         legend.text = element_text(size = 8),
-# #         legend.key.size = unit(0.3, "cm"),
-# #         legend.key.width = unit(0.3,"cm"),
-# #         legend.spacing = unit(0.1, 'cm')) + 
-# #   guides(shape=guide_legend(ncol=2), color=guide_legend(ncol=2))+
-# #   ggtitle("Outcome: mortality") + coord_cartesian(ylim=c(1,9))
-# 
-# 
-# p_mortsens <- ggplot(d2, aes(x=outcome_label)) +
-#   geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
-#   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-#   #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-#   labs(y = "", x = "Exposure 0-6 months") +
-#   geom_hline(yintercept = 1) +
-#   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-#   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
-#   scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-#   scale_size_manual(values=c(4,5)) +
-#   theme(plot.title = element_text(hjust = 0.5),
-#         strip.background = element_blank(),
-#         text = element_text(size=16), 
-#         legend.position = "none") + 
-#   ggtitle("Outcome: all mortality") + coord_cartesian(ylim=c(1,9)) + 
-#   coord_flip()
-# 
-# print(p_mortsens)
-# 
-# ggsave(p_mortsens, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-mortality-RR-sensitivity.png", width=6, height=5.2)
-# 
-
-
-
-
-i<-levels(d$outcome_variable)[2]
-
-d2 <- d %>% filter(outcome_variable==i) %>% filter(BW=="")
-
-d2<-droplevels(d2)
-
-d2$intervention_variable <- as.character(d2$intervention_variable)
-d2 <- d2 %>% arrange(RR)
-d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
-
-d2 = d2 %>% mutate(Measure=tolower(Measure),
-                   type = gsub("No", "Moderately", type),
-                   type = gsub("Yes", "Severely", type),
-                   type = gsub(" 0-6 months", "", type))
-
-d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
-                   outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
-                   outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
-                   outcome_label = factor(outcome_label, levels=unique(outcome_label)))
-
-
-
-p2 <- ggplot(d2, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-  labs(y = "Relative risk of persistent wasting from 6-24mo", x = "Exposure 0-6 months") +
-  geom_hline(yintercept = 1) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_size_manual(values=c(4,5)) +
-  theme(plot.title = element_text(hjust = 0.5),
-        strip.background = element_blank(),
-        legend.position="none",
-        text = element_text(size=16)) + 
-  #ggtitle("Outcome: persistent wasting\nfrom 6-24 months")+ 
-  coord_cartesian(ylim=c(1,8))+
-  coord_flip()
-
-ggsave(p2, file=here("/figures/risk factor/fig-morbidity-perswast-RR.png"), width=10, height=5.2)
-
-
-
-i<-levels(d$outcome_variable)[3]
-
-d2 <- d %>% filter(outcome_variable==i) %>% filter(BW=="")
-d2<-droplevels(d2)
-
-d2$intervention_variable <- as.character(d2$intervention_variable)
-d2 <- d2 %>% arrange(RR)
-d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
-
-d2 = d2 %>% mutate(Measure=tolower(Measure),
-                   type = gsub("No", "Moderately", type),
-                   type = gsub("Yes", "Severely", type),
-                   type = gsub(" 0-6 months", "", type))
-
-d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
-                   outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
-                   outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
-                   outcome_label = factor(outcome_label, levels=unique(outcome_label)))
-
-
-p3 <- ggplot(d2, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure), size=4, stroke = 1.5) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  #geom_text(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-  labs(y = "Relative risk of being wasted + stunted at 18mo", x = "Exposure 0-6 months") +
-  geom_hline(yintercept = 1) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-  #scale_fill_manual(values=tableau11[c(5,1)]) +
-  scale_size_manual(values=c(4,5)) +
-  theme(plot.title = element_text(hjust = 0.5),
-        strip.background = element_blank(),
-        legend.position = "none",
-        text = element_text(size=16))+
-  #ggtitle("Outcome: wasted and\nstunted at 18 months") + 
-  coord_cartesian(ylim=c(1,8)) +
-  coord_flip()
-
-ggsave(p3, file=here("/figures/risk factor/fig-morbidity-co-RR.png"), width=10, height=5.2)
-
-
-#Save plot objects
-save(p1, p2, p3, file=here("results/rf_mortality_plot_objects.Rdata"))
+#To do:
+# Change the legend to refer to one plot
+# Change plot references throughout the manuscript

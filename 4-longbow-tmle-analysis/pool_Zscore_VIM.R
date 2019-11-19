@@ -9,13 +9,17 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_2019-08-18.rdata")
-results_full <- results %>% filter(intervention_variable!="nchldlt5")
+load(here("results/rf results/raw longbow results/opttx_vim_results_2019-11-18.rdata"))
+results_full <- results
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_nchild_results_2019-08-21.rdata")
+#Load subset run after full longbow job errored 80% of the way through
+load(here("results/rf results/raw longbow results/opttx_vim_results_subset_2019-11-18.rdata"))
+
 results <- rbind(results_full, results)
 
 saveRDS(results, paste0(here::here(),"/results/rf results/full_VIM_results.rds"))
+
+
 
 unique(results$type)
 d <- results %>% filter(type=="PAR")

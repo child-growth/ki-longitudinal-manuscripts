@@ -36,16 +36,18 @@ source(here("4-longbow-tmle-analysis/VIM_comparions.R"))
 
 
 #Secondary outcome pooling
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_ATE_FE.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_ATE_FE_unadj.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_ATE_unadj.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_PAF_FE.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_PAF_FE_unadj.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_PAF_unadj.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_RR_FE.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_RR_FE_unadj.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_RR_unadj.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_Zscore_PAR_FE.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_Zscore_PAR_FE_unadj.R"))
-# source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_Zscore_PAR_unadj.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_ATE_FE.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_ATE_FE_unadj.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_ATE_unadj.R"))
 
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_Zscore_PAR_FE.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_Zscore_PAR_unadj.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_Zscore_PAR_FE_unadj.R"))
+
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_PAF_FE.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_PAF_FE_unadj.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_PAF_unadj.R"))
+
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_RR_FE.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_RR_FE_unadj.R"))
+source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_RR_unadj.R"))

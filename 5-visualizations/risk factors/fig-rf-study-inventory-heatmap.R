@@ -58,21 +58,23 @@ d$studyid<- gsub("^k.*?-" , "", d$studyid)
 #-----------------------------------
 # load and merge study descriptions
 #-----------------------------------
-md <- readRDS('results/GHAP_metadata_stunting.rds')
-md <- md %>% select(study_id, short_description) %>% rename(studyid = study_id) %>%
-             distinct(studyid, short_description)
+md <- readRDS(file=here("results/KI_metadata_stunting.RDS"))
+md <- md %>% select(studyid, country)
+
+# shorten the description for a few studies
+md <- shorten_descriptions(md)
+table(md$studyid, is.na(md$short_description))
 
 dim(d)
-dd <- left_join(d, md, by = c("studyid"))
+dd <- left_join(d, md, by = c("studyid", "country"))
 dim(dd)
+head(dd)
 
 #-----------------------------------
 # Do some final tidying up for the plot
 #-----------------------------------
 
 
-# shorten the description for a few studies
-dd <- shorten_descriptions(dd)
 
 # make a study-country label, and make the monthly variable into a factor
 # including an anonymous label (temporary) for sharing with WHO
@@ -104,11 +106,6 @@ dd <- dd %>% mutate(region = case_when(
 
 # # simplify Tanzania label
 dd$country[dd$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
-
-# shorten the description for a few studies
-dd <- dd %>% rename(study_id=studyid)
-dd <- shorten_descriptions(dd)
-dd <- dd %>% rename(studyid=study_id)
 
 
 dd$region <- as.character(dd$region)
@@ -300,6 +297,6 @@ rfhmgrid <- grid.arrange(nrfbar2,empty,
                         widths=c(100,20))
 
 # save plot 
-ggsave(filename=paste0("figures/manuscript figure composites/risk factor/fig-rf-heatmap.pdf"),
+ggsave(filename=here("figures/manuscript figure composites/risk factor/fig-rf-heatmap.pdf"),
        plot = rfhmgrid,device='pdf',width=12,height=9)
 

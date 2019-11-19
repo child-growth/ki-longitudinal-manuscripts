@@ -12,10 +12,11 @@ source(here("5-visualizations/risk factors/fig-age-strat-rf-comp.R"))
 source(here("5-visualizations/risk factors/fig-extra-manuscript-plots.R"))
 
 source(here("5-visualizations/risk factors/fig-spline-plots.R"))
+
 source(here("5-visualizations/risk factors/fig-wast-perswast-comp.R"))
 source(here("5-visualizations/risk factors/fig-wlz-quart-laz-velocity.R"))
 
-source(here("5-visualizations/risk factors/fig-mortality-plotsV2.R"))
+source(here("5-visualizations/risk factors/fig-mortality-plots.R"))
 source(here("5-visualizations/risk factors/fig-mortality-timing.R"))
 
 
@@ -35,7 +36,6 @@ source(here("5-visualizations/risk factors/fig-adjustment-effect-by-cov-number.R
 
 #Supplimental figures
 source(here("5-visualizations/risk factors/fig-kaplan-meier-curves.R"))
-source(here("5-visualizations/risk factors/mortality-kaplan-meier-curves.Rmd"))
 
 source(here("5-visualizations/risk factors/fig-RR-plots.R"))
 
