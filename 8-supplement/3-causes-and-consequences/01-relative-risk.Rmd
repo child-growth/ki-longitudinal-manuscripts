@@ -1,4 +1,4 @@
-# Sensitivity analysis using fixed effects {#fixed-effects}
+# Relative risk plots {#RR}
 
 ---
 output:
