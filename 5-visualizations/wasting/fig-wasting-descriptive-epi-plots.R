@@ -7,7 +7,7 @@ d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 load(paste0(here::here(),"/results/quantile_data_wasting.Rdata"))
 
 #Subset to primary analysis
-d <- d %>% filter(analysis=="Primary")
+d <- d %>% filter(analysis=="Primary", (pooling!="country" | is.na(pooling)))
 
 #subset to regional and overall pooled estimates
 #d <- d %>% filter(cohort=="pooled", pooling!="country" | is.na(pooling))
@@ -132,7 +132,7 @@ mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
 
 # define standardized plot names
 mean_wlz_plot_name = create_name(
-  outcome = "wlz",
+  outcome = "WLZ",
   cutoff = 2,
   measure = "mean",
   population = "overall and region-stratified",

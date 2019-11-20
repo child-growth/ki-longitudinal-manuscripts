@@ -124,7 +124,7 @@ ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",ci_plot
 saveRDS(ci_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",ci_plot_name,"_FE.RDS"))
 
 #Save plot objects for figure grid
-save(mean_wlz_plot, prev_plot, ci_plot, file=paste0(here::here(),"/figures/plot objects/fig2_plot_objects.Rdata"))
+save(mean_wlz_plot, prev_plot, ci_plot, file=paste0(here::here(),"/figures/plot objects/fig2_plot_objects_FE.rdata"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -237,7 +237,7 @@ inc_plot_name = create_name(
 ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",inc_plot_name, "_FE.png"), width=14, height=3)
 
 saveRDS(inc_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",inc_plot_name,"_FE.RDS"))
-save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.Rdata"))
+save(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object_FE.rdata"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -394,7 +394,7 @@ rec_plot_name = create_name(
 ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",rec_plot_name, "_FE.png"), width=14, height=3)
 saveRDS(rec_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",rec_plot_name,"_FE.RDS"))
 
-save(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object.Rdata"))
+save(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object_FE.rdata"))
 
 
 #Plot just the overall facet for presentation slide
@@ -599,7 +599,7 @@ ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","
 
 saveRDS(co_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",co_plot_name,"_FE.RDS"))
 
-save(co_plot, file=paste0(here::here(),"/figures/plot objects/co_plot_object.Rdata"))
+save(co_plot, file=paste0(here::here(),"/figures/plot objects/co_plot_object_FE.rdata"))
 
 
 #-------------------------------------------------------------------------------------------

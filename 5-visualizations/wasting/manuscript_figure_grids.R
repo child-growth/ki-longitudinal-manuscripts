@@ -12,12 +12,12 @@ require(cowplot)
 
 
 #Figure 2
-load(here("/figures/plot objects/fig2_plot_objects.Rdata"))
+plot_list <- readRDS(here("/figures/plot objects/fig2_plot_objects.RDS"))
 
-prev_p <- prev_plot[[1]]
+prev_p <- plot_list[[2]]
 prev_p <- prev_p + theme(legend.position = "none")
 
-fig2 <- plot_grid(mean_wlz_plot, prev_p, ci_plot[[1]], labels = "AUTO", ncol = 1, align = 'v', axis = 'l')
+fig2 <- plot_grid(plot_list[[1]], prev_p, plot_list[[3]], labels = "AUTO", ncol = 1, align = 'v', axis = 'l')
 
 ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig2.png"), width=14, height=14)
 
