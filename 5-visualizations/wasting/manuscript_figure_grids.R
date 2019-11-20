@@ -8,9 +8,25 @@ require(cowplot)
 
 
 
-#Figure 3 alt
+
+
+
+#Figure 2
+load(here("/figures/plot objects/fig2_plot_objects.Rdata"))
+
+prev_p <- prev_plot[[1]]
+prev_p <- prev_p + theme(legend.position = "none")
+
+fig2 <- plot_grid(mean_wlz_plot, prev_p, ci_plot[[1]], labels = "AUTO", ncol = 1, align = 'v', axis = 'l')
+
+ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig2.png"), width=14, height=14)
+
+
+
+#Figure 3 
 #load(here("/figures/plot objects/season_diff_plot.Rdata"))
-load(here("/figures/plot objects/season_RR_plot.Rdata"))
+p_seasonRR <- readRDS(here("/figures/plot objects/season_RR_plot.rds"))
+
 seasonbirth_plot_list <- readRDS(paste0(here(),"/figures/plot objects/season_plots.RDS"))
 plot_list <- readRDS(paste0(here(),"/figures/plot objects/rain_seasonality_plot_objects.rds"))
 
@@ -32,32 +48,8 @@ right_plot <- plot_grid(p_seasonRR, seasonbirth_plot_list[[2]], labels = c("B","
 
 fig3 <- plot_grid(left_plot, right_plot, labels = c("A",""), ncol = 2, align = 'h', axis = 'l', rel_heights = c(1, 1))
 
-ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig3_alt.png"), width=14, height=14)
+ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig3.png"), width=14, height=14)
 
-
-
-
-
-#Figure 2
-load(here("/figures/plot objects/fig2_plot_objects.Rdata"))
-
-prev_p <- prev_plot[[1]]
-prev_p <- prev_p + theme(legend.position = "none")
-
-fig2 <- plot_grid(mean_wlz_plot, prev_p, ci_plot[[1]], labels = "AUTO", ncol = 1, align = 'v', axis = 'l')
-
-ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig2.png"), width=14, height=14)
-
-
-#Figure 3
-# load(here("/figures/plot objects/season_diff_plot.Rdata"))
-# load(here("/figures/plot objects/season_plots.Rdata"))
-# 
-# TwobyTwoplot <- plot_grid(p1, p2, p3, p4, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-# 
-# fig3 <- plot_grid(TwobyTwoplot, pdiff, labels = c("","E"), ncol = 1, align = 'h', axis = 'l', rel_heights = c(2, 1))
-# 
-# ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig3.png"), width=14, height=14)
 
 #Figure 4
 rec_plot <- readRDS(here("/figures/plot objects/rec_plot_object.rds"))
@@ -80,7 +72,7 @@ ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/wasting/f
 
 
 #Figure 5
-load(here("/figures/plot objects/co_plot_object.Rdata"))
+co_plot <- readRDS(here("/figures/plot objects/co_plot_object.rds"))
 bar_plot_RE <- readRDS(here("/figures/plot objects/co_flow_object.rds"))
 
 co_p <- co_plot[[1]]
