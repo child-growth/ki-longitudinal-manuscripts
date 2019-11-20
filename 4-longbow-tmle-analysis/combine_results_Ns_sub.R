@@ -6,9 +6,13 @@ library(progress)
 library(longbowRiskFactors)
 
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/results_bin_obs_counts_2019-11-16.rdata")
+load(here("/results/rf results/raw longbow results/results_bin_obs_counts_2019-11-16.rdata"))
 d <- obs_counts
 
+load(here("/results/rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2019-11-19.rdata"))
+d2 <- obs_counts
+
+d <- bind_rows(d, d2)
 
 
 outcome_vars <- c("stunted","ever_stunted","wasted","ever_wasted")
@@ -23,7 +27,7 @@ exposure_vars <- c(
   "birthwt",       "mage",          "mhtcm",         "single",        "nrooms",       
   "feducyrs",      "hfoodsec",      "exclfeed6",     "s03rec24",      "enstunt",      
   "predfeed6",     "predexfd6",     "sex",          "brthmon",      
-  "month",     "pers_wast",    "lag_WHZ_quart")
+  "month",     "pers_wast",    "lag_WHZ_quart","rain_quartile")
 
 d <- data.frame(d)
 d<-d[!is.na(d$stunted)|!is.na(d$ever_stunted)|!is.na(d$wasted)|!is.na(d$ever_wasted),]
