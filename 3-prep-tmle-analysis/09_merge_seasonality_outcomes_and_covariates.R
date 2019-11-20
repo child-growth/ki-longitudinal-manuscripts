@@ -162,7 +162,7 @@ df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-
 #Set up dataset for longbow analysis
 df <- filter(df, agedays < 24 * 30.4167)
 
-d <- subset(df, select = c(studyid, subjid, country, agedays, whz, haz, month, rain_quartile))
+d <- subset(df, select = c(studyid, subjid, id, country, agedays, whz, haz, month, rain_quartile))
 head(d)
 
 
@@ -195,7 +195,7 @@ mode <- function(codes){
 
 dmn_wast <- dprev_whz %>%
   filter(!is.na(agecat)) %>%
-  group_by(studyid,country,subjid,agecat) %>%
+  group_by(studyid,country,id, subjid,agecat) %>%
   arrange(agedays) %>%
   summarise(whz=mean(whz), month= median(as.numeric(month)), rain_quartile= mode(rain_quartile)) %>%
   mutate(wasted=ifelse(whz< -2, 1,0),swasted=ifelse(whz< -3, 1,0)) %>% 
@@ -204,11 +204,11 @@ dmn_wast <- dprev_whz %>%
 
 # export
 wastprev = dmn_wast %>% 
-  select(studyid,subjid,country,agecat, rain_quartile, wasted, swasted)
+  select(studyid,subjid, id, country,agecat, rain_quartile, wasted, swasted)
 
 # save mean Z scores at each age
 meanWHZ = dmn_wast %>% 
-  select(studyid,subjid,country,agecat, rain_quartile, whz)
+  select(studyid,subjid, id, country,agecat, rain_quartile, whz)
 
 
 #--------------------------------------
@@ -219,7 +219,7 @@ meanWHZ = dmn_wast %>%
 
 dmn_stunt <- dprev_haz %>%
   filter(!is.na(agecat)) %>%
-  group_by(studyid,country,subjid,agecat) %>%
+  group_by(studyid,country,subjid,id, agecat) %>%
   arrange(agedays) %>%
   summarise(haz=mean(haz), month= median(as.numeric(month)), rain_quartile= mode(rain_quartile)) %>%
   mutate(stunted=ifelse(haz< -2, 1,0),sstunted=ifelse(haz< -3, 1,0)) %>% 
@@ -228,11 +228,11 @@ dmn_stunt <- dprev_haz %>%
 
 # export
 stuntprev = dmn_stunt %>% 
-  select(studyid,subjid,country,agecat, rain_quartile, stunted, sstunted)
+  select(studyid,subjid, id, country,agecat, rain_quartile, stunted, sstunted)
 
 # save mean Z scores at each age
 meanHAZ = dmn_stunt %>% 
-  select(studyid,subjid,country,agecat, rain_quartile, haz)
+  select(studyid,subjid, id, country,agecat, rain_quartile, haz)
 
 
 
