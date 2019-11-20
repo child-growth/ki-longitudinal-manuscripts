@@ -1,4 +1,4 @@
-# Sensitivity analysis using fixed effects {#fixed-effects}
+# Dropping PROBIT {#no-PROBIT}
 
 ---
 output:

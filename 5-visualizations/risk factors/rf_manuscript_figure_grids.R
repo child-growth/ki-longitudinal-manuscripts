@@ -1,6 +1,6 @@
 
 
-#rm(list=ls())
+rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 require(ggmap)

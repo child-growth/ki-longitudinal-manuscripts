@@ -7,13 +7,16 @@ library(longbowRiskFactors)
 
 
 load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-11-18.rdata"))
-
 d <- obs_counts
 
-
 load(here("/results/rf results/raw longbow results/seasonality_results_obs_counts_2019-11-15.rdata"))
-
 d2 <- obs_counts
+
+load(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2019-11-15.rdata"))
+d3 <- obs_counts
+
+ d <- bind_rows(d, d2, d3)
+
 
 
 exposure_vars <- c(
@@ -26,7 +29,7 @@ exposure_vars <- c(
   "birthwt",       "mage",          "mhtcm",         "single",        "nrooms",       
   "feducyrs",      "hfoodsec",      "exclfeed6",     "s03rec24",      "enstunt",      
   "predfeed6",     "predexfd6",     "sex",          "brthmon",      
-  "month",     "pers_wast",    "lag_WHZ_quart")
+  "month",     "pers_wast",    "lag_WHZ_quart","rain_quartile")
 
 
 d<-data.frame(d)

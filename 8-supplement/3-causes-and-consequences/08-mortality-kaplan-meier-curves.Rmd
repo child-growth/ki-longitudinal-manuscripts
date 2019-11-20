@@ -1,9 +1,17 @@
+
+# KI Kaplan-Meier Survival Curves{#survival}
+
 ---
-title: "KI Kaplan-Meier Survival Curves"
-author: "Andrew Mertens"
-date: "September 23, 2019"
-output: html_document
+output:
+  pdf_document:
+    keep_tex: yes
+fontfamily: mathpazo
+fontsize: 9pt
 ---
+
+\raggedright
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

@@ -29,7 +29,7 @@ dim(par2)
 dim(vim2)
 df <- merge(par2, vim2, by=c("outcome_variable", "intervention_variable"))
 dim(df)
-df <- df %>% filter(!is.na(PAR))
+df <- df %>% filter(!is.na(PAR)) %>% filter(RFlabel.x != "Mean WHZ in the prior 3 mo.")
 
 df <- df %>% arrange(PAR)
 
@@ -57,13 +57,12 @@ dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.5), as.character(dw
 # dhaz$outlier[dhaz$outlier == "# of children <5 in HH"] <- "Birth month\n# of children <5 in HH\nSafe water source\nSingle parent"
 # dwhz$outlier[dwhz$outlier == "Single parent"] <- "Single\nparent"
 
-dhaz$outlier[dhaz$outlier == "Birth month"] <- "Birth\nmonth"
-dhaz$outlier[dhaz$outlier == "Father's height"] <- "Father's\nheight"
+dwhz$outlier[dwhz$outlier == "Mother's age"] <- "Mother's\nage"
+dwhz$outlier[dwhz$outlier == "Father's height"] <- "Father's\nheight"
 
-dwhz$outlier[dwhz$outlier == "Birth order"] <- NA
-# dwhz$outlier[dwhz$outlier == "Father's height"] <- "Father's\nheight"
-dwhz$outlier[dwhz$outlier == "Birth month"] <- NA
-# dwhz$outlier[dwhz$outlier == "Single parent"] <- "Single\nparent"
+dhaz$outlier[dhaz$outlier == "Single parent"] <- "Single\nparent"
+dhaz$outlier[dhaz$outlier == "Birth order"] <- "Birth\norder"
+dhaz$outlier[dhaz$outlier == "# of people in HH"] <- "# of people\nin HH"
 
 dhaz$x <- -dhaz$PAR + 0.05
 dhaz$y <- -dhaz$VIM + 0.1
