@@ -178,9 +178,10 @@ unique(co_desc_data$agecat)
 co_desc_data$agecat <- factor(co_desc_data$agecat, levels=unique(co_desc_data$agecat))
 
 #Clean up region marking
-co_desc_data <- mark_region(co_desc_data)
 co_desc_data$region <- as.character(co_desc_data$region)
-co_desc_data$region[co_desc_data$region=="Other" & is.na(co_desc_data$country)] <- "Overall"
+
+fix_region <- mark_region(co_desc_data[co_desc_data$region=="Other",])
+co_desc_data$region[co_desc_data$region=="Other"] <- as.character(fix_region$region)
 table(co_desc_data$region)
 
 saveRDS(co_desc_data, file = paste0(here(),"/results/co_desc_data.rds"))
