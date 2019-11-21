@@ -10,6 +10,10 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 #Load longbow results
 load(here("results","rf results","raw longbow results","seasonality_results_2019-11-17.rdata"))
 
+#Load cohort Ns
+cohort_Ns <- readRDS(paste0(here(),"/results/seasonTMLE_Ns.rds")) 
+
+
 #Load seasonality index and prep for merge
 rain <- readRDS(here("/data/cohort_rain_data.rds"))
 rain <- rain %>% subset(., select = c(studyid, country, cohort_index)) %>% 

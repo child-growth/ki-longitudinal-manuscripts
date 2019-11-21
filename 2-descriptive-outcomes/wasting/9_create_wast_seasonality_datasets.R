@@ -210,6 +210,10 @@ W <- NULL
 #save analysis dataset
 save(d, file = paste0(ghapdata_dir, "seasonality_rf.Rdata"))
 
+#get N's for figure caption
+d %>% summarize(N=n(), nchild=length(unique(subjid)))
+cohort_Ns <- d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid)))
+
 #Specify analysis
 specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country"), id="id", adj_sets=adjustment_sets){
   
@@ -231,4 +235,8 @@ analyses <- specify_rf_analysis(A="rain_quartile", Y="whz", file="seasonality_rf
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/seasonality_analyses.rdata"))
+
+#Save cohort Ns
+saveRDS(cohort_Ns, file=paste0(here(),"/results/seasonTMLE_Ns.rds")) 
+
 

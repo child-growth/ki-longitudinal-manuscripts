@@ -132,6 +132,10 @@ rain_plot <- function(df, rain, cohort_name){
 }
 
 
+#Get N's for caption
+Ns <- d %>% group_by(cohort) %>% summarize(nmeas=n(), nchild=length(unique(subjid)))
+Ns
+Ns %>% summarize(min(nmeas), min(nchild), max(nmeas), max(nchild))
 
 
 plot_list=list()
