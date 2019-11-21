@@ -124,7 +124,11 @@ quantile_d_overall <- d %>% group_by(agecat) %>%
          fiftieth_perc = quantile(whz, probs = c(0.5))[[1]],
          ninetyfifth_perc = quantile(whz, probs = c(0.95))[[1]]) %>%
   select(agecat, fifth_perc, fiftieth_perc, ninetyfifth_perc)
-save(quantile_d, quantile_d_country, quantile_d_overall, file = paste0(here(),"/results/quantile_data_wasting.Rdata"))
+
+saveRDS(list(quantile_d=quantile_d, 
+             quantile_d_country=quantile_d_country, 
+             quantile_d_overall=quantile_d_overall), 
+        file = paste0(here(),"/results/quantile_data_wasting.RDS"))
 
 
 
