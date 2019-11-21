@@ -9,18 +9,20 @@ require(cowplot)
 
 
 
-
-
 #Figure 2
 plot_list <- readRDS(here("/figures/plot objects/fig2_plot_objects.RDS"))
 
-prev_p <- plot_list[[2]]
-prev_p <- prev_p + theme(legend.position = "none")
+prev_p <- plot_list[[2]]$`plot`
+prev_p <- prev_p + theme(legend.position = "none") + coord_cartesian(ylim=c(0, 37))
 
-fig2 <- plot_grid(plot_list[[1]], prev_p, plot_list[[3]], labels = "AUTO", ncol = 1, align = 'v', axis = 'l')
+fig2 <- plot_grid(plot_list[[1]], prev_p, plot_list[[3]]$`plot`, labels = "AUTO", ncol = 1, align = 'v', axis = 'l')
 
 ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig2.png"), width=14, height=14)
 
+#N's for figure caption
+plot_list[[1]]$`data` %>% group_by(region) %>% summarize(min(N), max(N))
+plot_list[[2]]$`data` %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
+plot_list[[3]]$`data` %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 
 
 #Figure 3 
@@ -32,13 +34,13 @@ plot_list <- readRDS(paste0(here(),"/figures/plot objects/rain_seasonality_plot_
 
 #Left plot
 left_plot <- plot_grid(
-  plot_list[[10]], plot_list[[1]], plot_list[[11]],
-  plot_list[[2]], plot_list[[12]], 
-  plot_list[[3]], plot_list[[13]], plot_list[[4]],
-  plot_list[[14]], plot_list[[5]], plot_list[[15]],
-  plot_list[[6]], plot_list[[16]], plot_list[[7]],
-  plot_list[[17]], plot_list[[8]], 
-  plot_list[[18]], plot_list[[9]], 
+  plot_list[[1]], plot_list[[10]], plot_list[[2]], plot_list[[11]],
+  plot_list[[3]], plot_list[[12]], 
+  plot_list[[4]], plot_list[[13]], plot_list[[5]],
+  plot_list[[14]], plot_list[[6]], plot_list[[15]],
+  plot_list[[7]], plot_list[[16]], plot_list[[8]],
+  plot_list[[17]], plot_list[[9]], 
+  plot_list[[18]], 
   labels = rep("", 18), ncol = 2, align = 'v', axis = 'l')
 
 #Right plot
@@ -71,9 +73,11 @@ fig4 <- plot_grid(fig4_a, inc_plot[[1]], rec_plot[[1]], fig4_c, labels = c("","B
 ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig4.png"), width=14, height=14)
 
 
+
 #Figure 5
 co_plot <- readRDS(here("/figures/plot objects/co_plot_object.rds"))
 bar_plot_RE <- readRDS(here("/figures/plot objects/co_flow_object.rds"))
+plot_data_pooled <- readRDS(paste0(figdata_dir_wasting, "figdata-co-2-coflow-overall--allage-primary.RDS"))
 
 co_p <- co_plot[[1]]
 co_p <- co_p + theme(legend.position = "none")
@@ -82,6 +86,7 @@ fig5 <- plot_grid(co_p, bar_plot_RE, labels = "AUTO", ncol = 1, align = 'v', axi
 ggsave(fig5, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig5.png"), width=14, height=14)
 
 
-
-
+#N's for figure caption
+co_plot[[2]] %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
+plot_list[[3]]$`data` %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 

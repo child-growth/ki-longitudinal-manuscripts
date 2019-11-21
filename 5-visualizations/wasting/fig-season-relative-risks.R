@@ -10,6 +10,8 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 #Load longbow results
 load(here("results","rf results","raw longbow results","seasonality_results_2019-11-17.rdata"))
 
+
+
 #Load cohort Ns
 cohort_Ns <- readRDS(paste0(here(),"/results/seasonTMLE_Ns.rds")) 
 
@@ -34,24 +36,30 @@ rain$country <- str_to_title(rain$country)
 #Merge resulta and seasonality index
 d <- left_join(results, rain, by = c("studyid","country"))
 
-
 d <- d %>% filter(type=="ATE")
 
+#Subset to monthly cohorts by merging in N's
+d <- left_join(cohort_Ns, d, by = c("studyid", "country"))
+table(d$studyid)
 
 
-RMAest <- d %>% group_by(intervention_variable, intervention_level, baseline_level, outcome_variable) %>%
+
+RMAest <- d %>% group_by(intervention_variable, intervention_level, baseline_level, outcome_variable, N, nchild) %>%
   do(pool.cont(.)) %>% as.data.frame()
 RMAest$seasonality_category <- "Pooled"
 
 
 #Group by seasonality index
-RMAest_season_index <- d %>% group_by(seasonality_category, intervention_variable, intervention_level, baseline_level, outcome_variable) %>%
+RMAest_season_index <- d %>% group_by(seasonality_category, intervention_variable, intervention_level, baseline_level, outcome_variable, N, nchild) %>%
   do(pool.cont(.)) %>% as.data.frame()
 
 
 df <- rbind(RMAest, RMAest_season_index)
 
-
+#Get N's for figure caption
+df %>% filter(intervention_level == baseline_level) %>% group_by(seasonality_category) %>% 
+  summarize(totN=sum(N), minN=min(N), maxN=max(N),
+            tot_nchild=sum(nchild), min_nchild=min(nchild), max_nchild=max(nchild))
 
 
 #Add reference level to labe

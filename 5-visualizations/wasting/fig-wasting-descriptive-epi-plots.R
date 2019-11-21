@@ -4,7 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Load data
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
-load(paste0(here::here(),"/results/quantile_data_wasting.Rdata"))
+quantiles <- readRDS(paste0(here::here(),"/results/quantile_data_wasting.RDS"))
 
 #Subset to primary analysis
 d <- d %>% filter(analysis=="Primary", (pooling!="country" | is.na(pooling)))
@@ -71,8 +71,8 @@ ggsave(p, file=here::here("/figures/wasting/WLZ_by_region.png"), width=10, heigh
 # Mean WLZ by month with quantiles
 #-------------------------------------------------------------------------------------------
 
-quantile_d_overall <- quantile_d_overall %>% mutate(region="Overall")
-df <- rbind(quantile_d_overall, quantile_d)
+quantile_d_overall <- quantiles$quantile_d_overall %>% mutate(region="Overall")
+df <- rbind(quantile_d_overall, quantiles$quantile_d)
 
 df$agecat <- factor(df$agecat, 
                     levels=c("Two weeks", "One month",

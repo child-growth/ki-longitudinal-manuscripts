@@ -5,7 +5,7 @@ source(paste0(here::here(), "/0-config.R"))
 #Primary outcomes
 wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS")) %>% mutate(analysis = "Primary")
 stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS")) %>% mutate(analysis = "Primary")
-co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.RDS")) %>% mutate(analysis = "Primary")
+co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.RDS")) %>% mutate(analysis = "Primary", pooling=ifelse(!is.na(country), "country",NA))
 
 
 #Fixed effects
