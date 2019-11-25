@@ -10,7 +10,7 @@ co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.RDS")) %>% mutate(analysis 
 
 #Fixed effects
 stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS")) %>% mutate(analysis = "Fixed effects")
-wast_fe <- readRDS(paste0(res_dir,"shiny_desc_data_wasting_objects_fe.RDS")) %>% mutate(analysis = "Fixed effects")
+wast_fe <- readRDS(paste0(res_dir,"wasting_desc_data_FE.RDS")) %>% mutate(analysis = "Fixed effects")
 
 
 #Other sensitivity
