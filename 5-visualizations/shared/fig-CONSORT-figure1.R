@@ -30,12 +30,18 @@ consort_ki <- consort_ki %>% select("Short_ID", "country", "nchild", "nobs", "St
                                     "measurefreq") 
 
 #Fix included small in CMIN non-bangladesh cohorts
-consort_ki <- consort_ki %>% mutate(included_small=ifelse(Study_ID=="CMIN" & country != "BANGLADESH", 0, included_small))
+consort_ki <- consort_ki %>% mutate(included_small=ifelse(Study_ID=="CMIN" & country != "BANGLADESH", 0, included_small)) %>%
+  rename(short_id = Short_ID, subject_count = nchild, studyid = Study_ID,
+         short_desc = Short_Description)
 
 
 
-consort_ki <- consort_ki %>% rename(short_id = Short_ID, subject_count = nchild, study_id = Study_ID,
-                                    short_desc = Short_Description) %>%  
+# shorten the description for a few studies
+consort_ki <- shorten_descriptions(consort_ki)
+consort_ki$short_desc <- as.character(consort_ki$short_desc)
+consort_ki$short_desc[!is.na(consort_ki$short_description)] <- consort_ki$short_description[!is.na(consort_ki$short_description)]
+
+consort_ki <- consort_ki %>% 
                              # use obs_count instead of subj_count for future
                              mutate(subject_count = as.integer(subject_count)) %>%
                              mutate(subject_count = case_when(is.na(subject_count) ~ as.double(0),

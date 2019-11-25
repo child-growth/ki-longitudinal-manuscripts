@@ -70,6 +70,8 @@ dd <- left_join(d, md, by = c("studyid", "country"))
 dim(dd)
 head(dd)
 
+dd$country[dd$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+
 #-----------------------------------
 # Do some final tidying up for the plot
 #-----------------------------------

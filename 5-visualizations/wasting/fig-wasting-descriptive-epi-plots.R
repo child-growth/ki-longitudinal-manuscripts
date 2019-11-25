@@ -836,7 +836,7 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
                        name = 'Measure', 
-                       labels = c('WLZ-based wasting', 'MUAC-based wasting')) + 
+                       labels = c('MUAC-based wasting','WLZ-based wasting')) + 
     scale_fill_manual(values=tableau11, guide = FALSE) +
     xlab(xlabel)+
     ylab(ylabel) +
@@ -866,13 +866,13 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
 
 muac_plot <- ki_combo_plot2(d,
               Disease="Wasting",
-              Measure=c("MUAC  WHZ Prevalence", "MUAC Prevalence"), 
+              Measure=c("MUAC WHZ Prevalence", "MUAC Prevalence"), 
               Birth="yes", 
               Severe="no", 
               Age_range="3 months", 
               Cohort="pooled",
               xlabel="Child age, months",
-              yrange=c(0,75), dodge = 0.5,
+              yrange=c(0,7), dodge = 0.5,
               legend.pos=c(.15,.92)) 
 
 # define standardized plot names
@@ -940,7 +940,7 @@ sevwast_plot <- ki_desc_plot(d,
                    Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Point prevalence (95% CI)',
-                   yrange=c(0,10),
+                   yrange=c(0,13),
                    returnData=T)
 
 
