@@ -56,21 +56,16 @@ d$country[d$study_id=="PROVIDE"] <- "BANGLADESH"
 d$studyid<- gsub("^k.*?-" , "", d$studyid)
 
 #-----------------------------------
-# load and merge study descriptions
+# clean study descriptions
 #-----------------------------------
-md <- readRDS(file=here("results/KI_metadata_stunting.RDS"))
-md <- md %>% select(studyid, country)
 
-# shorten the description for a few studies
-md <- shorten_descriptions(md)
-table(md$studyid, is.na(md$short_description))
+dd <- shorten_descriptions(d)
 
-dim(d)
-dd <- left_join(d, md, by = c("studyid", "country"))
-dim(dd)
-head(dd)
-
+# # simplify Tanzania label
+dd$country <- as.character(dd$country)
 dd$country[dd$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+
+
 
 #-----------------------------------
 # Do some final tidying up for the plot
@@ -96,7 +91,6 @@ dd <- dd %>% mutate(region = case_when(
     country=="GUINEA-BISSAU"|
     country=="MALAWI"|
     country=="SOUTH AFRICA"|
-    country=="TANZANIA, UNITED REPUBLIC OF"|
     country=="TANZANIA"|
     country=="ZIMBABWE"|
     country=="GAMBIA"                       ~ "Africa",
@@ -106,12 +100,11 @@ dd <- dd %>% mutate(region = case_when(
   TRUE                                    ~ "Other"
 ))
 
-# # simplify Tanzania label
-dd$country[dd$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
-
+table(dd$region)
 
 dd$region <- as.character(dd$region)
-dd$region <- factor(dd$region, levels=c("Asia","Africa","Latin America",""))
+dd$region[dd$region=="Latin America"] <- "Latin Am."
+dd$region <- factor(dd$region, levels=c("Asia","Africa","Latin Am.",""))
 
 dd <- mutate(dd,
              studycountry = factor(studycountry,
@@ -165,6 +158,9 @@ dd$RFlabel[dd$risk_factor=="month"] <-  "Month of measurement"
 dd$RFlabel[dd$risk_factor=="brthmon"] <-  "Birth month"
 dd$RFlabel[dd$risk_factor=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 months"
 
+
+table(dd$risk_factor, is.na(dd$RFlabel))
+dd <- dd %>% filter(!is.na(RFlabel))
 # dfull <- dd
 # dd <- dd %>% filter(N>0) 
 
