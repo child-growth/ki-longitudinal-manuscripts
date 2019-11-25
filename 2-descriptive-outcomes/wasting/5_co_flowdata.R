@@ -34,37 +34,28 @@ d = d %>%
 ##########################################
 # Define indicators of faltering at each time point
 ##########################################
-# define age windows
-d <- d %>% 
-  mutate(agecat=ifelse(agedays==1, "Birth",
-                       ifelse(agedays>1 & agedays<=3*30.4167,"0-3 months",
-                              ifelse(agedays>3*30.4167 & agedays<=6*30.4167,"3-6 months",
-                                     ifelse(agedays>6*30.4167 & agedays<=9*30.4167,"6-9 months",
-                                            ifelse(agedays>9*30.4167 & agedays<=12*30.4167,"9-12 months",
-                                                   ifelse(agedays>12*30.4167 & agedays<=15*30.4167,"12-15 months",
-                                                          ifelse(agedays>15*30.4167 & agedays<=18*30.4167,"15-18 months",
-                                                                 ifelse(agedays>18*30.4167 & agedays<=21*30.4167,"18-21 months",
-                                                                        ifelse(agedays>21*30.4167& agedays<=24*30.4167,"21-24 months","")))))))))) %>%
-  mutate(agecat=factor(agecat,levels=c("Birth","0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")))
 
-# check age categories
-d %>% group_by(agecat) %>%
-  summarise(min = min(agedays)/30.4167,
-            max = max(agedays)/30.4167)
+#Mark monthly  agecat
+d <- calc.monthly.agecat(d)
+d <- d %>% filter(!is.na(agecat))
 
 #Number of children ever wasted and stunted
 d %>% mutate(co=ifelse(haz< (-2) & whz < (-2),1,0),
              sevco=ifelse(haz< (-3) & whz < (-3),1,0)) %>% 
-     filter(!is.na(agecat)) %>%
   group_by(studyid, country, subjid) %>%
   summarize(everco=max(co), eversevco=max(sevco)) %>% ungroup() %>%
   summarize(N=n(), sumco=sum(everco), sumsevco=sum(eversevco), propco=mean(everco), propsevco=mean(eversevco))
 
 
+
+
+
 flow_m = d %>%
-  mutate(agem = agedays / 30.4167) %>%
+  mutate(agem = round(agedays / 30.4167)) %>%
+  #Take mean of multiple obs within a month
+  group_by(studyid,country,subjid, agem) %>%
+  summarize(haz=mean(haz), whz=mean(whz), waz=mean(waz)) %>%
   group_by(studyid,country,subjid) %>%
-  
   mutate(stunted=ifelse(haz< -2,1,0),
          wasted=ifelse(whz< -2,1,0),
          underwt=ifelse(waz< -2,1,0),
@@ -99,10 +90,9 @@ flow_m = d %>%
 
 
 # drop measurements with ages over 24 months
-flow_m = flow_m %>% filter(!is.na(agecat)) 
+flow_m = flow_m %>% filter(agem < 25) 
 
-# summarise within age months
-flow_m = flow_m %>% mutate(agem = round(agem))
+
 
 # check that indicators do not contain missing values
 assert_that(names(table(is.na(flow_m$stunted)))=="FALSE")
@@ -127,7 +117,9 @@ mean(sum(flow_m$wu)/sum(flow_m$wasted, flow_m$wu, flow_m$co))
 #Also stunted + underweight
 mean(sum(flow_m$co)/sum(flow_m$wasted, flow_m$wu, flow_m$co))
 
-
+#num children and observations
+flow_m %>% ungroup() %>% summarize(N=n(), nchild=length(unique(paste0(studyid, subjid))))
+flow_m %>% group_by(agem) %>% summarize(N=n(), nchild=length(unique(paste0(studyid, subjid)))) %>% as.data.frame()
 
 # Check that no child was classified in more
 # than one category at any time point
