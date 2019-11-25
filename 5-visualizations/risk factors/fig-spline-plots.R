@@ -59,7 +59,7 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
   # (THESE PARAMETERS CAN BE CHANGED BY THE USER FOR ADDITIONAL ANALYSES)
   bound <- c(1,730)
   degree <- 3
-  df <- 6
+  df <- 10
   
   
   

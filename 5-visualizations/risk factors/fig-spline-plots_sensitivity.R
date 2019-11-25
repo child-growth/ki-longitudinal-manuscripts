@@ -32,7 +32,7 @@ cen=365
 #Adapted from: 
 #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
 
-spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps"){
+spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="bs"){
   
   # LOAD THE PACKAGES (mvmeta PACKAGE IS ASSUMED TO BE INSTALLED)
   require(mvmeta)
