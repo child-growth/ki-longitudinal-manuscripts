@@ -81,8 +81,10 @@ pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM)) +
   geom_hline(yintercept = 0, linetype="dashed") +
   # geom_text_repel(aes(label = outlier), na.rm = TRUE, size = 2, nudge_y = .05, box.padding = 0, color="grey40", direction = "both", force=1, xlim = c(-0.2, -0.05)#, ylim = c(0.15, 0.25)
   #                )+
-  geom_text_repel(aes(label = outlier), lineheight = .7, na.rm = TRUE, size = 2.5,  
-                                         xlim=c(-0.2, 0.2), ylim = c(0.15, 0.4), direction = "both", force=3, nudge_x = -0.05, color="grey40")+
+  #THIS ONE WORKS - geom_text_repel(aes(label = outlier), lineheight = .7, na.rm = TRUE, size = 2.5,  
+                                         #xlim=c(-0.2, 0.2), ylim = c(0.15, 0.4), direction = "both", force=3, nudge_x = -0.05, color="grey40")+
+  geom_text_repel(aes(label = outlier), lineheight = 0.7, na.rm = TRUE, size = 2.5,  
+                 direction = "both", xlim = c(-0.25, 0.4), arrow = arrow(length = unit(0.05, "npc")), force=3, nudge_x = -0.18, nudge_y = 0.16, color="grey40", min.segment.length = 0)+
   #geom_text(aes(label = outlier), na.rm = TRUE, size = 2.5,  nudge_x = -0.2, color="grey40")+
   #geom_label_repel(aes(label = outlier), na.rm = TRUE, ylim = c(0.2, 0.4), direction = "y",
                     #nudge_x = 0.1,
@@ -103,7 +105,7 @@ pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM)) +
 set.seed(156)
 pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM)) + 
   geom_point(size = 2, alpha=0.5) +
-  coord_fixed(xlim = c(-0.2,0.25), ylim = c(-0.2,0.2)) +
+  coord_fixed(xlim = c(-0.2,0.25), ylim = c(-0.2,0.25)) +
   labs(x = "Attributable difference\nin WLZ, fixed reference", y = "Attributable difference\nin WLZ, optimal intervention") +
   geom_abline(slope=1,intercept=0) +
   geom_vline(xintercept = 0, linetype="dashed") +
@@ -111,7 +113,9 @@ pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM)) +
   # geom_text_repel(aes(label = outlier), na.rm = TRUE, nudge_x = 0, size = 2, color="grey40",  xlim=c(-0.2, -0.05), ylim = c(-10,0.5)
   #                 ) +
   #geom_text_repel(aes(label = outlier), na.rm = TRUE, size = 2,  xlim=c(-0.2, -0.05), nudge_y = -0.05)+
-  geom_text(aes(label = outlier), na.rm = TRUE, size = 2.5,   nudge_x = 0.13, color="grey40")+
+  # ORIGINAL - geom_text(aes(label = outlier), na.rm = TRUE, size = 2.5,   nudge_x = 0.13, color="grey40")+
+  geom_text_repel(aes(label = outlier), lineheight = 0.7, na.rm = TRUE, size = 2.5,  
+                  direction = "both", arrow = arrow(length = unit(0.05, "npc")), force=3, nudge_x = -0.18, nudge_y = 0.16, color="grey40", min.segment.length = 0)+
   scale_x_continuous(breaks=c(-0.1, 0,0.1,0.2)) +
   scale_y_continuous(breaks=c(-0.1,0,0.1,0.2)) +
   theme(strip.background = element_blank(),
