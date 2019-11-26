@@ -296,7 +296,7 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
       out <- data %>%
         ungroup() %>%
         summarise(
-          nstudies = length(unique(studyid)),
+          nstudies = length(unique(paste0(studyid," ",country))),
           nmeas = sum(data[[ni]])
         ) %>%
         mutate(
