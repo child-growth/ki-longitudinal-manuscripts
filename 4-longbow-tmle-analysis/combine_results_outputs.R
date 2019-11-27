@@ -39,8 +39,10 @@ season_bin_rf <- results
 
 
 d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, velocity, season, season_cont_rf, season_bin_rf)
-
-
+d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
+d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
+d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"
+d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="4"] <- "Post-max rain"
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -67,7 +69,7 @@ load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/contin
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
-#merge in seasonal N's
+
 
 dim(d)
 dim(N_sums)

@@ -73,6 +73,16 @@ vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 # define color palette
 mypalette = c("#D87A16", "#0EA76A")
 
+
+# get N's for figure caption
+vel_n = vel %>%
+  filter(!is.na(strata), pooled==1) %>%
+  group_by(region) %>%
+  summarise(min_study = min(nstudies, na.rm=TRUE),
+            max_study = max(nstudies, na.rm=TRUE),
+            min_n = min(N, na.rm=TRUE),
+            max_n = max(N, na.rm=TRUE))
+
 ####################################################################################
 # mean LAZ plots
 ####################################################################################
@@ -109,7 +119,7 @@ plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) +
 #-------------------------------------
 meanlaz_strat = meanlaz %>% 
   filter(cohort == "pooled") %>%
-  filter(region !="Europe") %>%
+  filter(region !="N.America & Europe") %>%
   mutate(agecat = factor(agecat, 
                          levels = c("0-3", "3-6", "6-9",
                                     "9-12", "12-15", "15-18",
@@ -182,7 +192,7 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                   position = position_dodge(width=0.5), size=1.25) +
   scale_color_manual(values=mypalette)+  
-  scale_y_continuous(limits=c(-0.4,0.2), breaks=seq(-0.4,0.2,0.05), labels=seq(-0.4,0.2,0.05)) +
+  scale_y_continuous(limits=c(-0.55,0.3), breaks=seq(-0.5,0.3,0.1), labels=seq(-0.5,0.3,0.1)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +

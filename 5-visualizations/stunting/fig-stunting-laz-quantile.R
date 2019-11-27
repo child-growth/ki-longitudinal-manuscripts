@@ -27,7 +27,7 @@ source(paste0(here::here(), "/0-config.R"))
 #Plot themes
 theme_set(theme_ki())
 
-#Quantile data (object: quantile_d)
+#Quantile data 
 quantile = readRDS(paste0(here::here(),"/results/quantile_data_stunting.RDS"))
 
 
@@ -40,7 +40,7 @@ quantile$agecat <- factor(quantile$agecat,
 
 quantile <- quantile %>% 
   arrange(agecat) %>%
-  filter(region!="Europe")
+  filter(region!="N.America & Europe")
 quantile <- droplevels(quantile)
 
 quantile <- quantile %>% 

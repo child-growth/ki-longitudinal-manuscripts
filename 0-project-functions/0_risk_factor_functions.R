@@ -198,6 +198,8 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                "<52 kg", "[52-58) kg", ">=58 kg",
                                                "2+","3 or less","4-5","6-7","8+","3+","4+",                                                 
                                                "0%","(0%, 5%]",">5%","Female","Male",
+                                               "Opposite max rain", "Pre-max rain","Max rain",
+                                               "Post-max rain",
                                                "WHZ Q1", "WHZ Q2", "WHZ Q3", "WHZ Q4"))
   
   
@@ -269,8 +271,8 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFlabel[RMAest$intervention_variable=="exclfeed6"] <-  "Exclusive breastfeeding under 6 mo."
   RMAest$RFlabel[RMAest$intervention_variable=="month"] <-  "Month of measurement"
   RMAest$RFlabel[RMAest$intervention_variable=="brthmon"] <-  "Birth month"
-  RMAest$RFlabel[RMAest$intervention_variable=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 mo."
-  RMAest$RFlabel[RMAest$intervention_variable=="rain_quartile"] <-  "Mean WHZ in the prior 3 mo."
+  RMAest$RFlabel[RMAest$intervention_variable=="lag_WHZ_quart"] <-  "Rain quartile"
+  RMAest$RFlabel[RMAest$intervention_variable=="rain_quartile"] <-  "Rain quartile"
   
   
   

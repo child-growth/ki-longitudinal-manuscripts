@@ -254,7 +254,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   if (Birth == "strat") {
     df <- df %>%
       mutate(agecat = as.character(agecat)) %>%
-      mutate(agecat = ifelse(agecat=="1 day-3", "0-3", agecat)) %>%
+      mutate(agecat = ifelse(agecat=="8 days-3", "0-3", agecat)) %>%
       mutate(agecat = factor(agecat, levels = c(
         "Birth",
         "0-3", 

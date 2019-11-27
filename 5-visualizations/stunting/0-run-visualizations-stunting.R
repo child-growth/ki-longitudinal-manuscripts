@@ -9,8 +9,8 @@ source(here("5-visualizations/stunting/fig-study-inventory-heatmaps-stunt.R"))
 
 #Primary pooled stunting descriptive epi plots
 source(here("5-visualizations/stunting/fig-stunting-plot-mean-laz.R"))
-source(here("5-visualizations/stunting/fig-stunting-plot-mean-laz-quantile.R"))
-source(here("5-visualizations/stunting/fig-stunting-laz-quantile.R"))
+source(here("5-visualizations/stunting/fig-stunting-plot-laz-quantile.R"))
+source(here("5-visualizations/stunting/fig-stunting-laz-quantile-monthly.R"))
 source(here("5-visualizations/stunting/fig-stunting-plot-prev.R"))
 source(here("5-visualizations/stunting/fig-stunting-plot-inc.R"))
 

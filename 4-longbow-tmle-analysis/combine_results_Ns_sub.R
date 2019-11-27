@@ -11,6 +11,12 @@ d <- obs_counts
 
 load(here("/results/rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2019-11-19.rdata"))
 d2 <- obs_counts
+d2 <- obs_counts %>% mutate(rain_quartile=case_when(
+  rain_quartile==1 ~ "Opposite max rain",
+  rain_quartile==2 ~ "Pre-max rain",
+  rain_quartile==3 ~ "Max rain",
+  rain_quartile==4 ~ "Post-max rain"
+))
 
 d <- bind_rows(d, d2)
 

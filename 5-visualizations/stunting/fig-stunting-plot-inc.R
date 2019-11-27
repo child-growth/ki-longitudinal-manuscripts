@@ -22,6 +22,8 @@ source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-e
 
 #Load data
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.RDS"))
+d <- d %>% filter(!is.na(agecat))
+d <- droplevels(d)
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
@@ -56,7 +58,6 @@ ci_inc_plot_primary$plot
 inc_n_primary = d_primary %>%
   filter(disease == "Stunting" &
            (measure == "Cumulative incidence" | measure== "Incidence_proportion") &
-           region!="Overall" &
            age_range == "3 months" &
            birth == "strat" &
            cohort == "pooled" &
