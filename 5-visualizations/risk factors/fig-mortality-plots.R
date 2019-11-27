@@ -201,7 +201,7 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
 ggsave(pmort, file=here("/figures/risk factor/fig-mort+morb-RR.png"), width=14, height=5.2)
 
 #Save plot object
-save(pmort, file=here("results/rf_mort+morb_plot_object.Rdata"))
+saveRDS(pmort, file=here("results/rf_mort+morb_plot_object.RDS"))
 
 #To do:
 # Change the legend to refer to one plot

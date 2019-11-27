@@ -182,7 +182,7 @@ print(p)
 ggsave(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing.png"), width=8, height=5)
 
 #Save plot object
-save(p, file=paste0(here::here(),"/results/fig-mortality-timing-plot-object.Rdata"))
+saveRDS(p, file=paste0(here::here(),"/results/fig-mortality-timing-plot-object.RDS"))
 
 
 

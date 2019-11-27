@@ -43,21 +43,21 @@ ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/risk fact
 
 
 #Figure 3
-load(paste0(here::here(),"/results/fig-severe-outcome-comps.Rdata"))
-load(paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.Rdata"))
-load(paste0(here::here(), "/results/rf_spline_objects.Rdata"))
+p_severecomp <- readRDS(here("/results/fig-severe-outcome-comps.RDS"))[[1]]
+p_ageRR <- readRDS(here("/results/fig-age-strat-wast-plot-objects.RDS"))[[1]]
+splines <- readRDS(here("/results/rf_spline_objects.RDS"))
 
 #pos = c(0.75,0.83) #For 2 panels
 #pos = c(0.45,0.83)
 #pos = c(0.35,0.2)
 pos = c(0,0.2)
 
-p1 <- p1 + ggtitle("") +  theme(legend.position ="none" ) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
-p2 <- p2 + ggtitle("") + theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
-p3 <- p3 + ggtitle("") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
-p4 <- p4 + ggtitle("") +  theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
-p5 <- p5 + ggtitle("") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
-p6 <- p6 + ggtitle("") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+p1 <- splines[[1]] + ggtitle("") +  theme(legend.position ="none" ) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+p2 <- splines[[2]]  + ggtitle("") + theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+p3 <- splines[[3]]  + ggtitle("") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p4 <- splines[[4]]  + ggtitle("") +  theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p5 <- splines[[5]]  + ggtitle("") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p6 <- splines[[6]]  + ggtitle("") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
 
 
 
@@ -87,15 +87,17 @@ ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/risk fact
 
 
 #Figure 4
-p_lagwhz <- readRDS(here("figures/plot objects/risk factor/fig-WLZ-quart-stunt-CI.rds"))
+#p_lagwhz <- readRDS(here("figures/plot objects/risk factor/fig-WLZ-quart-stunt-CI.rds"))
 p_earlywast <- readRDS(here("figures/plot objects/risk factor/fig-wasting-prior-to-stunting.rds"))
+plotdf2 <- readRDS(here("figures/risk factor/figure-data/fig-wasting-prior-to-stunting.rds"))
 
-load(here("/results/fig-WLZ-quart-len-vel.rdata"))
+
+plen_lagwhz <- readRDS(here("/results/fig-WLZ-quart-len-vel.rdata"))
 
 
 #load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mortality_plot_objects.Rdata")
-load(here("results/rf_mort+morb_plot_object.Rdata"))
-load(paste0(here::here(),"/results/fig-mortality-timing-plot-object.Rdata"))
+pmort <- readRDS(here("results/rf_mort+morb_plot_object.RDS"))
+p <- readRDS(here("/results/fig-mortality-timing-plot-object.RDS"))
 p <- p + theme(legend.position = c(0.9, 0.35)) 
 
 

@@ -100,4 +100,4 @@ p_severecomp
 
 ggsave(p_severecomp, file=paste0(here::here(),"/figures/risk factor/fig-wast-perswast-comp.png"), height=8, width=10)
 
-save(p_severecomp, plotdf, file = paste0(here::here(), "/results/fig-severe-outcome-comps.Rdata"))
+saveRDS(list(p_severecomp, plotdf), file = paste0(here::here(), "/results/fig-severe-outcome-comps.RDS"))
