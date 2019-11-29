@@ -4,7 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- season <- NULL
+Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
 load(here("/results/rf results/raw longbow results/results_cont_2019-11-18.rdata"))
 Zscores <- results
@@ -24,8 +24,11 @@ bin_unadj <- results
 # load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
 # lagwhz <- results
 
-load(here("/results/rf results/raw longbow results/vel_wlz_quart_2019-11-17.rdata"))
+load(here("/results/rf results/raw longbow results/vel_wlz_quart_2019-11-26.rdata"))
 velocity <- results
+
+load(here("/results/rf results/raw longbow results/results_vel_2019-11-28.rdata"))
+velocity_wlz_quart <- results
 
 load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
 season <- results %>% mutate(agecat="All")
@@ -38,7 +41,9 @@ season_bin_rf <- results
 
 
 
-d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, velocity, season, season_cont_rf, season_bin_rf)
+
+
+d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"

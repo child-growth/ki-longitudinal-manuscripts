@@ -11,8 +11,8 @@ dpool <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"
   filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region!="N.America & Europe") %>%
   mutate(pooled=1)
 dFE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds")) %>% 
-  filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled - FE") %>%
-        mutate(pooled=1)
+  filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled") %>%
+        mutate(pooled=1, region="Pooled - FE")
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds")) %>% 
   filter(type=="RR",  intervention_variable=="sex", outcome_variable=="ever_stunted", ci_lower != ci_upper, agecat=="0-24 months") %>%
   mutate(pooled=0) %>%
@@ -63,8 +63,8 @@ d <- droplevels(d)
 
 p <-  ggplot(d, aes(x=(studyid))) + 
   geom_point(aes(shape=pooled, y=RR, fill=region, color=region), size = 4) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=region)) +
-  coord_flip(ylim=range(0.5,8)) +
+  geom_errorbar(aes(ymin=RR.CI1, ymax=RR.CI2, color=region)) +
+  coord_flip(ylim=range(0.75,10)) +
   #labs(x = "Study-specific results stratified by risk factor level\nwith reference category N's and cases printed", y = Ylab) +
   ylab("Girls have                                        Boys have\nhigher risk                                       higher risk") +
   xlab("Cohort") +
@@ -73,7 +73,7 @@ p <-  ggplot(d, aes(x=(studyid))) +
   geom_vline(xintercept = 5.5) +
   #geom_text(aes(y=0.5, label=Ns), size=3,  hjust=0) +
   #geom_text(aes(y=3, label=adjustment_set), size=3,  hjust=0) +
-  scale_y_continuous(breaks= c( 0.50, 1.00, 2.00, 4.00, 8.00), trans='log10', labels=scaleFUN) +
+  scale_y_continuous(breaks= c( 0.75, 1.00, 2.00, 4.00, 8.00), trans='log10', labels=scaleFUN) +
   #scale_x_discrete(labels= df$studyid2) +
   scale_shape_manual(values=c(21, 23)) +
   scale_colour_manual(values=tableau11[c(1,1:5)]) +
