@@ -34,6 +34,10 @@ source(here("5-visualizations/risk factors/fig-PAF-plots.R"))
 source(here("5-visualizations/risk factors/fig-Zscore-PAR-extended-data-plots.R"))
 source(here("5-visualizations/risk factors/fig-adjustment-effect-by-cov-number.R"))
 
+source(here("5-visualizations/risk factors/fig-mediation-analysis.R"))
+source(here("5-visualizations/risk factors/fig-EValues.R"))
+
+
 #Supplimental figures
 source(here("5-visualizations/risk factors/fig-kaplan-meier-curves.R"))
 
