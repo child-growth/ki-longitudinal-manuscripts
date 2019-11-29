@@ -213,7 +213,7 @@ rev <- full_join(stunt.03, rec.24,by=c("studyid","country","subjid")) %>%
 #--------------------------------------
 # Format and subset the growth velocity dataset
 #--------------------------------------
-vel <- readRDS(file="U:/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt.rds")
+vel <- readRDS(file=paste0(ghapdata_dir,"velocity_longfmt_rf.rds"))
 
 #Drop yearly studies
 vel <- vel[!vel$studyid %in% c(
