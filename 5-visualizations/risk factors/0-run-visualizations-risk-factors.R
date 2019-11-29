@@ -9,12 +9,13 @@ source(here("5-visualizations/risk factors/fig-Zscore-PAR-plots.R"))
 source(here("5-visualizations/risk factors/fig-PAR-VIM-comparison.R"))
 
 source(here("5-visualizations/risk factors/fig-age-strat-rf-comp.R"))
-source(here("5-visualizations/risk factors/fig-extra-manuscript-plots.R"))
+source(here("5-visualizations/risk factors/fig-wast-perswast-comp.R"))
 
 source(here("5-visualizations/risk factors/fig-spline-plots.R"))
 
-source(here("5-visualizations/risk factors/fig-wast-perswast-comp.R"))
 source(here("5-visualizations/risk factors/fig-wlz-quart-laz-velocity.R"))
+source(here("5-visualizations/risk factors/fig-wlz-quart-stunting.R"))
+
 
 source(here("5-visualizations/risk factors/fig-mortality-plots.R"))
 source(here("5-visualizations/risk factors/fig-mortality-timing.R"))

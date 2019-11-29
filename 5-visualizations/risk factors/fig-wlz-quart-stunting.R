@@ -28,46 +28,16 @@ unique(df$region)
 unique(df$outcome_variable)
 unique(df$intervention_variable)
 
-plotdf <- df %>% 
-  filter(region=="Pooled",
-         outcome_variable=="Stunted",
-         intervention_variable == "lag_WHZ_quart") %>%
-  filter(!is.na(intervention_variable))
 
-#plotdf$agecat <- factor(plotdf$agecat, levels = c("3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months"))
-plotdf$agecat <- factor(plotdf$agecat, levels = c("3 months", "6 months", "9 months", "12 months", "15 months", "18 months", "21 months"))
-
-        p <- ggplot(plotdf, aes(x=intervention_level)) + 
-          geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
-          geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
-                         alpha=0.5, size = 1) +
-          facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
-          labs(x = "Quartile of mean WLZ in the prior 3 months", y = "Relative risk of stunting") +
-          geom_hline(yintercept = 1) +
-          geom_text(aes(x=1.2, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
-          scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-          scale_fill_manual(values=rep(tableau10,4)) +
-          scale_colour_manual(values=rep(tableau10,4)) +
-          theme(strip.background = element_blank(),
-                legend.position="none",
-                axis.text.y = element_text(size=12),
-                strip.text.x = element_text(size=10),
-                axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
-                panel.spacing = unit(0, "lines")) #+
-         # ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$intervention_variable[1],"\nRegion: ", dpool$region[1])) 
-        
-        
-        #ggsave(p, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/RR/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png"), height=8, width=10)
-
-        plotdf1 <- df %>% 
+plotdf1 <- df %>% 
           filter(region=="Pooled",
                  outcome_variable=="Ever Stunted",
                  intervention_variable == "lag_WHZ_quart") %>%
-          filter(!is.na(intervention_variable)) %>%
-          filter(agecat!="15-18 months") #Drop agecat with only 1 study
+          filter(!is.na(intervention_variable))# %>%
+         # filter(agecat!="15-18 months") #Drop agecat with only 1 study
         
-        plotdf1$agecat <- factor(plotdf1$agecat, levels = c("3-6 months", "6-9 months", "9-12 months", "12-15 months"))
-        #plotdf$agecat <- factor(plotdf$agecat, levels = c("3 months", "6 months", "9 months", "12 months", "15 months", "18 months", "21 months"))
+        plotdf1$agecat <- factor(plotdf1$agecat, levels = c("3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "21-24 months"))
+        plotdf1 <- droplevels(plotdf1)
         
         p_lagwhz <- ggplot(plotdf1, aes(x=intervention_level)) + 
           geom_point(aes(y=RR, fill=intervention_level, color=intervention_level), size = 3) +
@@ -108,6 +78,7 @@ plotdf2 <- df %>%
 
 plotdf2$Xvar <- factor(plotdf2$Xvar, levels = c("Enrolled\nwasted","Any wasting\nunder 6mo", "Persistently wasted\nunder 6mo"))
 plotdf2 <- plotdf2 %>% arrange(Xvar)
+plotdf2 <- droplevels(plotdf2)
 
 yticks <- c(1, 1.1, 1.2, 1.3, 1.4, 1.5, 2)
 p_earlywast <- ggplot(plotdf2, aes(x=Xvar)) + 
