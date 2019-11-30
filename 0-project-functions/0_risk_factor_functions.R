@@ -118,8 +118,9 @@ pool.Zpar <- function(d, method="REML"){
 
 #Pooled continious estimate function
 pool.cont <- function(d, method="REML"){
-  #nstudies=length(unique(d$studyid))
   nstudies <- d %>% summarise(N=n())
+  
+  #cat("Var: ", d$intervention_variable[1], " level: ",d$intervention_level[1] ," age: ", d$agecat[1] , "nstudies: ", nstudies$N, "\n")
   
   if(d$intervention_level[1] == d$baseline_level[1]){
     est <- data.frame(ATE=0, CI1=0, CI2=0, Nstudies= nstudies$N)
