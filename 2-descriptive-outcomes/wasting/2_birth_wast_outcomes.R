@@ -4,8 +4,8 @@
 
 rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
-source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
+source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
 load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
@@ -91,6 +91,16 @@ co$agecat <- factor(co$agecat)
 whz.res <- d %>% group_by(born_wast) %>% do(summary.whz(., N_filter=1)$whz.res)
 whz.res
 
+
+#prevalence
+prev.res <- d %>% group_by(born_wast) %>% do(summary.prev.whz(., N_filter=1)$prev.res)
+prev.res
+
+#CI
+ci.res <- d %>% group_by(born_wast) %>% do(summary.wast.ci(., N_filter=1, age.range=NULL)$ci.res)
+ci.res
+
+
 #Incidence rate
 ir.res <- d %>% group_by(born_wast) %>% do(summary.ir(., Nchild_filter=1, ptime_filter=1)$ir.res)
 ir.res$est <- ir.res$est * 1000
@@ -111,8 +121,8 @@ co.res
 
 
 res <- data.frame(
-  measure= rep(c("Mean WLZ", "Wasting incidence rate", "Persistent wasting", "Co-occurrent wasting and stunting"), each=2),
-  rbind(whz.res, ir.res, perswast.res, co.res)
+  measure= rep(c("Mean WLZ", "Wasting prevalence", "Wasting cumulative incidence", "Wasting incidence rate", "Persistent wasting", "Co-occurrent wasting and stunting"), each=2),
+  rbind(whz.res, prev.res, ci.res, ir.res, perswast.res, co.res)
 )
 res
 
