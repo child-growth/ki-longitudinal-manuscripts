@@ -5,10 +5,8 @@ source(paste0(here::here(), "/0-config.R"))
 #Load data
 d <- readRDS(paste0(here::here(),"/results/bw_longterm_res.rds"))
 
-d <- d %>% filter(measure!="Severe wasting cumulative incidence")
-
 d <- d %>% filter(measure=="Persistent wasting"|
-                  measure=="Wasting incidence rate"|
+                  measure=="Wasting cumulative incidence"|
                     measure=="Co-occurrent wasting and stunting")
 
 d$born_wast_lab <- ifelse(d$born_wast==1, "Born\nwasted", "Not born\nwasted")
@@ -20,7 +18,7 @@ d$measure_lab <- as.character(d$measure)
 d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting" 
 d$measure_lab <- factor(d$measure_lab)
 #d$measure_lab <- relevel(d$measure_lab, ref="Wasting\nincidence\nrate")
-d$measure_lab <- relevel(d$measure_lab, ref="Wasting incidence rate")
+d$measure_lab <- relevel(d$measure_lab, ref="Wasting cumulative incidence")
 
 
 birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
