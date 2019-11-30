@@ -13,6 +13,7 @@ source(here("5-visualizations/risk factors/fig-wast-perswast-comp.R"))
 
 source(here("5-visualizations/risk factors/fig-spline-plots.R"))
 
+source(here("5-visualizations/risk factors/fig-early-wast-RR.R"))
 source(here("5-visualizations/risk factors/fig-wlz-quart-laz-velocity.R"))
 source(here("5-visualizations/risk factors/fig-wlz-quart-stunting.R"))
 

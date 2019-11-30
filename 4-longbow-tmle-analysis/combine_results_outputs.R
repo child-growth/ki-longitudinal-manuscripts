@@ -30,8 +30,8 @@ velocity <- results
 load(here("/results/rf results/raw longbow results/results_vel_2019-11-28.rdata"))
 velocity_wlz_quart <- results
 
-load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
-season <- results %>% mutate(agecat="All")
+# load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
+# season <- results %>% mutate(agecat="All")
 
 load(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2019-11-19.rdata"))
 season_cont_rf <- results
@@ -48,6 +48,8 @@ d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_l
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="4"] <- "Post-max rain"
+d$baseline_level[d$intervention_variable=="rain_quartile"] <- "Opposite max rain"
+
 
 
 #Drop duplicated (unadjusted sex and month variables)
