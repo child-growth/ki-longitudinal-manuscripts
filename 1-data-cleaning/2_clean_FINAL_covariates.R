@@ -105,12 +105,15 @@ gc()
 
 provide <- readRDS(paste0(ghapdata_dir, "covariate creation intermediate datasets/derived covariate datasets/PROVIDE_birthmonth.rds"))
 provide$studyid <- "ki1017093b-PROVIDE"
+provide$birthmon_provide <- as.numeric(as.character(provide$birthmon_provide))
 
 unique(d$studyid)
 table(is.na(d$brthmon[d$studyid=="ki1017093b-PROVIDE"]))
 d <- left_join(d, provide, by = c("studyid", "subjid"))
+table(d$birthmon_provide)
 d$brthmon[d$studyid=="ki1017093b-PROVIDE"] <- d$birthmon_provide[d$studyid=="ki1017093b-PROVIDE"]
 table(is.na(d$brthmon[d$studyid=="ki1017093b-PROVIDE"]))
+table((d$brthmon[d$studyid=="ki1017093b-PROVIDE"]))
 d <- d %>% subset(., select = -c(birthmon_provide))
 
 

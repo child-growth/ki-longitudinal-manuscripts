@@ -9,11 +9,10 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 require(cowplot)
 library(RcppRoll)
 
-
-#rain <- read.csv(here("/data/monthly_rainfall.csv"))
 rain <- readRDS(here("/data/cohort_rain_data.rds"))
 
-d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
+d <- readRDS(seasonality_data_path)
+
 #subset to monthly cohorts
 d <- d %>% filter(measurefreq=="monthly")
 
@@ -238,5 +237,8 @@ save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specificati
 
 #Save cohort Ns
 saveRDS(cohort_Ns, file=paste0(here(),"/results/seasonTMLE_Ns.rds")) 
+
+
+
 
 
