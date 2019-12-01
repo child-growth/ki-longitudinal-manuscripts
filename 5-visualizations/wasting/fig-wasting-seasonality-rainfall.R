@@ -67,7 +67,7 @@ cohort_name <- cohorts[[1]]
 
 
 #Rain_plot function
-rain_plot <- function(df, rain, cohort_name){
+rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:18)){
   rain_sub <- filter(rain, cohort == cohort_name)
   dsub <- filter(df, cohort == cohort_name)
   
@@ -95,7 +95,7 @@ rain_plot <- function(df, rain, cohort_name){
   summary((dfit$fit-shift))
   summary((dfit$fit-shift)*conversion_factor)
   
-  if(i >= 10){
+  if(i %in% leftlab){
   p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
     geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=region), size=2) +
     geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
@@ -110,7 +110,8 @@ rain_plot <- function(df, rain, cohort_name){
     scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                      labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
     ggtitle(cohort_name) + theme(legend.position = "none")
-  }else{
+  }
+  if(i %in% rightlab){
     p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
       geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=region), size=2) +
       geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
@@ -127,6 +128,22 @@ rain_plot <- function(df, rain, cohort_name){
       ggtitle(cohort_name) + theme(legend.position = "none")
   }
   
+  if(!(i %in% leftlab | i %in% rightlab)){
+    p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
+      geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=region), size=2) +
+      geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
+                                   y=(fit-shift)*conversion_factor, 
+                                   ymin=(fit_lb-shift)*conversion_factor,  
+                                   ymax=(fit_ub-shift)*conversion_factor, 
+                                   color=NULL, fill=region), alpha=0.3) +
+      scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
+      ylab("") + xlab(NULL) +
+      scale_fill_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
+      scale_color_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
+      scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
+                       labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
+      ggtitle(cohort_name) + theme(legend.position = "none")
+  }
   
   return(p)
 }
@@ -149,16 +166,6 @@ saveRDS(plot_list, file=paste0(here(),"/figures/plot objects/rain_seasonality_pl
 
 
 
-# plot_grid <- plot_grid(
-#   plot_list[[1]], plot_list[[2]], plot_list[[3]],
-#   plot_list[[4]], plot_list[[5]], plot_list[[6]],
-#   plot_list[[7]], plot_list[[8]], plot_list[[9]],
-#   plot_list[[10]], plot_list[[11]], plot_list[[12]],
-#   plot_list[[13]], plot_list[[14]], plot_list[[15]],
-#   plot_list[[16]], plot_list[[17]], plot_list[[18]],
-#                       labels = rep("", 18), ncol = 3, align = 'v', axis = 'l')
-# ggsave(plot_grid, file=paste0(here(),"/figures/manuscript figure composites/wasting/rain_seasonality_plot.png"), width=14, height=20)
-
 plot_grid <- plot_grid(
   plot_list[[1]], plot_list[[10]], plot_list[[2]],
   plot_list[[11]], plot_list[[3]], plot_list[[12]],
@@ -170,3 +177,18 @@ plot_grid <- plot_grid(
 
 ggsave(plot_grid, file=paste0(here(),"/figures/manuscript figure composites/wasting/rain_seasonality_plot.png"), width=10, height=24)
 
+
+
+
+plot_list=list()
+for(i in 1:length(cohorts)){
+  print(cohorts[i])
+  plot_list[[i]] <- rain_plot(df=d, rain=rain2, cohort_name=cohorts[i], leftlab = c(1,4,7,10,13, 16), rightlab = c(3,6,9,12,15,18))
+}
+
+plot_grid2 <- plot_grid(
+  plot_list[[1]], plot_list[[2]], plot_list[[3]], plot_list[[4]], plot_list[[5]], plot_list[[6]],
+  plot_list[[7]], plot_list[[8]], plot_list[[9]], plot_list[[10]], plot_list[[11]], plot_list[[12]],
+  plot_list[[13]], plot_list[[14]], plot_list[[15]], plot_list[[16]], plot_list[[17]], plot_list[[18]],
+  labels = rep("", 18), ncol = 3, align = 'v', axis = 'l')
+ggsave(plot_grid2, file=paste0(here(),"/figures/manuscript figure composites/wasting/rain_seasonality_plot_alt.png"), width=14, height=12)
