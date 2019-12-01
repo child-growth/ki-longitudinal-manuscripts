@@ -9,7 +9,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 d <- readRDS(stunting_data_path)
 
-d <- d %>% filter(agedays < 730)
+d <- d %>% filter(agedays < 30.4167*24)
 
 d$agecat <- cut(d$agedays,
                 breaks = c(0:25) * 30.4167, include.lowest = F,

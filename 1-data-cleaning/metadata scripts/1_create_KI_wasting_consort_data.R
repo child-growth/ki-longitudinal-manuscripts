@@ -11,7 +11,7 @@ d <- readRDS(wasting_data_path)
 
 d <- d %>% filter(measurefreq=="monthly")
 
-d <- d %>% filter(agedays < 730)
+d <- d %>% filter(agedays < 30.4167*24)
 
 d$agecat <- cut(d$agedays,
                 breaks = c(0:25) * 30.4167, include.lowest = F,
