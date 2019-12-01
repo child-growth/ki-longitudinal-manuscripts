@@ -75,7 +75,7 @@ table(d$month)
 saveRDS(d, ki_manuscript_dataset_path)
 
 
-# Creae dataset of study start years
+# Create dataset of study start years
 start_year <- d %>% filter(agedays <= 731) %>%
   group_by(studyid, country, subjid) %>%
   mutate(max_year = max(brthyr + agedays/365)) %>%
