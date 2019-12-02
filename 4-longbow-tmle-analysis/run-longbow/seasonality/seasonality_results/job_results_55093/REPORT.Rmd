@@ -163,6 +163,9 @@ strata <- collapse_strata(data, nodes)
 ## Data Summary
 ```{r data_summary}
 obs_counts <- get_obs_counts(data, nodes, tl_params)
+
+obs_counts$outcome_variable <- nodes$Y
+
 kable(obs_counts)
 
 if(params$output_directory!=""){
@@ -170,6 +173,9 @@ if(params$output_directory!=""){
   
   save(obs_counts, file=counts_file)
 }
+
+obs_counts <- subset(obs_counts, select = -c(outcome_variable))
+
 
 ```
 

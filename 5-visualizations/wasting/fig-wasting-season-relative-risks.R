@@ -8,7 +8,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load longbow results
-load(here("results","rf results","raw longbow results","seasonality_results_2019-11-17.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_results_2019-12-01.rdata"))
 
 
 
@@ -24,7 +24,7 @@ rain <- rain %>% subset(., select = c(studyid, country, cohort_index)) %>%
   mutate(seasonality_category = 
            case_when(
              season_index >= 0.8 ~ "High seasonality",
-             season_index < 0.6 ~ "Low seasonality",
+             season_index < 0.5 ~ "Low seasonality",
              TRUE ~ "Medium seasonality"),
          seasonality_category = factor(seasonality_category, levels=c("High seasonality", "Medium seasonality", "Low seasonality")))
 table(rain$seasonality_category)
@@ -49,6 +49,9 @@ table(d$studyid)
 d %>% filter(intervention_level == baseline_level) %>% group_by(seasonality_category) %>% 
   summarize(totN=sum(N), minN=min(N), maxN=max(N),
             tot_nchild=sum(nchild), min_nchild=min(nchild), max_nchild=max(nchild))
+
+#d <- d %>% filter(studyid!="PROVIDE")
+
 
 
 RMAest <- d %>% group_by(intervention_variable, intervention_level, baseline_level, outcome_variable) %>%
@@ -103,7 +106,7 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
 print(p_seasonRR)
 
 saveRDS(p_seasonRR, file = here("/figures/plot objects/season_RR_plot.rds"))
-ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=6, height=14)
+ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=5, height=6)
 
 
 
