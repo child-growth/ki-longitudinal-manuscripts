@@ -73,96 +73,80 @@ The analysis was stratified on these variable(s):
 
 ## Data Summary
 
-studyid          country        rain_quartile        n_cell        n
----------------  -------------  ------------------  -------  -------
-CMC-V-BCS-2002   India          Opposite max rain      2170     8697
-CMC-V-BCS-2002   India          Post-max rain          2195     8697
-CMC-V-BCS-2002   India          Pre-max rain           2126     8697
-CMC-V-BCS-2002   India          Max rain               2206     8697
-CMIN             Bangladesh     Opposite max rain      1284     5372
-CMIN             Bangladesh     Post-max rain          1378     5372
-CMIN             Bangladesh     Pre-max rain           1336     5372
-CMIN             Bangladesh     Max rain               1374     5372
-CONTENT          Peru           Opposite max rain      2150     8339
-CONTENT          Peru           Post-max rain          2136     8339
-CONTENT          Peru           Pre-max rain           2023     8339
-CONTENT          Peru           Max rain               2030     8339
-EE               Pakistan       Opposite max rain      1987     8427
-EE               Pakistan       Post-max rain          2202     8427
-EE               Pakistan       Pre-max rain           2106     8427
-EE               Pakistan       Max rain               2132     8427
-GMS-Nepal        Nepal          Opposite max rain      3315    13340
-GMS-Nepal        Nepal          Post-max rain          3414    13340
-GMS-Nepal        Nepal          Pre-max rain           3116    13340
-GMS-Nepal        Nepal          Max rain               3495    13340
-Guatemala BSC    Guatemala      Opposite max rain       692     2545
-Guatemala BSC    Guatemala      Post-max rain           646     2545
-Guatemala BSC    Guatemala      Pre-max rain            607     2545
-Guatemala BSC    Guatemala      Max rain                600     2545
-IRC              India          Opposite max rain      2436     9729
-IRC              India          Post-max rain          2490     9729
-IRC              India          Pre-max rain           2345     9729
-IRC              India          Max rain               2458     9729
-JiVitA-3         Bangladesh     Opposite max rain     29776   102950
-JiVitA-3         Bangladesh     Post-max rain         25759   102950
-JiVitA-3         Bangladesh     Pre-max rain          27081   102950
-JiVitA-3         Bangladesh     Max rain              20334   102950
-JiVitA-4         Bangladesh     Opposite max rain      7870    35194
-JiVitA-4         Bangladesh     Post-max rain         10346    35194
-JiVitA-4         Bangladesh     Pre-max rain           8658    35194
-JiVitA-4         Bangladesh     Max rain               8320    35194
-Keneba           Gambia         Opposite max rain      9260    40115
-Keneba           Gambia         Post-max rain         10262    40115
-Keneba           Gambia         Pre-max rain           9832    40115
-Keneba           Gambia         Max rain              10761    40115
-MAL-ED           Bangladesh     Opposite max rain      1376     5592
-MAL-ED           Bangladesh     Post-max rain          1376     5592
-MAL-ED           Bangladesh     Pre-max rain           1431     5592
-MAL-ED           Bangladesh     Max rain               1409     5592
-MAL-ED           Brazil         Opposite max rain      1195     4837
-MAL-ED           Brazil         Post-max rain          1198     4837
-MAL-ED           Brazil         Pre-max rain           1227     4837
-MAL-ED           Brazil         Max rain               1217     4837
-MAL-ED           India          Opposite max rain      1424     5696
-MAL-ED           India          Post-max rain          1425     5696
-MAL-ED           India          Pre-max rain           1419     5696
-MAL-ED           India          Max rain               1428     5696
-MAL-ED           Nepal          Opposite max rain      1416     5695
-MAL-ED           Nepal          Post-max rain          1427     5695
-MAL-ED           Nepal          Pre-max rain           1429     5695
-MAL-ED           Nepal          Max rain               1423     5695
-MAL-ED           Peru           Opposite max rain      1539     6127
-MAL-ED           Peru           Post-max rain          1538     6127
-MAL-ED           Peru           Pre-max rain           1536     6127
-MAL-ED           Peru           Max rain               1514     6127
-MAL-ED           South Africa   Opposite max rain      1535     6151
-MAL-ED           South Africa   Post-max rain          1571     6151
-MAL-ED           South Africa   Pre-max rain           1544     6151
-MAL-ED           South Africa   Max rain               1501     6151
-MAL-ED           Tanzania       Opposite max rain      1366     5698
-MAL-ED           Tanzania       Post-max rain          1461     5698
-MAL-ED           Tanzania       Pre-max rain           1439     5698
-MAL-ED           Tanzania       Max rain               1432     5698
-PROVIDE          Bangladesh     Opposite max rain      2465     9202
-PROVIDE          Bangladesh     Post-max rain          2214     9202
-PROVIDE          Bangladesh     Pre-max rain           2389     9202
-PROVIDE          Bangladesh     Max rain               2134     9202
-ResPak           Pakistan       Opposite max rain       643     3164
-ResPak           Pakistan       Post-max rain           731     3164
-ResPak           Pakistan       Pre-max rain            770     3164
-ResPak           Pakistan       Max rain               1020     3164
-SAS-CompFeed     India          Opposite max rain      2449     9343
-SAS-CompFeed     India          Post-max rain          2377     9343
-SAS-CompFeed     India          Pre-max rain           2322     9343
-SAS-CompFeed     India          Max rain               2195     9343
-SAS-FoodSuppl    India          Opposite max rain       669     2221
-SAS-FoodSuppl    India          Post-max rain           549     2221
-SAS-FoodSuppl    India          Pre-max rain            537     2221
-SAS-FoodSuppl    India          Max rain                466     2221
-TanzaniaChild2   Tanzania       Opposite max rain      7365    29518
-TanzaniaChild2   Tanzania       Post-max rain          7317    29518
-TanzaniaChild2   Tanzania       Pre-max rain           7354    29518
-TanzaniaChild2   Tanzania       Max rain               7482    29518
+studyid          country        rain_quartile        n_cell       n  outcome_variable 
+---------------  -------------  ------------------  -------  ------  -----------------
+CMC-V-BCS-2002   India          Opposite max rain      2170    8697  whz              
+CMC-V-BCS-2002   India          Post-max rain          2195    8697  whz              
+CMC-V-BCS-2002   India          Pre-max rain           2126    8697  whz              
+CMC-V-BCS-2002   India          Max rain               2206    8697  whz              
+CMIN             Bangladesh     Opposite max rain      1284    5372  whz              
+CMIN             Bangladesh     Post-max rain          1378    5372  whz              
+CMIN             Bangladesh     Pre-max rain           1336    5372  whz              
+CMIN             Bangladesh     Max rain               1374    5372  whz              
+CONTENT          Peru           Opposite max rain      2150    8339  whz              
+CONTENT          Peru           Post-max rain          2136    8339  whz              
+CONTENT          Peru           Pre-max rain           2023    8339  whz              
+CONTENT          Peru           Max rain               2030    8339  whz              
+EE               Pakistan       Opposite max rain      1987    8427  whz              
+EE               Pakistan       Post-max rain          2202    8427  whz              
+EE               Pakistan       Pre-max rain           2106    8427  whz              
+EE               Pakistan       Max rain               2132    8427  whz              
+GMS-Nepal        Nepal          Opposite max rain      3315   13340  whz              
+GMS-Nepal        Nepal          Post-max rain          3414   13340  whz              
+GMS-Nepal        Nepal          Pre-max rain           3116   13340  whz              
+GMS-Nepal        Nepal          Max rain               3495   13340  whz              
+Guatemala BSC    Guatemala      Opposite max rain       692    2545  whz              
+Guatemala BSC    Guatemala      Post-max rain           646    2545  whz              
+Guatemala BSC    Guatemala      Pre-max rain            607    2545  whz              
+Guatemala BSC    Guatemala      Max rain                600    2545  whz              
+IRC              India          Opposite max rain      2436    9729  whz              
+IRC              India          Post-max rain          2490    9729  whz              
+IRC              India          Pre-max rain           2345    9729  whz              
+IRC              India          Max rain               2458    9729  whz              
+Keneba           Gambia         Opposite max rain      9260   40115  whz              
+Keneba           Gambia         Post-max rain         10262   40115  whz              
+Keneba           Gambia         Pre-max rain           9832   40115  whz              
+Keneba           Gambia         Max rain              10761   40115  whz              
+MAL-ED           Bangladesh     Opposite max rain      1376    5592  whz              
+MAL-ED           Bangladesh     Post-max rain          1376    5592  whz              
+MAL-ED           Bangladesh     Pre-max rain           1431    5592  whz              
+MAL-ED           Bangladesh     Max rain               1409    5592  whz              
+MAL-ED           Brazil         Opposite max rain      1195    4837  whz              
+MAL-ED           Brazil         Post-max rain          1198    4837  whz              
+MAL-ED           Brazil         Pre-max rain           1227    4837  whz              
+MAL-ED           Brazil         Max rain               1217    4837  whz              
+MAL-ED           India          Opposite max rain      1424    5696  whz              
+MAL-ED           India          Post-max rain          1425    5696  whz              
+MAL-ED           India          Pre-max rain           1419    5696  whz              
+MAL-ED           India          Max rain               1428    5696  whz              
+MAL-ED           Nepal          Opposite max rain      1416    5695  whz              
+MAL-ED           Nepal          Post-max rain          1427    5695  whz              
+MAL-ED           Nepal          Pre-max rain           1429    5695  whz              
+MAL-ED           Nepal          Max rain               1423    5695  whz              
+MAL-ED           Peru           Opposite max rain      1539    6127  whz              
+MAL-ED           Peru           Post-max rain          1538    6127  whz              
+MAL-ED           Peru           Pre-max rain           1536    6127  whz              
+MAL-ED           Peru           Max rain               1514    6127  whz              
+MAL-ED           South Africa   Opposite max rain      1535    6151  whz              
+MAL-ED           South Africa   Post-max rain          1571    6151  whz              
+MAL-ED           South Africa   Pre-max rain           1544    6151  whz              
+MAL-ED           South Africa   Max rain               1501    6151  whz              
+MAL-ED           Tanzania       Opposite max rain      1366    5698  whz              
+MAL-ED           Tanzania       Post-max rain          1461    5698  whz              
+MAL-ED           Tanzania       Pre-max rain           1439    5698  whz              
+MAL-ED           Tanzania       Max rain               1432    5698  whz              
+PROVIDE          Bangladesh     Opposite max rain      2350    9202  whz              
+PROVIDE          Bangladesh     Post-max rain          2466    9202  whz              
+PROVIDE          Bangladesh     Pre-max rain           2092    9202  whz              
+PROVIDE          Bangladesh     Max rain               2294    9202  whz              
+ResPak           Pakistan       Opposite max rain       643    3164  whz              
+ResPak           Pakistan       Post-max rain           731    3164  whz              
+ResPak           Pakistan       Pre-max rain            770    3164  whz              
+ResPak           Pakistan       Max rain               1020    3164  whz              
+TanzaniaChild2   Tanzania       Opposite max rain      7365   29518  whz              
+TanzaniaChild2   Tanzania       Post-max rain          7317   29518  whz              
+TanzaniaChild2   Tanzania       Pre-max rain           7354   29518  whz              
+TanzaniaChild2   Tanzania       Max rain               7482   29518  whz              
 
 
 The following strata were considered:
@@ -174,8 +158,6 @@ The following strata were considered:
 * studyid: GMS-Nepal, country: Nepal
 * studyid: Guatemala BSC, country: Guatemala
 * studyid: IRC, country: India
-* studyid: JiVitA-3, country: Bangladesh
-* studyid: JiVitA-4, country: Bangladesh
 * studyid: Keneba, country: Gambia
 * studyid: MAL-ED, country: Bangladesh
 * studyid: MAL-ED, country: Brazil
@@ -186,8 +168,6 @@ The following strata were considered:
 * studyid: MAL-ED, country: Tanzania
 * studyid: PROVIDE, country: Bangladesh
 * studyid: ResPak, country: Pakistan
-* studyid: SAS-CompFeed, country: India
-* studyid: SAS-FoodSuppl, country: India
 * studyid: TanzaniaChild2, country: Tanzania
 
 
@@ -1104,225 +1084,21 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 ## is not a cv-aware learner, so self$predict_fold reverts to self$predict
 ```
 
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in fold_fun(n, ...): n <= V so using leave-one-out CV
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
-## not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
-```
-## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
-## is not a cv-aware learner, so self$predict_fold reverts to self$predict
-```
-
 
 
 
 # Results Detail
 
 ## Results Plots
-![](/tmp/6cb9a27a-9606-479d-8c34-ad5908c68d17/b123ff13-7098-4384-af53-541622db9157/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
+![](/tmp/259ebb3a-47ef-4844-98e6-492ba81d5f19/d9e7382f-e71f-494d-b1e9-acf939343548/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
 
 
 
-![](/tmp/6cb9a27a-9606-479d-8c34-ad5908c68d17/b123ff13-7098-4384-af53-541622db9157/REPORT_files/figure-html/plot_ate-1.png)<!-- -->
+![](/tmp/259ebb3a-47ef-4844-98e6-492ba81d5f19/d9e7382f-e71f-494d-b1e9-acf939343548/REPORT_files/figure-html/plot_ate-1.png)<!-- -->
 
 
 
-![](/tmp/6cb9a27a-9606-479d-8c34-ad5908c68d17/b123ff13-7098-4384-af53-541622db9157/REPORT_files/figure-html/plot_par-1.png)<!-- -->
+![](/tmp/259ebb3a-47ef-4844-98e6-492ba81d5f19/d9e7382f-e71f-494d-b1e9-acf939343548/REPORT_files/figure-html/plot_par-1.png)<!-- -->
 
 ## Results Table
 
@@ -1359,14 +1135,6 @@ IRC              India          Opposite max rain    NA                -0.675463
 IRC              India          Post-max rain        NA                -0.8327309   -0.9243528   -0.7411091
 IRC              India          Pre-max rain         NA                -0.8554925   -0.9531436   -0.7578415
 IRC              India          Max rain             NA                -0.9125753   -1.0055027   -0.8196478
-JiVitA-3         Bangladesh     Opposite max rain    NA                -0.5283329   -0.5474073   -0.5092585
-JiVitA-3         Bangladesh     Post-max rain        NA                -0.6661961   -0.6854385   -0.6469537
-JiVitA-3         Bangladesh     Pre-max rain         NA                -0.6262610   -0.6450346   -0.6074875
-JiVitA-3         Bangladesh     Max rain             NA                -0.6653174   -0.6858817   -0.6447532
-JiVitA-4         Bangladesh     Opposite max rain    NA                -0.6019009   -0.6345268   -0.5692750
-JiVitA-4         Bangladesh     Post-max rain        NA                -0.7397439   -0.7726434   -0.7068443
-JiVitA-4         Bangladesh     Pre-max rain         NA                -0.7762081   -0.8065416   -0.7458747
-JiVitA-4         Bangladesh     Max rain             NA                -0.8533329   -0.8855826   -0.8210833
 Keneba           Gambia         Opposite max rain    NA                -0.4178056   -0.4664429   -0.3691683
 Keneba           Gambia         Post-max rain        NA                -0.7118408   -0.7623662   -0.6613153
 Keneba           Gambia         Pre-max rain         NA                -0.3219904   -0.3790766   -0.2649043
@@ -1399,22 +1167,14 @@ MAL-ED           Tanzania       Opposite max rain    NA                 0.398477
 MAL-ED           Tanzania       Post-max rain        NA                 0.3780835    0.2739008    0.4822662
 MAL-ED           Tanzania       Pre-max rain         NA                 0.3023211    0.1843264    0.4203157
 MAL-ED           Tanzania       Max rain             NA                 0.3340712    0.2257250    0.4424174
-PROVIDE          Bangladesh     Opposite max rain    NA                -0.4964097   -0.5723211   -0.4204984
-PROVIDE          Bangladesh     Post-max rain        NA                -0.6206685   -0.7244755   -0.5168614
-PROVIDE          Bangladesh     Pre-max rain         NA                -0.2275178   -0.3076031   -0.1474325
-PROVIDE          Bangladesh     Max rain             NA                -0.3860544   -0.4633967   -0.3087120
+PROVIDE          Bangladesh     Opposite max rain    NA                -0.1374426   -0.2106210   -0.0642641
+PROVIDE          Bangladesh     Post-max rain        NA                -0.5256448   -0.6065353   -0.4447543
+PROVIDE          Bangladesh     Pre-max rain         NA                -0.4483748   -0.5230185   -0.3737311
+PROVIDE          Bangladesh     Max rain             NA                -0.6137576   -0.7150811   -0.5124341
 ResPak           Pakistan       Opposite max rain    NA                -0.3511198   -0.5266625   -0.1755770
 ResPak           Pakistan       Post-max rain        NA                -0.3769631   -0.5723869   -0.1815393
 ResPak           Pakistan       Pre-max rain         NA                -0.7012468   -0.8634914   -0.5390021
 ResPak           Pakistan       Max rain             NA                -0.6210196   -0.7993666   -0.4426726
-SAS-CompFeed     India          Opposite max rain    NA                -0.3970110   -0.5193201   -0.2747019
-SAS-CompFeed     India          Post-max rain        NA                -0.8177745   -0.9810724   -0.6544766
-SAS-CompFeed     India          Pre-max rain         NA                -0.7995909   -0.9060365   -0.6931452
-SAS-CompFeed     India          Max rain             NA                -1.1132392   -1.2129902   -1.0134881
-SAS-FoodSuppl    India          Opposite max rain    NA                -0.9849477   -1.0922328   -0.8776626
-SAS-FoodSuppl    India          Post-max rain        NA                -1.1219672   -1.2392369   -1.0046976
-SAS-FoodSuppl    India          Pre-max rain         NA                -1.2122719   -1.3377368   -1.0868069
-SAS-FoodSuppl    India          Max rain             NA                -1.4460086   -1.5618115   -1.3302057
 TanzaniaChild2   Tanzania       Opposite max rain    NA                 0.0568011    0.0048412    0.1087610
 TanzaniaChild2   Tanzania       Post-max rain        NA                -0.0934030   -0.1449349   -0.0418711
 TanzaniaChild2   Tanzania       Pre-max rain         NA                 0.0263136   -0.0286174    0.0812446
@@ -1433,8 +1193,6 @@ EE               Pakistan       NA                   NA                -0.812872
 GMS-Nepal        Nepal          NA                   NA                -1.0630457   -1.1281751   -0.9979164
 Guatemala BSC    Guatemala      NA                   NA                -0.1613752   -0.2624299   -0.0603206
 IRC              India          NA                   NA                -0.8190122   -0.9060940   -0.7319304
-JiVitA-3         Bangladesh     NA                   NA                -0.6156438   -0.6299537   -0.6013338
-JiVitA-4         Bangladesh     NA                   NA                -0.7447431   -0.7723808   -0.7171055
 Keneba           Gambia         NA                   NA                -0.5115077   -0.5457987   -0.4772167
 MAL-ED           Bangladesh     NA                   NA                -0.4763108   -0.5786381   -0.3739835
 MAL-ED           Brazil         NA                   NA                 0.8645917    0.7265176    1.0026658
@@ -1445,8 +1203,6 @@ MAL-ED           South Africa   NA                   NA                 0.419665
 MAL-ED           Tanzania       NA                   NA                 0.3527782    0.2582437    0.4473127
 PROVIDE          Bangladesh     NA                   NA                -0.4309052   -0.4946536   -0.3671569
 ResPak           Pakistan       NA                   NA                -0.5293078   -0.6629147   -0.3957010
-SAS-CompFeed     India          NA                   NA                -0.7723793   -0.8890904   -0.6556682
-SAS-FoodSuppl    India          NA                   NA                -1.1705178   -1.2564934   -1.0845422
 TanzaniaChild2   Tanzania       NA                   NA                -0.0208120   -0.0614288    0.0198047
 
 
@@ -1483,14 +1239,6 @@ IRC              India          Opposite max rain    Opposite max rain     0.000
 IRC              India          Post-max rain        Opposite max rain    -0.1572670   -0.2094358   -0.1050983
 IRC              India          Pre-max rain         Opposite max rain    -0.1800287   -0.2377227   -0.1223346
 IRC              India          Max rain             Opposite max rain    -0.2371114   -0.3028829   -0.1713399
-JiVitA-3         Bangladesh     Opposite max rain    Opposite max rain     0.0000000    0.0000000    0.0000000
-JiVitA-3         Bangladesh     Post-max rain        Opposite max rain    -0.1378632   -0.1581173   -0.1176091
-JiVitA-3         Bangladesh     Pre-max rain         Opposite max rain    -0.0979281   -0.1176376   -0.0782187
-JiVitA-3         Bangladesh     Max rain             Opposite max rain    -0.1369846   -0.1603471   -0.1136220
-JiVitA-4         Bangladesh     Opposite max rain    Opposite max rain     0.0000000    0.0000000    0.0000000
-JiVitA-4         Bangladesh     Post-max rain        Opposite max rain    -0.1378430   -0.1632679   -0.1124181
-JiVitA-4         Bangladesh     Pre-max rain         Opposite max rain    -0.1743072   -0.2010623   -0.1475521
-JiVitA-4         Bangladesh     Max rain             Opposite max rain    -0.2514320   -0.2790955   -0.2237685
 Keneba           Gambia         Opposite max rain    Opposite max rain     0.0000000    0.0000000    0.0000000
 Keneba           Gambia         Post-max rain        Opposite max rain    -0.2940352   -0.3521170   -0.2359533
 Keneba           Gambia         Pre-max rain         Opposite max rain     0.0958152    0.0311831    0.1604473
@@ -1524,21 +1272,13 @@ MAL-ED           Tanzania       Post-max rain        Opposite max rain    -0.020
 MAL-ED           Tanzania       Pre-max rain         Opposite max rain    -0.0961562   -0.1828101   -0.0095023
 MAL-ED           Tanzania       Max rain             Opposite max rain    -0.0644061   -0.1506664    0.0218542
 PROVIDE          Bangladesh     Opposite max rain    Opposite max rain     0.0000000    0.0000000    0.0000000
-PROVIDE          Bangladesh     Post-max rain        Opposite max rain    -0.1242587   -0.2254504   -0.0230671
-PROVIDE          Bangladesh     Pre-max rain         Opposite max rain     0.2688919    0.1925067    0.3452772
-PROVIDE          Bangladesh     Max rain             Opposite max rain     0.1103554    0.0300959    0.1906148
+PROVIDE          Bangladesh     Post-max rain        Opposite max rain    -0.3882022   -0.4626443   -0.3137602
+PROVIDE          Bangladesh     Pre-max rain         Opposite max rain    -0.3109322   -0.3828716   -0.2389928
+PROVIDE          Bangladesh     Max rain             Opposite max rain    -0.4763151   -0.5757030   -0.3769272
 ResPak           Pakistan       Opposite max rain    Opposite max rain     0.0000000    0.0000000    0.0000000
 ResPak           Pakistan       Post-max rain        Opposite max rain    -0.0258433   -0.2089488    0.1572622
 ResPak           Pakistan       Pre-max rain         Opposite max rain    -0.3501270   -0.5147566   -0.1854974
 ResPak           Pakistan       Max rain             Opposite max rain    -0.2698999   -0.4777616   -0.0620381
-SAS-CompFeed     India          Opposite max rain    Opposite max rain     0.0000000    0.0000000    0.0000000
-SAS-CompFeed     India          Post-max rain        Opposite max rain    -0.4207635   -0.4746599   -0.3668670
-SAS-CompFeed     India          Pre-max rain         Opposite max rain    -0.4025798   -0.4457531   -0.3594066
-SAS-CompFeed     India          Max rain             Opposite max rain    -0.7162282   -0.7796865   -0.6527698
-SAS-FoodSuppl    India          Opposite max rain    Opposite max rain     0.0000000    0.0000000    0.0000000
-SAS-FoodSuppl    India          Post-max rain        Opposite max rain    -0.1370195   -0.2551617   -0.0188774
-SAS-FoodSuppl    India          Pre-max rain         Opposite max rain    -0.2273242   -0.3528357   -0.1018127
-SAS-FoodSuppl    India          Max rain             Opposite max rain    -0.4610609   -0.5901083   -0.3320135
 TanzaniaChild2   Tanzania       Opposite max rain    Opposite max rain     0.0000000    0.0000000    0.0000000
 TanzaniaChild2   Tanzania       Post-max rain        Opposite max rain    -0.1502041   -0.2022443   -0.0981639
 TanzaniaChild2   Tanzania       Pre-max rain         Opposite max rain    -0.0304875   -0.0861183    0.0251433
@@ -1557,8 +1297,6 @@ EE               Pakistan       Opposite max rain    NA                -0.400708
 GMS-Nepal        Nepal          Opposite max rain    NA                -0.2443670   -0.2846031   -0.2041309
 Guatemala BSC    Guatemala      Opposite max rain    NA                -0.0425747   -0.1251627    0.0400134
 IRC              India          Opposite max rain    NA                -0.1435484   -0.1797307   -0.1073660
-JiVitA-3         Bangladesh     Opposite max rain    NA                -0.0873109   -0.0993102   -0.0753115
-JiVitA-4         Bangladesh     Opposite max rain    NA                -0.1428422   -0.1596157   -0.1260688
 Keneba           Gambia         Opposite max rain    NA                -0.0937020   -0.1306165   -0.0567876
 MAL-ED           Bangladesh     Opposite max rain    NA                -0.1144758   -0.1634768   -0.0654747
 MAL-ED           Brazil         Opposite max rain    NA                -0.0147221   -0.1083812    0.0789370
@@ -1567,8 +1305,6 @@ MAL-ED           Nepal          Opposite max rain    NA                -0.108841
 MAL-ED           Peru           Opposite max rain    NA                -0.0401903   -0.1093597    0.0289790
 MAL-ED           South Africa   Opposite max rain    NA                -0.0883805   -0.2132792    0.0365181
 MAL-ED           Tanzania       Opposite max rain    NA                -0.0456991   -0.0928335    0.0014352
-PROVIDE          Bangladesh     Opposite max rain    NA                 0.0655045    0.0171406    0.1138684
+PROVIDE          Bangladesh     Opposite max rain    NA                -0.2934627   -0.3401351   -0.2467903
 ResPak           Pakistan       Opposite max rain    NA                -0.1781881   -0.2986388   -0.0577374
-SAS-CompFeed     India          Opposite max rain    NA                -0.3753683   -0.3975997   -0.3531369
-SAS-FoodSuppl    India          Opposite max rain    NA                -0.1855701   -0.2557668   -0.1153735
 TanzaniaChild2   Tanzania       Opposite max rain    NA                -0.0776131   -0.1117601   -0.0434662

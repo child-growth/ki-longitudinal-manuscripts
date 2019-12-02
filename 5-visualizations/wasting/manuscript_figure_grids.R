@@ -25,7 +25,6 @@ plot_list[[3]]$`data` %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 
 
 #Figure 3 
-#load(here("/figures/plot objects/season_diff_plot.Rdata"))
 p_seasonRR <- readRDS(here("/figures/plot objects/season_RR_plot.rds"))
 
 seasonbirth_plot_list <- readRDS(paste0(here(),"/figures/plot objects/season_plots.RDS"))
@@ -50,6 +49,7 @@ right_plot <- plot_grid(p_seasonRR, seasonbirth_plot_list[[2]], labels = c("B","
 fig3 <- plot_grid(left_plot, right_plot, labels = c("A",""), ncol = 2, align = 'h', axis = 'l', rel_heights = c(1, 1))
 
 ggsave(fig3, file=paste0(here(),"/figures/manuscript figure composites/wasting/fig3.png"), width=14, height=14)
+
 
 
 #Figure 4
