@@ -98,4 +98,5 @@ saveRDS(rf_table1_list, file=here("/results/rf_table1.RDS"))
 
 
 tab <- bind_rows(rf_table1_list, .id="Variable")
+colnames(tab) <- c("Variable","Level", "N", "Proportion")
 write.csv(tab, file =here("/results/rf_table.csv"))
