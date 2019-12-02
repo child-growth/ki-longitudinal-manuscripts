@@ -94,5 +94,8 @@ for(i in 1:length(exposures)){
   names(rf_table1_list)[i] <- exposures[i]
 }
 
-tab <- bind_rows(rf_table1_list, .id="Variable")
 saveRDS(rf_table1_list, file=here("/results/rf_table1.RDS"))
+
+
+tab <- bind_rows(rf_table1_list, .id="Variable")
+write.csv(tab, file =here("/results/rf_table.csv"))
