@@ -95,32 +95,6 @@ prev_plot_africa <- ki_desc_plot(d,
                           returnData=T
                           )
 
-prev_plot_lam <- ki_desc_plot(d,
-                                 Disease="Wasting",
-                                 Measure="Prevalence", 
-                                 Birth="yes", 
-                                 Severe="no", 
-                                 Age_range="3 months", 
-                                 Cohort="pooled",
-                                 xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24),
-                                 returnData=T,
-                                 Region="Latin America")
-
-prev_plot_sasia <- ki_desc_plot(d,
-                                 Disease="Wasting",
-                                 Measure="Prevalence", 
-                                 Birth="yes", 
-                                 Severe="no", 
-                                 Age_range="3 months", 
-                                 Cohort="pooled",
-                                 xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24),
-                                 returnData=T,
-                                 Region="South Asia")
-
 # define standardized plot names
 prev_plot_name = create_name(
   outcome = "wasting",
@@ -135,8 +109,6 @@ prev_plot_name = create_name(
 # save plot and underlying data
 ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",prev_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
 ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","prev_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
-ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","prev_plot_lam", "-no-Kenaba-BW.png"), width=10, height=5)
-ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","prev_plot_sasia", "-no-Kenaba-BW.png"), width=10, height=5)
 
 saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",prev_plot_name,"-no-Kenaba-BW.RDS"))
 
@@ -518,33 +490,6 @@ perswast_plot_africa <- ki_desc_plot(d,
                               returnData=T,
                               Region="Africa")
 
-perswast_plot_lam <- ki_desc_plot(d,
-                                     Disease="Wasting",
-                                     Measure="Persistent wasting", 
-                                     Birth="yes", 
-                                     Severe="no", 
-                                     Age_range="6 months", 
-                                     Cohort="pooled",
-                                     xlabel="Child age, months",
-                                     ylabel = 'Proportion (%)',
-                                     yrange=c(0,20),
-                                     returnData=T,
-                                     Region="Latin America")
-
-perswast_plot_sasia <- ki_desc_plot(d,
-                                     Disease="Wasting",
-                                     Measure="Persistent wasting", 
-                                     Birth="yes", 
-                                     Severe="no", 
-                                     Age_range="6 months", 
-                                     Cohort="pooled",
-                                     xlabel="Child age, months",
-                                     ylabel = 'Proportion (%)',
-                                     yrange=c(0,20),
-                                     returnData=T,
-                                     Region="South Asia")
-
-
 # define standardized plot names
 perswast_plot_name = create_name(
   outcome = "wasting",
@@ -557,9 +502,8 @@ perswast_plot_name = create_name(
 )
 
 # save plot and underlying data
+ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",perswast_plot_name, "-no-Kenaba-BW.png"), width=10, height=5)
 ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","perswast_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
-ggsave(perswast_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","perswast_plot_lam", "-no-Kenaba-BW.png"), width=10, height=5)
-ggsave(perswast_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","perswast_plot_sasia", "-no-Kenaba-BW.png"), width=10, height=5)
 
 saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_plot_name,"-no-Kenaba-BW.RDS"))
 
