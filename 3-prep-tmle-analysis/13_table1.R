@@ -78,7 +78,7 @@ exposure_tab <- function(d, Avar){
 exposure_tab(d, Avar="sex")
 
 
-exposures <- c("sex",           "month",                  "gagebrth",      "brthmon",       "parity",        "birthwt",      
+exposures <- c("sex",                   "gagebrth",         "parity",        "birthwt",      
                "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",         "mbmi",          "meducyrs",     
                "single",        "fage",          "fhtcm",         "feducyrs",      "trth2o",        "cleanck",       "impfloor",      "nrooms",       
                "nhh",           "nchldlt5",      "earlybf",       "hfoodsec",      "anywast06",     "pers_wast",     "enstunt",       "enwast",       
@@ -94,4 +94,5 @@ for(i in 1:length(exposures)){
   names(rf_table1_list)[i] <- exposures[i]
 }
 
+tab <- bind_rows(rf_table1_list, .id="Variable")
 saveRDS(rf_table1_list, file=here("/results/rf_table1.RDS"))

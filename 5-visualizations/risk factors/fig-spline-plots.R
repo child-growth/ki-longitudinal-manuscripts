@@ -496,23 +496,32 @@ print(p6)
 
 
 
-
+#Save plot objects
+saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/results/rf_spline_objects.RDS"))
 
 
 
 #------------------------------------------------------------------------------------------------
-# Save plots
+# Plot as a grid
 #------------------------------------------------------------------------------------------------
+
+pos = c(0.2,0.25)
+
+p1 <- p1 + ggtitle("Spline curves of WLZ, stratified by\ncategories of maternal weight") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +  guides(color = guide_legend("Maternal\nweight", nrow=3)) +scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+p2 <- p2  + ggtitle("Stratified by\ncategories of maternal height") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6))+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+p3 <- p3  + ggtitle("Spline curves of LAZ, stratified by\ncategories of maternal weight") + theme(legend.position = "none") + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p4 <- p4  + ggtitle("Stratified by\ncategories of maternal height") +  theme(legend.position = "none") +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+
 
 
 # Combine plot objects
 
 require(cowplot)
-p_grid <- plot_grid(p1, p2, p3, p4, p5, p6, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
 
-ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid.png"), width=14, height=14)
+p_grid <- plot_grid(p1, p3, p2, p4,p6, p5,  labels = rep("",6), ncol = 2, align = 'v', axis = 'l')
 
+ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid.png"), width=10, height=10)
 
-#Save plot objects
-saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/results/rf_spline_objects.RDS"))
 
