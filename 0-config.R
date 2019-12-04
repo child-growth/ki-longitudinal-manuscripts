@@ -99,21 +99,18 @@ metadata_GHAP_metadata_stunting_xlsx_path = paste0(metadata_dir, "GHAP_metadata_
 icc_res_path                          = paste0(res_dir,"icc_res.rds")
 test_data_path                       = "C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/data/simulated test data/testdata.rds"
 asset_PCA_allstudies_path       = paste0(project_functions_dir, "1_assetPCA-allstudies.R")
-asset_PCA_allstudies_path       = paste0(project_functions_dir, "1_assetPCA-allstudies.R")
-asset_PCA_allstudies_path       = paste0(project_functions_dir, "1_assetPCA-allstudies.R")
-asset_PCA_allstudies_path       = paste0(project_functions_dir, "1_assetPCA-allstudies.R")
+
+
 ##################################
 
 # Source base functions  
-source(paste0(project_functions_dir, "0_clean_study_data_functions.R"))
-source(paste0(project_functions_dir, "0_descriptive_epi_shared_functions.R"))
-source(paste0(project_functions_dir, "0_descriptive_epi_stunt_functions.R"))
-source(paste0(project_functions_dir, "0_descriptive_epi_wast_functions.R"))
-# what about these other ones?
-source(paste0(project_functions_dir, "0_descriptive_epi_co_functions.R")) # NP
-source(paste0(project_functions_dir, "0_helper_sampling_weights.R")) # NP
-source(paste0(project_functions_dir, "0_risk_factor_functions.R")) # NP
-source(paste0(project_functions_dir, "0_wast_inc_functions.R")) # NP
+source(paste0(project_functions_dir, "/0_clean_study_data_functions.R"))
+source(paste0(project_functions_dir, "/0_descriptive_epi_shared_functions.R"))
+source(paste0(project_functions_dir, "/0_descriptive_epi_stunt_functions.R"))
+source(paste0(project_functions_dir, "/0_descriptive_epi_wast_functions.R"))
+source(paste0(project_functions_dir, "/0_helper_sampling_weights.R")) 
+source(paste0(project_functions_dir, "/0_risk_factor_functions.R")) 
+
 
 # Set theme
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))

@@ -26,7 +26,7 @@ d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.RDS"))
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
 # subset to primary analysis
-d_primary <- d %>% filter(analysis == "Primary")
+d_primary <- d %>% filter(analysis == "Primary", disease=="Stunting", measure == "Mean LAZ", age_range=="3 months")
 
 # scale cohort-specific estimates
 d_primary = d_primary %>% mutate(
