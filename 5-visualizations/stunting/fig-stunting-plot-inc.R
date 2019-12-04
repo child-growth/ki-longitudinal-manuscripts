@@ -22,6 +22,8 @@ source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-e
 
 #Load data
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.RDS"))
+d <- d %>% filter(!is.na(agecat))
+d <- droplevels(d)
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
@@ -56,7 +58,6 @@ ci_inc_plot_primary$plot
 inc_n_primary = d_primary %>%
   filter(disease == "Stunting" &
            (measure == "Cumulative incidence" | measure== "Incidence_proportion") &
-           region!="Overall" &
            age_range == "3 months" &
            birth == "strat" &
            cohort == "pooled" &
@@ -71,7 +72,7 @@ ci_inc_plot_name_primary = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=ana
 
 # save plot and underlying data
 ggsave(ci_inc_plot_primary$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name_primary,".png"), width=16, height=4)
-saveRDS(ci_inc_plot_primary$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name_primary,".RDS"))
+saveRDS(ci_inc_plot_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_name_primary,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -91,7 +92,7 @@ ci_inc_plot_name_monthly <- name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=an
 # save plot and underlying data
 ggsave(ci_inc_plot_monthly, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name_monthly,".png"), width=14, height=3)
 
-saveRDS(d_monthly, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name_monthly,".RDS"))
+saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_name_monthly,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -122,7 +123,7 @@ ci_inc_plot_name_fe = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis
 # save plot and underlying data
 ggsave(ci_inc_plot_fe$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name_fe,".png"), width=16, height=4)
 
-saveRDS(ci_inc_plot_fe$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name_fe,".RDS"))
+saveRDS(ci_inc_plot_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_name_fe,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -170,7 +171,7 @@ ci_inc_plot_sev_name_primary = name_inc_plots(cut=3, pop=pop_list$o, loc="", ana
 
 # save plot and underlying data
 ggsave(ci_inc_plot_sev_primary$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name_primary,".png"), width=14, height=4)
-saveRDS(ci_inc_plot_sev_primary$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name_primary,".RDS"))
+saveRDS(ci_inc_plot_sev_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_sev_name_primary,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion - severe (monthly)
@@ -187,7 +188,7 @@ ci_inc_plot_sev_name_monthly <- name_inc_plots(cut=3, pop=pop_list$o, loc="", an
 
 # save plot and underlying data
 ggsave(ci_inc_plot_sev_monthly, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name_monthly,".png"), width=14, height=3)
-saveRDS(d_monthly, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name_monthly,".RDS"))
+saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_sev_name_monthly,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -203,7 +204,7 @@ ci_inc_plot_sev_name_fe = name_inc_plots(cut=3, pop=pop_list$o, loc="", ana=anal
 
 # save plot and underlying data
 ggsave(ci_inc_plot_sev_fe$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name_fe,".png"), width=14, height=4)
-saveRDS(ci_inc_plot_sev_fe$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name_fe,".RDS"))
+saveRDS(ci_inc_plot_sev_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_sev_name_fe,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -229,6 +230,6 @@ ggsave(ip_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_africa_
 ggsave(ip_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_latam_name, ".png"), width=10, height=5)
 ggsave(ip_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_sasia_name, ".png"), width=15, height=7)
 
-saveRDS(ip_plot_africa$data, file=paste0(figdata_dir, "figdata-",ip_plot_africa_name,".RDS"))
-saveRDS(ip_plot_lam$data, file=paste0(figdata_dir, "figdata-",ip_plot_latam_name,".RDS"))
-saveRDS(ip_plot_sasia$data, file=paste0(figdata_dir, "figdata-",ip_plot_sasia_name,".RDS"))
+saveRDS(ip_plot_africa$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_africa_name,".RDS"))
+saveRDS(ip_plot_lam$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_latam_name,".RDS"))
+saveRDS(ip_plot_sasia$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_sasia_name,".RDS"))

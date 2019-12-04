@@ -203,10 +203,10 @@ summarize_over_strata <- function(cohort.sum, strata=c("region","studyid","count
 
 
 
-summary.prev.whz <- function(d, severe.wasted=F, method="REML"){
+summary.prev.whz <- function(d, severe.wasted=F, method="REML", N_filter=50){
 
   dmn <- d %>%
-    filter(!is.na(agecat)) %>%
+    filter(!is.na(agecat), !is.na(whz)) %>%
     group_by(studyid,country,subjid,agecat) %>%
     summarise(whz=mean(whz)) %>%
     mutate(wasted=ifelse(whz< -2, 1,0),swasted=ifelse(whz< -3, 1,0))
@@ -224,7 +224,7 @@ summary.prev.whz <- function(d, severe.wasted=F, method="REML"){
     summarise(nmeas=sum(!is.na(whz)),
               prev=mean(wasted),
               nxprev=sum(wasted==1)) %>%
-    filter(nmeas>=50) 
+    filter(nmeas>=N_filter) 
   
   prev.data <- droplevels(prev.data)
 
@@ -252,45 +252,62 @@ summary.prev.whz <- function(d, severe.wasted=F, method="REML"){
 
 
 
-summary.ci <- function(d, severe.wasted = F, age.range, method="REML"){
+summary.wast.ci <- function(d, severe.wasted = F, age.range, method="REML", N_filter=50){
   cutoff <- ifelse(severe.wasted,-3,-2)
 
-  if(age.range == 3){
-  # identify ever wasted children
-  evs = d %>%
-    filter(!is.na(agecat) & !is.na(whz)) %>%
-    group_by(studyid,country,subjid) %>%
-    arrange(studyid,subjid) %>%
-    #create variable with minwhz by age category, cumulatively
-    mutate(minwhz=ifelse(agecat=="0-3 months",min(whz[agecat=="0-3 months"]),
-                         ifelse(agecat=="3-6 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"]),
-                                ifelse(agecat=="6-9 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
-                                       ifelse(agecat=="9-12 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
-                                              ifelse(agecat=="12-15 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
-                                                     ifelse(agecat=="15-18 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
-                                                            ifelse(agecat=="18-21 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
-                                                                   ifelse(agecat=="21-24 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
-                                                                          min(whz)))))))))) %>%
-    # create indicator for whether the child was ever wasted
-    # by age category
-    group_by(studyid,country,agecat,subjid) %>%
-    summarise(minwhz=min(minwhz)) %>% ungroup() %>%
-    mutate(ever_wasted=ifelse(minwhz< cutoff,1,0),
-           agecat=factor(agecat))
-  }
-  
-  if(age.range == 6){
+  if(!is.null(age.range)){
+    if(age.range == 3){
     # identify ever wasted children
     evs = d %>%
       filter(!is.na(agecat) & !is.na(whz)) %>%
       group_by(studyid,country,subjid) %>%
       arrange(studyid,subjid) %>%
       #create variable with minwhz by age category, cumulatively
-      mutate(minwhz=ifelse(agecat=="0-6 months",min(whz[agecat=="0-6 months"]),
-                           ifelse(agecat=="6-12 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"]),
-                                  ifelse(agecat=="12-18 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"|agecat=="12-18 months"]),
-                                         ifelse(agecat=="18-24 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"|agecat=="12-18 months"|agecat=="18-24 months"]),
-                                                                            min(whz)))))) %>%
+      mutate(minwhz=ifelse(agecat=="0-3 months",min(whz[agecat=="0-3 months"]),
+                           ifelse(agecat=="3-6 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"]),
+                                  ifelse(agecat=="6-9 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                         ifelse(agecat=="9-12 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                ifelse(agecat=="12-15 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                       ifelse(agecat=="15-18 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                              ifelse(agecat=="18-21 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                     ifelse(agecat=="21-24 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                            min(whz)))))))))) %>%
+      # create indicator for whether the child was ever wasted
+      # by age category
+      group_by(studyid,country,agecat,subjid) %>%
+      summarise(minwhz=min(minwhz)) %>% ungroup() %>%
+      mutate(ever_wasted=ifelse(minwhz< cutoff,1,0),
+             agecat=factor(agecat))
+    }
+    
+    if(age.range == 6){
+      # identify ever wasted children
+      evs = d %>%
+        filter(!is.na(agecat) & !is.na(whz)) %>%
+        group_by(studyid,country,subjid) %>%
+        arrange(studyid,subjid) %>%
+        #create variable with minwhz by age category, cumulatively
+        mutate(minwhz=ifelse(agecat=="0-6 months",min(whz[agecat=="0-6 months"]),
+                             ifelse(agecat=="6-12 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"]),
+                                    ifelse(agecat=="12-18 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"|agecat=="12-18 months"]),
+                                           ifelse(agecat=="18-24 months",min(whz[agecat=="0-6 months" | agecat=="6-12 months"|agecat=="12-18 months"|agecat=="18-24 months"]),
+                                                                              min(whz)))))) %>%
+        # create indicator for whether the child was ever wasted
+        # by age category
+        group_by(studyid,country,agecat,subjid) %>%
+        summarise(minwhz=min(minwhz)) %>% ungroup() %>%
+        mutate(ever_wasted=ifelse(minwhz< cutoff,1,0),
+               agecat=factor(agecat))
+    }
+  }
+  if(is.null(age.range)){
+    # identify ever wasted children
+    evs = d %>%
+      filter(!is.na(agecat) & !is.na(whz)) %>%
+      group_by(studyid,country,subjid) %>%
+      arrange(studyid,subjid) %>%
+      #create variable with minwhz by age category, cumulatively
+      mutate(minwhz=min(whz)) %>%
       # create indicator for whether the child was ever wasted
       # by age category
       group_by(studyid,country,agecat,subjid) %>%
@@ -309,7 +326,7 @@ summary.ci <- function(d, severe.wasted = F, age.range, method="REML"){
       nstudy=length(unique(studyid)),
       ncases=sum(ever_wasted),
       N=sum(length(ever_wasted))) %>%
-    filter(N>=5)
+    filter(N>=N_filter)
 
   cuminc.data <- droplevels(cuminc.data)
 

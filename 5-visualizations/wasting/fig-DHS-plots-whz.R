@@ -31,7 +31,7 @@ pcols <- tableau11
 ##################################
 # Plot mean z-score by age
 ##################################
-dhs_plotd = read_rds(paste0(figdata_dir, "figdata-fig_dhs_ki_zscores_byage.RDS"))
+dhs_plotd = read_rds(paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_byage.RDS"))
 dhs_plotd$region = factor(dhs_plotd$region, levels = c("Overall", "Africa", "Latin America", "South Asia"))
 dhs_plotd$measure[dhs_plotd$measure=="WHZ"] <- "WLZ"
 
@@ -107,5 +107,6 @@ dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, color = region, linetype =
 dplot
 
 # output a file to png
-saveRDS(dhsden_plot, file = paste0(figdata_dir, "figdata-fig_dhs_ki_zscores_density.RDS"))
+saveRDS(dhsden_plot, file = paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_density.RDS"))
 ggsave(dplot, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_density.png"), width = 6, height = 5)
+

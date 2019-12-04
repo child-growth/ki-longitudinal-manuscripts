@@ -4,7 +4,6 @@
 #-----------------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-source("U:/Wasting/1-outcomes/0_wast_incfunctions.R")
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
@@ -67,28 +66,10 @@ pval <- ki.ttest(data=df, y="recZ", levels="agecat2", ref="0-6", comp=c("6-18"))
 pval
 
 
-# #Plot Z scores after recovery
-# rec_density_plot = ggplot(df,aes(x=recZ, fill = agecat)) + 
-#   geom_density(alpha=0.5) + 
-#   facet_wrap(~agecat) +
-#   geom_vline(aes(xintercept = medianRecZ)) +
-#   geom_text(aes(x=medianRecZ+0.4, y=0.75, label=(round(medianRecZ,2)))) +
-#   xlab("Mean Weight-for-age Z-score within 3 months of recovery")+
-#   scale_y_discrete(expand = c(0.01, 0)) +
-#   scale_x_continuous(breaks = seq(-5, 3.5, 1), 
-#                      labels = seq(-5, 3.5, 1)) +
-#   geom_vline(xintercept = -2, linetype="dashed") +
-#   scale_fill_manual(values=rep(tableau10[3], 4)) +
-#   coord_cartesian(xlim=c(-3,2))
-# rec_density_plot
-# 
-# ggsave(rec_density_plot, file="U:/ki-longitudinal-manuscripts/figures/wasting/fig_wast_rec_dist_hist.png", width=8, height=5)
-# 
 
 
 
-
-#Create violin plot alternative
+#Create violin plot 
 df <- df %>% group_by(agecat) %>% 
   mutate(firstMedianRecZ=medianRecZ,
          firstMedianRecZ=ifelse(studyid==first(studyid) & 
@@ -97,14 +78,10 @@ df <- df %>% group_by(agecat) %>%
 
 rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) + 
   geom_violin(alpha=0.5, draw_quantiles = c(0.25, 0.5, 0.75)) + 
-   #geom_point(aes(y = firstMedianRecZ)) +
    geom_text(aes(y=firstMedianRecZ+0.1,  label=(round(firstMedianRecZ,2)))) +
   geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
    ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
    xlab("Age at wasting episode onset")+
-  # scale_y_discrete(expand = c(0.01, 0)) +
-  # scale_x_continuous(breaks = seq(-5, 3.5, 1), 
-  #                    labels = seq(-5, 3.5, 1)) +
    geom_hline(yintercept = -2, linetype="dashed") +
    scale_fill_manual(values=rep("grey30", 4)) +
    coord_cartesian(ylim=c(-3,2))
@@ -125,5 +102,12 @@ rec_violin_name = create_name(
 # save plot and underlying data
 ggsave(rec_violin_plot, file=paste0(here(),"/figures/wasting/fig-", rec_violin_name, ".png"), width=8, height=5)
 
-save(rec_violin_plot, file=paste0(here::here(),"/figures/plot objects/rec_violin_plot_object.Rdata"))
+saveRDS(rec_violin_plot, file=paste0(here::here(),"/figures/plot objects/rec_violin_plot_object.rds"))
+
+#Get N's for figure caption
+df %>% ungroup() %>% filter(agedays <= 24*30.4167) %>% 
+  summarize(N=n(), nchild=length(unique(subjid)), nstudies=length(unique(paste0(studyid,country))))
+
+df %>% group_by(studyid, country) %>% filter(agedays <= 24*30.4167) %>% 
+  summarize(N=n(), nchild=length(unique(subjid)), nstudies=length(unique(paste0(studyid,country))))
 

@@ -20,9 +20,15 @@ d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 #--------------------------------------------
 
 
-d<-d %>% subset(., select=c(studyid, subjid, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
+d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
 
 d <- d %>% filter(agedays < 24 * 30.4167)
+
+#d <- d %>% filter(studyid == "ki1017093b-PROVIDE")
+
+#Fill in birth week as middle of the month from birthmonth from PROVIDE datasets
+d$brthweek[d$studyid=="ki1017093b-PROVIDE"] <- round(as.numeric(d$brthmon[d$studyid=="ki1017093b-PROVIDE"])  * 4.3333 ) -2 
+
 
 table(d$studyid, is.na(d$brthweek))
 d <- d %>% filter(!is.na(brthweek))
@@ -34,19 +40,21 @@ d$subjid <- as.character(d$subjid)
 d <- d %>% filter(measurefreq!="yearly")
 
 #Has Z-score data
-d <- d %>% filter(!is.na(whz)) %>% filter(whz < 5 & whz > (-5))
+d <- d %>% filter(!is.na(whz) | !is.na(haz)) 
 
 #estimate birthday
 d$birthday <- d$brthweek *7 - 7 #Minus 7 days so week 1 starts at 0 and week 53 is day 364
+summary(d$birthday)
 
 #calculate study day of measurement (with 1 being the first day of the start of the study year)
 d$studyday <-  d$birthday + d$agedays
 
 
 #calculate julian day of measurement
-d$jday <- ((d$birthday + d$agedays)/364)%%1 * 364
+d$jday <- round(((d$birthday + d$agedays)/364)%%1 * 364, 0)
 summary(d$jday)
-
+table(is.na(d$month))
 
 saveRDS(d, seasonality_data_path)
+
 

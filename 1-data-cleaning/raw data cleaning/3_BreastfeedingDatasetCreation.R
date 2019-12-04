@@ -29,8 +29,8 @@ head(prbt)
 # - don't add in mled and prbt - they already have aggregate variables
 bf_df <- bind_rows(bfzn, ee)
 bf_df <- bind_rows(bf_df, gmsn)
-bf_df <- bind_rows(bf_df, jvt3)
 bf_df$visit <- as.character(bf_df$visit)
+bf_df <- bind_rows(bf_df, jvt3)
 bf_df <- bind_rows(bf_df, jvt4)
 
 
@@ -141,8 +141,8 @@ bf_3_6mo_raw <- bf_3_6mo
 #read full data csv file
 #-------------------------------------------
 
-d<-fread("U:/ucb-superlearner/Manuscript analysis data/FINAL.csv", header = T)
-
+d<-fread("H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv", header = T)
+         
 d <-d %>% filter(!is.na(AGEDAYS) & !is.na(WHZ)) %>%
   filter(WHZ > -5 & WHZ < 5) %>%
   filter(AGEDAYS <= 24 * 30.25)

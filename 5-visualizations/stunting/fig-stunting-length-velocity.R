@@ -73,6 +73,16 @@ vel$ycat <- gsub('lencm', 'Length velocity (cm per month)', vel$ycat)
 # define color palette
 mypalette = c("#D87A16", "#0EA76A")
 
+
+# get N's for figure caption
+vel_n = vel %>%
+  filter(!is.na(strata), pooled==1) %>%
+  group_by(region) %>%
+  summarise(min_study = min(nstudies, na.rm=TRUE),
+            max_study = max(nstudies, na.rm=TRUE),
+            min_n = min(N, na.rm=TRUE),
+            max_n = max(N, na.rm=TRUE))
+
 ####################################################################################
 # mean LAZ plots
 ####################################################################################
@@ -109,7 +119,7 @@ plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) +
 #-------------------------------------
 meanlaz_strat = meanlaz %>% 
   filter(cohort == "pooled") %>%
-  filter(region !="Europe") %>%
+  filter(region !="N.America & Europe") %>%
   mutate(agecat = factor(agecat, 
                          levels = c("0-3", "3-6", "6-9",
                                     "9-12", "12-15", "15-18",
@@ -166,7 +176,7 @@ plot_laz_name = create_name(
 
 # save plot and underlying data
 ggsave(plot_laz, file=paste0(fig_dir, "stunting/fig-",plot_laz_name,".png"), width=12, height=6)
-saveRDS(velplot_laz, file=paste0(figdata_dir, "figdata-",plot_laz_name,".RDS"))
+saveRDS(velplot_laz, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_name,".RDS"))
 
 
 #-------------------------------------
@@ -182,7 +192,7 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                   position = position_dodge(width=0.5), size=1.25) +
   scale_color_manual(values=mypalette)+  
-  scale_y_continuous(limits=c(-0.4,0.2), breaks=seq(-0.4,0.2,0.05), labels=seq(-0.4,0.2,0.05)) +
+  scale_y_continuous(limits=c(-0.55,0.3), breaks=seq(-0.5,0.3,0.1), labels=seq(-0.5,0.3,0.1)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
@@ -207,7 +217,7 @@ plot_laz_strat_name = create_name(
 
 # save plot and underlying data
 ggsave(plot_laz_strat, file=paste0(fig_dir, "stunting/fig-",plot_laz_strat_name,".png"), width=12, height=6)
-saveRDS(velplot_laz_strat, file=paste0(figdata_dir, "figdata-",plot_laz_strat_name,".RDS"))
+saveRDS(velplot_laz_strat, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_strat_name,".RDS"))
 
 
 #-------------------------------------
@@ -275,9 +285,9 @@ ggsave(plot_laz_cohort_latamer, file=paste0(fig_dir, "stunting/fig-",plot_laz_co
 ggsave(plot_laz_cohort_afr, file=paste0(fig_dir, "stunting/fig-",plot_laz_cohort_afr_name,".png"), 
        width=18, height=10)
 
-saveRDS(velplot_laz_asia, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_asia_name,".RDS"))
-saveRDS(velplot_laz_latamer, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_latamer_name,".RDS"))
-saveRDS(velplot_laz_afr, file=paste0(figdata_dir, "figdata-",plot_laz_cohort_afr_name,".RDS"))
+saveRDS(velplot_laz_asia, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_cohort_asia_name,".RDS"))
+saveRDS(velplot_laz_latamer, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_cohort_latamer_name,".RDS"))
+saveRDS(velplot_laz_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_cohort_afr_name,".RDS"))
 
 ####################################################################################
 # length velocity plots
@@ -352,7 +362,7 @@ plot_cm_name = create_name(
 # save plot and underlying data
 ggsave(plot_cm, file=paste0(fig_dir, "stunting/fig-",plot_cm_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm, file=paste0(figdata_dir, "figdata-",plot_cm_name,".RDS"))
+saveRDS(velplot_cm, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_name,".RDS"))
 
 #-------------------------------------
 # absolute length plot - stratified by region
@@ -400,7 +410,7 @@ plot_cm_strat_name = create_name(
 # save plot and underlying data
 ggsave(plot_cm_strat, file=paste0(fig_dir, "stunting/fig-",plot_cm_strat_name,".png"), 
        width=10, height=8)
-saveRDS(velplot_cm_strat, file=paste0(figdata_dir, "figdata-",plot_cm_strat_name,".RDS"))
+saveRDS(velplot_cm_strat, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_strat_name,".RDS"))
 
 
 #-------------------------------------
@@ -483,9 +493,9 @@ ggsave(plot_cm_cohort_latamer, file=paste0(fig_dir, "stunting/fig-",plot_cm_coho
 ggsave(plot_cm_cohort_afr, file=paste0(fig_dir, "stunting/fig-",plot_cm_cohort_afr_name,".png"), 
        width=18, height=18)
 
-saveRDS(velplot_cm_asia, file=paste0(figdata_dir, "figdata-",plot_cm_cohort_asia_name,".RDS"))
-saveRDS(velplot_cm_latamer, file=paste0(figdata_dir, "figdata-",plot_cm_cohort_latamer_name,".RDS"))
-saveRDS(velplot_cm_afr, file=paste0(figdata_dir, "figdata-",plot_cm_cohort_afr_name,".RDS"))
+saveRDS(velplot_cm_asia, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_cohort_asia_name,".RDS"))
+saveRDS(velplot_cm_latamer, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_cohort_latamer_name,".RDS"))
+saveRDS(velplot_cm_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_cohort_afr_name,".RDS"))
 
 
 ############################################################################
@@ -539,7 +549,7 @@ saveRDS(
     velplot_laz = velplot_laz,
     meanlaz_overall = meanlaz_overall
   ),
-  file = paste0(figdata_dir, "figdata-", combined_plot_name, ".RDS")
+  file = paste0(figdata_dir_stunting, "figdata-", combined_plot_name, ".RDS")
 )
 
 saveRDS(
@@ -548,5 +558,5 @@ saveRDS(
     velplot_laz_strat = velplot_laz_strat,
     meanlaz_strat = meanlaz_strat
   ),
-  file = paste0(figdata_dir, "figdata-", combined_plot_strat_name, ".RDS")
+  file = paste0(figdata_dir_stunting, "figdata-", combined_plot_strat_name, ".RDS")
 )

@@ -48,7 +48,7 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 inputs <- "single_bin_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 bin_batch_inputs <- "all_bin_analyses.json"

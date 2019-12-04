@@ -28,8 +28,8 @@ textcol = "grey20"
 #-----------------------------------
 # load the risk factor presence and N's
 #-----------------------------------
-rfp <- readRDS('results/cov_presence.rds')
-rfn <- readRDS('results/cov_N.rds')
+rfp <- readRDS(here('results/cov_presence.rds'))
+rfn <- readRDS(here('results/cov_N.rds'))
 
 # gather rf presence by study into long format
 rfp <- rfp %>% 
@@ -56,23 +56,22 @@ d$country[d$study_id=="PROVIDE"] <- "BANGLADESH"
 d$studyid<- gsub("^k.*?-" , "", d$studyid)
 
 #-----------------------------------
-# load and merge study descriptions
+# clean study descriptions
 #-----------------------------------
-md <- readRDS('results/GHAP_metadata_stunting.rds')
-md <- md %>% select(study_id, short_description) %>% rename(studyid = study_id) %>%
-             distinct(studyid, short_description)
 
-dim(d)
-dd <- left_join(d, md, by = c("studyid"))
-dim(dd)
+dd <- shorten_descriptions(d)
+
+# # simplify Tanzania label
+dd$country <- as.character(dd$country)
+dd$country[dd$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+
+
 
 #-----------------------------------
 # Do some final tidying up for the plot
 #-----------------------------------
 
 
-# shorten the description for a few studies
-dd <- shorten_descriptions(dd)
 
 # make a study-country label, and make the monthly variable into a factor
 # including an anonymous label (temporary) for sharing with WHO
@@ -92,7 +91,6 @@ dd <- dd %>% mutate(region = case_when(
     country=="GUINEA-BISSAU"|
     country=="MALAWI"|
     country=="SOUTH AFRICA"|
-    country=="TANZANIA, UNITED REPUBLIC OF"|
     country=="TANZANIA"|
     country=="ZIMBABWE"|
     country=="GAMBIA"                       ~ "Africa",
@@ -102,17 +100,11 @@ dd <- dd %>% mutate(region = case_when(
   TRUE                                    ~ "Other"
 ))
 
-# # simplify Tanzania label
-dd$country[dd$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
-
-# shorten the description for a few studies
-dd <- dd %>% rename(study_id=studyid)
-dd <- shorten_descriptions(dd)
-dd <- dd %>% rename(studyid=study_id)
-
+table(dd$region)
 
 dd$region <- as.character(dd$region)
-dd$region <- factor(dd$region, levels=c("Asia","Africa","Latin America",""))
+dd$region[dd$region=="Latin America"] <- "Latin Am."
+dd$region <- factor(dd$region, levels=c("Asia","Africa","Latin Am.",""))
 
 dd <- mutate(dd,
              studycountry = factor(studycountry,
@@ -166,6 +158,9 @@ dd$RFlabel[dd$risk_factor=="month"] <-  "Month of measurement"
 dd$RFlabel[dd$risk_factor=="brthmon"] <-  "Birth month"
 dd$RFlabel[dd$risk_factor=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 months"
 
+
+table(dd$risk_factor, is.na(dd$RFlabel))
+dd <- dd %>% filter(!is.na(RFlabel))
 # dfull <- dd
 # dd <- dd %>% filter(N>0) 
 
@@ -290,8 +285,8 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000)) +
 
 # add margin around plots
 hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm")) #top, right, bottom, left
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0.675,0.25,4.84,0), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,0.87,0,10.1), "cm"))
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,4.22,0), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,2.3,0,5.45), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2,empty, 
@@ -300,6 +295,6 @@ rfhmgrid <- grid.arrange(nrfbar2,empty,
                         widths=c(100,20))
 
 # save plot 
-ggsave(filename=paste0("figures/manuscript figure composites/risk factor/fig-rf-heatmap.pdf"),
+ggsave(filename=here("figures/manuscript figure composites/risk factor/fig-rf-heatmap.pdf"),
        plot = rfhmgrid,device='pdf',width=12,height=9)
 

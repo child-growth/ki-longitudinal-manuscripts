@@ -6,7 +6,9 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 
 
-load("U:/ucb-superlearner/data/Wasting_inc_data.RData")
+load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
+
+
 
 
 #Subset to monthly
@@ -68,15 +70,15 @@ d <- dfull %>% filter(agedays < 24 * 30.4167) %>%
   mutate(wast=max(wast), co=last(co)) %>%
   filter(agecat %in% c("0-6 months","18-24 months")) %>%
   group_by(studyid, country, subjid) %>% 
-  mutate(wast=first(wast), co=last(co)) %>% slice(1)
+  mutate(wast06=first(wast), co24=last(co)) %>% slice(1)
 
-table(d$wast, d$co)
-a<-prop.table(table(d$co[d$wast==0]))
-b<-prop.table(table(d$co[d$wast==1]))
+table(d$wast06, d$co24)
+a<-prop.table(table(d$co24[d$wast06==0]))
+b<-prop.table(table(d$co24[d$wast06==1]))
 
 b/a
 
-dat=table(-d$wast, -d$co)
+dat=table(-d$wast06, -d$co24)
 
 epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100, 
          homogeneity = "breslow.day", outcome = "as.columns")
@@ -127,7 +129,7 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 }
 
 
-earlywast_strat_co <- specify_rf_analysis(A="wast06", Y=c("co"), file="earlywast_strat_co_rf.Rdata")
+earlywast_strat_co <- specify_rf_analysis(A="wast06", Y=c("co24"), file="earlywast_strat_co_rf.Rdata")
 earlywast_strat_stunt <- specify_rf_analysis(A="wast06", Y=c("stunt24"), file="earlywast_strat_stunt_rf.Rdata")
 
 #bind together datasets

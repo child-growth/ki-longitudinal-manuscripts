@@ -6,6 +6,7 @@
 ##########################################
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+library(growthstandards)
 
 d <- readRDS(paste0(ghapdata_dir,"ki-manuscript-dataset.rds"))
 
@@ -58,7 +59,7 @@ d[agedays==0, haz := haz.y][, haz.y := NULL]
 setkeyv(d, cols = c("country","studyid","subjid","agedays"))
 
 #Drop outlier birth HAZ and WAZ
-d[waz < -6 | waz > 6, waz := NA]
+d[waz < -6 | waz > 5, waz := NA]
 d[haz < -6 | haz > 6, haz := NA]
 
 
@@ -162,7 +163,6 @@ dd_sub$tr[is.na(dd_sub$tr)]<-""
 dim(dd_sub)
 dd_sub=dd_sub[!(dd_sub$studyid=="kiGH5241-JiVitA-4" & dd_sub$tr!="Control"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="ki1119695-PROBIT" & dd_sub$tr!="Control"),]
-dd_sub=dd_sub[!(dd_sub$studyid=="ki1000304b-SAS-FoodSuppl" & dd_sub$tr!="Control"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="ki1112895-iLiNS-Zinc" & dd_sub$tr!="Control"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="ki1000304b-SAS-CompFeed" & dd_sub$tr!="Control"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="kiGH5241-JiVitA-3" & dd_sub$tr!="Control"),]

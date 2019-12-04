@@ -1,0 +1,96 @@
+[1] "File Name: velocity_longfmt.rds"
+[1] "Dimensions:"
+[1] 676124     15
+[1] "--------------------------------------"
+[1] "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   676124 character character 
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   676124 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   676124 character character 
+[1] "--------------------------------------"
+[1] "Column: sex"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   676124 character character 
+[1] "--------------------------------------"
+[1] "Column: t1agedays"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    0.0    77.0   183.0   198.7   278.0   653.0 
+[1] "--------------------------------------"
+[1] "Column: t1y"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -6.000  -0.890   2.299  16.818  40.600  96.300 
+[1] "--------------------------------------"
+[1] "Column: t2agedays"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   77.0   169.0   274.0   290.6   370.0   744.0 
+[1] "--------------------------------------"
+[1] "Column: t2y"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -6.000  -0.990   3.435  18.451  50.200  99.400 
+[1] "--------------------------------------"
+[1] "Column: diffdays"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  63.00   90.00   91.00   91.91   94.00  120.00 
+[1] "--------------------------------------"
+[1] "Column: diffmths"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  2.071   2.959   2.992   3.022   3.090   3.945 
+[1] "--------------------------------------"
+[1] "Column: y_diff"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-18.600  -0.110   0.610   1.633   2.416  27.000 
+[1] "--------------------------------------"
+[1] "Column: y_rate"
+[1] "Class: numeric"
+[1] "Summary:"
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-6.01092 -0.03598  0.20485  0.53889  0.80161  8.31390 
+[1] "--------------------------------------"
+[1] "Column: diffcat"
+[1] "Class: factor"
+[1] "Summary:"
+  0-3 months   3-6 months   6-9 months  9-12 months 12-15 months 15-18 months 18-21 months 21-24 months 
+      168814       140928       112550       106068        46838        41542        32246        27138 
+[1] "--------------------------------------"
+[1] "Column: ycat"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   676124 character character 
+[1] "--------------------------------------"
+[1] "Column: tr"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   676124 character character 
+[1] "--------------------------------------"

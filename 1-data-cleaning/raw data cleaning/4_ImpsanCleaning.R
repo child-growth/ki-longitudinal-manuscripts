@@ -6,7 +6,6 @@ library(foreign)
 setwd(paste0(ghapdata_dir, "raw SAS datasets/"))
 
 #Set cohort data file path
-cohortdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/cohort datasets/")
 bfdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/Breastfeeding datasets/")
 
 
@@ -94,18 +93,7 @@ d <- subset(d, select = -c(subjido))
 dsan <- bind_rows(dsan, d)
 
 
-#-------------------------------
-# ki1000107-Serrinha-VitA     
-#-------------------------------
 
-d<-load_san(paste0(cohortdata_dir,"svta.rds"),"sanitatn")
-#Not enough information to determine in analysis dataset
-
-d<-read_sas("Serrinha-VitA/final_dataset.sas7bdat")
-head(d)
-table(d$toilet)
-
-#Insufficient info to clssify. Just toilet presence
 
 #-------------------------------
 # ki1000125-AgaKhanUniv       
@@ -114,7 +102,7 @@ table(d$toilet)
 d<-load_san(paste0(cohortdata_dir,"akup.rds"),"sanitatn")
 
 d$impsan<-ifelse(d$sanitatn=="Latrine with flush system", 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)
@@ -126,7 +114,7 @@ dsan<-bind_rows(dsan, d)
 
 d<-load_san(paste0(cohortdata_dir,"vita.rds"),"sanitatn")
 d$impsan<-ifelse(d$sanitatn=="Flush latrine", 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)
@@ -138,7 +126,7 @@ dsan<-bind_rows(dsan, d)
 d<-load_san(paste0(cohortdata_dir,"zmrt.rds"),"sanitatn")
 
 d$impsan<-ifelse(d$sanitatn=="Family owns toilet", 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)
@@ -151,13 +139,13 @@ dsan<-bind_rows(dsan, d)
 d<-load_san(paste0(cohortdata_dir,"fspp.rds"),"sanitatn")
 
 d$impsan<-ifelse(d$sanitatn=="Private latrine", 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 #Check raw data -only 1 in the clean
-d<-read_sas("SAS-FoodSuppl/f2_baseline.sas7bdat")
-head(d)
-table(d$m_defaec)
+# d<-read_sas("SAS-FoodSuppl/f2_baseline.sas7bdat")
+# head(d)
+# table(d$m_defaec)
 
 #3= private latrine , 4=public latrine , 5= open field 
 
@@ -173,7 +161,7 @@ improved <- c("Septic tank or toilet",
               "Water-sealed or slab latrine")
 
 d$impsan<-ifelse(d$sanitatn %in% improved, 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 
@@ -191,7 +179,7 @@ improved <- c("Septic tank or toilet",
               "Water-sealed or slab latrine")
 
 d$impsan<-ifelse(d$sanitatn %in% improved, 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)
@@ -209,7 +197,7 @@ improved <- c("Septic tank or toilet",
               "Poor flash","Flash toilet")
 
 d$impsan<-ifelse(d$sanitatn %in% improved, 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)
@@ -220,8 +208,9 @@ dsan<-bind_rows(dsan, d)
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"bfzn.rds"),"sanitatn")
-d$impsan <- as.numeric(d$sanitatn)
+d$impsan <- d$sanitatn
 d$impsan[d$sanitatn==9] <- NA
+d$sanitatn <- as.character(d$sanitatn)
 
 #Check raw data to see source of var
 #Variable is an indicator for improved sanitation
@@ -249,7 +238,7 @@ table(d$sanitatn)
 improved <- c("Drain connected inside house","Outside Drain")
 
 d$impsan<-ifelse(d$sanitatn %in% improved, 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)
@@ -298,7 +287,7 @@ dsan<-bind_rows(dsan, df)
 d <- load_san(paste0(cohortdata_dir,"ilnd.rds"),"sanitatn")
   
 d$impsan <- ifelse(d$sanitatn=="Regular Pit Latrine",0,1)
-d$impsan[is.na(d$impsan)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan <- bind_rows(dsan, d)
@@ -312,7 +301,7 @@ d <- load_san(paste0(cohortdata_dir,"ildm.rds"),"sanitatn")
 
 #mostly missing from cleaned dataset
 library(xlsx)
-df <- read.xlsx("ilins-dyad-m/export_form_13a_2016-01-19-1526.xlsx", sheetName="export_form_13a")
+df <- read.xlsx("ilins-dyad-m/export_form_13a_2016-11-28-1741.xlsx", sheetName="export_form_13a")
 table(df$SocSanitaryFac)
 table(df$SocSpecSanitary)
 
@@ -337,7 +326,7 @@ d <- load_san(paste0(cohortdata_dir,"lcn5.rds"),"sanitatn")
 
 d$impsan<-ifelse(d$sanitatn=="Vent.impr.pit latrine", 1, 0)
 d$impsan[d$sanitatn=="Other"] <- NA
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)
@@ -353,7 +342,7 @@ improved <- c("Water sealed/slab",
               "Flush toilet")
 
 d$impsan<-ifelse(d$sanitatn %in% improved, 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)
@@ -369,7 +358,7 @@ improved <- c("Water sealed/slab",
               "Flush toilet")
 
 d$impsan<-ifelse(d$sanitatn %in% improved, 1, 0)
-d$impsan[is.na(d$sanitatn)] <- NA
+d$impsan[d$sanitatn==""] <- NA
 table(d$impsan)
 
 dsan<-bind_rows(dsan, d)

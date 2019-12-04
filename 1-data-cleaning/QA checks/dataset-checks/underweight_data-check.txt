@@ -1,0 +1,96 @@
+[1] "File Name: underweight_data.rds"
+[1] "Dimensions:"
+[1] 572204     15
+[1] "--------------------------------------"
+[1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   572204 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   572204 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   572204 character character 
+[1] "--------------------------------------"
+[1] "Column: region"
+[1] "Class: factor"
+[1] "Summary:"
+            Africa         South Asia      Latin America N.America & Europe 
+            164296             293782              30988              83138 
+[1] "--------------------------------------"
+[1] "Column: measurefreq"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   572204 character character 
+[1] "--------------------------------------"
+[1] "Column: tr"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   572204 character character 
+[1] "--------------------------------------"
+[1] "Column: sex"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   572204 character character 
+[1] "--------------------------------------"
+[1] "Column: agedays"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    1.0    92.0   275.0   481.4   554.0  6955.0 
+[1] "--------------------------------------"
+[1] "Column: haz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+-27.520  -2.070  -1.180  -1.145  -0.260  13.940   16036 
+[1] "--------------------------------------"
+[1] "Column: whz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -15.89   -1.17   -0.35   -0.34    0.48   11.11   43584 
+[1] "--------------------------------------"
+[1] "Column: waz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-6.0000 -1.7900 -0.9600 -0.9455 -0.1000  5.0000 
+[1] "--------------------------------------"
+[1] "Column: muaz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  -32.2    -1.4    -0.6    -0.6     0.1    18.8  453198 
+[1] "--------------------------------------"
+[1] "Column: latitude"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -22.80   13.33   24.10   25.17   28.70   78.93    5418 
+[1] "--------------------------------------"
+[1] "Column: longitud"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -90.49   27.57   39.10   47.45   89.50  123.53    5418 
+[1] "--------------------------------------"
+[1] "Column: measid"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   3.000   6.000   8.228  11.000  70.000 
+[1] "--------------------------------------"

@@ -30,12 +30,15 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Read rds file and drop unneeded columns that Vishak extracted that are either used elsewhere in covariate creation or 
 # were too rare to include as exposures (to avoid memory allocation issues)
-d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
+#d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
+d<-fread("H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv", header = T,
          drop = c( "AGEIMPFL",  #"WTKG", "REGION",   
                    #"HTCM",    "LENCM", 
                    "BAZ", "HCAZ",      
-                   "REGCTRY", "REGCTYP", "CITYTOWN", "HHID",    
-                   "FEEDING", "DURBRST", "BRTHYR", "ENSTUNT", "FWTKG", "FBMI",
+                   "REGCTRY", "REGCTYP", #"CITYTOWN",
+                   "HHID",    
+                   "FEEDING", "DURBRST", #"BRTHYR", 
+                   "ENSTUNT", "FWTKG", "FBMI",
                    "BRFEED", "SUMEP",   "SUMDIAR", "SUMDAYS",
                    "PCTDIAR", "IMPSAN",  "SOAP",    "SAFEH2O", "H2OTIME",
                    "CHICKEN", "COW",     "CATTLE",  "INCTOT", 
@@ -64,7 +67,8 @@ monthly_vec <- c("ki0047075b-MAL-ED",
   "ki1066203-TanzaniaChild2",           
   "ki1101329-Keneba",  
   "ki1112895-Guatemala BSC",       
-  "ki1113344-GMS-Nepal",             
+  "ki1113344-GMS-Nepal",    
+  "ki1114097-CMIN",                 
   "ki1114097-CONTENT")
 
 quarterly_vec <- c("ki1112895-iLiNS-Zinc",  
@@ -77,7 +81,6 @@ quarterly_vec <- c("ki1112895-iLiNS-Zinc",
   "ki1000304b-SAS-CompFeed",   
   "ki1000304b-SAS-FoodSuppl",   
   "ki1126311-ZVITAMBO",   
-  "ki1114097-CMIN",                 
   "ki1135781-COHORTS")
 
 yearly_vec <- c("ki1000110-WASH-Bangladesh",       
@@ -102,11 +105,11 @@ gc()
 
 
 
-#Mark COHORTS and CMIN cohorts with different measurement frequency than quarterly
-d[studyid=="ki1114097-CMIN" & country %in% c("BANGLADESH", "PERU"), measurefreq := "monthly"]
+#Drop CMIN cohorts with less than 200 children
+d <- d[!(studyid=="ki1114097-CMIN" & country != "BANGLADESH")]
 gc()
 
-#Mark yearly cohorts
+#Mark yearly COHORTS
 d <- d[studyid=="ki1135781-COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
 gc()
 

@@ -118,8 +118,9 @@ pool.Zpar <- function(d, method="REML"){
 
 #Pooled continious estimate function
 pool.cont <- function(d, method="REML"){
-  #nstudies=length(unique(d$studyid))
   nstudies <- d %>% summarise(N=n())
+  
+  #cat("Var: ", d$intervention_variable[1], " level: ",d$intervention_level[1] ," age: ", d$agecat[1] , "nstudies: ", nstudies$N, "\n")
   
   if(d$intervention_level[1] == d$baseline_level[1]){
     est <- data.frame(ATE=0, CI1=0, CI2=0, Nstudies= nstudies$N)
@@ -198,6 +199,8 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                "<52 kg", "[52-58) kg", ">=58 kg",
                                                "2+","3 or less","4-5","6-7","8+","3+","4+",                                                 
                                                "0%","(0%, 5%]",">5%","Female","Male",
+                                               "Opposite max rain", "Pre-max rain","Max rain",
+                                               "Post-max rain",
                                                "WHZ Q1", "WHZ Q2", "WHZ Q3", "WHZ Q4"))
   
   
@@ -220,7 +223,8 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                   "impsan","safeh20","trth2o",
                                                   "impfloor","cleanck",
                                                   "brthmon" ,"month",
-                                                  "lag_WHZ_quart"))   
+                                                  "lag_WHZ_quart",
+                                                  "rain_quartile"))   
   
   
   #Add variable labels
@@ -268,7 +272,10 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFlabel[RMAest$intervention_variable=="exclfeed6"] <-  "Exclusive breastfeeding under 6 mo."
   RMAest$RFlabel[RMAest$intervention_variable=="month"] <-  "Month of measurement"
   RMAest$RFlabel[RMAest$intervention_variable=="brthmon"] <-  "Birth month"
-  RMAest$RFlabel[RMAest$intervention_variable=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 mo."
+  RMAest$RFlabel[RMAest$intervention_variable=="lag_WHZ_quart"] <-  "Rain quartile"
+  RMAest$RFlabel[RMAest$intervention_variable=="rain_quartile"] <-  "Rain quartile"
+  
+  
   
   RMAest$intervention_variable <- factor(RMAest$intervention_variable)
   
@@ -315,12 +322,200 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFtype[RMAest$intervention_variable=="exclfeed6"] <-  "Breastfeeding"
   RMAest$RFtype[RMAest$intervention_variable=="month"] <-  "Time"
   RMAest$RFtype[RMAest$intervention_variable=="brthmon"] <-  "Time"
+  RMAest$RFtype[RMAest$intervention_variable=="rain_quartile"] <-  "Time"
   RMAest$RFtype[RMAest$intervention_variable=="enwast"] <-  "Postnatal child health"
   RMAest$RFtype[RMAest$intervention_variable=="anywast06"] <-  "Postnatal child health"
   RMAest$RFtype[RMAest$intervention_variable=="pers_wast"] <-  "Postnatal child health"
   
   return(RMAest)
 }
+
+
+
+
+
+
+
+
+
+
+#Adapted from: 
+#http://www.ag-myresearch.com/2012_gasparrini_statmed.html
+
+spline_meta <- function(d, Y="haz", Avar, overall=T, cen=365, type="bs", bound=c(1,730), degree=3, df = 10, center=365){
+  
+  # LOAD THE PACKAGES (mvmeta PACKAGE IS ASSUMED TO BE INSTALLED)
+  require(mvmeta)
+  require(dlnm)
+  
+  colnames(d)[which(colnames(d)==Avar)] <- "Avar"
+  colnames(d)[which(colnames(d)==Y)] <- "Y"
+  
+  d <- d %>% filter(!is.na(Y) & !is.na(Avar))
+  
+  #Number of exposure levels
+  nlevels <- length(unique(d$Avar))
+  
+  #Number of cohorts
+  d$id <- paste0(d$studyid, d$country,"__", d$Avar)
+  m <- length(unique(d$id))
+  
+  d <- droplevels(d)
+  
+  # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  # NOTE: set bound as average bound across studies and knots based on average quantiles, (same as example script, may need to save studies as a list first)
+  # if that fails, set splines specific to each study
+  # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  
+
+  # BUILT OBJECTS WHERE RESULTS WILL BE STORED:
+  #   ymat IS THE MATRIX FOR THE OUTCOME PARAMETERS
+  #   Slist IS THE LIST WITH (CO)VARIANCE MATRICES
+  ymat <- matrix(NA,m,df,dimnames=list(unique(d$id),paste("spl",seq(df),sep="")))
+  Slist <- vector("list",m)
+  names(Slist) <- unique(d$id)
+  
+  ####################################################################
+  # RUN THE FIRST-STAGE ANALYSIS
+  
+  for(i in 1:m){
+    
+    # PRINT ITERATION
+    cat(i,"")
+    
+    # LOAD
+    data <- d[d$id==unique(d$id)[i],]
+    
+    
+    # CREATE THE SPLINE
+    bt <- onebasis(data$agedays,fun=type,
+                   degree=degree, 
+                   df=df)
+    
+    # RUN THE MODEL
+    #Note: add cv cross-validation
+    model <- glm(Y ~ bt,family=gaussian(), data)
+    
+    # EXTRACT AND SAVE THE RELATED COEF AND VCOV
+    predbt <- NULL
+    try(predbt <- crosspred(bt,model,cen=center))
+    if(!is.null(predbt)){
+      ymat[i,1:length(predbt$coef)] <- predbt$coef
+      Slist[[i]] <- predbt$vcov
+    }
+  }
+  
+  Slist <- Filter(Negate(is.null), Slist)
+  #Drop missing columns
+  ymat<-ymat[!is.na(ymat[,1]),]
+  #drop missing rows
+  ymat<-ymat[, colSums(is.na(ymat)) != nrow(ymat)]
+  
+  ####################################################################
+  # PERFORM MULTIVARIATE META-ANALYSIS
+  ####################################################################
+  
+  
+  # 1) MULTIVARIATE META-ANALYSIS
+  if(overall){
+    mv <- mvmeta(ymat,Slist,method="ml")
+    
+    # PREDICTION FROM SIMPLE META-ANALYSES WITH NO PREDICTORS
+    # CENTERED TO SPECIFIC VALUE
+    tmean <- seq(bound[1],bound[2],length=30)
+    btmean <- onebasis(tmean,fun=type, degree=degree, df=df #,
+                       #knots=knots,
+                       #Bound=bound
+    )
+    cp <- crosspred(btmean,coef=coef(mv),vcov=vcov(mv), by=0.1, cen=center)
+    return(cp)
+  }else{
+    
+    # 2) MULTIVARIATE META-REGRESSION - Avar-level has to be study specific predictor
+    Avar_lev<- stringr::str_split(rownames(ymat),"__", simplify=T)[,2]
+    (mvlat <- mvmeta(ymat~Avar_lev,Slist,method="reml"))
+    
+    # NB: IN VERSION 0.4.1, CONVERGENCE MAY BE INSPECTED USING THE ARGUMENT:
+    #   control=list(showiter=T)
+    # NB: LESS STRICT CONVERGENCE CRITERIA, USEFUL FOR HIGH DIMENSIONAL
+    #   MODELS, MAY BE SELECTED BY ADDING A reltol ARGUMENT, FOR EXAMPLE:
+    #   control=list(showiter=T,reltol=10^-3)
+    
+    ####################################################################
+    # CREATE BASIS FOR PREDICTION
+    ####################################################################
+    
+    # BASIS USED TO PREDICT AGE, EQUAL TO THAT USED FOR ESTIMATION
+    #   NOTE: INTERNAL AND BOUNDARY KNOTS PLACED AT SAME VALUES AS IN ESTIMATION
+    tmean <- seq(bound[1],bound[2],length=30)
+    btmean <- onebasis(tmean,fun=type)
+    
+    
+    ####################################################################
+    # PREDICTION FROM MODELS
+    ####################################################################
+    
+    # USE OF crosspred TO PREDICT THE EFFECTS FOR THE CHOSEN VALUES
+    
+    
+    # COMPUTE PREDICTION FOR MULTIVARIATE META-REGRESSION MODELS
+    #   1ST STEP: PREDICT THE OUTCOME PARAMETERS FOR SPECIFIC VALUES OF META-PREDICTOR
+    #   2ND STEP: PREDICT THE RELATIONSHIP AT CHOSEN VALUES GIVEN THE PARAMETERS
+    
+    predAvar <- predict(mvlat,data.frame(Avar=factor(unique(d$Avar))),vcov=T)
+    predlist <- list()
+    for(i in 1:nlevels){
+      pred <- crosspred(btmean,coef=predAvar[[i]]$fit,vcov=predAvar[[i]]$vcov, model.link="log",by=0.1,cen=center)
+      predlist[[i]] <- pred 
+    }
+    names(predlist) <- unique(d$Avar)
+    return(predlist)
+  }
+}
+
+
+create_plotdf <- function(predlist, overall=F, stratlevel=NULL){
+  if(overall){
+    df <- data.frame(
+      level=stratlevel,
+      agedays=as.numeric(rownames(predlist$matfit)),
+      est=predlist$matfit[,1],
+      se=predlist$matse[,1]
+    )
+    df <- df %>%
+      mutate(ci.lb=est-1.96*se,
+             ci.ub=est+1.96*se)
+  }else{
+    df <- NULL
+    for(i in 1:length(predlist)){
+      temp <- data.frame(
+        level=names(predlist)[i],
+        agedays=as.numeric(rownames(predlist[[i]]$matfit)),
+        est=predlist[[i]]$matfit[,1],
+        se=predlist[[i]]$matse[,1]
+      )
+      temp <- temp %>%
+        mutate(ci.lb=est-1.96*se,
+               ci.ub=est+1.96*se)
+      df <- rbind(df, temp)
+    }
+  }
+  return(df)    
+}
+
+
+offset_fun <- function(d, Y="haz", Avar, center=365, range=60){
+  
+  df <- d[!is.na(d[,Avar]),]
+  
+  df <- df %>% filter(agedays < center + range & agedays > center - range) %>% mutate(agecat="first", agecat=factor(agecat)) 
+  
+  z.summary <- cohort.summary(d=df, var=Y, ci=F, continious=T, severe=F, minN=50, measure="",  strata=c("region","studyid","country","agecat",Avar))
+  z.res <- summarize_over_strata(cohort.sum=z.summary, proportion=F, continious=T, measure = "GEN",  method = "REML", strata=c("region","studyid","country","agecat",Avar),  region=F, cohort=F)
+  
+  z.res <- data.frame(level=z.res[,2], offset=z.res[,5])
+  return(z.res)
+} 
 
 
 

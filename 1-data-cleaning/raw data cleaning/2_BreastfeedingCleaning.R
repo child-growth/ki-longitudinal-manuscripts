@@ -17,7 +17,6 @@ library(foreign)
 setwd(paste0(ghapdata_dir, "raw SAS datasets/"))
 
 #Set cohort data file path
-cohortdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/cohort datasets/")
 bfdata_dir <- paste0(ghapdata_dir, "covariate creation intermediate datasets/Breastfeeding datasets/")
 
 
@@ -88,30 +87,26 @@ ee <- ee %>% select(studyid, country, subjid, agedays)
 
 
 
-
-
-d<-read_sas("EE/c2b_en.sas7bdat")
+d<-read.csv("EE/C2B_En.csv")
 colnames(d) <- tolower(colnames(d))
 head(d)
 
 
 
-d <- d %>% select(c1bfrmno,
-                  c2bageyy,
-                  c2bagemm,
-                  c2bagedd,
+d <- d %>% select(eeid,
+                  c2bage,
                   c2bmre,
                   c2bmrf,
                   c2bmrg) %>%
   mutate(
-    agedays=round(365.25 * c2bageyy + 365.25*c2bagemm/12 + c2bagedd) + 1,
+    agedays=c2bage,
     nbfyes=NA,
     anmlkfl=NA,
     pwmlkfl=NA,
     h20fedfl=NA, 
     othfedfl=NA
   ) %>%
-  rename(subjid = c1bfrmno)
+  rename(subjid = eeid)
 
 d$bfedfl <- NA
 d$formlkfl <- NA
@@ -135,7 +130,8 @@ table(d$bfedfl)
 table(d$formlkfl)
 table(d$weanfl)
 
-
+ee$subjid <- as.numeric(ee$subjid)
+ee$agedays <- as.numeric(ee$agedays)
 ee <- left_join(ee, d, by=c("subjid","agedays"))
 table(ee$bfedfl)
 
@@ -204,12 +200,12 @@ colnames(bfzn) <- tolower(colnames(bfzn))
 head(bfzn)
 bfzn <- bfzn %>% select(studyid, country, subjid, agedays) 
 
-d<-read.xport("BFZinc/dietch.xpt") 
-colnames(d) <- tolower(colnames(d))
-head(d)
+d.raw<-read.xport("BFZinc/dietch.xpt") 
+colnames(d.raw) <- tolower(colnames(d.raw))
+head(d.raw)
 
 
-d<-d %>% select(numenf,
+d<-d.raw %>% select(numenf,
                 agemo,
                 sanit062,
                 sanit063,
@@ -288,6 +284,7 @@ colnames <- c("babyid", paste0(rep(bfvars, 8), rep(measuretimes, each=length(bfv
 
 
 dfull<-read_sas("GMSN/gms6.sas7bdat") 
+colnames(dfull) <- tolower(colnames(dfull))
 #dfull <- dfull[,which(colnames(dfull) %in% colnames)]
 dfull <- dfull %>% select(colnames)
 colnames(dfull)
@@ -857,9 +854,16 @@ table(d$bfedfl)
 d$bfedfl[d$bfedfl==8] <- NA
 
 #merge in with ki ID's
-jvta3 <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study rds datasets/jvt3.rds")
+jvta3 <- readRDS(paste0(ghapdata_dir,"/cleaned individual study datasets/jvt3.rds"))
 colnames(jvta3) <- tolower(colnames(jvta3))
-jvta3 <- jvta3 %>% select(studyid, country, subjid, subjido, agedays, antpt) %>% mutate(subjido=as.numeric(subjido))
+
+table(jvta3$visit)
+table(jvta3$visit)
+
+jvta3 <- jvta3 %>% select(studyid, country, subjid, subjido, agedays,  visit) %>% mutate(subjido=as.numeric(subjido))
+jvta3$antpt = paste0("Infant ",jvta3$visit)
+jvta3$antpt[jvta3$antpt=="Infant 24 Month Postpartum"] = "Child 24 Month Postpartum"
+table(jvta3$antpt)
 
 jvta3 <- left_join(jvta3, d, by=c("subjido", "antpt"))
 
@@ -925,6 +929,14 @@ saveRDS(jvta3, file="U:/ucb-superlearner/Manuscript analysis data/covariate crea
 # 1=Yes 
 # 9=Don’t know 
 
+#Infant birth form
+ibirth<-read_sas("JiVitA-4/raw/hbgd_ibaf.sas7bdat")  %>% select("hbgdkid",
+                                                                    starts_with("ibbfed")) %>%
+  mutate_all(funs(as.numeric)) %>%
+  mutate(visit = "Birth assessment")
+
+
+
 #Infant 3 Month Interview Form (I3MOI) 
 i3mop<-read_sas("JiVitA-4/raw/hbgd_i3moi.sas7bdat")  %>% select(hbgdkid,
                                                                         i3sbfed,
@@ -979,7 +991,7 @@ i3mop<-read_sas("JiVitA-4/raw/hbgd_i3moi.sas7bdat")  %>% select(hbgdkid,
          formlkfl= as.numeric(formlkfl), 
          h20fedfl= as.numeric(h20fedfl), 
          othfedfl= as.numeric(othfedfl),
-         visit = "I3moi assessment")
+         visit = "3 Month Visit")
 
 
 table(i3mop$anmlkfl)                                                                         
@@ -1100,7 +1112,7 @@ c9mop<-read_sas("JiVitA-4/raw/hbgd_c9moi.sas7bdat")  %>% select(hbgdkid,
          formlkfl= as.numeric(formlkfl), 
          h20fedfl= as.numeric(h20fedfl), 
          othfedfl= as.numeric(othfedfl),
-         visit = "C9moi  assessment")
+         visit = "9 Month Visit")
 
 
 table(c9mop$anmlkfl)                                                                         
@@ -1161,7 +1173,7 @@ c12mop<-read_sas("JiVitA-4/raw/hbgd_c12moi.sas7bdat")  %>% select(hbgdkid,
          formlkfl= as.numeric(formlkfl), 
          h20fedfl= as.numeric(h20fedfl), 
          othfedfl= as.numeric(othfedfl),
-         visit = "C12moi assessment")
+         visit = "12 Month Visit")
 
 
 table(c12mop$anmlkfl)                                                                         
@@ -1224,7 +1236,7 @@ c15mop<-read_sas("JiVitA-4/raw/hbgd_c15moi.sas7bdat")  %>% select(hbgdkid,
          formlkfl= as.numeric(formlkfl), 
          h20fedfl= as.numeric(h20fedfl), 
          othfedfl= as.numeric(othfedfl),
-         visit = "C15moi assessment")
+         visit = "15 Month Visit")
 
 
 table(c15mop$anmlkfl)                                                                         
@@ -1285,7 +1297,7 @@ c18mop<-read_sas("JiVitA-4/raw/hbgd_c18moi.sas7bdat")  %>% select(hbgdkid,
          formlkfl= as.numeric(formlkfl), 
          h20fedfl= as.numeric(h20fedfl), 
          othfedfl= as.numeric(othfedfl),
-         visit = "C18moi assessment")
+         visit = "18 Month Visit")
 
 
 table(c18mop$anmlkfl)                                                                         
@@ -1346,7 +1358,7 @@ c24mop<-read_sas("JiVitA-4/raw/hbgd_c24moi.sas7bdat")  %>% select(hbgdkid,
          formlkfl= as.numeric(formlkfl), 
          h20fedfl= as.numeric(h20fedfl), 
          othfedfl= as.numeric(othfedfl),
-         visit = "C24moi assessment")
+         visit = "24 Month Visit")
 
 
 table(c24mop$anmlkfl)                                                                         
@@ -1362,21 +1374,31 @@ table(is.na(c24mop$othfedfl))
 
 
 #compile datasets
-d <- rbind(i3mop,cemop,c9mop, c12mop, c15mop, c18mop, c24mop)
+d <- bind_rows(ibirth, i3mop,cemop,c9mop, c12mop, c15mop, c18mop, c24mop)
 table(d$visit)
 table(d$bfedfl)
 d$bfedfl[d$bfedfl==8] <- NA
 
 
 #merge in with ki ID's
-jvta4 <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study rds datasets/jvt4.rds")
+jvta4 <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study datasets/jvt4.rds")
 colnames(jvta4) <- tolower(colnames(jvta4))
+jvta4$visit <- as.character(jvta4$visit)
+unique(jvta4$visit)
+unique(jvta4$visit[!is.na(jvta4$haz)])
+
 jvta4 <- jvta4 %>% select(studyid, country, subjid, agedays, visit) %>% mutate(subjido=as.numeric(subjid)) #Is there just one subjid between raw and cleaned jivita4 data?
 
+
+table(is.na(jvta4$visit))
+
+table(d$bfedfl)
 jvta4 <- left_join(jvta4, d, by=c("subjido", "visit"))
 table(jvta4$bfedfl)
 
 
 #save
 saveRDS(jvta4, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt4.rds")
+
+ 
 

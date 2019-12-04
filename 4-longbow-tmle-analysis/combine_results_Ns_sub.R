@@ -6,13 +6,20 @@ library(progress)
 library(longbowRiskFactors)
 
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/results_bin_obs_counts_2019-08-17.rdata")
+load(here("/results/rf results/raw longbow results/results_bin_obs_counts_2019-11-16.rdata"))
 d <- obs_counts
 
-#Temp: merge in nchild N's
-d <- d %>% filter(is.na(nchldlt5)) %>% mutate(pers_wast=as.numeric(as.character(pers_wast)))
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/results_nchild_bin_obs_counts_2019-08-21.rdata")
-d <- bind_rows(d, obs_counts)
+load(here("/results/rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2019-11-19.rdata"))
+d2 <- obs_counts
+d2 <- obs_counts %>% mutate(rain_quartile=case_when(
+  rain_quartile==1 ~ "Opposite max rain",
+  rain_quartile==2 ~ "Pre-max rain",
+  rain_quartile==3 ~ "Max rain",
+  rain_quartile==4 ~ "Post-max rain"
+))
+
+d <- bind_rows(d, d2)
+
 
 outcome_vars <- c("stunted","ever_stunted","wasted","ever_wasted")
 
@@ -26,7 +33,7 @@ exposure_vars <- c(
   "birthwt",       "mage",          "mhtcm",         "single",        "nrooms",       
   "feducyrs",      "hfoodsec",      "exclfeed6",     "s03rec24",      "enstunt",      
   "predfeed6",     "predexfd6",     "sex",          "brthmon",      
-  "month",     "pers_wast",    "lag_WHZ_quart")
+  "month",     "pers_wast",    "lag_WHZ_quart","rain_quartile")
 
 d <- data.frame(d)
 d<-d[!is.na(d$stunted)|!is.na(d$ever_stunted)|!is.na(d$wasted)|!is.na(d$ever_wasted),]
@@ -65,7 +72,7 @@ N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, inte
 
 
 # save concatenated Ns
-save(N_sums, Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns_sub.rdata")
+save(N_sums, Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file=here("results/stunting_rf_Ns_sub.rdata"))
 
 
 

@@ -10,7 +10,7 @@ get_file_path <- function(x)
   file.path(here::here(), x)
 ki.monthly <- readRDS(get_file_path("results/dhs/ki.quantiles.monthly.rds"))
 ki.quarterly<- readRDS(get_file_path("results/dhs/ki.quantiles.quarterly.rds"))
-dhs <- readRDS(get_file_path("results/dhs/dhs.quantiles.rds"))
+dhs <- readRDS(get_file_path("results/dhs/dhs_quantiles.rds"))
 
 #rename variables to unique names for the merge
 ki.monthly <- ki.monthly %>% rename(ki.zscore.monthly = zscore)
@@ -24,7 +24,7 @@ d <- merge(dhs, ki.monthly,
 d <- merge(d, ki.quarterly,
   by = c("quantile", "region", "measure"))
 
-tableau10 <- tableau_color_pal("Tableau 10")
+tableau10 <- tableau_color_pal("tableau10")
 pcols <- c("black", tableau10(10)[c(1:3)])
 
 d2 <- d %>%

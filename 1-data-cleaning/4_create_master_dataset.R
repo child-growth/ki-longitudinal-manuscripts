@@ -20,12 +20,13 @@ table(df$country, 1*(df$lencm < 45))
 dput(colnames(Zscores))
 Zscores <- Zscores %>% 
   subset(., select = c(studyid, country, measurefreq, subjid, sex, agedays, 
-                       waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, month, brthweek,  dead, agedth, 
+                       waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, month, brthweek, brthyr,  dead, agedth, 
                        latitude, longitud, causedth))
 
 #mark regions 
 Zscores <- mark_region(Zscores)
 table(Zscores$region)
+
 
 #load covariate dataset (one row per child)
 cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
@@ -61,10 +62,36 @@ d <- d %>% filter(!is.na(haz) | !is.na(whz) | !is.na(waz) | !is.na(muaz))
 dim(d)
 
 
+#Fill in missing month of measurement for cohorts that measure birth month  
+table(is.na(d$month), is.na(d$brthmon))
+table(is.na(d$month))
+d$month[is.na(d$month)] <- ceiling((as.numeric(d$brthmon[is.na(d$month)]) + d$agedays[is.na(d$month)]/30.4167)%%12) 
+table(is.na(d$month))
+table(d$month)
 
-table(d$studyid, d$tr)
 
+
+# Save dataset
 saveRDS(d, ki_manuscript_dataset_path)
 
 
+# Create dataset of study start years
+start_year <- d %>% filter(agedays <= 731) %>%
+  group_by(studyid, country, subjid) %>%
+  mutate(max_year = max(brthyr + agedays/365)) %>%
+  group_by(studyid, country) %>% 
+  summarize(start_year = min(brthyr), median_birth_year = median(brthyr), end_birth_year=max(brthyr), max_yr=max(max_year))
+
+#fill in start year and max year for studies missing birth year
+start_year$start_year[start_year$studyid=="ki1017093-NIH-Birth"] <- 2008
+start_year$start_year[start_year$studyid=="ki1017093b-PROVIDE"] <- 2011
+start_year$start_year[start_year$studyid=="ki1017093c-NIH-Crypto"] <- 2014
+start_year$start_year[start_year$studyid=="ki1112895-Burkina Faso Zn"] <- 2010
+
+start_year$max_yr[start_year$studyid=="ki1017093-NIH-Birth"] <- 2014
+start_year$max_yr[start_year$studyid=="ki1017093b-PROVIDE"] <- 2014
+start_year$max_yr[start_year$studyid=="ki1017093c-NIH-Crypto"] <- 2017
+start_year$max_yr[start_year$studyid=="ki1112895-Burkina Faso Zn"] <- 2012
+
+saveRDS(start_year, here("/data/study_start_years.rds"))
 

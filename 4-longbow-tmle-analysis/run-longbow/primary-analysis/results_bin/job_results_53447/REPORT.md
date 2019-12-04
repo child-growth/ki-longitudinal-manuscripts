@@ -1,0 +1,499 @@
+---
+title: "Risk Factor Analysis"
+output: 
+  html_document:
+    keep_md: TRUE
+    self_contained: true
+required_packages:  ['github://HBGD-UCB/longbowRiskFactors','github://jeremyrcoyle/skimr@vector_types', 'github://tlverse/delayed']
+params:
+  roles:
+    value:
+      - exclude
+      - strata
+      - id
+      - W
+      - A
+      - Y
+  data: 
+    value: 
+      type: 'web'
+      uri: 'https://raw.githubusercontent.com/HBGD-UCB/longbowRiskFactors/master/inst/sample_data/birthwt_data.rdata'
+  nodes:
+    value:
+      strata: ['study_id', 'mrace']
+      id: ['subjid']
+      W: ['apgar1', 'apgar5', 'gagebrth', 'mage', 'meducyrs', 'sexn']
+      A: ['parity_cat']
+      Y: ['haz01']
+  script_params:
+    value:
+      parallelize:
+        input: checkbox
+        value: FALSE
+      count_A:
+        input: checkbox
+        value: TRUE
+      count_Y:
+        input: checkbox
+        value: TRUE        
+      baseline_level:
+        input: 'character'
+        value: "[1,2)"
+  output_directory:
+    value: ''
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+
+
+
+## Methods
+## Outcome Variable
+
+**Outcome Variable:** sstunted
+
+## Predictor Variables
+
+**Intervention Variable:** single
+
+**Adjustment Set:**
+
+* arm
+* W_mage
+* meducyrs
+* feducyrs
+* W_mhtcm
+* W_mwtkg
+* W_mbmi
+* delta_W_mage
+* delta_meducyrs
+* delta_feducyrs
+* delta_W_mhtcm
+* delta_W_mwtkg
+* delta_W_mbmi
+
+## Stratifying Variables
+
+The analysis was stratified on these variable(s):
+
+* agecat
+* studyid
+* country
+
+## Data Summary
+
+agecat      studyid                    country                        single    sstunted   n_cell       n
+----------  -------------------------  -----------------------------  -------  ---------  -------  ------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     0                0      222     231
+Birth       ki0047075b-MAL-ED          BANGLADESH                     0                1        9     231
+Birth       ki0047075b-MAL-ED          BANGLADESH                     1                0        0     231
+Birth       ki0047075b-MAL-ED          BANGLADESH                     1                1        0     231
+Birth       ki0047075b-MAL-ED          BRAZIL                         0                0       55      65
+Birth       ki0047075b-MAL-ED          BRAZIL                         0                1        2      65
+Birth       ki0047075b-MAL-ED          BRAZIL                         1                0        7      65
+Birth       ki0047075b-MAL-ED          BRAZIL                         1                1        1      65
+Birth       ki0047075b-MAL-ED          INDIA                          0                0       45      47
+Birth       ki0047075b-MAL-ED          INDIA                          0                1        2      47
+Birth       ki0047075b-MAL-ED          INDIA                          1                0        0      47
+Birth       ki0047075b-MAL-ED          INDIA                          1                1        0      47
+Birth       ki0047075b-MAL-ED          NEPAL                          0                0       26      27
+Birth       ki0047075b-MAL-ED          NEPAL                          0                1        1      27
+Birth       ki0047075b-MAL-ED          NEPAL                          1                0        0      27
+Birth       ki0047075b-MAL-ED          NEPAL                          1                1        0      27
+Birth       ki0047075b-MAL-ED          PERU                           0                0      206     233
+Birth       ki0047075b-MAL-ED          PERU                           0                1        3     233
+Birth       ki0047075b-MAL-ED          PERU                           1                0       23     233
+Birth       ki0047075b-MAL-ED          PERU                           1                1        1     233
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   0                0       63     123
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   0                1        0     123
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   1                0       58     123
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   1                1        2     123
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                0      112     125
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                1       10     125
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                0        3     125
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                1        0     125
+Birth       ki1119695-PROBIT           BELARUS                        0                0    13343   13890
+Birth       ki1119695-PROBIT           BELARUS                        0                1        5   13890
+Birth       ki1119695-PROBIT           BELARUS                        1                0      542   13890
+Birth       ki1119695-PROBIT           BELARUS                        1                1        0   13890
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       0                0    12535   13817
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       0                1      407   13817
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       1                0      843   13817
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       1                1       32   13817
+Birth       ki1135781-COHORTS          GUATEMALA                      0                0      712     767
+Birth       ki1135781-COHORTS          GUATEMALA                      0                1        7     767
+Birth       ki1135781-COHORTS          GUATEMALA                      1                0       46     767
+Birth       ki1135781-COHORTS          GUATEMALA                      1                1        2     767
+Birth       ki1135781-COHORTS          INDIA                          0                0     4630    4778
+Birth       ki1135781-COHORTS          INDIA                          0                1      141    4778
+Birth       ki1135781-COHORTS          INDIA                          1                0        7    4778
+Birth       ki1135781-COHORTS          INDIA                          1                1        0    4778
+Birth       ki1135781-COHORTS          PHILIPPINES                    0                0     2893    3010
+Birth       ki1135781-COHORTS          PHILIPPINES                    0                1       43    3010
+Birth       ki1135781-COHORTS          PHILIPPINES                    1                0       72    3010
+Birth       ki1135781-COHORTS          PHILIPPINES                    1                1        2    3010
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     0                0     2581    2819
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     0                1      233    2819
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     1                0        5    2819
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     1                1        0    2819
+6 months    ki0047075b-MAL-ED          BANGLADESH                     0                0      233     241
+6 months    ki0047075b-MAL-ED          BANGLADESH                     0                1        8     241
+6 months    ki0047075b-MAL-ED          BANGLADESH                     1                0        0     241
+6 months    ki0047075b-MAL-ED          BANGLADESH                     1                1        0     241
+6 months    ki0047075b-MAL-ED          BRAZIL                         0                0      179     209
+6 months    ki0047075b-MAL-ED          BRAZIL                         0                1        0     209
+6 months    ki0047075b-MAL-ED          BRAZIL                         1                0       30     209
+6 months    ki0047075b-MAL-ED          BRAZIL                         1                1        0     209
+6 months    ki0047075b-MAL-ED          INDIA                          0                0      225     234
+6 months    ki0047075b-MAL-ED          INDIA                          0                1        9     234
+6 months    ki0047075b-MAL-ED          INDIA                          1                0        0     234
+6 months    ki0047075b-MAL-ED          INDIA                          1                1        0     234
+6 months    ki0047075b-MAL-ED          NEPAL                          0                0      235     236
+6 months    ki0047075b-MAL-ED          NEPAL                          0                1        1     236
+6 months    ki0047075b-MAL-ED          NEPAL                          1                0        0     236
+6 months    ki0047075b-MAL-ED          NEPAL                          1                1        0     236
+6 months    ki0047075b-MAL-ED          PERU                           0                0      232     273
+6 months    ki0047075b-MAL-ED          PERU                           0                1        8     273
+6 months    ki0047075b-MAL-ED          PERU                           1                0       31     273
+6 months    ki0047075b-MAL-ED          PERU                           1                1        2     273
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   0                0      139     254
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   0                1        1     254
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   1                0      109     254
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   1                1        5     254
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                0      225     247
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                1       14     247
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                0        8     247
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                1        0     247
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                0     1818    2013
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                1       17    2013
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                0      176    2013
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                1        2    2013
+6 months    ki1112895-Guatemala BSC    GUATEMALA                      0                0      230     277
+6 months    ki1112895-Guatemala BSC    GUATEMALA                      0                1       18     277
+6 months    ki1112895-Guatemala BSC    GUATEMALA                      1                0       22     277
+6 months    ki1112895-Guatemala BSC    GUATEMALA                      1                1        7     277
+6 months    ki1119695-PROBIT           BELARUS                        0                0    14893   15761
+6 months    ki1119695-PROBIT           BELARUS                        0                1      225   15761
+6 months    ki1119695-PROBIT           BELARUS                        1                0      625   15761
+6 months    ki1119695-PROBIT           BELARUS                        1                1       18   15761
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       0                0     7812    8638
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       0                1      313    8638
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       1                0      476    8638
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       1                1       37    8638
+6 months    ki1135781-COHORTS          GUATEMALA                      0                0      724     893
+6 months    ki1135781-COHORTS          GUATEMALA                      0                1      102     893
+6 months    ki1135781-COHORTS          GUATEMALA                      1                0       53     893
+6 months    ki1135781-COHORTS          GUATEMALA                      1                1       14     893
+6 months    ki1135781-COHORTS          INDIA                          0                0     4720    4971
+6 months    ki1135781-COHORTS          INDIA                          0                1      242    4971
+6 months    ki1135781-COHORTS          INDIA                          1                0        9    4971
+6 months    ki1135781-COHORTS          INDIA                          1                1        0    4971
+6 months    ki1135781-COHORTS          PHILIPPINES                    0                0     2482    2676
+6 months    ki1135781-COHORTS          PHILIPPINES                    0                1      126    2676
+6 months    ki1135781-COHORTS          PHILIPPINES                    1                0       64    2676
+6 months    ki1135781-COHORTS          PHILIPPINES                    1                1        4    2676
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     0                0     4543    4822
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     0                1      271    4822
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     1                0        8    4822
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     1                1        0    4822
+24 months   ki0047075b-MAL-ED          BANGLADESH                     0                0      184     212
+24 months   ki0047075b-MAL-ED          BANGLADESH                     0                1       28     212
+24 months   ki0047075b-MAL-ED          BANGLADESH                     1                0        0     212
+24 months   ki0047075b-MAL-ED          BANGLADESH                     1                1        0     212
+24 months   ki0047075b-MAL-ED          BRAZIL                         0                0      148     169
+24 months   ki0047075b-MAL-ED          BRAZIL                         0                1        0     169
+24 months   ki0047075b-MAL-ED          BRAZIL                         1                0       20     169
+24 months   ki0047075b-MAL-ED          BRAZIL                         1                1        1     169
+24 months   ki0047075b-MAL-ED          INDIA                          0                0      195     225
+24 months   ki0047075b-MAL-ED          INDIA                          0                1       30     225
+24 months   ki0047075b-MAL-ED          INDIA                          1                0        0     225
+24 months   ki0047075b-MAL-ED          INDIA                          1                1        0     225
+24 months   ki0047075b-MAL-ED          NEPAL                          0                0      221     228
+24 months   ki0047075b-MAL-ED          NEPAL                          0                1        7     228
+24 months   ki0047075b-MAL-ED          NEPAL                          1                0        0     228
+24 months   ki0047075b-MAL-ED          NEPAL                          1                1        0     228
+24 months   ki0047075b-MAL-ED          PERU                           0                0      165     201
+24 months   ki0047075b-MAL-ED          PERU                           0                1       11     201
+24 months   ki0047075b-MAL-ED          PERU                           1                0       21     201
+24 months   ki0047075b-MAL-ED          PERU                           1                1        4     201
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   0                0      119     238
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   0                1       12     238
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   1                0       92     238
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   1                1       15     238
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                0      141     214
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                1       67     214
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                0        3     214
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                1        3     214
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                0        5       6
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                1        1       6
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                0        0       6
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                1        0       6
+24 months   ki1119695-PROBIT           BELARUS                        0                0     3827    4035
+24 months   ki1119695-PROBIT           BELARUS                        0                1       63    4035
+24 months   ki1119695-PROBIT           BELARUS                        1                0      143    4035
+24 months   ki1119695-PROBIT           BELARUS                        1                1        2    4035
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       0                0     1379    1637
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       0                1      154    1637
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       1                0       81    1637
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       1                1       23    1637
+24 months   ki1135781-COHORTS          GUATEMALA                      0                0      480    1010
+24 months   ki1135781-COHORTS          GUATEMALA                      0                1      443    1010
+24 months   ki1135781-COHORTS          GUATEMALA                      1                0       34    1010
+24 months   ki1135781-COHORTS          GUATEMALA                      1                1       53    1010
+24 months   ki1135781-COHORTS          INDIA                          0                0     2784    3753
+24 months   ki1135781-COHORTS          INDIA                          0                1      960    3753
+24 months   ki1135781-COHORTS          INDIA                          1                0        6    3753
+24 months   ki1135781-COHORTS          INDIA                          1                1        3    3753
+24 months   ki1135781-COHORTS          PHILIPPINES                    0                0     1666    2416
+24 months   ki1135781-COHORTS          PHILIPPINES                    0                1      691    2416
+24 months   ki1135781-COHORTS          PHILIPPINES                    1                0       46    2416
+24 months   ki1135781-COHORTS          PHILIPPINES                    1                1       13    2416
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     0                0     4286    4744
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     0                1      452    4744
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     1                0        6    4744
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     1                1        0    4744
+
+
+The following strata were considered:
+
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: 24 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
+* agecat: 24 months, studyid: ki1135781-COHORTS, country: GUATEMALA
+* agecat: 24 months, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: 24 months, studyid: ki1135781-COHORTS, country: PHILIPPINES
+* agecat: 24 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1112895-Guatemala BSC, country: GUATEMALA
+* agecat: 6 months, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: 6 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
+* agecat: 6 months, studyid: ki1135781-COHORTS, country: GUATEMALA
+* agecat: 6 months, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: 6 months, studyid: ki1135781-COHORTS, country: PHILIPPINES
+* agecat: 6 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: Birth, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: Birth, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
+* agecat: Birth, studyid: ki1135781-COHORTS, country: GUATEMALA
+* agecat: Birth, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: Birth, studyid: ki1135781-COHORTS, country: PHILIPPINES
+* agecat: Birth, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+
+### Dropped Strata
+
+Some strata were dropped due to rare outcomes:
+
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: Birth, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: Birth, studyid: ki1135781-COHORTS, country: GUATEMALA
+* agecat: Birth, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: Birth, studyid: ki1135781-COHORTS, country: PHILIPPINES
+* agecat: Birth, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: 6 months, studyid: ki1135781-COHORTS, country: PHILIPPINES
+* agecat: 6 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: 24 months, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: 24 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+
+## Methods Detail
+
+We're interested in the causal parameters $E[Y_a]$ for all values of $a \in \mathcal{A}$. These parameters represent the mean outcome if, possibly contrary to fact, we intervened to set all units to have $A=a$. Under the randomization and positivity assumptions, these are identified by the statistical parameters $\psi_a=E_W[E_{Y|A,W}(Y|A=a,W)]$.  In addition, we're interested in the mean of $Y$, $E[Y]$ under no intervention (the observed mean). We will estimate these parameters by using SuperLearner to fit the relevant likelihood factors -- $E_{Y|A,W}(Y|A=a,W)$ and $p(A=a|W)$, and then updating our likelihood fit using a joint TMLE.
+
+For unadjusted analyses ($W=\{\}$), initial likelihoods were estimated using Lrnr_glm to estimate the simple $E(Y|A)$ and Lrnr_mean to estimate $p(A)$. For adjusted analyses, a small library containing Lrnr_glmnet, Lrnr_xgboost, and Lrnr_mean was used.
+
+Having estimated these parameters, we will then use the delta method to estimate relative risks and attributable risks relative to a prespecified baseline level of $A$.
+
+todo: add detail about dropping strata with rare outcomes, handling missingness
+
+
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+
+
+
+# Results Detail
+
+## Results Plots
+![](/tmp/77ab14a5-b004-4a9d-a2bf-20fce3bb218b/be4636d5-9afc-461e-ba06-cc5235296569/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
+
+![](/tmp/77ab14a5-b004-4a9d-a2bf-20fce3bb218b/be4636d5-9afc-461e-ba06-cc5235296569/REPORT_files/figure-html/plot_rr-1.png)<!-- -->
+
+
+
+![](/tmp/77ab14a5-b004-4a9d-a2bf-20fce3bb218b/be4636d5-9afc-461e-ba06-cc5235296569/REPORT_files/figure-html/plot_paf-1.png)<!-- -->
+
+![](/tmp/77ab14a5-b004-4a9d-a2bf-20fce3bb218b/be4636d5-9afc-461e-ba06-cc5235296569/REPORT_files/figure-html/plot_par-1.png)<!-- -->
+
+## Results Table
+
+### Parameter: TSM
+
+
+agecat      studyid                   country        intervention_level   baseline_level     estimate    ci_lower    ci_upper
+----------  ------------------------  -------------  -------------------  ---------------  ----------  ----------  ----------
+Birth       ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                0.0314615   0.0284535   0.0344695
+Birth       ki1126311-ZVITAMBO        ZIMBABWE       1                    NA                0.0363682   0.0235534   0.0491830
+6 months    ki1112895-Guatemala BSC   GUATEMALA      0                    NA                0.0725806   0.0402320   0.1049293
+6 months    ki1112895-Guatemala BSC   GUATEMALA      1                    NA                0.2413793   0.0853534   0.3974052
+6 months    ki1119695-PROBIT          BELARUS        0                    NA                0.0148838   0.0095889   0.0201787
+6 months    ki1119695-PROBIT          BELARUS        1                    NA                0.0275942   0.0108230   0.0443653
+6 months    ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                0.0384916   0.0343095   0.0426737
+6 months    ki1126311-ZVITAMBO        ZIMBABWE       1                    NA                0.0740736   0.0508143   0.0973329
+6 months    ki1135781-COHORTS         GUATEMALA      0                    NA                0.1229789   0.1005328   0.1454249
+6 months    ki1135781-COHORTS         GUATEMALA      1                    NA                0.2094615   0.1097757   0.3091472
+24 months   ki0047075b-MAL-ED         SOUTH AFRICA   0                    NA                0.0877205   0.0380110   0.1374299
+24 months   ki0047075b-MAL-ED         SOUTH AFRICA   1                    NA                0.1390393   0.0721367   0.2059419
+24 months   ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                0.1003410   0.0852872   0.1153947
+24 months   ki1126311-ZVITAMBO        ZIMBABWE       1                    NA                0.2091874   0.1272857   0.2910892
+24 months   ki1135781-COHORTS         GUATEMALA      0                    NA                0.4831855   0.4509696   0.5154015
+24 months   ki1135781-COHORTS         GUATEMALA      1                    NA                0.5823708   0.4784777   0.6862639
+24 months   ki1135781-COHORTS         PHILIPPINES    0                    NA                0.2930297   0.2746483   0.3114111
+24 months   ki1135781-COHORTS         PHILIPPINES    1                    NA                0.2392398   0.1392018   0.3392777
+
+
+### Parameter: E(Y)
+
+
+agecat      studyid                   country        intervention_level   baseline_level     estimate    ci_lower    ci_upper
+----------  ------------------------  -------------  -------------------  ---------------  ----------  ----------  ----------
+Birth       ki1126311-ZVITAMBO        ZIMBABWE       NA                   NA                0.0317725   0.0288478   0.0346971
+6 months    ki1112895-Guatemala BSC   GUATEMALA      NA                   NA                0.0902527   0.0564475   0.1240580
+6 months    ki1119695-PROBIT          BELARUS        NA                   NA                0.0154178   0.0100323   0.0208033
+6 months    ki1126311-ZVITAMBO        ZIMBABWE       NA                   NA                0.0405186   0.0363604   0.0446769
+6 months    ki1135781-COHORTS         GUATEMALA      NA                   NA                0.1298992   0.1078368   0.1519617
+24 months   ki0047075b-MAL-ED         SOUTH AFRICA   NA                   NA                0.1134454   0.0730697   0.1538211
+24 months   ki1126311-ZVITAMBO        ZIMBABWE       NA                   NA                0.1081246   0.0930769   0.1231723
+24 months   ki1135781-COHORTS         GUATEMALA      NA                   NA                0.4910891   0.4602428   0.5219354
+24 months   ki1135781-COHORTS         PHILIPPINES    NA                   NA                0.2913907   0.2732677   0.3095138
+
+
+### Parameter: RR
+
+
+agecat      studyid                   country        intervention_level   baseline_level     estimate    ci_lower   ci_upper
+----------  ------------------------  -------------  -------------------  ---------------  ----------  ----------  ---------
+Birth       ki1126311-ZVITAMBO        ZIMBABWE       0                    0                 1.0000000   1.0000000   1.000000
+Birth       ki1126311-ZVITAMBO        ZIMBABWE       1                    0                 1.1559606   0.8024026   1.665305
+6 months    ki1112895-Guatemala BSC   GUATEMALA      0                    0                 1.0000000   1.0000000   1.000000
+6 months    ki1112895-Guatemala BSC   GUATEMALA      1                    0                 3.3256705   1.5166712   7.292342
+6 months    ki1119695-PROBIT          BELARUS        0                    0                 1.0000000   1.0000000   1.000000
+6 months    ki1119695-PROBIT          BELARUS        1                    0                 1.8539723   1.0723184   3.205404
+6 months    ki1126311-ZVITAMBO        ZIMBABWE       0                    0                 1.0000000   1.0000000   1.000000
+6 months    ki1126311-ZVITAMBO        ZIMBABWE       1                    0                 1.9244106   1.3807254   2.682181
+6 months    ki1135781-COHORTS         GUATEMALA      0                    0                 1.0000000   1.0000000   1.000000
+6 months    ki1135781-COHORTS         GUATEMALA      1                    0                 1.7032317   1.0237053   2.833822
+24 months   ki0047075b-MAL-ED         SOUTH AFRICA   0                    0                 1.0000000   1.0000000   1.000000
+24 months   ki0047075b-MAL-ED         SOUTH AFRICA   1                    0                 1.5850263   0.7539849   3.332041
+24 months   ki1126311-ZVITAMBO        ZIMBABWE       0                    0                 1.0000000   1.0000000   1.000000
+24 months   ki1126311-ZVITAMBO        ZIMBABWE       1                    0                 2.0847663   1.3706459   3.170951
+24 months   ki1135781-COHORTS         GUATEMALA      0                    0                 1.0000000   1.0000000   1.000000
+24 months   ki1135781-COHORTS         GUATEMALA      1                    0                 1.2052738   0.9969201   1.457173
+24 months   ki1135781-COHORTS         PHILIPPINES    0                    0                 1.0000000   1.0000000   1.000000
+24 months   ki1135781-COHORTS         PHILIPPINES    1                    0                 0.8164352   0.5353599   1.245081
+
+
+### Parameter: PAR
+
+
+agecat      studyid                   country        intervention_level   baseline_level      estimate     ci_lower    ci_upper
+----------  ------------------------  -------------  -------------------  ---------------  -----------  -----------  ----------
+Birth       ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                 0.0003110   -0.0005016   0.0011236
+6 months    ki1112895-Guatemala BSC   GUATEMALA      0                    NA                 0.0176721   -0.0000894   0.0354335
+6 months    ki1119695-PROBIT          BELARUS        0                    NA                 0.0005340   -0.0000396   0.0011076
+6 months    ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                 0.0020271    0.0006761   0.0033780
+6 months    ki1135781-COHORTS         GUATEMALA      0                    NA                 0.0069204   -0.0006942   0.0145349
+24 months   ki0047075b-MAL-ED         SOUTH AFRICA   0                    NA                 0.0257249   -0.0117120   0.0631618
+24 months   ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                 0.0077837    0.0024114   0.0131559
+24 months   ki1135781-COHORTS         GUATEMALA      0                    NA                 0.0079036   -0.0014122   0.0172194
+24 months   ki1135781-COHORTS         PHILIPPINES    0                    NA                -0.0016390   -0.0041768   0.0008988
+
+
+### Parameter: PAF
+
+
+agecat      studyid                   country        intervention_level   baseline_level      estimate     ci_lower    ci_upper
+----------  ------------------------  -------------  -------------------  ---------------  -----------  -----------  ----------
+Birth       ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                 0.0097876   -0.0161057   0.0350211
+6 months    ki1112895-Guatemala BSC   GUATEMALA      0                    NA                 0.1958065   -0.0121457   0.3610334
+6 months    ki1119695-PROBIT          BELARUS        0                    NA                 0.0346349   -0.0026956   0.0705756
+6 months    ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                 0.0500277    0.0164565   0.0824531
+6 months    ki1135781-COHORTS         GUATEMALA      0                    NA                 0.0532749   -0.0067663   0.1097354
+24 months   ki0047075b-MAL-ED         SOUTH AFRICA   0                    NA                 0.2267603   -0.1769921   0.4920105
+24 months   ki1126311-ZVITAMBO        ZIMBABWE       0                    NA                 0.0719879    0.0217631   0.1196341
+24 months   ki1135781-COHORTS         GUATEMALA      0                    NA                 0.0160940   -0.0030865   0.0349077
+24 months   ki1135781-COHORTS         PHILIPPINES    0                    NA                -0.0056247   -0.0143674   0.0030427

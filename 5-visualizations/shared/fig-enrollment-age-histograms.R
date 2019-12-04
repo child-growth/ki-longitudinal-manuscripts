@@ -10,7 +10,7 @@ library(growthstandards)
 
 d <- readRDS(stunting_data_path)
 
-d <- d %>% subset(., select=c(studyid, subjid, country, region, measurefreq, tr, sex, agedays, haz, whz, waz, muaz,lencm,  wtkg, htcm ))
+d <- d %>% subset(., select=c(studyid, subjid, country, region, measurefreq, tr, sex, agedays, haz ))
 
 #Histogram of ages <= 30 days (all ages, not first enrollment)
 df1 <- d %>% filter(agedays < 31, measurefreq!="yearly")

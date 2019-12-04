@@ -154,7 +154,7 @@ pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) +
 ggsave(pPAR_laz, file=paste0(here::here(), "/figures/risk factor/fig-laz-PAR.png"), height=10, width=8)
 ggsave(pPAR_wlz, file=paste0(here::here(), "/figures/risk factor/fig-wlz-PAR.png"), height=10, width=8)
 
-save(pPAR_laz, pPAR_wlz, file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.Rdata"))
+saveRDS(list(pPAR_laz, pPAR_wlz), file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
 
 
 
@@ -224,7 +224,7 @@ mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
                                    t = 1, b = 1, l = 1, r = 2)
 
 #save the plots seperately 
-save(mtab_df_laz_tbl, mtab_df_wlz_tbl, file=paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.Rdata"))
+saveRDS(list(mtab_df_laz_tbl, mtab_df_wlz_tbl), file=paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
 
 
 

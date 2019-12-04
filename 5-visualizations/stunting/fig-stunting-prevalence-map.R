@@ -24,7 +24,7 @@ mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
 mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
 
 #Load cohort data and calc stunting prev by study
-load("U:/ucb-superlearner/data/stunting_data.RData")
+d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
 d$cohort <- paste0(d$studyid,"-",d$country)
 df <- d %>% filter(!is.na(haz)) %>% group_by(studyid,cohort) %>% 
@@ -42,8 +42,8 @@ df$country[df$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
 df <- left_join(df, mediods, by="country")
 
 
-df$lat <- df$LAT
-df$long <- df$LONG
+df$lat[is.na(df$lat)] <- df$LAT[is.na(df$lat)]
+df$long[is.na(df$long)] <- df$LONG[is.na(df$long)]
 
 world <- map_data('world')
 
@@ -61,6 +61,21 @@ jit <- 2
 repel <- 3
 coords <- FFieldPtRep(coords = cbind(jitter(df$long,jit),jitter(df$lat,jit)),rep.fact = repel)
 d <- cbind(data.frame(df), coords)
+
+#Replace coordinates with jittered coords if multiple cohorts in country
+d$lat[d$ncountry>1] <- d$y[d$ncountry>1]
+d$long[d$ncountry>1] <- d$x[d$ncountry>1]
+
+#Move pakistan cohort currently being plotted in the ocean
+d$lat[d$studyid=="ResPak"] <- 27
+d$lat[d$country=="BRAZIL"] <- -4.5
+
+#latitude and longitude swiched for two India cohorts
+d$long[d$studyid=="CMC-V-BCS-2002"] <- 80
+d$long[d$studyid=="IRC"] <- 79
+d$lat[d$studyid=="CMC-V-BCS-2002"] <- 15
+d$lat[d$studyid=="IRC"] <- 14
+
 
 
 summary(d$stunt)
@@ -80,7 +95,7 @@ d <- d %>% rename(`Number of observations`=Ncat, `Stunting Prevalence (%)`=stunt
 map_plot <- ggplot(world, aes(long, lat)) +
   geom_map(map=world, aes(map_id=region), fill=NA, color="grey20") +
   coord_quickmap() + theme_bw() + coord_cartesian(xlim=c(-90,120), ylim=c(-36,50)) +
-  geom_point(aes(x = x, y = y, size = `Number of observations`, 
+  geom_point(aes(x = long, y = lat, size = `Number of observations`, 
                  fill=`Stunting Prevalence (%)`), 
              data = d, alpha = 0.8, pch = 21, color = 'grey20') +
   scale_color_viridis(discrete=T) + 
@@ -104,5 +119,5 @@ map_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(map_plot, file=paste0(fig_dir, "stunting/fig-",map_plot_name,".png"), width=9, height=4)
-saveRDS(d, file=paste0(figdata_dir, "figdata-",map_plot_name,".RDS"))
+saveRDS(d, file=paste0(figdata_dir_stunting, "figdata-",map_plot_name,".RDS"))
 

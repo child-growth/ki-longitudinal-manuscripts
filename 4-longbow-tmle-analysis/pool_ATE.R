@@ -10,7 +10,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 
-d <- dfull %>% filter(type=="ATE")
+d <- dfull %>% filter(type=="ATE", agecat!="All")
 
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)

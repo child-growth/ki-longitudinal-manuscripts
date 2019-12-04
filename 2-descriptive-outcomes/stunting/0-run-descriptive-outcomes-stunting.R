@@ -1,0 +1,16 @@
+
+rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
+
+source(here("2-descriptive-outcomes/stunting/0-make-who-growth-vel.R"))
+source(here("2-descriptive-outcomes/stunting/1_growth_velocity.R"))
+source(here("2-descriptive-outcomes/stunting/2_stunt_calc_outcomes.R"))
+source(here("2-descriptive-outcomes/stunting/3_pool_velocity_outcomes.R"))
+source(here("2-descriptive-outcomes/stunting/4_stunt_flowdata.R"))
+source(here("2-descriptive-outcomes/stunting/5_stunt_rec_cohort.R"))
+source(here("2-descriptive-outcomes/stunting/6_stunt_meandiff_haz.R"))
+source(here("2-descriptive-outcomes/stunting/7_stunt_meandiff_hazvel.R"))
+source(here("2-descriptive-outcomes/stunting/8_stunt_meanLAZ_strat_incage.R"))
+source(here("2-descriptive-outcomes/stunting/9_stunt_velocity_strat_incage.R"))
+source(here("2-descriptive-outcomes/stunting/10_stunt_calc_outcomes_no_probit.R"))
+source(here("2-descriptive-outcomes/stunting/11_stunt_calc_outcomes_no_Kenaba_birth.R"))

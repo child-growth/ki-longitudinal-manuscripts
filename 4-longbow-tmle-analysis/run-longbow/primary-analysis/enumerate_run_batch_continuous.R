@@ -1,3 +1,4 @@
+
 library(data.table)
 library(longbowtools)
 library(jsonlite)
@@ -21,6 +22,9 @@ default_params$script_params$count_Y <- FALSE
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
 
 analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
+
+#Drop growth velocity
+analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
 
 i=1
 enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){

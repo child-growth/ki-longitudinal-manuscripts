@@ -1,0 +1,2463 @@
+---
+title: "Risk Factor Analysis"
+output: 
+  html_document:
+    keep_md: TRUE
+    self_contained: true
+required_packages:  ['github://HBGD-UCB/longbowRiskFactors','github://jeremyrcoyle/skimr@vector_types', 'github://tlverse/delayed']
+params:
+  roles:
+    value:
+      - exclude
+      - strata
+      - id
+      - W
+      - A
+      - Y
+  data: 
+    value: 
+      type: 'web'
+      uri: 'https://raw.githubusercontent.com/HBGD-UCB/longbowRiskFactors/master/inst/sample_data/birthwt_data.rdata'
+  nodes:
+    value:
+      strata: ['study_id', 'mrace']
+      id: ['subjid']
+      W: ['apgar1', 'apgar5', 'gagebrth', 'mage', 'meducyrs', 'sexn']
+      A: ['parity_cat']
+      Y: ['haz01']
+  script_params:
+    value:
+      parallelize:
+        input: checkbox
+        value: FALSE
+      count_A:
+        input: checkbox
+        value: TRUE
+      count_Y:
+        input: checkbox
+        value: TRUE        
+      baseline_level:
+        input: 'character'
+        value: "[1,2)"
+  output_directory:
+    value: ''
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+
+
+
+## Methods
+## Outcome Variable
+
+**Outcome Variable:** stunted
+
+## Predictor Variables
+
+**Intervention Variable:** birthwt
+
+**Adjustment Set:**
+
+unadjusted
+
+## Stratifying Variables
+
+The analysis was stratified on these variable(s):
+
+* agecat
+* studyid
+* country
+
+## Data Summary
+
+agecat      studyid                    country                        birthwt                       stunted   n_cell       n
+----------  -------------------------  -----------------------------  ---------------------------  --------  -------  ------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight          0      163     231
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight          1       14     231
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Low birthweight                     0       24     231
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Low birthweight                     1       30     231
+Birth       ki0047075b-MAL-ED          BRAZIL                         Normal or high birthweight          0       55      65
+Birth       ki0047075b-MAL-ED          BRAZIL                         Normal or high birthweight          1        6      65
+Birth       ki0047075b-MAL-ED          BRAZIL                         Low birthweight                     0        1      65
+Birth       ki0047075b-MAL-ED          BRAZIL                         Low birthweight                     1        3      65
+Birth       ki0047075b-MAL-ED          INDIA                          Normal or high birthweight          0       34      47
+Birth       ki0047075b-MAL-ED          INDIA                          Normal or high birthweight          1        5      47
+Birth       ki0047075b-MAL-ED          INDIA                          Low birthweight                     0        3      47
+Birth       ki0047075b-MAL-ED          INDIA                          Low birthweight                     1        5      47
+Birth       ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight          0       24      27
+Birth       ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight          1        0      27
+Birth       ki0047075b-MAL-ED          NEPAL                          Low birthweight                     0        1      27
+Birth       ki0047075b-MAL-ED          NEPAL                          Low birthweight                     1        2      27
+Birth       ki0047075b-MAL-ED          PERU                           Normal or high birthweight          0      205     233
+Birth       ki0047075b-MAL-ED          PERU                           Normal or high birthweight          1       16     233
+Birth       ki0047075b-MAL-ED          PERU                           Low birthweight                     0        2     233
+Birth       ki0047075b-MAL-ED          PERU                           Low birthweight                     1       10     233
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight          0      109     123
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight          1        6     123
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   Low birthweight                     0        4     123
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   Low birthweight                     1        4     123
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          0      102     125
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          1       16     125
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Low birthweight                     0        0     125
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Low birthweight                     1        7     125
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight          0       71      92
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight          1       10      92
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight                     0        4      92
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight                     1        7      92
+Birth       ki1000108-IRC              INDIA                          Normal or high birthweight          0      292     383
+Birth       ki1000108-IRC              INDIA                          Normal or high birthweight          1       25     383
+Birth       ki1000108-IRC              INDIA                          Low birthweight                     0       47     383
+Birth       ki1000108-IRC              INDIA                          Low birthweight                     1       19     383
+Birth       ki1000109-EE               PAKISTAN                       Normal or high birthweight          0      112     240
+Birth       ki1000109-EE               PAKISTAN                       Normal or high birthweight          1       48     240
+Birth       ki1000109-EE               PAKISTAN                       Low birthweight                     0       28     240
+Birth       ki1000109-EE               PAKISTAN                       Low birthweight                     1       52     240
+Birth       ki1000109-ResPak           PAKISTAN                       Normal or high birthweight          0       28      42
+Birth       ki1000109-ResPak           PAKISTAN                       Normal or high birthweight          1        7      42
+Birth       ki1000109-ResPak           PAKISTAN                       Low birthweight                     0        0      42
+Birth       ki1000109-ResPak           PAKISTAN                       Low birthweight                     1        7      42
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight          0      793    1252
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight          1      121    1252
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Low birthweight                     0      110    1252
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Low birthweight                     1      228    1252
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight          0      409     608
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight          1       14     608
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Low birthweight                     0      102     608
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Low birthweight                     1       83     608
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight          0      397     539
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight          1        5     539
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Low birthweight                     0       94     539
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Low birthweight                     1       43     539
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight          0      519     732
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight          1       41     732
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight                     0      112     732
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight                     1       60     732
+Birth       ki1101329-Keneba           GAMBIA                         Normal or high birthweight          0     1269    1529
+Birth       ki1101329-Keneba           GAMBIA                         Normal or high birthweight          1       39    1529
+Birth       ki1101329-Keneba           GAMBIA                         Low birthweight                     0      177    1529
+Birth       ki1101329-Keneba           GAMBIA                         Low birthweight                     1       44    1529
+Birth       ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight          0      453     696
+Birth       ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight          1       23     696
+Birth       ki1113344-GMS-Nepal        NEPAL                          Low birthweight                     0      121     696
+Birth       ki1113344-GMS-Nepal        NEPAL                          Low birthweight                     1       99     696
+Birth       ki1114097-CMIN             BANGLADESH                     Normal or high birthweight          0       13      26
+Birth       ki1114097-CMIN             BANGLADESH                     Normal or high birthweight          1        1      26
+Birth       ki1114097-CMIN             BANGLADESH                     Low birthweight                     0        4      26
+Birth       ki1114097-CMIN             BANGLADESH                     Low birthweight                     1        8      26
+Birth       ki1114097-CONTENT          PERU                           Normal or high birthweight          0        2       2
+Birth       ki1114097-CONTENT          PERU                           Normal or high birthweight          1        0       2
+Birth       ki1114097-CONTENT          PERU                           Low birthweight                     0        0       2
+Birth       ki1114097-CONTENT          PERU                           Low birthweight                     1        0       2
+Birth       ki1119695-PROBIT           BELARUS                        Normal or high birthweight          0    13857   13890
+Birth       ki1119695-PROBIT           BELARUS                        Normal or high birthweight          1       33   13890
+Birth       ki1119695-PROBIT           BELARUS                        Low birthweight                     0        0   13890
+Birth       ki1119695-PROBIT           BELARUS                        Low birthweight                     1        0   13890
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight          0    11231   13830
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight          1      698   13830
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight                     0     1167   13830
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight                     1      734   13830
+Birth       ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight          0      695     784
+Birth       ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight          1       22     784
+Birth       ki1135781-COHORTS          GUATEMALA                      Low birthweight                     0       43     784
+Birth       ki1135781-COHORTS          GUATEMALA                      Low birthweight                     1       24     784
+Birth       ki1135781-COHORTS          INDIA                          Normal or high birthweight          0     5059    6638
+Birth       ki1135781-COHORTS          INDIA                          Normal or high birthweight          1      209    6638
+Birth       ki1135781-COHORTS          INDIA                          Low birthweight                     0      787    6638
+Birth       ki1135781-COHORTS          INDIA                          Low birthweight                     1      583    6638
+Birth       ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight          0     2643    3004
+Birth       ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight          1       66    3004
+Birth       ki1135781-COHORTS          PHILIPPINES                    Low birthweight                     0      181    3004
+Birth       ki1135781-COHORTS          PHILIPPINES                    Low birthweight                     1      114    3004
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight          0    11711   22454
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight          1     1147   22454
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight                     0     3357   22454
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight                     1     6239   22454
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight          0     1617    2823
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight          1      182    2823
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight                     0      349    2823
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight                     1      675    2823
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight          0      165     238
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight          1       23     238
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Low birthweight                     0       29     238
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Low birthweight                     1       21     238
+6 months    ki0047075b-MAL-ED          BRAZIL                         Normal or high birthweight          0      194     209
+6 months    ki0047075b-MAL-ED          BRAZIL                         Normal or high birthweight          1        5     209
+6 months    ki0047075b-MAL-ED          BRAZIL                         Low birthweight                     0        9     209
+6 months    ki0047075b-MAL-ED          BRAZIL                         Low birthweight                     1        1     209
+6 months    ki0047075b-MAL-ED          INDIA                          Normal or high birthweight          0      162     227
+6 months    ki0047075b-MAL-ED          INDIA                          Normal or high birthweight          1       31     227
+6 months    ki0047075b-MAL-ED          INDIA                          Low birthweight                     0       26     227
+6 months    ki0047075b-MAL-ED          INDIA                          Low birthweight                     1        8     227
+6 months    ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight          0      204     229
+6 months    ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight          1        6     229
+6 months    ki0047075b-MAL-ED          NEPAL                          Low birthweight                     0       15     229
+6 months    ki0047075b-MAL-ED          NEPAL                          Low birthweight                     1        4     229
+6 months    ki0047075b-MAL-ED          PERU                           Normal or high birthweight          0      208     270
+6 months    ki0047075b-MAL-ED          PERU                           Normal or high birthweight          1       46     270
+6 months    ki0047075b-MAL-ED          PERU                           Low birthweight                     0        5     270
+6 months    ki0047075b-MAL-ED          PERU                           Low birthweight                     1       11     270
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight          0      193     253
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight          1       45     253
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Low birthweight                     0       10     253
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Low birthweight                     1        5     253
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          0      143     186
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          1       34     186
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Low birthweight                     0        2     186
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Low birthweight                     1        7     186
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight          0      243     369
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight          1       84     369
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight                     0       15     369
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight                     1       27     369
+6 months    ki1000108-IRC              INDIA                          Normal or high birthweight          0      268     401
+6 months    ki1000108-IRC              INDIA                          Normal or high birthweight          1       67     401
+6 months    ki1000108-IRC              INDIA                          Low birthweight                     0       38     401
+6 months    ki1000108-IRC              INDIA                          Low birthweight                     1       28     401
+6 months    ki1000109-EE               PAKISTAN                       Normal or high birthweight          0      155     372
+6 months    ki1000109-EE               PAKISTAN                       Normal or high birthweight          1       87     372
+6 months    ki1000109-EE               PAKISTAN                       Low birthweight                     0       35     372
+6 months    ki1000109-EE               PAKISTAN                       Low birthweight                     1       95     372
+6 months    ki1000109-ResPak           PAKISTAN                       Normal or high birthweight          0       18      34
+6 months    ki1000109-ResPak           PAKISTAN                       Normal or high birthweight          1       11      34
+6 months    ki1000109-ResPak           PAKISTAN                       Low birthweight                     0        1      34
+6 months    ki1000109-ResPak           PAKISTAN                       Low birthweight                     1        4      34
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight          0      803    1326
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight          1      200    1326
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Low birthweight                     0      146    1326
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Low birthweight                     1      177    1326
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight          0      306     518
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight          1       61     518
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Low birthweight                     0       72     518
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Low birthweight                     1       79     518
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight          0      417     604
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight          1       44     604
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Low birthweight                     0       91     604
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Low birthweight                     1       52     604
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight          0      467     715
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight          1       78     715
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight                     0       98     715
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight                     1       72     715
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          0     1770    2011
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          1      174    2011
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Low birthweight                     0       47    2011
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Low birthweight                     1       20    2011
+6 months    ki1101329-Keneba           GAMBIA                         Normal or high birthweight          0     1029    1334
+6 months    ki1101329-Keneba           GAMBIA                         Normal or high birthweight          1      117    1334
+6 months    ki1101329-Keneba           GAMBIA                         Low birthweight                     0      127    1334
+6 months    ki1101329-Keneba           GAMBIA                         Low birthweight                     1       61    1334
+6 months    ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight          0      344     563
+6 months    ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight          1       53     563
+6 months    ki1113344-GMS-Nepal        NEPAL                          Low birthweight                     0       97     563
+6 months    ki1113344-GMS-Nepal        NEPAL                          Low birthweight                     1       69     563
+6 months    ki1114097-CMIN             BANGLADESH                     Normal or high birthweight          0        6      12
+6 months    ki1114097-CMIN             BANGLADESH                     Normal or high birthweight          1        3      12
+6 months    ki1114097-CMIN             BANGLADESH                     Low birthweight                     0        2      12
+6 months    ki1114097-CMIN             BANGLADESH                     Low birthweight                     1        1      12
+6 months    ki1114097-CONTENT          PERU                           Normal or high birthweight          0        2       2
+6 months    ki1114097-CONTENT          PERU                           Normal or high birthweight          1        0       2
+6 months    ki1114097-CONTENT          PERU                           Low birthweight                     0        0       2
+6 months    ki1114097-CONTENT          PERU                           Low birthweight                     1        0       2
+6 months    ki1119695-PROBIT           BELARUS                        Normal or high birthweight          0    14773   15761
+6 months    ki1119695-PROBIT           BELARUS                        Normal or high birthweight          1      988   15761
+6 months    ki1119695-PROBIT           BELARUS                        Low birthweight                     0        0   15761
+6 months    ki1119695-PROBIT           BELARUS                        Low birthweight                     1        0   15761
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight          0     6601    8636
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight          1      965    8636
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight                     0      630    8636
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight                     1      440    8636
+6 months    ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight          0      446     771
+6 months    ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight          1      257     771
+6 months    ki1135781-COHORTS          GUATEMALA                      Low birthweight                     0       16     771
+6 months    ki1135781-COHORTS          GUATEMALA                      Low birthweight                     1       52     771
+6 months    ki1135781-COHORTS          INDIA                          Normal or high birthweight          0     4360    6261
+6 months    ki1135781-COHORTS          INDIA                          Normal or high birthweight          1      645    6261
+6 months    ki1135781-COHORTS          INDIA                          Low birthweight                     0      741    6261
+6 months    ki1135781-COHORTS          INDIA                          Low birthweight                     1      515    6261
+6 months    ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight          0     1979    2666
+6 months    ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight          1      439    2666
+6 months    ki1135781-COHORTS          PHILIPPINES                    Low birthweight                     0      125    2666
+6 months    ki1135781-COHORTS          PHILIPPINES                    Low birthweight                     1      123    2666
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight          0     7292   14130
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight          1     1067   14130
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight                     0     3217   14130
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight                     1     2554   14130
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight          0     2493    4041
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight          1      511    4041
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight                     0      539    4041
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight                     1      498    4041
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight          0       94     210
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight          1       71     210
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Low birthweight                     0       16     210
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Low birthweight                     1       29     210
+24 months   ki0047075b-MAL-ED          BRAZIL                         Normal or high birthweight          0      154     169
+24 months   ki0047075b-MAL-ED          BRAZIL                         Normal or high birthweight          1        7     169
+24 months   ki0047075b-MAL-ED          BRAZIL                         Low birthweight                     0        8     169
+24 months   ki0047075b-MAL-ED          BRAZIL                         Low birthweight                     1        0     169
+24 months   ki0047075b-MAL-ED          INDIA                          Normal or high birthweight          0      109     218
+24 months   ki0047075b-MAL-ED          INDIA                          Normal or high birthweight          1       76     218
+24 months   ki0047075b-MAL-ED          INDIA                          Low birthweight                     0       18     218
+24 months   ki0047075b-MAL-ED          INDIA                          Low birthweight                     1       15     218
+24 months   ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight          0      163     221
+24 months   ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight          1       40     221
+24 months   ki0047075b-MAL-ED          NEPAL                          Low birthweight                     0       11     221
+24 months   ki0047075b-MAL-ED          NEPAL                          Low birthweight                     1        7     221
+24 months   ki0047075b-MAL-ED          PERU                           Normal or high birthweight          0      124     199
+24 months   ki0047075b-MAL-ED          PERU                           Normal or high birthweight          1       63     199
+24 months   ki0047075b-MAL-ED          PERU                           Low birthweight                     0        2     199
+24 months   ki0047075b-MAL-ED          PERU                           Low birthweight                     1       10     199
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight          0      144     237
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight          1       80     237
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   Low birthweight                     0        9     237
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   Low birthweight                     1        4     237
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          0       48     162
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          1      106     162
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Low birthweight                     0        1     162
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   Low birthweight                     1        7     162
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight          0       99     371
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight          1      229     371
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight                     0        6     371
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight                     1       37     371
+24 months   ki1000108-IRC              INDIA                          Normal or high birthweight          0      208     403
+24 months   ki1000108-IRC              INDIA                          Normal or high birthweight          1      127     403
+24 months   ki1000108-IRC              INDIA                          Low birthweight                     0       27     403
+24 months   ki1000108-IRC              INDIA                          Low birthweight                     1       41     403
+24 months   ki1000109-EE               PAKISTAN                       Normal or high birthweight          0       34     167
+24 months   ki1000109-EE               PAKISTAN                       Normal or high birthweight          1       66     167
+24 months   ki1000109-EE               PAKISTAN                       Low birthweight                     0       15     167
+24 months   ki1000109-EE               PAKISTAN                       Low birthweight                     1       52     167
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight          0      150     414
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight          1      137     414
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Low birthweight                     0       28     414
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Low birthweight                     1       99     414
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight          0      319     578
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight          1      120     578
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Low birthweight                     0       69     578
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Low birthweight                     1       70     578
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight          0      315     514
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight          1       73     514
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight                     0       67     514
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight                     1       59     514
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          0        5       6
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight          1        1       6
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Low birthweight                     0        0       6
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Low birthweight                     1        0       6
+24 months   ki1101329-Keneba           GAMBIA                         Normal or high birthweight          0      646    1056
+24 months   ki1101329-Keneba           GAMBIA                         Normal or high birthweight          1      259    1056
+24 months   ki1101329-Keneba           GAMBIA                         Low birthweight                     0       69    1056
+24 months   ki1101329-Keneba           GAMBIA                         Low birthweight                     1       82    1056
+24 months   ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight          0      211     487
+24 months   ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight          1      144     487
+24 months   ki1113344-GMS-Nepal        NEPAL                          Low birthweight                     0       58     487
+24 months   ki1113344-GMS-Nepal        NEPAL                          Low birthweight                     1       74     487
+24 months   ki1114097-CMIN             BANGLADESH                     Normal or high birthweight          0        3      11
+24 months   ki1114097-CMIN             BANGLADESH                     Normal or high birthweight          1        5      11
+24 months   ki1114097-CMIN             BANGLADESH                     Low birthweight                     0        1      11
+24 months   ki1114097-CMIN             BANGLADESH                     Low birthweight                     1        2      11
+24 months   ki1114097-CONTENT          PERU                           Normal or high birthweight          0        2       2
+24 months   ki1114097-CONTENT          PERU                           Normal or high birthweight          1        0       2
+24 months   ki1114097-CONTENT          PERU                           Low birthweight                     0        0       2
+24 months   ki1114097-CONTENT          PERU                           Low birthweight                     1        0       2
+24 months   ki1119695-PROBIT           BELARUS                        Normal or high birthweight          0     3691    4035
+24 months   ki1119695-PROBIT           BELARUS                        Normal or high birthweight          1      344    4035
+24 months   ki1119695-PROBIT           BELARUS                        Low birthweight                     0        0    4035
+24 months   ki1119695-PROBIT           BELARUS                        Low birthweight                     1        0    4035
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight          0      991    1635
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight          1      451    1635
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight                     0       78    1635
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight                     1      115    1635
+24 months   ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight          0      119     650
+24 months   ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight          1      470     650
+24 months   ki1135781-COHORTS          GUATEMALA                      Low birthweight                     0        2     650
+24 months   ki1135781-COHORTS          GUATEMALA                      Low birthweight                     1       59     650
+24 months   ki1135781-COHORTS          INDIA                          Normal or high birthweight          0     2020    4858
+24 months   ki1135781-COHORTS          INDIA                          Normal or high birthweight          1     1929    4858
+24 months   ki1135781-COHORTS          INDIA                          Low birthweight                     0      244    4858
+24 months   ki1135781-COHORTS          INDIA                          Low birthweight                     1      665    4858
+24 months   ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight          0      875    2406
+24 months   ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight          1     1319    2406
+24 months   ki1135781-COHORTS          PHILIPPINES                    Low birthweight                     0       38    2406
+24 months   ki1135781-COHORTS          PHILIPPINES                    Low birthweight                     1      174    2406
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight          0     2578    7307
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight          1     1663    7307
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight                     0     1077    7307
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight                     1     1989    7307
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight          0     1966    4010
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight          1      989    4010
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight                     0      444    4010
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight                     1      611    4010
+
+
+The following strata were considered:
+
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
+* agecat: 24 months, studyid: ki1000108-IRC, country: INDIA
+* agecat: 24 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 24 months, studyid: ki1017093-NIH-Birth, country: BANGLADESH
+* agecat: 24 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
+* agecat: 24 months, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
+* agecat: 24 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1101329-Keneba, country: GAMBIA
+* agecat: 24 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: 24 months, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: 24 months, studyid: ki1114097-CONTENT, country: PERU
+* agecat: 24 months, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: 24 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
+* agecat: 24 months, studyid: ki1135781-COHORTS, country: GUATEMALA
+* agecat: 24 months, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: 24 months, studyid: ki1135781-COHORTS, country: PHILIPPINES
+* agecat: 24 months, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
+* agecat: 24 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
+* agecat: 6 months, studyid: ki1000108-IRC, country: INDIA
+* agecat: 6 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 6 months, studyid: ki1000109-ResPak, country: PAKISTAN
+* agecat: 6 months, studyid: ki1000304b-SAS-CompFeed, country: INDIA
+* agecat: 6 months, studyid: ki1017093-NIH-Birth, country: BANGLADESH
+* agecat: 6 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
+* agecat: 6 months, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
+* agecat: 6 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1101329-Keneba, country: GAMBIA
+* agecat: 6 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: 6 months, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: 6 months, studyid: ki1114097-CONTENT, country: PERU
+* agecat: 6 months, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: 6 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
+* agecat: 6 months, studyid: ki1135781-COHORTS, country: GUATEMALA
+* agecat: 6 months, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: 6 months, studyid: ki1135781-COHORTS, country: PHILIPPINES
+* agecat: 6 months, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
+* agecat: 6 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: Birth, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
+* agecat: Birth, studyid: ki1000108-IRC, country: INDIA
+* agecat: Birth, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: Birth, studyid: ki1000109-ResPak, country: PAKISTAN
+* agecat: Birth, studyid: ki1000304b-SAS-CompFeed, country: INDIA
+* agecat: Birth, studyid: ki1017093-NIH-Birth, country: BANGLADESH
+* agecat: Birth, studyid: ki1017093b-PROVIDE, country: BANGLADESH
+* agecat: Birth, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
+* agecat: Birth, studyid: ki1101329-Keneba, country: GAMBIA
+* agecat: Birth, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: Birth, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: Birth, studyid: ki1114097-CONTENT, country: PERU
+* agecat: Birth, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: Birth, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
+* agecat: Birth, studyid: ki1135781-COHORTS, country: GUATEMALA
+* agecat: Birth, studyid: ki1135781-COHORTS, country: INDIA
+* agecat: Birth, studyid: ki1135781-COHORTS, country: PHILIPPINES
+* agecat: Birth, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
+* agecat: Birth, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+
+### Dropped Strata
+
+Some strata were dropped due to rare outcomes:
+
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: Birth, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
+* agecat: Birth, studyid: ki1000109-ResPak, country: PAKISTAN
+* agecat: Birth, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: Birth, studyid: ki1114097-CONTENT, country: PERU
+* agecat: Birth, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1000109-ResPak, country: PAKISTAN
+* agecat: 6 months, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: 6 months, studyid: ki1114097-CONTENT, country: PERU
+* agecat: 6 months, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: 24 months, studyid: ki1114097-CONTENT, country: PERU
+* agecat: 24 months, studyid: ki1119695-PROBIT, country: BELARUS
+* agecat: 24 months, studyid: ki1135781-COHORTS, country: GUATEMALA
+
+## Methods Detail
+
+We're interested in the causal parameters $E[Y_a]$ for all values of $a \in \mathcal{A}$. These parameters represent the mean outcome if, possibly contrary to fact, we intervened to set all units to have $A=a$. Under the randomization and positivity assumptions, these are identified by the statistical parameters $\psi_a=E_W[E_{Y|A,W}(Y|A=a,W)]$.  In addition, we're interested in the mean of $Y$, $E[Y]$ under no intervention (the observed mean). We will estimate these parameters by using SuperLearner to fit the relevant likelihood factors -- $E_{Y|A,W}(Y|A=a,W)$ and $p(A=a|W)$, and then updating our likelihood fit using a joint TMLE.
+
+For unadjusted analyses ($W=\{\}$), initial likelihoods were estimated using Lrnr_glm to estimate the simple $E(Y|A)$ and Lrnr_mean to estimate $p(A)$. For adjusted analyses, a small library containing Lrnr_glmnet, Lrnr_xgboost, and Lrnr_mean was used.
+
+Having estimated these parameters, we will then use the delta method to estimate relative risks and attributable risks relative to a prespecified baseline level of $A$.
+
+todo: add detail about dropping strata with rare outcomes, handling missingness
+
+
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in fold_fun(n, ...): n <= V so using leave-one-out CV
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in fold_fun(n, ...): n <= V so using leave-one-out CV
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+
+
+
+# Results Detail
+
+## Results Plots
+![](/tmp/d6bf0862-a905-4da2-8ede-06d60b13579a/711de320-7c37-4a50-ad43-27da80652401/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
+
+![](/tmp/d6bf0862-a905-4da2-8ede-06d60b13579a/711de320-7c37-4a50-ad43-27da80652401/REPORT_files/figure-html/plot_rr-1.png)<!-- -->
+
+
+
+![](/tmp/d6bf0862-a905-4da2-8ede-06d60b13579a/711de320-7c37-4a50-ad43-27da80652401/REPORT_files/figure-html/plot_paf-1.png)<!-- -->
+
+![](/tmp/d6bf0862-a905-4da2-8ede-06d60b13579a/711de320-7c37-4a50-ad43-27da80652401/REPORT_files/figure-html/plot_par-1.png)<!-- -->
+
+## Results Table
+
+### Parameter: TSM
+
+
+agecat      studyid                    country                        intervention_level           baseline_level     estimate    ci_lower    ci_upper
+----------  -------------------------  -----------------------------  ---------------------------  ---------------  ----------  ----------  ----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.0790960   0.0392497   0.1189424
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Low birthweight              NA                0.5555556   0.4227349   0.6883763
+Birth       ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.0788644   0.0491553   0.1085734
+Birth       ki1000108-IRC              INDIA                          Low birthweight              NA                0.2878788   0.1785019   0.3972557
+Birth       ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.3000000   0.2288452   0.3711548
+Birth       ki1000109-EE               PAKISTAN                       Low birthweight              NA                0.6500000   0.5452629   0.7547371
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight   NA                0.1323851   0.0977557   0.1670146
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Low birthweight              NA                0.6745562   0.6137235   0.7353889
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.0330969   0.0160353   0.0501586
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Low birthweight              NA                0.4486486   0.3769209   0.5203764
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.0124378   0.0015937   0.0232819
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Low birthweight              NA                0.3138686   0.2360885   0.3916487
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.0732143   0.0516250   0.0948036
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight              NA                0.3488372   0.2775623   0.4201122
+Birth       ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.0298165   0.0205963   0.0390367
+Birth       ki1101329-Keneba           GAMBIA                         Low birthweight              NA                0.1990950   0.1464309   0.2517591
+Birth       ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.0483193   0.0290413   0.0675974
+Birth       ki1113344-GMS-Nepal        NEPAL                          Low birthweight              NA                0.4500000   0.3842135   0.5157865
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.0585129   0.0543008   0.0627249
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight              NA                0.3861126   0.3642262   0.4079990
+Birth       ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight   NA                0.0306834   0.0180520   0.0433148
+Birth       ki1135781-COHORTS          GUATEMALA                      Low birthweight              NA                0.3582090   0.2433267   0.4730912
+Birth       ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.0396735   0.0344022   0.0449448
+Birth       ki1135781-COHORTS          INDIA                          Low birthweight              NA                0.4255474   0.3993643   0.4517306
+Birth       ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.0243632   0.0185566   0.0301699
+Birth       ki1135781-COHORTS          PHILIPPINES                    Low birthweight              NA                0.3864407   0.3308657   0.4420156
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.0892052   0.0834871   0.0949233
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight              NA                0.6501667   0.6397735   0.6605599
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.1011673   0.0846262   0.1177084
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight              NA                0.6591797   0.6249532   0.6934061
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.1223404   0.0754017   0.1692792
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Low birthweight              NA                0.4200000   0.2829068   0.5570932
+6 months    ki0047075b-MAL-ED          INDIA                          Normal or high birthweight   NA                0.1606218   0.1087048   0.2125387
+6 months    ki0047075b-MAL-ED          INDIA                          Low birthweight              NA                0.2352941   0.0923981   0.3781901
+6 months    ki0047075b-MAL-ED          PERU                           Normal or high birthweight   NA                0.1811024   0.1336548   0.2285499
+6 months    ki0047075b-MAL-ED          PERU                           Low birthweight              NA                0.6875000   0.4599613   0.9150387
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight   NA                0.1890756   0.1392299   0.2389213
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Low birthweight              NA                0.3333333   0.0943013   0.5723654
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight   NA                0.2568807   0.2094611   0.3043004
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight              NA                0.6428571   0.4977493   0.7879650
+6 months    ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.2000000   0.1571128   0.2428872
+6 months    ki1000108-IRC              INDIA                          Low birthweight              NA                0.4242424   0.3048587   0.5436262
+6 months    ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.3595041   0.2989652   0.4200431
+6 months    ki1000109-EE               PAKISTAN                       Low birthweight              NA                0.7307692   0.6544185   0.8071200
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight   NA                0.1994018   0.1813440   0.2174596
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Low birthweight              NA                0.5479876   0.4971334   0.5988418
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.1662125   0.1280889   0.2043362
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Low birthweight              NA                0.5231788   0.4434377   0.6029199
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.0954447   0.0686005   0.1222889
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Low birthweight              NA                0.3636364   0.2847274   0.4425453
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.1431193   0.1136979   0.1725406
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight              NA                0.4235294   0.3492005   0.4978583
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight   NA                0.0895062   0.0768129   0.1021994
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Low birthweight              NA                0.2985075   0.1889082   0.4081068
+6 months    ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.1020942   0.0845581   0.1196304
+6 months    ki1101329-Keneba           GAMBIA                         Low birthweight              NA                0.3244681   0.2575196   0.3914166
+6 months    ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.1335013   0.1000151   0.1669874
+6 months    ki1113344-GMS-Nepal        NEPAL                          Low birthweight              NA                0.4156627   0.3406245   0.4907009
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.1275443   0.1200273   0.1350612
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight              NA                0.4112150   0.3817304   0.4406995
+6 months    ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight   NA                0.3655761   0.3299531   0.4011991
+6 months    ki1135781-COHORTS          GUATEMALA                      Low birthweight              NA                0.7647059   0.6638205   0.8655913
+6 months    ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.1288711   0.1195879   0.1381544
+6 months    ki1135781-COHORTS          INDIA                          Low birthweight              NA                0.4100318   0.3828292   0.4372345
+6 months    ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.1815550   0.1661876   0.1969224
+6 months    ki1135781-COHORTS          PHILIPPINES                    Low birthweight              NA                0.4959677   0.4337292   0.5582063
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.1276468   0.1194116   0.1358820
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight              NA                0.4425576   0.4280123   0.4571030
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.1701065   0.1541337   0.1860793
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight              NA                0.4802314   0.4437145   0.5167484
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.4303030   0.3545759   0.5060302
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Low birthweight              NA                0.6444444   0.5042519   0.7846370
+24 months   ki0047075b-MAL-ED          INDIA                          Normal or high birthweight   NA                0.4108108   0.3397535   0.4818681
+24 months   ki0047075b-MAL-ED          INDIA                          Low birthweight              NA                0.4545455   0.2842679   0.6248230
+24 months   ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight   NA                0.1970443   0.1422024   0.2518863
+24 months   ki0047075b-MAL-ED          NEPAL                          Low birthweight              NA                0.3888889   0.1631692   0.6146086
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight   NA                0.6981707   0.6484247   0.7479168
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight              NA                0.8604651   0.7567581   0.9641721
+24 months   ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.3791045   0.3270864   0.4311225
+24 months   ki1000108-IRC              INDIA                          Low birthweight              NA                0.6029412   0.4865023   0.7193801
+24 months   ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.6600000   0.5668756   0.7531244
+24 months   ki1000109-EE               PAKISTAN                       Low birthweight              NA                0.7761194   0.6760071   0.8762317
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.4773519   0.4194949   0.5352090
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Low birthweight              NA                0.7795276   0.7073397   0.8517154
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.2733485   0.2316219   0.3150751
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Low birthweight              NA                0.5035971   0.4204063   0.5867880
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.1881443   0.1492183   0.2270704
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight              NA                0.4682540   0.3810415   0.5554664
+24 months   ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.2861878   0.2567269   0.3156488
+24 months   ki1101329-Keneba           GAMBIA                         Low birthweight              NA                0.5430464   0.4635550   0.6225377
+24 months   ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.4056338   0.3545040   0.4567636
+24 months   ki1113344-GMS-Nepal        NEPAL                          Low birthweight              NA                0.5606061   0.4758514   0.6453607
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.3127601   0.2888237   0.3366964
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight              NA                0.5958549   0.5266015   0.6651083
+24 months   ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.4884781   0.4728860   0.5040702
+24 months   ki1135781-COHORTS          INDIA                          Low birthweight              NA                0.7315732   0.7027625   0.7603838
+24 months   ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.6011851   0.5806918   0.6216783
+24 months   ki1135781-COHORTS          PHILIPPINES                    Low birthweight              NA                0.8207547   0.7691130   0.8723965
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.3921245   0.3749096   0.4093394
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight              NA                0.6487280   0.6299740   0.6674819
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.3346870   0.3137783   0.3555957
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight              NA                0.5791469   0.5432051   0.6150887
+
+
+### Parameter: E(Y)
+
+
+agecat      studyid                    country                        intervention_level   baseline_level     estimate    ci_lower    ci_upper
+----------  -------------------------  -----------------------------  -------------------  ---------------  ----------  ----------  ----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     NA                   NA                0.1904762   0.1397281   0.2412242
+Birth       ki1000108-IRC              INDIA                          NA                   NA                0.1148825   0.0829051   0.1468600
+Birth       ki1000109-EE               PAKISTAN                       NA                   NA                0.4166667   0.3541635   0.4791698
+Birth       ki1000304b-SAS-CompFeed    INDIA                          NA                   NA                0.2787540   0.2475949   0.3099131
+Birth       ki1017093-NIH-Birth        BANGLADESH                     NA                   NA                0.1595395   0.1304091   0.1886699
+Birth       ki1017093b-PROVIDE         BANGLADESH                     NA                   NA                0.0890538   0.0649864   0.1131212
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     NA                   NA                0.1379781   0.1129774   0.1629789
+Birth       ki1101329-Keneba           GAMBIA                         NA                   NA                0.0542838   0.0429232   0.0656445
+Birth       ki1113344-GMS-Nepal        NEPAL                          NA                   NA                0.1752874   0.1470202   0.2035545
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       NA                   NA                0.1035430   0.0984652   0.1086208
+Birth       ki1135781-COHORTS          GUATEMALA                      NA                   NA                0.0586735   0.0422124   0.0751345
+Birth       ki1135781-COHORTS          INDIA                          NA                   NA                0.1193130   0.1115144   0.1271117
+Birth       ki1135781-COHORTS          PHILIPPINES                    NA                   NA                0.0599201   0.0514314   0.0684088
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     NA                   NA                0.3289392   0.3215744   0.3363039
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     NA                   NA                0.3035778   0.2836422   0.3235133
+6 months    ki0047075b-MAL-ED          BANGLADESH                     NA                   NA                0.1848739   0.1354515   0.2342964
+6 months    ki0047075b-MAL-ED          INDIA                          NA                   NA                0.1718062   0.1226272   0.2209851
+6 months    ki0047075b-MAL-ED          PERU                           NA                   NA                0.2111111   0.1623431   0.2598792
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   NA                   NA                0.1976285   0.1484630   0.2467939
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          NA                   NA                0.3008130   0.2539566   0.3476694
+6 months    ki1000108-IRC              INDIA                          NA                   NA                0.2369077   0.1952403   0.2785751
+6 months    ki1000109-EE               PAKISTAN                       NA                   NA                0.4892473   0.4383809   0.5401137
+6 months    ki1000304b-SAS-CompFeed    INDIA                          NA                   NA                0.2843137   0.2660295   0.3025980
+6 months    ki1017093-NIH-Birth        BANGLADESH                     NA                   NA                0.2702703   0.2319893   0.3085512
+6 months    ki1017093b-PROVIDE         BANGLADESH                     NA                   NA                0.1589404   0.1297581   0.1881227
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     NA                   NA                0.2097902   0.1799252   0.2396552
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   NA                   NA                0.0964694   0.0835627   0.1093762
+6 months    ki1101329-Keneba           GAMBIA                         NA                   NA                0.1334333   0.1151789   0.1516876
+6 months    ki1113344-GMS-Nepal        NEPAL                          NA                   NA                0.2166963   0.1826342   0.2507583
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       NA                   NA                0.1626911   0.1549064   0.1704758
+6 months    ki1135781-COHORTS          GUATEMALA                      NA                   NA                0.4007782   0.3661645   0.4353920
+6 months    ki1135781-COHORTS          INDIA                          NA                   NA                0.1852739   0.1756495   0.1948983
+6 months    ki1135781-COHORTS          PHILIPPINES                    NA                   NA                0.2108027   0.1953170   0.2262884
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     NA                   NA                0.2562633   0.2474260   0.2651005
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     NA                   NA                0.2496907   0.2335617   0.2658197
+24 months   ki0047075b-MAL-ED          BANGLADESH                     NA                   NA                0.4761905   0.4084806   0.5439003
+24 months   ki0047075b-MAL-ED          INDIA                          NA                   NA                0.4174312   0.3518190   0.4830433
+24 months   ki0047075b-MAL-ED          NEPAL                          NA                   NA                0.2126697   0.1585982   0.2667411
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          NA                   NA                0.7169811   0.6710815   0.7628807
+24 months   ki1000108-IRC              INDIA                          NA                   NA                0.4168734   0.3686766   0.4650703
+24 months   ki1000109-EE               PAKISTAN                       NA                   NA                0.7065868   0.6373214   0.7758523
+24 months   ki1017093-NIH-Birth        BANGLADESH                     NA                   NA                0.5700483   0.5223021   0.6177945
+24 months   ki1017093b-PROVIDE         BANGLADESH                     NA                   NA                0.3287197   0.2903909   0.3670485
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     NA                   NA                0.2568093   0.2190047   0.2946140
+24 months   ki1101329-Keneba           GAMBIA                         NA                   NA                0.3229167   0.2947011   0.3511322
+24 months   ki1113344-GMS-Nepal        NEPAL                          NA                   NA                0.4476386   0.4034301   0.4918471
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       NA                   NA                0.3461774   0.3231098   0.3692449
+24 months   ki1135781-COHORTS          INDIA                          NA                   NA                0.5339646   0.5199355   0.5479937
+24 months   ki1135781-COHORTS          PHILIPPINES                    NA                   NA                0.6205320   0.6011383   0.6399257
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     NA                   NA                0.4997947   0.4858988   0.5136907
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     NA                   NA                0.3990025   0.3802617   0.4177433
+
+
+### Parameter: RR
+
+
+agecat      studyid                    country                        intervention_level           baseline_level                 estimate     ci_lower    ci_upper
+----------  -------------------------  -----------------------------  ---------------------------  ---------------------------  ----------  -----------  ----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Low birthweight              Normal or high birthweight     7.023809    4.0216120   12.267195
+Birth       ki1000108-IRC              INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1000108-IRC              INDIA                          Low birthweight              Normal or high birthweight     3.650303    2.1377890    6.232941
+Birth       ki1000109-EE               PAKISTAN                       Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1000109-EE               PAKISTAN                       Low birthweight              Normal or high birthweight     2.166667    1.6265316    2.886169
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Low birthweight              Normal or high birthweight     5.095408    4.0800948    6.363378
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Low birthweight              Normal or high birthweight    13.555599    7.9016557   23.255158
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Low birthweight              Normal or high birthweight    25.235036   10.1943721   62.466532
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight              Normal or high birthweight     4.764606    3.3283157    6.820708
+Birth       ki1101329-Keneba           GAMBIA                         Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1101329-Keneba           GAMBIA                         Low birthweight              Normal or high birthweight     6.677341    4.4450331   10.030719
+Birth       ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1113344-GMS-Nepal        NEPAL                          Low birthweight              Normal or high birthweight     9.313043    6.0891201   14.243893
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight              Normal or high birthweight     6.598763    6.0210301    7.231932
+Birth       ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1135781-COHORTS          GUATEMALA                      Low birthweight              Normal or high birthweight    11.674356    6.9278186   19.672942
+Birth       ki1135781-COHORTS          INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1135781-COHORTS          INDIA                          Low birthweight              Normal or high birthweight    10.726239    9.2652530   12.417600
+Birth       ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       ki1135781-COHORTS          PHILIPPINES                    Low birthweight              Normal or high birthweight    15.861633   12.0075869   20.952704
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight              Normal or high birthweight     7.288443    6.8296213    7.778088
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight              Normal or high birthweight     6.515738    5.4881922    7.735669
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Low birthweight              Normal or high birthweight     3.433044    2.0744807    5.681319
+6 months    ki0047075b-MAL-ED          INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki0047075b-MAL-ED          INDIA                          Low birthweight              Normal or high birthweight     1.464896    0.7362525    2.914651
+6 months    ki0047075b-MAL-ED          PERU                           Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki0047075b-MAL-ED          PERU                           Low birthweight              Normal or high birthweight     3.796196    2.4890164    5.789878
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Low birthweight              Normal or high birthweight     1.762963    0.8211707    3.784887
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight              Normal or high birthweight     2.502551    1.8695840    3.349816
+6 months    ki1000108-IRC              INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1000108-IRC              INDIA                          Low birthweight              Normal or high birthweight     2.121212    1.4891300    3.021590
+6 months    ki1000109-EE               PAKISTAN                       Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1000109-EE               PAKISTAN                       Low birthweight              Normal or high birthweight     2.032714    1.6672864    2.478235
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Low birthweight              Normal or high birthweight     2.748158    2.4323082    3.105023
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Low birthweight              Normal or high birthweight     3.147649    2.3899336    4.145595
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Low birthweight              Normal or high birthweight     3.809917    2.6707818    5.434914
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight              Normal or high birthweight     2.959276    2.2583822    3.877694
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Low birthweight              Normal or high birthweight     3.335049    2.2499175    4.943537
+6 months    ki1101329-Keneba           GAMBIA                         Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1101329-Keneba           GAMBIA                         Low birthweight              Normal or high birthweight     3.178123    2.4298278    4.156866
+6 months    ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1113344-GMS-Nepal        NEPAL                          Low birthweight              Normal or high birthweight     3.113548    2.2858158    4.241017
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight              Normal or high birthweight     3.224096    2.9383206    3.537665
+6 months    ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1135781-COHORTS          GUATEMALA                      Low birthweight              Normal or high birthweight     2.091783    1.7753626    2.464599
+6 months    ki1135781-COHORTS          INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1135781-COHORTS          INDIA                          Low birthweight              Normal or high birthweight     3.181720    2.8849030    3.509075
+6 months    ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    ki1135781-COHORTS          PHILIPPINES                    Low birthweight              Normal or high birthweight     2.731777    2.3480499    3.178214
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight              Normal or high birthweight     3.467047    3.2364824    3.714037
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight              Normal or high birthweight     2.823122    2.4993619    3.188821
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Low birthweight              Normal or high birthweight     1.497653    1.1321145    1.981216
+24 months   ki0047075b-MAL-ED          INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki0047075b-MAL-ED          INDIA                          Low birthweight              Normal or high birthweight     1.106459    0.7323842    1.671598
+24 months   ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki0047075b-MAL-ED          NEPAL                          Low birthweight              Normal or high birthweight     1.973611    1.0368238    3.756801
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Low birthweight              Normal or high birthweight     1.232457    1.0714349    1.417677
+24 months   ki1000108-IRC              INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1000108-IRC              INDIA                          Low birthweight              Normal or high birthweight     1.590435    1.2549641    2.015583
+24 months   ki1000109-EE               PAKISTAN                       Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1000109-EE               PAKISTAN                       Low birthweight              Normal or high birthweight     1.175938    0.9713129    1.423672
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Low birthweight              Normal or high birthweight     1.633025    1.4020029    1.902115
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Low birthweight              Normal or high birthweight     1.842326    1.4712391    2.307012
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Low birthweight              Normal or high birthweight     2.488802    1.8840487    3.287672
+24 months   ki1101329-Keneba           GAMBIA                         Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1101329-Keneba           GAMBIA                         Low birthweight              Normal or high birthweight     1.897517    1.5865987    2.269365
+24 months   ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1113344-GMS-Nepal        NEPAL                          Low birthweight              Normal or high birthweight     1.382050    1.1351107    1.682709
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Low birthweight              Normal or high birthweight     1.905150    1.6576496    2.189605
+24 months   ki1135781-COHORTS          INDIA                          Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1135781-COHORTS          INDIA                          Low birthweight              Normal or high birthweight     1.497658    1.4236294    1.575536
+24 months   ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   ki1135781-COHORTS          PHILIPPINES                    Low birthweight              Normal or high birthweight     1.365228    1.2709454    1.466505
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Low birthweight              Normal or high birthweight     1.654393    1.5731879    1.739790
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   Normal or high birthweight     1.000000    1.0000000    1.000000
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Low birthweight              Normal or high birthweight     1.730414    1.5873752    1.886341
+
+
+### Parameter: PAR
+
+
+agecat      studyid                    country                        intervention_level           baseline_level     estimate     ci_lower    ci_upper
+----------  -------------------------  -----------------------------  ---------------------------  ---------------  ----------  -----------  ----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.1113801    0.0697875   0.1529728
+Birth       ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.0360182    0.0149439   0.0570925
+Birth       ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.1166667    0.0695607   0.1637727
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight   NA                0.1463689    0.1254630   0.1672748
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.1264425    0.0993385   0.1535466
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.0766160    0.0537812   0.0994507
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.0647639    0.0453221   0.0842056
+Birth       ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.0244673    0.0161832   0.0327514
+Birth       ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.1269680    0.1012321   0.1527039
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.0450302    0.0414357   0.0486246
+Birth       ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight   NA                0.0279901    0.0162136   0.0397666
+Birth       ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.0796395    0.0729686   0.0863105
+Birth       ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.0355569    0.0288515   0.0422623
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.2397340    0.2330233   0.2464447
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.2024104    0.1847041   0.2201168
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.0625335    0.0284005   0.0966666
+6 months    ki0047075b-MAL-ED          INDIA                          Normal or high birthweight   NA                0.0111844   -0.0118508   0.0342197
+6 months    ki0047075b-MAL-ED          PERU                           Normal or high birthweight   NA                0.0300087    0.0101626   0.0498549
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight   NA                0.0085528   -0.0065226   0.0236282
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight   NA                0.0439323    0.0225131   0.0653515
+6 months    ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.0369077    0.0144953   0.0593202
+6 months    ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.1297432    0.0912210   0.1682653
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight   NA                0.0849119    0.0668320   0.1029918
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.1040577    0.0747426   0.1333729
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.0634957    0.0417652   0.0852262
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.0666709    0.0457443   0.0875976
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight   NA                0.0069632    0.0029382   0.0109883
+6 months    ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.0313390    0.0207381   0.0419400
+6 months    ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.0831950    0.0567348   0.1096552
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.0351468    0.0308925   0.0394010
+6 months    ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight   NA                0.0352021    0.0228346   0.0475696
+6 months    ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.0564028    0.0499976   0.0628080
+6 months    ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.0292477    0.0223495   0.0361459
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.1286164    0.1215849   0.1356480
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.0795841    0.0681479   0.0910204
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.0458874    0.0097252   0.0820497
+24 months   ki0047075b-MAL-ED          INDIA                          Normal or high birthweight   NA                0.0066204   -0.0213876   0.0346284
+24 months   ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight   NA                0.0156253   -0.0045245   0.0357752
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight   NA                0.0188104    0.0044666   0.0331542
+24 months   ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.0377690    0.0147427   0.0607952
+24 months   ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.0465868   -0.0089473   0.1021210
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.0926964    0.0612957   0.1240971
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.0553712    0.0315930   0.0791494
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.0686650    0.0430363   0.0942937
+24 months   ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.0367288    0.0234477   0.0500099
+24 months   ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.0420048    0.0144856   0.0695240
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.0334173    0.0236999   0.0431347
+24 months   ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.0454865    0.0388020   0.0521710
+24 months   ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.0193470    0.0138557   0.0248382
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.1076702    0.0972174   0.1181231
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.0643155    0.0529172   0.0757138
+
+
+### Parameter: PAF
+
+
+agecat      studyid                    country                        intervention_level           baseline_level     estimate     ci_lower    ci_upper
+----------  -------------------------  -----------------------------  ---------------------------  ---------------  ----------  -----------  ----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.5847458    0.3779897   0.7227762
+Birth       ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.3135217    0.1263589   0.4605880
+Birth       ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.2800000    0.1573257   0.3848157
+Birth       ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight   NA                0.5250826    0.4289844   0.6050081
+Birth       ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.7925471    0.6675563   0.8705444
+Birth       ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.8603337    0.6824197   0.9385772
+Birth       ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.4693777    0.3376223   0.5749252
+Birth       ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.4507295    0.3137717   0.5603532
+Birth       ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.7243422    0.6073385   0.8064816
+Birth       ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.4348932    0.4057107   0.4626426
+Birth       ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight   NA                0.4770481    0.2987381   0.6100192
+Birth       ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.6674840    0.6279692   0.7028017
+Birth       ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.5934047    0.5094727   0.6629755
+Birth       kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.7288095    0.7130718   0.7436841
+Birth       kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.6667499    0.6169395   0.7100833
+6 months    ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.3382495    0.1464563   0.4869464
+6 months    ki0047075b-MAL-ED          INDIA                          Normal or high birthweight   NA                0.0650990   -0.0781515   0.1893163
+6 months    ki0047075b-MAL-ED          PERU                           Normal or high birthweight   NA                0.1421467    0.0463079   0.2283544
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   Normal or high birthweight   NA                0.0432773   -0.0356917   0.1162251
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight   NA                0.1460451    0.0728421   0.2134685
+6 months    ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.1557895    0.0578120   0.2435784
+6 months    ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.2651894    0.1799114   0.3415996
+6 months    ki1000304b-SAS-CompFeed    INDIA                          Normal or high birthweight   NA                0.2986558    0.2399869   0.3527957
+6 months    ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.3850136    0.2755694   0.4779234
+6 months    ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.3994938    0.2659854   0.5087187
+6 months    ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.3177982    0.2181869   0.4047179
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   Normal or high birthweight   NA                0.0721809    0.0304522   0.1121135
+6 months    ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.2348668    0.1568225   0.3056873
+6 months    ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.3839245    0.2612818   0.4862060
+6 months    ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.2160339    0.1909534   0.2403369
+6 months    ki1135781-COHORTS          GUATEMALA                      Normal or high birthweight   NA                0.0878344    0.0562361   0.1183747
+6 months    ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.3044292    0.2716781   0.3357075
+6 months    ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.1387444    0.1062928   0.1700177
+6 months    kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.5018918    0.4768700   0.5257167
+6 months    kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.3187310    0.2746129   0.3601658
+24 months   ki0047075b-MAL-ED          BANGLADESH                     Normal or high birthweight   NA                0.0963636    0.0162802   0.1699276
+24 months   ki0047075b-MAL-ED          INDIA                          Normal or high birthweight   NA                0.0158598   -0.0535968   0.0807376
+24 months   ki0047075b-MAL-ED          NEPAL                          Normal or high birthweight   NA                0.0734724   -0.0252655   0.1627014
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          Normal or high birthweight   NA                0.0262356    0.0057416   0.0463071
+24 months   ki1000108-IRC              INDIA                          Normal or high birthweight   NA                0.0906006    0.0333369   0.1444720
+24 months   ki1000109-EE               PAKISTAN                       Normal or high birthweight   NA                0.0659322   -0.0170700   0.1421607
+24 months   ki1017093-NIH-Birth        BANGLADESH                     Normal or high birthweight   NA                0.1626115    0.1035171   0.2178104
+24 months   ki1017093b-PROVIDE         BANGLADESH                     Normal or high birthweight   NA                0.1684450    0.0934112   0.2372687
+24 months   ki1017093c-NIH-Crypto      BANGLADESH                     Normal or high birthweight   NA                0.2673774    0.1649311   0.3572556
+24 months   ki1101329-Keneba           GAMBIA                         Normal or high birthweight   NA                0.1137409    0.0718380   0.1537520
+24 months   ki1113344-GMS-Nepal        NEPAL                          Normal or high birthweight   NA                0.0938364    0.0298773   0.1535788
+24 months   ki1126311-ZVITAMBO         ZIMBABWE                       Normal or high birthweight   NA                0.0965323    0.0680542   0.1241403
+24 months   ki1135781-COHORTS          INDIA                          Normal or high birthweight   NA                0.0851864    0.0723612   0.0978342
+24 months   ki1135781-COHORTS          PHILIPPINES                    Normal or high birthweight   NA                0.0311780    0.0221716   0.0401014
+24 months   kiGH5241-JiVitA-3          BANGLADESH                     Normal or high birthweight   NA                0.2154289    0.1934921   0.2367690
+24 months   kiGH5241-JiVitA-4          BANGLADESH                     Normal or high birthweight   NA                0.1611908    0.1319007   0.1894926

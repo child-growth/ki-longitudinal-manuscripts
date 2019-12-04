@@ -66,12 +66,12 @@ d <- d %>% filter(region=="South Asia")
 d <- d[d$agedays<730,]
 
 #Count number of children
-d %>% filter(agedays==1) %>%
+d %>% filter(agedays<=7) %>%
   group_by(studyid, country, subjid) %>% slice(1) %>%
   group_by(region) %>%
   summarize(nchild=n(), nstudies = length(unique(paste0(studyid, country))))
 
-p2 <- ggplot(d[d$agedays==1,], aes(x=birthday, y=whz)) + geom_smooth(color="grey20", span=1, se=T, size=2) + 
+p2 <- ggplot(d[d$agedays<=7,], aes(x=birthday, y=whz)) + geom_smooth(color="grey20", span=1, se=T, size=2) + 
   ylab("Mean WLZ") + xlab("Birth month") +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
@@ -89,8 +89,7 @@ p2_name = create_name(
 
 # save plot and underlying data
 ggsave(p2, file=paste0(here(),"/figures/wasting/fig-",p2_name,".png"), width=6, height=3)
-ggsave(p2, file=paste0(here(),"/6-shiny-app/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
-
+ggsave(p2, file=paste0(here(),"/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
 
 
 
@@ -129,8 +128,6 @@ d$studyseason <- factor(d$studyseason)
 d$studyseason_birthcat <- factor(interaction(d$studyseason, d$birthcat))
 table(d$studyseason_birthcat)
 table(d$birthcat, d$studyseason)
-
-
 
 
 
@@ -225,6 +222,6 @@ ggsave(p4, file=paste0(here(),"/figures/wasting/fig-birthmont-strat-seasonality-
 
 
 #Save plot objects
-save(p1, p2, p3, p4, file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_plots.Rdata")
+saveRDS(list(p1, p2, p3, p4), file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_plots.rds")
 
 

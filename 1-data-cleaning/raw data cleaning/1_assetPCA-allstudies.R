@@ -207,27 +207,6 @@ design_matrix <- function(W){
 
 
 
-#Identify studies measuring household assets 
-
-
-#setwd("U:/data")
-
-# 
-# load("allGHAPstudies.Rdata")
-# colnames(d)
-# 
-# 
-# dim(d)
-# d<- d %>% subset(select=c(WHZ, shortid, STUDYID,  SUBJID, SEX, AGEDAYS, region, BICYCLE, CAR, CART, COOKFUEL, FRIG, MCYCLE, PHONE, RADIO, TV, WASHMAC, MOBILE, CHAIR, WATCH, SOFA, FAN, TABLE)) %>%
-#   subset(!is.na(BICYCLE)|!is.na(CAR)|!is.na(CART)|!is.na(COOKFUEL)|!is.na(FRIG)|!is.na(MCYCLE)|!is.na(PHONE)|!is.na(RADIO)|!is.na(TV)|!is.na(WASHMAC)|!is.na(MOBILE)|!is.na(CHAIR)|
-#            !is.na(WATCH)|!is.na(SOFA)|!is.na(FAN)|!is.na(TABLE)) %>% 
-#   filter(WHZ>-5 & WHZ <5)
-# dim(d)
-# table(d$STUDYID)
-# unique(d$shortid)
-
-
-
 #---------
 # akup
 #---------
@@ -281,7 +260,7 @@ cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
 varlist<-colnames(d)[colnames(d) %in%   c("AGLAND",  "BICYCLE", "CAR", "ELEC",  "LLPHONE", "MCYCLE", "MOBILE","NROOMS", "RADIO", "RICKSHAW", "ROOF", "SEWING", "TV", "WALL")]
 
 gmsn <- read_asset_data(study, varlist)
-gmsn <- assetPCA(gmsn, varlist, reorder=T)
+gmsn <- assetPCA(gmsn, varlist, reorder=F)
 saveRDS(gmsn, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 #---------
@@ -290,10 +269,13 @@ saveRDS(gmsn, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 study<-"ilnd"
 d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
 cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
-varlist<-colnames(d)[colnames(d) %in% c("AGLAND", "BED", "BEDNET", "BICYCLE", "CAR", "CART", "CHAIR", "ELEC", "FAN", "FRIG", "MATTRESS", "MCYCLE", "NROOMS", "PHONE", "RADIO", "SEWING", "STOVE", "TABLE", "TV", "WASHMAC", "COOKPLAC", "ROOF", "WALL")]
+varlist<-colnames(d)[colnames(d) %in% c("AGLAND", "AXESICK", "BED", "BEDNET", "BEERDRUM", "BICYCLE", "BOATM", "CAR", "CART", "CDPLAY", "CHAIR", "CHICKEN", 
+                                        "COW", "ELEC", "FAN", "FISHNET", "FRIG", "GOAT", "HANDSPRY", "HOE", "LANTERN", "MATTRESS", "MCYCLE", "MINIBUS",  
+                                        "NROOMS", "PHONE", "RADIO", "SEWING", "SHEEP", "SLEEPAC", "STOVE", "TABLE", "TRUCK", "TV", "WASHMAC", "WBARROW", 
+                                        "INCTOT", "COOKFUEL", "COOKPLAC")]
 
 ilnd <- read_asset_data(study, varlist)
-ilnd <- assetPCA(ilnd, varlist, reorder=F)
+ilnd <- assetPCA(ilnd, varlist, reorder=T)
 saveRDS(ilnd, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 #---------
@@ -302,8 +284,10 @@ saveRDS(ilnd, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 study<-"ildm"
 d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
 cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
-varlist<-colnames(d)[colnames(d) %in%  c("ROOF", "WALL", "COOKFUEL", "COOKPLAC", "PHONE", "AGLAND", "BED", "BEDNET", "BICYCLE", "CAR", "CHAIR", "ELEC", "FAN", "FRIG", 
-                                         "MATTRESS", "MCYCLE", "MOBILE", "NROOMS", "RADIO", "SEWING", "STOVE", "TABLE", "TV", "WASHMAC")]
+varlist<-colnames(d)[colnames(d) %in%  c( "COOKFUEL",  "GOAT", "PHONE", "AGLAND", "AXESICK", "BED", "BEDNET", "BEERDRUM", "BICYCLE", "BOATM", "BOOKS", "BOWL", 
+                                          "CAR", "CDPLAY", "CHAIR", "CHICKEN", "COW", "ELEC", "FAN", "FISHNET", "FRIG", "HANDSPRY",  "HOE", "LANTERN", "MATTRESS", 
+                                          "MCYCLE", "MOBILE", "NROOMS", "NTOYS", "RADIO", "SEWING", "SHEEP", "SLEEPAC", "STOVE", "TABLE", "TOYSBB", "TOYSMU",
+                                          "TRUCK", "TV", "WASHMAC", "WBARROW", "INCTOT")]
 
 ildm <- read_asset_data(study, varlist)
 ildm <- assetPCA(ildm, varlist, reorder=T)
@@ -339,8 +323,8 @@ saveRDS(jvt3, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 study<-"jvt4"
 d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
 cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
-varlist<-colnames(d)[colnames(d) %in%  c("BED", "BICYCLE", "CLTHCAB", "ELEC",  "MCYCLE", "MOBILE", "NROOMS", "RADIO", "RICKSHAW", "SEWING", "TV", "WATCH", "KITCHDSC", "ROOF")]
-
+varlist<-colnames(d)[colnames(d) %in%  c("BED", "BICYCLE", "CLTHCAB", "DTABLE",  "ELEC", "FPOND", "GARDEN",  "GROVE", "MCYCLE", "MOBILE", 
+                                         "NROOMS",  "RADIO", "RICKSHAW", "SEWING", "TV", "KITCHDSC","WATCH", "ROOF")]
 d <- read_asset_data(study, varlist)
 d<-assetPCA(d, varlist, reorder=T)
 saveRDS(d, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
@@ -370,27 +354,17 @@ varlist<-colnames(d)[colnames(d) %in% c( "AGLAND", "BICYCLE", "ELEC", "FAN", "FR
 
 mled <- read_asset_data(study, varlist)
 
-d1<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[1],], varlist, reorder=T)
-#d2<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[2],], varlist, reorder=T) #Not enough variables
+d1<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[1],], varlist, reorder=F)
+d2<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[2],], varlist, reorder=T) #Not enough variables
 d3<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[3],], varlist, reorder=T)
-d4<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[4],], varlist, reorder=F)
-d5<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[5],], varlist, reorder=F)
+d4<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[4],], varlist, reorder=T)
+d5<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[5],], varlist, reorder=T)
 d6<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[6],], varlist, reorder=F)
 d7<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[7],], varlist, reorder=F)
 
-mled<-rbind(d1,d3,d4,d5,d6,d7)
+mled<-rbind(d1,d2,d3,d4,d5,d6,d7)
 saveRDS(mled, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
-
-#---------
-# ppd only 1 asset
-#---------
-# study<-"ppd"
-# d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
-# colnames(d)
-# varlist<-colnames(d)[c(28,31)]
-# d<-assetPCA(d, varlist, reorder=F)
-# saveRDS(d, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 
 
@@ -403,7 +377,7 @@ cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
 varlist<-colnames(d)[colnames(d) %in%  c("BED", "BENCH", "BICYCLE", "CEILFAN", "CHAIR", "CLTHCAB", "DRAIN", "ELEC", "MCYCLE","NROOMS", "OWNHOME", "PHONE", "RADIO","SEWING", "TABLE", "TV", "WATCH",  "COOKPLAC", "ROOF", "WALL")]
 
 prvd <- read_asset_data(study, varlist)
-prvd <- assetPCA(prvd, varlist, reorder=T)
+prvd <- assetPCA(prvd, varlist, reorder=F)
 saveRDS(prvd, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 #---------
@@ -418,14 +392,49 @@ tzc2 <- read_asset_data(study, varlist)
 tzc2 <- assetPCA(tzc2, varlist, reorder=T)
 saveRDS(tzc2, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
-#---------
-# tdc
-#---------
-study<-"tdc"
-d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
-cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
-varlist<-colnames(d)[colnames(d) %in% c("NROOMS", "CAR", "CLTHCAB", "COOKPLAC", "FAN", "LLPHONE", "MOBILE", "OWNHOME", "ROOF", "TV", "WALL")]
 
-tdc <- read_asset_data(study, varlist)
-tdc <- assetPCA(tdc, varlist, reorder=F)
-saveRDS(tdc, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+
+
+#----------------------------------------------
+# Bind studies
+#----------------------------------------------
+
+asset_study <- c(
+  "akup",
+  "cmc",
+  "cntt",
+  "gmsn",
+  "ilnd",
+  "ildm",
+  "irc",
+  "jvt3",
+  "jvt4",
+  "lcn5",
+  "mled",
+  "prvd",
+  "tzc2")
+
+#Add in study id
+d<-NULL
+for(i in 1:length(asset_study)){
+  temp<-readRDS(paste0(deriveddata_dir, asset_study[i], '.HHwealth.rds'))
+  if("HHwealth_quart" %in% colnames(temp)){
+    d <- rbind(d, temp)
+  }
+}
+colnames(d) <- tolower(colnames(d))
+
+
+#check which studies don't have wealth quartile
+asset_study
+unique(d$studyid)
+
+length(asset_study)
+length(unique(d$studyid))
+
+
+pca<-d
+saveRDS(pca, file=paste0(deriveddata_dir,"allGHAPstudies-HHwealth.rds"))
+
+
+

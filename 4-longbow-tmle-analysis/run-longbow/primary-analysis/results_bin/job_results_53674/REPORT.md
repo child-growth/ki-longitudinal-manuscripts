@@ -1,0 +1,538 @@
+---
+title: "Risk Factor Analysis"
+output: 
+  html_document:
+    keep_md: TRUE
+    self_contained: true
+required_packages:  ['github://HBGD-UCB/longbowRiskFactors','github://jeremyrcoyle/skimr@vector_types', 'github://tlverse/delayed']
+params:
+  roles:
+    value:
+      - exclude
+      - strata
+      - id
+      - W
+      - A
+      - Y
+  data: 
+    value: 
+      type: 'web'
+      uri: 'https://raw.githubusercontent.com/HBGD-UCB/longbowRiskFactors/master/inst/sample_data/birthwt_data.rdata'
+  nodes:
+    value:
+      strata: ['study_id', 'mrace']
+      id: ['subjid']
+      W: ['apgar1', 'apgar5', 'gagebrth', 'mage', 'meducyrs', 'sexn']
+      A: ['parity_cat']
+      Y: ['haz01']
+  script_params:
+    value:
+      parallelize:
+        input: checkbox
+        value: FALSE
+      count_A:
+        input: checkbox
+        value: TRUE
+      count_Y:
+        input: checkbox
+        value: TRUE        
+      baseline_level:
+        input: 'character'
+        value: "[1,2)"
+  output_directory:
+    value: ''
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+
+
+
+## Methods
+## Outcome Variable
+
+**Outcome Variable:** wast_rec90d
+
+## Predictor Variables
+
+**Intervention Variable:** predfeed3
+
+**Adjustment Set:**
+
+* arm
+* sex
+* month
+* brthmon
+* W_mage
+* meducyrs
+* feducyrs
+* hhwealth_quart
+* hfoodsec
+* W_mhtcm
+* W_mwtkg
+* W_mbmi
+* vagbrth
+* W_gagebrth
+* W_birthwt
+* W_birthlen
+* W_nrooms
+* W_nchldlt5
+* W_parity
+* impfloor
+* impsan
+* safeh20
+* delta_W_mage
+* delta_meducyrs
+* delta_feducyrs
+* delta_hhwealth_quart
+* delta_hfoodsec
+* delta_W_mhtcm
+* delta_W_mwtkg
+* delta_W_mbmi
+* delta_vagbrth
+* delta_W_gagebrth
+* delta_W_birthwt
+* delta_W_birthlen
+* delta_W_nrooms
+* delta_W_nchldlt5
+* delta_W_parity
+* delta_impfloor
+* delta_impsan
+* delta_safeh20
+
+## Stratifying Variables
+
+The analysis was stratified on these variable(s):
+
+* agecat
+* studyid
+* country
+
+## Data Summary
+
+agecat        studyid               country                        predfeed3    wast_rec90d   n_cell      n
+------------  --------------------  -----------------------------  ----------  ------------  -------  -----
+0-24 months   ki0047075b-MAL-ED     BANGLADESH                     1                      0       33    117
+0-24 months   ki0047075b-MAL-ED     BANGLADESH                     1                      1       68    117
+0-24 months   ki0047075b-MAL-ED     BANGLADESH                     0                      0        8    117
+0-24 months   ki0047075b-MAL-ED     BANGLADESH                     0                      1        8    117
+0-24 months   ki0047075b-MAL-ED     BRAZIL                         1                      0        5     22
+0-24 months   ki0047075b-MAL-ED     BRAZIL                         1                      1        9     22
+0-24 months   ki0047075b-MAL-ED     BRAZIL                         0                      0        1     22
+0-24 months   ki0047075b-MAL-ED     BRAZIL                         0                      1        7     22
+0-24 months   ki0047075b-MAL-ED     INDIA                          1                      0       43    162
+0-24 months   ki0047075b-MAL-ED     INDIA                          1                      1       67    162
+0-24 months   ki0047075b-MAL-ED     INDIA                          0                      0       19    162
+0-24 months   ki0047075b-MAL-ED     INDIA                          0                      1       33    162
+0-24 months   ki0047075b-MAL-ED     NEPAL                          1                      0       11     96
+0-24 months   ki0047075b-MAL-ED     NEPAL                          1                      1       35     96
+0-24 months   ki0047075b-MAL-ED     NEPAL                          0                      0        9     96
+0-24 months   ki0047075b-MAL-ED     NEPAL                          0                      1       41     96
+0-24 months   ki0047075b-MAL-ED     PERU                           1                      0        3     33
+0-24 months   ki0047075b-MAL-ED     PERU                           1                      1       12     33
+0-24 months   ki0047075b-MAL-ED     PERU                           0                      0        3     33
+0-24 months   ki0047075b-MAL-ED     PERU                           0                      1       15     33
+0-24 months   ki0047075b-MAL-ED     SOUTH AFRICA                   1                      0        4     77
+0-24 months   ki0047075b-MAL-ED     SOUTH AFRICA                   1                      1       12     77
+0-24 months   ki0047075b-MAL-ED     SOUTH AFRICA                   0                      0        8     77
+0-24 months   ki0047075b-MAL-ED     SOUTH AFRICA                   0                      1       53     77
+0-24 months   ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   1                      0        2     44
+0-24 months   ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   1                      1        8     44
+0-24 months   ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   0                      0        6     44
+0-24 months   ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   0                      1       28     44
+0-24 months   ki1000109-EE          PAKISTAN                       1                      0       14     30
+0-24 months   ki1000109-EE          PAKISTAN                       1                      1       16     30
+0-24 months   ki1000109-EE          PAKISTAN                       0                      0        0     30
+0-24 months   ki1000109-EE          PAKISTAN                       0                      1        0     30
+0-24 months   ki1113344-GMS-Nepal   NEPAL                          1                      0      185    491
+0-24 months   ki1113344-GMS-Nepal   NEPAL                          1                      1      231    491
+0-24 months   ki1113344-GMS-Nepal   NEPAL                          0                      0       32    491
+0-24 months   ki1113344-GMS-Nepal   NEPAL                          0                      1       43    491
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH                     1                      0     2252   4340
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH                     1                      1     1699   4340
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH                     0                      0      218   4340
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH                     0                      1      171   4340
+0-24 months   kiGH5241-JiVitA-4     BANGLADESH                     1                      0       37     54
+0-24 months   kiGH5241-JiVitA-4     BANGLADESH                     1                      1       12     54
+0-24 months   kiGH5241-JiVitA-4     BANGLADESH                     0                      0        5     54
+0-24 months   kiGH5241-JiVitA-4     BANGLADESH                     0                      1        0     54
+0-6 months    ki0047075b-MAL-ED     BANGLADESH                     1                      0        8     58
+0-6 months    ki0047075b-MAL-ED     BANGLADESH                     1                      1       40     58
+0-6 months    ki0047075b-MAL-ED     BANGLADESH                     0                      0        4     58
+0-6 months    ki0047075b-MAL-ED     BANGLADESH                     0                      1        6     58
+0-6 months    ki0047075b-MAL-ED     BRAZIL                         1                      0        1     13
+0-6 months    ki0047075b-MAL-ED     BRAZIL                         1                      1        5     13
+0-6 months    ki0047075b-MAL-ED     BRAZIL                         0                      0        0     13
+0-6 months    ki0047075b-MAL-ED     BRAZIL                         0                      1        7     13
+0-6 months    ki0047075b-MAL-ED     INDIA                          1                      0       12     74
+0-6 months    ki0047075b-MAL-ED     INDIA                          1                      1       33     74
+0-6 months    ki0047075b-MAL-ED     INDIA                          0                      0       11     74
+0-6 months    ki0047075b-MAL-ED     INDIA                          0                      1       18     74
+0-6 months    ki0047075b-MAL-ED     NEPAL                          1                      0        4     46
+0-6 months    ki0047075b-MAL-ED     NEPAL                          1                      1       16     46
+0-6 months    ki0047075b-MAL-ED     NEPAL                          0                      0        5     46
+0-6 months    ki0047075b-MAL-ED     NEPAL                          0                      1       21     46
+0-6 months    ki0047075b-MAL-ED     PERU                           1                      0        0     11
+0-6 months    ki0047075b-MAL-ED     PERU                           1                      1        6     11
+0-6 months    ki0047075b-MAL-ED     PERU                           0                      0        0     11
+0-6 months    ki0047075b-MAL-ED     PERU                           0                      1        5     11
+0-6 months    ki0047075b-MAL-ED     SOUTH AFRICA                   1                      0        2     29
+0-6 months    ki0047075b-MAL-ED     SOUTH AFRICA                   1                      1        7     29
+0-6 months    ki0047075b-MAL-ED     SOUTH AFRICA                   0                      0        2     29
+0-6 months    ki0047075b-MAL-ED     SOUTH AFRICA                   0                      1       18     29
+0-6 months    ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   1                      0        0     12
+0-6 months    ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   1                      1        4     12
+0-6 months    ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   0                      0        0     12
+0-6 months    ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   0                      1        8     12
+0-6 months    ki1000109-EE          PAKISTAN                       1                      0        5     12
+0-6 months    ki1000109-EE          PAKISTAN                       1                      1        7     12
+0-6 months    ki1000109-EE          PAKISTAN                       0                      0        0     12
+0-6 months    ki1000109-EE          PAKISTAN                       0                      1        0     12
+0-6 months    ki1113344-GMS-Nepal   NEPAL                          1                      0       54    181
+0-6 months    ki1113344-GMS-Nepal   NEPAL                          1                      1       96    181
+0-6 months    ki1113344-GMS-Nepal   NEPAL                          0                      0       13    181
+0-6 months    ki1113344-GMS-Nepal   NEPAL                          0                      1       18    181
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH                     1                      0      762   2720
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH                     1                      1     1699   2720
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH                     0                      0       88   2720
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH                     0                      1      171   2720
+0-6 months    kiGH5241-JiVitA-4     BANGLADESH                     1                      0        5     10
+0-6 months    kiGH5241-JiVitA-4     BANGLADESH                     1                      1        3     10
+0-6 months    kiGH5241-JiVitA-4     BANGLADESH                     0                      0        2     10
+0-6 months    kiGH5241-JiVitA-4     BANGLADESH                     0                      1        0     10
+6-24 months   ki0047075b-MAL-ED     BANGLADESH                     1                      0       25     59
+6-24 months   ki0047075b-MAL-ED     BANGLADESH                     1                      1       28     59
+6-24 months   ki0047075b-MAL-ED     BANGLADESH                     0                      0        4     59
+6-24 months   ki0047075b-MAL-ED     BANGLADESH                     0                      1        2     59
+6-24 months   ki0047075b-MAL-ED     BRAZIL                         1                      0        4      9
+6-24 months   ki0047075b-MAL-ED     BRAZIL                         1                      1        4      9
+6-24 months   ki0047075b-MAL-ED     BRAZIL                         0                      0        1      9
+6-24 months   ki0047075b-MAL-ED     BRAZIL                         0                      1        0      9
+6-24 months   ki0047075b-MAL-ED     INDIA                          1                      0       31     88
+6-24 months   ki0047075b-MAL-ED     INDIA                          1                      1       34     88
+6-24 months   ki0047075b-MAL-ED     INDIA                          0                      0        8     88
+6-24 months   ki0047075b-MAL-ED     INDIA                          0                      1       15     88
+6-24 months   ki0047075b-MAL-ED     NEPAL                          1                      0        7     50
+6-24 months   ki0047075b-MAL-ED     NEPAL                          1                      1       19     50
+6-24 months   ki0047075b-MAL-ED     NEPAL                          0                      0        4     50
+6-24 months   ki0047075b-MAL-ED     NEPAL                          0                      1       20     50
+6-24 months   ki0047075b-MAL-ED     PERU                           1                      0        3     22
+6-24 months   ki0047075b-MAL-ED     PERU                           1                      1        6     22
+6-24 months   ki0047075b-MAL-ED     PERU                           0                      0        3     22
+6-24 months   ki0047075b-MAL-ED     PERU                           0                      1       10     22
+6-24 months   ki0047075b-MAL-ED     SOUTH AFRICA                   1                      0        2     48
+6-24 months   ki0047075b-MAL-ED     SOUTH AFRICA                   1                      1        5     48
+6-24 months   ki0047075b-MAL-ED     SOUTH AFRICA                   0                      0        6     48
+6-24 months   ki0047075b-MAL-ED     SOUTH AFRICA                   0                      1       35     48
+6-24 months   ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   1                      0        2     32
+6-24 months   ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   1                      1        4     32
+6-24 months   ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   0                      0        6     32
+6-24 months   ki0047075b-MAL-ED     TANZANIA, UNITED REPUBLIC OF   0                      1       20     32
+6-24 months   ki1000109-EE          PAKISTAN                       1                      0        9     18
+6-24 months   ki1000109-EE          PAKISTAN                       1                      1        9     18
+6-24 months   ki1000109-EE          PAKISTAN                       0                      0        0     18
+6-24 months   ki1000109-EE          PAKISTAN                       0                      1        0     18
+6-24 months   ki1113344-GMS-Nepal   NEPAL                          1                      0      131    310
+6-24 months   ki1113344-GMS-Nepal   NEPAL                          1                      1      135    310
+6-24 months   ki1113344-GMS-Nepal   NEPAL                          0                      0       19    310
+6-24 months   ki1113344-GMS-Nepal   NEPAL                          0                      1       25    310
+6-24 months   kiGH5241-JiVitA-3     BANGLADESH                     1                      0     1490   1620
+6-24 months   kiGH5241-JiVitA-3     BANGLADESH                     1                      1        0   1620
+6-24 months   kiGH5241-JiVitA-3     BANGLADESH                     0                      0      130   1620
+6-24 months   kiGH5241-JiVitA-3     BANGLADESH                     0                      1        0   1620
+6-24 months   kiGH5241-JiVitA-4     BANGLADESH                     1                      0       32     44
+6-24 months   kiGH5241-JiVitA-4     BANGLADESH                     1                      1        9     44
+6-24 months   kiGH5241-JiVitA-4     BANGLADESH                     0                      0        3     44
+6-24 months   kiGH5241-JiVitA-4     BANGLADESH                     0                      1        0     44
+
+
+The following strata were considered:
+
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 0-24 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 0-24 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: 0-24 months, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
+* agecat: 0-24 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 0-6 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 0-6 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: 0-6 months, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
+* agecat: 0-6 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6-24 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 6-24 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: 6-24 months, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
+* agecat: 6-24 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+
+### Dropped Strata
+
+Some strata were dropped due to rare outcomes:
+
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 0-24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 0-24 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 0-24 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 0-6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 0-6 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 0-6 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 6-24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6-24 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 6-24 months, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
+* agecat: 6-24 months, studyid: kiGH5241-JiVitA-4, country: BANGLADESH
+
+## Methods Detail
+
+We're interested in the causal parameters $E[Y_a]$ for all values of $a \in \mathcal{A}$. These parameters represent the mean outcome if, possibly contrary to fact, we intervened to set all units to have $A=a$. Under the randomization and positivity assumptions, these are identified by the statistical parameters $\psi_a=E_W[E_{Y|A,W}(Y|A=a,W)]$.  In addition, we're interested in the mean of $Y$, $E[Y]$ under no intervention (the observed mean). We will estimate these parameters by using SuperLearner to fit the relevant likelihood factors -- $E_{Y|A,W}(Y|A=a,W)$ and $p(A=a|W)$, and then updating our likelihood fit using a joint TMLE.
+
+For unadjusted analyses ($W=\{\}$), initial likelihoods were estimated using Lrnr_glm to estimate the simple $E(Y|A)$ and Lrnr_mean to estimate $p(A)$. For adjusted analyses, a small library containing Lrnr_glmnet, Lrnr_xgboost, and Lrnr_mean was used.
+
+Having estimated these parameters, we will then use the delta method to estimate relative risks and attributable risks relative to a prespecified baseline level of $A$.
+
+todo: add detail about dropping strata with rare outcomes, handling missingness
+
+
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+
+
+
+# Results Detail
+
+## Results Plots
+![](/tmp/6b73b264-c072-47b4-b4d8-49cd47b11fb9/ae48aecd-679b-4e87-b0b3-7551a98d8a94/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
+
+![](/tmp/6b73b264-c072-47b4-b4d8-49cd47b11fb9/ae48aecd-679b-4e87-b0b3-7551a98d8a94/REPORT_files/figure-html/plot_rr-1.png)<!-- -->
+
+
+
+![](/tmp/6b73b264-c072-47b4-b4d8-49cd47b11fb9/ae48aecd-679b-4e87-b0b3-7551a98d8a94/REPORT_files/figure-html/plot_paf-1.png)<!-- -->
+
+![](/tmp/6b73b264-c072-47b4-b4d8-49cd47b11fb9/ae48aecd-679b-4e87-b0b3-7551a98d8a94/REPORT_files/figure-html/plot_par-1.png)<!-- -->
+
+## Results Table
+
+### Parameter: TSM
+
+
+agecat        studyid               country      intervention_level   baseline_level     estimate    ci_lower    ci_upper
+------------  --------------------  -----------  -------------------  ---------------  ----------  ----------  ----------
+0-24 months   ki0047075b-MAL-ED     BANGLADESH   1                    NA                0.6732673   0.5822997   0.7642350
+0-24 months   ki0047075b-MAL-ED     BANGLADESH   0                    NA                0.5000000   0.2219425   0.7780575
+0-24 months   ki0047075b-MAL-ED     INDIA        1                    NA                0.5990930   0.4973205   0.7008655
+0-24 months   ki0047075b-MAL-ED     INDIA        0                    NA                0.6530801   0.4926198   0.8135404
+0-24 months   ki0047075b-MAL-ED     NEPAL        1                    NA                0.7608696   0.6384483   0.8832909
+0-24 months   ki0047075b-MAL-ED     NEPAL        0                    NA                0.8200000   0.7247720   0.9152280
+0-24 months   ki1113344-GMS-Nepal   NEPAL        1                    NA                0.5548454   0.5021024   0.6075885
+0-24 months   ki1113344-GMS-Nepal   NEPAL        0                    NA                0.5417535   0.4121552   0.6713518
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH   1                    NA                0.4297448   0.4144880   0.4450015
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH   0                    NA                0.4400851   0.3918669   0.4883034
+0-6 months    ki0047075b-MAL-ED     INDIA        1                    NA                0.7517533   0.6134566   0.8900501
+0-6 months    ki0047075b-MAL-ED     INDIA        0                    NA                0.6700024   0.4845603   0.8554446
+0-6 months    ki1113344-GMS-Nepal   NEPAL        1                    NA                0.6378355   0.5600780   0.7155930
+0-6 months    ki1113344-GMS-Nepal   NEPAL        0                    NA                0.5200511   0.3415643   0.6985380
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH   1                    NA                0.6898621   0.6716348   0.7080893
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH   0                    NA                0.6665561   0.6087791   0.7243331
+6-24 months   ki0047075b-MAL-ED     INDIA        1                    NA                0.5230769   0.3907677   0.6553862
+6-24 months   ki0047075b-MAL-ED     INDIA        0                    NA                0.6521739   0.4038225   0.9005253
+6-24 months   ki1113344-GMS-Nepal   NEPAL        1                    NA                0.5067762   0.4412576   0.5722948
+6-24 months   ki1113344-GMS-Nepal   NEPAL        0                    NA                0.5633333   0.4006247   0.7260419
+
+
+### Parameter: E(Y)
+
+
+agecat        studyid               country      intervention_level   baseline_level     estimate    ci_lower    ci_upper
+------------  --------------------  -----------  -------------------  ---------------  ----------  ----------  ----------
+0-24 months   ki0047075b-MAL-ED     BANGLADESH   NA                   NA                0.6495726   0.5607849   0.7383604
+0-24 months   ki0047075b-MAL-ED     INDIA        NA                   NA                0.6172840   0.5340594   0.7005085
+0-24 months   ki0047075b-MAL-ED     NEPAL        NA                   NA                0.7916667   0.7146386   0.8686947
+0-24 months   ki1113344-GMS-Nepal   NEPAL        NA                   NA                0.5580448   0.5093588   0.6067308
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH   NA                   NA                0.4308756   0.4161410   0.4456101
+0-6 months    ki0047075b-MAL-ED     INDIA        NA                   NA                0.6891892   0.5810852   0.7972932
+0-6 months    ki1113344-GMS-Nepal   NEPAL        NA                   NA                0.6298343   0.5587812   0.7008873
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH   NA                   NA                0.6875000   0.6700777   0.7049223
+6-24 months   ki0047075b-MAL-ED     INDIA        NA                   NA                0.5568182   0.4384773   0.6751591
+6-24 months   ki1113344-GMS-Nepal   NEPAL        NA                   NA                0.5161290   0.4555456   0.5767125
+
+
+### Parameter: RR
+
+
+agecat        studyid               country      intervention_level   baseline_level     estimate    ci_lower   ci_upper
+------------  --------------------  -----------  -------------------  ---------------  ----------  ----------  ---------
+0-24 months   ki0047075b-MAL-ED     BANGLADESH   1                    1                 1.0000000   1.0000000   1.000000
+0-24 months   ki0047075b-MAL-ED     BANGLADESH   0                    1                 0.7426471   0.4190238   1.316213
+0-24 months   ki0047075b-MAL-ED     INDIA        1                    1                 1.0000000   1.0000000   1.000000
+0-24 months   ki0047075b-MAL-ED     INDIA        0                    1                 1.0901147   0.8081476   1.470462
+0-24 months   ki0047075b-MAL-ED     NEPAL        1                    1                 1.0000000   1.0000000   1.000000
+0-24 months   ki0047075b-MAL-ED     NEPAL        0                    1                 1.0777143   0.8831354   1.315164
+0-24 months   ki1113344-GMS-Nepal   NEPAL        1                    1                 1.0000000   1.0000000   1.000000
+0-24 months   ki1113344-GMS-Nepal   NEPAL        0                    1                 0.9764043   0.7545416   1.263503
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH   1                    1                 1.0000000   1.0000000   1.000000
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH   0                    1                 1.0240617   0.9142137   1.147109
+0-6 months    ki0047075b-MAL-ED     INDIA        1                    1                 1.0000000   1.0000000   1.000000
+0-6 months    ki0047075b-MAL-ED     INDIA        0                    1                 0.8912530   0.6388115   1.243453
+0-6 months    ki1113344-GMS-Nepal   NEPAL        1                    1                 1.0000000   1.0000000   1.000000
+0-6 months    ki1113344-GMS-Nepal   NEPAL        0                    1                 0.8153374   0.5659603   1.174597
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH   1                    1                 1.0000000   1.0000000   1.000000
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH   0                    1                 0.9662164   0.8827188   1.057612
+6-24 months   ki0047075b-MAL-ED     INDIA        1                    1                 1.0000000   1.0000000   1.000000
+6-24 months   ki0047075b-MAL-ED     INDIA        0                    1                 1.2468031   0.7893061   1.969474
+6-24 months   ki1113344-GMS-Nepal   NEPAL        1                    1                 1.0000000   1.0000000   1.000000
+6-24 months   ki1113344-GMS-Nepal   NEPAL        0                    1                 1.1116017   0.8097686   1.525940
+
+
+### Parameter: PAR
+
+
+agecat        studyid               country      intervention_level   baseline_level      estimate     ci_lower    ci_upper
+------------  --------------------  -----------  -------------------  ---------------  -----------  -----------  ----------
+0-24 months   ki0047075b-MAL-ED     BANGLADESH   1                    NA                -0.0236947   -0.0658584   0.0184690
+0-24 months   ki0047075b-MAL-ED     INDIA        1                    NA                 0.0181910   -0.0411950   0.0775769
+0-24 months   ki0047075b-MAL-ED     NEPAL        1                    NA                 0.0307971   -0.0513830   0.1129772
+0-24 months   ki1113344-GMS-Nepal   NEPAL        1                    NA                 0.0031994   -0.0178035   0.0242023
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH   1                    NA                 0.0011308   -0.0032889   0.0055505
+0-6 months    ki0047075b-MAL-ED     INDIA        1                    NA                -0.0625642   -0.1546467   0.0295184
+0-6 months    ki1113344-GMS-Nepal   NEPAL        1                    NA                -0.0080012   -0.0415517   0.0255492
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH   1                    NA                -0.0023621   -0.0080402   0.0033160
+6-24 months   ki0047075b-MAL-ED     INDIA        1                    NA                 0.0337413   -0.0410835   0.1085660
+6-24 months   ki1113344-GMS-Nepal   NEPAL        1                    NA                 0.0093528   -0.0153034   0.0340090
+
+
+### Parameter: PAF
+
+
+agecat        studyid               country      intervention_level   baseline_level      estimate     ci_lower    ci_upper
+------------  --------------------  -----------  -------------------  ---------------  -----------  -----------  ----------
+0-24 months   ki0047075b-MAL-ED     BANGLADESH   1                    NA                -0.0364773   -0.1046400   0.0274793
+0-24 months   ki0047075b-MAL-ED     INDIA        1                    NA                 0.0294693   -0.0717138   0.1210996
+0-24 months   ki0047075b-MAL-ED     NEPAL        1                    NA                 0.0389016   -0.0715585   0.1379751
+0-24 months   ki1113344-GMS-Nepal   NEPAL        1                    NA                 0.0057332   -0.0326208   0.0426626
+0-24 months   kiGH5241-JiVitA-3     BANGLADESH   1                    NA                 0.0026245   -0.0076837   0.0128272
+0-6 months    ki0047075b-MAL-ED     INDIA        1                    NA                -0.0907794   -0.2346067   0.0362926
+0-6 months    ki1113344-GMS-Nepal   NEPAL        1                    NA                -0.0127037   -0.0674591   0.0392430
+0-6 months    kiGH5241-JiVitA-3     BANGLADESH   1                    NA                -0.0034357   -0.0117309   0.0047914
+6-24 months   ki0047075b-MAL-ED     INDIA        1                    NA                 0.0605965   -0.0828181   0.1850165
+6-24 months   ki1113344-GMS-Nepal   NEPAL        1                    NA                 0.0181211   -0.0308919   0.0648039

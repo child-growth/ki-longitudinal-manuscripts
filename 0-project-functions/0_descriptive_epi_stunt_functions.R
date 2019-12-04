@@ -133,14 +133,14 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
       arrange(studyid,subjid) %>%
       #create variable with minhaz by age category, cumulatively
       mutate(minhaz=ifelse(agecat=="Birth",min(haz[agecat=="Birth"]),
-                           ifelse(agecat=="7 days-3 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months"]),
-                                  ifelse(agecat=="3-6 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"]),
-                                         ifelse(agecat=="6-9 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
-                                                ifelse(agecat=="9-12 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
-                                                       ifelse(agecat=="12-15 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
-                                                              ifelse(agecat=="15-18 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
-                                                                     ifelse(agecat=="18-21 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
-                                                                            ifelse(agecat=="21-24 months",min(haz[agecat=="Birth" | agecat=="7 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                           ifelse(agecat=="8 days-3 months",min(haz[agecat=="Birth" | agecat=="8 days-3 months"]),
+                                  ifelse(agecat=="3-6 months",min(haz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"]),
+                                         ifelse(agecat=="6-9 months",min(haz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                                ifelse(agecat=="9-12 months",min(haz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                       ifelse(agecat=="12-15 months",min(haz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                              ifelse(agecat=="15-18 months",min(haz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                                     ifelse(agecat=="18-21 months",min(haz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                            ifelse(agecat=="21-24 months",min(haz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
                                                                                    min(haz)))))))))))
   }
   
@@ -170,7 +170,7 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
       nstudy=length(unique(studyid)),
       ncases=sum(ever_stunted),
       N=sum(length(ever_stunted))) %>%
-    filter(N>=5)
+    filter(N>=50)
   
   cuminc.data <- droplevels(cuminc.data)
   agelist <- agelist[agelist %in% levels(cuminc.data$agecat)]
@@ -545,8 +545,8 @@ create_age_categories = function(data){
   data_with_agecat = data %>% group_by(studyid, country, subjid) %>% 
     # create age categories
     mutate(agecat = case_when(
-      agedays == 1 ~ "Birth",
-      agedays >1 & agedays<= 30.4167*3 ~ "0-3 months",
+      agedays <= 7 ~ "Birth",
+      agedays >7 & agedays<= 30.4167*3 ~ "0-3 months",
       agedays >30.4167*3 & agedays<= 30.4167*6 ~ "3-6 months",
       agedays >30.4167*6 & agedays<= 30.4167*9 ~ "6-9 months",
       agedays >30.4167*9 & agedays<= 30.4167*12 ~ "9-12 months",

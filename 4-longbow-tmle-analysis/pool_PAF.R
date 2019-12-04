@@ -4,11 +4,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
-source(paste0(here::here(), "/0-project-functions/0_longbow_results_pooling_functions.R"))
 
-#Plot themes
-source("5-visualizations/0-plot-themes.R")
-theme_set(theme_ki())
 
 
 #Load data

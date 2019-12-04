@@ -3,26 +3,52 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-load(here("/results/rf results/raw longbow results/results_cont_2019-08-16.rdata"))
+
+Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
+
+load(here("/results/rf results/raw longbow results/results_cont_2019-11-18.rdata"))
 Zscores <- results
 
-load(here("/results/rf results/raw longbow results/results_bin_2019-08-17.rdata"))
+load(here("/results/rf results/raw longbow results/results_bin_2019-11-16.rdata"))
 bin <- results
 
-load(here("/results/rf results/raw longbow results/mortality_2019-08-18.rdata"))
+load(here("/results/rf results/raw longbow results/mortality_2019-11-16.rdata"))
 mort <- results
 
-load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-08-19.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-11-16.rdata"))
 Zscores_unadj <- results
 
-load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
-lagwhz <- results
+load(here("/results/rf results/raw longbow results/results_bin_unadj_2019-11-16.rdata"))
+bin_unadj <- results
 
-load(here("results","rf results","raw longbow results","seasonality_results_2019-09-17.rdata"))
-season <- results
+# load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
+# lagwhz <- results
+
+load(here("/results/rf results/raw longbow results/vel_wlz_quart_2019-11-26.rdata"))
+velocity <- results
+
+load(here("/results/rf results/raw longbow results/results_vel_2019-11-28.rdata"))
+velocity_wlz_quart <- results
+
+# load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
+# season <- results %>% mutate(agecat="All")
+
+load(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2019-11-19.rdata"))
+season_cont_rf <- results
+
+load(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2019-11-19.rdata"))
+season_bin_rf <- results
 
 
-d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, season)
+
+
+
+d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
+d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
+d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
+d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"
+d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="4"] <- "Post-max rain"
+d$baseline_level[d$intervention_variable=="rain_quartile"] <- "Opposite max rain"
 
 
 
@@ -51,6 +77,7 @@ N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
 
+
 dim(d)
 dim(N_sums)
 d <- left_join(d, N_sums, by = c("agecat", "outcome_variable", "intervention_variable", "intervention_level", "continuous"))
@@ -59,6 +86,9 @@ dim(d)
 table(is.na(d$n[d$continuous==0 & d$type=="PAR"]))
 table(is.na(d$n[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months"]))
 
+
+df <- d[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months",]
+df[is.na(df$n) & !is.na(df$estimate),]
 
 
 

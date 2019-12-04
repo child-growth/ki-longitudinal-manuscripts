@@ -27,8 +27,8 @@ p <- ggplot(data=plotdf, aes(x=agedays, y=fit, group=born_wast, color=born_wast,
 p
 
 
-ggsave(p, file=paste0(here(),"/6-shiny-app/figures/wasting/birthwast_strat_growth_curve.png"), width=7, height=5)
-save(p, file=paste0(here::here(),"/figures/plot objects/birthwast_strat_growth_curve_object.Rdata"))
+ggsave(p, file=paste0(here(),"/figures/wasting/birthwast_strat_growth_curve.png"), width=7, height=5)
+saveRDS(p, file=paste0(here::here(),"/figures/plot objects/birthwast_strat_growth_curve_object.rds"))
 
 
 p <- ggplot(data=plotdf, aes(x=agedays, y=fit, group=born_wast, color=born_wast,  fill=born_wast)) +
@@ -52,7 +52,7 @@ p <- ggplot(data=plotdf, aes(x=agedays, y=fit, group=born_wast, color=born_wast,
     legend.text=element_text(size=rel(0.5)))+
   
   
-ggsave(p, file=paste0(here(),"/6-shiny-app/figures/wasting/birthwast_strat_growth_curve_nolegend.png"), width=7, height=5)
+ggsave(p, file=paste0(here(),"/figures/wasting/birthwast_strat_growth_curve_nolegend.png"), width=7, height=5)
 
 
 

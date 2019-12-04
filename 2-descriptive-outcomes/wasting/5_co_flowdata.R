@@ -12,7 +12,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-d <- readRDS("U:/ucb-superlearner/Manuscript analysis data/co_occurrence_data.rds")
+d <- readRDS(paste0(ghapdata_dir,"/co_occurrence_data.rds"))
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 
@@ -34,37 +34,28 @@ d = d %>%
 ##########################################
 # Define indicators of faltering at each time point
 ##########################################
-# define age windows
-d <- d %>% 
-  mutate(agecat=ifelse(agedays==1, "Birth",
-                       ifelse(agedays>1 & agedays<=3*30.4167,"0-3 months",
-                              ifelse(agedays>3*30.4167 & agedays<=6*30.4167,"3-6 months",
-                                     ifelse(agedays>6*30.4167 & agedays<=9*30.4167,"6-9 months",
-                                            ifelse(agedays>9*30.4167 & agedays<=12*30.4167,"9-12 months",
-                                                   ifelse(agedays>12*30.4167 & agedays<=15*30.4167,"12-15 months",
-                                                          ifelse(agedays>15*30.4167 & agedays<=18*30.4167,"15-18 months",
-                                                                 ifelse(agedays>18*30.4167 & agedays<=21*30.4167,"18-21 months",
-                                                                        ifelse(agedays>21*30.4167& agedays<=24*30.4167,"21-24 months","")))))))))) %>%
-  mutate(agecat=factor(agecat,levels=c("Birth","0-3 months","3-6 months","6-9 months","9-12 months","12-15 months","15-18 months","18-21 months","21-24 months")))
 
-# check age categories
-d %>% group_by(agecat) %>%
-  summarise(min = min(agedays)/30.4167,
-            max = max(agedays)/30.4167)
+#Mark monthly  agecat
+d <- calc.monthly.agecat(d)
+d <- d %>% filter(!is.na(agecat))
 
 #Number of children ever wasted and stunted
 d %>% mutate(co=ifelse(haz< (-2) & whz < (-2),1,0),
              sevco=ifelse(haz< (-3) & whz < (-3),1,0)) %>% 
-     filter(!is.na(agecat)) %>%
   group_by(studyid, country, subjid) %>%
   summarize(everco=max(co), eversevco=max(sevco)) %>% ungroup() %>%
   summarize(N=n(), sumco=sum(everco), sumsevco=sum(eversevco), propco=mean(everco), propsevco=mean(eversevco))
 
 
+
+
+
 flow_m = d %>%
-  mutate(agem = agedays / 30.4167) %>%
+  mutate(agem = round(agedays / 30.4167)) %>%
+  #Take mean of multiple obs within a month
+  group_by(studyid,country,subjid, agem) %>%
+  summarize(haz=mean(haz), whz=mean(whz), waz=mean(waz)) %>%
   group_by(studyid,country,subjid) %>%
-  
   mutate(stunted=ifelse(haz< -2,1,0),
          wasted=ifelse(whz< -2,1,0),
          underwt=ifelse(waz< -2,1,0),
@@ -92,87 +83,24 @@ flow_m = d %>%
                             (stunted==0 & wasted==0 & underwt==0 & co==0 & su==0 & wu==0), 1, 0),
          healthy=ifelse((lageverstunted==0 & lageverwasted==0 & lageverunderwt==0 & lageversu==0 & lageverwu==0 & lageverco==0) &
                             (stunted==0 & wasted==0 & underwt==0 & co==0 & su==0 & wu==0), 1, 0))
-# %>%
-#   
-#   mutate(newly_stunted = ifelse(stunted==1 & 
-#                                   lageverstunted == 0 , 1, 0),
-#          
-#          recover =       ifelse(stunted==0 &
-#                                   lagstunted==1 &
-#                                   lageverstunted==1, 1, 0),
-#          
-#          never_stunted =       ifelse(stunted==0 &
-#                                         lagstunted==0 &
-#                                         lageverstunted==0, 1, 0)) %>%
-#   
-#   # recoding indicators at first measurement since lag is NA
-#   mutate(newly_stunted = ifelse(stunted==1 & measid==1, 1, newly_stunted),
-#          
-#          never_stunted = ifelse(stunted==0 & measid==1, 1, never_stunted),
-#          
-#          recover = ifelse(stunted==0 & measid==1, 0, recover)) %>%
-#   
-#   # code relapse 
-#   mutate(everrecover = cummax(recover),
-#          evernew = cummax(newly_stunted),
-#          
-#          relapse =       ifelse(stunted==1 &
-#                                   lageverstunted==1 &
-#                                   lagstunted==0 &
-#                                   everrecover==1, 1, 0),
-#          
-#          still_stunted = ifelse(stunted==1 & 
-#                                   evernew==1 &
-#                                   lagstunted==1, 1, 0),
-#          
-#          not_stunted =   ifelse(stunted==0 & 
-#                                   lagstunted==0 &
-#                                   everrecover==1, 1, 0))  %>%
-#   
-#   # recode still stunted at first measurement  
-#   mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
 
 
 
 
-
-
-# rec.prev[rec.prev$subjid==103,-c(1:5, 7,10:11, 14)]
-# rec.prev[rec.prev$subjid==103,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
-# # age 3-6 should be still stunted
-# # age 12-15 months should be not stunted
-# 
-# # what to do with the last row of 103?
-# # id 108 meas id 12
-# rec.prev[rec.prev$subjid==108,-c(1:5, 7,9:11, 13:14)][1:10,]
-# rec.prev[rec.prev$subjid==108,-c(1:5, 7,9:11, 13:14)][11:24,]
-# rec.prev[rec.prev$subjid==108,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][1:10,]
-# rec.prev[rec.prev$subjid==108,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][11:24,]
-# 
-# rec.prev[rec.prev$subjid==2,-c(1:5, 7)][1:8,]
-# rec.prev[rec.prev$subjid==2,-c(1:5, 7)][9:24,]
-# rec.prev[rec.prev$subjid==2,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][1:8,]
-# rec.prev[rec.prev$subjid==2,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")][9:24,]
-# 
-# rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11)][1:9,]
-# rec.prev[rec.prev$subjid==2091,-c(1:3,5, 7,9:11,14)][10:23,]
-# rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","recover","relapse","still_stunted2", "not_stunted2", "never_stunted")]
-# rec.prev[rec.prev$subjid==2091,c("haz","agecat","newly_stunted","new_age","never_stunted","nev_age")][1:9,]
 
 
 # drop measurements with ages over 24 months
-flow_m = flow_m %>% filter(!is.na(agecat)) 
+flow_m = flow_m %>% filter(agem < 25) 
 
-# summarise within age months
-flow_m = flow_m %>% mutate(agem = round(agem))
+
 
 # check that indicators do not contain missing values
-assert_that(names(table(is.na(flow_m$newly_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$recover)))=="FALSE")
-assert_that(names(table(is.na(flow_m$relapse)))=="FALSE")
-assert_that(names(table(is.na(flow_m$still_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$not_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$never_stunted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$stunted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$wasted)))=="FALSE")
+assert_that(names(table(is.na(flow_m$underwt)))=="FALSE")
+assert_that(names(table(is.na(flow_m$co)))=="FALSE")
+assert_that(names(table(is.na(flow_m$su)))=="FALSE")
+assert_that(names(table(is.na(flow_m$wu)))=="FALSE")
 
 # check for multiple categories
 flow_m = flow_m %>% mutate(sum = stunted+wasted+underwt+wu+su+co+recovered+healthy)
@@ -189,7 +117,9 @@ mean(sum(flow_m$wu)/sum(flow_m$wasted, flow_m$wu, flow_m$co))
 #Also stunted + underweight
 mean(sum(flow_m$co)/sum(flow_m$wasted, flow_m$wu, flow_m$co))
 
-
+#num children and observations
+flow_m %>% ungroup() %>% summarize(N=n(), nchild=length(unique(paste0(studyid, subjid))))
+flow_m %>% group_by(agem) %>% summarize(N=n(), nchild=length(unique(paste0(studyid, subjid)))) %>% as.data.frame()
 
 # Check that no child was classified in more
 # than one category at any time point
@@ -293,46 +223,6 @@ co_0 = as.character(summary$agem[summary$co==0])
 recovered_0 = as.character(summary$agem[summary$recovered==0])
 healthy_0 = as.character(summary$agem[summary$healthy==0])
 
-
-# # function to replace est, se, lb, ub, est.f if
-# # no observations in summary
-# replace_zero = function(data, age_list, label){
-#   
-#   if(length(age_list)>0){
-#     
-#     data$est[data$label==label & data$agecat %in% age_list] = 0
-#     data$ptest.f[data$label==label & data$agecat %in% age_list] = "0"
-#     data$se[data$label==label & data$agecat %in% age_list] = 0
-#     data$lb[data$label==label & data$agecat %in% age_list] = 0
-#     data$ub[data$label==label & data$agecat %in% age_list] = 0
-#     
-#   }
-#   return(data)
-# }
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled,
-#                                  age_list = newly_0,
-#                                  label = "Newly stunted")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = still_0,
-#                                  label = "Still stunted")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = not_0,
-#                                  label = "Not stunted")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = rec_0,
-#                                  label = "Recovered")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = relapse_0,
-#                                  label = "Stunting relapse")
-# 
-# stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-#                                  age_list = never_0,
-#                                  label = "Never stunted")
 
 
 saveRDS(flow_m, file=paste0(res_dir, "co_flow.RDS"))

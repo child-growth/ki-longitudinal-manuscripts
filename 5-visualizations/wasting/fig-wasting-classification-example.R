@@ -15,15 +15,10 @@ d <- d %>% filter(agedays < 24 * 30.4167)
 
 
 
-
-
-
-
-
 #------------------------------------------
 # Individual trajectory plot function
 #------------------------------------------
-ind_traj_plot <- function(d){
+ind_traj_plot <- function(d, Xmax=731){
   
   #set up colors
   colors <-  c("green", "orange", "red", "grey80", "grey40")
@@ -72,9 +67,9 @@ ind_traj_plot <- function(d){
     #geom_text(aes(x=300,y=1.2,label=wastinc))+#geom_text(aes(x=300,y=1,label=sevwastinc))+ 
     #geom_text(aes(x=300,y=1,label=wastrec))+#geom_text(aes(x=300,y=0.6,label=sevwastrec))+ 
     #geom_text(aes(x=300,y=0.4,label=dur))+ 
-    coord_cartesian(xlim=c(1,732), ylim=yrange, expand = c(0,0)) +
+    coord_cartesian(xlim=c(1,Xmax), ylim=yrange, expand = c(0,0)) +
     ylab("Weight-for-length Z-score")  +
-    scale_x_continuous(limits=c(1,731), expand = c(0, 0),
+    scale_x_continuous(limits=c(1,Xmax), expand = c(0, 0),
                        breaks = 1:24*30.41 - 15.2, labels = as.character(1:24)) +
     theme(legend.position = "right") + guides(fill=guide_legend(title="Wasting status"))
     #+ aes(alpha=alpha, group=factor(subjid)) + guides(alpha=FALSE)
@@ -93,10 +88,10 @@ ind_traj_plot <- function(d){
 df <- d %>% filter(studyid=="ki0047075b-MAL-ED")
 
 i<-100
-p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],])
+p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],], Xmax=702)
 print(p)
 
-save(p, file=paste0(here::here(),"/figures/plot objects/ind_traj_plot_object.Rdata"))
+saveRDS(p, file=paste0(here::here(),"/figures/plot objects/ind_traj_plot_object.rds"))
 
 ggsave(p, file=paste0(here(),"/figures/wasting/individual_traj.png"),width=8,height=5)    
 

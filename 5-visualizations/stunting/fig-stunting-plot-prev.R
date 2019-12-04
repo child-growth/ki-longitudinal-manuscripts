@@ -56,7 +56,7 @@ prev_plot_name_monthly = name_prev_plots(cut=2, pop=pop_list$o, loc="", ana=anal
 
 # save plot and underlying data
 ggsave(prev_plot_monthly$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name_monthly, ".png"), width=14, height=3)
-saveRDS(d_monthly, file=paste0(figdata_dir, "figdata-",prev_plot_name_monthly,".RDS"))
+saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_name_monthly,".RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting prevalence - 3 months (primary)
@@ -85,7 +85,7 @@ prev_plot_name_primary = name_prev_plots(cut=2, pop=pop_list$o, loc="", ana=anal
 
 # save plot and underlying data
 ggsave(prev_plot_primary$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name_primary, ".png"), width=14, height=4)
-saveRDS(prev_plot_primary$data, file=paste0(figdata_dir, "figdata-",prev_plot_name_primary,".RDS"))
+saveRDS(prev_plot_primary$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_name_primary,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ prev_plot_name_fe <- name_prev_plots(cut=2, pop=pop_list$o, loc="", ana=analysis
 # save plot and underlying data
 ggsave(prev_plot_fe$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name_fe, ".png"), width=14, height=4)
 
-saveRDS(prev_plot_fe$data, file=paste0(figdata_dir, "figdata-",prev_plot_name_fe,".RDS"))
+saveRDS(prev_plot_fe$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_name_fe,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -141,9 +141,9 @@ ggsave(prev_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_afr
 ggsave(prev_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_latam_name, ".png"), width=10, height=5)
 ggsave(prev_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sasia_name, ".png"), width=15, height=7)
 
-saveRDS(prev_plot_africa$data, file=paste0(figdata_dir, "figdata-",prev_plot_africa_name,".RDS"))
-saveRDS(prev_plot_lam$data, file=paste0(figdata_dir, "figdata-",prev_plot_latam_name,".RDS"))
-saveRDS(prev_plot_sasia$data, file=paste0(figdata_dir, "figdata-",prev_plot_sasia_name,".RDS"))
+saveRDS(prev_plot_africa$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_africa_name,".RDS"))
+saveRDS(prev_plot_lam$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_latam_name,".RDS"))
+saveRDS(prev_plot_sasia$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_sasia_name,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -158,7 +158,7 @@ prev_plot_sev_name_primary = name_prev_plots(cut=3, pop=pop_list$o, loc="", ana=
 
 # save plot and underlying data
 ggsave(prev_plot_sev_primary$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name_primary, ".png"), width=14, height=4)
-saveRDS(prev_plot_sev_primary$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name_primary,".RDS"))
+saveRDS(prev_plot_sev_primary$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_sev_name_primary,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ prev_plot_sev_name_monthly = name_prev_plots(cut=3, pop=pop_list$o, loc="", ana=
 
 # save plot and underlying data
 ggsave(prev_plot_sev_monthly$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name_monthly, ".png"), width=14, height=3)
-saveRDS(d_monthly, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name_monthly,".RDS"))
+saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_sev_name_monthly,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -188,7 +188,7 @@ prev_plot_sev_name_fe <- name_prev_plots(cut=3, pop=pop_list$o, loc="", ana=anal
 
 # save plot and underlying data
 ggsave(prev_plot_sev_fe$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name_fe, ".png"), width=14, height=4)
-saveRDS(prev_plot_sev_fe$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name_fe,".RDS"))
+saveRDS(prev_plot_sev_fe$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_sev_name_fe,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -213,6 +213,6 @@ ggsave(prev_plot_sev_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot
 ggsave(prev_plot_sev_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_latam_name, ".png"), width=10, height=5)
 ggsave(prev_plot_sev_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_sasia_name, ".png"), width=15, height=7)
 
-saveRDS(prev_plot_sev_africa$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_africa_name,".RDS"))
-saveRDS(prev_plot_sev_lam$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_latam_name,".RDS"))
-saveRDS(prev_plot_sev_sasia$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_sasia_name,".RDS"))
+saveRDS(prev_plot_sev_africa$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_sev_africa_name,".RDS"))
+saveRDS(prev_plot_sev_lam$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_sev_latam_name,".RDS"))
+saveRDS(prev_plot_sev_sasia$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_sev_sasia_name,".RDS"))

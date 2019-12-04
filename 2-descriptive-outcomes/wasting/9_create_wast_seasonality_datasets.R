@@ -9,15 +9,22 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 require(cowplot)
 library(RcppRoll)
 
+rain <- readRDS(here("/data/cohort_rain_data.rds"))
 
-rain <- read.csv(here("/data/monthly_rainfall.csv"))
+d <- readRDS(seasonality_data_path)
 
-d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
+#subset to monthly cohorts
+d <- d %>% filter(measurefreq=="monthly")
+
+#drop outliers 
+d <- d %>% filter(!is.na(whz)) %>% filter(whz < 5 & whz > (-5))
+
+
 head(rain)
 head(d)
 
-rain$country <- toupper(rain$country)
-rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
+# rain$country <- toupper(rain$country)
+# rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
 rain <- mark_region(rain)
 rain$region <- factor(rain$region, levels = c("South Asia","Africa","Latin America"))
 rain$country <- tolower(rain$country)
@@ -29,12 +36,10 @@ d$country[d$country=="tanzania, united republic of"] <- "tanzania"
 d$studyid <- gsub("^k.*?-" , "", d$studyid)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
 
-#drop PROVIDE from rain dataset (no date in KI data)
-rain <- filter(rain, studyid!="PROVIDE ")
 
 #Transform rain dataset
-rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
-                                      "Jun_pre", "Jul_pre", "Aug_pre", "Sep_pre", "Oct_pre", "Nov_pre", "Dec_pre"))
+rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan", "Feb", "Mar", "Apr", "May",
+                                      "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
 
 rain$country <- str_to_title(rain$country)
 d$country <- str_to_title(d$country)
@@ -60,7 +65,8 @@ d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
                   cohort=factor(cohort, levels=unique(rain_long$cohort)))
 
 rain_long <- droplevels(rain_long)
-cohorts=levels(rain_long$cohort)
+d <- droplevels(d)
+cohorts=levels(d$cohort)
 
 
 
@@ -203,6 +209,10 @@ W <- NULL
 #save analysis dataset
 save(d, file = paste0(ghapdata_dir, "seasonality_rf.Rdata"))
 
+#get N's for figure caption
+d %>% summarize(N=n(), nchild=length(unique(subjid)))
+cohort_Ns <- d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid)))
+
 #Specify analysis
 specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country"), id="id", adj_sets=adjustment_sets){
   
@@ -224,5 +234,11 @@ analyses <- specify_rf_analysis(A="rain_quartile", Y="whz", file="seasonality_rf
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/seasonality_analyses.rdata"))
-save(analyses, file="U:/sprint_7D_longbow/Manuscript analysis/seasonality_analyses.rdata")
+
+#Save cohort Ns
+saveRDS(cohort_Ns, file=paste0(here(),"/results/seasonTMLE_Ns.rds")) 
+
+
+
+
 

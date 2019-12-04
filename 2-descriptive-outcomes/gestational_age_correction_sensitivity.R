@@ -15,6 +15,9 @@ library(growthstandards)
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
 
+
+
+
 #---------------------------------------------------------
 # Drop cohorts without gestational age
 #---------------------------------------------------------
@@ -36,6 +39,8 @@ ggplot(d, aes(x=W_gagebrth)) + geom_histogram() + facet_wrap(~cohort, scales="fr
 d <- d %>% filter(W_gagebrth > 24 *7 & W_gagebrth <= 300) 
   
 
+
+
 #---------------------------------------------------------
 #Subset to observations at birth
 #---------------------------------------------------------
@@ -52,7 +57,7 @@ stunt <- d %>% filter(haz >= -6 & haz <=6,
 
 uwt <- d %>% filter(waz >= -6 & waz <=5,
                     measurefreq!="yearly",
-                    agedays == 1) %>%
+                    agedays ==1) %>%
              mutate(underwt = 1*(waz < (-2)),
                     agecat="Birth",
                     agecat = factor(agecat)) %>%
@@ -175,6 +180,16 @@ df <- rbind(
   data.frame(stunt_prev_GA, measure="Stunting", GA_correction="GA Corrected")
 )
 
+
+#---------------------------------------------------------
+# Clean up cohort names for plot
+#---------------------------------------------------------
+
+# # simplify Tanzania label
+df$country[df$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
+df <- mutate(df, country=str_to_title(str_to_lower(country)))
+
+
 df$cohort <- factor(df$cohort, levels = unique(df$cohort))
 df$region <- factor(df$region, levels = c("Overall","South Asia","Africa","Latin America", "N.America & Europe", "Europe"))
 df$GA_correction <- factor(df$GA_correction, levels = c("GA Corrected", "Uncorrected"))
@@ -191,6 +206,11 @@ df$ub[df$cohort!="pooled"] <- df$ub[df$cohort!="pooled"] * 100
 
 df$cohort <- as.character(df$cohort)
 df$cohort[df$cohort=="pooled"] <- paste0("Pooled - ", df$region[df$cohort=="pooled"] )
+
+df$cohort[df$cohort=="COHORTS-Philippines"] <-   "Cebu Cohort"   
+df$cohort[df$cohort=="COHORTS-Guatemala"] <- "INCAP Nutr Supp RCT" 
+df$cohort[df$cohort=="COHORTS-India"] <- "New Delhi Birth Cohort" 
+
 df$cohort <- factor(df$cohort, levels = rev(unique(df$cohort)))
 
 
@@ -214,11 +234,11 @@ p <- ggplot(df, aes(y=est,x=cohort)) +
 
 print(p)
 
-#Check how GA correction can lead to increase?
-
-#Where is stunting for tanzania child?
+#Note that tanzania child measured weight, but not length, at birth, so missing from the stunting plot
 
 
-#Maybe look at Z-score densities after correction (overall and by cohort)
+#Save plot and plot data
+ggsave(p, file=paste0(here::here(), "/figures/shared/fig-GA-correction-sensitivity.png"), height=10, width=14)
 
+saveRDS(df, file=paste0(here::here(), "/figures/figure-data/fig-GA-correction-sensitivity.RDS"))
 

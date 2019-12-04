@@ -2,25 +2,16 @@
 
 
 rm(list=ls())
-library(tidyverse)
-library(data.table)
+source(paste0(here::here(), "/0-config.R"))
 library(xlsx)
 library(haven)
 
+#source("U:/GHAP-Data-Management/HBGDki_functions.R")
 
-source("U:/GHAP-Data-Management/HBGDki_functions.R")
-
-
-setwd("U:/data")
 
 #read csv file
-d<-fread("U:/data/FINAL/UCB Rally7/Main/adam/FINAL.csv", header = T)
-
-
-#Read rds file
-#d<- readRDS("FINAL.rds")
-
-
+d<-fread("H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv", header = T)
+         
 
 gc()
 
@@ -28,8 +19,8 @@ colnames(d) <- tolower(colnames(d))
 colnames(d)
 
 #Drop un-needed columns
+#d <- d %>% subset(., select=c(studyid, country, subjid, agedays, visitnum, diarfl,diarfl_r, dur_r))
 d <- d %>% subset(., select=c(studyid, subjid, agedays, diarfl,diarfl_r, dur_r))
-
 
 #Drop studies Vishak added to data product that don't meet inclusion criteria
 dim(d)
@@ -37,9 +28,9 @@ d <- d[d$studyid!="ki1000301-DIVIDS" & d$studyid!="ki1055867-WomenFirst" & d$stu
 dim(d)
 
 #Replace diar flag with 1-day recall 
-table(dfull$studyid, !is.na(dfull$diarfl))
+table(d$studyid, !is.na(d$diarfl))
 d$diarfl[is.na(d$diarfl) & !is.na(d$diarfl_r) & d$dur_r==1] <- d$diarfl_r[is.na(d$diarfl) & !is.na(d$diarfl_r) & d$dur_r==1]
-table(dfull$studyid, !is.na(dfull$diarfl))
+table(d$studyid, !is.na(d$diarfl))
 
 
 #drop unneeded variables
@@ -66,8 +57,7 @@ dfull <- d
 
 
 #aga khan
-
-d <- read_sas("U:/data/AgaKhanUniv/raw/childmorbidityandimmunization.sas7bdat")
+d <- read_sas(paste0(ghapdata_dir, "/raw SAS datasets/AgaKhanUniv/childmorbidityandimmunization.sas7bdat"))
 head(d)
 d$subjido <- gsub("C-Y-C-","",d$frmid)
 d$subjido <- gsub("I-Y-C-","",d$subjido)
@@ -78,9 +68,10 @@ d$agedays<- round(d$age*30.42)
 #a1: During the last 24 hours, has <child> have more than 3 liquid stools (diarrhea)
 table(d$a1)
 
-akup<-readRDS("U:/data/akup.rds")
+akup <- readRDS(paste0(cohortdata_dir,"akup.rds"))
 colnames(akup) <- tolower(colnames(akup))
 akup$visitnum <- as.numeric(akup$visitnum )
+akup$subjido <- as.character(akup$subjido)
 head(akup)
 
 akup <- left_join(akup, d, by=c("subjido","visitnum"))
@@ -102,6 +93,7 @@ table(akup$a1)
 akup <- akup %>% subset(., select = c(subjid, agedays.x, studyid, a1)) %>% 
                  rename(agedays = agedays.x, diarfl2 = a1)
 
+gc()
 dfull$diarfl[dfull$studyid=="ki1000125-AgaKhanUniv"] <- NA
 
 akup$subjid <- as.numeric(akup$subjid)
@@ -114,8 +106,12 @@ dfull<-dfull[,1:4]
 
 
 
+
+
+
+
 #Ilins Dose
-d <- read_sas("U:/data/iLiNS-DOSE/raw/morbid18tab.sas7bdat")
+d <- read_sas(paste0(ghapdata_dir,"raw SAS datasets/iLiNS-DOSE/morbid18tab.sas7bdat"))
 head(d)
 
 table(d$HomNumberStool)
@@ -124,7 +120,7 @@ d$HomNumberStool[d$HomNumberStool==99] <- NA
 table(d$HomNumberStool>2) #diarrhea defined by 3 or more loose stools
 
 
-ilnd<-readRDS("U:/data/ilnd.rds")
+ilnd <- readRDS(paste0(cohortdata_dir,"ilnd.rds"))
 colnames(ilnd) <- tolower(colnames(ilnd))
 #ilnd$visitnum <- as.numeric(ilnd$visitnum )
 head(ilnd)
@@ -146,7 +142,7 @@ table(ilnd$diarfl)
 
 
 #Tanzania child
-d <- read_sas("U:/data/TanzaniaChild2/import/childnurse.sas7bdat")
+d <- read_sas(paste0(ghapdata_dir,"raw SAS datasets/TanzaniaChild2/childnurse.sas7bdat"))
 head(d)
 colnames(d) <- tolower(colnames(d))
 
@@ -156,9 +152,10 @@ mean(d$cndt, na.rm=T)
 
 table(d$cchadm) #visit number
 
-d <- d %>% rename(subjid=idno2, visitnum=cchadm, diarfl=cndt) %>% mutate(subjid=as.numeric(subjid)) %>% select(subjid, visitnum, diarfl)
+d <- d %>% rename(visitnum=cchadm, diarfl=cndt) %>% mutate(subjid=as.numeric(subjid)) %>% select(subjid, visitnum, diarfl)
 
-tzc2<-readRDS("U:/data/tzc2.rds")
+tzc2 <- readRDS(paste0(cohortdata_dir,"tzc2.rds"))
+
 colnames(tzc2) <- tolower(colnames(tzc2))
 tzc2<- tzc2 %>% select(studyid, subjid, visitnum, country, agedays)
 head(tzc2)
@@ -185,6 +182,7 @@ res <-diar_df %>%
   filter(agedays < 30.4167*6) %>% filter(!is.na(diarfl)) %>%
   group_by(studyid, subjid) %>%
   summarise(n=n(), prev=mean(diarfl, na.rm=T)) %>% 
+  filter(n >= 100) %>% #Drop if less than 100 obs 
   ungroup() %>%
   group_by(studyid) %>%
   summarise(num_obs=sum(n), mean_obs=mean(n), mean_prev=mean(prev) *100) %>%
@@ -195,35 +193,17 @@ res2 <-diar_df %>%
   filter(agedays < 30.4167*24) %>% filter(!is.na(diarfl)) %>%
   group_by(studyid, subjid) %>%
   summarise(n=n(), prev=mean(diarfl, na.rm=T)) %>% 
+  filter(n >= 100) %>% #Drop if less than 100 obs 
   ungroup() %>%
   group_by(studyid) %>%
-  summarise(num_ons=sum(n), mean_obs=mean(n), mean_prev=mean(prev) *100) %>%
+  summarise(num_obs=sum(n), mean_obs=mean(n), mean_prev=mean(prev) *100) %>%
   as.data.frame()
 knitr::kable(res2, digits=1)
 
 
-#Drop studies without correct survellance information or with too few measurements (<100)
-diar_df <- diar_df %>% 
-  #Inaccurate non-case data
-  filter(studyid!="ki1000108-CMC-V-BCS-2002" &
-                                studyid!="ki1000108-IRC" &
-                                studyid!="ki1112895-Burkina Faso Zn" &
-                                studyid!="ki1113344-GMS-Nepal" &
-                                studyid!="ki1148112-iLiNS-DYAD-M ")# %>%
-  #Too few observations
-  # filter(studyid!="ki1148112-iLiNS-DOSE " &
-  #          studyid!="ki1148112-LCNI-5" &
-  #          studyid!="ki1000125-AgaKhanUniv" &
-  #          studyid!="ki1000304-EU" &
-  #          studyid!="ki1148112-iLiNS-DOSE" &
-  #          studyid!="ki1148112-iLiNS-DYAD-M" &
-  #          studyid!="ki1000304-VITAMIN-A" &
-  #          studyid!="ki1000304-ZnMort" &
-  #          studyid!="ki1000304b-SAS-CompFeed" &
-  #          studyid!="ki1066203-TanzaniaChild2" &
-  #          studyid!="ki1126311-ZVITAMBO" )
-
-
+#Drop CMC and IRC, which have 10 and 2 children with enough obs, and unrealisticly high prevalence 
+#(probable incorrect mapping/recording of healthy observations)
+diar_df$diarfl[diar_df$studyid=="ki1000108-CMC-V-BCS-2002" | diar_df$studyid=="ki1000108-IRC"] <- NA
 
 #Summarize under 6 month  diarrhea
 diar_6mo <- diar_df %>% #filter(!is.na(predfeed_fl)) %>% 
@@ -233,7 +213,6 @@ diar_6mo <- diar_df %>% #filter(!is.na(predfeed_fl)) %>%
   ungroup() %>% group_by(studyid) %>% mutate(meanN=mean(n)) %>% filter(meanN >= 100) %>% #Set as NA if less than 100 obs under 6 months
   ungroup() %>% group_by(studyid,subjid) %>% slice(1) %>% subset(., select = -c(n, meanN, agedays, diarfl))
 summary(diar_6mo$perdiar6)
-
 
 
 
@@ -252,7 +231,7 @@ summary(diar_24mo$perdiar24)
 
 diar <- merge(diar_6mo, diar_24mo, by=c("studyid","subjid"), all.x = T, all.y = T)
 
-save(diar, file="U:/data/Raw Data Cleaning/rawdiar_df.Rdata")
+save(diar, file=paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/rawdiar_df.Rdata"))
 
 table(diar$studyid)
 summary(diar$perdiar6)
@@ -261,4 +240,5 @@ summary(diar_6mo$perdiar6)
 summary(diar$perdiar24)
 
 
-
+table(diar$studyid, diar$perdiar6 < 0.05)
+table(diar$studyid, diar$perdiar24< 0.05)

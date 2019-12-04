@@ -1,19 +1,26 @@
 
 rm(list=ls())
-source(paste0(here::here(), "/0-config.R"))
+library(tidyverse)
 library(longbowtools)
 library(progress)
 library(longbowRiskFactors)
 
 
-load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-08-16.rdata"))
-
+load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-11-18.rdata"))
 d <- obs_counts
 
-#Temp: merge in nchild N's
-d <- d %>% filter(is.na(nchldlt5)) 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/results_nchild_cont_obs_counts_2019-08-21.rdata")
-d <- bind_rows(d, obs_counts)
+
+load(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2019-11-19.rdata"))
+d2 <- obs_counts %>% mutate(rain_quartile=case_when(
+  rain_quartile==1 ~ "Opposite max rain",
+  rain_quartile==2 ~ "Pre-max rain",
+  rain_quartile==3 ~ "Max rain",
+  rain_quartile==4 ~ "Post-max rain"
+))
+
+ d <- bind_rows(d, d2)
+
+
 
 exposure_vars <- c(
   "gagebrth",        "birthlen",      "enwast",        "vagbrth",      
@@ -25,7 +32,7 @@ exposure_vars <- c(
   "birthwt",       "mage",          "mhtcm",         "single",        "nrooms",       
   "feducyrs",      "hfoodsec",      "exclfeed6",     "s03rec24",      "enstunt",      
   "predfeed6",     "predexfd6",     "sex",          "brthmon",      
-  "month",     "pers_wast",    "lag_WHZ_quart")
+  "month",     "pers_wast",    "lag_WHZ_quart","rain_quartile")
 
 
 d<-data.frame(d)
@@ -49,13 +56,13 @@ for(i in 1:nrows){
 
 exposure_df 
 
-Ns <- d %>% subset(., select = c(studyid, country, agecat, n_cell, n))
+Ns <- d %>% subset(., select = c(studyid, country, agecat, n_cell, n,outcome_variable))
 
 Ndf <- cbind(Ns, exposure_df)
-
+# 
 #Always more laz than whz obs, so seperate bigger N's to laz
-Ndf_laz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level) %>% filter(n==max(n)) %>% mutate(outcome_variable="haz")
-Ndf_wlz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level) %>% filter(n==min(n)) %>% mutate(outcome_variable="whz")
+ Ndf_laz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level,outcome_variable) 
+ Ndf_wlz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level,outcome_variable) 
 
 
 Ndf <- rbind(Ndf_laz, Ndf_wlz)

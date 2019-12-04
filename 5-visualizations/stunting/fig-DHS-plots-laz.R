@@ -1,3 +1,4 @@
+
 ##########################################
 # ki longitudinal manuscripts
 # stunting analysis
@@ -52,7 +53,7 @@ laz_ageplot_name <- create_name(
   analysis = "primary"
 )
 
-dhs_plotd_laz = read_rds(paste0(figdata_dir, "figdata-", laz_ageplot_name, ".RDS"))
+dhs_plotd_laz = read_rds(paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
 
 laz_ageplot <- ggplot(
   dhs_plotd_laz,
@@ -133,7 +134,7 @@ laz_dplot_name <- create_name(
   analysis = "primary"
 )
 
-saveRDS(dhsden_plot_laz, file = paste0(figdata_dir, "figdata-", laz_dplot_name, ".RDS"))
+saveRDS(dhsden_plot_laz, file = paste0(figdata_dir_stunting, "figdata-", laz_dplot_name, ".RDS"))
 ggsave(laz_dplot, file = paste0(fig_dir, "stunting/fig-", laz_dplot_name, ".png"), width = 8, height = 2)
 
 #############################################

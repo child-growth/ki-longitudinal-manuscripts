@@ -241,4 +241,4 @@ saveRDS(dhsfits, file = here::here("results/dhs", "wasting-DHSandKI-by-region.rd
 dhs_plotd <- dhsfits %>%
   filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
-saveRDS(dhs_plotd, file = paste0(figdata_dir, "figdata-fig_dhs_ki_zscores_byage.RDS"))
+saveRDS(dhs_plotd, file = paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_byage.RDS"))

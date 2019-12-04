@@ -52,7 +52,7 @@ plot_mean_laz = function(data){
     geom_ribbon(aes(ymin = lb, ymax = ub, fill = stunt_inc_age), alpha = 0.5, color = NA)+
     geom_line(aes(fill=stunt_inc_age, color=stunt_inc_age), se=F, span = 0.5) + 
     geom_hline(yintercept = 0, colour = "black") +
-    scale_y_continuous(limits = c(min(data$est) - 0.5, max(data$est) + 0.5),
+    scale_y_continuous(limits = c(min(data$lb) - 0.1, max(data$ub) + 0.1),
                        expand = c(0, 0)) + 
     scale_x_continuous(limits = c(0,15), breaks = seq(0,15,1), labels = seq(0,15,1),
                        expand = c(0, 0)) + 

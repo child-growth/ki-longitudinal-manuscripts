@@ -20,7 +20,7 @@ tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
 tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
 
-
+theme_set(theme_ki)
 
 
 #-------------------------------------------------------------------------------------------
@@ -167,7 +167,6 @@ ki_desc_plot_fe <- function(d, Disease, Measure, Birth, Severe, Age_range,
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-    
     # add space to the left and right of points on x axis
     # to accommodate point estimate labels
     scale_x_discrete(expand = expand_scale(add = 1)) +
@@ -178,7 +177,6 @@ ki_desc_plot_fe <- function(d, Disease, Measure, Birth, Severe, Age_range,
                                        margin(t = 0, r = 0, b = 0, l = 0),
                                      size = 10)) +
     theme(axis.title.y = element_text(size = 12)) +
-    
     ggtitle("")
   
   if (!is.null(Region)) {
@@ -256,7 +254,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   if (Birth == "strat") {
     df <- df %>%
       mutate(agecat = as.character(agecat)) %>%
-      mutate(agecat = ifelse(agecat=="1 day-3", "0-3", agecat)) %>%
+      mutate(agecat = ifelse(agecat=="8 days-3", "0-3", agecat)) %>%
       mutate(agecat = factor(agecat, levels = c(
         "Birth",
         "0-3", 

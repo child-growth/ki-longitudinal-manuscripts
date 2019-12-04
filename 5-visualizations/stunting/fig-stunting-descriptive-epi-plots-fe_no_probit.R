@@ -42,12 +42,12 @@ expand_scale = function(mult = 0, add = 0) {
 theme_set(theme_ki())
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned_no_probit.RDS"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
-# subset to fixed effects analysis
-d <- d %>% filter(analysis == "Fixed effects")
+# subset to probit analysis
+d <- d %>% filter(analysis == "No Probit - Fixed effects")
 
 #-------------------------------------------------------------------------------------------
 # Stunting prevalence - 3 months
@@ -95,7 +95,7 @@ prev_plot_name = create_name(
 # save plot and underlying data
 ggsave(prev_plot$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name, "_no_probit.png"), width=14, height=4)
 
-saveRDS(prev_plot$data, file=paste0(figdata_dir, "figdata-",prev_plot_name,"_no_probit.RDS"))
+saveRDS(prev_plot$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_name,"_no_probit.RDS"))
 
 
 
@@ -131,7 +131,7 @@ prev_plot_sev_name = create_name(
 # save plot and underlying data
 ggsave(prev_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sev_name, "_no_probit.png"), width=14, height=4)
 
-saveRDS(prev_plot_sev$data, file=paste0(figdata_dir, "figdata-",prev_plot_sev_name,"_no_probit.RDS"))
+saveRDS(prev_plot_sev$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_sev_name,"_no_probit.RDS"))
 
 
 
@@ -181,7 +181,7 @@ ci_inc_plot_name = create_name(
 # save plot and underlying data
 ggsave(ci_inc_plot$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name,"_no_probit.png"), width=16, height=4)
 
-saveRDS(ci_inc_plot$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_name,"_no_probit.RDS"))
+saveRDS(ci_inc_plot$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_name,"_no_probit.RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Stunting cumulative incidence + incidence proportion - severe
@@ -215,7 +215,7 @@ ci_inc_plot_sev_name = create_name(
 # save plot and underlying data
 ggsave(ci_inc_plot_sev$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name,"_no_probit.png"), width=14, height=4)
 
-saveRDS(ci_inc_plot_sev$data, file=paste0(figdata_dir, "figdata-",ci_inc_plot_sev_name,"_no_probit.RDS"))
+saveRDS(ci_inc_plot_sev$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_sev_name,"_no_probit.RDS"))
 
 
 

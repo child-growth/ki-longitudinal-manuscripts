@@ -9,13 +9,22 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_results_2019-08-18.rdata")
-results_full <- results %>% filter(intervention_variable!="nchldlt5")
+load(here("results/rf results/raw longbow results/opttx_vim_results_2019-11-18.rdata"))
+results_full <- results
 
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/raw longbow results/opttx_vim_nchild_results_2019-08-21.rdata")
-results <- rbind(results_full, results)
+#Load subset run after full longbow job errored 80% of the way through
+load(here("results/rf results/raw longbow results/opttx_vim_results_subset_2019-11-18.rdata"))
+results_sub <- results
+
+#load seasonal VIM
+load(here("results/rf results/raw longbow results/opttx_vim_season_results_2019-11-20.rdata"))
+results_season <- results
+
+results <- rbind(results_full, results_sub, results_season)
 
 saveRDS(results, paste0(here::here(),"/results/rf results/full_VIM_results.rds"))
+
+
 
 unique(results$type)
 d <- results %>% filter(type=="PAR")
@@ -60,7 +69,7 @@ d$adjusted <- ifelse(d$adjustment_set!="unadjusted" , 1, 0)
 
 #Seperate unadjusted estimates
 d_unadj <- d %>% filter(adjusted==0)
-d <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon") & adjusted==0))
+d <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | intervention_variable=="month"  | intervention_variable=="brthmon" | intervention_variable=="rain_quartile") & adjusted==0))
 
 
 d <- droplevels(d)

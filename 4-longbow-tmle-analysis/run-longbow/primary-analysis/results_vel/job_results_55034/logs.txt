@@ -1,0 +1,111 @@
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/46ed63e6-6c73-47a8-9a46-f0be43f6814c
+cd /tmp;tar xvzf tmpz15kioi_.tar.gz --strip 1;cd /tmp/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/55034/append_log/;screen -d -m python x.py;sleep 1
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/script.Rmd: time stamp 2019-11-27 18:05:31 is 0.008986737 s in the future
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/46ed63e6-6c73-47a8-9a46-f0be43f6814c: time stamp 2019-11-27 18:05:31 is 0.008704702 s in the future
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/inputs.json: time stamp 2019-11-27 18:05:31 is 0.008640109 s in the future
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/ensure_git_dataset.sh: time stamp 2019-11-27 18:05:31 is 0.008546648 s in the future
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/x.py: time stamp 2019-11-27 18:05:31 is 0.008473758 s in the future
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/wrapper.sh: time stamp 2019-11-27 18:05:31 is 0.008401656 s in the future
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/provision.sh: time stamp 2019-11-27 18:05:31 is 0.008252181 s in the future
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/runner.R: time stamp 2019-11-27 18:05:31 is 0.008174543 s in the future
+tar: 03a482dd-72aa-4ef0-aeb5-b593a9f28e7tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/
+tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/script.Rmd
+tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/46ed63e6-6c73-47a8-9a46-f0be43f6814c/
+tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/inputs.json
+tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/ensure_git_dataset.sh
+tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/x.py
+tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/wrapper.sh
+tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/provision.sh
+tmpz15kioi_/03a482dd-72aa-4ef0-aeb5-b593a9f28e7f/runner.R
+f: time stamp 2019-11-27 18:05:31 is 0.008115644 s in the future
+Requirement already satisfied: requests in /opt/anaconda2/lib/python2.7/site-packages
+You are using pip version 9.0.1, however version 19.3.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+{"job": {"status": "running", "created_at": "2019-11-27T04:24:04.800", "results_url": "/jobs/55034/", "jobs": []}}Making sure longbowtools package is available for runner
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
+> 
+> 
+Installing pandoc
+pandoc-2.3.1/
+pandoc-2.3.1/bin/
+pandoc-2.3.1/bin/pandoc
+pandoc-2.3.1/bin/pandoc-citeproc
+pandoc-2.3.1/share/
+pandoc-2.3.1/share/man/
+pandoc-2.3.1/share/man/man1/
+pandoc-2.3.1/share/man/man1/pandoc.1.gz
+pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
+Running provision script
+skipping provisioning because this is a child job
+Making sure longbowtools package is available for runner
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
+> 
+> 
+Starting analysis
+
+
+processing file: REPORT.Rmd
+  |                                                                         |                                                                 |   0%  |                                                                         |..                                                               |   3%
+  ordinary text without R code
+
+  |                                                                         |....                                                             |   6%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                         |......                                                           |   9%
+  ordinary text without R code
+
+  |                                                                         |........                                                         |  12%
+label: params (with options) 
+List of 2
+ $ warning: logi FALSE
+ $ message: logi FALSE
+
+Loading required package: graphics
+Quitting from lines 55-80 (REPORT.Rmd) 
+Error in get_tl_nodes() : Column(s) missing from data: y_rate_waz
+Calls: run_internal ... withCallingHandlers -> withVisible -> eval -> eval -> get_tl_nodes
+
+Execution halted
+Running analysis failed
+{"status": "error"}
