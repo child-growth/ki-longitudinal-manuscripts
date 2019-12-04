@@ -15,6 +15,6 @@ xxx
 
 
 
-
+<img src="figure-copies/fig-GA-correction-sensitivity.png" width="2100" />
 
 

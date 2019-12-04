@@ -14,7 +14,22 @@ xxx
 
 
 
+## Histogram of age from 0-30 days
+
+### All cohorts
+<img src="figure-copies/age_histogram_first_month.png" width="1200" />
+
+### Cohort-stratified
+<img src="figure-copies/age_histogram_first_month_cohort.png" width="1200" />
 
 
+
+## Histogram of age at enrollment
+
+### All cohorts
+<img src="figure-copies/enrollment_age_histogram_over_7d.png" width="1200" />
+
+### Cohort-stratified
+<img src="figure-copies/enrollment_age_histogram_over_7d_cohort.png" width="1200" />
 
 

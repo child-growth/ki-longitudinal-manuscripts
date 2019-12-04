@@ -141,7 +141,7 @@ xxx
 
 
 
-
+<img src="figure-copies/fig-GA-correction-sensitivity.png" width="2100" />
 
 
 
@@ -163,8 +163,23 @@ xxx
 
 
 
+## Histogram of age from 0-30 days
+
+### All cohorts
+<img src="figure-copies/age_histogram_first_month.png" width="1200" />
+
+### Cohort-stratified
+<img src="figure-copies/age_histogram_first_month_cohort.png" width="1200" />
 
 
+
+## Histogram of age at enrollment
+
+### All cohorts
+<img src="figure-copies/enrollment_age_histogram_over_7d.png" width="1200" />
+
+### Cohort-stratified
+<img src="figure-copies/enrollment_age_histogram_over_7d_cohort.png" width="1200" />
 
 
 
@@ -182,6 +197,98 @@ xxx
 Placeholder
 
 
+## Age-specific prevalence
+### Random effects
+### Fixed effects
+## Age-specific incidence
+### Random effects
+### Fixed effects
+## Changes in stunting status by age
+### Random effects
+### Fixed effects
+## Linear growth velocity
+### Random effects
+### Fixed effects
+## Mean length-for-age Z-score by age
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific prevalence
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific incidence
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific severe stunting prevalence
+## Age-specific severe stunting incidence
+## Age-specific prevalence
+### Random effects
+### Fixed effects
+## Age-specific incidence
+### Random effects
+### Fixed effects
+## Changes in stunting status by age
+### Random effects
+### Fixed effects
+## Linear growth velocity
+### Random effects
+### Fixed effects
+## Mean length-for-age Z-score by age
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific prevalence
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific incidence
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific severe stunting prevalence
+## Age-specific severe stunting incidence
+## Age-specific prevalence
+### Random effects
+### Fixed effects
+## Age-specific incidence
+### Random effects
+### Fixed effects
+## Changes in stunting status by age
+### Random effects
+### Fixed effects
+## Linear growth velocity
+### Random effects
+### Fixed effects
+## Mean length-for-age Z-score by age
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific prevalence
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific incidence
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific severe stunting prevalence
+## Age-specific severe stunting incidence
+## Age-specific prevalence
+### Random effects
+### Fixed effects
+## Age-specific incidence
+### Random effects
+### Fixed effects
+## Changes in stunting status by age
+### Random effects
+### Fixed effects
+## Linear growth velocity
+### Random effects
+### Fixed effects
+## Mean length-for-age Z-score by age
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific prevalence
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific incidence
+### Including PROBIT
+### Excluding PROBIT
+## Age-specific severe stunting prevalence
+## Age-specific severe stunting incidence
 ## Age-specific prevalence
 ### Random effects
 ### Fixed effects

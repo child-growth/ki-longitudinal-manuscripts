@@ -15,16 +15,38 @@ xxx
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-# source(paste0(here::here(), "/0-config.R"))
 setwd("../../")
 source("0-config.R")
-#http://www.randigriffin.com/2017/04/25/how-to-knit-for-mysite.html
+```
 
+## Histogram of age from 0-30 days
+
+### All cohorts
+```{r age-first, echo = FALSE}
+#include_graphics(paste0(here::here(), "/figures/shared/age_histogram_first_month.png"))
+include_graphics("figure-copies/age_histogram_first_month.png")
+```
+
+### Cohort-stratified
+```{r age-first-cohort, echo = FALSE}
+#include_graphics(paste0(here::here(), "/figures/shared/age_histogram_first_month_cohort.png"))
+include_graphics("figure-copies/age_histogram_first_month_cohort.png")
 ```
 
 
-```{r prev-re, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/shared/laz_secular_trend.png"))
+
+## Histogram of age at enrollment
+
+### All cohorts
+```{r age-enr, echo = FALSE}
+#include_graphics(paste0(here::here(), "/figures/shared/enrollment_age_histogram_over_7d.png"))
+include_graphics("figure-copies/enrollment_age_histogram_over_7d.png")
+```
+
+### Cohort-stratified
+```{r age-enr-cohort, echo = FALSE}
+#include_graphics(paste0(here::here(), "/figures/shared/enrollment_age_histogram_over_7d_cohort.png"))
+include_graphics("figure-copies/enrollment_age_histogram_over_7d_cohort.png")
 ```
 
 

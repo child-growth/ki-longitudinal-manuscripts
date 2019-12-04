@@ -32,3 +32,16 @@ cp ../../figures/stunting/fig-stunt-2-inc-overall_region--allage-primary.png    
 # Severe stunting
 cp ../../figures/stunting/fig-stunt-3-prev-overall_region--allage-primary.png  figure-copies
 cp ../../figures/stunting/fig-stunt-3-inc-overall_region--allage-primary.png   figure-copies
+
+# Gestational age
+cp ../../figures/shared/fig-GA-correction-sensitivity.png figure-copies
+
+# Age at first measurement
+cp ../../figures/shared/age_histogram_first_month_cohort.png              figure-copies
+cp ../../figures/shared/age_histogram_first_month.png                     figure-copies
+cp ../../figures/shared/enrollment_age_histogram_over_7d_cohort.png       figure-copies
+cp ../../figures/shared/enrollment_age_histogram_over_7d.png              figure-copies
+
+
+
+
