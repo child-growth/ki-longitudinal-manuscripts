@@ -24,7 +24,7 @@
 <meta name="author" content="Jade Benjamin-Chung et al." />
 
 
-<meta name="date" content="2019-10-21" />
+<meta name="date" content="2019-12-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -68,9 +68,10 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a></li>
 <li class="chapter" data-level="2" data-path="fixed-effects.html"><a href="fixed-effects.html"><i class="fa fa-check"></i><b>2</b> Sensitivity analysis using fixed effects</a><ul>
-<li class="chapter" data-level="2.1" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-incidence"><i class="fa fa-check"></i><b>2.1</b> Age-specific incidence</a></li>
-<li class="chapter" data-level="2.2" data-path="fixed-effects.html"><a href="fixed-effects.html#relationship-between-laz-and-stunting-status"><i class="fa fa-check"></i><b>2.2</b> Relationship between LAZ and stunting status</a></li>
-<li class="chapter" data-level="2.3" data-path="fixed-effects.html"><a href="fixed-effects.html#linear-growth-velocity"><i class="fa fa-check"></i><b>2.3</b> Linear growth velocity</a></li>
+<li class="chapter" data-level="2.1" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-prevalence"><i class="fa fa-check"></i><b>2.1</b> Age-specific prevalence</a></li>
+<li class="chapter" data-level="2.2" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-incidence"><i class="fa fa-check"></i><b>2.2</b> Age-specific incidence</a></li>
+<li class="chapter" data-level="2.3" data-path="fixed-effects.html"><a href="fixed-effects.html#relationship-between-laz-and-stunting-status"><i class="fa fa-check"></i><b>2.3</b> Relationship between LAZ and stunting status</a></li>
+<li class="chapter" data-level="2.4" data-path="fixed-effects.html"><a href="fixed-effects.html#linear-growth-velocity"><i class="fa fa-check"></i><b>2.4</b> Linear growth velocity</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="secular-trends.html"><a href="secular-trends.html"><i class="fa fa-check"></i><b>3</b> Assessment of potential secular trends</a></li>
 <li class="chapter" data-level="4" data-path="exclude-PROBIT.html"><a href="exclude-PROBIT.html"><i class="fa fa-check"></i><b>4</b> Primary analyses excluding the PROBIT study</a></li>
@@ -78,6 +79,18 @@
 <li class="chapter" data-level="6" data-path="gestational.html"><a href="gestational.html"><i class="fa fa-check"></i><b>6</b> Analyses of gestational age</a></li>
 <li class="chapter" data-level="7" data-path="age-meas.html"><a href="age-meas.html"><i class="fa fa-check"></i><b>7</b> Analyses of age at first measurement</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="8" data-path="overview-1.html"><a href="overview-1.html"><i class="fa fa-check"></i><b>8</b> Overview</a><ul>
+<li class="chapter" data-level="8.1" data-path="overview-1.html"><a href="overview-1.html#age-specific-prevalence-1"><i class="fa fa-check"></i><b>8.1</b> Age-specific prevalence</a></li>
+<li class="chapter" data-level="8.2" data-path="overview-1.html"><a href="overview-1.html#age-specific-incidence-1"><i class="fa fa-check"></i><b>8.2</b> Age-specific incidence</a></li>
+<li class="chapter" data-level="8.3" data-path="overview-1.html"><a href="overview-1.html#relationship-between-laz-and-stunting-status-1"><i class="fa fa-check"></i><b>8.3</b> Relationship between LAZ and stunting status</a></li>
+<li class="chapter" data-level="8.4" data-path="overview-1.html"><a href="overview-1.html#linear-growth-velocity-1"><i class="fa fa-check"></i><b>8.4</b> Linear growth velocity</a></li>
+<li class="chapter" data-level="8.5" data-path="overview-1.html"><a href="overview-1.html#age-specific-prevalence-2"><i class="fa fa-check"></i><b>8.5</b> Age-specific prevalence</a></li>
+<li class="chapter" data-level="8.6" data-path="overview-1.html"><a href="overview-1.html#age-specific-incidence-2"><i class="fa fa-check"></i><b>8.6</b> Age-specific incidence</a></li>
+<li class="chapter" data-level="8.7" data-path="overview-1.html"><a href="overview-1.html#relationship-between-laz-and-stunting-status-2"><i class="fa fa-check"></i><b>8.7</b> Relationship between LAZ and stunting status</a></li>
+<li class="chapter" data-level="8.8" data-path="overview-1.html"><a href="overview-1.html#linear-growth-velocity-2"><i class="fa fa-check"></i><b>8.8</b> Linear growth velocity</a></li>
+<li class="chapter" data-level="8.9" data-path="overview-1.html"><a href="overview-1.html#example-one"><i class="fa fa-check"></i><b>8.9</b> Example one</a></li>
+<li class="chapter" data-level="8.10" data-path="overview-1.html"><a href="overview-1.html#example-two"><i class="fa fa-check"></i><b>8.10</b> Example two</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -156,20 +169,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
