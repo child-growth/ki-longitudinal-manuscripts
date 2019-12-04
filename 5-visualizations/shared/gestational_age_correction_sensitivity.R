@@ -15,6 +15,12 @@ library(growthstandards)
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
 
+#Clean country and cohort names
+d$country <- tolower(d$country)
+d$country <- tolower(d$country)
+d$country[d$country=="tanzania, united republic of"] <- "tanzania"
+d$studyid <- gsub("^k.*?-" , "", d$studyid)
+d$country <- str_to_title(d$country)
 
 
 
@@ -30,9 +36,9 @@ d$lencm[is.na(d$lencm)] <- d$htcm[is.na(d$lencm)]
 
 
 #Histograms of GA by cohort
-ggplot(d, aes(x=W_gagebrth)) + geom_histogram() + facet_wrap(~cohort, scales="free_y") +
+phist <- ggplot(d, aes(x=W_gagebrth)) + geom_histogram() + facet_wrap(~cohort, scales="free_y") +
   geom_vline(xintercept = c(168, 300))
-
+ggsave(phist , file=paste0(here::here(), "/figures/shared/fig-GA-by-cohort-histogram.png"), height=10, width=14)
 
 
 #Drop gestational ages under 24 weeks or over 300 days (no intergrowth standards) 
