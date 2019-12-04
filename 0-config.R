@@ -51,7 +51,7 @@ data_dir                          = here::here("data")
 metadata_dir                      = "U:/results/Metadata/"
 ghapdata_dir                      = "U://ucb-superlearner/Manuscript analysis data/"
     
-project_functions_dir             = here::here("0-project-functions//")
+project_functions_dir             = here::here("0-project-functions/")
 data_cleaning_dir                 = here::here("1-data-cleaning")
 descriptive_outcomes_dir          = here::here("2-descriptive-outcomes")
 prep_tmle_analysis_dir            = here::here("3-prep-tmle-analysis")
