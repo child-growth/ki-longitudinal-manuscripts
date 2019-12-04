@@ -3,70 +3,51 @@
 The primary analyses presented in this manuscript pooled across individual studies using random effects. Inferences about estimates from fixed effects models are restricted to only the included studies.[^1] The random effects approach was more conservative in the presence of study heterogeneity, as evidenced by larger confidence intervals around each point estimates. Overall, the inference from results produced by each method was similar. 
 
 
-The working dir is /Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png.
+
+<!-- ##################################################################################### -->
 ## Age-specific prevalence
 
+### Random effects
 <img src="figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" width="2100" />
-**Figure 1a.  Age-specific stunting prevalence overall and stratified by region and pooled using random effects. ** Age-specific stunting prevalence overall and stratified by region. The “Overall” panel includes 22 studies (N=53,194); the “Africa” panel includes 7 studies (N=15,756); the “Latin America” panel includes 5 studies (N=2,205); and the “South Asia” panel includes 15 studies (N=28,492). Results were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals. 
 
-<img src="/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/stunting/fig-stunt-2-prev-overall_region--allage-fe.png" width="2100" />
-**Figure 1b.  Age-specific stunting prevalence overall and stratified by region and pooled using fixed effects. ** Results include data from cohorts that measured children at least quarterly. We pooled estimates across studies using inverse variance weighted fixed effects models. Results shown in both panels were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals.
+### Fixed effects
+<img src="figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png" width="2100" />
 
+[ADD CAPTION]
 
+<!-- ##################################################################################### -->
 ## Age-specific incidence
 
+### Random effects
+<img src="figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png" width="2400" />
 
-<img src="/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/stunting/fig-stunt-2-inc-overall_region--allage-primary.png" width="2400" />
-**Figure 2a.  Age-specific stunting incidence (cumulative and new cases) overall and stratified by region and pooled using random effects.** ) "0-3" includes ages from age 2 days up to 3 months. The “Overall” panel includes 23 studies (N=60,356); the “Africa” panel includes 7 studies (N=19,859); the “Latin America” panel includes 5 studies (N=2,163); and the “South Asia” panel includes 15 studies (N=30,358). Results shown in both panels include data from cohorts that measured children at least quarterly. We pooled estimates across studies using random effects models fit with restricted maximum likelihood estimation.  Results were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals. 
+### Fixed effects
+<img src="figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png" width="2400" />
 
-<img src="/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/stunting/fig-stunt-2-inc-overall_region--allage-fe.png" width="2400" />
-**Figure 2b.  Age-specific stunting incidence (cumulative and new cases) overall and stratified by region and pooled using fixed effects.** Results include data from cohorts that measured children at least quarterly. We pooled estimates across studies using inverse variance weighted fixed effects models. Results shown in both panels were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals.
+[ADD CAPTION]
 
-## Relationship between LAZ and stunting status
+<!-- ##################################################################################### -->
+## Changes in stunting status by age
 
-FIGURE TO BE ADDED
+### Random effects
+<img src="figure-copies/fig-stunt-2-flow-overall--allage-re.png" width="1500" />
 
+### Fixed effects
+<img src="figure-copies/fig-stunt-2-flow-overall--allage-fe.png" width="1500" />
 
-<!-- # ```{r bar-re, echo = FALSE} -->
-<!-- # include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-flow-overall--allage-primary.png")) -->
-<!-- # ``` -->
-
-**Relationship between LAZ and stunting status pooled using fixed effects models.** Percentage of children stunted and not stunted by age. "Never stunted": children with LAZ $\ge$ –2 at previous ages and the current age. "Still not stunted": children who were previously recovered with LAZ  $\ge$ –2 at the current age. "No longer stunted": children with LAZ < –2 at the previous age and LAZ  $\ge$–2 at the current age. "Newly stunted": children whose LAZ was previously always  $\ge$ –2 and with LAZ < –2 at the current age. "Stunting relapse": children who were previously stunted with LAZ  $\ge$ –2 at the previous age and LAZ < –2 at the current age. "Still stunted": children whose LAZ was < –2 at the previous and current age. Analyses in b and c includes data from 12 cohorts with at least monthly measurement, 10 countries, and 11,394 children. Results shown in all panels were pooled across studies using inverse variance weighted fixed effects models and include data subset to ages up to 15 months because in most cohorts, measurements were less frequent above 15 months. 
-
-FIGURE TO BE ADDED
-
-**Relationship between LAZ and stunting status pooled using fixed effects models.** Percentage of children stunted and not stunted by age. "Never stunted": children with LAZ $\ge$ –2 at previous ages and the current age. "Still not stunted": children who were previously recovered with LAZ  $\ge$ –2 at the current age. "No longer stunted": children with LAZ < –2 at the previous age and LAZ  $\ge$–2 at the current age. "Newly stunted": children whose LAZ was previously always  $\ge$ –2 and with LAZ < –2 at the current age. "Stunting relapse": children who were previously stunted with LAZ  $\ge$ –2 at the previous age and LAZ < –2 at the current age. "Still stunted": children whose LAZ was < –2 at the previous and current age. Analyses in b and c includes data from 12 cohorts with at least monthly measurement, 10 countries, and 11,394 children. Results shown in all panels were pooled across studies using inverse variance weighted fixed effects models and include data subset to ages up to 15 months because in most cohorts, measurements were less frequent above 15 months.  
+[ADD CAPTION] 
 
 
-
+<!-- ##################################################################################### -->
 ## Linear growth velocity
-FIGURE TO BE ADDED
 
-<!-- # ```{r bar-re, echo = FALSE} -->
-<!-- # # include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-vel-overall--allage-primary.png")) -->
-<!-- # ``` -->
+### Random effects
+<img src="figure-copies/fig-stunt-2-vel-overall--allage-primary.png" width="1500" />
 
-**Figure 4a.  Within-child difference in length in centimeters per month stratified by age and sex pooled using random effects.** Dotted black line indicates 15th percentile of the WHO Growth Velocity Standards; dashed black line indicates the 25th percentile; solid black line indicates the 50th percentile. Colored lines indicate and vertical bars indicate 95% confidence intervals for ki cohorts. Using pooled random effects models, differences were statistically significant between sexes at ages 0-3, 3-6, 12-15, 15-18, and 18-21 months. 
+### Fixed effects
+<img src="figure-copies/fig-stunt-2-vel-overall--allage-fe.png" width="1500" />
 
-FIGURE TO BE ADDED
+[ADD CAPTION]
 
-**Figure 4b.  Within-child difference in length in centimeters per month stratified by age and sex pooled using fixed effects.** Dotted black line indicates 15th percentile of the WHO Growth Velocity Standards; dashed black line indicates the 25th percentile; solid black line indicates the 50th percentile. Colored lines indicate and vertical bars indicate 95% confidence intervals for ki cohorts. 
-
-FIGURE TO BE ADDED
-
-**Figure 4c.  Within-child difference in length-for-age Z-score per month by age and sex pooled using random effects.** Using pooled random effects models, differences were statistically significant between sexes at ages 0-3, 3-6, 6-9, 9-12, 18-21, and 21-24 months. 
-
-FIGURE TO BE ADDED
-
-**Figure 4d.  Within-child difference in length-for-age Z-score per month by age and sex. **
-
-FIGURE TO BE ADDED
-
-**Figure 4e.  Mean length-for-age Z-score by age and sex pooled using random effects.** Differences by sex were statistically significant in each age group. Results shown in all panels were derived from 23 ki cohorts in 15 countries that measured children at least quarterly (n = 77,129 children) and pooled using random effects models fit with restricted maximum likelihood estimation. 
-
-
-FIGURE TO BE ADDED
-
-**Figure 4f.  Mean length-for-age Z-score by age and sex.** Results shown in all panels were derived from 23 ki cohorts in 15 countries that measured children at least quarterly (n = 77,129 children) and pooled using inverse variance weighted fixed effects models. 95% confidence intervals are included in plots but for certain estimates are not visible because they are very close to the pooled point estimate.  
 
 [^1]: Hedges, L. V. & Vevea, J. L. Fixed- and random-effects models in meta-analysis. Psychol. Methods 3, 486–504 (1998).
