@@ -50,16 +50,16 @@ rf_spline_meta <- function(d, Avar, outcome="whz", degree=degree){
   
   names(plotdflist) <- levels
   plotdf <- data.frame(Avar=Avar, bind_rows(plotdflist))
-  
-  offsetZ <- offset_fun(d, Y=outcome, Avar=Avar)
-  
-  
-  plotdf <- left_join(plotdf, offsetZ, by="level")
-  plotdf <- plotdf %>% 
-    mutate(est= est + offset,
-           ci.lb= ci.lb + offset,
-           ci.ub= ci.ub + offset)
-  
+  # 
+  # offsetZ <- offset_fun(d, Y=outcome, Avar=Avar)
+  # 
+  # 
+  # plotdf <- left_join(plotdf, offsetZ, by="level")
+  # plotdf <- plotdf %>% 
+  #   mutate(est= est + offset,
+  #          ci.lb= ci.lb + offset,
+  #          ci.ub= ci.ub + offset)
+  # 
   
   
   p <- ggplot() +
