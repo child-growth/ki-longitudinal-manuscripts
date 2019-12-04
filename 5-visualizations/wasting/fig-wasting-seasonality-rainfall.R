@@ -26,12 +26,23 @@ rain$studyid <- as.character(rain$studyid)
 rain$studyid[rain$studyid == "ki1017093b-PROVIDE "] <-  "ki1017093b-PROVIDE"
 d$country[d$country=="tanzania, united republic of"] <- "tanzania"
 
+rain <- rain %>% 
+  rename(season_index = cohort_index) %>%
+  arrange(season_index) %>%
+  mutate(seasonality_category = 
+           case_when(
+             season_index >= 0.8 ~ "High seasonality",
+             season_index < 0.5 ~ "Low seasonality",
+             TRUE ~ "Medium seasonality"),
+         seasonality_category = factor(seasonality_category, levels=c("High seasonality", "Medium seasonality", "Low seasonality")))
+table(rain$seasonality_category)
+
 #remove grant identifiers from studyid
 d$studyid <- gsub("^k.*?-" , "", d$studyid)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
 
 #Transform rain dataset
-rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
+rain <- rain %>% subset(., select = c("studyid", "country", "seasonality_category", "season_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
                                       "Jun_pre", "Jul_pre", "Aug_pre", "Sep_pre", "Oct_pre", "Nov_pre", "Dec_pre"))
 
 rain$country <- str_to_title(rain$country)
@@ -39,7 +50,7 @@ d$country <- str_to_title(d$country)
 
 # gather meanWHZ by month data into long format
 rain2 <- rain %>%
-  gather(month,rain, -studyid, -country, -cohort_index, -region) 
+  gather(month,rain, -studyid, -country, -season_index, -seasonality_category) 
 rain2$month = gsub("_pre","",rain2$month)
 rain2$month = factor(rain2$month, levels=c("Jan", "Feb", "Mar", "Apr", "May","Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
 head(rain2)
@@ -51,7 +62,7 @@ rain2$month_day = as.numeric(rain2$month) * 30.4167
 
 
 #arrange cohorts by seasonality index and set factor levels
-rain2 <- rain2 %>% arrange(region, -cohort_index) %>% 
+rain2 <- rain2 %>% arrange(-season_index) %>% 
   mutate(cohort = paste0(studyid, ", ", country),
          cohort=factor(cohort, levels=unique(cohort))) 
 d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
@@ -72,7 +83,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:1
   dsub <- filter(df, cohort == cohort_name)
   
   #add
-  cohort_name <- paste0(cohort_name," (", round(rain_sub$cohort_index[1],2),")")
+  cohort_name <- paste0(cohort_name," (", round(rain_sub$season_index[1],2),")")
   
   rainmax = max(rain_sub$rain)
   
@@ -81,7 +92,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:1
   newd <- data.frame(jday = 0:364)
   # estimate approximate simultaneous confidence intervals
   fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
-  dfit <- data.frame(jday = 0:364, region=dsub$region[1], fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
+  dfit <- data.frame(jday = 0:364, seasonality_category=rain_sub$seasonality_category[1], fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
   
   shift<-min(dfit$fit_lb)
   Zpeak<-ifelse(min(dfit$fit_lb)<0, abs(min(dfit$fit_lb)), max(dfit$fit_ub-shift))
@@ -97,32 +108,32 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:1
   
   if(i %in% leftlab){
   p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
-    geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=region), size=2) +
+    geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=seasonality_category), size=2) +
     geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
                                  y=(fit-shift)*conversion_factor, 
                                  ymin=(fit_lb-shift)*conversion_factor,  
                                  ymax=(fit_ub-shift)*conversion_factor, 
-                                 color=NULL, fill=region), alpha=0.3) +
+                                 color=NULL, fill=seasonality_category), alpha=0.3) +
     scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "Mean WLZ")) +
     ylab(NULL) + xlab(NULL) +
-    scale_fill_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
-    scale_color_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
+    scale_fill_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
+    scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
     scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                      labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
     ggtitle(cohort_name) + theme(legend.position = "none")
   }
   if(i %in% rightlab){
     p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
-      geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=region), size=2) +
+      geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=seasonality_category), size=2) +
       geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
                                    y=(fit-shift)*conversion_factor, 
                                    ymin=(fit_lb-shift)*conversion_factor,  
                                    ymax=(fit_ub-shift)*conversion_factor, 
-                                   color=NULL, fill=region), alpha=0.3) +
+                                   color=NULL, fill=seasonality_category), alpha=0.3) +
       scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
       ylab("Rainfall (mm)") + xlab(NULL) +
-      scale_fill_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
-      scale_color_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
+      scale_fill_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
+      scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                        labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
       ggtitle(cohort_name) + theme(legend.position = "none")
@@ -130,16 +141,16 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:1
   
   if(!(i %in% leftlab | i %in% rightlab)){
     p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
-      geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=region), size=2) +
+      geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=seasonality_category), size=2) +
       geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
                                    y=(fit-shift)*conversion_factor, 
                                    ymin=(fit_lb-shift)*conversion_factor,  
                                    ymax=(fit_ub-shift)*conversion_factor, 
-                                   color=NULL, fill=region), alpha=0.3) +
+                                   color=NULL, fill=seasonality_category), alpha=0.3) +
       scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
       ylab("") + xlab(NULL) +
-      scale_fill_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
-      scale_color_manual(values=tableau10[c(1,3,2,4,5,6)], drop=TRUE, limits = levels(df$region)) +
+      scale_fill_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
+      scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                        labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
       ggtitle(cohort_name) + theme(legend.position = "none")

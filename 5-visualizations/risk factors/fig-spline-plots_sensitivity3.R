@@ -132,7 +132,7 @@ p5 <- ggplot(data=haz_mbmi[!is.na(haz_mbmi$mbmi),]) +
   geom_smooth(aes(x=agecat, y=est, group=mbmi, color=mbmi), size=1.25, se=F) +
   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
-  xlab("Child age in months") + ylab("Mean WLZ") +
+  xlab("Child age in months") + ylab("Mean LAZ") +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = c(0.8,0.9), axis.text.x = element_text(angle = 45, hjust = 1, vjust=1))
 
