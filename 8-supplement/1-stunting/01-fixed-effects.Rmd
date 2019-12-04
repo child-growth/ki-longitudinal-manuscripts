@@ -13,7 +13,9 @@ The working dir is `r paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region-
 ## Age-specific prevalence
 
 ```{r prev-re, echo = FALSE}
-include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-primary.png"))
+# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-primary.png"))
+include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png")
+
 ```
 **Figure 1a.  Age-specific stunting prevalence overall and stratified by region and pooled using random effects. ** Age-specific stunting prevalence overall and stratified by region. The “Overall” panel includes 22 studies (N=53,194); the “Africa” panel includes 7 studies (N=15,756); the “Latin America” panel includes 5 studies (N=2,205); and the “South Asia” panel includes 15 studies (N=28,492). Results were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals. 
 

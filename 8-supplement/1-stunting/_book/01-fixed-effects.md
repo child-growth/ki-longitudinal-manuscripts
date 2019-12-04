@@ -6,7 +6,7 @@ The primary analyses presented in this manuscript pooled across individual studi
 The working dir is /Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png.
 ## Age-specific prevalence
 
-<img src="/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png" width="2100" />
+<img src="figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" width="2100" />
 **Figure 1a.  Age-specific stunting prevalence overall and stratified by region and pooled using random effects. ** Age-specific stunting prevalence overall and stratified by region. The “Overall” panel includes 22 studies (N=53,194); the “Africa” panel includes 7 studies (N=15,756); the “Latin America” panel includes 5 studies (N=2,205); and the “South Asia” panel includes 15 studies (N=28,492). Results were estimated from data in up to 23 cohorts. The number of children per estimate ranged from approximately 6,000 to 1.7 million.  Vertical bars indicate 95% confidence intervals. 
 
 <img src="/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/stunting/fig-stunt-2-prev-overall_region--allage-fe.png" width="2100" />
