@@ -65,7 +65,9 @@ quantile_region <- quantile %>%
 quantile_cohort <- quantile %>%
   filter(studyid!="pooled") %>%
   gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "LAZ") %>% 
-  mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+  mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")),
+         studyid <- gsub("^k.*?-" , "", studyid),
+         cohort = paste0(studyid, "-", str_to_title(country)))
 
 #------------------------------------------
 # regional plot 
@@ -105,11 +107,11 @@ mean_laz_quantile_plot <- ggplot(quantile_region,aes(x = agecat, group = region)
 # cohort stratified plots
 #------------------------------------------
 plot_cohort_quantile_mean = function(data){
-  plot = ggplot(quantile_cohort_asia,aes(x = agecat, group = region)) +
+  plot = ggplot(data,aes(x = agecat, group = region)) +
     
     geom_smooth(aes(y = LAZ, color = region, group = interval, linetype = interval), se = F, span = 0.5) +
     
-    facet_wrap(~studyid) +
+    facet_wrap(~cohort) +
     geom_hline(yintercept = 0, colour = "black") +
     scale_x_continuous(limits = c(0,24), breaks = seq(0,24,6), labels = seq(0,24,6)) + 
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
