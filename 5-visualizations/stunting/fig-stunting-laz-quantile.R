@@ -62,11 +62,12 @@ quantile_region <- quantile %>%
   gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "LAZ") %>% 
   mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
+quantile$studyid <- gsub("^k.*?-" , "", quantile$studyid)
+quantile$country <- gsub("TANZANIA, UNITED REPUBLIC OF" , "TANZANIA", quantile$country)
 quantile_cohort <- quantile %>%
   filter(studyid!="pooled") %>%
   gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "LAZ") %>% 
   mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")),
-         studyid <- gsub("^k.*?-" , "", studyid),
          cohort = paste0(studyid, "-", str_to_title(country)))
 
 #------------------------------------------
