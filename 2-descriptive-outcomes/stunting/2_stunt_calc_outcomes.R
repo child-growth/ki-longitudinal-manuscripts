@@ -193,13 +193,13 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   #----------------------------------------
   # Get monthly HAZ quantiles
   #----------------------------------------
-  quantile_d_cohort <- dmon %>% group_by(agecat, region, studyid) %>%
+  quantile_d_cohort <- dmon %>% group_by(agecat, region, country, studyid) %>%
     mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
            fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
            ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
     select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
   
-  quantile_d <- dmon %>% group_by(agecat, region) %>%
+  quantile_d <- dmon %>% group_by(agecat,  country, region) %>%
     mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
            fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
            ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
