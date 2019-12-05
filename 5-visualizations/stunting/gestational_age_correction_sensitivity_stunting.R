@@ -198,7 +198,8 @@ p <- ggplot(df, aes(y=est,x=cohort)) +
   ggtitle("") + 
   theme(strip.text = element_text(size=14, margin = margin(t = 0)),
         legend.position = "right",
-        axis.text.y = element_text( hjust = 0)) 
+        axis.text.y = element_text( hjust = 0)) +
+  labs(shape="Gestational\nAge\nCorrection")
 
 print(p)
 

@@ -229,7 +229,6 @@ p <- ggplot(df,aes(y=est,x=cohort)) +
   geom_point(aes(fill=Region, color=Region, shape=GA_correction, group=GA_correction), size = 2, position = position_dodge(0.4)) +
   scale_fill_manual(values=tableau11) +
   scale_color_manual(values=tableau11) +
-  geom_hline(yintercept = 0) +
   xlab("Cohort")+
   ylab("Prevalence at birth") +
   scale_shape_manual(values = c(4, 21)) +
@@ -241,7 +240,8 @@ p <- ggplot(df,aes(y=est,x=cohort)) +
   facet_grid(~measure) +
   theme(strip.text = element_text(size=14, margin = margin(t = 0)),
         legend.position = "right",
-        axis.text.y = element_text( hjust = 0)) 
+        axis.text.y = element_text( hjust = 0)) +
+  labs(shape="Gestational\nAge\nCorrection")
 
 print(p)
 
