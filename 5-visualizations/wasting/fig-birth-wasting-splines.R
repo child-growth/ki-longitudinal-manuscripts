@@ -5,7 +5,6 @@ source(paste0(here::here(), "/0-config.R"))
 
 plotdf <- readRDS(paste0(ghapdata_dir, "birthwast_strat_whz_plot_data.rds"))
 
-
 p <- ggplot(data=plotdf, aes(x=agedays, y=fit, group=born_wast, color=born_wast,  fill=born_wast)) +
   geom_line(size=2) +
   geom_ribbon(aes(ymin=fit_lb, ymax=fit_ub), alpha=0.3, color=NA) +
