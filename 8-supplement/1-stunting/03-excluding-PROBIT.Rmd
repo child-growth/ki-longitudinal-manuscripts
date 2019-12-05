@@ -15,10 +15,8 @@ xxx
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-# source(paste0(here::here(), "/0-config.R"))
-setwd("../../")
-source("0-config.R")
-#http://www.randigriffin.com/2017/04/25/how-to-knit-for-mysite.html
+# setwd("../../")
+# source("0-config.R")
 
 ```
 
