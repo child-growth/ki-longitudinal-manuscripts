@@ -16,12 +16,20 @@ To assess X, we compared stunting prevalence at birth when correcting at-birth Z
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-setwd("../../")
-source("0-config.R")
+# setwd("../../")
+# source("0-config.R")
 ```
 
+## Cohort-specific histograms of gestational age at birth in days
 
-```{r prev-re, echo = FALSE}
+```{r ga-cohort, echo = FALSE}
+#include_graphics(paste0(here::here(), "/figures/shared/fig-GA-by-cohort-histogram.png"))
+include_graphics("figure-copies/fig-GA-by-cohort-histogram.png")
+```
+
+## Stunting prevalence with and without gestational age correction
+
+```{r ga, echo = FALSE}
 #include_graphics(paste0(here::here(), "/figures/shared/fig-GA-correction-sensitivity.png"))
 include_graphics("figure-copies/fig-GA-correction-sensitivity.png")
 ```
