@@ -35,7 +35,7 @@ cp ../../figures/stunting/fig-stunt-3-inc-overall_region--allage-primary.png   f
 
 # Gestational age
 cp ../../figures/shared/fig-GA-correction-sensitivity.png figure-copies
-#fig-GA-by-cohort-histogram
+cp ../../figures/shared/fig-GA-by-cohort-histogram.png    figure-copies
 
 # Age at first measurement
 cp ../../figures/shared/age_histogram_first_month_cohort.png              figure-copies

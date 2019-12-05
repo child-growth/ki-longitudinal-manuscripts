@@ -15,8 +15,8 @@ xxx
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-setwd("../../")
-source("0-config.R")
+# setwd("../../")
+# source("0-config.R")
 ```
 
 ## Histogram of age from 0-30 days

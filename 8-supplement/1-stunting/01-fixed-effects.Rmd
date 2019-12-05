@@ -5,8 +5,8 @@ The primary analyses presented in this manuscript pooled across individual studi
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-setwd("../../")
-source("0-config.R")
+# setwd("../../")
+# source("0-config.R")
 ```
 
 <!-- ##################################################################################### -->
