@@ -25,6 +25,8 @@ d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
        filter(age_enrol <= age_cutoff) %>%
        mutate(born_wast = 1 * (first(whz) < (-2))) 
 table(d$born_wast)
+d %>% group_by(born_wast) %>% summarize(length(unique(paste0(studyid, subjid))))
+
 
 #Subset to co-occurrence to monthly
 co <- co %>% filter(measurefreq == "monthly") %>% filter(agedays < 24*30.4167) %>%

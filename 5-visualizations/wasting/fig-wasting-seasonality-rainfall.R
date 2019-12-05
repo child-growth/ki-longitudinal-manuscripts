@@ -120,7 +120,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:1
     scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
     scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                      labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
-    ggtitle(cohort_name) + theme(legend.position = "none")
+    ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
   }
   if(i %in% rightlab){
     p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
@@ -136,7 +136,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:1
       scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                        labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
-      ggtitle(cohort_name) + theme(legend.position = "none")
+      ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
   }
   
   if(!(i %in% leftlab | i %in% rightlab)){
@@ -153,7 +153,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:1
       scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                        labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
-      ggtitle(cohort_name) + theme(legend.position = "none")
+      ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
   }
   
   return(p)

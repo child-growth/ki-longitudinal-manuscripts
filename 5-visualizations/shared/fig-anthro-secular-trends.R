@@ -133,24 +133,16 @@ d <- mark_region(d)
 
 #Drop europe
 d <- d %>% filter(region != "N.America & Europe")
-
+d$Region <- d$region
 
 #Scatterplot by region
-p <- ggplot(d, aes(x=brthyr, y=haz, color=region, group=region)) + geom_point(alpha=0.05) + facet_wrap(~region) +
+p <- ggplot(d, aes(x=brthyr, y=haz, color=Region, group=Region)) + geom_point(alpha=0.05) + facet_wrap(~Region) +
   scale_color_manual(values=tableau10) + theme(legend.position = "right") + coord_cartesian(ylim=c(-6,6)) + xlab("Birth year") +
-  ylab("LAZ")
+  ylab("LAZ") +
+  guides(color = guide_legend(override.aes = list(alpha=1)))
+
 
 ggsave(p, file = here::here("/figures/shared/laz_secular_trend.png"), width=8, height=4)
 
-# #Spline by region
-# p <- ggplot(d, aes(x=brthyr, y=haz, color=region, group=region)) + geom_smooth() +
-#   scale_color_manual(values=tableau10) + theme(legend.position = "right")
-# p
-# 
-# 
-# #Spline by country
-# p <- ggplot(d, aes(x=brthyr, y=haz, color=country, group=country)) + geom_smooth(method = lm) +
-#   theme(legend.position = "right")
-# p
 
 
