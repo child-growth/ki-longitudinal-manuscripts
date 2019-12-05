@@ -205,7 +205,7 @@ print(p)
 
 
 #Save plot and plot data
-ggsave(p, file=paste0(here::here(), "/figures/stunting/fig-GA-correction-sensitivity.png"), height=6, width=5)
+ggsave(p, file=paste0(here::here(), "/figures/stunting/fig-GA-correction-sensitivity.png"), height=8, width=5)
 
 saveRDS(df, file=paste0(here::here(), "/figures/stunting/figure-data/fig-GA-correction-sensitivity.RDS"))
 
