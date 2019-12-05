@@ -15,6 +15,9 @@ xxx
 
 
 
+## Age-specific severe stunting prevalence
+<img src="figure-copies/fig-stunt-3-prev-overall_region--allage-primary.png" width="4200" />
 
 
-
+## Age-specific severe stunting incidence
+<img src="figure-copies/fig-stunt-3-inc-overall_region--allage-primary.png" width="4200" />

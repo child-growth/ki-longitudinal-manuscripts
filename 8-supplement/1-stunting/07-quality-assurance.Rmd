@@ -1,0 +1,32 @@
+# Quality assurance {#QA}
+
+---
+output:
+  pdf_document:
+    keep_tex: yes
+fontfamily: mathpazo
+fontsize: 9pt
+---
+
+\raggedright
+
+Add text
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+setwd("../../")
+source("0-config.R")
+
+```
+
+```{r qa, echo = FALSE}
+# include_graphics(paste0(here::here(), "/figures/shared/laz_QA.png"))
+include_graphics("figure-copies/laz_QA.png")
+```
+
+
+```{r qa-cohort, echo = FALSE}
+# include_graphics(paste0(here::here(), "/figures/shared/laz_QA_cohort.png"))
+include_graphics("figure-copies/laz_QA_cohort.png")
+```
