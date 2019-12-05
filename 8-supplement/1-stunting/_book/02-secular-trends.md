@@ -15,6 +15,6 @@ This study included cohorts that measured child growth from 1969 to 2014. To ass
 
 
 
-<img src="figure-copies/laz_secular_trend.png" width="1200" />
+<img src="figure-copies/laz_secular_trend.png" width="2400" />
 
 

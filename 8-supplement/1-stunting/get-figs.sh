@@ -35,6 +35,7 @@ cp ../../figures/stunting/fig-stunt-3-inc-overall_region--allage-primary.png   f
 
 # Gestational age
 cp ../../figures/shared/fig-GA-correction-sensitivity.png figure-copies
+#fig-GA-by-cohort-histogram
 
 # Age at first measurement
 cp ../../figures/shared/age_histogram_first_month_cohort.png              figure-copies
@@ -42,6 +43,9 @@ cp ../../figures/shared/age_histogram_first_month.png                     figure
 cp ../../figures/shared/enrollment_age_histogram_over_7d_cohort.png       figure-copies
 cp ../../figures/shared/enrollment_age_histogram_over_7d.png              figure-copies
 
+# Quality assurance
+cp ../../figures/shared/laz_QA.png           figure-copies
+cp ../../figures/shared/laz_QA_cohort.png    figure-copies
 
 
 

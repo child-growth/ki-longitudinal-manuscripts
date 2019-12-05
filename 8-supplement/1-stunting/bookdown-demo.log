@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2017.5.23)  21 OCT 2019 12:04
+This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2017.5.23)  4 DEC 2019 14:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -850,126 +850,313 @@ LaTeX Font Info:    Font shape `U/msb/m/n' will be
 (Font)              scaled to size 8.33606pt on input line 115.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
 (Font)              scaled to size 5.21004pt on input line 115.
-
-Underfull \hbox (badness 1325) in paragraph at lines 117--119
-[]\TU/lmr/m/n/10 The working dir is /Users/jadederong/Documents/CRG/ki/ki-longi
-tudinal-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 117--119
-\TU/lmr/m/n/10 manuscripts/6-shiny-app/figures/stunting/fig-stunt-2-prev-overal
-l_region–
- []
-
-File: /Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/6-shiny-ap
-p/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png Graphic 
-file (type QTm)
-
-<use  "/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/6-shiny-a
-pp/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png" >
-Overfull \hbox (666.82588pt too wide) in paragraph at lines 120--122
-[][]
+File: figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png Graphic
+ file (type QTm)
+<use  "figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" >
+Overfull \hbox (666.82588pt too wide) in paragraph at lines 123--124
+[] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [7]
-File: /Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/6-shiny-ap
-p/figures/stunting/fig-stunt-2-prev-overall_region--allage-fe.png Graphic file 
-(type QTm)
-
-<use  "/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/6-shiny-a
-pp/figures/stunting/fig-stunt-2-prev-overall_region--allage-fe.png" >
-Overfull \hbox (666.82588pt too wide) in paragraph at lines 123--125
-[][]
+File: figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png Graphic file
+ (type QTm)
+<use  "figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png" >
+Overfull \hbox (666.82588pt too wide) in paragraph at lines 128--129
+[] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [8]
-File: /Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/6-shiny-ap
-p/figures/stunting/fig-stunt-2-inc-overall_region--allage-primary.png Graphic f
-ile (type QTm)
-
-<use  "/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/6-shiny-a
-pp/figures/stunting/fig-stunt-2-inc-overall_region--allage-primary.png" >
-Overfull \hbox (811.37238pt too wide) in paragraph at lines 129--131
-[]
+File: figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png Graphic 
+file (type QTm)
+<use  "figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png" >
+Overfull \hbox (811.37238pt too wide) in paragraph at lines 138--139
+[] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [9]
-File: /Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/6-shiny-ap
-p/figures/stunting/fig-stunt-2-inc-overall_region--allage-fe.png Graphic file (
-type QTm)
-
-<use  "/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/6-shiny-a
-pp/figures/stunting/fig-stunt-2-inc-overall_region--allage-fe.png" >
-Overfull \hbox (811.37238pt too wide) in paragraph at lines 132--134
-[][]
+File: figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png Graphic file 
+(type QTm)
+<use  "figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png" >
+Overfull \hbox (811.37238pt too wide) in paragraph at lines 143--144
+[] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[10] [11] [12] [13] [14
+[10]
+File: figure-copies/fig-stunt-2-flow-overall--allage-re.png Graphic file (type 
+QTm)
+<use  "figure-copies/fig-stunt-2-flow-overall--allage-re.png" >
+Overfull \hbox (377.73274pt too wide) in paragraph at lines 153--154
+[] 
+ []
 
-]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[11]
+File: figure-copies/fig-stunt-2-flow-overall--allage-fe.png Graphic file (type 
+QTm)
+<use  "figure-copies/fig-stunt-2-flow-overall--allage-fe.png" >
+Overfull \hbox (377.73274pt too wide) in paragraph at lines 158--159
+[] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[12]
+File: figure-copies/fig-stunt-2-vel-overall--allage-primary.png Graphic file (t
+ype QTm)
+<use  "figure-copies/fig-stunt-2-vel-overall--allage-primary.png" >
+Overfull \hbox (342.53288pt too wide) in paragraph at lines 168--169
+[] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[13]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[14]
+Overfull \vbox (53.54826pt too high) has occurred while \output is active []
+
+[15]
+File: figure-copies/fig-stunt-2-vel-overall--allage-fe.png Graphic file (type Q
+Tm)
+<use  "figure-copies/fig-stunt-2-vel-overall--allage-fe.png" >
+Overfull \hbox (342.53288pt too wide) in paragraph at lines 173--174
+[] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[16]
+Overfull \vbox (23.56328pt too high) has occurred while \output is active []
+
+[17] [18]
 Chapter 3.
-File: /Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/sh
-ared/laz_secular_trend.png Graphic file (type QTm)
-
-<use  "/Users/jadederong/Documents/CRG/ki/ki-longitudinal-manuscripts/figures/s
-hared/laz_secular_trend.png" >
-Overfull \hbox (233.18617pt too wide) in paragraph at lines 180--181
+File: figure-copies/laz_secular_trend.png Graphic file (type QTm)
+<use  "figure-copies/laz_secular_trend.png" >
+Overfull \hbox (233.18617pt too wide) in paragraph at lines 184--185
 [][]  
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[15] [16]
+[19
+
+] [20]
 Chapter 4.
-[17
+File: figure-copies/fig-laz-2-mean-overall_region--allage-primary.png Graphic f
+ile (type QTm)
+<use  "figure-copies/fig-laz-2-mean-overall_region--allage-primary.png" >
+Overfull \hbox (377.73274pt too wide) in paragraph at lines 199--200
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[21
 
 ]
+File: figure-copies/fig-laz-2-mean-overall_region--allage-primary_no_probit.png
+ Graphic file (type QTm)
+
+<use  "figure-copies/fig-laz-2-mean-overall_region--allage-primary_no_probit.pn
+g" >
+Overfull \hbox (377.73274pt too wide) in paragraph at lines 204--205
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 Overfull \hbox (2.48453pt too wide) has occurred while \output is active
-\TU/lmr/m/n/10 18 \TU/lmr/m/sl/10 CHAPTER 4.  PRIMARY ANALYSES EXCLUDING THE PR
+\TU/lmr/m/n/10 22 \TU/lmr/m/sl/10 CHAPTER 4.  PRIMARY ANALYSES EXCLUDING THE PR
 OBIT STUDY
  []
 
-[18
+[22]
+File: figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png Graphic
+ file (type QTm)
+<use  "figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" >
+Overfull \hbox (666.82588pt too wide) in paragraph at lines 212--213
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[23]
+File: figure-copies/fig-stunt-2-prev-overall_region--allage-primary_no_probit.p
+ng Graphic file (type QTm)
+
+<use  "figure-copies/fig-stunt-2-prev-overall_region--allage-primary_no_probit.
+png" >
+Overfull \hbox (666.82588pt too wide) in paragraph at lines 217--218
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (2.48453pt too wide) has occurred while \output is active
+\TU/lmr/m/n/10 24 \TU/lmr/m/sl/10 CHAPTER 4.  PRIMARY ANALYSES EXCLUDING THE PR
+OBIT STUDY
+ []
+
+[24]
+File: figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png Graphic
+ file (type QTm)
+<use  "figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" >
+Overfull \hbox (666.82588pt too wide) in paragraph at lines 225--226
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[25]
+File: figure-copies/fig-stunt-2-inc-overall_region--allage-primary_no_probit.pn
+g Graphic file (type QTm)
+
+<use  "figure-copies/fig-stunt-2-inc-overall_region--allage-primary_no_probit.p
+ng" >
+Overfull \hbox (811.37238pt too wide) in paragraph at lines 230--231
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (2.48453pt too wide) has occurred while \output is active
+\TU/lmr/m/n/10 26 \TU/lmr/m/sl/10 CHAPTER 4.  PRIMARY ANALYSES EXCLUDING THE PR
+OBIT STUDY
+ []
+
+[26] [27]
+Overfull \hbox (2.48453pt too wide) has occurred while \output is active
+\TU/lmr/m/n/10 28 \TU/lmr/m/sl/10 CHAPTER 4.  PRIMARY ANALYSES EXCLUDING THE PR
+OBIT STUDY
+ []
+
+[28
 
 ]
 Chapter 5.
-[19] [20
+File: figure-copies/fig-stunt-3-prev-overall_region--allage-primary.png Graphic
+ file (type QTm)
+<use  "figure-copies/fig-stunt-3-prev-overall_region--allage-primary.png" >
+Overfull \hbox (666.82588pt too wide) in paragraph at lines 242--243
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[29]
+File: figure-copies/fig-stunt-3-inc-overall_region--allage-primary.png Graphic 
+file (type QTm)
+<use  "figure-copies/fig-stunt-3-inc-overall_region--allage-primary.png" >
+Overfull \hbox (666.82588pt too wide) in paragraph at lines 247--248
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[30] [31] [32
 
 ]
 Chapter 6.
-[21] [22
+File: figure-copies/fig-GA-correction-sensitivity.png Graphic file (type QTm)
+<use  "figure-copies/fig-GA-correction-sensitivity.png" >
+Overfull \hbox (425.01216pt too wide) in paragraph at lines 256--257
+[][]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[33] [34]
+Chapter 7.
+File: figure-copies/age_histogram_first_month.png Graphic file (type QTm)
+<use  "figure-copies/age_histogram_first_month.png" >
+Overfull \hbox (233.18617pt too wide) in paragraph at lines 271--272
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[35
 
 ]
-Chapter 7.
+File: figure-copies/age_histogram_first_month_cohort.png Graphic file (type QTm
+)
+<use  "figure-copies/age_histogram_first_month_cohort.png" >
+Overfull \hbox (233.18617pt too wide) in paragraph at lines 276--277
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[36]
+File: figure-copies/enrollment_age_histogram_over_7d.png Graphic file (type QTm
+)
+<use  "figure-copies/enrollment_age_histogram_over_7d.png" >
+Overfull \hbox (233.18617pt too wide) in paragraph at lines 284--285
+[]  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[37]
+File: figure-copies/enrollment_age_histogram_over_7d_cohort.png Graphic file (t
+ype QTm)
+<use  "figure-copies/enrollment_age_histogram_over_7d_cohort.png" >
+Overfull \hbox (233.18617pt too wide) in paragraph at lines 289--290
+[]  
+ []
+
 No file bookdown-demo.bbl.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 213.
-[23]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 213.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 294.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[38] [39]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 294.
 (./bookdown-demo.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 213.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 213.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 294.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 294.
  ) 
 Here is how much of TeX's memory you used:
- 21026 strings out of 493005
- 386678 string characters out of 6134596
- 494461 words of memory out of 5000000
- 24784 multiletter control sequences out of 15000+600000
- 15610 words of font info for 65 fonts, out of 8000000 for 9000
+ 21087 strings out of 493005
+ 388363 string characters out of 6134596
+ 492801 words of memory out of 5000000
+ 24830 multiletter control sequences out of 15000+600000
+ 15618 words of font info for 66 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  41i,8n,54p,10411b,368s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on bookdown-demo.pdf (23 pages).
+Output written on bookdown-demo.pdf (39 pages).

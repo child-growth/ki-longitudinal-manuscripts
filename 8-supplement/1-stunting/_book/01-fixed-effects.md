@@ -8,10 +8,10 @@ The primary analyses presented in this manuscript pooled across individual studi
 ## Age-specific prevalence
 
 ### Random effects
-<img src="figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" width="2100" />
+<img src="figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" width="4200" />
 
 ### Fixed effects
-<img src="figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png" width="2100" />
+<img src="figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png" width="4200" />
 
 [ADD CAPTION]
 
@@ -19,10 +19,10 @@ The primary analyses presented in this manuscript pooled across individual studi
 ## Age-specific incidence
 
 ### Random effects
-<img src="figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png" width="2400" />
+<img src="figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png" width="4800" />
 
 ### Fixed effects
-<img src="figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png" width="2400" />
+<img src="figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png" width="4800" />
 
 [ADD CAPTION]
 
@@ -30,10 +30,10 @@ The primary analyses presented in this manuscript pooled across individual studi
 ## Changes in stunting status by age
 
 ### Random effects
-<img src="figure-copies/fig-stunt-2-flow-overall--allage-re.png" width="1500" />
+<img src="figure-copies/fig-stunt-2-flow-overall--allage-re.png" width="3000" />
 
 ### Fixed effects
-<img src="figure-copies/fig-stunt-2-flow-overall--allage-fe.png" width="1500" />
+<img src="figure-copies/fig-stunt-2-flow-overall--allage-fe.png" width="3000" />
 
 [ADD CAPTION] 
 
@@ -42,10 +42,10 @@ The primary analyses presented in this manuscript pooled across individual studi
 ## Linear growth velocity
 
 ### Random effects
-<img src="figure-copies/fig-stunt-2-vel-overall--allage-primary.png" width="1500" />
+<img src="figure-copies/fig-stunt-2-vel-overall--allage-primary.png" width="3000" />
 
 ### Fixed effects
-<img src="figure-copies/fig-stunt-2-vel-overall--allage-fe.png" width="1500" />
+<img src="figure-copies/fig-stunt-2-vel-overall--allage-fe.png" width="3000" />
 
 [ADD CAPTION]
 
