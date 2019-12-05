@@ -853,7 +853,7 @@ calc.ci.agecat <- function(d, range = 3, birth = "yes") {
   if (range == 6 & birth == "no") {
     d <- d %>%
       mutate(agecat = ifelse(agedays <= 7, "Birth",
-       ifelse(agedays > 7 & agedays <= 6 * 30.4167, " days-6 months",
+       ifelse(agedays > 7 & agedays <= 6 * 30.4167, "8 days-6 months",
         ifelse(agedays > 6 * 30.4167 & agedays <= 12 * 30.4167, "6-12 months",
           ifelse(agedays > 12 * 30.4167 & agedays <= 18 * 30.41867, "12-18 months",
             ifelse(agedays > 18 * 30.4167 & agedays <= 24 * 30.4167, "18-24 months", "")

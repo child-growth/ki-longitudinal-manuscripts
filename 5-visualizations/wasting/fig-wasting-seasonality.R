@@ -71,7 +71,18 @@ d %>% filter(agedays<=7) %>%
   group_by(region) %>%
   summarize(nchild=n(), nstudies = length(unique(paste0(studyid, country))))
 
-p2 <- ggplot(d[d$agedays<=7,], aes(x=birthday, y=whz)) + geom_smooth(color="grey20", span=1, se=T, size=2) + 
+
+# estimate spline fit to mean z-scores by day of the year
+dsub = d[d$agedays<=7,]
+fiti <- mgcv::gam(whz ~ s(birthday, bs = "cr"), data = dsub)
+newd <- data.frame(birthday = 1:364)
+# estimate approximate simultaneous confidence intervals
+fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
+dfit <- data.frame(birthday = 1:364,  fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
+
+p2 <- ggplot(data=dfit, aes(x=birthday, y=fit), color="grey20",  fill="grey20") +
+  geom_line(size=2) +
+  geom_ribbon(aes(ymin=fit_lb, ymax=fit_ub), alpha=0.3, color=NA) +
   ylab("Mean WLZ") + xlab("Birth month") +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 

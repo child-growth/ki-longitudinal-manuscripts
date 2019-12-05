@@ -22,6 +22,9 @@ df <- d %>% select(studyid, country, region, subjid, wasting_episode, episode_id
                    a3=lead(agedays, 3)-agedays, a4=lead(agedays, 4)-agedays) %>% 
   filter(wast_rec==1)
 
+#N obs and childre
+df %>% ungroup() %>% summarize(n(), length(unique(paste0(subjid, subjid))))
+
 df$l1[df$a1 > 3 * 30.4167] <- NA       
 df$l2[df$a2 > 3 * 30.4167] <- NA       
 df$l3[df$a3 > 3 * 30.4167] <- NA       

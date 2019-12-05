@@ -15,35 +15,42 @@ library(growthstandards)
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
 
-
-
-
-#---------------------------------------------------------
-# Drop cohorts without gestational age
-#---------------------------------------------------------
+#Clean country and cohort names and drop cohorts without gestational age
+d$country <- tolower(d$country)
+d$country <- tolower(d$country)
+d$country[d$country=="tanzania, united republic of"] <- "tanzania"
+d$studyid <- gsub("^k.*?-" , "", d$studyid)
+d$country <- str_to_title(d$country)
 
 d <- d %>% filter(!is.na(W_gagebrth)) %>%
   subset(., select = c(studyid, country, region, measurefreq, subjid, agedays, sex, W_gagebrth, haz, waz, wtkg, lencm, htcm)) %>%
   mutate(cohort = paste0(studyid, ":\n", country))
 
+d$cohort[d$cohort=="COHORTS-Philippines"] <-   "Cebu Cohort"   
+d$cohort[d$cohort=="COHORTS-Guatemala"] <- "INCAP Nutr Supp RCT" 
+d$cohort[d$cohort=="COHORTS-India"] <- "New Delhi Birth Cohort" 
+
 d$lencm[is.na(d$lencm)] <- d$htcm[is.na(d$lencm)]
 
 
-#Histograms of GA by cohort
-ggplot(d, aes(x=W_gagebrth)) + geom_histogram() + facet_wrap(~cohort, scales="free_y") +
-  geom_vline(xintercept = c(168, 300))
+#---------------------------------------------------------
+# Histograms of GA by cohort
+#---------------------------------------------------------
 
 
-
-#Drop gestational ages under 24 weeks or over 300 days (no intergrowth standards) 
-d <- d %>% filter(W_gagebrth > 24 *7 & W_gagebrth <= 300) 
-  
-
+phist <- ggplot(d, aes(x=W_gagebrth)) + geom_histogram() + facet_wrap(~cohort, scales="free_y") +
+  geom_vline(xintercept = c(168, 300)) + xlab("Gestational age in days at birth")
+ggsave(phist , file=paste0(here::here(), "/figures/shared/fig-GA-by-cohort-histogram.png"), height=10, width=14)
 
 
 #---------------------------------------------------------
 #Subset to observations at birth
 #---------------------------------------------------------
+
+
+#Drop gestational ages under 24 weeks or over 300 days (no intergrowth standards) 
+d <- d %>% filter(W_gagebrth > 24 *7 & W_gagebrth <= 300) 
+
 
 stunt <- d %>% filter(haz >= -6 & haz <=6,
                       measurefreq!="yearly",
@@ -80,11 +87,15 @@ stunt$diff <- stunt$haz_GA - stunt$haz
 uwt$diff <- uwt$waz_GA - uwt$waz
 
 #Histograms of Z-score differences
-ggplot(stunt, aes(x=diff)) + geom_density() + facet_wrap(~cohort, scales="free_y")  +
+p1 <- ggplot(stunt, aes(x=diff)) + geom_density() + facet_wrap(~cohort, scales="free_y")  +
   geom_vline(xintercept = 0) + ggtitle("Difference between GA corrected and uncorrected LAZ")
 
-ggplot(uwt, aes(x=diff)) + geom_density() + facet_wrap(~cohort, scales="free_y")  +
+p2 <- ggplot(uwt, aes(x=diff)) + geom_density() + facet_wrap(~cohort, scales="free_y")  +
   geom_vline(xintercept = 0) + ggtitle("Difference between GA corrected and uncorrected WAZ")
+
+ggsave(p1 , file=paste0(here::here(), "/figures/shared/fig-GA-correction-density-LAZ.png"), height=10, width=14)
+ggsave(p2 , file=paste0(here::here(), "/figures/shared/fig-GA-correction-density-LAZ.png"), height=10, width=14)
+
 
 #---------------------------------------------------------
 # Fill in the Z-scores for high GA and drop Z-scores from 
@@ -185,9 +196,6 @@ df <- rbind(
 # Clean up cohort names for plot
 #---------------------------------------------------------
 
-# # simplify Tanzania label
-df$country[df$country=='TANZANIA, UNITED REPUBLIC OF'] <- 'TANZANIA'
-df <- mutate(df, country=str_to_title(str_to_lower(country)))
 
 
 df$cohort <- factor(df$cohort, levels = unique(df$cohort))
@@ -207,9 +215,7 @@ df$ub[df$cohort!="pooled"] <- df$ub[df$cohort!="pooled"] * 100
 df$cohort <- as.character(df$cohort)
 df$cohort[df$cohort=="pooled"] <- paste0("Pooled - ", df$region[df$cohort=="pooled"] )
 
-df$cohort[df$cohort=="COHORTS-Philippines"] <-   "Cebu Cohort"   
-df$cohort[df$cohort=="COHORTS-Guatemala"] <- "INCAP Nutr Supp RCT" 
-df$cohort[df$cohort=="COHORTS-India"] <- "New Delhi Birth Cohort" 
+
 
 df$cohort <- factor(df$cohort, levels = rev(unique(df$cohort)))
 
@@ -238,7 +244,7 @@ print(p)
 
 
 #Save plot and plot data
-ggsave(p, file=paste0(here::here(), "/figures/shared/fig-GA-correction-sensitivity.png"), height=10, width=14)
+ggsave(p, file=paste0(here::here(), "/figures/shared/fig-GA-correction-sensitivity.png"), height=6, width=8)
 
-saveRDS(df, file=paste0(here::here(), "/figures/figure-data/fig-GA-correction-sensitivity.RDS"))
+saveRDS(df, file=paste0(here::here(), "/figures/shared/figure-data/fig-GA-correction-sensitivity.RDS"))
 

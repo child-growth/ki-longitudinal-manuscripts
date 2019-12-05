@@ -236,7 +236,7 @@ ci_plot <- ki_combo_plot(d,
                         Age_range="3 months", 
                         Cohort="pooled",
                         xlabel="Child age, months",
-                    yrange=c(0,55),
+                    yrange=c(0,60),
                     returnData=T)
 
 ci_plot_name = create_name(
@@ -369,6 +369,8 @@ ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_
 
 saveRDS(inc_plot$data, file=paste0(figdata_dir_wasting,"figdata-",inc_plot_name,".RDS"))
 saveRDS(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object.rds"))
+
+inc_plot$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 
 
 #-------------------------------------------------------------------------------------------

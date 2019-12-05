@@ -12,7 +12,6 @@ source(here("2-descriptive-outcomes/DHS_figures/0-run-descriptive-outcomes-DHS.R
 
 source(here("2-descriptive-outcomes/compile_desc_outcomes.R"))
 
-source(here("2-descriptive-outcomes/gestational_age_correction_sensitivity.R"))
 
 
 
