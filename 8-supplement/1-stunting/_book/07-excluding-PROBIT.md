@@ -10,7 +10,7 @@ fontsize: 9pt
 
 \raggedright
 
-Only one cohort from Europe met the inclusion criteria for this study -- the PROBIT study. To assess whether inclusion of this study altered our overall study inference, we repeated analyses excluding the PROBIT cohort, as shown below in the "Overall" panels. Results were very similar with and without the PROBIT cohort. Stunting prevalence was slightly higher at birth, and 
+Only one cohort from Europe met the inclusion criteria for this study -- the PROBIT study. To assess whether inclusion of this study altered our overall study inference, we repeated analyses excluding the PROBIT cohort, as shown below in the "Overall" panels. Results were very similar with and without the PROBIT cohort. Stunting prevalence and incidence were slightly higher at birth when excluding PROBIT, but overall age-specific patterns remained the same. For this reason, we chose to retain PROBIT in the primary analyses presented in this manuscript.  
 
 
 

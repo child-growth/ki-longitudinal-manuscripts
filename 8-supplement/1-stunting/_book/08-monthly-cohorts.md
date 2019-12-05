@@ -12,7 +12,7 @@ fontsize: 9pt
 
 To explore the influence of differing numbers of cohorts contributing data at different ages, we conducted a sensitivity analysis in which we subset data to cohorts that measured anthropometry monthly from birth to 24 months.
 
-prevalence SE varition: It looks like it it COHORTS Guatemala, which is quarterly measured and has super high stunting prevalence:
+In this sensitivity analysis, the mean length-for-age Z-score was higher in Latin America and exhibited less of a downwards trajectory with age. Age-specific stunting prevalence and incidence was slightly lower in Latin America and Asia and slightly higher in Africa. Standard errors were smaller for Latin America because the analyses with monthly cohorts excluded the COHORTS Guatemala study, which had a very high stunting prevalence compared to other Latin American cohorts. 
 
 
 

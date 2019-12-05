@@ -47,7 +47,7 @@ cp ../../figures/shared/enrollment_age_histogram_over_7d.png              figure
 
 # Quality assurance
 cp ../../figures/shared/laz_QA.png           figure-copies
-cp ../../figures/shared/laz_QA_cohort.png    figure-copies
+#cp ../../figures/shared/laz_QA_cohort.png    figure-copies
 
 # Cohort specific
 cp ../../figures/stunting/fig-laz-2-quant-cohort-africa-allage-primary.png           figure-copies

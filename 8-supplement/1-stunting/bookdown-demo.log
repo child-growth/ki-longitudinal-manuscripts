@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2017.5.23)  5 DEC 2019 11:35
+This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2017.5.23)  5 DEC 2019 12:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -851,19 +851,7 @@ Overfull \hbox (233.18617pt too wide) in paragraph at lines 119--120
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[7]
-File: figure-copies/laz_QA_cohort.png Graphic file (type QTm)
-<use  "figure-copies/laz_QA_cohort.png" >
-Overfull \hbox (342.51088pt too wide) in paragraph at lines 121--122
-[][]  
- []
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[8] [9] [10
-
-]
+[7] [8]
 Chapter 3.
 File: figure-copies/fig-stunt-3-prev-overall_region--allage-primary.png Graphic
  file (type QTm)
@@ -875,7 +863,9 @@ Overfull \hbox (666.82588pt too wide) in paragraph at lines 133--134
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[11]
+[9
+
+]
 File: figure-copies/fig-stunt-3-inc-overall_region--allage-primary.png Graphic 
 file (type QTm)
 <use  "figure-copies/fig-stunt-3-inc-overall_region--allage-primary.png" >
@@ -886,7 +876,7 @@ Overfull \hbox (666.82588pt too wide) in paragraph at lines 138--139
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[12] [13] [14
+[10] [11] [12
 
 ]
 Chapter 4.
@@ -899,7 +889,7 @@ Overfull \hbox (233.18617pt too wide) in paragraph at lines 147--148
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[15] [16]
+[13] [14]
 Chapter 5.
 File: figure-copies/age_histogram_first_month.png Graphic file (type QTm)
 <use  "figure-copies/age_histogram_first_month.png" >
@@ -910,7 +900,7 @@ Overfull \hbox (233.18617pt too wide) in paragraph at lines 162--163
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[17
+[15
 
 ]
 File: figure-copies/age_histogram_first_month_cohort.png Graphic file (type QTm
@@ -923,7 +913,7 @@ Overfull \hbox (233.18617pt too wide) in paragraph at lines 167--168
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[18]
+[16]
 File: figure-copies/enrollment_age_histogram_over_7d.png Graphic file (type QTm
 )
 <use  "figure-copies/enrollment_age_histogram_over_7d.png" >
@@ -934,7 +924,7 @@ Overfull \hbox (233.18617pt too wide) in paragraph at lines 175--176
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[19]
+[17]
 File: figure-copies/enrollment_age_histogram_over_7d_cohort.png Graphic file (t
 ype QTm)
 <use  "figure-copies/enrollment_age_histogram_over_7d_cohort.png" >
@@ -945,17 +935,17 @@ Overfull \hbox (233.18617pt too wide) in paragraph at lines 180--181
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[20] [21] [22
+[18] [19] [20
 
 ]
 Chapter 6.
-[23]
+[21]
 Overfull \hbox (44.72343pt too wide) has occurred while \output is active
-\TU/lmr/m/n/10 24 \TU/lmr/m/sl/10 CHAPTER 6.  COMPARISON TO DHS SURVEYS FROM MA
+\TU/lmr/m/n/10 22 \TU/lmr/m/sl/10 CHAPTER 6.  COMPARISON TO DHS SURVEYS FROM MA
 TCHING COUNTRIES
  []
 
-[24
+[22
 
 ]
 Chapter 7.
@@ -969,13 +959,13 @@ Overfull \hbox (425.01216pt too wide) in paragraph at lines 204--205
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[25]
+[23]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[26]
+[24]
 Overfull \vbox (53.61064pt too high) has occurred while \output is active []
 
-[27]
+[25]
 File: figure-copies/fig-laz-2-quant-cohort-latamer-allage-primary.png Graphic f
 ile (type QTm)
 <use  "figure-copies/fig-laz-2-quant-cohort-latamer-allage-primary.png" >
@@ -986,10 +976,10 @@ Overfull \hbox (425.01216pt too wide) in paragraph at lines 209--210
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[28]
+[26]
 Overfull \vbox (23.61765pt too high) has occurred while \output is active []
 
-[29]
+[27]
 File: figure-copies/fig-laz-2-quant-cohort-asia-allage-primary.png Graphic file
  (type QTm)
 <use  "figure-copies/fig-laz-2-quant-cohort-asia-allage-primary.png" >
@@ -1000,10 +990,10 @@ Overfull \hbox (425.01216pt too wide) in paragraph at lines 214--215
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[30]
+[28]
 Overfull \vbox (23.61765pt too high) has occurred while \output is active []
 
-[31]
+[29]
 File: figure-copies/fig-stunt-2-prev-cohort-africa-allage-primary.png Graphic f
 ile (type QTm)
 <use  "figure-copies/fig-stunt-2-prev-cohort-africa-allage-primary.png" >
@@ -1021,7 +1011,7 @@ Overfull \hbox (377.71068pt too wide) in paragraph at lines 227--228
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[32]
+[30]
 File: figure-copies/fig-stunt-2-prev-cohort-asia-allage-primary.png Graphic fil
 e (type QTm)
 <use  "figure-copies/fig-stunt-2-prev-cohort-asia-allage-primary.png" >
@@ -1032,7 +1022,7 @@ Overfull \hbox (739.06602pt too wide) in paragraph at lines 232--233
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[33]
+[31]
 File: figure-copies/fig-stunt-2-inc-cohort-africa-allage-primary.png Graphic fi
 le (type QTm)
 <use  "figure-copies/fig-stunt-2-inc-cohort-africa-allage-primary.png" >
@@ -1043,7 +1033,7 @@ Overfull \hbox (377.71068pt too wide) in paragraph at lines 240--241
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[34]
+[32]
 File: figure-copies/fig-stunt-2-inc-cohort-latamer-allage-primary.png Graphic f
 ile (type QTm)
 <use  "figure-copies/fig-stunt-2-inc-cohort-latamer-allage-primary.png" >
@@ -1054,7 +1044,7 @@ Overfull \hbox (377.71068pt too wide) in paragraph at lines 245--246
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[35]
+[33]
 File: figure-copies/fig-stunt-2-inc-cohort-asia-allage-primary.png Graphic file
  (type QTm)
 <use  "figure-copies/fig-stunt-2-inc-cohort-asia-allage-primary.png" >
@@ -1065,7 +1055,7 @@ Overfull \hbox (739.06602pt too wide) in paragraph at lines 250--251
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[36]
+[34]
 File: figure-copies/fig-length-2-length_vel-cohort-africa-allage-primary.png Gr
 aphic file (type QTm)
 
@@ -1078,13 +1068,13 @@ Overfull \hbox (205.01086pt too wide) in paragraph at lines 258--259
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[37]
+[35]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[38]
+[36]
 Overfull \vbox (53.53284pt too high) has occurred while \output is active []
 
-[39]
+[37]
 File: figure-copies/fig-length-2-length_vel-cohort-latamer-allage-primary.png G
 raphic file (type QTm)
 
@@ -1097,10 +1087,10 @@ Overfull \hbox (205.01086pt too wide) in paragraph at lines 263--264
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[40]
+[38]
 Overfull \vbox (23.61984pt too high) has occurred while \output is active []
 
-[41]
+[39]
 File: figure-copies/fig-length-2-length_vel-cohort-asia-allage-primary.png Grap
 hic file (type QTm)
 
@@ -1112,10 +1102,10 @@ Overfull \hbox (205.01086pt too wide) in paragraph at lines 268--269
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[42]
+[40]
 Overfull \vbox (23.61984pt too high) has occurred while \output is active []
 
-[43]
+[41]
 File: figure-copies/fig-laz-2-laz_vel-cohort-africa-allage-primary.png Graphic 
 file (type QTm)
 <use  "figure-copies/fig-laz-2-laz_vel-cohort-africa-allage-primary.png" >
@@ -1126,10 +1116,10 @@ Overfull \hbox (645.0156pt too wide) in paragraph at lines 276--277
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[44]
+[42]
 Overfull \vbox (53.61064pt too high) has occurred while \output is active []
 
-[45]
+[43]
 File: figure-copies/fig-laz-2-laz_vel-cohort-latamer-allage-primary.png Graphic
  file (type QTm)
 <use  "figure-copies/fig-laz-2-laz_vel-cohort-latamer-allage-primary.png" >
@@ -1140,10 +1130,10 @@ Overfull \hbox (645.0156pt too wide) in paragraph at lines 281--282
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[46]
+[44]
 Overfull \vbox (23.61765pt too high) has occurred while \output is active []
 
-[47]
+[45]
 File: figure-copies/fig-laz-2-laz_vel-cohort-asia-allage-primary.png Graphic fi
 le (type QTm)
 <use  "figure-copies/fig-laz-2-laz_vel-cohort-asia-allage-primary.png" >
@@ -1154,10 +1144,10 @@ Overfull \hbox (645.0156pt too wide) in paragraph at lines 286--287
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[48]
+[46]
 Overfull \vbox (23.61765pt too high) has occurred while \output is active []
 
-[49] [50
+[47] [48
 
 ]
 Chapter 8.
@@ -1171,7 +1161,7 @@ Overfull \hbox (377.73274pt too wide) in paragraph at lines 301--302
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[51]
+[49]
 File: figure-copies/fig-laz-2-mean-overall_region--allage-primary_no_probit.png
  Graphic file (type QTm)
 
@@ -1186,11 +1176,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \hbox (2.48453pt too wide) has occurred while \output is active
-\TU/lmr/m/n/10 52 \TU/lmr/m/sl/10 CHAPTER 8.  PRIMARY ANALYSES EXCLUDING THE PR
+\TU/lmr/m/n/10 50 \TU/lmr/m/sl/10 CHAPTER 8.  PRIMARY ANALYSES EXCLUDING THE PR
 OBIT STUDY
  []
 
-[52]
+[50]
 File: figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png Graphic
  file (type QTm)
 <use  "figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" >
@@ -1201,7 +1191,7 @@ Overfull \hbox (666.82588pt too wide) in paragraph at lines 314--315
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[53]
+[51]
 File: figure-copies/fig-stunt-2-prev-overall_region--allage-primary_no_probit.p
 ng Graphic file (type QTm)
 
@@ -1216,11 +1206,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \hbox (2.48453pt too wide) has occurred while \output is active
-\TU/lmr/m/n/10 54 \TU/lmr/m/sl/10 CHAPTER 8.  PRIMARY ANALYSES EXCLUDING THE PR
+\TU/lmr/m/n/10 52 \TU/lmr/m/sl/10 CHAPTER 8.  PRIMARY ANALYSES EXCLUDING THE PR
 OBIT STUDY
  []
 
-[54]
+[52]
 File: figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png Graphic 
 file (type QTm)
 <use  "figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png" >
@@ -1231,7 +1221,7 @@ Overfull \hbox (811.37238pt too wide) in paragraph at lines 327--328
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[55]
+[53]
 File: figure-copies/fig-stunt-2-inc-overall_region--allage-primary_no_probit.pn
 g Graphic file (type QTm)
 
@@ -1246,17 +1236,17 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \hbox (2.48453pt too wide) has occurred while \output is active
+\TU/lmr/m/n/10 54 \TU/lmr/m/sl/10 CHAPTER 8.  PRIMARY ANALYSES EXCLUDING THE PR
+OBIT STUDY
+ []
+
+[54] [55]
+Overfull \hbox (2.48453pt too wide) has occurred while \output is active
 \TU/lmr/m/n/10 56 \TU/lmr/m/sl/10 CHAPTER 8.  PRIMARY ANALYSES EXCLUDING THE PR
 OBIT STUDY
  []
 
-[56] [57]
-Overfull \hbox (2.48453pt too wide) has occurred while \output is active
-\TU/lmr/m/n/10 58 \TU/lmr/m/sl/10 CHAPTER 8.  PRIMARY ANALYSES EXCLUDING THE PR
-OBIT STUDY
- []
-
-[58
+[56
 
 ]
 Chapter 9.
@@ -1270,7 +1260,7 @@ Overfull \hbox (377.73274pt too wide) in paragraph at lines 349--350
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[59]
+[57]
 File: figure-copies/fig-laz-2-mean-overall_region--allage-month24.png Graphic f
 ile (type QTm)
 <use  "figure-copies/fig-laz-2-mean-overall_region--allage-month24.png" >
@@ -1281,7 +1271,7 @@ Overfull \hbox (377.73274pt too wide) in paragraph at lines 354--355
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[60]
+[58]
 File: figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png Graphic
  file (type QTm)
 <use  "figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png" >
@@ -1292,7 +1282,7 @@ Overfull \hbox (666.82588pt too wide) in paragraph at lines 362--363
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[61]
+[59]
 File: figure-copies/fig-stunt-2-prev-overall_region--allage-month24.png Graphic
  file (type QTm)
 <use  "figure-copies/fig-stunt-2-prev-overall_region--allage-month24.png" >
@@ -1303,7 +1293,7 @@ Overfull \hbox (666.82588pt too wide) in paragraph at lines 367--368
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[62]
+[60]
 File: figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png Graphic 
 file (type QTm)
 <use  "figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png" >
@@ -1314,7 +1304,7 @@ Overfull \hbox (811.37238pt too wide) in paragraph at lines 375--376
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[63]
+[61]
 File: figure-copies/fig-stunt-2-inc-overall_region--allage-month24.png Graphic 
 file (type QTm)
 <use  "figure-copies/fig-stunt-2-inc-overall_region--allage-month24.png" >
@@ -1325,7 +1315,7 @@ Overfull \hbox (666.82588pt too wide) in paragraph at lines 380--381
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[64]
+[62]
 File: figure-copies/fig-stunt-2-vel-overall--allage-primary.png Graphic file (t
 ype QTm)
 <use  "figure-copies/fig-stunt-2-vel-overall--allage-primary.png" >
@@ -1336,13 +1326,13 @@ Overfull \hbox (342.53288pt too wide) in paragraph at lines 388--389
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[65]
+[63]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[66]
+[64]
 Overfull \vbox (55.81627pt too high) has occurred while \output is active []
 
-[67]
+[65]
 File: figure-copies/fig-stunt-2-vel-overall--allage-month24.png Graphic file (t
 ype QTm)
 <use  "figure-copies/fig-stunt-2-vel-overall--allage-month24.png" >
@@ -1353,10 +1343,10 @@ Overfull \hbox (342.53288pt too wide) in paragraph at lines 393--394
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[68]
+[66]
 Overfull \vbox (37.56328pt too high) has occurred while \output is active []
 
-[69] [70
+[67] [68
 
 ]
 Chapter 10.
@@ -1378,7 +1368,7 @@ Overfull \hbox (666.82588pt too wide) in paragraph at lines 406--407
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[71]
+[69]
 File: figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png Graphic file
  (type QTm)
 <use  "figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png" >
@@ -1389,7 +1379,7 @@ Overfull \hbox (666.82588pt too wide) in paragraph at lines 411--412
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[72]
+[70]
 File: figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png Graphic 
 file (type QTm)
 <use  "figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png" >
@@ -1400,7 +1390,7 @@ Overfull \hbox (811.37238pt too wide) in paragraph at lines 421--422
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[73]
+[71]
 File: figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png Graphic file 
 (type QTm)
 <use  "figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png" >
@@ -1411,7 +1401,7 @@ Overfull \hbox (811.37238pt too wide) in paragraph at lines 426--427
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[74]
+[72]
 File: figure-copies/fig-stunt-2-flow-overall--allage-re.png Graphic file (type 
 QTm)
 <use  "figure-copies/fig-stunt-2-flow-overall--allage-re.png" >
@@ -1422,7 +1412,7 @@ Overfull \hbox (377.73274pt too wide) in paragraph at lines 436--437
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[75]
+[73]
 File: figure-copies/fig-stunt-2-flow-overall--allage-fe.png Graphic file (type 
 QTm)
 <use  "figure-copies/fig-stunt-2-flow-overall--allage-fe.png" >
@@ -1433,7 +1423,7 @@ Overfull \hbox (377.73274pt too wide) in paragraph at lines 441--442
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[76]
+[74]
 File: figure-copies/fig-stunt-2-vel-overall--allage-primary.png Graphic file (t
 ype QTm)
 <use  "figure-copies/fig-stunt-2-vel-overall--allage-primary.png" >
@@ -1444,13 +1434,13 @@ Overfull \hbox (342.53288pt too wide) in paragraph at lines 451--452
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[77]
+[75]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[78]
+[76]
 Overfull \vbox (53.54826pt too high) has occurred while \output is active []
 
-[79]
+[77]
 File: figure-copies/fig-stunt-2-vel-overall--allage-fe.png Graphic file (type Q
 Tm)
 <use  "figure-copies/fig-stunt-2-vel-overall--allage-fe.png" >
@@ -1461,25 +1451,25 @@ Overfull \hbox (342.53288pt too wide) in paragraph at lines 456--457
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[80]
+[78]
 Overfull \vbox (23.63527pt too high) has occurred while \output is active []
 
-[81]
+[79]
 No file bookdown-demo.bbl.
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 463.
-[82]
+[80]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 463.
 (./bookdown-demo.aux)
 Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 463.
 Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 463.
  ) 
 Here is how much of TeX's memory you used:
- 21164 strings out of 493005
- 391389 string characters out of 6134596
- 497682 words of memory out of 5000000
- 24887 multiletter control sequences out of 15000+600000
+ 21162 strings out of 493005
+ 391341 string characters out of 6134596
+ 497681 words of memory out of 5000000
+ 24886 multiletter control sequences out of 15000+600000
  15618 words of font info for 66 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  41i,8n,54p,10411b,387s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on bookdown-demo.pdf (82 pages).
+Output written on bookdown-demo.pdf (80 pages).

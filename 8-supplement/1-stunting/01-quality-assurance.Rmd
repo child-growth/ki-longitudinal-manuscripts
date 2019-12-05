@@ -27,5 +27,7 @@ include_graphics("figure-copies/laz_QA.png")
 
 ```{r qa-cohort, echo = FALSE}
 # include_graphics(paste0(here::here(), "/figures/shared/laz_QA_cohort.png"))
-include_graphics("figure-copies/laz_QA_cohort.png")
+# include_graphics("figure-copies/laz_QA_cohort.png")
 ```
+
+Revised files to be added - image was too large to push before 
