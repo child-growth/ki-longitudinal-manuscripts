@@ -49,7 +49,7 @@ splines <- readRDS(here("/results/rf_spline_objects.RDS"))
 
 #pos = c(0.75,0.83) #For 2 panels
 #pos = c(0.45,0.83)
-pos = c(0.35,0.2)
+pos = c(0.3,0.15)
 #pos = c(0,0.2)
 
 p1 <- splines[[1]] + ggtitle("") +  theme(legend.position ="none" ) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
