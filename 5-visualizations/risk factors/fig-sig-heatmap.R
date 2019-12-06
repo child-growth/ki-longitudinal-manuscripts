@@ -8,8 +8,8 @@ ate <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results.rds")
 rr <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 
 #Match columns names
-rr <- rr %>% rename(est=RR, ci.lb=RR.CI1, ci.ub=RR.CI2)
-ate <- ate %>% rename(est=ATE, ci.lb=CI1, ci.ub=CI2)
+rr <- rr %>% rename(est=RR, CI.lb=RR.CI1, CI.ub=RR.CI2)
+ate <- ate %>% rename(est=ATE, CI.lb=CI1, CI.ub=CI2)
 
 
 d <- bind_rows(rr, ate)
@@ -26,7 +26,7 @@ dim(d)
 unique(d$intervention_variable)
 d <- d %>% filter(!(intervention_variable %in% c("brthmon", "month")))
 
-#Drop probit-specific Europe estimates
+#Drop probit-spemofic Europe estimates
 d <- d %>% filter(region!="N.America & Europe")
 d <- d %>% mutate(region = factor(region, levels = c("Pooled","South Asia","Africa","Latin America")))
 
@@ -63,7 +63,7 @@ d <- d %>% filter(!(intervention_variable %in% c("lag_WHZ_quart")))
 #Calculate P-values
 
 #calculate the test statistic: z = Est/SE.
-d <- d %>% mutate(se = (ci.ub-ci.lb)/(2*1.96))
+d <- d %>% mutate(se = (CI.ub-CI.lb)/(2*1.96))
 d$se[!is.na(d$logRR.psi)] <-  NA
 d$Z <- ifelse(!is.na(d$logRR.psi), d$logRR.psi/d$logSE, d$est/d$se)
 
@@ -122,48 +122,52 @@ d$yvar <- paste0(d$agecat,", ", d$region)
 unique(d$yvar)
 
 d = d %>% mutate(agecat = case_when(
-  agecat == "Birth" ~ "Birth prev.", 
-  agecat ==  "6 months" ~ "6 prev.",
-  agecat ==  "24 months" ~ "24 prev.",
-  agecat ==  "0-24 months" ~ "0-24 CI",
-  agecat ==  "0-6 months" ~ "0-6 CI",
-  agecat ==  "6-24 months" ~ "6-24 CI"),
-  agecat = factor(agecat, levels = list("Birth prev.", "6 prev.", "24 prev.", "0-24 CI", "0-6 CI", "6-24 CI")))
+  agecat == "Birth" ~ "Birth", 
+  agecat ==  "6 months" ~ "6 mo",
+  agecat ==  "24 months" ~ "24 mo",
+  agecat ==  "0-24 months" ~ "0-24 mo",
+  agecat ==  "0-6 months" ~ "0-6 mo",
+  agecat ==  "6-24 months" ~ "6-24 mo"),
+  agecat = factor(agecat, levels = list("Birth", "6 mo", "24 mo", "0-24 mo", "0-6 mo", "6-24 mo")))
 
-country_agecat_levels = list("Birth prev., Pooled", "6 prev., Pooled", "24 prev., Pooled", 
-                             "Birth prev., Africa", "6 prev., Africa", "24 prev., Africa", 
-                             "Birth prev., Latin America", "6 prev., Latin America", "24 prev., Latin America",
-                             "Birth prev., South Asia", "6 prev., South Asia", "24 prev., South Asia",
-                             "0-24 CI, Pooled", "0-6 CI, Pooled", "6-24 CI, Pooled",
-                             "0-24 CI, Africa", "0-6 CI, Africa", "6-24 CI, Africa", 
-                             "0-24 CI, Latin America", "0-6 CI, Latin America", "6-24 CI, Latin America", 
-                             "0-24 CI, South Asia", "0-6 CI, South Asia", "6-24 CI, South Asia")   
+country_agecat_levels = list("Birth, Pooled", "6 mo, Pooled", "24 mo, Pooled", 
+                             "0-24 mo, Pooled", "0-6 mo, Pooled", "6-24 mo, Pooled",
+                             "Birth, Africa", "Birth, Latin America", "Birth, South Asia", 
+                             "6 mo, Africa", "6 mo, Latin America", "6 mo, South Asia", 
+                             "24 mo, Africa", 
+                             "24 mo, Latin America",
+                             "24 mo, South Asia",
+                             "0-24 mo, Africa", 
+                             "0-24 mo, Latin America",  
+                             "0-24 mo, South Asia", 
+                             "0-6 mo, Africa", "0-6 mo, Latin America", "0-6 mo, South Asia", 
+                             "6-24 mo, Africa", "6-24 mo, Latin America", "6-24 mo, South Asia")  
 
 d = d %>% mutate(yvar = case_when(
-  yvar == "Birth, Pooled" ~ "Birth prev., Pooled", 
-  yvar == "24 months, Africa" ~ "24 prev., Africa",
-  yvar == "6 months, Latin America" ~ "6 prev., Latin America",
-  yvar == "Birth, Latin America" ~ "Birth prev., Latin America",
-  yvar == "6 months, Africa" ~ "6 prev., Africa",
-  yvar == "24 months, South Asia" ~ "24 prev., South Asia",     
-  yvar == "Birth, Africa" ~ "Birth prev., Africa",   
-  yvar == "6 months, South Asia" ~ "6 prev., South Asia",
-  yvar == "Birth, South Asia" ~ "Birth prev., South Asia",   
-  yvar == "24 months, Latin America" ~ "24 prev., Latin America",
-  yvar == "24 months, Pooled" ~ "24 prev., Pooled", 
-  yvar == "6 months, Pooled" ~ "6 prev., Pooled",       
-  yvar == "6-24 months, South Asia" ~ "6-24 CI, South Asia",
-  yvar == "0-24 months, Pooled" ~ "0-24 CI, Pooled",
-  yvar == "6-24 months, Africa" ~ "6-24 CI, Africa",    
-  yvar == "0-6 months, Africa" ~ "0-6 CI, Africa",   
-  yvar == "0-6 months, Pooled" ~ "0-6 CI, Pooled",   
-  yvar == "0-6 months, Latin America" ~ "0-6 CI, Latin America", 
-  yvar == "6-24 months, Latin America" ~ "6-24 CI, Latin America",
-  yvar == "0-24 months, South Asia" ~ "0-24 CI, South Asia",
-  yvar == "0-6 months, South Asia" ~ "0-6 CI, South Asia", 
-  yvar == "6-24 months, Pooled" ~ "6-24 CI, Pooled",
-  yvar == "0-24 months, Africa" ~ "0-24 CI, Africa",     
-  yvar == "0-24 months, Latin America" ~ "0-24 CI, Latin America"),
+  yvar == "Birth, Pooled" ~ "Birth, Pooled", 
+  yvar == "24 months, Africa" ~ "24 mo, Africa",
+  yvar == "6 months, Latin America" ~ "6 mo, Latin America",
+  yvar == "Birth, Latin America" ~ "Birth, Latin America",
+  yvar == "6 months, Africa" ~ "6 mo, Africa",
+  yvar == "24 months, South Asia" ~ "24 mo, South Asia",     
+  yvar == "Birth, Africa" ~ "Birth, Africa",   
+  yvar == "6 months, South Asia" ~ "6 mo, South Asia",
+  yvar == "Birth, South Asia" ~ "Birth, South Asia",   
+  yvar == "24 months, Latin America" ~ "24 mo, Latin America",
+  yvar == "24 months, Pooled" ~ "24 mo, Pooled", 
+  yvar == "6 months, Pooled" ~ "6 mo, Pooled",       
+  yvar == "6-24 months, South Asia" ~ "6-24 mo, South Asia",
+  yvar == "0-24 months, Pooled" ~ "0-24 mo, Pooled",
+  yvar == "6-24 months, Africa" ~ "6-24 mo, Africa",    
+  yvar == "0-6 months, Africa" ~ "0-6 mo, Africa",   
+  yvar == "0-6 months, Pooled" ~ "0-6 mo, Pooled",   
+  yvar == "0-6 months, Latin America" ~ "0-6 mo, Latin America", 
+  yvar == "6-24 months, Latin America" ~ "6-24 mo, Latin America",
+  yvar == "0-24 months, South Asia" ~ "0-24 mo, South Asia",
+  yvar == "0-6 months, South Asia" ~ "0-6 mo, South Asia", 
+  yvar == "6-24 months, Pooled" ~ "6-24 mo, Pooled",
+  yvar == "0-24 months, Africa" ~ "0-24 mo, Africa",     
+  yvar == "0-24 months, Latin America" ~ "0-24 mo, Latin America"),
   yvar = factor(yvar, levels = country_agecat_levels))
   
 
@@ -183,11 +187,11 @@ agecat_with_ranges = c(  "Ever\nstunted", "Ever\nwasted", "Persistently\nwasted"
 pooled_data = d[d$region=="Pooled",]
 
 # Manually add in N/A values to create legend entry for non-existent contrast - at least 1 N/A needed for legend entry
-# Create N/A values for any missing pair of xvar and outcome_variable, arbitrarily set agecat to Birth prev.
+# Create N/A values for any missing pair of xvar and outcome_variable, arbitrarily set agecat to Birth
 # Filter data so no extra blank columns are displayed
 pooled_data = pooled_data %>% 
-                complete(xvar, outcome_variable, fill = list(agecat = "Birth prev.")) %>% 
-                filter((outcome_variable %in% agecat_with_ranges & agecat != "Birth prev.") | !(outcome_variable %in% agecat_with_ranges)) %>% 
+                complete(xvar, outcome_variable, fill = list(agecat = "Birth")) %>% 
+                filter((outcome_variable %in% agecat_with_ranges & agecat != "Birth") | !(outcome_variable %in% agecat_with_ranges)) %>% 
                 replace_na(list(pval_cat = "Non-existent or rare contrast"))
 
 
@@ -233,13 +237,13 @@ ggsave(hm, file=paste0(here::here(),"/figures/risk factor/fig-sig-heatmap.png"),
 #Pooled estimates only 
 
 # Manually add in N/A values to create legend entry for non-existent contrast - at least one N/A value is needed for legend entry
-# Create N/A values for any missing pair of xvar and outcome_variable, arbitrarily set agecat to 'Birth prev., Africa'
+# Create N/A values for any missing pair of xvar and outcome_variable, arbitrarily set agecat to 'Birth, Africa'
 # Filter data so no extra blank columns are displayed
 region_data = d[d$region!="Pooled",]
 
 region_data = region_data %>% 
-  complete(xvar, outcome_variable, fill = list(yvar = "Birth prev., Africa")) %>% 
-  filter((outcome_variable %in% agecat_with_ranges & yvar != "Birth prev., Africa") | !(outcome_variable %in% agecat_with_ranges)) %>% 
+  complete(xvar, outcome_variable, fill = list(yvar = "Birth, Africa")) %>% 
+  filter((outcome_variable %in% agecat_with_ranges & yvar != "Birth, Africa") | !(outcome_variable %in% agecat_with_ranges)) %>% 
   replace_na(list(pval_cat = "Non-existent or rare contrast"))
 
 hm_strat <- ggplot(region_data,aes(x=xvar, y=yvar, fill=pval_cat)) +
