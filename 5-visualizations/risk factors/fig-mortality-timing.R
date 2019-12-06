@@ -161,7 +161,7 @@ summary(df$id)
 p <- ggplot(df) + theme_bw() +
   geom_point(aes(x=agedth, y=(id)), color="grey40") +
   geom_point(aes(x=agedays, y=(id), color=status2, alpha=severe2, shape=severe)) + 
-  scale_color_manual("", values = plot_cols2, guide=guide_legend(title="Growth faltering")) +
+  scale_color_manual("", values = plot_cols2, guide=guide_legend(title="Child Status")) +
   scale_shape_discrete(guide=guide_legend(title="Severity")) +
   scale_alpha_discrete(range=c(0.5, 1), guide=guide_legend(title="Severity")) +
   coord_cartesian(xlim=c(0, 730)) +

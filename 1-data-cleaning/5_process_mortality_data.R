@@ -38,6 +38,9 @@ table(d$studyid, d$agedth>0)
 table(d$studyid, d$dead)
 table(d$dead)
 
+#save longform for kaplan-meier curves
+saveRDS(d, file=paste0(paste0(ghapdata_dir, "stuntwast_mort.rds")))
+
 #make sure dead is time-static and subset to 1 observation
 d <- d %>% 
   group_by(studyid, country, subjid) %>%
@@ -93,7 +96,7 @@ table(mort$cohort, mort$dead0plus)
 table(mort$cohort, mort$dead6plus)
 
 
-mort <- subset(mort, select = c(studyid, country, subjid,  dead, agedth, causedth, dead624, dead0plus, dead6plus))
+mort <- subset(mort, select = c(studyid, country, subjid, maxage, dead, agedth, causedth, dead624, dead0plus, dead6plus))
 
 saveRDS(mort, mortality_path)
 

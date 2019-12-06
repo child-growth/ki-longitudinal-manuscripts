@@ -6,13 +6,24 @@ library(survminer)
 library(cowplot)
 
 #read in mortality data
-d <- readRDS(paste0(ghapdata_dir,"stuntwast_mort.rds"))
+d <- readRDS(mortality_path)
 
 #transform data to form for survfit() function
 d <- d %>% mutate(status = dead+1) #%>%
           #filter(maxage <= 730)
 
 d$maxage[d$maxage>730] <- 730
+
+#Load wasting measures
+load(paste0(ghapdata_dir,"mort_exposures.rdata"))
+
+
+#Join in growth measures
+wast_ci_0_6 <- subset(wast_ci_0_6, select = - c(maxage))
+d <- full_join(d, wast_ci_0_6, by=c("studyid","country","subjid"))
+d <- full_join(d, stunt_ci_0_6, by=c("studyid","country","subjid"))
+d <- full_join(d, underweight_ci_0_6, by=c("studyid","country","subjid"))
+d <- full_join(d, co_ci_0_6, by=c("studyid","country", "subjid"))
 
 
 #Survival plot function

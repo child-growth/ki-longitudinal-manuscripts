@@ -26,6 +26,12 @@ d <- subset(d, select = -c(id, arm, tr))
 dim(d)
 
 
+#N's for figure caption
+d %>% ungroup() %>%  filter(!is.na(mhtcm)) %>% summarize(N=n(), Nchild=length(unique(paste0(studyid, country, subjid))), Nstudies=length(unique(paste0(studyid, country))))
+d %>% ungroup() %>%  filter(!is.na(mwtkg)) %>% summarize(N=n(), Nchild=length(unique(paste0(studyid, country, subjid))), Nstudies=length(unique(paste0(studyid, country))))
+d %>% ungroup() %>%  filter(!is.na(mbmi)) %>% summarize(N=n(), Nchild=length(unique(paste0(studyid, country, subjid))),  Nstudies=length(unique(paste0(studyid, country))))
+
+
 #Adapted from: 
 #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
 
