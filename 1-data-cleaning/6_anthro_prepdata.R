@@ -42,9 +42,9 @@ table(d$studyid,d$country)
 # anthropometry measure
 #--------------------------------------------
 nobs <- nrow(d)
-nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167))
-nobsm <- nrow(d %>% filter(measurefreq=="monthly" & agedays < 24*30.4167))
-stunt_mort <- d %>% filter(haz >= -6 & haz <=6) %>%
+nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz)))
+nobsm <- nrow(d %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(haz)))
+stunt_mort <- d %>% filter(haz >= -6 & haz <=6, !is.na(haz)) %>%
   subset(., select = - c(whz, waz, muaz)) %>%
   arrange(studyid,subjid,agedays) %>%
   group_by(studyid,subjid) %>%
@@ -56,6 +56,10 @@ dropped <- nobsq - nrow(stunt_mort %>% filter(measurefreq!="yearly" & agedays < 
 dropped
 dropped/nobsq * 100 #percentage dropped
 
+
+
+nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(whz)))
+nobsm <- nrow(d %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(whz)))
 wast_mort <- d %>% filter(whz >= -5 & whz <=5) %>%
   subset(., select = - c(haz, waz, muaz)) %>%
   arrange(studyid,subjid,agedays) %>%
@@ -63,22 +67,31 @@ wast_mort <- d %>% filter(whz >= -5 & whz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
 nobs - nrow(wast_mort)
-dropped <- nobsq - nrow(wast_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167))
+dropped <- nobsq - nrow(wast_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(whz)))
 dropped
-dropped/nobsm * 100 #percentage dropped - quarterly
-droppedm <- nobsm - nrow(wast_mort %>% filter(measurefreq=="monthly" & agedays < 24*30.4167))
+dropped/nobsq * 100 #percentage dropped - quarterly
+droppedm <- nobsm - nrow(wast_mort %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(whz)))
 droppedm
 droppedm/nobsm * 100 #percentage dropped monthly
 
+
+nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(waz)))
+nobsm <- nrow(d %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(waz)))
 waz_mort <- d %>% filter(waz >= -6 & waz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   group_by(studyid,subjid) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
 nobs - nrow(waz_mort)
-dropped <- nobsq - nrow(waz_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167))
+dropped <- nobsq - nrow(waz_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(waz)))
 dropped
 dropped/nobsq * 100 #percentage dropped
+droppedm <- nobsm - nrow(waz_mort %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(waz)))
+droppedm
+droppedm/nobsm * 100 #percentage dropped monthly
+
+
+nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz), !is.na(whz)))
 
 co_mort <- d %>% filter(haz >= -6 & haz <=6 & whz >= -5 & whz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
@@ -86,9 +99,10 @@ co_mort <- d %>% filter(haz >= -6 & haz <=6 & whz >= -5 & whz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(measid=seq_along(subjid)) 
 nobs - nrow(co_mort)
-dropped <- nobsq - nrow(co_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167))
+dropped <- nobsq - nrow(co_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz), !is.na(whz)))
 dropped
 dropped/nobsq * 100 #percentage dropped
+
 
 
 #--------------------------------------------

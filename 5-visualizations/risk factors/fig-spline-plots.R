@@ -29,7 +29,7 @@ dim(d)
 #Adapted from: 
 #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
 
-spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="ps"){
+spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps"){
   
   # LOAD THE PACKAGES (mvmeta PACKAGE IS ASSUMED TO BE INSTALLED)
   require(mvmeta)
@@ -200,11 +200,11 @@ create_plotdf <- function(predlist, overall=F, stratlevel=NULL){
 }
 
 
-offset_fun <- function(d, Y="haz", Avar, cen=1){
+offset_fun <- function(d, Y="haz", Avar, cen=365, range=60){
   
   df <- d[!is.na(d[,Avar]),]
   
-  df <- df %>% filter(agedays < cen + 30 & agedays > cen - 30) %>% mutate(agecat="first", agecat=factor(agecat)) 
+  df <- df %>% filter(agedays < cen + range & agedays > cen - range) %>% mutate(agecat="first", agecat=factor(agecat)) 
   
   z.summary <- cohort.summary(d=df, var=Y, ci=F, continious=T, severe=F, minN=50, measure="",  strata=c("region","studyid","country","agecat",Avar))
   z.res <- summarize_over_strata(cohort.sum=z.summary, proportion=F, continious=T, measure = "GEN",  method = "REML", strata=c("region","studyid","country","agecat",Avar),  region=F, cohort=F)
@@ -220,15 +220,15 @@ offset_fun <- function(d, Y="haz", Avar, cen=1){
 # WLZ- maternal weight
 #------------------------------------------------------------------------------------------------
 
-predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="whz", Avar="mwtkg", overall=T, cen=1)
+predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=58 kg")
-predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="whz", Avar="mwtkg", overall=T, cen=1)
+predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<52 kg")
-predlist3 <- spline_meta(d[d$mwtkg=="[52-58) kg",], Y="whz", Avar="mwtkg", overall=T, cen=1)
+predlist3 <- spline_meta(d[d$mwtkg=="[52-58) kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
 plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[52-58) kg")
 plotdf_wlz_mwtkg <- rbind(plotdf1,plotdf2,plotdf3)
 
-offsetZ_wlz_mwtkg <- offset_fun(d, Y="whz", Avar="mwtkg", cen=1)
+offsetZ_wlz_mwtkg <- offset_fun(d, Y="whz", Avar="mwtkg", cen=365)
 
 
 plotdf_wlz_mwtkg <- left_join(plotdf_wlz_mwtkg, offsetZ_wlz_mwtkg, by="level")
@@ -414,14 +414,14 @@ df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summari
 
 #Normal weight   Underweight 
 
-predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="haz", Avar="mbmi", overall=T, cen=1)
+predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="haz", Avar="mbmi", overall=T, cen=365)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
-predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="haz", Avar="mbmi", overall=T, cen=1)
+predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="haz", Avar="mbmi", overall=T, cen=365)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
 
 plotdf_laz_mbmi <- rbind(plotdf1,plotdf2)
 
-offsetZ_laz_mbmi <- offset_fun(d, Y="haz", Avar="mbmi", cen=1)
+offsetZ_laz_mbmi <- offset_fun(d, Y="haz", Avar="mbmi", cen=365)
 
 
 plotdf_laz_mbmi <- left_join(plotdf_laz_mbmi, offsetZ_laz_mbmi, by="level")
@@ -461,14 +461,14 @@ print(p5)
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 table(d$mbmi)
-predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=1)
+predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=365)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
-predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=1)
+predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=365)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
 
 plotdf_wlz_mbmi <- rbind(plotdf1,plotdf2)
 
-offsetZ_wlz_mbmi <- offset_fun(d, Y="whz", Avar="mbmi", cen=1)
+offsetZ_wlz_mbmi <- offset_fun(d, Y="whz", Avar="mbmi", cen=365)
 
 
 plotdf_wlz_mbmi <- left_join(plotdf_wlz_mbmi, offsetZ_wlz_mbmi, by="level")
@@ -524,4 +524,11 @@ p_grid <- plot_grid(p1, p3, p2, p4,p6, p5,  labels = rep("",6), ncol = 2, align 
 
 ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid.png"), width=10, height=10)
 
+
+ggsave(p1, file=paste0(here(),"/figures/risk factor/spline_wlz_mwtkg.png"), width=10, height=5)
+ggsave(p2, file=paste0(here(),"/figures/risk factor/spline_wlz_mhtcm.png"), width=10, height=5)
+ggsave(p3, file=paste0(here(),"/figures/risk factor/spline_laz_mwtkg.png"), width=10, height=5)
+ggsave(p4, file=paste0(here(),"/figures/risk factor/spline_laz_mhtcm.png"), width=10, height=5)
+ggsave(p5, file=paste0(here(),"/figures/risk factor/spline_wlz_mbmi.png"), width=10, height=5)
+ggsave(p6, file=paste0(here(),"/figures/risk factor/spline_laz_mbmi.png"), width=10, height=5)
 
