@@ -18,7 +18,8 @@ head(dfull)
 dfull <- dfull %>% group_by(intervention_variable) %>% 
   mutate(has_probit = max(1*(studyid=="ki1119695-PROBIT"))) %>%
   filter(has_probit == 1,
-         studyid!="ki1119695-PROBIT") 
+         studyid!="ki1119695-PROBIT",
+         outcome_variable %in% c("haz","whz")) 
 table(dfull$intervention_variable)
 
 
