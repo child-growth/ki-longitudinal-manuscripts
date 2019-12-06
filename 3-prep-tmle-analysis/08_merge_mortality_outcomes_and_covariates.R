@@ -19,29 +19,29 @@ cov <- cov %>% subset(., select= -c(pers_wast, enwast, anywast06))
 load(paste0(ghapdata_dir,"mort_exposures.rdata"))
 
 stunt_ci_0_6 <- stunt_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_stunted06, ever_sstunted06)) 
-#stunt_ci_6_24 <- stunt_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_stunted624, ever_sstunted624))
+stunt_ci_0_24 <- stunt_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_stunted024, ever_sstunted024))
 wast_ci_0_6 <- wast_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_wasted06, ever_swasted06, pers_wasted06)) 
-#wast_ci_6_24 <- wast_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_wasted624, ever_swasted624, pers_wasted624))
-#wast_ci_0_6_no_birth <- wast_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_wasted06_noBW, ever_swasted06_noBW)) 
+wast_ci_0_24 <- wast_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_wasted024, ever_swasted024, pers_wasted024))
+wast_ci_0_6_no_birth <- wast_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_wasted06_noBW, ever_swasted06_noBW)) 
 underweight_ci_0_6 <- underweight_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_underweight06, ever_sunderweight06)) 
-#underweight_ci_6_24 <- underweight_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_underweight624, ever_sunderweight624))
+underweight_ci_0_24 <- underweight_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_underweight024, ever_sunderweight024))
 co_ci_0_6 <- co_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_co06)) 
-#co_ci_6_24 <- co_ci_6_24 %>% subset(., select=c(studyid,country,subjid,ever_co624))
+co_ci_0_24 <- co_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_co024))
 
 #convert subjid to character for the merge with mortality dataset
 mort$subjid <- as.character(mort$subjid)
 stunt_ci_0_6$subjid <- as.character(stunt_ci_0_6$subjid)
-#stunt_ci_6_24$subjid <- as.character(stunt_ci_6_24$subjid)
+stunt_ci_0_24$subjid <- as.character(stunt_ci_0_24$subjid)
 wast_ci_0_6$subjid <- as.character(wast_ci_0_6$subjid)
-#wast_ci_6_24$subjid <- as.character(wast_ci_6_24$subjid)
+wast_ci_0_24$subjid <- as.character(wast_ci_0_24$subjid)
 wast_ci_0_6_no_birth$subjid <- as.character(wast_ci_0_6_no_birth$subjid)
 underweight_ci_0_6$subjid <- as.character(underweight_ci_0_6$subjid)
-#underweight_ci_6_24$subjid <- as.character(underweight_ci_6_24$subjid)
+underweight_ci_0_24$subjid <- as.character(underweight_ci_0_24$subjid)
 co_ci_0_6$subjid <- as.character(co_ci_0_6$subjid)
-#co_ci_6_24$subjid <- as.character(co_ci_6_24$subjid)
+co_ci_0_24$subjid <- as.character(co_ci_0_24$subjid)
 
 
-
+#merge u6 datasets
 d<- wast_ci_0_6
 
 #Join in stunting measures
@@ -102,25 +102,25 @@ calc_RR <- function(d1, d2){
 # calc_RR(d$ever_wasted06, d$dead)
 # calc_RR(d$ever_swasted06, d$dead)
 # calc_RR(d$pers_wasted06, d$dead)
-# calc_RR(d$ever_wasted624, d$dead)
-# calc_RR(d$ever_swasted624, d$dead)
-# calc_RR(d$pers_wasted624, d$dead)
+# calc_RR(d$ever_wasted024, d$dead)
+# calc_RR(d$ever_swasted024, d$dead)
+# calc_RR(d$pers_wasted024, d$dead)
 # 
 # calc_RR(d$ever_stunted06, d$dead)
 # calc_RR(d$ever_sstunted06, d$dead)
-# calc_RR(d$ever_stunted624, d$dead)
-# calc_RR(d$ever_sstunted624, d$dead)
+# calc_RR(d$ever_stunted024, d$dead)
+# calc_RR(d$ever_sstunted024, d$dead)
 # 
 # calc_RR(d$ever_wasted06_noBW, d$dead)
 # calc_RR(d$ever_swasted06_noBW, d$dead)
 # 
 # calc_RR(d$ever_underweight06, d$dead)
 # calc_RR(d$ever_sunderweight06, d$dead)
-# calc_RR(d$ever_underweight624, d$dead)
-# calc_RR(d$ever_sunderweight624, d$dead)
+# calc_RR(d$ever_underweight024, d$dead)
+# calc_RR(d$ever_sunderweight024, d$dead)
 # 
 # calc_RR(d$ever_co06, d$dead)
-# calc_RR(d$ever_co624, d$dead)
+# calc_RR(d$ever_co024, d$dead)
 
 
 #Drop studies with no mortality information
@@ -132,19 +132,19 @@ Avars <- c("ever_wasted06",
            "pers_wasted06",
            "ever_stunted06",
            "ever_sstunted06",
-           # "ever_wasted624",
-           # "ever_swasted624",
-           # "pers_wasted624",
-           # "ever_stunted624",
-           # "ever_sstunted624",
+           # "ever_wasted024",
+           # "ever_swasted024",
+           # "pers_wasted024",
+           # "ever_stunted024",
+           # "ever_sstunted024",
            # "ever_wasted06_noBW",
            # "ever_swasted06_noBW",
            "ever_underweight06",
            "ever_sunderweight06",
-           # "ever_underweight624",
-           # "ever_sunderweight624",
+           # "ever_underweight024",
+           # "ever_sunderweight024",
            "ever_co06"#,
-           #"ever_co624"
+           #"ever_co024"
            )
 
 for(i in Avars){
@@ -251,6 +251,81 @@ for(i in Avars_morbidity){
 save(d, file=paste0(ghapdata_dir,"stuntwast_morbidity.Rdata"))
 
 
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# Create 0-24 mortality datasetv(with 0-6 no birth wasting)
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+d<- wast_ci_0_24
+
+#Join in stunting measures
+d <- full_join(d, stunt_ci_0_24, by=c("studyid","country","subjid"))
+dim(d)
+head(d)
+
+#Join in underweight measures
+d <- full_join(d, underweight_ci_0_24, by=c("studyid","country","subjid"))
+dim(d)
+head(d)
+
+#merge co-occurrence measures
+d <- full_join(d, co_ci_0_24, by=c("studyid","country", "subjid"))
+dim(d)
+
+#merge u6 no BW
+d <- full_join(d, wast_ci_0_6_no_birth, by=c("studyid","country", "subjid"))
+dim(d)
+
+
+#Merge in covariates
+cov <- cov %>% subset(., select = - c(dead, agedth, causedth))
+dim(d)
+df <- merge(as.data.frame(d), cov, by=c("studyid", "subjid", "country"), all.x = T, all.y = F)
+dim(df)
+head(df)
+
+
+# Merge in mortality information
+dim(df)
+dim(mort)
+d <- left_join(df, mort, by=c("studyid",  "country", "subjid"))
+dim(d)
+
+
+
+#Drop studies with no mortality information
+d <- d %>% group_by(studyid, country) %>% mutate(tot_dead = sum(dead)) %>% filter(tot_dead>0) %>% ungroup() %>% as.data.frame()
+
+#Set exposures to factors
+Avars <- c(
+           "ever_wasted024",
+           "ever_swasted024",
+           "pers_wasted024",
+           "ever_stunted024",
+           "ever_sstunted024",
+           "ever_wasted06_noBW",
+           "ever_swasted06_noBW",
+           "ever_underweight024",
+           "ever_sunderweight024",
+           "ever_co024"
+)
+
+for(i in Avars){
+  print(i)
+  d[,i] <- factor(d[,i])
+}
+
+
+#Summarize number of cohorts and children,
+d %>% filter(tot_dead>10) %>% #group_by(studyid, country) %>% 
+  summarize(ncohort=length(unique(paste0(studyid, country))), 
+            nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))),
+            ndeath=sum(dead), missage=sum(is.na(agedth)))
+
+
+save(d, file=paste0(ghapdata_dir,"stuntwast_mortality_024.Rdata"))
+
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # Create list of adjustment variables
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -269,19 +344,19 @@ adjustment_sets_mortality <- list(
   pers_wasted06=cov,
   ever_stunted06=cov,
   ever_sstunted06=cov,
-  ever_wasted624=cov,
-  ever_swasted624=cov,
-  pers_wasted624=cov,
-  ever_stunted624=cov,
-  ever_sstunted624=cov,
+  ever_wasted024=cov,
+  ever_swasted024=cov,
+  pers_wasted024=cov,
+  ever_stunted024=cov,
+  ever_sstunted024=cov,
   ever_wasted06_noBW=cov,
   ever_swasted06_noBW=cov,
   ever_underweight06=cov,
   ever_sunderweight06=cov,
-  ever_underweight624=cov,
-  ever_sunderweight624=cov,
+  ever_underweight024=cov,
+  ever_sunderweight024=cov,
   ever_co06=cov,
-  ever_co624=cov)
+  ever_co024=cov)
 
 
 save(adjustment_sets_mortality, file=here("data/mortality_adjustment_sets_list.Rdata"))
