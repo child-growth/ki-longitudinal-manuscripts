@@ -91,11 +91,8 @@ d <- RMAest
 d <- droplevels(d)
 
 table(d$outcome_variable)
-d$outcome_variable <- factor(d$outcome_variable, levels=c("dead", "pers_wasted624", "co_occurence"))
-levels(d$outcome_variable) <- c("Relative risk of\nmortality by 24 months",
-                                "Relative risk of\npersistent wasting from 6-24mo",  
-                                "Relative risk of concurrent\nwasting and stunting at 18mo"
-                                )
+d$outcome_variable <- factor(d$outcome_variable, levels=c("dead", "dead0plus",  "dead624", "dead6plus"))
+levels(d$outcome_variable) <- c("Relative risk of\nmortality by 24 months")
 table(d$outcome_variable)
 
 
@@ -141,11 +138,11 @@ table(d$Measure)
 d$severe <- factor(ifelse(grepl("evere",d$RFlabel),"Yes","No"))
 table(d$severe)
 
-d$agerange <- factor(ifelse(grepl("24",d$RFlabel),"6-24 months","0-6 months"))
+d$agerange <- factor(ifelse(grepl("24",d$RFlabel),"0-24 months","0-6 months"))
 table(d$agerange)
 
 d$type <- paste0(d$severe, " ", d$agerange)
-d$type <- factor(d$type, levels=c("No 0-6 months", "Yes 0-6 months", "No 6-24 months", "Yes 6-24 months"))
+d$type <- factor(d$type, levels=c("No 0-6 months", "Yes 0-6 months", "No 0-24 months", "Yes 0-24 months"))
 
 d$BW <- factor(ifelse(grepl("birth",d$RFlabel),"*",""))
 table(d$BW)
@@ -154,7 +151,9 @@ d$intervention_variable <- factor(d$RFlabel)
 
 
 #Drop 6-24 month outcomes
-d2 <- d %>% filter(agerange!="6-24 months")
+#d2 <- d %>% filter(agerange!="6-24 months")
+d2 <-d
+
 
 d2<-droplevels(d2)
 
@@ -174,12 +173,13 @@ d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
 
 d2$severe<-factor(ifelse(grepl("evere",d2$RFlabel),1,0),levels=c("0","1"))
 
+d2 <- d2 %>% filter(outcome_variable=="dead", !(intervention_variable %in% c(" Wasted under 6mo, excluding birth", "Severely wasted under 6mo, excluding birth ")))
 
 pmort <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
-  labs(y = "", x = "Exposure 0-6 months") +
+  labs(y = "", x = "Exposure 0-24 months") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
@@ -192,94 +192,13 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
         strip.background = element_blank(),
         text = element_text(size=16), 
         legend.position = "none") + 
-  facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
+  #facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
   #coord_cartesian(ylim=c(1,9)) + 
   coord_flip(ylim=c(1,9))
     #expand=c(0,0)) 
 
 
-ggsave(pmort, file=here("/figures/risk factor/fig-mort+morb-RR.png"), width=14, height=5.2)
+ggsave(pmort, file=here("/figures/risk factor/fig-mort-024.png"), width=5.2, height=5.2)
 
 #Save plot object
-saveRDS(pmort, file=here("results/rf_mort+morb_plot_object.RDS"))
-
-#To do:
-# Change the legend to refer to one plot
-# Change plot references throughout the manuscript
-
-
-
-#Save single plot
-dsub <- d2[d2$outcome_variable=="Relative risk of\nmortality by 24 months",]
-p1 <- ggplot(dsub, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  labs(y = "", x = "Exposure 0-6 months") +
-  geom_hline(yintercept = 1, linetype = "dashed") +
-  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_size_manual(values=c(4,5)) +
-  scale_shape_manual(values=c(16,21)) +
-  theme(strip.placement = "outside",
-        panel.spacing = unit(0, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        strip.background = element_blank(),
-        text = element_text(size=16), 
-        legend.position = "none") + 
-  ggtitle(dsub$outcome_variable[1]) + 
-  coord_flip(ylim=c(1,9))
-
-ggsave(p1, file=here("/figures/risk factor/fig-mort-RR.png"), width=5.2, height=5.2)
-
-
-dsub <- d2[d2$outcome_variable=="Relative risk of\npersistent wasting from 6-24mo",] %>% arrange(RR) %>% mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label)))
-p2 <- ggplot(dsub, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  labs(y = "", x = "Exposure 0-6 months") +
-  geom_hline(yintercept = 1, linetype = "dashed") +
-  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_size_manual(values=c(4,5)) +
-  scale_shape_manual(values=c(16,21)) +
-  theme(strip.placement = "outside",
-        panel.spacing = unit(0, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        strip.background = element_blank(),
-        text = element_text(size=16), 
-        legend.position = "none") + 
-  ggtitle(dsub$outcome_variable[1]) + 
-  coord_flip(ylim=c(1,9))
-
-ggsave(p2, file=here("/figures/risk factor/fig-pers-wast-RR.png"), width=5.2, height=5.2)
-
-dsub <- d2[d2$outcome_variable=="Relative risk of concurrent\nwasting and stunting at 18mo",] %>% arrange(RR) %>% mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label)))
-p3 <- ggplot(dsub, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  labs(y = "", x = "Exposure 0-6 months") +
-  geom_hline(yintercept = 1, linetype = "dashed") +
-  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_size_manual(values=c(4,5)) +
-  scale_shape_manual(values=c(16,21)) +
-  theme(strip.placement = "outside",
-        panel.spacing = unit(0, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        strip.background = element_blank(),
-        text = element_text(size=16), 
-        legend.position = "none") + 
-  ggtitle(dsub$outcome_variable[1]) + 
-  coord_flip(ylim=c(1,9))
-
-ggsave(p3, file=here("/figures/risk factor/fig-co-RR.png"), width=5.2, height=5.2)
-
-
-
-
-
-
-
+saveRDS(pmort, file=here("results/rf_mort-024-object.RDS"))

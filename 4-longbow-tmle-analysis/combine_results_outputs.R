@@ -12,7 +12,7 @@ Zscores <- results
 load(here("/results/rf results/raw longbow results/results_bin_2019-11-16.rdata"))
 bin <- results
 
-load(here("/results/rf results/raw longbow results/mortality_2019-11-16.rdata"))
+load(here("/results/rf results/raw longbow results/mortality_2019-12-06.rdata"))
 mort <- results
 
 load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-11-16.rdata"))
