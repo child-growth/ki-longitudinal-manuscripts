@@ -237,7 +237,7 @@ summary.prev.whz <- function(d, severe.wasted=F, method="REML", N_filter=50){
 
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)),function(x)
-    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
+    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children", method=method))
   prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)

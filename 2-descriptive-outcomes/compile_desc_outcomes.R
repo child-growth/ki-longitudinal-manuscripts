@@ -11,6 +11,7 @@ co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.RDS")) %>% mutate(analysis 
 #Fixed effects
 stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS")) %>% mutate(analysis = "Fixed effects")
 wast_fe <- readRDS(paste0(res_dir,"wasting_desc_data_FE.RDS")) %>% mutate(analysis = "Fixed effects")
+co_fe <- readRDS(paste0(res_dir,"co_desc_data_FE.RDS")) %>% mutate(analysis = "Fixed effects")
 
 
 #Other sensitivity
@@ -31,7 +32,7 @@ stunt_noKenaba_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe
 
 
 d <- bind_rows(stunt, wast, co_desc_data, 
-               stunt_fe, wast_fe, 
+               stunt_fe, wast_fe, co_fe,
                stunt_monthly24, 
                stunt_noProbit, stunt_noProbit_fe, 
                wast_noKenabaBirth,

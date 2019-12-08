@@ -2,7 +2,7 @@
 
 
 
-summary.prev.co <- function(d, severe=F, N_filter=50){
+summary.prev.co <- function(d, severe=F, N_filter=50, method="REML"){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -41,7 +41,7 @@ summary.prev.co <- function(d, severe=F, N_filter=50){
   
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
-    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
+    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children", method=method))
   prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
@@ -57,7 +57,7 @@ summary.prev.co <- function(d, severe=F, N_filter=50){
 
 
 
-summary.prev.haz <- function(d, severe.stunted=F){
+summary.prev.haz <- function(d, severe.stunted=F, method="REML"){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -93,7 +93,7 @@ summary.prev.haz <- function(d, severe.stunted=F){
   
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
-    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
+    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children", method=method))
   prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
@@ -109,7 +109,7 @@ summary.prev.haz <- function(d, severe.stunted=F){
 
 
 
-summary.prev.muaz <- function(d, severe=F){
+summary.prev.muaz <- function(d, severe=F, method="REML"){
   
   d <- d %>% filter(!is.na(muaz)) %>% filter(muaz > (-5) & muaz < 5)
   
@@ -159,7 +159,7 @@ summary.prev.muaz <- function(d, severe=F){
   
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)),function(x) 
-    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children"))
+    fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children", method=method))
   prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
@@ -170,7 +170,7 @@ summary.prev.muaz <- function(d, severe=F){
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
   m.prev.res=lapply((levels(prev.data$agecat)),function(x) 
-    fit.rma(data=prev.data,ni="nmeas", xi="m.nxprev",age=x,measure="PLO",nlab="children"))
+    fit.rma(data=prev.data,ni="nmeas", xi="m.nxprev",age=x,measure="PLO",nlab="children", method=method))
   m.prev.res=as.data.frame(rbindlist(m.prev.res, use.names=TRUE, fill=T))
   m.prev.res$est=as.numeric(m.prev.res$est)
   m.prev.res$lb=as.numeric(m.prev.res$lb)
@@ -185,7 +185,7 @@ summary.prev.muaz <- function(d, severe=F){
 
 
 
-summary.waz <- function(d){
+summary.waz <- function(d, method="REML"){
   
   # take mean of multiple measurements within age window
   dmn <- d %>%
@@ -218,7 +218,7 @@ summary.waz <- function(d){
   
   # estimate random effects, format results
   waz.res=lapply((levels(waz.data$agecat)),function(x) 
-    fit.rma(data=waz.data, ni="nmeas", yi="meanwaz", vi="varwaz", nlab="children",age=x))
+    fit.rma(data=waz.data, ni="nmeas", yi="meanwaz", vi="varwaz", nlab="children",age=x, method=method))
   waz.res=as.data.frame(rbindlist(waz.res, use.names=TRUE, fill=T))
   waz.res$est=as.numeric(waz.res$est)
   waz.res$lb=as.numeric(waz.res$lb)
