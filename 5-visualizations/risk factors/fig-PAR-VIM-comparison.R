@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 library(gtable)
 library(ggrepel)
 library(ggplot2)
-library(rowr)
+#library(rowr)
 
 #Load data
 vim <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_VIM_results.rds"))
@@ -50,21 +50,21 @@ is_outlier <- function(x, thres=1.5) {
   return(x < quantile(x, 0.25) - thres * IQR(x) | x > quantile(x, 0.75) + thres * IQR(x))
 }
 
-# dhaz$outlier <- ifelse(is_outlier(dhaz$PAR) | is_outlier(dhaz$VIM),as.character(dhaz$RFlabel.x),NA)
-# dwhz$outlier <- ifelse(is_outlier(dwhz$PAR) | is_outlier(dwhz$VIM),as.character(dwhz$RFlabel.x),NA)
-dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=1.5), as.character(dhaz$RFlabel.x),NA)
-dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.5), as.character(dwhz$RFlabel.x),NA)
 
-# dhaz$outlier[dhaz$outlier %in% c("Safe water source","Single parent","Birth month")] <- NA
-# dhaz$outlier[dhaz$outlier == "# of children <5 in HH"] <- "Birth month\n# of children <5 in HH\nSafe water source\nSingle parent"
-# dwhz$outlier[dwhz$outlier == "Single parent"] <- "Single\nparent"
+dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=2), as.character(dhaz$RFlabel.x),NA)
+dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.75), as.character(dwhz$RFlabel.x),NA)
+dhaz$is_outlier <- ifelse(is.na(dhaz$outlier), "0", "1")
+dwhz$is_outlier <- ifelse(is.na(dwhz$outlier), "0", "1")
+dhaz$outlier
+dwhz$outlier
 
-dwhz$outlier[dwhz$outlier == "Mother's age"] <- "Mother's\nage"
-dwhz$outlier[dwhz$outlier == "Father's height"] <- "Father's\nheight"
-
-dhaz$outlier[dhaz$outlier == "Single parent"] <- "Single\nparent"
-dhaz$outlier[dhaz$outlier == "Birth order"] <- "Birth\norder"
-dhaz$outlier[dhaz$outlier == "# of people in HH"] <- "# of people\nin HH"
+# 
+# dwhz$outlier[dwhz$outlier == "Mother's age"] <- "Mother's\nage"
+# dwhz$outlier[dwhz$outlier == "Father's height"] <- "Father's\nheight"
+# 
+# dhaz$outlier[dhaz$outlier == "Single parent"] <- "Single\nparent"
+# dhaz$outlier[dhaz$outlier == "Birth order"] <- "Birth\norder"
+# dhaz$outlier[dhaz$outlier == "# of people in HH"] <- "# of people\nin HH"
 
 dhaz$x <- -dhaz$PAR + 0.05
 dhaz$y <- -dhaz$VIM + 0.1
@@ -79,7 +79,7 @@ for (i in 1:length(dhaz$outlier)) {
 }
 fdata = factor(dhaz$outlier)
 
-levels(fdata) = c(1, 2, 3, 4)
+levels(fdata) = c(1:length(levels(fdata)))
 
 dhaz$outlier_color = fdata
 
@@ -91,7 +91,7 @@ for (i in 1:length(dwhz$outlier)) {
   }
 }
 fdata1 = factor(dwhz$outlier)
-levels(fdata1) = c(1, 2, 3)
+levels(fdata1) = c(1:length(levels(fdata1)))
 dwhz$outlier_color = fdata1
 
 
@@ -100,10 +100,12 @@ dwhz$outlier_color = fdata1
 set.seed(12346)
 #set.seed(123456)
 pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM, color = outlier_color)) + 
-  geom_point(size = 2, alpha=0.5) +
+  geom_point(aes(shape=is_outlier, alpha=is_outlier), size = 4) +
   scale_colour_manual(values=tableau11)+
-  coord_fixed(xlim = c(-0.2,0.4), ylim = c(-0.1,0.4)) +
-  labs(x = "Attributable difference\nin LAZ, fixed reference", y = "Attributable difference\nin LAZ, optimal intervention") +
+  scale_alpha_manual(values=c(0.5, 1))+
+  scale_shape_manual(values=c(19,19))+
+  coord_fixed(xlim = c(-0.1,0.4), ylim = c(-0.1,0.4)) +
+  labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\nLAZ, optimal intervention") +
   geom_abline(slope=1,intercept=0) +
   geom_vline(xintercept = 0, linetype="dashed") +
   geom_hline(yintercept = 0, linetype="dashed") +
@@ -117,17 +119,19 @@ pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM, color = outlier_color)) +
         axis.title = element_text(size=9),
         axis.text = element_text(size=8),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE)+
+  guides(color=FALSE, shape=FALSE)
 
-#pVIMhaz
+pVIMhaz
 
 
 set.seed(156)
 pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM, color = outlier_color)) + 
-  geom_point(size = 2, alpha=0.5) +
+  geom_point(aes(shape=is_outlier, alpha=is_outlier), size = 4) +
   scale_colour_manual(values=tableau11)+
-  coord_fixed(xlim = c(-0.2,0.25), ylim = c(-0.2,0.25)) +
-  labs(x = "Attributable difference\nin WLZ, fixed reference", y = "Attributable difference\nin WLZ, optimal intervention") +
+  scale_alpha_manual(values=c(0.5, 1))+
+  scale_shape_manual(values=c(19,19))+
+  coord_fixed(xlim = c(-0.1,0.25), ylim = c(-0.1,0.25)) +
+  labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\noptimal intervention") +
   geom_abline(slope=1,intercept=0) +
   geom_vline(xintercept = 0, linetype="dashed") +
   geom_hline(yintercept = 0, linetype="dashed") +
@@ -144,7 +148,7 @@ pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM, color = outlier_color)) +
         axis.text = element_text(size=8),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   guides(color=FALSE, shape=FALSE)
-#pVIMwhz
+pVIMwhz
 
 
 save(pVIMhaz, pVIMwhz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))

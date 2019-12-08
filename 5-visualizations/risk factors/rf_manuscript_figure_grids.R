@@ -25,16 +25,21 @@ load(paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
 
 #embedded plots 
 #https://www.r-bloggers.com/plots-within-plots-with-ggplot2-and-ggmap/
-p1embed <- p1 + inset(ggplotGrob(pVIMhaz), xmin = 0, xmax = 9, ymin = 0.12, ymax = 0.58) 
+p1embed <- p1 + inset(ggplotGrob(pVIMhaz), xmin = 0, xmax = 10, ymin = 0.12, ymax = 0.58) 
+#p1embed <- p1 + inset(ggplotGrob(pVIMhaz), xmin = 0, xmax = 9, ymin = 0.12, ymax = 0.58) 
 p2embed <- p2 + inset(ggplotGrob(pVIMwhz), xmin = 0, xmax = 10, ymin = 0.12, ymax = 0.58)
 
-pPar_laz_plot = grid.arrange(blank, p1embed, nrow = 2, heights = c(0.9, 20))
-pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.65))
+pPar_laz_plot = grid.arrange(blank, p1embed, nrow = 2, heights = c(1.3, 20))
+#pPar_laz_plot = grid.arrange(blank, p1embed, nrow = 2, heights = c(0.9, 20))
+pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.55))
+#pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.65))
 pPar_laz_combined = plot_grid(pPar_laz_plot, NULL, pPar_laz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
 
 
-pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(0.9, 20))
-pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.65))
+pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(1.3, 20))
+#pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(0.9, 20))
+pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.45))
+#pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.65))
 pPar_wlz_combined = plot_grid(pPar_wlz_plot, NULL, pPar_wlz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
 
 fig2 <- plot_grid(pPar_laz_combined, NULL, pPar_wlz_combined, ncol = 3, labels = c("A","", "B"), rel_widths = c(1, -0.05, 1))
