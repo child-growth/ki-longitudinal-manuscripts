@@ -40,7 +40,7 @@ d <- dfull %>% filter(type=="RR", adjusted==1)
 
 #keep only morbidity and mortality analysis
 table(d$outcome_variable)
-d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="" | outcome_variable=="")
+d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="dead0plus" | outcome_variable=="dead624"| outcome_variable=="dead6plus")
 
 
 
@@ -50,7 +50,7 @@ d <- droplevels(d)
 d <- d %>% filter( ci_lower !=  ci_upper)
 
 
-poolRR <- function(d){
+poolRR <- function(d, method="REML"){
   #nstudies=length(unique(d$studyid))
   nstudies <- d %>% summarize(N=n())
   
@@ -59,7 +59,7 @@ poolRR <- function(d){
   }else{
     
     fit<-NULL
-    try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="RR"))
+    try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="RR"))
     if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="RR"))}
     if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="RR"))}
     if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="RR"))}
@@ -84,6 +84,8 @@ poolRR <- function(d){
 
 RMAest <- d %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
+MAest_FE <- d %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
+  do(poolRR(., method="REML")) %>% as.data.frame()
 
 #Save cleaned data
 saveRDS(RMAest, paste0(here::here(),"/results/rf results/pooled_mortality_RR_results.rds"))
@@ -93,11 +95,12 @@ d <- RMAest
 d <- droplevels(d)
 
 table(d$outcome_variable)
-d$outcome_variable <- factor(d$outcome_variable, levels=c("dead", "pers_wasted624", "co_occurence"))
+d$outcome_variable <- factor(d$outcome_variable, levels=c("dead",  "dead0plus", "dead624", "dead6plus"))
 levels(d$outcome_variable) <- c("Relative risk of\nmortality by 24 months",
-                                "Relative risk of\npersistent wasting from 6-24mo",  
-                                "Relative risk of concurrent\nwasting and stunting at 18mo"
-                                )
+                                "Relative risk of\nany mortality",
+                                "Relative risk of\nmortality 6-24 months",
+                                "Relative risk of\nmortality after 6 months")
+                                
 table(d$outcome_variable)
 
 
@@ -143,22 +146,18 @@ table(d$Measure)
 d$severe <- factor(ifelse(grepl("evere",d$RFlabel),"Yes","No"))
 table(d$severe)
 
-d$agerange <- factor(ifelse(grepl("24",d$RFlabel),"6-24 months","0-6 months"))
+d$agerange <- factor(ifelse(grepl("24",d$RFlabel),"0-24 months","0-6 months"))
 table(d$agerange)
 
 d$type <- paste0(d$severe, " ", d$agerange)
-d$type <- factor(d$type, levels=c("No 0-6 months", "Yes 0-6 months", "No 6-24 months", "Yes 6-24 months"))
+d$type <- factor(d$type, levels=c("No 0-6 months", "Yes 0-6 months", "No 0-24 months", "Yes 0-24 months"))
 
 d$BW <- factor(ifelse(grepl("birth",d$RFlabel),"*",""))
 table(d$BW)
 
 d$intervention_variable <- factor(d$RFlabel)
 
-
-#Drop 6-24 month outcomes
-d2 <- d %>% filter(agerange!="6-24 months")
-
-d2<-droplevels(d2)
+d2<-droplevels(d)
 
 d2$intervention_variable <- as.character(d2$intervention_variable)
 d2 <- d2 %>% arrange(outcome_variable, RR)
@@ -169,7 +168,8 @@ d2 = d2 %>% mutate(Measure=tolower(Measure),
   type = gsub("Yes", "Severely", type),
   type = gsub(" 0-6 months", "", type))
   
-d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
+d2 = d2 %>% arrange(outcome_variable, RR) %>%
+  mutate(outcome_label = paste(type, " ", Measure, sep = ""),
                    outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
@@ -177,7 +177,9 @@ d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
 d2$severe<-factor(ifelse(grepl("evere",d2$RFlabel),1,0),levels=c("0","1"))
 
 
-pmort <- ggplot(d2[d2$outcome_variable=="Relative risk of\nmortality by 24 months",], aes(x=outcome_label)) +
+d2 <- d2 %>% filter(intervention_level==1)
+
+pmort <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
@@ -194,13 +196,14 @@ pmort <- ggplot(d2[d2$outcome_variable=="Relative risk of\nmortality by 24 month
         strip.background = element_blank(),
         text = element_text(size=16), 
         legend.position = "none") + 
-  ggtitle("Associations between growth failure\nunder 6mo and mortality\n-excluding bi-annually measured trials") + 
+  ggtitle("outcome_variable") + 
+  facet_wrap(~outcome_variable, ncol=1) +
   theme(plot.title = element_text(size = 12, face = "bold")) +
   coord_flip(ylim=c(1,9))
     #expand=c(0,0)) 
+pmort
 
+ggsave(pmort, file=here("/figures/risk factor/fig-mort-RR-time-death.png"), width=5.2, height=10)
 
-# ggsave(pmort, file=here("/figures/risk factor/fig-mort-RR-sens.png"), width=5.2, height=5.2)
-# 
-# #Save plot object
-# saveRDS(pmort, file=here("results/rf_mort+morb-sens_plot_object.RDS"))
+#Save plot object
+saveRDS(pmort, file=here("results/fig-mort-RR-time-death.RDS"))

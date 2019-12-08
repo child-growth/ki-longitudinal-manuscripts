@@ -14,37 +14,202 @@ fontsize: 9pt
 
 ```{r setup, include=FALSE}
 library(knitr)
+library(tidyverse)
 knitr::opts_chunk$set(echo = TRUE)
 # source(paste0(here::here(), "/0-config.R"))
-setwd("../../")
-source("0-config.R")
-```
-
-## splines fit to all data, naive to study membership
-
-```{r spline-all, echo = FALSE}
-plots_all <- readRDS(here("/figures/plot objects/risk factor/rf_spline_sens_objects2.RDS"))
-print(plots_all[[1]])
-print(plots_all[[2]])
-print(plots_all[[3]])
-print(plots_all[[4]])
-print(plots_all[[5]])
-print(plots_all[[6]])
-
+# setwd("../../")
+# source("0-config.R")
+plots <- readRDS("figure-copies/plot objects/rf_spline_objects.RDS")
+plots2 <- readRDS("figure-copies/plot objects/rf_spline_sens_objects2.RDS")
+plots3 <- readRDS("figure-copies/plot objects/rf_spline_sens_objects3.RDS")
+plots4 <- readRDS("figure-copies/plot objects/rf_spline_sens4_objects.RDS")
 
 ```
 
-## splines fit to random-effect pooled monthly means
 
+## WLZ, stratified by maternal weight
 
-```{r spline-RE, echo = FALSE}
-plots_RE_means <- readRDS(here("/figures/plot objects/risk factor/rf_spline_sens_objects3.RDS"))
-print(plots_RE_means[[1]])
-print(plots_RE_means[[2]])
-print(plots_RE_means[[3]])
-print(plots_RE_means[[4]])
-print(plots_RE_means[[5]])
-print(plots_RE_means[[6]])
+#### Primary plots
 
-
+```{r, echo = FALSE, message=F}
+i<-1
+print(plots[[i]]+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)))
 ```
+
+#### Splines fit to all data, naive to study membership
+
+```{r, echo = FALSE, message=F}
+print(plots2[[i]])
+```
+
+#### Splines fit to random-effect pooled monthly means
+
+```{r, echo = FALSE, message=F}
+print(plots3[[i]])
+```
+
+#### Random-effects meta-analysis of splines, sensitivity to parameters
+
+```{r, echo = FALSE, message=F}
+print(plots4[[i]])
+```
+
+
+## WLZ, stratified by maternal height
+
+#### Primary plots
+
+```{r, echo = FALSE, message=F}
+i<-2
+print(plots[[i]]+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)))
+```
+
+#### Splines fit to all data, naive to study membership
+
+```{r, echo = FALSE, message=F}
+print(plots2[[i]])
+```
+
+#### Splines fit to random-effect pooled monthly means
+
+```{r, echo = FALSE, message=F}
+print(plots3[[i]])
+```
+
+#### Random-effects meta-analysis of splines, sensitivity to parameters
+
+```{r, echo = FALSE, message=F}
+print(plots4[[i]])
+```
+
+
+
+
+
+
+
+
+## LAZ, stratified by maternal weight
+
+#### Primary plots
+
+```{r, echo = FALSE, message=F}
+i<-3
+print(plots[[i]]+ scale_y_continuous(limits=c(-2.2, 0.4), breaks = seq(-2.2, 0.4, 0.2), labels = round(seq(-2.2, 0.4, 0.2),1)))
+```
+
+#### Splines fit to all data, naive to study membership
+
+```{r, echo = FALSE, message=F}
+print(plots2[[i]])
+```
+
+#### Splines fit to random-effect pooled monthly means
+
+```{r, echo = FALSE, message=F}
+print(plots3[[i]])
+```
+
+#### Random-effects meta-analysis of splines, sensitivity to parameters
+
+```{r, echo = FALSE, message=F}
+print(plots4[[i]])
+```
+
+
+## LAZ, stratified by maternal height
+
+#### Primary plots
+
+```{r, echo = FALSE, message=F}
+i<-4
+print(plots[[i]]+ scale_y_continuous(limits=c(-2.2, 0.4), breaks = seq(-2.2, 0.4, 0.2), labels = round(seq(-2.2, 0.4, 0.2),1)))
+```
+
+#### Splines fit to all data, naive to study membership
+
+```{r, echo = FALSE, message=F}
+print(plots2[[i]])
+```
+
+#### Splines fit to random-effect pooled monthly means
+
+```{r, echo = FALSE, message=F}
+print(plots3[[i]])
+```
+
+#### Random-effects meta-analysis of splines, sensitivity to parameters
+
+```{r, echo = FALSE, message=F}
+print(plots4[[i]])
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## WLZ, stratified by maternal BMI
+
+#### Primary plots
+
+```{r, echo = FALSE, message=F}
+i<-5
+print(plots[[i]]+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)))
+```
+
+#### Splines fit to all data, naive to study membership
+
+```{r, echo = FALSE, message=F}
+print(plots2[[i]])
+```
+
+#### Splines fit to random-effect pooled monthly means
+
+```{r, echo = FALSE, message=F}
+print(plots3[[i]])
+```
+
+#### Random-effects meta-analysis of splines, sensitivity to parameters
+
+```{r, echo = FALSE, message=F}
+print(plots4[[i]])
+```
+
+
+## LAZ, stratified by maternal BMI
+
+#### Primary plots
+
+```{r, echo = FALSE, message=F}
+i<-6
+print(plots[[i]]+ scale_y_continuous(limits=c(-2.2, 0.4), breaks = seq(-2.2, 0.4, 0.2), labels = round(seq(-2.2, 0.4, 0.2),1)))
+```
+
+#### Splines fit to all data, naive to study membership
+
+```{r, echo = FALSE, message=F}
+print(plots2[[i]])
+```
+
+#### Splines fit to random-effect pooled monthly means
+
+```{r, echo = FALSE, message=F}
+print(plots3[[i]])
+```
+
+#### Random-effects meta-analysis of splines, sensitivity to parameters
+
+```{r, echo = FALSE, message=F}
+print(plots4[[i]])
+```
+
+
