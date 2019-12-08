@@ -184,6 +184,17 @@ fix_region <- mark_region(co_desc_data[co_desc_data$region=="Other",])
 co_desc_data$region[co_desc_data$region=="Other"] <- as.character(fix_region$region)
 table(co_desc_data$region)
 
+
+
+co_desc_data <- co_desc_data %>% 
+  mutate(pooling = case_when(
+    cohort != "pooled" ~ "no pooling",
+    cohort == "pooled" & !is.na(country) ~ "country",
+    region != "Overall" ~ "regional",
+    region == "Overall" ~ "overall"
+  ))
+
+
 saveRDS(co_desc_data, file = paste0(here(),"/results/co_desc_data.rds"))
 
 
