@@ -28,6 +28,10 @@ underweight_ci_0_24 <- underweight_ci_0_24 %>% subset(., select=c(studyid,countr
 co_ci_0_6 <- co_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_co06)) 
 co_ci_0_24 <- co_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_co024))
 
+stunt_ci_0_6_no_birth <- stunt_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_stunted06_noBW, ever_sstunted06_noBW)) 
+underweight_ci_0_6_no_birth <- underweight_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_underweighted06_noBW, ever_sunderweighted06_noBW)) 
+
+
 #convert subjid to character for the merge with mortality dataset
 mort$subjid <- as.character(mort$subjid)
 stunt_ci_0_6$subjid <- as.character(stunt_ci_0_6$subjid)

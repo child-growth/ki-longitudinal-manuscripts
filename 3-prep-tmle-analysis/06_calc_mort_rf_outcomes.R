@@ -136,6 +136,26 @@ stunt_ci_0_6 = d6 %>%
   ungroup() 
 
 
+# 
+# #calculate any stunting from 0-6 - no birth
+# stunt_ci_0_6_no_birth = d6 %>% 
+#   group_by(studyid,country,subjid) %>% arrange(studyid,country,subjid,agedays) %>%
+#   mutate(firsthaz=first(haz), haz=ifelse(firsthaz >= (-2), haz, NA)) %>% #Drop children born/enrolled stunted
+#   mutate(mo6_obs = 1*(agedays = min(abs(agedays - 6*30.4167)))) %>% #Mark observation closest to 6 months (so that yearly trial data isn't dropped)
+#   filter(agedays<=max(mo6_obs*agedays) & agedays<=6.5*30.4167) %>% #14 day window around 6 months for SAS compfeed and vit A (most obs slightly above 30.4167*6)
+#   mutate(minhaz=min(haz), ever_stunted06=ifelse(minhaz< -2,1,0), ever_sstunted06=ifelse(minhaz< -3,1,0)) %>% slice(1) %>%
+#   ungroup() 
+# summary(stunt_ci_0_6_no_birth$firsthaz)
+# summary(stunt_ci_0_6_no_birth$minhaz)
+# summary(stunt_ci_0_6_no_birth$haz)
+# 
+# table(stunt_ci_0_6$ever_stunted06)
+# table(stunt_ci_0_6_no_birth$ever_stunted06)
+# 
+# 
+# table(stunt_ci_0_6$ever_sstunted06)
+# table(stunt_ci_0_6_no_birth$ever_sstunted06)
+
 # stunt_ci_6_24 = d6 %>% ungroup() %>%
 #   group_by(studyid,country,subjid) %>%
 #   arrange(studyid,country,subjid, agedays) %>%

@@ -172,4 +172,5 @@ print(p6)
 
 #Save plot objects
 saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot objects/risk factor/rf_spline_sens_objects2.RDS"))
+saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/plot objects/rf_spline_sens_objects2.RDS"))
 
