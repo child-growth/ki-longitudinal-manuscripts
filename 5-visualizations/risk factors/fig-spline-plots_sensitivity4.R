@@ -483,4 +483,5 @@ ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid_sens4.png"),
 
 #Save plot objects
 saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/results/rf_spline_sens4_objects.RDS"))
+saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/plot objects/rf_spline_sens_objects4.RDS"))
 
