@@ -459,7 +459,7 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 # Results Detail
 
 ## Results Plots
-![](/tmp/b002adb6-6b6f-41fa-918a-81bf53643ccd/cb4ce14b-79fe-4df7-ae2e-83cdb388e99f/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
+![](/tmp/961f377c-5296-46d1-9891-487acbef2f05/7cbfda4d-52af-4cb1-9690-23e871de2dc7/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
 
 
 
@@ -471,62 +471,62 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
 studyid          country        agecat      intervention_level   baseline_level      estimate     ci_lower     ci_upper
 ---------------  -------------  ----------  -------------------  ---------------  -----------  -----------  -----------
-CMC-V-BCS-2002   India          Birth       optimal              observed          -1.0916300   -1.5195698   -0.6636901
-CMC-V-BCS-2002   India          6 months    optimal              observed          -1.4141077   -1.6871387   -1.1410767
-CMC-V-BCS-2002   India          24 months   optimal              observed          -2.6856936   -2.9285760   -2.4428112
-CMIN             Bangladesh     Birth       optimal              observed          -2.3965174   -3.4563683   -1.3366664
-CMIN             Bangladesh     6 months    optimal              observed          -1.3857082   -1.6013262   -1.1700903
-CMIN             Bangladesh     24 months   optimal              observed          -2.2966451   -2.5852398   -2.0080505
-CONTENT          Peru           6 months    optimal              observed          -0.2309975   -0.7005123    0.2385174
-CONTENT          Peru           24 months   optimal              observed          -0.5748075   -0.9623697   -0.1872454
-Guatemala BSC    Guatemala      6 months    optimal              observed          -1.8025272   -1.9788140   -1.6262404
-IRC              India          Birth       optimal              observed           0.1291667   -0.3092709    0.5676044
-IRC              India          6 months    optimal              observed          -0.9233461   -1.1824977   -0.6641946
-IRC              India          24 months   optimal              observed          -1.7363212   -1.9249528   -1.5476897
-JiVitA-3         Bangladesh     Birth       optimal              observed          -1.4500283   -1.4876148   -1.4124418
-JiVitA-3         Bangladesh     6 months    optimal              observed          -1.2694846   -1.3124730   -1.2264962
-JiVitA-4         Bangladesh     Birth       optimal              observed          -1.2891525   -1.4228953   -1.1554097
-JiVitA-4         Bangladesh     6 months    optimal              observed          -1.2383888   -1.3201665   -1.1566110
-JiVitA-4         Bangladesh     24 months   optimal              observed          -1.7123938   -1.9162783   -1.5085092
-Keneba           Gambia         Birth       optimal              observed           0.1372922    0.0158699    0.2587144
-Keneba           Gambia         6 months    optimal              observed          -0.8714149   -0.9620403   -0.7807894
-Keneba           Gambia         24 months   optimal              observed          -1.5616236   -1.7218712   -1.4013761
-LCNI-5           Malawi         6 months    optimal              observed          -1.8078422   -1.9629329   -1.6527515
-LCNI-5           Malawi         24 months   optimal              observed          -1.8030623   -2.0393221   -1.5668025
-MAL-ED           Bangladesh     Birth       optimal              observed          -1.3451259   -1.6254043   -1.0648475
-MAL-ED           Bangladesh     6 months    optimal              observed          -1.3825117   -1.6284596   -1.1365637
-MAL-ED           Bangladesh     24 months   optimal              observed          -1.8516770   -2.1033590   -1.5999951
-MAL-ED           Brazil         Birth       optimal              observed          -0.8909925   -1.5155466   -0.2664383
-MAL-ED           Brazil         6 months    optimal              observed           0.2944034    0.0209790    0.5678278
-MAL-ED           Brazil         24 months   optimal              observed          -0.2027103   -0.6227876    0.2173670
-MAL-ED           India          Birth       optimal              observed          -0.7386748   -1.2472378   -0.2301118
-MAL-ED           India          6 months    optimal              observed          -1.2152574   -1.4111099   -1.0194049
-MAL-ED           India          24 months   optimal              observed          -2.0291608   -2.2758615   -1.7824602
-MAL-ED           Nepal          Birth       optimal              observed          -0.8864650   -1.5981312   -0.1747989
-MAL-ED           Nepal          6 months    optimal              observed          -0.5348087   -0.7621742   -0.3074433
-MAL-ED           Nepal          24 months   optimal              observed          -1.0773505   -1.3663937   -0.7883073
-MAL-ED           Peru           Birth       optimal              observed          -0.6617961   -0.9216245   -0.4019678
-MAL-ED           Peru           6 months    optimal              observed          -1.1495373   -1.3875049   -0.9115696
-MAL-ED           Peru           24 months   optimal              observed          -1.6943741   -1.9010998   -1.4876483
-MAL-ED           South Africa   Birth       optimal              observed          -0.3728911   -0.7919314    0.0461493
-MAL-ED           South Africa   6 months    optimal              observed          -0.7297567   -1.0147052   -0.4448081
-MAL-ED           South Africa   24 months   optimal              observed          -1.2689513   -1.6312564   -0.9066462
-MAL-ED           Tanzania       Birth       optimal              observed          -0.8484674   -1.2354549   -0.4614799
-MAL-ED           Tanzania       6 months    optimal              observed          -1.1662089   -1.4251271   -0.9072907
-MAL-ED           Tanzania       24 months   optimal              observed          -2.7402262   -3.0531217   -2.4273307
-PROBIT           Belarus        Birth       optimal              observed           1.3768311    1.2078710    1.5457912
-PROBIT           Belarus        6 months    optimal              observed           0.1889879    0.0811306    0.2968452
-PROBIT           Belarus        24 months   optimal              observed           0.0530883   -0.1360938    0.2422704
-PROVIDE          Bangladesh     Birth       optimal              observed          -0.8643516   -1.0085157   -0.7201876
-PROVIDE          Bangladesh     6 months    optimal              observed          -0.8704277   -1.0451022   -0.6957533
-ResPak           Pakistan       6 months    optimal              observed          -1.4644412   -2.2396330   -0.6892494
+CMC-V-BCS-2002   India          Birth       optimal              observed          -1.1807429   -1.6854642   -0.6760216
+CMC-V-BCS-2002   India          6 months    optimal              observed          -1.4438955   -1.7190389   -1.1687521
+CMC-V-BCS-2002   India          24 months   optimal              observed          -2.9454587   -3.1702222   -2.7206953
+CMIN             Bangladesh     Birth       optimal              observed          -2.3878922   -3.4056039   -1.3701805
+CMIN             Bangladesh     6 months    optimal              observed          -1.3754640   -1.5913481   -1.1595799
+CMIN             Bangladesh     24 months   optimal              observed          -2.2907038   -2.5708532   -2.0105543
+CONTENT          Peru           6 months    optimal              observed          -0.5199504   -0.8467181   -0.1931828
+CONTENT          Peru           24 months   optimal              observed          -0.8058410   -1.1051974   -0.5064846
+Guatemala BSC    Guatemala      6 months    optimal              observed          -1.6866321   -1.9019833   -1.4712809
+IRC              India          Birth       optimal              observed           0.1282878   -0.3057295    0.5623050
+IRC              India          6 months    optimal              observed          -0.9133034   -1.1751040   -0.6515028
+IRC              India          24 months   optimal              observed          -1.8164047   -2.0154583   -1.6173511
+JiVitA-3         Bangladesh     Birth       optimal              observed          -1.4497757   -1.4873645   -1.4121869
+JiVitA-3         Bangladesh     6 months    optimal              observed          -1.2692358   -1.3122316   -1.2262400
+JiVitA-4         Bangladesh     Birth       optimal              observed          -1.2851657   -1.4183105   -1.1520209
+JiVitA-4         Bangladesh     6 months    optimal              observed          -1.2372172   -1.3188347   -1.1555997
+JiVitA-4         Bangladesh     24 months   optimal              observed          -1.7093704   -1.9109332   -1.5078076
+Keneba           Gambia         Birth       optimal              observed           0.1395677    0.0187142    0.2604211
+Keneba           Gambia         6 months    optimal              observed          -0.8238216   -0.9144918   -0.7331514
+Keneba           Gambia         24 months   optimal              observed          -1.6579279   -1.8237155   -1.4921403
+LCNI-5           Malawi         6 months    optimal              observed          -1.7956327   -1.9660979   -1.6251675
+LCNI-5           Malawi         24 months   optimal              observed          -1.7995081   -2.0378797   -1.5611364
+MAL-ED           Bangladesh     Birth       optimal              observed          -1.2589098   -1.5521675   -0.9656522
+MAL-ED           Bangladesh     6 months    optimal              observed          -1.3159152   -1.5606595   -1.0711709
+MAL-ED           Bangladesh     24 months   optimal              observed          -1.8446110   -2.0985106   -1.5907113
+MAL-ED           Brazil         Birth       optimal              observed          -1.0613051   -1.6565532   -0.4660570
+MAL-ED           Brazil         6 months    optimal              observed           0.1877668   -0.0920255    0.4675590
+MAL-ED           Brazil         24 months   optimal              observed          -0.1668607   -0.6069229    0.2732015
+MAL-ED           India          Birth       optimal              observed          -0.6722138   -1.1236813   -0.2207464
+MAL-ED           India          6 months    optimal              observed          -1.3915468   -1.6212977   -1.1617960
+MAL-ED           India          24 months   optimal              observed          -2.1940758   -2.4151622   -1.9729895
+MAL-ED           Nepal          Birth       optimal              observed          -0.7437303   -1.7280501    0.2405894
+MAL-ED           Nepal          6 months    optimal              observed          -0.3857899   -0.6085216   -0.1630582
+MAL-ED           Nepal          24 months   optimal              observed          -1.0584643   -1.3436485   -0.7732801
+MAL-ED           Peru           Birth       optimal              observed          -0.6832721   -0.9451379   -0.4214063
+MAL-ED           Peru           6 months    optimal              observed          -1.1432211   -1.3815970   -0.9048453
+MAL-ED           Peru           24 months   optimal              observed          -1.6797054   -1.8887671   -1.4706438
+MAL-ED           South Africa   Birth       optimal              observed          -0.6708642   -1.1377053   -0.2040232
+MAL-ED           South Africa   6 months    optimal              observed          -0.7118328   -1.0010885   -0.4225770
+MAL-ED           South Africa   24 months   optimal              observed          -1.2146690   -1.5733933   -0.8559447
+MAL-ED           Tanzania       Birth       optimal              observed          -0.8971601   -1.2846673   -0.5096528
+MAL-ED           Tanzania       6 months    optimal              observed          -1.1778880   -1.4367299   -0.9190460
+MAL-ED           Tanzania       24 months   optimal              observed          -2.8004932   -3.0642000   -2.5367864
+PROBIT           Belarus        Birth       optimal              observed           1.3781617    1.2091645    1.5471589
+PROBIT           Belarus        6 months    optimal              observed           0.1895176    0.0816672    0.2973679
+PROBIT           Belarus        24 months   optimal              observed           0.0515435   -0.1370432    0.2401303
+PROVIDE          Bangladesh     Birth       optimal              observed          -0.8165691   -0.9660311   -0.6671071
+PROVIDE          Bangladesh     6 months    optimal              observed          -0.8740587   -1.0486478   -0.6994696
+ResPak           Pakistan       6 months    optimal              observed          -1.4893054   -2.2265008   -0.7521100
 SAS-CompFeed     India          Birth       optimal              observed          -1.3137866   -1.4624821   -1.1650912
 SAS-CompFeed     India          6 months    optimal              observed          -1.3085853   -1.4410899   -1.1760808
-SAS-FoodSuppl    India          6 months    optimal              observed          -1.8068822   -1.9773983   -1.6363661
-TanzaniaChild2   Tanzania       6 months    optimal              observed          -0.3493113   -0.4536332   -0.2449894
-ZVITAMBO         Zimbabwe       Birth       optimal              observed          -0.3649692   -0.4030818   -0.3268565
-ZVITAMBO         Zimbabwe       6 months    optimal              observed          -0.7947033   -0.8457095   -0.7436972
-ZVITAMBO         Zimbabwe       24 months   optimal              observed          -1.8901130   -2.3220909   -1.4581352
+SAS-FoodSuppl    India          6 months    optimal              observed          -1.9176571   -2.1333220   -1.7019921
+TanzaniaChild2   Tanzania       6 months    optimal              observed          -0.3489986   -0.4531859   -0.2448114
+ZVITAMBO         Zimbabwe       Birth       optimal              observed          -0.3650091   -0.4031096   -0.3269086
+ZVITAMBO         Zimbabwe       6 months    optimal              observed          -0.7951043   -0.8461189   -0.7440897
+ZVITAMBO         Zimbabwe       24 months   optimal              observed          -1.8379748   -2.2675195   -1.4084301
 
 
 ### Parameter: E(Y)
@@ -597,59 +597,59 @@ ZVITAMBO         Zimbabwe       24 months   observed             observed       
 
 studyid          country        agecat      intervention_level   baseline_level      estimate     ci_lower     ci_upper
 ---------------  -------------  ----------  -------------------  ---------------  -----------  -----------  -----------
-CMC-V-BCS-2002   India          Birth       optimal              observed           0.1304343   -0.2159533    0.4768219
-CMC-V-BCS-2002   India          6 months    optimal              observed          -0.0093431   -0.2425512    0.2238651
-CMC-V-BCS-2002   India          24 months   optimal              observed          -0.0070542   -0.2249845    0.2108762
-CMIN             Bangladesh     Birth       optimal              observed           0.5153635   -0.5349139    1.5656409
-CMIN             Bangladesh     6 months    optimal              observed          -0.3987293   -0.6047092   -0.1927495
-CMIN             Bangladesh     24 months   optimal              observed          -0.2597165   -0.5114211   -0.0080119
-CONTENT          Peru           6 months    optimal              observed          -0.0829242   -0.5141977    0.3483493
-CONTENT          Peru           24 months   optimal              observed          -0.1214120   -0.4647598    0.2219358
-Guatemala BSC    Guatemala      6 months    optimal              observed           0.2406264    0.0742805    0.4069724
-IRC              India          Birth       optimal              observed          -0.4372080   -0.8165435   -0.0578724
-IRC              India          6 months    optimal              observed          -0.3110601   -0.5238619   -0.0982583
-IRC              India          24 months   optimal              observed          -0.1423963   -0.2968111    0.0120184
-JiVitA-3         Bangladesh     Birth       optimal              observed          -0.1393865   -0.1722067   -0.1065664
-JiVitA-3         Bangladesh     6 months    optimal              observed          -0.0436086   -0.0783932   -0.0088240
-JiVitA-4         Bangladesh     Birth       optimal              observed          -0.2341383   -0.3660203   -0.1022563
-JiVitA-4         Bangladesh     6 months    optimal              observed          -0.1064053   -0.1841073   -0.0287032
-JiVitA-4         Bangladesh     24 months   optimal              observed          -0.2204006   -0.4122646   -0.0285365
-Keneba           Gambia         Birth       optimal              observed          -0.1064885   -0.2143882    0.0014111
-Keneba           Gambia         6 months    optimal              observed          -0.0322226   -0.1098736    0.0454284
-Keneba           Gambia         24 months   optimal              observed          -0.0938709   -0.2326956    0.0449537
-LCNI-5           Malawi         6 months    optimal              observed           0.1476515    0.0081495    0.2871535
-LCNI-5           Malawi         24 months   optimal              observed          -0.2428489   -0.4569066   -0.0287912
-MAL-ED           Bangladesh     Birth       optimal              observed           0.2270307   -0.0145921    0.4686535
-MAL-ED           Bangladesh     6 months    optimal              observed           0.1775186   -0.0284218    0.3834589
-MAL-ED           Bangladesh     24 months   optimal              observed          -0.1686438   -0.3890202    0.0517326
-MAL-ED           Brazil         Birth       optimal              observed           0.2149925   -0.3502644    0.7802494
-MAL-ED           Brazil         6 months    optimal              observed          -0.2468277   -0.4729480   -0.0207073
-MAL-ED           Brazil         24 months   optimal              observed           0.1363630   -0.2329537    0.5056796
-MAL-ED           India          Birth       optimal              observed          -0.4649423   -0.9688352    0.0389507
-MAL-ED           India          6 months    optimal              observed           0.0037320   -0.1843187    0.1917827
-MAL-ED           India          24 months   optimal              observed           0.0953737   -0.1278077    0.3185551
-MAL-ED           Nepal          Birth       optimal              observed           0.0331317   -0.6512251    0.7174885
-MAL-ED           Nepal          6 months    optimal              observed          -0.0267732   -0.2255504    0.1720040
-MAL-ED           Nepal          24 months   optimal              observed          -0.2565745   -0.5224336    0.0092846
-MAL-ED           Peru           Birth       optimal              observed          -0.2209936   -0.4528262    0.0108391
-MAL-ED           Peru           6 months    optimal              observed          -0.1741288   -0.3835392    0.0352817
-MAL-ED           Peru           24 months   optimal              observed          -0.1241184   -0.3198972    0.0716604
-MAL-ED           South Africa   Birth       optimal              observed          -0.2588163   -0.5743380    0.0567055
-MAL-ED           South Africa   6 months    optimal              observed          -0.3335636   -0.5957536   -0.0713735
-MAL-ED           South Africa   24 months   optimal              observed          -0.4396940   -0.7758682   -0.1035198
-MAL-ED           Tanzania       Birth       optimal              observed          -0.3071326   -0.6457191    0.0314538
-MAL-ED           Tanzania       6 months    optimal              observed          -0.2025360   -0.4346319    0.0295599
-MAL-ED           Tanzania       24 months   optimal              observed           0.0422754   -0.2220874    0.3066382
-PROBIT           Belarus        Birth       optimal              observed          -0.0498865   -0.0940788   -0.0056943
-PROBIT           Belarus        6 months    optimal              observed          -0.0821342   -0.1366614   -0.0276071
-PROBIT           Belarus        24 months   optimal              observed          -0.2813032   -0.5724586    0.0098522
-PROVIDE          Bangladesh     Birth       optimal              observed          -0.0207504   -0.1493628    0.1078620
-PROVIDE          Bangladesh     6 months    optimal              observed          -0.2212638   -0.3760842   -0.0664434
-ResPak           Pakistan       6 months    optimal              observed           0.0330325   -0.7414362    0.8075013
+CMC-V-BCS-2002   India          Birth       optimal              observed           0.2195473   -0.1953526    0.6344471
+CMC-V-BCS-2002   India          6 months    optimal              observed           0.0204447   -0.2151106    0.2560000
+CMC-V-BCS-2002   India          24 months   optimal              observed           0.2527110    0.0504136    0.4550084
+CMIN             Bangladesh     Birth       optimal              observed           0.5067384   -0.5090294    1.5225062
+CMIN             Bangladesh     6 months    optimal              observed          -0.4089736   -0.6146592   -0.2032880
+CMIN             Bangladesh     24 months   optimal              observed          -0.2656578   -0.5097185   -0.0215972
+CONTENT          Peru           6 months    optimal              observed           0.2060287   -0.1097841    0.5218416
+CONTENT          Peru           24 months   optimal              observed           0.1096215   -0.1783637    0.3976067
+Guatemala BSC    Guatemala      6 months    optimal              observed           0.1247313   -0.0647417    0.3142043
+IRC              India          Birth       optimal              observed          -0.4363290   -0.8115711   -0.0610869
+IRC              India          6 months    optimal              observed          -0.3211028   -0.5363324   -0.1058732
+IRC              India          24 months   optimal              observed          -0.0623129   -0.2275452    0.1029194
+JiVitA-3         Bangladesh     Birth       optimal              observed          -0.1396391   -0.1724610   -0.1068173
+JiVitA-3         Bangladesh     6 months    optimal              observed          -0.0438574   -0.0786506   -0.0090642
+JiVitA-4         Bangladesh     Birth       optimal              observed          -0.2381251   -0.3694055   -0.1068447
+JiVitA-4         Bangladesh     6 months    optimal              observed          -0.1075768   -0.1851578   -0.0299959
+JiVitA-4         Bangladesh     24 months   optimal              observed          -0.2234240   -0.4131048   -0.0337431
+Keneba           Gambia         Birth       optimal              observed          -0.1087640   -0.2161797   -0.0013484
+Keneba           Gambia         6 months    optimal              observed          -0.0798159   -0.1575491   -0.0020827
+Keneba           Gambia         24 months   optimal              observed           0.0024334   -0.1396732    0.1445399
+LCNI-5           Malawi         6 months    optimal              observed           0.1354420   -0.0142488    0.2851328
+LCNI-5           Malawi         24 months   optimal              observed          -0.2464032   -0.4620736   -0.0307327
+MAL-ED           Bangladesh     Birth       optimal              observed           0.1408146   -0.1097340    0.3913631
+MAL-ED           Bangladesh     6 months    optimal              observed           0.1109221   -0.0952779    0.3171222
+MAL-ED           Bangladesh     24 months   optimal              observed          -0.1757099   -0.3980488    0.0466290
+MAL-ED           Brazil         Birth       optimal              observed           0.3853051   -0.1701224    0.9407325
+MAL-ED           Brazil         6 months    optimal              observed          -0.1401910   -0.3713281    0.0909460
+MAL-ED           Brazil         24 months   optimal              observed           0.1005134   -0.2844944    0.4855213
+MAL-ED           India          Birth       optimal              observed          -0.5314032   -0.9910850   -0.0717214
+MAL-ED           India          6 months    optimal              observed           0.1800214   -0.0272527    0.3872956
+MAL-ED           India          24 months   optimal              observed           0.2602887    0.0525516    0.4680258
+MAL-ED           Nepal          Birth       optimal              observed          -0.1096030   -1.0238672    0.8046612
+MAL-ED           Nepal          6 months    optimal              observed          -0.1757921   -0.3703841    0.0187999
+MAL-ED           Nepal          24 months   optimal              observed          -0.2754607   -0.5375641   -0.0133574
+MAL-ED           Peru           Birth       optimal              observed          -0.1995176   -0.4333708    0.0343356
+MAL-ED           Peru           6 months    optimal              observed          -0.1804449   -0.3903847    0.0294949
+MAL-ED           Peru           24 months   optimal              observed          -0.1387870   -0.3366595    0.0590855
+MAL-ED           South Africa   Birth       optimal              observed           0.0391569   -0.3248245    0.4031383
+MAL-ED           South Africa   6 months    optimal              observed          -0.3514874   -0.6175962   -0.0853787
+MAL-ED           South Africa   24 months   optimal              observed          -0.4939763   -0.8268519   -0.1611008
+MAL-ED           Tanzania       Birth       optimal              observed          -0.2584399   -0.5973778    0.0804979
+MAL-ED           Tanzania       6 months    optimal              observed          -0.1908570   -0.4229779    0.0412639
+MAL-ED           Tanzania       24 months   optimal              observed           0.1025424   -0.1346426    0.3397274
+PROBIT           Belarus        Birth       optimal              observed          -0.0512172   -0.0956701   -0.0067643
+PROBIT           Belarus        6 months    optimal              observed          -0.0826639   -0.1371323   -0.0281956
+PROBIT           Belarus        24 months   optimal              observed          -0.2797584   -0.5694159    0.0098991
+PROVIDE          Bangladesh     Birth       optimal              observed          -0.0685329   -0.1993417    0.0622758
+PROVIDE          Bangladesh     6 months    optimal              observed          -0.2176328   -0.3723540   -0.0629116
+ResPak           Pakistan       6 months    optimal              observed           0.0578968   -0.6835914    0.7993850
 SAS-CompFeed     India          Birth       optimal              observed          -0.1176351   -0.2284260   -0.0068443
 SAS-CompFeed     India          6 months    optimal              observed          -0.0932710   -0.2112977    0.0247558
-SAS-FoodSuppl    India          6 months    optimal              observed          -0.0918020   -0.2247277    0.0411237
-TanzaniaChild2   Tanzania       6 months    optimal              observed          -0.1941276   -0.2822183   -0.1060369
-ZVITAMBO         Zimbabwe       Birth       optimal              observed          -0.1353033   -0.1683715   -0.1022350
-ZVITAMBO         Zimbabwe       6 months    optimal              observed          -0.0732416   -0.1168793   -0.0296040
-ZVITAMBO         Zimbabwe       24 months   optimal              observed           0.0531985   -0.3468369    0.4532339
+SAS-FoodSuppl    India          6 months    optimal              observed           0.0189729   -0.1529007    0.1908464
+TanzaniaChild2   Tanzania       6 months    optimal              observed          -0.1944402   -0.2824029   -0.1064776
+ZVITAMBO         Zimbabwe       Birth       optimal              observed          -0.1352633   -0.1683213   -0.1022054
+ZVITAMBO         Zimbabwe       6 months    optimal              observed          -0.0728407   -0.1164847   -0.0291966
+ZVITAMBO         Zimbabwe       24 months   optimal              observed           0.0010603   -0.3971309    0.3992514

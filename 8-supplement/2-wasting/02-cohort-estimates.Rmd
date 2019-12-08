@@ -1,0 +1,11 @@
+# Sensitivity analysis dropping at-Birth measures in Kenaba {#no-kenaba}
+
+---
+output:
+  pdf_document:
+    keep_tex: yes
+fontfamily: mathpazo
+fontsize: 9pt
+---
+
+\raggedright
