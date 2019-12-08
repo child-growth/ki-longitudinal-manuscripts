@@ -97,7 +97,7 @@ p_earlywast <- readRDS(here("figures/plot objects/risk factor/fig-wasting-prior-
 plotdf2 <- readRDS(here("figures/risk factor/figure-data/fig-wasting-prior-to-stunting.rds"))
 
 
-plen_lagwhz <- readRDS(here("/results/fig-WLZ-quart-len-vel.rdata"))
+plen_lagwhz <- readRDS(here("/figures/plot objects/risk factor/fig-WLZ-quart-len-vel.rds"))
 
 
 #load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mortality_plot_objects.Rdata")

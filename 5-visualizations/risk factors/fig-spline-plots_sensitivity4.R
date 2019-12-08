@@ -20,6 +20,8 @@ cov <- cov %>% subset(., select=-c( region, month, W_gagebrth,    W_birthwt,    
                                     W_perdiar6,    W_perdiar24))
 dim(d)
 d <- left_join(d, cov, by=c("studyid","country","subjid"))
+rm(cov)
+
 dim(d)
 d <- d %>% filter(agedays < 24 * 30.4167) 
 d <- subset(d, select = -c(id, arm, tr))
@@ -27,12 +29,12 @@ dim(d)
 
 
 #Set global parameters
-cen=365
+cen=1
 
 #Adapted from: 
 #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
 
-spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="bs", d_f=8){
+spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="bs", d_f=8){
   
   # LOAD THE PACKAGES (mvmeta PACKAGE IS ASSUMED TO BE INSTALLED)
   require(mvmeta)
@@ -203,7 +205,7 @@ create_plotdf <- function(predlist, overall=F, stratlevel=NULL){
 }
 
 
-offset_fun <- function(d, Y="haz", Avar, cen=365){
+offset_fun <- function(d, Y="haz", Avar, cen=1){
   
   df <- d[!is.na(d[,Avar]),]
   
@@ -230,7 +232,7 @@ plotdf_wlz_mwtkg <- create_plotdf(predlist, overall=F)
 offsetZ_wlz_mwtkg <- offset_fun(d, Y="whz", Avar="mwtkg")
 
 
-plotdf_wlz_mwtkg <- left_join(plotdf_wlz_mwtkg, offsetZ_laz_mwtkg, by="level")
+plotdf_wlz_mwtkg <- left_join(plotdf_wlz_mwtkg, offsetZ_wlz_mwtkg, by="level")
 plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% 
   mutate(est= est + offset,
          ci.lb= ci.lb + offset,
@@ -305,12 +307,10 @@ print(p2)
 
 df <- d %>% filter(!is.na(mwtkg))
 
-
-
-predlist <- spline_meta(df, Y="haz", Avar="mwtkg", overall=F, cen=cen)
+predlist <- spline_meta(d, Y="haz", Avar="mwtkg", overall=F, cen=cen, d_f=7)
 plotdf_laz_mwtkg <- create_plotdf(predlist, overall=F)
-
-
+rm(predlist)
+gc()
 offsetZ_laz_mwtkg <- offset_fun(d, Y="haz", Avar="mwtkg")
 
 
@@ -320,7 +320,8 @@ plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>%
          ci.lb= ci.lb + offset,
          ci.ub= ci.ub + offset)
 
-plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
+plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c(  ">=58 kg", "[52-58) kg", "<52 kg")))
+
 
 
 Avarwt="Maternal weight"
@@ -339,11 +340,14 @@ p3 <- ggplot() +
   theme(legend.position = c(0.8,0.9))
 print(p3)
 
+saveRDS(list(p1, p2, p3),  file=paste0(here(),"/results/rf_spline_sens4_objects1.RDS"))
+rm(p1,p2,p3)
 
 #------------------------------------------------------------------------------------------------
 # LAZ- maternal height
 #------------------------------------------------------------------------------------------------
-
+rm(plotdf_laz_mwtkg, plotdf_wlz_mhtcm, plotdf_wlz_mwtkg)
+gc()
 df <- d %>% filter(!is.na(mhtcm))# %>% filter(agedays < 24* 30.4167)
 dim(df)
 
@@ -426,7 +430,7 @@ print(p5)
 predlist <- spline_meta(df, Y="whz", Avar="mbmi", overall=F, cen=cen)
 plotdf_wlz_mbmi <- create_plotdf(predlist, overall=F)
 
-offsetZ_wlz_mbmi <- offset_fun(df, Y="whz", Avar="temp", cen=cen)
+offsetZ_wlz_mbmi <- offset_fun(df, Y="whz", Avar="mbmi", cen=cen)
 
 plotdf_wlz_mbmi <- data.frame(plotdf_wlz_mbmi, offset=offsetZ_wlz_mbmi$offset)
 plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>%
@@ -459,19 +463,24 @@ print(p6)
 
 
 
-# #------------------------------------------------------------------------------------------------
-# # Save plots
-# #------------------------------------------------------------------------------------------------
-# 
-# 
-# # Combine plot objects
-# 
-# require(cowplot)
-# p_grid <- plot_grid(p1, p2, p3, p4, p5, p6, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
-# 
-# ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid_sens4.png"), width=14, height=14)
-# 
-# 
-# #Save plot objects
-# save(p1, p2, p3, p4, p5, p6,  file=paste0(here(),"/results/rf_spline_sens4_objects.Rdata"))
+#------------------------------------------------------------------------------------------------
+# Save plots
+#------------------------------------------------------------------------------------------------
+
+plist<-readRDS(  file=paste0(here(),"/results/rf_spline_sens4_objects1.RDS"))
+
+p1<-plist[[1]]
+p2<-plist[[2]]
+p3<-plist[[3]]
+
+# Combine plot objects
+
+require(cowplot)
+p_grid <- plot_grid(p1, p2, p3, p4, p5, p6, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+
+ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid_sens4.png"), width=14, height=14)
+
+
+#Save plot objects
+saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/results/rf_spline_sens4_objects.RDS"))
 
