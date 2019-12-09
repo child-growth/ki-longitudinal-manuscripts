@@ -31,7 +31,12 @@ dir = "U://ucb-superlearner/Manuscript analysis data/"
 files = list.files(path=dir, pattern='*', full.names = FALSE)
 files = files[!files %in% c("cleaned individual study rds datasets",
                             "covariate creation intermediate datasets",
-                            "raw SAS datasets")]
+                            "raw SAS datasets",
+                            "cleaned individual study rds datasets - Old",
+                            "raw SAS datasets - Old")]
+
+
+
 
 for (file_path in files){
   sink(paste0("1-data-cleaning/QA checks/dataset-checks/", tools::file_path_sans_ext(file_path), '-check.txt'))

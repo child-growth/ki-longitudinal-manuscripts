@@ -1,6 +1,6 @@
 [1] "File Name: st_rec_outcomes.RData"
 [1] "Dimensions:"
-[1] 9976    4
+[1] 10253     4
 [1] "--------------------------------------"
 [1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,23 +8,23 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-     9976 character character 
+    10253 character character 
 [1] "--------------------------------------"
 [1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-     9976 character character 
+    10253 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-     9976 character character 
+    10253 character character 
 [1] "--------------------------------------"
 [1] "Column: s03rec24"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- 0.0000  0.0000  0.0000  0.0336  0.0000  1.0000     573 
+ 0.0000  0.0000  0.0000  0.0339  0.0000  1.0000     589 
 [1] "--------------------------------------"

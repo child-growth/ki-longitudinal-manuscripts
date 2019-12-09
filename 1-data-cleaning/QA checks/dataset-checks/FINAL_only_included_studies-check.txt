@@ -1,6 +1,6 @@
 [1] "File Name: FINAL_only_included_studies.rds"
 [1] "Dimensions:"
-[1] 7442279      56
+[1] 7541223      56
 [1] "--------------------------------------"
 [1] "Class of Data: data.table" "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,26 +8,26 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: integer64"
 [1] "Summary:"
 integer64
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-       1     1104     4184   539003    30822 40023309 
+       1     1125     4260   532118    28953 40023309 
 [1] "--------------------------------------"
 [1] "Column: sex"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: agedays"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    1.0   223.0   368.0   429.9   519.0 15076.0 
+    1.0   219.0   367.0   427.4   518.0 15076.0 
 [1] "--------------------------------------"
 [1] "Column: month"
 [1] "Class: integer"
@@ -39,139 +39,139 @@ integer64
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       5       8       9      10     150 6575499 
+      0       5       8       8      10     150 6670302 
 [1] "--------------------------------------"
 [1] "Column: htcm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-     36      83      92      98     110     191 7283104 
+     36      83      92      98     110     191 7381920 
 [1] "--------------------------------------"
 [1] "Column: lencm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-     22      57      66      65      73     112 6778883 
+     22      57      65      65      72     112 6871327 
 [1] "--------------------------------------"
 [1] "Column: hcircm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0      38      42      41      45      99 6889352 
+      0      38      42      41      45      99 6984395 
 [1] "--------------------------------------"
 [1] "Column: muaccm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      1      12      13      13      14      44 7132054 
+      1      12      13      13      14      44 7227883 
 [1] "--------------------------------------"
 [1] "Column: waz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   -157      -2      -1      -1       0      14 6580738 
+   -157      -2      -1      -1       0      14 6679693 
 [1] "--------------------------------------"
 [1] "Column: haz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    -28      -2      -1      -1       0      20 6625273 
+    -28      -2      -1      -1       0      20 6721418 
 [1] "--------------------------------------"
 [1] "Column: whz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   -196      -1       0       0       0      12 6679571 
+   -196      -1       0       0       0      12 6775991 
 [1] "--------------------------------------"
 [1] "Column: muaz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    -32      -1      -1      -1       0      19 7221293 
+    -32      -1      -1      -1       0      19 7322186 
 [1] "--------------------------------------"
 [1] "Column: siteid"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   0.00    1.00    1.00   44.24    4.00  534.00  115725 
+   0.00    1.00    1.00   43.66    4.00  534.00  115725 
 [1] "--------------------------------------"
 [1] "Column: ctrycd"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: region"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: citytown"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: latitude"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -22.80   12.92   23.81   20.08   25.25   78.93  299589 
+ -22.80   13.33   23.81   20.15   25.25   78.93  299589 
 [1] "--------------------------------------"
 [1] "Column: longitud"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -90.49   31.03   89.50   59.74   90.00  123.53  299589 
+ -90.49   31.03   89.50   60.15   90.00  123.53  299589 
 [1] "--------------------------------------"
 [1] "Column: clustid"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      1     133     376     327     512     596 4519135 
+      1     136     374     326     512     596 4519257 
 [1] "--------------------------------------"
 [1] "Column: arm"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: tr"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: gagebrth"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    144     259     266     267     280     340 5963645 
+    144     259     266     268     280     340 5968445 
 [1] "--------------------------------------"
 [1] "Column: dead"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       0       0       0       1 3351665 
+      0       0       0       0       0       1 3449345 
 [1] "--------------------------------------"
 [1] "Column: agedth"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-     -8     182     405     420     560    6668 7414930 
+     -8     182     405     419     560    6668 7512732 
 [1] "--------------------------------------"
 [1] "Column: causedth"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: brthyr"
 [1] "Class: integer"
@@ -183,145 +183,145 @@ integer64
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    0.0    12.0    24.0    24.8    37.0    53.0 2113454 
+    0.0    12.0    24.0    24.9    37.0    53.0 2113454 
 [1] "--------------------------------------"
 [1] "Column: brthmon"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    1.0     3.0     6.0     6.1     9.0    12.0 1359514 
+    1.0     3.0     6.0     6.2     9.0    12.0 1359514 
 [1] "--------------------------------------"
 [1] "Column: parity"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      1       1       2       3       4      35 6388437 
+      1       2       2       3       4      35 6388559 
 [1] "--------------------------------------"
 [1] "Column: brthordr"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       2       3       3       4      12 7344931 
+      0       2       3       3       4      12 7443875 
 [1] "--------------------------------------"
 [1] "Column: birthwt"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    440    2560    2900    2959    3260    9998 2661017 
+    440    2550    2900    2951    3250    9998 2709693 
 [1] "--------------------------------------"
 [1] "Column: birthlen"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-     22      47      48      49      50      69 4033140 
+     22      47      48      49      50      68 4082978 
 [1] "--------------------------------------"
 [1] "Column: vagbrth"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       1       1       1       1       1 4311697 
+      0       1       1       1       1       1 4312215 
 [1] "--------------------------------------"
 [1] "Column: hdlvry"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       1       1       1       1 4251996 
+      0       0       1       1       1       1 4348500 
 [1] "--------------------------------------"
 [1] "Column: mage"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    9.0    21.0    25.0    25.6    29.0    70.0 2377664 
+    9.0    21.0    25.0    25.5    29.0    70.0 2377705 
 [1] "--------------------------------------"
 [1] "Column: mhtcm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   41.0   148.0   153.0   153.6   158.5   199.0 2909911 
+   41.0   148.0   152.8   153.5   158.4   199.0 2910263 
 [1] "--------------------------------------"
 [1] "Column: mwtkg"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-     26      45      51      53      60     168 3794295 
+     26      45      51      53      59     168 3794469 
 [1] "--------------------------------------"
 [1] "Column: mbmi"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-     12      20      22      23      25     892 3186030 
+     12      20      22      22      25     892 3186389 
 [1] "--------------------------------------"
 [1] "Column: meducyrs"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       5       5       9      24 2270713 
+    0.0     2.0     7.0     6.3    10.0    24.0 1190136 
 [1] "--------------------------------------"
 [1] "Column: single"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       0       0       1       1 3742489 
+      0       0       0       0       0       1 3826055 
 [1] "--------------------------------------"
 [1] "Column: fage"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-     14      27      32      33      37      80 6417137 
+     14      27      32      33      37      80 6516045 
 [1] "--------------------------------------"
 [1] "Column: fhtcm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    130     166     172     172     178     205 7088050 
+    130     166     172     172     178     205 7186994 
 [1] "--------------------------------------"
 [1] "Column: feducyrs"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       6       6      10      27 3770421 
+    0.0     0.0     8.0     6.8    11.0    27.0 3006590 
 [1] "--------------------------------------"
 [1] "Column: trth2o"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       0       0       1       1 6015698 
+      0       0       0       0       1       1 6114615 
 [1] "--------------------------------------"
 [1] "Column: cleanck"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       1       1       1       1 6300995 
+      0       0       1       1       1       1 6399939 
 [1] "--------------------------------------"
 [1] "Column: impfloor"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    0.0     0.0     1.0     0.5     1.0     1.0 2155371 
+    0.0     0.0     1.0     0.5     1.0     1.0 2155609 
 [1] "--------------------------------------"
 [1] "Column: nrooms"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    0.0     1.0     2.0     2.2     3.0    77.0 2773568 
+    0.0     1.0     2.0     2.2     3.0    77.0 2773661 
 [1] "--------------------------------------"
 [1] "Column: nhh"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      1       4       5       5       6      20 5437760 
+      1       4       5       5       6      20 5536704 
 [1] "--------------------------------------"
 [1] "Column: nchldlt5"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       1       1       1      11 5529405 
+      0       0       1       1       1      11 5529610 
 [1] "--------------------------------------"
 [1] "Column: ses"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: earlybf"
 [1] "Class: integer"
@@ -333,11 +333,11 @@ integer64
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"
 [1] "Column: measurefreq"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-  7442279 character character 
+  7541223 character character 
 [1] "--------------------------------------"

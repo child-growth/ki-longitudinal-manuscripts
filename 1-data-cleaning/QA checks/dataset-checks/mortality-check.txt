@@ -1,6 +1,6 @@
 [1] "File Name: mortality.rds"
 [1] "Dimensions:"
-[1] 72293     9
+[1] 72284    10
 [1] "--------------------------------------"
 [1] "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,53 +8,59 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    72293 character character 
+    72284 character character 
 [1] "--------------------------------------"
 [1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    72293 character character 
+    72284 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    72293 character character 
+    72284 character character 
+[1] "--------------------------------------"
+[1] "Column: maxage"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    1.0   365.0   550.0   548.9   740.0  5178.0 
 [1] "--------------------------------------"
 [1] "Column: dead"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.00000 0.00000 0.00000 0.03578 0.00000 1.00000 
+0.00000 0.00000 0.00000 0.03573 0.00000 1.00000 
 [1] "--------------------------------------"
 [1] "Column: agedth"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   -8.0    34.0   120.0   237.9   325.0  6668.0   69808 
+   -8.0    34.0   120.0   238.1   325.0  6668.0   69803 
 [1] "--------------------------------------"
 [1] "Column: causedth"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    72293 character character 
+    72284 character character 
 [1] "--------------------------------------"
 [1] "Column: dead624"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  0.000   0.000   0.000   0.017   0.000   1.000   10237 
+  0.000   0.000   0.000   0.017   0.000   1.000   10230 
 [1] "--------------------------------------"
 [1] "Column: dead0plus"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.00000 0.00000 0.00000 0.03722 0.00000 1.00000 
+0.00000 0.00000 0.00000 0.03717 0.00000 1.00000 
 [1] "--------------------------------------"
 [1] "Column: dead6plus"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  0.000   0.000   0.000   0.018   0.000   1.000   10237 
+  0.000   0.000   0.000   0.018   0.000   1.000   10230 
 [1] "--------------------------------------"

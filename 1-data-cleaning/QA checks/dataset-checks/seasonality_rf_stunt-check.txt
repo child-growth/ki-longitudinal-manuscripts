@@ -1,6 +1,6 @@
-[1] "File Name: wast_prev.RData"
+[1] "File Name: seasonality_rf_stunt.Rdata"
 [1] "Dimensions:"
-[1] 166549      6
+[1] 123083      8
 [1] "--------------------------------------"
 [1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,35 +8,47 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   166549 character character 
+   123083 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   166549 character character 
+   123083 character character 
+[1] "--------------------------------------"
+[1] "Column: id"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1    9562   19749   21511   34674   42814 
 [1] "--------------------------------------"
 [1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   166549 character character 
+   123083 character character 
 [1] "--------------------------------------"
 [1] "Column: agecat"
 [1] "Class: factor"
 [1] "Summary:"
     Birth  3 months  6 months  9 months 12 months 15 months 18 months 21 months 24 months 
-    63505         0     69331         0         0         0         0         0     33713 
+    58714         0     57754         0         0         0         0         0      6615 
 [1] "--------------------------------------"
-[1] "Column: wasted"
+[1] "Column: rain_quartile"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.000   2.000   2.465   3.000   4.000 
+[1] "--------------------------------------"
+[1] "Column: stunted"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.0000  0.0000  0.1104  0.0000  1.0000 
+ 0.0000  0.0000  0.0000  0.1919  0.0000  1.0000 
 [1] "--------------------------------------"
-[1] "Column: swasted"
+[1] "Column: sstunted"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.00000 0.00000 0.00000 0.02638 0.00000 1.00000 
+0.00000 0.00000 0.00000 0.05519 0.00000 1.00000 
 [1] "--------------------------------------"

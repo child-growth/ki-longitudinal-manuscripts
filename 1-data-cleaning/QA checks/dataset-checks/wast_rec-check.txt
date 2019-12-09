@@ -14,7 +14,7 @@
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    1.0     1.0    91.0   167.9   304.0   730.0 
+    1.0     1.0    91.0   168.2   304.0   730.0 
 [1] "--------------------------------------"
 [1] "Column: whz"
 [1] "Class: numeric"
@@ -32,31 +32,31 @@
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.0000  0.0000  0.2025  0.0000  1.0000 
+ 0.0000  0.0000  0.0000  0.2026  0.0000  1.0000 
 [1] "--------------------------------------"
 [1] "Column: firstmeasure"
 [1] "Class: logical"
 [1] "Summary:"
    Mode   FALSE    TRUE 
-logical   35068   26276 
+logical   35078   26266 
 [1] "--------------------------------------"
 [1] "Column: last_midpoint"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   0.00    0.00    0.50   94.66  144.00  717.00 
+   0.00    0.00    0.50   94.74  143.00  717.00 
 [1] "--------------------------------------"
 [1] "Column: period_length"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   1.00   24.00   46.00   70.14   91.00  697.50 
+   1.00   24.00   45.50   70.14   91.00  697.50 
 [1] "--------------------------------------"
 [1] "Column: sevwast_inc"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.0000  0.0000  0.2025  0.0000  1.0000 
+ 0.0000  0.0000  0.0000  0.2026  0.0000  1.0000 
 [1] "--------------------------------------"
 [1] "Column: wast_inc"
 [1] "Class: numeric"
@@ -128,25 +128,25 @@ logical   35068   26276
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    0.5     0.5    53.5   139.5   273.6   728.0 
+    0.5     0.5    54.0   139.7   274.0   728.0 
 [1] "--------------------------------------"
 [1] "Column: maxage"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    1.0     4.0   113.0   236.8   379.0  1852.0 
+    1.0     6.0   113.0   236.8   378.0  1852.0 
 [1] "--------------------------------------"
 [1] "Column: duration"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    1.0    28.5    59.5   101.0   120.0  1691.0   13212 
+    1.0    28.5    58.5   100.7   119.5  1691.0   13212 
 [1] "--------------------------------------"
 [1] "Column: wasting_duration"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    1.0    28.5    59.5   101.0   120.0  1691.0   13212 
+    1.0    28.5    58.5   100.7   119.5  1691.0   13212 
 [1] "--------------------------------------"
 [1] "Column: born_sevwast_inc"
 [1] "Class: numeric"
@@ -170,37 +170,37 @@ logical   35068   26276
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    1.5    26.0    49.5    96.5    99.0  1643.0   51366 
+   1.50   26.00   49.00   96.37   99.00 1643.00   51356 
 [1] "--------------------------------------"
 [1] "Column: wast_rec90d"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.0000  1.0000  0.5042  1.0000  1.0000 
+ 0.0000  0.0000  1.0000  0.5045  1.0000  1.0000 
 [1] "--------------------------------------"
 [1] "Column: wast_rec60d"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.0000  0.0000  0.3972  1.0000  1.0000 
+ 0.0000  0.0000  0.0000  0.4014  1.0000  1.0000 
 [1] "--------------------------------------"
 [1] "Column: wast_rec30d"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.0000  0.0000  0.2092  0.0000  1.0000 
+ 0.0000  0.0000  0.0000  0.2093  0.0000  1.0000 
 [1] "--------------------------------------"
 [1] "Column: sevwast_inc90d"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.00000 0.00000 0.00000 0.03176 0.00000 1.00000 
+0.00000 0.00000 0.00000 0.03185 0.00000 1.00000 
 [1] "--------------------------------------"
 [1] "Column: sevwast_inc60d"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.00000 0.00000 0.00000 0.02002 0.00000 1.00000 
+0.00000 0.00000 0.00000 0.02057 0.00000 1.00000 
 [1] "--------------------------------------"
 [1] "Column: sevwast_inc30d"
 [1] "Class: numeric"
@@ -218,13 +218,13 @@ logical   35068   26276
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   0.50    0.50   29.50   44.87   80.50  363.50 
+   0.50    0.50   29.50   44.98   80.50  363.50 
 [1] "--------------------------------------"
 [1] "Column: pt_sevwast"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   0.50    0.50   29.50   44.87   80.50  363.50 
+   0.50    0.50   29.50   44.98   80.50  363.50 
 [1] "--------------------------------------"
 [1] "Column: pt_wast_rec"
 [1] "Class: numeric"
@@ -260,7 +260,7 @@ logical   35068   26276
 [1] "Class: factor"
 [1] "Summary:"
             Africa         South Asia      Latin America N.America & Europe              Other 
-             14370              37140                972               8862                  0 
+             14386              37122                974               8862                  0 
 [1] "--------------------------------------"
 [1] "Column: measurefreq"
 [1] "Class: character"
@@ -278,19 +278,19 @@ logical   35068   26276
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -22.80   17.86   25.25   26.99   28.70   78.93     380 
+ -22.80   17.86   25.25   26.98   28.70   78.93     380 
 [1] "--------------------------------------"
 [1] "Column: longitud"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -90.49   27.57   77.10   58.49   89.50  123.53     380 
+ -90.49   27.57   77.10   58.47   89.50  123.53     380 
 [1] "--------------------------------------"
 [1] "Column: measid"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.000   1.000   2.000   3.638   5.000  45.000 
+   1.00    1.00    2.00    3.64    5.00   45.00 
 [1] "--------------------------------------"
 [1] "Column: agecat"
 [1] "Class: character"

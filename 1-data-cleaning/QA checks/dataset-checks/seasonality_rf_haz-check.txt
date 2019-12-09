@@ -1,6 +1,6 @@
-[1] "File Name: stuntwast_mort.rds"
+[1] "File Name: seasonality_rf_haz.Rdata"
 [1] "Dimensions:"
-[1] 872368      8
+[1] 123083      7
 [1] "--------------------------------------"
 [1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,47 +8,41 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872368 character character 
-[1] "--------------------------------------"
-[1] "Column: country"
-[1] "Class: character"
-[1] "Summary:"
-   Length     Class      Mode 
-   872368 character character 
+   123083 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872368 character character 
+   123083 character character 
 [1] "--------------------------------------"
-[1] "Column: agedays"
-[1] "Class: integer"
-[1] "Summary:"
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    1.0    92.0   275.0   464.4   551.0  6955.0 
-[1] "--------------------------------------"
-[1] "Column: dead"
+[1] "Column: id"
 [1] "Class: numeric"
 [1] "Summary:"
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       0       0       0       1  543134 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1    9562   19749   21511   34674   42814 
 [1] "--------------------------------------"
-[1] "Column: agedth"
-[1] "Class: integer"
-[1] "Summary:"
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   -8.0   115.0   289.0   424.8   505.0  6668.0  864385 
-[1] "--------------------------------------"
-[1] "Column: causedth"
+[1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872368 character character 
+   123083 character character 
 [1] "--------------------------------------"
-[1] "Column: maxage"
+[1] "Column: agecat"
+[1] "Class: factor"
+[1] "Summary:"
+    Birth  3 months  6 months  9 months 12 months 15 months 18 months 21 months 24 months 
+    58714         0     57754         0         0         0         0         0      6615 
+[1] "--------------------------------------"
+[1] "Column: rain_quartile"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.000   2.000   2.465   3.000   4.000 
+[1] "--------------------------------------"
+[1] "Column: haz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-      1     560     759    1478    2320    6955 
+ -5.990  -1.730  -0.840  -0.741   0.140   5.880 
 [1] "--------------------------------------"

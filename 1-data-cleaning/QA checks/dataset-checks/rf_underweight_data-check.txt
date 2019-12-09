@@ -1,6 +1,6 @@
 [1] "File Name: rf_underweight_data.rds"
 [1] "Dimensions:"
-[1] 778623     15
+[1] 778662     15
 [1] "--------------------------------------"
 [1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,89 +8,89 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   778623 character character 
+   778662 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   778623 character character 
+   778662 character character 
 [1] "--------------------------------------"
 [1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   778623 character character 
+   778662 character character 
 [1] "--------------------------------------"
 [1] "Column: region"
 [1] "Class: factor"
 [1] "Summary:"
             Africa         South Asia      Latin America N.America & Europe              Other 
-            173224             392134              39054             174211                  0 
+            173442             391495              39514             174211                  0 
 [1] "--------------------------------------"
 [1] "Column: measurefreq"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   778623 character character 
+   778662 character character 
 [1] "--------------------------------------"
 [1] "Column: tr"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   778623 character character 
+   778662 character character 
 [1] "--------------------------------------"
 [1] "Column: sex"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   778623 character character 
+   778662 character character 
 [1] "--------------------------------------"
 [1] "Column: agedays"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    1.0    91.0   274.0   473.6   550.0  6955.0 
+    1.0    91.0   274.0   474.1   550.0  6955.0 
 [1] "--------------------------------------"
 [1] "Column: haz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
--27.520  -2.000  -1.090  -1.035  -0.110  13.940   18498 
+-27.520  -2.000  -1.100  -1.045  -0.120  13.940   18368 
 [1] "--------------------------------------"
 [1] "Column: whz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -15.89   -1.16   -0.34   -0.33    0.50   11.11   62026 
+ -15.89   -1.16   -0.34   -0.33    0.50   11.11   62191 
 [1] "--------------------------------------"
 [1] "Column: waz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--6.0000 -1.7500 -0.9000 -0.8762  0.0000  5.0000 
+-6.0000 -1.7500 -0.9000 -0.8816 -0.0100  5.0000 
 [1] "--------------------------------------"
 [1] "Column: muaz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  -32.2    -1.4    -0.7    -0.7     0.0    18.8  591336 
+  -32.2    -1.4    -0.7    -0.7     0.0    18.8  593305 
 [1] "--------------------------------------"
 [1] "Column: latitude"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -22.80   17.86   25.25   28.33   53.90   78.93    5418 
+ -22.80   17.86   25.25   28.30   53.90   78.93    5418 
 [1] "--------------------------------------"
 [1] "Column: longitud"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -90.49   27.57   39.10   48.35   89.50  123.53    5418 
+ -90.49   27.57   39.10   48.24   89.50  123.53    5418 
 [1] "--------------------------------------"
 [1] "Column: measid"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.000   3.000   5.000   7.282   9.000  70.000 
+  1.000   3.000   5.000   7.313   9.000  70.000 
 [1] "--------------------------------------"

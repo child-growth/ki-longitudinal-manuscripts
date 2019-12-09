@@ -1,6 +1,126 @@
 [1] "File Name: mort_exposures.RData"
 [1] "Dimensions:"
-NULL
+[1] 107420     20
 [1] "--------------------------------------"
-[1] "Class of Data: NULL"
+[1] "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
+[1] "--------------------------------------"
+[1] "Column: studyid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   107420 character character 
+[1] "--------------------------------------"
+[1] "Column: subjid"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   107420 character character 
+[1] "--------------------------------------"
+[1] "Column: country"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   107420 character character 
+[1] "--------------------------------------"
+[1] "Column: region"
+[1] "Class: factor"
+[1] "Summary:"
+            Africa         South Asia      Latin America N.America & Europe              Other 
+             34224              53885               2414              16897                  0 
+[1] "--------------------------------------"
+[1] "Column: measurefreq"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   107420 character character 
+[1] "--------------------------------------"
+[1] "Column: tr"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   107420 character character 
+[1] "--------------------------------------"
+[1] "Column: sex"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   107420 character character 
+[1] "--------------------------------------"
+[1] "Column: agedays"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00    1.00    1.00   58.77   43.00  730.00 
+[1] "--------------------------------------"
+[1] "Column: haz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-5.9900 -1.6900 -0.8300 -0.7317  0.0800  5.8800 
+[1] "--------------------------------------"
+[1] "Column: whz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-5.0000 -1.4800 -0.6700 -0.6994  0.1100  4.8900 
+[1] "--------------------------------------"
+[1] "Column: waz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -8.260  -1.750  -0.980  -1.001  -0.200   4.390 
+[1] "--------------------------------------"
+[1] "Column: muaz"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  -6.70   -1.47   -0.72   -0.75    0.00    4.16   90996 
+[1] "--------------------------------------"
+[1] "Column: latitude"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -22.80   17.86   25.25   24.70   28.52   78.93     271 
+[1] "--------------------------------------"
+[1] "Column: longitud"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -90.49   27.57   39.10   51.57   89.50  123.53     271 
+[1] "--------------------------------------"
+[1] "Column: measid"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
+[1] "--------------------------------------"
+[1] "Column: agecat"
+[1] "Class: character"
+[1] "Summary:"
+   Length     Class      Mode 
+   107420 character character 
+[1] "--------------------------------------"
+[1] "Column: co"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.02259 0.00000 1.00000 
+[1] "--------------------------------------"
+[1] "Column: ever_co024"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.08956 0.00000 1.00000 
+[1] "--------------------------------------"
+[1] "Column: Nobs"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   3.000   5.000   6.066   7.000  68.000 
+[1] "--------------------------------------"
+[1] "Column: N"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
 [1] "--------------------------------------"

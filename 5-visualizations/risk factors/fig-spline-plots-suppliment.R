@@ -50,16 +50,16 @@ rf_spline_meta <- function(d, Avar, outcome="whz", degree=degree){
   
   names(plotdflist) <- levels
   plotdf <- data.frame(Avar=Avar, bind_rows(plotdflist))
-  # 
-  # offsetZ <- offset_fun(d, Y=outcome, Avar=Avar)
-  # 
-  # 
-  # plotdf <- left_join(plotdf, offsetZ, by="level")
-  # plotdf <- plotdf %>% 
-  #   mutate(est= est + offset,
-  #          ci.lb= ci.lb + offset,
-  #          ci.ub= ci.ub + offset)
-  # 
+
+  offsetZ <- offset_fun(d, Y=outcome, Avar=Avar)
+
+
+  plotdf <- left_join(plotdf, offsetZ, by="level")
+  plotdf <- plotdf %>%
+    mutate(est= est + offset,
+           ci.lb= ci.lb + offset,
+           ci.ub= ci.ub + offset)
+
   
   
   p <- ggplot() +
@@ -90,7 +90,7 @@ degree=6
 outcome="whz"
 
 res <- rf_spline_meta(d=d, Avar="hhwealth_quart", outcome="whz", degree=6)
-
+print(res[[1]])
 
 ggsave(res[[1]], file=paste0(here(),"/figures/risk factor/spline plots/",outcome,"-",Avar,"-spline.png"), width=6, height=6)
 

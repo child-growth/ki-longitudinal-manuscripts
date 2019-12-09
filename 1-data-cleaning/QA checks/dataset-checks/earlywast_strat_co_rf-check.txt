@@ -1,6 +1,6 @@
 [1] "File Name: earlywast_strat_co_rf.Rdata"
 [1] "Dimensions:"
-[1] 10324    19
+[1] 10595    21
 [1] "--------------------------------------"
 [1] "Class of Data: grouped_df" "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,113 +8,125 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    10324 character character 
+    10595 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    10324 character character 
+    10595 character character 
 [1] "--------------------------------------"
 [1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    10324 character character 
+    10595 character character 
 [1] "--------------------------------------"
 [1] "Column: region"
 [1] "Class: factor"
 [1] "Summary:"
             Africa         South Asia      Latin America N.America & Europe 
-              5695               3584               1045                  0 
+              5695               3855               1045                  0 
 [1] "--------------------------------------"
 [1] "Column: measurefreq"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    10324 character character 
+    10595 character character 
 [1] "--------------------------------------"
 [1] "Column: tr"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    10324 character character 
+    10595 character character 
 [1] "--------------------------------------"
 [1] "Column: sex"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-    10324 character character 
+    10595 character character 
 [1] "--------------------------------------"
 [1] "Column: agedays"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   1.00    3.00   14.00   40.85   42.00  729.00 
+   1.00    3.00   15.00   40.68   42.00  729.00 
 [1] "--------------------------------------"
 [1] "Column: haz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- -5.960  -1.480  -0.640  -0.673   0.090   5.620 
+-5.9600 -1.5000 -0.6800 -0.7016  0.0800  5.6200 
 [1] "--------------------------------------"
 [1] "Column: whz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--4.9600 -1.3800 -0.4600 -0.4681  0.4600  4.7200 
+-4.9600 -1.3700 -0.4600 -0.4663  0.4500  4.7200 
 [1] "--------------------------------------"
 [1] "Column: waz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--6.9900 -1.4400 -0.7300 -0.7727 -0.0400  3.4100 
+-6.9900 -1.4700 -0.7400 -0.7962 -0.0600  3.4100 
 [1] "--------------------------------------"
 [1] "Column: muaz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -5.460  -1.390  -0.650  -0.695   0.100   2.820    9761 
+ -5.460  -1.390  -0.650  -0.695   0.100   2.820   10032 
 [1] "--------------------------------------"
 [1] "Column: latitude"
 [1] "Class: numeric"
 [1] "Summary:"
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- -22.80   -6.80   13.33   13.72   23.81   78.93 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -22.80   -6.80   13.33   13.72   23.81   78.93     271 
 [1] "--------------------------------------"
 [1] "Column: longitud"
 [1] "Class: numeric"
 [1] "Summary:"
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- -90.49  -16.01   39.10   22.83   67.09   90.41 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -90.49  -16.01   39.10   22.83   67.09   90.41     271 
 [1] "--------------------------------------"
 [1] "Column: measid"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   1.00    1.00    1.00    1.06    1.00   21.00 
+  1.000   1.000   1.000   1.059   1.000  21.000 
 [1] "--------------------------------------"
 [1] "Column: id"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-      1   11932   30666   25739   38331   42786 
+      1   11059   30219   25196   38292   42814 
 [1] "--------------------------------------"
 [1] "Column: agecat"
 [1] "Class: factor"
 [1] "Summary:"
   0-6 months  6-12 months 12-18 months 18-24 months 
-       10054            0            0          270 
+       10325            0            0          270 
 [1] "--------------------------------------"
 [1] "Column: wast"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.0000  0.0000  0.2329  0.0000  1.0000 
+ 0.0000  0.0000  0.0000  0.2319  0.0000  1.0000 
 [1] "--------------------------------------"
 [1] "Column: co"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.00000 0.00000 0.00000 0.04175 0.00000 1.00000 
+0.00000 0.00000 0.00000 0.01642 0.00000 1.00000 
+[1] "--------------------------------------"
+[1] "Column: wast06"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.2319  0.0000  1.0000 
+[1] "--------------------------------------"
+[1] "Column: co24"
+[1] "Class: numeric"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.04342 0.00000 1.00000 
 [1] "--------------------------------------"

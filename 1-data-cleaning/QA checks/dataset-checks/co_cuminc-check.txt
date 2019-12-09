@@ -1,6 +1,6 @@
 [1] "File Name: co_cuminc.rdata"
 [1] "Dimensions:"
-[1] 259034     19
+[1] 259017     19
 [1] "--------------------------------------"
 [1] "Class of Data: tbl_df"     "Class of Data: tbl"        "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,67 +8,67 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   259034 character character 
+   259017 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   259034 character character 
+   259017 character character 
 [1] "--------------------------------------"
 [1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   259034 character character 
+   259017 character character 
 [1] "--------------------------------------"
 [1] "Column: region"
 [1] "Class: factor"
 [1] "Summary:"
             Africa         South Asia      Latin America N.America & Europe              Other 
-             63638             138299               6709              50388                  0 
+             63638             138282               6709              50388                  0 
 [1] "--------------------------------------"
 [1] "Column: measurefreq"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   259034 character character 
+   259017 character character 
 [1] "--------------------------------------"
 [1] "Column: sex"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   259034 character character 
+   259017 character character 
 [1] "--------------------------------------"
 [1] "Column: agedays"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   1.00    1.00    4.00   77.91  185.00  730.00 
+   1.00    1.00   10.00   78.93  185.00  730.00 
 [1] "--------------------------------------"
 [1] "Column: haz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--6.0000 -1.6300 -0.7300 -0.6341  0.2200  5.9900 
+-6.0000 -1.6700 -0.7900 -0.7098  0.1200  5.9900 
 [1] "--------------------------------------"
 [1] "Column: whz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--5.0000 -1.3500 -0.5200 -0.5442  0.2800  5.0000 
+-5.0000 -1.3500 -0.5200 -0.5441  0.2800  5.0000 
 [1] "--------------------------------------"
 [1] "Column: waz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--8.4500 -1.6500 -0.8300 -0.8263  0.0000  5.7800 
+-8.4500 -1.6800 -0.8800 -0.8808 -0.0700  4.5900 
 [1] "--------------------------------------"
 [1] "Column: muaz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  -7.41   -1.40   -0.72   -0.74   -0.06    4.23  216693 
+  -7.41   -1.39   -0.71   -0.73   -0.06    4.23  216561 
 [1] "--------------------------------------"
 [1] "Column: latitude"
 [1] "Class: numeric"
@@ -86,31 +86,31 @@
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.000   1.000   1.000   1.911   3.000  20.000 
+   1.00    1.00    1.00    1.91    3.00   20.00 
 [1] "--------------------------------------"
 [1] "Column: agecat"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   259034 character character 
+   259017 character character 
 [1] "--------------------------------------"
 [1] "Column: co"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.00000 0.00000 0.00000 0.01725 0.00000 1.00000 
+0.00000 0.00000 0.00000 0.01834 0.00000 1.00000 
 [1] "--------------------------------------"
 [1] "Column: ever_co"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.00000 0.00000 0.00000 0.06361 0.00000 1.00000 
+0.00000 0.00000 0.00000 0.06412 0.00000 1.00000 
 [1] "--------------------------------------"
 [1] "Column: Nobs"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.000   2.000   3.000   4.738   5.000  68.000 
+  1.000   2.000   3.000   4.737   5.000  68.000 
 [1] "--------------------------------------"
 [1] "Column: N"
 [1] "Class: integer"

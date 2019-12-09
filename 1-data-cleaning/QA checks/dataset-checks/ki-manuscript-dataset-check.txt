@@ -1,6 +1,6 @@
 [1] "File Name: ki-manuscript-dataset.rds"
 [1] "Dimensions:"
-[1] 872407     75
+[1] 872368     76
 [1] "--------------------------------------"
 [1] "Class of Data: data.frame"
 [1] "--------------------------------------"
@@ -8,483 +8,475 @@
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872407 character character 
+   872368 character character 
 [1] "--------------------------------------"
 [1] "Column: country"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872407 character character 
+   872368 character character 
 [1] "--------------------------------------"
 [1] "Column: measurefreq"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872407 character character 
+   872368 character character 
 [1] "--------------------------------------"
 [1] "Column: subjid"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872407 character character 
+   872368 character character 
 [1] "--------------------------------------"
 [1] "Column: sex"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872407 character character 
+   872368 character character 
 [1] "--------------------------------------"
 [1] "Column: agedays"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-      1      92     275     464     551    6955 
+    1.0    92.0   275.0   464.4   551.0  6955.0 
 [1] "--------------------------------------"
 [1] "Column: waz"
 [1] "Class: numeric"
 [1] "Summary:"
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
--157.300   -1.800   -0.950   -0.939   -0.050   14.110    10866 
+-157.300   -1.800   -0.950   -0.944   -0.060   14.110    10838 
 [1] "--------------------------------------"
 [1] "Column: haz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -27.52   -2.02   -1.12   -1.07   -0.15   20.47   55401 
+ -27.52   -2.02   -1.13   -1.08   -0.17   20.47   52563 
 [1] "--------------------------------------"
 [1] "Column: whz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
--196.08   -1.17   -0.36   -0.37    0.48   12.07  109699 
+-196.08   -1.17   -0.36   -0.37    0.48   12.07  107136 
 [1] "--------------------------------------"
 [1] "Column: muaz"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  -32.2    -1.4    -0.7    -0.7     0.0    18.8  651421 
+  -32.2    -1.4    -0.7    -0.7     0.0    18.8  653331 
 [1] "--------------------------------------"
 [1] "Column: lencm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  21.80   57.00   65.50   64.75   72.60  112.00  209689 
+  21.80   57.00   65.50   64.76   72.60  112.00  207300 
 [1] "--------------------------------------"
 [1] "Column: wtkg"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  0.007   5.280   7.525   8.239   9.600 100.600   10866 
+  0.007   5.300   7.537   8.244   9.600 100.600   10836 
 [1] "--------------------------------------"
 [1] "Column: htcm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   36.0    82.4    91.7    96.1   108.0   187.8  717798 
+   36.0    82.4    91.7    96.1   108.0   187.8  717631 
 [1] "--------------------------------------"
 [1] "Column: tr"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872407 character character 
+   872368 character character 
 [1] "--------------------------------------"
 [1] "Column: month"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   1.00    3.00    7.00    6.52   10.00   12.00  137955 
+   1.00    3.00    7.00    6.52   10.00   12.00  123376 
 [1] "--------------------------------------"
 [1] "Column: brthweek"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   0.00   14.00   29.00   27.47   41.00   53.00  152189 
+   0.00   14.00   29.00   27.47   41.00   53.00  152417 
+[1] "--------------------------------------"
+[1] "Column: brthyr"
+[1] "Class: integer"
+[1] "Summary:"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   1969    1996    1999    2000    2010    2013   39584 
 [1] "--------------------------------------"
 [1] "Column: dead"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      0       0       0       0       0       1  543943 
+      0       0       0       0       0       1  543152 
 [1] "--------------------------------------"
 [1] "Column: agedth"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   -8.0   115.0   288.0   424.2   505.0  6668.0  864402 
+   -8.0   115.0   289.0   424.8   505.0  6668.0  864385 
 [1] "--------------------------------------"
 [1] "Column: latitude"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -22.80   13.33   25.25   26.42   28.70   78.93    5457 
+ -22.80   13.33   25.25   26.40   28.70   78.93    5457 
 [1] "--------------------------------------"
 [1] "Column: longitud"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
- -90.49   27.57   35.28   47.69   89.50  123.53    5457 
+ -90.49   27.57   35.28   47.59   89.50  123.53    5457 
 [1] "--------------------------------------"
 [1] "Column: causedth"
 [1] "Class: character"
 [1] "Summary:"
    Length     Class      Mode 
-   872407 character character 
+   872368 character character 
 [1] "--------------------------------------"
 [1] "Column: region"
 [1] "Class: factor"
 [1] "Summary:"
             Africa         South Asia      Latin America N.America & Europe              Other 
-            230727             427010              39174             175496                  0 
+            230928             426312              39632             175496                  0 
 [1] "--------------------------------------"
 [1] "Column: arm"
 [1] "Class: factor"
 [1] "Summary:"
-                                            50,000 IU nippled + 400,000 IU Oval        50,000 IU nippled + Placebo Oval 
-                                 284951                                   18993                                   19012 
-                              a.LNS-Zn0                               b.LNS-Zn5                                     BSC 
-                                   2236                                    2222                                     607 
-                             c.LNS-Zn10                                     CFC                                Chickpea 
-                                   2235                                   10427                                    6198 
-                                Control                       Control (no Zinc)                           Control group 
-                                  38016                                    2173                                   83741 
-                           d.LNS-TabZn5                               e.Control                      Experimental group 
-                                   2237                                    1622                                   91755 
-                   Food supplementation  Intermittent Zinc: 10 mg/d for 10 days                            Intervention 
-                                    548                                    5589                                   11463 
-    Iron and folic acid supplementation                         Iron Folic Acid                            Likuni Phala 
-                                   3502                                   61475                                    1437 
-   Lipid-based nutrient supplementation                                LNS-10gM                                LNS-20gM 
-                                   3465                                    3049                                    3038 
-                             LNS-20gNoM                                LNS-40gM                              LNS-40gNoM 
-                                   3206                                    3333                                    3295 
-                                Milk FS                               MNT + BSC                               MNT + WPC 
-                                   1515                                     589                                     613 
- Multiple micronutrient supplementation                 Multiple Micronutrients                      Multivitamin Alone 
-                                   3425                                   62858                                    8102 
-                        No intervention               No Rotarix + No IPV (175)       No Rotarix + With IPV Boost (175) 
-                                    575                                    3864                                    3394 
-                Nutritional counselling       Placebo nippled + 400,000 IU Oval          Placebo nippled + Placebo Oval 
-                                    561                                   18938                                   18863 
-                             Plumpy Doz               Preventive Zinc: 7 mg/day                             Rice Lentil 
-                                  11001                                    5607                                    6117 
-                 Rotarix + No IPV (175)          Rotarix + With IPV Boost (175)                                  Soy FS 
-                                   3679                                    3870                                    1474 
-                      Standard(Control) Therapeutic Zinc: 20 mg/day for 10 days                              Visitation 
-                                   1505                                    5600                                     563 
-                              Vitamin A                                     WPC                                   WSB++ 
-                                  15865                                     617                                    6242 
-                    Zinc + Multivitamin                              Zinc Alone                                    NA's 
-                                   7957                                    8192                                     996 
+                                            50,000 IU nippled + 400,000 IU Oval        50,000 IU nippled + Placebo Oval                               a.LNS-Zn0                               b.LNS-Zn5 
+                                 285966                                   18993                                   19012                                    2236                                    2222 
+                                    BSC                              c.LNS-Zn10                                     CFC                                Chickpea                                 Control 
+                                    607                                    2235                                   10427                                    6198                                   38281 
+                      Control (no Zinc)                           Control group                            d.LNS-TabZn5                               e.Control                      Experimental group 
+                                   2173                                   83741                                    2237                                    1622                                   91755 
+                   Food supplementation  Intermittent Zinc: 10 mg/d for 10 days                            Intervention     Iron and folic acid supplementation                         Iron Folic Acid 
+                                    548                                    5589                                   11463                                    3502                                   60949 
+                           Likuni Phala    Lipid-based nutrient supplementation                                LNS-10gM                                LNS-20gM                              LNS-20gNoM 
+                                   1437                                    3465                                    3049                                    3038                                    3206 
+                               LNS-40gM                              LNS-40gNoM                                 Milk FS                               MNT + BSC                               MNT + WPC 
+                                   3333                                    3295                                    1515                                     589                                     613 
+ Multiple micronutrient supplementation                 Multiple Micronutrients                      Multivitamin Alone                         No intervention               No Rotarix + No IPV (175) 
+                                   3425                                   62346                                    8102                                     575                                    3864 
+      No Rotarix + With IPV Boost (175)                 Nutritional counselling       Placebo nippled + 400,000 IU Oval          Placebo nippled + Placebo Oval                              Plumpy Doz 
+                                   3394                                     561                                   18938                                   18863                                   11001 
+              Preventive Zinc: 7 mg/day                             Rice Lentil                  Rotarix + No IPV (175)          Rotarix + With IPV Boost (175)                                  Soy FS 
+                                   5607                                    6117                                    3679                                    3870                                    1474 
+                      Standard(Control) Therapeutic Zinc: 20 mg/day for 10 days                              Visitation                               Vitamin A                                     WPC 
+                                   1505                                    5600                                     563                                   16099                                     617 
+                                  WSB++                     Zinc + Multivitamin                              Zinc Alone                                    NA's 
+                                   6242                                    7957                                    8192                                     481 
 [1] "--------------------------------------"
 [1] "Column: gagebrth"
 [1] "Class: factor"
 [1] "Summary:"
 Full or late term           Preterm        Early term              NA's 
-           238862             76034            170114            387397 
+           238169             67298            169324            397577 
 [1] "--------------------------------------"
 [1] "Column: brthmon"
 [1] "Class: factor"
 [1] "Summary:"
      1      2      3      4      5      6      7      8      9     10     11     12   NA's 
- 57712  56566  62804  54519  51811  53815  64647  68591  64198  65435  64586  68880 138843 
+ 58638  57414  63866  55366  52972  55694  66473  70093  65796  67178  65536  69593 123749 
 [1] "--------------------------------------"
 [1] "Column: parity"
 [1] "Class: factor"
 [1] "Summary:"
      1      2     3+   NA's 
-126678 115692 182397 447640 
+126038 115401 182290 448639 
 [1] "--------------------------------------"
 [1] "Column: birthwt"
 [1] "Class: factor"
 [1] "Summary:"
 Normal or high birthweight            Low birthweight                       NA's 
-                    611798                     113717                     146892 
+                    595853                     111381                     165134 
 [1] "--------------------------------------"
 [1] "Column: birthlen"
 [1] "Class: factor"
 [1] "Summary:"
    >=50 cm     <48 cm [48-50) cm       NA's 
-    276260     202485     162610     231052 
+    264870     198974     159100     249424 
 [1] "--------------------------------------"
 [1] "Column: vagbrth"
 [1] "Class: factor"
 [1] "Summary:"
      0      1   NA's 
- 50517 453976 367914 
+ 50400 453288 368680 
 [1] "--------------------------------------"
 [1] "Column: hdlvry"
 [1] "Class: factor"
 [1] "Summary:"
      0      1   NA's 
-132490  71768 668149 
+132688  71795 667885 
 [1] "--------------------------------------"
 [1] "Column: mage"
 [1] "Class: factor"
 [1] "Summary:"
 [20-30)     <20    >=30    NA's 
- 495469  133078  163035   80825 
+ 496004  132734  163320   80310 
 [1] "--------------------------------------"
 [1] "Column: mhtcm"
 [1] "Class: factor"
 [1] "Summary:"
     >=155 cm      <151 cm [151-155) cm         NA's 
-      360138       175336       110028       226905 
+      360343       175186       109956       226883 
 [1] "--------------------------------------"
 [1] "Column: mwtkg"
 [1] "Class: factor"
 [1] "Summary:"
    >=58 kg     <52 kg [52-58) kg       NA's 
-    214984     108996      88937     459490 
+    218393     221417      97312     335246 
 [1] "--------------------------------------"
 [1] "Column: mbmi"
 [1] "Class: factor"
 [1] "Summary:"
 Normal weight   Underweight          NA's 
-       376901         26869        468637 
+       453327         74274        344767 
 [1] "--------------------------------------"
 [1] "Column: meducyrs"
 [1] "Class: factor"
 [1] "Summary:"
   High    Low Medium   NA's 
-204153 275116 278238 114900 
+217435 272809 290644  91480 
 [1] "--------------------------------------"
 [1] "Column: single"
 [1] "Class: factor"
 [1] "Summary:"
      0      1   NA's 
-425327  30982 416098 
+465821  31193 375354 
 [1] "--------------------------------------"
 [1] "Column: fage"
 [1] "Class: factor"
 [1] "Summary:"
    >=38     <32 [32-38)    NA's 
-  31791  200528   52784  587304 
+  31893  200606   52892  586977 
 [1] "--------------------------------------"
 [1] "Column: fhtcm"
 [1] "Class: factor"
 [1] "Summary:"
     >=167 cm      <162 cm [162-167) cm         NA's 
-      159138        10985        20358       681926 
+      159138        10985        20358       681887 
 [1] "--------------------------------------"
 [1] "Column: feducyrs"
 [1] "Class: factor"
 [1] "Summary:"
   High    Low Medium   NA's 
-145697 232992 249020 244698 
+151982 230006 262037 228343 
 [1] "--------------------------------------"
 [1] "Column: trth2o"
 [1] "Class: factor"
 [1] "Summary:"
      1      0   NA's 
- 24058  24058 824291 
+ 24331  24229 823808 
 [1] "--------------------------------------"
 [1] "Column: cleanck"
 [1] "Class: factor"
 [1] "Summary:"
      1      0   NA's 
- 63629  56477 752301 
+ 64258  56507 751603 
 [1] "--------------------------------------"
 [1] "Column: impfloor"
 [1] "Class: factor"
 [1] "Summary:"
      1      0   NA's 
-109573 181113 581721 
+110099 180590 581679 
 [1] "--------------------------------------"
 [1] "Column: nrooms"
 [1] "Class: factor"
 [1] "Summary:"
     4+      1      2      3   NA's 
- 45735 190522 102240  45046 488864 
+ 46106 190700 102166  45041 488355 
 [1] "--------------------------------------"
 [1] "Column: nhh"
 [1] "Class: factor"
 [1] "Summary:"
 3 or less       4-5       6-7        8+      NA's 
-    10928     26663     14574      9929    810313 
+    10982     26750     14631      9959    810046 
 [1] "--------------------------------------"
 [1] "Column: nchldlt5"
 [1] "Class: factor"
 [1] "Summary:"
      1     2+   NA's 
-138820  94536 639051 
+138284  94262 639822 
 [1] "--------------------------------------"
 [1] "Column: earlybf"
 [1] "Class: factor"
 [1] "Summary:"
      1      0   NA's 
-115181 214522 542704 
+115853 213830 542685 
 [1] "--------------------------------------"
 [1] "Column: hfoodsec"
 [1] "Class: factor"
 [1] "Summary:"
          Food Secure Mildly Food Insecure        Food Insecure                 NA's 
-              108901                64336                51018               648152 
+              108883                64264                51205               648016 
 [1] "--------------------------------------"
 [1] "Column: anywast06"
 [1] "Class: factor"
 [1] "Summary:"
      0      1   NA's 
-148678  55609 668120 
+153799  56724 661845 
 [1] "--------------------------------------"
 [1] "Column: pers_wast"
 [1] "Class: factor"
 [1] "Summary:"
      0      1   NA's 
-189848  10826 671733 
+195839  11069 665460 
 [1] "--------------------------------------"
 [1] "Column: enstunt"
 [1] "Class: factor"
 [1] "Summary:"
      0      1   NA's 
-738701 132710    996 
+734565 137322    481 
 [1] "--------------------------------------"
 [1] "Column: enwast"
 [1] "Class: factor"
 [1] "Summary:"
      0      1   NA's 
-701879 125897  44631 
+702080 126223  44065 
 [1] "--------------------------------------"
 [1] "Column: hhwealth_quart"
 [1] "Class: factor"
 [1] "Summary:"
 Wealth Q4 Wealth Q1 Wealth Q2 Wealth Q3      NA's 
-    93233     87535     85321     92902    513416 
+   106202     95782     94728    103851    471805 
 [1] "--------------------------------------"
 [1] "Column: id"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      1   11301   22197   23004   35014   42787     996 
+      1   11301   22175   23007   35026   42815     481 
 [1] "--------------------------------------"
 [1] "Column: W_gagebrth"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  144.0   266.0   273.0   273.1   280.0   340.0  387397 
+  144.0   266.0   274.0   273.6   280.0   340.0  397577 
 [1] "--------------------------------------"
 [1] "Column: W_birthwt"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    620    2650    3000    3029    3390    9998  146892 
+    620    2650    3000    3016    3370    9998  165134 
 [1] "--------------------------------------"
 [1] "Column: W_birthlen"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  21.80   47.27   49.17   49.28   51.00   69.40  231052 
+  21.80   47.20   49.10   49.22   51.00   68.00  249424 
 [1] "--------------------------------------"
 [1] "Column: W_mage"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   9.00   21.00   24.00   24.94   28.00   70.00   80825 
+   9.00   21.00   24.00   24.95   28.00   70.00   80310 
 [1] "--------------------------------------"
 [1] "Column: W_mhtcm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   41.0   150.2   156.0   156.5   162.8   199.0  226905 
+   41.0   150.2   156.0   156.5   162.8   199.0  226883 
 [1] "--------------------------------------"
 [1] "Column: W_mwtkg"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   30.0    51.3    58.0    60.0    67.0   168.0  459490 
+   26.6    46.4    54.7    56.3    64.0   168.0  335246 
 [1] "--------------------------------------"
 [1] "Column: W_mbmi"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   12.4    20.6    22.9    23.6    25.7   892.3  468637 
+   11.6    19.7    22.0    22.7    24.8   892.3  344767 
 [1] "--------------------------------------"
 [1] "Column: W_fage"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   14.0    24.0    28.0    29.1    33.0    80.0  587304 
+   14.0    24.0    28.0    29.1    33.0    80.0  586977 
 [1] "--------------------------------------"
 [1] "Column: W_fhtcm"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    130     170     174     174     179     205  681926 
+    130     170     174     174     179     205  681887 
 [1] "--------------------------------------"
 [1] "Column: W_meducyrs"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   0.00    3.00    8.00    7.31   12.00   24.00  114900 
+   0.00    3.00    8.00    7.46   12.00   24.00   91480 
 [1] "--------------------------------------"
 [1] "Column: W_feducyrs"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   0.00    5.00   10.00    8.42   12.00   27.00  244698 
+   0.00    5.00   10.00    8.51   12.00   27.00  228343 
 [1] "--------------------------------------"
 [1] "Column: W_nrooms"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-      1       1       2       2       2      77  488864 
+      1       1       2       2       2      77  488355 
 [1] "--------------------------------------"
 [1] "Column: W_nhh"
 [1] "Class: integer"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    1.0     4.0     5.0     5.5     7.0    20.0  810313 
+    1.0     4.0     5.0     5.5     7.0    20.0  810046 
 [1] "--------------------------------------"
 [1] "Column: W_nchldlt5"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    1.0     1.0     1.0     1.5     2.0    11.0  639051 
+    1.0     1.0     1.0     1.5     2.0    11.0  639822 
 [1] "--------------------------------------"
 [1] "Column: W_parity"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    1.0     1.0     2.0     2.6     4.0    19.0  447640 
+    1.0     1.0     2.0     2.6     4.0    19.0  448639 
 [1] "--------------------------------------"
 [1] "Column: impsan"
 [1] "Class: factor"
 [1] "Summary:"
      1      0   NA's 
-221493 182584 468330 
+207433 167081 497854 
 [1] "--------------------------------------"
 [1] "Column: safeh20"
 [1] "Class: factor"
 [1] "Summary:"
      1      0   NA's 
-269704  50849 551854 
+239808  49701 582859 
 [1] "--------------------------------------"
 [1] "Column: perdiar6"
 [1] "Class: factor"
 [1] "Summary:"
       0% (0%, 5%]      >5%     NA's 
-   37986    29888    30020   774513 
+   46613    30944    30395   764416 
 [1] "--------------------------------------"
 [1] "Column: perdiar24"
 [1] "Class: factor"
 [1] "Summary:"
       0% (0%, 5%]      >5%     NA's 
-   20841    91222    39522   720822 
+   17978   102170    41492   710728 
 [1] "--------------------------------------"
 [1] "Column: W_perdiar6"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    0.0     0.0     0.0     0.0     0.1     0.6  774513 
+    0.0     0.0     0.0     0.0     0.1     0.6  764416 
 [1] "--------------------------------------"
 [1] "Column: W_perdiar24"
 [1] "Class: numeric"
 [1] "Summary:"
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    0.0     0.0     0.0     0.0     0.1     1.0  720822 
+    0.0     0.0     0.0     0.0     0.1     1.0  710728 
 [1] "--------------------------------------"
 [1] "Column: predexfd6"
 [1] "Class: factor"
 [1] "Summary:"
      1      0   NA's 
-175083 116048 581276 
+133959 108166 630243 
 [1] "--------------------------------------"
