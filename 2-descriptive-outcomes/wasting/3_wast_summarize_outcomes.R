@@ -171,9 +171,9 @@ ci_3 <- bind_rows(
 #Cumulative inc 3 month - birth as seperate category
 d3_nobirth <- calc.ci.agecat(d, range = 3, birth="no")
 
-ci.data3_nobirth <- summary.wast.ci(d3_nobirth, age.range=3)
-ci.region3_nobirth <- d3_nobirth %>% group_by(region) %>% do(summary.wast.ci(., age.range=3)$ci.res)
-ci.country3_nobirth <- d3_nobirth %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=3)$ci.res) 
+ci.data3_nobirth <- summary.wast.ci(d3_nobirth, age.range=3, birthstrat = T)
+ci.region3_nobirth <- d3_nobirth %>% group_by(region) %>% do(summary.wast.ci(., age.range=3, birthstrat = T)$ci.res)
+ci.country3_nobirth <- d3_nobirth %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=3, birthstrat = T)$ci.res) 
 ci.cohort3_nobirth <-
   ci.data3_nobirth$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
