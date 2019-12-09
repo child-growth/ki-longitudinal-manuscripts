@@ -1,9 +1,14 @@
 [1] "File Name: cleaned individual study rds datasets - Old"
- [1] "birthwast_strat_whz_plot_data.rds"           "cleaned individual study datasets"           "cleaned individual study rds datasets - Old" "co_cuminc.rdata"                            
- [5] "co_cuminc_rf.Rdata"                          "co_occurrence_data.rds"                      "earlywast_strat_co_rf.Rdata"                 "earlywast_strat_stunt_rf.Rdata"             
- [9] "FINAL.csv"                                   "FINAL_clean_covariates.rds"                  "FINAL_only_included_studies.rds"             "FINAL_temp_clean_covariates.rds"            
-[13] "ki-manuscript-dataset.rds"                   "laz_vel_whz_rf.Rdata"                        "len_vel_whz_rf.Rdata"                        "mediation_HAZ.Rdata"                        
-[17] "mediation_WHZ.Rdata"                         "mort_exposures.RData"                        "mortality.rds"                               "mortality_anthro_data.RData"                
+
+             ki1000109-EE  ki1000304b-SAS-FoodSuppl          ki1101329-Keneba ki1112895-Burkina Faso Zn      ki1148112-iLiNS-DOSE    ki1148112-iLiNS-DYAD-M         kiGH5241-JiVitA-3         kiGH5241-JiVitA-4 
+                       35                      2228                     23807                     16562                      9458                      4152                       542                     35381 
+null device 
+          1 
+[1] 2
+
+             ki1000109-EE  ki1000304b-SAS-FoodSuppl          ki1101329-Keneba ki1112895-Burkina Faso Zn      ki1148112-iLiNS-DOSE    ki1148112-iLiNS-DYAD-M         kiGH5241-JiVitA-3         kiGH5241-JiVitA-4 
+                       35                      2228                     23807                     16562                      9458                      4152                       542                     35381 
+                        "mortality_anthro_data.RData"                
 [21] "pers_wast.rdata"                             "pers_wast_rf.Rdata"                          "raw SAS datasets - Old"                      "rf_co_occurrence_data.rds"                  
 [25] "rf_stunting_data.rds"                        "rf_underweight_data.rds"                     "rf_wasting_data.rds"                         "seasonality_data.rds"                       
 [29] "seasonality_rf.Rdata"                        "seasonality_rf_haz.Rdata"                    "seasonality_rf_stunt.Rdata"                  "seasonality_rf_wast.Rdata"                  
@@ -62,4 +67,9 @@
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 [1] 714818     11
 [1] 714818     91
 [1] 613420     88
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18            used  (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells  3188239 170.3    5684620  303.6   5684620  303.6
+Vcells 75292895 574.5  319257386 2435.8 498833256 3805.8
+
+             ki1000109-EE  ki1000304b-SAS-FoodSuppl          ki1101329-Keneba ki1112895-Burkina Faso Zn      ki1148112-iLiNS-DOSE    ki1148112-iLiNS-DYAD-M         kiGH5241-JiVitA-3         kiGH5241-JiVitA-4 
+                       35                      2228                     23807                     16562                      9458                      4152                       542                     35381 

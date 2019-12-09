@@ -17,10 +17,6 @@ d$country <- tolower(d$country)
 d$country[d$country=="tanzania, united republic of"] <- "tanzania"
 d$country <- str_to_title(d$country)
 
-#https://stackoverflow.com/questions/7714677/scatterplot-with-too-many-points
-# ggplot(d,aes(x=lencm, y=wtkg)) + geom_point(alpha = 0.1)
-# ggplot(d,aes(x=lencm, y=wtkg)) + stat_binhex()
-
 
 
 p <- ggplot(data = subset(d, subjid == 8), aes(x = agedays, y = htcm)) +
@@ -39,7 +35,7 @@ p <- ggplot(data = subset(cpp, subjid == 8), aes(x = htcm, y = wtkg)) +
 
 p <- ggplot(d,aes(x=lencm, y=wtkg)) + geom_point(alpha = 0.05) +
   geom_who(x_seq = seq(0, 120, by = 1), x_var = "htcm", y_var = "wtkg") 
-ggsave(p, file = here::here("/figures/shared/wlz_QA.png"), width=8, height=4)
+ggsave(p, file = here::here("/figures/shared/wlz_QA.png"),  width=25, height=20)
 
 
 
@@ -67,6 +63,11 @@ p <- ggplot(d,aes(x=agedays, y=lencm)) + geom_point(alpha = 0.05) +
   xlab("Age in days") + ylab("Height in CM")
 ggsave(p, file = here::here("/figures/shared/laz_QA_cohort.png"),  width=25, height=20)
 
+pWlz <-  ggplot(d,aes(x=lencm, y=wtkg)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 120, by = 1), x_var = "htcm", y_var = "wtkg") + facet_wrap(~cohort) +
+  xlab("Height in CM") + ylab("Weight in KG")
+ggsave(pWlz, file = here::here("/figures/shared/wlz_QA_cohort.png"), width=25, height=20)
+
 
 
 
@@ -75,4 +76,56 @@ pWaz <- ggplot(d,aes(x=agedays, y=wtkg)) + geom_point(alpha = 0.05) +
   coord_cartesian(xlim=c(0, 730), ylim=c(0,25))+ facet_wrap(cohort~sex) +
   xlab("Age in days") + ylab("Weight in KG")
 ggsave(pWaz, file = here::here("/figures/shared/waz_QA_cohort.png"), width=25, height=20)
+
+
+
+#Monthly plots
+d <- d %>% filter(measurefreq=="monthly")
+
+p <- ggplot(d,aes(x=lencm, y=wtkg)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 120, by = 1), x_var = "htcm", y_var = "wtkg") 
+ggsave(p, file = here::here("/figures/shared/wlz_QA.png"),  width=25, height=20)
+
+
+
+
+p <- ggplot(d,aes(x=agedays, y=lencm)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 730, by = 1),  y_var = "htcm") +
+  coord_cartesian(xlim=c(0, 730)) + facet_wrap(~sex)
+ggsave(p, file = here::here("/figures/shared/laz_QA.png"), width=8, height=4)
+
+
+
+
+p <- ggplot(d,aes(x=agedays, y=wtkg)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 730, by = 1),  y_var = "wtkg")  +
+  coord_cartesian(xlim=c(0, 730))+ facet_wrap(~sex)
+ggsave(p, file = here::here("/figures/shared/waz_QA.png"), width=8, height=4)
+
+
+
+#Cohort-stratified plots
+d$cohort <- paste0(d$studyid, "\n", d$country)
+p <- ggplot(d,aes(x=agedays, y=lencm)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 730, by = 1),  y_var = "htcm") +
+  coord_cartesian(xlim=c(0, 730)) + facet_wrap(cohort~sex) +
+  xlab("Age in days") + ylab("Height in CM")
+ggsave(p, file = here::here("/figures/shared/laz_QA_cohort.png"),  width=25, height=20)
+
+pWlz <-  ggplot(d,aes(x=lencm, y=wtkg)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 120, by = 1), x_var = "htcm", y_var = "wtkg") + facet_wrap(~cohort) +
+  xlab("Height in CM") + ylab("Weight in KG")
+ggsave(pWlz, file = here::here("/figures/shared/wlz_QA_cohort.png"), width=25, height=20)
+
+
+
+
+pWaz <- ggplot(d,aes(x=agedays, y=wtkg)) + geom_point(alpha = 0.05) +
+  geom_who(x_seq = seq(0, 730, by = 1),  y_var = "wtkg")  +
+  coord_cartesian(xlim=c(0, 730), ylim=c(0,25))+ facet_wrap(cohort~sex) +
+  xlab("Age in days") + ylab("Weight in KG")
+ggsave(pWaz, file = here::here("/figures/shared/waz_QA_cohort.png"), width=25, height=20)
+
+
+
 
