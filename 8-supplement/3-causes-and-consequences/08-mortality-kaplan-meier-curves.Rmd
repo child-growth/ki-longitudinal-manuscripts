@@ -17,8 +17,15 @@ fontsize: 9pt
 knitr::opts_chunk$set(echo = TRUE)
 source(paste0(here::here(), "/0-config.R"))
 library(survminer)
-load(file=paste0(here::here(),"/figures/plot objects/kaplan_meier_objects.Rdata"))
+load("figure-copies/plot objects/kaplan_meier_objects.Rdata")
 
+```
+
+
+## Associations between
+
+```{r prev-primary_FE, echo = FALSE}
+include_graphics("figure-copies/fig-wast-2-prev-overall_region--allage-primary_FE.png")
 ```
 
 

@@ -204,6 +204,8 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
 pmort
 
 ggsave(pmort, file=here("/figures/risk factor/fig-mort-RR-time-death.png"), width=5.2, height=10)
+ggsave(pmort, file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/fig-mort-RR-time-death.png"), width=5.2, height=10)
 
 #Save plot object
 saveRDS(pmort, file=here("results/fig-mort-RR-time-death.RDS"))
+saveRDS(pmort, file=here("/8-supplement/3-causes-and-consequences/figure-copies/plot objects/fig-mort-RR-time-death.RDS"))
