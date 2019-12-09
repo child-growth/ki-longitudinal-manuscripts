@@ -204,6 +204,7 @@ pmort <- ggplot(d2[d2$outcome_variable=="Relative risk of\nmortality by 24 month
 
 
 ggsave(pmort, file=here("/figures/risk factor/fig-mort-RR-sens.png"), width=5.2, height=5.2)
+ggsave(pmort, file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/fig-mort-RR-sens.png"), width=5.2, height=10)
 
 #Save plot object
 saveRDS(pmort, file=here("results/rf_mort+morb-sens_plot_object.RDS"))

@@ -15,67 +15,97 @@ fontsize: 9pt
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-source(paste0(here::here(), "/0-config.R"))
 library(survminer)
-load("figure-copies/plot objects/kaplan_meier_objects.Rdata")
+library(knitr)
+
+p <- readRDS("figure-copies/plot objects/kaplan_meier_objects.RDS")
 
 ```
 
 
-## Associations between
+## Associations between early growth failure and mortality
+
+### Random Effects Pooling
 
 ```{r prev-primary_FE, echo = FALSE}
-include_graphics("figure-copies/fig-wast-2-prev-overall_region--allage-primary_FE.png")
+include_graphics("figure-copies/fig-mort-RR-time-death.png")
 ```
+
+### Fixed Effects Pooling
+
+```{r, echo = FALSE}
+include_graphics("figure-copies/fig-mort-RR-time-death_FE.png")
+```
+
+## Associations between any growth failure and mortality
+
+### Random Effects Pooling
+
+```{r, echo = FALSE}
+include_graphics("figure-copies/fig-mort-024.png")
+```
+
+### Fixed Effects Pooling
+
+
+```{r, echo = FALSE}
+include_graphics("figure-copies/fig-mort-024_FE.png")
+```
+
+
+
+## Kaplan-Meier curves
 
 
 ### Wasting under 6mo
 
 ```{r, echo=FALSE, warning=F}
-p1
+p[[1]]
 ```
 
 
 ### Severe wasting under 6mo
 
 ```{r, echo=FALSE, warning=F}
-p2
+p[[2]]
 ```
 
 ### Persistent wasting under 6mo
 
 ```{r, echo=FALSE, warning=F}
-p3
+p[[3]]
 ```
 
 ### Stunting under 6mo
 
 ```{r, echo=FALSE, warning=F}
-p4
+p[[4]]
 ```
 
 ### Severe stunting under 6mo
 
 ```{r, echo=FALSE, warning=F}
-p5
+p[[5]]
 ```
+
+
+### Wasted and stunted under 6mo
+
+```{r, echo=FALSE, warning=F}
+p[[8]]
+```
+
 
 ### Underweight under 6mo
 
 ```{r, echo=FALSE, warning=F}
-p6
+p[[6]]
 ```
 
 ### Severe underweight under 6mo
 
 ```{r, echo=FALSE, warning=F}
-p7
-```
-
-### Wasted and stunted under 6mo
-
-```{r, echo=FALSE, warning=F}
-p8
+p[[7]]
 ```
 
 

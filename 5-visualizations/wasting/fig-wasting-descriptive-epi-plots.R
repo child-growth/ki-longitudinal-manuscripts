@@ -223,6 +223,7 @@ ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","p
 saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",prev_plot_name,".RDS"))
 
 
+ggsave(prev_plot[[1]] + ggtitle("Wasting prevalence"), file=paste0(here::here(),"/figures/wasting/fig-",prev_plot_name, "_presentation.png"), width=13, height=3)
 
 
 #-------------------------------------------------------------------------------------------
@@ -256,6 +257,38 @@ saveRDS(ci_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,".
 
 #Save plot objects for figure grid
 saveRDS(list(mean_wlz_plot, prev_plot, ci_plot), file=paste0(here::here(),"/figures/plot objects/fig2_plot_objects.rds"))
+
+#-------------------------------------------------------------------------------------------
+# Wasting cumulative incidence -birthstrat
+#-------------------------------------------------------------------------------------------
+ci_plot <- ki_combo_plot(d,
+                         Disease="Wasting",
+                         Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                         Severe="no", 
+                         Age_range="3 months", 
+                         Cohort="pooled",
+                         xlabel="Child age, months",
+                         Birth = "strat",
+                         yrange=c(0,60),
+                         returnData=T)
+
+ci_plot_name = create_name(
+  outcome = "wasting",
+  cutoff = 2,
+  measure = "cumulative incidence",
+  population = "overall and region-stratified",
+  location = "",
+  age = "All ages",
+  analysis = "primary"
+)
+
+# save plot and underlying data
+ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, "_birthstrat.png"), width=14, height=3)
+
+saveRDS(ci_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,"_birthstrat.RDS"))
+
+ggsave(ci_plot[[1]] + ggtitle("Wasting incidence"), file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, "_birthstrat_presentation.png"), width=13, height=3)
+
 
 
 #-------------------------------------------------------------------------------------------
@@ -664,7 +697,7 @@ co_plot <- ki_desc_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Child age, months",
-                   ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
+                   ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
                    yrange=c(0,11),
                    returnData=T)
 
@@ -676,7 +709,7 @@ co_plot_africa <- ki_desc_plot(d,
                         Age_range="3 months", 
                         Cohort="pooled",
                         xlabel="Child age, months",
-                        ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
+                        ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
                         yrange=c(0,12),
                         returnData=T,
                         Region="Africa")
@@ -689,7 +722,7 @@ co_plot_lam <- ki_desc_plot(d,
                                Age_range="3 months", 
                                Cohort="pooled",
                                xlabel="Child age, months",
-                               ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
+                               ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
                                yrange=c(0,12),
                                returnData=T,
                                Region="Latin America")
@@ -702,7 +735,7 @@ co_plot_sasia <- ki_desc_plot(d,
                                Age_range="3 months", 
                                Cohort="pooled",
                                xlabel="Child age, months",
-                               ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
+                               ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
                                yrange=c(0,12),
                                returnData=T,
                                Region="South Asia")
