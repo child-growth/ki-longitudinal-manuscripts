@@ -201,6 +201,21 @@ ip_3 <- bind_rows(
   ip.cohort3
 )
 
+#Incidence proportions 3 month intervals - no birth
+ip.data3_nobirth <- summary.incprop(d3_nobirth)
+ip.region3_nobirth <- d3_nobirth %>% group_by(region) %>% do(summary.incprop(.)$ci.res)
+ip.country3_nobirth <- d3_nobirth %>% group_by(region, country) %>% do(summary.incprop(.)$ci.res) 
+ip.cohort3_nobirth <-
+  ip.data_nobirth3$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
+
+ip_3_nobirth <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ip.data3_nobirth$ci.res),
+  data.frame(cohort = "pooled", ip.country3_nobirth),
+  data.frame(cohort = "pooled", ip.region3_nobirth),
+  ip.cohort3_nobirth
+)
+
 
 #Cumulative inc, no birth
 d_noBW <- calc.ci.agecat(d_noBW, range = 6)
@@ -459,6 +474,7 @@ wasting_desc_data <- bind_rows(
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci_3),
   data.frame(disease = "Wasting", age_range="3 months",   birth="no", severe="no", measure= "Cumulative incidence", ci_3_nobirth),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ip_3),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="no", severe="no", measure= "Incidence_proportion", ip_3_nobirth),
   data.frame(disease = "Wasting", age_range="6 months",   birth="no",  severe="no",   measure= "Cumulative incidence",  ci_nobw),
   data.frame(disease = "Wasting", age_range="3 months",   birth="no",  severe="no",   measure= "Cumulative incidence",  ci_nobw3),
   data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="yes", measure= "Cumulative incidence",  sev.ci),
