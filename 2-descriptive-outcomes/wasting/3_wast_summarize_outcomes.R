@@ -166,7 +166,25 @@ ci_3 <- bind_rows(
   data.frame(cohort = "pooled", ci.country3),
   data.frame(cohort = "pooled", ci.region3),
   ci.cohort3
-)
+) 
+
+#Cumulative inc 3 month - birth as seperate category
+d3_nobirth <- calc.ci.agecat(d, range = 3, birth="no")
+
+ci.data3_nobirth <- summary.wast.ci(d3_nobirth, age.range=3)
+ci.region3_nobirth <- d3_nobirth %>% group_by(region) %>% do(summary.wast.ci(., age.range=3)$ci.res)
+ci.country3_nobirth <- d3_nobirth %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=3)$ci.res) 
+ci.cohort3_nobirth <-
+  ci.data3_nobirth$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
+
+ci_3_nobirth <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data3_nobirth$ci.res),
+  data.frame(cohort = "pooled", ci.country3_nobirth),
+  data.frame(cohort = "pooled", ci.region3_nobirth),
+  ci.cohort3
+) 
+
 
 #Incidence proportions 3 month intervals
 ip.data3 <- summary.incprop(d3)
@@ -438,8 +456,8 @@ wasting_desc_data <- bind_rows(
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Mean WLZ",  whz),
   data.frame(disease = "Wasting", age_range="1 month",   birth="yes", severe="no", measure= "Mean WLZ",  monthly.whz),
-  #data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci_3),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="no", severe="no", measure= "Cumulative incidence", ci_3_nobirth),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ip_3),
   data.frame(disease = "Wasting", age_range="6 months",   birth="no",  severe="no",   measure= "Cumulative incidence",  ci_nobw),
   data.frame(disease = "Wasting", age_range="3 months",   birth="no",  severe="no",   measure= "Cumulative incidence",  ci_nobw3),
