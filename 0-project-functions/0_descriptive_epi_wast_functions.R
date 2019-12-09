@@ -252,32 +252,57 @@ summary.prev.whz <- function(d, severe.wasted=F, method="REML", N_filter=50){
 
 
 
-summary.wast.ci <- function(d, severe.wasted = F, age.range, method="REML", N_filter=50){
+summary.wast.ci <- function(d, severe.wasted = F, age.range, method="REML", N_filter=50, birthstrat=F){
   cutoff <- ifelse(severe.wasted,-3,-2)
 
   if(!is.null(age.range)){
     if(age.range == 3){
     # identify ever wasted children
-    evs = d %>%
-      filter(!is.na(agecat) & !is.na(whz)) %>%
-      group_by(studyid,country,subjid) %>%
-      arrange(studyid,subjid) %>%
-      #create variable with minwhz by age category, cumulatively
-      mutate(minwhz=ifelse(agecat=="0-3 months",min(whz[agecat=="0-3 months"]),
-                           ifelse(agecat=="3-6 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"]),
-                                  ifelse(agecat=="6-9 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
-                                         ifelse(agecat=="9-12 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
-                                                ifelse(agecat=="12-15 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
-                                                       ifelse(agecat=="15-18 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
-                                                              ifelse(agecat=="18-21 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
-                                                                     ifelse(agecat=="21-24 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
-                                                                            min(whz)))))))))) %>%
+      if(!birthstrat){
+        
+        evs = d %>%
+          filter(!is.na(agecat)) %>%
+          group_by(studyid,country,subjid) %>%
+          arrange(studyid,subjid) %>%
+          #create variable with minwhz by age category, cumulatively
+          mutate(minwhz=ifelse(agecat=="0-3 months",min(whz[agecat=="0-3 months"]),
+                               ifelse(agecat=="3-6 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"]),
+                                      ifelse(agecat=="6-9 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                             ifelse(agecat=="9-12 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                    ifelse(agecat=="12-15 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                           ifelse(agecat=="15-18 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                                  ifelse(agecat=="18-21 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                         ifelse(agecat=="21-24 months",min(whz[agecat=="0-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                                min(whz))))))))))
+      }
+      
+      if(birthstrat){
+        
+        evs = d %>%
+          filter(!is.na(agecat)) %>%
+          group_by(studyid,country,subjid) %>%
+          arrange(studyid,subjid) %>%
+          #create variable with minwhz by age category, cumulatively
+          mutate(minwhz=ifelse(agecat=="Birth",min(whz[agecat=="Birth"]),
+                               ifelse(agecat=="8 days-3 months",min(whz[agecat=="Birth" | agecat=="8 days-3 months"]),
+                                      ifelse(agecat=="3-6 months",min(whz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"]),
+                                             ifelse(agecat=="6-9 months",min(whz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"]),
+                                                    ifelse(agecat=="9-12 months",min(whz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"]),
+                                                           ifelse(agecat=="12-15 months",min(whz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"]),
+                                                                  ifelse(agecat=="15-18 months",min(whz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"]),
+                                                                         ifelse(agecat=="18-21 months",min(whz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"]),
+                                                                                ifelse(agecat=="21-24 months",min(whz[agecat=="Birth" | agecat=="8 days-3 months" | agecat=="3-6 months"|agecat=="6-9 months"|agecat=="9-12 months"|agecat=="12-15 months"|agecat=="15-18 months"|agecat=="18-21 months"|agecat=="21-24 months"]),
+                                                                                       min(whz)))))))))))
+      }
+      
+      
       # create indicator for whether the child was ever wasted
       # by age category
+      evs <- evs %>%
       group_by(studyid,country,agecat,subjid) %>%
-      summarise(minwhz=min(minwhz)) %>% ungroup() %>%
-      mutate(ever_wasted=ifelse(minwhz< cutoff,1,0),
-             agecat=factor(agecat))
+        summarise(minwhz=min(minwhz)) %>% ungroup() %>%
+        mutate(ever_wasted=ifelse(minwhz< cutoff,1,0),
+               agecat=factor(agecat))
     }
     
     if(age.range == 6){
