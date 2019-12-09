@@ -62,11 +62,11 @@ dd$region <- factor(dd$region, levels=c("South Asia","Africa","Latin America",""
 
 
 
-dd$country[dd$country=="Tanzania Child 2, Tanzania"] <- "Tanzania Child 2" 
+dd$studycountry[dd$studycountry=="Tanzania Child 2, Tanzania"] <- "Tanzania Child 2" 
 
 dd <- mutate(dd,
-             country = factor(country,
-                                   levels=unique(country[order(region,stuntprev)]), 
+             studycountry = factor(studycountry,
+                                   levels=unique(studycountry[order(region,overall_stuntprev)]), 
                                    ordered=TRUE))
 
 # categorize stunting prevalence

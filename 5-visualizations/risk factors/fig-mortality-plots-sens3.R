@@ -85,7 +85,12 @@ poolRR <- function(d, method="REML"){
 RMAest <- d %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
 MAest_FE <- d %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
-  do(poolRR(., method="REML")) %>% as.data.frame()
+  do(poolRR(., method="FE")) %>% as.data.frame()
+
+RMAest <- bind_rows(data.frame(RMAest, analysis="Random Effects"),
+                    data.frame(MAest_FE, analysis="Fixed Effects")) %>%
+          mutate(analysis = factor(analysis, levels=c("Random Effects", "Fixed Effects")))
+
 
 #Save cleaned data
 saveRDS(RMAest, paste0(here::here(),"/results/rf results/pooled_mortality_RR_results.rds"))
@@ -157,27 +162,27 @@ table(d$BW)
 
 d$intervention_variable <- factor(d$RFlabel)
 
-d2<-droplevels(d)
+d<-droplevels(d)
 
-d2$intervention_variable <- as.character(d2$intervention_variable)
-d2 <- d2 %>% arrange(outcome_variable, RR)
-d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
+d$intervention_variable <- as.character(d$intervention_variable)
+d <- d %>% arrange(outcome_variable, RR)
+d$intervention_variable <- factor(d$intervention_variable, levels=unique(d$intervention_variable))
 
-d2 = d2 %>% mutate(Measure=tolower(Measure),
+d = d %>% mutate(Measure=tolower(Measure),
   type = gsub("No", "Moderately", type),
   type = gsub("Yes", "Severely", type),
   type = gsub(" 0-6 months", "", type))
   
-d2 = d2 %>% arrange(outcome_variable, RR) %>%
+d = d %>% arrange(analysis, outcome_variable, RR) %>%
   mutate(outcome_label = paste(type, " ", Measure, sep = ""),
                    outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
-d2$severe<-factor(ifelse(grepl("evere",d2$RFlabel),1,0),levels=c("0","1"))
+d$severe<-factor(ifelse(grepl("evere",d$RFlabel),1,0),levels=c("0","1"))
 
 
-d2 <- d2 %>% filter(intervention_level==1)
+d2 <- d %>% filter(intervention_level==1, analysis=="Random Effects")
 
 pmort <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
@@ -196,16 +201,48 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
         strip.background = element_blank(),
         text = element_text(size=16), 
         legend.position = "none") + 
-  ggtitle("outcome_variable") + 
+  ggtitle("") + 
   facet_wrap(~outcome_variable, ncol=1) +
   theme(plot.title = element_text(size = 12, face = "bold")) +
   coord_flip(ylim=c(1,9))
     #expand=c(0,0)) 
 pmort
 
+d3 <- d %>% filter(intervention_level==1, analysis=="Fixed Effects")
+
+pmort_FE <- ggplot(d3, aes(x=outcome_label)) +
+  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
+  #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
+  labs(y = "", x = "Exposure 0-6 months") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
+  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_size_manual(values=c(4,5)) +
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.placement = "outside",
+        panel.spacing = unit(0, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        strip.background = element_blank(),
+        text = element_text(size=16), 
+        legend.position = "none") + 
+  ggtitle("") + 
+  facet_wrap(~outcome_variable, ncol=1) +
+  theme(plot.title = element_text(size = 12, face = "bold")) +
+  coord_flip(ylim=c(1,9))
+#expand=c(0,0)) 
+pmort_FE
+
 ggsave(pmort, file=here("/figures/risk factor/fig-mort-RR-time-death.png"), width=5.2, height=10)
 ggsave(pmort, file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/fig-mort-RR-time-death.png"), width=5.2, height=10)
+
+ggsave(pmort_FE, file=here("/figures/risk factor/fig-mort-RR-time-death_FE.png"), width=5.2, height=10)
+ggsave(pmort_FE, file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/fig-mort-RR-time-death_FE.png"), width=5.2, height=10)
 
 #Save plot object
 saveRDS(pmort, file=here("results/fig-mort-RR-time-death.RDS"))
 saveRDS(pmort, file=here("/8-supplement/3-causes-and-consequences/figure-copies/plot objects/fig-mort-RR-time-death.RDS"))
+
+saveRDS(pmort_FE, file=here("results/fig-mort-RR-time-death.RDS"))
+saveRDS(pmort_FE, file=here("/8-supplement/3-causes-and-consequences/figure-copies/plot objects/fig-mort-RR-time-death.RDS"))

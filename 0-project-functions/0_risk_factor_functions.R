@@ -272,7 +272,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFlabel[RMAest$intervention_variable=="exclfeed6"] <-  "Exclusive breastfeeding under 6 mo."
   RMAest$RFlabel[RMAest$intervention_variable=="month"] <-  "Month of measurement"
   RMAest$RFlabel[RMAest$intervention_variable=="brthmon"] <-  "Birth month"
-  RMAest$RFlabel[RMAest$intervention_variable=="lag_WHZ_quart"] <-  "Rain quartile"
+  RMAest$RFlabel[RMAest$intervention_variable=="lag_WHZ_quart"] <-  "Prior WLZ"
   RMAest$RFlabel[RMAest$intervention_variable=="rain_quartile"] <-  "Rain quartile"
   
   

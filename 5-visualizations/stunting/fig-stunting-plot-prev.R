@@ -87,6 +87,8 @@ prev_plot_name_primary = name_prev_plots(cut=2, pop=pop_list$o, loc="", ana=anal
 ggsave(prev_plot_primary$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_name_primary, ".png"), width=14, height=4)
 saveRDS(prev_plot_primary$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_name_primary,".RDS"))
 
+ggsave(prev_plot_primary$plot + ggtitle("Stunting prevalence"), file=paste0(fig_dir, "stunting/fig-",prev_plot_name_primary, "_presentation.png"), width=13, height=3)
+
 
 #-------------------------------------------------------------------------------------------
 # Stunting prevalence - 3 months (fixed effects)
