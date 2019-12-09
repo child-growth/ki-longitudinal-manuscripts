@@ -27,6 +27,7 @@ p
 
 
 ggsave(p, file=paste0(here(),"/figures/wasting/birthwast_strat_growth_curve.png"), width=7, height=5)
+ggsave(p, file=paste0(here(),"/figures/wasting/birthwast_strat_growth_curve_alt.png"), width=6, height=3)
 saveRDS(p, file=paste0(here::here(),"/figures/plot objects/birthwast_strat_growth_curve_object.rds"))
 
 
