@@ -1,6 +1,16 @@
 # Description
 
-Please include a summary of the change. Please also include relevant motivation and context. List any dependencies that are required for this change.
+## Summary of change
+
+Please include a summary of the change. 
+
+## Motivation and context for change
+
+Please also include relevant motivation and context. 
+
+## Dependencies 
+
+List any dependencies that are required for this change.
 
 ## Type of change
 
