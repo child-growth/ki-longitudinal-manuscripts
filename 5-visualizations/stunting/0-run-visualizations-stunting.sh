@@ -41,29 +41,29 @@
 # fig-stunting-rec-density.R \
 # fig-stunting-rec-prev.R
 
-R CMD BATCH fig-study-inventory-heatmaps-stunt.R
-R CMD BATCH fig-stunting-plot-mean-laz.R
-R CMD BATCH fig-stunting-laz-quantile.R
-R CMD BATCH fig-stunting-plot-laz-quantile-monthly.R
-R CMD BATCH fig-stunting-plot-prev.R
-R CMD BATCH fig-stunting-plot-inc.R
-R CMD BATCH fig-stunting-rec-density.R
-R CMD BATCH fig-stunting-rec-prev.R
-R CMD BATCH fig-stunting-length-velocity.R
-R CMD BATCH fig-stunting-length-velocity-fe.R
-R CMD BATCH fig-stunting-length-velocity-monthly24.R
-R CMD BATCH fig-stunting-length-velocity-subset.R
-R CMD BATCH fig-stunting-flow-strat-prep.R
-R CMD BATCH fig-stunting-flow.R
-R CMD BATCH fig-stunting-flow-fe.R
-R CMD BATCH fig-stunting-flow-re.R
-R CMD BATCH fig-stunting-meanlaz-incage.R
-R CMD BATCH fig-stunting-velocity-incage.R
-R CMD BATCH fig-stunting-prevalence-map.R
-R CMD BATCH fig-DHS-plots-laz.R
-R CMD BATCH fig-DHS-quantile-plots.R
-R CMD BATCH fig-stunting-descriptive-epi-plots_no_probit.R
-R CMD BATCH fig-stunting-descriptive-epi-plots-fe_no_probit.R
+# R CMD BATCH fig-study-inventory-heatmaps-stunt.R
+# R CMD BATCH fig-stunting-plot-mean-laz.R
+# R CMD BATCH fig-stunting-laz-quantile.R
+# R CMD BATCH fig-stunting-plot-laz-quantile-monthly.R
+# R CMD BATCH fig-stunting-plot-prev.R
+# R CMD BATCH fig-stunting-plot-inc.R
+# R CMD BATCH fig-stunting-rec-density.R
+# R CMD BATCH fig-stunting-rec-prev.R
+# R CMD BATCH fig-stunting-length-velocity.R
+# R CMD BATCH fig-stunting-length-velocity-fe.R
+# R CMD BATCH fig-stunting-length-velocity-monthly24.R
+# R CMD BATCH fig-stunting-length-velocity-subset.R
+# R CMD BATCH fig-stunting-flow-strat-prep.R
+# R CMD BATCH fig-stunting-flow.R
+# R CMD BATCH fig-stunting-flow-fe.R
+# R CMD BATCH fig-stunting-flow-re.R
+# R CMD BATCH fig-stunting-meanlaz-incage.R
+# R CMD BATCH fig-stunting-velocity-incage.R
+# R CMD BATCH fig-stunting-prevalence-map.R
+# R CMD BATCH fig-DHS-plots-laz.R
+# R CMD BATCH fig-DHS-quantile-plots.R
+# R CMD BATCH fig-stunting-descriptive-epi-plots_no_probit.R
+# R CMD BATCH fig-stunting-descriptive-epi-plots-fe_no_probit.R
 
 
 # Remove copied utility run script
