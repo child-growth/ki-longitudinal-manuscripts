@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "start"
 # Remove previous results
 # cd /data/flu/flu-data/
 # rm -f \
@@ -63,8 +63,8 @@
 # R CMD BATCH fig-DHS-plots-laz.R
 # R CMD BATCH fig-DHS-quantile-plots.R
 # R CMD BATCH fig-stunting-descriptive-epi-plots_no_probit.R
-# R CMD BATCH fig-stunting-descriptive-epi-plots-fe_no_probit.R
+R CMD BATCH fig-stunting-descriptive-epi-plots-fe_no_probit.R
 
-
+echo "end"
 # Remove copied utility run script
 # rm runFileSaveLogs
