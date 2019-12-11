@@ -8,3 +8,5 @@
 *.rdata
 .gitignore
 .httr-oauth
+*.RProfile
+8-supplement/1-stunting/_book/

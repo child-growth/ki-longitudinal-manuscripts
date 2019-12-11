@@ -17,8 +17,8 @@ In this sensitivity analysis, the mean length-for-age Z-score was higher in Lati
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-# setwd("../../")
-# source("0-config.R")
+setwd("../../")
+source("0-config.R")
 ```
 
 <!-- ##################################################################################### -->
@@ -26,15 +26,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### All eligible cohorts
 ```{r mean, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/stunting/fig-laz-2-mean-overall_region--allage-primary.png"))
-include_graphics("figure-copies/fig-laz-2-mean-overall_region--allage-primary.png")
+include_graphics(paste0(here::here(), "/figures/stunting/fig-laz-2-mean-overall_region--allage-primary.png"))
+# include_graphics("figure-copies/fig-laz-2-mean-overall_region--allage-primary.png")
 ```
 
 ### Cohorts that measured monthly from birth to 24 months
 
 ```{r monthly-mean, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/stunting/fig-laz-2-mean-overall_region--allage-month24.png"))
-include_graphics("figure-copies/fig-laz-2-mean-overall_region--allage-month24.png")
+include_graphics(paste0(here::here(), "/figures/stunting/fig-laz-2-mean-overall_region--allage-month24.png"))
+# include_graphics("figure-copies/fig-laz-2-mean-overall_region--allage-month24.png")
 ```
 
 <!-- ##################################################################################### -->
@@ -43,15 +43,15 @@ include_graphics("figure-copies/fig-laz-2-mean-overall_region--allage-month24.pn
 ### All eligible cohorts
 
 ```{r prev, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png"))
-include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png")
+include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-prev-overall_region--allage-primary.png"))
+# include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png")
 ```
 
 ### Cohorts that measured monthly from birth to 24 months
 
 ```{r monthly-prev, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-prev-overall_region--allage-month24.png"))
-include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-month24.png")
+include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-prev-overall_region--allage-month24.png"))
+# include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-month24.png")
 ```
 
 <!-- ##################################################################################### -->
@@ -60,15 +60,15 @@ include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-month24.
 ### All eligible cohorts
 
 ```{r inc, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-inc-overall_region--allage-primary.png"))
-include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png")
+include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-inc-overall_region--allage-primary.png"))
+# include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png")
 ```
 
 ### Cohorts that measured monthly from birth to 24 months
 
 ```{r monthly-inc, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-inc-overall_region--allage-month24.png"))
-include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-month24.png")
+include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-inc-overall_region--allage-month24.png"))
+# include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-month24.png")
 ```
 
 <!-- ##################################################################################### -->
@@ -77,14 +77,14 @@ include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-month24.p
 ### All eligible cohorts
 
 ```{r vel, echo = FALSE}
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-vel-overall--allage-primary.png")) 
-include_graphics("figure-copies/fig-stunt-2-vel-overall--allage-primary.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-vel-overall--allage-primary.png")) 
+# include_graphics("figure-copies/fig-stunt-2-vel-overall--allage-primary.png")
 ```
 
 ### Cohorts that measured monthly from birth to 24 months
 
 ```{r vel-inc, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-vel-overall--allage-month24.png"))
-include_graphics("figure-copies/fig-stunt-2-vel-overall--allage-month24.png")
+include_graphics(paste0(here::here(), "/figures/stunting/fig-stunt-2-vel-overall--allage-month24.png"))
+# include_graphics("figure-copies/fig-stunt-2-vel-overall--allage-month24.png")
 ```
 

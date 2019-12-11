@@ -15,15 +15,15 @@ This study included cohorts that measured child growth from 1969 to 2014. To ass
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-# setwd("../../")
-# source("0-config.R")
+setwd("../../")
+source("0-config.R")
 
 ```
 
 
 ```{r prev-re, echo = FALSE}
-# include_graphics(paste0(here::here(), "/figures/shared/laz_secular_trend.png"))
-include_graphics("figure-copies/laz_secular_trend.png")
+include_graphics(paste0(here::here(), "/figures/shared/laz_secular_trend.png"))
+#include_graphics("figure-copies/laz_secular_trend.png")
 ```
 
 
