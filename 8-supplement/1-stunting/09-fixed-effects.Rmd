@@ -5,8 +5,8 @@ The primary analyses presented in this manuscript pooled across individual studi
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-# setwd("../../")
-# source("0-config.R")
+setwd("../../")
+source("0-config.R")
 ```
 
 <!-- ##################################################################################### -->
@@ -14,15 +14,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Random effects
 ```{r prev-re, echo = FALSE}
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-primary.png"))
-include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-primary.png"))
+# include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-primary.png")
 
 ```
 
 ### Fixed effects
 ```{r prev-fe, echo = FALSE}
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-fe.png"))
-include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-prev-overall_region--allage-fe.png"))
+# include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png")
 ```
 
 [ADD CAPTION]
@@ -32,14 +32,14 @@ include_graphics("figure-copies/fig-stunt-2-prev-overall_region--allage-fe.png")
 
 ### Random effects
 ```{r inc-re, echo = FALSE}
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region--allage-primary.png"))
-include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region--allage-primary.png"))
+# include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-primary.png")
 ```
 
 ### Fixed effects
 ```{r inc-fe, echo = FALSE}
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region--allage-fe.png"))
-include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region--allage-fe.png"))
+# include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png")
 
 ```
 
@@ -50,14 +50,14 @@ include_graphics("figure-copies/fig-stunt-2-inc-overall_region--allage-fe.png")
 
 ### Random effects
 ```{r bar-re, echo = FALSE}
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-flow-overall--allage-re.png"))
-include_graphics("figure-copies/fig-stunt-2-flow-overall--allage-re.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-flow-overall--allage-re.png"))
+# include_graphics("figure-copies/fig-stunt-2-flow-overall--allage-re.png")
 ```
 
 ### Fixed effects
 ```{r bar-fe, echo = FALSE}
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-flow-overall--allage-fe.png"))
-include_graphics("figure-copies/fig-stunt-2-flow-overall--allage-fe.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-flow-overall--allage-fe.png"))
+# include_graphics("figure-copies/fig-stunt-2-flow-overall--allage-fe.png")
 ```
 
 [ADD CAPTION] 
@@ -68,14 +68,14 @@ include_graphics("figure-copies/fig-stunt-2-flow-overall--allage-fe.png")
 
 ### Random effects
 ```{r vel-re, echo = FALSE} 
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-vel-overall--allage-primary.png")) 
-include_graphics("figure-copies/fig-stunt-2-vel-overall--allage-primary.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-vel-overall--allage-primary.png")) 
+# include_graphics("figure-copies/fig-stunt-2-vel-overall--allage-primary.png")
 ``` 
 
 ### Fixed effects
 ```{r vel-fe, echo = FALSE} 
-# include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-vel-overall--allage-primary.png")) 
-include_graphics("figure-copies/fig-stunt-2-vel-overall--allage-fe.png")
+include_graphics(paste0(fig_dir, "stunting/fig-stunt-2-vel-overall--allage-primary.png")) 
+# include_graphics("figure-copies/fig-stunt-2-vel-overall--allage-fe.png")
 ``` 
 
 [ADD CAPTION]

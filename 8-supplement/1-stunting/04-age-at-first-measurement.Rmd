@@ -15,22 +15,22 @@ Our analyses of stunting incidence assumed that children whose first measurement
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-# setwd("../../")
-# source("0-config.R")
+setwd("../../")
+source("0-config.R")
 ```
 
 ## Histogram of first measurement within age 0-30 days
 
 ### All cohorts
 ```{r age-first, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/shared/age_histogram_first_month.png"))
-include_graphics("figure-copies/age_histogram_first_month.png")
+include_graphics(paste0(here::here(), "/figures/shared/age_histogram_first_month.png"))
+#include_graphics("figure-copies/age_histogram_first_month.png")
 ```
 
 ### Cohort-stratified
 ```{r age-first-cohort, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/shared/age_histogram_first_month_cohort.png"))
-include_graphics("figure-copies/age_histogram_first_month_cohort.png")
+include_graphics(paste0(here::here(), "/figures/shared/age_histogram_first_month_cohort.png"))
+#include_graphics("figure-copies/age_histogram_first_month_cohort.png")
 ```
 
 
@@ -39,14 +39,14 @@ include_graphics("figure-copies/age_histogram_first_month_cohort.png")
 
 ### All cohorts
 ```{r age-enr, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/shared/enrollment_age_histogram_over_7d.png"))
-include_graphics("figure-copies/enrollment_age_histogram_over_7d.png")
+include_graphics(paste0(here::here(), "/figures/shared/enrollment_age_histogram_over_7d.png"))
+#include_graphics("figure-copies/enrollment_age_histogram_over_7d.png")
 ```
 
 ### Cohort-stratified
 ```{r age-enr-cohort, echo = FALSE}
-#include_graphics(paste0(here::here(), "/figures/shared/enrollment_age_histogram_over_7d_cohort.png"))
-include_graphics("figure-copies/enrollment_age_histogram_over_7d_cohort.png")
+include_graphics(paste0(here::here(), "/figures/shared/enrollment_age_histogram_over_7d_cohort.png"))
+#include_graphics("figure-copies/enrollment_age_histogram_over_7d_cohort.png")
 ```
 
 
