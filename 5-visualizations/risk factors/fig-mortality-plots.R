@@ -48,7 +48,7 @@ d <- droplevels(d)
 d <- d %>% filter( ci_lower !=  ci_upper)
 
 
-poolRR <- function(d){
+poolRR <- function(d, method="REML"){
   #nstudies=length(unique(d$studyid))
   nstudies <- d %>% summarize(N=n())
   
@@ -57,7 +57,7 @@ poolRR <- function(d){
   }else{
     
     fit<-NULL
-    try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="RR"))
+    try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method=method, measure="RR"))
     if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="RR"))}
     if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="RR"))}
     if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="RR"))}
@@ -82,6 +82,17 @@ poolRR <- function(d){
 
 RMAest <- d %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
+RMAest_FE <- d %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
+  do(poolRR(., method="FE")) %>% as.data.frame()
+RMAest_region <- d %>% group_by(region, intervention_variable, intervention_level, outcome_variable) %>%
+  do(poolRR(.)) %>% as.data.frame()
+
+RMAest <- bind_rows(data.frame(RMAest, analysis="Random Effects"),
+                    data.frame(RMAest_FE, analysis="Fixed Effects"),
+                    data.frame(RMAest_region, analysis="Region")) %>%
+  mutate(analysis = factor(analysis, levels=c("Random Effects", "Fixed Effects","Region")))
+
+
 
 #Save cleaned data
 saveRDS(RMAest, paste0(here::here(),"/results/rf results/pooled_mortality_RR_results.rds"))
@@ -154,26 +165,27 @@ d$intervention_variable <- factor(d$RFlabel)
 
 
 #Drop 6-24 month outcomes
-d2 <- d %>% filter(agerange!="6-24 months")
+d <- d %>% filter(agerange!="6-24 months")
 
-d2<-droplevels(d2)
+d<-droplevels(d)
 
-d2$intervention_variable <- as.character(d2$intervention_variable)
-d2 <- d2 %>% arrange(outcome_variable, RR)
-d2$intervention_variable <- factor(d2$intervention_variable, levels=unique(d2$intervention_variable))
+d$intervention_variable <- as.character(d$intervention_variable)
+d <- d %>% arrange(outcome_variable, RR)
+d$intervention_variable <- factor(d$intervention_variable, levels=unique(d$intervention_variable))
 
-d2 = d2 %>% mutate(Measure=tolower(Measure),
+d = d %>% mutate(Measure=tolower(Measure),
   type = gsub("No", "Moderately", type),
   type = gsub("Yes", "Severely", type),
   type = gsub(" 0-6 months", "", type))
   
-d2 = d2 %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
+d = d %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
                    outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
-d2$severe<-factor(ifelse(grepl("evere",d2$RFlabel),1,0),levels=c("0","1"))
+d$severe<-factor(ifelse(grepl("evere",d$RFlabel),1,0),levels=c("0","1"))
 
+d2 <- d %>% filter(analysis=="Random effects")
 
 pmort <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
@@ -279,6 +291,71 @@ ggsave(p3, file=here("/figures/risk factor/fig-co-RR.png"), width=5.2, height=5.
 
 
 
+
+
+
+
+
+
+
+#Fixed effects
+d3 <- d %>% filter(analysis=="Fixed Effects")
+
+pmort <- ggplot(d3, aes(x=outcome_label)) +
+  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
+  #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
+  labs(y = "", x = "Exposure 0-6 months") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
+  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_size_manual(values=c(4,5)) +
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.placement = "outside",
+        panel.spacing = unit(0, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        strip.background = element_blank(),
+        text = element_text(size=16), 
+        legend.position = "none") + 
+  facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
+  #coord_cartesian(ylim=c(1,9)) + 
+  coord_flip(ylim=c(1,9))
+#expand=c(0,0)) 
+
+
+ggsave(pmort, file=here("/figures/risk factor/fig-mort+morb-RR_FE.png"), width=14, height=5.2)
+
+
+
+
+d4 <- d %>% filter(analysis=="Region")
+
+pregion <- ggplot(d4, aes(x=outcome_label, group=region)) +
+  geom_point(aes(y=RR, color=Measure, shape=region), size=3, stroke = 1.5, position = position_dodge(0.4)) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure), position = position_dodge(0.4)) +
+  #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
+  labs(y = "", x = "Exposure 0-6 months") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(breaks=c(1, 2, 4, 8, 16), trans='log10', labels=scaleFUN) +
+  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_size_manual(values=c(4,5)) +
+  scale_shape_manual(values=c(16,17, 25, 22)) +
+  theme(strip.placement = "outside",
+        panel.spacing = unit(0, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        strip.background = element_blank(),
+        text = element_text(size=16), 
+        legend.position = "right") + 
+  facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
+  #guides(shape="Region") +
+  coord_flip(ylim=c(1,16)) +
+  guides(
+    shape = guide_legend(reverse = TRUE))
+pregion
+
+ggsave(pregion, file=here("/figures/risk factor/fig-mort+morb-RR_Region.png"), width=16, height=5.2)
 
 
 

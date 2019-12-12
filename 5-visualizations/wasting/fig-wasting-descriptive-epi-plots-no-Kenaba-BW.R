@@ -62,7 +62,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=here::here("/figures/wasting/no-Kenaba-BW/WLZ_by_region-no-Kenaba-BW.png"), width=10, height=4)
+ggsave(p, file=here::here("/8-supplement/2-wasting/figure-copies/WLZ_by_region-no-Kenaba-BW.png"), width=10, height=4)
 
 
 
@@ -103,12 +103,12 @@ prev_plot_name = create_name(
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
-  analysis = "primary"
+  analysis="No Kenaba birth"
 )
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",prev_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
-ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","prev_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
+ggsave(prev_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",prev_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","prev_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
 
 saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",prev_plot_name,"-no-Kenaba-BW.RDS"))
 
@@ -136,11 +136,11 @@ ci_plot_name = create_name(
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
-  analysis = "primary"
+  analysis="No Kenaba birth"
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",ci_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(ci_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",ci_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(ci_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,"-no-Kenaba-BW.RDS"))
 
@@ -249,11 +249,11 @@ inc_plot_name = create_name(
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
-  analysis = "primary"
+  analysis="No Kenaba birth"
 )
 
 # save plot and underlying data
-ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",inc_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(inc_plot$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",inc_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(inc_plot$data, file=paste0(figdata_dir_wasting,"figdata-",inc_plot_name,"-no-Kenaba-BW.RDS"))
 saveRDS(inc_plot, file=paste0(here::here(),"/figures/plot objects/inc_plot_object-no-Kenaba-BW.RDS"))
@@ -286,11 +286,11 @@ inc_plot_name = create_name(
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
-  analysis = "primary"
+  analysis="No Kenaba birth"
 )
 
 # save plot and underlying data
-ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",inc_plot_name,"-no-Kenaba-BW.png"), width=14, height=4.5)
+ggsave(inc_plot$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",inc_plot_name,"-no-Kenaba-BW.png"), width=14, height=4.5)
 
 
 #-------------------------------------------------------------------------------------------
@@ -400,11 +400,11 @@ rec_plot_name = create_name(
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
-  analysis = "primary"
+  analysis="No Kenaba birth"
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",rec_plot_name, "-no-Kenaba-BW.png"), width=14, height=4.5)
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",rec_plot_name, "-no-Kenaba-BW.png"), width=14, height=4.5)
 saveRDS(rec_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",rec_plot_name,"-no-Kenaba-BW.RDS"))
 
 saveRDS(rec_plot, file=paste0(here::here(),"/figures/plot objects/rec_plot_object-no-Kenaba-BW.RDS"))
@@ -453,11 +453,11 @@ rec_plot_name = create_name(
   population = "overall",
   location = "",
   age = "All ages",
-  analysis = "primary"
+  analysis="No Kenaba birth"
 )
 
 # save plot and underlying data
-ggsave(p, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",rec_plot_name, "-no-Kenaba-BW.png"), width=8, height=5)
+ggsave(p, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",rec_plot_name, "-no-Kenaba-BW.png"), width=8, height=5)
 
 saveRDS(df, file=paste0(figdata_dir_wasting,"figdata-",rec_plot_name,"-no-Kenaba-BW.RDS"))
 
@@ -498,12 +498,11 @@ perswast_plot_name = create_name(
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
-  analysis = "primary"
+  analysis="No Kenaba birth"
 )
 
 # save plot and underlying data
-ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",perswast_plot_name, "-no-Kenaba-BW.png"), width=10, height=5)
-ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","perswast_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
+ggsave(perswast_plot$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",perswast_plot_name, "-no-Kenaba-BW.png"), width=10, height=5)
 
 saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_plot_name,"-no-Kenaba-BW.RDS"))
 
@@ -573,14 +572,14 @@ saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_
 #   population = "overall and region-stratified",
 #   location = "",
 #   age = "All ages",
-#   analysis = "primary"
+#   analysis="No Kenaba birth"
 # )
 # 
 # # save plot and underlying data
-# ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",co_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
-# ggsave(co_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","co_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
-# ggsave(co_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","co_plot_lam", "-no-Kenaba-BW.png"), width=10, height=5)
-# ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","co_plot_sasia", "-no-Kenaba-BW.png"), width=10, height=5)
+# ggsave(co_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",co_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
+# ggsave(co_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","co_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
+# ggsave(co_plot_lam$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","co_plot_lam", "-no-Kenaba-BW.png"), width=10, height=5)
+# ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","co_plot_sasia", "-no-Kenaba-BW.png"), width=10, height=5)
 # 
 # saveRDS(co_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",co_plot_name,"-no-Kenaba-BW.RDS"))
 # 
@@ -646,14 +645,14 @@ saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_
 #   population = "overall and region-stratified",
 #   location = "",
 #   age = "All ages",
-#   analysis = "primary"
+#   analysis="No Kenaba birth"
 # )
 # 
 # # save plot and underlying data
-# ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",underweight_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
-# ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","underweight_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
-# ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","underweight_plot_lam", "-no-Kenaba-BW.png"), width=10, height=5)
-# ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-","underweight_plot_sasia", "-no-Kenaba-BW.png"), width=10, height=5)
+# ggsave(underweight_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",underweight_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
+# ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
+# ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_lam", "-no-Kenaba-BW.png"), width=10, height=5)
+# ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_sasia", "-no-Kenaba-BW.png"), width=10, height=5)
 # 
 # saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",underweight_plot_name,"-no-Kenaba-BW.RDS"))
 
@@ -682,11 +681,11 @@ sevwast_plot_name = create_name(
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
-  analysis = "primary"
+  analysis="No Kenaba birth"
 )
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-Kenaba-BW/fig-",sevwast_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",sevwast_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",sevwast_plot_name,"-no-Kenaba-BW.RDS"))
 
