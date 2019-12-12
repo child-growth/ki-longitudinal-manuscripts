@@ -1,0 +1,60 @@
+variable.type,variable,description
+exposure,anywast06,Any wasting <6 mo.
+exposure,birthlen,Birth length (cm)
+exposure,birthwt,Birth weight (kg)
+exposure,brthmon,Birth month
+exposure,cleanck,Clean cooking fuel usage
+exposure,earlybf,Breastfed hour after birth
+exposure,enstunt,Enrolled stunted
+exposure,enwast,Enrolled wasted
+exposure,exclfeed3,Exclusive breastfeeding under 3 mo.
+exposure,exclfeed36,Exclusive breastfeeding from 3-6 mo.
+exposure,exclfeed6,Exclusive breastfeeding under 6 mo.
+exposure,fage,Father's age
+exposure,feducyrs,Father's education
+exposure,fhtcm,Father's height
+exposure,gagebrth,Gestational age at birth
+exposure,hdlvry,Child delivered at home
+exposure,hfoodsec,HH food security
+exposure,hhwealth_quart,HH wealth
+exposure,impfloor,Improved floor
+exposure,impsan,Improved sanitation
+exposure,lag_WHZ_quart,Mean WHZ in the prior 3 mo.
+exposure,mage,Mother's age
+exposure,mbmi,Mother's BMI
+exposure,meducyrs,Mother's education
+exposure,mhtcm,Mother's height
+exposure,month,Month of measurement
+exposure,mwtkg,Mother's weight
+exposure,nchldlt5,# of children <5 in HH
+exposure,nhh,# of people in HH
+exposure,nrooms,# of rooms in HH
+exposure,parity,Birth order
+exposure,perdiar24,Diarrhea <24 mo. (% days)
+exposure,perdiar6,Diarrhea <6 mo. (% days)
+exposure,pers_wast,Persistent wasting <6 mo.
+exposure,predexfd6,Excl/Pred breastfed <6mo.
+exposure,predfeed3,Predominant breastfeeding under 3 mo.
+exposure,predfeed36,Predominant breastfeeding from 3-6 mo.
+exposure,predfeed6,Predominant breastfeeding under 6 mo.
+exposure,safeh20,Safe water source
+exposure,sex,Sex
+exposure,single,Single parent
+exposure,trth2o,Treats drinking water
+exposure,vagbrth,Vaginal birth
+exposure,rain_quartile,Rain quartile
+outcome,sstunted,Prevalence of severe stunting
+outcome,stunted,Prevalence of stunting
+outcome,ever_stunted,Cumulative incidence of stunting
+outcome,ever_sstunted,Cumulative incidence of severe stunting
+outcome,ever_wasted,Cumulative incidence of wasting
+outcome,pers_wast,Prevalence of persistent wasting
+outcome,wast_rec90d,Wasting recovery
+outcome,swasted,Prevalence of severe wasting
+outcome,wasted,Prevalence of wasting
+outcome,ever_co,Cumulative incidence of the co-occurance of stunting and wasting
+outcome,ever_swasted,Cumulative incidence of severe wasting
+outcome,dead,Deceased
+outcome,co_occurence,Prevalence of the co-occurance of stunting and wasting
+outcome,pers_wast624,Persistently wasted 624
+outcome,Unspecified,Unspecified

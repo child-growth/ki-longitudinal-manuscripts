@@ -1,0 +1,39 @@
+# Anthropometry measurement quality {#anthro}
+
+---
+output:
+  pdf_document:
+    keep_tex: yes
+fontfamily: mathpazo
+fontsize: 9pt
+---
+
+\raggedright
+
+
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+# setwd("../../")
+# source("0-config.R")
+```
+
+
+
+## Age-specific incidence
+
+```{r, echo = FALSE}
+include_graphics("figure-copies/fig-wast-2-cuminc-overall_region--allage-primary_FE.png")
+
+```
+
+
+
+file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/wlz_QA_cohort.png
+file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/laz_QA.png
+file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/laz_QA_cohort.png
+file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/laz_secular_trend.png
+file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/waz_QA.png
+file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/waz_QA_cohort.png
+file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/wlz_QA.png
