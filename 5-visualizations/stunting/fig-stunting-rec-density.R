@@ -31,7 +31,7 @@ d$subjid <- as.numeric(d$subjid)
 d = d %>% filter(agedays<=16 * 30.4167)
 
 # number of studies, countries, children included
-length(names(table(d$studyid)))
+length(names(table(paste0(d$studyid,d$country))))
 length(names(table(d$country)))
 
 x=d %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))

@@ -85,22 +85,40 @@ dd$ncat <- factor(dd$ncat)
 summary(dd$meanhaz)
 dd$hazcat <- cut(dd$meanhaz,breaks=c(-5, -3, -2.5, -2,-1.5,-1,-0.5,0,5), 
                  labels=c("<= -3","(-3,-2.5]", "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",  "(-0.5,0]", ">0" ))
-table(dd$hazcat)
-dd$hazcat<- factor(dd$hazcat)
 dd$hazcat[dd$N<50] <- NA
-
-dd$hazcatnew = as.character(dd$hazcat)
-dd$hazcatnew = ifelse(is.na(dd$hazcat), "Fewer than 50\nobservations", dd$hazcatnew)
-dd$hazcatnew<- factor(dd$hazcatnew, levels = c("<= -3","(-3,-2.5]",
-                              "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",
-                              "(-0.5,0]", ">0", "Fewer than 50\nobservations"))
-
 
 
 #Make cohort-specific summary dataset
 dp <- dd %>% group_by(studycountry) %>% slice(1) %>%
   select(studycountry, region, overall_nmeas, overall_stuntprev)
 
+##Fill missing age-cohort combinations as NA so they appear as grey
+table(is.na(dd))
+dim(dd)
+
+dd <- dd  %>% mutate(studycountry=factor(studycountry)) %>%
+  filter(agecat!=24) %>% droplevels(.) %>%
+  tidyr::expand(agecat, studycountry, region) %>%
+  left_join(dd, by = c("agecat", "studycountry", "region")) %>%
+  group_by(studycountry, region) %>%
+  mutate(N_missing_ages=sum(is.na(hazcat))) %>%
+  filter(N_missing_ages!=24) %>%
+  droplevels(.) %>% 
+  ungroup()
+
+dd$hazcat = as.character(dd$hazcat)
+dd$hazcat = ifelse(is.na(dd$hazcat), "Fewer than 50\nobservations", dd$hazcat)
+dd$hazcat<- factor(dd$hazcat, levels = c("<= -3","(-3,-2.5]",
+                                               "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",
+                                               "(-0.5,0]", ">0", "Fewer than 50\nobservations"))
+
+
+
+dd <- dd %>% 
+  group_by(region) %>%
+  dplyr::arrange(stuntprev, .by_group = TRUE) 
+dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
+dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
 
 
 
@@ -231,7 +249,7 @@ sidebar <- ggplot(data = dp, aes(x = studycountry)) +
 #-----------------------------------
 # heat map
 viridis_cols = c(viridis(
-  n = length(levels(dd$hazcatnew)) - 1,
+  n = length(levels(dd$hazcat)) - 1,
   alpha = 1,
   begin = 0,
   end = 0.8,
@@ -244,10 +262,9 @@ stphm <- hm +
   #aes(fill=hazcat) +
   # labs(x="Age in months",y="",title="Mean height-for-age Z-score by month of age") +
   labs(x="Age in months",y="",title="b") +
-  aes(fill = hazcatnew) +
-  labs(x = "Age in months", y = "", title = "Mean height-for-age Z-score by month of age") +  
-  
-  scale_fill_manual(guide=guide_legend(title="Mean HAZ",title.vjust = 1,
+  aes(fill = hazcat) +
+  scale_fill_manual(na.value="grey90",
+                    guide=guide_legend(title="Mean LAZ",title.vjust = 1,
                                        label.position="bottom",label.hjust=0.1,nrow=1),
                     values = viridis_cols) 
 
