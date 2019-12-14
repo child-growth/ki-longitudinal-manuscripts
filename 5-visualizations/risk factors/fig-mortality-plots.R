@@ -50,7 +50,7 @@ d <- d %>% filter( ci_lower !=  ci_upper)
 
 poolRR <- function(d, method="REML"){
   #nstudies=length(unique(d$studyid))
-  nstudies <- d %>% summarize(N=n())
+  nstudies <- d %>% summarise(N=n())
   
   if(d$intervention_level[1] == d$baseline_level[1]){
     est <- data.frame(logRR.psi=1, logSE=0, RR=1, RR.CI1=1, RR.CI2=1, Nstudies= nstudies$N)

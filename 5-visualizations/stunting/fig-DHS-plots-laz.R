@@ -27,7 +27,6 @@
 #---------------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
-source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
 pcols <- tableau11
@@ -64,12 +63,13 @@ laz_ageplot <- ggplot(
   geom_ribbon(aes(ymin = fit_lb, ymax = fit_ub), color = NA, alpha = 0.2) +
   geom_line(alpha = 1) +
   scale_x_continuous(breaks = seq(0, 24, by = 6)) +
-  scale_y_continuous(breaks = seq(-2, 0, by = 0.5)) +
-  scale_color_manual(values = pcols, guide = FALSE) +
-  scale_fill_manual(values = pcols, guide = FALSE) +
-  scale_linetype_manual(values = c("solid", "dashed", "dotdash")) +
-  labs(x="Child age, months",y="Length-for-age z-score") +
-  coord_cartesian(ylim = c(-2, 0)) +
+  scale_y_continuous(breaks = seq(-3, 0, by = 0.5)) +
+  scale_color_manual(values = pcols, guide = FALSE, name = "") +
+  scale_fill_manual(values = pcols, guide = FALSE, name = "") +
+  scale_linetype_manual(values = c("solid", "dashed", "dotdash"), name = "") +
+  labs(x="Child age, months",y="Length-for-age\nz-score") +
+  guides(linetype=guide_legend(override.aes=list(fill=NA))) +
+  coord_cartesian(ylim = c(-2.25, 0)) +
   theme_minimal() +
   theme(
     legend.position = "bottom",
@@ -77,7 +77,9 @@ laz_ageplot <- ggplot(
     strip.background = element_rect(fill = NA, color = NA),
     # strip.text.y = element_text(angle=180),
     panel.spacing = unit(0.5, "lines"),
-    panel.grid.minor.x = element_blank()
+    panel.grid.minor.x = element_blank()#,
+    # legend.background=element_blank(),
+    # legend.key = element_rect(fill = "white")
   )
 
 laz_ageplot
