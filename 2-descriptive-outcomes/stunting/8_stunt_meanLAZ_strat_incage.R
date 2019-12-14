@@ -55,6 +55,13 @@ study24 = c("ki0047075b-MAL-ED", "ki1000108-CMC-V-BCS-2002", "ki1000108-IRC",
 
 d_st_monthly <- d_st %>% filter(studyid %in% study24)
 
+#Proportion of children in each category 
+d_st_monthly %>% group_by(studyid, subjid) %>% slice(1) %>% 
+  filter(!is.na(stunt_inc_age)) %>%
+  ungroup() %>% mutate(tot_N=n()) %>%
+  group_by(stunt_inc_age) %>% summarize(N=n(), tot_N=tot_N[1]) %>%
+  mutate(prop=N/tot_N*100)
+
 #######################################################################
 # Analyze data
 #######################################################################

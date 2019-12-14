@@ -34,10 +34,10 @@ d$lencm[is.na(d$lencm)] <- d$htcm[is.na(d$lencm)]
 
 #calculate prevalence by cohort and add to label
 d_preterm <- d %>% group_by(cohort) %>% 
-  summarize(cohort_preterm=round(mean(gagebrth=="Preterm")*100,2))%>%
+  summarize(cohort_preterm=round(mean(gagebrth=="Preterm")*100,2), min_age=min(agedays))%>%
             mutate(cohort=gsub(":\n", "-", cohort),
               cohort_lab=paste0(cohort," (",cohort_preterm,")")) %>%
-  select(cohort, cohort_lab)
+  select(cohort, cohort_lab, min_age)
 d_preterm
 #---------------------------------------------------------
 # Histograms of GA by cohort
