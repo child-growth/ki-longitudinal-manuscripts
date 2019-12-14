@@ -75,6 +75,13 @@ mypalette = c("#D87A16", "#0EA76A")
 
 
 # get N's for figure caption
+vel_cohorts = vel %>% filter(pooled==0) %>%
+  mutate(unique_cohorts = length(unique(country_cohort))) %>%
+  group_by(region) %>%
+  summarize(unique_cohorts=unique_cohorts[1], 
+            unique_cohorts_region = length(unique(country_cohort)))
+vel_cohorts
+
 vel_n = vel %>%
   filter(!is.na(strata), pooled==1) %>%
   group_by(region) %>%
@@ -82,6 +89,7 @@ vel_n = vel %>%
             max_study = max(nstudies, na.rm=TRUE),
             min_n = min(N, na.rm=TRUE),
             max_n = max(N, na.rm=TRUE))
+vel_n
 
 ####################################################################################
 # mean LAZ plots
