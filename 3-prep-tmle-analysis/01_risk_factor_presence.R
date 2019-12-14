@@ -17,8 +17,7 @@ load(paste0(ghapdata_dir, "seasonality_rf_stunt.Rdata"))
 head(stuntprev)
 season <- stuntprev %>% group_by(studyid, subjid) %>% summarize(rain_quartile = 1*(sum(!is.na(rain_quartile))>0))
 cov<-left_join(cov, season, by = c("studyid","subjid"))
-cov$rain_quartile[is.na(cov$rain_quartile)] <- 0
-table(cov$rain_quartile)
+table(is.na(cov$rain_quartile))
 
 sum_not_na <- function(x){sum(!is.na(x))}
 ifelse_present <- function(x){ifelse(x>0, 1, 0)}
