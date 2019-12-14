@@ -33,8 +33,8 @@ d = d %>% select(studyid, subjid, region, country, measid, agedays, haz)
 ##########################################
 # define age windows
 d <- d %>% 
-      mutate(agecat=ifelse(agedays==1, "Birth",
-                      ifelse(agedays>1 & agedays<=3*30.4167,"0-3 months",
+      mutate(agecat=ifelse(agedays<=7, "Birth",
+                      ifelse(agedays>7 & agedays<=3*30.4167,"0-3 months",
                            ifelse(agedays>3*30.4167 & agedays<=6*30.4167,"3-6 months",
                                   ifelse(agedays>6*30.4167 & agedays<=9*30.4167,"6-9 months",
                                          ifelse(agedays>9*30.4167 & agedays<=12*30.4167,"9-12 months",
@@ -48,6 +48,7 @@ d <- d %>%
 d %>% group_by(agecat) %>%
   summarise(min = min(agedays)/30.4167,
             max = max(agedays)/30.4167)
+
 
 #--------------------------------------------------
 # classify stunting status each month
@@ -108,6 +109,12 @@ flow_m = d %>%
 #flow_m = flow_m %>% filter(!is.na(agecat)) 
 flow_m = flow_m %>% filter(agem < 25) 
 
+
+#Number of children in primary plot
+flow_m %>% filter(agem < 16) %>% ungroup() %>%
+  summarize(Nchild=length(unique(paste0(studyid, subjid))))
+d %>% filter(agedays<=16 * 30.4167) %>% ungroup() %>%
+  summarize(Nchild=length(unique(paste0(studyid, subjid))))
 
 
 #--------------------------------------------------

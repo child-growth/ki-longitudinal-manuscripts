@@ -198,6 +198,14 @@ length(unique(Ndf$country)) #Countries
 length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
 length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
 
+#Monthly N's
+Ndf <- stunt %>% filter(agedays < 24 * 30.4167, measurefreq=="monthly")
+length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
+length(unique(Ndf$country)) #Countries
+length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
+length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
+
+
 #--------------------------------------------
 # Get Wasting manuscript N's
 #--------------------------------------------
