@@ -55,13 +55,13 @@ plotdf1 <- df %>%
                 axis.text.y = element_text(size=12),
                 strip.text.x = element_text(size=10),
                 axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
-                panel.spacing = unit(0, "lines")) +
-          ggtitle("Age-specific relative risk of stunting onset by prior mean WLZ")
+                panel.spacing = unit(0, "lines")) #+
+          #ggtitle("Age-specific relative risk of stunting onset by prior mean WLZ")
         
-ggsave(p_lagwhz, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-WLZ-quart-stunt-CI.png"), height=4, width=10)
+ggsave(p_lagwhz, file=here("figures/risk-factor/fig-WLZ-quart-stunt-CI.png"), height=4, width=10)
         
-saveRDS(p_lagwhz, file=here("figures/plot objects/risk factor/fig-WLZ-quart-stunt-CI.rds"))
-saveRDS(plotdf1, file=here("figures/risk factor/figure-data/fig-WLZ-quart-stunt-CI.rds"))
+saveRDS(p_lagwhz, file=here("figures/plot-objects/risk-factor/fig-WLZ-quart-stunt-CI.rds"))
+saveRDS(plotdf1, file=here("figures/risk-factor/figure-data/fig-WLZ-quart-stunt-CI.rds"))
 
 
 

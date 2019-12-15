@@ -83,11 +83,8 @@ Twoby1plotC_t <- plot_grid(titleC, Twoby1plotC, ncol=1, rel_heights=c(0.1, 1))
 
 Twoby1plot <- plot_grid(Twoby1plotA_t, Twoby1plotB_t, Twoby1plotC_t, labels = "auto", ncol = 3, align = 'v', axis = 'l')
 
-<<<<<<< HEAD
-fig3 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","D","E"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
-=======
+
 fig3 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","d","e"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
->>>>>>> 5e307c85e6b5b88ebea8cb4dec97b9c135a75c8b
 ggsave(fig3, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig3.png"), width=14, height=18)
 
 
@@ -97,17 +94,17 @@ ggsave(fig3, file=paste0(here(),"/figures/manuscript-figure-composites/risk-fact
 
 #Figure 4
 #p_lagwhz <- readRDS(here("figures/plot objects/risk factor/fig-WLZ-quart-stunt-CI.rds"))
-p_earlywast <- readRDS(here("figures/plot objects/risk factor/fig-wasting-prior-to-stunting.rds"))
-plotdf2 <- readRDS(here("figures/risk factor/figure-data/fig-wasting-prior-to-stunting.rds"))
+p_earlywast <- readRDS(here("figures/plot-objects/risk-factor/fig-wasting-prior-to-stunting.rds"))
+plotdf2 <- readRDS(here("figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds"))
 
 
-plen_lagwhz <- readRDS(here("/figures/plot objects/risk factor/fig-WLZ-quart-len-vel.rds"))
+plen_lagwhz <- readRDS(here("/figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds"))
 
 
 #load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mortality_plot_objects.Rdata")
 pmort <- readRDS(here("results/rf_mort+morb_plot_object.RDS"))
-p <- readRDS(here("/results/fig-mortality-timing-plot-object.RDS"))
-p <- p + theme(legend.position = c(0.9, 0.35)) 
+# p <- readRDS(here("/results/fig-mortality-timing-plot-object.RDS"))
+# p <- p + theme(legend.position = c(0.9, 0.35)) 
 
 
 # pos1 = c(0.25, 0.8)
@@ -120,8 +117,8 @@ fig4a <- plot_grid(plen_lagwhz, p_earlywast, labels = "auto", ncol = 2, align = 
 # fig4b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2) #, align = 'v', axis = 'l')
 # fig4 <- plot_grid(fig4a, fig4b, labels = c("",""), ncol = 1, rel_heights = c(1,2))
 
-fig4  <- plot_grid(fig4a, pmort, p, labels = c("","c","d"), ncol = 1, rel_heights = c(1,1.5,1))
-ggsave(fig4, file=paste0(here(),"/figures/manuscript figure composites/risk factor/fig4.png"), width=14, height=14)
+fig4  <- plot_grid(fig4a, pmort, labels = c("","c"), ncol = 1, rel_heights = c(1,1))
+ggsave(fig4, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig4.png"), width=14, height=6)
 
 
 

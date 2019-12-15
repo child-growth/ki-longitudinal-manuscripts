@@ -64,9 +64,9 @@ p <-  ggplot(df, aes(x=num_cov , y=diff)) +
   ylab("Difference between unadjusted and adjusted estimates") +
   geom_hline(yintercept = 0) + theme_ki() +
   scale_x_continuous(breaks = pretty(df$num_cov, n = 10)) +
-  geom_text(aes(x=20, y=0.75, label=paste0("Average absolute difference: ",ave_abs_diff))) +
-  ggtitle("Difference between unadjusted and adjusted\nestimates of differences in LAZ and WLZ outcomes") 
+  geom_text(aes(x=20, y=0.75, label=paste0("Average absolute difference: ",ave_abs_diff))) #+
+  #("Difference between unadjusted and adjusted\nestimates of differences in LAZ and WLZ outcomes") 
 
 
-ggsave(p, file=here("/figures/risk factor/fig-adjusted-unadjusted-differences.png"), height=8, width=8)
+ggsave(p, file=here("/figures/risk-factor/fig-adjusted-unadjusted-differences.png"), height=8, width=8)
 

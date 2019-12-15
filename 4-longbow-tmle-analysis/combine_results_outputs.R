@@ -104,20 +104,24 @@ d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfe
 
 # Drop non-sensical combinations
 unique(d$intervention_variable)
-atbirth <- c("vagbrth", "hdlvry", "trth2o", "safeh20", "cleanck", "impfloor", "impsan", "earlybf",  "enstunt", "enwast")
+atbirth <- c("vagbrth", "hdlvry", "trth2o", "safeh20", "cleanck", "impfloor", "impsan", "earlybf",  "enstunt", "enwast", "birthlen")
 postnatal <- c("anywast06", "pers_wast", "perdiar6","predexfd6")
 full2years <- "perdiar24"
 wastingvars <- c("anywast06", "pers_wast", "enwast")
-wasting_outcomevars <- c("wasted", "swasted", "wast_rec90d", "ever_wasted", "ever_swasted", "pers_wast", "ever_co" )
+wasting_outcomevars <- c("whz","wasted", "swasted", "wast_rec90d", "ever_wasted", "ever_swasted", "pers_wast", "ever_co" )
 
       
 
 dim(d)
 d <- d %>% filter(!(intervention_variable %in% atbirth & agecat=="Birth"))
+d <- d %>% filter(!(intervention_variable == "birthwt" & agecat=="Birth" & outcome_variable %in% wasting_outcomevars))
 d <- d %>% filter(!(intervention_variable %in% postnatal & agecat %in% c("Birth", "0-6 months",  "0-24 months")))
 d <- d %>% filter(!(intervention_variable %in% full2years & agecat!="24 months"))
 d <- d %>% filter(!(intervention_variable %in% wastingvars & outcome_variable %in% wasting_outcomevars))
 dim(d)
+
+dsub <- d %>% filter(agecat=="Birth") 
+table(dsub$intervention_variable, dsub$outcome_variable)
 
 
 #Seperate adjusted and unadjusted

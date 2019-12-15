@@ -39,20 +39,29 @@ df <- RMAest
 
 
 #Add reference level to labe
-df$RFlabel_ref <- paste0(df$RFlabel, ", ref: ", df$baseline_level)
+df$RFlabel <- "Month of birth"
+df$RFlabel_ref <- paste0(df$RFlabel, ", ref: Jan.")
 
-df$seasonality_category <- factor(df$seasonality_category, levels=c("Pooled", "High seasonality", "Medium seasonality", "Low seasonality"))
+df$baseline_level <- "Jan."
+df$intervention_level[df$intervention_level=="1"] <- "Jan."
+df$intervention_level[df$intervention_level=="2"] <- "Feb."
+df$intervention_level[df$intervention_level=="3"] <- "Mar."
+df$intervention_level[df$intervention_level=="4"] <- "Apr."
+df$intervention_level[df$intervention_level=="5"] <- "May"
+df$intervention_level[df$intervention_level=="6"] <- "Jun."
+df$intervention_level[df$intervention_level=="7"] <- "Jul."
+df$intervention_level[df$intervention_level=="8"] <- "Aug."
+df$intervention_level[df$intervention_level=="9"] <- "Sep."
+df$intervention_level[df$intervention_level=="10"] <- "Oct."
+df$intervention_level[df$intervention_level=="11"] <- "Nov."
+df$intervention_level[df$intervention_level=="12"] <- "Dec."
 
-df$intervention_level[df$intervention_level=="Opposite max rain"] <- "Opposite\nmax rain"
-df$intervention_level[df$intervention_level=="Pre-max rain"] <- "Pre-max\nrain"
-df$intervention_level[df$intervention_level=="Max rain"] <- "Max\nrain"
-df$intervention_level[df$intervention_level=="Post-max rain"] <- "Post-max\nrain"
 
-#df$intervention_level <- factor(df$intervention_level, levels=c("Opposite max rain",  "Pre-max rain", "Max rain", "Post-max rain"))
-df$intervention_level <- factor(df$intervention_level, levels=c("Post-max\nrain", "Max\nrain", "Pre-max\nrain", "Opposite\nmax rain"))
+df$intervention_level <- factor(df$intervention_level, 
+                                levels=c("Jan.", "Feb.","Mar.","Apr.","May","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.", "Dec."))
 
 #mark reference points
-df$ref <- ifelse(df$intervention_level=="Opposite\nmax rain","(ref.)",NA)
+df$ref <- ifelse(df$intervention_level=="Jan.", "Ref.", NA)
 
 
 p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
@@ -60,23 +69,21 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   geom_point(aes(fill=seasonality_category, color=seasonality_category), size = 3) +
   geom_text(aes(label=ref), hjust = 1) +
   scale_color_manual(values=tableau11[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure)) +
-  geom_hline(yintercept = 0) + coord_flip() +
-  xlab("3-month quarter of the year, grouped by rainfall")+
+  geom_hline(yintercept = 0) + 
+  xlab("Birth month")+
   ylab("WLZ difference") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 5))  +
   theme(
     axis.text.x = element_text(margin =
                                  margin(t = 0, r = 0, b = 0, l = 0),
-                               size = 14 #, angle = 45, hjust = 1, vjust =1
+                               size = 12 #, angle = 45, hjust = 1, vjust =1
                                )) +
-  theme(axis.title.y = element_text(size = 14)) +
-  ggtitle("") + facet_wrap(~seasonality_category, ncol=2) +
-    theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
+  theme(axis.title.y = element_text(size = 12)) ) 
 
 print(p_seasonRR)
 
-saveRDS(p_seasonRR, file = here("/figures/plot objects/season_RR_plot.rds"))
-ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=5, height=6)
+saveRDS(p_seasonRR, file = here("/figures/plot-objects/season_birth_wlz_diff_plot.rds"))
+ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_birth_wlz_diff.png"), width=5, height=4)
 
 
 

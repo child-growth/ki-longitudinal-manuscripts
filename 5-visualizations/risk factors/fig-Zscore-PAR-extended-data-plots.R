@@ -88,7 +88,7 @@ plot_laz_24 = plot_age("LAZ", "24 months")
 plot_laz_age = grid.arrange(plot_laz_birth, plot_laz_6, plot_laz_24, ncol = 2, nrow = 2,
                             top = textGrob("Attributable difference - LAZ, stratified by age",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_laz_age, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-laz-PAR-strat-age.png"), height=18, width=15)
+ggsave(plot_laz_age, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-age.png"), height=18, width=15)
 
 ### Plot WLZ, stratified by age
 plot_wlz_birth = plot_age("WLZ", "Birth")
@@ -98,25 +98,27 @@ plot_wlz_24 = plot_age("WLZ", "24 months")
 plot_wlz_age = grid.arrange(plot_wlz_birth, plot_wlz_6, plot_wlz_24, ncol = 2, nrow = 2,
                             top = textGrob("Attributable difference - WLZ, stratified by age",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_wlz_age, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-wlz-PAR-strat-age.png"), height=18, width=15)
+ggsave(plot_wlz_age, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-age.png"), height=18, width=15)
 
 #######################
 # Region stratified plots
 #######################
 
-plot_region = function(outcome, reg){
+plot_region = function(outcome, reg, Yrange=NULL){
   data <- par_regionstrat %>% filter(outcome_variable == outcome, region == reg) %>% arrange(-PAR) 
   
   rflevels = unique(data$RFlabel_ref)
   data$RFlabel_ref=factor(data$RFlabel_ref, levels=rflevels)
   
-  lb = -max(par_regionstrat %>% filter(outcome_variable == outcome) %>% select(CI2))
-  ub = -min(par_regionstrat %>% filter(outcome_variable == outcome) %>% select(CI1))
-  
+  if(is.null(Yrange)){
+    lb = -max(par_regionstrat %>% filter(outcome_variable == outcome) %>% select(CI2))
+    ub = -min(par_regionstrat %>% filter(outcome_variable == outcome) %>% select(CI1))
+    Yrange=c(lb, ub)
+  }
   plot <-  ggplot(data, aes(x=RFlabel_ref)) + 
     geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
     geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
-    coord_flip(ylim=c(lb, ub)) +
+    coord_flip(ylim=Yrange) +
     scale_colour_manual(values=c("#7F7F7F")) +
     labs(x = "", y = paste0("Attributable difference in ", outcome)) +
     geom_hline(yintercept = 0) +
@@ -133,14 +135,14 @@ plot_region = function(outcome, reg){
 }
 
 ### Plot LAZ, stratified by region
-plot_laz_africa = plot_region("LAZ", "Africa")
-plot_laz_la = plot_region("LAZ", "Latin America")
-plot_laz_sa = plot_region("LAZ", "South Asia")
+plot_laz_africa = plot_region("LAZ", "Africa",  Yrange=c(-0.75, 1))
+plot_laz_la = plot_region("LAZ", "Latin America",  Yrange=c(-0.75, 1))
+plot_laz_sa = plot_region("LAZ", "South Asia",  Yrange=c(-0.75, 1))
 
 plot_laz_region = grid.arrange(plot_laz_africa, plot_laz_la, plot_laz_sa, ncol = 2, nrow = 2,
                             top = textGrob("Attributable difference - LAZ, stratified by region",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_laz_region, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-laz-PAR-strat-region.png"), height=18, width=15)
+ggsave(plot_laz_region, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-region.png"), height=18, width=15)
 
 ### Plot WLZ, stratified by region
 plot_wlz_africa = plot_region("WLZ", "Africa")
@@ -150,5 +152,5 @@ plot_wlz_sa = plot_region("WLZ", "South Asia")
 plot_wlz_region = grid.arrange(plot_wlz_africa, plot_wlz_la, plot_wlz_sa, ncol = 2, nrow = 2,
                                top = textGrob("Attributable difference - WLZ, stratified by region",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_wlz_region, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-wlz-PAR-strat-region.png"), height=18, width=15)
+ggsave(plot_wlz_region, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-region.png"), height=18, width=15)
 

@@ -120,7 +120,7 @@ pPAF_stunt <-  ggplot(plotdf_stunt, aes(x=RFlabel_ref)) +
   coord_flip(ylim=c(-5, 40)) +
   labs(#x = "Exposure, and to which level of exposure the cohorts are shifted",
     x = "Exposure",
-    y = "Attributable fraction in\nstunting cumulative incidence") +
+    y = "Attributable fraction (%) in\nstunting cumulative incidence") +
   geom_hline(yintercept = 0) +
   theme(strip.background = element_blank(),
         legend.position="right",
@@ -144,7 +144,7 @@ pPAF_wast <-  ggplot(plotdf_wast, aes(x=RFlabel_ref)) +
   coord_flip(ylim=c(-5, 40)) +
   labs(#x = "Exposure, and to which level of exposure the cohorts are shifted",
     x = "",
-    y = "Attributable fraction in\nwasting cumulative incidence") +
+    y = "Attributable fraction (%) in\nwasting cumulative incidence") +
   geom_hline(yintercept = 0) +
   theme(strip.background = element_blank(),
         legend.position="right",
@@ -157,15 +157,15 @@ pPAF_wast
 
 
 
-ggsave(pPAF_stunt, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-stunt-ci-PAF.png"), height=10, width=8)
-ggsave(pPAF_wast, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-wast-ci-PAF.png"), height=10, width=8)
+ggsave(pPAF_stunt, file=here("figures/risk-factor/fig-stunt-ci-PAF.png"), height=10, width=8)
+ggsave(pPAF_wast, file=here("figures/risk-factor/fig-wast-ci-PAF.png"), height=10, width=8)
 
-save(pPAF_stunt, pPAF_wast, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf results/rf_paf_plot_objects.Rdata")
+save(pPAF_stunt, pPAF_wast, file=here("results/rf results/rf_paf_plot_objects.Rdata"))
 
 
 plot_PAF = plot_grid(pPAF_stunt, pPAF_wast, labels = c("A","B"), ncol = 2, nrow = 1)
 
-ggsave(plot_PAF, file=paste0(here::here(), "/figures/manuscript figure composites/risk factor/extended data/fig-PAF.png"), height=14, width=14)
+ggsave(plot_PAF, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-PAF.png"), height=14, width=14)
 
 
 

@@ -185,7 +185,7 @@ d = d %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
 
 d$severe<-factor(ifelse(grepl("evere",d$RFlabel),1,0),levels=c("0","1"))
 
-d2 <- d %>% filter(analysis=="Random effects")
+d2 <- d %>% filter(analysis=="Random Effects")
 
 pmort <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
@@ -210,7 +210,7 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
     #expand=c(0,0)) 
 
 
-ggsave(pmort, file=here("/figures/risk factor/fig-mort+morb-RR.png"), width=14, height=5.2)
+ggsave(pmort, file=here("/figures/risk-factor/fig-mort+morb-RR.png"), width=14, height=5.2)
 
 #Save plot object
 saveRDS(pmort, file=here("results/rf_mort+morb_plot_object.RDS"))
@@ -242,7 +242,7 @@ p1 <- ggplot(dsub, aes(x=outcome_label)) +
   ggtitle(dsub$outcome_variable[1]) + 
   coord_flip(ylim=c(1,9))
 
-ggsave(p1, file=here("/figures/risk factor/fig-mort-RR.png"), width=5.2, height=5.2)
+ggsave(p1, file=here("/figures/risk-factor/fig-mort-RR.png"), width=5.2, height=5.2)
 
 
 dsub <- d2[d2$outcome_variable=="Relative risk of\npersistent wasting from 6-24mo",] %>% arrange(RR) %>% mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label)))
@@ -265,7 +265,7 @@ p2 <- ggplot(dsub, aes(x=outcome_label)) +
   ggtitle(dsub$outcome_variable[1]) + 
   coord_flip(ylim=c(1,9))
 
-ggsave(p2, file=here("/figures/risk factor/fig-pers-wast-RR.png"), width=5.2, height=5.2)
+ggsave(p2, file=here("/figures/risk-factor/fig-pers-wast-RR.png"), width=5.2, height=5.2)
 
 dsub <- d2[d2$outcome_variable=="Relative risk of concurrent\nwasting and stunting at 18mo",] %>% arrange(RR) %>% mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label)))
 p3 <- ggplot(dsub, aes(x=outcome_label)) +
@@ -287,7 +287,7 @@ p3 <- ggplot(dsub, aes(x=outcome_label)) +
   ggtitle(dsub$outcome_variable[1]) + 
   coord_flip(ylim=c(1,9))
 
-ggsave(p3, file=here("/figures/risk factor/fig-co-RR.png"), width=5.2, height=5.2)
+ggsave(p3, file=here("/figures/risk-factor/fig-co-RR.png"), width=5.2, height=5.2)
 
 
 
@@ -324,7 +324,7 @@ pmort <- ggplot(d3, aes(x=outcome_label)) +
 #expand=c(0,0)) 
 
 
-ggsave(pmort, file=here("/figures/risk factor/fig-mort+morb-RR_FE.png"), width=14, height=5.2)
+ggsave(pmort, file=here("/figures/risk-factor/fig-mort+morb-RR_FE.png"), width=14, height=5.2)
 
 
 
@@ -355,7 +355,7 @@ pregion <- ggplot(d4, aes(x=outcome_label, group=region)) +
     shape = guide_legend(reverse = TRUE))
 pregion
 
-ggsave(pregion, file=here("/figures/risk factor/fig-mort+morb-RR_Region.png"), width=16, height=5.2)
+ggsave(pregion, file=here("/figures/risk-factor/fig-mort+morb-RR_Region.png"), width=16, height=5.2)
 
 
 

@@ -13,7 +13,6 @@ ate <- ate %>% rename(est=ATE, CI.lb=CI1, CI.ub=CI2)
 
 
 d <- bind_rows(rr, ate)
-
 head(d)
 
 
@@ -101,7 +100,7 @@ d <- d %>% filter(intervention_level != "Q4")
 d <- d %>% filter(!is.na(RFlabel))
 
 #Concatenate variable and level for the x-axis
-d$xvar <- paste0(d$RFlabel,": ",d$intervention_level)
+d$xvar <- paste0(d$RFlabel,": ",d$intervention_level, " (ref: ",d$baseline_level,")")
 
 d <- d %>% group_by(intervention_variable) %>%
   mutate(mean_pval = mean(sig)) %>% ungroup() %>%    
@@ -179,7 +178,7 @@ table(d$yvar, d$outcome_variable)
 textcol = "grey20"
 cols = rev(brewer.pal(n = 7, name = "Spectral"))
 
-levels(d$pval_cat) = c(levels(d$pval_cat), "Non-existent or rare contrast")
+levels(d$pval_cat) = c(levels(d$pval_cat), "Not estimated")
 agecat_with_ranges = c(  "Ever\nstunted", "Ever\nwasted", "Persistently\nwasted", "Stunted\nand wasted","Recovery\nfrom\nwasting")
 
 #Pooled estimates only 
@@ -192,7 +191,16 @@ pooled_data = d[d$region=="Pooled",]
 pooled_data = pooled_data %>% 
                 complete(xvar, outcome_variable, fill = list(agecat = "Birth")) %>% 
                 filter((outcome_variable %in% agecat_with_ranges & agecat != "Birth") | !(outcome_variable %in% agecat_with_ranges)) %>% 
-                replace_na(list(pval_cat = "Non-existent or rare contrast"))
+                replace_na(list(pval_cat = "Not estimated"))
+pooled_data <- droplevels(pooled_data)
+
+# unique(pooled_data$agecat)
+# pooled_data <- pooled_data %>%
+#   mutate(agecat_num = case_when(
+#     agecat %in% c("Birth","0-24 mo") ~"1",
+#     agecat %in% c("6 mo","0-6 mo") ~"2",
+#     agecat %in% c("24 mo","6-24 mo") ~"3"
+#   ))
 
 
 hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
@@ -227,10 +235,10 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
   labs(x="Exposure",y="Age category",title="") +
   coord_flip()
   
-hm  
+  
   
 # save plot 
-ggsave(hm, file=paste0(here::here(),"/figures/risk factor/fig-sig-heatmap.png"), height=14, width=11.5)
+ggsave(hm, file=paste0(here::here(),"/figures/risk-factor/fig-sig-heatmap.png"), height=14, width=11.5)
 
 
 #Region stratified
@@ -244,7 +252,7 @@ region_data = d[d$region!="Pooled",]
 region_data = region_data %>% 
   complete(xvar, outcome_variable, fill = list(yvar = "Birth, Africa")) %>% 
   filter((outcome_variable %in% agecat_with_ranges & yvar != "Birth, Africa") | !(outcome_variable %in% agecat_with_ranges)) %>% 
-  replace_na(list(pval_cat = "Non-existent or rare contrast"))
+  replace_na(list(pval_cat = "Not estimated"))
 
 hm_strat <- ggplot(region_data,aes(x=xvar, y=yvar, fill=pval_cat)) +
   facet_grid(. ~ outcome_variable, scales = "free", space="free") +
@@ -280,5 +288,5 @@ hm_strat <- ggplot(region_data,aes(x=xvar, y=yvar, fill=pval_cat)) +
 hm_strat
 
 # save plot 
-ggsave(hm_strat, file=paste0(here::here(), "/figures/risk factor/fig-sig-heatmap_regionstrat.png"), height=10, width=14)
+ggsave(hm_strat, file=paste0(here::here(), "/figures/risk-factor/fig-sig-heatmap_regionstrat.png"), height=10, width=14)
 
