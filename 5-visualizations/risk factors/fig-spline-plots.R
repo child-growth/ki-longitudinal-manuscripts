@@ -35,7 +35,7 @@ d %>% ungroup() %>%  filter(!is.na(mbmi)) %>% summarize(N=n(), Nchild=length(uni
 #Adapted from: 
 #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
 
-spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps"){
+spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps", mean_aic=F){
   
   # LOAD THE PACKAGES (mvmeta PACKAGE IS ASSUMED TO BE INSTALLED)
   require(mvmeta)
@@ -79,6 +79,21 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps"){
   
   ####################################################################
   # RUN THE FIRST-STAGE ANALYSIS
+  fullres <-NULL
+  for(i in 1:m){
+    
+    res <- get_df_aic(data=d[d$id==unique(d$id)[i],], splinetype=type, splinedegree=degree, degreefreedom=df)
+    fullres <- bind_rows(fullres, res)
+  }
+  bestdf <- fullres %>% group_by(df) %>% summarize(med_aic=median(aic, na.rm=T), mean_aic=mean(aic, na.rm=T)) 
+  if(mean_aic){ #Use mean when median is too low for fit
+    bestdf <- bestdf %>%  filter(mean_aic==min(mean_aic))
+  }else{
+    bestdf <- bestdf %>%  filter(med_aic==min(med_aic))
+  }
+    
+  bestdf <- bestdf$df
+    bestdf
   
   for(i in 1:m){
     
@@ -92,7 +107,7 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps"){
     # CREATE THE SPLINE
     bt <- onebasis(data$agedays,fun=type,
                    degree=degree, 
-                   df=df)
+                   df=bestdf)
 
     # RUN THE MODEL
     #Note: add cv cross-validation
@@ -125,7 +140,7 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps"){
    # PREDICTION FROM SIMPLE META-ANALYSES WITH NO PREDICTORS
    # CENTERED TO SPECIFIC VALUE
    tmean <- seq(bound[1],bound[2],length=30)
-   btmean <- onebasis(tmean,fun=type, degree=degree, df=df #,
+   btmean <- onebasis(tmean,fun=type, degree=degree, df=bestdf #,
                       #knots=knots,
                       #Bound=bound
                       )
@@ -220,7 +235,25 @@ offset_fun <- function(d, Y="haz", Avar, cen=365, range=60){
 } 
   
 
+#Function to pick degrees of freedom from lowest mean AIC across cohorts
+get_df_aic <- function(data, splinetype=type, splinedegree=degree, degreefreedom=df){
+  res <- NULL
+  for(i in splinedegree:degreefreedom){
+    # CREATE THE SPLINE
+    bt <- onebasis(data$agedays,fun=splinetype,
+                   degree=splinedegree, 
+                   df=i)
+    
+    # RUN THE MODEL
+    #Note: add cv cross-validation
+    model <- glm(Y ~ bt,family=gaussian(), data)
+    
+    res <- bind_rows(res, data.frame(cohort=data$id[1] , df=i, aic=model$aic))    
+  }
 
+return(res)
+
+}
 
 #------------------------------------------------------------------------------------------------
 # WLZ- maternal weight
@@ -275,11 +308,11 @@ print(p1)
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 table(d$mhtcm)
-predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T)
+predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
-predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="whz", Avar="mhtcm", overall=T)
+predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
-predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="whz", Avar="mhtcm", overall=T)
+predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
 plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
 plotdf_wlz_mhtcm <- rbind(plotdf1,plotdf2,plotdf3)
 
@@ -354,7 +387,7 @@ p3 <- ggplot() +
   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
+  scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
@@ -373,11 +406,11 @@ df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summari
 
 predlist1 <- predlist2 <- predlist3 <- NULL
 
-predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="haz", Avar="mhtcm", overall=T)
+predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
 predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="haz", Avar="mhtcm", overall=T)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
-predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="haz", Avar="mhtcm", overall=T)
+predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)#, forcedf=) #forced df due to fit issues
 plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
 plotdf_laz_mhtcm <- rbind(plotdf1,plotdf2,plotdf3)
 
@@ -401,7 +434,7 @@ p4 <- ggplot() +
   scale_fill_manual(values = light_blue_color_gradient, name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
+  scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
@@ -416,13 +449,13 @@ print(p4)
 
 df <- d %>% filter(!is.na(mbmi))
 dim(df)
-df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(n(), Nstudies=unique(paste0(studyid, country)))
+df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(n(), Nstudies=length(unique(paste0(studyid, country))))
 
 #Normal weight   Underweight 
 
 predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="haz", Avar="mbmi", overall=T, cen=365)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
-predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="haz", Avar="mbmi", overall=T, cen=365)
+predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="haz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
 
 plotdf_laz_mbmi <- rbind(plotdf1,plotdf2)
@@ -449,7 +482,7 @@ p5 <- ggplot() +
   scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
+  scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") +
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
@@ -515,10 +548,10 @@ pos = c(0.2,0.25)
 
 p1 <- p1 + ggtitle("Spline curves of WLZ, stratified by\ncategories of maternal weight") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +  guides(color = guide_legend("Maternal\nweight", nrow=3)) +scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
 p2 <- p2  + ggtitle("Stratified by\ncategories of maternal height") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6))+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
-p3 <- p3  + ggtitle("Spline curves of LAZ, stratified by\ncategories of maternal weight") + theme(legend.position = "none") + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
-p4 <- p4  + ggtitle("Stratified by\ncategories of maternal height") +  theme(legend.position = "none") +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
-p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
-p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+p3 <- p3  + ggtitle("Spline curves of LAZ, stratified by\ncategories of maternal weight") + theme(legend.position = "none") + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + theme(legend.key = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
+p4 <- p4  + ggtitle("Stratified by\ncategories of maternal height") +  theme(legend.position = "none") +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
+p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
+p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
 
 
 
@@ -528,13 +561,13 @@ require(cowplot)
 
 p_grid <- plot_grid(p1, p3, p2, p4,p6, p5,  labels = rep("",6), ncol = 2, align = 'v', axis = 'l')
 
-ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid.png"), width=10, height=10)
+ggsave(p_grid, file=paste0(here(),"/figures/risk-factor/spline_grid.png"), width=10, height=10)
 
 
-ggsave(p1, file=paste0(here(),"/figures/risk factor/spline_wlz_mwtkg.png"), width=10, height=5)
-ggsave(p2, file=paste0(here(),"/figures/risk factor/spline_wlz_mhtcm.png"), width=10, height=5)
-ggsave(p3, file=paste0(here(),"/figures/risk factor/spline_laz_mwtkg.png"), width=10, height=5)
-ggsave(p4, file=paste0(here(),"/figures/risk factor/spline_laz_mhtcm.png"), width=10, height=5)
-ggsave(p5, file=paste0(here(),"/figures/risk factor/spline_wlz_mbmi.png"), width=10, height=5)
-ggsave(p6, file=paste0(here(),"/figures/risk factor/spline_laz_mbmi.png"), width=10, height=5)
+ggsave(p1, file=paste0(here(),"/figures/risk-factor/spline_wlz_mwtkg.png"), width=10, height=5)
+ggsave(p2, file=paste0(here(),"/figures/risk-factor/spline_wlz_mhtcm.png"), width=10, height=5)
+ggsave(p3, file=paste0(here(),"/figures/risk-factor/spline_laz_mwtkg.png"), width=10, height=5)
+ggsave(p4, file=paste0(here(),"/figures/risk-factor/spline_laz_mhtcm.png"), width=10, height=5)
+ggsave(p5, file=paste0(here(),"/figures/risk-factor/spline_wlz_mbmi.png"), width=10, height=5)
+ggsave(p6, file=paste0(here(),"/figures/risk-factor/spline_laz_mbmi.png"), width=10, height=5)
 
