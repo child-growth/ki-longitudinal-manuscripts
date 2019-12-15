@@ -64,26 +64,41 @@ df$intervention_level <- factor(df$intervention_level,
 df$ref <- ifelse(df$intervention_level=="Jan.", "Ref.", NA)
 
 
-p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
+p_season_birth_diff <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   geom_errorbar(aes(color=seasonality_category, ymin=CI1, ymax=CI2), width = 0) +
   geom_point(aes(fill=seasonality_category, color=seasonality_category), size = 3) +
-  geom_text(aes(label=ref), hjust = 1) +
+  geom_text(aes(label=ref), hjust = 0, vjust=0, nudge_y = 0.08) +
   scale_color_manual(values=tableau11[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure)) +
   geom_hline(yintercept = 0) + 
-  xlab("Birth month")+
+  xlab("")+
   ylab("WLZ difference") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 5))  +
-  theme(
-    axis.text.x = element_text(margin =
-                                 margin(t = 0, r = 0, b = 0, l = 0),
-                               size = 12 #, angle = 45, hjust = 1, vjust =1
-                               )) +
-  theme(axis.title.y = element_text(size = 12)) ) 
+  scale_x_discrete(labels = c("Jan.","", "Mar.","",  "May","",  "Jul.","",  "Sep.","",  "Nov.", "")) +
+  # theme(
+  #   axis.text.x = element_text(margin =
+  #                                margin(t = 0, r = 0, b = 0, l = 0),
+  #                              size = 12 #, angle = 45, hjust = 1, vjust =1
+  #                              )) +
+  # theme(axis.title.y = element_text(size = 12))  
+theme(panel.background=element_blank(), 
+      # panel.grid.major=element_blank(), 
+      # panel.grid.minor=element_blank(), 
+      panel.spacing = unit(c(0, 0, 0, 0), "cm"),       
+      #axis.ticks=element_blank(), 
+      #axis.text.x=element_blank(), 
+      #axis.text.y=element_blank(), 
+      axis.title.x=element_blank(), 
+      #axis.title.y=element_blank(),
+      #plot.background = element_rect(fill = "transparent",colour = NA),
+      #plot.margin = unit(c(-1, -1.2, -1.2, -1.5), "cm"),  # Edited code
+      legend.position = 'none') +
+  labs(x=NULL)
 
-print(p_seasonRR)
 
-saveRDS(p_seasonRR, file = here("/figures/plot-objects/season_birth_wlz_diff_plot.rds"))
-ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_birth_wlz_diff.png"), width=5, height=4)
+
+
+saveRDS(p_season_birth_diff, file = here("/figures/plot-objects/season_birth_wlz_diff_plot.rds"))
+ggsave(p_season_birth_diff, file=paste0(here::here(),"/figures/wasting/season_birth_wlz_diff.png"), width=5, height=4)
 
 
 
