@@ -22,6 +22,7 @@ par$intervention_level[par$intervention_level=="Full or late term"] <- "Full/lat
 par$intervention_level[par$intervention_level=="(0%, 5%]"] <- "(0%,5%]"
 par$intervention_level[par$intervention_level=="No"] <- "None"
 par$intervention_level[par$intervention_level=="Yes"] <- "All"
+par$intervention_level[par$intervention_level=="Normal weight"] <- ">=18.5 BMI"
 par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("brthmon","month")] <- "Jan."
 par$intervention_level[par$intervention_level=="0" & par$intervention_variable %in% c("single")] <- "Partnered"
 par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("parity")] <- "Firstborn"
@@ -64,7 +65,11 @@ yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 # Colors
 color_vec = c("#7F7F7F", "#E377C2")
 
+main_color <- "#287D8EFF"
 
+#Viridis colors
+#287D8EFF
+#29AF7FFF
 
 #----------------------------------------------------------
 # Clean up plot dataframe
@@ -111,8 +116,8 @@ plotdf_laz$RFlabel_ref=factor(plotdf_laz$RFlabel_ref, levels=rflevels)
 
 
 pPAR_laz <-  ggplot(plotdf_laz, aes(x=RFlabel_ref)) + 
-  geom_point(aes(y=-PAR), color="grey30", size = 4) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30") +
+  geom_point(aes(y=-PAR), color=main_color, size = 4) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color=main_color) +
   coord_flip(ylim=c(-0.2, 0.55)) +
   labs(#x = "Exposure, and to which level of exposure the cohorts are shifted",
        x = "Exposure",
@@ -138,8 +143,8 @@ plotdf_wlz$RFlabel_ref=factor(plotdf_wlz$RFlabel_ref, levels = rflevels)
 
 
 pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) + 
-  geom_point(aes(y=-PAR), color="grey30", size = 4) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30") +
+  geom_point(aes(y=-PAR), color=main_color, size = 4) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color=main_color) +
   coord_flip(ylim=c(-0.2, 0.55)) +
   labs(x = "Exposure", y = "Attributable difference in WLZ") +
   geom_hline(yintercept = 0) +
@@ -151,8 +156,8 @@ pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) +
   guides(color=FALSE, shape=FALSE)
 
 
-ggsave(pPAR_laz, file=paste0(here::here(), "/figures/risk factor/fig-laz-PAR.png"), height=10, width=8)
-ggsave(pPAR_wlz, file=paste0(here::here(), "/figures/risk factor/fig-wlz-PAR.png"), height=10, width=8)
+ggsave(pPAR_laz, file=paste0(here::here(), "/figures/risk-factor/fig-laz-PAR.png"), height=10, width=8)
+ggsave(pPAR_wlz, file=paste0(here::here(), "/figures/risk-factor/fig-wlz-PAR.png"), height=10, width=8)
 
 saveRDS(list(pPAR_laz, pPAR_wlz), file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
 

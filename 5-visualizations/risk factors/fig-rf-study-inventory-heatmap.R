@@ -157,7 +157,7 @@ dd$RFlabel[dd$risk_factor=="exclfeed6"] <-  "Exclusive breastfeeding under 6 mon
 dd$RFlabel[dd$risk_factor=="month"] <-  "Month of measurement"
 dd$RFlabel[dd$risk_factor=="brthmon"] <-  "Birth month"
 dd$RFlabel[dd$risk_factor=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 months"
-
+dd$RFlabel[dd$risk_factor=="rain_quartile"] <-  "Rain quartile"
 
 table(dd$risk_factor, is.na(dd$RFlabel))
 dd <- dd %>% filter(!is.na(RFlabel))
@@ -292,9 +292,9 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000, fill=region)
 # hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm")) #top, right, bottom, left
 # sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,4.22,0), "cm"))
 # nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,2.3,0,5.45), "cm"))
-hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm")) #top, right, bottom, left
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,4.5,-1), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,2.3,0,5.45), "cm"))
+hm2 = hm + theme(plot.margin = unit(c(0,0,0,0), "cm")) #top, right, bottom, left
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,2.955,-2.75), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 3.5, 0, 6.655), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2,empty, 
@@ -305,6 +305,6 @@ rfhmgrid <- grid.arrange(nrfbar2,empty,
 
 
 # save plot 
-ggsave(filename=here("figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.pdf"),
-       plot = rfhmgrid,device='pdf',width=12,height=9)
+ggsave(filename=here("figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.png"),
+       plot = rfhmgrid,device='png',width=12,height=9)
 

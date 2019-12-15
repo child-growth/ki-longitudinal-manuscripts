@@ -51,6 +51,7 @@ is_outlier <- function(x, thres=1.5) {
 }
 
 
+
 dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=2), as.character(dhaz$RFlabel.x),NA)
 dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.75), as.character(dwhz$RFlabel.x),NA)
 dhaz$is_outlier <- ifelse(is.na(dhaz$outlier), "0", "1")
@@ -95,15 +96,22 @@ levels(fdata1) = c(1:length(levels(fdata1)))
 dwhz$outlier_color = fdata1
 
 
+#Main color
+main_color <- "#287D8EFF"
+
+#Viridis colors
+#287D8EFF
+#29AF7FFF
 
 #make plots
 set.seed(12346)
 #set.seed(123456)
-pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM, color = outlier_color)) + 
-  geom_point(aes(shape=is_outlier, alpha=is_outlier), size = 4) +
-  scale_colour_manual(values=tableau11)+
+pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM, color=outlier_color, shape=outlier_color,  size=outlier_color)) + 
+  geom_point(aes(alpha=is_outlier)) +
+  scale_colour_manual(values=c(main_color, "grey30", "grey30")) +
   scale_alpha_manual(values=c(0.5, 1))+
-  scale_shape_manual(values=c(19,19))+
+  scale_size_manual(values=c(4, 4, 4))+
+  scale_shape_manual(values=c(19,9,13))+
   coord_fixed(xlim = c(-0.1,0.4), ylim = c(-0.1,0.4)) +
   labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\nLAZ, optimal intervention") +
   geom_abline(slope=1,intercept=0) +
@@ -119,17 +127,18 @@ pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM, color = outlier_color)) +
         axis.title = element_text(size=9),
         axis.text = element_text(size=8),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE)
+  guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE)
 
 pVIMhaz
 
 
 set.seed(156)
-pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM, color = outlier_color)) + 
-  geom_point(aes(shape=is_outlier, alpha=is_outlier), size = 4) +
-  scale_colour_manual(values=tableau11)+
+pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM, color=outlier_color, shape=outlier_color,  size=outlier_color)) + 
+  geom_point(aes(alpha=is_outlier)) +
+  scale_colour_manual(values=c(main_color, "grey30", "grey30")) +
   scale_alpha_manual(values=c(0.5, 1))+
-  scale_shape_manual(values=c(19,19))+
+  scale_size_manual(values=c(4, 4, 4))+
+  scale_shape_manual(values=c(19,9,13))+
   coord_fixed(xlim = c(-0.1,0.25), ylim = c(-0.1,0.25)) +
   labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\noptimal intervention") +
   geom_abline(slope=1,intercept=0) +
@@ -147,7 +156,7 @@ pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM, color = outlier_color)) +
         axis.title = element_text(size=9),
         axis.text = element_text(size=8),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE)
+  guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE)
 pVIMwhz
 
 
@@ -156,8 +165,8 @@ save(pVIMhaz, pVIMwhz, file=paste0(here::here(), "/results/rf results/fig-VIM-PA
 
 
 
-ggsave(pVIMhaz, file=here("figures/risk factor/fig-VIM-PAR-comp-haz.png"), height=2, width=2)
-ggsave(pVIMwhz, file=here("figures/risk factor/fig-VIM-PAR-comp-whz.png"), height=2, width=2)
+ggsave(pVIMhaz, file=here("figures/risk-factor/fig-VIM-PAR-comp-haz.png"), height=2, width=2)
+ggsave(pVIMwhz, file=here("figures/risk-factor/fig-VIM-PAR-comp-whz.png"), height=2, width=2)
 
 
 
