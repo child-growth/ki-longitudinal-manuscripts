@@ -83,7 +83,6 @@ Twoby1plotC_t <- plot_grid(titleC, Twoby1plotC, ncol=1, rel_heights=c(0.1, 1))
 
 Twoby1plot <- plot_grid(Twoby1plotA_t, Twoby1plotB_t, Twoby1plotC_t, labels = "auto", ncol = 3, align = 'v', axis = 'l')
 
-
 fig3 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","d","e"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
 ggsave(fig3, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig3.png"), width=14, height=18)
 

@@ -76,9 +76,9 @@ df <- df %>% ungroup() %>% arrange(agedth) %>%
               stunt==1 & sevstunt==0 & co==0   ~ "Stunted",
               stunt==1 & sevstunt==1   ~ "Severely stunted",
               sevstunt==1 & sevwast==1~ "Co-occurrent severe wasting and stunting",
-              TRUE ~ "Not faltered"
+              TRUE ~ "No growth failure"
             )) %>%
-  mutate(status = factor(status, levels = c("Not faltered", 
+  mutate(status = factor(status, levels = c("No growth failure", 
                                               #"Recovered",
                                               "Stunted",
                                               #"Underweight",       
@@ -179,7 +179,7 @@ print(p)
 
 
 
-ggsave(p, file=paste0(here::here(),"/figures/risk factor/fig-mortality-timing.png"), width=8, height=5)
+ggsave(p, file=paste0(here::here(),"/figures/risk-factor/fig-mortality-timing.png"), width=8, height=5)
 
 #Save plot object
 saveRDS(p, file=paste0(here::here(),"/results/fig-mortality-timing-plot-object.RDS"))
