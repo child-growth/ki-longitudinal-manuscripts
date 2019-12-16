@@ -118,7 +118,9 @@ perswast.res
 
 
 #co-occurrent wasting and stunting
-co.res <- co %>% group_by(born_wast) %>% do(summary.prev.co(., N_filter=1)$prev.res)
+co.res <- co %>% group_by(born_wast) %>% 
+  filter(agedays > 17*30.4167 & agedays < 19*30.4167) %>% 
+  do(summary.prev.co(., N_filter=1)$prev.res)
 co.res
 
 
