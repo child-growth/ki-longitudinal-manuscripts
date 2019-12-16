@@ -45,6 +45,11 @@ dim(rfn)
 d <- merge(rfp, rfn, by = c("studyid", "country", "risk_factor"))
 dim(d)
 
+#Drop EE gestational age
+dim(d)
+d <- d %>% filter(!(studyid=="EE" & risk_factor=="gagebrth"))
+dim(d)
+
 #Mark measure frequency
 d <- mark_measure_freq(d)
 d <- d %>% filter(measurefreq!="yearly")

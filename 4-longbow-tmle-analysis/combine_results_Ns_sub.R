@@ -8,6 +8,9 @@ library(longbowRiskFactors)
 
 load(here("/results/rf results/raw longbow results/results_bin_obs_counts_2019-11-16.rdata"))
 d <- obs_counts
+#drop EE gestational age
+d <- d %>% filter(!(studyid=="ki1000109-EE" & !is.na(gagebrth)))
+
 
 load(here("/results/rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2019-11-19.rdata"))
 d2 <- obs_counts

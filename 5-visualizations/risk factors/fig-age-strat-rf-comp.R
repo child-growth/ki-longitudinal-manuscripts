@@ -109,7 +109,7 @@ p_ageRR <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_le
 
 print(p_ageRR)
 
-ggsave(p_ageRR, file=paste0(here::here(), "/figures/risk factor/fig-age-strat-wast.png"), height=8, width=10)
+ggsave(p_ageRR, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wast.png"), height=8, width=10)
 
 saveRDS(list(p_ageRR=p_ageRR, plotdf=plotdf), file = paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.RDS"))
 
