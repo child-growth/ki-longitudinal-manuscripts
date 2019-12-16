@@ -10,7 +10,7 @@ fontsize: 9pt
 
 \raggedright
 
-
+-Add discussion of Kenaba birth measuresu and motivation/conclusions of sensitivity analysis
 
 ```{r setup, include=FALSE}
 library(knitr)
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Mean WLZ by region
 
-```{r prev-primary-no-Kenaba-BW, echo = FALSE}
+```{r, echo = FALSE}
 # include_graphics(paste0(fig_dir, "wasting/fig-wast-2-prev-overall_region--allage-primary-no-Kenaba-BW.png"))
 include_graphics("figure-copies/WLZ_by_region-no-Kenaba-BW.png")
 ```
@@ -38,14 +38,14 @@ include_graphics("figure-copies/fig-wast-prev-no-Kenaba-BW.png")
 ## Age-specific incidence
 
 ```{r, echo = FALSE}
-include_graphics("figure-copies/fig-wast-ci-no-Kenaba-BW")
+include_graphics("figure-copies/fig-wast-ci-no-Kenaba-BW.png")
 
 ```
 
 ## Age-specific incidence rate
 
 ```{r, echo = FALSE}
-include_graphics("figure-copies/fig-wast-ir-no-Kenaba-BW.png.png")
+include_graphics("figure-copies/fig-wast-ir-no-Kenaba-BW.png")
 
 ```
 
@@ -73,14 +73,14 @@ include_graphics("figure-copies/fig-pers-wast-no-Kenaba-BW.png")
 ## Age-specific prevalence of concurrent wasting and stunting
 
 ```{r, echo = FALSE}
-include_graphics("figure-copies/fig-wast-2-co-overall_region--allage-primary-no-Kenaba-BW.png")
+include_graphics("figure-copies/fig-co-prev-no-Kenaba-BW.png")
 
 ```
 
 ## Age-specific prevalence of underweight (weight-for-age Z-score < -2)
 
 ```{r, echo = FALSE}
-include_graphics("figure-copies/fig-wast-2-uwt-overall_region--allage-primary-no-Kenaba-BW.png")
+include_graphics("figure-copies/fig-uw-prev-no-Kenaba-BW.png")
 
 ```
 

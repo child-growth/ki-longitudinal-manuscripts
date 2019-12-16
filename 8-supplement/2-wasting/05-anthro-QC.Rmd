@@ -29,6 +29,7 @@ include_graphics("figure-copies/fig-wast-2-cuminc-overall_region--allage-primary
 ```
 
 
+-need to use monthly
 
 file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/wlz_QA_cohort.png
 file:///C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/shared/laz_QA.png

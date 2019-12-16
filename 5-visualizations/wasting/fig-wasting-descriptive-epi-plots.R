@@ -13,12 +13,12 @@ d <- d %>% filter(analysis=="Primary", (pooling!="country" | is.na(pooling)))
 #d <- d %>% filter(cohort=="pooled", pooling!="country" | is.na(pooling))
 
 #convert cohort specific estimates to percents
-d$est[is.na(d$pooling) & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery","MUAC Prevalence","MUAC WHZ Prevalence" )] <-
-  d$est[is.na(d$pooling) & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery","MUAC Prevalence","MUAC WHZ Prevalence" )] * 100
-d$lb[is.na(d$pooling) & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery","MUAC Prevalence","MUAC WHZ Prevalence" )] <-
-  d$lb[is.na(d$pooling) & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery","MUAC Prevalence","MUAC WHZ Prevalence" )] * 100
-d$ub[is.na(d$pooling) & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery","MUAC Prevalence","MUAC WHZ Prevalence" )] <-
-  d$ub[is.na(d$pooling) & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery","MUAC Prevalence","MUAC WHZ Prevalence" )] * 100
+d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
+  d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
+d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
+  d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
+d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
+  d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
 
 
 
@@ -180,7 +180,7 @@ prev_plot_africa <- ki_desc_plot(d,
                           Cohort="pooled",
                           xlabel="Child age, months",
                           ylabel='Point prevalence (95% CI)',
-                          yrange=c(0,24),
+                          yrange=c(0,30),
                           Region="Africa",
                           returnData=T
                           )
@@ -194,7 +194,7 @@ prev_plot_lam <- ki_desc_plot(d,
                                  Cohort="pooled",
                                  xlabel="Child age, months",
                                  ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24),
+                                 yrange=c(0,30),
                                  returnData=T,
                                  Region="Latin America")
 
@@ -207,7 +207,7 @@ prev_plot_sasia <- ki_desc_plot(d,
                                  Cohort="pooled",
                                  xlabel="Child age, months",
                                  ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24),
+                                 yrange=c(0,30),
                                  returnData=T,
                                  Region="South Asia")
 
@@ -641,7 +641,7 @@ perswast_plot_africa <- ki_desc_plot(d,
                               Cohort="pooled",
                               xlabel="Child age, months",
                               ylabel = 'Proportion (%)',
-                              yrange=c(0,20),
+                              yrange=c(0,27),
                               returnData=T,
                               Region="Africa")
 
@@ -654,7 +654,7 @@ perswast_plot_lam <- ki_desc_plot(d,
                                      Cohort="pooled",
                                      xlabel="Child age, months",
                                      ylabel = 'Proportion (%)',
-                                     yrange=c(0,20),
+                                     yrange=c(0,27),
                                      returnData=T,
                                      Region="Latin America")
 
@@ -667,7 +667,7 @@ perswast_plot_sasia <- ki_desc_plot(d,
                                      Cohort="pooled",
                                      xlabel="Child age, months",
                                      ylabel = 'Proportion (%)',
-                                     yrange=c(0,20),
+                                     yrange=c(0,27),
                                      returnData=T,
                                      Region="South Asia")
 
@@ -720,7 +720,7 @@ co_plot_africa <- ki_desc_plot(d,
                         Cohort="pooled",
                         xlabel="Child age, months",
                         ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
-                        yrange=c(0,12),
+                        yrange=c(0,20),
                         returnData=T,
                         Region="Africa")
 
@@ -733,7 +733,7 @@ co_plot_lam <- ki_desc_plot(d,
                                Cohort="pooled",
                                xlabel="Child age, months",
                                ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
-                               yrange=c(0,12),
+                               yrange=c(0,20),
                                returnData=T,
                                Region="Latin America")
 
@@ -746,7 +746,7 @@ co_plot_sasia <- ki_desc_plot(d,
                                Cohort="pooled",
                                xlabel="Child age, months",
                                ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
-                               yrange=c(0,12),
+                               yrange=c(0,20),
                                returnData=T,
                                Region="South Asia")
 
@@ -796,7 +796,7 @@ underweight_plot_africa <- ki_desc_plot(d,
                                  Cohort="pooled",
                                  xlabel="Child age, months",
                                  ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24),
+                                 yrange=c(0,60),
                                  Region="Africa")
 
 underweight_plot_lam <- ki_desc_plot(d,
@@ -808,7 +808,7 @@ underweight_plot_lam <- ki_desc_plot(d,
                                  Cohort="pooled",
                                  xlabel="Child age, months",
                                  ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24),
+                                 yrange=c(0,60),
                                  Region="Latin America")
 
 underweight_plot_sasia <- ki_desc_plot(d,
@@ -820,7 +820,7 @@ underweight_plot_sasia <- ki_desc_plot(d,
                                      Cohort="pooled",
                                      xlabel="Child age, months",
                                      ylabel='Point prevalence (95% CI)',
-                                     yrange=c(0,24),
+                                     yrange=c(0,60),
                                      Region="South Asia")
 
 # define standardized plot names
@@ -988,6 +988,46 @@ sevwast_plot <- ki_desc_plot(d,
                    yrange=c(0,13),
                    returnData=T)
 
+sevwast_plot_africa <- ki_desc_plot(d,
+                                    Disease="Wasting",
+                                    Measure="Prevalence", 
+                                    Birth="yes", 
+                                    Severe="no", 
+                                    Age_range="3 months", 
+                                    Cohort="pooled",
+                                    xlabel="Child age, months",
+                                    ylabel='Point prevalence (95% CI)',
+                                    yrange=c(0,20),
+                                    Region="Africa",
+                                    returnData=T
+)
+
+sevwast_plot_lam <- ki_desc_plot(d,
+                                 Disease="Wasting",
+                                 Measure="Prevalence", 
+                                 Birth="yes", 
+                                 Severe="no", 
+                                 Age_range="3 months", 
+                                 Cohort="pooled",
+                                 xlabel="Child age, months",
+                                 ylabel='Point prevalence (95% CI)',
+                                 yrange=c(0,20),
+                                 returnData=T,
+                                 Region="Latin America")
+
+sevwast_plot_sasia <- ki_desc_plot(d,
+                                   Disease="Wasting",
+                                   Measure="Prevalence", 
+                                   Birth="yes", 
+                                   Severe="yes", 
+                                   Age_range="3 months", 
+                                   Cohort="pooled",
+                                   xlabel="Child age, months",
+                                   ylabel='Point prevalence (95% CI)',
+                                   yrange=c(0,20),
+                                   returnData=T,
+                                   Region="South Asia")
+
 
 # define standardized plot names
 sevwast_plot_name = create_name(
@@ -1002,6 +1042,12 @@ sevwast_plot_name = create_name(
 
 # save plot and underlying data
 ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
+ggsave(sevwast_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","sevwast_plot_africa", ".png"), width=10, height=5)
+ggsave(sevwast_plot_lam$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","sevwast_plot_lam", ".png"), width=10, height=5)
+ggsave(sevwast_plot_sasia$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","sevwast_plot_sasia", ".png"), width=10, height=5)
+
 
 saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",sevwast_plot_name,".RDS"))
+
+
 

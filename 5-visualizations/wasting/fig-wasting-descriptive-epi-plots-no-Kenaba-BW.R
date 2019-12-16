@@ -105,15 +105,7 @@ ci_plot <- ki_combo_plot(d,
                     yrange=c(0,55),
                     returnData=T)
 
-ci_plot_name = create_name(
-  outcome = "wasting",
-  cutoff = 2,
-  measure = "cumulative incidence",
-  population = "overall and region-stratified",
-  location = "",
-  age = "All ages",
-  analysis="No Kenaba birth"
-)
+
 
 # save plot and underlying data
 ggsave(ci_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-wast-ci-no-Kenaba-BW.png"), width=14, height=3)
@@ -394,60 +386,11 @@ underweight_plot <- ki_desc_plot(d,
                    returnData = T,
                    yrange=c(0,45))
 
-underweight_plot_africa <- ki_desc_plot(d,
-                                 Disease="Underweight",
-                                 Measure="Prevalence",
-                                 Birth="yes",
-                                 Severe="no",
-                                 Age_range="3 months",
-                                 Cohort="pooled",
-                                 xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24),
-                                 Region="Africa")
-
-underweight_plot_lam <- ki_desc_plot(d,
-                                 Disease="Underweight",
-                                 Measure="Prevalence",
-                                 Birth="yes",
-                                 Severe="no",
-                                 Age_range="3 months",
-                                 Cohort="pooled",
-                                 xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
-                                 yrange=c(0,24),
-                                 Region="Latin America")
-
-underweight_plot_sasia <- ki_desc_plot(d,
-                                     Disease="Underweight",
-                                     Measure="Prevalence",
-                                     Birth="yes",
-                                     Severe="no",
-                                     Age_range="3 months",
-                                     Cohort="pooled",
-                                     xlabel="Child age, months",
-                                     ylabel='Point prevalence (95% CI)',
-                                     yrange=c(0,24),
-                                     Region="South Asia")
-
-# define standardized plot names
-underweight_plot_name = create_name(
-  outcome = "wasting",
-  cutoff = 2,
-  measure = "underweight",
-  population = "overall and region-stratified",
-  location = "",
-  age = "All ages",
-  analysis="No Kenaba birth"
-)
 
 # save plot and underlying data
-ggsave(underweight_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",underweight_plot_name, "-no-Kenaba-BW.png"), width=14, height=3)
-ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_africa", "-no-Kenaba-BW.png"), width=10, height=5)
-ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_lam", "-no-Kenaba-BW.png"), width=10, height=5)
-ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_sasia", "-no-Kenaba-BW.png"), width=10, height=5)
+ggsave(underweight_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-uw-prev-no-Kenaba-BW.png"), width=14, height=3)
 
-saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",underweight_plot_name,"-no-Kenaba-BW.RDS"))
+saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-uw-prev-no-Kenaba-BW.RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Severe Wasting prevalence
