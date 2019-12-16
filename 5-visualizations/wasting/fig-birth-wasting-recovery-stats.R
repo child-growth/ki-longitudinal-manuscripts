@@ -43,18 +43,6 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
 
 #ggsave(p, file=paste0(here::here(),"/figures/wasting/birthwast_stats_subplot.png"), width=7, height=3)
 
-#-----------------------------------------
-# define standardized plot names
-#-----------------------------------------
-birthstrat_stats_plot_name = create_name(
-  outcome = "co-occurrence",
-  cutoff = 2,
-  measure = "Birth-stratified outcomes",
-  population = "birth-stratified",
-  location = "",
-  age = "6-24 months",
-  analysis = "primary"
-)
 
 # save plot and underlying data
 ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-birth-stratified-outcomes.png"), width=8, height=5)

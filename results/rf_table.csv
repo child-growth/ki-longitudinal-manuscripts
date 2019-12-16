@@ -2,10 +2,10 @@
 "1","sex","Total",93756,100
 "2","sex","Female",46224,49.3
 "3","sex","Male",47532,50.7
-"4","gagebrth","Total",53879,100
-"5","gagebrth","Full or late term",27096,50.3
-"6","gagebrth","Preterm",8346,15.5
-"7","gagebrth","Early term",18437,34.2
+"4","gagebrth","Total",53500,100
+"5","gagebrth","Full or late term",27079,50.6
+"6","gagebrth","Preterm",8044,15
+"7","gagebrth","Early term",18377,34.3
 "8","parity","Total",58044,100
 "9","parity","1",20041,34.5
 "10","parity","2",17125,29.5

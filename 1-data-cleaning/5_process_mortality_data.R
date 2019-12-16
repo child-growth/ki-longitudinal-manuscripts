@@ -90,6 +90,7 @@ mort$cohort <- paste0(mort$studyid," ", mort$country)
 
 #drop cohorts with no mortality info
 mort <- mort %>% group_by(cohort) %>% mutate(tot_dead=sum(dead, na.rm=T)) %>% filter(tot_dead>0)
+prop.table(table(mort$dead))
 table(mort$cohort, mort$dead)
 table(mort$cohort, mort$dead624)
 table(mort$cohort, mort$dead0plus)
