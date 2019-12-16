@@ -50,6 +50,10 @@ d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_l
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="4"] <- "Post-max rain"
 d$baseline_level[d$intervention_variable=="rain_quartile"] <- "Opposite max rain"
 
+#drop EE gestational age
+dim(d)
+d <- d %>% filter(!(studyid=="ki1000109-EE" & intervention_variable=="gagebrth"))
+dim(d)
 
 
 #Drop duplicated (unadjusted sex and month variables)

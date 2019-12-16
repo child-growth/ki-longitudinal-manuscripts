@@ -226,7 +226,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
 hm  
   
 # save plot 
-ggsave(hm, file=paste0(here::here(),"/figures/risk factor/fig-sig-heatmap_FE.png"), height=14, width=11.5)
+ggsave(hm, file=paste0(here::here(),"/figures/risk-factor/fig-sig-heatmap_FE.png"), height=14, width=11.5)
 
 
 
