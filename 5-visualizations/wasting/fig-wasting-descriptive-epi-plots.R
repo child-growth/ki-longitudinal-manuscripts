@@ -917,7 +917,7 @@ muac_plot <- ki_combo_plot2(d,
               Age_range="3 months", 
               Cohort="pooled",
               xlabel="Child age, months",
-              yrange=c(0,7), dodge = 0.5,
+              yrange=c(0,65), dodge = 0.5,
               legend.pos=c(.15,.92)) 
 
 # define standardized plot names

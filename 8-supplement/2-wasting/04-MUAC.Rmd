@@ -1,4 +1,4 @@
-# Sensitivity analysis dropping at-Birth measures in Kenaba {#no-kenaba}
+# Sensitivity analysis comparing wasting defined via weight-for-length versus middle-upper arm circumference {#muac}
 
 ---
 output:
@@ -9,3 +9,16 @@ fontsize: 9pt
 ---
 
 \raggedright
+
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+setwd("../../")
+source("0-config.R")
+```
+
+```{r muac, echo = FALSE}
+include_graphics(paste0(here::here(), "/figures/wasting/fig-wast-2-muac-overall_region--allage-primary.png"))
+```
+
