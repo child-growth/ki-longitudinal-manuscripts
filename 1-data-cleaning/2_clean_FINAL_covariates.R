@@ -206,8 +206,9 @@ d$hfoodsec <- factor(d$hfoodsec, levels=c("Food Secure", "Mildly Food Insecure",
 
 # drop gestational age in studies with no variations (measured it at the month level)
 d$gagebrth[d$studyid=="ki1113344-GMS-Nepal"] <- NA
-#drop gestational age in study where GA is mother reported and unbelievably high (93% preterm)
+#drop gestational age in study where GA is mother reported and unbelievably high (93% and 80% preterm)
 d$gagebrth[d$studyid=="ki1000304b-SAS-CompFeed"] <- NA
+d$gagebrth[d$studyid=="ki1000109-EE"] <- NA
 
 
 #parity
