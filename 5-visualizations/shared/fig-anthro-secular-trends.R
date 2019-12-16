@@ -121,19 +121,21 @@ d <- d[studyid=="ki1135781-COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), 
 gc()
 
 #Drop yearly studies except for four with high quality mortality data used in the mortality analysis
-d <- d[measurefreq!="yearly" ]
+df <- d[d$measurefreq!="yearly", ]
+rm(d)
 gc()
 
+#Mark region
+df <- mark_region(df)
+df <- df %>% rename(Region=region)
 
 #Drop missing anthropometry
-d <- d[!is.na(haz)]
+d <- df[!is.na(df$haz),]
 
-#Mark region
-d <- mark_region(d)
+
 
 #Drop europe
 d <- d %>% filter(region != "N.America & Europe")
-d$Region <- d$region
 
 #Scatterplot by region
 p <- ggplot(d, aes(x=brthyr, y=haz, color=Region, group=Region)) + geom_point(alpha=0.05) + facet_wrap(~Region) +
@@ -144,5 +146,40 @@ p <- ggplot(d, aes(x=brthyr, y=haz, color=Region, group=Region)) + geom_point(al
 
 ggsave(p, file = here::here("/figures/shared/laz_secular_trend.png"), width=8, height=4)
 
+
+
+
+#Subset to monthly
+df <- df[df$measurefreq=="monthly", ]
+
+
+#Drop missing anthropometry
+d <- df[!is.na(df$haz),]
+#Scatterplot by region
+pHaz <- ggplot(d, aes(x=brthyr, y=haz, color=Region, group=Region)) + geom_point(alpha=0.05) + facet_wrap(~Region) +
+  scale_color_manual(values=tableau10) + theme(legend.position = "right") + coord_cartesian(ylim=c(-6,6)) + xlab("Birth year") +
+  ylab("LAZ") +
+  guides(color = guide_legend(override.aes = list(alpha=1)))
+
+#Drop missing anthropometry
+d <- df[!is.na(df$waz),]
+#Scatterplot by region
+pWaz <- ggplot(d, aes(x=brthyr, y=waz, color=Region, group=Region)) + geom_point(alpha=0.05) + facet_wrap(~Region) +
+  scale_color_manual(values=tableau10) + theme(legend.position = "right") + coord_cartesian(ylim=c(-6,6)) + xlab("Birth year") +
+  ylab("WAZ") +
+  guides(color = guide_legend(override.aes = list(alpha=1)))
+
+#Drop missing anthropometry
+d <- df[!is.na(df$whz),]
+#Scatterplot by region
+pWhz <- ggplot(d, aes(x=brthyr, y=whz, color=Region, group=Region)) + geom_point(alpha=0.05) + facet_wrap(~Region) +
+  scale_color_manual(values=tableau10) + theme(legend.position = "right") + coord_cartesian(ylim=c(-6,6)) + xlab("Birth year") +
+  ylab("WLZ") +
+  guides(color = guide_legend(override.aes = list(alpha=1)))
+
+
+ggsave(pHaz, file = here::here("/figures/shared/laz_secular_trend_monthly.png"), width=8, height=4)
+ggsave(pWaz, file = here::here("/figures/shared/waz_secular_trend_monthly.png"), width=8, height=4)
+ggsave(pWhz, file = here::here("/figures/shared/wlz_secular_trend_monthly.png"), width=8, height=4)
 
 
