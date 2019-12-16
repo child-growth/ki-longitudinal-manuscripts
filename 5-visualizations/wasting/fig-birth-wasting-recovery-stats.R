@@ -12,13 +12,12 @@ d <- d %>% filter(measure=="Persistent wasting"|
 d$born_wast_lab <- ifelse(d$born_wast==1, "Born\nwasted", "Not born\nwasted")
 
 d$measure_lab <- as.character(d$measure)
-# d$measure_lab[d$measure=="Persistent wasting"] <- "Persistent\nwasting" 
-# d$measure_lab[d$measure=="Wasting cumulative incidence"] <- "Wasting\ncumulative\nincidence" 
-# d$measure_lab[d$measure=="Wasting incidence rate"] <- "Wasting\nincidence\nrate" 
-d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting" 
+d$measure_lab[d$measure=="Persistent wasting"] <- "Persistent wasting\nfrom 6-24 months"
+d$measure_lab[d$measure=="Wasting cumulative incidence"] <- "Wasting cumulative incidence\nfrom 6-24 month"
+d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting at 18 months" 
 d$measure_lab <- factor(d$measure_lab)
 #d$measure_lab <- relevel(d$measure_lab, ref="Wasting\nincidence\nrate")
-d$measure_lab <- relevel(d$measure_lab, ref="Wasting cumulative incidence")
+d$measure_lab <- relevel(d$measure_lab, ref="Wasting cumulative incidence\nfrom 6-24 month")
 
 
 birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
@@ -37,7 +36,7 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
                                    size = 12))+ #,
                                    #angle = 30, hjust = 0.5, vjust=0.5)) +
   theme(axis.title.y = element_text(size = 12)) +
-  ggtitle("Outcomes by birth status among children 6-24 months") +
+  #ggtitle("Outcomes by birth status among children 6-24 months") +
   facet_wrap(~measure_lab, nrow=1, scales="free_y", strip.position = "left") +
   theme(strip.background = element_blank(), strip.placement = "outside")
 
