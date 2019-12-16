@@ -39,13 +39,9 @@ whz <- d %>% filter(agecat=="24 months", !is.na(whz))
 
 #Pick prediction variables and subset to studies that measure all variables
 
-
-
 covars <- c("parity", "W_birthlen", "W_birthwt","W_meducyrs",
             "W_nrooms", "W_mhtcm", "sex")
 
-# covars <- c("parity", "W_birthlen", "W_birthwt","W_meducyrs",
-#             "W_nrooms", "W_mhtcm", "W_mwtkg", "sex")
 
 
 haz <- haz %>% group_by(studyid, country) %>% 
@@ -84,6 +80,13 @@ whz <- whz %>% group_by(studyid, country) %>%
 haz <- haz %>% filter(sum_miss<2) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars))
 whz <- whz %>% filter(sum_miss<2) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars))
 
+#N's for manuscript
+haz %>% ungroup() %>%
+  summarize(Nstudies=length(unique(paste0(studyid, country))),
+                  Nchildren=length(unique(paste0(studyid, subjid))))
+whz %>% ungroup() %>%
+  summarize(Nstudies=length(unique(paste0(studyid, country))),
+            Nchildren=length(unique(paste0(studyid, subjid))))
 
 
 # haz_split <- split(haz,list(haz$studyid,haz$country),drop = T)
