@@ -61,15 +61,6 @@ wast_ci_0_24 = d %>% ungroup() %>%
          pers_wasted024=as.numeric(mean(whz < (-2)) >= 0.5)) %>% slice(1) %>%
   ungroup()
 
-#calculate persistent wasting from 6-24
-# pers_wast_6_24 = d %>% ungroup() %>%
-#   filter(agedays>6*30.4167 & agedays<=24*30.4167) %>%
-#   group_by(studyid,country,subjid) %>%
-#   mutate(pers_wasted624=as.numeric(mean(whz < (-2)) >= 0.5), N=n()) %>% slice(1) %>%
-#   filter(N>1) %>% # must have at least 2 obs
-#   ungroup()
-# table(pers_wast_6_24$pers_wasted624)
-
 
 #Persistent wasting outcome
 pers_wast_6_24 = d %>% filter(measurefreq!="yearly") %>%

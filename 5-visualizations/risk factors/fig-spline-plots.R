@@ -443,6 +443,51 @@ print(p4)
 
 
 
+
+
+
+
+#------------------------------------------------------------------------------------------------
+# WLZ- maternal BMI
+#------------------------------------------------------------------------------------------------
+
+predlist1 <- predlist2 <- predlist3 <- NULL
+
+table(d$mbmi)
+predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=365)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
+predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=365)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
+
+plotdf_wlz_mbmi <- rbind(plotdf1,plotdf2)
+
+offsetZ_wlz_mbmi <- offset_fun(d, Y="whz", Avar="mbmi", cen=365)
+
+
+plotdf_wlz_mbmi <- left_join(plotdf_wlz_mbmi, offsetZ_wlz_mbmi, by="level")
+plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% 
+  mutate(est= est + offset,
+         ci.lb= ci.lb + offset,
+         ci.ub= ci.ub + offset)
+
+plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
+
+Avar="Maternal BMI"
+
+p5 <- ggplot() + 
+  geom_line(data=plotdf_wlz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
+  scale_color_manual(values=brown_color_gradient, name = paste0( Avar)) +
+  scale_fill_manual(values=brown_color_gradient, name = paste0( Avar)) +
+  scale_x_continuous(limits=c(1,730), expand = c(0, 0),
+                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
+  xlab("Child age in months") + ylab("Mean WLZ") + 
+  #coord_cartesian(ylim=c(-2,1)) +
+  ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
+  theme(legend.position = c(0.8,0.9))
+print(p5)
+
+
 #------------------------------------------------------------------------------------------------
 # LAZ- maternal BMI
 #------------------------------------------------------------------------------------------------
@@ -476,7 +521,7 @@ Avarwt="Maternal BMI"
 
 brown_color_gradient = c(tableau10[6], "#c99a6b")
 
-p5 <- ggplot() +
+p6 <- ggplot() +
   geom_line(data=plotdf_laz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   scale_color_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
   scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
@@ -488,49 +533,6 @@ p5 <- ggplot() +
   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
   theme(legend.position = c(0.8,0.9))
 
-print(p5)
-
-
-
-
-#------------------------------------------------------------------------------------------------
-# WLZ- maternal BMI
-#------------------------------------------------------------------------------------------------
-
-predlist1 <- predlist2 <- predlist3 <- NULL
-
-table(d$mbmi)
-predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=365)
-plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
-predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=365)
-plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
-
-plotdf_wlz_mbmi <- rbind(plotdf1,plotdf2)
-
-offsetZ_wlz_mbmi <- offset_fun(d, Y="whz", Avar="mbmi", cen=365)
-
-
-plotdf_wlz_mbmi <- left_join(plotdf_wlz_mbmi, offsetZ_wlz_mbmi, by="level")
-plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% 
-  mutate(est= est + offset,
-         ci.lb= ci.lb + offset,
-         ci.ub= ci.ub + offset)
-
-plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
-
-Avar="Maternal BMI"
-
-p6 <- ggplot() + 
-  geom_line(data=plotdf_wlz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
-  scale_color_manual(values=brown_color_gradient, name = paste0( Avar)) +
-  scale_fill_manual(values=brown_color_gradient, name = paste0( Avar)) +
-  scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-                     breaks = 0:12*30.41*2, labels = 0:12*2) +
-  scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
-  xlab("Child age in months") + ylab("Mean WLZ") + 
-  #coord_cartesian(ylim=c(-2,1)) +
-  ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
-  theme(legend.position = c(0.8,0.9))
 print(p6)
 
 
@@ -550,8 +552,8 @@ p1 <- p1 + ggtitle("Spline curves of WLZ, stratified by\ncategories of maternal 
 p2 <- p2  + ggtitle("Stratified by\ncategories of maternal height") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6))+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
 p3 <- p3  + ggtitle("Spline curves of LAZ, stratified by\ncategories of maternal weight") + theme(legend.position = "none") + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + theme(legend.key = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
 p4 <- p4  + ggtitle("Stratified by\ncategories of maternal height") +  theme(legend.position = "none") +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
-p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
-p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) 
+p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none")+ scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
 
 
 
@@ -559,7 +561,7 @@ p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend
 
 require(cowplot)
 
-p_grid <- plot_grid(p1, p3, p2, p4,p6, p5,  labels = rep("",6), ncol = 2, align = 'v', axis = 'l')
+p_grid <- plot_grid(p1, p3, p2, p4, p5, p6,  labels = rep("",6), ncol = 2, align = 'v', axis = 'l')
 
 ggsave(p_grid, file=paste0(here(),"/figures/risk-factor/spline_grid.png"), width=10, height=10)
 

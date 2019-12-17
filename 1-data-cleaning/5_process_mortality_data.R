@@ -11,7 +11,7 @@ source(paste0(here::here(), "/0-config.R"))
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 gc()
 
-d <- subset(d, select= c(studyid, country, subjid, agedays, dead, agedth, causedth))
+d <- subset(d, select= c(studyid, country, subjid, agedays, dead, agedth, causedth, haz, waz))
 gc()
 
 
@@ -50,6 +50,9 @@ dim(d)
 table(d$dead)
 table(d$studyid, d$dead)
 
+#look at measurements pripr to early death
+#-many seem like incorrect age-death, with anthro measures at older ages
+as.data.frame(d[d$agedth<8 & !is.na(d$agedth),])
 
 #Drop mortality after 24 months
 summary(d$maxage)
