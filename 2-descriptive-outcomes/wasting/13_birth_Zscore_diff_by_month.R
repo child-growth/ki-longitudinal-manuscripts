@@ -65,6 +65,10 @@ whz.res$ub=as.numeric(whz.res$ub)
 whz.res$brthmon = levels(whz.data$agecat)
 whz.res
 
+#Maximum and minimum
+max(whz.res$est)
+min(whz.res$est)
+
 #Difference between max and minimum month
 max(whz.res$est) - min(whz.res$est)
 
