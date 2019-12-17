@@ -33,17 +33,17 @@ velocity_wlz_quart <- results
 # load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
 # season <- results %>% mutate(agecat="All")
 
-load(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2019-11-19.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2019-12-17.rdata"))
 season_cont_rf <- results
 
-load(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2019-11-19.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2019-12-17.rdata"))
 season_bin_rf <- results
 
 
 
 
 
-d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
+d <- bind_rows(Zscores, Zscores_unadj, bin, bin_unadj, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"

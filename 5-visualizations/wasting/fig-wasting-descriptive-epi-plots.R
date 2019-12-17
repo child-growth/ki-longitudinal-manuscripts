@@ -239,7 +239,7 @@ saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",prev_plot_nam
 #-------------------------------------------------------------------------------------------
 ci_plot <- ki_combo_plot(d,
                         Disease="Wasting",
-                        Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                        Measure=c("Cumulative incidence", "Incidence proportion"), 
                         Birth="yes", 
                         Severe="no", 
                         Age_range="3 months", 
@@ -271,7 +271,7 @@ saveRDS(list(mean_wlz_plot, prev_plot, ci_plot), file=paste0(here::here(),"/figu
 #-------------------------------------------------------------------------------------------
 ci_plot <- ki_combo_plot(d,
                          Disease="Wasting",
-                         Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                         Measure=c("Cumulative incidence", "Incidence proportion"), 
                          Severe="no", 
                          Age_range="3 months", 
                          Cohort="pooled",
@@ -420,7 +420,7 @@ inc_plot$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 inc_plot <- ip_plot(
   d,
   Disease = "Wasting",
-  Measure = "Incidence_proportion",
+  Measure = "Incidence proportion",
   Birth = "yes",
   Severe = "no",
   Age_range = "3 months",

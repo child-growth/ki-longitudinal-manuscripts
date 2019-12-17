@@ -9,3 +9,20 @@ fontsize: 9pt
 ---
 
 \raggedright
+
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+# source(paste0(here::here(), "/0-config.R"))
+setwd("../../")
+source("0-config.R")
+```
+
+### Relative risks between levels of all exposures for prevalence and cumulative incidence of wasting and stunting outcomes
+
+```{r prev-re, echo = FALSE}
+include_graphics(paste0(fig_dir, "risk-factor/RR-plots/fig-RR-test.png"))
+```
+
+

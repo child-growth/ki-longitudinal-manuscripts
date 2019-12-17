@@ -136,7 +136,7 @@ plot_ip_by_reg <- function(reg) {
   ip_plot(
     d_primary,
     Disease = "Stunting",
-    Measure = "Incidence_proportion",
+    Measure = "Incidence proportion",
     Birth = "strat",
     Severe = "no",
     Age_range = "3 months",

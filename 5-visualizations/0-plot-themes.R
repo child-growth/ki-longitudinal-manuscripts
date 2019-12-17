@@ -273,15 +273,15 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   # that overlaps between CI and IP
   if(Birth!="strat"){
     df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
-                                         measure=="Incidence_proportion", NA, est))
+                                         measure=="Incidence proportion", NA, est))
   }else{
     df <- df %>% mutate(est.f = ifelse(agecat=="Birth" & 
-                                         measure=="Incidence_proportion", NA, est))
+                                         measure=="Incidence proportion", NA, est))
   }
 
   # remove N= labels for incidence proportion
-  df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence_proportion', '', nmeas.f)) %>%
-    mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
+  df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence proportion', '', nmeas.f)) %>%
+    mutate(nstudy.f = ifelse(measure == 'Incidence proportion', '', nstudy.f))
   
 
   if (min(df$lb) < 0) {
@@ -295,13 +295,13 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     geom_point(aes(shape=measure, fill=region, color=region
     ), size = 2, position = position_dodge(dodge)) +
     
-    geom_text(data=df[df$measure =='Incidence_proportion',], 
+    geom_text(data=df[df$measure =='Incidence proportion',], 
               aes(x = agecat, y = est, label = round(est.f)),
               hjust = 1.5, 
               position = position_dodge(width = dodge),
               vjust = 0.5) + 
     
-    geom_text(data=df[df$measure =='Incidence_proportion - monthly cohorts',], 
+    geom_text(data=df[df$measure =='Incidence proportion - monthly cohorts',], 
               aes(x = agecat, y = est, label = round(est.f)),
               hjust = 1.5, 
               position = position_dodge(width = dodge),
@@ -321,6 +321,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
+    scale_size_manual(values = c(16, 17)) +
     scale_shape_manual(values = c(16, 17),
                        name = 'Measure')+
                        #labels = c('Cumulative Incidence', 'New Incident Cases')) + 
@@ -418,8 +419,8 @@ ip_plot <- function(d,
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
   # remove N= labels for incidence proportion
-  df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence_proportion', '', nmeas.f)) %>%
-    mutate(nstudy.f = ifelse(measure == 'Incidence_proportion', '', nstudy.f))
+  df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence proportion', '', nmeas.f)) %>%
+    mutate(nstudy.f = ifelse(measure == 'Incidence proportion', '', nstudy.f))
   
   
   p <- ggplot(df,aes(y=est,x=agecat)) +

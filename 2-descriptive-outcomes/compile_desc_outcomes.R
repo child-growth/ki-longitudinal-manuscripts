@@ -49,6 +49,11 @@ d$est[grepl("Incidence rate", d$measure)] <- d$est[grepl("Incidence rate", d$mea
 d$lb[grepl("Incidence rate", d$measure)] <- d$lb[grepl("Incidence rate", d$measure)] * 1000
 d$ub[grepl("Incidence rate", d$measure)] <- d$ub[grepl("Incidence rate", d$measure)] * 1000
 
+
+#Clean up measure labels
+d$measure <- gsub("Incidence_proportion", "Incidence proportion", d$measure)
+
+
 #Check for duplicates
 dim(d)
 # Return all duplicated elements

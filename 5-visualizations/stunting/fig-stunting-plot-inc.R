@@ -25,7 +25,6 @@ d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.RDS"))
 d <- d %>% filter(!is.na(agecat))
 d <- droplevels(d)
 
-d$measure <- gsub("Incidence_proportion", "Incidence proportion", d$measure)
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 

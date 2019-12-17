@@ -96,7 +96,7 @@ saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-wast-prev-no-Ke
 #-------------------------------------------------------------------------------------------
 ci_plot <- ki_combo_plot(d,
                         Disease="Wasting",
-                        Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                        Measure=c("Cumulative incidence", "Incidence proportion"), 
                         Birth="yes", 
                         Severe="no", 
                         Age_range="3 months", 

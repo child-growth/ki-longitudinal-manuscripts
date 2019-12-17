@@ -140,7 +140,7 @@ saveRDS(prev_plot_sev$data, file=paste0(figdata_dir_stunting, "figdata-",prev_pl
 #-------------------------------------------------------------------------------------------
 ci_inc_plot <- ki_combo_plot(d,
                              Disease="Stunting",
-                             Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                             Measure=c("Cumulative incidence", "Incidence proportion"), 
                              Birth="strat", 
                              Severe="no", 
                              Age_range="3 months", 
@@ -155,7 +155,7 @@ ci_inc_plot$plot
 # get N's for figure caption
 inc_n = d %>%
   filter(disease == "Stunting" & 
-           (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
+           (measure == "Cumulative incidence" | measure== "Incidence proportion") & 
            region!="Overall" &
            age_range == "3 months" &
            birth == "strat" & 
@@ -189,7 +189,7 @@ saveRDS(ci_inc_plot$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_pl
 
 ci_inc_plot_sev <- ki_combo_plot(d,
                                  Disease="Stunting",
-                                 Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                                 Measure=c("Cumulative incidence", "Incidence proportion"), 
                                  Birth="yes", 
                                  Severe="yes", 
                                  Age_range="3 months", 

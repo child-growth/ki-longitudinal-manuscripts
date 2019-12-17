@@ -4,7 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 
 #Load data
-ate <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_FE_results.rds")) 
+ate <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_FE.rds")) 
 rr <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds"))
 
 #Match columns names

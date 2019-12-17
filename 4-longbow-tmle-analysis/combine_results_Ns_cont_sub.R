@@ -12,7 +12,7 @@ d <- obs_counts
 d <- d %>% filter(!(studyid=="ki1000109-EE" & !is.na(gagebrth)))
 
 
-load(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2019-11-19.rdata"))
+load(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2019-12-17.rdata"))
 d2 <- obs_counts %>% mutate(rain_quartile=case_when(
   rain_quartile==1 ~ "Opposite max rain",
   rain_quartile==2 ~ "Pre-max rain",
