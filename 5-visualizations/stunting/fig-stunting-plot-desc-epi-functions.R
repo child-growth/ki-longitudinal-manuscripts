@@ -102,7 +102,7 @@ name_prev_plots <- function(cut=2, pop, loc="", ana) {
 # Stunting cumulative incidence + incidence proportion (primary)
 #-------------------------------------------------------------------------------------------
 
-plot_ci_inc <- function(d, meas=c("Cumulative incidence", "Incidence_proportion"), birth, sev, ...) {
+plot_ci_inc <- function(d, meas=c("Cumulative incidence", "Incidence proportion"), birth, sev, ...) {
   ki_combo_plot(d,
                 Disease="Stunting",
                 Measure=meas, 

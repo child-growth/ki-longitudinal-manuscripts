@@ -25,6 +25,8 @@ d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.RDS"))
 d <- d %>% filter(!is.na(agecat))
 d <- droplevels(d)
 
+d$measure <- gsub("Incidence_proportion", "Incidence proportion", d$measure)
+
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
 # subset to primary analysis
@@ -57,7 +59,7 @@ ci_inc_plot_primary$plot
 # get N's for figure caption
 inc_n_primary = d_primary %>%
   filter(disease == "Stunting" &
-           (measure == "Cumulative incidence" | measure== "Incidence_proportion") &
+           (measure == "Cumulative incidence" | measure== "Incidence proportion") &
            age_range == "3 months" &
            birth == "strat" &
            cohort == "pooled" &
@@ -81,7 +83,7 @@ ggsave(ci_inc_plot_primary$plot + ggtitle("Stunting incidence"), file=paste0(fig
 # Stunting cumulative incidence + incidence proportion (monthly from 0-24 months)
 #-------------------------------------------------------------------------------------------
 ci_inc_plot_monthly <- plot_ci_inc(d_monthly, 
-                                   meas=c("Cumulative incidence - monthly cohorts", "Incidence_proportion - monthly cohorts"), 
+                                   meas=c("Cumulative incidence - monthly cohorts", "Incidence proportion - monthly cohorts"), 
                                    birth="yes", 
                                    sev="no")
 
@@ -107,7 +109,7 @@ ci_inc_plot_fe$plot
 # get N's for figure caption
 inc_n_fe = d_fe %>%
   filter(disease == "Stunting" & 
-           (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
+           (measure == "Cumulative incidence" | measure== "Incidence proportion") & 
            region!="Overall" &
            age_range == "3 months" &
            birth == "strat" & 
@@ -133,7 +135,7 @@ saveRDS(ci_inc_plot_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc
 #-------------------------------------------------------------------------------------------
 inc_plot <- ip_plot(d_primary,
                     Disease = "Stunting",
-                    Measure = "Incidence_proportion",
+                    Measure = "Incidence proportion",
                     Birth = "yes",
                     Severe = "no",
                     Age_range = "3 months",
@@ -179,7 +181,7 @@ saveRDS(ci_inc_plot_sev_primary$data, file=paste0(figdata_dir_stunting, "figdata
 # Stunting cumulative incidence + incidence proportion - severe (monthly)
 #-------------------------------------------------------------------------------------------
 ci_inc_plot_sev_monthly <- plot_ci_inc(d_monthly, 
-                                       meas=c("Cumulative incidence - monthly cohorts", "Incidence_proportion - monthly cohorts"),
+                                       meas=c("Cumulative incidence - monthly cohorts", "Incidence proportion - monthly cohorts"),
                                        birth="yes", 
                                        sev="yes") 
 ci_inc_plot_sev_monthly
