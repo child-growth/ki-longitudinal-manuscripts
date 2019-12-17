@@ -159,11 +159,11 @@ df <- droplevels(df)
 #Set reference levels
 df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-max rain", "Pre-max rain", "Max rain"))
 
-#Set up dataset for longbow analysis
-df <- filter(df, agedays < 24 * 30.4167)
 
 d <- subset(df, select = c(studyid, subjid, id, country, agedays, whz, haz, month, rain_quartile))
 head(d)
+
+
 
 
 #Mark age categories for tmle analysis and subset to wasting or stunting data
@@ -178,8 +178,11 @@ dim(d_haz)
 dprev_whz <- calc.prev.agecat(d_whz)
 dprev_haz <- calc.prev.agecat(d_haz)
 
-
-
+#Get N's for table 1
+Ndf <- dprev_haz %>% filter(agecat=="24 months")
+Ndf %>% ungroup %>% summarize(N=n())
+table(Ndf$rain_quartile)
+prop.table(table(Ndf$rain_quartile))*100
 
 #--------------------------------------
 # Calculate prevalence of
