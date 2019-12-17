@@ -272,7 +272,7 @@ plot_data_sub = plot_data_sub %>%
 
 plot_data_sub = plot_data_sub %>%
   mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
-  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3"))) %>%
+  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
 
 
 
