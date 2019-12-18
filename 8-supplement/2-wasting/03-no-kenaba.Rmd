@@ -12,7 +12,7 @@ fontsize: 9pt
 
 -Add discussion of Kenaba birth measuresu and motivation/conclusions of sensitivity analysis
 
-```{r setup, include=FALSE}
+```{r setup3, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
 # setwd("../../")

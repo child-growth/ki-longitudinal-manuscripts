@@ -1,4 +1,4 @@
-# Sensitivity analysis dropping at-Birth measures in Kenaba {#no-kenaba}
+# Cohort-specific estimates {#cohort}
 
 ---
 output:
@@ -14,14 +14,14 @@ fontsize: 9pt
 
 
 
-```{r setup, include=FALSE}
+```{r setup2, include=FALSE}
 library(knitr)
 
 ```
 
 ## Age-specific prevalence
 
-```{r prev-primary-no-Kenaba-BW, echo = FALSE}
+```{r, echo = FALSE}
 include_graphics("figure-copies/fig-prev_plot_africa.png")
 include_graphics("figure-copies/fig-prev_plot_lam.png")
 include_graphics("figure-copies/fig-prev_plot_sasia.png")

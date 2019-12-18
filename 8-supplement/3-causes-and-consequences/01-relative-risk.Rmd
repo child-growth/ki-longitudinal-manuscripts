@@ -22,7 +22,7 @@ source("0-config.R")
 ### Relative risks between levels of all exposures for prevalence and cumulative incidence of wasting and stunting outcomes
 
 ```{r prev-re, echo = FALSE}
-include_graphics(paste0(fig_dir, "risk-factor/RR-plots/fig-RR-test.png"))
+include_graphics(paste0(fig_dir, "risk-factor/RR-plots/fig-RR-sex.png"))
 ```
 
 

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Sensitivity analysis using fixed effects | Supplement to Longitudinal analysis of early childhood stunting in low-resource settings</title>
+  <meta name="description" content="This is supplementary information to Longitudinal analysis of early childhood stunting in low-resource settings" />
+  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Sensitivity analysis using fixed effects | Supplement to Longitudinal analysis of early childhood stunting in low-resource settings" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is supplementary information to Longitudinal analysis of early childhood stunting in low-resource settings" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Sensitivity analysis using fixed effects | Supplement to Longitudinal analysis of early childhood stunting in low-resource settings" />
+  
+  <meta name="twitter:description" content="This is supplementary information to Longitudinal analysis of early childhood stunting in low-resource settings" />
+  
+
+<meta name="author" content="Jade Benjamin-Chung et al." />
+
+
+<meta name="date" content="2019-12-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="velocity.html">
+<link rel="next" href="unadjusted.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Stunting Supplementary Information</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a></li>
+<li class="chapter" data-level="2" data-path="RR.html"><a href="RR.html"><i class="fa fa-check"></i><b>2</b> Relative risk plots</a><ul>
+<li class="chapter" data-level="2.0.1" data-path="RR.html"><a href="RR.html#relative-risks-between-levels-of-all-exposures-for-prevalence-and-cumulative-incidence-of-wasting-and-stunting-outcomes"><i class="fa fa-check"></i><b>2.0.1</b> Relative risks between levels of all exposures for prevalence and cumulative incidence of wasting and stunting outcomes</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="velocity.html"><a href="velocity.html"><i class="fa fa-check"></i><b>3</b> Growth velocity</a></li>
+<li class="chapter" data-level="4" data-path="fixed-effects.html"><a href="fixed-effects.html"><i class="fa fa-check"></i><b>4</b> Sensitivity analysis using fixed effects</a><ul>
+<li class="chapter" data-level="4.1" data-path="fixed-effects.html"><a href="fixed-effects.html#primary-manuscript-figures-recreated-with-estimates-pooled-using-fixed-effects"><i class="fa fa-check"></i><b>4.1</b> Primary manuscript figures recreated with estimates pooled using fixed effects</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="unadjusted.html"><a href="unadjusted.html"><i class="fa fa-check"></i><b>5</b> Unadjusted RF plots</a></li>
+<li class="chapter" data-level="6" data-path="spline.html"><a href="spline.html"><i class="fa fa-check"></i><b>6</b> Sensitivity analysis of spline-fitting method</a><ul>
+<li class="chapter" data-level="6.1" data-path="spline.html"><a href="spline.html#wlz-stratified-by-maternal-weight"><i class="fa fa-check"></i><b>6.1</b> WLZ, stratified by maternal weight</a></li>
+<li class="chapter" data-level="6.2" data-path="spline.html"><a href="spline.html#wlz-stratified-by-maternal-height"><i class="fa fa-check"></i><b>6.2</b> WLZ, stratified by maternal height</a></li>
+<li class="chapter" data-level="6.3" data-path="spline.html"><a href="spline.html#laz-stratified-by-maternal-weight"><i class="fa fa-check"></i><b>6.3</b> LAZ, stratified by maternal weight</a></li>
+<li class="chapter" data-level="6.4" data-path="spline.html"><a href="spline.html#laz-stratified-by-maternal-height"><i class="fa fa-check"></i><b>6.4</b> LAZ, stratified by maternal height</a></li>
+<li class="chapter" data-level="6.5" data-path="spline.html"><a href="spline.html#wlz-stratified-by-maternal-bmi"><i class="fa fa-check"></i><b>6.5</b> WLZ, stratified by maternal BMI</a></li>
+<li class="chapter" data-level="6.6" data-path="spline.html"><a href="spline.html#laz-stratified-by-maternal-bmi"><i class="fa fa-check"></i><b>6.6</b> LAZ, stratified by maternal BMI</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="no-PROBIT.html"><a href="no-PROBIT.html"><i class="fa fa-check"></i><b>7</b> Dropping PROBIT Trial</a></li>
+<li class="chapter" data-level="8" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>8</b> Heatmaps</a><ul>
+<li class="chapter" data-level="8.1" data-path="heatmaps.html"><a href="heatmaps.html#heatmap-of-significance-of-estimates-region-stratified"><i class="fa fa-check"></i><b>8.1</b> Heatmap of significance of estimates, region stratified</a></li>
+<li class="chapter" data-level="8.2" data-path="heatmaps.html"><a href="heatmaps.html#heatmap-of-significance-of-estimates-pooled-using-fixed-effects"><i class="fa fa-check"></i><b>8.2</b> Heatmap of significance of estimates pooled using fixed effects</a></li>
+<li class="chapter" data-level="8.3" data-path="heatmaps.html"><a href="heatmaps.html#heatmap-of-significance-of-estimate-unadjusted"><i class="fa fa-check"></i><b>8.3</b> Heatmap of significance of estimate, unadjusted</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="survival.html"><a href="survival.html"><i class="fa fa-check"></i><b>9</b> KI Kaplan-Meier Survival Curves</a><ul>
+<li class="chapter" data-level="9.1" data-path="survival.html"><a href="survival.html#associations-between-early-growth-failure-and-mortality"><i class="fa fa-check"></i><b>9.1</b> Associations between early growth failure and mortality</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="survival.html"><a href="survival.html#random-effects-pooling"><i class="fa fa-check"></i><b>9.1.1</b> Random Effects Pooling</a></li>
+<li class="chapter" data-level="9.1.2" data-path="survival.html"><a href="survival.html#fixed-effects-pooling"><i class="fa fa-check"></i><b>9.1.2</b> Fixed Effects Pooling</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="survival.html"><a href="survival.html#associations-between-any-growth-failure-and-mortality"><i class="fa fa-check"></i><b>9.2</b> Associations between any growth failure and mortality</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="survival.html"><a href="survival.html#random-effects-pooling-1"><i class="fa fa-check"></i><b>9.2.1</b> Random Effects Pooling</a></li>
+<li class="chapter" data-level="9.2.2" data-path="survival.html"><a href="survival.html#fixed-effects-pooling-1"><i class="fa fa-check"></i><b>9.2.2</b> Fixed Effects Pooling</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="survival.html"><a href="survival.html#kaplan-meier-curves"><i class="fa fa-check"></i><b>9.3</b> Kaplan-Meier curves</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="survival.html"><a href="survival.html#wasting-under-6mo"><i class="fa fa-check"></i><b>9.3.1</b> Wasting under 6mo</a></li>
+<li class="chapter" data-level="9.3.2" data-path="survival.html"><a href="survival.html#severe-wasting-under-6mo"><i class="fa fa-check"></i><b>9.3.2</b> Severe wasting under 6mo</a></li>
+<li class="chapter" data-level="9.3.3" data-path="survival.html"><a href="survival.html#persistent-wasting-under-6mo"><i class="fa fa-check"></i><b>9.3.3</b> Persistent wasting under 6mo</a></li>
+<li class="chapter" data-level="9.3.4" data-path="survival.html"><a href="survival.html#stunting-under-6mo"><i class="fa fa-check"></i><b>9.3.4</b> Stunting under 6mo</a></li>
+<li class="chapter" data-level="9.3.5" data-path="survival.html"><a href="survival.html#severe-stunting-under-6mo"><i class="fa fa-check"></i><b>9.3.5</b> Severe stunting under 6mo</a></li>
+<li class="chapter" data-level="9.3.6" data-path="survival.html"><a href="survival.html#wasted-and-stunted-under-6mo"><i class="fa fa-check"></i><b>9.3.6</b> Wasted and stunted under 6mo</a></li>
+<li class="chapter" data-level="9.3.7" data-path="survival.html"><a href="survival.html#underweight-under-6mo"><i class="fa fa-check"></i><b>9.3.7</b> Underweight under 6mo</a></li>
+<li class="chapter" data-level="9.3.8" data-path="survival.html"><a href="survival.html#severe-underweight-under-6mo"><i class="fa fa-check"></i><b>9.3.8</b> Severe underweight under 6mo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="RR-forest.html"><a href="RR-forest.html"><i class="fa fa-check"></i><b>10</b> Forest plots of relative risk</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Supplement to Longitudinal analysis of early childhood stunting in low-resource settings</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="fixed-effects" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Sensitivity analysis using fixed effects</h1>
+
+<p>The primary analyses presented in this manuscript pooled across individual studies using random effects. Inferences about estimates from fixed effects models are restricted to only the included studies.[^1] The random effects approach was more conservative in the presence of study heterogeneity, as evidenced by larger confidence intervals around each point estimates. Overall, the inference from results produced by each method was similar.</p>
+<div id="primary-manuscript-figures-recreated-with-estimates-pooled-using-fixed-effects" class="section level2">
+<h2><span class="header-section-number">4.1</span> Primary manuscript figures recreated with estimates pooled using fixed effects</h2>
+<p>More estimates are significant when pooling using fixed effects due to the generally smaller confidence intervals.</p>
+<p><img src="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk-factor/fig-sig-heatmap_FE.png" width="1725" /> <strong>Figure 1a. Heatmap of significance and direction across exposure-outcome combinations of associations estimated using fixed effects. </strong></p>
+<p><img src="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-age_FE.png" width="2250" /> <strong>Extended Data Figure 3 | Age-stratified population attributable differences in length-for-age Z-scores estimated using fixed effects. </strong></p>
+<p><img src="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-age_FE.png" width="2250" /> <strong>Extended Data Figure 4 | Age-stratified population attributable differences in weight-for-length Z-scores estimated using fixed effects. </strong></p>
+<p><img src="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-region_FE.png" width="2250" /> <strong>Extended Data Figure 7 | Region-stratified population attributable differences in length-for-age Z-scores estimated using fixed effects. </strong></p>
+<p><img src="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-region_FE.png" width="2250" /> <strong>Extended Data Figure 8 | Region-stratified population attributable differences in weight-for-length Z-scores estimated using fixed effects. </strong></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="velocity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="unadjusted.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/03-fixed-effects.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
