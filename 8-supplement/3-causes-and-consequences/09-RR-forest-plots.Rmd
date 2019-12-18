@@ -28,21 +28,25 @@ d <- readRDS(file=here( "/figures/risk-factor/figure-data/all_forest_plot_RR.RDS
 ```
 
 
+** [TEMP] Will fill in with all primary forest plots - right now just printing one for space/speed of publishing **
+
+
 Group plots by exposure
 
 ```{r  echo=FALSE, results='asis'}
 
-   df <- d %>% filter()
+   df <- d #%>% filter()
   #Dynamic title
   cat(pasteo("#### ",df$intervention_variable[1])
-}
+
 ```
 
 
-```{r prev, echo = FALSE}
-for(i in 1:length(df)){
+```{r, echo = FALSE}
+i<-1
+#for(i in 1:length(df)){
   print(df$plot[i])
-}
+#}
 ```
 
 
