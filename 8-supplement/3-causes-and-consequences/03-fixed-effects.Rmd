@@ -22,8 +22,35 @@ source("0-config.R")
 
 ## Primary manuscript figures recreated with estimates pooled using fixed effects
 
-```{r prev-re, echo = FALSE}
+More estimates are significant when pooling using fixed effects due to the generally smaller confidence intervals.
+
+```{r, echo = FALSE}
 include_graphics(paste0(fig_dir, "risk-factor/fig-sig-heatmap_FE.png"))
 ```
 **Figure 1a.  Heatmap of significance and direction across exposure-outcome combinations of associations estimated using fixed effects. ** 
 
+```{r, echo = FALSE}
+include_graphics(paste0(fig_dir, "manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-age_FE.png"))
+
+```
+**Extended Data Figure 3 | Age-stratified population attributable differences in length-for-age Z-scores estimated using fixed effects. ** 
+
+```{r, echo = FALSE}
+include_graphics(paste0(fig_dir, "manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-age_FE.png"))
+
+```
+**Extended Data Figure 4 | Age-stratified population attributable differences in weight-for-length Z-scores estimated using fixed effects. ** 
+
+
+
+```{r, echo = FALSE}
+include_graphics(paste0(fig_dir, "manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-region_FE.png"))
+
+```
+**Extended Data Figure 7 | Region-stratified population attributable differences in length-for-age Z-scores estimated using fixed effects. ** 
+
+```{r, echo = FALSE}
+include_graphics(paste0(fig_dir, "manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-region_FE.png"))
+
+```
+**Extended Data Figure 8 | Region-stratified population attributable differences in weight-for-length Z-scores estimated using fixed effects. ** 
