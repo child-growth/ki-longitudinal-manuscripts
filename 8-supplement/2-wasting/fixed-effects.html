@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Sensitivity analysis using fixed effects | Supplement to Longitudinal analysis of child wasting and concurrence with stunting in low-resource settings</title>
+  <meta name="description" content="This is supplementary information to Longitudinal analysis of child wasting and concurrence with stunting in low-resource settings" />
+  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Sensitivity analysis using fixed effects | Supplement to Longitudinal analysis of child wasting and concurrence with stunting in low-resource settings" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is supplementary information to Longitudinal analysis of child wasting and concurrence with stunting in low-resource settings" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Sensitivity analysis using fixed effects | Supplement to Longitudinal analysis of child wasting and concurrence with stunting in low-resource settings" />
+  
+  <meta name="twitter:description" content="This is supplementary information to Longitudinal analysis of child wasting and concurrence with stunting in low-resource settings" />
+  
+
+<meta name="author" content="Andrew Mertens et al." />
+
+
+<meta name="date" content="2019-12-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html">
+<link rel="next" href="cohort.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a></li>
+<li class="chapter" data-level="2" data-path="fixed-effects.html"><a href="fixed-effects.html"><i class="fa fa-check"></i><b>2</b> Sensitivity analysis using fixed effects</a><ul>
+<li class="chapter" data-level="2.1" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-prevalence"><i class="fa fa-check"></i><b>2.1</b> Age-specific prevalence</a></li>
+<li class="chapter" data-level="2.2" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-incidence"><i class="fa fa-check"></i><b>2.2</b> Age-specific incidence</a></li>
+<li class="chapter" data-level="2.3" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-incidence-rate"><i class="fa fa-check"></i><b>2.3</b> Age-specific incidence rate</a></li>
+<li class="chapter" data-level="2.4" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-recovery"><i class="fa fa-check"></i><b>2.4</b> Age-specific recovery</a></li>
+<li class="chapter" data-level="2.5" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-prevalence-of-severe-wasting"><i class="fa fa-check"></i><b>2.5</b> Age-specific prevalence of severe wasting</a></li>
+<li class="chapter" data-level="2.6" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-longitudinal-prevalence-of-persistent-wasting"><i class="fa fa-check"></i><b>2.6</b> Age-specific longitudinal prevalence of persistent wasting</a></li>
+<li class="chapter" data-level="2.7" data-path="fixed-effects.html"><a href="fixed-effects.html#age-specific-prevalence-of-concurrent-wasting-and-stunting"><i class="fa fa-check"></i><b>2.7</b> Age-specific prevalence of concurrent wasting and stunting</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="cohort.html"><a href="cohort.html"><i class="fa fa-check"></i><b>3</b> Cohort-specific estimates</a><ul>
+<li class="chapter" data-level="3.1" data-path="cohort.html"><a href="cohort.html#age-specific-prevalence-1"><i class="fa fa-check"></i><b>3.1</b> Age-specific prevalence</a></li>
+<li class="chapter" data-level="3.2" data-path="cohort.html"><a href="cohort.html#age-specific-prevalence-of-severe-wasting-1"><i class="fa fa-check"></i><b>3.2</b> Age-specific prevalence of severe wasting</a></li>
+<li class="chapter" data-level="3.3" data-path="cohort.html"><a href="cohort.html#age-specific-longitudinal-prevalence-of-persistent-wasting-1"><i class="fa fa-check"></i><b>3.3</b> Age-specific longitudinal prevalence of persistent wasting</a></li>
+<li class="chapter" data-level="3.4" data-path="cohort.html"><a href="cohort.html#age-specific-prevalence-of-concurrent-wasting-and-stunting-1"><i class="fa fa-check"></i><b>3.4</b> Age-specific prevalence of concurrent wasting and stunting</a></li>
+<li class="chapter" data-level="3.5" data-path="cohort.html"><a href="cohort.html#age-specific-prevalence-of-underweight-weight-for-age-z-score--2"><i class="fa fa-check"></i><b>3.5</b> Age-specific prevalence of underweight (weight-for-age Z-score &lt; -2)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="no-kenaba.html"><a href="no-kenaba.html"><i class="fa fa-check"></i><b>4</b> Sensitivity analysis dropping at-Birth measures in Kenaba</a><ul>
+<li class="chapter" data-level="4.1" data-path="no-kenaba.html"><a href="no-kenaba.html#mean-wlz-by-region"><i class="fa fa-check"></i><b>4.1</b> Mean WLZ by region</a></li>
+<li class="chapter" data-level="4.2" data-path="no-kenaba.html"><a href="no-kenaba.html#age-specific-prevalence-2"><i class="fa fa-check"></i><b>4.2</b> Age-specific prevalence</a></li>
+<li class="chapter" data-level="4.3" data-path="no-kenaba.html"><a href="no-kenaba.html#age-specific-incidence-1"><i class="fa fa-check"></i><b>4.3</b> Age-specific incidence</a></li>
+<li class="chapter" data-level="4.4" data-path="no-kenaba.html"><a href="no-kenaba.html#age-specific-incidence-rate-1"><i class="fa fa-check"></i><b>4.4</b> Age-specific incidence rate</a></li>
+<li class="chapter" data-level="4.5" data-path="no-kenaba.html"><a href="no-kenaba.html#age-specific-recovery-1"><i class="fa fa-check"></i><b>4.5</b> Age-specific recovery</a></li>
+<li class="chapter" data-level="4.6" data-path="no-kenaba.html"><a href="no-kenaba.html#age-specific-prevalence-of-severe-wasting-2"><i class="fa fa-check"></i><b>4.6</b> Age-specific prevalence of severe wasting</a></li>
+<li class="chapter" data-level="4.7" data-path="no-kenaba.html"><a href="no-kenaba.html#age-specific-longitudinal-prevalence-of-persistent-wasting-2"><i class="fa fa-check"></i><b>4.7</b> Age-specific longitudinal prevalence of persistent wasting</a></li>
+<li class="chapter" data-level="4.8" data-path="no-kenaba.html"><a href="no-kenaba.html#age-specific-prevalence-of-concurrent-wasting-and-stunting-2"><i class="fa fa-check"></i><b>4.8</b> Age-specific prevalence of concurrent wasting and stunting</a></li>
+<li class="chapter" data-level="4.9" data-path="no-kenaba.html"><a href="no-kenaba.html#age-specific-prevalence-of-underweight-weight-for-age-z-score--2-1"><i class="fa fa-check"></i><b>4.9</b> Age-specific prevalence of underweight (weight-for-age Z-score &lt; -2)</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="muac.html"><a href="muac.html"><i class="fa fa-check"></i><b>5</b> Sensitivity analysis comparing wasting defined via weight-for-length versus middle-upper arm circumference</a></li>
+<li class="chapter" data-level="6" data-path="anthro.html"><a href="anthro.html"><i class="fa fa-check"></i><b>6</b> Anthropometry measurement quality</a><ul>
+<li class="chapter" data-level="6.1" data-path="anthro.html"><a href="anthro.html#anthropometry-measuresments-compared-to-who-standards"><i class="fa fa-check"></i><b>6.1</b> Anthropometry measuresments compared to WHO standards</a></li>
+<li class="chapter" data-level="6.2" data-path="anthro.html"><a href="anthro.html#age-specific-incidence-2"><i class="fa fa-check"></i><b>6.2</b> Age-specific incidence</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Supplement to Longitudinal analysis of child wasting and concurrence with stunting in low-resource settings</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="fixed-effects" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Sensitivity analysis using fixed effects</h1>
+
+<p>The primary analyses presented in this manuscript pooled across individual studies using random effects. Inferences about estimates from fixed effects models are restricted to only the included studies.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> The random effects approach was more conservative in the presence of study heterogeneity, as evidenced by larger confidence intervals around each point estimates. Overall, the inference from results produced by each method was similar.</p>
+<!-- ##################################################################################### -->
+<div id="age-specific-prevalence" class="section level2">
+<h2><span class="header-section-number">2.1</span> Age-specific prevalence</h2>
+<!-- ### Random effects -->
+<!-- ```{r prev-re, echo = FALSE} -->
+<!-- # include_graphics(paste0(fig_dir, "wasting/fig-wast-2-prev-overall_region--allage-primary.png")) -->
+<!-- #include_graphics("figure-copies/fig-wast-2-prev-overall_region--allage-primary.png") -->
+<!-- ``` -->
+<!-- ### Fixed effects -->
+<p><img src="figure-copies/fig-wast-2-prev-overall_region--allage-primary_FE.png" width="2100" /></p>
+</div>
+<div id="age-specific-incidence" class="section level2">
+<h2><span class="header-section-number">2.2</span> Age-specific incidence</h2>
+<p><img src="figure-copies/fig-wast-2-cuminc-overall_region--allage-primary_FE.png" width="2100" /></p>
+</div>
+<div id="age-specific-incidence-rate" class="section level2">
+<h2><span class="header-section-number">2.3</span> Age-specific incidence rate</h2>
+<p><img src="figure-copies/fig-wast-2-ir-overall_region--allage-primary_FE.png" width="2100" /></p>
+</div>
+<div id="age-specific-recovery" class="section level2">
+<h2><span class="header-section-number">2.4</span> Age-specific recovery</h2>
+<p><img src="figure-copies/fig-wast-2-rec-overall_region--allage-primary_FE.png" width="2100" /></p>
+</div>
+<div id="age-specific-prevalence-of-severe-wasting" class="section level2">
+<h2><span class="header-section-number">2.5</span> Age-specific prevalence of severe wasting</h2>
+<p><img src="figure-copies/fig-wast-3-prev-overall_region--allage-primary_FE.png" width="2100" /></p>
+</div>
+<div id="age-specific-longitudinal-prevalence-of-persistent-wasting" class="section level2">
+<h2><span class="header-section-number">2.6</span> Age-specific longitudinal prevalence of persistent wasting</h2>
+<p><img src="figure-copies/fig-perswast_plot_FE.png" width="900" /></p>
+</div>
+<div id="age-specific-prevalence-of-concurrent-wasting-and-stunting" class="section level2">
+<h2><span class="header-section-number">2.7</span> Age-specific prevalence of concurrent wasting and stunting</h2>
+<p><img src="figure-copies/fig-wast-2-co-overall_region--allage-primary_FE.png" width="2100" /></p>
+<!-- ## Age-specific prevalence of underweight (weight-for-age Z-score < -2) -->
+<!-- ```{r, echo = FALSE} -->
+<!-- include_graphics("figure-copies/fig-wast-2-uwt-overall_region--allage-primary_FE.png") -->
+<!-- ``` -->
+
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Hedges, L. V. &amp; Vevea, J. L. Fixed- and random-effects models in meta-analysis. Psychol. Methods 3, 486–504 (1998).<a href="fixed-effects.html#fnref1">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="cohort.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/01-fixed-effects.RMD",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>

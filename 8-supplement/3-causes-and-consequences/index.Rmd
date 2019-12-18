@@ -1,6 +1,6 @@
 --- 
-title: "Supplement to Longitudinal analysis of early childhood stunting in low-resource settings"
-author: "Jade Benjamin-Chung et al."
+title: "Supplement to Causes and consequences of child growth failure in low resource settings"
+author: "Andrew Mertens et al."
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
@@ -14,9 +14,9 @@ description: "This is supplementary information to Longitudinal analysis of earl
 
 # Overview
 
-**Recommended citation:** Benjamin-Chung J, et al. 2020. Longitudinal analyses of early childhood stunting in low-resource settings. *Journal Name*. doi. 
+**Recommended citation:** Mertens A N, et al. 2020.Causes and consequences of child growth failure in low resource settings. *Journal Name*. doi. 
 
-This site contains supplementary information to the *Longitudinal analyses of early childhood stunting in low-resource settings*. 
+This site contains supplementary information to the *Causes and consequences of child growth failure in low resource settings*. 
 
 
 ```{r include=FALSE}
