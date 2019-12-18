@@ -22,7 +22,6 @@ d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
 d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
 
-d <- d %>% filter(agedays < 24 * 30.4167)
 
 #d <- d %>% filter(studyid == "ki1017093b-PROVIDE")
 
@@ -55,6 +54,10 @@ d$jday <- round(((d$birthday + d$agedays)/364)%%1 * 364, 0)
 summary(d$jday)
 table(is.na(d$month))
 
-saveRDS(d, seasonality_data_path)
+#RF dataset (with ages up to 25 months for 24 month mean WLZ)
+saveRDS(d, paste0(ghapdata_dir,"seasonality_rf_data.rds"))
 
+d <- d %>% filter(agedays < 24 * 30.4167)
+
+saveRDS(d, seasonality_data_path)
 
