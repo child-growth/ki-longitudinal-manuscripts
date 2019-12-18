@@ -47,5 +47,6 @@ source(here("5-visualizations/risk factors/fig-RR-plots.R"))
 
 source(here("5-visualizations/risk factors/fig-spline-plots_sensitivity.R"))
 
+source(here("5-visualizations/risk factors/fig-pooled-RR-plots.R"))
 
 

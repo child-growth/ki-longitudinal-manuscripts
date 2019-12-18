@@ -11,7 +11,7 @@ require(cowplot)
 
 
 #Load data
-par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
+par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_FE.rds"))
 
 dim(par)
 
