@@ -62,9 +62,10 @@ Ns <- d %>% subset(., select = c(studyid, country, agecat, n_cell, n,outcome_var
 
 Ndf <- cbind(Ns, exposure_df)
 # 
-#Always more laz than whz obs, so seperate bigger N's to laz
- Ndf_laz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level,outcome_variable) 
- Ndf_wlz <- Ndf %>% group_by(studyid,country,agecat, intervention_variable, intervention_level,outcome_variable) 
+
+# seperate laz and wlz
+ Ndf_laz <- Ndf %>% filter(outcome_variable=="haz")
+ Ndf_wlz <- Ndf %>% filter(outcome_variable=="whz")
 
 
 Ndf <- rbind(Ndf_laz, Ndf_wlz)

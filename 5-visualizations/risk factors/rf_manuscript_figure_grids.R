@@ -38,7 +38,7 @@ pPar_laz_combined = plot_grid(pPar_laz_plot, NULL, pPar_laz_plot_table, ncol = 3
 
 pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(1.3, 20))
 #pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(0.9, 20))
-pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.45))
+pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.5))
 #pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.65))
 pPar_wlz_combined = plot_grid(pPar_wlz_plot, NULL, pPar_wlz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
 

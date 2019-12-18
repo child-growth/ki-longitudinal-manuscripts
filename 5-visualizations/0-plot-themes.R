@@ -292,8 +292,8 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     geom_errorbar(aes(color=region, 
                       group=interaction(measure, region), ymin=lb, ymax=ub), 
                   width = 0, position = position_dodge(dodge)) +
-    geom_point(aes(shape=measure, fill=region, color=region
-    ), size = 2, position = position_dodge(dodge)) +
+    geom_point(aes(shape=measure, size=measure, fill=region, color=region
+    ),  position = position_dodge(dodge)) +
     
     geom_text(data=df[df$measure =='Incidence proportion',], 
               aes(x = agecat, y = est, label = round(est.f)),
@@ -321,7 +321,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
-    scale_size_manual(values = c(16, 17)) +
+    scale_size_manual(values = c(2, 1.5), guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
                        name = 'Measure')+
                        #labels = c('Cumulative Incidence', 'New Incident Cases')) + 
@@ -352,7 +352,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     theme(legend.position = c(.06,.83),
           legend.title = element_blank(),
-          legend.text = element_text(size = 8),
+          legend.text = element_text(size = 10),
           legend.background = element_blank(),
           legend.margin = margin(0.5, 1.5, 0.5, 0.5),
           legend.box.background = element_rect(colour = "black"))
