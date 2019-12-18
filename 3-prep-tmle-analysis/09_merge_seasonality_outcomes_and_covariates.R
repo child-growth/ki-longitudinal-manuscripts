@@ -16,7 +16,7 @@ library(RcppRoll)
 #rain <- read.csv(here("/data/monthly_rainfall.csv"))
 rain <- readRDS(here("/data/cohort_rain_data.rds"))
 
-d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
+d <- readRDS(paste0(ghapdata_dir,"/seasonality_rf_data.rds"))
 
 head(rain)
 head(d)
@@ -179,7 +179,11 @@ dprev_whz <- calc.prev.agecat(d_whz)
 dprev_haz <- calc.prev.agecat(d_haz)
 
 #Get N's for table 1
-Ndf <- dprev_haz %>% filter(agecat=="24 months")
+mode <- function(codes){
+  which.max(tabulate(codes))
+}
+
+Ndf <- dprev_haz %>% filter(agecat=="24 months") %>% group_by(studyid, subjid) %>% summarize(rain_quartile=mode(rain_quartile))
 Ndf %>% ungroup %>% summarize(N=n())
 table(Ndf$rain_quartile)
 prop.table(table(Ndf$rain_quartile))*100
@@ -192,10 +196,6 @@ prop.table(table(Ndf$rain_quartile))*100
 
 
 # take mean of multiple measurements within age window
-mode <- function(codes){
-  which.max(tabulate(codes))
-}
-
 dmn_wast <- dprev_whz %>%
   filter(!is.na(agecat)) %>%
   group_by(studyid,country,id, subjid,agecat) %>%
