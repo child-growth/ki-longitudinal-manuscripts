@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.RDS"))
 
 #Subset to primary analysis
-d <- d %>% filter(analysis=="No Kenaba birth", (pooling!="country" | is.na(pooling)))
+d <- d %>% filter(analysis=="No Kenaba birth", (pooling!="country" | is.na(pooling)), is.na(country), cohort=="pooled")
 
 
 
