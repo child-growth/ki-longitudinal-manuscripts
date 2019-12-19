@@ -24,7 +24,7 @@ shorten_descriptions<-function(dd){
   dd$short_description[dd$studyid=='IRC'] <- 'Immune Response Crypto'
   dd$short_description[dd$studyid=='JiVitA-3'] <- 'JiVitA-3'
   dd$short_description[dd$studyid=='JiVitA-4'] <- 'JiVitA-4'
-  dd$short_description[dd$studyid=='Keneba'] <- 'MRC Kenaba'
+  dd$short_description[dd$studyid=='Keneba'] <- 'MRC Keneba'
   dd$short_description[dd$studyid=='SAS-CompFeed'] <- 'Optimal Infant Feeding'
   dd$short_description[dd$studyid=='NIH-Birth'] <- 'NIH Birth Cohort'
   
