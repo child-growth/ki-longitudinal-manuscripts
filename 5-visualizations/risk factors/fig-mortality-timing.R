@@ -6,7 +6,11 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Load mortality outcomes
 df <- mort <- readRDS("U:/UCB-SuperLearner/Manuscript analysis data/mortality.rds")
-mort <- mort %>% filter(!is.na(agedth))
+
+#N's for figure legend
+Ns <- mort %>% filter(!is.na(dead)) %>% group_by(studyid, subjid) %>% slice(1) %>%
+  filter(agedth<731)
+table(is.na(Ns$agedth))
 
 df <- df %>% filter(!(studyid %in% c("ki1055867-WomenFirst","ki1000301-DIVIDS","ki0047075b-MAL-ED", 
                                      "ki1000304b-SAS-FoodSuppl", "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal"))) #drop studies qith too few outcomes
@@ -46,10 +50,10 @@ df2 %>%  summarize(n())
 
 #convert subjid to character for the merge with covariate dataset
 d$subjid <- as.character(d$subjid)
-mort$subjid <- as.character(mort$subjid)
+df$subjid <- as.character(df$subjid)
 
 dim(mort)
-df_full <- left_join(mort, d, by=c("studyid","country","subjid"))
+df_full <- left_join(df, d, by=c("studyid","country","subjid"))
 dim(df_full)
 
 df <- df_full %>% filter(!is.na(haz))
@@ -185,5 +189,7 @@ ggsave(p, file=paste0(here::here(),"/figures/risk-factor/fig-mortality-timing.pn
 saveRDS(p, file=paste0(here::here(),"/results/fig-mortality-timing-plot-object.RDS"))
 
 
-
+#N's for figure legend
+df %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
+  summarize(sum(dead, na.rm=T), n(), length(unique(paste0(studyid,country))))
 
