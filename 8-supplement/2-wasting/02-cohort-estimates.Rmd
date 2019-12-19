@@ -10,7 +10,7 @@ fontsize: 9pt
 
 \raggedright
 
-
+Below are the cohort-specific estimates for the age-specific prevalences of wasting, severe wasting, persistent wasting, underweight, and concurrent wasting and stunting.
 
 
 

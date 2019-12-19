@@ -11,34 +11,39 @@ fontsize: 9pt
 \raggedright
 
 
-The primary analyses presented in this manuscript pooled across individual studies using random effects. Inferences about estimates from fixed effects models are restricted to only the included studies.[^1] The random effects approach was more conservative in the presence of study heterogeneity, as evidenced by larger confidence intervals around each point estimates. Overall, the inference from results produced by each method was similar. 
+The primary analyses presented in this manuscript pooled across individual studies using random effects. Inferences about estimates from fixed effects models are restricted to only the included studies.[^1] The random effects approach is more conservative in the presence of study heterogeneity and has larger confidence intervals around each point estimate unless all cohort-specific estimates are very similiar. Overall, the inference from results produced by each method did not greatly differ. 
 
 ```{r setup1, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-# setwd("../../")
-# source("0-config.R")
+setwd("../../")
+source("0-config.R")
 ```
 
-<!-- ##################################################################################### -->
 ## Age-specific prevalence
 
-<!-- ### Random effects -->
-<!-- ```{r prev-re, echo = FALSE} -->
-<!-- # include_graphics(paste0(fig_dir, "wasting/fig-wast-2-prev-overall_region--allage-primary.png")) -->
-<!-- #include_graphics("figure-copies/fig-wast-2-prev-overall_region--allage-primary.png") -->
+### Random effects
+```{r, echo = FALSE}
+include_graphics(here::here("wasting/fig-wast-2-prev-overall_region--allage-primary.png"))
 
-<!-- ``` -->
+```
 
-<!-- ### Fixed effects -->
+### Fixed effects
 ```{r prev-primary_FE, echo = FALSE}
-# include_graphics(paste0(fig_dir, "wasting/fig-wast-2-prev-overall_region--allage-primary_FE.png"))
 include_graphics("figure-copies/fig-wast-2-prev-overall_region--allage-primary_FE.png")
 ```
 
 
 
 ## Age-specific incidence
+
+### Random effects
+```{r, echo = FALSE}
+include_graphics(here::here("wasting/fig-wast-2-cuminc-overall_region--allage-primary.png"))
+
+```
+
+### Fixed effects
 
 ```{r, echo = FALSE}
 include_graphics("figure-copies/fig-wast-2-cuminc-overall_region--allage-primary_FE.png")
@@ -47,12 +52,28 @@ include_graphics("figure-copies/fig-wast-2-cuminc-overall_region--allage-primary
 
 ## Age-specific incidence rate
 
+### Random effects
+```{r, echo = FALSE}
+include_graphics(here::here("wasting/fig-wast-2-ir-overall_region--allage-primary.png"))
+
+```
+
+### Fixed effects
+
 ```{r, echo = FALSE}
 include_graphics("figure-copies/fig-wast-2-ir-overall_region--allage-primary_FE.png")
 
 ```
 
 ## Age-specific recovery
+
+### Random effects
+```{r, echo = FALSE}
+include_graphics(here::here("wasting/fig-wast-2-rec-overall_region--allage-primary.png"))
+
+```
+
+### Fixed effects
 
 ```{r, echo = FALSE}
 include_graphics("figure-copies/fig-wast-2-rec-overall_region--allage-primary_FE.png")
@@ -61,6 +82,14 @@ include_graphics("figure-copies/fig-wast-2-rec-overall_region--allage-primary_FE
 
 ## Age-specific prevalence of severe wasting
 
+### Random effects
+```{r, echo = FALSE}
+include_graphics(here::here("wasting/fig-wast-3-prev-overall_region--allage-primary.png"))
+
+```
+
+### Fixed effects
+
 ```{r, echo = FALSE}
 include_graphics("figure-copies/fig-wast-3-prev-overall_region--allage-primary_FE.png")
 
@@ -68,12 +97,28 @@ include_graphics("figure-copies/fig-wast-3-prev-overall_region--allage-primary_F
 
 ## Age-specific longitudinal prevalence of persistent wasting
 
+### Random effects
+```{r, echo = FALSE}
+include_graphics(here::here("wasting/fig-perswast_plot.png"))
+
+```
+
+### Fixed effects
+
 ```{r, echo = FALSE}
 include_graphics("figure-copies/fig-perswast_plot_FE.png")
 
 ```
 
 ## Age-specific prevalence of concurrent wasting and stunting
+
+### Random effects
+```{r, echo = FALSE}
+include_graphics(here::here("wasting/fig-wast-2-co-overall_region--allage-primary.png"))
+
+```
+
+### Fixed effects
 
 ```{r, echo = FALSE}
 include_graphics("figure-copies/fig-wast-2-co-overall_region--allage-primary_FE.png")
