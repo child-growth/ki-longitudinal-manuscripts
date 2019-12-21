@@ -473,6 +473,7 @@ plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>%
 plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
 
 Avar="Maternal BMI"
+brown_color_gradient = c(tableau10[6], "#c99a6b")
 
 p5 <- ggplot() + 
   geom_line(data=plotdf_wlz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
@@ -519,7 +520,6 @@ plotdf_laz_mbmi <- plotdf_laz_mbmi %>% mutate(level = factor(level, levels=c( "N
 
 Avarwt="Maternal BMI"
 
-brown_color_gradient = c(tableau10[6], "#c99a6b")
 
 p6 <- ggplot() +
   geom_line(data=plotdf_laz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
@@ -538,9 +538,11 @@ print(p6)
 
 
 #Save plot objects
-saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/results/rf_spline_objects.RDS"))
+saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot-objects/risk-factor//rf_spline_objects.RDS"))
 
-
+#save plot data
+saveRDS(list(plotdf_wlz_mwtkg,plotdf_laz_mwtkg,plotdf_wlz_mhtcm,plotdf_laz_mhtcm,plotdf_wlz_mbmi,plotdf_laz_mbmi), 
+        file=paste0(here(),"/figures//risk-factor/figure-data/rf_spline_data.RDS"))
 
 #------------------------------------------------------------------------------------------------
 # Plot as a grid
