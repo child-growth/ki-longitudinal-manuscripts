@@ -445,10 +445,12 @@ Avarwt="Maternal BMI"
 
 brown_color_gradient = c(tableau10[6], "#c99a6b")
 
+
+
 p6 <- ggplot() +
-  geom_line(data=plotdf_laz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
+  geom_line(data=plotdf_wlz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   scale_color_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
-  scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
+  #scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   #scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) +
@@ -457,9 +459,6 @@ p6 <- ggplot() +
   theme(legend.position = c(0.8,0.9))
 
 print(p6)
-
-
-
 
 
 
@@ -473,15 +472,23 @@ p1<-plist[[1]]
 p2<-plist[[2]]
 p3<-plist[[3]]
 
+pos =  c(0.8,0.9)
+p1 <- p1 + theme(legend.position =pos)
+p2 <- p2 + theme(legend.position =pos)
+p3 <- p3 + theme(legend.position =pos)
+p4 <- p4 + theme(legend.position =pos)
+p5 <- p5 + theme(legend.position =pos)
+p6 <- p6 + theme(legend.position =pos)
+
+
 # Combine plot objects
 
 require(cowplot)
-p_grid <- plot_grid(p1, p2, p3, p4, p5, p6, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
+p_grid <- plot_grid(p1,  p3,  p2,p4, p5, p6, labels = "AUTO", ncol = 2, align = 'v', axis = 'l')
 
-ggsave(p_grid, file=paste0(here(),"/figures/risk factor/spline_grid_sens4.png"), width=14, height=14)
+ggsave(p_grid, file=paste0(here(),"/figures/risk-factor/spline_grid_sens4.png"), width=14, height=14)
 
 
 #Save plot objects
 saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/results/rf_spline_sens4_objects.RDS"))
-saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/plot objects/rf_spline_sens_objects4.RDS"))
 
