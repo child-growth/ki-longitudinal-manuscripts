@@ -1,0 +1,2 @@
+07MAY2019 - changes made by VS (removing special characters from filenames for synapse migration)
+- File name: "/storage/migrations/instances/pilot/ki1119695/PROBIT/docs/Teacher Classroom Questionnaire & Teacher SDQ - PROBIT II.pdf" contains invalid characters: "&"
