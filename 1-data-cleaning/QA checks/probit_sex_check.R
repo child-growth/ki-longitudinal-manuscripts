@@ -100,8 +100,8 @@ df <- df %>% filter(agedays < 205 & agedays > 150) %>% arrange(agedays)
 #Z-scores by sex in the raw data
 table(anthro$SEX)
 table(anthro$SEX[anthro$TIME==1])
-anthro$sex <- "female"
-anthro$sex[anthro$SEX==2] <- "male"
+anthro$sex <- "male"
+anthro$sex[anthro$SEX==2] <- "female"
 ggplot(anthro, aes(x=TIME, y=HAZ, group=sex, color=sex)) + 
   geom_point(alpha=0.05) +
   geom_smooth(method = "gam", formula = y ~ s(x, k = 3), size = 1) + theme(legend.position = "right")
@@ -111,3 +111,30 @@ anthro2 <- anthro %>% filter(TIME==1, abs(HAZ) < 6)
 d3 <- d2 %>% filter(abs(haz) < 6)
 table(d3$sex, d3$haz < -2)
 table(anthro2$sex, anthro2$HAZ < -2)
+
+prop.table(table(anthro2$sex))
+prop.table(table(anthro2$HAZ < -2))
+
+prop.table(table(d2$sex))
+prop.table(table(d2$haz < -2))
+
+
+anthro3 <- anthro %>%  filter(abs(HAZ) < 6) %>% group_by(HOSP, SUBJ) %>%
+  mutate(everstunt=1*(min(HAZ) < -2)) %>% slice(1)
+
+d4 <- d %>%  filter(agedays < 15 * 30.4167, abs(haz) < 6) %>% group_by(subjid) %>%
+  mutate(everstunt=1*(min(haz) < -2)) %>% slice(1)
+
+table(anthro3$sex, anthro3$everstunt)
+table(d4$sex, d4$everstunt)
+
+library(epitools)
+epitab(table(anthro3$sex, anthro3$everstunt))
+epitab(table(d4$sex, d4$everstunt))
+
+epitab(table(d3$sex, d3$haz < -2))
+epitab(table(anthro2$sex, anthro2$HAZ < -2))
+
+
+
+
