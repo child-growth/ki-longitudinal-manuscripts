@@ -3,7 +3,6 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-source(here("/1-data-cleaning/raw data cleaning/0_save_studies_as_rds.R"))
 
 source(here("2-descriptive-outcomes/wasting/0-run-descriptive-outcomes-wasting.R"))
 source(here("2-descriptive-outcomes/stunting/0-run-descriptive-outcomes-stunting.R"))

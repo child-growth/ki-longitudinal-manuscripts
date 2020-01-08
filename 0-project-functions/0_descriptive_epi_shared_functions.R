@@ -1053,3 +1053,62 @@ create_name = function(outcome, cutoff, measure, population,
   return(name)
   
 }
+
+
+
+
+
+
+
+
+# Update the who_value2zscore function from the growthstandards package to use length in the WLZ calculations
+#(The standards are already part of the package, but a X_var/Y_var pari check did not include length+weight)
+#See help(who_value2zscore) for function details.
+
+who_value2zscore2 <- function(x, y, x_var = "agedays", y_var = "htcm", sex = "Female", 
+                              data = NULL) 
+{
+  if (!is.null(data)) {
+    x <- v_eval(substitute(x), try(x, silent = TRUE), data)
+    y <- v_eval(substitute(y), try(y, silent = TRUE), data)
+    x_var <- v_eval(substitute(x_var), try(x_var, silent = TRUE), 
+                    data)
+    y_var <- v_eval(substitute(y_var), try(y_var, silent = TRUE), 
+                    data)
+    sex <- v_eval(substitute(sex), try(sex, silent = TRUE), 
+                  data)
+  }
+  dat <- data.frame(x = x, y = y, x_var = x_var, y_var = y_var, 
+                    sex = sex, stringsAsFactors = FALSE)
+  if (!all(unique(dat$sex) %in% c("Male", "Female"))) 
+    stop("sex must be 'Male' or 'Female'")
+  value2zscore_single_pars <- function(x, y, x_var, y_var, 
+                                       sex) {
+    pair <- paste(y_var, x_var, sep = "_")
+    coefs <- growthstandards::who_coefs[[pair]][[sex]]$data
+    oob <- which(x < min(coefs$x) | x > max(coefs$x))
+    idx <- growthstandards:::get_coef_idx(x, coefs$x)
+    coefs <- coefs[idx, , drop = FALSE]
+    if (nrow(coefs) == 1) {
+      coefs <- data.frame(y = y, coefs, row.names = NULL)
+    }
+    else {
+      coefs <- data.frame(x = x, y = y, m = approx(coefs$x, 
+                                                   coefs$m, x)$y, l = approx(coefs$x, coefs$l, x)$y, 
+                          s = approx(coefs$x, coefs$s, x)$y)
+    }
+    res <- with(coefs, ((y/m)^l - 1)/(s * l))
+    if (length(oob) > 0) {
+      message("Observations with ", x_var, " value of ", 
+              paste(x[oob], collapse = ", "), " are outside the range of the standard. Setting to NA.")
+      res[oob] <- NA
+    }
+    res
+  }
+  dat <- dat %>% dplyr::group_by(x_var, y_var, sex) %>% dplyr::mutate(res = value2zscore_single_pars(x, 
+                                                                                                     y, x_var[1], y_var[1], sex[1]))
+  dat$res
+}
+
+
+

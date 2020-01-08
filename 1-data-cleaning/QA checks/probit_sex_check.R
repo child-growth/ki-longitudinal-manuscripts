@@ -9,11 +9,20 @@ library(haven)
 
 dfull <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 d <- dfull %>% filter(studyid == "ki1119695-PROBIT")
+summary(d$lencm)
+
+#Check content sex ratio (should be ~52-53% male)
+dProvide <- dfull %>% filter(studyid == "ki1114097-CONTENT") %>% arrange(agedays) %>%
+  group_by(subjid) %>% slice(1)
+(table(dProvide$sex))
+prop.table(table(dProvide$sex))
+
 
 #anthro <- read_sas("U:/data/probit_new/PROBIT/raw/anthro.sas7bdat")
 anthro <- read_sas("U:/data/probit_new/PROBIT/import/PI/z_scores.sas7bdat")
 anthro <- anthro %>% filter(age < 24 * 30.4167)
 head(anthro)
+summary(anthro$HEIGHT)
 
 ggplot(d[abs(d$haz) < 5,], aes(x=haz)) + geom_density() + coord_cartesian(xlim= c(-5, 5))
 ggplot(anthro[abs(anthro$HAZ) < 5,], aes(x=HAZ)) + geom_density() + coord_cartesian(xlim= c(-5, 5))
@@ -136,5 +145,19 @@ epitab(table(d3$sex, d3$haz < -2))
 epitab(table(anthro2$sex, anthro2$HAZ < -2))
 
 
+
+
+
+#Recalculate Z-scores after flipping sex in KI data
+library(growthstandards)
+d$sex2 <- ifelse(d$sex=="Male", "Female", "Male")
+d$haz2 <- who_value2zscore(d$agedays, d$lencm, x_var = "agedays", y_var = "htcm", sex = d$sex2)
+summary(d$haz)
+summary(d$haz2)
+
+ggplot(d, aes(x=agedays, y=haz2, group=sex2, color=sex2)) + 
+  geom_point(alpha=0.05) +
+  geom_smooth() + theme(legend.position = "right") +
+  coord_cartesian(ylim= c(-5, 5), xlim=c(0, 730))
 
 

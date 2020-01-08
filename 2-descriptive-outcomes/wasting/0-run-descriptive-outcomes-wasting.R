@@ -14,3 +14,7 @@ source(here("2-descriptive-outcomes/wasting/9_create_wast_seasonality_datasets.R
 source(here("2-descriptive-outcomes/wasting/10_wast_summarize_outcomes_FE.R"))
 source(here("2-descriptive-outcomes/wasting/11_wast_summarize_outcomes_no_Kenaba_bw.R"))
 source(here("2-descriptive-outcomes/wasting/12_co_summarize_outcomes_FE.R"))
+source(here("2-descriptive-outcomes/wasting/13_create_birth_wast_seasonality_dataset.R"))
+source(here("2-descriptive-outcomes/wasting/14_co_summarize_outcomes_no_Kenaba.R"))
+
+
