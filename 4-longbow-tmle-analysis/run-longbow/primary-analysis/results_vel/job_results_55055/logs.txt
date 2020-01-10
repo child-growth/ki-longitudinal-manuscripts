@@ -1,295 +1,0 @@
-Command to run:
-Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/2227a987-8ee8-4f60-a081-9c03c8599d55
-cd /tmp;tar xvzf tmpfvyidk3l.tar.gz --strip 1;cd /tmp/99f5799a-d6ac-4829-af8e-7aaa2a60ec43;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/55055/append_log/;screen -d -m python x.py;sleep 1
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43/x.py: time stamp 2019-11-27 18:42:28 is 0.864464021 s in the future
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43/script.Rmd: time stamp 2019-11-27 18:42:28 is 0.864234078 s in the future
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43/inputs.json: time stamp 2019-11-27 18:42:28 is 0.864110171 s in the future
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43/wrapper.sh: time stamp 2019-11-27 18:42:28 is 0.863999841 s in the future
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43/runner.R: time stamp 2019-11-27 18:42:28 is 0.86391076 s in the future
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43/2227a987-8ee8-4f60-a081-9c03c8599d55: time stamp 2019-11-27 18:42:28 is 0.863820903 s in the future
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43/ensure_git_dataset.sh: time stamp 2019-11-27 18:42:28 is 0.863775537 s in the future
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43/provision.sh: time stamp 2019-11-27 18:42:28 is 0.863657898 s in the future
-tar: 99f5799a-d6ac-4829-af8e-7aaa2a60ec43: time stamp 2019-11-27 18:42:28 is 0.863593027 s in the future
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/x.py
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/script.Rmd
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/inputs.json
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/wrapper.sh
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/runner.R
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/2227a987-8ee8-4f60-a081-9c03c8599d55/
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/ensure_git_dataset.sh
-tmpfvyidk3l/99f5799a-d6ac-4829-af8e-7aaa2a60ec43/provision.sh
-Requirement already satisfied: requests in /opt/anaconda2/lib/python2.7/site-packages
-You are using pip version 9.0.1, however version 19.3.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-{"job": {"status": "running", "created_at": "2019-11-27T04:24:05.436", "results_url": "/jobs/55055/", "jobs": []}}Making sure longbowtools package is available for runner
-
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-redhat-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
-> 
-> 
-Installing pandoc
-pandoc-2.3.1/
-pandoc-2.3.1/bin/
-pandoc-2.3.1/bin/pandoc
-pandoc-2.3.1/bin/pandoc-citeproc
-pandoc-2.3.1/share/
-pandoc-2.3.1/share/man/
-pandoc-2.3.1/share/man/man1/
-pandoc-2.3.1/share/man/man1/pandoc.1.gz
-pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
-Running provision script
-skipping provisioning because this is a child job
-Making sure longbowtools package is available for runner
-
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-redhat-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
-> 
-> 
-Starting analysis
-
-
-processing file: REPORT.Rmd
-  |                                                                         |                                                                 |   0%  |                                                                         |..                                                               |   3%
-  ordinary text without R code
-
-  |                                                                         |....                                                             |   6%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                         |......                                                           |   9%
-  ordinary text without R code
-
-  |                                                                         |........                                                         |  12%
-label: params (with options) 
-List of 2
- $ warning: logi FALSE
- $ message: logi FALSE
-
-Loading required package: graphics
-magec("arm", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec", "W_mhtcm", "W_mwtkg", "W_mbmi", "W_fhtcm", "single", "W_nrooms", "W_nhh", "W_nchldlt5", "trth2o", "cleanck", "impfloor", "impsan", "safeh20")y_rate_wtkgidc("agecat", "studyid", "country")
-TRUEFALSEFALSENULL
-  |                                                                         |..........                                                       |  16%
-  ordinary text without R code
-
-  |                                                                         |............                                                     |  19%
-label: preprocessing
-  |                                                                         |..............                                                   |  22%
-   inline R code fragments
-
-  |                                                                         |................                                                 |  25%
-label: print_adjustment_set (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |..................                                               |  28%
-  ordinary text without R code
-
-  |                                                                         |....................                                             |  31%
-label: print_strata_variables (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |......................                                           |  34%
-  ordinary text without R code
-
-  |                                                                         |........................                                         |  38%
-label: data_summary
-  |                                                                         |..........................                                       |  41%
-  ordinary text without R code
-
-  |                                                                         |............................                                     |  44%
-label: print_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |..............................                                   |  47%
-  ordinary text without R code
-
-  |                                                                         |................................                                 |  50%
-label: drop_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |...................................                              |  53%
-  ordinary text without R code
-
-  |                                                                         |.....................................                            |  56%
-label: stratified_tmle (with options) 
-List of 1
- $ message: logi FALSE
-
-tmle for:	agecat: 0-3 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
-tmle for:	agecat: 0-3 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
-tmle for:	agecat: 0-3 months, studyid: ki0047075b-MAL-ED, country: INDIA
-tmle for:	agecat: 0-3 months, studyid: ki0047075b-MAL-ED, country: NEPAL
-tmle for:	agecat: 0-3 months, studyid: ki0047075b-MAL-ED, country: PERU
-tmle for:	agecat: 0-3 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 0-3 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 0-3 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
-tmle for:	agecat: 0-3 months, studyid: ki1000108-IRC, country: INDIA
-tmle for:	agecat: 0-3 months, studyid: ki1000304b-SAS-CompFeed, country: INDIA
-tmle for:	agecat: 0-3 months, studyid: ki1017093-NIH-Birth, country: BANGLADESH
-tmle for:	agecat: 0-3 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
-tmle for:	agecat: 0-3 months, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
-tmle for:	agecat: 0-3 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 0-3 months, studyid: ki1101329-Keneba, country: GAMBIA
-tmle for:	agecat: 0-3 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
-tmle for:	agecat: 0-3 months, studyid: ki1119695-PROBIT, country: BELARUS
-tmle for:	agecat: 0-3 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
-tmle for:	agecat: 0-3 months, studyid: ki1135781-COHORTS, country: GUATEMALA
-tmle for:	agecat: 0-3 months, studyid: ki1135781-COHORTS, country: INDIA
-tmle for:	agecat: 0-3 months, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
-tmle for:	agecat: 3-6 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
-tmle for:	agecat: 3-6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
-tmle for:	agecat: 3-6 months, studyid: ki0047075b-MAL-ED, country: INDIA
-tmle for:	agecat: 3-6 months, studyid: ki0047075b-MAL-ED, country: NEPAL
-tmle for:	agecat: 3-6 months, studyid: ki0047075b-MAL-ED, country: PERU
-tmle for:	agecat: 3-6 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 3-6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 3-6 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
-tmle for:	agecat: 3-6 months, studyid: ki1000108-IRC, country: INDIA
-tmle for:	agecat: 3-6 months, studyid: ki1000304b-SAS-CompFeed, country: INDIA
-tmle for:	agecat: 3-6 months, studyid: ki1017093-NIH-Birth, country: BANGLADESH
-tmle for:	agecat: 3-6 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
-tmle for:	agecat: 3-6 months, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
-tmle for:	agecat: 3-6 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 3-6 months, studyid: ki1101329-Keneba, country: GAMBIA
-tmle for:	agecat: 3-6 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
-tmle for:	agecat: 3-6 months, studyid: ki1119695-PROBIT, country: BELARUS
-tmle for:	agecat: 3-6 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
-tmle for:	agecat: 3-6 months, studyid: ki1135781-COHORTS, country: GUATEMALA
-tmle for:	agecat: 3-6 months, studyid: ki1135781-COHORTS, country: INDIA
-tmle for:	agecat: 3-6 months, studyid: kiGH5241-JiVitA-3, country: BANGLADESH
-tmle for:	agecat: 6-9 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
-tmle for:	agecat: 6-9 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
-tmle for:	agecat: 6-9 months, studyid: ki0047075b-MAL-ED, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: ki0047075b-MAL-ED, country: PERU
-tmle for:	agecat: 6-9 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 6-9 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 6-9 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: ki1000108-IRC, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: ki1000304b-SAS-CompFeed, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: ki1000304b-SAS-FoodSuppl, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: ki1017093-NIH-Birth, country: BANGLADESH
-tmle for:	agecat: 6-9 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
-tmle for:	agecat: 6-9 months, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
-tmle for:	agecat: 6-9 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 6-9 months, studyid: ki1101329-Keneba, country: GAMBIA
-tmle for:	agecat: 6-9 months, studyid: ki1112895-Guatemala BSC, country: GUATEMALA
-tmle for:	agecat: 6-9 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
-tmle for:	agecat: 6-9 months, studyid: ki1119695-PROBIT, country: BELARUS
-tmle for:	agecat: 6-9 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
-tmle for:	agecat: 6-9 months, studyid: ki1135781-COHORTS, country: GUATEMALA
-tmle for:	agecat: 6-9 months, studyid: ki1135781-COHORTS, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: ki1148112-LCNI-5, country: MALAWI
-tmle for:	agecat: 9-12 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
-tmle for:	agecat: 9-12 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
-tmle for:	agecat: 9-12 months, studyid: ki0047075b-MAL-ED, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: ki0047075b-MAL-ED, country: PERU
-tmle for:	agecat: 9-12 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 9-12 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 9-12 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: ki1000108-IRC, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: ki1000304b-SAS-CompFeed, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: ki1000304b-SAS-FoodSuppl, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: ki1017093-NIH-Birth, country: BANGLADESH
-tmle for:	agecat: 9-12 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
-tmle for:	agecat: 9-12 months, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
-tmle for:	agecat: 9-12 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 9-12 months, studyid: ki1101329-Keneba, country: GAMBIA
-tmle for:	agecat: 9-12 months, studyid: ki1112895-Guatemala BSC, country: GUATEMALA
-tmle for:	agecat: 9-12 months, studyid: ki1112895-iLiNS-Zinc, country: BURKINA FASO
-tmle for:	agecat: 9-12 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
-tmle for:	agecat: 9-12 months, studyid: ki1119695-PROBIT, country: BELARUS
-tmle for:	agecat: 9-12 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
-tmle for:	agecat: 9-12 months, studyid: ki1135781-COHORTS, country: GUATEMALA
-tmle for:	agecat: 9-12 months, studyid: ki1135781-COHORTS, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: ki1148112-LCNI-5, country: MALAWI
-tmle for:	agecat: 12-15 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
-tmle for:	agecat: 12-15 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
-tmle for:	agecat: 12-15 months, studyid: ki0047075b-MAL-ED, country: INDIA
-tmle for:	agecat: 12-15 months, studyid: ki0047075b-MAL-ED, country: PERU
-tmle for:	agecat: 12-15 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 12-15 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 12-15 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
-tmle for:	agecat: 12-15 months, studyid: ki1000108-IRC, country: INDIA
-tmle for:	agecat: 12-15 months, studyid: ki1000304b-SAS-CompFeed, country: INDIA
-tmle for:	agecat: 12-15 months, studyid: ki1000304b-SAS-FoodSuppl, country: INDIA
-tmle for:	agecat: 12-15 months, studyid: ki1017093-NIH-Birth, country: BANGLADESH
-tmle for:	agecat: 12-15 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
-tmle for:	agecat: 12-15 months, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
-tmle for:	agecat: 12-15 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 12-15 months, studyid: ki1101329-Keneba, country: GAMBIA
-tmle for:	agecat: 12-15 months, studyid: ki1112895-Guatemala BSC, country: GUATEMALA
-tmle for:	agecat: 12-15 months, studyid: ki1112895-iLiNS-Zinc, country: BURKINA FASO
-tmle for:	agecat: 12-15 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
-tmle for:	agecat: 12-15 months, studyid: ki1119695-PROBIT, country: BELARUS
-tmle for:	agecat: 12-15 months, studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
-tmle for:	agecat: 12-15 months, studyid: ki1135781-COHORTS, country: GUATEMALA
-tmle for:	agecat: 12-15 months, studyid: ki1148112-LCNI-5, country: MALAWI
-tmle for:	agecat: 15-18 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
-tmle for:	agecat: 15-18 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
-tmle for:	agecat: 15-18 months, studyid: ki0047075b-MAL-ED, country: INDIA
-tmle for:	agecat: 15-18 months, studyid: ki0047075b-MAL-ED, country: PERU
-tmle for:	agecat: 15-18 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 15-18 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 15-18 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
-tmle for:	agecat: 15-18 months, studyid: ki1000108-IRC, country: INDIA
-tmle for:	agecat: 15-18 months, studyid: ki1000304b-SAS-CompFeed, country: INDIA
-tmle for:	agecat: 15-18 months, studyid: ki1000304b-SAS-FoodSuppl, country: INDIA
-tmle for:	agecat: 15-18 months, studyid: ki1017093-NIH-Birth, country: BANGLADESH
-tmle for:	agecat: 15-18 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
-tmle for:	agecat: 15-18 months, studyid: ki1017093c-NIH-Crypto, country: BANGLADESH
-tmle for:	agecat: 15-18 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 15-18 months, studyid: ki1101329-Keneba, country: GAMBIA
-tmle for:	agecat: 15-18 months, studyid: ki1112895-iLiNS-Zinc, country: BURKINA FASO
-tmle for:	agecat: 15-18 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
-tmle for:	agecat: 15-18 months, studyid: ki1119695-PROBIT, country: BELARUS
-Failed on predict
-Failed on chain
-Quitting from lines 236-242 (REPORT.Rmd) 
-Error in self$compute_step() : Error in self$compute_step() : 
-  Error in combiners[[result_name]](results[[result_name]]) : 
-  Class attribute on column 1 of item 8 does not match with column 1 of item 1.
-
-Calls: run_internal ... <Anonymous> -> <Anonymous> -> <Anonymous> -> <Anonymous>
-
-Execution halted
-Running analysis failed
-{"status": "error"}
