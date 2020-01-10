@@ -126,8 +126,12 @@ rm(d)
 gc()
 
 dsub$sex2 <- ifelse(dsub$sex=="Male", "Female", "Male")
-dsub$sex2[is.na(dsub$sex)] <- NA
+dsub$sex2[is.na(dsub$sex) | dsub$sex==""] <- NA
+table(dsub$sex)
+table(dsub$sex2)
 dsub$sex <- dsub$sex2
+
+dsub <- dsub %>% filter(!is.na(sex))
 
 #recalculate Z-scores
 
@@ -149,6 +153,11 @@ dsub$waz2 <- who_value2zscore(dsub$agedays, dsub$wtkg, x_var = "agedays", y_var 
 
 summary(dsub$haz)
 summary(dsub$haz2)
+
+summary(dsub$haz[dsub$sex=="Male"])
+summary(dsub$haz[dsub$sex=="Female"])
+summary(dsub$haz2[dsub$sex=="Male"])
+summary(dsub$haz2[dsub$sex=="Female"])
 
 summary(dsub$waz)
 summary(dsub$waz2)

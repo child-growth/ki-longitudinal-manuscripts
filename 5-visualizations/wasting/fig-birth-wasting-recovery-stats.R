@@ -45,11 +45,11 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
 
 
 # save plot and underlying data
-ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-birth-stratified-outcomes.png"), width=8, height=5)
-ggsave(birthstrat_stats_plot, file=paste0("figures/wasting/fig-birth-stratified-outcomes_alt.png"), width=7, height=4)
+ggsave(birthstrat_stats_plot, file=paste0(here(),"/figures/wasting/fig-birth-stratified-outcomes.png"), width=8, height=5)
+ggsave(birthstrat_stats_plot, file=paste0(here(),"/figures/wasting/fig-birth-stratified-outcomes_alt.png"), width=7, height=4)
 
 saveRDS(d, file=paste0(here(), "/results/figure-data/figdata-birth-stratified-outcomes.RDS"))
 
-saveRDS(birthstrat_stats_plot, file=paste0(here::here(),"/figures/plot objects/birthstrat_stats_plot_object.rds"))
+saveRDS(birthstrat_stats_plot, file=paste0(here::here(),"/figures/plot-objects/birthstrat_stats_plot_object.rds"))
 
 

@@ -274,7 +274,7 @@ table(d$studyid[!is.na(d$single)], d$single[!is.na(d$single)])
 
 
 #Merge in post-birth weight measures for jivita-3 and sas-compfeed
-load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/maternal_weight_dataset.Rdata"))
+mat_weight <- readRDS(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/maternal_weight_dataset.RDS"))
 head(mat_weight)
 mat_weight <- mat_weight %>% rename(post_birth_weight=mwtkg)
 mat_weight$subjid <- as.character(mat_weight$subjid)

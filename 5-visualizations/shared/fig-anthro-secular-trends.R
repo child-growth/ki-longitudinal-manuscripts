@@ -36,29 +36,8 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Read rds file and drop unneeded columns that Vishak extracted that are either used elsewhere in covariate creation or 
 # were too rare to include as exposures (to avoid memory allocation issues)
-d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
-         drop = c( "AGEIMPFL",  #"WTKG", "REGION",   
-                   #"HTCM",    "LENCM", 
-                   "BAZ", "HCAZ",      
-                   "REGCTRY", "REGCTYP", "CITYTOWN", "HHID",    
-                   "FEEDING", "DURBRST", "ENSTUNT", "FWTKG", "FBMI",
-                   "BRFEED", "SUMEP",   "SUMDIAR", "SUMDAYS",
-                   "PCTDIAR", "IMPSAN",  "SOAP",    "SAFEH2O", "H2OTIME",
-                   "CHICKEN", "COW",     "CATTLE",  "INCTOT", 
-                   "INCTOTU", "BFEDFL",  "EXBFEDFL","WEANFL",  "ANMLKFL", "PWMLKFL",
-                   "FORMLKFL","BOTTLEFL","H20FEDFL","OTHFEDFL","SLDFEDFL","NBFYES",   "CMFDINT", "DIARFL",  "LSSTLFL",
-                   "NUMLS",   "BLDSTLFL","DIARFL_R","LSSTFL_R","NUMLS_R", "BLDSTL_R",
-                   "DUR_R"))
-gc()
+d<-readRDS(included_studies_path)
 
-colnames(d) <- tolower(colnames(d))
-gc()
-
-#Drop studies Vishak added to data product that don't meet inclusion criteria
-dim(d)
-d <- d[!(studyid %in% c("ki1000301-DIVIDS", "ki1055867-WomenFirst", "ki1135782-INCAP"))]
-dim(d)
-gc()
 
 #Drop obs without birth year
 d <- d[!is.na(brthyr)]

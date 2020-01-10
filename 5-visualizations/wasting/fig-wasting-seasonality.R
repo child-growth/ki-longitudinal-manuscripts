@@ -233,7 +233,7 @@ p4 <- ggplot() +
 ggsave(p4, file=paste0(here(),"/figures/wasting/fig-birthmont-strat-seasonality-by-age.png"), width=8, height=5)
 
 
-#Save plot objects
-saveRDS(list(p1, p2, p3, p4), file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_plots.rds")
+#Save plot-objects
+saveRDS(list(p1, p2, p3, p4), file="U:/ki-longitudinal-manuscripts/figures/plot-objects/season_plots.rds")
 
 

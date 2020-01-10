@@ -91,7 +91,7 @@ i<-100
 p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],], Xmax=702)
 print(p)
 
-saveRDS(p, file=paste0(here::here(),"/figures/plot objects/ind_traj_plot_object.rds"))
+saveRDS(p, file=paste0(here::here(),"/figures/plot-objects/ind_traj_plot_object.rds"))
 
 ggsave(p, file=paste0(here(),"/figures/wasting/individual_traj.png"),width=8,height=5)    
 

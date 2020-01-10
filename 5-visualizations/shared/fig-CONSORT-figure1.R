@@ -21,7 +21,7 @@ source(paste0(here::here(), "/0-config.R"))
 # Load in HBGD Data from Andrew                                                         #
 #                                                                                       #
 #########################################################################################
-consort_ki <- readRDS("data/HBGDki_CONSORT_inclusion_Ns.rds")
+consort_ki <- readRDS(here("data/HBGDki_CONSORT_inclusion_Ns.rds"))
 consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID))
 
 consort_ki <- consort_ki %>% select("Short_ID", "country", "nchild", "nobs", "Study_ID", "Short_Description", 
@@ -405,6 +405,6 @@ grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
                         heights = c(120, 1200))
 
 # save plot and underlying data
-ggsave(filename="figures/shared/fig-consort.pdf",
+ggsave(filename=here("/figures/shared/fig-consort.pdf"),
        plot = grid,device='pdf',width=9,height=20,limitsize = FALSE)
 

@@ -94,5 +94,4 @@ ggsave(fig5, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/f
 
 #N's for figure caption
 co_plot[[2]] %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
-plot_data_pooled %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 

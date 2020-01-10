@@ -10,6 +10,7 @@ source(here("/1-data-cleaning/raw data cleaning/4_ImpsanCleaning.R"))
 source(here("/1-data-cleaning/raw data cleaning/5_SafeH2OCleaning.R"))
 source(here("/1-data-cleaning/raw data cleaning/6_DiarrheaCleaning.R"))
 source(here("/1-data-cleaning/raw data cleaning/7_PROVIDE_measure_months.R"))
+source(here("/1-data-cleaning/raw data cleaning/8_maternal_weight.R"))
 
 
 source(here("/1-data-cleaning/1_process_FINAL_dataset.R"))

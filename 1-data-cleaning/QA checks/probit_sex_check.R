@@ -12,10 +12,10 @@ d <- dfull %>% filter(studyid == "ki1119695-PROBIT")
 summary(d$lencm)
 
 #Check content sex ratio (should be ~52-53% male)
-dProvide <- dfull %>% filter(studyid == "ki1114097-CONTENT") %>% arrange(agedays) %>%
+dContent <- dfull %>% filter(studyid == "ki1114097-CONTENT") %>% arrange(agedays) %>%
   group_by(subjid) %>% slice(1)
-(table(dProvide$sex))
-prop.table(table(dProvide$sex))
+(table(dContent$sex))
+prop.table(table(dContent$sex))
 
 
 #anthro <- read_sas("U:/data/probit_new/PROBIT/raw/anthro.sas7bdat")
@@ -57,12 +57,18 @@ dRaw1 <- dRaw %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
 table(d1$sex)
 table(dRaw1$sex)
 
-#subset to obs at birth
-d2 <- d1 %>% filter(agedays ==1)
-dRaw2 <- dRaw1 %>% filter(agedays ==1) 
+table(dRaw1$arm)
+(table(dRaw1$sex[dRaw1$arm=="Control group"])) 
+(table(dRaw1$sex[dRaw1$arm=="Experimental group"])) 
+prop.table(table(dRaw1$sex[dRaw1$arm=="Control group"])) * 100
+prop.table(table(dRaw1$sex[dRaw1$arm=="Experimental group"])) * 100
 
-table(d2$sex)
-table(dRaw2$sex)
+#subset to obs at birth
+# d2 <- d1 %>% filter(agedays ==1)
+# dRaw2 <- dRaw1 %>% filter(agedays ==1) 
+# 
+# table(d2$sex)
+# table(dRaw2$sex)
 
 
 
@@ -161,3 +167,27 @@ ggplot(d, aes(x=agedays, y=haz2, group=sex2, color=sex2)) +
   coord_cartesian(ylim= c(-5, 5), xlim=c(0, 730))
 
 
+
+
+
+
+
+
+
+dRaw <- read.csv("U:/data/content/CONTENT-201511/adam/ADS_KI1114097_CONTENT_201511.csv")
+colnames(dRaw) <- tolower(colnames(dRaw))
+
+table(dRaw$sex)
+
+#subset to first obser per child
+dRaw1 <- dRaw %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
+
+table(dRaw1$sex)
+
+(table(dRaw1$sex[dRaw1$arm=="Control group"])) 
+(table(dRaw1$sex[dRaw1$arm=="Experimental group"])) 
+prop.table(table(dRaw1$sex[dRaw1$arm=="Control group"])) * 100
+prop.table(table(dRaw1$sex[dRaw1$arm=="Experimental group"])) * 100
+
+#subset to obs at birth
+# d2 <- d1 %>% filter(agedays ==1)
