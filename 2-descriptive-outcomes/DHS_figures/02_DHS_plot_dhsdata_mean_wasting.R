@@ -157,9 +157,8 @@ dhssubfits <- bind_rows(dhssubfits, dhssub_pool) %>%
 # Grab GHAP KI cohort estimated mean Z-scores
 # by age, and format the data for this analysis
 #---------------------------------------
-d <- readRDS(paste0(here(),"/results/desc_data_cleaned.rds"))
+d <- readRDS(paste0(here(),"/results/desc_data_cleaned.rds")) %>% filter(is.na(country))
 d$region <- as.character(d$region)
-d$region[d$region=="Asia"] <- "South Asia"
 
 
 ghapd <- d %>%

@@ -116,6 +116,24 @@ d <- dfull %>% filter(studyid == "ki1017093-NIH-Birth")
 #--------------------------------------------
 d <- dfull %>% filter(studyid == "ki1017093b-PROVIDE")        
 
+# outcome-measure outcome-description publication n outcome-value
+# Neonatal  Age at enrollment (days)  700 4.9
+# female sex  700 47.40%
+# HAZ at enrollment 700 -0.9
+# WAZ at enrollment 700 -1.29
+# 
+# Maternal  Age at enrollment (years) 700 24.65
+
+#data at enrollment
+df <- d %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
+df <- droplevels(df)
+
+dim(df)
+summary(df$agedays) #matches as ages start t 1 instead of 0
+prop.table(table(df$sex)) * 100
+summary(df$haz)
+summary(df$waz)
+summary(df$W_mage)
 
 #--------------------------------------------
 # ki1017093c-NIH-Crypto     
@@ -127,6 +145,57 @@ d <- dfull %>% filter(studyid == "ki1017093c-NIH-Crypto")
 # ki1066203-TanzaniaChild2 
 #--------------------------------------------
 d <- dfull %>% filter(studyid == "ki1066203-TanzaniaChild2") 
+
+#data at enrollment
+df <- d %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
+df <- droplevels(df)
+
+
+# Child age at randomization (weeks)	
+# ZN + MVs	602	5.9
+# Zinc only	596	5.9
+# Multivitamins only	598	5.9
+# Placebo	604	5.9
+
+#Don't have variable to subset to assignment at time of randomization
+
+# 1	LAZ	
+# ZN + MVs	602	-0.37
+# Zinc only	596	-0.33
+# Multivitamins only	598	-0.26
+# Placebo	604	-0.17
+# 
+# 1	WLZ	
+# ZN + MVs	602	0.15
+# Zinc only	596	0.16
+# Multivitamins only	598	0.14
+# Placebo	604	0.05
+# 
+# 1	WAZ	
+# ZN + MVs	602	-0.26
+# Zinc only	596	-0.23
+# Multivitamins only	598	-0.17
+# Placebo	604	-0.16
+
+#grab obs closest to 6wks
+df <- d %>% group_by(subjid) %>% filter(abs(agedays- 5.9*7) == min(abs(agedays- 5.9*7))) 
+df %>% group_by(arm) %>% 
+  summarize(
+    haz=mean(haz, na.rm=T),
+    whz=mean(whz, na.rm=T),
+    waz=mean(waz, na.rm=T))
+#KI Z-scores consistent
+
+
+
+# 1	Male sex	
+# ZN + MVs	602	289 (48%)
+# Zinc only	596	300 (50.3%)
+# Multivitamins only	598	316 (52.8%)
+# Placebo	604	311 (51.5%)
+table(df$arm, df$sex)
+prop.table(table(df$arm, df$sex), 1)
+#KI data consistent
 
 
 #--------------------------------------------
@@ -184,6 +253,38 @@ d <- dfull %>% filter(studyid == "ki1113344-GMS-Nepal")
 #--------------------------------------------
 d <- dfull %>% filter(studyid == "ki1114097-CMIN")           
 
+# Sex male	Children 0-2y	252	144 (57%)
+# 
+# Birthweight (g)	<2500	252	86 (34%)
+# > or = 2500	252	166 (66%)
+
+df <- d %>% group_by(subjid) %>% arrange(agedays)  %>% filter(agedays < 731) %>% slice(1)
+dim(df)
+
+prop.table(table(df$sex))
+prop.table(table(df$birthwt))
+table(df$W_birthwt)
+
+# Participants 288
+# Weight and length in 4 periods1: 247
+# Girls: 106 (43)
+prop.table(table(df$sex))
+
+# Mean age at first visit:  1.2 
+# Mean visits,18 mo: 16
+# 
+# Any wasting
+# 0–17 mo: 104 (42) 
+
+d %>% filter(agedays < 17*30.4167, !is.na(whz)) %>% group_by(subjid) %>% mutate(minwhz = min(whz)) %>% slice(1) %>% ungroup() %>% summarize(mean (minwhz < -2)*100)
+
+# Stunted at
+# 18–24 mo 168 (68)
+d %>% filter(agedays > 18*30.4167, agedays < 24*30.4167, !is.na(haz), haz > -6) %>% group_by(subjid) %>% mutate(minhaz = min(haz)) %>% slice(1) %>% ungroup() %>% summarize(N=n(), mean (minhaz < -2)*100)
+
+#Stunting a 15% higher. Try longitudinal prevalence of stunting rather than CI
+d %>% filter(agedays > 18*30.4167, agedays < 24*30.4167, !is.na(haz), haz > -6) %>% summarize(N=n(), mean (haz < -2)*100)
+#Matches closer
 
 #--------------------------------------------
 # ki1126311-ZVITAMBO        
@@ -221,8 +322,59 @@ d <- dfull %>% filter(studyid == "ki1148112-iLiNS-DYAD-M")
 d <- dfull %>% filter(studyid == "kiGH5241-JiVitA-3")        
 
 
-summary_by_arm(d, "haz")
-summary_by_arm(d, "whz")
+# Table-number	outcome-measure	outcome-description	outcome-value
+# 1	n Iron-folic acid group		13897
+# 1	n multiple micronutrient group		14117
+# 
+# 1	Age <20	Iron-folic acid group maternal age at baseline 	4750 (34.2%)
+# 1	Age 20-29	Iron-folic acid group maternal age at baseline 	7462 (53.7%)
+# 1	Age >/=30	Iron-folic acid group maternal age at baseline 	1685 (12.1%)
+# 
+# 1	Age <20	Multiple micronutrient group maternal age at baseline 	4749 (33.6%)
+# 1	Age 20-29	Multiple micronutrient group maternal age at baseline 	7526 (53.3%)
+# 1	Age >/=30	Multiple micronutrient group maternal age at baseline 	1842 (13.1%)
+# 
+
+
+#baseline measures
+df <- d %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
+df <- droplevels(df)
+
+table(df$arm)
+
+#maternal age -note siblings may throw off numbers as dataset is per child...
+table(df$arm, df$mage)
+table(df$mage[df$arm=="Iron Folic Acid"])
+table(df$mage[df$arm=="Multiple Micronutrients"])
+prop.table(table(df$mage[df$arm=="Iron Folic Acid"])) * 100
+prop.table(table(df$mage[df$arm=="Multiple Micronutrients"])) * 100
+
+
+# 1	male	Iron-folic acid	51.1 (n = 7100/13901)
+# 1	male	Multiple micronutrient	51.6 (n = 7281/14121)
+table(df$arm, df$sex)
+prop.table(table(df$arm, df$sex), 1) * 100
+
+
+
+
+# 1	stunted at birth	Iron-folic acid group newborn length (cm)	35.7 (N=3680/10297)
+# 1	wasted at birth	iron-folic acid group newborn weight (g)	10.8  (N=851/8172)
+# 
+# 1	stunted at birth	Multiple micronutrient group newborn length (cm)	31.9  (N=3412/10640)
+# 1	wasted at birth	Multiple micronutrient group newborn weight (g)	10  (N=881/8529)
+
+
+#stunting and wasting at birth
+df <- d %>% group_by(subjid) %>% arrange(agedays) %>% slice(1) %>% filter(agedays==1)
+df <- droplevels(df)
+
+table(df$arm, df$haz < -2)
+prop.table(table(df$haz[df$arm=="Iron Folic Acid"] < -2)) * 100
+prop.table(table(df$haz[df$arm=="Multiple Micronutrients"] < -2)) * 100
+
+prop.table(table(df$whz[df$arm=="Iron Folic Acid"] < -2)) * 100
+prop.table(table(df$whz[df$arm=="Multiple Micronutrients"] < -2)) * 100
 
 
 #--------------------------------------------
