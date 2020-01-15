@@ -61,13 +61,63 @@ d <- dfull %>% filter(studyid == "ki1119695-PROBIT")
 # ki0047075b-MAL-ED         
 #--------------------------------------------
 d <- dfull %>% filter(studyid == "ki0047075b-MAL-ED")         
+df <- d %>% filter(!is.na(whz)) %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
+#outcome-measure	Cohort	publication n	outcome-value
+# Sample size with complete data	BGD	265	206
+# INV	251	200
+# NEB	240	208
+# BRF	233	81
+# PEL	303	198
+# SAV	314	199
+# TZH	262	199
+
+table(df$country)
+
+# WAZ (at enrollment)	
+# BGD	265	-1.3
+# INV	251	-1.3
+# NEB	240	-0.9
+# BRF	233	-0.2
+# PEL	303	-0.6
+# SAV	314	-0.4
+# TZH	262	-0.2
+
+df %>% group_by(country) %>% 
+  summarize(N=n(), mean(waz))
+
+# Maternal height (cm)	
+# BGD	265	148.9
+# INV	251	151.2
+# NEB	240	149.6
+# BRF	233	154.9
+# PEL	303	149.8
+# SAV	314	158.7
+# TZH	262	155.8
+
+df %>% group_by(country) %>% summarize(mean(W_mhtcm, na.rm=T))
+
 
 
 #--------------------------------------------
 # ki1000108-CMC-V-BCS-2002  
 #--------------------------------------------
 d <- dfull %>% filter(studyid == "ki1000108-CMC-V-BCS-2002")  
+df <- d %>% filter(!is.na(haz)) %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
 
+#gladstone 2011
+#373 finished 3 years of followup
+
+#187 female 186 males
+table(df$sex)
+
+# Birth weight 
+# Missing 8 
+# <2.5 kg 43 
+# ≥2.5 kg 322
+table(is.na(df$W_birthwt))
+table(df$W_birthwt < 2500)
+
+table(df$W_birthwt)
 
 #--------------------------------------------
 # ki1000108-IRC            
@@ -111,6 +161,27 @@ d <- dfull %>% filter(studyid == "ki1000304b-SAS-FoodSuppl")
 d <- dfull %>% filter(studyid == "ki1017093-NIH-Birth")      
 
 
+# outcome-description	publication n	outcome-value
+# 392	
+# No cryptosporidium infection mean HAZ at birth	90	(.99, -.94)
+# No cryptosporidium infection mean WAZ at birth	90	-1.38
+# No cryptosporidium infection percent male	90	57
+# 
+# Any cryptosporidium infection mean HAZ at birth	302	(.97, -.96)
+# Any cryptosporidium infection mean WAZ at birth	302	-1.41
+# Any cryptosporidium infection percent male	302	55
+
+#numbers won't match exactly because I can't stratify by crypto status
+df <- d %>% group_by(subjid) %>% arrange(agedays) %>% filter(agedays < 7) %>% slice(1)
+df <- droplevels(df)
+
+table(df$sex)
+prop.table(table(df$sex))
+
+summary(df$haz)
+summary(df$whz)
+
+#Seems to match, though male percent is less
 #--------------------------------------------
 # ki1017093b-PROVIDE        
 #--------------------------------------------
@@ -140,6 +211,46 @@ summary(df$W_mage)
 #--------------------------------------------
 d <- dfull %>% filter(studyid == "ki1017093c-NIH-Crypto")     
 
+df <- d %>% group_by(subjid)  %>% filter(!is.na(haz)) %>% summarize(N=n())
+table(df$N)
+
+df <- d %>% group_by(subjid) %>% arrange(agedays) %>% slice(1) #%>% filter(agedays < 7)
+df <- droplevels(df)
+table(df$agedays)
+
+#Urban site:
+
+# outcome-measure	outcome-description	publication n	outcome-value
+# Female sex	No crypto	89	50 (56%)
+# Any crypto	161	92 (57%)
+# 
+# Mean WAZ at birth	No crypto	89	-1.297
+# Any crypto	161	-1.287
+# 
+# Mean LAZ at birth	No crypto	89	-0.979
+# Any crypto	161	-0.938
+# 
+# Mean maternal age	No crypto	89	23.7
+# Any crypto	161	24.2
+
+table(df$siteid, df$sex)
+prop.table(table(df$siteid, df$sex), 1) * 100
+summary(df$haz)
+summary(df$waz)
+
+prop.table(table(df$siteid, df$haz < -2), 1) * 100
+#Stunting percent matches
+
+summary(df$W_mage)
+
+#load raw data
+d <- read.csv("U:/data/nih-crypto/NIH-Crypto-201707/adam/full_NIH_Crypto_Final.csv")
+colnames(d) <- tolower(colnames(d))
+head(d)
+length(unique(d$subjid))
+d <- d %>% filter(!is.na(haz))
+length(unique(d$subjid))
+#Matches KI dataset
 
 #--------------------------------------------
 # ki1066203-TanzaniaChild2 
@@ -240,7 +351,20 @@ summary_by_arm(df, "whz")
 # ki1112895-iLiNS-Zinc      
 #--------------------------------------------
 d <- dfull %>% filter(studyid == "ki1112895-iLiNS-Zinc")      
+d <- droplevels(d)
 
+# outcome-measure	outcome-description	publication n	outcome-value
+# LAZ	LAZ at 9mo, LNS-Zn0	602	-1.22 ± 1.07
+# LAZ	LAZ at 18mo, LNS-Zn0	602	-1.44 ± 1.05
+# WAZ	WAZ at 9mo, LNS-Zn0	602	-1.42 ± 1.10
+# WAZ	WAZ at 18mo, LNS-Zn0	602	-1.22 ± 0.94
+# WLZ	WLZ at 9mo, LNS-Zn0	602	-0.99 ± 1.06
+# WLZ	WLZ at 18mo, LNS-Zn0	602	-0.72 ± 0.89
+
+table(d$arm)
+d %>% filter(arm=="a.LNS-Zn0", agedays > 8* 30.4167, agedays < 10 * 30.4167, !is.na(whz)) %>% group_by(subjid) %>% slice(1) %>% ungroup() %>% summarize(mean(haz), mean(waz), mean(whz))
+d %>% filter(arm=="a.LNS-Zn0", agedays > 17* 30.4167, agedays < 19 * 30.4167, !is.na(whz)) %>% group_by(subjid) %>% slice(1) %>% ungroup() %>% summarize(mean(haz), mean(waz), mean(whz))
+#matches
 
 #--------------------------------------------
 # ki1113344-GMS-Nepal       
@@ -291,6 +415,39 @@ d %>% filter(agedays > 18*30.4167, agedays < 24*30.4167, !is.na(haz), haz > -6) 
 #--------------------------------------------
 d <- dfull %>% filter(studyid == "ki1126311-ZVITAMBO")        
 
+d %>% group_by(subjid) %>% mutate(lagage=lag(agedays), agediff = agedays-lagage) %>% ungroup() %>% summarize(median(agediff, na.rm=T), mean(agediff, na.rm=T))
+
+df <- d %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
+df <- droplevels(df)
+
+# outcome-measure	Group	publication n	outcome-value
+# Maternal age (y)	Aa	2319	24.19
+# Ap	2300	24.22
+# Pa	2280	23.98
+# Pp	2309	23.99
+
+summary(df$W_mage)
+
+# Infant male sex	Aa	2319	1204 (51.9%)
+# Ap	2300	1164 (50.7%)
+# Pa	2280	1209 (53.1%)
+# Pp	2309	1195 (51.8%)
+#
+table(df$sex)
+prop.table(table(df$sex))
+
+# Birth weight (g)	Aa	2319	3002.9
+# Ap	2300	2994.9
+# Pa	2280	3009.7
+# Pp	2309	2994.3
+# 
+# Length (cm)	Aa	2319	48.68
+# Ap	2300	48.53
+# Pa	2280	48.68
+# Pp	2309	48.61
+
+summary(df$wtkg) *1000
+summary(df$lencm) 
 
 #--------------------------------------------
 # ki1135781-COHORTS         
@@ -301,8 +458,50 @@ d <- dfull %>% filter(studyid == "ki1135781-COHORTS")
 #--------------------------------------------
 # ki1148112-LCNI-5         
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1148112-LCNI-5")         
+d <- dfull %>% filter(studyid == "ki1148112-LCNI-5")   
 
+# outcome-measure	outcome-description	publication n	outcome-value
+# Infant sex, male	Control	209	111 (53.1%)
+#                   Milk-LNS	212	107 (50.5%
+#                   Soy-LNS	210	103 (49.1%)
+#                   CSB	209	98 (46.9%)
+
+df<- d %>% group_by(subjid) %>% arrange(agedays) %>% slice(1) 
+df <- droplevels(df)
+
+table(df$arm, df$sex)
+sex_by_arm(df)
+
+#                   Age, months	Control	209	6.02
+#                   Milk-LNS	212	6.02
+#                   Soy-LNS	210	6.04
+#                   CSB	209	6.03
+
+df$agemonth = df$agedays/30.4167
+summary_by_arm(d=df,  Y="agemonth")
+
+#                   WLZ (weight for length z score)	
+#                   Control	209	0.41
+#                   Milk-LNS	212	0.5
+#                   Soy-LNS	210	0.46
+#                   CSB	209	0.42
+summary_by_arm(d=df,  Y="whz")
+
+                  
+#                   WAZ	Control	209	-0.8
+#                   Milk-LNS	212	-0.7
+#                   Soy-LNS	210	-0.8
+#                   CSB	209	-0.85
+summary_by_arm(d=df,  Y="waz")
+
+                 
+#                   LAZ	Control	209	-1.64
+#                   Milk-LNS	212	-1.59
+#                   Soy-LNS	210	-1.68
+#                   CSB	209	-1.72
+summary_by_arm(d=df,  Y="haz")
+
+#Matches
 
 #--------------------------------------------
 # ki1148112-iLiNS-DOSE      

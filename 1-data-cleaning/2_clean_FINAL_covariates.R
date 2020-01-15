@@ -265,6 +265,9 @@ d$birthwt[is.na(d$birthwt)] <- d$birthwt2[is.na(d$birthwt)]
 table(d$studyid, is.na(d$birthlen))
 table(d$studyid, is.na(d$birthwt))
 
+#fix 8 observations in CMC cohort with missing birthweight that still have missingess code (9998) rather than NA
+table(df$birthwt==9998)
+df$birthwt[df$birthwt==9998] <- NA
 #--------------------------------------------------------------------------
 # parental characteristics
 #--------------------------------------------------------------------------
