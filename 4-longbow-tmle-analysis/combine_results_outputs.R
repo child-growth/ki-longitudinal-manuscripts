@@ -6,37 +6,37 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-load(here("/results/rf results/raw longbow results/results_cont_2019-11-18.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_2020-11-18.rdata"))
 Zscores <- results
 
-load(here("/results/rf results/raw longbow results/results_bin_2019-11-16.rdata"))
+load(here("/results/rf results/raw longbow results/results_bin_2020-01-08.rdata"))
 bin <- results
 
-load(here("/results/rf results/raw longbow results/mortality_2019-12-06.rdata"))
+load(here("/results/rf results/raw longbow results/mortality_2020-12-06.rdata"))
 mort <- results
 
-load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-11-16.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_unadj_2020-11-16.rdata"))
 Zscores_unadj <- results
 
-load(here("/results/rf results/raw longbow results/results_bin_unadj_2019-11-16.rdata"))
+load(here("/results/rf results/raw longbow results/results_bin_unadj_2020-01-08.rdata"))
 bin_unadj <- results
 
-# load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
+# load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2020-08-19.rdata"))
 # lagwhz <- results
 
-load(here("/results/rf results/raw longbow results/vel_wlz_quart_2019-11-26.rdata"))
+load(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-11-26.rdata"))
 velocity <- results
 
-load(here("/results/rf results/raw longbow results/results_vel_2019-11-28.rdata"))
+load(here("/results/rf results/raw longbow results/results_vel_2020-11-28.rdata"))
 velocity_wlz_quart <- results
 
-# load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
+# load(here("results","rf results","raw longbow results","seasonality_results_2020-11-15.rdata"))
 # season <- results %>% mutate(agecat="All")
 
-load(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2019-12-17.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2020-12-17.rdata"))
 season_cont_rf <- results
 
-load(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2019-12-17.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2020-12-17.rdata"))
 season_bin_rf <- results
 
 

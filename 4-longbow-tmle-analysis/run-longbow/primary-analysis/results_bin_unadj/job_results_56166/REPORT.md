@@ -1,0 +1,1567 @@
+---
+title: "Risk Factor Analysis"
+output: 
+  html_document:
+    keep_md: TRUE
+    self_contained: true
+required_packages:  ['github://HBGD-UCB/longbowRiskFactors','github://jeremyrcoyle/skimr@vector_types', 'github://tlverse/delayed']
+params:
+  roles:
+    value:
+      - exclude
+      - strata
+      - id
+      - W
+      - A
+      - Y
+  data: 
+    value: 
+      type: 'web'
+      uri: 'https://raw.githubusercontent.com/HBGD-UCB/longbowRiskFactors/master/inst/sample_data/birthwt_data.rdata'
+  nodes:
+    value:
+      strata: ['study_id', 'mrace']
+      id: ['subjid']
+      W: ['apgar1', 'apgar5', 'gagebrth', 'mage', 'meducyrs', 'sexn']
+      A: ['parity_cat']
+      Y: ['haz01']
+  script_params:
+    value:
+      parallelize:
+        input: checkbox
+        value: FALSE
+      count_A:
+        input: checkbox
+        value: TRUE
+      count_Y:
+        input: checkbox
+        value: TRUE        
+      baseline_level:
+        input: 'character'
+        value: "[1,2)"
+  output_directory:
+    value: ''
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+
+
+
+## Methods
+## Outcome Variable
+
+**Outcome Variable:** stunted
+
+## Predictor Variables
+
+**Intervention Variable:** anywast06
+
+**Adjustment Set:**
+
+unadjusted
+
+## Stratifying Variables
+
+The analysis was stratified on these variable(s):
+
+* agecat
+* studyid
+* country
+
+## Data Summary
+
+agecat      studyid                    country                        anywast06    stunted   n_cell      n  outcome_variable 
+----------  -------------------------  -----------------------------  ----------  --------  -------  -----  -----------------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     0                  0      146    229  stunted          
+Birth       ki0047075b-MAL-ED          BANGLADESH                     0                  1       31    229  stunted          
+Birth       ki0047075b-MAL-ED          BANGLADESH                     1                  0       41    229  stunted          
+Birth       ki0047075b-MAL-ED          BANGLADESH                     1                  1       11    229  stunted          
+Birth       ki0047075b-MAL-ED          BRAZIL                         0                  0       53     65  stunted          
+Birth       ki0047075b-MAL-ED          BRAZIL                         0                  1        9     65  stunted          
+Birth       ki0047075b-MAL-ED          BRAZIL                         1                  0        3     65  stunted          
+Birth       ki0047075b-MAL-ED          BRAZIL                         1                  1        0     65  stunted          
+Birth       ki0047075b-MAL-ED          INDIA                          0                  0       25     47  stunted          
+Birth       ki0047075b-MAL-ED          INDIA                          0                  1        8     47  stunted          
+Birth       ki0047075b-MAL-ED          INDIA                          1                  0       12     47  stunted          
+Birth       ki0047075b-MAL-ED          INDIA                          1                  1        2     47  stunted          
+Birth       ki0047075b-MAL-ED          NEPAL                          0                  0       22     27  stunted          
+Birth       ki0047075b-MAL-ED          NEPAL                          0                  1        1     27  stunted          
+Birth       ki0047075b-MAL-ED          NEPAL                          1                  0        3     27  stunted          
+Birth       ki0047075b-MAL-ED          NEPAL                          1                  1        1     27  stunted          
+Birth       ki0047075b-MAL-ED          PERU                           0                  0      199    233  stunted          
+Birth       ki0047075b-MAL-ED          PERU                           0                  1       24    233  stunted          
+Birth       ki0047075b-MAL-ED          PERU                           1                  0        8    233  stunted          
+Birth       ki0047075b-MAL-ED          PERU                           1                  1        2    233  stunted          
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   0                  0       93    122  stunted          
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   0                  1        8    122  stunted          
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   1                  0       20    122  stunted          
+Birth       ki0047075b-MAL-ED          SOUTH AFRICA                   1                  1        1    122  stunted          
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                  0       99    124  stunted          
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                  1       20    124  stunted          
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                  0        3    124  stunted          
+Birth       ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                  1        2    124  stunted          
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          0                  0       30     92  stunted          
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          0                  1        7     92  stunted          
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          1                  0       45     92  stunted          
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          1                  1       10     92  stunted          
+Birth       ki1000108-IRC              INDIA                          0                  0      137    388  stunted          
+Birth       ki1000108-IRC              INDIA                          0                  1       27    388  stunted          
+Birth       ki1000108-IRC              INDIA                          1                  0      206    388  stunted          
+Birth       ki1000108-IRC              INDIA                          1                  1       18    388  stunted          
+Birth       ki1000109-EE               PAKISTAN                       0                  0       86    240  stunted          
+Birth       ki1000109-EE               PAKISTAN                       0                  1       70    240  stunted          
+Birth       ki1000109-EE               PAKISTAN                       1                  0       54    240  stunted          
+Birth       ki1000109-EE               PAKISTAN                       1                  1       30    240  stunted          
+Birth       ki1000109-ResPak           PAKISTAN                       0                  0       18     42  stunted          
+Birth       ki1000109-ResPak           PAKISTAN                       0                  1       10     42  stunted          
+Birth       ki1000109-ResPak           PAKISTAN                       1                  0       10     42  stunted          
+Birth       ki1000109-ResPak           PAKISTAN                       1                  1        4     42  stunted          
+Birth       ki1017093b-PROVIDE         BANGLADESH                     0                  0      365    539  stunted          
+Birth       ki1017093b-PROVIDE         BANGLADESH                     0                  1       31    539  stunted          
+Birth       ki1017093b-PROVIDE         BANGLADESH                     1                  0      126    539  stunted          
+Birth       ki1017093b-PROVIDE         BANGLADESH                     1                  1       17    539  stunted          
+Birth       ki1101329-Keneba           GAMBIA                         0                  0      934   1542  stunted          
+Birth       ki1101329-Keneba           GAMBIA                         0                  1       60   1542  stunted          
+Birth       ki1101329-Keneba           GAMBIA                         1                  0      526   1542  stunted          
+Birth       ki1101329-Keneba           GAMBIA                         1                  1       22   1542  stunted          
+Birth       ki1113344-GMS-Nepal        NEPAL                          0                  0      340    684  stunted          
+Birth       ki1113344-GMS-Nepal        NEPAL                          0                  1       82    684  stunted          
+Birth       ki1113344-GMS-Nepal        NEPAL                          1                  0      234    684  stunted          
+Birth       ki1113344-GMS-Nepal        NEPAL                          1                  1       28    684  stunted          
+Birth       ki1114097-CMIN             BANGLADESH                     0                  0       13     20  stunted          
+Birth       ki1114097-CMIN             BANGLADESH                     0                  1        2     20  stunted          
+Birth       ki1114097-CMIN             BANGLADESH                     1                  0        4     20  stunted          
+Birth       ki1114097-CMIN             BANGLADESH                     1                  1        1     20  stunted          
+Birth       ki1114097-CONTENT          PERU                           0                  0        2      2  stunted          
+Birth       ki1114097-CONTENT          PERU                           0                  1        0      2  stunted          
+Birth       ki1114097-CONTENT          PERU                           1                  0        0      2  stunted          
+Birth       ki1114097-CONTENT          PERU                           1                  1        0      2  stunted          
+6 months    ki0047075b-MAL-ED          BANGLADESH                     0                  0      151    241  stunted          
+6 months    ki0047075b-MAL-ED          BANGLADESH                     0                  1       32    241  stunted          
+6 months    ki0047075b-MAL-ED          BANGLADESH                     1                  0       46    241  stunted          
+6 months    ki0047075b-MAL-ED          BANGLADESH                     1                  1       12    241  stunted          
+6 months    ki0047075b-MAL-ED          BRAZIL                         0                  0      188    209  stunted          
+6 months    ki0047075b-MAL-ED          BRAZIL                         0                  1        6    209  stunted          
+6 months    ki0047075b-MAL-ED          BRAZIL                         1                  0       15    209  stunted          
+6 months    ki0047075b-MAL-ED          BRAZIL                         1                  1        0    209  stunted          
+6 months    ki0047075b-MAL-ED          INDIA                          0                  0      128    236  stunted          
+6 months    ki0047075b-MAL-ED          INDIA                          0                  1       31    236  stunted          
+6 months    ki0047075b-MAL-ED          INDIA                          1                  0       63    236  stunted          
+6 months    ki0047075b-MAL-ED          INDIA                          1                  1       14    236  stunted          
+6 months    ki0047075b-MAL-ED          NEPAL                          0                  0      181    236  stunted          
+6 months    ki0047075b-MAL-ED          NEPAL                          0                  1        7    236  stunted          
+6 months    ki0047075b-MAL-ED          NEPAL                          1                  0       43    236  stunted          
+6 months    ki0047075b-MAL-ED          NEPAL                          1                  1        5    236  stunted          
+6 months    ki0047075b-MAL-ED          PERU                           0                  0      204    273  stunted          
+6 months    ki0047075b-MAL-ED          PERU                           0                  1       59    273  stunted          
+6 months    ki0047075b-MAL-ED          PERU                           1                  0        9    273  stunted          
+6 months    ki0047075b-MAL-ED          PERU                           1                  1        1    273  stunted          
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   0                  0      178    254  stunted          
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   0                  1       45    254  stunted          
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   1                  0       26    254  stunted          
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   1                  1        5    254  stunted          
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                  0      179    247  stunted          
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                  1       55    247  stunted          
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                  0        9    247  stunted          
+6 months    ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                  1        4    247  stunted          
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          0                  0      120    365  stunted          
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          0                  1       57    365  stunted          
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          1                  0      134    365  stunted          
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          1                  1       54    365  stunted          
+6 months    ki1000108-IRC              INDIA                          0                  0      131    407  stunted          
+6 months    ki1000108-IRC              INDIA                          0                  1       49    407  stunted          
+6 months    ki1000108-IRC              INDIA                          1                  0      176    407  stunted          
+6 months    ki1000108-IRC              INDIA                          1                  1       51    407  stunted          
+6 months    ki1000109-EE               PAKISTAN                       0                  0      131    373  stunted          
+6 months    ki1000109-EE               PAKISTAN                       0                  1      118    373  stunted          
+6 months    ki1000109-EE               PAKISTAN                       1                  0       59    373  stunted          
+6 months    ki1000109-EE               PAKISTAN                       1                  1       65    373  stunted          
+6 months    ki1000109-ResPak           PAKISTAN                       0                  0       80    239  stunted          
+6 months    ki1000109-ResPak           PAKISTAN                       0                  1       63    239  stunted          
+6 months    ki1000109-ResPak           PAKISTAN                       1                  0       73    239  stunted          
+6 months    ki1000109-ResPak           PAKISTAN                       1                  1       23    239  stunted          
+6 months    ki1017093b-PROVIDE         BANGLADESH                     0                  0      381    604  stunted          
+6 months    ki1017093b-PROVIDE         BANGLADESH                     0                  1       69    604  stunted          
+6 months    ki1017093b-PROVIDE         BANGLADESH                     1                  0      127    604  stunted          
+6 months    ki1017093b-PROVIDE         BANGLADESH                     1                  1       27    604  stunted          
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                  0     1559   2029  stunted          
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                  1      169   2029  stunted          
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                  0      273   2029  stunted          
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                  1       28   2029  stunted          
+6 months    ki1101329-Keneba           GAMBIA                         0                  0     1252   2056  stunted          
+6 months    ki1101329-Keneba           GAMBIA                         0                  1      189   2056  stunted          
+6 months    ki1101329-Keneba           GAMBIA                         1                  0      512   2056  stunted          
+6 months    ki1101329-Keneba           GAMBIA                         1                  1      103   2056  stunted          
+6 months    ki1112895-Guatemala BSC    GUATEMALA                      0                  0      192    280  stunted          
+6 months    ki1112895-Guatemala BSC    GUATEMALA                      0                  1       78    280  stunted          
+6 months    ki1112895-Guatemala BSC    GUATEMALA                      1                  0        2    280  stunted          
+6 months    ki1112895-Guatemala BSC    GUATEMALA                      1                  1        8    280  stunted          
+6 months    ki1113344-GMS-Nepal        NEPAL                          0                  0      259    564  stunted          
+6 months    ki1113344-GMS-Nepal        NEPAL                          0                  1       77    564  stunted          
+6 months    ki1113344-GMS-Nepal        NEPAL                          1                  0      183    564  stunted          
+6 months    ki1113344-GMS-Nepal        NEPAL                          1                  1       45    564  stunted          
+6 months    ki1114097-CMIN             BANGLADESH                     0                  0      125    243  stunted          
+6 months    ki1114097-CMIN             BANGLADESH                     0                  1       76    243  stunted          
+6 months    ki1114097-CMIN             BANGLADESH                     1                  0       25    243  stunted          
+6 months    ki1114097-CMIN             BANGLADESH                     1                  1       17    243  stunted          
+6 months    ki1114097-CONTENT          PERU                           0                  0      192    215  stunted          
+6 months    ki1114097-CONTENT          PERU                           0                  1       19    215  stunted          
+6 months    ki1114097-CONTENT          PERU                           1                  0        4    215  stunted          
+6 months    ki1114097-CONTENT          PERU                           1                  1        0    215  stunted          
+24 months   ki0047075b-MAL-ED          BANGLADESH                     0                  0       82    212  stunted          
+24 months   ki0047075b-MAL-ED          BANGLADESH                     0                  1       80    212  stunted          
+24 months   ki0047075b-MAL-ED          BANGLADESH                     1                  0       29    212  stunted          
+24 months   ki0047075b-MAL-ED          BANGLADESH                     1                  1       21    212  stunted          
+24 months   ki0047075b-MAL-ED          BRAZIL                         0                  0      150    169  stunted          
+24 months   ki0047075b-MAL-ED          BRAZIL                         0                  1        6    169  stunted          
+24 months   ki0047075b-MAL-ED          BRAZIL                         1                  0       12    169  stunted          
+24 months   ki0047075b-MAL-ED          BRAZIL                         1                  1        1    169  stunted          
+24 months   ki0047075b-MAL-ED          INDIA                          0                  0       80    227  stunted          
+24 months   ki0047075b-MAL-ED          INDIA                          0                  1       71    227  stunted          
+24 months   ki0047075b-MAL-ED          INDIA                          1                  0       50    227  stunted          
+24 months   ki0047075b-MAL-ED          INDIA                          1                  1       26    227  stunted          
+24 months   ki0047075b-MAL-ED          NEPAL                          0                  0      143    228  stunted          
+24 months   ki0047075b-MAL-ED          NEPAL                          0                  1       39    228  stunted          
+24 months   ki0047075b-MAL-ED          NEPAL                          1                  0       35    228  stunted          
+24 months   ki0047075b-MAL-ED          NEPAL                          1                  1       11    228  stunted          
+24 months   ki0047075b-MAL-ED          PERU                           0                  0      122    201  stunted          
+24 months   ki0047075b-MAL-ED          PERU                           0                  1       71    201  stunted          
+24 months   ki0047075b-MAL-ED          PERU                           1                  0        5    201  stunted          
+24 months   ki0047075b-MAL-ED          PERU                           1                  1        3    201  stunted          
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   0                  0      135    238  stunted          
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   0                  1       77    238  stunted          
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   1                  0       19    238  stunted          
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   1                  1        7    238  stunted          
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                  0       55    214  stunted          
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   0                  1      147    214  stunted          
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                  0        4    214  stunted          
+24 months   ki0047075b-MAL-ED          TANZANIA, UNITED REPUBLIC OF   1                  1        8    214  stunted          
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          0                  0       48    366  stunted          
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          0                  1      128    366  stunted          
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          1                  0       56    366  stunted          
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          1                  1      134    366  stunted          
+24 months   ki1000108-IRC              INDIA                          0                  0      104    409  stunted          
+24 months   ki1000108-IRC              INDIA                          0                  1       77    409  stunted          
+24 months   ki1000108-IRC              INDIA                          1                  0      133    409  stunted          
+24 months   ki1000108-IRC              INDIA                          1                  1       95    409  stunted          
+24 months   ki1000109-EE               PAKISTAN                       0                  0       32    167  stunted          
+24 months   ki1000109-EE               PAKISTAN                       0                  1       77    167  stunted          
+24 months   ki1000109-EE               PAKISTAN                       1                  0       17    167  stunted          
+24 months   ki1000109-EE               PAKISTAN                       1                  1       41    167  stunted          
+24 months   ki1017093b-PROVIDE         BANGLADESH                     0                  0      290    578  stunted          
+24 months   ki1017093b-PROVIDE         BANGLADESH                     0                  1      142    578  stunted          
+24 months   ki1017093b-PROVIDE         BANGLADESH                     1                  0       98    578  stunted          
+24 months   ki1017093b-PROVIDE         BANGLADESH                     1                  1       48    578  stunted          
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                  0        4      6  stunted          
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                  1        1      6  stunted          
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                  0        1      6  stunted          
+24 months   ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                  1        0      6  stunted          
+24 months   ki1101329-Keneba           GAMBIA                         0                  0      739   1563  stunted          
+24 months   ki1101329-Keneba           GAMBIA                         0                  1      352   1563  stunted          
+24 months   ki1101329-Keneba           GAMBIA                         1                  0      301   1563  stunted          
+24 months   ki1101329-Keneba           GAMBIA                         1                  1      171   1563  stunted          
+24 months   ki1113344-GMS-Nepal        NEPAL                          0                  0      166    488  stunted          
+24 months   ki1113344-GMS-Nepal        NEPAL                          0                  1      134    488  stunted          
+24 months   ki1113344-GMS-Nepal        NEPAL                          1                  0      103    488  stunted          
+24 months   ki1113344-GMS-Nepal        NEPAL                          1                  1       85    488  stunted          
+24 months   ki1114097-CMIN             BANGLADESH                     0                  0       64    242  stunted          
+24 months   ki1114097-CMIN             BANGLADESH                     0                  1      136    242  stunted          
+24 months   ki1114097-CMIN             BANGLADESH                     1                  0       13    242  stunted          
+24 months   ki1114097-CMIN             BANGLADESH                     1                  1       29    242  stunted          
+24 months   ki1114097-CONTENT          PERU                           0                  0      140    164  stunted          
+24 months   ki1114097-CONTENT          PERU                           0                  1       21    164  stunted          
+24 months   ki1114097-CONTENT          PERU                           1                  0        3    164  stunted          
+24 months   ki1114097-CONTENT          PERU                           1                  1        0    164  stunted          
+
+
+The following strata were considered:
+
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
+* agecat: 24 months, studyid: ki1000108-IRC, country: INDIA
+* agecat: 24 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 24 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
+* agecat: 24 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1101329-Keneba, country: GAMBIA
+* agecat: 24 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: 24 months, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: 24 months, studyid: ki1114097-CONTENT, country: PERU
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
+* agecat: 6 months, studyid: ki1000108-IRC, country: INDIA
+* agecat: 6 months, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: 6 months, studyid: ki1000109-ResPak, country: PAKISTAN
+* agecat: 6 months, studyid: ki1017093b-PROVIDE, country: BANGLADESH
+* agecat: 6 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1101329-Keneba, country: GAMBIA
+* agecat: 6 months, studyid: ki1112895-Guatemala BSC, country: GUATEMALA
+* agecat: 6 months, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: 6 months, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: 6 months, studyid: ki1114097-CONTENT, country: PERU
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BANGLADESH
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: Birth, studyid: ki1000108-CMC-V-BCS-2002, country: INDIA
+* agecat: Birth, studyid: ki1000108-IRC, country: INDIA
+* agecat: Birth, studyid: ki1000109-EE, country: PAKISTAN
+* agecat: Birth, studyid: ki1000109-ResPak, country: PAKISTAN
+* agecat: Birth, studyid: ki1017093b-PROVIDE, country: BANGLADESH
+* agecat: Birth, studyid: ki1101329-Keneba, country: GAMBIA
+* agecat: Birth, studyid: ki1113344-GMS-Nepal, country: NEPAL
+* agecat: Birth, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: Birth, studyid: ki1114097-CONTENT, country: PERU
+
+### Dropped Strata
+
+Some strata were dropped due to rare outcomes:
+
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: INDIA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: NEPAL
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: SOUTH AFRICA
+* agecat: Birth, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: Birth, studyid: ki1000109-ResPak, country: PAKISTAN
+* agecat: Birth, studyid: ki1114097-CMIN, country: BANGLADESH
+* agecat: Birth, studyid: ki1114097-CONTENT, country: PERU
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 6 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: ki1112895-Guatemala BSC, country: GUATEMALA
+* agecat: 6 months, studyid: ki1114097-CONTENT, country: PERU
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: BRAZIL
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: PERU
+* agecat: 24 months, studyid: ki0047075b-MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1066203-TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: ki1114097-CONTENT, country: PERU
+
+## Methods Detail
+
+We're interested in the causal parameters $E[Y_a]$ for all values of $a \in \mathcal{A}$. These parameters represent the mean outcome if, possibly contrary to fact, we intervened to set all units to have $A=a$. Under the randomization and positivity assumptions, these are identified by the statistical parameters $\psi_a=E_W[E_{Y|A,W}(Y|A=a,W)]$.  In addition, we're interested in the mean of $Y$, $E[Y]$ under no intervention (the observed mean). We will estimate these parameters by using SuperLearner to fit the relevant likelihood factors -- $E_{Y|A,W}(Y|A=a,W)$ and $p(A=a|W)$, and then updating our likelihood fit using a joint TMLE.
+
+For unadjusted analyses ($W=\{\}$), initial likelihoods were estimated using Lrnr_glm to estimate the simple $E(Y|A)$ and Lrnr_mean to estimate $p(A)$. For adjusted analyses, a small library containing Lrnr_glmnet, Lrnr_xgboost, and Lrnr_mean was used.
+
+Having estimated these parameters, we will then use the delta method to estimate relative risks and attributable risks relative to a prespecified baseline level of $A$.
+
+todo: add detail about dropping strata with rare outcomes, handling missingness
+
+
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is
+## not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE
+## is not a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+
+
+
+# Results Detail
+
+## Results Plots
+![](/tmp/14855bbb-d68a-4ec3-b062-498cea685763/425cccd0-956a-4844-806c-3430cd577824/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
+
+![](/tmp/14855bbb-d68a-4ec3-b062-498cea685763/425cccd0-956a-4844-806c-3430cd577824/REPORT_files/figure-html/plot_rr-1.png)<!-- -->
+
+
+
+![](/tmp/14855bbb-d68a-4ec3-b062-498cea685763/425cccd0-956a-4844-806c-3430cd577824/REPORT_files/figure-html/plot_paf-1.png)<!-- -->
+
+![](/tmp/14855bbb-d68a-4ec3-b062-498cea685763/425cccd0-956a-4844-806c-3430cd577824/REPORT_files/figure-html/plot_par-1.png)<!-- -->
+
+## Results Table
+
+### Parameter: TSM
+
+
+agecat      studyid                    country                        intervention_level   baseline_level     estimate    ci_lower    ci_upper
+----------  -------------------------  -----------------------------  -------------------  ---------------  ----------  ----------  ----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     0                    NA                0.1751412   0.1190241   0.2312584
+Birth       ki0047075b-MAL-ED          BANGLADESH                     1                    NA                0.2115385   0.1002932   0.3227838
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                0.1891892   0.0622989   0.3160795
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          1                    NA                0.1818182   0.0793277   0.2843087
+Birth       ki1000108-IRC              INDIA                          0                    NA                0.1646341   0.1078032   0.2214651
+Birth       ki1000108-IRC              INDIA                          1                    NA                0.0803571   0.0447115   0.1160028
+Birth       ki1000109-EE               PAKISTAN                       0                    NA                0.4487179   0.3705073   0.5269286
+Birth       ki1000109-EE               PAKISTAN                       1                    NA                0.3571429   0.2544611   0.4598246
+Birth       ki1017093b-PROVIDE         BANGLADESH                     0                    NA                0.0782828   0.0518017   0.1047639
+Birth       ki1017093b-PROVIDE         BANGLADESH                     1                    NA                0.1188811   0.0657857   0.1719765
+Birth       ki1101329-Keneba           GAMBIA                         0                    NA                0.0603622   0.0455521   0.0751723
+Birth       ki1101329-Keneba           GAMBIA                         1                    NA                0.0401460   0.0237052   0.0565868
+Birth       ki1113344-GMS-Nepal        NEPAL                          0                    NA                0.1943128   0.1565344   0.2320912
+Birth       ki1113344-GMS-Nepal        NEPAL                          1                    NA                0.1068702   0.0694333   0.1443072
+6 months    ki0047075b-MAL-ED          BANGLADESH                     0                    NA                0.1748634   0.1197144   0.2300124
+6 months    ki0047075b-MAL-ED          BANGLADESH                     1                    NA                0.2068966   0.1024297   0.3113634
+6 months    ki0047075b-MAL-ED          INDIA                          0                    NA                0.1949686   0.1332579   0.2566792
+6 months    ki0047075b-MAL-ED          INDIA                          1                    NA                0.1818182   0.0954869   0.2681495
+6 months    ki0047075b-MAL-ED          NEPAL                          0                    NA                0.0372340   0.0101120   0.0643560
+6 months    ki0047075b-MAL-ED          NEPAL                          1                    NA                0.1041667   0.0175647   0.1907686
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   0                    NA                0.2017937   0.1490144   0.2545730
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   1                    NA                0.1612903   0.0315623   0.2910184
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                0.3220339   0.2531033   0.3909645
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          1                    NA                0.2872340   0.2224667   0.3520014
+6 months    ki1000108-IRC              INDIA                          0                    NA                0.2722222   0.2071183   0.3373262
+6 months    ki1000108-IRC              INDIA                          1                    NA                0.2246696   0.1703089   0.2790303
+6 months    ki1000109-EE               PAKISTAN                       0                    NA                0.4738956   0.4117931   0.5359980
+6 months    ki1000109-EE               PAKISTAN                       1                    NA                0.5241935   0.4361736   0.6122135
+6 months    ki1000109-ResPak           PAKISTAN                       0                    NA                0.4405594   0.3590196   0.5220993
+6 months    ki1000109-ResPak           PAKISTAN                       1                    NA                0.2395833   0.1540221   0.3251446
+6 months    ki1017093b-PROVIDE         BANGLADESH                     0                    NA                0.1533333   0.1200155   0.1866511
+6 months    ki1017093b-PROVIDE         BANGLADESH                     1                    NA                0.1753247   0.1152197   0.2354297
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                    NA                0.0978009   0.0837920   0.1118099
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                    NA                0.0930233   0.0602012   0.1258453
+6 months    ki1101329-Keneba           GAMBIA                         0                    NA                0.1311589   0.1137252   0.1485927
+6 months    ki1101329-Keneba           GAMBIA                         1                    NA                0.1674797   0.1379611   0.1969982
+6 months    ki1113344-GMS-Nepal        NEPAL                          0                    NA                0.2291667   0.1841866   0.2741467
+6 months    ki1113344-GMS-Nepal        NEPAL                          1                    NA                0.1973684   0.1456598   0.2490770
+6 months    ki1114097-CMIN             BANGLADESH                     0                    NA                0.3781095   0.3109339   0.4452850
+6 months    ki1114097-CMIN             BANGLADESH                     1                    NA                0.4047619   0.2560095   0.5535143
+24 months   ki0047075b-MAL-ED          BANGLADESH                     0                    NA                0.4938272   0.4166561   0.5709982
+24 months   ki0047075b-MAL-ED          BANGLADESH                     1                    NA                0.4200000   0.2828713   0.5571287
+24 months   ki0047075b-MAL-ED          INDIA                          0                    NA                0.4701987   0.3904147   0.5499826
+24 months   ki0047075b-MAL-ED          INDIA                          1                    NA                0.3421053   0.2352101   0.4490004
+24 months   ki0047075b-MAL-ED          NEPAL                          0                    NA                0.2142857   0.1545415   0.2740299
+24 months   ki0047075b-MAL-ED          NEPAL                          1                    NA                0.2391304   0.1155937   0.3626672
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   0                    NA                0.3632075   0.2983335   0.4280816
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   1                    NA                0.2692308   0.0983756   0.4400860
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                0.7272727   0.6613859   0.7931596
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          1                    NA                0.7052632   0.6403462   0.7701801
+24 months   ki1000108-IRC              INDIA                          0                    NA                0.4254144   0.3532997   0.4975291
+24 months   ki1000108-IRC              INDIA                          1                    NA                0.4166667   0.3525951   0.4807382
+24 months   ki1000109-EE               PAKISTAN                       0                    NA                0.7064220   0.6206723   0.7921718
+24 months   ki1000109-EE               PAKISTAN                       1                    NA                0.7068966   0.5893996   0.8243935
+24 months   ki1017093b-PROVIDE         BANGLADESH                     0                    NA                0.3287037   0.2843692   0.3730382
+24 months   ki1017093b-PROVIDE         BANGLADESH                     1                    NA                0.3287671   0.2525016   0.4050327
+24 months   ki1101329-Keneba           GAMBIA                         0                    NA                0.3226398   0.2948910   0.3503885
+24 months   ki1101329-Keneba           GAMBIA                         1                    NA                0.3622881   0.3189115   0.4056647
+24 months   ki1113344-GMS-Nepal        NEPAL                          0                    NA                0.4466667   0.3903524   0.5029809
+24 months   ki1113344-GMS-Nepal        NEPAL                          1                    NA                0.4521277   0.3809105   0.5233448
+24 months   ki1114097-CMIN             BANGLADESH                     0                    NA                0.6800000   0.6152169   0.7447831
+24 months   ki1114097-CMIN             BANGLADESH                     1                    NA                0.6904762   0.5503743   0.8305781
+
+
+### Parameter: E(Y)
+
+
+agecat      studyid                    country                        intervention_level   baseline_level     estimate    ci_lower    ci_upper
+----------  -------------------------  -----------------------------  -------------------  ---------------  ----------  ----------  ----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     NA                   NA                0.1834061   0.1331729   0.2336393
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          NA                   NA                0.1847826   0.1050392   0.2645260
+Birth       ki1000108-IRC              INDIA                          NA                   NA                0.1159794   0.0840777   0.1478811
+Birth       ki1000109-EE               PAKISTAN                       NA                   NA                0.4166667   0.3541635   0.4791698
+Birth       ki1017093b-PROVIDE         BANGLADESH                     NA                   NA                0.0890538   0.0649864   0.1131212
+Birth       ki1101329-Keneba           GAMBIA                         NA                   NA                0.0531777   0.0419744   0.0643810
+Birth       ki1113344-GMS-Nepal        NEPAL                          NA                   NA                0.1608187   0.1332679   0.1883695
+6 months    ki0047075b-MAL-ED          BANGLADESH                     NA                   NA                0.1825726   0.1336978   0.2314474
+6 months    ki0047075b-MAL-ED          INDIA                          NA                   NA                0.1906780   0.1404524   0.2409036
+6 months    ki0047075b-MAL-ED          NEPAL                          NA                   NA                0.0508475   0.0227597   0.0789352
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   NA                   NA                0.1968504   0.1478551   0.2458457
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          NA                   NA                0.3041096   0.2568508   0.3513684
+6 months    ki1000108-IRC              INDIA                          NA                   NA                0.2457002   0.2038248   0.2875757
+6 months    ki1000109-EE               PAKISTAN                       NA                   NA                0.4906166   0.4398159   0.5414174
+6 months    ki1000109-ResPak           PAKISTAN                       NA                   NA                0.3598326   0.2988570   0.4208083
+6 months    ki1017093b-PROVIDE         BANGLADESH                     NA                   NA                0.1589404   0.1297581   0.1881227
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   NA                   NA                0.0970922   0.0842059   0.1099785
+6 months    ki1101329-Keneba           GAMBIA                         NA                   NA                0.1420233   0.1269309   0.1571158
+6 months    ki1113344-GMS-Nepal        NEPAL                          NA                   NA                0.2163121   0.1823021   0.2503220
+6 months    ki1114097-CMIN             BANGLADESH                     NA                   NA                0.3827160   0.3214780   0.4439541
+24 months   ki0047075b-MAL-ED          BANGLADESH                     NA                   NA                0.4764151   0.4090254   0.5438047
+24 months   ki0047075b-MAL-ED          INDIA                          NA                   NA                0.4273128   0.3628178   0.4918077
+24 months   ki0047075b-MAL-ED          NEPAL                          NA                   NA                0.2192982   0.1654718   0.2731246
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   NA                   NA                0.3529412   0.2921001   0.4137823
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          NA                   NA                0.7158470   0.6695782   0.7621158
+24 months   ki1000108-IRC              INDIA                          NA                   NA                0.4205379   0.3726382   0.4684376
+24 months   ki1000109-EE               PAKISTAN                       NA                   NA                0.7065868   0.6373214   0.7758523
+24 months   ki1017093b-PROVIDE         BANGLADESH                     NA                   NA                0.3287197   0.2903909   0.3670485
+24 months   ki1101329-Keneba           GAMBIA                         NA                   NA                0.3346129   0.3112129   0.3580129
+24 months   ki1113344-GMS-Nepal        NEPAL                          NA                   NA                0.4487705   0.4045970   0.4929440
+24 months   ki1114097-CMIN             BANGLADESH                     NA                   NA                0.6818182   0.6230135   0.7406228
+
+
+### Parameter: RR
+
+
+agecat      studyid                    country                        intervention_level   baseline_level     estimate    ci_lower    ci_upper
+----------  -------------------------  -----------------------------  -------------------  ---------------  ----------  ----------  ----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     0                    0                 1.0000000   1.0000000   1.0000000
+Birth       ki0047075b-MAL-ED          BANGLADESH                     1                    0                 1.2078164   0.6524672   2.2358526
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          0                    0                 1.0000000   1.0000000   1.0000000
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          1                    0                 0.9610390   0.4001688   2.3080159
+Birth       ki1000108-IRC              INDIA                          0                    0                 1.0000000   1.0000000   1.0000000
+Birth       ki1000108-IRC              INDIA                          1                    0                 0.4880952   0.2782256   0.8562726
+Birth       ki1000109-EE               PAKISTAN                       0                    0                 1.0000000   1.0000000   1.0000000
+Birth       ki1000109-EE               PAKISTAN                       1                    0                 0.7959184   0.5686588   1.1140003
+Birth       ki1017093b-PROVIDE         BANGLADESH                     0                    0                 1.0000000   1.0000000   1.0000000
+Birth       ki1017093b-PROVIDE         BANGLADESH                     1                    0                 1.5186104   0.8672082   2.6593124
+Birth       ki1101329-Keneba           GAMBIA                         0                    0                 1.0000000   1.0000000   1.0000000
+Birth       ki1101329-Keneba           GAMBIA                         1                    0                 0.6650852   0.4126157   1.0720345
+Birth       ki1113344-GMS-Nepal        NEPAL                          0                    0                 1.0000000   1.0000000   1.0000000
+Birth       ki1113344-GMS-Nepal        NEPAL                          1                    0                 0.5499907   0.3684343   0.8210142
+6 months    ki0047075b-MAL-ED          BANGLADESH                     0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki0047075b-MAL-ED          BANGLADESH                     1                    0                 1.1831897   0.6523898   2.1458608
+6 months    ki0047075b-MAL-ED          INDIA                          0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki0047075b-MAL-ED          INDIA                          1                    0                 0.9325513   0.5270401   1.6500679
+6 months    ki0047075b-MAL-ED          NEPAL                          0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki0047075b-MAL-ED          NEPAL                          1                    0                 2.7976190   0.9262833   8.4495445
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   1                    0                 0.7992832   0.3430732   1.8621496
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          1                    0                 0.8919373   0.6535984   1.2171880
+6 months    ki1000108-IRC              INDIA                          0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1000108-IRC              INDIA                          1                    0                 0.8253169   0.5873151   1.1597658
+6 months    ki1000109-EE               PAKISTAN                       0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1000109-EE               PAKISTAN                       1                    0                 1.1061372   0.8939323   1.3687162
+6 months    ki1000109-ResPak           PAKISTAN                       0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1000109-ResPak           PAKISTAN                       1                    0                 0.5438161   0.3637166   0.8130945
+6 months    ki1017093b-PROVIDE         BANGLADESH                     0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1017093b-PROVIDE         BANGLADESH                     1                    0                 1.1434218   0.7619625   1.7158500
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                    0                 0.9511490   0.6499315   1.3919690
+6 months    ki1101329-Keneba           GAMBIA                         0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1101329-Keneba           GAMBIA                         1                    0                 1.2769218   1.0239810   1.5923433
+6 months    ki1113344-GMS-Nepal        NEPAL                          0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1113344-GMS-Nepal        NEPAL                          1                    0                 0.8612440   0.6208066   1.1948024
+6 months    ki1114097-CMIN             BANGLADESH                     0                    0                 1.0000000   1.0000000   1.0000000
+6 months    ki1114097-CMIN             BANGLADESH                     1                    0                 1.0704887   0.7117126   1.6101249
+24 months   ki0047075b-MAL-ED          BANGLADESH                     0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki0047075b-MAL-ED          BANGLADESH                     1                    0                 0.8505000   0.5922070   1.2214484
+24 months   ki0047075b-MAL-ED          INDIA                          0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki0047075b-MAL-ED          INDIA                          1                    0                 0.7275760   0.5098700   1.0382388
+24 months   ki0047075b-MAL-ED          NEPAL                          0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki0047075b-MAL-ED          NEPAL                          1                    0                 1.1159420   0.6204303   2.0071983
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   1                    0                 0.7412587   0.3834034   1.4331239
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          1                    0                 0.9697368   0.8522450   1.1034263
+24 months   ki1000108-IRC              INDIA                          0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki1000108-IRC              INDIA                          1                    0                 0.9794372   0.7790756   1.2313276
+24 months   ki1000109-EE               PAKISTAN                       0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki1000109-EE               PAKISTAN                       1                    0                 1.0006717   0.8145260   1.2293579
+24 months   ki1017093b-PROVIDE         BANGLADESH                     0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki1017093b-PROVIDE         BANGLADESH                     1                    0                 1.0001929   0.7647988   1.3080380
+24 months   ki1101329-Keneba           GAMBIA                         0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki1101329-Keneba           GAMBIA                         1                    0                 1.1228874   0.9689767   1.3012449
+24 months   ki1113344-GMS-Nepal        NEPAL                          0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki1113344-GMS-Nepal        NEPAL                          1                    0                 1.0122261   0.8272846   1.2385118
+24 months   ki1114097-CMIN             BANGLADESH                     0                    0                 1.0000000   1.0000000   1.0000000
+24 months   ki1114097-CMIN             BANGLADESH                     1                    0                 1.0154062   0.8115007   1.2705469
+
+
+### Parameter: PAR
+
+
+agecat      studyid                    country                        intervention_level   baseline_level      estimate     ci_lower     ci_upper
+----------  -------------------------  -----------------------------  -------------------  ---------------  -----------  -----------  -----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     0                    NA                 0.0082649   -0.0200973    0.0366270
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                -0.0044066   -0.1019219    0.0931087
+Birth       ki1000108-IRC              INDIA                          0                    NA                -0.0486548   -0.0876056   -0.0097039
+Birth       ki1000109-EE               PAKISTAN                       0                    NA                -0.0320513   -0.0775658    0.0134632
+Birth       ki1017093b-PROVIDE         BANGLADESH                     0                    NA                 0.0107710   -0.0050431    0.0265850
+Birth       ki1101329-Keneba           GAMBIA                         0                    NA                -0.0071845   -0.0150631    0.0006942
+Birth       ki1113344-GMS-Nepal        NEPAL                          0                    NA                -0.0334941   -0.0541144   -0.0128738
+6 months    ki0047075b-MAL-ED          BANGLADESH                     0                    NA                 0.0077092   -0.0207732    0.0361916
+6 months    ki0047075b-MAL-ED          INDIA                          0                    NA                -0.0042906   -0.0389232    0.0303421
+6 months    ki0047075b-MAL-ED          NEPAL                          0                    NA                 0.0136134   -0.0051628    0.0323896
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   0                    NA                -0.0049433   -0.0221144    0.0122277
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                -0.0179243   -0.0666746    0.0308260
+6 months    ki1000108-IRC              INDIA                          0                    NA                -0.0265220   -0.0738825    0.0208385
+6 months    ki1000109-EE               PAKISTAN                       0                    NA                 0.0167210   -0.0191712    0.0526133
+6 months    ki1000109-ResPak           PAKISTAN                       0                    NA                -0.0807268   -0.1298241   -0.0316296
+6 months    ki1017093b-PROVIDE         BANGLADESH                     0                    NA                 0.0056071   -0.0119314    0.0231455
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                    NA                -0.0007088   -0.0060034    0.0045858
+6 months    ki1101329-Keneba           GAMBIA                         0                    NA                 0.0108644    0.0005846    0.0211443
+6 months    ki1113344-GMS-Nepal        NEPAL                          0                    NA                -0.0128546   -0.0405900    0.0148808
+6 months    ki1114097-CMIN             BANGLADESH                     0                    NA                 0.0046066   -0.0236323    0.0328455
+24 months   ki0047075b-MAL-ED          BANGLADESH                     0                    NA                -0.0174121   -0.0547636    0.0199394
+24 months   ki0047075b-MAL-ED          INDIA                          0                    NA                -0.0428859   -0.0882342    0.0024624
+24 months   ki0047075b-MAL-ED          NEPAL                          0                    NA                 0.0050125   -0.0227036    0.0327286
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   0                    NA                -0.0102664   -0.0305773    0.0100445
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                -0.0114257   -0.0594554    0.0366040
+24 months   ki1000108-IRC              INDIA                          0                    NA                -0.0048765   -0.0586538    0.0489009
+24 months   ki1000109-EE               PAKISTAN                       0                    NA                 0.0001648   -0.0503542    0.0506838
+24 months   ki1017093b-PROVIDE         BANGLADESH                     0                    NA                 0.0000160   -0.0222668    0.0222988
+24 months   ki1101329-Keneba           GAMBIA                         0                    NA                 0.0119731   -0.0036030    0.0275493
+24 months   ki1113344-GMS-Nepal        NEPAL                          0                    NA                 0.0021038   -0.0328742    0.0370819
+24 months   ki1114097-CMIN             BANGLADESH                     0                    NA                 0.0018182   -0.0249753    0.0286117
+
+
+### Parameter: PAF
+
+
+agecat      studyid                    country                        intervention_level   baseline_level      estimate     ci_lower     ci_upper
+----------  -------------------------  -----------------------------  -------------------  ---------------  -----------  -----------  -----------
+Birth       ki0047075b-MAL-ED          BANGLADESH                     0                    NA                 0.0450632   -0.1224723    0.1875931
+Birth       ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                -0.0238474   -0.7142110    0.3884863
+Birth       ki1000108-IRC              INDIA                          0                    NA                -0.4195122   -0.7824186   -0.1304948
+Birth       ki1000109-EE               PAKISTAN                       0                    NA                -0.0769231   -0.1922527    0.0272505
+Birth       ki1017093b-PROVIDE         BANGLADESH                     0                    NA                 0.1209491   -0.0727707    0.2796871
+Birth       ki1101329-Keneba           GAMBIA                         0                    NA                -0.1351033   -0.2906268    0.0016792
+Birth       ki1113344-GMS-Nepal        NEPAL                          0                    NA                -0.2082723   -0.3405515   -0.0890458
+6 months    ki0047075b-MAL-ED          BANGLADESH                     0                    NA                 0.0422255   -0.1269287    0.1859894
+6 months    ki0047075b-MAL-ED          INDIA                          0                    NA                -0.0225017   -0.2212015    0.1438679
+6 months    ki0047075b-MAL-ED          NEPAL                          0                    NA                 0.2677305   -0.1663846    0.5402729
+6 months    ki0047075b-MAL-ED          SOUTH AFRICA                   0                    NA                -0.0251121   -0.1160385    0.0584063
+6 months    ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                -0.0589403   -0.2319924    0.0898040
+6 months    ki1000108-IRC              INDIA                          0                    NA                -0.1079444   -0.3181948    0.0687712
+6 months    ki1000109-EE               PAKISTAN                       0                    NA                 0.0340817   -0.0419964    0.1046052
+6 months    ki1000109-ResPak           PAKISTAN                       0                    NA                -0.2243454   -0.3708976   -0.0934600
+6 months    ki1017093b-PROVIDE         BANGLADESH                     0                    NA                 0.0352778   -0.0814914    0.1394393
+6 months    ki1066203-TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                    NA                -0.0072999   -0.0633275    0.0457756
+6 months    ki1101329-Keneba           GAMBIA                         0                    NA                 0.0764975    0.0015473    0.1458214
+6 months    ki1113344-GMS-Nepal        NEPAL                          0                    NA                -0.0594262   -0.1955679    0.0612127
+6 months    ki1114097-CMIN             BANGLADESH                     0                    NA                 0.0120366   -0.0645803    0.0831394
+24 months   ki0047075b-MAL-ED          BANGLADESH                     0                    NA                -0.0365481   -0.1181532    0.0391013
+24 months   ki0047075b-MAL-ED          INDIA                          0                    NA                -0.1003618   -0.2125344    0.0014335
+24 months   ki0047075b-MAL-ED          NEPAL                          0                    NA                 0.0228571   -0.1120019    0.1413611
+24 months   ki0047075b-MAL-ED          SOUTH AFRICA                   0                    NA                -0.0290881   -0.0883034    0.0269054
+24 months   ki1000108-CMC-V-BCS-2002   INDIA                          0                    NA                -0.0159611   -0.0853560    0.0489968
+24 months   ki1000108-IRC              INDIA                          0                    NA                -0.0115958   -0.1479111    0.1085320
+24 months   ki1000109-EE               PAKISTAN                       0                    NA                 0.0002332   -0.0738826    0.0692338
+24 months   ki1017093b-PROVIDE         BANGLADESH                     0                    NA                 0.0000487   -0.0700884    0.0655888
+24 months   ki1101329-Keneba           GAMBIA                         0                    NA                 0.0357821   -0.0119076    0.0812242
+24 months   ki1113344-GMS-Nepal        NEPAL                          0                    NA                 0.0046880   -0.0763879    0.0796570
+24 months   ki1114097-CMIN             BANGLADESH                     0                    NA                 0.0026667   -0.0374173    0.0412018
