@@ -98,7 +98,7 @@ saveRDS(prev_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure
 #-------------------------------------------------------------------------------------------
 ci_plot <- ki_combo_plot(d,
                         Disease="Wasting",
-                        Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                        Measure=c("Cumulative incidence", "Incidence proportion"), 
                         Birth="yes", 
                         Severe="no", 
                         Age_range="3 months", 
@@ -242,7 +242,7 @@ saveRDS(inc_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-
 inc_plot <- ip_plot(
   d,
   Disease = "Wasting",
-  Measure = "Incidence_proportion",
+  Measure = "Incidence proportion",
   Birth = "yes",
   Severe = "no",
   Age_range = "3 months",

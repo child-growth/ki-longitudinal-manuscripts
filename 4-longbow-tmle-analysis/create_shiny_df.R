@@ -131,7 +131,7 @@ df <- df %>% select("agecat", "studyid", "country", "adjustment_set",
 
 
 
-var_key = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRXN1QYQd4OUSGe0eRAL6gCEJQmhA3HGddPxGTVhEy5Tdt8Tin-kGnh0naLXWcUe8Lop_B6r6cfnr6h/pub?gid=0&single=true&output=csv")
+var_key = read.csv("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/data/C&C Variable Transformation.csv")
 
 intervention_levels = levels(df$intervention_variable)
 
@@ -175,7 +175,7 @@ intervention_var_levels = c("Birth weight (kg)", "Sex", "# of children <5 in HH"
                             "Month of measurement", "Mother's age", "Mother's BMI",
                             "Mother's education","Mother's height", "Mother's weight",
                             "Persistent wasting <6 mo.", "Safe water source", 
-                            "Single parent", "Vaginal birth")
+                            "Single parent", "Vaginal birth", "Rain quartile")
 df$intervention_variable = factor(df$intervention_variable, levels = unique(c(intervention_var_levels, !(levels(df$intervention_variable) %in% intervention_var_levels))))
 
 # Set order for parameter

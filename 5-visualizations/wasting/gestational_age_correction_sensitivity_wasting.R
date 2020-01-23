@@ -14,6 +14,8 @@ library(growthstandards)
 
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
+#Drop EE cohort (~mother-reported, unbelievable preterm prev ~80%)
+d <- d %>% filter(studyid!="ki1000109-EE")
 
 #Clean country and cohort names and drop cohorts without gestational age
 d$country_f <- tolower(d$country)
@@ -22,7 +24,7 @@ d$studyid_f <- gsub("^k.*?-" , "", d$studyid)
 d$country_f <- str_to_title(d$country_f)
 
 d <- d %>% filter(!is.na(W_gagebrth), measurefreq=="monthly") %>%
-  subset(., select = c(studyid, studyid_f, country, country_f, region, measurefreq, subjid, agedays, sex, W_gagebrth, haz, waz, wtkg, lencm, htcm)) %>%
+  subset(., select = c(studyid, studyid_f, country, country_f, region, measurefreq, subjid, agedays, sex, gagebrth, W_gagebrth, haz, waz, wtkg, lencm, htcm)) %>%
   mutate(cohort = paste0(studyid_f, ":\n", country_f))
 
 d$cohort[d$cohort=="COHORTS-Philippines"] <-   "Cebu Cohort"   
@@ -30,6 +32,15 @@ d$cohort[d$cohort=="COHORTS-Guatemala"] <- "INCAP Nutr Supp RCT"
 d$cohort[d$cohort=="COHORTS-India"] <- "New Delhi Birth Cohort" 
 
 d$lencm[is.na(d$lencm)] <- d$htcm[is.na(d$lencm)]
+
+#calculate prevalence by cohort and add to label
+d_preterm <- d %>% group_by(cohort) %>% 
+  summarize(cohort_preterm=round(mean(gagebrth=="Preterm")*100,2), min_age=min(agedays))%>%
+  mutate(cohort=gsub(":\n", "-", cohort),
+         cohort_lab=paste0(cohort," (",cohort_preterm,")")) %>%
+  select(cohort, cohort_lab, min_age)
+d_preterm$cohort[d_preterm$cohort=="TanzaniaChild2-Tanzania"] <- "Tanzania Child 2"
+d_preterm
 
 
 #---------------------------------------------------------
@@ -221,10 +232,18 @@ df$cohort <- gsub("GAMBIA", "Gambia", df$cohort)
 df$cohort <- factor(df$cohort, levels = rev(unique(df$cohort)))
 
 
+#merge in cohort-specific preterm prevalence
+df <- left_join(df, d_preterm, by=c("cohort"))
+df$cohort_lab[is.na(df$cohort_lab)] <- df$cohort[is.na(df$cohort_lab)]
+
+df <- df %>% arrange(pooled, region, GA_correction, est)
+df$cohort_lab <- factor(df$cohort_lab, levels = rev(unique(df$cohort_lab)))
+
+
 df$Region <- df$region
                                               
 
-p <- ggplot(df,aes(y=est,x=cohort)) +
+p <- ggplot(df,aes(y=est,x=cohort_lab)) +
   geom_errorbar(aes(color=Region, ymin=lb, ymax=ub, group=GA_correction), width = 0, position = position_dodge(0.4)) +
   geom_point(aes(fill=Region, color=Region, shape=GA_correction, group=GA_correction), size = 2, position = position_dodge(0.4)) +
   scale_fill_manual(values=tableau11) +

@@ -31,7 +31,7 @@ d$subjid <- as.numeric(d$subjid)
 d = d %>% filter(agedays<=16 * 30.4167)
 
 # number of studies, countries, children included
-length(names(table(d$studyid)))
+length(names(table(paste0(d$studyid,d$country))))
 length(names(table(d$country)))
 
 x=d %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
@@ -258,35 +258,23 @@ plot_data_sub = plot_data %>% filter(haz >=-5 & haz <=3.5)
 # rename labels
 plot_data_sub = plot_data_sub %>%
   mutate(age_rec_f = case_when(
-    age_rec == "0-3 months" ~ "Stunting recovery\nat 3 months",
-    age_rec == "3-6 months" ~ "Stunting recovery\nat 6 months",
-    age_rec == "6-9 months" ~ "Stunting recovery\nat 9 months",
-    age_rec == "9-12 months" ~ "Stunting recovery\nat 12 months"
+    age_rec == "0-3 months" ~ "Stunting reversal\nat 3 months",
+    age_rec == "3-6 months" ~ "Stunting reversal\nat 6 months",
+    age_rec == "6-9 months" ~ "Stunting reversal\nat 9 months",
+    age_rec == "9-12 months" ~ "Stunting reversal\nat 12 months"
   )) %>%
   mutate(age_rec_f = factor(age_rec_f, levels = c(
-    "Stunting recovery\nat 3 months",
-    "Stunting recovery\nat 6 months",
-    "Stunting recovery\nat 9 months",
-    "Stunting recovery\nat 12 months"
+    "Stunting reversal\nat 3 months",
+    "Stunting reversal\nat 6 months",
+    "Stunting reversal\nat 9 months",
+    "Stunting reversal\nat 12 months"
   )))
 
 plot_data_sub = plot_data_sub %>%
   mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
-  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3"))) %>%
+  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
 
-  # new label
-  mutate(age_rec_f2 = case_when(
-    age_rec_f == "Stunting recovery\nat 3 months" ~ "LAZ rose above -2\nat 3 months",
-    age_rec_f == "Stunting recovery\nat 6 months" ~ "LAZ rose above -2\nat 6 months",
-    age_rec_f == "Stunting recovery\nat 9 months" ~ "LAZ rose above -2\nat 9 months",
-    age_rec_f == "Stunting recovery\nat 12 months" ~ "LAZ rose above -2\nat 12 months"
-  )) %>%
-  mutate(age_rec_f2 = factor(age_rec_f2, levels = c(
-    "LAZ rose above -2\nat 3 months",
-    "LAZ rose above -2\nat 6 months",
-    "LAZ rose above -2\nat 9 months",
-    "LAZ rose above -2\nat 12 months"
-  )))
+
 
 # --------------------------------------------
 # prepare label for each panel of the plot
@@ -304,16 +292,16 @@ results_df = results_df %>%
            age_meas == "15 month measurement" ~ 1.85
          )) %>%
   mutate(age_rec_f = case_when(
-    age_rec == "0-3 months" ~ "Stunting recovery\nat 3 months",
-    age_rec == "3-6 months" ~ "Stunting recovery\nat 6 months",
-    age_rec == "6-9 months" ~ "Stunting recovery\nat 9 months",
-    age_rec == "9-12 months" ~ "Stunting recovery\nat 12 months"
+    age_rec == "0-3 months" ~ "Stunting reversal\nat 3 months",
+    age_rec == "3-6 months" ~ "Stunting reversal\nat 6 months",
+    age_rec == "6-9 months" ~ "Stunting reversal\nat 9 months",
+    age_rec == "9-12 months" ~ "Stunting reversal\nat 12 months"
   )) %>%
   mutate(age_rec_f = factor(age_rec_f, levels = c(
-    "Stunting recovery\nat 3 months",
-    "Stunting recovery\nat 6 months",
-    "Stunting recovery\nat 9 months",
-    "Stunting recovery\nat 12 months"
+    "Stunting reversal\nat 3 months",
+    "Stunting reversal\nat 6 months",
+    "Stunting reversal\nat 9 months",
+    "Stunting reversal\nat 12 months"
   ))) 
 
 
@@ -324,12 +312,12 @@ results_df = results_df %>%
 bluegreen = brewer.pal(n = 5, name = "YlGnBu")[2:5]
 
 rec_histogram_plot = ggplot(plot_data_sub, 
-                            aes(x=haz, y = age_meas_n, fill = age_rec_f2)) + 
+                            aes(x=haz, y = age_meas_n, fill = age_rec_f)) + 
   geom_density_ridges_gradient(stat = "binline", 
                                binwidth=.1, 
                                scale=0.8,
                                size=0.01) + 
-  facet_grid(~age_rec_f2) +
+  facet_grid(~age_rec_f) +
   ylab("Measurement age, months")+
   xlab("Length-for-age Z-score")+
   scale_y_discrete(expand = c(0.01, 0)) +

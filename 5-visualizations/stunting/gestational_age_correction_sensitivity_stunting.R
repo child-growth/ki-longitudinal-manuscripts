@@ -1,6 +1,7 @@
 
 
 
+
 #-----------------------------------
 # Check anthropometry measure quality
 #-----------------------------------
@@ -22,16 +23,22 @@ d$studyid_f <- gsub("^k.*?-" , "", d$studyid)
 d$country_f <- str_to_title(d$country_f)
 
 d <- d %>% filter(!is.na(W_gagebrth)) %>%
-  subset(., select = c(studyid, studyid_f, country, country_f, region, measurefreq, subjid, agedays, sex, W_gagebrth, haz, waz, wtkg, lencm, htcm)) %>%
+  subset(., select = c(studyid, studyid_f, country, country_f, region, measurefreq, subjid, agedays, sex, gagebrth, W_gagebrth, haz, waz, wtkg, lencm, htcm)) %>%
   mutate(cohort = paste0(studyid_f, ":\n", country_f))
 
-d$cohort[d$cohort=="COHORTS-Philippines"] <-   "Cebu Cohort"   
-d$cohort[d$cohort=="COHORTS-Guatemala"] <- "INCAP Nutr Supp RCT" 
-d$cohort[d$cohort=="COHORTS-India"] <- "New Delhi Birth Cohort" 
+d$cohort[d$cohort=="COHORTS:\nPhilippines"] <-   "Cebu Cohort:\nPhilippines"   
+d$cohort[d$cohort=="COHORTS:\nGuatemala"] <- "INCAP Nutr Supp RCT:\nGuatemala" 
+d$cohort[d$cohort=="COHORTS:\nIndia"] <- "New Delhi Birth Cohort:\nIndia" 
 
 d$lencm[is.na(d$lencm)] <- d$htcm[is.na(d$lencm)]
 
-
+#calculate prevalence by cohort and add to label
+d_preterm <- d %>% group_by(cohort) %>% 
+  summarize(cohort_preterm=round(mean(gagebrth=="Preterm")*100,2), min_age=min(agedays))%>%
+            mutate(cohort=gsub(":\n", "-", cohort),
+              cohort_lab=paste0(cohort," (",cohort_preterm,")")) %>%
+  select(cohort, cohort_lab, min_age)
+d_preterm
 #---------------------------------------------------------
 # Histograms of GA by cohort
 #---------------------------------------------------------
@@ -54,12 +61,12 @@ d <- d %>% filter(W_gagebrth > 24 *7 & W_gagebrth <= 300)
 stunt <- d %>% filter(haz >= -6 & haz <=6,
                       measurefreq!="yearly",
                       agedays == 1) %>%
-               mutate(stunt = 1*(haz < (-2)),
-                      agecat="Birth",
-                      agecat = factor(agecat)) %>%
-              #Drop cohorts with few birth measures
-               group_by(cohort) %>%
-              filter(n() >= 50)
+  mutate(stunt = 1*(haz < (-2)),
+         agecat="Birth",
+         agecat = factor(agecat)) %>%
+  #Drop cohorts with few birth measures
+  group_by(cohort) %>%
+  filter(n() >= 50)
 
 
 #---------------------------------------------------------
@@ -152,7 +159,6 @@ df$GA_correction <- factor(df$GA_correction, levels = c("GA Corrected", "Uncorre
 
 df$pooled <- ifelse(df$cohort=="pooled", 0, 1)
 
-df <- df %>% arrange(pooled, region, GA_correction, est)
 
 df <- df %>% filter(!(cohort=="pooled" & region=="N.America & Europe"))
 
@@ -174,38 +180,49 @@ df$cohort <- gsub("PHILIPPINES", "Philippines", df$cohort)
 df$cohort <- gsub("BELARUS", "Belarus", df$cohort)
 df$cohort <- gsub("GUATEMALA", "Guatemala", df$cohort)
 
+df$cohort[df$cohort=="COHORTS-Philippines"] <-   "Cebu Cohort-Philippines"   
+df$cohort[df$cohort=="COHORTS-Guatemala"] <- "INCAP Nutr Supp RCT-Guatemala" 
+df$cohort[df$cohort=="COHORTS-India"] <- "New Delhi Birth Cohort-India" 
+
 df <- df %>% filter(!(cohort %in% c("Pooled - Africa", "Pooled - Latin America")))
 
-df$cohort <- factor(df$cohort, levels = rev(unique(df$cohort)))
 
+#merge in cohort-specific preterm prevalence
+df <- left_join(df, d_preterm, by=c("cohort"))
+df$cohort_lab[is.na(df$cohort_lab)] <- df$cohort[is.na(df$cohort_lab)]
+     
+df <- df %>% arrange(pooled, region, GA_correction, est)
+df$cohort_lab <- factor(df$cohort_lab, levels = rev(unique(df$cohort_lab)))
 
+           
 df$Region <- df$region
-
-#Stunting only
-p <- ggplot(df, aes(y=est,x=cohort)) +
-  geom_errorbar(aes(color=Region, ymin=lb, ymax=ub, group=GA_correction), width = 0, position = position_dodge(0.4)) +
-  geom_point(aes(fill=Region, color=Region, shape=GA_correction, group=GA_correction), size = 2, position = position_dodge(0.4)) +
-  scale_fill_manual(values=tableau11) +
-  scale_color_manual(values=tableau11) +
-  geom_hline(yintercept = 0) +
-  xlab("Cohort")+
-  ylab("Prevalence at birth") +
-  scale_shape_manual(values = c(4, 21)) +
-  scale_x_discrete(expand = expand_scale(add = 1)) +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
-  coord_flip() +
-  theme(axis.title.y = element_text(size = 14)) +
-  ggtitle("") + 
-  theme(strip.text = element_text(size=14, margin = margin(t = 0)),
-        legend.position = "right",
-        axis.text.y = element_text( hjust = 0)) +
-  labs(shape="Gestational\nAge\nCorrection")
-
-print(p)
-
-
-#Save plot and plot data
-ggsave(p, file=paste0(here::here(), "/figures/stunting/fig-GA-correction-sensitivity.png"), height=8, width=5)
-
-saveRDS(df, file=paste0(here::here(), "/figures/stunting/figure-data/fig-GA-correction-sensitivity.RDS"))
-
+                
+                #Stunting only
+                p <- ggplot(df, aes(y=est,x=cohort_lab)) +
+                  geom_errorbar(aes(color=Region, ymin=lb, ymax=ub, group=GA_correction), width = 0, position = position_dodge(0.4)) +
+                  geom_point(aes(fill=Region, color=Region, shape=GA_correction, group=GA_correction), size = 2, position = position_dodge(0.4)) +
+                  scale_fill_manual(values=tableau11) +
+                  scale_color_manual(values=tableau11) +
+                  geom_hline(yintercept = 0) +
+                  xlab("Cohort")+
+                  ylab("Prevalence at birth") +
+                  scale_shape_manual(values = c(4, 21)) +
+                  scale_x_discrete(expand = expand_scale(add = 1)) +
+                  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
+                  coord_flip() +
+                  theme(axis.title.y = element_text(size = 14)) +
+                  ggtitle("") + 
+                  theme(strip.text = element_text(size=14, margin = margin(t = 0)),
+                        legend.position = "right",
+                        axis.text.y = element_text( hjust = 0)) +
+                  labs(shape="Gestational\nAge\nCorrection")
+                
+                print(p)
+                
+                
+                #Save plot and plot data
+                ggsave(p, file=paste0(here::here(), "/figures/stunting/fig-GA-correction-sensitivity.png"), height=7, width=8)
+                
+                saveRDS(df, file=paste0(here::here(), "/figures/stunting/figure-data/fig-GA-correction-sensitivity.RDS"))
+                
+                

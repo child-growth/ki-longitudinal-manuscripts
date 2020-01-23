@@ -25,6 +25,7 @@
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+library(growthstandards)
 
 
 
@@ -117,6 +118,59 @@ gc()
 d <- d[measurefreq!="yearly" | studyid %in% c("ki1148112-iLiNS-DOSE", "ki1148112-iLiNS-DYAD-M","ki1112895-Burkina Faso Zn", "ki1000304-VITAMIN-A" )]
 gc()
 
+
+#fix sex and Z-scores in PROBIT and CONTENT
+dfull <- d %>% filter(!(studyid %in% c("ki1119695-PROBIT","ki1114097-CONTENT")))
+dsub <- d %>% filter((studyid %in% c("ki1119695-PROBIT","ki1114097-CONTENT")))
+rm(d)
+gc()
+
+dsub$sex2 <- ifelse(dsub$sex=="Male", "Female", "Male")
+dsub$sex2[is.na(dsub$sex) | dsub$sex==""] <- NA
+table(dsub$sex)
+table(dsub$sex2)
+dsub$sex <- dsub$sex2
+
+dsub <- dsub %>% filter(!is.na(sex))
+
+#recalculate Z-scores
+
+#whz
+#use length or height standards, depending on age
+dsub$whz2 <- ifelse(!is.na(dsub$lencm),
+                    who_value2zscore2(dsub$lencm, dsub$wtkg, x_var = "lencm", y_var = "wtkg", sex = dsub$sex),    
+                    who_value2zscore(dsub$htcm, dsub$wtkg, x_var = "htcm", y_var = "wtkg", sex = dsub$sex)
+                    )
+
+
+#temporarily combine length and height variables
+dsub$lencm[is.na(dsub$lencm) & !is.na(dsub$htcm)] <- dsub$htcm[is.na(dsub$lencm) & !is.na(dsub$htcm)] 
+
+#haz and waz
+dsub$haz2 <- who_value2zscore(dsub$agedays, dsub$lencm, x_var = "agedays", y_var = "htcm", sex = dsub$sex)
+dsub$waz2 <- who_value2zscore(dsub$agedays, dsub$wtkg, x_var = "agedays", y_var = "wtkg", sex = dsub$sex)
+
+
+summary(dsub$haz)
+summary(dsub$haz2)
+
+summary(dsub$haz[dsub$sex=="Male"])
+summary(dsub$haz[dsub$sex=="Female"])
+summary(dsub$haz2[dsub$sex=="Male"])
+summary(dsub$haz2[dsub$sex=="Female"])
+
+summary(dsub$waz)
+summary(dsub$waz2)
+
+summary(dsub$whz)
+summary(dsub$whz2)
+
+dsub$haz <- dsub$haz2
+dsub$waz <- dsub$waz2
+dsub$whz <- dsub$whz2
+
+dsub <- dsub %>% subset(., select = -c(sex2, haz2, waz2, whz2))
+d <- bind_rows(dfull, dsub)
 
 
 saveRDS(d, included_studies_path)

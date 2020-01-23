@@ -84,6 +84,7 @@ p2 <- ggplot(data=dfit, aes(x=birthday, y=fit), color="grey20",  fill="grey20") 
   geom_line(size=2) +
   geom_ribbon(aes(ymin=fit_lb, ymax=fit_ub), alpha=0.3, color=NA) +
   ylab("Mean WLZ") + xlab("Birth month") +
+  scale_y_continuous(breaks = c(-16:0)/10) +
   scale_x_continuous(limits=c(1,364), expand = c(0, 0),
                      breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 p2
@@ -232,7 +233,7 @@ p4 <- ggplot() +
 ggsave(p4, file=paste0(here(),"/figures/wasting/fig-birthmont-strat-seasonality-by-age.png"), width=8, height=5)
 
 
-#Save plot objects
-saveRDS(list(p1, p2, p3, p4), file="U:/ki-longitudinal-manuscripts/figures/plot objects/season_plots.rds")
+#Save plot-objects
+saveRDS(list(p1, p2, p3, p4), file="U:/ki-longitudinal-manuscripts/figures/plot-objects/season_plots.rds")
 
 

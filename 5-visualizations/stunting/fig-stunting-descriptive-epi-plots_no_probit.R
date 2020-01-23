@@ -425,7 +425,7 @@ saveRDS(prev_plot_sev_sasia$data, file=paste0(figdata_dir_stunting, "figdata-",p
 #-------------------------------------------------------------------------------------------
 ci_inc_plot <- ki_combo_plot(d,
                         Disease="Stunting",
-                        Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                        Measure=c("Cumulative incidence", "Incidence proportion"), 
                         Birth="strat", 
                         Severe="no", 
                         Age_range="3 months", 
@@ -440,7 +440,7 @@ ci_inc_plot$plot
 # get N's for figure caption
 inc_n = d %>%
   filter(disease == "Stunting" & 
-           (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
+           (measure == "Cumulative incidence" | measure== "Incidence proportion") & 
            region!="Overall" &
            age_range == "3 months" &
            birth == "strat" & 
@@ -475,7 +475,7 @@ saveRDS(ci_inc_plot$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_pl
 inc_plot <- ip_plot(
   d,
   Disease = "Stunting",
-  Measure = "Incidence_proportion",
+  Measure = "Incidence proportion",
   Birth = "yes",
   Severe = "no",
   Age_range = "3 months",
@@ -509,7 +509,7 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,"_no_probit.
 #-------------------------------------------------------------------------------------------
 ci_inc_plot_nobirth <- ki_combo_plot(d,
                              Disease="Stunting",
-                             Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                             Measure=c("Cumulative incidence", "Incidence proportion"), 
                              Birth="strat", 
                              Severe="no", 
                              Age_range="3 months", 
@@ -529,7 +529,7 @@ ci_inc_plot_nobirth$plot
 # get N's for figure caption
 inc_n = d %>%
   filter(disease == "Stunting" & 
-           (measure == "Cumulative incidence" | measure== "Incidence_proportion") & 
+           (measure == "Cumulative incidence" | measure== "Incidence proportion") & 
            age_range == "3 months" &
            cohort == "pooled" &
            severe == "no") %>% 
@@ -562,7 +562,7 @@ saveRDS(ci_inc_plot_nobirth$data, file=paste0(figdata_dir_stunting, "figdata-",c
 
 ci_inc_plot_sev <- ki_combo_plot(d,
                              Disease="Stunting",
-                             Measure=c("Cumulative incidence", "Incidence_proportion"), 
+                             Measure=c("Cumulative incidence", "Incidence proportion"), 
                              Birth="yes", 
                              Severe="yes", 
                              Age_range="3 months", 
@@ -598,7 +598,7 @@ saveRDS(ci_inc_plot_sev$data, file=paste0(figdata_dir_stunting, "figdata-",ci_in
 ip_plot_africa <- ip_plot(
   d,
   Disease = "Stunting",
-  Measure = "Incidence_proportion",
+  Measure = "Incidence proportion",
   Birth = "strat",
   Severe = "no",
   Age_range = "3 months",
@@ -615,7 +615,7 @@ ip_plot_africa$plot
 ip_plot_lam <- ip_plot(
   d,
   Disease = "Stunting",
-  Measure = "Incidence_proportion",
+  Measure = "Incidence proportion",
   Birth = "strat",
   Severe = "no",
   Age_range = "3 months",
@@ -632,7 +632,7 @@ ip_plot_lam$plot
 ip_plot_sasia <- ip_plot(
   d,
   Disease = "Stunting",
-  Measure = "Incidence_proportion",
+  Measure = "Incidence proportion",
   Birth = "strat",
   Severe = "no",
   Age_range = "3 months",

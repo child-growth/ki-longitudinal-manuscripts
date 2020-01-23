@@ -16,7 +16,7 @@ library(RcppRoll)
 #rain <- read.csv(here("/data/monthly_rainfall.csv"))
 rain <- readRDS(here("/data/cohort_rain_data.rds"))
 
-d <- readRDS(paste0(ghapdata_dir,"/seasonality_data.rds"))
+d <- readRDS(paste0(ghapdata_dir,"/seasonality_rf_data.rds"))
 
 head(rain)
 head(d)
@@ -159,11 +159,11 @@ df <- droplevels(df)
 #Set reference levels
 df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-max rain", "Pre-max rain", "Max rain"))
 
-#Set up dataset for longbow analysis
-df <- filter(df, agedays < 24 * 30.4167)
 
 d <- subset(df, select = c(studyid, subjid, id, country, agedays, whz, haz, month, rain_quartile))
 head(d)
+
+
 
 
 #Mark age categories for tmle analysis and subset to wasting or stunting data
@@ -178,8 +178,15 @@ dim(d_haz)
 dprev_whz <- calc.prev.agecat(d_whz)
 dprev_haz <- calc.prev.agecat(d_haz)
 
+#Get N's for table 1
+mode <- function(codes){
+  which.max(tabulate(codes))
+}
 
-
+Ndf <- dprev_haz %>% filter(agecat=="24 months") %>% group_by(studyid, subjid) %>% summarize(rain_quartile=mode(rain_quartile))
+Ndf %>% ungroup %>% summarize(N=n())
+table(Ndf$rain_quartile)
+prop.table(table(Ndf$rain_quartile))*100
 
 #--------------------------------------
 # Calculate prevalence of
@@ -189,10 +196,6 @@ dprev_haz <- calc.prev.agecat(d_haz)
 
 
 # take mean of multiple measurements within age window
-mode <- function(codes){
-  which.max(tabulate(codes))
-}
-
 dmn_wast <- dprev_whz %>%
   filter(!is.na(agecat)) %>%
   group_by(studyid,country,id, subjid,agecat) %>%

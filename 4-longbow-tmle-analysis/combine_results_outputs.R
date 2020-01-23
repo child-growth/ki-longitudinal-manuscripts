@@ -6,50 +6,54 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-load(here("/results/rf results/raw longbow results/results_cont_2019-11-18.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_2020-11-18.rdata"))
 Zscores <- results
 
-load(here("/results/rf results/raw longbow results/results_bin_2019-11-16.rdata"))
+load(here("/results/rf results/raw longbow results/results_bin_2020-01-08.rdata"))
 bin <- results
 
-load(here("/results/rf results/raw longbow results/mortality_2019-12-06.rdata"))
+load(here("/results/rf results/raw longbow results/mortality_2020-12-06.rdata"))
 mort <- results
 
-load(here("/results/rf results/raw longbow results/results_cont_unadj_2019-11-16.rdata"))
+load(here("/results/rf results/raw longbow results/results_cont_unadj_2020-11-16.rdata"))
 Zscores_unadj <- results
 
-load(here("/results/rf results/raw longbow results/results_bin_unadj_2019-11-16.rdata"))
+load(here("/results/rf results/raw longbow results/results_bin_unadj_2020-01-08.rdata"))
 bin_unadj <- results
 
-# load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2019-08-19.rdata"))
+# load(here("/results/rf results/raw longbow results/results_bin_lagwhz_2020-08-19.rdata"))
 # lagwhz <- results
 
-load(here("/results/rf results/raw longbow results/vel_wlz_quart_2019-11-26.rdata"))
+load(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-11-26.rdata"))
 velocity <- results
 
-load(here("/results/rf results/raw longbow results/results_vel_2019-11-28.rdata"))
+load(here("/results/rf results/raw longbow results/results_vel_2020-11-28.rdata"))
 velocity_wlz_quart <- results
 
-# load(here("results","rf results","raw longbow results","seasonality_results_2019-11-15.rdata"))
+# load(here("results","rf results","raw longbow results","seasonality_results_2020-11-15.rdata"))
 # season <- results %>% mutate(agecat="All")
 
-load(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2019-11-19.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2020-12-17.rdata"))
 season_cont_rf <- results
 
-load(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2019-11-19.rdata"))
+load(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2020-12-17.rdata"))
 season_bin_rf <- results
 
 
 
 
 
-d <- bind_rows(Zscores, Zscores_unadj, bin, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
+d <- bind_rows(Zscores, Zscores_unadj, bin, bin_unadj, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="4"] <- "Post-max rain"
 d$baseline_level[d$intervention_variable=="rain_quartile"] <- "Opposite max rain"
 
+#drop EE gestational age
+dim(d)
+d <- d %>% filter(!(studyid=="ki1000109-EE" & intervention_variable=="gagebrth"))
+dim(d)
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -104,20 +108,24 @@ d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfe
 
 # Drop non-sensical combinations
 unique(d$intervention_variable)
-atbirth <- c("vagbrth", "hdlvry", "trth2o", "safeh20", "cleanck", "impfloor", "impsan", "earlybf",  "enstunt", "enwast")
+atbirth <- c("vagbrth", "hdlvry", "trth2o", "safeh20", "cleanck", "impfloor", "impsan", "earlybf",  "enstunt", "enwast", "birthlen")
 postnatal <- c("anywast06", "pers_wast", "perdiar6","predexfd6")
 full2years <- "perdiar24"
 wastingvars <- c("anywast06", "pers_wast", "enwast")
-wasting_outcomevars <- c("wasted", "swasted", "wast_rec90d", "ever_wasted", "ever_swasted", "pers_wast", "ever_co" )
+wasting_outcomevars <- c("whz","wasted", "swasted", "wast_rec90d", "ever_wasted", "ever_swasted", "pers_wast", "ever_co" )
 
       
 
 dim(d)
 d <- d %>% filter(!(intervention_variable %in% atbirth & agecat=="Birth"))
+d <- d %>% filter(!(intervention_variable == "birthwt" & agecat=="Birth" & outcome_variable %in% wasting_outcomevars))
 d <- d %>% filter(!(intervention_variable %in% postnatal & agecat %in% c("Birth", "0-6 months",  "0-24 months")))
 d <- d %>% filter(!(intervention_variable %in% full2years & agecat!="24 months"))
 d <- d %>% filter(!(intervention_variable %in% wastingvars & outcome_variable %in% wasting_outcomevars))
 dim(d)
+
+dsub <- d %>% filter(agecat=="Birth") 
+table(dsub$intervention_variable, dsub$outcome_variable)
 
 
 #Seperate adjusted and unadjusted

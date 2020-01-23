@@ -106,11 +106,34 @@ dp <- dp %>%
 dp$studycountry <- sapply(dp$studycountry, function(x) as.character(x))
 dp$studycountry <- factor(dp$studycountry, levels = unique(dp$studycountry))
 
+
+##Fill missing age-cohort combinations as NA so they appear as grey 
+dd <- dd  %>% 
+  tidyr::expand(agecat, studycountry, region) %>%
+  left_join(dd, by = c("agecat", "studycountry", "region")) %>%
+  group_by(studycountry, region) %>%
+  mutate(N_missing_ages=sum(is.na(whzcat))) %>%
+  filter(N_missing_ages!=24) %>%
+  droplevels(.) %>% 
+  ungroup()
+
+dd$whzcat = as.character(dd$whzcat)
+dd$whzcat = ifelse(is.na(dd$whzcat), "Fewer than 50\nobservations", dd$whzcat)
+dd$whzcat<- factor(dd$whzcat, levels = c("<= -1", "(-1,-0.75]", "(-0.75,-0.5]", 
+                                         "(-0.5,-0.25]", "(-0.25,0]", "(0,0.5]",  "(0.5,1]", ">1",
+                                         "Fewer than 50\nobservations"))
+
+
+
+
 dd <- dd %>% 
   group_by(region) %>%
   dplyr::arrange(wastprev, .by_group = TRUE) 
 dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
 dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
+
+
+
 
 #-----------------------------------
 # Basic plot schemes
@@ -238,16 +261,27 @@ sidebar <- ggplot(data = dp, aes(x = studycountry)) +
 #-----------------------------------
 # WASTING PREVALENCE HEAT MAP
 #-----------------------------------
+viridis_cols = c(viridis(
+  n = length(levels(dd$whzcat)) - 1,
+  alpha = 1,
+  begin = 0,
+  end = 0.8,
+  direction = -1,
+  option = "C"
+),
+"grey90")
 
 # heat map
 wastphm <- hm + 
   aes(fill=whzcat) +
   labs(x="Age in months",y="",title="b") +
-  scale_fill_viridis(na.value="grey90", option = "C", discrete = T,
-                     direction = -1,
-                     end = 0.8,
-                     guide=guide_legend(title="Mean WLZ",title.vjust = 1,
-                                        label.position="bottom",label.hjust=0.5,nrow=1))
+  scale_fill_manual(na.value="grey90", 
+                    guide=guide_legend(title="Mean WLZ",title.vjust = 1,
+                                       label.position="bottom",label.hjust=0.1,nrow=1),
+                    values = viridis_cols) 
+
+
+
 
 # wasting prevalence side bar plot
 wpbar <- sidebar +
@@ -319,8 +353,8 @@ awstpgrid_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(filename=paste0("figures/wasting/fig-",awstpgrid_name, ".pdf"),
+ggsave(filename=here(paste0("figures/wasting/fig-",awstpgrid_name, ".pdf")),
       plot = awstpgrid,device='pdf',width=12,height=8)
 saveRDS(list(dd = dd,
              dp = dp),
-        file=here(paste0(figdata_dir_wasting,"figdata-",awstpgrid_name,".RDS")))
+        file=paste0(figdata_dir_wasting,"figdata-",awstpgrid_name,".RDS"))

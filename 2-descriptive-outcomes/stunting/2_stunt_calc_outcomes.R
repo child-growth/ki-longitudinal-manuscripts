@@ -52,6 +52,9 @@ study24 = c("ki0047075b-MAL-ED", "ki1000108-CMC-V-BCS-2002", "ki1000108-IRC",
 
 monthly_d <- monthly_d %>% filter(studyid %in% study24)
 
+#N cohorts and children in the monthly dataset
+monthly_d %>% ungroup() %>% filter(agedays < 24*30.4167) %>% summarize(Nstudies=length(unique(paste0(studyid, country))), Nchildren=length(unique(paste0(studyid, subjid))))
+
 agelst3 = list(
   "0-3 months",
   "3-6 months",

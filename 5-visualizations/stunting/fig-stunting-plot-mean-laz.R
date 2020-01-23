@@ -52,6 +52,7 @@ df_primary <- filter_df(d_primary, "Mean LAZ")
 
 df_monthly <- filter_df(d_monthly, "Mean LAZ - monthly cohorts")
 
+df_monthly %>% group_by(region) %>% summarize(min(nstudies), max(nstudies), min(nmeas), max(nmeas))
 
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month (primary & monthly from 0-24 months)

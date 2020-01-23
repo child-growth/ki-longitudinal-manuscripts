@@ -82,7 +82,7 @@ p_severecomp <- ggplot(plotdf, aes(x=Outcome, group=intervention_level)) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
                  alpha=0.5, size = 1) +
   facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
-  labs(x = "Cumulative incidence of growth faltering\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
+  labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
@@ -98,6 +98,6 @@ p_severecomp <- ggplot(plotdf, aes(x=Outcome, group=intervention_level)) +
 
 p_severecomp
 
-ggsave(p_severecomp, file=paste0(here::here(),"/figures/risk factor/fig-wast-perswast-comp.png"), height=8, width=10)
+ggsave(p_severecomp, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp.png"), height=8, width=10)
 
 saveRDS(list(p_severecomp, plotdf), file = paste0(here::here(), "/results/fig-severe-outcome-comps.RDS"))

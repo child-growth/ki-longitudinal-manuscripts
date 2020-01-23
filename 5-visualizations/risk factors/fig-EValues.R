@@ -84,7 +84,7 @@ p
 
 
 
-ggsave(p, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk factor/fig-Evalues.png"), height=10, width=8)
+ggsave(p, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk-factor/fig-Evalues.png"), height=10, width=8)
 
 
 

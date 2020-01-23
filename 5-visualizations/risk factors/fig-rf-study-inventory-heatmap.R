@@ -45,6 +45,11 @@ dim(rfn)
 d <- merge(rfp, rfn, by = c("studyid", "country", "risk_factor"))
 dim(d)
 
+#Drop EE gestational age
+dim(d)
+d <- d %>% filter(!(studyid=="EE" & risk_factor=="gagebrth"))
+dim(d)
+
 #Mark measure frequency
 d <- mark_measure_freq(d)
 d <- d %>% filter(measurefreq!="yearly")
@@ -157,7 +162,7 @@ dd$RFlabel[dd$risk_factor=="exclfeed6"] <-  "Exclusive breastfeeding under 6 mon
 dd$RFlabel[dd$risk_factor=="month"] <-  "Month of measurement"
 dd$RFlabel[dd$risk_factor=="brthmon"] <-  "Birth month"
 dd$RFlabel[dd$risk_factor=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 months"
-
+dd$RFlabel[dd$risk_factor=="rain_quartile"] <-  "Rain quartile"
 
 table(dd$risk_factor, is.na(dd$RFlabel))
 dd <- dd %>% filter(!is.na(RFlabel))
@@ -197,6 +202,7 @@ dhist_c <- dd %>% group_by(region, studycountry) %>% summarize(N=max(N, na.rm=T)
 textcol = "grey20"
 
 
+
 hm <- ggplot(dd,aes(x=RFlabel,y=studycountry, fill=factor(presence))) +
   facet_grid(region~., scales = "free_y", space="free") +
   geom_tile(colour="white",size=0.25) +
@@ -217,18 +223,22 @@ hm <- ggplot(dd,aes(x=RFlabel,y=studycountry, fill=factor(presence))) +
     strip.text.x = element_text(size=10),
     strip.text.y = element_text(angle=270,size=10),
     plot.background=element_blank(),
-    panel.border=element_blank()
+    panel.border=element_blank(),
+    strip.background =element_rect(color = "grey20", size = 1, fill="grey100")
   ) + 
   labs(x="Exposure",y="",title="b") +
-  scale_fill_manual(values = c("grey90","grey30"))
+  scale_fill_manual(values = c("grey90", "#287D8EFF"))
+
+
+
 
 
 #-----------------------------------
 # n by risk factor top plot 
 #-----------------------------------
-nrfbar <- ggplot(dhist_a, aes(y = N/1000, x = risk_factor)) +
+nrfbar <- ggplot(dhist_a, aes(y = N/1000, x = risk_factor, fill=risk_factor)) +
   geom_bar(stat = "identity") +  
-  scale_fill_manual(values=rep('gray70',7),na.value="grey90") +
+  scale_fill_manual(values=rep('gray70',50),na.value="grey90") +
   theme(
     # make background white
     panel.background = element_blank(),
@@ -250,7 +260,7 @@ nrfbar <- ggplot(dhist_a, aes(y = N/1000, x = risk_factor)) +
 #-----------------------------------
 # n by study right plot 
 #-----------------------------------
-sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000)) + 
+sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000, fill=region)) + 
   geom_bar(stat = "identity") +
   coord_flip() + 
   facet_grid(region~.,scales='free_y',space='free_y') +
@@ -284,9 +294,12 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000)) +
 
 
 # add margin around plots
-hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm")) #top, right, bottom, left
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,4.22,0), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,2.3,0,5.45), "cm"))
+# hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm")) #top, right, bottom, left
+# sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,4.22,0), "cm"))
+# nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,2.3,0,5.45), "cm"))
+hm2 = hm + theme(plot.margin = unit(c(0,0,0,0), "cm")) #top, right, bottom, left
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,2.955,-2.75), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 3.5, 0, 6.655), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2,empty, 
@@ -294,7 +307,9 @@ rfhmgrid <- grid.arrange(nrfbar2,empty,
                         heights = c(25,100),
                         widths=c(100,20))
 
+
+
 # save plot 
-ggsave(filename=here("figures/manuscript figure composites/risk factor/fig-rf-heatmap.pdf"),
-       plot = rfhmgrid,device='pdf',width=12,height=9)
+ggsave(filename=here("figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.png"),
+       plot = rfhmgrid,device='png',width=12,height=9)
 

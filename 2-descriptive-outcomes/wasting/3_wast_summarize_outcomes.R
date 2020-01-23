@@ -153,7 +153,18 @@ saveRDS(list(quantile_d=quantile_d,
 
 #Cumulative inc 3 month intervals
 d3 <- calc.ci.agecat(d, range = 3)
+length(unique(paste0(d3$studyid, d3$subjid)))
 
+#Calculate the raw  proportion of ever-wasted children who became wasted at each age
+d3_raw <- d3 %>% group_by(studyid, subjid) %>% filter(!is.na(agecat)) %>%
+  mutate(minwhz=min(whz)) %>% filter(minwhz < -2) %>% arrange(agedays) %>% mutate(sum_inc=cumsum(wast_inc))
+length(unique(paste0(d3_raw$studyid, d3_raw$subjid)))
+d3_raw_first_inc <- d3_raw %>% filter(sum_inc==1) %>% slice(1)
+dim(d3_raw_first_inc)
+table(d3_raw_first_inc$agecat)
+prop.table(table(d3_raw_first_inc$agecat)) * 100
+
+#RE pooled estimates
 ci.data3 <- summary.wast.ci(d3, age.range=3)
 ci.region3 <- d3 %>% group_by(region) %>% do(summary.wast.ci(., age.range=3)$ci.res)
 ci.country3 <- d3 %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=3)$ci.res) 

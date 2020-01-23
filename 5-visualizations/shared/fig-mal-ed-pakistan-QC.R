@@ -111,7 +111,7 @@ require(cowplot)
 fig2b <- plot_grid(p_kenaba, p_length, labels = c("B","C"), ncol = 2, align = 'h', axis = 'l', rel_heights = c(1, 1))
 fig2 <- plot_grid(p_mled, fig2b, labels = c("A",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1, 1))
 
-ggsave(fig2, file=paste0(here(),"/figures/manuscript figure composites/shared/fig2_anthroQC.png"), width=14, height=14)
+ggsave(fig2, file=paste0(here(),"/figures/manuscript-figure-composites/shared/fig2_anthroQC.png"), width=14, height=14)
   
   
   

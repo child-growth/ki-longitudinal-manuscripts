@@ -17,15 +17,20 @@ load(here("results/rf results/raw longbow results/opttx_vim_results_subset_2019-
 results_sub <- results
 
 #load seasonal VIM
-load(here("results/rf results/raw longbow results/opttx_vim_season_results_2019-12-07.rdata"))
+load(here("results/rf results/raw longbow results/opttx_vim_season_results_2019-12-17.rdata"))
 results_season <- results
 
 results <- rbind(results_full, results_sub, results_season)
 
+#drop EE gestational age
+dim(results)
+results <- results %>% filter(!(studyid=="ki1000109-EE" & intervention_variable=="gagebrth"))
+dim(results)
+
 saveRDS(results, paste0(here::here(),"/results/rf results/full_VIM_results.rds"))
 
 
-7
+
 unique(results$type)
 d <- results %>% filter(type=="PAR")
 

@@ -105,7 +105,7 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
 
 print(p_seasonRR)
 
-saveRDS(p_seasonRR, file = here("/figures/plot objects/season_RR_plot.rds"))
+saveRDS(p_seasonRR, file = here("/figures/plot-objects/season_RR_plot.rds"))
 ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=5, height=6)
 
 

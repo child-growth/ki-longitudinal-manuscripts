@@ -20,7 +20,7 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 #Subset agecat
 d <- droplevels(d)
 
-
+head(d)
 
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%

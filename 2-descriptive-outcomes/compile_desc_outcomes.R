@@ -5,7 +5,7 @@ source(paste0(here::here(), "/0-config.R"))
 #Primary outcomes
 wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS")) %>% mutate(analysis = "Primary")
 stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS")) %>% mutate(analysis = "Primary")
-co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.RDS")) %>% mutate(analysis = "Primary", pooling=ifelse(!is.na(country), "country",NA))
+co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.RDS")) %>% mutate(analysis = "Primary", pooling=ifelse(!is.na(country) & pooling!="no pooling", "country",NA))
 
 
 #Fixed effects
@@ -20,6 +20,7 @@ stunt_noProbit = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_no_pro
 stunt_noProbit_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe_no_probit.RDS")) %>% mutate(analysis = "No Probit - Fixed effects")
 
 wast_noKenabaBirth =  readRDS(paste0(res_dir,"wasting_desc_data_no_Kenaba_bw.RDS")) %>% mutate(analysis = "No Kenaba birth")
+co_noKenabaBirth <- readRDS(paste0(res_dir,"co_desc_data_no_Kenaba.RDS")) %>% mutate(analysis = "No Kenaba birth")
 
 stunt_noKenaba_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba - monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
 stunt_noKenaba = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba")
@@ -35,7 +36,7 @@ d <- bind_rows(stunt, wast, co_desc_data,
                stunt_fe, wast_fe, co_fe,
                stunt_monthly24, 
                stunt_noProbit, stunt_noProbit_fe, 
-               wast_noKenabaBirth,
+               wast_noKenabaBirth, co_noKenabaBirth,
                stunt_noKenaba, stunt_noKenaba_fe, stunt_noKenaba_monthly24)
 
 
@@ -47,6 +48,11 @@ d$region <- factor(d$region, levels=  c("Overall","Africa","Latin America", "Sou
 d$est[grepl("Incidence rate", d$measure)] <- d$est[grepl("Incidence rate", d$measure)] * 1000
 d$lb[grepl("Incidence rate", d$measure)] <- d$lb[grepl("Incidence rate", d$measure)] * 1000
 d$ub[grepl("Incidence rate", d$measure)] <- d$ub[grepl("Incidence rate", d$measure)] * 1000
+
+
+#Clean up measure labels
+d$measure <- gsub("Incidence_proportion", "Incidence proportion", d$measure)
+
 
 #Check for duplicates
 dim(d)

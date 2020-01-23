@@ -1,11 +1,11 @@
 "","Variable","Level","N","Proportion"
 "1","sex","Total",93756,100
-"2","sex","Female",46224,49.3
-"3","sex","Male",47532,50.7
-"4","gagebrth","Total",53879,100
-"5","gagebrth","Full or late term",27096,50.3
-"6","gagebrth","Preterm",8346,15.5
-"7","gagebrth","Early term",18437,34.2
+"2","sex","Female",45638,48.7
+"3","sex","Male",48118,51.3
+"4","gagebrth","Total",53500,100
+"5","gagebrth","Full or late term",27079,50.6
+"6","gagebrth","Preterm",8044,15
+"7","gagebrth","Early term",18377,34.3
 "8","parity","Total",58044,100
 "9","parity","1",20041,34.5
 "10","parity","2",17125,29.5
@@ -31,13 +31,13 @@
 "30","mhtcm",">=155 cm",35237,49.2
 "31","mhtcm","<151 cm",23433,32.7
 "32","mhtcm","[151-155) cm",12996,18.1
-"33","mwtkg","Total",63917,100
-"34","mwtkg",">=58 kg",20534,32.1
-"35","mwtkg","<52 kg",33515,52.4
-"36","mwtkg","[52-58) kg",9868,15.4
-"37","mbmi","Total",62281,100
-"38","mbmi","Normal weight",49423,79.4
-"39","mbmi","Underweight",12858,20.6
+"33","mwtkg","Total",63878,100
+"34","mwtkg",">=58 kg",20620,32.3
+"35","mwtkg","<52 kg",33464,52.4
+"36","mwtkg","[52-58) kg",9794,15.3
+"37","mbmi","Total",62279,100
+"38","mbmi","Normal weight",49273,79.1
+"39","mbmi","Underweight",13006,20.9
 "40","meducyrs","Total",84912,100
 "41","meducyrs","High",26564,31.3
 "42","meducyrs","Low",28029,33
@@ -93,11 +93,11 @@
 "92","pers_wast","0",9176,95.3
 "93","pers_wast","1",455,4.7
 "94","enstunt","Total",93756,100
-"95","enstunt","0",76847,82
-"96","enstunt","1",16909,18
+"95","enstunt","0",76856,82
+"96","enstunt","1",16900,18
 "97","enwast","Total",86641,100
-"98","enwast","0",73722,85.1
-"99","enwast","1",12919,14.9
+"98","enwast","0",73632,85
+"99","enwast","1",13009,15
 "100","hhwealth_quart","Total",44263,100
 "101","hhwealth_quart","Wealth Q4",11671,26.4
 "102","hhwealth_quart","Wealth Q1",10844,24.5

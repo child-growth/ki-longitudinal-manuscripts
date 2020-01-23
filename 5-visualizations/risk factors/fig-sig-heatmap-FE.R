@@ -4,7 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 
 #Load data
-ate <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_FE_results.rds")) 
+ate <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_FE.rds")) 
 rr <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds"))
 
 #Match columns names
@@ -226,7 +226,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
 hm  
   
 # save plot 
-ggsave(hm, file=paste0(here::here(),"/figures/risk factor/fig-sig-heatmap_FE.png"), height=14, width=11.5)
+ggsave(hm, file=paste0(here::here(),"/figures/risk-factor/fig-sig-heatmap_FE.png"), height=14, width=11.5)
 
 
 

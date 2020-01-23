@@ -161,26 +161,32 @@ print(p6)
 
 
 
+#------------------------------------------------------------------------------------------------
+# Format plots
+#------------------------------------------------------------------------------------------------
+
+pos = c(0.2,0.25)
+
+p1 <- p1 + ggtitle("Spline curves of WLZ, stratified by\ncategories of maternal weight") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +  guides(color = guide_legend("Maternal\nweight", nrow=3))
+p2 <- p2  + ggtitle("Stratified by\ncategories of maternal height") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6))
+p3 <- p3  + ggtitle("Spline curves of LAZ, stratified by\ncategories of maternal weight") + theme(legend.position = "none") + theme(legend.key = element_blank()) + theme(legend.key = element_blank())
+p4 <- p4  + ggtitle("Stratified by\ncategories of maternal height") +  theme(legend.position = "none") +guides(color = guide_legend("Maternal\nheight", nrow=3))
+p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5"))
+p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none") + theme(legend.key = element_blank())
+
+
 
 
 #------------------------------------------------------------------------------------------------
 # Save plots
 #------------------------------------------------------------------------------------------------
 
-#Save plot objects
-saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot objects/risk factor/rf_spline_sens_objects3.RDS"))
-saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/plot objects/rf_spline_sens_objects3.RDS"))
 
+# Combine plot objects
 
+require(cowplot)
+p_grid <- plot_grid(p1, p3, p2, p4, p5,  p6,   labels = rep("",6), ncol = 2, align = 'v', axis = 'l')
 
-
-
-
-
-
-
-
-
-
+ggsave(p_grid, file=paste0(here(),"/figures/risk-factor/spline_grid_sens3.png"), width=10, height=10)
 
 

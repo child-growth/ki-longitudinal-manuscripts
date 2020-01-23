@@ -206,8 +206,9 @@ d$hfoodsec <- factor(d$hfoodsec, levels=c("Food Secure", "Mildly Food Insecure",
 
 # drop gestational age in studies with no variations (measured it at the month level)
 d$gagebrth[d$studyid=="ki1113344-GMS-Nepal"] <- NA
-#drop gestational age in study where GA is mother reported and unbelievably high (93% preterm)
+#drop gestational age in study where GA is mother reported and unbelievably high (93% and 80% preterm)
 d$gagebrth[d$studyid=="ki1000304b-SAS-CompFeed"] <- NA
+d$gagebrth[d$studyid=="ki1000109-EE"] <- NA
 
 
 #parity
@@ -264,6 +265,9 @@ d$birthwt[is.na(d$birthwt)] <- d$birthwt2[is.na(d$birthwt)]
 table(d$studyid, is.na(d$birthlen))
 table(d$studyid, is.na(d$birthwt))
 
+#fix 8 observations in CMC cohort with missing birthweight that still have missingess code (9998) rather than NA
+table(df$birthwt==9998)
+df$birthwt[df$birthwt==9998] <- NA
 #--------------------------------------------------------------------------
 # parental characteristics
 #--------------------------------------------------------------------------
@@ -273,7 +277,7 @@ table(d$studyid[!is.na(d$single)], d$single[!is.na(d$single)])
 
 
 #Merge in post-birth weight measures for jivita-3 and sas-compfeed
-load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/maternal_weight_dataset.Rdata"))
+mat_weight <- readRDS(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/maternal_weight_dataset.RDS"))
 head(mat_weight)
 mat_weight <- mat_weight %>% rename(post_birth_weight=mwtkg)
 mat_weight$subjid <- as.character(mat_weight$subjid)
