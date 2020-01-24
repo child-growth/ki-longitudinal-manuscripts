@@ -31,42 +31,32 @@ cd 1-data-cleaning/
 # 8_DHS-data-quantiles.R \
 # 9_seasonality_prepdata.R
 
-R CMD BATCH 1_process_FINAL_dataset.R
 
-# # TEMPORARY FIX
-# echo $'\n### Running 1_process_FINAL_dataset.R...' >&1
-# (time Rscript 1_process_FINAL_dataset.R >&1)
+R CMD BATCH raw data cleaning/0_save_studies_as_rds.R
+R CMD BATCH raw data cleaning/1_assetPCA-allstudies.R
+R CMD BATCH raw data cleaning/2_BreastfeedingCleaning.R
+R CMD BATCH raw data cleaning/3_BreastfeedingDatasetCreation.R
+R CMD BATCH raw data cleaning/4_ImpsanCleaning.R
+R CMD BATCH raw data cleaning/5_SafeH2OCleaning.R
+R CMD BATCH raw data cleaning/6_DiarrheaCleaning.R
+R CMD BATCH raw data cleaning/7_PROVIDE_measure_months.R
+R CMD BATCH raw data cleaning/8_maternal_weight.R
 
-# echo $'\n### Running 1_process_FINAL_dataset.R...' >&2
-# (time Rscript 1_process_FINAL_dataset.R >&2)
-# 
-# echo $'\n### Running 2_clean_FINAL_covariates.R...' >&2
-# (time Rscript 2_clean_FINAL_covariates.R >&2)
-# 
-# # echo $'\n### Running 3_merge_covariates_and_raw_data.R...' >&2
-# # (time Rscript 3_merge_covariates_and_raw_data.R >&2)
-# # 
-# # echo $'\n### Running 4_create_master_dataset.R...' >&2
-# # (time Rscript 4_create_master_dataset.R >&2)
-# # 
-# # echo $'\n### Running 5_process_mortality_data.R...' >&2
-# # (time Rscript 5_process_mortality_data.R >&2)
-# # 
-# # echo $'\n### Running 6_anthro_prepdata.R...' >&2
-# # (time Rscript 6_anthro_prepdata.R >&2)
-# # 
-# # echo $'\n### Running 7_DHS-data-cleaning.R...' >&2
-# # (time Rscript 7_DHS-data-cleaning.R >&2)
-# # 
-# # echo $'\n### Running 8_DHS-data-quantiles.R...' >&2
-# # (time Rscript 8_DHS-data-quantiles.R >&2)
-# # 
-# # echo $'\n### Running 9_seasonality_prepdata.R...' >&2
-# # (time Rscript 9_seasonality_prepdata.R >&2)
-# 
-# echo $'\n--- Total time to run data-cleaning scripts:' >&2
 
 R CMD BATCH 1_process_FINAL_dataset.R
+R CMD BATCH 2_clean_FINAL_covariates.R
+R CMD BATCH 3_merge_covariates_and_raw_data.R
+R CMD BATCH 4_create_master_dataset.R
+R CMD BATCH 5_process_mortality_data.R
+R CMD BATCH 6_anthro_prepdata.R
+R CMD BATCH 7_DHS-data-cleaning.R
+R CMD BATCH 8_DHS-data-quantiles.R
+R CMD BATCH 9_seasonality_prepdata.R
+
+
+R CMD BATCH metadata scripts/1_create_KI_wasting_consort_data.R
+R CMD BATCH metadata scripts/2_create_KI_stunting_consort_data.R
+R CMD BATCH metadata scripts/3_check_extended_table1_stunting.R
 
 
 # Remove copied utility run script
