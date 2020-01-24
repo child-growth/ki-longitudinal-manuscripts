@@ -1,10 +1,12 @@
 
 rm(list=ls())
+.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
 source(paste0(here::here(), "/0-config.R"))
 
 library(longbowtools)
 library(progress)
 library(longbowRiskFactors)
+library(jsonlite)
 
 #get IP address
 system("ifconfig", intern=TRUE)
@@ -23,6 +25,7 @@ analyses$file <- "data/birthwt_data.csv"
 
 #Drop growth velocity
 analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
+analyses <- analyses[1:2,]
 
 i=1
 enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
@@ -47,6 +50,7 @@ inputs <- "inputs_template.json"
 
 
 writeLines(toJSON(enumerated_analyses[[1]]),"single_cont_analysis.json")
+writeLines(toJSON(enumerated_analyses),"all_cont_analyses.json")
 
 
 # 2. run batch
@@ -58,4 +62,26 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 inputs <- "single_cont_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+
+
+# send the batch to longbow (with provisioning disabled)
+batch_inputs <- "all_cont_analyses.json"
+batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
+
+# wait for the batch to finish and track progress
+wait_for_batch(batch_id_cont)
+
+# download the longbow outputs
+get_batch_results(batch_id_cont, results_folder="results_cont")
+length(dir("results_cont"))
+
+# load and concatenate the rdata from the jobs
+results <- load_batch_results("results.rdata", results_folder = "results_cont")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_cont")
+
+# save concatenated results
+filename1 <- paste(paste('results_cont',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename2 <- paste(paste('results_cont_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
+save(results, file=here("results","rf results","raw longbow results",filename1))
+save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
