@@ -248,9 +248,9 @@ The following object is masked from ‘package:purrr’:
 [10] "        inet 128.32.59.171  netmask 255.255.255.192  broadcast 128.32.59.191"
 [11] "        inet6 fe80::bbf0:bbef:f2ed:28dd  prefixlen 64  scopeid 0x20<link>"   
 [12] "        ether ac:1f:6b:41:46:7c  txqueuelen 1000  (Ethernet)"                
-[13] "        RX packets 973320545  bytes 435083399159 (405.2 GiB)"                
-[14] "        RX errors 0  dropped 1256640  overruns 0  frame 0"                   
-[15] "        TX packets 6016977272  bytes 8628148877258 (7.8 TiB)"                
+[13] "        RX packets 973374417  bytes 435158784614 (405.2 GiB)"                
+[14] "        RX errors 0  dropped 1256660  overruns 0  frame 0"                   
+[15] "        TX packets 6016993700  bytes 8628162079910 (7.8 TiB)"                
 [16] "        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0"          
 [17] ""                                                                            
 [18] "eno2: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500"                  
@@ -265,9 +265,9 @@ The following object is masked from ‘package:purrr’:
 [27] "        inet 127.0.0.1  netmask 255.0.0.0"                                   
 [28] "        inet6 ::1  prefixlen 128  scopeid 0x10<host>"                        
 [29] "        loop  txqueuelen 1000  (Local Loopback)"                             
-[30] "        RX packets 49502132  bytes 1541483423190 (1.4 TiB)"                  
+[30] "        RX packets 49508967  bytes 1541484549211 (1.4 TiB)"                  
 [31] "        RX errors 0  dropped 0  overruns 0  frame 0"                         
-[32] "        TX packets 49502132  bytes 1541483423190 (1.4 TiB)"                  
+[32] "        TX packets 49508967  bytes 1541484549211 (1.4 TiB)"                  
 [33] "        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0"          
 [34] ""                                                                            
 > 
@@ -322,13 +322,12 @@ The following object is masked from ‘package:purrr’:
 > inputs <- "single_cont_analysis.json"
 > 
 > #run test/provisioning job
-> #run_on_longbow(rmd_filename, inputs, provision = TRUE)
+> #run_on_longbow(rmd_filename, inputs, provision = TRUE, backend="bluevelvet")
 > 
 > 
 > # send the batch to longbow (with provisioning disabled)
 > batch_inputs <- "all_cont_analyses.json"
-> batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
-> 
-> # wait for the batch to finish and track progress
-> wait_for_batch(batch_id_cont)
-Running jobs...
+> batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE, backend="bluevelvet")
+Error in run_on_longbow(rmd_filename, batch_inputs, provision = FALSE,  : 
+  unused argument (backend = "bluevelvet")
+Execution halted
