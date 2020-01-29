@@ -17,6 +17,12 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+Warning: namespace ‘ggplot2’ is not available and has been replaced
+by .GlobalEnv when processing object ‘nagebar’
+Warning: namespace ‘scales’ is not available and has been replaced
+by .GlobalEnv when processing object ‘nagebar’
+[Previously saved workspace restored]
+
 > ##########################################
 > # ki longitudinal manuscripts
 > # stunting analysis
@@ -596,4 +602,4 @@ Removed 101 rows containing missing values (position_stack).
 > 
 > proc.time()
    user  system elapsed 
-  5.891   0.528   7.229 
+  5.893   0.469   6.661 

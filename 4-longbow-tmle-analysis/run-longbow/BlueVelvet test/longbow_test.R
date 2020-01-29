@@ -62,12 +62,12 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 inputs <- "single_cont_analysis.json"
 
 #run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE, backend="bluevelvet")
 
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_cont_analyses.json"
-batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
+batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE, backend="bluevelvet")
 
 # wait for the batch to finish and track progress
 wait_for_batch(batch_id_cont)
