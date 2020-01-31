@@ -23,8 +23,8 @@ default_params <- fromJSON(inputs)
 default_params$script_params$count_Y <- FALSE
 
 #set data path
-default_params$data$uri <- "https://raw.githubusercontent.com/HBGD-UCB/longbowRiskFactors/master/inst/sample_data/birthwt_data.csv"
-default_params$data$uri <- "/home/andrew.mertens/ki-longitudinal-manuscripts/data/birthwt_data.csv"
+#default_params$data$uri <- "https://raw.githubusercontent.com/HBGD-UCB/longbowRiskFactors/master/inst/sample_data/birthwt_data.csv"
+default_params$data$uri <- "/home/andrew.mertens/ki-longitudinal-manuscripts/data/non-secure data/birthwt_data.csv"
 default_params$data$type <- "web"
 default_params$data$repository_path <- NULL
 
@@ -42,7 +42,7 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
   analysis_params <- default_params
   analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
   analysis_nodes$W <- NULL
-  analysis_nodes$strata <- NULL
+  analysis_nodes$strata <- "ses"
   analysis_nodes$Y <- "haz"
   analysis_nodes$A <- "sex"
   analysis_nodes$id <- "subjid"
@@ -72,8 +72,10 @@ inputs <- "single_cont_analysis.json"
 #inputs <- "sample_inputs.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE, backend="bluevelvet")
 
+
+run_on_longbow(rmd_filename, inputs, provision = TRUE, backend="bluevelvet")
+#run_locally(rmd_filename, inputs)
 
 # # send the batch to longbow (with provisioning disabled)
 # batch_inputs <- "all_cont_analyses.json"
