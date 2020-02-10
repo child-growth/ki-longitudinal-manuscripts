@@ -11,15 +11,16 @@
 
 
 # Copy utility run script into this folder for concision in call
-#cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualizations/stunting
+cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/5-visualizations/stunting/runFileSaveLogs
 
 # Run folder scripts and produce output
 cd ~/ki-longitudinal-manuscripts/5-visualizations/stunting
 
 
 #list all scripts here
- ./runFileSaveLogs -i "visualizations-stunting" \
-  fig-study-inventory-heatmaps-stunt.R #\
+  ./runFileSaveLogs -i "visualizations-stunting" fig-study-inventory-heatmaps-stunt.R 
+
+#\
  # fig-DHS-plots-laz-compute.R \
  # fig-DHS-plots-laz.R \
  # fig-DHS-quantile-plots.R \

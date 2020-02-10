@@ -11,30 +11,38 @@ import shutil
 import glob	
 import pathlib	
 
+print(os.getcwd())
+print(os.path.dirname(__file__))
+
 # Setting working directory to this script's current directory	
 os.chdir(os.path.dirname(__file__))	
+
+	
 
 # Setting up argument parser	
 parser = argparse.ArgumentParser(description='Runs the argument R script(s) - in parallel if specified - and moves the subsequent generated .Rout log files to a time-stamped, user-stamped, and optionally, identifier-stamped directory.')	
 
 def is_valid_file(parser, arg):	
   if not os.path.exists(arg):	
-  parser.error("The file %s does not exist!" % arg)	
-else:	
-  return arg	
+    parser.error("The file %s does not exist!" % arg)	
+  else:	
+    return arg	
 
 def is_valid_directory(parser, arg):	
   if not os.path.isdir(arg):	
-  parser.error("The specified path (%s) is not a directory!" % arg)	
-else:	
-  return arg	
+    parser.error("The specified path (%s) is not a directory!" % arg)	
+  else:	
+    return arg	
 
 parser.add_argument('-p', '--parallel', action='store_true', help="Runs the argument R scripts in parallel if specified")	
-parser.add_argument("-l", "--logDirPrefix", help="The directory in which log files will be saved to.", default="ki-logs/", type=lambda logDirPrefix: is_valid_directory(parser, logDirPrefix))	
+parser.add_argument("-l", "--logDirPrefix", help="The directory in which log files will be saved to.", default="~/data/KI/ki-logs/", type=lambda logDirPrefix: is_valid_directory(parser, logDirPrefix))	
 parser.add_argument("-i", "--identifier", help="Adds an identifier to the directory name where this is saved")	
 parser.add_argument('filepaths', nargs='+', type=lambda filename: is_valid_file(parser, filename), help="The filepath(s) of the R scripts to be run")	
 
+
+print(os.getcwd())
 args = parser.parse_args()	
+
 
 print("Arguments:", args)	
 
