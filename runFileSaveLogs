@@ -35,24 +35,29 @@ def is_valid_directory(parser, arg):
     return arg	
 
 parser.add_argument('-p', '--parallel', action='store_true', help="Runs the argument R scripts in parallel if specified")	
-parser.add_argument("-l", "--logDirPrefix", help="The directory in which log files will be saved to.", default="~/data/KI/ki-logs/", type=lambda logDirPrefix: is_valid_directory(parser, logDirPrefix))	
+parser.add_argument("-l", "--logDirPrefix", help="The directory in which log files will be saved to.", default="/data/KI/ki-logs/", type=lambda logDirPrefix: is_valid_directory(parser, logDirPrefix))	
 parser.add_argument("-i", "--identifier", help="Adds an identifier to the directory name where this is saved")	
 parser.add_argument('filepaths', nargs='+', type=lambda filename: is_valid_file(parser, filename), help="The filepath(s) of the R scripts to be run")	
 
 
 print(os.getcwd())
+
 args = parser.parse_args()	
+print("Hello")
 
 
 print("Arguments:", args)	
 
 # Run given R Scripts	
 for filename in args.filepaths:	
+  print(filename)
   system_call = "R CMD BATCH" + " " + filename	
-if args.parallel:	
-  system_call = "nohup" + " " + system_call + " &"	
+  if args.parallel:	
+    system_call = "nohup" + " " + system_call + " &"	
 
-os.system(system_call)	
+  os.system(system_call)	
+  
+print("Goodbye")
 
 
 # Create the directory (and any parents) of the log files	
@@ -65,12 +70,16 @@ if args.identifier is not None:
 
 logDir += "/"	
 
+print(logDir)
 pathlib.Path(logDir).mkdir(parents=True, exist_ok=True)	
 
 
 # Find and move all logs to this new directory	
 currentLogPaths = glob.glob('./*.Rout')	
-
+print("Start moving")
 for currentLogPath in currentLogPaths:	
-  filename = currentLogPath.split("/")[-1]	
-shutil.move(currentLogPath, logDir + filename)
+  filename = currentLogPath.split("/")[-1]
+  print(currentLogPath)
+  print(logDir + filename)
+  shutil.move(currentLogPath, logDir + filename)
+  #shutil.move(currentLogPath, "data/" + filename)
