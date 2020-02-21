@@ -39,11 +39,20 @@ parser.add_argument("-l", "--logDirPrefix", help="The directory in which log fil
 parser.add_argument("-i", "--identifier", help="Adds an identifier to the directory name where this is saved")	
 parser.add_argument('filepaths', nargs='+', type=lambda filename: is_valid_file(parser, filename), help="The filepath(s) of the R scripts to be run")	
 
+<<<<<<< HEAD
+print(os.getcwd())
+=======
 
 
+>>>>>>> 63688a9d0f3d545db1a254d3a46e318e5ec2631e
 args = parser.parse_args()	
 
 
+<<<<<<< HEAD
+=======
+
+print("Arguments:", args)	
+>>>>>>> 4800728cd93733b5b0f8e00ddbab1d4635c8fb4d
 
 # Run given R Scripts	
 for filename in args.filepaths:	
