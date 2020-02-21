@@ -1,0 +1,59 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> ##########################################
+> # ki longitudinal manuscripts
+> # stunting analysis
+> #
+> # ben arnold (benarnold@berkeley.edu)
+> # modified by jade benjamin-chung (jadebc@berkeley.edu)
+> #
+> # create a heatmap of data availability
+> # for weight and height by study 
+> # in GHAP using meta-data
+> # (GHAP_metadata) that Andrew created
+> # using GHAPStudyMetadata.R
+> 
+> # inputs: GHAP_metadata_stunting.RDS
+> 
+> # outputs: 
+> # "fig-stunt_laz-2-heatmap-overall--allage-primary.png"
+> # "figdata-stunt_laz-2-heatmap-overall--allage-primary.RDS"
+> ##########################################
+> 
+> 
+> #-----------------------------------
+> # preamble
+> #-----------------------------------
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+Error: package or namespace load failed for ‘tidyverse’:
+ .onAttach failed in attachNamespace() for 'tidyverse', details:
+  call: value[[3L]](cond)
+  error: Package ‘dplyr’ version 0.8.4 cannot be unloaded:
+ Error in unloadNamespace(package) : namespace ‘dplyr’ is imported by ‘broom’, ‘tidyr’ so cannot be unloaded
+Execution halted

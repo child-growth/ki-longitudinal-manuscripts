@@ -81,5 +81,5 @@ for currentLogPath in currentLogPaths:
   filename = currentLogPath.split("/")[-1]
   print(currentLogPath)
   print(logDir + filename)
-  shutil.move(currentLogPath, logDir + filename)
+  #shutil.move(currentLogPath, logDir + filename)
   #shutil.move(currentLogPath, "data/" + filename)

@@ -40,13 +40,10 @@ parser.add_argument("-i", "--identifier", help="Adds an identifier to the direct
 parser.add_argument('filepaths', nargs='+', type=lambda filename: is_valid_file(parser, filename), help="The filepath(s) of the R scripts to be run")	
 
 
-print(os.getcwd())
 
 args = parser.parse_args()	
-print("Hello")
 
 
-print("Arguments:", args)	
 
 # Run given R Scripts	
 for filename in args.filepaths:	
@@ -57,7 +54,6 @@ for filename in args.filepaths:
 
   os.system(system_call)	
   
-print("Goodbye")
 
 
 # Create the directory (and any parents) of the log files	
@@ -70,7 +66,6 @@ if args.identifier is not None:
 
 logDir += "/"	
 
-print(logDir)
 pathlib.Path(logDir).mkdir(parents=True, exist_ok=True)	
 
 
@@ -79,7 +74,4 @@ currentLogPaths = glob.glob('./*.Rout')
 print("Start moving")
 for currentLogPath in currentLogPaths:	
   filename = currentLogPath.split("/")[-1]
-  print(currentLogPath)
-  print(logDir + filename)
   shutil.move(currentLogPath, logDir + filename)
-  #shutil.move(currentLogPath, "data/" + filename)
