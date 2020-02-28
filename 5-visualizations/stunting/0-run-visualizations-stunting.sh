@@ -84,8 +84,4 @@ cd ~/ki-longitudinal-manuscripts/5-visualizations/stunting
 
 
 # Remove copied utility run script
-<<<<<<< HEAD
  rm runFileSaveLogs
-=======
-rm runFileSaveLogs
->>>>>>> 4800728cd93733b5b0f8e00ddbab1d4635c8fb4d
