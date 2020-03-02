@@ -4,10 +4,10 @@
 
 
 # Remove previous results
-# cd ../../ki-longitudinal-manuscripts/figures/stunting/
-# 
-# rm -f \
-#  list filenames
+cd ~/ki-longitudinal-manuscripts/figures/stunting
+
+rm -f \
+ list filenames
 
 
 # Copy utility run script into this folder for concision in call
