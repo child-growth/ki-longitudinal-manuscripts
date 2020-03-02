@@ -4,10 +4,7 @@
 
 
 # Remove previous results
-cd ~/ki-longitudinal-manuscripts/figures/stunting
-
-rm -f \
- list filenames
+rm ~/ki-longitudinal-manuscripts/figures/stunting/*
 
 
 # Copy utility run script into this folder for concision in call
