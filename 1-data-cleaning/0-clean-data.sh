@@ -17,47 +17,39 @@
 # Copy utility run script into this folder for concision in call
 # cp ~/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/runFileSaveLogs ~/Documents/Berkeley/Colford-Hubbard/ki-longitudinal-manuscripts/1-data-cleaning
 
+
+# Copy utility run script into this folder for concision in call
+cp ~/ki-longitudinal-manuscripts/runFileSaveLogs ~/ki-longitudinal-manuscripts/1-data-cleaning
+
 # Run folder scripts and produce output
-cd 1-data-cleaning/
-
-# ./runFileSaveLogs -i "clean-data" \
-# 1_process_FINAL_dataset.R \
-# 2_clean_FINAL_covariates.R \
-# 3_merge_covariates_and_raw_data.R \
-# 4_create_master_dataset.R \
-# 5_process_mortality_data.R \
-# 6_anthro_prepdata.R \
-# 7_DHS-data-cleaning.R \
-# 8_DHS-data-quantiles.R \
-# 9_seasonality_prepdata.R
+cd ~/ki-longitudinal-manuscripts/1-data-cleaning
 
 
-R CMD BATCH raw data cleaning/0_save_studies_as_rds.R
-R CMD BATCH raw data cleaning/1_assetPCA-allstudies.R
-R CMD BATCH raw data cleaning/2_BreastfeedingCleaning.R
-R CMD BATCH raw data cleaning/3_BreastfeedingDatasetCreation.R
-R CMD BATCH raw data cleaning/4_ImpsanCleaning.R
-R CMD BATCH raw data cleaning/5_SafeH2OCleaning.R
-R CMD BATCH raw data cleaning/6_DiarrheaCleaning.R
-R CMD BATCH raw data cleaning/7_PROVIDE_measure_months.R
-R CMD BATCH raw data cleaning/8_maternal_weight.R
-
-
-R CMD BATCH 1_process_FINAL_dataset.R
-R CMD BATCH 2_clean_FINAL_covariates.R
-R CMD BATCH 3_merge_covariates_and_raw_data.R
-R CMD BATCH 4_create_master_dataset.R
-R CMD BATCH 5_process_mortality_data.R
-R CMD BATCH 6_anthro_prepdata.R
-R CMD BATCH 7_DHS-data-cleaning.R
-R CMD BATCH 8_DHS-data-quantiles.R
-R CMD BATCH 9_seasonality_prepdata.R
-
-
-R CMD BATCH metadata scripts/1_create_KI_wasting_consort_data.R
-R CMD BATCH metadata scripts/2_create_KI_stunting_consort_data.R
-R CMD BATCH metadata scripts/3_check_extended_table1_stunting.R
-
+#list all scripts here
+ ./runFileSaveLogs -i "visualizations-stunting" \
+ raw data cleaning/0_save_studies_as_rds.R \
+ raw data cleaning/1_assetPCA-allstudies.R \
+ raw data cleaning/2_BreastfeedingCleaning.R \
+ raw data cleaning/3_BreastfeedingDatasetCreation.R \
+ raw data cleaning/4_ImpsanCleaning.R \
+ raw data cleaning/5_SafeH2OCleaning.R \
+ raw data cleaning/6_DiarrheaCleaning.R \
+ raw data cleaning/7_PROVIDE_measure_months.R \
+ raw data cleaning/8_maternal_weight.R \
+ 1_process_FINAL_dataset.R \
+ 2_clean_FINAL_covariates.R \
+ 3_merge_covariates_and_raw_data.R \
+ 4_create_master_dataset.R \
+ 5_process_mortality_data.R \
+ 6_anthro_prepdata.R \
+ 7_DHS-data-cleaning.R \
+ 8_DHS-data-quantiles.R \
+ 9_seasonality_prepdata.R \
+ 10_rainfall_prepdata.R \
+ metadata scripts/1_create_KI_wasting_consort_data.R \
+ metadata scripts/2_create_KI_stunting_consort_data.R \
+ metadata scripts/3_check_extended_table1_stunting.R 
+ 
 
 # Remove copied utility run script
-# rm runFileSaveLogs
+ rm runFileSaveLogs
