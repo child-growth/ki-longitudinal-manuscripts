@@ -52,7 +52,7 @@ res_dir                           = here::here("results//")
 dhs_res_dir                       = here::here("results", "dhs")
 data_dir                          = here::here("data")
 metadata_dir                      = "U:/results/Metadata/"
-ghapdata_dir                      = "U://ucb-superlearner/Manuscript analysis data/"
+ghapdata_dir                      = "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
     
 project_functions_dir             = here::here("0-project-functions/")
 data_cleaning_dir                 = here::here("1-data-cleaning")
