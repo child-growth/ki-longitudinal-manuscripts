@@ -48,53 +48,53 @@ mark_measure_freq <- function(dd){
   dd$measurefreq <- NA
   
   dd$measurefreq[dd$studyid %in% c(
-    "ki0047075b-MAL-ED",   
-    "ki1000108-CMC-V-BCS-2002",              
-    "ki1000108-IRC",               
-    "ki1000109-EE",           
-    "ki1000109-ResPak",  
-    "ki1017093b-PROVIDE",  
-    "ki1066203-TanzaniaChild2",           
-    "ki1101329-Keneba",  
-    "ki1112895-Guatemala BSC",       
-    "ki1113344-GMS-Nepal",             
-    "ki1114097-CONTENT"
+    "MAL-ED",   
+    "CMC-V-BCS-2002",              
+    "IRC",               
+    "EE",           
+    "ResPak",  
+    "PROVIDE",  
+    "TanzaniaChild2",           
+    "Keneba",  
+    "Guatemala BSC",       
+    "GMS-Nepal",             
+    "CONTENT"
   )] <- "monthly"
   
   dd$measurefreq[dd$studyid %in% c(
-    "ki1112895-iLiNS-Zinc",  
-    "kiGH5241-JiVitA-3",          
-    "kiGH5241-JiVitA-4", 
-    "ki1148112-LCNI-5",          
-    "ki1017093-NIH-Birth",
-    "ki1017093c-NIH-Crypto",   
-    "ki1119695-PROBIT",         
-    "ki1000304b-SAS-CompFeed",   
-    "ki1000304b-SAS-FoodSuppl",   
-    "ki1126311-ZVITAMBO",   
-    "ki1114097-CMIN",                 
-    "ki1135781-COHORTS"
+    "iLiNS-Zinc",  
+    "JiVitA-3",          
+    "JiVitA-4", 
+    "LCNI-5",          
+    "NIH-Birth",
+    "NIH-Crypto",   
+    "PROBIT",         
+    "SAS-CompFeed",   
+    "SAS-FoodSuppl",   
+    "ZVITAMBO",   
+    "CMIN",                 
+    "COHORTS"
   )] <- "quarterly"
   
   dd$measurefreq[dd$studyid %in% c(
-    "ki1000110-WASH-Bangladesh",       
-    "ki1000111-WASH-Kenya",  
-    "ki1148112-iLiNS-DOSE",     
-    "ki1148112-iLiNS-DYAD-M", 
-    "ki1033518-iLiNS-DYAD-G",
-    "ki1000125-AgaKhanUniv",           
-    "ki1112895-Burkina Faso Zn",    
-    "ki1000304-VITAMIN-A",  
-    "ki1000304-Vitamin-B12",
-    "ki1000107-Serrinha-VitA",   
-    "ki1000304-EU",        
-    "ki1000304-ZnMort"
+    "WASH-Bangladesh",       
+    "WASH-Kenya",  
+    "iLiNS-DOSE",     
+    "iLiNS-DYAD-M", 
+    "iLiNS-DYAD-G",
+    "AgaKhanUniv",           
+    "Burkina Faso Zn",    
+    "VITAMIN-A",  
+    "Vitamin-B12",
+    "Serrinha-VitA",   
+    "EU",        
+    "ZnMort"
   )] <- "yearly"
   
   
   #Mark COHORTS and CMIN cohorts with different measurement frequency than quarterly
-  dd$measurefreq[dd$studyid=="ki1114097-CMIN" & dd$country=="BANGLADESH"] <- "monthly"
-  dd$measurefreq[dd$studyid=="ki1114097-CMIN" & dd$country=="PERU"] <- "monthly"
+  dd$measurefreq[dd$studyid=="CMIN" & dd$country=="BANGLADESH"] <- "monthly"
+  dd$measurefreq[dd$studyid=="CMIN" & dd$country=="PERU"] <- "monthly"
   
   
   

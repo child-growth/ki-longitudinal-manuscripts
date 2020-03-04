@@ -15,7 +15,7 @@ library(growthstandards)
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
 #Drop EE cohort (~mother-reported, unbelievable preterm prev ~80%)
-d <- d %>% filter(studyid!="ki1000109-EE")
+d <- d %>% filter(studyid!="EE")
 
 #Clean country and cohort names and drop cohorts without gestational age
 d$country_f <- tolower(d$country)

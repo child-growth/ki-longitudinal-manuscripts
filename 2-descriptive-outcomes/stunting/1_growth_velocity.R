@@ -161,12 +161,12 @@ dd_sub$tr[is.na(dd_sub$tr)]<-""
 
 
 dim(dd_sub)
-dd_sub=dd_sub[!(dd_sub$studyid=="kiGH5241-JiVitA-4" & dd_sub$tr!="Control"),]
-dd_sub=dd_sub[!(dd_sub$studyid=="ki1119695-PROBIT" & dd_sub$tr!="Control"),]
-dd_sub=dd_sub[!(dd_sub$studyid=="ki1112895-iLiNS-Zinc" & dd_sub$tr!="Control"),]
-dd_sub=dd_sub[!(dd_sub$studyid=="ki1000304b-SAS-CompFeed" & dd_sub$tr!="Control"),]
-dd_sub=dd_sub[!(dd_sub$studyid=="kiGH5241-JiVitA-3" & dd_sub$tr!="Control"),]
-dd_sub=dd_sub[!(dd_sub$studyid=="ki1135781-COHORTS" & dd_sub$tr=="Other"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-4" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="PROBIT" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="iLiNS-Zinc" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="SAS-CompFeed" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-3" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="COHORTS" & dd_sub$tr=="Other"),]
 dim(dd_sub)
 
 saveRDS(dd_sub, file=paste0(ghapdata_dir,"velocity_longfmt.rds"))

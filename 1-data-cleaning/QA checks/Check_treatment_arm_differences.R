@@ -91,7 +91,7 @@ laz_tr %>% filter(tr!="", !is.na(haz)) %>% group_by(studyid, country, tr) %>%
 
 unique(laz_tr$studyid)
 
-res <- aov(haz~arm , data = laz_tr[laz_tr$studyid=="kiGH5241-JiVitA-3",])
+res <- aov(haz~arm , data = laz_tr[laz_tr$studyid=="JiVitA-3",])
 summary(res)
 
 for(i in unique(laz_tr$studyid)){
@@ -102,13 +102,13 @@ for(i in unique(laz_tr$studyid)){
 
 
 # drop_int_arms <- function(d){
-#   d=d[-which(d$studyid=="kiGH5241-JiVitA-4" & d$tr!="Control"),]
-#   d=d[-which(d$studyid=="ki1119695-PROBIT" & d$tr!="Control"),]
-#   d=d[-which(d$studyid=="ki1000304b-SAS-FoodSuppl" & d$tr!="Control"),]
-#   d=d[-which(d$studyid=="ki1112895-iLiNS-Zinc" & d$tr!="Control"),]
-#   d=d[-which(d$studyid=="ki1000304b-SAS-CompFeed" & d$tr!="Control"),]
-#   d=d[-which(d$studyid=="kiGH5241-JiVitA-3" & d$tr!="Control"),]
-#   d=d[-which(d$studyid=="ki1135781-COHORTS" & d$tr=="Other"),]
+#   d=d[-which(d$studyid=="JiVitA-4" & d$tr!="Control"),]
+#   d=d[-which(d$studyid=="PROBIT" & d$tr!="Control"),]
+#   d=d[-which(d$studyid=="SAS-FoodSuppl" & d$tr!="Control"),]
+#   d=d[-which(d$studyid=="iLiNS-Zinc" & d$tr!="Control"),]
+#   d=d[-which(d$studyid=="SAS-CompFeed" & d$tr!="Control"),]
+#   d=d[-which(d$studyid=="JiVitA-3" & d$tr!="Control"),]
+#   d=d[-which(d$studyid=="COHORTS" & d$tr=="Other"),]
 #   return(d)
 # }
 
@@ -117,7 +117,7 @@ for(i in unique(laz_tr$studyid)){
 # Compare specific arms
 #--------------------------------------------
 
-df <- laz_tr %>% filter(studyid=="ki1000304b-SAS-FoodSuppl")
+df <- laz_tr %>% filter(studyid=="SAS-FoodSuppl")
 df <- droplevels(df)
 table(df$arm)
 
@@ -125,7 +125,7 @@ t.test(haz ~ arm , data = df[df$arm %in% c("Food supplementation","No interventi
 t.test(haz ~ arm , data = df[df$arm %in% c("Nutritional counselling","No intervention"),])
 t.test(haz ~ arm , data = df[df$arm %in% c("Visitation","No intervention"),])
 
-df <- laz_tr %>% filter(studyid=="ki1126311-ZVITAMBO")
+df <- laz_tr %>% filter(studyid=="ZVITAMBO")
 df <- droplevels(df)
 table(df$arm)
 

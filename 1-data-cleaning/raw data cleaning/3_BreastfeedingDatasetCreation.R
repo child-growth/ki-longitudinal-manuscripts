@@ -154,13 +154,13 @@ d <- d %>% subset(., select=c(studyid, country, subjid, agedays, bfedfl, exbfedf
 
 #Drop studies where we are grabbing breastfeeding info from the raw data
 unique(d$studyid)
-d <- d %>% filter(studyid!="ki0047075b-MAL-ED" & 
-                    studyid!="ki1000109-EE" & 
-                    studyid!="ki1113344-GMS-Nepal" & 
-                    studyid!="kiGH5241-JiVitA-3" & 
-                    studyid!="kiGH5241-JiVitA-4" & 
-                    studyid!="ki1112895-Burkina Faso Zn" & 
-                    studyid!="ki1119695-PROBIT")
+d <- d %>% filter(studyid!="MAL-ED" & 
+                    studyid!="EE" & 
+                    studyid!="GMS-Nepal" & 
+                    studyid!="JiVitA-3" & 
+                    studyid!="JiVitA-4" & 
+                    studyid!="Burkina Faso Zn" & 
+                    studyid!="PROBIT")
 
 #Code variables
 d$anmlkfl[is.na(d$anmlkfl)] <- 99  
@@ -312,7 +312,7 @@ prbt$exclfeed36 <- as.numeric(prbt$exbf6==1)
 prbt$exclfeed36[is.na(prbt$exbf6)] <- NA
 
 prbt <- prbt %>% subset(., select=c(subjid, exclfeed6, exclfeed3, exclfeed36))
-prbt$studyid <- "ki1119695-PROBIT"
+prbt$studyid <- "PROBIT"
 
 #mled
 head(mled)

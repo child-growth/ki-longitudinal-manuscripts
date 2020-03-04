@@ -52,48 +52,48 @@ gc()
 
 #Drop studies Vishak added to data product that don't meet inclusion criteria
 dim(d)
-d <- d[!(studyid %in% c("ki1000301-DIVIDS", "ki1055867-WomenFirst", "ki1135782-INCAP"))]
+d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP"))]
 dim(d)
 gc()
 
 
-monthly_vec <- c("ki0047075b-MAL-ED",   
-  "ki1000108-CMC-V-BCS-2002",              
-  "ki1000108-IRC",               
-  "ki1000109-EE",           
-  "ki1000109-ResPak",  
-  "ki1017093b-PROVIDE",  
-  "ki1066203-TanzaniaChild2",           
-  "ki1101329-Keneba",  
-  "ki1112895-Guatemala BSC",       
-  "ki1113344-GMS-Nepal",    
-  "ki1114097-CMIN",                 
-  "ki1114097-CONTENT")
+monthly_vec <- c("MAL-ED",   
+  "CMC-V-BCS-2002",              
+  "IRC",               
+  "EE",           
+  "ResPak",  
+  "PROVIDE",  
+  "TanzaniaChild2",           
+  "Keneba",  
+  "Guatemala BSC",       
+  "GMS-Nepal",    
+  "CMIN",                 
+  "CONTENT")
 
-quarterly_vec <- c("ki1112895-iLiNS-Zinc",  
-  "kiGH5241-JiVitA-3",          
-  "kiGH5241-JiVitA-4", 
-  "ki1148112-LCNI-5",          
-  "ki1017093-NIH-Birth",
-  "ki1017093c-NIH-Crypto",   
-  "ki1119695-PROBIT",         
-  "ki1000304b-SAS-CompFeed",   
-  "ki1000304b-SAS-FoodSuppl",   
-  "ki1126311-ZVITAMBO",   
-  "ki1135781-COHORTS")
+quarterly_vec <- c("iLiNS-Zinc",  
+  "JiVitA-3",          
+  "JiVitA-4", 
+  "LCNI-5",          
+  "NIH-Birth",
+  "NIH-Crypto",   
+  "PROBIT",         
+  "SAS-CompFeed",   
+  "SAS-FoodSuppl",   
+  "ZVITAMBO",   
+  "COHORTS")
 
-yearly_vec <- c("ki1000110-WASH-Bangladesh",       
-  "ki1000111-WASH-Kenya",  
-  "ki1148112-iLiNS-DOSE",     
-  "ki1148112-iLiNS-DYAD-M", 
-  "ki1033518-iLiNS-DYAD-G",
-  "ki1000125-AgaKhanUniv",           
-  "ki1112895-Burkina Faso Zn",    
-  "ki1000304-VITAMIN-A",  
-  "ki1000304-Vitamin-B12",
-  "ki1000107-Serrinha-VitA",   
-  "ki1000304-EU",        
-  "ki1000304-ZnMort"
+yearly_vec <- c("WASH-Bangladesh",       
+  "WASH-Kenya",  
+  "iLiNS-DOSE",     
+  "iLiNS-DYAD-M", 
+  "iLiNS-DYAD-G",
+  "AgaKhanUniv",           
+  "Burkina Faso Zn",    
+  "VITAMIN-A",  
+  "Vitamin-B12",
+  "Serrinha-VitA",   
+  "EU",        
+  "ZnMort"
 )
 
 
@@ -105,21 +105,21 @@ gc()
 
 
 #Drop CMIN cohorts with less than 200 children
-d <- d[!(studyid=="ki1114097-CMIN" & country != "BANGLADESH")]
+d <- d[!(studyid=="CMIN" & country != "BANGLADESH")]
 gc()
 
 #Mark yearly COHORTS
-d <- d[studyid=="ki1135781-COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
+d <- d[studyid=="COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
 gc()
 
 #Drop yearly studies except for four with high quality mortality data used in the mortality analysis
-d <- d[measurefreq!="yearly" | studyid %in% c("ki1148112-iLiNS-DOSE", "ki1148112-iLiNS-DYAD-M","ki1112895-Burkina Faso Zn", "ki1000304-VITAMIN-A" )]
+d <- d[measurefreq!="yearly" | studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","Burkina Faso Zn", "VITAMIN-A" )]
 gc()
 
 
 # #fix sex and Z-scores in PROBIT and CONTENT
-# dfull <- d %>% filter(!(studyid %in% c("ki1119695-PROBIT","ki1114097-CONTENT")))
-# dsub <- d %>% filter((studyid %in% c("ki1119695-PROBIT","ki1114097-CONTENT")))
+# dfull <- d %>% filter(!(studyid %in% c("PROBIT","CONTENT")))
+# dsub <- d %>% filter((studyid %in% c("PROBIT","CONTENT")))
 # rm(d)
 # gc()
 # 

@@ -42,7 +42,7 @@ d <- dfull %>% filter(type=="RR", adjusted==1)
 d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
 
 #Drop yearly cohorts
-d <- d %>% filter(!(studyid %in% c("ki1000304-VITAMIN-A", "ki1148112-iLiNS-DYAD-M")))
+d <- d %>% filter(!(studyid %in% c("VITAMIN-A", "iLiNS-DYAD-M")))
 
   
 

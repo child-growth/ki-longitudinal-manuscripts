@@ -36,7 +36,7 @@ d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
 head(d)
 d <- d %>% subset(., select = -c(tr))
-d <- d %>% filter(studyid != "ki1119695-PROBIT")
+d <- d %>% filter(studyid != "PROBIT")
 d = d 
 
 #----------------------------------------
@@ -48,9 +48,9 @@ monthly_d <- d %>% filter(measurefreq == "monthly")
 # subset to studies that have monthly measurement
 # up to 24 months
 #----------------------------------------
-study24 = c("ki0047075b-MAL-ED", "ki1000108-CMC-V-BCS-2002", "ki1000108-IRC", 
-            "ki1101329-Keneba", "ki1113344-GMS-Nepal", "ki1114097-CMIN", 
-            "ki1114097-CONTENT", "ki1017093b-PROVIDE")
+study24 = c("MAL-ED", "CMC-V-BCS-2002", "IRC", 
+            "Keneba", "GMS-Nepal", "CMIN", 
+            "CONTENT", "PROVIDE")
 
 monthly_d <- monthly_d %>% filter(studyid %in% study24)
 

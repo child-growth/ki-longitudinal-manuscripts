@@ -35,7 +35,7 @@ d <- d %>% group_by(studyid, subjid) %>%
   filter(Nobs > 1)
 
 #TEMP
-#d <- d %>% filter(studyid=="ki1101329-Keneba")
+#d <- d %>% filter(studyid=="Keneba")
 
 
 # --------------------------------------

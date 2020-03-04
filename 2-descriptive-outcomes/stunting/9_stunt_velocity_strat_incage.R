@@ -80,9 +80,9 @@ d_st$agecat <- factor(d_st$agecat)
 #----------------------------------------
 # Filter to monthly cohorts
 #----------------------------------------
-study24 = c("ki0047075b-MAL-ED", "ki1000108-CMC-V-BCS-2002", "ki1000108-IRC", 
-            "ki1101329-Keneba", "ki1113344-GMS-Nepal", "ki1114097-CMIN", 
-            "ki1114097-CONTENT", "ki1017093b-PROVIDE")
+study24 = c("MAL-ED", "CMC-V-BCS-2002", "IRC", 
+            "Keneba", "GMS-Nepal", "CMIN", 
+            "CONTENT", "PROVIDE")
 
 d_st_monthly <- d_st %>% filter(studyid %in% study24)
 

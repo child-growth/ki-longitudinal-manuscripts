@@ -10,7 +10,7 @@ d <- readRDS(paste0(here(),"/results/desc_data_cleaned.rds"))
 
 head(d)
 
-d <- d %>% filter(cohort == "ki1101329-Keneba-GAMBIA" |
+d <- d %>% filter(cohort == "Keneba-GAMBIA" |
                     cohort == "Keneba-GAMBIA" |
                     (cohort == "pooled" & region=="Overall") |
                     (cohort == "pooled" & region=="South Asia")) %>%

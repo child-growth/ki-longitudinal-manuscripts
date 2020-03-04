@@ -73,7 +73,7 @@ p_mled <- ggplot(df, aes(x=anthro)) +
 #--------------------------------------------
 
 df2 <- d %>%
-  filter(studyid == "ki1101329-Keneba") %>%
+  filter(studyid == "Keneba") %>%
   filter(sex=="Male")
 
 p_kenaba <- ggplot(d, aes(x=agedays, y=htcm)) + geom_point(alpha = 0.25, shape = 1) +

@@ -23,10 +23,10 @@ d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
 
 
-#d <- d %>% filter(studyid == "ki1017093b-PROVIDE")
+#d <- d %>% filter(studyid == "PROVIDE")
 
 #Fill in birth week as middle of the month from birthmonth from PROVIDE datasets
-d$brthweek[d$studyid=="ki1017093b-PROVIDE"] <- round(as.numeric(d$brthmon[d$studyid=="ki1017093b-PROVIDE"])  * 4.3333 ) -2 
+d$brthweek[d$studyid=="PROVIDE"] <- round(as.numeric(d$brthmon[d$studyid=="PROVIDE"])  * 4.3333 ) -2 
 
 
 table(d$studyid, is.na(d$brthweek))

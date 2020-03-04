@@ -8,7 +8,7 @@ library(haven)
 dfull <- readRDS(included_studies_path)
 head(dfull)
 
-df <- dfull %>% filter(studyid=="kiGH5241-JiVitA-3")
+df <- dfull %>% filter(studyid=="JiVitA-3")
 df <- df %>% group_by(subjid) %>% slice(1)
 df$mwtkg[df$mwtkg==99.9] <-NA
 summary(df$mwtkg)
@@ -34,7 +34,7 @@ summary(PEF$peweight)
 
 
 
-df <- dfull %>% filter(studyid=="ki1000304b-SAS-CompFeed")
+df <- dfull %>% filter(studyid=="SAS-CompFeed")
 df <- df %>% group_by(subjid) %>% slice(1)
 summary(df$mwtkg)
 
@@ -83,18 +83,18 @@ cpfd <- cpfd %>% select(studyid, subjid, matwt_3mo) %>% rename(mwtkg=matwt_3mo)
 #Create a cleaned maternal weight dataset
 M1MOP$subjid <- as.numeric(M1MOP$hbgdmid)
 M1MOP$mwtkg <- M1MOP$m1weight
-jvta3 <- M1MOP %>% select (subjid, mwtkg) %>% mutate(studyid="kiGH5241-JiVitA-3")
+jvta3 <- M1MOP %>% select (subjid, mwtkg) %>% mutate(studyid="JiVitA-3")
 
 
 mat_weight = rbind(jvta3, cpfd)
 
 #Mark missingness codeas missing
-mat_weight$mwtkg[mat_weight$studyid=="kiGH5241-JiVitA-3"& mat_weight$mwtkg==99.9] <-NA
-mat_weight$mwtkg[mat_weight$studyid=="ki1000304b-SAS-CompFeed" & mat_weight$mwtkg>88] <-NA
+mat_weight$mwtkg[mat_weight$studyid=="JiVitA-3"& mat_weight$mwtkg==99.9] <-NA
+mat_weight$mwtkg[mat_weight$studyid=="SAS-CompFeed" & mat_weight$mwtkg>88] <-NA
 summary(mat_weight$mwtkg)
 
-summary(mat_weight$mwtkg[mat_weight$studyid=="kiGH5241-JiVitA-3"])
-summary(mat_weight$mwtkg[mat_weight$studyid=="ki1000304b-SAS-CompFeed"])
+summary(mat_weight$mwtkg[mat_weight$studyid=="JiVitA-3"])
+summary(mat_weight$mwtkg[mat_weight$studyid=="SAS-CompFeed"])
 
 
 saveRDS(mat_weight, file=paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/maternal_weight_dataset.RDS"))

@@ -12,8 +12,8 @@ Ns <- mort %>% filter(!is.na(dead)) %>% group_by(studyid, subjid) %>% slice(1) %
   filter(agedth<731)
 table(is.na(Ns$agedth))
 
-df <- df %>% filter(!(studyid %in% c("ki1055867-WomenFirst","ki1000301-DIVIDS","ki0047075b-MAL-ED", 
-                                     "ki1000304b-SAS-FoodSuppl", "ki1017093b-PROVIDE", "ki1066203-TanzaniaChild2", "ki1113344-GMS-Nepal"))) #drop studies qith too few outcomes
+df <- df %>% filter(!(studyid %in% c("WomenFirst","DIVIDS","MAL-ED", 
+                                     "SAS-FoodSuppl", "PROVIDE", "TanzaniaChild2", "GMS-Nepal"))) #drop studies qith too few outcomes
 length(unique(df$studyid[!is.na(df$dead)]))
 table(df$dead)
 df %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
@@ -37,7 +37,7 @@ d<-dfull %>% subset(., select=c(studyid, subjid, country, tr, agedays, haz, whz,
 # Examine the number of obs and children in extra studies
 #--------------------------------------------
 
-df2 <- d %>% filter(studyid %in% c("ki1112895-Burkina Faso Zn","ki1000304-VITAMIN-A","ki1148112-iLiNS-DOSE","ki1148112-iLiNS-DYAD-M")) %>% filter(!is.na(haz)) %>%
+df2 <- d %>% filter(studyid %in% c("Burkina Faso Zn","VITAMIN-A","iLiNS-DOSE","iLiNS-DYAD-M")) %>% filter(!is.na(haz)) %>%
             filter(haz > (-6) & haz < 6, whz > (-5) & whz < 5)
 df2 %>% group_by(studyid, subjid) %>% slice(1) %>% ungroup() %>% 
   summarize(n())

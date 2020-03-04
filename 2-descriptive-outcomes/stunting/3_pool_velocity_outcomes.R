@@ -170,9 +170,9 @@ saveRDS(pooled_vel_fe,
 # pool results -- sensitivity analysis with monthly 
 # cohorts with measurements at each age up to 24 months of age
 #----------------------------------------------------
-study24 = c("ki0047075b-MAL-ED", "ki1000108-CMC-V-BCS-2002", "ki1000108-IRC", 
-            "ki1101329-Keneba", "ki1113344-GMS-Nepal", "ki1114097-CMIN", 
-            "ki1114097-CONTENT", "ki1017093b-PROVIDE")
+study24 = c("MAL-ED", "CMC-V-BCS-2002", "IRC", 
+            "Keneba", "GMS-Nepal", "CMIN", 
+            "CONTENT", "PROVIDE")
 
 dmonth24 <- d %>% filter(studyid %in% study24)
 
@@ -193,7 +193,7 @@ saveRDS(pooled_vel_month24,
 #----------------------------------------------------
 #Pool velocity - sensitivity analysis dropping CONTENT and Cohorts Guat.
 #----------------------------------------------------
-dsub <- d %>% filter(studyid!="ki1114097-CONTENT") %>% filter(!(studyid=="ki1135781-COHORTS" & country=="GUATEMALA"))
+dsub <- d %>% filter(studyid!="CONTENT") %>% filter(!(studyid=="COHORTS" & country=="GUATEMALA"))
 poolhaz_boys <- RE_pool(dsub, ycategory="haz", gender="Male")
 poolhaz_girls <- RE_pool(dsub, ycategory="haz", gender="Female")
 poollencm_boys <- RE_pool(dsub, ycategory="lencm", gender="Male")

@@ -44,7 +44,7 @@ dsan<-NULL
 
 
 #-------------------------------
-# ki0047075b-MAL-ED           
+# MAL-ED           
 #-------------------------------
 
 # use raw data values to classify toilets
@@ -96,7 +96,7 @@ dsan <- bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1000125-AgaKhanUniv       
+# AgaKhanUniv       
 #-------------------------------
 
 d<-load_san(paste0(cohortdata_dir,"akup.rds"),"sanitatn")
@@ -109,7 +109,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1000304-VITAMIN-A        
+# VITAMIN-A        
 #-------------------------------
 
 d<-load_san(paste0(cohortdata_dir,"vita.rds"),"sanitatn")
@@ -120,7 +120,7 @@ table(d$impsan)
 dsan<-bind_rows(dsan, d)
 
 #-------------------------------
-# ki1000304-ZnMort          
+# ZnMort          
 #-------------------------------
 
 d<-load_san(paste0(cohortdata_dir,"zmrt.rds"),"sanitatn")
@@ -133,7 +133,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1000304b-SAS-FoodSuppl    
+# SAS-FoodSuppl    
 #-------------------------------
 
 d<-load_san(paste0(cohortdata_dir,"fspp.rds"),"sanitatn")
@@ -152,7 +152,7 @@ table(d$impsan)
 #No variation- only one imrproved
 
 #-------------------------------
-# ki1017093-NIH-Birth         
+# NIH-Birth         
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"nbrt.rds"),"sanitatn")
@@ -169,7 +169,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1017093b-PROVIDE        
+# PROVIDE        
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"prvd.rds"),"sanitatn")
@@ -186,7 +186,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1017093c-NIH-Crypto      
+# NIH-Crypto      
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"ncry.rds"),"sanitatn")
@@ -204,7 +204,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1112895-Burkina Faso Zn  
+# Burkina Faso Zn  
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"bfzn.rds"),"sanitatn")
@@ -219,7 +219,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1114097-CONTENT            
+# CONTENT            
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"cntt.rds"),"sanitatn")
@@ -245,7 +245,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1135781-COHORTS          
+# COHORTS          
 #-------------------------------
 
 df <- readRDS(paste0(cohortdata_dir,"cort.rds"))
@@ -281,7 +281,7 @@ dsan<-bind_rows(dsan, df)
 
 
 #-------------------------------
-# ki1148112-iLiNS-DOSE       
+# iLiNS-DOSE       
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"ilnd.rds"),"sanitatn")
@@ -294,7 +294,7 @@ dsan <- bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1148112-iLiNS-DYAD-M       
+# iLiNS-DYAD-M       
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"ildm.rds"),"sanitatn")
@@ -318,7 +318,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# ki1148112-LCNI-5      
+# LCNI-5      
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"lcn5.rds"),"sanitatn")
@@ -333,7 +333,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# kiGH5241-JiVitA-3     
+# JiVitA-3     
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"jvt3.rds"),"sanitatn")
@@ -349,7 +349,7 @@ dsan<-bind_rows(dsan, d)
 
 
 #-------------------------------
-# kiGH5241-JiVitA-4   
+# JiVitA-4   
 #-------------------------------
 
 d <- load_san(paste0(cohortdata_dir,"jvt4.rds"),"sanitatn")

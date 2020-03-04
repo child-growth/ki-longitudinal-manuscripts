@@ -72,9 +72,9 @@ unique(gs$studyid)
 # Check LCNI-5 cohort
 #------------------------------------------------------------------------------------
 
-stupidity <- d %>%filter(studyid == "ki1148112-LCNI-5") %>% subset(., select = c(cohort, studyid))
+stupidity <- d %>%filter(studyid == "LCNI-5") %>% subset(., select = c(cohort, studyid))
 
-df <- d %>% filter(studyid == "ki1148112-LCNI-5")
+df <- d %>% filter(studyid == "LCNI-5")
 
 measure_times <- gs %>% filter(studyid == "Lungwena Child Nutrition RCT, Malawi") %>%
                         subset(., select = c(measure_times, measure_units)) #%>% as.character()

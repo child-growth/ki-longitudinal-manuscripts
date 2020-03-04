@@ -85,7 +85,7 @@ ind_traj_plot <- function(d, Xmax=731){
 # Load incidence data and create a plot per individual
 #------------------------------------------
 
-df <- d %>% filter(studyid=="ki0047075b-MAL-ED")
+df <- d %>% filter(studyid=="MAL-ED")
 
 i<-100
 p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],], Xmax=702)

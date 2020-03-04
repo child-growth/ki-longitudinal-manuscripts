@@ -9,7 +9,7 @@ source(paste0(here::here(), "/0-config.R"))
 df <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
 #Temp subset to just maled
-df <- df %>% filter(studyid == "ki0047075b-MAL-ED")
+df <- df %>% filter(studyid == "MAL-ED")
 
 d <- df  %>% 
   filter(haz > -6 & haz < 6) %>% 
@@ -159,7 +159,7 @@ dall <- d %>% mutate(diffhaz0_3=NA,diffhaz3_6=NA,diffhaz6_9=NA,diffhaz9_12=NA,
 
 
 #Compare to primary growth velocity estimates:
-velsub <- vel %>% filter(ycat == "haz", studyid == "ki0047075b-MAL-ED", diffcat=="0-3 months")
+velsub <- vel %>% filter(ycat == "haz", studyid == "MAL-ED", diffcat=="0-3 months")
 head(velsub)
 
 

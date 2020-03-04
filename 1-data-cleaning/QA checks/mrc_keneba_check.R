@@ -3,7 +3,7 @@
 library(growthstandards)
 
 d <- readRDS(included_studies_path)
-d <-d %>% filter(studyid == "ki1101329-Keneba")
+d <-d %>% filter(studyid == "Keneba")
 
 d <- d %>% filter(agedays < 730) %>% filter(!is.na(whz))
 

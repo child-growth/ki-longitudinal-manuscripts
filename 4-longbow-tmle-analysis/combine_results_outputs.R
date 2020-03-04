@@ -52,7 +52,7 @@ d$baseline_level[d$intervention_variable=="rain_quartile"] <- "Opposite max rain
 
 #drop EE gestational age
 dim(d)
-d <- d %>% filter(!(studyid=="ki1000109-EE" & intervention_variable=="gagebrth"))
+d <- d %>% filter(!(studyid=="EE" & intervention_variable=="gagebrth"))
 dim(d)
 
 

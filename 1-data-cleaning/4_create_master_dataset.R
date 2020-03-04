@@ -83,15 +83,15 @@ start_year <- d %>% filter(agedays <= 731) %>%
   summarize(start_year = min(brthyr), median_birth_year = median(brthyr), end_birth_year=max(brthyr), max_yr=max(max_year))
 
 #fill in start year and max year for studies missing birth year
-start_year$start_year[start_year$studyid=="ki1017093-NIH-Birth"] <- 2008
-start_year$start_year[start_year$studyid=="ki1017093b-PROVIDE"] <- 2011
-start_year$start_year[start_year$studyid=="ki1017093c-NIH-Crypto"] <- 2014
-start_year$start_year[start_year$studyid=="ki1112895-Burkina Faso Zn"] <- 2010
+start_year$start_year[start_year$studyid=="NIH-Birth"] <- 2008
+start_year$start_year[start_year$studyid=="PROVIDE"] <- 2011
+start_year$start_year[start_year$studyid=="NIH-Crypto"] <- 2014
+start_year$start_year[start_year$studyid=="Burkina Faso Zn"] <- 2010
 
-start_year$max_yr[start_year$studyid=="ki1017093-NIH-Birth"] <- 2014
-start_year$max_yr[start_year$studyid=="ki1017093b-PROVIDE"] <- 2014
-start_year$max_yr[start_year$studyid=="ki1017093c-NIH-Crypto"] <- 2017
-start_year$max_yr[start_year$studyid=="ki1112895-Burkina Faso Zn"] <- 2012
+start_year$max_yr[start_year$studyid=="NIH-Birth"] <- 2014
+start_year$max_yr[start_year$studyid=="PROVIDE"] <- 2014
+start_year$max_yr[start_year$studyid=="NIH-Crypto"] <- 2017
+start_year$max_yr[start_year$studyid=="Burkina Faso Zn"] <- 2012
 
 saveRDS(start_year, here("/data/study_start_years.rds"))
 

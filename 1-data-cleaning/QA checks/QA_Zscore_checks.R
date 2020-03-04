@@ -36,7 +36,7 @@ unique(laz_df$studyid)
 #------------------------------------------------------------------------------------
 
 #subset raw data to study of interest
-laz_df_sub <- laz_df %>% filter(studyid == "ki1112895-Guatemala BSC")
+laz_df_sub <- laz_df %>% filter(studyid == "Guatemala BSC")
 
 #Load in google sheet of Guatemala BSC
 gs <- gs_title("HBGD original paper data values") %>%

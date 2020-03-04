@@ -175,7 +175,7 @@ saveRDS(bfzn, file=paste0(cohortdata_dir, study, '.rds') )
 
 
 #-------------------------------
-# ki1000304-VITAMIN-A        
+# VITAMIN-A        
 #-------------------------------
 study<-"vita"
 vita<-read_sas(paste0(cohortdata_dir,"/adam versions/vit-a/ads_full.sas7bdat")) 
@@ -186,7 +186,7 @@ saveRDS(vita, file=paste0(cohortdata_dir, study, '.rds') )
 
 
 #-------------------------------
-# ki1000304-ZnMort          
+# ZnMort          
 #-------------------------------
 study<-"zmrt"
 zmrt<-read_sas(paste0(cohortdata_dir,"/adam versions/zinc-mort/ads_full.sas7bdat")) 
@@ -196,7 +196,7 @@ saveRDS(zmrt, file=paste0(cohortdata_dir, study, '.rds') )
 
 
 #-------------------------------
-# ki1017093-NIH-Birth         
+# NIH-Birth         
 #-------------------------------
 study<-"nbrt"
 nbrt<-read.csv(paste0(cohortdata_dir,"/adam versions/nih-birth-cohort/full_nbrt.csv")) 
@@ -205,7 +205,7 @@ saveRDS(nbrt, file=paste0(cohortdata_dir, study, '.rds') )
 
 
 #-------------------------------
-# ki1017093c-NIH-Crypto      
+# NIH-Crypto      
 #-------------------------------
 study<-"ncry"
 ncry<-read_sas(paste0(cohortdata_dir,"/adam versions/nih-crypto/full_nih_crypto_final.sas7bdat")) 
@@ -215,7 +215,7 @@ saveRDS(ncry, file=paste0(cohortdata_dir, study, '.rds') )
 
 
 #-------------------------------
-# ki1135781-COHORTS          
+# COHORTS          
 #-------------------------------
 study<-"cort"
 cort<-read_sas(paste0(cohortdata_dir,"/adam versions/cohorts/ads_full_ki1135781_cohorts.sas7bdat")) 
@@ -225,7 +225,7 @@ saveRDS(cort, file=paste0(cohortdata_dir, study, '.rds') )
 
 
 #-------------------------------
-# ki1000304b-SAS-FoodSuppl    
+# SAS-FoodSuppl    
 #-------------------------------
 
 study<-"fspp"
@@ -236,7 +236,7 @@ saveRDS(fspp, file=paste0(cohortdata_dir, study, '.rds') )
 
 
 #-------------------------------
-# ki1000304b-SAS-CompFeed   
+# SAS-CompFeed   
 #-------------------------------
 
 study<-"cpfd"

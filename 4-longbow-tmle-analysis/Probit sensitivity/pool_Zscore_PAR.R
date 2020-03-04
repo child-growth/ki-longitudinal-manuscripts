@@ -16,9 +16,9 @@ head(dfull)
 
 #Drop risk factors without probit
 dfull <- dfull %>% group_by(intervention_variable) %>% 
-  mutate(has_probit = max(1*(studyid=="ki1119695-PROBIT"))) %>%
+  mutate(has_probit = max(1*(studyid=="PROBIT"))) %>%
   filter(has_probit == 1,
-         studyid!="ki1119695-PROBIT",
+         studyid!="PROBIT",
          outcome_variable %in% c("haz","whz")) 
 table(dfull$intervention_variable)
 

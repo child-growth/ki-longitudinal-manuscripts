@@ -217,21 +217,21 @@ vel <- readRDS(file=paste0(ghapdata_dir,"velocity_longfmt_rf.rds"))
 
 #Drop yearly studies
 vel <- vel[!vel$studyid %in% c(
-  "ki1000110-WASH-Bangladesh",       
-  "ki1000111-WASH-Kenya",  
-  "ki1148112-iLiNS-DOSE",     
-  "ki1148112-iLiNS-DYAD-M", 
-  "ki1033518-iLiNS-DYAD-G",
-  "ki1000125-AgaKhanUniv",           
-  "ki1112895-Burkina Faso Zn",    
-  "ki1000304-VITAMIN-A",  
-  "ki1000304-Vitamin-B12",
-  "ki1000107-Serrinha-VitA",   
-  "ki1000304-EU",        
-  "ki1000304-ZnMort"),]
+  "WASH-Bangladesh",       
+  "WASH-Kenya",  
+  "iLiNS-DOSE",     
+  "iLiNS-DYAD-M", 
+  "iLiNS-DYAD-G",
+  "AgaKhanUniv",           
+  "Burkina Faso Zn",    
+  "VITAMIN-A",  
+  "Vitamin-B12",
+  "Serrinha-VitA",   
+  "EU",        
+  "ZnMort"),]
 
-vel <- vel[!(vel$studyid=="ki1135781-COHORTS" & vel$country=="BRAZIL"),] #Drop because yearly 
-vel <- vel[!(vel$studyid=="ki1135781-COHORTS" & vel$country=="SOUTH AFRICA"),] #Drop because yearly 
+vel <- vel[!(vel$studyid=="COHORTS" & vel$country=="BRAZIL"),] #Drop because yearly 
+vel <- vel[!(vel$studyid=="COHORTS" & vel$country=="SOUTH AFRICA"),] #Drop because yearly 
 
 class(vel$subjid)
 

@@ -46,21 +46,21 @@ sex_by_arm = function(d){
 
 
 #--------------------------------------------
-# ki1114097-CONTENT         
+# CONTENT         
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1114097-CONTENT")         
+d <- dfull %>% filter(studyid == "CONTENT")         
 
 
 #--------------------------------------------
-# ki1119695-PROBIT  
+# PROBIT  
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1119695-PROBIT")  
+d <- dfull %>% filter(studyid == "PROBIT")  
 
 
 #--------------------------------------------
-# ki0047075b-MAL-ED         
+# MAL-ED         
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki0047075b-MAL-ED")         
+d <- dfull %>% filter(studyid == "MAL-ED")         
 df <- d %>% filter(!is.na(whz)) %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
 #outcome-measure	Cohort	publication n	outcome-value
 # Sample size with complete data	BGD	265	206
@@ -99,9 +99,9 @@ df %>% group_by(country) %>% summarize(mean(W_mhtcm, na.rm=T))
 
 
 #--------------------------------------------
-# ki1000108-CMC-V-BCS-2002  
+# CMC-V-BCS-2002  
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1000108-CMC-V-BCS-2002")  
+d <- dfull %>% filter(studyid == "CMC-V-BCS-2002")  
 df <- d %>% filter(!is.na(haz)) %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
 
 #gladstone 2011
@@ -120,45 +120,45 @@ table(df$W_birthwt < 2500)
 table(df$W_birthwt)
 
 #--------------------------------------------
-# ki1000108-IRC            
+# IRC            
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1000108-IRC")            
+d <- dfull %>% filter(studyid == "IRC")            
 
 
 #--------------------------------------------
-# ki1000109-EE              
+# EE              
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1000109-EE")              
+d <- dfull %>% filter(studyid == "EE")              
 
 
 #--------------------------------------------
-# ki1000109-ResPak          
+# ResPak          
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1000109-ResPak")          
+d <- dfull %>% filter(studyid == "ResPak")          
 
 
 #--------------------------------------------
-# ki1000304-VITAMIN-A      
+# VITAMIN-A      
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1000304-VITAMIN-A")      
+d <- dfull %>% filter(studyid == "VITAMIN-A")      
 
 
 #--------------------------------------------
-# ki1000304b-SAS-CompFeed   
+# SAS-CompFeed   
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1000304b-SAS-CompFeed")   
+d <- dfull %>% filter(studyid == "SAS-CompFeed")   
 
 
 #--------------------------------------------
-# ki1000304b-SAS-FoodSuppl  
+# SAS-FoodSuppl  
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1000304b-SAS-FoodSuppl")  
+d <- dfull %>% filter(studyid == "SAS-FoodSuppl")  
 
 
 #--------------------------------------------
-# ki1017093-NIH-Birth      
+# NIH-Birth      
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1017093-NIH-Birth")      
+d <- dfull %>% filter(studyid == "NIH-Birth")      
 
 
 # outcome-description	publication n	outcome-value
@@ -183,9 +183,9 @@ summary(df$whz)
 
 #Seems to match, though male percent is less
 #--------------------------------------------
-# ki1017093b-PROVIDE        
+# PROVIDE        
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1017093b-PROVIDE")        
+d <- dfull %>% filter(studyid == "PROVIDE")        
 
 # outcome-measure outcome-description publication n outcome-value
 # Neonatal  Age at enrollment (days)  700 4.9
@@ -207,9 +207,9 @@ summary(df$waz)
 summary(df$W_mage)
 
 #--------------------------------------------
-# ki1017093c-NIH-Crypto     
+# NIH-Crypto     
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1017093c-NIH-Crypto")     
+d <- dfull %>% filter(studyid == "NIH-Crypto")     
 
 df <- d %>% group_by(subjid)  %>% filter(!is.na(haz)) %>% summarize(N=n())
 table(df$N)
@@ -253,9 +253,9 @@ length(unique(d$subjid))
 #Matches KI dataset
 
 #--------------------------------------------
-# ki1066203-TanzaniaChild2 
+# TanzaniaChild2 
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1066203-TanzaniaChild2") 
+d <- dfull %>% filter(studyid == "TanzaniaChild2") 
 
 #data at enrollment
 df <- d %>% group_by(subjid) %>% arrange(agedays) %>% slice(1)
@@ -310,21 +310,21 @@ prop.table(table(df$arm, df$sex), 1)
 
 
 #--------------------------------------------
-# ki1101329-Keneba         
+# Keneba         
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1101329-Keneba")         
+d <- dfull %>% filter(studyid == "Keneba")         
 
 
 #--------------------------------------------
-# ki1112895-Burkina Faso Zn 
+# Burkina Faso Zn 
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1112895-Burkina Faso Zn") 
+d <- dfull %>% filter(studyid == "Burkina Faso Zn") 
 
 
 #--------------------------------------------
-# ki1112895-Guatemala BSC  
+# Guatemala BSC  
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1112895-Guatemala BSC")  
+d <- dfull %>% filter(studyid == "Guatemala BSC")  
 
 
 # Link to primary publication	Table-number	outcome-measure	outcome-description	publication n	outcome-value	notes
@@ -348,9 +348,9 @@ summary_by_arm(df, "whz")
 
 
 #--------------------------------------------
-# ki1112895-iLiNS-Zinc      
+# iLiNS-Zinc      
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1112895-iLiNS-Zinc")      
+d <- dfull %>% filter(studyid == "iLiNS-Zinc")      
 d <- droplevels(d)
 
 # outcome-measure	outcome-description	publication n	outcome-value
@@ -367,15 +367,15 @@ d %>% filter(arm=="a.LNS-Zn0", agedays > 17* 30.4167, agedays < 19 * 30.4167, !i
 #matches
 
 #--------------------------------------------
-# ki1113344-GMS-Nepal       
+# GMS-Nepal       
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1113344-GMS-Nepal")       
+d <- dfull %>% filter(studyid == "GMS-Nepal")       
 #not yet published
 
 #--------------------------------------------
-# ki1114097-CMIN           
+# CMIN           
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1114097-CMIN")           
+d <- dfull %>% filter(studyid == "CMIN")           
 
 # Sex male	Children 0-2y	252	144 (57%)
 # 
@@ -411,9 +411,9 @@ d %>% filter(agedays > 18*30.4167, agedays < 24*30.4167, !is.na(haz), haz > -6) 
 #Matches closer
 
 #--------------------------------------------
-# ki1126311-ZVITAMBO        
+# ZVITAMBO        
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1126311-ZVITAMBO")        
+d <- dfull %>% filter(studyid == "ZVITAMBO")        
 
 d %>% group_by(subjid) %>% mutate(lagage=lag(agedays), agediff = agedays-lagage) %>% ungroup() %>% summarize(median(agediff, na.rm=T), mean(agediff, na.rm=T))
 
@@ -450,15 +450,15 @@ summary(df$wtkg) *1000
 summary(df$lencm) 
 
 #--------------------------------------------
-# ki1135781-COHORTS         
+# COHORTS         
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1135781-COHORTS")         
+d <- dfull %>% filter(studyid == "COHORTS")         
 
 
 #--------------------------------------------
-# ki1148112-LCNI-5         
+# LCNI-5         
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1148112-LCNI-5")   
+d <- dfull %>% filter(studyid == "LCNI-5")   
 
 # outcome-measure	outcome-description	publication n	outcome-value
 # Infant sex, male	Control	209	111 (53.1%)
@@ -504,21 +504,21 @@ summary_by_arm(d=df,  Y="haz")
 #Matches
 
 #--------------------------------------------
-# ki1148112-iLiNS-DOSE      
+# iLiNS-DOSE      
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1148112-iLiNS-DOSE")      
+d <- dfull %>% filter(studyid == "iLiNS-DOSE")      
 
 
 #--------------------------------------------
-# ki1148112-iLiNS-DYAD-M    
+# iLiNS-DYAD-M    
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "ki1148112-iLiNS-DYAD-M")    
+d <- dfull %>% filter(studyid == "iLiNS-DYAD-M")    
 
 
 #--------------------------------------------
-# kiGH5241-JiVitA-3        
+# JiVitA-3        
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "kiGH5241-JiVitA-3")        
+d <- dfull %>% filter(studyid == "JiVitA-3")        
 
 
 # Table-number	outcome-measure	outcome-description	outcome-value
@@ -577,9 +577,9 @@ prop.table(table(df$whz[df$arm=="Multiple Micronutrients"] < -2)) * 100
 
 
 #--------------------------------------------
-# kiGH5241-JiVitA-4         
+# JiVitA-4         
 #--------------------------------------------
-d <- dfull %>% filter(studyid == "kiGH5241-JiVitA-4")   
+d <- dfull %>% filter(studyid == "JiVitA-4")   
 
 
 # Link to primary publication	Table-number	outcome-measure	outcome-description	publication n	outcome-value

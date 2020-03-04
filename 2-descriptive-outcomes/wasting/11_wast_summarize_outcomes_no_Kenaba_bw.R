@@ -14,8 +14,8 @@ d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 
 
 #Drop birth measure from MRC kenaba
-d <- d %>% filter(!(studyid=="ki1101329-Keneba" & agedays==1))
-d_noBW <- d_noBW %>% filter(!(studyid=="ki1101329-Keneba" & agedays==1))
+d <- d %>% filter(!(studyid=="Keneba" & agedays==1))
+d_noBW <- d_noBW %>% filter(!(studyid=="Keneba" & agedays==1))
 
 
 #Prevalence

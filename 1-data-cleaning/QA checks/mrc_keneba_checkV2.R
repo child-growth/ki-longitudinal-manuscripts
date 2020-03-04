@@ -6,7 +6,7 @@ library(growthstandards)
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 
 
-d <- d %>% filter(studyid == "ki1101329-Keneba")
+d <- d %>% filter(studyid == "Keneba")
 
 d <- d %>%
   mutate(age = case_when(agedays==1 ~ "Birth",

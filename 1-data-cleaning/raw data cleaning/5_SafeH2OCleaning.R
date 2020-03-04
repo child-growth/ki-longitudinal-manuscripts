@@ -59,10 +59,10 @@ dh20<-NULL
 
 
 #-------------------------------
-# ki0047075b-MAL-ED           
+# MAL-ED           
 #-------------------------------
 
-# e <- read.csv("U:/git/hbgd/ki0047075b/MALED-201707/adam/full_ki0047075b_MALED_201707.csv")
+# e <- read.csv("U:/git/hbgd/201707/adam/full_ki0047075b_MALED_201707.csv")
 # df<-load_wat("U:/data/mled.rds")
 
 #may have to use compiled dataset values or search raw data
@@ -114,7 +114,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1000125-AgaKhanUniv       
+# AgaKhanUniv       
 #-------------------------------
 
 d<-load_wat("akup.rds", "h2osrc")
@@ -132,7 +132,7 @@ dh20<-bind_rows(dh20, d)
 # table(d$cf11) #same info
 
 #-------------------------------
-# ki1000304-VITAMIN-A        
+# VITAMIN-A        
 #-------------------------------
 
 d<-load_wat("vita.rds", "h2osrc")
@@ -145,7 +145,7 @@ table(d$safeh20)
 dh20<-bind_rows(dh20, d)
 
 #-------------------------------
-# ki1000304-ZnMort          
+# ZnMort          
 #-------------------------------
 
 d<-load_wat("zmrt.rds", "h2osrc")
@@ -159,7 +159,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1000304b-SAS-FoodSuppl    
+# SAS-FoodSuppl    
 #-------------------------------
 
 d<-load_wat("fspp.rds", "h2osrc")
@@ -170,7 +170,7 @@ d$safeh20[is.na(d$h2osrc)] <- NA
 table(d$safeh20)
 
 #Check raw data -only 1 in the clean
-# d<-read_sas("U:/git/hbgd/ki1000304b/SAS-FoodSuppl/raw/f2_baseline.sas7bdat")
+# d<-read_sas("U:/git/hbgd/FoodSuppl/raw/f2_baseline.sas7bdat")
 # head(d)
 # table(d$w_suply)
 
@@ -182,7 +182,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1017093-NIH-Birth         
+# NIH-Birth         
 #-------------------------------
 
 d<-load_wat("nbrt.rds", "h2osrcp")
@@ -199,7 +199,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1017093b-PROVIDE        
+# PROVIDE        
 #-------------------------------
 
 d<-load_wat("prvd.rds", "h2osrcp")
@@ -215,7 +215,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1017093c-NIH-Crypto      
+# NIH-Crypto      
 #-------------------------------
 
 d<-load_wat("ncry.rds", "h2osrc")
@@ -234,7 +234,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1112895-Burkina Faso Zn  
+# Burkina Faso Zn  
 #-------------------------------
 
 d<-load_wat("bfzn.rds", "h2osrcp")
@@ -254,7 +254,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1114097-CONTENT            
+# CONTENT            
 #-------------------------------
 
 d<-load_wat("cntt.rds", "h2osrcc")
@@ -269,7 +269,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1135781-COHORTS          
+# COHORTS          
 #-------------------------------
 
 d<-load_wat("cort.rds", "h2oavail")
@@ -283,7 +283,7 @@ d<-load_wat("cort.rds", "h2oavail")
 
 
 #-------------------------------
-# ki1148112-iLiNS-DOSE       
+# iLiNS-DOSE       
 #-------------------------------
 
 d<-load_wat("ilnd.rds", "h2osrcp")
@@ -301,7 +301,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1148112-iLiNS-DYAD-M       
+# iLiNS-DYAD-M       
 #-------------------------------
 
 d<-load_wat("ildm.rds", "h2osrcp")
@@ -321,7 +321,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# ki1148112-LCNI-5      
+# LCNI-5      
 #-------------------------------
 
 d<-load_wat("lcn5.rds", "h2osrcp")
@@ -338,7 +338,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# kiGH5241-JiVitA-3     
+# JiVitA-3     
 #-------------------------------
 
 d<-load_wat("jvt3.rds", "h2osrcp")
@@ -355,7 +355,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-# kiGH5241-JiVitA-4   
+# JiVitA-4   
 #-------------------------------
 
 d<-load_wat("jvt4.rds", "h2osrcp")
@@ -373,7 +373,7 @@ dh20<-bind_rows(dh20, d)
 
 
 #-------------------------------
-#ki1113344-GMS-Nepal   
+#GMS-Nepal   
 #-------------------------------
 
 d<-load_wat("gmsn.rds", "h2osrc")

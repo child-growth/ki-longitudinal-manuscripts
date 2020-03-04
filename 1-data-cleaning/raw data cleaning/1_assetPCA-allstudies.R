@@ -347,7 +347,7 @@ saveRDS(lcn5, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 #---------
 study<-"mled"
 d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
-#d<-read.csv("U:/git/hbgd/ki0047075b/MALED-201707/adam/full_ki0047075b_MALED_201707.csv")
+#d<-read.csv("U:/git/hbgd/201707/adam/full_ki0047075b_MALED_201707.csv")
 
 cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
 varlist<-colnames(d)[colnames(d) %in% c( "AGLAND", "BICYCLE", "ELEC", "FAN", "FRIG", "INCTOT", "MOBILE", "NROOMS", "RADIO", "TV", "WATCH", "CHAIR", "COMPUTER","MATTRESS", "SOFA", "TABLE", "BOOKS")]

@@ -24,7 +24,7 @@ d <- d %>% subset(., select=c(studyid, subjid, agedays, diarfl,diarfl_r, dur_r))
 
 #Drop studies Vishak added to data product that don't meet inclusion criteria
 dim(d)
-d <- d[d$studyid!="ki1000301-DIVIDS" & d$studyid!="ki1055867-WomenFirst" & d$studyid!="ki1135782-INCAP",]
+d <- d[d$studyid!="DIVIDS" & d$studyid!="WomenFirst" & d$studyid!="INCAP",]
 dim(d)
 
 #Replace diar flag with 1-day recall 
@@ -85,7 +85,7 @@ table(d$subjido)
 table(akup$subjido)
 
 #There isn't enough info to merge diarrhea with outcome dataset, but could append as its own rows with its own ages
-df_akup <- dfull %>% filter(studyid=="ki1000125-AgaKhanUniv")
+df_akup <- dfull %>% filter(studyid=="AgaKhanUniv")
 table(df_akup$diarfl)
 table(akup$diarfl)
 table(akup$a1)
@@ -94,7 +94,7 @@ akup <- akup %>% subset(., select = c(subjid, agedays.x, studyid, a1)) %>%
                  rename(agedays = agedays.x, diarfl2 = a1)
 
 gc()
-dfull$diarfl[dfull$studyid=="ki1000125-AgaKhanUniv"] <- NA
+dfull$diarfl[dfull$studyid=="AgaKhanUniv"] <- NA
 
 akup$subjid <- as.numeric(akup$subjid)
 dfull$subjid <- as.numeric(dfull$subjid)
@@ -132,7 +132,7 @@ ilnd <- ilnd %>% subset(., select = c(studyid, country, subjid, agedays, diarfl)
 head(ilnd)
 
 ilnd$diarfl <- as.numeric(ilnd$diarfl)
-dfull <- dfull %>% filter(studyid!="ki1148112-iLiNS-DOSE")
+dfull <- dfull %>% filter(studyid!="iLiNS-DOSE")
 dfull <- bind_rows(dfull, ilnd)
 table(dfull$studyid, dfull$diarfl)
 table(ilnd$diarfl)
@@ -170,7 +170,7 @@ tzc2 <- tzc2 %>% subset(., select = c(studyid, country, subjid, agedays, diarfl)
 head(tzc2)
 
 tzc2$diarfl <- as.numeric(tzc2$diarfl)
-dfull <- dfull %>% filter(studyid!="ki1066203-TanzaniaChild2")
+dfull <- dfull %>% filter(studyid!="TanzaniaChild2")
 dfull <- bind_rows(dfull, tzc2)
 table(dfull$studyid, dfull$diarfl)
 table(tzc2$diarfl)
@@ -203,7 +203,7 @@ knitr::kable(res2, digits=1)
 
 #Drop CMC and IRC, which have 10 and 2 children with enough obs, and unrealisticly high prevalence 
 #(probable incorrect mapping/recording of healthy observations)
-diar_df$diarfl[diar_df$studyid=="ki1000108-CMC-V-BCS-2002" | diar_df$studyid=="ki1000108-IRC"] <- NA
+diar_df$diarfl[diar_df$studyid=="CMC-V-BCS-2002" | diar_df$studyid=="IRC"] <- NA
 
 #Summarize under 6 month  diarrhea
 diar_6mo <- diar_df %>% #filter(!is.na(predfeed_fl)) %>% 

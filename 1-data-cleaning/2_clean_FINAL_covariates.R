@@ -104,16 +104,16 @@ gc()
 
 
 provide <- readRDS(paste0(ghapdata_dir, "covariate creation intermediate datasets/derived covariate datasets/PROVIDE_birthmonth.rds"))
-provide$studyid <- "ki1017093b-PROVIDE"
+provide$studyid <- "PROVIDE"
 provide$birthmon_provide <- as.numeric(as.character(provide$birthmon_provide))
 
 unique(d$studyid)
-table(is.na(d$brthmon[d$studyid=="ki1017093b-PROVIDE"]))
+table(is.na(d$brthmon[d$studyid=="PROVIDE"]))
 d <- left_join(d, provide, by = c("studyid", "subjid"))
 table(d$birthmon_provide)
-d$brthmon[d$studyid=="ki1017093b-PROVIDE"] <- d$birthmon_provide[d$studyid=="ki1017093b-PROVIDE"]
-table(is.na(d$brthmon[d$studyid=="ki1017093b-PROVIDE"]))
-table((d$brthmon[d$studyid=="ki1017093b-PROVIDE"]))
+d$brthmon[d$studyid=="PROVIDE"] <- d$birthmon_provide[d$studyid=="PROVIDE"]
+table(is.na(d$brthmon[d$studyid=="PROVIDE"]))
+table((d$brthmon[d$studyid=="PROVIDE"]))
 d <- d %>% subset(., select = -c(birthmon_provide))
 
 
@@ -140,7 +140,7 @@ d <- left_join(d, pca, by=c("studyid", "country", "subjid"))
 #merge in ses variable for COHORTS for all countries except INDIA. The other countries have wealth based on 
 #an asset-based PCA index, but India is based on father's occupation.
 d$hhwealth_quart <- as.character(d$hhwealth_quart)
-chtses<- d$ses[is.na(d$hhwealth_quart) & d$studyid=="ki1135781-COHORTS" & d$country!="INDIA"]
+chtses<- d$ses[is.na(d$hhwealth_quart) & d$studyid=="COHORTS" & d$country!="INDIA"]
 chtses[chtses==""] <- NA
 chtses[chtses=="Low"] <- "Wealth Q1"
 chtses[chtses=="Lower-mi"] <- "Wealth Q2"
@@ -148,7 +148,7 @@ chtses[chtses=="Middle"] <- "Wealth Q3"
 chtses[chtses=="Upper-mi"] <- "Wealth Q4"
 chtses[chtses=="Upper"] <- "Wealth Q4"
 
-d$hhwealth_quart[is.na(d$hhwealth_quart) & d$studyid=="ki1135781-COHORTS" & d$country!="INDIA"] <-chtses
+d$hhwealth_quart[is.na(d$hhwealth_quart) & d$studyid=="COHORTS" & d$country!="INDIA"] <-chtses
 d$hhwealth_quart <- factor(d$hhwealth_quart)
 
 #Check and make sure all merged correctly
@@ -205,10 +205,10 @@ d$hfoodsec <- factor(d$hfoodsec, levels=c("Food Secure", "Mildly Food Insecure",
 
 
 # drop gestational age in studies with no variations (measured it at the month level)
-d$gagebrth[d$studyid=="ki1113344-GMS-Nepal"] <- NA
+d$gagebrth[d$studyid=="GMS-Nepal"] <- NA
 #drop gestational age in study where GA is mother reported and unbelievably high (93% and 80% preterm)
-d$gagebrth[d$studyid=="ki1000304b-SAS-CompFeed"] <- NA
-d$gagebrth[d$studyid=="ki1000109-EE"] <- NA
+d$gagebrth[d$studyid=="SAS-CompFeed"] <- NA
+d$gagebrth[d$studyid=="EE"] <- NA
 
 
 #parity
@@ -221,15 +221,15 @@ table(d$studyid[!is.na(d$brthordr)], d$brthordr[!is.na(d$brthordr)])
 d$parity[is.na(d$parity)] <- d$brthordr[is.na(d$parity)]
 
 
-#Shift obs in ki1000304b-SAS-FoodSuppl to make 1==firstborn
-d$parity[d$studyid=="ki1000304b-SAS-FoodSuppl"] <- d$parity[d$studyid=="ki1000304b-SAS-FoodSuppl"] + 1   
+#Shift obs in SAS-FoodSuppl to make 1==firstborn
+d$parity[d$studyid=="SAS-FoodSuppl"] <- d$parity[d$studyid=="SAS-FoodSuppl"] + 1   
 
 #Fix right shift of Tanzania child, Kenaba, iLiNS-DYAD-M, and Jivita-3 parity
-d$parity[d$studyid=="ki1066203-TanzaniaChild2" & d$parity==1] <- NA
-d$parity[d$studyid=="ki1066203-TanzaniaChild2"] <- d$parity[d$studyid=="ki1066203-TanzaniaChild2"] - 1  
-d$parity[d$studyid=="ki1101329-Keneba"] <- d$parity[d$studyid=="ki1101329-Keneba"] - 1  
-d$parity[d$studyid=="ki1148112-iLiNS-DYAD-M"] <- d$parity[d$studyid=="ki1148112-iLiNS-DYAD-M"] - 1  
-d$parity[d$studyid=="kiGH5241-JiVitA-3"] <- d$parity[d$studyid=="kiGH5241-JiVitA-3"] - 1  
+d$parity[d$studyid=="TanzaniaChild2" & d$parity==1] <- NA
+d$parity[d$studyid=="TanzaniaChild2"] <- d$parity[d$studyid=="TanzaniaChild2"] - 1  
+d$parity[d$studyid=="Keneba"] <- d$parity[d$studyid=="Keneba"] - 1  
+d$parity[d$studyid=="iLiNS-DYAD-M"] <- d$parity[d$studyid=="iLiNS-DYAD-M"] - 1  
+d$parity[d$studyid=="JiVitA-3"] <- d$parity[d$studyid=="JiVitA-3"] - 1  
 table(d$studyid, d$parity)
 
 #Convert birth Zscore to absolute units
@@ -325,14 +325,14 @@ table(d$studyid[!is.na(d$nchldlt5)], d$nchldlt5[!is.na(d$nchldlt5)])
 #Need to shift full distribution by 1 in studies with 0 marked- 
 #  inconsistent marking of subject in the count across studies
 #  Some count number of other children, some number of total children
-d$nchldlt5[d$studyid=="ki1148112-LCNI-5" & d$nchldlt5==0] <- NA #LCNI has 4 children marked as 0 -drop as
-d$nchldlt5[d$studyid=="ki1148112-iLiNS-DOSE" & d$nchldlt5==0] <- NA #ilins-DOSE has 3 children marked as 0 -drop as
-d$nchldlt5[d$studyid=="ki1000108-IRC"] <- d$nchldlt5[d$studyid=="ki1000108-IRC"] + 1
-d$nchldlt5[d$studyid=="ki1017093b-PROVIDE"] <- d$nchldlt5[d$studyid=="ki1017093b-PROVIDE"] + 1
-d$nchldlt5[d$studyid=="ki1017093c-NIH-Crypto"] <- d$nchldlt5[d$studyid=="ki1017093c-NIH-Crypto"] + 1
-d$nchldlt5[d$studyid=="ki1066203-TanzaniaChild2"] <- d$nchldlt5[d$studyid=="ki1066203-TanzaniaChild2"] + 1
-d$nchldlt5[d$studyid=="ki1148112-iLiNS-DYAD-M"] <- d$nchldlt5[d$studyid=="ki1148112-iLiNS-DYAD-M"] + 1
-d$nchldlt5[d$studyid=="kiGH5241-JiVitA-3"] <- d$nchldlt5[d$studyid=="kiGH5241-JiVitA-3"] + 1
+d$nchldlt5[d$studyid=="LCNI-5" & d$nchldlt5==0] <- NA #LCNI has 4 children marked as 0 -drop as
+d$nchldlt5[d$studyid=="iLiNS-DOSE" & d$nchldlt5==0] <- NA #ilins-DOSE has 3 children marked as 0 -drop as
+d$nchldlt5[d$studyid=="IRC"] <- d$nchldlt5[d$studyid=="IRC"] + 1
+d$nchldlt5[d$studyid=="PROVIDE"] <- d$nchldlt5[d$studyid=="PROVIDE"] + 1
+d$nchldlt5[d$studyid=="NIH-Crypto"] <- d$nchldlt5[d$studyid=="NIH-Crypto"] + 1
+d$nchldlt5[d$studyid=="TanzaniaChild2"] <- d$nchldlt5[d$studyid=="TanzaniaChild2"] + 1
+d$nchldlt5[d$studyid=="iLiNS-DYAD-M"] <- d$nchldlt5[d$studyid=="iLiNS-DYAD-M"] + 1
+d$nchldlt5[d$studyid=="JiVitA-3"] <- d$nchldlt5[d$studyid=="JiVitA-3"] + 1
 
 
 
@@ -343,27 +343,27 @@ d$nchldlt5[d$studyid=="kiGH5241-JiVitA-3"] <- d$nchldlt5[d$studyid=="kiGH5241-Ji
 #--------------------------------------------------------
 
 d$id <- NA
-d$id[d$studyid %in% c("ki1112895-iLiNS-Zinc",
-                      "kiGH5241-JiVitA-3",    
-                      "kiGH5241-JiVitA-4",
-                      "ki1119695-PROBIT",
-                      "ki1000304b-SAS-CompFeed")] <-d$clustid[d$studyid %in% c("ki1112895-iLiNS-Zinc",
-                                                                               "kiGH5241-JiVitA-3",    
-                                                                               "kiGH5241-JiVitA-4",
-                                                                               "ki1119695-PROBIT",
-                                                                               "ki1000304b-SAS-CompFeed")]
-d$id[!(d$studyid %in% c("ki1112895-iLiNS-Zinc",
-                        "kiGH5241-JiVitA-3",    
-                        "kiGH5241-JiVitA-4",
-                        "ki1119695-PROBIT",
-                        "ki1000304b-SAS-CompFeed"))] <-d$subjid[!(d$studyid %in% c("ki1112895-iLiNS-Zinc",
-                                                                                   "kiGH5241-JiVitA-3",    
-                                                                                   "kiGH5241-JiVitA-4",
-                                                                                   "ki1119695-PROBIT",
-                                                                                   "ki1000304b-SAS-CompFeed"))]
+d$id[d$studyid %in% c("iLiNS-Zinc",
+                      "JiVitA-3",    
+                      "JiVitA-4",
+                      "PROBIT",
+                      "SAS-CompFeed")] <-d$clustid[d$studyid %in% c("iLiNS-Zinc",
+                                                                               "JiVitA-3",    
+                                                                               "JiVitA-4",
+                                                                               "PROBIT",
+                                                                               "SAS-CompFeed")]
+d$id[!(d$studyid %in% c("iLiNS-Zinc",
+                        "JiVitA-3",    
+                        "JiVitA-4",
+                        "PROBIT",
+                        "SAS-CompFeed"))] <-d$subjid[!(d$studyid %in% c("iLiNS-Zinc",
+                                                                                   "JiVitA-3",    
+                                                                                   "JiVitA-4",
+                                                                                   "PROBIT",
+                                                                                   "SAS-CompFeed"))]
 
 #use siteid from PROBIT
-d$id[d$studyid %in% c("ki1119695-PROBIT")] <-d$siteid[d$studyid %in% c("ki1119695-PROBIT")]
+d$id[d$studyid %in% c("PROBIT")] <-d$siteid[d$studyid %in% c("PROBIT")]
 
 table(is.na(d$id))
 
@@ -379,88 +379,88 @@ arms
 
 d$tr <- NA
 
-d$tr[d$studyid=="ki1000107-Serrinha-VitA" & d$arm=="Placebo"] <- "Control"
-d$tr[d$studyid=="ki1000107-Serrinha-VitA" & d$arm=="Vitamin A"] <- "VitA"
+d$tr[d$studyid=="Serrinha-VitA" & d$arm=="Placebo"] <- "Control"
+d$tr[d$studyid=="Serrinha-VitA" & d$arm=="Vitamin A"] <- "VitA"
 
-d$tr[(d$studyid=="ki1000110-WASH-Bangladesh" | d$studyid=="ki1000111-WASH-Kenya")] <- "Other"
-d$tr[(d$studyid=="ki1000110-WASH-Bangladesh" | d$studyid=="ki1000111-WASH-Kenya") & (d$arm=="Control" | d$arm=="Passive Control")] <- "Control"
-d$tr[(d$studyid=="ki1000110-WASH-Bangladesh" | d$studyid=="ki1000111-WASH-Kenya") & (d$arm=="Nutrition" | d$arm=="Nutrition + WSH")] <- "LNS"
+d$tr[(d$studyid=="WASH-Bangladesh" | d$studyid=="WASH-Kenya")] <- "Other"
+d$tr[(d$studyid=="WASH-Bangladesh" | d$studyid=="WASH-Kenya") & (d$arm=="Control" | d$arm=="Passive Control")] <- "Control"
+d$tr[(d$studyid=="WASH-Bangladesh" | d$studyid=="WASH-Kenya") & (d$arm=="Nutrition" | d$arm=="Nutrition + WSH")] <- "LNS"
 
-d$tr[d$studyid=="ki1000125-AgaKhanUniv" & d$arm=="Control"] <- "Control"
-d$tr[d$studyid=="ki1000125-AgaKhanUniv" & d$arm=="Intervention"] <- "Maternal"
+d$tr[d$studyid=="AgaKhanUniv" & d$arm=="Control"] <- "Control"
+d$tr[d$studyid=="AgaKhanUniv" & d$arm=="Intervention"] <- "Maternal"
 
-d$tr[d$studyid=="ki1000304-EU" & d$arm=="Placebo"] <- "Control"
-d$tr[d$studyid=="ki1000304-EU" & d$arm=="Zinc"] <- "Zinc"
+d$tr[d$studyid=="EU" & d$arm=="Placebo"] <- "Control"
+d$tr[d$studyid=="EU" & d$arm=="Zinc"] <- "Zinc"
 
-d$tr[d$studyid=="ki1000304-VITAMIN-A" & d$arm=="Control"] <- "Control"
-d$tr[d$studyid=="ki1000304-VITAMIN-A" & d$arm=="Vitamin A"] <- "VitA"
+d$tr[d$studyid=="VITAMIN-A" & d$arm=="Control"] <- "Control"
+d$tr[d$studyid=="VITAMIN-A" & d$arm=="Vitamin A"] <- "VitA"
 
-d$tr[d$studyid=="ki1000304-Vitamin-B12" ] <- "Other"
-d$tr[d$studyid=="ki1000304-Vitamin-B12" & d$arm=="Placebo"] <- "Control"
+d$tr[d$studyid=="Vitamin-B12" ] <- "Other"
+d$tr[d$studyid=="Vitamin-B12" & d$arm=="Placebo"] <- "Control"
 
-d$tr[d$studyid=="ki1000304-ZnMort" & d$arm=="IFA"] <- "Control"
-d$tr[d$studyid=="ki1000304-ZnMort" & d$arm=="Zinc+IFA"] <- "Zinc"
+d$tr[d$studyid=="ZnMort" & d$arm=="IFA"] <- "Control"
+d$tr[d$studyid=="ZnMort" & d$arm=="Zinc+IFA"] <- "Zinc"
 
-d$tr[d$studyid=="ki1000304b-SAS-CompFeed" & d$arm=="Control"] <- "Control"
-d$tr[d$studyid=="ki1000304b-SAS-CompFeed" & (d$arm=="Intervention"|d$arm=="")] <- "Other"
+d$tr[d$studyid=="SAS-CompFeed" & d$arm=="Control"] <- "Control"
+d$tr[d$studyid=="SAS-CompFeed" & (d$arm=="Intervention"|d$arm=="")] <- "Other"
 
-d$tr[d$studyid=="ki1000304b-SAS-FoodSuppl" ] <- "Other"
-d$tr[d$studyid=="ki1000304b-SAS-FoodSuppl" & d$arm=="No intervention"] <- "Control"
+d$tr[d$studyid=="SAS-FoodSuppl" ] <- "Other"
+d$tr[d$studyid=="SAS-FoodSuppl" & d$arm=="No intervention"] <- "Control"
 
-d$tr[d$studyid=="ki1017093b-PROVIDE" ] <- "Other"
-d$tr[d$studyid=="ki1017093b-PROVIDE" & d$arm=="No Rotarix + No IPV (175)"] <- "Control"
+d$tr[d$studyid=="PROVIDE" ] <- "Other"
+d$tr[d$studyid=="PROVIDE" & d$arm=="No Rotarix + No IPV (175)"] <- "Control"
 
-d$tr[d$studyid=="ki1066203-TanzaniaChild2" & d$arm=="Control"] <- "Control"
-d$tr[d$studyid=="ki1066203-TanzaniaChild2" & d$arm=="Multivitamin Alone"] <- "Other"
-d$tr[d$studyid=="ki1066203-TanzaniaChild2" & (d$arm=="Zinc Alone" | d$arm=="Zinc + Multivitamin")] <- "Zinc"
+d$tr[d$studyid=="TanzaniaChild2" & d$arm=="Control"] <- "Control"
+d$tr[d$studyid=="TanzaniaChild2" & d$arm=="Multivitamin Alone"] <- "Other"
+d$tr[d$studyid=="TanzaniaChild2" & (d$arm=="Zinc Alone" | d$arm=="Zinc + Multivitamin")] <- "Zinc"
 
-d$tr[d$studyid=="ki1112895-Burkina Faso Zn" ] <- "Zinc"
-d$tr[d$studyid=="ki1112895-Burkina Faso Zn" & d$arm=="Control (no Zinc)"] <- "Control"
+d$tr[d$studyid=="Burkina Faso Zn" ] <- "Zinc"
+d$tr[d$studyid=="Burkina Faso Zn" & d$arm=="Control (no Zinc)"] <- "Control"
 
-d$tr[d$studyid=="ki1112895-Guatemala BSC" ] <- "Other"
-d$tr[d$studyid=="ki1112895-Guatemala BSC" & (d$arm=="WPC"|d$arm=="MNT + WPC")] <- "Control"
+d$tr[d$studyid=="Guatemala BSC" ] <- "Other"
+d$tr[d$studyid=="Guatemala BSC" & (d$arm=="WPC"|d$arm=="MNT + WPC")] <- "Control"
 
-d$tr[d$studyid=="ki1112895-iLiNS-Zinc" ] <- "LNS"
-d$tr[d$studyid=="ki1112895-iLiNS-Zinc" & d$arm=="e.Control"] <- "Control"
+d$tr[d$studyid=="iLiNS-Zinc" ] <- "LNS"
+d$tr[d$studyid=="iLiNS-Zinc" & d$arm=="e.Control"] <- "Control"
 
 #Create secondary dataset for Zinc+LNS vs LNS contrast
-iLiNS_Zinc_df <- d[d$studyid=="ki1112895-iLiNS-Zinc" & d$arm!="e.Control", ]
+iLiNS_Zinc_df <- d[d$studyid=="iLiNS-Zinc" & d$arm!="e.Control", ]
 iLiNS_Zinc_df$tr <- "Zinc"
 iLiNS_Zinc_df$tr[iLiNS_Zinc_df$arm=="a.LNS-Zn0"] <- "Control"
 iLiNS_Zinc_df$studyid <- "iLiNS-Zinc_ZvLNS"
 
-d$tr[d$studyid=="ki1119695-PROBIT" ] <- "Maternal"
-d$tr[d$studyid=="ki1119695-PROBIT" & d$arm=="Control group"] <- "Control"
+d$tr[d$studyid=="PROBIT" ] <- "Maternal"
+d$tr[d$studyid=="PROBIT" & d$arm=="Control group"] <- "Control"
 
-d$tr[d$studyid=="ki1126311-ZVITAMBO" ] <- "VitA"
-d$tr[d$studyid=="ki1126311-ZVITAMBO" & d$arm=="Placebo nippled + Placebo Oval"] <- "Control"
-
-
-d$tr[d$studyid=="ki1135781-COHORTS" & d$arm=="Control"] <- "Control"
-d$tr[d$studyid=="ki1135781-COHORTS" & d$arm=="Intervention"] <- "Other"
-
-d$tr[d$studyid=="ki1148112-iLiNS-DOSE" & d$arm=="Control"] <- "Control"
-d$tr[d$studyid=="ki1148112-iLiNS-DOSE" & d$arm!="Control"] <- "LNS"
-
-d$tr[d$studyid=="ki1148112-iLiNS-DYAD-M" & d$arm=="Iron and folic acid supplementation"] <- "Control"
-d$tr[d$studyid=="ki1148112-iLiNS-DYAD-M" & d$arm!="Iron and folic acid supplementation"] <- "Maternal"
+d$tr[d$studyid=="ZVITAMBO" ] <- "VitA"
+d$tr[d$studyid=="ZVITAMBO" & d$arm=="Placebo nippled + Placebo Oval"] <- "Control"
 
 
-iLiNS_DYADM_df <- d[d$studyid=="ki1148112-iLiNS-DYAD-M" & d$arm!="Multiple micronutrient supplementation", ]
+d$tr[d$studyid=="COHORTS" & d$arm=="Control"] <- "Control"
+d$tr[d$studyid=="COHORTS" & d$arm=="Intervention"] <- "Other"
+
+d$tr[d$studyid=="iLiNS-DOSE" & d$arm=="Control"] <- "Control"
+d$tr[d$studyid=="iLiNS-DOSE" & d$arm!="Control"] <- "LNS"
+
+d$tr[d$studyid=="iLiNS-DYAD-M" & d$arm=="Iron and folic acid supplementation"] <- "Control"
+d$tr[d$studyid=="iLiNS-DYAD-M" & d$arm!="Iron and folic acid supplementation"] <- "Maternal"
+
+
+iLiNS_DYADM_df <- d[d$studyid=="iLiNS-DYAD-M" & d$arm!="Multiple micronutrient supplementation", ]
 iLiNS_DYADM_df$tr <- "Control"
 iLiNS_DYADM_df$tr[iLiNS_DYADM_df$arm!="Iron and folic acid supplementation"] <- "LNS"
 iLiNS_DYADM_df$studyid <- "iLiNS_DYADM_LNS"
 
-d$tr[d$studyid=="ki1148112-LCNI-5"& d$arm=="Standard(Control)"] <- "Control"
-d$tr[d$studyid=="ki1148112-LCNI-5"& (d$arm=="Milk FS"|d$arm=="Soy FS")] <- "LNS"
-d$tr[d$studyid=="ki1148112-LCNI-5"& d$arm=="Likuni Phala"] <- "Other"
+d$tr[d$studyid=="LCNI-5"& d$arm=="Standard(Control)"] <- "Control"
+d$tr[d$studyid=="LCNI-5"& (d$arm=="Milk FS"|d$arm=="Soy FS")] <- "LNS"
+d$tr[d$studyid=="LCNI-5"& d$arm=="Likuni Phala"] <- "Other"
 
-d$tr[d$studyid=="kiGH5241-JiVitA-3" & d$arm=="Iron Folic Acid"] <- "Control"
-d$tr[d$studyid=="kiGH5241-JiVitA-3" & d$arm=="Multiple Micronutrients"] <- "Maternal"
+d$tr[d$studyid=="JiVitA-3" & d$arm=="Iron Folic Acid"] <- "Control"
+d$tr[d$studyid=="JiVitA-3" & d$arm=="Multiple Micronutrients"] <- "Maternal"
 
-d$tr[d$studyid=="kiGH5241-JiVitA-4"] <- "Other"
-d$tr[d$studyid=="kiGH5241-JiVitA-4" & d$arm=="CFC"] <- "Control"
-d$tr[d$studyid=="kiGH5241-JiVitA-4" & d$arm=="Plumpy Doz"] <- "LNS"
+d$tr[d$studyid=="JiVitA-4"] <- "Other"
+d$tr[d$studyid=="JiVitA-4" & d$arm=="CFC"] <- "Control"
+d$tr[d$studyid=="JiVitA-4" & d$arm=="Plumpy Doz"] <- "LNS"
 
 
 
@@ -579,7 +579,7 @@ d$birthlen <- quantile_rf(d, d$W_birthlen, Acuts=c(0,48, 50, max(d$W_birthlen, n
 
 # Fix Ages in Burkino Faso Zinc so they are categorized correctly by the function, which are based on these categories:
 #Categories: <20 years old; 20-29 years old; 30-39 years old; 40-49 years old; 50+ years old
-d$W_mage[d$studyid=="ki1112895-Burkina Faso Zn" & d$W_mage==20] <- 18
+d$W_mage[d$studyid=="Burkina Faso Zn" & d$W_mage==20] <- 18
 d$mage <- quantile_rf(d, d$W_mage, Acuts=c(0,20,30,max(d$W_mage, na.rm=T)))
 
 d$mhtcm <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,151,155,max(d$W_mhtcm, na.rm=T)), units="cm")

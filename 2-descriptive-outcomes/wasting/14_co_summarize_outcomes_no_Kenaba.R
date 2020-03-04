@@ -15,8 +15,8 @@ d <- d %>% filter(measurefreq == "monthly")
 waz <- waz %>% filter(measurefreq == "monthly")
 
 #Drop birth measure from MRC kenaba
-d <- d %>% filter(!(studyid=="ki1101329-Keneba" & agedays==1))
-waz <- waz %>% filter(!(studyid=="ki1101329-Keneba" & agedays==1))
+d <- d %>% filter(!(studyid=="Keneba" & agedays==1))
+waz <- waz %>% filter(!(studyid=="Keneba" & agedays==1))
 
 
 #clean country names

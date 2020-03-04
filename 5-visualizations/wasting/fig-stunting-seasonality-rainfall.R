@@ -23,7 +23,7 @@ rain$country <- tolower(rain$country)
 d$country <- tolower(d$country)
 colnames(rain)[1] <- "studyid"
 rain$studyid <- as.character(rain$studyid)
-rain$studyid[rain$studyid == "ki1017093b-PROVIDE "] <-  "ki1017093b-PROVIDE"
+rain$studyid[rain$studyid == "PROVIDE "] <-  "PROVIDE"
 d$country[d$country=="tanzania, united republic of"] <- "tanzania"
 
 #remove grant identifiers from studyid

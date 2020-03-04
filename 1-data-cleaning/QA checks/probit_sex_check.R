@@ -8,11 +8,11 @@ library(haven)
 #--------------------------------------------
 
 dfull <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
-d <- dfull %>% filter(studyid == "ki1119695-PROBIT")
+d <- dfull %>% filter(studyid == "PROBIT")
 summary(d$lencm)
 
 #Check content sex ratio (should be ~52-53% male)
-dContent <- dfull %>% filter(studyid == "ki1114097-CONTENT") %>% arrange(agedays) %>%
+dContent <- dfull %>% filter(studyid == "CONTENT") %>% arrange(agedays) %>%
   group_by(subjid) %>% slice(1)
 (table(dContent$sex))
 prop.table(table(dContent$sex))
