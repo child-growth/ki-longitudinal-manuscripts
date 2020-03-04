@@ -27,15 +27,15 @@ cd ~/ki-longitudinal-manuscripts/1-data-cleaning
 
 #list all scripts here
  ./runFileSaveLogs -i "visualizations-stunting" \
- raw data cleaning/0_save_studies_as_rds.R \
- raw data cleaning/1_assetPCA-allstudies.R \
- raw data cleaning/2_BreastfeedingCleaning.R \
- raw data cleaning/3_BreastfeedingDatasetCreation.R \
- raw data cleaning/4_ImpsanCleaning.R \
- raw data cleaning/5_SafeH2OCleaning.R \
- raw data cleaning/6_DiarrheaCleaning.R \
- raw data cleaning/7_PROVIDE_measure_months.R \
- raw data cleaning/8_maternal_weight.R \
+ # raw data cleaning/0_save_studies_as_rds.R \
+ # raw data cleaning/1_assetPCA-allstudies.R \
+ # raw data cleaning/2_BreastfeedingCleaning.R \
+ # raw data cleaning/3_BreastfeedingDatasetCreation.R \
+ # raw data cleaning/4_ImpsanCleaning.R \
+ # raw data cleaning/5_SafeH2OCleaning.R \
+ # raw data cleaning/6_DiarrheaCleaning.R \
+ # raw data cleaning/7_PROVIDE_measure_months.R \
+ # raw data cleaning/8_maternal_weight.R \
  1_process_FINAL_dataset.R \
  2_clean_FINAL_covariates.R \
  3_merge_covariates_and_raw_data.R \

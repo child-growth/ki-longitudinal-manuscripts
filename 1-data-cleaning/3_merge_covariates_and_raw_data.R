@@ -63,6 +63,11 @@ load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covar
 load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/improved_sanitation_dataset.Rdata"))
 load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/improved_water_dataset.Rdata"))
 
+#Strip grant identifiers from study id's
+bf$studyid<- gsub("^k.*?-" , "", bf$studyid)
+diar$studyid<- gsub("^k.*?-" , "", diar$studyid)
+dh20$studyid<- gsub("^k.*?-" , "", dh20$studyid)
+dsan$studyid<- gsub("^k.*?-" , "", dsan$studyid)
 
 head(bf)
 head(diar)

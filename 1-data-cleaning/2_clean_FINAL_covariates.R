@@ -128,6 +128,10 @@ d$subjid <- as.character(d$subjid)
 
 #load in pca results
 pca <- readRDS(paste0(deriveddata_dir,"allGHAPstudies-HHwealth.rds"))
+
+#Strip grant identifiers from study id's
+pca$studyid<- gsub("^k.*?-" , "", pca$studyid)
+
 table(pca$studyid, pca$hhwealth_quart)
 
 #Merge into main dataframe
@@ -278,6 +282,9 @@ table(d$studyid[!is.na(d$single)], d$single[!is.na(d$single)])
 
 #Merge in post-birth weight measures for jivita-3 and sas-compfeed
 mat_weight <- readRDS(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/maternal_weight_dataset.RDS"))
+#Strip grant identifiers from study id's
+mat_weight$studyid<- gsub("^k.*?-" , "", mat_weight$studyid)
+
 head(mat_weight)
 mat_weight <- mat_weight %>% rename(post_birth_weight=mwtkg)
 mat_weight$subjid <- as.character(mat_weight$subjid)

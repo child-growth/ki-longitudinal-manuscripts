@@ -56,6 +56,18 @@ d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP"))]
 dim(d)
 gc()
 
+#update study names where they have changed during BlueVelvet switch
+d <- d[studyid=="ZINC-MORTALITY", studyid := "ZnMort"]
+d <- d[studyid=="VITAMIN-B12", studyid := "Vitamin-B12"]
+d <- d[studyid=="WASH-BK", studyid := "WASH-Kenya"]
+d <- d[studyid=="Respak", studyid := "ResPak"]
+d <- d[studyid=="ILINS-Zinc", studyid := "iLiNS-Zinc"]
+d <- d[studyid=="GMS-Nepal-201606", studyid := "GMS-Nepal"]
+d <- d[studyid=="BurkinaFasoZn", studyid := "Burkina Faso Zn"]
+d <- d[studyid=="ILINS-DOSE", studyid := "iLiNS-DOSE"]
+d <- d[studyid=="ILINS-DYAD-M", studyid := "iLiNS-DYAD-M"]
+
+
 
 monthly_vec <- c("MAL-ED",   
   "CMC-V-BCS-2002",              
@@ -93,8 +105,7 @@ yearly_vec <- c("WASH-Bangladesh",
   "Vitamin-B12",
   "Serrinha-VitA",   
   "EU",        
-  "ZnMort"
-)
+  "ZnMort")
 
 
 d <- d[, measurefreq := c("monthly", "quarterly", "yearly")[1* (studyid %in% monthly_vec) +
