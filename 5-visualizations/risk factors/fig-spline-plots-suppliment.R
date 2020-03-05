@@ -11,7 +11,7 @@ d <- d %>% subset(., select=-c(tr,  region, measurefreq, sex))
 
 
 #merge WLZ outcomes with covariates
-cov<-readRDS("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
 
 
 exposures <- c("sex",                   "gagebrth",         "parity",        "birthwt",      

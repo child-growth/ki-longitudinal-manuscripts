@@ -34,7 +34,7 @@ plot(density(d$lencm[!is.na(d$lencm)]))
 plot(density(anthro$weight[!is.na(anthro$weight)]))
 plot(density(d$wtkg[!is.na(d$wtkg)]))
 
-#dRaw <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study rds datasets - Old/prbt.rds")
+#dRaw <- readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/cleaned individual study rds datasets - Old/prbt.rds")
 dRaw <- read.csv("U:/data/probit_new/PROBIT/adam/ads_full_KI1119695_PROBIT.csv")
 
 colnames(dRaw) <- tolower(colnames(dRaw))

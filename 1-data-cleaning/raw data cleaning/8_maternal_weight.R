@@ -13,14 +13,14 @@ df <- df %>% group_by(subjid) %>% slice(1)
 df$mwtkg[df$mwtkg==99.9] <-NA
 summary(df$mwtkg)
 
-M1MOP <- read_sas("U:/ucb-superlearner/Manuscript analysis data/raw SAS datasets/JiVitA-3/raw/hbgd_m1mop.sas7bdat")
+M1MOP <- read_sas("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/raw SAS datasets/JiVitA-3/raw/hbgd_m1mop.sas7bdat")
 
 M1MOP$m1weight <- as.numeric(M1MOP$m1weight)
 M1MOP$m1weight[M1MOP$m1weight==99.9] <-NA
 M1MOP$m1weight[M1MOP$m1weight==0] <-NA
 summary(M1MOP$m1weight)
 
-PEF <- read_sas("U:/ucb-superlearner/Manuscript analysis data/raw SAS datasets/JiVitA-3/raw/hbgd_pef.sas7bdat")
+PEF <- read_sas("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/raw SAS datasets/JiVitA-3/raw/hbgd_pef.sas7bdat")
 
 PEF$peweight <- as.numeric(PEF$peweight)
 PEF$peweight[PEF$peweight==0] <-NA
@@ -39,12 +39,12 @@ df <- df %>% group_by(subjid) %>% slice(1)
 summary(df$mwtkg)
 
 
-baseline <- read_sas("U:/ucb-superlearner/Manuscript analysis data/raw SAS datasets/SAS-CompFeed/f2_base.sas7bdat")
+baseline <- read_sas("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/raw SAS datasets/SAS-CompFeed/f2_base.sas7bdat")
 baseline$mat_wt[baseline$mat_wt>88.8] <- NA
 summary(baseline$mat_wt)
 
 
-M3 <- read_sas("U:/ucb-superlearner/Manuscript analysis data/raw SAS datasets/SAS-CompFeed/f3_3mo.sas7bdat")
+M3 <- read_sas("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/raw SAS datasets/SAS-CompFeed/f3_3mo.sas7bdat")
 
 M3$matwt_3mo[M3$matwt_3mo>999] <- NA
 summary(M3$matwt_3mo)
@@ -55,7 +55,7 @@ summary(baseline$mat_wt)
 summary(M3$matwt_3mo)
 
 #merge in with ki ID's
-cpfd <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study datasets/cpfd.rds")
+cpfd <- readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/cleaned individual study datasets/cpfd.rds")
 colnames(cpfd) <- tolower(colnames(cpfd))
 head(cpfd)
 

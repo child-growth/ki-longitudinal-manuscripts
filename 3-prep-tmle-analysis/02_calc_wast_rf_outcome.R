@@ -30,7 +30,7 @@ d_noBW <- d_noBW %>% subset(., select= -c(tr))
 #   filter(!is.na(agecat)) %>%
 #   group_by(studyid,country,subjid,agecat,measurefreq) %>%
 #   summarise(whz=mean(whz))
-# save(monthly_whz, file="U:/ucb-superlearner/Manuscript analysis data/monthly_whz.rdata")
+# save(monthly_whz, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/monthly_whz.rdata")
 
 #--------------------------------------
 # Calculate prevalence of
@@ -221,12 +221,12 @@ rec <- bind_rows(wast_rec_0_6, wast_rec_6_24, wast_rec_0_24)
 #--------------------------------------
 
 
-save(prev, file="U:/ucb-superlearner/Manuscript analysis data/wast_prev.RData")
-save(meanWHZ, file="U:/ucb-superlearner/Manuscript analysis data/wast_meanZ_outcomes.RData")
-save(cuminc, file="U:/ucb-superlearner/Manuscript analysis data/wast_cuminc.rdata")
-save(cuminc_nobirth, file="U:/ucb-superlearner/Manuscript analysis data/wast_cuminc_nobirth.rdata")
-save(pers_wast, file="U:/ucb-superlearner/Manuscript analysis data/pers_wast.rdata")
-save(rec, file="U:/ucb-superlearner/Manuscript analysis data/wast_rec.rdata")
+save(prev, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_prev.RData")
+save(meanWHZ, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_outcomes.RData")
+save(cuminc, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc.rdata")
+save(cuminc_nobirth, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_nobirth.rdata")
+save(pers_wast, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/pers_wast.rdata")
+save(rec, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_rec.rdata")
 
 
 

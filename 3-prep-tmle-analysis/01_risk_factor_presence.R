@@ -6,7 +6,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #load covariates
-cov <- readRDS("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+cov <- readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
 
 
 #remove grant identifiers from studyid

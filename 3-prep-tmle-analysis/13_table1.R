@@ -10,7 +10,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #load covariates
-cov<-readRDS("U:/ucb-superlearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
 
 #Check reference levels
 for(i in 3:ncol(cov)){
@@ -36,7 +36,7 @@ cov$predexfd6 <- relevel(cov$predexfd6, ref="1")
 
 
 
-setwd("U:/ucb-superlearner/Manuscript analysis data/")
+setwd("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/")
 
 
 #load outcomes

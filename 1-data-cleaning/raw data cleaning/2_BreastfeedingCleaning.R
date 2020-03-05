@@ -387,7 +387,7 @@ table(d$dur_bf)
 #Don't know how duration variables were calculated, so drop
 
 d <- d %>% rename(subjid=child) %>% subset(., select=-c(hospital, dur_exbf, dur_bf))
-saveRDS(d, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_prbt.rds")
+saveRDS(d, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_prbt.rds")
 
 
 #----------------------------------------------------------
@@ -868,7 +868,7 @@ table(jvta3$antpt)
 jvta3 <- left_join(jvta3, d, by=c("subjido", "antpt"))
 
 #save
-saveRDS(jvta3, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt3.rds")
+saveRDS(jvta3, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt3.rds")
 
 
 
@@ -1381,7 +1381,7 @@ d$bfedfl[d$bfedfl==8] <- NA
 
 
 #merge in with ki ID's
-jvta4 <- readRDS("U:/ucb-superlearner/Manuscript analysis data/cleaned individual study datasets/jvt4.rds")
+jvta4 <- readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/cleaned individual study datasets/jvt4.rds")
 colnames(jvta4) <- tolower(colnames(jvta4))
 jvta4$visit <- as.character(jvta4$visit)
 unique(jvta4$visit)
@@ -1398,7 +1398,7 @@ table(jvta4$bfedfl)
 
 
 #save
-saveRDS(jvta4, file="U:/ucb-superlearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt4.rds")
+saveRDS(jvta4, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt4.rds")
 
  
 
