@@ -163,11 +163,13 @@ d %>% filter(tr!="", !is.na(haz)) %>% group_by(studyid, country, tr) %>%
   as.data.frame()
 
 drop_int_arms <- function(d){
-  d=d[-which(d$studyid=="JiVitA-4" & d$tr!="Control"),]
+  if(length(which(d$studyid=="JiVitA-4" & d$tr!="Control")) > 0){
+    d=d[-which(d$studyid=="JiVitA-4" & d$tr!="Control"),]
+    d=d[-which(d$studyid=="JiVitA-3" & d$tr!="Control"),]
+  }
   d=d[-which(d$studyid=="PROBIT" & d$tr!="Control"),]
   d=d[-which(d$studyid=="iLiNS-Zinc" & d$tr!="Control"),]
   d=d[-which(d$studyid=="SAS-CompFeed" & d$tr!="Control"),]
-  d=d[-which(d$studyid=="JiVitA-3" & d$tr!="Control"),]
   d=d[-which(d$studyid=="COHORTS" & d$tr=="Other"),]
   return(d)
 }

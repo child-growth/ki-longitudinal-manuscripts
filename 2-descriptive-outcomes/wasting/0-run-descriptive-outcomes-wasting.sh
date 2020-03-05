@@ -19,19 +19,19 @@ cd ~/ki-longitudinal-manuscripts/2-descriptive-outcomes/wasting/
 
 #list all scripts here
  ./runFileSaveLogs -i "descriptive-outcomes-wasting" \
-1_wast_calcinc.R \
-2_birth_wast_outcomes.R \
-3_wast_summarize_outcomes.R \
-4_co_summarize_outcomes.R \
-5_co_flowdata.R \
-7_wast_ir_sensitivity.R \
-8_wast_manuscript_extra_stats.R \
-9_create_wast_seasonality_datasets.R \
-10_wast_summarize_outcomes_FE.R \
-11_wast_summarize_outcomes_no_Kenaba_bw.R \
-12_co_summarize_outcomes_FE.R \
-13_create_birth_wast_seasonality_dataset.R \
-14_co_summarize_outcomes_no_Kenaba.R
+  1_wast_calcinc.R \
+  2_birth_wast_outcomes.R \
+  3_wast_summarize_outcomes.R \
+  4_co_summarize_outcomes.R \
+  5_co_flowdata.R \
+  7_wast_ir_sensitivity.R \
+  8_wast_manuscript_extra_stats.R \
+  9_create_wast_seasonality_datasets.R \
+  10_wast_summarize_outcomes_FE.R \
+  11_wast_summarize_outcomes_no_Kenaba_bw.R \
+  12_co_summarize_outcomes_FE.R \
+  13_create_birth_wast_seasonality_dataset.R \
+  14_co_summarize_outcomes_no_Kenaba.R
 
 # Remove copied utility run script
  rm runFileSaveLogs

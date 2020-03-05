@@ -10,6 +10,7 @@ library(RcppRoll)
 
 d <- readRDS(seasonality_data_path)
 
+
 #subset to monthly cohorts
 d <- d %>% filter(measurefreq=="monthly", region=="South Asia", agedays<=7)
 
@@ -24,11 +25,8 @@ d$country <- str_to_title(d$country)
 levels(d$brthmon)
 table(d$brthmon)
 
-#Set reference levels
-df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-max rain", "Pre-max rain", "Max rain"))
-
 #Set up dataset for longbow analysis
-df <- filter(df, agedays < 24 * 30.4167)
+df <- filter(d, agedays < 24 * 30.4167)
 
 df <- subset(df, select = c(studyid, subjid, country, whz, brthmon))
 head(df)

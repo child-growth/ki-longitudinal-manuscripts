@@ -26,7 +26,7 @@ cd ~/ki-longitudinal-manuscripts/1-data-cleaning
 
 
 #list all scripts here
- ./runFileSaveLogs -i "visualizations-stunting" \
+ # ./runFileSaveLogs -i "data-cleaning" \
  # raw data cleaning/0_save_studies_as_rds.R \
  # raw data cleaning/1_assetPCA-allstudies.R \
  # raw data cleaning/2_BreastfeedingCleaning.R \
@@ -36,19 +36,22 @@ cd ~/ki-longitudinal-manuscripts/1-data-cleaning
  # raw data cleaning/6_DiarrheaCleaning.R \
  # raw data cleaning/7_PROVIDE_measure_months.R \
  # raw data cleaning/8_maternal_weight.R \
- 1_process_FINAL_dataset.R \
- 2_clean_FINAL_covariates.R \
- 3_merge_covariates_and_raw_data.R \
- 4_create_master_dataset.R \
- 5_process_mortality_data.R \
- 6_anthro_prepdata.R \
- 7_DHS-data-cleaning.R \
- 8_DHS-data-quantiles.R \
- 9_seasonality_prepdata.R \
- 10_rainfall_prepdata.R \
- metadata scripts/1_create_KI_wasting_consort_data.R \
- metadata scripts/2_create_KI_stunting_consort_data.R \
- metadata scripts/3_check_extended_table1_stunting.R 
+ 
+./runFileSaveLogs -i "data-cleaning" \
+  1_process_FINAL_dataset.R \
+  2_clean_FINAL_covariates.R \
+  3_merge_covariates_and_raw_data.R \
+  4_create_master_dataset.R \
+  5_process_mortality_data.R \
+  6_anthro_prepdata.R \
+  7_DHS-data-cleaning.R \
+  8_DHS-data-quantiles.R \
+  9_seasonality_prepdata.R \
+  10_rainfall_prepdata.R #\
+  
+  # metadata scripts/1_create_KI_wasting_consort_data.R \
+  # metadata scripts/2_create_KI_stunting_consort_data.R \
+  # metadata scripts/3_check_extended_table1_stunting.R
  
 
 # Remove copied utility run script

@@ -164,7 +164,7 @@ df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-
 #Set up dataset for longbow analysis
 df <- filter(df, agedays < 24 * 30.4167)
 
-df <- subset(df, select = c(studyid, subjid, country, whz, rain_quartile))
+df <- subset(df, select = c(studyid, subjid, agedays, country, whz, rain_quartile))
 head(df)
 
 

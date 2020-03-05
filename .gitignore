@@ -6,6 +6,7 @@
 *.bib
 *.gitignore
 *.rdata
+*.RData
 .gitignore
 .httr-oauth
 *.RProfile
