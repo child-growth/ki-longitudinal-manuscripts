@@ -1,12 +1,14 @@
 
+rm(list=ls())
+.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
+
+source(paste0(here::here(), "/0-config.R"))
+.libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
 library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
-library(here)
-#note: every "here" in this script is the working directory where all the repos live on your laptop
-#for example: here = "C:/Users/rolan/Documents/repos"
 
 
 # 1. enumerate analysis
@@ -14,22 +16,13 @@ setwd(here("4-longbow-tmle-analysis","run-longbow","seasonality"))
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
 
+
 #Set to continious
 default_params$script_params$count_Y <- FALSE
 
 load(here("4-longbow-tmle-analysis","analysis specification","seasonality_birth_analyses.rdata"))
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-
-
-enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
-  analysis <- analyses[i,]
-  analysis_params <- default_params
-  analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
-  analysis_params$nodes <- analysis_nodes
-  analysis_params$data$repository_path <- analysis$file
-  return(analysis_params)
-})
 
 writeLines(toJSON(enumerated_analyses),"seasonality_birth_analyses.json")
 
@@ -41,6 +34,7 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "seasonality_birth_analyses.json"
 batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
+batch_id_cont
 
 # wait for the batch to finish and track progress
 wait_for_batch(batch_id_cont)

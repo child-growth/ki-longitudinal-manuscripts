@@ -15,25 +15,15 @@ library(longbowRiskFactors)
 setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
-default_params$data$uri <- "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
-default_params$data$type <- "web"
-default_params$data$repository_path <- NULL
+
 
 load(here("4-longbow-tmle-analysis","analysis specification","unadjusted_binary_analyses.rdata"))
-#analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-#st_prev_rf.Rdata
-i=1
-enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
-  analysis <- analyses[i,]
-  analysis_params <- default_params
-  analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
-  analysis_nodes$W <- gsub("W_bmi", "W_mbmi", analysis_nodes$W[[1]])
-  analysis_params$nodes <- analysis_nodes
-  #analysis_params$data$repository_path <- analysis$file
-  analysis_params$data$uri <- paste0(analysis_params$data$uri, analysis$file)
+
+
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
   
-  return(analysis_params)
-})
+
+
 
 writeLines(toJSON(enumerated_analyses[[1]]),"single_bin_analysis.json")
 writeLines(toJSON(enumerated_analyses),"all_bin_analyses.json")

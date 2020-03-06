@@ -1,5 +1,23 @@
 
 #-----------------------------------------------------------------------------------------
+# Longbow prep function
+#-----------------------------------------------------------------------------------------
+
+specify_longbow <- function(j, analyses_df=analyses, params=default_params){
+  params$data$uri <- "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
+  params$data$type <- "web"
+  params$data$repository_path <- NULL
+  
+  analysis <- analyses_df[j,]
+  analysis_params <- params
+  analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
+  analysis_nodes$W <- gsub("W_bmi", "W_mbmi", analysis_nodes$W[[1]])
+  analysis_params$nodes <- analysis_nodes
+  analysis_params$data$uri <- paste0(analysis_params$data$uri, analysis$file)
+  return(analysis_params)
+}
+
+#-----------------------------------------------------------------------------------------
 # Plotting functions
 #-----------------------------------------------------------------------------------------
 scaleFUN <- function(x) sprintf("%.2f", x)
