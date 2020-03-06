@@ -1,0 +1,579 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> ##########################################
+> # ki longitudinal manuscripts
+> # stunting analysis
+> 
+> # Calculate mean LAZ, prevalence, incidence, 
+> # and recovery, repeated for fixed effects models 
+> # and sensitivity analysis in monthly cohorts
+> # with measurements up to 24 months
+> 
+> # Inputs:
+> #   0-config.R : configuration file
+> #   0_descriptive_epi_shared_functions.R
+> #   0_descriptive_epi_stunt_functions.R
+> #   stunting_data.RData
+> 
+> # Outputs:
+> #   meanlaz_velocity.RDS
+> #   meanlaz_velocity_monthly.RDS
+> #   meanlaz_velocity_fe.RDS
+> #   quantile_data_stunting.RDS
+> #   quantile_data_stunting_monthly.RDS
+> #   quantile_data_stunting_fe.RDS
+> #   shiny_desc_data_stunting_objects.RDS
+> #   shiny_desc_data_stunting_objects_monthly.RDS
+> #   shiny_desc_data_stunting_objects_fe.RDS
+> ##########################################
+> 
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> 
+> # reloading because some overlap with stunting
+> source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))
+> source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functions.R"))
+> 
+> d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
+> 
+> head(d)
+# A tibble: 6 x 12
+# Groups:   studyid, subjid [1]
+  studyid subjid country region measurefreq tr    sex   agedays   haz latitude
+  <chr>   <chr>  <chr>   <fct>  <chr>       <chr> <chr>   <int> <dbl>    <dbl>
+1 CMC-V-… 1      INDIA   South… monthly     ""    Male       33 -3.56     78.9
+2 CMC-V-… 1      INDIA   South… monthly     ""    Male       67 -1.93     78.9
+3 CMC-V-… 1      INDIA   South… monthly     ""    Male       95 -2.67     78.9
+4 CMC-V-… 1      INDIA   South… monthly     ""    Male      130 -2.35     78.9
+5 CMC-V-… 1      INDIA   South… monthly     ""    Male      159 -2.95     78.9
+6 CMC-V-… 1      INDIA   South… monthly     ""    Male      190 -2.08     78.9
+# … with 2 more variables: longitud <dbl>, measid <int>
+> d <- d %>% subset(., select = -c(tr))
+> 
+> #Drop birth measure from MRC kenaba
+> d <- d %>% filter(!(studyid=="Keneba" & agedays==1))
+> 
+> 
+> #----------------------------------------
+> # subset to monthly cohorts
+> #----------------------------------------
+> monthly_d <- d %>% filter(measurefreq == "monthly")
+> 
+> #----------------------------------------
+> # subset to studies that have monthly measurement
+> # up to 24 months
+> #----------------------------------------
+> study24 = c("MAL-ED", "CMC-V-BCS-2002", "IRC", 
++             "Keneba", "GMS-Nepal", "CMIN", 
++             "CONTENT", "PROVIDE")
+> 
+> monthly_d <- monthly_d %>% filter(studyid %in% study24)
+> 
+> agelst3 = list(
++   "0-3 months",
++   "3-6 months",
++   "6-9 months",
++   "9-12 months",
++   "12-15 months",
++   "15-18 months",
++   "18-21 months",
++   "21-24 months"
++ )
+> 
+> agelst6 = list(
++   "0-6 months", 
++   "6-12 months", 
++   "12-18 months", 
++   "18-24 months"
++ )
+> 
+> agelst3_birthstrat = list(
++   "Birth",
++   "8 days-3 months",
++   "3-6 months",
++   "6-9 months",
++   "9-12 months",
++   "12-15 months",
++   "15-18 months",
++   "18-21 months",
++   "21-24 months"
++ )
+> 
+> agelst6_birthstrat = list(
++   "Birth",
++   "8 days-6 months", 
++   "6-12 months", 
++   "12-18 months", 
++   "18-24 months"
++ )
+> 
+> calc_outcomes = function(data, calc_method, output_file_suffix){
++   dprev <<- calc.prev.agecat(data)
++   dmon <<- calc.monthly.agecat(data)
++   d3 <<- calc.ci.agecat(data, range = 3, birth="yes")
++   d6 <<- calc.ci.agecat(data, range = 6, birth="yes")
++   d3_birthstrat <<- calc.ci.agecat(data, range = 3, birth="no")
++   d6_birthstrat <<- calc.ci.agecat(data, range = 6, birth="no")
++   
++   ######################################################################
++   # Prevalence
++   ######################################################################
++   calc_prevalence = function(severe){
++     prev.data <- summary.prev.haz(dprev, severe.stunted = severe, method = calc_method)
++     prev.region <- dprev  %>% group_by(region) %>% do(summary.prev.haz(., severe.stunted = severe, method = calc_method)$prev.res)
++     prev.cohort <-
++       prev.data$prev.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
++       rename(est = prev,  lb = ci.lb,  ub = ci.ub)
++     
++     prev <- bind_rows(
++       data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
++       data.frame(cohort = "pooled", prev.region),
++       prev.cohort
++     )
++     return(prev)
++   }
++   #----------------------------------------
++   # Prevalence and WHZ  - not including yearly studies
++   #----------------------------------------
++   prev = calc_prevalence(severe = FALSE)
++   
++   #----------------------------------------
++   # Severe stunting prevalence
++   #----------------------------------------
++   sev.prev = calc_prevalence(severe = TRUE)
++   
++   ######################################################################
++   # Mean HAZ
++   ######################################################################
++   #----------------------------------------
++   # mean haz
++   #----------------------------------------
++   haz.data <- summary.haz(dprev, method = calc_method)
++   haz.region <- dprev %>% group_by(region) %>% do(summary.haz(., method = calc_method)$haz.res)
++   haz.cohort <-
++     haz.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
++     rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
++   
++   haz <- bind_rows(
++     data.frame(cohort = "pooled", region = "Overall", haz.data$haz.res),
++     data.frame(cohort = "pooled", haz.region),
++     haz.cohort
++   )
++   
++   #----------------------------------------
++   # mean haz for growth velocity age categories
++   #----------------------------------------
++   d_vel = data %>% 
++     mutate(agecat=ifelse(agedays<3*30.4167,"0-3",
++                          ifelse(agedays>=3*30.4167 & agedays<6*30.4167,"3-6",
++                                 ifelse(agedays>=6*30.4167 & agedays<9*30.4167,"6-9",
++                                        ifelse(agedays>=9*30.4167 & agedays<12*30.4167,"9-12",
++                                               ifelse(agedays>=12*30.4167 & agedays<15*30.4167,"12-15",
++                                                      ifelse(agedays>=15*30.4167 & agedays<18*30.4167,"15-18",
++                                                             ifelse(agedays>=18*30.4167 & agedays<21*30.4167,"18-21",
++                                                                    ifelse(agedays>=21*30.4167& agedays<24*30.4167,"21-24",""))))))))) %>%
++     mutate(agecat=factor(agecat,levels=c("0-3","3-6","6-9","9-12",
++                                          "12-15","15-18","18-21","21-24"))) 
++   
++   haz.data.vel <- summary.haz.age.sex(d_vel, method = calc_method)
++   haz.region.vel <-  d_vel  %>% group_by(region) %>% do(summary.haz.age.sex(., method = calc_method)$haz.res)
++   haz.cohort.vel <-
++     haz.data.vel$haz.cohort %>% 
++     subset(., select = c(cohort, region, agecat, sex, nmeas,  meanhaz, 
++                          ci.lb,  ci.ub)) %>%
++     rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
++   
++   haz.vel <- bind_rows(
++     data.frame(cohort = "pooled", region = "Overall", haz.data.vel$haz.res),
++     data.frame(cohort = "pooled", haz.region.vel),
++     haz.cohort.vel
++   )
++   
++   saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity", output_file_suffix, ".RDS"))
++   
++   #----------------------------------------
++   # monthly mean haz
++   #----------------------------------------
++   dmon <- calc.monthly.agecat(data)
++   monthly.haz.data <- summary.haz(dmon, method = calc_method)
++   monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(., method = calc_method)$haz.res)
++   monthly.haz.cohort <-
++     monthly.haz.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
++     rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
++   
++   monthly.haz <- bind_rows(
++     data.frame(cohort = "pooled", region = "Overall", monthly.haz.data$haz.res),
++     data.frame(cohort = "pooled", monthly.haz.region),
++     monthly.haz.cohort
++   )
++   
++   #----------------------------------------
++   # Get monthly HAZ quantiles
++   #----------------------------------------
++   quantile_d_cohort <- dmon %>% group_by(agecat, region, studyid) %>%
++     mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
++            fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
++            ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
++     select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
++   
++   quantile_d <- dmon %>% group_by(agecat, region) %>%
++     mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
++            fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
++            ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
++     mutate(studyid = "pooled") %>%
++     select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
++   
++   quantile_d_overall <- dmon %>% 
++     group_by(agecat) %>%
++     summarise(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
++               fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
++               ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
++     mutate(region = "Overall") %>%
++     mutate(studyid = "pooled") %>%
++     select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
++   
++   # combine data
++   quantiles <- bind_rows(quantile_d, quantile_d_overall,quantile_d_cohort)
++   
++   saveRDS(quantiles,file = paste0(here(),"/results/quantile_data_stunting", output_file_suffix, ".RDS"))
++   
++   ######################################################################
++   # Incidence proportion
++   ######################################################################
++   calc_ip = function(datatable, age_list, severe){
++     ip.data <- summary.stunt.incprop(datatable, agelist = age_list, severe.stunted = severe, method = calc_method)
++     ip.region <- datatable %>% group_by(region) %>% do(summary.stunt.incprop(., agelist = age_list, severe.stunted = severe, method = calc_method)$ip.res)
++     ip.cohort <-
++       ip.data$ip.cohort %>% 
++       subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
++       rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
++     
++     
++     ip <- bind_rows(
++       data.frame(cohort = "pooled", region = "Overall", ip.data$ip.res),
++       data.frame(cohort = "pooled", ip.region),
++       ip.cohort
++     )
++     return(ip)
++   }
++   #----------------------------------------
++   # Incidence proportion 3 month intervals
++   #----------------------------------------
++   ip_3 = calc_ip(d3, agelst3, severe = FALSE)
++   
++   #----------------------------------------
++   # Incidence proportion 3 month intervals
++   # stratify by birth
++   #----------------------------------------
++   ip_3.birthstrat = calc_ip(d3_birthstrat, agelst3_birthstrat, severe = FALSE)
++ 
++   #----------------------------------------
++   # Incidence proportion 6 month intervals
++   #----------------------------------------
++   ip_6 = calc_ip(d6, agelst6, severe = FALSE)
++   
++   #----------------------------------------
++   # Incidence proportion of severe stunting 
++   # 3 month interval
++   #----------------------------------------
++   sev.ip3 = calc_ip(d3, agelst3, severe = TRUE)
++ 
++   #----------------------------------------
++   # Incidence proportion of severe stunting
++   # 6 month interval
++   #----------------------------------------
++   sev.ip6 = calc_ip(d6, agelst6, severe = TRUE)
++ 
++   ######################################################################
++   # Cumulative incidence
++   ######################################################################
++   
++   calc_ci = function(datatable, age_list, birth_strat, severe){
++     ci.data <- summary.ci(datatable, birthstrat = birth_strat, agelist = age_list, severe.stunted = severe, method = calc_method)
++     ci.region <- datatable %>% group_by(region) %>% do(summary.ci(., agelist = age_list,  birthstrat = birth_strat, severe.stunted = severe, method = calc_method)$ci.res)
++     ci.cohort <-
++       ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat, nchild,  yi,  ci.lb,  ci.ub)) %>%
++       rename(est = yi,  lb = ci.lb,  ub = ci.ub, nmeas=nchild)
++     
++     cuminc <- bind_rows(
++       data.frame(cohort = "pooled", region = "Overall", ci.data$ci.res),
++       data.frame(cohort = "pooled", ci.region),
++       ci.cohort
++     )
++     return(cuminc)
++   }
++     
++   #----------------------------------------
++   # Cumulative Incidence  - 3 month intervals
++   #----------------------------------------
++   cuminc3 = calc_ci(d3, agelst3, birth_strat = FALSE, severe = FALSE)
++   
++   #----------------------------------------
++   # Cumulative Incidence  - 3 month intervals
++   # stratify by birth 
++   #----------------------------------------
++   cuminc3.birthstrat = calc_ci(d3_birthstrat, agelst3_birthstrat, birth_strat = TRUE, severe = FALSE)
++   
++   #----------------------------------------
++   # Cumulative Incidence  - 6 month intervals
++   #----------------------------------------
++   cuminc6 <- calc_ci(d6, agelst6, birth_strat = FALSE, severe = FALSE)
++   
++   #----------------------------------------
++   # Cumulative Incidence  - 3 month intervals 
++   # severe
++   #----------------------------------------
++   sev.cuminc3 <- calc_ci(d3, agelst3, birth_strat = FALSE, severe = TRUE)
++   
++   #----------------------------------------
++   # Cumulative Incidence  - 6 month intervals
++   # severe
++   #----------------------------------------
++   sev.cuminc6 <- calc_ci(d6, agelst6, birth_strat = FALSE, severe = TRUE)
++   
++   shiny_desc_data <- bind_rows(
++     data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
++     data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
++     data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Mean LAZ",  haz),
++     data.frame(disease = "Stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ",  monthly.haz),
++     data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc3),
++     data.frame(disease = "Stunting", age_range="3 months",   birth="strat", severe="no", measure= "Cumulative incidence", cuminc3.birthstrat),
++     data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Cumulative incidence", cuminc6),
++     data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc3),
++     data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Cumulative incidence", sev.cuminc6),
++     data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ip_3),
++     data.frame(disease = "Stunting", age_range="3 months",   birth="strat", severe="no", measure= "Incidence_proportion", ip_3.birthstrat),
++     data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="no", measure= "Incidence_proportion", ip_6),
++     data.frame(disease = "Stunting", age_range="3 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ip3),
++     data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ip6)
++   )
++   
++   assert_that(names(table(shiny_desc_data$method.used)) == calc_method)
++   
++   shiny_desc_data <- shiny_desc_data %>% subset(., select = -c(se, nmeas.f,  ptest.f))
++   
++   shiny_desc_data$agecat <- as.factor(shiny_desc_data$agecat)
++   
++   shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Africa", "Latin America", "South Asia"))
++     
++   return(shiny_desc_data)
++ }
+> 
+> stunt_outcomes = calc_outcomes(data = d, calc_method = "REML", output_file_suffix = "")

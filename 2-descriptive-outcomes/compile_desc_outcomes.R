@@ -22,7 +22,8 @@ stunt_noProbit_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe
 wast_noKenabaBirth =  readRDS(paste0(res_dir,"wasting_desc_data_no_Kenaba_bw.RDS")) %>% mutate(analysis = "No Kenaba birth")
 co_noKenabaBirth <- readRDS(paste0(res_dir,"co_desc_data_no_Kenaba.RDS")) %>% mutate(analysis = "No Kenaba birth")
 
-stunt_noKenaba_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba - monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
+stunt_noKenaba_mont
+hly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba - monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
 stunt_noKenaba = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba")
 stunt_noKenaba_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba - Fixed effects")
 

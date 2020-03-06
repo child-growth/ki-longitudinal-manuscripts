@@ -1,0 +1,819 @@
+---
+title: "Risk Factor Analysis"
+output: 
+  html_document:
+    keep_md: TRUE
+    self_contained: true
+required_packages:  ['github://HBGD-UCB/longbowRiskFactors','github://jeremyrcoyle/skimr@vector_types', 'github://tlverse/delayed']
+params:
+  roles:
+    value:
+      - exclude
+      - strata
+      - id
+      - W
+      - A
+      - Y
+  data: 
+    value: 
+      type: 'web'
+      uri: 'https://raw.githubusercontent.com/HBGD-UCB/longbowRiskFactors/master/inst/sample_data/birthwt_data.rdata'
+  nodes:
+    value:
+      strata: ['study_id', 'mrace']
+      id: ['subjid']
+      W: ['apgar1', 'apgar5', 'gagebrth', 'mage', 'meducyrs', 'sexn']
+      A: ['parity_cat']
+      Y: ['haz01']
+  script_params:
+    value:
+      parallelize:
+        input: checkbox
+        value: FALSE
+      count_A:
+        input: checkbox
+        value: TRUE
+      count_Y:
+        input: checkbox
+        value: TRUE        
+      baseline_level:
+        input: 'character'
+        value: "[1,2)"
+  output_directory:
+    value: ''
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+
+
+
+## Methods
+## Outcome Variable
+
+**Outcome Variable:** sstunted
+
+## Predictor Variables
+
+**Intervention Variable:** hdlvry
+
+**Adjustment Set:**
+
+unadjusted
+
+## Stratifying Variables
+
+The analysis was stratified on these variable(s):
+
+* agecat
+* studyid
+* country
+
+## Data Summary
+
+agecat      studyid          country                        hdlvry    sstunted   n_cell      n
+----------  ---------------  -----------------------------  -------  ---------  -------  -----
+Birth       CMC-V-BCS-2002   INDIA                          0                0       88     92
+Birth       CMC-V-BCS-2002   INDIA                          0                1        4     92
+Birth       CMC-V-BCS-2002   INDIA                          1                0        0     92
+Birth       CMC-V-BCS-2002   INDIA                          1                1        0     92
+Birth       COHORTS          INDIA                          0                0     2855   4694
+Birth       COHORTS          INDIA                          0                1       83   4694
+Birth       COHORTS          INDIA                          1                0     1702   4694
+Birth       COHORTS          INDIA                          1                1       54   4694
+Birth       EE               PAKISTAN                       0                0      130    238
+Birth       EE               PAKISTAN                       0                1       31    238
+Birth       EE               PAKISTAN                       1                0       60    238
+Birth       EE               PAKISTAN                       1                1       17    238
+Birth       GMS-Nepal        NEPAL                          0                0      150    646
+Birth       GMS-Nepal        NEPAL                          0                1        7    646
+Birth       GMS-Nepal        NEPAL                          1                0      469    646
+Birth       GMS-Nepal        NEPAL                          1                1       20    646
+Birth       IRC              INDIA                          0                0      365    388
+Birth       IRC              INDIA                          0                1       16    388
+Birth       IRC              INDIA                          1                0        7    388
+Birth       IRC              INDIA                          1                1        0    388
+Birth       NIH-Crypto       BANGLADESH                     0                0      558    732
+Birth       NIH-Crypto       BANGLADESH                     0                1        9    732
+Birth       NIH-Crypto       BANGLADESH                     1                0      164    732
+Birth       NIH-Crypto       BANGLADESH                     1                1        1    732
+Birth       PROVIDE          BANGLADESH                     0                0      389    539
+Birth       PROVIDE          BANGLADESH                     0                1        2    539
+Birth       PROVIDE          BANGLADESH                     1                0      146    539
+Birth       PROVIDE          BANGLADESH                     1                1        2    539
+Birth       SAS-CompFeed     INDIA                          0                0      117   1085
+Birth       SAS-CompFeed     INDIA                          0                1        7   1085
+Birth       SAS-CompFeed     INDIA                          1                0      894   1085
+Birth       SAS-CompFeed     INDIA                          1                1       67   1085
+6 months    CMC-V-BCS-2002   INDIA                          0                0      318    366
+6 months    CMC-V-BCS-2002   INDIA                          0                1       40    366
+6 months    CMC-V-BCS-2002   INDIA                          1                0        7    366
+6 months    CMC-V-BCS-2002   INDIA                          1                1        1    366
+6 months    COHORTS          INDIA                          0                0     2788   4699
+6 months    COHORTS          INDIA                          0                1      112   4699
+6 months    COHORTS          INDIA                          1                0     1680   4699
+6 months    COHORTS          INDIA                          1                1      119   4699
+6 months    EE               PAKISTAN                       0                0      198    371
+6 months    EE               PAKISTAN                       0                1       52    371
+6 months    EE               PAKISTAN                       1                0       93    371
+6 months    EE               PAKISTAN                       1                1       28    371
+6 months    GMS-Nepal        NEPAL                          0                0      127    528
+6 months    GMS-Nepal        NEPAL                          0                1        2    528
+6 months    GMS-Nepal        NEPAL                          1                0      383    528
+6 months    GMS-Nepal        NEPAL                          1                1       16    528
+6 months    IRC              INDIA                          0                0      370    407
+6 months    IRC              INDIA                          0                1       29    407
+6 months    IRC              INDIA                          1                0        8    407
+6 months    IRC              INDIA                          1                1        0    407
+6 months    NIH-Crypto       BANGLADESH                     0                0      535    715
+6 months    NIH-Crypto       BANGLADESH                     0                1       19    715
+6 months    NIH-Crypto       BANGLADESH                     1                0      157    715
+6 months    NIH-Crypto       BANGLADESH                     1                1        4    715
+6 months    PROVIDE          BANGLADESH                     0                0      443    604
+6 months    PROVIDE          BANGLADESH                     0                1        7    604
+6 months    PROVIDE          BANGLADESH                     1                0      147    604
+6 months    PROVIDE          BANGLADESH                     1                1        7    604
+6 months    SAS-CompFeed     INDIA                          0                0      141   1091
+6 months    SAS-CompFeed     INDIA                          0                1        6   1091
+6 months    SAS-CompFeed     INDIA                          1                0      839   1091
+6 months    SAS-CompFeed     INDIA                          1                1      105   1091
+6 months    SAS-FoodSuppl    INDIA                          0                0       69    380
+6 months    SAS-FoodSuppl    INDIA                          0                1        7    380
+6 months    SAS-FoodSuppl    INDIA                          1                0      257    380
+6 months    SAS-FoodSuppl    INDIA                          1                1       47    380
+6 months    TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                0     1873   1921
+6 months    TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                1       16   1921
+6 months    TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                0       30   1921
+6 months    TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                1        2   1921
+24 months   CMC-V-BCS-2002   INDIA                          0                0      238    368
+24 months   CMC-V-BCS-2002   INDIA                          0                1      122    368
+24 months   CMC-V-BCS-2002   INDIA                          1                0        6    368
+24 months   CMC-V-BCS-2002   INDIA                          1                1        2    368
+24 months   COHORTS          INDIA                          0                0     1819   3556
+24 months   COHORTS          INDIA                          0                1      414   3556
+24 months   COHORTS          INDIA                          1                0      816   3556
+24 months   COHORTS          INDIA                          1                1      507   3556
+24 months   EE               PAKISTAN                       0                0       70    166
+24 months   EE               PAKISTAN                       0                1       42    166
+24 months   EE               PAKISTAN                       1                0       37    166
+24 months   EE               PAKISTAN                       1                1       17    166
+24 months   GMS-Nepal        NEPAL                          0                0      105    456
+24 months   GMS-Nepal        NEPAL                          0                1       13    456
+24 months   GMS-Nepal        NEPAL                          1                0      305    456
+24 months   GMS-Nepal        NEPAL                          1                1       33    456
+24 months   IRC              INDIA                          0                0      362    409
+24 months   IRC              INDIA                          0                1       39    409
+24 months   IRC              INDIA                          1                0        6    409
+24 months   IRC              INDIA                          1                1        2    409
+24 months   NIH-Crypto       BANGLADESH                     0                0      364    514
+24 months   NIH-Crypto       BANGLADESH                     0                1       27    514
+24 months   NIH-Crypto       BANGLADESH                     1                0      114    514
+24 months   NIH-Crypto       BANGLADESH                     1                1        9    514
+24 months   PROVIDE          BANGLADESH                     0                0      397    578
+24 months   PROVIDE          BANGLADESH                     0                1       36    578
+24 months   PROVIDE          BANGLADESH                     1                0      129    578
+24 months   PROVIDE          BANGLADESH                     1                1       16    578
+24 months   TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                0        5      6
+24 months   TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   0                1        1      6
+24 months   TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                0        0      6
+24 months   TanzaniaChild2   TANZANIA, UNITED REPUBLIC OF   1                1        0      6
+
+
+The following strata were considered:
+
+* agecat: 24 months, studyid: CMC-V-BCS-2002, country: INDIA
+* agecat: 24 months, studyid: COHORTS, country: INDIA
+* agecat: 24 months, studyid: EE, country: PAKISTAN
+* agecat: 24 months, studyid: GMS-Nepal, country: NEPAL
+* agecat: 24 months, studyid: IRC, country: INDIA
+* agecat: 24 months, studyid: NIH-Crypto, country: BANGLADESH
+* agecat: 24 months, studyid: PROVIDE, country: BANGLADESH
+* agecat: 24 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 6 months, studyid: CMC-V-BCS-2002, country: INDIA
+* agecat: 6 months, studyid: COHORTS, country: INDIA
+* agecat: 6 months, studyid: EE, country: PAKISTAN
+* agecat: 6 months, studyid: GMS-Nepal, country: NEPAL
+* agecat: 6 months, studyid: IRC, country: INDIA
+* agecat: 6 months, studyid: NIH-Crypto, country: BANGLADESH
+* agecat: 6 months, studyid: PROVIDE, country: BANGLADESH
+* agecat: 6 months, studyid: SAS-CompFeed, country: INDIA
+* agecat: 6 months, studyid: SAS-FoodSuppl, country: INDIA
+* agecat: 6 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA
+* agecat: Birth, studyid: COHORTS, country: INDIA
+* agecat: Birth, studyid: EE, country: PAKISTAN
+* agecat: Birth, studyid: GMS-Nepal, country: NEPAL
+* agecat: Birth, studyid: IRC, country: INDIA
+* agecat: Birth, studyid: NIH-Crypto, country: BANGLADESH
+* agecat: Birth, studyid: PROVIDE, country: BANGLADESH
+* agecat: Birth, studyid: SAS-CompFeed, country: INDIA
+
+### Dropped Strata
+
+Some strata were dropped due to rare outcomes:
+
+* agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA
+* agecat: Birth, studyid: IRC, country: INDIA
+* agecat: Birth, studyid: NIH-Crypto, country: BANGLADESH
+* agecat: Birth, studyid: PROVIDE, country: BANGLADESH
+* agecat: 6 months, studyid: CMC-V-BCS-2002, country: INDIA
+* agecat: 6 months, studyid: GMS-Nepal, country: NEPAL
+* agecat: 6 months, studyid: IRC, country: INDIA
+* agecat: 6 months, studyid: NIH-Crypto, country: BANGLADESH
+* agecat: 6 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+* agecat: 24 months, studyid: CMC-V-BCS-2002, country: INDIA
+* agecat: 24 months, studyid: IRC, country: INDIA
+* agecat: 24 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
+
+## Methods Detail
+
+We're interested in the causal parameters $E[Y_a]$ for all values of $a \in \mathcal{A}$. These parameters represent the mean outcome if, possibly contrary to fact, we intervened to set all units to have $A=a$. Under the randomization and positivity assumptions, these are identified by the statistical parameters $\psi_a=E_W[E_{Y|A,W}(Y|A=a,W)]$.  In addition, we're interested in the mean of $Y$, $E[Y]$ under no intervention (the observed mean). We will estimate these parameters by using SuperLearner to fit the relevant likelihood factors -- $E_{Y|A,W}(Y|A=a,W)$ and $p(A=a|W)$, and then updating our likelihood fit using a joint TMLE.
+
+For unadjusted analyses ($W=\{\}$), initial likelihoods were estimated using Lrnr_glm to estimate the simple $E(Y|A)$ and Lrnr_mean to estimate $p(A)$. For adjusted analyses, a small library containing Lrnr_glmnet, Lrnr_xgboost, and Lrnr_mean was used.
+
+Having estimated these parameters, we will then use the delta method to estimate relative risks and attributable risks relative to a prespecified baseline level of $A$.
+
+todo: add detail about dropping strata with rare outcomes, handling missingness
+
+
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in fold_fun(n, ...): n <= V so using leave-one-out CV
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in fold_fun(n, ...): n <= V so using leave-one-out CV
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_mean is not a
+## cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+```
+## Warning in learner$predict_fold(learner_task, fold_number): Lrnr_glm_TRUE is not
+## a cv-aware learner, so self$predict_fold reverts to self$predict
+```
+
+
+
+
+# Results Detail
+
+## Results Plots
+![](/tmp/ae908693-1368-49b1-aed9-3b1a1117665f/eeb8f0ed-6a61-4de9-b9a2-730b1fc62226/REPORT_files/figure-html/plot_tsm-1.png)<!-- -->
+
+![](/tmp/ae908693-1368-49b1-aed9-3b1a1117665f/eeb8f0ed-6a61-4de9-b9a2-730b1fc62226/REPORT_files/figure-html/plot_rr-1.png)<!-- -->
+
+
+
+![](/tmp/ae908693-1368-49b1-aed9-3b1a1117665f/eeb8f0ed-6a61-4de9-b9a2-730b1fc62226/REPORT_files/figure-html/plot_paf-1.png)<!-- -->
+
+![](/tmp/ae908693-1368-49b1-aed9-3b1a1117665f/eeb8f0ed-6a61-4de9-b9a2-730b1fc62226/REPORT_files/figure-html/plot_par-1.png)<!-- -->
+
+## Results Table
+
+### Parameter: TSM
+
+
+agecat      studyid         country      intervention_level   baseline_level     estimate    ci_lower    ci_upper
+----------  --------------  -----------  -------------------  ---------------  ----------  ----------  ----------
+Birth       COHORTS         INDIA        0                    NA                0.0282505   0.0222587   0.0342423
+Birth       COHORTS         INDIA        1                    NA                0.0307517   0.0226759   0.0388275
+Birth       EE              PAKISTAN     0                    NA                0.1925466   0.1315120   0.2535812
+Birth       EE              PAKISTAN     1                    NA                0.2207792   0.1279411   0.3136174
+Birth       GMS-Nepal       NEPAL        0                    NA                0.0445860   0.0122765   0.0768954
+Birth       GMS-Nepal       NEPAL        1                    NA                0.0408998   0.0233318   0.0584678
+Birth       SAS-CompFeed    INDIA        0                    NA                0.0564516   0.0274585   0.0854447
+Birth       SAS-CompFeed    INDIA        1                    NA                0.0697190   0.0451096   0.0943285
+6 months    COHORTS         INDIA        0                    NA                0.0386207   0.0316069   0.0456345
+6 months    COHORTS         INDIA        1                    NA                0.0661479   0.0546617   0.0776340
+6 months    EE              PAKISTAN     0                    NA                0.2080000   0.1576200   0.2583800
+6 months    EE              PAKISTAN     1                    NA                0.2314050   0.1561601   0.3066498
+6 months    PROVIDE         BANGLADESH   0                    NA                0.0155556   0.0041126   0.0269986
+6 months    PROVIDE         BANGLADESH   1                    NA                0.0454545   0.0125289   0.0783802
+6 months    SAS-CompFeed    INDIA        0                    NA                0.0408163   0.0221750   0.0594577
+6 months    SAS-CompFeed    INDIA        1                    NA                0.1112288   0.0906768   0.1317809
+6 months    SAS-FoodSuppl   INDIA        0                    NA                0.0921053   0.0270064   0.1572041
+6 months    SAS-FoodSuppl   INDIA        1                    NA                0.1546053   0.1139117   0.1952988
+24 months   COHORTS         INDIA        0                    NA                0.1854008   0.1692798   0.2015218
+24 months   COHORTS         INDIA        1                    NA                0.3832200   0.3570189   0.4094210
+24 months   EE              PAKISTAN     0                    NA                0.3750000   0.2850695   0.4649305
+24 months   EE              PAKISTAN     1                    NA                0.3148148   0.1905653   0.4390644
+24 months   GMS-Nepal       NEPAL        0                    NA                0.1101695   0.0536149   0.1667241
+24 months   GMS-Nepal       NEPAL        1                    NA                0.0976331   0.0659552   0.1293111
+24 months   NIH-Crypto      BANGLADESH   0                    NA                0.0690537   0.0438979   0.0942095
+24 months   NIH-Crypto      BANGLADESH   1                    NA                0.0731707   0.0271040   0.1192374
+24 months   PROVIDE         BANGLADESH   0                    NA                0.0831409   0.0571130   0.1091688
+24 months   PROVIDE         BANGLADESH   1                    NA                0.1103448   0.0593029   0.1613867
+
+
+### Parameter: E(Y)
+
+
+agecat      studyid         country      intervention_level   baseline_level     estimate    ci_lower    ci_upper
+----------  --------------  -----------  -------------------  ---------------  ----------  ----------  ----------
+Birth       COHORTS         INDIA        NA                   NA                0.0291862   0.0243703   0.0340021
+Birth       EE              PAKISTAN     NA                   NA                0.2016807   0.1505956   0.2527658
+Birth       GMS-Nepal       NEPAL        NA                   NA                0.0417957   0.0263516   0.0572398
+Birth       SAS-CompFeed    INDIA        NA                   NA                0.0682028   0.0450759   0.0913296
+6 months    COHORTS         INDIA        NA                   NA                0.0491594   0.0429771   0.0553417
+6 months    EE              PAKISTAN     NA                   NA                0.2156334   0.1737285   0.2575383
+6 months    PROVIDE         BANGLADESH   NA                   NA                0.0231788   0.0111688   0.0351888
+6 months    SAS-CompFeed    INDIA        NA                   NA                0.1017415   0.0806841   0.1227990
+6 months    SAS-FoodSuppl   INDIA        NA                   NA                0.1421053   0.1069532   0.1772573
+24 months   COHORTS         INDIA        NA                   NA                0.2589989   0.2445981   0.2733997
+24 months   EE              PAKISTAN     NA                   NA                0.3554217   0.2823892   0.4284541
+24 months   GMS-Nepal       NEPAL        NA                   NA                0.1008772   0.0732047   0.1285497
+24 months   NIH-Crypto      BANGLADESH   NA                   NA                0.0700389   0.0479542   0.0921236
+24 months   PROVIDE         BANGLADESH   NA                   NA                0.0899654   0.0666186   0.1133122
+
+
+### Parameter: RR
+
+
+agecat      studyid         country      intervention_level   baseline_level     estimate    ci_lower   ci_upper
+----------  --------------  -----------  -------------------  ---------------  ----------  ----------  ---------
+Birth       COHORTS         INDIA        0                    0                 1.0000000   1.0000000   1.000000
+Birth       COHORTS         INDIA        1                    0                 1.0885364   0.7766770   1.525617
+Birth       EE              PAKISTAN     0                    0                 1.0000000   1.0000000   1.000000
+Birth       EE              PAKISTAN     1                    0                 1.1466276   0.6772127   1.941421
+Birth       GMS-Nepal       NEPAL        0                    0                 1.0000000   1.0000000   1.000000
+Birth       GMS-Nepal       NEPAL        1                    0                 0.9173240   0.3950715   2.129952
+Birth       SAS-CompFeed    INDIA        0                    0                 1.0000000   1.0000000   1.000000
+Birth       SAS-CompFeed    INDIA        1                    0                 1.2350230   0.7402466   2.060505
+6 months    COHORTS         INDIA        0                    0                 1.0000000   1.0000000   1.000000
+6 months    COHORTS         INDIA        1                    0                 1.7127571   1.3322122   2.202004
+6 months    EE              PAKISTAN     0                    0                 1.0000000   1.0000000   1.000000
+6 months    EE              PAKISTAN     1                    0                 1.1125238   0.7416854   1.668779
+6 months    PROVIDE         BANGLADESH   0                    0                 1.0000000   1.0000000   1.000000
+6 months    PROVIDE         BANGLADESH   1                    0                 2.9220779   1.0407048   8.204574
+6 months    SAS-CompFeed    INDIA        0                    0                 1.0000000   1.0000000   1.000000
+6 months    SAS-CompFeed    INDIA        1                    0                 2.7251059   1.6370779   4.536255
+6 months    SAS-FoodSuppl   INDIA        0                    0                 1.0000000   1.0000000   1.000000
+6 months    SAS-FoodSuppl   INDIA        1                    0                 1.6785714   0.7895724   3.568516
+24 months   COHORTS         INDIA        0                    0                 1.0000000   1.0000000   1.000000
+24 months   COHORTS         INDIA        1                    0                 2.0669811   1.8505373   2.308741
+24 months   EE              PAKISTAN     0                    0                 1.0000000   1.0000000   1.000000
+24 months   EE              PAKISTAN     1                    0                 0.8395062   0.5290019   1.332265
+24 months   GMS-Nepal       NEPAL        0                    0                 1.0000000   1.0000000   1.000000
+24 months   GMS-Nepal       NEPAL        1                    0                 0.8862085   0.4828319   1.626581
+24 months   NIH-Crypto      BANGLADESH   0                    0                 1.0000000   1.0000000   1.000000
+24 months   NIH-Crypto      BANGLADESH   1                    0                 1.0596206   0.5119815   2.193040
+24 months   PROVIDE         BANGLADESH   0                    0                 1.0000000   1.0000000   1.000000
+24 months   PROVIDE         BANGLADESH   1                    0                 1.3272031   0.7592136   2.320122
+
+
+### Parameter: PAR
+
+
+agecat      studyid         country      intervention_level   baseline_level      estimate     ci_lower    ci_upper
+----------  --------------  -----------  -------------------  ---------------  -----------  -----------  ----------
+Birth       COHORTS         INDIA        0                    NA                 0.0009357   -0.0028263   0.0046977
+Birth       EE              PAKISTAN     0                    NA                 0.0091341   -0.0268507   0.0451189
+Birth       GMS-Nepal       NEPAL        0                    NA                -0.0027903   -0.0306294   0.0250488
+Birth       SAS-CompFeed    INDIA        0                    NA                 0.0117512   -0.0152182   0.0387205
+6 months    COHORTS         INDIA        0                    NA                 0.0105387    0.0053720   0.0157054
+6 months    EE              PAKISTAN     0                    NA                 0.0076334   -0.0219213   0.0371882
+6 months    PROVIDE         BANGLADESH   0                    NA                 0.0076233   -0.0013249   0.0165714
+6 months    SAS-CompFeed    INDIA        0                    NA                 0.0609252    0.0357423   0.0861081
+6 months    SAS-FoodSuppl   INDIA        0                    NA                 0.0500000   -0.0114686   0.1114686
+24 months   COHORTS         INDIA        0                    NA                 0.0735981    0.0617289   0.0854672
+24 months   EE              PAKISTAN     0                    NA                -0.0195783   -0.0696582   0.0305015
+24 months   GMS-Nepal       NEPAL        0                    NA                -0.0092923   -0.0573430   0.0387584
+24 months   NIH-Crypto      BANGLADESH   0                    NA                 0.0009852   -0.0115760   0.0135464
+24 months   PROVIDE         BANGLADESH   0                    NA                 0.0068245   -0.0075810   0.0212300
+
+
+### Parameter: PAF
+
+
+agecat      studyid         country      intervention_level   baseline_level      estimate     ci_lower    ci_upper
+----------  --------------  -----------  -------------------  ---------------  -----------  -----------  ----------
+Birth       COHORTS         INDIA        0                    NA                 0.0320591   -0.1056968   0.1526524
+Birth       EE              PAKISTAN     0                    NA                 0.0452899   -0.1506663   0.2078751
+Birth       GMS-Nepal       NEPAL        0                    NA                -0.0667610   -0.9909847   0.4284340
+Birth       SAS-CompFeed    INDIA        0                    NA                 0.1722973   -0.3094683   0.4768169
+6 months    COHORTS         INDIA        0                    NA                 0.2143783    0.1056046   0.3099232
+6 months    EE              PAKISTAN     0                    NA                 0.0354000   -0.1117823   0.1630977
+6 months    PROVIDE         BANGLADESH   0                    NA                 0.3288889   -0.1267356   0.6002699
+6 months    SAS-CompFeed    INDIA        0                    NA                 0.5988233    0.3630717   0.7473142
+6 months    SAS-FoodSuppl   INDIA        0                    NA                 0.3518519   -0.2498734   0.6638891
+24 months   COHORTS         INDIA        0                    NA                 0.2841637    0.2383095   0.3272574
+24 months   EE              PAKISTAN     0                    NA                -0.0550847   -0.2059140   0.0768796
+24 months   GMS-Nepal       NEPAL        0                    NA                -0.0921150   -0.6884397   0.2935992
+24 months   NIH-Crypto      BANGLADESH   0                    NA                 0.0140665   -0.1825711   0.1780073
+24 months   PROVIDE         BANGLADESH   0                    NA                 0.0758572   -0.0977956   0.2220410

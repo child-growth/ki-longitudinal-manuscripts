@@ -15,15 +15,13 @@ library(longbowRiskFactors)
 setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
+default_params$data$uri <- "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
+default_params$data$type <- "web"
+default_params$data$repository_path <- NULL
 
 load(here("4-longbow-tmle-analysis","analysis specification","unadjusted_binary_analyses.rdata"))
-analyses <- analyses
-# load("wasting_unadjusted_binary_analyses.rdata")
-# analyses_2 <- analyses
-# analyses <- rbindlist(list(analyses_1, analyses_2), fill=TRUE)
-
-analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-
+#analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
+#st_prev_rf.Rdata
 i=1
 enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
   analysis <- analyses[i,]
@@ -31,7 +29,9 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
   analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
   analysis_nodes$W <- gsub("W_bmi", "W_mbmi", analysis_nodes$W[[1]])
   analysis_params$nodes <- analysis_nodes
-  analysis_params$data$repository_path <- analysis$file
+  #analysis_params$data$repository_path <- analysis$file
+  analysis_params$data$uri <- paste0(analysis_params$data$uri, analysis$file)
+  
   return(analysis_params)
 })
 
@@ -49,7 +49,7 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 inputs <- "single_bin_analysis.json"
 
 #run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 bin_batch_inputs <- "all_bin_analyses.json"

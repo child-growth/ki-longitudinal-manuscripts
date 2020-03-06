@@ -16,7 +16,7 @@ cov <- cov %>% subset(., select= -c(pers_wast, enwast, anywast06))
 
 
 #Load wasting measures
-load(paste0(ghapdata_dir,"mort_exposures.rdata"))
+load(paste0(ghapdata_dir,"mort_exposures.RData"))
 
 stunt_ci_0_6 <- stunt_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_stunted06, ever_sstunted06)) 
 stunt_ci_0_24 <- stunt_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_stunted024, ever_sstunted024))
@@ -28,8 +28,8 @@ underweight_ci_0_24 <- underweight_ci_0_24 %>% subset(., select=c(studyid,countr
 co_ci_0_6 <- co_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_co06)) 
 co_ci_0_24 <- co_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_co024))
 
-stunt_ci_0_6_no_birth <- stunt_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_stunted06_noBW, ever_sstunted06_noBW)) 
-underweight_ci_0_6_no_birth <- underweight_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_underweighted06_noBW, ever_sunderweighted06_noBW)) 
+# stunt_ci_0_6_no_birth <- stunt_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_stunted06_noBW, ever_sstunted06_noBW)) 
+# underweight_ci_0_6_no_birth <- underweight_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_underweighted06_noBW, ever_sunderweighted06_noBW)) 
 
 
 #convert subjid to character for the merge with mortality dataset
@@ -229,10 +229,10 @@ table(d$ever_sunderweight06, d$co_occurence)
 calc_RR(d$ever_underweight06, d$co_occurence)
 calc_RR(d$ever_sunderweight06, d$co_occurence)
 
-res1 <- d %>% group_by(studyid, country) %>% do(res=try(calc_RR(.$ever_underweight06, .$co_occurence))) %>% as.data.frame() %>% mutate(res=as.numeric(res))
-res2 <- d %>% group_by(studyid, country) %>% do(res=try(calc_RR(.$ever_sunderweight06, .$co_occurence))) %>% as.data.frame() %>% mutate(res=as.numeric(res))
-res <- merge(res1, res2, by=c("studyid","country"))
-res
+# res1 <- d %>% group_by(studyid, country) %>% do(res=try(calc_RR(.$ever_underweight06, .$co_occurence))) %>% as.data.frame() %>% mutate(res=as.numeric(res))
+# res2 <- d %>% group_by(studyid, country) %>% do(res=try(calc_RR(.$ever_sunderweight06, .$co_occurence))) %>% as.data.frame() %>% mutate(res=as.numeric(res))
+# res <- merge(res1, res2, by=c("studyid","country"))
+# res
 
 #Set exposures to factors
 Avars_morbidity <- c("ever_wasted06",
@@ -283,7 +283,6 @@ dim(d)
 
 
 #Merge in covariates
-cov <- cov %>% subset(., select = - c(dead, agedth, causedth))
 dim(d)
 df <- merge(as.data.frame(d), cov, by=c("studyid", "subjid", "country"), all.x = T, all.y = F)
 dim(df)

@@ -4,7 +4,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 
-load(paste0(ghapdata_dir,"adjustment_sets_list.Rdata"))
+load(here("results/adjustment_sets_list.Rdata"))
 A <- names(adjustment_sets)
 
 Avars <- c("mage","fage","mhtcm","mwtkg","mbmi","single","fhtcm","meducyrs","feducyrs")

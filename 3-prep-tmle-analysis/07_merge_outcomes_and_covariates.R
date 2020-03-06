@@ -46,12 +46,12 @@ setwd(ghapdata_dir)
 
 
 #load outcomes
-load("st_prev_outcomes.rdata")
-load("st_meanZ_outcomes.rdata")
+load("st_prev_outcomes.RData")
+load("st_meanZ_outcomes.RData")
 load("st_cuminc_outcomes.rdata")
 load("st_cuminc_outcomes_nobirth.rdata")
-load("st_rec_outcomes.rdata")
-load("st_vel_outcomes.rdata")
+load("st_rec_outcomes.RData")
+load("st_vel_outcomes.RData")
 load("waz_vel_outcomes.RData")
 
 

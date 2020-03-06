@@ -1,158 +1,0 @@
-Command to run:
-Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/c3198390-c315-4ee6-93e3-2cd47e796dae/9df7855c-fde7-46f8-b6de-068795316e1d
-cd /tmp;tar xvzf tmpe25t42i8.tar.gz --strip 1;cd /tmp/c3198390-c315-4ee6-93e3-2cd47e796dae;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/56294/append_log/;screen -d -m python x.py;sleep 1
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/
-tar: c3198390-c315-4ee6-93e3-2cd47e796dae/9df7855c-fde7-46f8-b6de-068795316e1d: time stamp 2020-01-09 01:52:20 is 0.127136928 s in the future
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/ensure_git_dataset.sh
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/inputs.json
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/provision.sh
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/runner.R
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/9df7855c-fde7-46f8-b6de-068795316e1d/
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/x.py
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/wrapper.sh
-tmpe25t42i8/c3198390-c315-4ee6-93e3-2cd47e796dae/script.Rmd
-tar: c3198390-c315-4ee6-93e3-2cd47e796dae/x.py: time stamp 2020-01-09 01:52:20 is 0.126923517 s in the future
-tar: c3198390-c315-4ee6-93e3-2cd47e796dae/wrapper.sh: time stamp 2020-01-09 01:52:20 is 0.126783305 s in the future
-tar: c3198390-c315-4ee6-93e3-2cd47e796dae: time stamp 2020-01-09 01:52:20 is 0.126663154 s in the future
-Requirement already satisfied: requests in /opt/anaconda2/lib/python2.7/site-packages
-You are using pip version 9.0.1, however version 19.3.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-{"job": {"status": "running", "created_at": "2020-01-09T01:08:28.497", "results_url": "/jobs/56294/", "jobs": []}}Making sure longbowtools package is available for runner
-
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-redhat-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
-> 
-> 
-Installing pandoc
-pandoc-2.3.1/
-pandoc-2.3.1/bin/
-pandoc-2.3.1/bin/pandoc
-pandoc-2.3.1/bin/pandoc-citeproc
-pandoc-2.3.1/share/
-pandoc-2.3.1/share/man/
-pandoc-2.3.1/share/man/man1/
-pandoc-2.3.1/share/man/man1/pandoc.1.gz
-pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
-Running provision script
-skipping provisioning because this is a child job
-Making sure longbowtools package is available for runner
-
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-redhat-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
-> 
-> 
-Starting analysis
-
-
-processing file: REPORT.Rmd
-  |                                                                         |                                                                 |   0%  |                                                                         |..                                                               |   3%
-  ordinary text without R code
-
-  |                                                                         |....                                                             |   6%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                         |......                                                           |   9%
-  ordinary text without R code
-
-  |                                                                         |........                                                         |  12%
-label: params (with options) 
-List of 2
- $ warning: logi FALSE
- $ message: logi FALSE
-
-Loading required package: graphics
-list()impsanlist()ever_sstuntedidc("agecat", "studyid", "country")
-TRUETRUEFALSENULL
-  |                                                                         |..........                                                       |  16%
-  ordinary text without R code
-
-  |                                                                         |............                                                     |  19%
-label: preprocessing
-  |                                                                         |..............                                                   |  22%
-   inline R code fragments
-
-  |                                                                         |................                                                 |  25%
-label: print_adjustment_set (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |..................                                               |  28%
-  ordinary text without R code
-
-  |                                                                         |....................                                             |  31%
-label: print_strata_variables (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |......................                                           |  34%
-  ordinary text without R code
-
-  |                                                                         |........................                                         |  38%
-label: data_summary
-  |                                                                         |..........................                                       |  41%
-  ordinary text without R code
-
-  |                                                                         |............................                                     |  44%
-label: print_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |..............................                                   |  47%
-  ordinary text without R code
-
-  |                                                                         |................................                                 |  50%
-label: drop_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-
-output file: REPORT.knit.md
-
-/usr/local/bin/pandoc +RTS -K512m -RTS REPORT.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output /tmp/c3198390-c315-4ee6-93e3-2cd47e796dae/9df7855c-fde7-46f8-b6de-068795316e1d/REPORT.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /data/rlibs/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/RtmpbKzBTL/rmarkdown-stre037716e2e39.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' 
-
-Output created: 9df7855c-fde7-46f8-b6de-068795316e1d/REPORT.html
-[1] "/tmp/c3198390-c315-4ee6-93e3-2cd47e796dae/9df7855c-fde7-46f8-b6de-068795316e1d/REPORT.html"
-Running analysis succeeded
-9df7855c-fde7-46f8-b6de-068795316e1d/
-9df7855c-fde7-46f8-b6de-068795316e1d/REPORT.Rmd
-9df7855c-fde7-46f8-b6de-068795316e1d/inputs.json
-9df7855c-fde7-46f8-b6de-068795316e1d/obs_counts.rdata
-9df7855c-fde7-46f8-b6de-068795316e1d/REPORT.html
-9df7855c-fde7-46f8-b6de-068795316e1d/REPORT.md
-{"status": "executed"}
