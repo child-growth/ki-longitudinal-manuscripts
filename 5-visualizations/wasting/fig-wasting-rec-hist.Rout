@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > #-----------------------------------------
 > # Process data for wasting traj figures
@@ -25,7 +27,7 @@ Type 'q()' to quit R.
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
 ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
 ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ✔ readr   1.3.1     ✔ forcats 0.4.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -350,7 +352,13 @@ Removed 3559 rows containing missing values (geom_text).
 > 
 > # save plot and underlying data
 > ggsave(rec_violin_plot, file=paste0(here(),"/figures/wasting/fig-", rec_violin_name, ".png"), width=8, height=5)
-Error in grid.newpage() : 
-  could not open file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/wasting/fig-wast-2-rec-overall--allage-primary.png'
-Calls: ggsave ... grid.draw.ggplot -> print -> print.ggplot -> grid.newpage
+Warning message:
+Removed 3559 rows containing missing values (geom_text). 
+> 
+> saveRDS(rec_violin_plot, file=paste0(here::here(),"/figures/plot-objects/rec_violin_plot_object.rds"))
+Error in gzfile(file, mode) : cannot open the connection
+Calls: saveRDS -> gzfile
+In addition: Warning message:
+In gzfile(file, mode) :
+  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/plot-objects/rec_violin_plot_object.rds', probable reason 'No such file or directory'
 Execution halted

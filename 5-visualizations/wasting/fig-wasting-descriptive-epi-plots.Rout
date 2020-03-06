@@ -17,12 +17,14 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
 ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
 ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ✔ readr   1.3.1     ✔ forcats 0.4.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -289,7 +291,220 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +   theme(legend.position="right")
 > 
 > ggsave(p, file=here::here("/figures/wasting/WLZ_by_region.png"), width=10, height=4)
-Error in grid.newpage() : 
-  could not open file '/home/andrew.mertens/ki-longitudinal-manuscripts//figures/wasting/WLZ_by_region.png'
-Calls: ggsave ... grid.draw.ggplot -> print -> print.ggplot -> grid.newpage
+`geom_smooth()` using method = 'loess' and formula 'y ~ x'
+Warning message:
+Removed 16 rows containing non-finite values (stat_smooth). 
+> 
+> 
+> 
+> #-------------------------------------------------------------------------------------------
+> # Mean WLZ by month with quantiles
+> #-------------------------------------------------------------------------------------------
+> 
+> quantile_d_overall <- quantiles$quantile_d_overall %>% mutate(region="Overall")
+Warning message:
+Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
+> df <- rbind(quantile_d_overall, quantiles$quantile_d)
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+2: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
+> 
+> df$agecat <- factor(df$agecat, 
++                     levels=c("Two weeks", "One month",
++                              paste0(2:24," months")))
+> 
+> df <- df %>% 
++   arrange(agecat) %>%
++   filter(region!="Europe")
+Warning message:
+Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
+> df <-droplevels(df)
+Warning message:
+Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
+> 
+> df <- df %>% 
++   ungroup(agecat) %>%
++   arrange(agecat) %>%
++   filter(!is.na(agecat)) %>%
++   filter(!is.na(region)) %>%
++   mutate(agecat = as.character(agecat)) %>%
++   mutate(agecat = ifelse(agecat == "Two weeks", ".5", agecat)) %>%
++   mutate(agecat = gsub(" month", "", agecat)) %>%
++   mutate(agecat = gsub(" months", "", agecat)) %>%
++   mutate(agecat = gsub("s", "", agecat)) %>%
++   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
++   mutate(agecat = as.numeric(agecat)) %>%
++   mutate(region = ifelse(region=="Asia", "South Asia", region)) %>% 
++   gather(`ninetyfifth_perc`, `fiftieth_perc`, `fifth_perc`, key = "interval", value = "WLZ") %>% 
++   mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+> 
+> # NEED TO ADD LEGEND
+> 
+> mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
++ 
++   geom_smooth(aes(y = WLZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
++   facet_wrap(~region, nrow=1) +
++   geom_hline(yintercept = 0, colour = "black") +
++   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) + 
++   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
++   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=TRUE, limits = levels(df$measure), 
++                      name = 'Region') +
++   scale_linetype_manual(name = "interval", values = c("fiftieth_perc" = "solid",
++                                                       "ninetyfifth_perc" = "dashed",
++                                                       "fifth_perc" = "dotted"),
++                         breaks = c("fiftieth_perc",
++                                    "ninetyfifth_perc",
++                                    "fifth_perc"),
++                         labels = c("Mean", "95th percentile", "5th percentile")) +
++   xlab("Child age, months") +
++   ylab("Weight-for-length Z-score") +
++   ggtitle("") +
++   theme(strip.text = element_text(margin=margin(t=5))) +
++   guides(linetype = guide_legend(override.aes = list(col = 'black'), 
++                                  keywidth = 3, keyheight = 1),
++          colour = FALSE) +
++   theme(legend.position = "bottom",
++         legend.title = element_blank(),
++         legend.background = element_blank(),
++         legend.box.background = element_rect(colour = "black"))
+Warning message:
+Unknown or uninitialised column: 'measure'. 
+> 
+> 
+> # define standardized plot names
+> mean_wlz_plot_name = create_name(
++   outcome = "WLZ",
++   cutoff = 2,
++   measure = "mean",
++   population = "overall and region-stratified",
++   location = "",
++   age = "All ages",
++   analysis = "primary"
++ )
+> 
+> # save plot and underlying data
+> ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=3)
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+> saveRDS(df, file=paste0(figdata_dir_wasting,"figdata-",mean_wlz_plot_name,".RDS"))
+> 
+> 
+> 
+> 
+> #-------------------------------------------------------------------------------------------
+> # Wasting prevalence
+> #-------------------------------------------------------------------------------------------
+> prev_plot <- ki_desc_plot(d,
++                    Disease="Wasting",
++                    Measure="Prevalence", 
++                    Birth="yes", 
++                    Severe="no", 
++                    Age_range="3 months", 
++                    Cohort="pooled",
++                    xlabel="Child age, months",
++                    ylabel='Point prevalence (95% CI)',
++                    yrange=c(0,24),
++                    returnData=T)
+> 
+> prev_plot_africa <- ki_desc_plot(d,
++                           Disease="Wasting",
++                           Measure="Prevalence", 
++                           Birth="yes", 
++                           Severe="no", 
++                           Age_range="3 months", 
++                           Cohort="pooled",
++                           xlabel="Child age, months",
++                           ylabel='Point prevalence (95% CI)',
++                           yrange=c(0,30),
++                           Region="Africa",
++                           returnData=T
++                           )
+> 
+> prev_plot_lam <- ki_desc_plot(d,
++                                  Disease="Wasting",
++                                  Measure="Prevalence", 
++                                  Birth="yes", 
++                                  Severe="no", 
++                                  Age_range="3 months", 
++                                  Cohort="pooled",
++                                  xlabel="Child age, months",
++                                  ylabel='Point prevalence (95% CI)',
++                                  yrange=c(0,30),
++                                  returnData=T,
++                                  Region="Latin America")
+> 
+> prev_plot_sasia <- ki_desc_plot(d,
++                                  Disease="Wasting",
++                                  Measure="Prevalence", 
++                                  Birth="yes", 
++                                  Severe="no", 
++                                  Age_range="3 months", 
++                                  Cohort="pooled",
++                                  xlabel="Child age, months",
++                                  ylabel='Point prevalence (95% CI)',
++                                  yrange=c(0,30),
++                                  returnData=T,
++                                  Region="South Asia")
+> 
+> # define standardized plot names
+> prev_plot_name = create_name(
++   outcome = "wasting",
++   cutoff = 2,
++   measure = "prevalence",
++   population = "overall and region-stratified",
++   location = "",
++   age = "All ages",
++   analysis = "primary"
++ )
+> 
+> # save plot and underlying data
+> ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
+> ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_africa", ".png"), width=10, height=5)
+> ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
+> ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
+> 
+> saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",prev_plot_name,".RDS"))
+> 
+> 
+> #ggsave(prev_plot[[1]] + ggtitle("Wasting prevalence"), file=paste0(here::here(),"/figures/wasting/fig-",prev_plot_name, "_presentation.png"), width=13, height=3)
+> 
+> 
+> #-------------------------------------------------------------------------------------------
+> # Wasting cumulative incidence
+> #-------------------------------------------------------------------------------------------
+> ci_plot <- ki_combo_plot(d,
++                         Disease="Wasting",
++                         Measure=c("Cumulative incidence", "Incidence proportion"), 
++                         Birth="yes", 
++                         Severe="no", 
++                         Age_range="3 months", 
++                         Cohort="pooled",
++                         xlabel="Child age, months",
++                     yrange=c(0,60),
++                     returnData=T)
+> 
+> ci_plot_name = create_name(
++   outcome = "wasting",
++   cutoff = 2,
++   measure = "cumulative incidence",
++   population = "overall and region-stratified",
++   location = "",
++   age = "All ages",
++   analysis = "primary"
++ )
+> 
+> # save plot and underlying data
+> ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
+Warning message:
+Removed 4 rows containing missing values (geom_text). 
+> 
+> saveRDS(ci_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,".RDS"))
+> 
+> #Save plot-objects for figure grid
+> saveRDS(list(mean_wlz_plot, prev_plot, ci_plot), file=paste0(here::here(),"/figures/plot-objects/fig2_plot_objects.rds"))
+Error in gzfile(file, mode) : cannot open the connection
+Calls: saveRDS -> gzfile
+In addition: Warning message:
+In gzfile(file, mode) :
+  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/plot-objects/fig2_plot_objects.rds', probable reason 'No such file or directory'
 Execution halted
