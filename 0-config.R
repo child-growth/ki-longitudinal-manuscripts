@@ -48,7 +48,7 @@ library(bit64)
 library(zoo)
 
 # Define directories
-res_dir                           = here::here("results//")
+res_dir                           = here::here("results/")
 dhs_res_dir                       = here::here("results", "dhs")
 data_dir                          = here::here("data")
 metadata_dir                      = "U:/results/Metadata/"

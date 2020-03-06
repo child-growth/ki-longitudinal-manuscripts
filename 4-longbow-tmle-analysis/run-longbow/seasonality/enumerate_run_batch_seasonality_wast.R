@@ -46,7 +46,7 @@ results <- load_batch_results("results.rdata", results_folder = "seasonality_res
 obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "seasonality_results")
 
 # save concatenated results
-filename1 <- paste(paste('seasonality_results',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('seasonality_results_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
-save(results, file=here("results","rf results","raw longbow results",filename1))
-save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+filename1 <- paste(paste('seasonality_results',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('seasonality_results_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
+saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
+saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
