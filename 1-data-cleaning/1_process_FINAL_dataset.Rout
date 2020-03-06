@@ -286,3 +286,186 @@ Vcells 315686523 2408.5  641402759 4893.6 636568685 4856.7
 +                    "FORMLKFL","BOTTLEFL","H20FEDFL","OTHFEDFL","SLDFEDFL","NBFYES",   "CMFDINT", "DIARFL",  "LSSTLFL",
 +                    "NUMLS",   "BLDSTLFL","DIARFL_R","LSSTFL_R","NUMLS_R", "BLDSTL_R",
 +                    "DUR_R"))
+> gc()
+            used   (Mb) gc trigger    (Mb)   max used   (Mb)
+Ncells   1962549  104.9    3022715   161.5    3022715  161.5
+Vcells 717893421 5477.1 1357518496 10357.1 1130313787 8623.7
+> jiv <- jiv[STUDYID=="kiGH5241-JiVitA-3" | STUDYID == "kiGH5241-JiVitA-4"]
+> gc()
+            used   (Mb) gc trigger   (Mb)   max used   (Mb)
+Ncells   1983633  106.0    3022715  161.5    3022715  161.5
+Vcells 405204558 3091.5 1086014797 8285.7 1130313787 8623.7
+> #strip grant identifiers
+> jiv$STUDYID <- gsub("^k.*?-" , "", jiv$STUDYID)
+> unique(jiv$STUDYID)
+[1] "JiVitA-3" "JiVitA-4"
+> 
+> d <- rbind(d, jiv)
+> unique(d$STUDYID)
+ [1] "AgaKhanUniv"      "BurkinaFasoZn"    "CMC-V-BCS-2002"   "CMIN"            
+ [5] "COHORTS"          "CONTENT"          "DIVIDS"           "EE"              
+ [9] "EU"               "GMS-Nepal-201606" "Guatemala BSC"    "ILINS-DOSE"      
+[13] "ILINS-DYAD-M"     "ILINS-Zinc"       "INCAP"            "IRC"             
+[17] "Keneba"           "LCNI-5"           "MAL-ED"           "NIH-Birth"       
+[21] "NIH-Crypto"       "PROBIT"           "PROVIDE"          "Respak"          
+[25] "SAS-CompFeed"     "SAS-FoodSuppl"    "Serrinha-VitA"    "TanzaniaChild2"  
+[29] "VITAMIN-A"        "VITAMIN-B12"      "WASH-BK"          "WASH-Bangladesh" 
+[33] "WomenFirst"       "ZINC-MORTALITY"   "ZVITAMBO"         "JiVitA-3"        
+[37] "JiVitA-4"        
+> 
+> colnames(d) <- tolower(colnames(d))
+> gc()
+            used   (Mb) gc trigger   (Mb)   max used   (Mb)
+Ncells   1987830  106.2    3022715  161.5    3022715  161.5
+Vcells 494680497 3774.2 1086014797 8285.7 1130313787 8623.7
+> 
+> #Drop studies Vishak added to data product that don't meet inclusion criteria
+> dim(d)
+[1] 9570371      55
+> d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP"))]
+> dim(d)
+[1] 9525336      55
+> gc()
+            used   (Mb) gc trigger   (Mb)   max used   (Mb)
+Ncells   1994935  106.6    3022715  161.5    3022715  161.5
+Vcells 492810067 3759.9 1086014797 8285.7 1130313787 8623.7
+> 
+> #update study names where they have changed during BlueVelvet switch
+> d <- d[studyid=="ZINC-MORTALITY", studyid := "ZnMort"]
+> d <- d[studyid=="VITAMIN-B12", studyid := "Vitamin-B12"]
+> d <- d[studyid=="WASH-BK", studyid := "WASH-Kenya"]
+> d <- d[studyid=="Respak", studyid := "ResPak"]
+> d <- d[studyid=="ILINS-Zinc", studyid := "iLiNS-Zinc"]
+> d <- d[studyid=="GMS-Nepal-201606", studyid := "GMS-Nepal"]
+> d <- d[studyid=="BurkinaFasoZn", studyid := "Burkina Faso Zn"]
+> d <- d[studyid=="ILINS-DOSE", studyid := "iLiNS-DOSE"]
+> d <- d[studyid=="ILINS-DYAD-M", studyid := "iLiNS-DYAD-M"]
+> 
+> 
+> 
+> monthly_vec <- c("MAL-ED",   
++   "CMC-V-BCS-2002",              
++   "IRC",               
++   "EE",           
++   "ResPak",  
++   "PROVIDE",  
++   "TanzaniaChild2",           
++   "Keneba",  
++   "Guatemala BSC",       
++   "GMS-Nepal",    
++   "CMIN",                 
++   "CONTENT")
+> 
+> quarterly_vec <- c("iLiNS-Zinc",  
++   "JiVitA-3",          
++   "JiVitA-4", 
++   "LCNI-5",          
++   "NIH-Birth",
++   "NIH-Crypto",   
++   "PROBIT",         
++   "SAS-CompFeed",   
++   "SAS-FoodSuppl",   
++   "ZVITAMBO",   
++   "COHORTS")
+> 
+> yearly_vec <- c("WASH-Bangladesh",       
++   "WASH-Kenya",  
++   "iLiNS-DOSE",     
++   "iLiNS-DYAD-M", 
++   "iLiNS-DYAD-G",
++   "AgaKhanUniv",           
++   "Burkina Faso Zn",    
++   "VITAMIN-A",  
++   "Vitamin-B12",
++   "Serrinha-VitA",   
++   "EU",        
++   "ZnMort")
+> 
+> 
+> d <- d[, measurefreq := c("monthly", "quarterly", "yearly")[1* (studyid %in% monthly_vec) +
++                                2 * (studyid %in% quarterly_vec) + 
++                                3 * (studyid %in% yearly_vec)]]
+> gc()
+            used   (Mb) gc trigger   (Mb)   max used   (Mb)
+Ncells   1995534  106.6    3022715  161.5    3022715  161.5
+Vcells 502444927 3833.4 1086014797 8285.7 1130313787 8623.7
+> 
+> 
+> 
+> #Drop CMIN cohorts with less than 200 children
+> d <- d[!(studyid=="CMIN" & country != "BANGLADESH")]
+> gc()
+            used   (Mb) gc trigger   (Mb)   max used   (Mb)
+Ncells   1995257  106.6    3022715  161.5    3022715  161.5
+Vcells 435967047 3326.2 1086014797 8285.7 1130313787 8623.7
+> 
+> #Mark yearly COHORTS
+> d <- d[studyid=="COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
+> gc()
+            used   (Mb) gc trigger   (Mb)   max used   (Mb)
+Ncells   1995291  106.6    3022715  161.5    3022715  161.5
+Vcells 439968462 3356.7 1086014797 8285.7 1130313787 8623.7
+> 
+> #Drop yearly studies except for four with high quality mortality data used in the mortality analysis
+> d <- d[measurefreq!="yearly" | studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","Burkina Faso Zn", "VITAMIN-A" )]
+> gc()
+            used   (Mb) gc trigger   (Mb)   max used   (Mb)
+Ncells   1995239  106.6    3022715  161.5    3022715  161.5
+Vcells 416989587 3181.4 1086014797 8285.7 1130313787 8623.7
+> 
+> 
+> # #fix sex and Z-scores in PROBIT and CONTENT
+> # dfull <- d %>% filter(!(studyid %in% c("PROBIT","CONTENT")))
+> # dsub <- d %>% filter((studyid %in% c("PROBIT","CONTENT")))
+> # rm(d)
+> # gc()
+> # 
+> # dsub$sex2 <- ifelse(dsub$sex=="Male", "Female", "Male")
+> # dsub$sex2[is.na(dsub$sex) | dsub$sex==""] <- NA
+> # table(dsub$sex)
+> # table(dsub$sex2)
+> # dsub$sex <- dsub$sex2
+> # 
+> # dsub <- dsub %>% filter(!is.na(sex))
+> 
+> # #recalculate Z-scores
+> # 
+> # #whz
+> # #use length or height standards, depending on age
+> # dsub$whz2 <- ifelse(!is.na(dsub$lencm),
+> #                     who_value2zscore2(dsub$lencm, dsub$wtkg, x_var = "lencm", y_var = "wtkg", sex = dsub$sex),    
+> #                     who_value2zscore(dsub$htcm, dsub$wtkg, x_var = "htcm", y_var = "wtkg", sex = dsub$sex)
+> #                     )
+> # 
+> # 
+> # #temporarily combine length and height variables
+> # dsub$lencm[is.na(dsub$lencm) & !is.na(dsub$htcm)] <- dsub$htcm[is.na(dsub$lencm) & !is.na(dsub$htcm)] 
+> # 
+> # #haz and waz
+> # dsub$haz2 <- who_value2zscore(dsub$agedays, dsub$lencm, x_var = "agedays", y_var = "htcm", sex = dsub$sex)
+> # dsub$waz2 <- who_value2zscore(dsub$agedays, dsub$wtkg, x_var = "agedays", y_var = "wtkg", sex = dsub$sex)
+> # 
+> # 
+> # summary(dsub$haz)
+> # summary(dsub$haz2)
+> # 
+> # summary(dsub$haz[dsub$sex=="Male"])
+> # summary(dsub$haz[dsub$sex=="Female"])
+> # summary(dsub$haz2[dsub$sex=="Male"])
+> # summary(dsub$haz2[dsub$sex=="Female"])
+> # 
+> # summary(dsub$waz)
+> # summary(dsub$waz2)
+> # 
+> # summary(dsub$whz)
+> # summary(dsub$whz2)
+> # 
+> # dsub$haz <- dsub$haz2
+> # dsub$waz <- dsub$waz2
+> # dsub$whz <- dsub$whz2
+> # 
+> # dsub <- dsub %>% subset(., select = -c(sex2, haz2, waz2, whz2))
+> # d <- bind_rows(dfull, dsub)
+> 
+> 
+> saveRDS(d, included_studies_path)
