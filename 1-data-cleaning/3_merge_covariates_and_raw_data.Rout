@@ -1,0 +1,670 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> 
+> #merge covariates with additional raw data covariates
+> 
+> 
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> 
+> 
+> #quantiling functions
+> quantile_rf <- function(A, labs=NULL, Acuts=NULL){
++   A<-as.numeric(A)
++   if(sum(is.na(A))!=length(A)){
++     if(is.null(Acuts)){
++       Acuts=c(0, as.numeric(quantile(A, probs = c(.25,.5,.75), na.rm=T)), max(A, na.rm=T))
++     }
++     
++     if(length(Acuts)==4){
++       Alevels=c(paste0("<",round(Acuts[2],2)), 
++                 paste0("[",round(Acuts[2],2),"-",round(Acuts[3],2),")"),
++                 paste0(">=",round(Acuts[3],2))) 
++     }
++     if(length(Acuts)==5){
++       Alevels=c(paste0("<",round(Acuts[2],2)), 
++                 paste0("[",round(Acuts[2],2),"-",round(Acuts[3],2),")"),
++                 paste0("[",round(Acuts[3],2),"-",round(Acuts[4],2),")"), 
++                 paste0(">=",round(Acuts[4],2))) 
++     }
++     if(length(Acuts)==6){
++       Alevels=c(paste0("<",round(Acuts[2],2)), 
++                 paste0("[",round(Acuts[2],2),"-",round(Acuts[3],2),")"),
++                 paste0("[",round(Acuts[3],2),"-",round(Acuts[4],2),")"),
++                 paste0("[",round(Acuts[4],2),"-",round(Acuts[5],2),")"), 
++                 paste0(">=",round(Acuts[5],2))) 
++     }    
++     
++     
++     if(!is.null(labs)){
++       Alevels=labs
++     }
++     
++     if(length(unique(Acuts))==length((Acuts))){
++       A <- cut(A, include.lowest = T, right = FALSE, breaks=Acuts,labels=Alevels)
++     }else{
++       A <- cut(A, include.lowest = T, right = FALSE, breaks=4,labels=c("Q1","Q2","Q3","Q4","Q5")[1:(length(Acuts)-1)])
++     }
++     A <- factor(A)
++     return(A)
++   }
++ }
+> 
+> 
+> 
+> 
+> 
+> 
+> #load covariates
+> d<-readRDS(paste0(ghapdata_dir,"FINAL_temp_clean_covariates.rds"))
+> d$arm<-factor(d$arm)
+> 
+> load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/BF_dataset.Rdata"))
+> load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/rawdiar_df.Rdata"))
+> load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/improved_sanitation_dataset.Rdata"))
+> load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/improved_water_dataset.Rdata"))
+> 
+> #Strip grant identifiers from study id's
+> bf$studyid<- gsub("^k.*?-" , "", bf$studyid)
+> diar$studyid<- gsub("^k.*?-" , "", diar$studyid)
+> dh20$studyid<- gsub("^k.*?-" , "", dh20$studyid)
+> dsan$studyid<- gsub("^k.*?-" , "", dsan$studyid)
+> 
+> head(bf)
+        studyid country subjid predfeed3 exclfeed3 predfeed6 exclfeed6
+1 Serrinha-VitA  BRAZIL   1015        NA        NA        NA        NA
+2 Serrinha-VitA  BRAZIL   1121        NA        NA        NA        NA
+3 Serrinha-VitA  BRAZIL   1188        NA        NA        NA        NA
+4 Serrinha-VitA  BRAZIL    132        NA        NA        NA        NA
+5 Serrinha-VitA  BRAZIL    150        NA        NA        NA        NA
+6 Serrinha-VitA  BRAZIL    164        NA        NA        NA        NA
+  predfeed36 exclfeed36 predexfd6
+1         NA         NA        NA
+2         NA         NA        NA
+3         NA         NA        NA
+4         NA         NA        NA
+5         NA         NA        NA
+6         NA         NA        NA
+> head(diar)
+  studyid subjid   perdiar6   perdiar24
+1  MAL-ED      1 0.00000000 0.057665260
+2  MAL-ED      2 0.07142857 0.034246575
+3  MAL-ED      3 0.01098901 0.008620690
+4  MAL-ED      4 0.06593407 0.063013699
+5  MAL-ED      5 0.02222222 0.022222222
+6  MAL-ED      6 0.00000000 0.002739726
+> head(dh20)
+# A tibble: 6 x 4
+# Groups:   studyid, country, subjid [6]
+  safeh20 studyid country    subjid
+    <dbl> <chr>   <chr>       <dbl>
+1       0 MAL-ED  BANGLADESH      1
+2       0 MAL-ED  BANGLADESH      2
+3       0 MAL-ED  BANGLADESH      3
+4       0 MAL-ED  BANGLADESH      4
+5       0 MAL-ED  BANGLADESH      6
+6       0 MAL-ED  BANGLADESH      8
+Warning message:
+Detecting old grouped_df format, replacing `vars` attribute by `groups` 
+> head(dsan)
+# A tibble: 6 x 4
+  impsan studyid country    subjid
+   <dbl> <chr>   <chr>       <dbl>
+1      1 MAL-ED  BANGLADESH      1
+2      0 MAL-ED  BANGLADESH      2
+3      1 MAL-ED  BANGLADESH      3
+4      1 MAL-ED  BANGLADESH      4
+5      1 MAL-ED  BANGLADESH      6
+6      1 MAL-ED  BANGLADESH      8
+> 
+> 
+> #Sanitation
+> dsan <- dsan %>% subset(., select = c(impsan, studyid, country, subjid))
+> 
+> 
+> table(dsan$impsan)
+
+     0      1 
+ 57639 117407 
+> table(dsan$studyid, dsan$impsan)
+                 
+                      0     1
+  AgaKhanUniv       536   151
+  Burkina Faso Zn  5552   290
+  COHORTS          5928  8716
+  CONTENT            14   201
+  iLiNS-DOSE         12     2
+  iLiNS-DYAD-M     1122   108
+  JiVitA-3        14052 30646
+  JiVitA-4         1242  4191
+  LCNI-5            810     3
+  MAL-ED            853   822
+  NIH-Birth         387   242
+  NIH-Crypto         92   655
+  PROVIDE             2    58
+  VITAMIN-A        1065  2935
+  ZnMort          25972 68387
+> 
+> dsan$subjid <- as.character(dsan$subjid)
+> d <- left_join(d, dsan, by=c("studyid", "country", "subjid"))
+> table(d$impsan)
+
+    0     1 
+15564  7570 
+> table(d$studyid, d$impsan)
+                 
+                     0    1
+  Burkina Faso Zn 5552  290
+  CMC-V-BCS-2002     0    0
+  CMIN               0    0
+  COHORTS         5714 2321
+  CONTENT           14  201
+  EE                 0    0
+  GMS-Nepal          0    0
+  Guatemala BSC      0    0
+  iLiNS-DOSE        12    2
+  iLiNS-DYAD-M    1086  108
+  iLiNS-Zinc         0    0
+  IRC                0    0
+  Keneba             0    0
+  LCNI-5           810    3
+  MAL-ED           853  822
+  NIH-Birth        387  242
+  NIH-Crypto        92  655
+  PROBIT             0    0
+  PROVIDE            2   58
+  ResPak             0    0
+  SAS-CompFeed       0    0
+  SAS-FoodSuppl      0    0
+  TanzaniaChild2     0    0
+  VITAMIN-A       1042 2868
+  ZVITAMBO           0    0
+> 
+> 
+> #Drinking water
+> dh20$subjid <- as.character(dh20$subjid)
+> d <- left_join(d, dh20, by=c("studyid", "country", "subjid"))
+> table(d$safeh20)
+
+   0    1 
+5030 9093 
+> table(d$studyid, d$safeh20)
+                 
+                     0    1
+  Burkina Faso Zn 3479 2363
+  CMC-V-BCS-2002     0    0
+  CMIN               0    0
+  COHORTS            0    0
+  CONTENT            3   54
+  EE                 0    0
+  GMS-Nepal          0    0
+  Guatemala BSC      0    0
+  iLiNS-DOSE         2   13
+  iLiNS-DYAD-M       1    2
+  iLiNS-Zinc         0    0
+  IRC                0    0
+  Keneba             0    0
+  LCNI-5           144  673
+  MAL-ED          1394  220
+  NIH-Birth          2  627
+  NIH-Crypto         0  758
+  PROBIT             0    0
+  PROVIDE            0   60
+  ResPak             0    0
+  SAS-CompFeed       0    0
+  SAS-FoodSuppl      0  418
+  TanzaniaChild2     0    0
+  VITAMIN-A          5 3905
+  ZVITAMBO           0    0
+> 
+> #diarrhea
+> diar$subjid <- as.character(diar$subjid)
+> d <- left_join(d, diar, by=c("studyid", "subjid"))
+> 
+> #quartile diarrhea
+> summary(d$perdiar6)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.01    0.04    0.05    0.62   71745 
+> summary(d$perdiar24)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.01    0.03    0.05    0.06    1.00   68568 
+> 
+> #Save continious version of variables for adjustment set
+> d$W_perdiar6 <- d$perdiar6
+> d$W_perdiar24 <- d$perdiar24
+> 
+> summary(d$perdiar6)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.01    0.04    0.05    0.62   71745 
+> summary(d$perdiar24)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.01    0.03    0.05    0.06    1.00   68568 
+> 
+> #Cut diarrhea at standard points. Quartiling by overall distribution leads to sparsity
+> d$perdiar6 <- as.character(cut(d$W_perdiar6, breaks=c(0, 0.05, 1), include.lowest=F, 
++                                labels = c("(0%, 5%]",">5%")))
+> d$perdiar6[d$W_perdiar6==0] <-"0%"
+> d$perdiar6 <- factor(d$perdiar6, levels = c("0%","(0%, 5%]",">5%"))
+> table(d$perdiar6)
+
+      0% (0%, 5%]      >5% 
+    2199     1336     1280 
+> table(paste0(d$studyid, " ", d$country), d$perdiar6)
+                                             
+                                               0% (0%, 5%] >5%
+  Burkina Faso Zn BURKINA FASO                  0        0   0
+  CMC-V-BCS-2002 INDIA                          0        0   0
+  CMIN BANGLADESH                             102       63 114
+  COHORTS GUATEMALA                             0        0   0
+  COHORTS INDIA                                 0        0   0
+  COHORTS PHILIPPINES                           0        0   0
+  CONTENT PERU                                115       43  57
+  EE PAKISTAN                                 343       35   2
+  GMS-Nepal NEPAL                               0        0   0
+  Guatemala BSC GUATEMALA                       0        0   0
+  iLiNS-DOSE MALAWI                             0        0   0
+  iLiNS-DYAD-M MALAWI                           0        0   0
+  iLiNS-Zinc BURKINA FASO                       0        0   0
+  IRC INDIA                                     0        0   0
+  Keneba GAMBIA                                 0        0   0
+  LCNI-5 MALAWI                                 0        0   0
+  MAL-ED BANGLADESH                            87       98  80
+  MAL-ED BRAZIL                               216       15   2
+  MAL-ED INDIA                                 61      129  61
+  MAL-ED NEPAL                                 83       77  80
+  MAL-ED PERU                                  90       93 120
+  MAL-ED SOUTH AFRICA                         233       60  10
+  MAL-ED TANZANIA, UNITED REPUBLIC OF         114      102  46
+  NIH-Birth BANGLADESH                        169      186 271
+  NIH-Crypto BANGLADESH                       364      174 220
+  PROBIT BELARUS                                0        0   0
+  PROVIDE BANGLADESH                          222      261 217
+  ResPak PAKISTAN                               0        0   0
+  SAS-CompFeed INDIA                            0        0   0
+  SAS-FoodSuppl INDIA                           0        0   0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   0        0   0
+  VITAMIN-A INDIA                               0        0   0
+  ZVITAMBO ZIMBABWE                             0        0   0
+> 
+> 
+> 
+> d$perdiar24 <- as.character(cut(d$W_perdiar24, breaks=c(0, 0.05, 1), include.lowest=F, 
++                                labels = c("(0%, 5%]",">5%")))
+> d$perdiar24[d$W_perdiar24==0] <-"0%"
+> d$perdiar6 <- factor(d$perdiar6, levels = c("(0%, 5%]","0%",">5%"))
+> table(d$perdiar24)
+
+(0%, 5%]      >5%       0% 
+    4073     2536     1383 
+> table(paste0(d$studyid, " ", d$country), d$perdiar24)
+                                             
+                                              (0%, 5%]  >5%   0%
+  Burkina Faso Zn BURKINA FASO                       0    0    0
+  CMC-V-BCS-2002 INDIA                               0    0    0
+  CMIN BANGLADESH                                  121  140   18
+  COHORTS GUATEMALA                                  0    0    0
+  COHORTS INDIA                                      0    0    0
+  COHORTS PHILIPPINES                                0    0    0
+  CONTENT PERU                                     142   67    6
+  EE PAKISTAN                                      118    0  262
+  GMS-Nepal NEPAL                                    0    0    0
+  Guatemala BSC GUATEMALA                           71  205   33
+  iLiNS-DOSE MALAWI                                  0    0    0
+  iLiNS-DYAD-M MALAWI                                0    0    0
+  iLiNS-Zinc BURKINA FASO                         1324  769  357
+  IRC INDIA                                          0    0    0
+  Keneba GAMBIA                                      0    0    0
+  LCNI-5 MALAWI                                      0    0    0
+  MAL-ED BANGLADESH                                148   95   22
+  MAL-ED BRAZIL                                    101    2  130
+  MAL-ED INDIA                                     193   44   14
+  MAL-ED NEPAL                                     144   79   17
+  MAL-ED PERU                                      113  161   29
+  MAL-ED SOUTH AFRICA                              182    3  118
+  MAL-ED TANZANIA, UNITED REPUBLIC OF              183   62   17
+  NIH-Birth BANGLADESH                             358  214   54
+  NIH-Crypto BANGLADESH                            398  207  153
+  PROBIT BELARUS                                     0    0    0
+  PROVIDE BANGLADESH                               430  201   69
+  ResPak PAKISTAN                                    0    0    0
+  SAS-CompFeed INDIA                                 0    0    0
+  SAS-FoodSuppl INDIA                               47  287   84
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF        0    0    0
+  VITAMIN-A INDIA                                    0    0    0
+  ZVITAMBO ZIMBABWE                                  0    0    0
+> 
+> #breastfeeding
+> d <- left_join(d, bf, by=c("studyid", "country", "subjid"))
+> table(d$exclfeed3)
+
+   0    1 
+7266 6418 
+> 
+> #Convert all columns to factors exceot continious adjustment vars
+> for(i in 3:ncol(d)){
++   if(class(d[,i])!="factor" & !grepl("W_",substr(colnames(d)[i],1,2))){
++     d[,i] <- as.factor(d[,i])
++   }
++ }
+> d$id <- as.numeric(d$id)
+> 
+> #drop duplicated Jivita covariates
+> dim(d)
+[1] 84944    83
+> d <- distinct(d, .keep_all=T )
+> dim(d)
+[1] 76860    83
+> 
+> #Drop one duplicated row from iLiNS-DYAD-M (all values the same except 
+> # sanitation (iLiNS-DYAD-M), but iLiNS-DYAD-M only used in the mortality analysis)
+> dim(d)
+[1] 76860    83
+> d <- distinct(d, studyid, subjid, country, .keep_all = TRUE)
+> dim(d)
+[1] 76559    83
+> 
+> 
+> #Set reference level to the lowest risk level
+> d$trth2o <- relevel(d$trth2o, ref="1")
+> d$cleanck <- relevel(d$cleanck, ref="1")
+> d$impfloor <- relevel(d$impfloor, ref="1")
+> d$earlybf <- relevel(d$earlybf, ref="1")
+> 
+> d$impsan <- relevel(d$impsan, ref="1")
+> d$safeh20 <- relevel(d$safeh20, ref="1")
+> d$predfeed3 <- relevel(d$predfeed3, ref="1")
+> d$exclfeed3 <- relevel(d$exclfeed3, ref="1")
+> d$predfeed6 <- relevel(d$predfeed6, ref="1")
+> d$exclfeed6 <- relevel(d$exclfeed6, ref="1")
+> d$predfeed36 <- relevel(d$predfeed36, ref="1")
+> d$exclfeed36 <- relevel(d$exclfeed36, ref="1")
+> d$predexfd6 <- relevel(d$predexfd6, ref="1")
+> 
+> 
+> table(d$studyid, d$perdiar6)
+                 
+                  (0%, 5%]  0% >5%
+  Burkina Faso Zn        0   0   0
+  CMC-V-BCS-2002         0   0   0
+  CMIN                  63 102 114
+  COHORTS                0   0   0
+  CONTENT               43 115  57
+  EE                    35 343   2
+  GMS-Nepal              0   0   0
+  Guatemala BSC          0   0   0
+  iLiNS-DOSE             0   0   0
+  iLiNS-DYAD-M           0   0   0
+  iLiNS-Zinc             0   0   0
+  IRC                    0   0   0
+  Keneba                 0   0   0
+  LCNI-5                 0   0   0
+  MAL-ED               574 884 399
+  NIH-Birth            186 169 271
+  NIH-Crypto           174 364 220
+  PROBIT                 0   0   0
+  PROVIDE              261 222 217
+  ResPak                 0   0   0
+  SAS-CompFeed           0   0   0
+  SAS-FoodSuppl          0   0   0
+  TanzaniaChild2         0   0   0
+  VITAMIN-A              0   0   0
+  ZVITAMBO               0   0   0
+> table(d$studyid, d$perdiar24)
+                 
+                  (0%, 5%]  >5%   0%
+  Burkina Faso Zn        0    0    0
+  CMC-V-BCS-2002         0    0    0
+  CMIN                 121  140   18
+  COHORTS                0    0    0
+  CONTENT              142   67    6
+  EE                   118    0  262
+  GMS-Nepal              0    0    0
+  Guatemala BSC         71  205   33
+  iLiNS-DOSE             0    0    0
+  iLiNS-DYAD-M           0    0    0
+  iLiNS-Zinc          1324  769  357
+  IRC                    0    0    0
+  Keneba                 0    0    0
+  LCNI-5                 0    0    0
+  MAL-ED              1064  446  347
+  NIH-Birth            358  214   54
+  NIH-Crypto           398  207  153
+  PROBIT                 0    0    0
+  PROVIDE              430  201   69
+  ResPak                 0    0    0
+  SAS-CompFeed           0    0    0
+  SAS-FoodSuppl         47  287   84
+  TanzaniaChild2         0    0    0
+  VITAMIN-A              0    0    0
+  ZVITAMBO               0    0    0
+> 
+> d$perdiar6 <- relevel(d$perdiar6, ref="0%")
+> d$perdiar24 <- relevel(d$perdiar24, ref="0%")
+> 
+> #Save dataset
+> saveRDS(d, clean_covariates_path)
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 53.551   2.956  56.495 

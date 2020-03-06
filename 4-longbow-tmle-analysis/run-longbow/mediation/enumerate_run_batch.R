@@ -1,14 +1,14 @@
 
-library(tidyverse)
+rm(list=ls())
+.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
+
+source(paste0(here::here(), "/0-config.R"))
+.libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
 library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
-library(here)
-#note: every "here" in this script is the working directory where all the repos live on your laptop
-#for example: here = "C:/Users/rolan/Documents/repos"
-
 
 # 1. enumerate analysis
 
@@ -21,19 +21,8 @@ load(here("4-longbow-tmle-analysis","analysis specification","mediation.RData"))
 analyses
 
 analyses <- analyses %>% filter(A %in% c("fhtcm","mhtcm","mwtkg","mbmi"))
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-
-i=1
-enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
-  analysis <- analyses[i,]
-  analysis_params <- default_params
-  analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
-  analysis_nodes$W <- gsub("W_bmi", "W_mbmi", analysis_nodes$W[[1]])
-  analysis_params$nodes <- analysis_nodes
-  analysis_params$data$repository_path <- analysis$file
-  return(analysis_params)
-})
 
 writeLines(toJSON(enumerated_analyses[[1]]),"single_mediation_analyses.json")
 writeLines(toJSON(enumerated_analyses),"all_mediation_analyses.json")
@@ -42,8 +31,7 @@ writeLines(toJSON(enumerated_analyses),"all_mediation_analyses.json")
 
 # 2. run batch
 
-try(configure_cluster(here("ki-longitudinal-manuscripts","0-project-functions","cluster_credentials.json")))
-try(configure_cluster("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/0-project-functions/cluster_credentials.json"))
+configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
 #inputs <- "inputs_template.json"
@@ -68,9 +56,9 @@ results <- load_batch_results("results.rdata", results_folder = "results")
 obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results")
 
 # save concatenated results
-filename1 <- paste(paste('mediation',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('mediation_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
-save(results, file=here("results","rf results","raw longbow results",filename1))
-save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+filename1 <- paste(paste('mediation',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('mediation_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
+saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
+saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
 
 

@@ -54,20 +54,20 @@ for filename in args.filepaths:
 
 
 # Create the directory (and any parents) of the log files	
-currentUser = getpass.getuser()	
-currentTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")	
-logDir = args.logDirPrefix + currentTime + "-" + currentUser	
+#currentUser = getpass.getuser()	
+#currentTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")	
+#logDir = args.logDirPrefix + currentTime + "-" + currentUser	
 
-if args.identifier is not None:	
-  logDir += "-" + args.identifier	
+#if args.identifier is not None:	
+#  logDir += "-" + args.identifier	
 
-logDir += "/"	
+#logDir += "/"	
 
-pathlib.Path(logDir).mkdir(parents=True, exist_ok=True)	
+#pathlib.Path(logDir).mkdir(parents=True, exist_ok=True)	
 
 
 # Find and move all logs to this new directory	
-currentLogPaths = glob.glob('./*.Rout')	
-for currentLogPath in currentLogPaths:	
-  filename = currentLogPath.split("/")[-1]
-  shutil.move(currentLogPath, logDir + filename)
+#currentLogPaths = glob.glob('./*.Rout')	
+#for currentLogPath in currentLogPaths:	
+#  filename = currentLogPath.split("/")[-1]
+#  shutil.move(currentLogPath, logDir + filename)

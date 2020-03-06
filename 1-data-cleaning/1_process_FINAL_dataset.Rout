@@ -469,3 +469,11 @@ Vcells 416989587 3181.4 1086014797 8285.7 1130313787 8623.7
 > 
 > 
 > saveRDS(d, included_studies_path)
+> gc()
+            used   (Mb) gc trigger   (Mb)   max used   (Mb)
+Ncells   1995465  106.6    3022715  161.5    3022715  161.5
+Vcells 416987993 3181.4 1086014797 8285.7 1130313787 8623.7
+> 
+> proc.time()
+   user  system elapsed 
+173.376  23.344 109.104 

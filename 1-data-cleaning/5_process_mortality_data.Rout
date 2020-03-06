@@ -1,0 +1,1793 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> 
+> 
+> 
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> 
+> 
+> 
+> #read csv file
+> d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
+> gc()
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  2036920 108.8    4176595 223.1  2523252 134.8
+Vcells 49506391 377.8   61500915 469.3 52506450 400.6
+> 
+> d <- subset(d, select= c(studyid, country, subjid, agedays, dead, agedth, causedth, haz, waz))
+> gc()
+          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 2038356 108.9    4176595 223.1  2523252 134.8
+Vcells 9817926  75.0   49200732 375.4 61303829 467.8
+> 
+> 
+> dim(d)
+[1] 872348      9
+> d <- d %>% filter(!is.na(dead) | !is.na(agedth) | !is.na(causedth))
+> dim(d)
+[1] 872348      9
+> 
+> #Get maximum age recorded
+> d <- d %>% group_by(studyid, country, subjid) %>% mutate(maxage = max(agedays))
+> summary(d$maxage)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1     560     759    1478    2320    6955 
+> 
+> table(d$dead)
+
+     0      1 
+319635   9561 
+> table(d$causedth)
+
+                                                                                            
+                                                                                     868184 
+                                                                         Accident or Injury 
+                                                                                         19 
+                                                                Accident or poisoning:BURNS 
+                                                                                         18 
+                                                             Accident or poisoning:DROWNING 
+                                                                                          9 
+                                                          Accident or poisoning:HEAD INJURY 
+                                                                                          5 
+                                                               Accident or poisoning:INJURY 
+                                                                                          5 
+                                                                  Accident or poisoning:RTA 
+                                                                                          2 
+                                                           Accident or poisoning:SNAKE BITE 
+                                                                                          2 
+                                                                             Acute Diarrhea 
+                                                                                        114 
+                                                                            Acute Dysentery 
+                                                                                         16 
+                                                   Acute Lower Respiratory Infection (ALRI) 
+                                                                                         96 
+                                                                             ARI /Pneumonia 
+                                                                                       1191 
+                                               ARI /Pneumonia/Chronic /Persistent diarrhoea 
+                                                                                         27 
+                    ARI /Pneumonia/Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                         46 
+                                                  ARI /Pneumonia/Diarrhoea /Gastroenteritis 
+                                                                                        252 
+             ARI /Pneumonia/Diarrhoea /Gastroenteritis/Accident or poisoning:MUTI POISONING 
+                                                                                          4 
+                                          ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malaria 
+                                                                                          4 
+               ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malaria/Malnutrition (m, k or m-k) 
+                                                                                          6 
+                       ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                        261 
+                                       ARI /Pneumonia/Diarrhoea /Gastroenteritis/Meningitis 
+                                                                                          8 
+ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CONG HEART DIS 
+                                                                                          4 
+                                                                   ARI /Pneumonia/Dysentery 
+                                                                                         21 
+                                                        ARI /Pneumonia/Dysentery/Meningitis 
+                                                                                          8 
+                                                                     ARI /Pneumonia/Malaria 
+                                                                                          4 
+                                                  ARI /Pneumonia/Malnutrition (m, k or m-k) 
+                                                                                        408 
+                             ARI /Pneumonia/Malnutrition (m, k or m-k)/Other:CEREBRAL PALSY 
+                                                                                          9 
+                               ARI /Pneumonia/Malnutrition (m, k or m-k)/Other:CLEFT PALATE 
+                                                                                          2 
+                                                                  ARI /Pneumonia/Meningitis 
+                                                                                         55 
+                                       ARI /Pneumonia/Meningitis/Malnutrition (m, k or m-k) 
+                                                                                          3 
+                                 ARI /Pneumonia/Meningitis/Non-specific /generalised sepsis 
+                                                                                          2 
+                                                         ARI /Pneumonia/Meningitis/Other:CP 
+                                                                                          5 
+                                            ARI /Pneumonia/Non-specific /generalised sepsis 
+                                                                                         15 
+              ARI /Pneumonia/Non-specific /generalised sepsis/Other specific infection:SKIN 
+                                                                                          2 
+    ARI /Pneumonia/Non-specific /generalised sepsis/Other specific infection:SKIN ABSCESSES 
+                                                                                          6 
+                                         ARI /Pneumonia/Other specific infection:CELLULITIS 
+                                                                                          4 
+                                        ARI /Pneumonia/Other specific infection:SEPTICAEMIA 
+                                                                                          1 
+                                               ARI /Pneumonia/Other specific infection:SK1N 
+                                                                                          2 
+                                               ARI /Pneumonia/Other specific infection:SKIN 
+                                                                                          1 
+                                     ARI /Pneumonia/Other specific infection:VARICELLA DISS 
+                                                                                          2 
+            ARI /Pneumonia/Other specific infection/Malnutrition (m, k or m-k):SKIN ABSCESS 
+                                                                                          2 
+                                                            ARI /Pneumonia/Other:ASPIRATION 
+                                                                                          2 
+                                                              ARI /Pneumonia/Other:BLEEDING 
+                                                                                          4 
+                                                                   ARI /Pneumonia/Other:CCF 
+                                                                                         13 
+                                                            ARI /Pneumonia/Other:CONG HEART 
+                                                                                          9 
+                                                                    ARI /Pneumonia/Other:CP 
+                                                                                          5 
+                                                        ARI /Pneumonia/Other:DOWNS SYNDROME 
+                                                                                          1 
+                                                        ARI /Pneumonia/Other:ENCEPHALOPATHY 
+                                                                                          5 
+                                                           ARI /Pneumonia/Other:PDA AND RVH 
+                                                                                          3 
+                                                                ARI /Pneumonia/Tuberculosis 
+                                                                                         14 
+                                     ARI /Pneumonia/Tuberculosis/Diarrhoea /Gastroenteritis 
+                                                                                          5 
+          ARI /Pneumonia/Tuberculosis/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                          5 
+                                                      ARI /Pneumonia/Tuberculosis/Dysentery 
+                                                                                          7 
+                                     ARI /Pneumonia/Tuberculosis/Malnutrition (m, k or m-k) 
+                                                                                         16 
+                                                                                   Censored 
+                                                                                         29 
+                                                              Chronic /Persistent diarrhoea 
+                                                                                          2 
+                                   Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                         62 
+     Chronic /Persistent diarrhoea/Other specific infection/Malnutrition (m, k or m-k):SKIN 
+                                                                                          4 
+      Chronic /Persistent diarrhoea/Other specific infection/Malnutrition (m, k or m-k):UTI 
+                                                                                          9 
+                                          Chronic /Persistent diarrhoea/Other:CONGENITAL HT 
+                                                                                          3 
+                                                                    Congenital Malformation 
+                                                                                         44 
+                                                                 Diarrhoea /Gastroenteritis 
+                                                                                        159 
+        Diarrhoea /Gastroenteritis/Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                          6 
+                                                         Diarrhoea /Gastroenteritis/Malaria 
+                                                                                          4 
+                              Diarrhoea /Gastroenteritis/Malaria/Malnutrition (m, k or m-k) 
+                                                                                          7 
+                                      Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                         82 
+                 Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k)/Other:TRISOMY 21 CCF 
+                                                                                          7 
+                           Diarrhoea /Gastroenteritis/Meningitis/Malnutrition (m, k or m-k) 
+                                                                                          5 
+                            Diarrhoea /Gastroenteritis/Other specific infection:CHICKEN POX 
+                                                                                          3 
+         Diarrhoea /Gastroenteritis/Other specific infection/Malnutrition (m, k or m-k):UT1 
+                                                                                          9 
+                                                Diarrhoea /Gastroenteritis/Other:FITS CAUSE 
+                                                                                          8 
+                                             Diarrhoea /Gastroenteritis/Other:HYDROCEPHALUS 
+                                                                                          3 
+                                                                                  Dysentery 
+                                                                                         18 
+                                                       Dysentery/Malnutrition (m, k or m-k) 
+                                                                                         22 
+                                                                               Malnutrition 
+                                                                                         34 
+                                                       Malnutrition (m, k or m-k)/Other:CCF 
+                                                                                          9 
+                                                                                 Meningitis 
+                                                                                        100 
+                                                                         Meningitis/Malaria 
+                                                                                          2 
+                                                      Meningitis/Malnutrition (m, k or m-k) 
+                                                                                         19 
+                              Meningitis/Non-specific /generalised sepsis/Other:KERNICTERUS 
+                                                                                          2 
+                                                                            Neonatal Sepsis 
+                                                                                          1 
+                                                           Non-specific /generalised sepsis 
+                                                                                         17 
+                                Non-specific /generalised sepsis/Malnutrition (m, k or m-k) 
+                                                                                         17 
+                    Non-specific /generalised sepsis/Other specific infection:OSTEOMYELITIS 
+                                                                                          1 
+ Non-specific /generalised sepsis/Other specific infection/Other:NEONATALSEPSIS:KERNICTERUS 
+                                                                                          2 
+                                          Non-specific /generalised sepsis/Other:CONGENITAL 
+                                                                                          2 
+                                      Non-specific /generalised sepsis/Other:DBSTRUCTED GUT 
+                                                                                          1 
+                                          Non-specific /generalised sepsis/Other:HYPOTHEMIA 
+                                                                                          2 
+                                         Non-specific /generalised sepsis/Other:HYPOTHERMIA 
+                                                                                          2 
+                                            Non-specific /generalised sepsis/Other:JAUNDICE 
+                                                                                          1 
+                                         Non-specific /generalised sepsis/Other:KERNICTERUS 
+                                                                                          1 
+                                       Non-specific /generalised sepsis/Other:POLYCYTHAEMIA 
+                                                                                          2 
+                                          Non-specific /generalised sepsis/Other:TRISOMY 18 
+                                                                                          2 
+                                                              Other specific infection:SKIN 
+                                                                                          2 
+                              Other specific infection/Accident or poisoning:CELLULITIS:RTA 
+                                                                                          6 
+                         Other specific infection/Other:VIRAL ENCEPHAL:PATHY:CEREBRAL PALSY 
+                                                                                          8 
+                                                                                  Other:CCF 
+                                                                                          9 
+                                                                            Other:CIRRHOSIS 
+                                                                                          5 
+                                                                       Other:CONG HEART DIS 
+                                                                                          4 
+                                                                            Other:HEPATITIS 
+                                                                                          4 
+                                                                       Other:HYPERLIPIDAEMI 
+                                                                                          4 
+                                                                          Other:HYPOTHERMIA 
+                                                                                          1 
+                                                                          Other:IMPERF ANUS 
+                                                                                          2 
+                                                                         Other:MECONIUM ASP 
+                                                                                          1 
+                                                                          Other:POST PDA OP 
+                                                                                          6 
+                                                                     Other:POST:ANAESTHETIC 
+                                                                                          5 
+                                                                             Other:RDS 1UGR 
+                                                                                          1 
+                                                                          Other:RESPIRATORY 
+                                                                                          1 
+                                                                                 Other:SIDS 
+                                                                                          3 
+                                                Persistent Diarrhea or Persistent Dysentery 
+                                                                                         45 
+                                                                                 Septicemia 
+                                                                                         19 
+                                                                              Severe Anemia 
+                                                                                          6 
+                                                        Sudden Infant Death Syndrome (SIDS) 
+                                                                                          6 
+                                                                               Tuberculosis 
+                                                                                         37 
+                                                    Tuberculosis/Diarrhoea /Gastroenteritis 
+                                                                                         18 
+                         Tuberculosis/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                         14 
+                                                    Tuberculosis/Malnutrition (m, k or m-k) 
+                                                                                         15 
+                                       Tuberculosis/Other specific infection:TBPERICARDITIS 
+                                                                                          2 
+                Tuberculosis/Other specific infection/Malnutrition (m, k or m-k):CELLULITIS 
+                                                                                          3 
+                                                                                  Uncertain 
+                                                                                        436 
+                                                                                 Uncertain: 
+                                                                                          1 
+                                                                               Uncertain:7J 
+                                                                                          1 
+                                                                   Uncertain/ARI /Pneumonia 
+                                                                                          1 
+                                        Uncertain/ARI /Pneumonia/Diarrhoea /Gastroenteritis 
+                                                                                          5 
+                                                        Uncertain/ARI /Pneumonia/Other:SIDS 
+                                                                                          3 
+                                                       Uncertain/Malnutrition (m, k or m-k) 
+                                                                                         34 
+                                                               Uncertain/Other:FITS ? CAUSE 
+                                                                                          3 
+                                                              Uncertain/Other:HYDROCEPHALUS 
+                                                                                          4 
+                                                                Uncertain/Other:HYPOTHERMIA 
+                                                                                          1 
+                                                                       Uncertain/Other:IUGR 
+                                                                                          1 
+                                                                       Uncertain/Other:S1DS 
+                                                                                          1 
+                                                                       Uncertain/Other:SIDS 
+                                                                                         13 
+> 
+> table(1*!is.na(d$dead),is.na(d$agedth))
+   
+     FALSE   TRUE
+  0     18 543134
+  1   7965 321231
+> table(1*!is.na(d$dead),(d$causedth==""))
+   
+     FALSE   TRUE
+  0      0 543152
+  1   4164 325032
+> 
+> #mark dead if have a cause or age death
+> d$agedth[!is.na(d$agedth) & is.na(d$dead)]
+ [1] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+> d$dead[!is.na(d$agedth) & is.na(d$dead)] <- 1
+> 
+> 
+> table(d$studyid, d$agedth>0)
+                 
+                  FALSE TRUE
+  Burkina Faso Zn     0   86
+  CMC-V-BCS-2002      0    0
+  CMIN                0    0
+  COHORTS             0    0
+  CONTENT             0    0
+  EE                  0    0
+  GMS-Nepal           0    9
+  Guatemala BSC       0    0
+  iLiNS-DOSE          0  264
+  iLiNS-DYAD-M        0  237
+  iLiNS-Zinc          0    0
+  IRC                 0    0
+  JiVitA-3            0 2054
+  JiVitA-4            0  225
+  Keneba              0 1057
+  LCNI-5              0    0
+  MAL-ED              0   48
+  NIH-Birth           0    0
+  NIH-Crypto          0    0
+  PROBIT              0    0
+  PROVIDE             0   39
+  ResPak              0    0
+  SAS-CompFeed        0    0
+  SAS-FoodSuppl       0    0
+  TanzaniaChild2      0   18
+  VITAMIN-A           0  466
+  ZVITAMBO            3 3477
+> table(d$studyid, d$dead)
+                 
+                      0     1
+  Burkina Faso Zn 16476    86
+  CMC-V-BCS-2002      0     0
+  CMIN                0     0
+  COHORTS             0     0
+  CONTENT             0     0
+  EE                  0    54
+  GMS-Nepal       14134    29
+  Guatemala BSC       0     0
+  iLiNS-DOSE      17634  1450
+  iLiNS-DYAD-M    10155   253
+  iLiNS-Zinc          0     0
+  IRC                 0     0
+  JiVitA-3            0  2054
+  JiVitA-4        39771   225
+  Keneba          42663  1057
+  LCNI-5              0     0
+  MAL-ED          47909    53
+  NIH-Birth           0     0
+  NIH-Crypto          0     0
+  PROBIT              0     0
+  PROVIDE         14768    39
+  ResPak              0     0
+  SAS-CompFeed     9431   110
+  SAS-FoodSuppl    2231    16
+  TanzaniaChild2      0    18
+  VITAMIN-A       32308   466
+  ZVITAMBO        72155  3669
+> table(d$dead)
+
+     0      1 
+319635   9579 
+> 
+> #save longform for kaplan-meier curves
+> saveRDS(d, file=paste0(paste0(ghapdata_dir, "stuntwast_mort.rds")))
+> 
+> #make sure dead is time-static and subset to 1 observation
+> d <- d %>% 
++   group_by(studyid, country, subjid) %>%
++   mutate(dead=1*(max(dead)>0 | (agedth>0) | (!is.na(causedth) & causedth!="")), agedth=max(agedth)) %>% 
++   slice(1)
+> dim(d)
+[1] 109680     10
+> table(d$dead)
+
+   1 
+2687 
+> table(d$studyid, d$dead)
+                 
+                     1
+  Burkina Faso Zn   51
+  CMC-V-BCS-2002     0
+  CMIN               0
+  COHORTS            0
+  CONTENT            0
+  EE                 4
+  GMS-Nepal          8
+  Guatemala BSC      0
+  iLiNS-DOSE       129
+  iLiNS-DYAD-M      60
+  iLiNS-Zinc         0
+  IRC                0
+  JiVitA-3         979
+  JiVitA-4          50
+  Keneba           100
+  LCNI-5             0
+  MAL-ED            11
+  NIH-Birth          0
+  NIH-Crypto         0
+  PROBIT             0
+  PROVIDE            5
+  ResPak             0
+  SAS-CompFeed      52
+  SAS-FoodSuppl      6
+  TanzaniaChild2     1
+  VITAMIN-A        108
+  ZVITAMBO        1123
+> 
+> #look at measurements pripr to early death
+> #-many seem like incorrect age-death, with anthro measures at older ages
+> as.data.frame(d[d$agedth<8 & !is.na(d$agedth),])
+           studyid                      country subjid agedays dead agedth
+1       iLiNS-DOSE                       MALAWI    985     191    1      7
+2     iLiNS-DYAD-M                       MALAWI  30542       1    1      1
+3     iLiNS-DYAD-M                       MALAWI  31081       2    1      3
+4     iLiNS-DYAD-M                       MALAWI  33021       2    1      2
+5     iLiNS-DYAD-M                       MALAWI  33611       2    1      2
+6     iLiNS-DYAD-M                       MALAWI  34101       1    1      1
+7     iLiNS-DYAD-M                       MALAWI  34161       2    1      3
+8     iLiNS-DYAD-M                       MALAWI  34581       2    1      2
+9     iLiNS-DYAD-M                       MALAWI  34621       2    1      3
+10    iLiNS-DYAD-M                       MALAWI  40461       1    1      6
+11    iLiNS-DYAD-M                       MALAWI  51091       3    1      7
+12    iLiNS-DYAD-M                       MALAWI  81021       2    1      6
+13    iLiNS-DYAD-M                       MALAWI  81141       2    1      5
+14        JiVitA-3                   BANGLADESH  10032       1    1      6
+15        JiVitA-3                   BANGLADESH  10066       1    1      3
+16        JiVitA-3                   BANGLADESH  10099       2    1      4
+17        JiVitA-3                   BANGLADESH  10228       1    1      3
+18        JiVitA-3                   BANGLADESH  10288       1    1      5
+19        JiVitA-3                   BANGLADESH  10347       1    1      1
+20        JiVitA-3                   BANGLADESH   1053       1    1      6
+21        JiVitA-3                   BANGLADESH  10600       1    1      5
+22        JiVitA-3                   BANGLADESH  10656       1    1      2
+23        JiVitA-3                   BANGLADESH  10703       1    1      3
+24        JiVitA-3                   BANGLADESH  10894       1    1      5
+25        JiVitA-3                   BANGLADESH  10936       1    1      6
+26        JiVitA-3                   BANGLADESH  11000       1    1      3
+27        JiVitA-3                   BANGLADESH  11097       1    1      2
+28        JiVitA-3                   BANGLADESH  11130       1    1      2
+29        JiVitA-3                   BANGLADESH  11187       1    1      2
+30        JiVitA-3                   BANGLADESH  11209       1    1      5
+31        JiVitA-3                   BANGLADESH  11240       2    1      3
+32        JiVitA-3                   BANGLADESH  11305       1    1      2
+33        JiVitA-3                   BANGLADESH  11354       1    1      5
+34        JiVitA-3                   BANGLADESH  11571       1    1      2
+35        JiVitA-3                   BANGLADESH  11895       1    1      5
+36        JiVitA-3                   BANGLADESH  12376       1    1      2
+37        JiVitA-3                   BANGLADESH  12608       1    1      3
+38        JiVitA-3                   BANGLADESH  12611       1    1      4
+39        JiVitA-3                   BANGLADESH  12829       1    1      3
+40        JiVitA-3                   BANGLADESH  13020       1    1      1
+41        JiVitA-3                   BANGLADESH  13204       1    1      2
+42        JiVitA-3                   BANGLADESH  13219       1    1      6
+43        JiVitA-3                   BANGLADESH  13277       1    1      4
+44        JiVitA-3                   BANGLADESH  13382       1    1      3
+45        JiVitA-3                   BANGLADESH  13464       1    1      5
+46        JiVitA-3                   BANGLADESH  13682       4    1      7
+47        JiVitA-3                   BANGLADESH  13770       1    1      4
+48        JiVitA-3                   BANGLADESH  13772       1    1      5
+49        JiVitA-3                   BANGLADESH  13811       1    1      5
+50        JiVitA-3                   BANGLADESH  14033       2    1      5
+51        JiVitA-3                   BANGLADESH  14089       1    1      2
+52        JiVitA-3                   BANGLADESH  14116       1    1      2
+53        JiVitA-3                   BANGLADESH  14142       1    1      1
+54        JiVitA-3                   BANGLADESH  14180       1    1      2
+55        JiVitA-3                   BANGLADESH  14360       1    1      4
+56        JiVitA-3                   BANGLADESH  14481       1    1      3
+57        JiVitA-3                   BANGLADESH  14851       1    1      3
+58        JiVitA-3                   BANGLADESH  14870       1    1      3
+59        JiVitA-3                   BANGLADESH  15206       1    1      2
+60        JiVitA-3                   BANGLADESH  15368       2    1      3
+61        JiVitA-3                   BANGLADESH  15423       1    1      4
+62        JiVitA-3                   BANGLADESH  15461       1    1      3
+63        JiVitA-3                   BANGLADESH  15642       1    1      7
+64        JiVitA-3                   BANGLADESH  15678       1    1      4
+65        JiVitA-3                   BANGLADESH  15699       1    1      3
+66        JiVitA-3                   BANGLADESH  15810       1    1      3
+67        JiVitA-3                   BANGLADESH  15833       1    1      3
+68        JiVitA-3                   BANGLADESH  15872       1    1      2
+69        JiVitA-3                   BANGLADESH  16317       1    1      4
+70        JiVitA-3                   BANGLADESH  16413       1    1      5
+71        JiVitA-3                   BANGLADESH  16455       1    1      4
+72        JiVitA-3                   BANGLADESH  16520       1    1      2
+73        JiVitA-3                   BANGLADESH  16545       1    1      4
+74        JiVitA-3                   BANGLADESH  16584       1    1      2
+75        JiVitA-3                   BANGLADESH  16586       1    1      4
+76        JiVitA-3                   BANGLADESH  16822       1    1      4
+77        JiVitA-3                   BANGLADESH  16927       1    1      1
+78        JiVitA-3                   BANGLADESH  17035       3    1      6
+79        JiVitA-3                   BANGLADESH  17055       1    1      6
+80        JiVitA-3                   BANGLADESH  17125       1    1      7
+81        JiVitA-3                   BANGLADESH  17178       1    1      2
+82        JiVitA-3                   BANGLADESH  17180       1    1      3
+83        JiVitA-3                   BANGLADESH  17213       1    1      6
+84        JiVitA-3                   BANGLADESH  17269       1    1      3
+85        JiVitA-3                   BANGLADESH  17430       1    1      4
+86        JiVitA-3                   BANGLADESH  17498       1    1      5
+87        JiVitA-3                   BANGLADESH   1769       2    1      3
+88        JiVitA-3                   BANGLADESH  17700       1    1      3
+89        JiVitA-3                   BANGLADESH  17838       1    1      5
+90        JiVitA-3                   BANGLADESH  17940       1    1      2
+91        JiVitA-3                   BANGLADESH  18081       1    1      4
+92        JiVitA-3                   BANGLADESH  18200       1    1      3
+93        JiVitA-3                   BANGLADESH  18206       1    1      4
+94        JiVitA-3                   BANGLADESH  18360       2    1      3
+95        JiVitA-3                   BANGLADESH  18727       1    1      2
+96        JiVitA-3                   BANGLADESH   1890       2    1      3
+97        JiVitA-3                   BANGLADESH  19000     753    1      5
+98        JiVitA-3                   BANGLADESH  19075       1    1      7
+99        JiVitA-3                   BANGLADESH  19145       1    1      5
+100       JiVitA-3                   BANGLADESH   1916       1    1      2
+101       JiVitA-3                   BANGLADESH  19409       1    1      2
+102       JiVitA-3                   BANGLADESH  19467       1    1      3
+103       JiVitA-3                   BANGLADESH  19526       1    1      3
+104       JiVitA-3                   BANGLADESH  19553       1    1      3
+105       JiVitA-3                   BANGLADESH  19658       1    1      3
+106       JiVitA-3                   BANGLADESH  19688       1    1      2
+107       JiVitA-3                   BANGLADESH  19707       1    1      3
+108       JiVitA-3                   BANGLADESH   1985       1    1      3
+109       JiVitA-3                   BANGLADESH  20092       1    1      3
+110       JiVitA-3                   BANGLADESH  20187       1    1      3
+111       JiVitA-3                   BANGLADESH  20237       1    1      1
+112       JiVitA-3                   BANGLADESH  20246       1    1      5
+113       JiVitA-3                   BANGLADESH  20374       1    1      3
+114       JiVitA-3                   BANGLADESH  20456       1    1      3
+115       JiVitA-3                   BANGLADESH  20720       1    1      4
+116       JiVitA-3                   BANGLADESH  20806       3    1      5
+117       JiVitA-3                   BANGLADESH  20883       1    1      1
+118       JiVitA-3                   BANGLADESH  20938       1    1      4
+119       JiVitA-3                   BANGLADESH     21       1    1      2
+120       JiVitA-3                   BANGLADESH  21007       2    1      4
+121       JiVitA-3                   BANGLADESH  21293       1    1      3
+122       JiVitA-3                   BANGLADESH  21455       1    1      3
+123       JiVitA-3                   BANGLADESH  21583       1    1      3
+124       JiVitA-3                   BANGLADESH  21697       2    1      2
+125       JiVitA-3                   BANGLADESH  21709       1    1      7
+126       JiVitA-3                   BANGLADESH  21762       1    1      3
+127       JiVitA-3                   BANGLADESH  21911       1    1      3
+128       JiVitA-3                   BANGLADESH  21970       2    1      5
+129       JiVitA-3                   BANGLADESH  21994       1    1      3
+130       JiVitA-3                   BANGLADESH  22046       1    1      2
+131       JiVitA-3                   BANGLADESH   2216       1    1      1
+132       JiVitA-3                   BANGLADESH  22206       1    1      3
+133       JiVitA-3                   BANGLADESH  22223       1    1      5
+134       JiVitA-3                   BANGLADESH   2235       1    1      3
+135       JiVitA-3                   BANGLADESH  22351       1    1      6
+136       JiVitA-3                   BANGLADESH  22466       1    1      7
+137       JiVitA-3                   BANGLADESH  22726       1    1      3
+138       JiVitA-3                   BANGLADESH  22794       1    1      1
+139       JiVitA-3                   BANGLADESH  23135       1    1      4
+140       JiVitA-3                   BANGLADESH  23239       1    1      3
+141       JiVitA-3                   BANGLADESH  23435       1    1      2
+142       JiVitA-3                   BANGLADESH  23438       1    1      4
+143       JiVitA-3                   BANGLADESH   2357       1    1      2
+144       JiVitA-3                   BANGLADESH  23699       1    1      3
+145       JiVitA-3                   BANGLADESH  23861       1    1      3
+146       JiVitA-3                   BANGLADESH  23900       1    1      5
+147       JiVitA-3                   BANGLADESH  24075       1    1      4
+148       JiVitA-3                   BANGLADESH  24172       1    1      4
+149       JiVitA-3                   BANGLADESH   2424       1    1      2
+150       JiVitA-3                   BANGLADESH  24248       1    1      5
+151       JiVitA-3                   BANGLADESH   2447       1    1      5
+152       JiVitA-3                   BANGLADESH    245       1    1      3
+153       JiVitA-3                   BANGLADESH  24713       1    1      4
+154       JiVitA-3                   BANGLADESH  24821       1    1      3
+155       JiVitA-3                   BANGLADESH  24933       1    1      7
+156       JiVitA-3                   BANGLADESH   2495       4    1      7
+157       JiVitA-3                   BANGLADESH  24994       1    1      7
+158       JiVitA-3                   BANGLADESH    250       1    1      5
+159       JiVitA-3                   BANGLADESH  25041       1    1      4
+160       JiVitA-3                   BANGLADESH    251       2    1      4
+161       JiVitA-3                   BANGLADESH  25109       1    1      4
+162       JiVitA-3                   BANGLADESH  25187       1    1      3
+163       JiVitA-3                   BANGLADESH  25222       2    1      2
+164       JiVitA-3                   BANGLADESH  25405       1    1      7
+165       JiVitA-3                   BANGLADESH  25484       1    1      7
+166       JiVitA-3                   BANGLADESH  25536       1    1      7
+167       JiVitA-3                   BANGLADESH   2554       1    1      3
+168       JiVitA-3                   BANGLADESH  25820       1    1      3
+169       JiVitA-3                   BANGLADESH  25993       2    1      3
+170       JiVitA-3                   BANGLADESH  26006       1    1      2
+171       JiVitA-3                   BANGLADESH  26070       1    1      1
+172       JiVitA-3                   BANGLADESH  26167       1    1      3
+173       JiVitA-3                   BANGLADESH  26389       2    1      3
+174       JiVitA-3                   BANGLADESH  26550       1    1      1
+175       JiVitA-3                   BANGLADESH  26645       1    1      3
+176       JiVitA-3                   BANGLADESH  26658       1    1      4
+177       JiVitA-3                   BANGLADESH   2671       1    1      6
+178       JiVitA-3                   BANGLADESH  26726       1    1      5
+179       JiVitA-3                   BANGLADESH   2683       1    1      1
+180       JiVitA-3                   BANGLADESH   2685       1    1      1
+181       JiVitA-3                   BANGLADESH  26859       1    1      5
+182       JiVitA-3                   BANGLADESH  26871       1    1      6
+183       JiVitA-3                   BANGLADESH  26916       2    1      3
+184       JiVitA-3                   BANGLADESH  27055       1    1      4
+185       JiVitA-3                   BANGLADESH  27201       2    1      6
+186       JiVitA-3                   BANGLADESH  27202       1    1      3
+187       JiVitA-3                   BANGLADESH  27397       1    1      3
+188       JiVitA-3                   BANGLADESH    275       1    1      3
+189       JiVitA-3                   BANGLADESH  27579       1    1      4
+190       JiVitA-3                   BANGLADESH  27620       1    1      3
+191       JiVitA-3                   BANGLADESH  27675       1    1      3
+192       JiVitA-3                   BANGLADESH   2768       2    1      4
+193       JiVitA-3                   BANGLADESH  27769       1    1      1
+194       JiVitA-3                   BANGLADESH  27901       2    1      5
+195       JiVitA-3                   BANGLADESH  27903       1    1      3
+196       JiVitA-3                   BANGLADESH  28037       1    1      2
+197       JiVitA-3                   BANGLADESH  28199       1    1      5
+198       JiVitA-3                   BANGLADESH  28221       1    1      4
+199       JiVitA-3                   BANGLADESH  28249       1    1      3
+200       JiVitA-3                   BANGLADESH  28320       1    1      3
+201       JiVitA-3                   BANGLADESH  28354       1    1      3
+202       JiVitA-3                   BANGLADESH  28465       1    1      7
+203       JiVitA-3                   BANGLADESH  28472       1    1      3
+204       JiVitA-3                   BANGLADESH   2907       1    1      3
+205       JiVitA-3                   BANGLADESH    296       2    1      3
+206       JiVitA-3                   BANGLADESH   2965       2    1      3
+207       JiVitA-3                   BANGLADESH   3074       1    1      2
+208       JiVitA-3                   BANGLADESH   3155       1    1      5
+209       JiVitA-3                   BANGLADESH   3183       1    1      4
+210       JiVitA-3                   BANGLADESH   3226       1    1      6
+211       JiVitA-3                   BANGLADESH   3383       1    1      4
+212       JiVitA-3                   BANGLADESH   3513       1    1      2
+213       JiVitA-3                   BANGLADESH    365       1    1      2
+214       JiVitA-3                   BANGLADESH    369       1    1      7
+215       JiVitA-3                   BANGLADESH   3848       1    1      1
+216       JiVitA-3                   BANGLADESH    426       1    1      2
+217       JiVitA-3                   BANGLADESH   4284       2    1      4
+218       JiVitA-3                   BANGLADESH   4303       1    1      3
+219       JiVitA-3                   BANGLADESH   4304       1    1      3
+220       JiVitA-3                   BANGLADESH   4358       1    1      5
+221       JiVitA-3                   BANGLADESH   4524       1    1      3
+222       JiVitA-3                   BANGLADESH   4551       1    1      3
+223       JiVitA-3                   BANGLADESH   4635       1    1      4
+224       JiVitA-3                   BANGLADESH   4762       1    1      2
+225       JiVitA-3                   BANGLADESH   5003       1    1      3
+226       JiVitA-3                   BANGLADESH    506       1    1      4
+227       JiVitA-3                   BANGLADESH    512       1    1      3
+228       JiVitA-3                   BANGLADESH    537       1    1      3
+229       JiVitA-3                   BANGLADESH   5443       1    1      4
+230       JiVitA-3                   BANGLADESH   5758       1    1      3
+231       JiVitA-3                   BANGLADESH   5785       1    1      4
+232       JiVitA-3                   BANGLADESH   5792       1    1      2
+233       JiVitA-3                   BANGLADESH   5898       1    1      4
+234       JiVitA-3                   BANGLADESH     59       1    1      3
+235       JiVitA-3                   BANGLADESH   6000       1    1      2
+236       JiVitA-3                   BANGLADESH   6250       1    1      1
+237       JiVitA-3                   BANGLADESH   6352       2    1      2
+238       JiVitA-3                   BANGLADESH    643       1    1      2
+239       JiVitA-3                   BANGLADESH   6453       1    1      3
+240       JiVitA-3                   BANGLADESH   6661       1    1      6
+241       JiVitA-3                   BANGLADESH   6678       1    1      7
+242       JiVitA-3                   BANGLADESH   6721       1    1      5
+243       JiVitA-3                   BANGLADESH   6811       1    1      4
+244       JiVitA-3                   BANGLADESH    682       4    1      6
+245       JiVitA-3                   BANGLADESH   6994       1    1      2
+246       JiVitA-3                   BANGLADESH   7117       1    1      2
+247       JiVitA-3                   BANGLADESH   7161       1    1      4
+248       JiVitA-3                   BANGLADESH   7243       1    1      4
+249       JiVitA-3                   BANGLADESH   7255       2    1      5
+250       JiVitA-3                   BANGLADESH     73       1    1      7
+251       JiVitA-3                   BANGLADESH   7377       1    1      6
+252       JiVitA-3                   BANGLADESH   7471       1    1      6
+253       JiVitA-3                   BANGLADESH   7513       1    1      3
+254       JiVitA-3                   BANGLADESH   7655       1    1      2
+255       JiVitA-3                   BANGLADESH   7691       1    1      2
+256       JiVitA-3                   BANGLADESH   7748       1    1      1
+257       JiVitA-3                   BANGLADESH   8133       1    1      6
+258       JiVitA-3                   BANGLADESH   8163       1    1      3
+259       JiVitA-3                   BANGLADESH   8183       1    1      3
+260       JiVitA-3                   BANGLADESH   8250       1    1      2
+261       JiVitA-3                   BANGLADESH   8269       1    1      6
+262       JiVitA-3                   BANGLADESH   8388       1    1      2
+263       JiVitA-3                   BANGLADESH   8611       1    1      3
+264       JiVitA-3                   BANGLADESH   8667       3    1      4
+265       JiVitA-3                   BANGLADESH   8804       1    1      4
+266       JiVitA-3                   BANGLADESH   8861       3    1      7
+267       JiVitA-3                   BANGLADESH   9148       1    1      3
+268       JiVitA-3                   BANGLADESH   9182       1    1      7
+269       JiVitA-3                   BANGLADESH   9193       1    1      4
+270       JiVitA-3                   BANGLADESH   9230       2    1      3
+271       JiVitA-3                   BANGLADESH   9238       1    1      3
+272       JiVitA-3                   BANGLADESH   9393       1    1      4
+273       JiVitA-3                   BANGLADESH   9406       1    1      3
+274       JiVitA-3                   BANGLADESH   9432       1    1      6
+275       JiVitA-3                   BANGLADESH    948       1    1      4
+276       JiVitA-3                   BANGLADESH   9831       1    1      6
+277       JiVitA-3                   BANGLADESH   9930       1    1      6
+278       JiVitA-3                   BANGLADESH   9945       1    1      4
+279 TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  60212       1    1      3
+280       ZVITAMBO                     ZIMBABWE 104461       1    1      2
+281       ZVITAMBO                     ZIMBABWE 105621       1    1      6
+282       ZVITAMBO                     ZIMBABWE 110111       1    1      6
+283       ZVITAMBO                     ZIMBABWE 121051       1    1      4
+284       ZVITAMBO                     ZIMBABWE 128551       1    1      5
+285       ZVITAMBO                     ZIMBABWE 130691       1    1      3
+286       ZVITAMBO                     ZIMBABWE 138331       1    1      3
+287       ZVITAMBO                     ZIMBABWE 140141       1    1      3
+288       ZVITAMBO                     ZIMBABWE 141031       1    1      4
+289       ZVITAMBO                     ZIMBABWE 142521       1    1      2
+290       ZVITAMBO                     ZIMBABWE 146601       1    1      3
+291       ZVITAMBO                     ZIMBABWE 158671       1    1      1
+292       ZVITAMBO                     ZIMBABWE 160871       1    1      5
+293       ZVITAMBO                     ZIMBABWE 162391       1    1      4
+294       ZVITAMBO                     ZIMBABWE 163711       1    1     -1
+295       ZVITAMBO                     ZIMBABWE 164731       1    1      6
+296       ZVITAMBO                     ZIMBABWE 167771       1    1      7
+297       ZVITAMBO                     ZIMBABWE 168401       1    1      3
+298       ZVITAMBO                     ZIMBABWE 169311       1    1      4
+299       ZVITAMBO                     ZIMBABWE 170681       1    1      4
+300       ZVITAMBO                     ZIMBABWE 174711       1    1      3
+301       ZVITAMBO                     ZIMBABWE 178151       1    1     -8
+302       ZVITAMBO                     ZIMBABWE 179491       1    1      3
+303       ZVITAMBO                     ZIMBABWE 181751       1    1      5
+304       ZVITAMBO                     ZIMBABWE 182771       1    1      6
+305       ZVITAMBO                     ZIMBABWE 183101       1    1      3
+306       ZVITAMBO                     ZIMBABWE 185311       1    1      3
+307       ZVITAMBO                     ZIMBABWE 187451       1    1      3
+308       ZVITAMBO                     ZIMBABWE 188261       1    1      6
+309       ZVITAMBO                     ZIMBABWE 188561       1    1      3
+310       ZVITAMBO                     ZIMBABWE 190791       1    1      6
+311       ZVITAMBO                     ZIMBABWE 198181       1    1      4
+312       ZVITAMBO                     ZIMBABWE 198541       1    1      3
+313       ZVITAMBO                     ZIMBABWE 202451       1    1      3
+314       ZVITAMBO                     ZIMBABWE 207591       1    1      4
+315       ZVITAMBO                     ZIMBABWE 208181       1    1      3
+316       ZVITAMBO                     ZIMBABWE 216951       1    1      6
+317       ZVITAMBO                     ZIMBABWE 219411       1    1      6
+318       ZVITAMBO                     ZIMBABWE 222271       1    1      6
+319       ZVITAMBO                     ZIMBABWE 222661       1    1      3
+320       ZVITAMBO                     ZIMBABWE 224911       1    1      2
+321       ZVITAMBO                     ZIMBABWE 235601       1    1      1
+                                                                                      causedth
+1                                                                                             
+2                                                                                             
+3                                                                                             
+4                                                                                             
+5                                                                                             
+6                                                                                             
+7                                                                                             
+8                                                                                             
+9                                                                                             
+10                                                                                            
+11                                                                                            
+12                                                                                            
+13                                                                                            
+14                                                                                            
+15                                                                                            
+16                                                                                            
+17                                                                                            
+18                                                                                            
+19                                                                                            
+20                                                                                            
+21                                                                                            
+22                                                                                            
+23                                                                                            
+24                                                                                            
+25                                                                                            
+26                                                                                            
+27                                                                                            
+28                                                                                            
+29                                                                                            
+30                                                                                            
+31                                                                                            
+32                                                                                            
+33                                                                                            
+34                                                                                            
+35                                                                                            
+36                                                                                            
+37                                                                                            
+38                                                                                            
+39                                                                                            
+40                                                                                            
+41                                                                                            
+42                                                                                            
+43                                                                                            
+44                                                                                            
+45                                                                                            
+46                                                                                            
+47                                                                                            
+48                                                                                            
+49                                                                                            
+50                                                                                            
+51                                                                                            
+52                                                                                            
+53                                                                                            
+54                                                                                            
+55                                                                                            
+56                                                                                            
+57                                                                                            
+58                                                                                            
+59                                                                                            
+60                                                                                            
+61                                                                                            
+62                                                                                            
+63                                                                                            
+64                                                                                            
+65                                                                                            
+66                                                                                            
+67                                                                                            
+68                                                                                            
+69                                                                                            
+70                                                                                            
+71                                                                                            
+72                                                                                            
+73                                                                                            
+74                                                                                            
+75                                                                                            
+76                                                                                            
+77                                                                                            
+78                                                                                            
+79                                                                                            
+80                                                                                            
+81                                                                                            
+82                                                                                            
+83                                                                                            
+84                                                                                            
+85                                                                                            
+86                                                                                            
+87                                                                                            
+88                                                                                            
+89                                                                                            
+90                                                                                            
+91                                                                                            
+92                                                                                            
+93                                                                                            
+94                                                                                            
+95                                                                                            
+96                                                                                            
+97                                                                                            
+98                                                                                            
+99                                                                                            
+100                                                                                           
+101                                                                                           
+102                                                                                           
+103                                                                                           
+104                                                                                           
+105                                                                                           
+106                                                                                           
+107                                                                                           
+108                                                                                           
+109                                                                                           
+110                                                                                           
+111                                                                                           
+112                                                                                           
+113                                                                                           
+114                                                                                           
+115                                                                                           
+116                                                                                           
+117                                                                                           
+118                                                                                           
+119                                                                                           
+120                                                                                           
+121                                                                                           
+122                                                                                           
+123                                                                                           
+124                                                                                           
+125                                                                                           
+126                                                                                           
+127                                                                                           
+128                                                                                           
+129                                                                                           
+130                                                                                           
+131                                                                                           
+132                                                                                           
+133                                                                                           
+134                                                                                           
+135                                                                                           
+136                                                                                           
+137                                                                                           
+138                                                                                           
+139                                                                                           
+140                                                                                           
+141                                                                                           
+142                                                                                           
+143                                                                                           
+144                                                                                           
+145                                                                                           
+146                                                                                           
+147                                                                                           
+148                                                                                           
+149                                                                                           
+150                                                                                           
+151                                                                                           
+152                                                                                           
+153                                                                                           
+154                                                                                           
+155                                                                                           
+156                                                                                           
+157                                                                                           
+158                                                                                           
+159                                                                                           
+160                                                                                           
+161                                                                                           
+162                                                                                           
+163                                                                                           
+164                                                                                           
+165                                                                                           
+166                                                                                           
+167                                                                                           
+168                                                                                           
+169                                                                                           
+170                                                                                           
+171                                                                                           
+172                                                                                           
+173                                                                                           
+174                                                                                           
+175                                                                                           
+176                                                                                           
+177                                                                                           
+178                                                                                           
+179                                                                                           
+180                                                                                           
+181                                                                                           
+182                                                                                           
+183                                                                                           
+184                                                                                           
+185                                                                                           
+186                                                                                           
+187                                                                                           
+188                                                                                           
+189                                                                                           
+190                                                                                           
+191                                                                                           
+192                                                                                           
+193                                                                                           
+194                                                                                           
+195                                                                                           
+196                                                                                           
+197                                                                                           
+198                                                                                           
+199                                                                                           
+200                                                                                           
+201                                                                                           
+202                                                                                           
+203                                                                                           
+204                                                                                           
+205                                                                                           
+206                                                                                           
+207                                                                                           
+208                                                                                           
+209                                                                                           
+210                                                                                           
+211                                                                                           
+212                                                                                           
+213                                                                                           
+214                                                                                           
+215                                                                                           
+216                                                                                           
+217                                                                                           
+218                                                                                           
+219                                                                                           
+220                                                                                           
+221                                                                                           
+222                                                                                           
+223                                                                                           
+224                                                                                           
+225                                                                                           
+226                                                                                           
+227                                                                                           
+228                                                                                           
+229                                                                                           
+230                                                                                           
+231                                                                                           
+232                                                                                           
+233                                                                                           
+234                                                                                           
+235                                                                                           
+236                                                                                           
+237                                                                                           
+238                                                                                           
+239                                                                                           
+240                                                                                           
+241                                                                                           
+242                                                                                           
+243                                                                                           
+244                                                                                           
+245                                                                                           
+246                                                                                           
+247                                                                                           
+248                                                                                           
+249                                                                                           
+250                                                                                           
+251                                                                                           
+252                                                                                           
+253                                                                                           
+254                                                                                           
+255                                                                                           
+256                                                                                           
+257                                                                                           
+258                                                                                           
+259                                                                                           
+260                                                                                           
+261                                                                                           
+262                                                                                           
+263                                                                                           
+264                                                                                           
+265                                                                                           
+266                                                                                           
+267                                                                                           
+268                                                                                           
+269                                                                                           
+270                                                                                           
+271                                                                                           
+272                                                                                           
+273                                                                                           
+274                                                                                           
+275                                                                                           
+276                                                                                           
+277                                                                                           
+278                                                                                           
+279                                                                                           
+280                                                                   Uncertain/ARI /Pneumonia
+281                                            ARI /Pneumonia/Non-specific /generalised sepsis
+282                                         Non-specific /generalised sepsis/Other:KERNICTERUS
+283                                                                                  Uncertain
+284                                                                                  Uncertain
+285                                                                                  Uncertain
+286                                                           Non-specific /generalised sepsis
+287                                                                                  Uncertain
+288                                                                                  Uncertain
+289                                                                                  Uncertain
+290                                                                                  Uncertain
+291                                                                                  Uncertain
+292                                                                             Other:RDS 1UGR
+293                                                                                  Uncertain
+294                                                                             ARI /Pneumonia
+295                                                           Non-specific /generalised sepsis
+296                                                                             ARI /Pneumonia
+297                                                                                  Uncertain
+298                                                                                 Meningitis
+299                                                                             ARI /Pneumonia
+300                                                                                  Uncertain
+301                                                                                  Uncertain
+302                                                           Non-specific /generalised sepsis
+303                                                                       Uncertain/Other:IUGR
+304                                                           Non-specific /generalised sepsis
+305                                                                                  Uncertain
+306                                            ARI /Pneumonia/Non-specific /generalised sepsis
+307                                                                             ARI /Pneumonia
+308                                                           Non-specific /generalised sepsis
+309                                                                                  Uncertain
+310                                                                                 Uncertain:
+311                                                                                  Uncertain
+312                                                                                  Uncertain
+313                                                                             ARI /Pneumonia
+314                                                                          Other:IMPERF ANUS
+315                                                                                  Uncertain
+316                                            ARI /Pneumonia/Non-specific /generalised sepsis
+317 Non-specific /generalised sepsis/Other specific infection/Other:NEONATALSEPSIS:KERNICTERUS
+318                                                                                  Uncertain
+319                                                                                  Uncertain
+320                                                                         Other:MECONIUM ASP
+321                                                                          Other:RESPIRATORY
+       haz   waz maxage
+1    -3.42 -2.68    361
+2       NA -3.52      1
+3       NA -1.34      2
+4       NA -4.40      2
+5       NA -5.53     95
+6       NA -0.40      1
+7       NA -2.06      2
+8       NA -3.04      2
+9       NA -6.35      2
+10      NA -5.82      6
+11      NA -1.75      3
+12      NA -1.72      2
+13      NA  0.63      2
+14   -1.48 -2.28      1
+15   -0.89 -1.80      1
+16      NA -4.71      2
+17   -9.34 -7.36      1
+18   -1.74 -2.17      1
+19   -4.16 -3.43      1
+20   -3.43 -3.11      1
+21   -4.85 -4.66      1
+22   -4.32 -4.59      1
+23   -2.60 -2.75      1
+24   -6.41 -7.00      1
+25   -6.07 -4.10      1
+26   -4.86 -5.02      1
+27   -1.31 -1.28      1
+28   -0.84 -2.30      1
+29   -2.71 -3.07      1
+30   -0.89 -0.93      1
+31   -7.10 -6.44      2
+32   -5.02 -5.32      1
+33   -0.35 -1.11      1
+34      NA -2.31      1
+35   -5.39 -5.02      1
+36      NA -1.55      1
+37   -2.71 -3.83      1
+38   -2.10 -1.42      1
+39   -6.04 -5.95      1
+40      NA -6.84      1
+41   -0.19 -1.62      1
+42   -3.11 -3.46      1
+43   -3.25 -1.78      1
+44   -3.30 -2.83      1
+45   -6.59 -6.07      1
+46   -5.43 -6.06      4
+47   -4.86 -6.72      1
+48   -3.09 -4.29      1
+49      NA -6.66      1
+50   -4.89 -5.43      2
+51   -7.07 -5.79      1
+52      NA -4.86      1
+53   -6.54 -6.62      1
+54   -4.32 -3.91      1
+55   -2.16 -2.41      1
+56   -0.56 -0.05      1
+57   -1.42 -1.14      1
+58   -4.48 -4.59      1
+59   -4.96 -4.69      1
+60   -6.92 -6.45      2
+61   -1.37 -1.11      1
+62   -6.28 -7.66      1
+63   -5.02 -5.24      1
+64   -1.58 -1.08      1
+65   -4.48 -4.62      1
+66   -4.64 -4.39      1
+67   -2.84 -2.62      1
+68   -0.73 -1.85      1
+69   -6.04 -5.28      1
+70   -7.00 -6.86      1
+71   -1.96 -1.78      1
+72   -3.16 -2.46      1
+73   -0.26 -0.76      1
+74   -1.15 -2.25      1
+75   -0.94 -1.25      1
+76      NA -4.79      1
+77      NA -6.84      1
+78   -8.35 -7.42      3
+79   -5.77 -5.82      1
+80   -0.41 -0.87      1
+81   -2.60 -2.95      1
+82   -5.13 -4.80      1
+83      NA -0.98      1
+84   -6.90 -6.91      1
+85   -4.69 -4.13      1
+86   -6.54 -5.79      1
+87   -7.62 -6.54      2
+88   -1.74 -1.33      1
+89   -4.37 -4.05      1
+90      NA -4.66      1
+91   -2.63 -2.07      1
+92   -4.69 -4.52      1
+93   -2.10 -2.84      1
+94   -6.47 -6.27      2
+95   -5.17 -4.93      1
+96   -6.55 -6.31      2
+97   -1.76 -1.07    753
+98   -5.49 -4.23      1
+99   -1.15 -1.68      1
+100     NA -5.55      1
+101  -2.79 -2.62      1
+102     NA -0.80      1
+103  -1.37 -1.47      1
+104  -1.52 -2.05      1
+105  -3.21 -4.13      1
+106  -0.24 -0.38      1
+107  -2.71 -2.69      1
+108  -5.86 -4.16      1
+109     NA -2.10      1
+110  -2.50 -1.88      1
+111     NA -6.75      1
+112  -3.84 -2.47      1
+113  -7.60 -6.91      1
+114  -4.64 -4.80      1
+115  -6.65 -5.75      1
+116  -1.44 -0.98      3
+117  -2.28 -2.04      1
+118  -4.59 -5.62      1
+119  -2.74 -1.18      1
+120  -7.90 -6.90      2
+121     NA -6.19      1
+122  -6.74 -6.68      1
+123  -3.11 -3.28      1
+124  -0.44 -0.19      2
+125  -1.42 -1.65      1
+126  -3.30 -2.75      1
+127  -6.12 -5.94      1
+128  -4.24 -4.05      2
+129  -4.05 -3.33      1
+130   0.01 -0.07      1
+131     NA -9.45      1
+132  -3.43 -4.36      1
+133  -2.76 -2.98      1
+134  -5.49 -5.00      1
+135  -4.16 -4.22      1
+136  -5.13 -5.59      1
+137  -1.53 -3.21      1
+138  -2.98 -2.64      1
+139  -7.17 -6.45      1
+140  -7.60 -6.91      1
+141  -2.95 -2.81      1
+142  -4.38 -3.76      1
+143  -5.45 -6.45      1
+144  -3.03 -2.31      1
+145  -2.17 -1.99      1
+146  -2.71 -2.23      1
+147  -0.31 -1.53      1
+148  -2.69 -4.10      1
+149  -4.27 -3.82      1
+150  -1.31 -1.78      1
+151  -3.09 -2.95      1
+152     NA -2.78      1
+153  -4.01 -3.76      1
+154  -4.43 -3.23    737
+155  -6.75 -6.11      1
+156  -6.81 -5.81      4
+157  -2.16 -1.44      1
+158  -1.73 -2.73      1
+159   0.99 -0.05      1
+160  -7.62 -7.38      2
+161  -1.63 -1.87      1
+162  -4.85 -4.66      1
+163  -3.88 -3.39      2
+164     NA -5.15      1
+165  -2.01 -1.50      1
+166  -3.73 -3.13      1
+167  -3.11 -3.97      1
+168  -4.00 -3.67      1
+169  -7.47 -6.81      2
+170  -7.97 -6.36      1
+171  -3.79 -4.13      1
+172  -3.78 -3.15      1
+173     NA -5.88      2
+174     NA -9.86      1
+175     NA -2.72      1
+176  -4.54 -3.96      1
+177  -3.78 -3.80      1
+178  -5.49 -5.48      1
+179     NA -5.18      1
+180  -6.79 -5.95      1
+181  -1.26 -1.28      1
+182  -4.38 -4.46      1
+183  -1.51 -2.41      2
+184     NA -1.68      1
+185     NA -4.60      2
+186  -2.90 -2.67      1
+187  -1.85 -1.70      1
+188  -4.21 -4.05      1
+189  -1.64 -0.59      1
+190  -4.11 -6.15      1
+191  -6.41 -5.35      1
+192  -1.03 -2.02      2
+193     NA -2.10      1
+194  -6.36 -6.01      2
+195  -5.49 -4.56      1
+196   0.03 -2.12      1
+197  -2.90 -1.78      1
+198  -5.12 -3.40      1
+199  -4.27 -3.92      1
+200     NA -8.15      1
+201  -4.16 -3.55      1
+202  -6.20 -5.86      1
+203  -4.16 -3.17      1
+204  -5.38 -6.71      1
+205  -5.84 -5.93      2
+206  -3.04 -2.43      2
+207  -4.59 -3.14      1
+208  -6.28 -4.79      1
+209  -6.65 -5.87      1
+210  -3.78 -4.19      1
+211  -8.35 -7.80      1
+212  -1.37 -1.02      1
+213  -8.02 -7.54      1
+214  -6.65 -6.40      1
+215     NA -5.40      1
+216     NA -0.96      1
+217  -1.51 -1.99      2
+218  -5.82 -5.47      1
+219  -5.23 -5.32      1
+220  -2.28 -2.81      1
+221     NA -4.66      1
+222  -3.95 -2.10      1
+223  -2.63 -0.73      1
+224  -2.32 -2.00      1
+225  -1.42 -2.15      1
+226  -6.07 -5.29      1
+227  -3.09 -2.72      1
+228  -3.37 -2.86      1
+229  -2.39 -1.99      1
+230  -0.03 -0.63      1
+231  -6.36 -6.11      1
+232     NA -4.69      1
+233  -3.62 -4.09      1
+234     NA -3.17      1
+235     NA -1.90      1
+236     NA -5.18      1
+237  -4.78 -4.82      2
+238  -2.90 -2.62      1
+239     NA -6.49      1
+240  -2.21 -2.23      1
+241  -1.64 -1.30      1
+242  -2.01 -2.50      1
+243     NA -1.95      1
+244  -8.28 -7.77      4
+245  -3.95 -5.99      1
+246  -9.69 -8.65      1
+247  -3.03 -3.64      1
+248  -4.16 -5.48      1
+249  -5.26 -5.35      2
+250   0.01 -0.35      1
+251  -3.43 -3.52      1
+252  -6.68 -6.37      1
+253  -1.15 -1.85      1
+254     NA -7.72      1
+255  -1.85 -1.45      1
+256 -12.51 -5.99      1
+257  -1.58 -1.61      1
+258     NA -0.82      1
+259  -1.10 -1.30      1
+260  -3.74 -4.07      1
+261  -5.86 -5.26      1
+262  -8.08 -6.86      1
+263     NA -1.25      1
+264  -7.40 -6.79      3
+265  -4.16 -4.07      1
+266  -4.59 -4.63      3
+267  -0.63 -1.05      1
+268  -4.43 -4.46      1
+269  -4.91 -4.84      1
+270     NA -1.97      2
+271  -2.01 -1.73      1
+272  -5.86 -5.33      1
+273  -0.47 -1.09      1
+274  -4.00 -3.58      1
+275  -5.45 -6.03      1
+276  -6.07 -5.83      1
+277     NA -2.39      1
+278  -2.53 -2.67      1
+279     NA -0.30    602
+280  -1.31 -1.47      1
+281  -2.32 -1.42      1
+282  -1.52 -0.96      1
+283  -1.58  0.10      1
+284  -1.52 -1.73      1
+285  -1.69 -2.09      1
+286  -0.10 -0.65      1
+287  -0.47 -0.11      1
+288   0.64 -0.47      1
+289  -1.52 -0.25      1
+290   0.91  0.15      1
+291   1.28  0.27      1
+292  -4.16 -4.23      1
+293  -0.47 -1.28      1
+294   0.59  0.27     44
+295  -1.26 -0.91      5
+296  -0.47 -1.07      1
+297   1.53 -1.18      1
+298  -0.88 -2.04      2
+299   1.53 -1.88      1
+300  -0.88 -1.93      1
+301   1.26 -1.30      1
+302  -1.52 -2.15      1
+303  -2.66 -3.11      1
+304  -1.95 -1.53      1
+305   0.06 -1.70      1
+306  -1.00 -2.15      2
+307  -4.11 -3.96      1
+308  -5.75 -4.46      1
+309   0.06 -0.62      1
+310  -0.62 -2.76      1
+311  -1.52 -2.41      1
+312  -1.79 -3.11      1
+313  -0.35  0.98      1
+314   0.06  0.31      3
+315  -0.08  0.36      1
+316  -0.52 -2.17      5
+317  -0.47 -1.90      6
+318  -3.11 -3.23      1
+319  -1.52 -1.09      1
+320     NA  0.71      1
+321  -1.90 -1.45      1
+> 
+> #Drop mortality after 24 months
+> summary(d$maxage)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1     370     731    1107    1095    6955 
+> dim(d)
+[1] 109680     10
+> table(d$dead)
+
+   1 
+2687 
+> 
+> #Mark deaths not over 24 months to keep
+> d <- d %>% mutate(keep=1*(agedth <= 730 | is.na(agedth) & ((maxage <= 730 & dead==1) | dead!=1)))
+> dim(d)
+[1] 109680     11
+> table(d$dead)
+
+   1 
+2687 
+> table(d$keep)
+
+   0    1 
+ 104 2510 
+> 
+> 
+> 
+> #Create a mortality after 6 month variable
+> d$dead624 <- d$dead 
+> d$dead624[d$agedth < 6*30.4167 | (is.na(d$agedth) & d$maxage<6*30.4167)] <- 2
+> table(d$dead)
+
+   1 
+2687 
+> table(d$dead624)
+
+    1     2 
+ 1128 11437 
+> 
+> d$subjid <- as.character(d$subjid)
+> 
+> 
+> mort <- d
+> mort$dead[is.na(mort$dead)] <-0
+> mort$dead624[is.na(mort$dead624)] <-0
+> mort$dead624[mort$dead624==2] <- NA
+> #keep variable with mortality after 24 months
+> mort$dead0plus <- mort$dead
+> mort$dead6plus <- mort$dead624
+> #mark death as 0 if child died after 24 months
+> mort$dead[mort$keep==0] <- 0
+> mort$dead624[mort$keep==0] <- 0
+> 
+> prop.table(table(mort$dead))
+
+         0          1 
+0.97644967 0.02355033 
+> 
+> mort$cohort <- paste0(mort$studyid," ", mort$country)
+> 
+> #drop cohorts with no mortality info
+> mort <- mort %>% group_by(cohort) %>% mutate(tot_dead=sum(dead, na.rm=T)) %>% filter(tot_dead>0)
+> prop.table(table(mort$dead))
+
+         0          1 
+0.96426595 0.03573405 
+> table(mort$cohort, mort$dead)
+                                             
+                                                  0     1
+  Burkina Faso Zn BURKINA FASO                 7594    39
+  EE PAKISTAN                                   376     4
+  GMS-Nepal NEPAL                               690     8
+  iLiNS-DOSE MALAWI                            1803   129
+  iLiNS-DYAD-M MALAWI                          1181    56
+  JiVitA-3 BANGLADESH                         26512   938
+  JiVitA-4 BANGLADESH                          5399    49
+  Keneba GAMBIA                                2889    65
+  MAL-ED BANGLADESH                             262     3
+  MAL-ED INDIA                                  249     2
+  MAL-ED PERU                                   301     2
+  MAL-ED SOUTH AFRICA                           313     1
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           259     3
+  PROVIDE BANGLADESH                            696     4
+  SAS-CompFeed INDIA                           1483    52
+  SAS-FoodSuppl INDIA                           412     6
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2399     1
+  VITAMIN-A INDIA                              3892   108
+  ZVITAMBO ZIMBABWE                           12991  1113
+> table(mort$cohort, mort$dead624)
+                                             
+                                                  0     1
+  Burkina Faso Zn BURKINA FASO                 7592    39
+  EE PAKISTAN                                   371     4
+  GMS-Nepal NEPAL                               590     2
+  iLiNS-DOSE MALAWI                            1747   128
+  iLiNS-DYAD-M MALAWI                          1138    25
+  JiVitA-3 BANGLADESH                         20837   274
+  JiVitA-4 BANGLADESH                          5388    49
+  Keneba GAMBIA                                2739    44
+  MAL-ED BANGLADESH                             240     0
+  MAL-ED INDIA                                  235     0
+  MAL-ED PERU                                   272     1
+  MAL-ED SOUTH AFRICA                           261     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           245     0
+  PROVIDE BANGLADESH                            615     2
+  SAS-CompFeed INDIA                           1377    12
+  SAS-FoodSuppl INDIA                           398     4
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2096     0
+  VITAMIN-A INDIA                              3587    33
+  ZVITAMBO ZIMBABWE                           11302   407
+> table(mort$cohort, mort$dead0plus)
+                                             
+                                                  0     1
+  Burkina Faso Zn BURKINA FASO                 7582    51
+  EE PAKISTAN                                   376     4
+  GMS-Nepal NEPAL                               690     8
+  iLiNS-DOSE MALAWI                            1803   129
+  iLiNS-DYAD-M MALAWI                          1177    60
+  JiVitA-3 BANGLADESH                         26471   979
+  JiVitA-4 BANGLADESH                          5398    50
+  Keneba GAMBIA                                2854   100
+  MAL-ED BANGLADESH                             262     3
+  MAL-ED INDIA                                  249     2
+  MAL-ED PERU                                   301     2
+  MAL-ED SOUTH AFRICA                           313     1
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           259     3
+  PROVIDE BANGLADESH                            695     5
+  SAS-CompFeed INDIA                           1483    52
+  SAS-FoodSuppl INDIA                           412     6
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2399     1
+  VITAMIN-A INDIA                              3892   108
+  ZVITAMBO ZIMBABWE                           12981  1123
+> table(mort$cohort, mort$dead6plus)
+                                             
+                                                  0     1
+  Burkina Faso Zn BURKINA FASO                 7580    51
+  EE PAKISTAN                                   371     4
+  GMS-Nepal NEPAL                               590     2
+  iLiNS-DOSE MALAWI                            1747   128
+  iLiNS-DYAD-M MALAWI                          1134    29
+  JiVitA-3 BANGLADESH                         20796   315
+  JiVitA-4 BANGLADESH                          5387    50
+  Keneba GAMBIA                                2704    79
+  MAL-ED BANGLADESH                             240     0
+  MAL-ED INDIA                                  235     0
+  MAL-ED PERU                                   272     1
+  MAL-ED SOUTH AFRICA                           261     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           245     0
+  PROVIDE BANGLADESH                            614     3
+  SAS-CompFeed INDIA                           1377    12
+  SAS-FoodSuppl INDIA                           398     4
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2096     0
+  VITAMIN-A INDIA                              3587    33
+  ZVITAMBO ZIMBABWE                           11292   417
+> 
+> 
+> mort <- subset(mort, select = c(studyid, country, subjid, maxage, dead, agedth, causedth, dead624, dead0plus, dead6plus))
+> 
+> saveRDS(mort, mortality_path)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 27.578   0.779  28.334 
