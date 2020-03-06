@@ -1,9 +1,9 @@
 
 rm(list=ls())
-.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
+try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) ))
 
 source(paste0(here::here(), "/0-config.R"))
-.libPaths( "~/rlibs" )
+try(.libPaths( "~/rlibs" ))
 library(data.table)
 library(longbowtools)
 library(jsonlite)
@@ -22,41 +22,27 @@ default_params$script_params$count_Y <- FALSE
 
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-
-#Drop growth velocity
-analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
-
-i=1
-enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
-  analysis <- analyses[i,]
-  analysis_params <- default_params
-  analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
-  analysis_nodes$W <- gsub("W_bmi", "W_mbmi", analysis_nodes$W[[1]])
-  analysis_params$nodes <- analysis_nodes
-  analysis_params$data$repository_path <- analysis$file
-  return(analysis_params)
-})
 
 writeLines(toJSON(enumerated_analyses[[1]]),"single_cont_analysis.json")
 writeLines(toJSON(enumerated_analyses),"all_cont_analyses.json")
 
 
 # 2. run batch
-
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
 # inputs <- "inputs_template.json"
-inputs <- "single_cont_analysis.json"
+#inputs <- "single_cont_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_cont_analyses.json"
 batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
+batch_id_cont
 
 # wait for the batch to finish and track progress
 wait_for_batch(batch_id_cont)
@@ -70,7 +56,7 @@ results <- load_batch_results("results.rdata", results_folder = "results_cont")
 obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_cont")
 
 # save concatenated results
-filename1 <- paste(paste('results_cont',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('results_cont_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
-save(results, file=here("results","rf results","raw longbow results",filename1))
-save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+filename1 <- paste(paste('results_cont',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('results_cont_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
+saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
+saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
