@@ -1,12 +1,14 @@
 
+rm(list=ls())
+try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) ))
+
+source(paste0(here::here(), "/0-config.R"))
+try(.libPaths( "~/rlibs" ))
 library(data.table)
 library(longbowtools)
 library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
-library(here)
-#note: every "here" in this script is the working directory where all the repos live on your laptop
-#for example: here = "C:/Users/rolan/Documents/repos"
 
 
 # 1. enumerate analysis
@@ -16,23 +18,7 @@ inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
 
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
-analyses <- analyses
-# load("wasting_unadjusted_binary_analyses.rdata")
-# analyses_2 <- analyses
-# analyses <- rbindlist(list(analyses_1, analyses_2), fill=TRUE)
-
-analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-
-i=1
-enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
-  analysis <- analyses[i,]
-  analysis_params <- default_params
-  analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
-  analysis_nodes$W <- gsub("W_bmi", "W_mbmi", analysis_nodes$W[[1]])
-  analysis_params$nodes <- analysis_nodes
-  analysis_params$data$repository_path <- analysis$file
-  return(analysis_params)
-})
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 writeLines(toJSON(enumerated_analyses[[1]]),"single_bin_analysis.json")
 writeLines(toJSON(enumerated_analyses),"all_bin_analyses.json")
@@ -66,7 +52,7 @@ results <- load_batch_results("results.rdata", results_folder = "results_bin")
 obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin")
 
 # save concatenated results
-filename1 <- paste(paste('results_bin',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('results_bin_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
-save(results, file=here("results","rf results","raw longbow results",filename1))
-save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+filename1 <- paste(paste('results_bin',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('results_bin_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
+saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
+saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))

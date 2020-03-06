@@ -23,7 +23,7 @@ load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuou
 
 analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
 
-#Drop growth velocity
+#Subset to growth velocity
 analyses <- analyses %>% filter(Y!="haz" & Y!="whz")
 
 i=1
