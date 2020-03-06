@@ -467,15 +467,15 @@ The following object is masked from ‘package:ggthemes’:
 > #Set up dataset for longbow analysis
 > df <- filter(df, agedays < 24 * 30.4167)
 > 
-> df <- subset(df, select = c(studyid, subjid, country, whz, rain_quartile))
+> df <- subset(df, select = c(studyid, subjid, agedays, country, whz, rain_quartile))
 > head(df)
-         studyid subjid country   whz     rain_quartile
-1 CMC-V-BCS-2002      1   India  0.55 Opposite max rain
-2 CMC-V-BCS-2002      1   India -2.91 Opposite max rain
-3 CMC-V-BCS-2002      1   India -2.45 Opposite max rain
-4 CMC-V-BCS-2002      1   India -1.44      Pre-max rain
-5 CMC-V-BCS-2002      1   India -1.27      Pre-max rain
-6 CMC-V-BCS-2002      1   India -2.18      Pre-max rain
+         studyid subjid agedays country   whz     rain_quartile
+1 CMC-V-BCS-2002      1      33   India  0.55 Opposite max rain
+2 CMC-V-BCS-2002      1      67   India -2.91 Opposite max rain
+3 CMC-V-BCS-2002      1      95   India -2.45 Opposite max rain
+4 CMC-V-BCS-2002      1     130   India -1.44      Pre-max rain
+5 CMC-V-BCS-2002      1     159   India -1.27      Pre-max rain
+6 CMC-V-BCS-2002      1     190   India -2.18      Pre-max rain
 > 
 > 
 > #Load covariate dataset
@@ -508,12 +508,12 @@ The following object is masked from ‘package:ggthemes’:
 > 
 > #Merge WLZ, season, and covariates
 > dim(df)
-[1] 178244      5
+[1] 178244      6
 > dim(cov)
 [1] 76559    83
 > d <- left_join(df, cov, by = c("studyid", "subjid", "country"))
 > dim(d)
-[1] 178244     85
+[1] 178244     86
 > 
 > #Set adjustment variables
 > W <- NULL
@@ -560,4 +560,4 @@ The following object is masked from ‘package:ggthemes’:
 > 
 > proc.time()
    user  system elapsed 
- 18.032   1.089  19.118 
+ 17.860   1.185  19.029 
