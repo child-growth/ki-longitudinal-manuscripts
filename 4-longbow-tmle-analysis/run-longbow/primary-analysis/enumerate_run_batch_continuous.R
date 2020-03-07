@@ -12,7 +12,6 @@ library(longbowRiskFactors)
 
 
 # 1. enumerate analysis
-
 setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
@@ -20,8 +19,15 @@ default_params <- fromJSON(inputs)
 #Set to continious
 default_params$script_params$count_Y <- FALSE
 
-#load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
+#load analyses
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
+
+#Drop growth velocity
+dim(analyses)
+analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
+dim(analyses)
+
+#specify analyses
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 

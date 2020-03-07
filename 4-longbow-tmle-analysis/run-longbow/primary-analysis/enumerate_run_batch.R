@@ -39,6 +39,7 @@ inputs <- "single_bin_analysis.json"
 # send the batch to longbow (with provisioning disabled)
 bin_batch_inputs <- "all_bin_analyses.json"
 bin_batch_id <-  run_on_longbow(rmd_filename, bin_batch_inputs, provision = FALSE)
+bin_batch_id
 
 # wait for the batch to finish and track progress
 wait_for_batch(bin_batch_id)

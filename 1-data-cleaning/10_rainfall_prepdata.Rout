@@ -351,4 +351,4 @@ This warning is displayed once per session.
 > 
 > proc.time()
    user  system elapsed 
-  4.680   0.411   5.070 
+  4.623   0.317   4.920 

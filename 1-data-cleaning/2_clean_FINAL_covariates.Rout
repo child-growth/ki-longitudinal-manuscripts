@@ -1845,13 +1845,16 @@ Groups: <by row>
 > # Function groups subjects into even categories from irregular distributions of education 
 > # (just tertiling leads to sparsity/R errors)
 > 
-> quantile_rf_edu <- function(d, Avar="meducyrs"){
+> quantile_rf_edu <- function(d, Avar="meducyrs", to.character=F){
 +   dfull <-d
++   
++   print(d$studyid[1])
++   print(d$country[1])
 +   
 +   A0 <- NULL
 +   d <- data.frame(id=1:nrow(dfull), A=as.data.frame(dfull[,Avar])[,1])
 +   
-+   if(sum(is.na(d$A))!=length(d$A)){
++   if(sum(is.na(d$A))!=nrow(d)){
 +     
 +     Acuts=c(0, as.numeric(quantile(d$A, probs = c(1/3, 2/3), na.rm=T)), max(d$A, na.rm=T))
 +     if(length(Acuts)==length(unique(Acuts))){
@@ -1893,13 +1896,2005 @@ Groups: <by row>
 +       }
 +     }
 +     dfull[,Avar] <- A
++     
 +   }
++   dfull <-as.data.frame(dfull)
++   if(to.character){
++   dfull[,Avar] <- as.character(dfull[,Avar])
++   }
++   print(class(dfull[,Avar]))
 +   return(dfull)
 + }
 > 
 > d <- d %>% group_by(studyid, country) %>%
 +   do(quantile_rf_edu(., Avar="meducyrs"))
+[1] "Burkina Faso Zn"
+[1] "BURKINA FASO"
+[1] "factor"
+[1] "CMC-V-BCS-2002"
+[1] "INDIA"
+[1] "factor"
+[1] "CMIN"
+[1] "BANGLADESH"
+[1] "integer"
+[1] "COHORTS"
+[1] "GUATEMALA"
+[1] "factor"
+[1] "COHORTS"
+[1] "INDIA"
+[1] "factor"
+[1] "COHORTS"
+[1] "PHILIPPINES"
+[1] "factor"
+[1] "CONTENT"
+[1] "PERU"
+[1] "integer"
+[1] "EE"
+[1] "PAKISTAN"
+[1] "factor"
+[1] "GMS-Nepal"
+[1] "NEPAL"
+[1] "factor"
+[1] "Guatemala BSC"
+[1] "GUATEMALA"
+[1] "factor"
+[1] "iLiNS-DOSE"
+[1] "MALAWI"
+[1] "factor"
+[1] "iLiNS-DYAD-M"
+[1] "MALAWI"
+[1] "factor"
+[1] "iLiNS-Zinc"
+[1] "BURKINA FASO"
+[1] "integer"
+[1] "IRC"
+[1] "INDIA"
+[1] "factor"
+[1] "JiVitA-3"
+[1] "BANGLADESH"
+[1] "factor"
+[1] "JiVitA-4"
+[1] "BANGLADESH"
+[1] "factor"
+[1] "Keneba"
+[1] "GAMBIA"
+[1] "integer"
+[1] "LCNI-5"
+[1] "MALAWI"
+[1] "factor"
+[1] "MAL-ED"
+[1] "BANGLADESH"
+[1] "factor"
+[1] "MAL-ED"
+[1] "BRAZIL"
+[1] "factor"
+[1] "MAL-ED"
+[1] "INDIA"
+[1] "factor"
+[1] "MAL-ED"
+[1] "NEPAL"
+[1] "factor"
+[1] "MAL-ED"
+[1] "PERU"
+[1] "factor"
+[1] "MAL-ED"
+[1] "SOUTH AFRICA"
+[1] "factor"
+[1] "MAL-ED"
+[1] "TANZANIA, UNITED REPUBLIC OF"
+[1] "factor"
+[1] "NIH-Birth"
+[1] "BANGLADESH"
+[1] "factor"
+[1] "NIH-Crypto"
+[1] "BANGLADESH"
+[1] "factor"
+[1] "PROBIT"
+[1] "BELARUS"
+[1] "factor"
+[1] "PROVIDE"
+[1] "BANGLADESH"
+[1] "factor"
+[1] "ResPak"
+[1] "PAKISTAN"
+[1] "integer"
+[1] "SAS-CompFeed"
+[1] "INDIA"
+[1] "factor"
+[1] "SAS-FoodSuppl"
+[1] "INDIA"
+[1] "factor"
+[1] "TanzaniaChild2"
+[1] "TANZANIA, UNITED REPUBLIC OF"
+[1] "factor"
+[1] "VITAMIN-A"
+[1] "INDIA"
+[1] "factor"
+[1] "ZVITAMBO"
+[1] "ZIMBABWE"
+[1] "factor"
+> #d <- d %>% arrange(feducyrs, studyid, country, subjid)
 > d <- d %>% group_by(studyid, country) %>%
-+   do(quantile_rf_edu(., Avar="feducyrs"))
-Error: Column `feducyrs` can't be converted from integer to factor
-Execution halted
++   do(quantile_rf_edu(., Avar="feducyrs", to.character=T))
+[1] "Burkina Faso Zn"
+[1] "BURKINA FASO"
+[1] "character"
+[1] "CMC-V-BCS-2002"
+[1] "INDIA"
+[1] "character"
+[1] "CMIN"
+[1] "BANGLADESH"
+[1] "character"
+[1] "COHORTS"
+[1] "GUATEMALA"
+[1] "character"
+[1] "COHORTS"
+[1] "INDIA"
+[1] "character"
+[1] "COHORTS"
+[1] "PHILIPPINES"
+[1] "character"
+[1] "CONTENT"
+[1] "PERU"
+[1] "character"
+[1] "EE"
+[1] "PAKISTAN"
+[1] "character"
+[1] "GMS-Nepal"
+[1] "NEPAL"
+[1] "character"
+[1] "Guatemala BSC"
+[1] "GUATEMALA"
+[1] "character"
+[1] "iLiNS-DOSE"
+[1] "MALAWI"
+[1] "character"
+[1] "iLiNS-DYAD-M"
+[1] "MALAWI"
+[1] "character"
+[1] "iLiNS-Zinc"
+[1] "BURKINA FASO"
+[1] "character"
+[1] "IRC"
+[1] "INDIA"
+[1] "character"
+[1] "JiVitA-3"
+[1] "BANGLADESH"
+[1] "character"
+[1] "JiVitA-4"
+[1] "BANGLADESH"
+[1] "character"
+[1] "Keneba"
+[1] "GAMBIA"
+[1] "character"
+[1] "LCNI-5"
+[1] "MALAWI"
+[1] "character"
+[1] "MAL-ED"
+[1] "BANGLADESH"
+[1] "character"
+[1] "MAL-ED"
+[1] "BRAZIL"
+[1] "character"
+[1] "MAL-ED"
+[1] "INDIA"
+[1] "character"
+[1] "MAL-ED"
+[1] "NEPAL"
+[1] "character"
+[1] "MAL-ED"
+[1] "PERU"
+[1] "character"
+[1] "MAL-ED"
+[1] "SOUTH AFRICA"
+[1] "character"
+[1] "MAL-ED"
+[1] "TANZANIA, UNITED REPUBLIC OF"
+[1] "character"
+[1] "NIH-Birth"
+[1] "BANGLADESH"
+[1] "character"
+[1] "NIH-Crypto"
+[1] "BANGLADESH"
+[1] "character"
+[1] "PROBIT"
+[1] "BELARUS"
+[1] "character"
+[1] "PROVIDE"
+[1] "BANGLADESH"
+[1] "character"
+[1] "ResPak"
+[1] "PAKISTAN"
+[1] "character"
+[1] "SAS-CompFeed"
+[1] "INDIA"
+[1] "character"
+[1] "SAS-FoodSuppl"
+[1] "INDIA"
+[1] "character"
+[1] "TanzaniaChild2"
+[1] "TANZANIA, UNITED REPUBLIC OF"
+[1] "character"
+[1] "VITAMIN-A"
+[1] "INDIA"
+[1] "character"
+[1] "ZVITAMBO"
+[1] "ZIMBABWE"
+[1] "character"
+> d$feducyrs <- factor(d$feducyrs, levels = c("Low","Medium","High"))
+> 
+> table(d$meducyrs)
+
+   Low Medium   High 
+ 39713  36495  30485 
+> table(d$feducyrs)
+
+   Low Medium   High 
+ 32630  37781  20562 
+> 
+> table(paste0(d$studyid," ", d$country), d$meducyrs)
+                                             
+                                               Low Medium High
+  Burkina Faso Zn BURKINA FASO                4823    873  256
+  CMC-V-BCS-2002 INDIA                         106    109  158
+  CMIN BANGLADESH                                0      0    0
+  COHORTS GUATEMALA                            945    603  422
+  COHORTS INDIA                               1979   3136  802
+  COHORTS PHILIPPINES                          903    982 1173
+  CONTENT PERU                                   0      0    0
+  EE PAKISTAN                                  329     33   15
+  GMS-Nepal NEPAL                              486    124   85
+  Guatemala BSC GUATEMALA                       76     88  118
+  iLiNS-DOSE MALAWI                            592    565  710
+  iLiNS-DYAD-M MALAWI                          407    476  322
+  iLiNS-Zinc BURKINA FASO                        0      0    0
+  IRC INDIA                                    147    139  124
+  JiVitA-3 BANGLADESH                         9927   8340 9059
+  JiVitA-4 BANGLADESH                         1787   1733 1901
+  Keneba GAMBIA                                  0      0    0
+  LCNI-5 MALAWI                                261    255  298
+  MAL-ED BANGLADESH                             70     66   78
+  MAL-ED BRAZIL                                 63     90   79
+  MAL-ED INDIA                                  76     81   63
+  MAL-ED NEPAL                                  96     76   53
+  MAL-ED PERU                                  104    107   91
+  MAL-ED SOUTH AFRICA                          150     69   95
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           64    142   11
+  NIH-Birth BANGLADESH                         230    220  179
+  NIH-Crypto BANGLADESH                        242    262  254
+  PROBIT BELARUS                              6100   7957 2841
+  PROVIDE BANGLADESH                           214    251  235
+  ResPak PAKISTAN                                0      0    0
+  SAS-CompFeed INDIA                          4245   3240 2054
+  SAS-FoodSuppl INDIA                          332     45   41
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   82   1683  621
+  VITAMIN-A INDIA                             1914   1277  716
+  ZVITAMBO ZIMBABWE                           2963   3473 7631
+> table(paste0(d$studyid," ", d$country), d$feducyrs)
+                                             
+                                                Low Medium  High
+  Burkina Faso Zn BURKINA FASO                    0      0     0
+  CMC-V-BCS-2002 INDIA                            0      0     0
+  CMIN BANGLADESH                                 0      0     0
+  COHORTS GUATEMALA                             860    625   319
+  COHORTS INDIA                                 475    414   569
+  COHORTS PHILIPPINES                           828   1021  1031
+  CONTENT PERU                                    0      0     0
+  EE PAKISTAN                                     0      0     0
+  GMS-Nepal NEPAL                               296    227   173
+  Guatemala BSC GUATEMALA                         0      0     0
+  iLiNS-DOSE MALAWI                             584    525   698
+  iLiNS-DYAD-M MALAWI                           433    411   361
+  iLiNS-Zinc BURKINA FASO                         0      0     0
+  IRC INDIA                                       0      0     0
+  JiVitA-3 BANGLADESH                         10854   8981  6525
+  JiVitA-4 BANGLADESH                          1955   2076  1247
+  Keneba GAMBIA                                   0      0     0
+  LCNI-5 MALAWI                                 291    271   251
+  MAL-ED BANGLADESH                              40     55    54
+  MAL-ED BRAZIL                                   0      0     0
+  MAL-ED INDIA                                   59     44    44
+  MAL-ED NEPAL                                   28     28    42
+  MAL-ED PERU                                    69     61   120
+  MAL-ED SOUTH AFRICA                            37     30    43
+  MAL-ED TANZANIA, UNITED REPUBLIC OF            61     21   130
+  NIH-Birth BANGLADESH                            0      0     0
+  NIH-Crypto BANGLADESH                         242    220   296
+  PROBIT BELARUS                               6418   7189  2708
+  PROVIDE BANGLADESH                            238    230   232
+  ResPak PAKISTAN                                 0      0     0
+  SAS-CompFeed INDIA                           3967   3059  2492
+  SAS-FoodSuppl INDIA                           147    161   110
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  1270    664   449
+  VITAMIN-A INDIA                              1162   1079  1666
+  ZVITAMBO ZIMBABWE                            2316  10389  1002
+> 
+> 
+> 
+> 
+> #Categorize nrooms, nhh, nchild5
+> table(d$nrooms)
+
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+27594 13154  4974  1973   725   345   145    81    38    32     7     8     3 
+   14    15    77 
+    4     6     2 
+> table(paste0(d$studyid," ", d$country), d$nrooms)
+                                             
+                                                  1     2     3     4     5
+  Burkina Faso Zn BURKINA FASO                    0     0     0     0     0
+  CMC-V-BCS-2002 INDIA                          202   106    51    12     1
+  CMIN BANGLADESH                                 0     0     0     0     0
+  COHORTS GUATEMALA                               0     0     0     0     0
+  COHORTS INDIA                                3563  1567   199    83    17
+  COHORTS PHILIPPINES                             0     0     0     0     0
+  CONTENT PERU                                   44    54    39    35    26
+  EE PAKISTAN                                     0     0     0     0     0
+  GMS-Nepal NEPAL                                49   145   181   165    67
+  Guatemala BSC GUATEMALA                         0     0     0     0     0
+  iLiNS-DOSE MALAWI                             340   701   446   209    35
+  iLiNS-DYAD-M MALAWI                           136   141    65    27    10
+  iLiNS-Zinc BURKINA FASO                         0     0     0     0     0
+  IRC INDIA                                     185   170    36    12     2
+  JiVitA-3 BANGLADESH                         16201  7360  2629   773   251
+  JiVitA-4 BANGLADESH                          3193  1387   562   185    60
+  Keneba GAMBIA                                   0     0     0     0     0
+  LCNI-5 MALAWI                                   0     0     0     0     0
+  MAL-ED BANGLADESH                             152    50    28     9     1
+  MAL-ED BRAZIL                                   4    20    59    58    36
+  MAL-ED INDIA                                   84    78    48    21     2
+  MAL-ED NEPAL                                   52    31    22    31    26
+  MAL-ED PERU                                    19    52    62    57    43
+  MAL-ED SOUTH AFRICA                            14    22    25    39    43
+  MAL-ED TANZANIA, UNITED REPUBLIC OF            13    63    66    35    30
+  NIH-Birth BANGLADESH                            0     0     0     0     0
+  NIH-Crypto BANGLADESH                         368   191   104    57    25
+  PROBIT BELARUS                                  0     0     0     0     0
+  PROVIDE BANGLADESH                            507   108    62    13     6
+  ResPak PAKISTAN                                 0     0     0     0     0
+  SAS-CompFeed INDIA                              0     0     0     0     0
+  SAS-FoodSuppl INDIA                             0     0     0     0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     0     0     0     0     0
+  VITAMIN-A INDIA                              2468   908   290   152    44
+  ZVITAMBO ZIMBABWE                               0     0     0     0     0
+                                             
+                                                  6     7     8     9    10
+  Burkina Faso Zn BURKINA FASO                    0     0     0     0     0
+  CMC-V-BCS-2002 INDIA                            1     0     0     0     0
+  CMIN BANGLADESH                                 0     0     0     0     0
+  COHORTS GUATEMALA                               0     0     0     0     0
+  COHORTS INDIA                                   6     0     0     0     0
+  COHORTS PHILIPPINES                             0     0     0     0     0
+  CONTENT PERU                                    7     7     1     1     0
+  EE PAKISTAN                                     0     0     0     0     0
+  GMS-Nepal NEPAL                                52    17    12     2     5
+  Guatemala BSC GUATEMALA                         0     0     0     0     0
+  iLiNS-DOSE MALAWI                              13     3     3     0     0
+  iLiNS-DYAD-M MALAWI                             0     0     0     3     0
+  iLiNS-Zinc BURKINA FASO                         0     0     0     0     0
+  IRC INDIA                                       1     2     0     0     0
+  JiVitA-3 BANGLADESH                            85    21     9     0     1
+  JiVitA-4 BANGLADESH                            23    10     6     0     1
+  Keneba GAMBIA                                   0     0     0     0     0
+  LCNI-5 MALAWI                                   0     0     0     0     0
+  MAL-ED BANGLADESH                               2     0     0     0     0
+  MAL-ED BRAZIL                                  17     9     3     2     1
+  MAL-ED INDIA                                    2     0     0     0     0
+  MAL-ED NEPAL                                   19    17    15     4     9
+  MAL-ED PERU                                    23    12     3     0     1
+  MAL-ED SOUTH AFRICA                            36    33    13    15     7
+  MAL-ED TANZANIA, UNITED REPUBLIC OF            17    11     6     5     2
+  NIH-Birth BANGLADESH                            0     0     0     0     0
+  NIH-Crypto BANGLADESH                           7     1     2     2     1
+  PROBIT BELARUS                                  0     0     0     0     0
+  PROVIDE BANGLADESH                              2     1     0     1     0
+  ResPak PAKISTAN                                 0     0     0     0     0
+  SAS-CompFeed INDIA                              0     0     0     0     0
+  SAS-FoodSuppl INDIA                             0     0     0     0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     0     0     0     0     0
+  VITAMIN-A INDIA                                32     1     8     3     4
+  ZVITAMBO ZIMBABWE                               0     0     0     0     0
+                                             
+                                                 11    12    13    14    15
+  Burkina Faso Zn BURKINA FASO                    0     0     0     0     0
+  CMC-V-BCS-2002 INDIA                            0     0     0     0     0
+  CMIN BANGLADESH                                 0     0     0     0     0
+  COHORTS GUATEMALA                               0     0     0     0     0
+  COHORTS INDIA                                   0     0     0     0     0
+  COHORTS PHILIPPINES                             0     0     0     0     0
+  CONTENT PERU                                    1     0     0     0     0
+  EE PAKISTAN                                     0     0     0     0     0
+  GMS-Nepal NEPAL                                 1     0     0     1     1
+  Guatemala BSC GUATEMALA                         0     0     0     0     0
+  iLiNS-DOSE MALAWI                               0     0     0     0     0
+  iLiNS-DYAD-M MALAWI                             0     0     0     0     0
+  iLiNS-Zinc BURKINA FASO                         0     0     0     0     0
+  IRC INDIA                                       0     0     0     0     0
+  JiVitA-3 BANGLADESH                             0     0     0     0     0
+  JiVitA-4 BANGLADESH                             0     0     1     0     0
+  Keneba GAMBIA                                   0     0     0     0     0
+  LCNI-5 MALAWI                                   0     0     0     0     0
+  MAL-ED BANGLADESH                               0     0     0     0     0
+  MAL-ED BRAZIL                                   0     0     0     1     0
+  MAL-ED INDIA                                    0     0     0     0     0
+  MAL-ED NEPAL                                    2     5     0     1     2
+  MAL-ED PERU                                     0     0     0     0     0
+  MAL-ED SOUTH AFRICA                             2     2     2     1     3
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             1     1     0     0     0
+  NIH-Birth BANGLADESH                            0     0     0     0     0
+  NIH-Crypto BANGLADESH                           0     0     0     0     0
+  PROBIT BELARUS                                  0     0     0     0     0
+  PROVIDE BANGLADESH                              0     0     0     0     0
+  ResPak PAKISTAN                                 0     0     0     0     0
+  SAS-CompFeed INDIA                              0     0     0     0     0
+  SAS-FoodSuppl INDIA                             0     0     0     0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     0     0     0     0     0
+  VITAMIN-A INDIA                                 0     0     0     0     0
+  ZVITAMBO ZIMBABWE                               0     0     0     0     0
+                                             
+                                                 77
+  Burkina Faso Zn BURKINA FASO                    0
+  CMC-V-BCS-2002 INDIA                            0
+  CMIN BANGLADESH                                 0
+  COHORTS GUATEMALA                               0
+  COHORTS INDIA                                   0
+  COHORTS PHILIPPINES                             0
+  CONTENT PERU                                    0
+  EE PAKISTAN                                     0
+  GMS-Nepal NEPAL                                 0
+  Guatemala BSC GUATEMALA                         0
+  iLiNS-DOSE MALAWI                               2
+  iLiNS-DYAD-M MALAWI                             0
+  iLiNS-Zinc BURKINA FASO                         0
+  IRC INDIA                                       0
+  JiVitA-3 BANGLADESH                             0
+  JiVitA-4 BANGLADESH                             0
+  Keneba GAMBIA                                   0
+  LCNI-5 MALAWI                                   0
+  MAL-ED BANGLADESH                               0
+  MAL-ED BRAZIL                                   0
+  MAL-ED INDIA                                    0
+  MAL-ED NEPAL                                    0
+  MAL-ED PERU                                     0
+  MAL-ED SOUTH AFRICA                             0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0
+  NIH-Birth BANGLADESH                            0
+  NIH-Crypto BANGLADESH                           0
+  PROBIT BELARUS                                  0
+  PROVIDE BANGLADESH                              0
+  ResPak PAKISTAN                                 0
+  SAS-CompFeed INDIA                              0
+  SAS-FoodSuppl INDIA                             0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     0
+  VITAMIN-A INDIA                                 0
+  ZVITAMBO ZIMBABWE                               0
+> nroom<-NA
+> nroom[d$nrooms<2] <- "1"
+> nroom[d$nrooms==2] <- "2"
+> nroom[d$nrooms==3] <- "3"
+> nroom[d$nrooms>3] <- "4+"
+> d$nrooms <- as.factor(nroom)
+> table(d$nrooms)
+
+    1     2     3    4+ 
+27594 13154  4974  3369 
+> table(paste0(d$studyid," ", d$country), d$nrooms)
+                                             
+                                                  1     2     3    4+
+  Burkina Faso Zn BURKINA FASO                    0     0     0     0
+  CMC-V-BCS-2002 INDIA                          202   106    51    14
+  CMIN BANGLADESH                                 0     0     0     0
+  COHORTS GUATEMALA                               0     0     0     0
+  COHORTS INDIA                                3563  1567   199   106
+  COHORTS PHILIPPINES                             0     0     0     0
+  CONTENT PERU                                   44    54    39    78
+  EE PAKISTAN                                     0     0     0     0
+  GMS-Nepal NEPAL                                49   145   181   323
+  Guatemala BSC GUATEMALA                         0     0     0     0
+  iLiNS-DOSE MALAWI                             340   701   446   265
+  iLiNS-DYAD-M MALAWI                           136   141    65    40
+  iLiNS-Zinc BURKINA FASO                         0     0     0     0
+  IRC INDIA                                     185   170    36    17
+  JiVitA-3 BANGLADESH                         16201  7360  2629  1140
+  JiVitA-4 BANGLADESH                          3193  1387   562   286
+  Keneba GAMBIA                                   0     0     0     0
+  LCNI-5 MALAWI                                   0     0     0     0
+  MAL-ED BANGLADESH                             152    50    28    12
+  MAL-ED BRAZIL                                   4    20    59   127
+  MAL-ED INDIA                                   84    78    48    25
+  MAL-ED NEPAL                                   52    31    22   131
+  MAL-ED PERU                                    19    52    62   139
+  MAL-ED SOUTH AFRICA                            14    22    25   196
+  MAL-ED TANZANIA, UNITED REPUBLIC OF            13    63    66   108
+  NIH-Birth BANGLADESH                            0     0     0     0
+  NIH-Crypto BANGLADESH                         368   191   104    95
+  PROBIT BELARUS                                  0     0     0     0
+  PROVIDE BANGLADESH                            507   108    62    23
+  ResPak PAKISTAN                                 0     0     0     0
+  SAS-CompFeed INDIA                              0     0     0     0
+  SAS-FoodSuppl INDIA                             0     0     0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     0     0     0     0
+  VITAMIN-A INDIA                              2468   908   290   244
+  ZVITAMBO ZIMBABWE                               0     0     0     0
+> 
+> 
+> table(d$nhh)  
+
+  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  20 
+  7  95 697 884 813 563 386 220 123 105  47  37  14  12   7   4   5   2   1 
+> table(paste0(d$studyid," ", d$country), d$nhh)
+                                             
+                                                1   2   3   4   5   6   7   8
+  Burkina Faso Zn BURKINA FASO                  0   0   0   0   0   0   0   0
+  CMC-V-BCS-2002 INDIA                          0   0   0   0   0   0   0   0
+  CMIN BANGLADESH                               0   0   0   0   0   0   0   0
+  COHORTS GUATEMALA                             0   0   0   0   0   0   0   0
+  COHORTS INDIA                                 0   0   0   0   0   0   0   0
+  COHORTS PHILIPPINES                           0   0   0   0   0   0   0   0
+  CONTENT PERU                                  0   0   0   0   0   0   0   0
+  EE PAKISTAN                                   0   0   0   0   0   0   0   0
+  GMS-Nepal NEPAL                               0   0   0   0   0   0   0   0
+  Guatemala BSC GUATEMALA                       0   0   0   0   0   0   0   0
+  iLiNS-DOSE MALAWI                             0   0   0   0   0   0   0   0
+  iLiNS-DYAD-M MALAWI                           4  51  52  47  41  34  28  15
+  iLiNS-Zinc BURKINA FASO                       0   0   0   0   0   0   0   0
+  IRC INDIA                                     1  11  46  80  78  64  43  29
+  JiVitA-3 BANGLADESH                           0   0   0   0   0   0   0   0
+  JiVitA-4 BANGLADESH                           0   0   0   0   0   0   0   0
+  Keneba GAMBIA                                 0   0   0   0   0   0   0   0
+  LCNI-5 MALAWI                                 2  28 195 180 160 111  71  40
+  MAL-ED BANGLADESH                             0   0   0   0   0   0   0   0
+  MAL-ED BRAZIL                                 0   0   0   0   0   0   0   0
+  MAL-ED INDIA                                  0   0   0   0   0   0   0   0
+  MAL-ED NEPAL                                  0   0   0   0   0   0   0   0
+  MAL-ED PERU                                   0   0   0   0   0   0   0   0
+  MAL-ED SOUTH AFRICA                           0   0   0   0   0   0   0   0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           0   0   0   0   0   0   0   0
+  NIH-Birth BANGLADESH                          0   1 116 130 134  83  59  51
+  NIH-Crypto BANGLADESH                         0   2 112 176 166 110  68  29
+  PROBIT BELARUS                                0   0   0   0   0   0   0   0
+  PROVIDE BANGLADESH                            0   2 138 198 124  84  67  26
+  ResPak PAKISTAN                               0   0   0   0   0   0   0   0
+  SAS-CompFeed INDIA                            0   0   0   0   0   0   0   0
+  SAS-FoodSuppl INDIA                           0   0  38  73 110  77  50  30
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   0   0   0   0   0   0   0   0
+  VITAMIN-A INDIA                               0   0   0   0   0   0   0   0
+  ZVITAMBO ZIMBABWE                             0   0   0   0   0   0   0   0
+                                             
+                                                9  10  11  12  13  14  15  16
+  Burkina Faso Zn BURKINA FASO                  0   0   0   0   0   0   0   0
+  CMC-V-BCS-2002 INDIA                          0   0   0   0   0   0   0   0
+  CMIN BANGLADESH                               0   0   0   0   0   0   0   0
+  COHORTS GUATEMALA                             0   0   0   0   0   0   0   0
+  COHORTS INDIA                                 0   0   0   0   0   0   0   0
+  COHORTS PHILIPPINES                           0   0   0   0   0   0   0   0
+  CONTENT PERU                                  0   0   0   0   0   0   0   0
+  EE PAKISTAN                                   0   0   0   0   0   0   0   0
+  GMS-Nepal NEPAL                               0   0   0   0   0   0   0   0
+  Guatemala BSC GUATEMALA                       0   0   0   0   0   0   0   0
+  iLiNS-DOSE MALAWI                             0   0   0   0   0   0   0   0
+  iLiNS-DYAD-M MALAWI                           4   6   5   2   1   0   0   0
+  iLiNS-Zinc BURKINA FASO                       0   0   0   0   0   0   0   0
+  IRC INDIA                                    17  12  10   7   6   0   2   1
+  JiVitA-3 BANGLADESH                           0   0   0   0   0   0   0   0
+  JiVitA-4 BANGLADESH                           0   0   0   0   0   0   0   0
+  Keneba GAMBIA                                 0   0   0   0   0   0   0   0
+  LCNI-5 MALAWI                                16   9   1   2   2   0   0   0
+  MAL-ED BANGLADESH                             0   0   0   0   0   0   0   0
+  MAL-ED BRAZIL                                 0   0   0   0   0   0   0   0
+  MAL-ED INDIA                                  0   0   0   0   0   0   0   0
+  MAL-ED NEPAL                                  0   0   0   0   0   0   0   0
+  MAL-ED PERU                                   0   0   0   0   0   0   0   0
+  MAL-ED SOUTH AFRICA                           0   0   0   0   0   0   0   0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           0   0   0   0   0   0   0   0
+  NIH-Birth BANGLADESH                         21  15   7   3   3   3   0   2
+  NIH-Crypto BANGLADESH                        29  28   9  18   1   6   3   0
+  PROBIT BELARUS                                0   0   0   0   0   0   0   0
+  PROVIDE BANGLADESH                           21  17  12   4   0   2   2   1
+  ResPak PAKISTAN                               0   0   0   0   0   0   0   0
+  SAS-CompFeed INDIA                            0   0   0   0   0   0   0   0
+  SAS-FoodSuppl INDIA                          15  18   3   1   1   1   0   0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   0   0   0   0   0   0   0   0
+  VITAMIN-A INDIA                               0   0   0   0   0   0   0   0
+  ZVITAMBO ZIMBABWE                             0   0   0   0   0   0   0   0
+                                             
+                                               17  18  20
+  Burkina Faso Zn BURKINA FASO                  0   0   0
+  CMC-V-BCS-2002 INDIA                          0   0   0
+  CMIN BANGLADESH                               0   0   0
+  COHORTS GUATEMALA                             0   0   0
+  COHORTS INDIA                                 0   0   0
+  COHORTS PHILIPPINES                           0   0   0
+  CONTENT PERU                                  0   0   0
+  EE PAKISTAN                                   0   0   0
+  GMS-Nepal NEPAL                               0   0   0
+  Guatemala BSC GUATEMALA                       0   0   0
+  iLiNS-DOSE MALAWI                             0   0   0
+  iLiNS-DYAD-M MALAWI                           0   0   0
+  iLiNS-Zinc BURKINA FASO                       0   0   0
+  IRC INDIA                                     2   0   1
+  JiVitA-3 BANGLADESH                           0   0   0
+  JiVitA-4 BANGLADESH                           0   0   0
+  Keneba GAMBIA                                 0   0   0
+  LCNI-5 MALAWI                                 0   0   0
+  MAL-ED BANGLADESH                             0   0   0
+  MAL-ED BRAZIL                                 0   0   0
+  MAL-ED INDIA                                  0   0   0
+  MAL-ED NEPAL                                  0   0   0
+  MAL-ED PERU                                   0   0   0
+  MAL-ED SOUTH AFRICA                           0   0   0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           0   0   0
+  NIH-Birth BANGLADESH                          0   1   0
+  NIH-Crypto BANGLADESH                         1   0   0
+  PROBIT BELARUS                                0   0   0
+  PROVIDE BANGLADESH                            1   1   0
+  ResPak PAKISTAN                               0   0   0
+  SAS-CompFeed INDIA                            0   0   0
+  SAS-FoodSuppl INDIA                           1   0   0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   0   0   0
+  VITAMIN-A INDIA                               0   0   0
+  ZVITAMBO ZIMBABWE                             0   0   0
+> 
+> nhh<-NA
+> nhh[d$nhh<4] <- "3 or less"
+> nhh[d$nhh>3 & d$nhh<6] <- "4-5"
+> nhh[d$nhh>5 & d$nhh<8] <- "6-7"
+> nhh[d$nhh>7] <- "8+"
+> d$nhh <- as.factor(nhh)
+> table(d$nhh)
+
+3 or less       4-5       6-7        8+ 
+      799      1697       949       577 
+> table(paste0(d$studyid," ", d$country), d$nhh)
+                                             
+                                              3 or less 4-5 6-7  8+
+  Burkina Faso Zn BURKINA FASO                        0   0   0   0
+  CMC-V-BCS-2002 INDIA                                0   0   0   0
+  CMIN BANGLADESH                                     0   0   0   0
+  COHORTS GUATEMALA                                   0   0   0   0
+  COHORTS INDIA                                       0   0   0   0
+  COHORTS PHILIPPINES                                 0   0   0   0
+  CONTENT PERU                                        0   0   0   0
+  EE PAKISTAN                                         0   0   0   0
+  GMS-Nepal NEPAL                                     0   0   0   0
+  Guatemala BSC GUATEMALA                             0   0   0   0
+  iLiNS-DOSE MALAWI                                   0   0   0   0
+  iLiNS-DYAD-M MALAWI                               107  88  62  33
+  iLiNS-Zinc BURKINA FASO                             0   0   0   0
+  IRC INDIA                                          58 158 107  87
+  JiVitA-3 BANGLADESH                                 0   0   0   0
+  JiVitA-4 BANGLADESH                                 0   0   0   0
+  Keneba GAMBIA                                       0   0   0   0
+  LCNI-5 MALAWI                                     225 340 182  70
+  MAL-ED BANGLADESH                                   0   0   0   0
+  MAL-ED BRAZIL                                       0   0   0   0
+  MAL-ED INDIA                                        0   0   0   0
+  MAL-ED NEPAL                                        0   0   0   0
+  MAL-ED PERU                                         0   0   0   0
+  MAL-ED SOUTH AFRICA                                 0   0   0   0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF                 0   0   0   0
+  NIH-Birth BANGLADESH                              117 264 142 106
+  NIH-Crypto BANGLADESH                             114 342 178 124
+  PROBIT BELARUS                                      0   0   0   0
+  PROVIDE BANGLADESH                                140 322 151  87
+  ResPak PAKISTAN                                     0   0   0   0
+  SAS-CompFeed INDIA                                  0   0   0   0
+  SAS-FoodSuppl INDIA                                38 183 127  70
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF         0   0   0   0
+  VITAMIN-A INDIA                                     0   0   0   0
+  ZVITAMBO ZIMBABWE                                   0   0   0   0
+> 
+> 
+> table(d$nchldlt5)
+
+    1     2     3     4     5     6     7     8    10    11 
+22662 12964  1512   383   107    30    11     3     3     2 
+> table(paste0(d$studyid," ", d$country), d$nchldlt5)
+                                             
+                                                  1     2     3     4     5
+  Burkina Faso Zn BURKINA FASO                    0     0     0     0     0
+  CMC-V-BCS-2002 INDIA                            0     0     0     0     0
+  CMIN BANGLADESH                                 0     0     0     0     0
+  COHORTS GUATEMALA                               0     0     0     0     0
+  COHORTS INDIA                                   0     0     0     0     0
+  COHORTS PHILIPPINES                             0     0     0     0     0
+  CONTENT PERU                                    0     0     0     0     0
+  EE PAKISTAN                                     0     0     0     0     0
+  GMS-Nepal NEPAL                                 0     0     0     0     0
+  Guatemala BSC GUATEMALA                         0     0     0     0     0
+  iLiNS-DOSE MALAWI                             845   816   119    24     5
+  iLiNS-DYAD-M MALAWI                            63   163    40     7     4
+  iLiNS-Zinc BURKINA FASO                      1073  1272   525   231    68
+  IRC INDIA                                      89   119   100    62    22
+  JiVitA-3 BANGLADESH                         17511  9180   596    41     4
+  JiVitA-4 BANGLADESH                             0     0     0     0     0
+  Keneba GAMBIA                                   0     0     0     0     0
+  LCNI-5 MALAWI                                 391   358    51     9     1
+  MAL-ED BANGLADESH                               0     0     0     0     0
+  MAL-ED BRAZIL                                   0     0     0     0     0
+  MAL-ED INDIA                                    0     0     0     0     0
+  MAL-ED NEPAL                                    0     0     0     0     0
+  MAL-ED PERU                                     0     0     0     0     0
+  MAL-ED SOUTH AFRICA                             0     0     0     0     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0     0     0     0     0
+  NIH-Birth BANGLADESH                            0     0     0     0     0
+  NIH-Crypto BANGLADESH                         541   211     6     0     0
+  PROBIT BELARUS                                  0     0     0     0     0
+  PROVIDE BANGLADESH                            512   176    12     0     0
+  ResPak PAKISTAN                                 0     0     0     0     0
+  SAS-CompFeed INDIA                              0     0     0     0     0
+  SAS-FoodSuppl INDIA                             0     0     0     0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  1637   669    63     9     3
+  VITAMIN-A INDIA                                 0     0     0     0     0
+  ZVITAMBO ZIMBABWE                               0     0     0     0     0
+                                             
+                                                  6     7     8    10    11
+  Burkina Faso Zn BURKINA FASO                    0     0     0     0     0
+  CMC-V-BCS-2002 INDIA                            0     0     0     0     0
+  CMIN BANGLADESH                                 0     0     0     0     0
+  COHORTS GUATEMALA                               0     0     0     0     0
+  COHORTS INDIA                                   0     0     0     0     0
+  COHORTS PHILIPPINES                             0     0     0     0     0
+  CONTENT PERU                                    0     0     0     0     0
+  EE PAKISTAN                                     0     0     0     0     0
+  GMS-Nepal NEPAL                                 0     0     0     0     0
+  Guatemala BSC GUATEMALA                         0     0     0     0     0
+  iLiNS-DOSE MALAWI                               2     0     0     0     0
+  iLiNS-DYAD-M MALAWI                             0     1     0     0     1
+  iLiNS-Zinc BURKINA FASO                        15     4     1     0     0
+  IRC INDIA                                      12     4     2     0     0
+  JiVitA-3 BANGLADESH                             1     0     0     0     0
+  JiVitA-4 BANGLADESH                             0     0     0     0     0
+  Keneba GAMBIA                                   0     0     0     0     0
+  LCNI-5 MALAWI                                   0     1     0     0     1
+  MAL-ED BANGLADESH                               0     0     0     0     0
+  MAL-ED BRAZIL                                   0     0     0     0     0
+  MAL-ED INDIA                                    0     0     0     0     0
+  MAL-ED NEPAL                                    0     0     0     0     0
+  MAL-ED PERU                                     0     0     0     0     0
+  MAL-ED SOUTH AFRICA                             0     0     0     0     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0     0     0     0     0
+  NIH-Birth BANGLADESH                            0     0     0     0     0
+  NIH-Crypto BANGLADESH                           0     0     0     0     0
+  PROBIT BELARUS                                  0     0     0     0     0
+  PROVIDE BANGLADESH                              0     0     0     0     0
+  ResPak PAKISTAN                                 0     0     0     0     0
+  SAS-CompFeed INDIA                              0     0     0     0     0
+  SAS-FoodSuppl INDIA                             0     0     0     0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     0     1     0     3     0
+  VITAMIN-A INDIA                                 0     0     0     0     0
+  ZVITAMBO ZIMBABWE                               0     0     0     0     0
+> 
+> nchild5<-NA
+> nchild5[d$nchldlt5==1] <- "1"
+> nchild5[d$nchldlt5>=2] <- "2+"
+> d$nchldlt5 <- as.factor(nchild5)
+> table(d$nchldlt5)
+
+    1    2+ 
+22662 15015 
+> table(paste0(d$studyid," ", d$country), d$nchldlt5)
+                                             
+                                                  1    2+
+  Burkina Faso Zn BURKINA FASO                    0     0
+  CMC-V-BCS-2002 INDIA                            0     0
+  CMIN BANGLADESH                                 0     0
+  COHORTS GUATEMALA                               0     0
+  COHORTS INDIA                                   0     0
+  COHORTS PHILIPPINES                             0     0
+  CONTENT PERU                                    0     0
+  EE PAKISTAN                                     0     0
+  GMS-Nepal NEPAL                                 0     0
+  Guatemala BSC GUATEMALA                         0     0
+  iLiNS-DOSE MALAWI                             845   966
+  iLiNS-DYAD-M MALAWI                            63   216
+  iLiNS-Zinc BURKINA FASO                      1073  2116
+  IRC INDIA                                      89   321
+  JiVitA-3 BANGLADESH                         17511  9822
+  JiVitA-4 BANGLADESH                             0     0
+  Keneba GAMBIA                                   0     0
+  LCNI-5 MALAWI                                 391   421
+  MAL-ED BANGLADESH                               0     0
+  MAL-ED BRAZIL                                   0     0
+  MAL-ED INDIA                                    0     0
+  MAL-ED NEPAL                                    0     0
+  MAL-ED PERU                                     0     0
+  MAL-ED SOUTH AFRICA                             0     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0     0
+  NIH-Birth BANGLADESH                            0     0
+  NIH-Crypto BANGLADESH                         541   217
+  PROBIT BELARUS                                  0     0
+  PROVIDE BANGLADESH                            512   188
+  ResPak PAKISTAN                                 0     0
+  SAS-CompFeed INDIA                              0     0
+  SAS-FoodSuppl INDIA                             0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  1637   748
+  VITAMIN-A INDIA                                 0     0
+  ZVITAMBO ZIMBABWE                               0     0
+> 
+> d$nchldlt5 <- relevel(d$nchldlt5, ref="1")
+> 
+> table(d$parity)
+
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+24132 20607 12934 10176  2505  2335   566   348   513   123    63    32     6 
+   14    15    17    19 
+    5     2     1     2 
+> table(paste0(d$studyid," ", d$country), d$parity)
+                                             
+                                                  1     2     3     4     5
+  Burkina Faso Zn BURKINA FASO                 1321  1197   992  1355     0
+  CMC-V-BCS-2002 INDIA                            0     0     0     0     0
+  CMIN BANGLADESH                                 0     0     0     0     0
+  COHORTS GUATEMALA                             317   309   280  1093     0
+  COHORTS INDIA                                 827  1199  1040  1620     0
+  COHORTS PHILIPPINES                           678   690   597  1093     0
+  CONTENT PERU                                    0     0     0     0     0
+  EE PAKISTAN                                     0     0     0     0     0
+  GMS-Nepal NEPAL                               211   181   128    89    48
+  Guatemala BSC GUATEMALA                         0     0     0     0     0
+  iLiNS-DOSE MALAWI                               0     0     0     0     0
+  iLiNS-DYAD-M MALAWI                           215   269   262   205   158
+  iLiNS-Zinc BURKINA FASO                         0     0     0     0     0
+  IRC INDIA                                       0     0     0     0     0
+  JiVitA-3 BANGLADESH                         10327  9027  4737  2018   760
+  JiVitA-4 BANGLADESH                             0     0     0     0     0
+  Keneba GAMBIA                                 241   215   233   238   223
+  LCNI-5 MALAWI                                   0     0     0     0     0
+  MAL-ED BANGLADESH                               0     0     0     0     0
+  MAL-ED BRAZIL                                   0     0     0     0     0
+  MAL-ED INDIA                                    0     0     0     0     0
+  MAL-ED NEPAL                                    0     0     0     0     0
+  MAL-ED PERU                                     0     0     0     0     0
+  MAL-ED SOUTH AFRICA                             0     0     0     0     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0     0     0     0     0
+  NIH-Birth BANGLADESH                            0     0     0     0     0
+  NIH-Crypto BANGLADESH                           0     0     0     0     0
+  PROBIT BELARUS                                  0     0     0     0     0
+  PROVIDE BANGLADESH                            271   244   103    50    21
+  ResPak PAKISTAN                                 0     0     0     0     0
+  SAS-CompFeed INDIA                           2806  2213  2012  1180   696
+  SAS-FoodSuppl INDIA                            21    77    92    74    54
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   821   771   460   192    82
+  VITAMIN-A INDIA                                 0     0     0     0     0
+  ZVITAMBO ZIMBABWE                            6076  4215  1998   969   463
+                                             
+                                                  6     7     8     9    10
+  Burkina Faso Zn BURKINA FASO                 1093     0     0   283     0
+  CMC-V-BCS-2002 INDIA                            0     0     0     0     0
+  CMIN BANGLADESH                                 0     0     0     0     0
+  COHORTS GUATEMALA                               0     0     0     0     0
+  COHORTS INDIA                                   0     0     0     0     0
+  COHORTS PHILIPPINES                             0     0     0     0     0
+  CONTENT PERU                                    0     0     0     0     0
+  EE PAKISTAN                                     0     0     0     0     0
+  GMS-Nepal NEPAL                                19     5     9     4     3
+  Guatemala BSC GUATEMALA                         0     0     0     0     0
+  iLiNS-DOSE MALAWI                               0     0     0     0     0
+  iLiNS-DYAD-M MALAWI                            63    24     6     3     0
+  iLiNS-Zinc BURKINA FASO                         0     0     0     0     0
+  IRC INDIA                                       0     0     0     0     0
+  JiVitA-3 BANGLADESH                           295   123    43    19     7
+  JiVitA-4 BANGLADESH                             0     0     0     0     0
+  Keneba GAMBIA                                 231   173   125   129    94
+  LCNI-5 MALAWI                                   0     0     0     0     0
+  MAL-ED BANGLADESH                               0     0     0     0     0
+  MAL-ED BRAZIL                                   0     0     0     0     0
+  MAL-ED INDIA                                    0     0     0     0     0
+  MAL-ED NEPAL                                    0     0     0     0     0
+  MAL-ED PERU                                     0     0     0     0     0
+  MAL-ED SOUTH AFRICA                             0     0     0     0     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0     0     0     0     0
+  NIH-Birth BANGLADESH                            0     0     0     0     0
+  NIH-Crypto BANGLADESH                           0     0     0     0     0
+  PROBIT BELARUS                                  0     0     0     0     0
+  PROVIDE BANGLADESH                              6     3     1     0     1
+  ResPak PAKISTAN                                 0     0     0     0     0
+  SAS-CompFeed INDIA                            329   118   121    56     7
+  SAS-FoodSuppl INDIA                            58    23    11     5     1
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF    21     7     2     0     0
+  VITAMIN-A INDIA                                 0     0     0     0     0
+  ZVITAMBO ZIMBABWE                             220    90    30    14    10
+                                             
+                                                 11    12    13    14    15
+  Burkina Faso Zn BURKINA FASO                    0     0     0     0     0
+  CMC-V-BCS-2002 INDIA                            0     0     0     0     0
+  CMIN BANGLADESH                                 0     0     0     0     0
+  COHORTS GUATEMALA                               0     0     0     0     0
+  COHORTS INDIA                                   0     0     0     0     0
+  COHORTS PHILIPPINES                             0     0     0     0     0
+  CONTENT PERU                                    0     0     0     0     0
+  EE PAKISTAN                                     0     0     0     0     0
+  GMS-Nepal NEPAL                                 1     0     0     0     0
+  Guatemala BSC GUATEMALA                         0     0     0     0     0
+  iLiNS-DOSE MALAWI                               0     0     0     0     0
+  iLiNS-DYAD-M MALAWI                             0     0     0     0     0
+  iLiNS-Zinc BURKINA FASO                         0     0     0     0     0
+  IRC INDIA                                       0     0     0     0     0
+  JiVitA-3 BANGLADESH                             5     1     0     1     0
+  JiVitA-4 BANGLADESH                             0     0     0     0     0
+  Keneba GAMBIA                                  54    30     6     4     2
+  LCNI-5 MALAWI                                   0     0     0     0     0
+  MAL-ED BANGLADESH                               0     0     0     0     0
+  MAL-ED BRAZIL                                   0     0     0     0     0
+  MAL-ED INDIA                                    0     0     0     0     0
+  MAL-ED NEPAL                                    0     0     0     0     0
+  MAL-ED PERU                                     0     0     0     0     0
+  MAL-ED SOUTH AFRICA                             0     0     0     0     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0     0     0     0     0
+  NIH-Birth BANGLADESH                            0     0     0     0     0
+  NIH-Crypto BANGLADESH                           0     0     0     0     0
+  PROBIT BELARUS                                  0     0     0     0     0
+  PROVIDE BANGLADESH                              0     0     0     0     0
+  ResPak PAKISTAN                                 0     0     0     0     0
+  SAS-CompFeed INDIA                              0     1     0     0     0
+  SAS-FoodSuppl INDIA                             2     0     0     0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     0     0     0     0     0
+  VITAMIN-A INDIA                                 0     0     0     0     0
+  ZVITAMBO ZIMBABWE                               1     0     0     0     0
+                                             
+                                                 17    19
+  Burkina Faso Zn BURKINA FASO                    0     0
+  CMC-V-BCS-2002 INDIA                            0     0
+  CMIN BANGLADESH                                 0     0
+  COHORTS GUATEMALA                               0     0
+  COHORTS INDIA                                   0     0
+  COHORTS PHILIPPINES                             0     0
+  CONTENT PERU                                    0     0
+  EE PAKISTAN                                     0     0
+  GMS-Nepal NEPAL                                 0     0
+  Guatemala BSC GUATEMALA                         0     0
+  iLiNS-DOSE MALAWI                               0     0
+  iLiNS-DYAD-M MALAWI                             0     0
+  iLiNS-Zinc BURKINA FASO                         0     0
+  IRC INDIA                                       0     0
+  JiVitA-3 BANGLADESH                             0     0
+  JiVitA-4 BANGLADESH                             0     0
+  Keneba GAMBIA                                   0     2
+  LCNI-5 MALAWI                                   0     0
+  MAL-ED BANGLADESH                               0     0
+  MAL-ED BRAZIL                                   0     0
+  MAL-ED INDIA                                    0     0
+  MAL-ED NEPAL                                    0     0
+  MAL-ED PERU                                     0     0
+  MAL-ED SOUTH AFRICA                             0     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0     0
+  NIH-Birth BANGLADESH                            0     0
+  NIH-Crypto BANGLADESH                           0     0
+  PROBIT BELARUS                                  0     0
+  PROVIDE BANGLADESH                              0     0
+  ResPak PAKISTAN                                 0     0
+  SAS-CompFeed INDIA                              0     0
+  SAS-FoodSuppl INDIA                             0     0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     1     0
+  VITAMIN-A INDIA                                 0     0
+  ZVITAMBO ZIMBABWE                               0     0
+> 
+> parity<-NA
+> parity[d$parity==1] <- "1"
+> parity[d$parity==2] <- "2"
+> parity[d$parity>2] <- "3+"
+> d$parity <- as.factor(parity)
+> table(d$parity)
+
+    1     2    3+ 
+24132 20607 29611 
+> table(paste0(d$studyid," ", d$country), d$parity)
+                                             
+                                                  1     2    3+
+  Burkina Faso Zn BURKINA FASO                 1321  1197  3723
+  CMC-V-BCS-2002 INDIA                            0     0     0
+  CMIN BANGLADESH                                 0     0     0
+  COHORTS GUATEMALA                             317   309  1373
+  COHORTS INDIA                                 827  1199  2660
+  COHORTS PHILIPPINES                           678   690  1690
+  CONTENT PERU                                    0     0     0
+  EE PAKISTAN                                     0     0     0
+  GMS-Nepal NEPAL                               211   181   306
+  Guatemala BSC GUATEMALA                         0     0     0
+  iLiNS-DOSE MALAWI                               0     0     0
+  iLiNS-DYAD-M MALAWI                           215   269   721
+  iLiNS-Zinc BURKINA FASO                         0     0     0
+  IRC INDIA                                       0     0     0
+  JiVitA-3 BANGLADESH                         10327  9027  8009
+  JiVitA-4 BANGLADESH                             0     0     0
+  Keneba GAMBIA                                 241   215  1544
+  LCNI-5 MALAWI                                   0     0     0
+  MAL-ED BANGLADESH                               0     0     0
+  MAL-ED BRAZIL                                   0     0     0
+  MAL-ED INDIA                                    0     0     0
+  MAL-ED NEPAL                                    0     0     0
+  MAL-ED PERU                                     0     0     0
+  MAL-ED SOUTH AFRICA                             0     0     0
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             0     0     0
+  NIH-Birth BANGLADESH                            0     0     0
+  NIH-Crypto BANGLADESH                           0     0     0
+  PROBIT BELARUS                                  0     0     0
+  PROVIDE BANGLADESH                            271   244   185
+  ResPak PAKISTAN                                 0     0     0
+  SAS-CompFeed INDIA                           2806  2213  4520
+  SAS-FoodSuppl INDIA                            21    77   320
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   821   771   765
+  VITAMIN-A INDIA                                 0     0     0
+  ZVITAMBO ZIMBABWE                            6076  4215  3795
+> 
+> 
+> 
+> d$parity <- relevel(d$parity, ref="1")
+> 
+> 
+> 
+> 
+> #---------------------------------------
+> # Set reference levels
+> #---------------------------------------
+> 
+> #birthweight
+> # Low birth weight: < 2500
+> # healthy birth weight 2500-4200
+> 
+> d$birthwt <- relevel(d$birthwt, ref="Normal or high birthweight")
+> 
+> 
+> #birth length: 
+> #No WHO categories:
+> #Based on quantiles
+> 
+> d$birthlen <- relevel(d$birthlen, ref=">=50 cm")
+> 
+> #wealth index: 
+> #wealthiest quartile - Q4 is baseline
+> table(paste0(d$studyid," ", d$country), d$hhwealth_quart)
+                                             
+                                              Wealth Q1 Wealth Q2 Wealth Q3
+  Burkina Faso Zn BURKINA FASO                        0         0         0
+  CMC-V-BCS-2002 INDIA                               91        95        91
+  CMIN BANGLADESH                                     0         0         0
+  COHORTS GUATEMALA                                 358       377       374
+  COHORTS INDIA                                       0         0         0
+  COHORTS PHILIPPINES                               687       542       985
+  CONTENT PERU                                       59        52        52
+  EE PAKISTAN                                         0         0         0
+  GMS-Nepal NEPAL                                   175       174       174
+  Guatemala BSC GUATEMALA                             0         0         0
+  iLiNS-DOSE MALAWI                                 470       470       468
+  iLiNS-DYAD-M MALAWI                               299       300       301
+  iLiNS-Zinc BURKINA FASO                             0         0         0
+  IRC INDIA                                         105       102       103
+  JiVitA-3 BANGLADESH                              6628      6689      6841
+  JiVitA-4 BANGLADESH                              1372      1345      1361
+  Keneba GAMBIA                                       0         0         0
+  LCNI-5 MALAWI                                     204       199       197
+  MAL-ED BANGLADESH                                  60        61        60
+  MAL-ED BRAZIL                                      53        53        51
+  MAL-ED INDIA                                       60        58        58
+  MAL-ED NEPAL                                       59        59        59
+  MAL-ED PERU                                        68        71        65
+  MAL-ED SOUTH AFRICA                                64        64        64
+  MAL-ED TANZANIA, UNITED REPUBLIC OF                63        62        62
+  NIH-Birth BANGLADESH                                0         0         0
+  NIH-Crypto BANGLADESH                               0         0         0
+  PROBIT BELARUS                                      0         0         0
+  PROVIDE BANGLADESH                                174       176       175
+  ResPak PAKISTAN                                     0         0         0
+  SAS-CompFeed INDIA                                  0         0         0
+  SAS-FoodSuppl INDIA                                 0         0         0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF       719       483       589
+  VITAMIN-A INDIA                                     0         0         0
+  ZVITAMBO ZIMBABWE                                   0         0         0
+                                             
+                                              Wealth Q4
+  Burkina Faso Zn BURKINA FASO                        0
+  CMC-V-BCS-2002 INDIA                               96
+  CMIN BANGLADESH                                     0
+  COHORTS GUATEMALA                                 743
+  COHORTS INDIA                                       0
+  COHORTS PHILIPPINES                               843
+  CONTENT PERU                                       52
+  EE PAKISTAN                                         0
+  GMS-Nepal NEPAL                                   175
+  Guatemala BSC GUATEMALA                             0
+  iLiNS-DOSE MALAWI                                 470
+  iLiNS-DYAD-M MALAWI                               305
+  iLiNS-Zinc BURKINA FASO                             0
+  IRC INDIA                                         100
+  JiVitA-3 BANGLADESH                              7178
+  JiVitA-4 BANGLADESH                              1350
+  Keneba GAMBIA                                       0
+  LCNI-5 MALAWI                                     217
+  MAL-ED BANGLADESH                                  61
+  MAL-ED BRAZIL                                      53
+  MAL-ED INDIA                                       59
+  MAL-ED NEPAL                                       59
+  MAL-ED PERU                                        68
+  MAL-ED SOUTH AFRICA                                65
+  MAL-ED TANZANIA, UNITED REPUBLIC OF                63
+  NIH-Birth BANGLADESH                                0
+  NIH-Crypto BANGLADESH                               0
+  PROBIT BELARUS                                      0
+  PROVIDE BANGLADESH                                175
+  ResPak PAKISTAN                                     0
+  SAS-CompFeed INDIA                                  0
+  SAS-FoodSuppl INDIA                                 0
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF       593
+  VITAMIN-A INDIA                                     0
+  ZVITAMBO ZIMBABWE                                   0
+> d$hhwealth_quart <- relevel(d$hhwealth_quart, ref="Wealth Q4")
+> 
+> # children < 5 in HH
+> #not sure how this could be zero - can you double check this? 
+> #baseline should be smallest number
+> 
+> d$nchldlt5 <- relevel(d$nchldlt5, ref="1")
+> 
+> #gestational age at birth
+> #<37 weeks = preterm
+> #37-38 weeks = early term
+> #39-40 weeks = full term (baseline)
+> #>=41 weeks = late/post term
+> 
+> d$gagebrth <- relevel(d$gagebrth, ref="Full or late term")
+> 
+> #maternal BMI (is this measured when pregnant or not? if pregnant, then we may need to change these categories)
+> #<18.5 = underweight
+> #>=18.5 and <25 = normal weight (baseline)
+> #>=25 and <30 = overweight
+> #>=30 = obese
+> 
+> d$mbmi <- relevel(d$mbmi, ref="Normal weight")
+> 
+> #maternal height (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3095774/)
+> #less than 145 cm
+> #145-149.9 cm
+> #150-154.9 cm
+> #155-159.9 cm
+> #160.0 cm or greater. (baseline)
+> 
+> d$mhtcm <- relevel(d$mhtcm, ref=">=155 cm")
+> 
+> #maternal weight?
+> d$mwtkg <- relevel(d$mwtkg, ref=">=58 kg")
+> 
+> #mother's/father's education
+> #lowest education level = baseline
+> d$meducyrs <- relevel(factor(d$meducyrs), ref="Low")
+> d$feducyrs <- relevel(factor(d$feducyrs), ref="Low")
+> 
+> #mother's age
+> #middle = baseline
+> d$mage <- relevel(d$mage, ref="[20-30)")
+> 
+> #father age
+> #oldest = baseline
+> d$fage <- relevel(d$fage, ref=">=38")
+> 
+> #father height
+> d$fhtcm <- relevel(d$fhtcm, ref=">=167 cm")
+> 
+> #parental education
+> d$meducyrs <- relevel(d$meducyrs, ref="High")
+> d$feducyrs <- relevel(d$feducyrs, ref="High")
+> 
+> #number of rooms
+> d$nrooms <- relevel(d$nrooms, ref="4+")
+> 
+> 
+> 
+> #Set remaining risk factors to factors
+> d$brthmon <- factor(d$brthmon)
+> d$month <- factor(d$month)
+> d$single <- factor(d$single)
+> d$vagbrth <- factor(d$vagbrth)
+> d$hdlvry <- factor(d$hdlvry)
+> d$hfoodsec <- factor(d$hfoodsec)
+> d$enstunt <- factor(d$enstunt)
+> d$sex <- factor(d$sex)
+> d$meducyrs <- factor(d$meducyrs)
+> 
+> #Check that all risk factor variables are set as factors
+> d<-as.data.frame(d)
+> for(i in 1:ncol(d)){
++   cat(colnames(d)[i], ": ", class(d[,i]), "\n")
++ }
+studyid :  character 
+subjid :  character 
+sex :  factor 
+month :  factor 
+wtkg :  numeric 
+htcm :  numeric 
+lencm :  numeric 
+hcircm :  numeric 
+muaccm :  numeric 
+muaz :  numeric 
+siteid :  integer 
+ctrycd :  character 
+country :  character 
+region :  character 
+citytown :  character 
+latitude :  numeric 
+longitud :  numeric 
+clustid :  integer 
+arm :  character 
+tr :  character 
+gagebrth :  factor 
+dead :  integer 
+agedth :  integer 
+causedth :  character 
+brthyr :  integer 
+brthmon :  factor 
+parity :  factor 
+birthwt :  factor 
+birthlen :  factor 
+vagbrth :  factor 
+hdlvry :  factor 
+mage :  factor 
+mhtcm :  factor 
+mwtkg :  factor 
+mbmi :  factor 
+meducyrs :  factor 
+single :  factor 
+fage :  factor 
+fhtcm :  factor 
+feducyrs :  factor 
+trth2o :  integer 
+cleanck :  integer 
+impfloor :  integer 
+nrooms :  factor 
+nhh :  factor 
+nchldlt5 :  factor 
+earlybf :  integer 
+hfoodsec :  factor 
+measurefreq :  character 
+anywast06 :  numeric 
+pers_wast :  numeric 
+enstunt :  factor 
+enwast :  numeric 
+hhwealth_quart :  factor 
+id :  character 
+W_gagebrth :  integer 
+W_birthwt :  numeric 
+W_birthlen :  numeric 
+W_mage :  numeric 
+W_mhtcm :  numeric 
+W_mwtkg :  numeric 
+W_mbmi :  numeric 
+W_fage :  integer 
+W_fhtcm :  numeric 
+W_meducyrs :  integer 
+W_feducyrs :  integer 
+W_nrooms :  integer 
+W_nhh :  integer 
+W_nchldlt5 :  numeric 
+W_parity :  numeric 
+> 
+> 
+> 
+> #Tabulate missingness
+> for(i in 1:ncol(d)){
++   print(colnames(d)[i])
++   print(table(is.na(d[,i])))
++   print(levels(d[,i]))
++ }
+[1] "studyid"
+
+ FALSE 
+117372 
+NULL
+[1] "subjid"
+
+ FALSE 
+117372 
+NULL
+[1] "sex"
+
+ FALSE 
+117372 
+[1] "Female" "Male"  
+[1] "month"
+
+ FALSE   TRUE 
+103334  14038 
+ [1] "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10" "11" "12"
+[1] "wtkg"
+
+ FALSE   TRUE 
+117163    209 
+NULL
+[1] "htcm"
+
+ FALSE   TRUE 
+ 10351 107021 
+NULL
+[1] "lencm"
+
+ FALSE   TRUE 
+107020  10352 
+NULL
+[1] "hcircm"
+
+FALSE  TRUE 
+82168 35204 
+NULL
+[1] "muaccm"
+
+FALSE  TRUE 
+52771 64601 
+NULL
+[1] "muaz"
+
+ FALSE   TRUE 
+ 16104 101268 
+NULL
+[1] "siteid"
+
+ FALSE 
+117372 
+NULL
+[1] "ctrycd"
+
+ FALSE 
+117372 
+NULL
+[1] "country"
+
+ FALSE 
+117372 
+NULL
+[1] "region"
+
+ FALSE 
+117372 
+NULL
+[1] "citytown"
+
+ FALSE 
+117372 
+NULL
+[1] "latitude"
+
+ FALSE   TRUE 
+117093    279 
+NULL
+[1] "longitud"
+
+ FALSE   TRUE 
+117093    279 
+NULL
+[1] "clustid"
+
+FALSE  TRUE 
+62510 54862 
+NULL
+[1] "arm"
+
+ FALSE 
+117372 
+NULL
+[1] "tr"
+
+FALSE  TRUE 
+97971 19401 
+NULL
+[1] "gagebrth"
+
+FALSE  TRUE 
+54850 62522 
+[1] "Full or late term" "Preterm"           "Early term"       
+[1] "dead"
+
+FALSE  TRUE 
+49919 67453 
+NULL
+[1] "agedth"
+
+ FALSE   TRUE 
+  2372 115000 
+NULL
+[1] "causedth"
+
+ FALSE 
+117372 
+NULL
+[1] "brthyr"
+
+ FALSE   TRUE 
+113893   3479 
+NULL
+[1] "brthmon"
+
+ FALSE   TRUE 
+104034  13338 
+ [1] "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10" "11" "12"
+[1] "parity"
+
+FALSE  TRUE 
+74350 43022 
+[1] "1"  "2"  "3+"
+[1] "birthwt"
+
+FALSE  TRUE 
+89259 28113 
+[1] "Normal or high birthweight" "Low birthweight"           
+[1] "birthlen"
+
+FALSE  TRUE 
+83890 33482 
+[1] ">=50 cm"    "<48 cm"     "[48-50) cm"
+[1] "vagbrth"
+
+FALSE  TRUE 
+68124 49248 
+[1] "0" "1"
+[1] "hdlvry"
+
+FALSE  TRUE 
+24868 92504 
+[1] "0" "1"
+[1] "mage"
+
+ FALSE   TRUE 
+107098  10274 
+[1] "[20-30)" "<20"     ">=30"   
+[1] "mhtcm"
+
+FALSE  TRUE 
+88895 28477 
+[1] ">=155 cm"     "<151 cm"      "[151-155) cm"
+[1] "mwtkg"
+
+FALSE  TRUE 
+81094 36278 
+[1] ">=58 kg"    "<52 kg"     "[52-58) kg"
+[1] "mbmi"
+
+FALSE  TRUE 
+78844 38528 
+[1] "Normal weight" "Underweight"  
+[1] "meducyrs"
+
+ FALSE   TRUE 
+106693  10679 
+[1] "High"   "Low"    "Medium"
+[1] "single"
+
+FALSE  TRUE 
+54197 63175 
+[1] "0" "1"
+[1] "fage"
+
+FALSE  TRUE 
+34791 82581 
+[1] ">=38"    "<32"     "[32-38)"
+[1] "fhtcm"
+
+FALSE  TRUE 
+21484 95888 
+[1] ">=167 cm"     "<162 cm"      "[162-167) cm"
+[1] "feducyrs"
+
+FALSE  TRUE 
+90973 26399 
+[1] "High"   "Low"    "Medium"
+[1] "trth2o"
+
+ FALSE   TRUE 
+  2138 115234 
+NULL
+[1] "cleanck"
+
+ FALSE   TRUE 
+  8787 108585 
+NULL
+[1] "impfloor"
+
+FALSE  TRUE 
+37988 79384 
+NULL
+[1] "nrooms"
+
+FALSE  TRUE 
+49091 68281 
+[1] "4+" "1"  "2"  "3" 
+[1] "nhh"
+
+ FALSE   TRUE 
+  4022 113350 
+[1] "3 or less" "4-5"       "6-7"       "8+"       
+[1] "nchldlt5"
+
+FALSE  TRUE 
+37677 79695 
+[1] "1"  "2+"
+[1] "earlybf"
+
+FALSE  TRUE 
+59489 57883 
+NULL
+[1] "hfoodsec"
+
+FALSE  TRUE 
+28362 89010 
+[1] "Food Secure"          "Mildly Food Insecure" "Food Insecure"       
+[1] "measurefreq"
+
+ FALSE 
+117372 
+NULL
+[1] "anywast06"
+
+ FALSE   TRUE 
+ 10334 107038 
+NULL
+[1] "pers_wast"
+
+ FALSE   TRUE 
+  9633 107739 
+NULL
+[1] "enstunt"
+
+ FALSE 
+117372 
+[1] "0" "1"
+[1] "enwast"
+
+ FALSE   TRUE 
+109122   8250 
+NULL
+[1] "hhwealth_quart"
+
+FALSE  TRUE 
+48055 69317 
+[1] "Wealth Q4" "Wealth Q1" "Wealth Q2" "Wealth Q3"
+[1] "id"
+
+ FALSE 
+117372 
+NULL
+[1] "W_gagebrth"
+
+FALSE  TRUE 
+54850 62522 
+NULL
+[1] "W_birthwt"
+
+FALSE  TRUE 
+89259 28113 
+NULL
+[1] "W_birthlen"
+
+FALSE  TRUE 
+83890 33482 
+NULL
+[1] "W_mage"
+
+ FALSE   TRUE 
+107098  10274 
+NULL
+[1] "W_mhtcm"
+
+FALSE  TRUE 
+88895 28477 
+NULL
+[1] "W_mwtkg"
+
+FALSE  TRUE 
+81094 36278 
+NULL
+[1] "W_mbmi"
+
+FALSE  TRUE 
+78844 38528 
+NULL
+[1] "W_fage"
+
+FALSE  TRUE 
+34791 82581 
+NULL
+[1] "W_fhtcm"
+
+FALSE  TRUE 
+21484 95888 
+NULL
+[1] "W_meducyrs"
+
+ FALSE   TRUE 
+106693  10679 
+NULL
+[1] "W_feducyrs"
+
+FALSE  TRUE 
+90973 26399 
+NULL
+[1] "W_nrooms"
+
+FALSE  TRUE 
+49091 68281 
+NULL
+[1] "W_nhh"
+
+ FALSE   TRUE 
+  4022 113350 
+NULL
+[1] "W_nchldlt5"
+
+FALSE  TRUE 
+37677 79695 
+NULL
+[1] "W_parity"
+
+FALSE  TRUE 
+74350 43022 
+NULL
+> 
+> 
+> 
+> #--------------------------------------------
+> # Check for sparsity across RF levels
+> #--------------------------------------------
+> 
+> tabRF <- function(d, Avar){
++   tab <- table(paste0(d$studyid, " ",d$country), d[,Avar])
++   tab <- tab[rowSums(tab)!=0, ]
++   print(tab)
++ }
+> 
+> 
+> 
+> 
+> 
+> tabRF(d, "gagebrth")
+                                             
+                                              Full or late term Preterm
+  CMC-V-BCS-2002 INDIA                                      215      52
+  COHORTS GUATEMALA                                         454     134
+  COHORTS INDIA                                             594     319
+  COHORTS PHILIPPINES                                      1167     653
+  iLiNS-DYAD-M MALAWI                                       795      96
+  IRC INDIA                                                 250      42
+  JiVitA-3 BANGLADESH                                     13408    5461
+  Keneba GAMBIA                                             847     257
+  NIH-Crypto BANGLADESH                                     168     265
+  PROBIT BELARUS                                           8630     591
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF              1390     350
+                                             
+                                              Early term
+  CMC-V-BCS-2002 INDIA                                84
+  COHORTS GUATEMALA                                  237
+  COHORTS INDIA                                      466
+  COHORTS PHILIPPINES                               1212
+  iLiNS-DYAD-M MALAWI                                314
+  IRC INDIA                                           98
+  JiVitA-3 BANGLADESH                               7176
+  Keneba GAMBIA                                      609
+  NIH-Crypto BANGLADESH                              325
+  PROBIT BELARUS                                    7677
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF        514
+> tabRF(d, "birthwt")
+                                             
+                                              Normal or high birthweight
+  CMC-V-BCS-2002 INDIA                                               322
+  CMIN BANGLADESH                                                     14
+  COHORTS GUATEMALA                                                  859
+  COHORTS INDIA                                                     5385
+  COHORTS PHILIPPINES                                               2716
+  CONTENT PERU                                                         2
+  EE PAKISTAN                                                        245
+  GMS-Nepal NEPAL                                                    477
+  iLiNS-DYAD-M MALAWI                                                894
+  IRC INDIA                                                          335
+  JiVitA-3 BANGLADESH                                              13041
+  JiVitA-4 BANGLADESH                                               3329
+  Keneba GAMBIA                                                     1316
+  MAL-ED BANGLADESH                                                  205
+  MAL-ED BRAZIL                                                      221
+  MAL-ED INDIA                                                       205
+  MAL-ED NEPAL                                                       214
+  MAL-ED PERU                                                        282
+  MAL-ED SOUTH AFRICA                                                290
+  MAL-ED TANZANIA, UNITED REPUBLIC OF                                187
+  NIH-Birth BANGLADESH                                               423
+  NIH-Crypto BANGLADESH                                              581
+  PROBIT BELARUS                                                   16898
+  PROVIDE BANGLADESH                                                 532
+  ResPak PAKISTAN                                                     35
+  SAS-CompFeed INDIA                                                7159
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF                       2289
+  ZVITAMBO ZIMBABWE                                                12107
+                                             
+                                              Low birthweight
+  CMC-V-BCS-2002 INDIA                                     43
+  CMIN BANGLADESH                                          12
+  COHORTS GUATEMALA                                        85
+  COHORTS INDIA                                          1395
+  COHORTS PHILIPPINES                                     295
+  CONTENT PERU                                              0
+  EE PAKISTAN                                             134
+  GMS-Nepal NEPAL                                         220
+  iLiNS-DYAD-M MALAWI                                     136
+  IRC INDIA                                                69
+  JiVitA-3 BANGLADESH                                    9858
+  JiVitA-4 BANGLADESH                                    1179
+  Keneba GAMBIA                                           222
+  MAL-ED BANGLADESH                                        57
+  MAL-ED BRAZIL                                            12
+  MAL-ED INDIA                                             36
+  MAL-ED NEPAL                                             19
+  MAL-ED PERU                                              17
+  MAL-ED SOUTH AFRICA                                      22
+  MAL-ED TANZANIA, UNITED REPUBLIC OF                      10
+  NIH-Birth BANGLADESH                                    185
+  NIH-Crypto BANGLADESH                                   177
+  PROBIT BELARUS                                            0
+  PROVIDE BANGLADESH                                      168
+  ResPak PAKISTAN                                           7
+  SAS-CompFeed INDIA                                     2322
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF              82
+  ZVITAMBO ZIMBABWE                                      1934
+> tabRF(d, "birthlen")
+                                     
+                                      >=50 cm <48 cm [48-50) cm
+  CMC-V-BCS-2002 INDIA                     16     50         40
+  CMIN BANGLADESH                           2     16          8
+  COHORTS GUATEMALA                       437    163        252
+  COHORTS INDIA                          1426   2779       2440
+  COHORTS PHILIPPINES                    1129    762       1159
+  CONTENT PERU                              1      1          0
+  EE PAKISTAN                              24    164         54
+  GMS-Nepal NEPAL                         115    374        208
+  iLiNS-DYAD-M MALAWI                       6      9          8
+  IRC INDIA                               142    111        138
+  JiVitA-3 BANGLADESH                    1259  16208       5088
+  JiVitA-4 BANGLADESH                    1232   2174       1077
+  Keneba GAMBIA                           764    293        495
+  MAL-ED BANGLADESH                        39    113         79
+  MAL-ED BRAZIL                            30     17         18
+  MAL-ED INDIA                              9     20         18
+  MAL-ED NEPAL                              8     12          7
+  MAL-ED PERU                              52     88         93
+  MAL-ED SOUTH AFRICA                      44     33         46
+  MAL-ED TANZANIA, UNITED REPUBLIC OF      32     42         51
+  NIH-Birth BANGLADESH                    139    240        229
+  NIH-Crypto BANGLADESH                   168    292        298
+  PROBIT BELARUS                        15312    191       1395
+  PROVIDE BANGLADESH                      169    248        283
+  ResPak PAKISTAN                          12     16         14
+  SAS-CompFeed INDIA                     1406   5050       3004
+  ZVITAMBO ZIMBABWE                      4126   4482       5341
+> tabRF(d, "parity") 
+                                             
+                                                  1     2    3+
+  Burkina Faso Zn BURKINA FASO                 1321  1197  3723
+  COHORTS GUATEMALA                             317   309  1373
+  COHORTS INDIA                                 827  1199  2660
+  COHORTS PHILIPPINES                           678   690  1690
+  GMS-Nepal NEPAL                               211   181   306
+  iLiNS-DYAD-M MALAWI                           215   269   721
+  JiVitA-3 BANGLADESH                         10327  9027  8009
+  Keneba GAMBIA                                 241   215  1544
+  PROVIDE BANGLADESH                            271   244   185
+  SAS-CompFeed INDIA                           2806  2213  4520
+  SAS-FoodSuppl INDIA                            21    77   320
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   821   771   765
+  ZVITAMBO ZIMBABWE                            6076  4215  3795
+> tabRF(d, "mage")
+                                             
+                                              [20-30)   <20  >=30
+  Burkina Faso Zn BURKINA FASO                   3066   848  2327
+  CMC-V-BCS-2002 INDIA                            296    34    43
+  COHORTS GUATEMALA                               984   300   717
+  COHORTS INDIA                                  3646   436  1292
+  COHORTS PHILIPPINES                            1827   378   853
+  EE PAKISTAN                                     162     1   214
+  GMS-Nepal NEPAL                                 447   149   102
+  Guatemala BSC GUATEMALA                         175    47    59
+  iLiNS-DOSE MALAWI                              1079   301   469
+  iLiNS-DYAD-M MALAWI                             671   283   251
+  iLiNS-Zinc BURKINA FASO                        1743   403  1033
+  IRC INDIA                                       344    37    29
+  JiVitA-3 BANGLADESH                           12751 12257  2344
+  Keneba GAMBIA                                  1455   399  1042
+  LCNI-5 MALAWI                                   364   108   198
+  MAL-ED BANGLADESH                               182    37    46
+  MAL-ED BRAZIL                                   139    43    51
+  MAL-ED INDIA                                    194    34    21
+  MAL-ED NEPAL                                    189     5    46
+  MAL-ED PERU                                     153    83    67
+  MAL-ED SOUTH AFRICA                             161    48   105
+  MAL-ED TANZANIA, UNITED REPUBLIC OF             140    16   106
+  NIH-Birth BANGLADESH                            422    73   132
+  NIH-Crypto BANGLADESH                           494   136   128
+  PROBIT BELARUS                                12130  1745  3023
+  PROVIDE BANGLADESH                              493    85   122
+  SAS-CompFeed INDIA                             7274  1227  1038
+  SAS-FoodSuppl INDIA                             290    36    92
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF    1571   167   638
+  VITAMIN-A INDIA                                3146   247   512
+  ZVITAMBO ZIMBABWE                              9447  2243  2357
+> tabRF(d, "mhtcm") 
+                                             
+                                              >=155 cm <151 cm [151-155) cm
+  Burkina Faso Zn BURKINA FASO                    5033     327          800
+  COHORTS GUATEMALA                                221    1108          353
+  COHORTS INDIA                                    581     829          516
+  COHORTS PHILIPPINES                              632    1549          877
+  Guatemala BSC GUATEMALA                           36     143           56
+  iLiNS-DOSE MALAWI                               1060     398          470
+  iLiNS-DYAD-M MALAWI                              670     203          326
+  iLiNS-Zinc BURKINA FASO                         2900      91          226
+  JiVitA-3 BANGLADESH                             4166   16190         6882
+  Keneba GAMBIA                                   2035      94          328
+  LCNI-5 MALAWI                                    514     131          192
+  MAL-ED BANGLADESH                                 25     163           66
+  MAL-ED BRAZIL                                    130      53           39
+  MAL-ED INDIA                                      55     115           72
+  MAL-ED NEPAL                                      41     133           64
+  MAL-ED PERU                                       60     169           61
+  MAL-ED SOUTH AFRICA                              204      33           33
+  MAL-ED TANZANIA, UNITED REPUBLIC OF              153      51           52
+  NIH-Birth BANGLADESH                             117     366          146
+  NIH-Crypto BANGLADESH                            140     435          180
+  PROBIT BELARUS                                 13211     125          398
+  PROVIDE BANGLADESH                               138     373          158
+  SAS-CompFeed INDIA                              3683    3005         2091
+  SAS-FoodSuppl INDIA                               78     220          111
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF     1490     358          511
+  ZVITAMBO ZIMBABWE                               7839     574         1439
+> tabRF(d, "mwtkg") 
+                                             
+                                              >=58 kg <52 kg [52-58) kg
+  Burkina Faso Zn BURKINA FASO                   1673   2344       1925
+  iLiNS-DOSE MALAWI                               419    938        567
+  iLiNS-DYAD-M MALAWI                             288    543        369
+  iLiNS-Zinc BURKINA FASO                         937   1201       1079
+  JiVitA-3 BANGLADESH                             674  24878       1780
+  LCNI-5 MALAWI                                   114    504        220
+  MAL-ED BANGLADESH                                48    162         44
+  MAL-ED BRAZIL                                   143     42         36
+  MAL-ED INDIA                                     42    150         50
+  MAL-ED NEPAL                                     80     76         82
+  MAL-ED PERU                                     104    115         71
+  MAL-ED SOUTH AFRICA                             194     30         46
+  MAL-ED TANZANIA, UNITED REPUBLIC OF              98     99         59
+  NIH-Birth BANGLADESH                             82    453         94
+  NIH-Crypto BANGLADESH                           192    406        157
+  PROBIT BELARUS                                10279   1131       2362
+  PROVIDE BANGLADESH                              120    432        117
+  SAS-CompFeed INDIA                              723   7248       1518
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF    1476    393        483
+  ZVITAMBO ZIMBABWE                              5843   2408       2953
+> tabRF(d, "mbmi") 
+                                             
+                                              Normal weight Underweight
+  Burkina Faso Zn BURKINA FASO                         5340         602
+  iLiNS-DOSE MALAWI                                    1785         136
+  iLiNS-DYAD-M MALAWI                                  1130          65
+  iLiNS-Zinc BURKINA FASO                              2763         454
+  JiVitA-3 BANGLADESH                                 16809       10428
+  LCNI-5 MALAWI                                         692         145
+  MAL-ED BANGLADESH                                     222          32
+  MAL-ED BRAZIL                                         211          10
+  MAL-ED INDIA                                          193          49
+  MAL-ED NEPAL                                          238           0
+  MAL-ED PERU                                           285           5
+  MAL-ED SOUTH AFRICA                                   262           8
+  MAL-ED TANZANIA, UNITED REPUBLIC OF                   242          14
+  NIH-Birth BANGLADESH                                  523         106
+  NIH-Crypto BANGLADESH                                 687          68
+  PROBIT BELARUS                                      13205         523
+  PROVIDE BANGLADESH                                    542         127
+  SAS-CompFeed INDIA                                   6435        2344
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF          2307          38
+  ZVITAMBO ZIMBABWE                                    9302         517
+> tabRF(d, "fage")
+                                     
+                                       >=38   <32 [32-38)
+  COHORTS GUATEMALA                     545   904     451
+  COHORTS PHILIPPINES                   330  2083     538
+  iLiNS-DOSE MALAWI                     384   987     341
+  iLiNS-DYAD-M MALAWI                   232   682     249
+  LCNI-5 MALAWI                          26    56      24
+  MAL-ED BANGLADESH                      69    30      52
+  MAL-ED BRAZIL                          30    18      31
+  MAL-ED INDIA                           36    53      72
+  MAL-ED NEPAL                           17    15      47
+  MAL-ED PERU                            27    29      29
+  MAL-ED SOUTH AFRICA                    65     9      16
+  MAL-ED TANZANIA, UNITED REPUBLIC OF    48    15      37
+  PROBIT BELARUS                        744 13059    2475
+  SAS-CompFeed INDIA                    309  8013    1196
+  SAS-FoodSuppl INDIA                    44   289      85
+> tabRF(d, "fhtcm")
+                     
+                      >=167 cm <162 cm [162-167) cm
+  COHORTS GUATEMALA        117     506          226
+  Keneba GAMBIA           1258     133          557
+  PROBIT BELARUS         11744     168          625
+  SAS-CompFeed INDIA      2657    1391         1703
+  SAS-FoodSuppl INDIA      106     163          130
+> tabRF(d, "feducyrs")
+                                             
+                                               High   Low Medium
+  COHORTS GUATEMALA                             319   860    625
+  COHORTS INDIA                                 569   475    414
+  COHORTS PHILIPPINES                          1031   828   1021
+  GMS-Nepal NEPAL                               173   296    227
+  iLiNS-DOSE MALAWI                             698   584    525
+  iLiNS-DYAD-M MALAWI                           361   433    411
+  JiVitA-3 BANGLADESH                          6525 10854   8981
+  JiVitA-4 BANGLADESH                          1247  1955   2076
+  LCNI-5 MALAWI                                 251   291    271
+  MAL-ED BANGLADESH                              54    40     55
+  MAL-ED INDIA                                   44    59     44
+  MAL-ED NEPAL                                   42    28     28
+  MAL-ED PERU                                   120    69     61
+  MAL-ED SOUTH AFRICA                            43    37     30
+  MAL-ED TANZANIA, UNITED REPUBLIC OF           130    61     21
+  NIH-Crypto BANGLADESH                         296   242    220
+  PROBIT BELARUS                               2708  6418   7189
+  PROVIDE BANGLADESH                            232   238    230
+  SAS-CompFeed INDIA                           2492  3967   3059
+  SAS-FoodSuppl INDIA                           110   147    161
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   449  1270    664
+  VITAMIN-A INDIA                              1666  1162   1079
+  ZVITAMBO ZIMBABWE                            1002  2316  10389
+> tabRF(d, "nrooms")
+                                     
+                                         4+     1     2     3
+  CMC-V-BCS-2002 INDIA                   14   202   106    51
+  COHORTS INDIA                         106  3563  1567   199
+  CONTENT PERU                           78    44    54    39
+  GMS-Nepal NEPAL                       323    49   145   181
+  iLiNS-DOSE MALAWI                     265   340   701   446
+  iLiNS-DYAD-M MALAWI                    40   136   141    65
+  IRC INDIA                              17   185   170    36
+  JiVitA-3 BANGLADESH                  1140 16201  7360  2629
+  JiVitA-4 BANGLADESH                   286  3193  1387   562
+  MAL-ED BANGLADESH                      12   152    50    28
+  MAL-ED BRAZIL                         127     4    20    59
+  MAL-ED INDIA                           25    84    78    48
+  MAL-ED NEPAL                          131    52    31    22
+  MAL-ED PERU                           139    19    52    62
+  MAL-ED SOUTH AFRICA                   196    14    22    25
+  MAL-ED TANZANIA, UNITED REPUBLIC OF   108    13    63    66
+  NIH-Crypto BANGLADESH                  95   368   191   104
+  PROVIDE BANGLADESH                     23   507   108    62
+  VITAMIN-A INDIA                       244  2468   908   290
+> tabRF(d, "nhh")
+                       
+                        3 or less 4-5 6-7  8+
+  iLiNS-DYAD-M MALAWI         107  88  62  33
+  IRC INDIA                    58 158 107  87
+  LCNI-5 MALAWI               225 340 182  70
+  NIH-Birth BANGLADESH        117 264 142 106
+  NIH-Crypto BANGLADESH       114 342 178 124
+  PROVIDE BANGLADESH          140 322 151  87
+  SAS-FoodSuppl INDIA          38 183 127  70
+> tabRF(d, "nchldlt5")
+                                             
+                                                  1    2+
+  iLiNS-DOSE MALAWI                             845   966
+  iLiNS-DYAD-M MALAWI                            63   216
+  iLiNS-Zinc BURKINA FASO                      1073  2116
+  IRC INDIA                                      89   321
+  JiVitA-3 BANGLADESH                         17511  9822
+  LCNI-5 MALAWI                                 391   421
+  NIH-Crypto BANGLADESH                         541   217
+  PROVIDE BANGLADESH                            512   188
+  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  1637   748
+> 
+> 
+> 
+> 
+> #--------------------------------------------
+> # Save dataset
+> #--------------------------------------------
+> 
+> 
+> 
+> saveRDS(d, temp_clean_covariates_path)
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+147.164   4.687 151.830 

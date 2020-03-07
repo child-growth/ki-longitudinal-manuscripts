@@ -266,7 +266,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +                    "DUR_R"))
 > gc()
             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1962431  104.9    3022715  161.5   3022715  161.5
+Ncells   1962431  104.9    3022948  161.5   3022948  161.5
 Vcells 315686523 2408.5  641402759 4893.6 636568685 4856.7
 > 
 > 
@@ -288,12 +288,12 @@ Vcells 315686523 2408.5  641402759 4893.6 636568685 4856.7
 +                    "DUR_R"))
 > gc()
             used   (Mb) gc trigger    (Mb)   max used   (Mb)
-Ncells   1962549  104.9    3022715   161.5    3022715  161.5
+Ncells   1962549  104.9    3022948   161.5    3022948  161.5
 Vcells 717893421 5477.1 1357518496 10357.1 1130313787 8623.7
 > jiv <- jiv[STUDYID=="kiGH5241-JiVitA-3" | STUDYID == "kiGH5241-JiVitA-4"]
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1983633  106.0    3022715  161.5    3022715  161.5
+Ncells   1983633  106.0    3022948  161.5    3022948  161.5
 Vcells 405204558 3091.5 1086014797 8285.7 1130313787 8623.7
 > #strip grant identifiers
 > jiv$STUDYID <- gsub("^k.*?-" , "", jiv$STUDYID)
@@ -316,7 +316,7 @@ Vcells 405204558 3091.5 1086014797 8285.7 1130313787 8623.7
 > colnames(d) <- tolower(colnames(d))
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1987830  106.2    3022715  161.5    3022715  161.5
+Ncells   1987830  106.2    3022948  161.5    3022948  161.5
 Vcells 494680497 3774.2 1086014797 8285.7 1130313787 8623.7
 > 
 > #Drop studies Vishak added to data product that don't meet inclusion criteria
@@ -327,7 +327,7 @@ Vcells 494680497 3774.2 1086014797 8285.7 1130313787 8623.7
 [1] 9525336      55
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1994935  106.6    3022715  161.5    3022715  161.5
+Ncells   1994935  106.6    3022948  161.5    3022948  161.5
 Vcells 492810067 3759.9 1086014797 8285.7 1130313787 8623.7
 > 
 > #update study names where they have changed during BlueVelvet switch
@@ -387,7 +387,7 @@ Vcells 492810067 3759.9 1086014797 8285.7 1130313787 8623.7
 +                                3 * (studyid %in% yearly_vec)]]
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995534  106.6    3022715  161.5    3022715  161.5
+Ncells   1995534  106.6    3022948  161.5    3022948  161.5
 Vcells 502444927 3833.4 1086014797 8285.7 1130313787 8623.7
 > 
 > 
@@ -396,21 +396,21 @@ Vcells 502444927 3833.4 1086014797 8285.7 1130313787 8623.7
 > d <- d[!(studyid=="CMIN" & country != "BANGLADESH")]
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995257  106.6    3022715  161.5    3022715  161.5
+Ncells   1995257  106.6    3022948  161.5    3022948  161.5
 Vcells 435967047 3326.2 1086014797 8285.7 1130313787 8623.7
 > 
 > #Mark yearly COHORTS
 > d <- d[studyid=="COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995291  106.6    3022715  161.5    3022715  161.5
+Ncells   1995291  106.6    3022948  161.5    3022948  161.5
 Vcells 439968462 3356.7 1086014797 8285.7 1130313787 8623.7
 > 
 > #Drop yearly studies except for four with high quality mortality data used in the mortality analysis
 > d <- d[measurefreq!="yearly" | studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","Burkina Faso Zn", "VITAMIN-A" )]
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995239  106.6    3022715  161.5    3022715  161.5
+Ncells   1995239  106.6    3022948  161.5    3022948  161.5
 Vcells 416989587 3181.4 1086014797 8285.7 1130313787 8623.7
 > 
 > 
@@ -471,9 +471,9 @@ Vcells 416989587 3181.4 1086014797 8285.7 1130313787 8623.7
 > saveRDS(d, included_studies_path)
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995465  106.6    3022715  161.5    3022715  161.5
+Ncells   1995465  106.6    3022948  161.5    3022948  161.5
 Vcells 416987993 3181.4 1086014797 8285.7 1130313787 8623.7
 > 
 > proc.time()
    user  system elapsed 
-173.376  23.344 109.104 
+164.167  11.310 101.532 

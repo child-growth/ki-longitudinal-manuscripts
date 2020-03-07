@@ -1,0 +1,957 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> 
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> 
+> 
+> #Load mortality outcomes
+> mort <- readRDS(paste0(ghapdata_dir,"mortality.rds"))
+> 
+> 
+> #load covariates
+> cov <- readRDS(paste0(ghapdata_dir,"/FINAL_clean_covariates.rds"))
+> cov$country <- as.character(cov$country)
+> #Drop wasting risk factors
+> cov <- cov %>% subset(., select= -c(pers_wast, enwast, anywast06))
+> 
+> 
+> #Load wasting measures
+> load(paste0(ghapdata_dir,"mort_exposures.RData"))
+> 
+> stunt_ci_0_6 <- stunt_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_stunted06, ever_sstunted06)) 
+> stunt_ci_0_24 <- stunt_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_stunted024, ever_sstunted024))
+> wast_ci_0_6 <- wast_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_wasted06, ever_swasted06, pers_wasted06)) 
+> wast_ci_0_24 <- wast_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_wasted024, ever_swasted024, pers_wasted024))
+> wast_ci_0_6_no_birth <- wast_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_wasted06_noBW, ever_swasted06_noBW)) 
+> underweight_ci_0_6 <- underweight_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_underweight06, ever_sunderweight06)) 
+> underweight_ci_0_24 <- underweight_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_underweight024, ever_sunderweight024))
+> co_ci_0_6 <- co_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_co06)) 
+> co_ci_0_24 <- co_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_co024))
+> 
+> # stunt_ci_0_6_no_birth <- stunt_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_stunted06_noBW, ever_sstunted06_noBW)) 
+> # underweight_ci_0_6_no_birth <- underweight_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_underweighted06_noBW, ever_sunderweighted06_noBW)) 
+> 
+> 
+> #convert subjid to character for the merge with mortality dataset
+> mort$subjid <- as.character(mort$subjid)
+> stunt_ci_0_6$subjid <- as.character(stunt_ci_0_6$subjid)
+> stunt_ci_0_24$subjid <- as.character(stunt_ci_0_24$subjid)
+> wast_ci_0_6$subjid <- as.character(wast_ci_0_6$subjid)
+> wast_ci_0_24$subjid <- as.character(wast_ci_0_24$subjid)
+> wast_ci_0_6_no_birth$subjid <- as.character(wast_ci_0_6_no_birth$subjid)
+> underweight_ci_0_6$subjid <- as.character(underweight_ci_0_6$subjid)
+> underweight_ci_0_24$subjid <- as.character(underweight_ci_0_24$subjid)
+> co_ci_0_6$subjid <- as.character(co_ci_0_6$subjid)
+> co_ci_0_24$subjid <- as.character(co_ci_0_24$subjid)
+> 
+> 
+> #merge u6 datasets
+> d<- wast_ci_0_6
+> 
+> #Join in stunting measures
+> d <- full_join(d, stunt_ci_0_6, by=c("studyid","country","subjid"))
+> dim(d)
+[1] 96822     8
+> head(d)
+# A tibble: 6 x 8
+  studyid country subjid ever_wasted06 ever_swasted06 pers_wasted06
+  <chr>   <chr>   <chr>          <dbl>          <dbl>         <dbl>
+1 Burkin… BURKIN… 101602             0              0             0
+2 Burkin… BURKIN… 101903             0              0             0
+3 Burkin… BURKIN… 102607             0              0             0
+4 Burkin… BURKIN… 103302             0              0             0
+5 Burkin… BURKIN… 103303             1              0             1
+6 Burkin… BURKIN… 104203             0              0             0
+# … with 2 more variables: ever_stunted06 <dbl>, ever_sstunted06 <dbl>
+> 
+> 
+> 
+> #Join in underweight measures
+> d <- full_join(d, underweight_ci_0_6, by=c("studyid","country","subjid"))
+> dim(d)
+[1] 97367    10
+> head(d)
+# A tibble: 6 x 10
+  studyid country subjid ever_wasted06 ever_swasted06 pers_wasted06
+  <chr>   <chr>   <chr>          <dbl>          <dbl>         <dbl>
+1 Burkin… BURKIN… 101602             0              0             0
+2 Burkin… BURKIN… 101903             0              0             0
+3 Burkin… BURKIN… 102607             0              0             0
+4 Burkin… BURKIN… 103302             0              0             0
+5 Burkin… BURKIN… 103303             1              0             1
+6 Burkin… BURKIN… 104203             0              0             0
+# … with 4 more variables: ever_stunted06 <dbl>, ever_sstunted06 <dbl>,
+#   ever_underweight06 <dbl>, ever_sunderweight06 <dbl>
+> 
+> 
+> 
+> 
+> #merge co-occurrence measures
+> d <- full_join(d, co_ci_0_6, by=c("studyid","country", "subjid"))
+> dim(d)
+[1] 97367    11
+> 
+> #Merge in covariates
+> cov <- cov %>% subset(., select = - c(dead, agedth, causedth))
+> dim(d)
+[1] 97367    11
+> df <- merge(as.data.frame(d), cov, by=c("studyid", "subjid", "country"), all.x = T, all.y = F)
+> dim(df)
+[1] 97367    85
+> head(df)
+          studyid subjid      country ever_wasted06 ever_swasted06
+1 Burkina Faso Zn 101602 BURKINA FASO             0              0
+2 Burkina Faso Zn 101903 BURKINA FASO             0              0
+3 Burkina Faso Zn 102607 BURKINA FASO             0              0
+4 Burkina Faso Zn 103302 BURKINA FASO             0              0
+5 Burkina Faso Zn 103303 BURKINA FASO             1              0
+6 Burkina Faso Zn 104203 BURKINA FASO             0              0
+  pers_wasted06 ever_stunted06 ever_sstunted06 ever_underweight06
+1             0              0               0                  0
+2             0              0               0                  0
+3             0              0               0                  0
+4             0              0               0                  0
+5             1              1               1                  1
+6             0              0               0                  0
+  ever_sunderweight06 ever_co06    sex month wtkg htcm lencm hcircm muaccm
+1                   0         0   Male     7 6.53 <NA>  66.4   <NA>   12.3
+2                   0         0 Female    12 6.18 <NA>  63.2   <NA>     14
+3                   0         0 Female     7 8.16 <NA>  69.2   <NA>   15.2
+4                   0         0 Female    12 6.25 <NA>  61.7   <NA>   13.7
+5                   1         1   Male    12 4.76 <NA>  59.2   <NA>   11.5
+6                   0         0 Female    12 8.15 <NA>  67.5   <NA>   15.2
+   muaz siteid ctrycd region citytown latitude longitud clustid
+1 -1.86    103    BFA Africa             11.14    -4.93    <NA>
+2  0.18    103    BFA Africa             11.14    -4.93    <NA>
+3  1.13    103    BFA Africa             11.14    -4.93    <NA>
+4 -0.09    103    BFA Africa             11.14    -4.93    <NA>
+5 -2.75    103    BFA Africa             11.14    -4.93    <NA>
+6  1.13    103    BFA Africa             11.14    -4.93    <NA>
+                                      arm   tr gagebrth brthyr brthmon parity
+1 Therapeutic Zinc: 20 mg/day for 10 days Zinc     <NA>   2011       1      2
+2               Preventive Zinc: 7 mg/day Zinc     <NA>   2010       6      1
+3               Preventive Zinc: 7 mg/day Zinc     <NA>   2011       1     3+
+4               Preventive Zinc: 7 mg/day Zinc     <NA>   2010       6     3+
+5               Preventive Zinc: 7 mg/day Zinc     <NA>   2010       6     3+
+6  Intermittent Zinc: 10 mg/d for 10 days Zinc     <NA>   2010       6      2
+  birthwt birthlen vagbrth hdlvry    mage    mhtcm      mwtkg          mbmi
+1    <NA>     <NA>    <NA>   <NA> [20-30) >=155 cm [52-58) kg Normal weight
+2    <NA>     <NA>    <NA>   <NA>     <20 >=155 cm    >=58 kg Normal weight
+3    <NA>     <NA>    <NA>   <NA>    >=30 >=155 cm [52-58) kg Normal weight
+4    <NA>     <NA>    <NA>   <NA> [20-30) >=155 cm    >=58 kg Normal weight
+5    <NA>     <NA>    <NA>   <NA> [20-30) >=155 cm    >=58 kg Normal weight
+6    <NA>     <NA>    <NA>   <NA> [20-30) >=155 cm [52-58) kg Normal weight
+  meducyrs single fage fhtcm feducyrs trth2o cleanck impfloor nrooms  nhh
+1      Low   <NA> <NA>  <NA>     <NA>   <NA>    <NA>     <NA>   <NA> <NA>
+2   Medium   <NA> <NA>  <NA>     <NA>   <NA>    <NA>     <NA>   <NA> <NA>
+3     <NA>   <NA> <NA>  <NA>     <NA>   <NA>    <NA>     <NA>   <NA> <NA>
+4      Low   <NA> <NA>  <NA>     <NA>   <NA>    <NA>     <NA>   <NA> <NA>
+5      Low   <NA> <NA>  <NA>     <NA>   <NA>    <NA>     <NA>   <NA> <NA>
+6      Low   <NA> <NA>  <NA>     <NA>   <NA>    <NA>     <NA>   <NA> <NA>
+  nchldlt5 earlybf hfoodsec measurefreq enstunt hhwealth_quart  id W_gagebrth
+1     <NA>    <NA>     <NA>      yearly       0           <NA> 200         NA
+2     <NA>    <NA>     <NA>      yearly       0           <NA> 237         NA
+3     <NA>    <NA>     <NA>      yearly       0           <NA> 343         NA
+4     <NA>    <NA>     <NA>      yearly       0           <NA> 427         NA
+5     <NA>    <NA>     <NA>      yearly       1           <NA> 428         NA
+6     <NA>    <NA>     <NA>      yearly       0           <NA> 555         NA
+  W_birthwt W_birthlen W_mage W_mhtcm  W_mwtkg  W_mbmi W_fage W_fhtcm
+1        NA         NA     25   163.7 55.87506 20.8507     NA      NA
+2        NA         NA     18   162.0 59.13639 22.5333     NA      NA
+3        NA         NA     50   160.3 54.12496 21.0635     NA      NA
+4        NA         NA     25   172.0 59.79991 20.2136     NA      NA
+5        NA         NA     25   172.0 59.79991 20.2136     NA      NA
+6        NA         NA     25   163.6 54.63344 20.4123     NA      NA
+  W_meducyrs W_feducyrs W_nrooms W_nhh W_nchldlt5 W_parity impsan safeh20
+1          0         NA       NA    NA         NA        2      0       0
+2          4         NA       NA    NA         NA        1      0       0
+3         NA         NA       NA    NA         NA        9   <NA>    <NA>
+4          0         NA       NA    NA         NA        3      1       0
+5          0         NA       NA    NA         NA        3      1       0
+6          0         NA       NA    NA         NA        2      0       0
+  perdiar6 perdiar24 W_perdiar6 W_perdiar24 predfeed3 exclfeed3 predfeed6
+1     <NA>      <NA>         NA          NA      <NA>      <NA>      <NA>
+2     <NA>      <NA>         NA          NA      <NA>      <NA>      <NA>
+3     <NA>      <NA>         NA          NA      <NA>      <NA>      <NA>
+4     <NA>      <NA>         NA          NA      <NA>      <NA>      <NA>
+5     <NA>      <NA>         NA          NA      <NA>      <NA>      <NA>
+6     <NA>      <NA>         NA          NA      <NA>      <NA>      <NA>
+  exclfeed6 predfeed36 exclfeed36 predexfd6
+1      <NA>       <NA>       <NA>      <NA>
+2      <NA>       <NA>       <NA>      <NA>
+3      <NA>       <NA>       <NA>      <NA>
+4      <NA>       <NA>       <NA>      <NA>
+5      <NA>       <NA>       <NA>      <NA>
+6      <NA>       <NA>       <NA>      <NA>
+> 
+> 
+> # Merge in mortality information
+> dim(df)
+[1] 97367    85
+> dim(mort)
+[1] 72284    10
+> d <- left_join(df, mort, by=c("studyid",  "country", "subjid"))
+> dim(d)
+[1] 97367    92
+> 
+> #Check mortality variation for all exposures
+> table(d$ever_wasted06, d$dead)
+   
+        0     1
+  0 49744  1422
+  1 11466   586
+> table(d$ever_swasted06, d$dead)
+   
+        0     1
+  0 58103  1760
+  1  3107   248
+> table(d$pers_wasted06, d$dead)
+   
+        0     1
+  0 56747  1615
+  1  4463   393
+> 
+> 
+> table(d$ever_stunted06, d$dead)
+   
+        0     1
+  0 38905  1084
+  1 22531  1244
+> table(d$ever_sstunted06, d$dead)
+   
+        0     1
+  0 53944  1619
+  1  7492   709
+> 
+> 
+> table(d$ever_underweight06, d$dead)
+   
+        0     1
+  0 40484  1031
+  1 21273  1410
+> table(d$ever_sunderweight06, d$dead)
+   
+        0     1
+  0 54413  1542
+  1  7344   899
+> 
+> 
+> table(d$ever_co06, d$dead)
+   
+        0     1
+  0 58846  1765
+  1  2324   229
+> 
+> 
+> calc_RR <- function(d1, d2){
++   tab <- table(d1, d2)
++   (tab[1,1] * tab[2*2])/(tab[1,2] * tab[2*1])
++ }
+> 
+> # calc_RR(d$ever_wasted06, d$dead)
+> # calc_RR(d$ever_swasted06, d$dead)
+> # calc_RR(d$pers_wasted06, d$dead)
+> # calc_RR(d$ever_wasted024, d$dead)
+> # calc_RR(d$ever_swasted024, d$dead)
+> # calc_RR(d$pers_wasted024, d$dead)
+> # 
+> # calc_RR(d$ever_stunted06, d$dead)
+> # calc_RR(d$ever_sstunted06, d$dead)
+> # calc_RR(d$ever_stunted024, d$dead)
+> # calc_RR(d$ever_sstunted024, d$dead)
+> # 
+> # calc_RR(d$ever_wasted06_noBW, d$dead)
+> # calc_RR(d$ever_swasted06_noBW, d$dead)
+> # 
+> # calc_RR(d$ever_underweight06, d$dead)
+> # calc_RR(d$ever_sunderweight06, d$dead)
+> # calc_RR(d$ever_underweight024, d$dead)
+> # calc_RR(d$ever_sunderweight024, d$dead)
+> # 
+> # calc_RR(d$ever_co06, d$dead)
+> # calc_RR(d$ever_co024, d$dead)
+> 
+> 
+> #Drop studies with no mortality information
+> d <- d %>% group_by(studyid, country) %>% mutate(tot_dead = sum(dead)) %>% filter(tot_dead>0) %>% ungroup() %>% as.data.frame()
+> 
+> #Set exposures to factors
+> Avars <- c("ever_wasted06",
++            "ever_swasted06",
++            "pers_wasted06",
++            "ever_stunted06",
++            "ever_sstunted06",
++            # "ever_wasted024",
++            # "ever_swasted024",
++            # "pers_wasted024",
++            # "ever_stunted024",
++            # "ever_sstunted024",
++            # "ever_wasted06_noBW",
++            # "ever_swasted06_noBW",
++            "ever_underweight06",
++            "ever_sunderweight06",
++            # "ever_underweight024",
++            # "ever_sunderweight024",
++            "ever_co06"#,
++            #"ever_co024"
++            )
+> 
+> for(i in Avars){
++   print(i)
++   d[,i] <- factor(d[,i])
++ }
+[1] "ever_wasted06"
+[1] "ever_swasted06"
+[1] "pers_wasted06"
+[1] "ever_stunted06"
+[1] "ever_sstunted06"
+[1] "ever_underweight06"
+[1] "ever_sunderweight06"
+[1] "ever_co06"
+> 
+> 
+> #Summarize number of cohorts and children,
+> d %>% filter(tot_dead>10) %>% #group_by(studyid, country) %>% 
++   summarize(ncohort=length(unique(paste0(studyid, country))), 
++   nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))),
++   ndeath=sum(dead), missage=sum(is.na(agedth)))
+  ncohort  nobs nchild ndeath missage
+1       8 57903  57903   2418   55574
+> 
+> 
+> save(d, file=paste0(ghapdata_dir,"stuntwast_mortality.Rdata"))
+> 
+> 
+> #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+> # Create morbidity datasets
+> #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+> 
+> co_prev18 <- co_prev18 %>% subset(., select = c( studyid, subjid, country, co_occurence))
+> pers_wast_6_24 <- pers_wast_6_24 %>% subset(., select = c( studyid, subjid, country, pers_wasted624))
+> 
+> dim(co_prev18)
+[1] 24914     4
+> dim(pers_wast_6_24)
+[1] 78055     4
+> d <- full_join(co_prev18, pers_wast_6_24, by=c("studyid","country","subjid"))
+> 
+> 
+> dim(d)
+[1] 78055     5
+> dim(df)
+[1] 97367    85
+> d <- full_join(d, df, by=c("studyid","country","subjid"))
+> dim(d)
+[1] 101386     87
+> 
+> 
+> #Summarize number of cohorts and children,
+> d %>% mutate(cohort= paste0(studyid, country)) %>% group_by(cohort) %>%
++   mutate(Ncases=sum(pers_wasted624, na.rm=T)) %>%
++   filter(!is.na(pers_wasted624), Ncases > 5) %>% ungroup() %>% 
++   summarize(ncohort=length(unique(paste0(studyid, country))), 
++             nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))),
++             n_pers=sum(pers_wasted624, na.rm=T))
+# A tibble: 1 x 4
+  ncohort  nobs nchild n_pers
+    <int> <int>  <int>  <dbl>
+1      24 76347  76347   7037
+> 
+> d %>% mutate(cohort= paste0(studyid, country)) %>% group_by(cohort) %>%
++   mutate(Ncases=sum(co_occurence, na.rm=T)) %>%
++   filter(!is.na(co_occurence), Ncases > 5) %>% ungroup() %>% 
++   summarize(ncohort=length(unique(paste0(studyid, country))), 
++             nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))),
++             n_co=sum(co_occurence, na.rm=T))
+# A tibble: 1 x 4
+  ncohort  nobs nchild  n_co
+    <int> <int>  <int> <dbl>
+1      21 21681  21681  1635
+> 
+> 
+> 
+> #Check mortality variation for all exposures
+> table(d$ever_wasted06, d$pers_wasted624)
+   
+        0     1
+  0 54576  2656
+  1 12713  3794
+> table(d$ever_swasted06, d$pers_wasted624)
+   
+        0     1
+  0 63687  5279
+  1  3602  1171
+> table(d$pers_wasted06, d$pers_wasted624)
+   
+        0     1
+  0 64751  4523
+  1  2538  1927
+> table(d$ever_stunted06, d$pers_wasted624)
+   
+        0     1
+  0 48865  3076
+  1 18517  3386
+> table(d$ever_co06, d$pers_wasted624)
+   
+        0     1
+  0 66210  5290
+  1  1061  1150
+> 
+> table(d$ever_underweight06, d$pers_wasted624)
+   
+        0     1
+  0 52892  1623
+  1 14645  4860
+> table(d$ever_sunderweight06, d$pers_wasted624)
+   
+        0     1
+  0 63504  4307
+  1  4033  2176
+> calc_RR(d$ever_underweight06, d$pers_wasted624)
+[1] 10.8148
+> calc_RR(d$ever_sunderweight06, d$pers_wasted624)
+[1] 7.955306
+> 
+> 
+> 
+> table(d$ever_wasted06, d$co_occurence)
+   
+        0     1
+  0 16408   830
+  1  4105   616
+> table(d$ever_swasted06, d$co_occurence)
+   
+        0     1
+  0 19348  1255
+  1  1165   191
+> table(d$pers_wasted06, d$co_occurence)
+   
+        0     1
+  0 19646  1144
+  1   867   302
+> table(d$ever_stunted06, d$co_occurence)
+   
+        0     1
+  0 14089   467
+  1  6452   984
+> table(d$ever_underweight06, d$co_occurence)
+   
+        0     1
+  0 15763   325
+  1  4863  1137
+> table(d$ever_co06, d$co_occurence)
+   
+        0     1
+  0 20044  1194
+  1   467   249
+> 
+> table(d$ever_underweight06, d$co_occurence)
+   
+        0     1
+  0 15763   325
+  1  4863  1137
+> table(d$ever_sunderweight06, d$co_occurence)
+   
+        0     1
+  0 19298   942
+  1  1328   520
+> 
+> calc_RR(d$ever_underweight06, d$co_occurence)
+[1] 11.33996
+> calc_RR(d$ever_sunderweight06, d$co_occurence)
+[1] 8.021705
+> 
+> # res1 <- d %>% group_by(studyid, country) %>% do(res=try(calc_RR(.$ever_underweight06, .$co_occurence))) %>% as.data.frame() %>% mutate(res=as.numeric(res))
+> # res2 <- d %>% group_by(studyid, country) %>% do(res=try(calc_RR(.$ever_sunderweight06, .$co_occurence))) %>% as.data.frame() %>% mutate(res=as.numeric(res))
+> # res <- merge(res1, res2, by=c("studyid","country"))
+> # res
+> 
+> #Set exposures to factors
+> Avars_morbidity <- c("ever_wasted06",
++                      "ever_swasted06",
++                      "pers_wasted06",
++                      "ever_stunted06",
++                      "ever_sstunted06",
++                      "ever_underweight06",
++                      "ever_sunderweight06",
++                      "ever_co06",
++                      "pers_wasted06")
+> 
+> d <- as.data.frame(d)
+> for(i in Avars_morbidity){
++   print(i)
++   d[,i] <- factor(d[,i])
++ }
+[1] "ever_wasted06"
+[1] "ever_swasted06"
+[1] "pers_wasted06"
+[1] "ever_stunted06"
+[1] "ever_sstunted06"
+[1] "ever_underweight06"
+[1] "ever_sunderweight06"
+[1] "ever_co06"
+[1] "pers_wasted06"
+> 
+> 
+> save(d, file=paste0(ghapdata_dir,"stuntwast_morbidity.Rdata"))
+> 
+> 
+> 
+> #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+> # Create 0-24 mortality datasetv(with 0-6 no birth wasting)
+> #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+> 
+> 
+> d<- wast_ci_0_24
+> 
+> #Join in stunting measures
+> d <- full_join(d, stunt_ci_0_24, by=c("studyid","country","subjid"))
+> dim(d)
+[1] 107992      8
+> head(d)
+# A tibble: 6 x 8
+  studyid country subjid ever_wasted024 ever_swasted024 pers_wasted024
+  <chr>   <chr>   <chr>           <dbl>           <dbl>          <dbl>
+1 Burkin… BURKIN… 100101              0               0              0
+2 Burkin… BURKIN… 100102              0               0              0
+3 Burkin… BURKIN… 100103              0               0              0
+4 Burkin… BURKIN… 100105              0               0              0
+5 Burkin… BURKIN… 100201              0               0              0
+6 Burkin… BURKIN… 100202              0               0              0
+# … with 2 more variables: ever_stunted024 <dbl>, ever_sstunted024 <dbl>
+> 
+> #Join in underweight measures
+> d <- full_join(d, underweight_ci_0_24, by=c("studyid","country","subjid"))
+> dim(d)
+[1] 108336     10
+> head(d)
+# A tibble: 6 x 10
+  studyid country subjid ever_wasted024 ever_swasted024 pers_wasted024
+  <chr>   <chr>   <chr>           <dbl>           <dbl>          <dbl>
+1 Burkin… BURKIN… 100101              0               0              0
+2 Burkin… BURKIN… 100102              0               0              0
+3 Burkin… BURKIN… 100103              0               0              0
+4 Burkin… BURKIN… 100105              0               0              0
+5 Burkin… BURKIN… 100201              0               0              0
+6 Burkin… BURKIN… 100202              0               0              0
+# … with 4 more variables: ever_stunted024 <dbl>, ever_sstunted024 <dbl>,
+#   ever_underweight024 <dbl>, ever_sunderweight024 <dbl>
+> 
+> #merge co-occurrence measures
+> d <- full_join(d, co_ci_0_24, by=c("studyid","country", "subjid"))
+> dim(d)
+[1] 108336     11
+> 
+> #merge u6 no BW
+> d <- full_join(d, wast_ci_0_6_no_birth, by=c("studyid","country", "subjid"))
+> dim(d)
+[1] 108336     13
+> 
+> 
+> #Merge in covariates
+> dim(d)
+[1] 108336     13
+> df <- merge(as.data.frame(d), cov, by=c("studyid", "subjid", "country"), all.x = T, all.y = F)
+> dim(df)
+[1] 108336     87
+> head(df)
+          studyid subjid      country ever_wasted024 ever_swasted024
+1 Burkina Faso Zn 100101 BURKINA FASO              0               0
+2 Burkina Faso Zn 100102 BURKINA FASO              0               0
+3 Burkina Faso Zn 100103 BURKINA FASO              0               0
+4 Burkina Faso Zn 100105 BURKINA FASO              0               0
+5 Burkina Faso Zn 100201 BURKINA FASO              0               0
+6 Burkina Faso Zn 100202 BURKINA FASO              0               0
+  pers_wasted024 ever_stunted024 ever_sstunted024 ever_underweight024
+1              0               0                0                   0
+2              0               0                0                   0
+3              0               0                0                   0
+4              0               0                0                   0
+5              0               1                0                   0
+6              0               1                0                   0
+  ever_sunderweight024 ever_co024 ever_wasted06_noBW ever_swasted06_noBW    sex
+1                    0          0                 NA                  NA   Male
+2                    0          0                 NA                  NA Female
+3                    0          0                 NA                  NA   Male
+4                    0          0                 NA                  NA   Male
+5                    0          0                 NA                  NA   Male
+6                    0          0                 NA                  NA Female
+  month wtkg htcm lencm hcircm muaccm  muaz siteid ctrycd region citytown
+1    12 7.96 <NA>  69.8   <NA>   14.5     0    103    BFA Africa         
+2    12 9.65 <NA>  81.2   <NA>   14.1 -0.59    103    BFA Africa         
+3    12 8.09 <NA>  71.9   <NA>   14.6 -0.09    103    BFA Africa         
+4    12 8.67 <NA>    72   <NA>   14.8  0.17    103    BFA Africa         
+5    12 9.18 <NA>  76.4   <NA>   14.6 -0.22    103    BFA Africa         
+6    12 9.64 <NA>  69.8   <NA>   16.3  1.67    103    BFA Africa         
+  latitude longitud clustid                                     arm   tr
+1    11.14    -4.93    <NA>  Intermittent Zinc: 10 mg/d for 10 days Zinc
+2    11.14    -4.93    <NA>  Intermittent Zinc: 10 mg/d for 10 days Zinc
+3    11.14    -4.93    <NA>  Intermittent Zinc: 10 mg/d for 10 days Zinc
+4    11.14    -4.93    <NA>  Intermittent Zinc: 10 mg/d for 10 days Zinc
+5    11.14    -4.93    <NA> Therapeutic Zinc: 20 mg/day for 10 days Zinc
+6    11.14    -4.93    <NA> Therapeutic Zinc: 20 mg/day for 10 days Zinc
+  gagebrth brthyr brthmon parity birthwt birthlen vagbrth hdlvry    mage
+1     <NA>   2010       4     3+    <NA>     <NA>    <NA>   <NA>    >=30
+2     <NA>   2009       2     3+    <NA>     <NA>    <NA>   <NA>    >=30
+3     <NA>   2009      12      1    <NA>     <NA>    <NA>   <NA> [20-30)
+4     <NA>   2010       1     3+    <NA>     <NA>    <NA>   <NA>    >=30
+5     <NA>   2009       6     3+    <NA>     <NA>    <NA>   <NA>    >=30
+6     <NA>   2010       1     3+    <NA>     <NA>    <NA>   <NA>    >=30
+         mhtcm      mwtkg          mbmi meducyrs single fage fhtcm feducyrs
+1     >=155 cm    >=58 kg Normal weight      Low   <NA> <NA>  <NA>     <NA>
+2     >=155 cm [52-58) kg Normal weight     <NA>   <NA> <NA>  <NA>     <NA>
+3      <151 cm [52-58) kg Normal weight      Low   <NA> <NA>  <NA>     <NA>
+4 [151-155) cm [52-58) kg Normal weight      Low   <NA> <NA>  <NA>     <NA>
+5     >=155 cm    >=58 kg Normal weight      Low   <NA> <NA>  <NA>     <NA>
+6     >=155 cm    >=58 kg Normal weight      Low   <NA> <NA>  <NA>     <NA>
+  trth2o cleanck impfloor nrooms  nhh nchldlt5 earlybf hfoodsec measurefreq
+1   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>      yearly
+2   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>      yearly
+3   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>      yearly
+4   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>      yearly
+5   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>      yearly
+6   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>      yearly
+  enstunt hhwealth_quart id W_gagebrth W_birthwt W_birthlen W_mage W_mhtcm
+1       0           <NA> 15         NA        NA         NA     35   160.4
+2       0           <NA> 16         NA        NA         NA     50   157.0
+3       0           <NA> 17         NA        NA         NA     25   149.8
+4       0           <NA> 19         NA        NA         NA     35   154.6
+5       1           <NA> 30         NA        NA         NA     35   164.7
+6       0           <NA> 31         NA        NA         NA     35   165.0
+   W_mwtkg  W_mbmi W_fage W_fhtcm W_meducyrs W_feducyrs W_nrooms W_nhh
+1 60.91296 23.6756     NA      NA          0         NA       NA    NA
+2 57.46150 23.3119     NA      NA         NA         NA       NA    NA
+3 54.92492 24.4763     NA      NA          0         NA       NA    NA
+4 57.49998 24.0574     NA      NA          0         NA       NA    NA
+5 64.59997 23.8147     NA      NA          0         NA       NA    NA
+6 66.20004 24.3159     NA      NA          0         NA       NA    NA
+  W_nchldlt5 W_parity impsan safeh20 perdiar6 perdiar24 W_perdiar6 W_perdiar24
+1         NA        4      0       0     <NA>      <NA>         NA          NA
+2         NA        9   <NA>    <NA>     <NA>      <NA>         NA          NA
+3         NA        1      0       0     <NA>      <NA>         NA          NA
+4         NA        4      0       0     <NA>      <NA>         NA          NA
+5         NA        4      0       0     <NA>      <NA>         NA          NA
+6         NA        6      0       0     <NA>      <NA>         NA          NA
+  predfeed3 exclfeed3 predfeed6 exclfeed6 predfeed36 exclfeed36 predexfd6
+1      <NA>      <NA>      <NA>      <NA>       <NA>       <NA>      <NA>
+2      <NA>      <NA>      <NA>      <NA>       <NA>       <NA>      <NA>
+3      <NA>      <NA>      <NA>      <NA>       <NA>       <NA>      <NA>
+4      <NA>      <NA>      <NA>      <NA>       <NA>       <NA>      <NA>
+5      <NA>      <NA>      <NA>      <NA>       <NA>       <NA>      <NA>
+6      <NA>      <NA>      <NA>      <NA>       <NA>       <NA>      <NA>
+> 
+> 
+> # Merge in mortality information
+> dim(df)
+[1] 108336     87
+> dim(mort)
+[1] 72284    10
+> d <- left_join(df, mort, by=c("studyid",  "country", "subjid"))
+> dim(d)
+[1] 108336     94
+> 
+> 
+> 
+> #Drop studies with no mortality information
+> d <- d %>% group_by(studyid, country) %>% mutate(tot_dead = sum(dead)) %>% filter(tot_dead>0) %>% ungroup() %>% as.data.frame()
+> 
+> #Set exposures to factors
+> Avars <- c(
++            "ever_wasted024",
++            "ever_swasted024",
++            "pers_wasted024",
++            "ever_stunted024",
++            "ever_sstunted024",
++            "ever_wasted06_noBW",
++            "ever_swasted06_noBW",
++            "ever_underweight024",
++            "ever_sunderweight024",
++            "ever_co024"
++ )
+> 
+> for(i in Avars){
++   print(i)
++   d[,i] <- factor(d[,i])
++ }
+[1] "ever_wasted024"
+[1] "ever_swasted024"
+[1] "pers_wasted024"
+[1] "ever_stunted024"
+[1] "ever_sstunted024"
+[1] "ever_wasted06_noBW"
+[1] "ever_swasted06_noBW"
+[1] "ever_underweight024"
+[1] "ever_sunderweight024"
+[1] "ever_co024"
+> 
+> 
+> #Summarize number of cohorts and children,
+> d %>% filter(tot_dead>10) %>% #group_by(studyid, country) %>% 
++   summarize(ncohort=length(unique(paste0(studyid, country))), 
++             nobs=n(), nchild=length(unique(paste0(studyid, country, subjid))),
++             ndeath=sum(dead), missage=sum(is.na(agedth)))
+  ncohort  nobs nchild ndeath missage
+1       9 65673  65673   2477   63283
+> 
+> 
+> save(d, file=paste0(ghapdata_dir,"stuntwast_mortality_024.Rdata"))
+> 
+> #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+> # Create list of adjustment variables
+> #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+> 
+> cov=c(
++   "sex","arm","brthmon","vagbrth","hdlvry","single","trth2o","cleanck",
++   "impfloor","hfoodsec","hhwealth_quart",
++   "W_mage","W_mhtcm","W_mwtkg",
++   "W_mbmi","W_fage","W_fhtcm","W_meducyrs","W_feducyrs",          
++   "W_nrooms","W_nhh","W_nchldlt5","W_parity",
++   "impsan","safeh20")
+> 
+> adjustment_sets_mortality <- list( 
++   ever_wasted06=cov,
++   ever_swasted06=cov,
++   pers_wasted06=cov,
++   ever_stunted06=cov,
++   ever_sstunted06=cov,
++   ever_wasted024=cov,
++   ever_swasted024=cov,
++   pers_wasted024=cov,
++   ever_stunted024=cov,
++   ever_sstunted024=cov,
++   ever_wasted06_noBW=cov,
++   ever_swasted06_noBW=cov,
++   ever_underweight06=cov,
++   ever_sunderweight06=cov,
++   ever_underweight024=cov,
++   ever_sunderweight024=cov,
++   ever_co06=cov,
++   ever_co024=cov)
+> 
+> 
+> save(adjustment_sets_mortality, file=here("data/mortality_adjustment_sets_list.Rdata"))
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 57.525   2.195  59.700 

@@ -1,50 +1,50 @@
 "","Variable","Level","N","Proportion"
-"1","sex","Total",61087,100
-"2","sex","Female",29538,48.4
-"3","sex","Male",31549,51.6
-"4","gagebrth","Total",27573,100
-"5","gagebrth","Full or late term",13703,49.7
-"6","gagebrth","Preterm",2658,9.6
-"7","gagebrth","Early term",11212,40.7
-"8","parity","Total",30817,100
-"9","parity","1",9789,31.8
-"10","parity","2",8126,26.4
-"11","parity","3+",12902,41.9
-"12","birthwt","Total",52830,100
-"13","birthwt","Normal or high birthweight",47254,89.4
-"14","birthwt","Low birthweight",5576,10.6
-"15","birthlen","Total",48870,100
-"16","birthlen",">=50 cm",24418,50
-"17","birthlen","<48 cm",11309,23.1
-"18","birthlen","[48-50) cm",13143,26.9
-"19","vagbrth","Total",35206,100
-"20","vagbrth","0",3799,10.8
-"21","vagbrth","1",31407,89.2
-"22","hdlvry","Total",12304,100
-"23","hdlvry","0",7910,64.3
-"24","hdlvry","1",4394,35.7
-"25","mage","Total",57786,100
-"26","mage","[20-30)",38216,66.1
-"27","mage","<20",7125,12.3
-"28","mage",">=30",12445,21.5
-"29","mhtcm","Total",44560,100
-"30","mhtcm",">=155 cm",31082,69.8
-"31","mhtcm","<151 cm",7338,16.5
-"32","mhtcm","[151-155) cm",6140,13.8
-"33","mwtkg","Total",36720,100
-"34","mwtkg",">=58 kg",19861,54.1
-"35","mwtkg","<52 kg",8770,23.9
-"36","mwtkg","[52-58) kg",8089,22
-"37","mbmi","Total",35175,100
-"38","mbmi","Normal weight",32724,93
-"39","mbmi","Underweight",2451,7
-"40","meducyrs","Total",52300,100
-"41","meducyrs","High",15636,29.9
-"42","meducyrs","Low",16377,31.3
-"43","meducyrs","Medium",20287,38.8
-"44","single","Total",45045,100
-"45","single","0",42808,95
-"46","single","1",2237,5
+"1","sex","Total",93756,100
+"2","sex","Female",45638,48.7
+"3","sex","Male",48118,51.3
+"4","gagebrth","Total",53500,100
+"5","gagebrth","Full or late term",27079,50.6
+"6","gagebrth","Preterm",8044,15
+"7","gagebrth","Early term",18377,34.3
+"8","parity","Total",58044,100
+"9","parity","1",20041,34.5
+"10","parity","2",17125,29.5
+"11","parity","3+",20878,36
+"12","birthwt","Total",80154,100
+"13","birthwt","Normal or high birthweight",63623,79.4
+"14","birthwt","Low birthweight",16531,20.6
+"15","birthlen","Total",75832,100
+"16","birthlen",">=50 cm",26909,35.5
+"17","birthlen","<48 cm",29615,39.1
+"18","birthlen","[48-50) cm",19308,25.5
+"19","vagbrth","Total",66826,100
+"20","vagbrth","0",5684,8.5
+"21","vagbrth","1",61142,91.5
+"22","hdlvry","Total",17158,100
+"23","hdlvry","0",9123,53.2
+"24","hdlvry","1",8035,46.8
+"25","mage","Total",85002,100
+"26","mage","[20-30)",50917,59.9
+"27","mage","<20",19310,22.7
+"28","mage",">=30",14775,17.4
+"29","mhtcm","Total",71666,100
+"30","mhtcm",">=155 cm",35237,49.2
+"31","mhtcm","<151 cm",23433,32.7
+"32","mhtcm","[151-155) cm",12996,18.1
+"33","mwtkg","Total",63917,100
+"34","mwtkg",">=58 kg",20534,32.1
+"35","mwtkg","<52 kg",33515,52.4
+"36","mwtkg","[52-58) kg",9868,15.4
+"37","mbmi","Total",62281,100
+"38","mbmi","Normal weight",49423,79.4
+"39","mbmi","Underweight",12858,20.6
+"40","meducyrs","Total",84912,100
+"41","meducyrs","High",26564,31.3
+"42","meducyrs","Low",28029,33
+"43","meducyrs","Medium",30319,35.7
+"44","single","Total",50468,100
+"45","single","0",48223,95.6
+"46","single","1",2245,4.4
 "47","fage","Total",23328,100
 "48","fage",">=38",1873,8
 "49","fage","<32",17543,75.2
@@ -53,92 +53,70 @@
 "52","fhtcm",">=167 cm",13569,83.4
 "53","fhtcm","<162 cm",986,6.1
 "54","fhtcm","[162-167) cm",1713,10.5
-"55","feducyrs","Total",43849,100
-"56","feducyrs","0",2130,4.9
-"57","feducyrs","1",176,0.4
-"58","feducyrs","2",435,1
-"59","feducyrs","3",657,1.5
-"60","feducyrs","4",609,1.4
-"61","feducyrs","5",855,1.9
-"62","feducyrs","6",1034,2.4
-"63","feducyrs","7",2680,6.1
-"64","feducyrs","8",1248,2.8
-"65","feducyrs","9",1519,3.5
-"66","feducyrs","10",1816,4.1
-"67","feducyrs","11",11228,25.6
-"68","feducyrs","12",7120,16.2
-"69","feducyrs","13",8327,19
-"70","feducyrs","14",829,1.9
-"71","feducyrs","15",442,1
-"72","feducyrs","16",2324,5.3
-"73","feducyrs","17",177,0.4
-"74","feducyrs","18",17,0
-"75","feducyrs","19",2,0
-"76","feducyrs","20",3,0
-"77","feducyrs","21",1,0
-"78","feducyrs","24",16,0
-"79","feducyrs","25",1,0
-"80","feducyrs","27",203,0.5
-"81","trth2o","Total",2138,100
-"82","trth2o","1",952,44.5
-"83","trth2o","0",1186,55.5
-"84","cleanck","Total",2678,100
-"85","cleanck","1",1338,50
-"86","cleanck","0",1340,50
-"87","impfloor","Total",5104,100
-"88","impfloor","1",3702,72.5
-"89","impfloor","0",1402,27.5
-"90","nrooms","Total",10228,100
-"91","nrooms","4+",1394,13.6
-"92","nrooms","1",5212,51
-"93","nrooms","2",2644,25.9
-"94","nrooms","3",978,9.6
-"95","nhh","Total",3732,100
-"96","nhh","3 or less",692,18.5
-"97","nhh","4-5",1609,43.1
-"98","nhh","6-7",887,23.8
-"99","nhh","8+",544,14.6
-"100","nchldlt5","Total",8253,100
-"101","nchldlt5","1",4243,51.4
-"102","nchldlt5","2+",4010,48.6
-"103","earlybf","Total",17614,100
-"104","earlybf","1",8782,49.9
-"105","earlybf","0",8832,50.1
-"106","hfoodsec","Total",3070,100
-"107","hfoodsec","Food Secure",1634,53.2
-"108","hfoodsec","Mildly Food Insecure",900,29.3
-"109","hfoodsec","Food Insecure",536,17.5
-"110","anywast06","Total",10328,100
-"111","anywast06","0",7849,76
-"112","anywast06","1",2479,24
-"113","pers_wast","Total",9631,100
-"114","pers_wast","0",9176,95.3
-"115","pers_wast","1",455,4.7
-"116","enstunt","Total",61087,100
-"117","enstunt","0",54608,89.4
-"118","enstunt","1",6479,10.6
-"119","enwast","Total",59035,100
-"120","enwast","0",49065,83.1
-"121","enwast","1",9970,16.9
-"122","hhwealth_quart","Total",4335,100
-"123","hhwealth_quart","Wealth Q4",1328,30.6
-"124","hhwealth_quart","Wealth Q1",932,21.5
-"125","hhwealth_quart","Wealth Q2",802,18.5
-"126","hhwealth_quart","Wealth Q3",1273,29.4
-"127","impsan","Total",11592,100
-"128","impsan","1",4257,36.7
-"129","impsan","0",7335,63.3
-"130","safeh20","Total",4353,100
-"131","safeh20","1",2810,64.6
-"132","safeh20","0",1543,35.4
-"133","perdiar6","Total",4812,100
-"134","perdiar6","0%",2196,45.6
-"135","perdiar6","(0%, 5%]",1336,27.8
-"136","perdiar6",">5%",1280,26.6
-"137","perdiar24","Total",7988,100
-"138","perdiar24","0%",1380,17.3
-"139","perdiar24","(0%, 5%]",4073,51
-"140","perdiar24",">5%",2535,31.7
-"141","predexfd6","Total",6111,100
-"142","predexfd6","1",2221,36.3
-"143","predexfd6","0",3890,63.7
+"55","feducyrs","Total",75358,100
+"56","feducyrs","High",15623,20.7
+"57","feducyrs","Low",26767,35.5
+"58","feducyrs","Medium",32968,43.7
+"59","trth2o","Total",2138,100
+"60","trth2o","1",952,44.5
+"61","trth2o","0",1186,55.5
+"62","cleanck","Total",2678,100
+"63","cleanck","1",1338,50
+"64","cleanck","0",1340,50
+"65","impfloor","Total",37686,100
+"66","impfloor","1",6477,17.2
+"67","impfloor","0",31209,82.8
+"68","nrooms","Total",42851,100
+"69","nrooms","4+",2819,6.6
+"70","nrooms","1",24526,57.2
+"71","nrooms","2",11351,26.5
+"72","nrooms","3",4155,9.7
+"73","nhh","Total",3732,100
+"74","nhh","3 or less",692,18.5
+"75","nhh","4-5",1609,43.1
+"76","nhh","6-7",887,23.8
+"77","nhh","8+",544,14.6
+"78","nchldlt5","Total",35453,100
+"79","nchldlt5","1",21653,61.1
+"80","nchldlt5","2+",13800,38.9
+"81","earlybf","Total",50188,100
+"82","earlybf","1",12483,24.9
+"83","earlybf","0",37705,75.1
+"84","hfoodsec","Total",25848,100
+"85","hfoodsec","Food Secure",13082,50.6
+"86","hfoodsec","Mildly Food Insecure",8632,33.4
+"87","hfoodsec","Food Insecure",4134,16
+"88","anywast06","Total",10328,100
+"89","anywast06","0",7849,76
+"90","anywast06","1",2479,24
+"91","pers_wast","Total",9631,100
+"92","pers_wast","0",9176,95.3
+"93","pers_wast","1",455,4.7
+"94","enstunt","Total",93756,100
+"95","enstunt","0",76868,82
+"96","enstunt","1",16888,18
+"97","enwast","Total",86641,100
+"98","enwast","0",73673,85
+"99","enwast","1",12968,15
+"100","hhwealth_quart","Total",44263,100
+"101","hhwealth_quart","Wealth Q4",11671,26.4
+"102","hhwealth_quart","Wealth Q1",10844,24.5
+"103","hhwealth_quart","Wealth Q2",10496,23.7
+"104","hhwealth_quart","Wealth Q3",11252,25.4
+"105","impsan","Total",44216,100
+"106","impsan","1",27350,61.9
+"107","impsan","0",16866,38.1
+"108","safeh20","Total",36980,100
+"109","safeh20","1",35392,95.7
+"110","safeh20","0",1588,4.3
+"111","perdiar6","Total",4812,100
+"112","perdiar6","0%",2196,45.6
+"113","perdiar6","(0%, 5%]",1336,27.8
+"114","perdiar6",">5%",1280,26.6
+"115","perdiar24","Total",13430,100
+"116","perdiar24","0%",1600,11.9
+"117","perdiar24","(0%, 5%]",8705,64.8
+"118","perdiar24",">5%",3125,23.3
+"119","predexfd6","Total",26948,100
+"120","predexfd6","1",18471,68.5
+"121","predexfd6","0",8477,31.5

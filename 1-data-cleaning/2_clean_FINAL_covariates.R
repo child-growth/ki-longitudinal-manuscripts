@@ -603,13 +603,16 @@ d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,167,max(d$W_fhtcm, na.rm=T)),
 # Function groups subjects into even categories from irregular distributions of education 
 # (just tertiling leads to sparsity/R errors)
 
-quantile_rf_edu <- function(d, Avar="meducyrs"){
+quantile_rf_edu <- function(d, Avar="meducyrs", to.character=F){
   dfull <-d
+  
+  print(d$studyid[1])
+  print(d$country[1])
   
   A0 <- NULL
   d <- data.frame(id=1:nrow(dfull), A=as.data.frame(dfull[,Avar])[,1])
   
-  if(sum(is.na(d$A))!=length(d$A)){
+  if(sum(is.na(d$A))!=nrow(d)){
     
     Acuts=c(0, as.numeric(quantile(d$A, probs = c(1/3, 2/3), na.rm=T)), max(d$A, na.rm=T))
     if(length(Acuts)==length(unique(Acuts))){
@@ -651,14 +654,23 @@ quantile_rf_edu <- function(d, Avar="meducyrs"){
       }
     }
     dfull[,Avar] <- A
+    
   }
+  dfull <-as.data.frame(dfull)
+  if(to.character){
+  dfull[,Avar] <- as.character(dfull[,Avar])
+  }
+  print(class(dfull[,Avar]))
   return(dfull)
 }
 
 d <- d %>% group_by(studyid, country) %>%
   do(quantile_rf_edu(., Avar="meducyrs"))
+#d <- d %>% arrange(feducyrs, studyid, country, subjid)
 d <- d %>% group_by(studyid, country) %>%
-  do(quantile_rf_edu(., Avar="feducyrs"))
+  do(quantile_rf_edu(., Avar="feducyrs", to.character=T))
+d$feducyrs <- factor(d$feducyrs, levels = c("Low","Medium","High"))
+
 table(d$meducyrs)
 table(d$feducyrs)
 

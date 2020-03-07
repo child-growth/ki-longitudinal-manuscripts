@@ -21,11 +21,6 @@ Type 'q()' to quit R.
 
 > 
 > 
-> #-----------------------------------
-> # Wasting analysis
-> # Objective 1a
-> # Import data, subset to relevant variables
-> #-----------------------------------
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
@@ -228,95 +223,125 @@ Warning message:
 New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
 > 
-> #--------------------------------------------
-> # Read in .csv file and save as an .rds file
-> #--------------------------------------------
+> load(here("results/adjustment_sets_list.Rdata"))
+> A <- names(adjustment_sets)
 > 
-> d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
-> 
-> #--------------------------------------------
-> # Subset to  just identifying, Z-score data, and time data
-> #--------------------------------------------
+> Avars <- c("mage","fage","mhtcm","mwtkg","mbmi","single","fhtcm","meducyrs","feducyrs")
 > 
 > 
-> d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
+> adjustment_sets <- list( 
++   
++   mage=c("arm","W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
++          "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
++          "single",
++          "W_nrooms","W_nhh","W_nchldlt5",
++          "trth2o","cleanck","impfloor","impsan","safeh20",
++          "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),   
++   
++   fage=c("arm","W_mage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
++          "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
++          "single",
++          "W_nrooms","W_nhh","W_nchldlt5",
++          "brthmon",
++          "trth2o","cleanck","impfloor","impsan","safeh20",
++          "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),     
++   
++   mhtcm=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
++           "W_fhtcm",
++           "single",
++           "W_nrooms",
++           "trth2o","cleanck","impfloor","impsan","safeh20",
++           "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),    
++   
++   mwtkg=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
++           "W_fhtcm",
++           "single",
++           "W_nrooms","W_nhh","W_nchldlt5",
++           "brthmon","W_parity",
++           "trth2o","cleanck","impfloor","impsan","safeh20",
++           "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),
++   
++   mbmi=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
++          "W_fhtcm",
++          "single",
++          "W_nrooms","W_nhh","W_nchldlt5",
++          "brthmon","W_parity",
++          "trth2o","cleanck","impfloor","impsan","safeh20",
++          "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),      
++   
++   single=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
++            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
++            "W_nrooms","W_nhh","W_nchldlt5",
++            "trth2o","cleanck","impfloor","impsan","safeh20",
++            "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),    
++   
++   fhtcm=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
++           "W_mhtcm","W_mwtkg","W_bmi",
++           "single",
++           "W_nrooms",
++           "trth2o","cleanck","impfloor","impsan","safeh20",
++           "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),     
++   
++   meducyrs=c("arm", "W_mage", "W_fage", "feducyrs", "hhwealth_quart",
++              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
++              "single",
++              "W_nrooms","W_nhh","W_nchldlt5",
++              "trth2o","cleanck","impfloor","impsan","safeh20",
++              "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity"),
++   
++   feducyrs=c("arm", "W_mage", "W_fage", "meducyrs",  "hhwealth_quart", 
++              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
++              "single",
++              "W_nrooms","W_nhh","W_nchldlt5",
++              "trth2o","cleanck","impfloor","impsan","safeh20",
++              "W_gagebrth","W_birthwt","W_birthlen","vagbrth","hdlvry","parity")
++ )
 > 
 > 
-> #d <- d %>% filter(studyid == "PROVIDE")
-> 
-> #Fill in birth week as middle of the month from birthmonth from PROVIDE datasets
-> d$brthweek[d$studyid=="PROVIDE"] <- round(as.numeric(d$brthmon[d$studyid=="PROVIDE"])  * 4.3333 ) -2 
-> 
-> 
-> table(d$studyid, is.na(d$brthweek))
-                 
-                   FALSE   TRUE
-  Burkina Faso Zn  16562   2407
-  CMC-V-BCS-2002   16516      0
-  CMIN              5457      0
-  COHORTS              0 112833
-  CONTENT           8339      0
-  EE                9043      0
-  GMS-Nepal        14163      0
-  Guatemala BSC     2551      0
-  iLiNS-DOSE       19084      0
-  iLiNS-DYAD-M     10408      0
-  iLiNS-Zinc       10552      0
-  IRC              14842      0
-  JiVitA-3        123417      0
-  JiVitA-4         39996      0
-  Keneba           43720      0
-  LCNI-5            5931      0
-  MAL-ED           47962      0
-  NIH-Birth            0  11828
-  NIH-Crypto           0  10542
-  PROBIT          175496      0
-  PROVIDE          14807      0
-  ResPak            3177      0
-  SAS-CompFeed      9541      0
-  SAS-FoodSuppl     2247      0
-  TanzaniaChild2   32329      0
-  VITAMIN-A        32774      0
-  ZVITAMBO         75824      0
-> d <- d %>% filter(!is.na(brthweek))
-> 
-> #convert subjid to character for the merge with covariate dataset
-> d$subjid <- as.character(d$subjid)
-> 
-> #drop yearly studies
-> d <- d %>% filter(measurefreq!="yearly")
-> 
-> #Has Z-score data
-> d <- d %>% filter(!is.na(whz) | !is.na(haz)) 
-> 
-> #estimate birthday
-> d$birthday <- d$brthweek *7 - 7 #Minus 7 days so week 1 starts at 0 and week 53 is day 364
-> summary(d$birthday)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   -7.0    91.0   196.0   186.3   280.0   364.0 
-> 
-> #calculate study day of measurement (with 1 being the first day of the start of the study year)
-> d$studyday <-  d$birthday + d$agedays
+> #---------------------------------------------
+> #Adjustment specifying function
+> #---------------------------------------------
 > 
 > 
-> #calculate julian day of measurement
-> d$jday <- round(((d$birthday + d$agedays)/364)%%1 * 364, 0)
-> summary(d$jday)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    0.0    88.0   183.0   181.9   274.0   363.0 
-> table(is.na(d$month))
-
- FALSE 
-640992 
+> specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","country"), id="id", adj_sets=adjustment_sets){
++   
++   analyses <- expand.grid(A=A,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
++   analyses$id <- id
++   analyses$strata <- list(V)
++   if(is.null(W)){analyses$W <- adj_sets[analyses$A]}else{
++     analyses$W <- list(W)
++   }
++   names(analyses$W) <- NULL
++   analyses$file <- file
++   
++   return(analyses)
++ }
 > 
-> #RF dataset (with ages up to 25 months for 24 month mean WLZ)
-> saveRDS(d, paste0(ghapdata_dir,"seasonality_rf_data.rds"))
 > 
-> d <- d %>% filter(agedays < 24 * 30.4167)
 > 
-> saveRDS(d, seasonality_data_path)
+> 
+> #---------------------------------------------
+> # Specify the continuous analyses
+> #---------------------------------------------
+> 
+> 
+> 
+> haz <- specify_rf_analysis(A=Avars, Y="haz", file="mediation_HAZ.Rdata")
+> whz <- specify_rf_analysis(A=Avars, Y="whz", file="mediation_WHZ.Rdata")
+> 
+> 
+> 
+> analyses <- rbind(haz, whz)
+> 
+> 
+> #Save analysis specification
+> save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/mediation.RData"))
+> 
+> 
+> 
+> 
 > 
 > 
 > proc.time()
    user  system elapsed 
- 21.515   0.648  22.143 
+  2.952   0.298   3.230 

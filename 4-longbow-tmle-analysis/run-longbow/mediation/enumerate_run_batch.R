@@ -43,6 +43,7 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 # send the batch to longbow (with provisioning disabled)
 med_batch_inputs <- "all_mediation_analyses.json"
 med_batch_id <-  run_on_longbow(rmd_filename, med_batch_inputs, provision = FALSE)
+med_batch_id
 
 # wait for the batch to finish and track progress
 wait_for_batch(med_batch_id)

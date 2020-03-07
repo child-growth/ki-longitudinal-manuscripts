@@ -321,7 +321,7 @@ c("studyid", "subjid", "sex", "month", "wtkg", "htcm", "lencm",
 > dim(Zscores)
 [1] 7540678      23
 > dim(cov)
-[1] 76559    57
+[1] 109366     57
 > d <- left_join(Zscores, cov, by = c("studyid", "subjid", "country"))
 Warning message:
 Column `country` joining character vector and factor, coercing into character vector 
@@ -331,8 +331,8 @@ Column `country` joining character vector and factor, coercing into character ve
 > rm(Zscores, cov)
 > gc()
             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   2126529  113.6    3874352  207.0   2999594  160.2
-Vcells 404113431 3083.2  653398997 4985.1 572999250 4371.7
+Ncells   2126529  113.6    3800420  203.0   3344917  178.7
+Vcells 404113417 3083.2  652306974 4976.8 574278686 4381.4
 > 
 > ##Drop observations missing all anthropometry
 > dim(d)
@@ -346,7 +346,7 @@ Vcells 404113431 3083.2  653398997 4985.1 572999250 4371.7
 > table(is.na(d$month), is.na(d$brthmon))
        
          FALSE   TRUE
-  FALSE 523459 163653
+  FALSE 686739    373
   TRUE   61860 123376
 > table(is.na(d$month))
 
@@ -391,4 +391,4 @@ Vcells 404113431 3083.2  653398997 4985.1 572999250 4371.7
 > 
 > proc.time()
    user  system elapsed 
- 71.917   3.022  74.920 
+ 72.669   3.088  75.739 

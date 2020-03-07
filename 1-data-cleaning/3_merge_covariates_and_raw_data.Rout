@@ -368,35 +368,37 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > table(d$impsan)
 
     0     1 
-15564  7570 
+25156 30737 
 > table(d$studyid, d$impsan)
                  
-                     0    1
-  Burkina Faso Zn 5552  290
-  CMC-V-BCS-2002     0    0
-  CMIN               0    0
-  COHORTS         5714 2321
-  CONTENT           14  201
-  EE                 0    0
-  GMS-Nepal          0    0
-  Guatemala BSC      0    0
-  iLiNS-DOSE        12    2
-  iLiNS-DYAD-M    1086  108
-  iLiNS-Zinc         0    0
-  IRC                0    0
-  Keneba             0    0
-  LCNI-5           810    3
-  MAL-ED           853  822
-  NIH-Birth        387  242
-  NIH-Crypto        92  655
-  PROBIT             0    0
-  PROVIDE            2   58
-  ResPak             0    0
-  SAS-CompFeed       0    0
-  SAS-FoodSuppl      0    0
-  TanzaniaChild2     0    0
-  VITAMIN-A       1042 2868
-  ZVITAMBO           0    0
+                      0     1
+  Burkina Faso Zn  5552   290
+  CMC-V-BCS-2002      0     0
+  CMIN                0     0
+  COHORTS          5714  2321
+  CONTENT            14   201
+  EE                  0     0
+  GMS-Nepal           0     0
+  Guatemala BSC       0     0
+  iLiNS-DOSE         12     2
+  iLiNS-DYAD-M     1086   108
+  iLiNS-Zinc          0     0
+  IRC                 0     0
+  JiVitA-3         8352 18979
+  JiVitA-4         1240  4188
+  Keneba              0     0
+  LCNI-5            810     3
+  MAL-ED            853   822
+  NIH-Birth         387   242
+  NIH-Crypto         92   655
+  PROBIT              0     0
+  PROVIDE             2    58
+  ResPak              0     0
+  SAS-CompFeed        0     0
+  SAS-FoodSuppl       0     0
+  TanzaniaChild2      0     0
+  VITAMIN-A        1042  2868
+  ZVITAMBO            0     0
 > 
 > 
 > #Drinking water
@@ -404,36 +406,38 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > d <- left_join(d, dh20, by=c("studyid", "country", "subjid"))
 > table(d$safeh20)
 
-   0    1 
-5030 9093 
+    0     1 
+ 5076 41809 
 > table(d$studyid, d$safeh20)
                  
-                     0    1
-  Burkina Faso Zn 3479 2363
-  CMC-V-BCS-2002     0    0
-  CMIN               0    0
-  COHORTS            0    0
-  CONTENT            3   54
-  EE                 0    0
-  GMS-Nepal          0    0
-  Guatemala BSC      0    0
-  iLiNS-DOSE         2   13
-  iLiNS-DYAD-M       1    2
-  iLiNS-Zinc         0    0
-  IRC                0    0
-  Keneba             0    0
-  LCNI-5           144  673
-  MAL-ED          1394  220
-  NIH-Birth          2  627
-  NIH-Crypto         0  758
-  PROBIT             0    0
-  PROVIDE            0   60
-  ResPak             0    0
-  SAS-CompFeed       0    0
-  SAS-FoodSuppl      0  418
-  TanzaniaChild2     0    0
-  VITAMIN-A          5 3905
-  ZVITAMBO           0    0
+                      0     1
+  Burkina Faso Zn  3479  2363
+  CMC-V-BCS-2002      0     0
+  CMIN                0     0
+  COHORTS             0     0
+  CONTENT             3    54
+  EE                  0     0
+  GMS-Nepal           0     0
+  Guatemala BSC       0     0
+  iLiNS-DOSE          2    13
+  iLiNS-DYAD-M        1     2
+  iLiNS-Zinc          0     0
+  IRC                 0     0
+  JiVitA-3           45 27289
+  JiVitA-4            1  5427
+  Keneba              0     0
+  LCNI-5            144   673
+  MAL-ED           1394   220
+  NIH-Birth           2   627
+  NIH-Crypto          0   758
+  PROBIT              0     0
+  PROVIDE             0    60
+  ResPak              0     0
+  SAS-CompFeed        0     0
+  SAS-FoodSuppl       0   418
+  TanzaniaChild2      0     0
+  VITAMIN-A           5  3905
+  ZVITAMBO            0     0
 > 
 > #diarrhea
 > diar$subjid <- as.character(diar$subjid)
@@ -442,10 +446,10 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > #quartile diarrhea
 > summary(d$perdiar6)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   0.00    0.00    0.01    0.04    0.05    0.62   71745 
+   0.00    0.00    0.01    0.04    0.05    0.62  112558 
 > summary(d$perdiar24)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   0.00    0.01    0.03    0.05    0.06    1.00   68568 
+   0.00    0.01    0.02    0.04    0.05    1.00  103937 
 > 
 > #Save continious version of variables for adjustment set
 > d$W_perdiar6 <- d$perdiar6
@@ -453,10 +457,10 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > 
 > summary(d$perdiar6)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   0.00    0.00    0.01    0.04    0.05    0.62   71745 
+   0.00    0.00    0.01    0.04    0.05    0.62  112558 
 > summary(d$perdiar24)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-   0.00    0.01    0.03    0.05    0.06    1.00   68568 
+   0.00    0.01    0.02    0.04    0.05    1.00  103937 
 > 
 > #Cut diarrhea at standard points. Quartiling by overall distribution leads to sparsity
 > d$perdiar6 <- as.character(cut(d$W_perdiar6, breaks=c(0, 0.05, 1), include.lowest=F, 
@@ -484,6 +488,8 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
   iLiNS-DYAD-M MALAWI                           0        0   0
   iLiNS-Zinc BURKINA FASO                       0        0   0
   IRC INDIA                                     0        0   0
+  JiVitA-3 BANGLADESH                           0        0   0
+  JiVitA-4 BANGLADESH                           0        0   0
   Keneba GAMBIA                                 0        0   0
   LCNI-5 MALAWI                                 0        0   0
   MAL-ED BANGLADESH                            87       98  80
@@ -513,7 +519,7 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > table(d$perdiar24)
 
 (0%, 5%]      >5%       0% 
-    4073     2536     1383 
+    8707     3126     1603 
 > table(paste0(d$studyid, " ", d$country), d$perdiar24)
                                              
                                               (0%, 5%]  >5%   0%
@@ -531,6 +537,8 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
   iLiNS-DYAD-M MALAWI                                0    0    0
   iLiNS-Zinc BURKINA FASO                         1324  769  357
   IRC INDIA                                          0    0    0
+  JiVitA-3 BANGLADESH                                0    0    0
+  JiVitA-4 BANGLADESH                             4634  590  220
   Keneba GAMBIA                                      0    0    0
   LCNI-5 MALAWI                                      0    0    0
   MAL-ED BANGLADESH                                148   95   22
@@ -555,8 +563,8 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > d <- left_join(d, bf, by=c("studyid", "country", "subjid"))
 > table(d$exclfeed3)
 
-   0    1 
-7266 6418 
+    0     1 
+ 8828 22660 
 > 
 > #Convert all columns to factors exceot continious adjustment vars
 > for(i in 3:ncol(d)){
@@ -568,18 +576,18 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > 
 > #drop duplicated Jivita covariates
 > dim(d)
-[1] 84944    83
+[1] 125757     83
 > d <- distinct(d, .keep_all=T )
 > dim(d)
-[1] 76860    83
+[1] 109667     83
 > 
 > #Drop one duplicated row from iLiNS-DYAD-M (all values the same except 
 > # sanitation (iLiNS-DYAD-M), but iLiNS-DYAD-M only used in the mortality analysis)
 > dim(d)
-[1] 76860    83
+[1] 109667     83
 > d <- distinct(d, studyid, subjid, country, .keep_all = TRUE)
 > dim(d)
-[1] 76559    83
+[1] 109366     83
 > 
 > 
 > #Set reference level to the lowest risk level
@@ -614,6 +622,8 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
   iLiNS-DYAD-M           0   0   0
   iLiNS-Zinc             0   0   0
   IRC                    0   0   0
+  JiVitA-3               0   0   0
+  JiVitA-4               0   0   0
   Keneba                 0   0   0
   LCNI-5                 0   0   0
   MAL-ED               574 884 399
@@ -642,6 +652,8 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
   iLiNS-DYAD-M           0    0    0
   iLiNS-Zinc          1324  769  357
   IRC                    0    0    0
+  JiVitA-3               0    0    0
+  JiVitA-4            4634  590  220
   Keneba                 0    0    0
   LCNI-5                 0    0    0
   MAL-ED              1064  446  347
@@ -667,4 +679,4 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > 
 > proc.time()
    user  system elapsed 
- 53.551   2.956  56.495 
+ 14.169   0.599  14.749 

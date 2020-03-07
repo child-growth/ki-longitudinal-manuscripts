@@ -41,7 +41,8 @@ cov$region <- factor(cov$region, levels = c("South Asia","Africa","Latin America
 cov$country <- tolower(cov$country)
 cov$studyid <- gsub("^k.*?-" , "", cov$studyid)
 cov$country <- str_to_title(cov$country)
-
+#drop duplicate birthmonth
+cov <- cov %>% subset(., select = -c(brthmon))
 
 
 #Merge WLZ, birthmonth, and ID from covariates

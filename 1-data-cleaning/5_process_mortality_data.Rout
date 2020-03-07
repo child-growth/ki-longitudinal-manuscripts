@@ -230,13 +230,13 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 > gc()
            used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells  2036920 108.8    4176595 223.1  2523252 134.8
-Vcells 49506391 377.8   61500915 469.3 52506450 400.6
+Ncells  2036927 108.8    4176615 223.1  2523252 134.8
+Vcells 49506391 377.8   61500915 469.3 52506436 400.6
 > 
 > d <- subset(d, select= c(studyid, country, subjid, agedays, dead, agedth, causedth, haz, waz))
 > gc()
           used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2038356 108.9    4176595 223.1  2523252 134.8
+Ncells 2038356 108.9    4176615 223.1  2523252 134.8
 Vcells 9817926  75.0   49200732 375.4 61303829 467.8
 > 
 > 
@@ -1790,4 +1790,4 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > 
 > proc.time()
    user  system elapsed 
- 27.578   0.779  28.334 
+ 27.444   0.695  28.121 

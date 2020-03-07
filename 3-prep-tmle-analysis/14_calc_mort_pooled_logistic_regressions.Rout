@@ -21,11 +21,12 @@ Type 'q()' to quit R.
 
 > 
 > 
-> #-----------------------------------
-> # Wasting analysis
-> # Objective 1a
-> # Import data, subset to relevant variables
-> #-----------------------------------
+> 
+> 
+> 
+> 
+> 
+> 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
@@ -227,96 +228,95 @@ The following objects are masked from ‘package:base’:
 Warning message:
 New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
-> 
-> #--------------------------------------------
-> # Read in .csv file and save as an .rds file
-> #--------------------------------------------
-> 
-> d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
-> 
-> #--------------------------------------------
-> # Subset to  just identifying, Z-score data, and time data
-> #--------------------------------------------
+> #read in data
+> mort <- readRDS(mortality_path)
+> wast <- readRDS(rf_wasting_data_path)
 > 
 > 
-> d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
+> 
+> d <- left_join(wast, mort, by = c("studyid", "country", "subjid"))
 > 
 > 
-> #d <- d %>% filter(studyid == "PROVIDE")
+> # Subset to children under 2 years and children with an age of death (among child mortality)
+> d <- d %>% filter(agedays < 730) %>%
++            filter(dead==0 | !is.na(agedth))
 > 
-> #Fill in birth week as middle of the month from birthmonth from PROVIDE datasets
-> d$brthweek[d$studyid=="PROVIDE"] <- round(as.numeric(d$brthmon[d$studyid=="PROVIDE"])  * 4.3333 ) -2 
+> # Calculate exposures
+> d <- d %>% mutate(wast = 1*(whz) < -2)
 > 
+> #Mark person-time
+> d <- d %>% group_by(studyid, subjid) %>%
++   mutate(Nobs = n(),
++          min_age = min(agedays),
++          max_age = max(agedays),
++          person_time = max_age - min_age
++          ) %>%
++   filter(Nobs > 1)
 > 
-> table(d$studyid, is.na(d$brthweek))
-                 
-                   FALSE   TRUE
-  Burkina Faso Zn  16562   2407
-  CMC-V-BCS-2002   16516      0
-  CMIN              5457      0
-  COHORTS              0 112833
-  CONTENT           8339      0
-  EE                9043      0
-  GMS-Nepal        14163      0
-  Guatemala BSC     2551      0
-  iLiNS-DOSE       19084      0
-  iLiNS-DYAD-M     10408      0
-  iLiNS-Zinc       10552      0
-  IRC              14842      0
-  JiVitA-3        123417      0
-  JiVitA-4         39996      0
-  Keneba           43720      0
-  LCNI-5            5931      0
-  MAL-ED           47962      0
-  NIH-Birth            0  11828
-  NIH-Crypto           0  10542
-  PROBIT          175496      0
-  PROVIDE          14807      0
-  ResPak            3177      0
-  SAS-CompFeed      9541      0
-  SAS-FoodSuppl     2247      0
-  TanzaniaChild2   32329      0
-  VITAMIN-A        32774      0
-  ZVITAMBO         75824      0
-> d <- d %>% filter(!is.na(brthweek))
-> 
-> #convert subjid to character for the merge with covariate dataset
-> d$subjid <- as.character(d$subjid)
-> 
-> #drop yearly studies
-> d <- d %>% filter(measurefreq!="yearly")
-> 
-> #Has Z-score data
-> d <- d %>% filter(!is.na(whz) | !is.na(haz)) 
-> 
-> #estimate birthday
-> d$birthday <- d$brthweek *7 - 7 #Minus 7 days so week 1 starts at 0 and week 53 is day 364
-> summary(d$birthday)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   -7.0    91.0   196.0   186.3   280.0   364.0 
-> 
-> #calculate study day of measurement (with 1 being the first day of the start of the study year)
-> d$studyday <-  d$birthday + d$agedays
+> #TEMP
+> #d <- d %>% filter(studyid=="Keneba")
 > 
 > 
-> #calculate julian day of measurement
-> d$jday <- round(((d$birthday + d$agedays)/364)%%1 * 364, 0)
-> summary(d$jday)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    0.0    88.0   183.0   181.9   274.0   363.0 
-> table(is.na(d$month))
-
- FALSE 
-640992 
+> # --------------------------------------
+> # Robust clustered SE function
+> # http://people.su.se/~ma/mcluster.R
+> # R (www.r-project.org) codes for computing multi-way clustered-standard errors
+> # Mahmood Arai, Jan 21, 2008. 
+> # See: Thompson (2006), Cameron, Gelbach and Miller (2006) and Petersen (2006).
+> #
+> # slightly modified to have it return the vcovCL object
+> # rather than the updated fit (since might need the VC matrix)
+> # --------------------------------------
+> cl   <- function(dat,fm, cluster){
++   # dat: data used to fit the model
++   # fm : model fit (object)
++   # cluster : vector of cluster IDs
++   require(sandwich, quietly = TRUE)
++   require(lmtest, quietly = TRUE)
++   M <- length(unique(cluster))
++   N <- length(cluster)
++   K <- fm$rank
++   dfc <- (M/(M-1))*((N-1)/(N-K))
++   uj  <- apply(estfun(fm),2, function(x) tapply(x, cluster, sum));
++   vcovCL <- dfc*sandwich(fm, meat=crossprod(uj)/N)
++   return(vcovCL)
++ }
 > 
-> #RF dataset (with ages up to 25 months for 24 month mean WLZ)
-> saveRDS(d, paste0(ghapdata_dir,"seasonality_rf_data.rds"))
+> # --------------------------------------
+> # function to estimate poisson models
+> # with robust SEs
+> # --------------------------------------
+> poissonRB <- function(fmla,dat,print=TRUE) {
++   # poisson regression with robust SEs
++   # fmla : formula for the model fit
++   # dat  : data used to fit the model (has to include "subjid" for individuals)
++   # print: print results ?
++   
++   # restrict to complete cases
++   dat <- dat[complete.cases(dat[,c(all.vars(fmla))]),] 
++   
++   # fit model
++   fmla<-paste0(fmla, " + offset(log(person_time))")
++   #fit <- glm(wast/period_length~MEDUCYRS,family=quasipoisson,data=dat,model=FALSE,x=TRUE, weights=period_length)
++   fit <- glm(fmla,family=poisson,data=dat,model=FALSE,x=TRUE)
++   
++   vcovCL <- cl(dat=dat,fm=fit,cluster=dat$subjid)
++   rfit <- coeftest(fit, vcovCL)
++   if(print==TRUE) {
++     cat(paste("N obs=",nrow(dat)))
++     print(rfit)
++   }
++   list(fit=fit,rfit=rfit,vcovCL=vcovCL)
++ }
 > 
-> d <- d %>% filter(agedays < 24 * 30.4167)
-> 
-> saveRDS(d, seasonality_data_path)
 > 
 > 
-> proc.time()
-   user  system elapsed 
- 21.515   0.648  22.143 
+> irr <- poissonRB(fmla="dead~wast",dat=d)
+Error in estfun(fm) : could not find function "estfun"
+Calls: poissonRB -> cl -> apply
+In addition: Warning messages:
+1: In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
+  there is no package called ‘sandwich’
+2: In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
+  there is no package called ‘lmtest’
+Execution halted

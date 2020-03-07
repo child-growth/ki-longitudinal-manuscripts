@@ -1,0 +1,605 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> 
+> 
+> 
+> 
+> #-----------------------------------------
+> # Process data for wasting traj figures
+> #-----------------------------------------
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
+> require(cowplot)
+Loading required package: cowplot
+
+********************************************************
+Note: As of version 1.0.0, cowplot does not change the
+  default ggplot2 theme anymore. To recover the previous
+  behavior, execute:
+  theme_set(theme_cowplot())
+********************************************************
+
+
+Attaching package: ‘cowplot’
+
+The following object is masked from ‘package:ggthemes’:
+
+    theme_map
+
+> library(RcppRoll)
+> 
+> 
+> #rain <- read.csv(here("/data/monthly_rainfall.csv"))
+> rain <- readRDS(here("/data/cohort_rain_data.rds"))
+> 
+> d <- readRDS(paste0(ghapdata_dir,"/seasonality_rf_data.rds"))
+> 
+> head(rain)
+          studyid      country start_year median_birth_year end_birth_year
+1 Burkina Faso Zn BURKINA FASO       2010                NA             NA
+2  CMC-V-BCS-2002        INDIA       2002              2002           2003
+3            CMIN   BANGLADESH       1993              1994           1994
+4         COHORTS    GUATEMALA       1969              1969           1969
+5         COHORTS        INDIA       1969              1969           1969
+6         COHORTS  PHILIPPINES       1983              1983           1983
+  max_yr       Jan      Feb       Mar       Apr       May       Jun      Jul
+1   2012   0.00000  0.90000  3.133333  28.40000  45.73333  91.16667 178.2667
+2   2005  12.05000 14.95000 19.500000  33.40000  50.77500 151.12500 223.6500
+3   1996  10.17500 39.80000 84.500000 136.15000 310.15000 541.02500 505.1250
+4   1971  81.20000 37.70000 66.766667  81.83333 240.36667 375.26667 487.5667
+5   1971  12.03333 11.86667 15.633333  32.20000  65.50000 184.66667 259.6000
+6   1985 132.26667 81.06667 78.766667 116.50000 134.60000 270.80000 277.2333
+       Aug      Sep       Oct        Nov         Dec       mam       jja
+1 227.2000 152.2667  48.06667   1.133333   0.1666667  77.23333  496.6000
+2 217.6750 159.0750  87.80000  22.000000   7.9750000 103.67500  592.4750
+3 448.4500 314.6500 150.90000  53.875000   0.3000000 530.82500 1494.6250
+4 509.6000 515.5333 335.03333 154.433333  66.8666667 389.00000 1372.4000
+5 266.8667 178.8333  77.80000  25.133333   9.8666667 113.30000  711.1333
+6 260.5000 308.7667 346.36667 225.633333 170.8000000 329.86667  808.5000
+        son       djf       ann cohort_index
+1  201.4333   0.90000  776.4333    1.0048226
+2  268.8000  30.70000  999.9750    0.8453586
+3  519.4250  37.95000 2595.1000    0.8000527
+4 1005.0000 243.76667 2952.1667    0.6726792
+5  281.8000  37.16667 1140.0000    0.8946784
+6  880.7333 456.73333 2403.3000    0.4058170
+> head(d)
+         studyid subjid id country     region agedays measurefreq month   whz
+1 CMC-V-BCS-2002      1  1   INDIA South Asia      33     monthly     1  0.55
+2 CMC-V-BCS-2002      1  1   INDIA South Asia      67     monthly     2 -2.91
+3 CMC-V-BCS-2002      1  1   INDIA South Asia      95     monthly     3 -2.45
+4 CMC-V-BCS-2002      1  1   INDIA South Asia     130     monthly     4 -1.44
+5 CMC-V-BCS-2002      1  1   INDIA South Asia     159     monthly     5 -1.27
+6 CMC-V-BCS-2002      1  1   INDIA South Asia     190     monthly     6 -2.18
+    haz   waz latitude longitud brthweek brthmon birthday studyday jday
+1 -3.56 -2.74    78.93    12.85       50      12      343      376   12
+2 -1.93 -3.62    78.93    12.85       50      12      343      410   46
+3 -2.67 -3.91    78.93    12.85       50      12      343      438   74
+4 -2.35 -2.74    78.93    12.85       50      12      343      473  109
+5 -2.95 -3.02    78.93    12.85       50      12      343      502  138
+6 -2.08 -2.90    78.93    12.85       50      12      343      533  169
+> 
+> # rain$country <- toupper(rain$country)
+> # rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
+> rain <- mark_region(rain)
+> rain$region <- factor(rain$region, levels = c("South Asia","Africa","Latin America"))
+> rain$country <- tolower(rain$country)
+> d$country <- tolower(d$country)
+> colnames(rain)[1] <- "studyid"
+> d$country[d$country=="tanzania, united republic of"] <- "tanzania"
+> 
+> #remove grant identifiers from studyid
+> d$studyid <- gsub("^k.*?-" , "", d$studyid)
+> rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
+> 
+> 
+> #Transform rain dataset
+> rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan", "Feb", "Mar", "Apr", "May",
++                                       "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+> 
+> rain$country <- str_to_title(rain$country)
+> d$country <- str_to_title(d$country)
+> 
+> # gather meanWHZ by month data into long format
+> rain_long <- rain %>%
++   gather(month,rain, -studyid, -country, -cohort_index, -region) 
+> rain_long$month = gsub("_pre","",rain_long$month)
+> rain_long$month = factor(rain_long$month, levels=c("Jan", "Feb", "Mar", "Apr", "May","Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+> head(rain_long)
+          studyid      country        region cohort_index month      rain
+1 Burkina Faso Zn Burkina Faso        Africa    1.0048226   Jan   0.00000
+2  CMC-V-BCS-2002        India    South Asia    0.8453586   Jan  12.05000
+3            CMIN   Bangladesh    South Asia    0.8000527   Jan  10.17500
+4         COHORTS    Guatemala Latin America    0.6726792   Jan  81.20000
+5         COHORTS        India    South Asia    0.8946784   Jan  12.03333
+6         COHORTS  Philippines    South Asia    0.4058170   Jan 132.26667
+> 
+> rain_long$month_day = as.numeric(rain_long$month) * 30.4167
+> 
+> 
+> 
+> 
+> 
+> #arrange cohorts by seasonality index and set factor levels
+> rain_long <- rain_long %>% arrange(region, -cohort_index) %>% 
++   mutate(cohort = paste0(studyid, ", ", country),
++          cohort=factor(cohort, levels=unique(cohort))) 
+> d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
++                   cohort=factor(cohort, levels=unique(rain_long$cohort)))
+> 
+> rain_long <- droplevels(rain_long)
+> d <- droplevels(d)
+> cohorts=levels(d$cohort)
+> 
+> 
+> 
+> 
+> # Quartile cohorts month by levels of rainfall
+> 
+> #3-month Rolling sum of rainfall
+> 
+> #Set a second ordering of month so all 3-month rain sums can be calculated (i.e grouping "Nov", "Dec","Jan" and "Dec","Jan", "Feb")
+> rain_long$month2 = factor(rain_long$month, levels=c("Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec","Jan", "Feb", "Mar", "Apr", "May"))
+> 
+> rain_quartile <- rain_long %>% group_by(studyid, country) %>%
++   mutate(month_number = as.numeric(month),
++          month_number2 = as.numeric(month2)) %>%
++   arrange(studyid, country, month_number) %>%
++   mutate(roll_sum1 = roll_sum(rain, 3, align = "right", fill = 0, na.rm=T)) %>%
++   arrange(studyid, country, month_number2) %>%
++   mutate(roll_sum2 = roll_sum(rain, 3, align = "right", fill = 0, na.rm=T),
++          max_rain_quarter = ifelse(roll_sum1>roll_sum2, roll_sum1, roll_sum2),
++          month_end_max_rain = month_number[max_rain_quarter==max(max_rain_quarter)]) %>%
++   select(studyid, country, month_end_max_rain) %>% unique(.)
+> head(rain_quartile, 12)
+# A tibble: 12 x 3
+# Groups:   studyid, country [12]
+   studyid         country      month_end_max_rain
+   <chr>           <chr>                     <dbl>
+ 1 Burkina Faso Zn Burkina Faso                  9
+ 2 CMC-V-BCS-2002  India                         9
+ 3 CMIN            Bangladesh                    8
+ 4 COHORTS         Guatemala                     9
+ 5 COHORTS         India                         8
+ 6 COHORTS         Philippines                  10
+ 7 CONTENT         Peru                          3
+ 8 EE              Pakistan                      9
+ 9 GMS-Nepal       Nepal                         9
+10 Guatemala BSC   Guatemala                     9
+11 iLiNS-DOSE      Malawi                        3
+12 iLiNS-DYAD-M    Malawi                        3
+> 
+> 
+> df <- left_join(d, rain_quartile, by = c("studyid","country"))
+> 
+> 
+> df <- df %>% mutate(
++   rain_quartile = case_when(
++     month_end_max_rain == 1 & month %in% c(11, 12, 1) ~ "Max rain", 
++     month_end_max_rain == 2 & month %in% c(12, 1, 2) ~ "Max rain", 
++     month_end_max_rain == 3 & month %in% c(1, 2, 3) ~ "Max rain", 
++     month_end_max_rain == 4 & month %in% c(2, 3, 4) ~ "Max rain", 
++     month_end_max_rain == 5 & month %in% c(3, 4, 5) ~ "Max rain", 
++     month_end_max_rain == 6 & month %in% c(4, 5, 6) ~ "Max rain", 
++     month_end_max_rain == 7 & month %in% c(5, 6, 7) ~ "Max rain", 
++     month_end_max_rain == 8 & month %in% c(6, 7, 8) ~ "Max rain", 
++     month_end_max_rain == 9 & month %in% c(7, 8, 9) ~ "Max rain", 
++     month_end_max_rain == 10 & month %in% c(8, 9, 10) ~ "Max rain", 
++     month_end_max_rain == 11 & month %in% c(9, 10, 11) ~ "Max rain", 
++     month_end_max_rain == 12 & month %in% c(10, 11, 12) ~ "Max rain", 
++     
++     month_end_max_rain == 10 & month %in% c(11, 12, 1) ~ "Post-max rain", 
++     month_end_max_rain == 11 & month %in% c(12, 1, 2) ~ "Post-max rain", 
++     month_end_max_rain == 12 & month %in% c(1, 2, 3) ~ "Post-max rain", 
++     month_end_max_rain == 1 & month %in% c(2, 3, 4) ~ "Post-max rain", 
++     month_end_max_rain == 2 & month %in% c(3, 4, 5) ~ "Post-max rain", 
++     month_end_max_rain == 3 & month %in% c(4, 5, 6) ~ "Post-max rain", 
++     month_end_max_rain == 4 & month %in% c(5, 6, 7) ~ "Post-max rain", 
++     month_end_max_rain == 5 & month %in% c(6, 7, 8) ~ "Post-max rain", 
++     month_end_max_rain == 6 & month %in% c(7, 8, 9) ~ "Post-max rain", 
++     month_end_max_rain == 7 & month %in% c(8, 9, 10) ~ "Post-max rain", 
++     month_end_max_rain == 8 & month %in% c(9, 10, 11) ~ "Post-max rain", 
++     month_end_max_rain == 9 & month %in% c(10, 11, 12) ~ "Post-max rain", 
++     
++     month_end_max_rain == 4 & month %in% c(11, 12, 1) ~ "Pre-max rain", 
++     month_end_max_rain == 5 & month %in% c(12, 1, 2) ~ "Pre-max rain", 
++     month_end_max_rain == 6 & month %in% c(1, 2, 3) ~ "Pre-max rain", 
++     month_end_max_rain == 7 & month %in% c(2, 3, 4) ~ "Pre-max rain", 
++     month_end_max_rain == 8 & month %in% c(3, 4, 5) ~ "Pre-max rain", 
++     month_end_max_rain == 9 & month %in% c(4, 5, 6) ~ "Pre-max rain", 
++     month_end_max_rain == 10 & month %in% c(5, 6, 7) ~ "Pre-max rain", 
++     month_end_max_rain == 11 & month %in% c(6, 7, 8) ~ "Pre-max rain", 
++     month_end_max_rain == 12 & month %in% c(7, 8, 9) ~ "Pre-max rain", 
++     month_end_max_rain == 1 & month %in% c(8, 9, 10) ~ "Pre-max rain", 
++     month_end_max_rain == 2 & month %in% c(9, 10, 11) ~ "Pre-max rain", 
++     month_end_max_rain == 3 & month %in% c(10, 11, 12) ~ "Pre-max rain", 
++     
++     month_end_max_rain == 7 & month %in% c(11, 12, 1) ~ "Opposite max rain", 
++     month_end_max_rain == 8 & month %in% c(12, 1, 2) ~ "Opposite max rain", 
++     month_end_max_rain == 9 & month %in% c(1, 2, 3) ~ "Opposite max rain", 
++     month_end_max_rain == 10 & month %in% c(2, 3, 4) ~ "Opposite max rain", 
++     month_end_max_rain == 11 & month %in% c(3, 4, 5) ~ "Opposite max rain", 
++     month_end_max_rain == 12 & month %in% c(4, 5, 6) ~ "Opposite max rain", 
++     month_end_max_rain == 1 & month %in% c(5, 6, 7) ~ "Opposite max rain", 
++     month_end_max_rain == 2 & month %in% c(6, 7, 8) ~ "Opposite max rain", 
++     month_end_max_rain == 3 & month %in% c(7, 8, 9) ~ "Opposite max rain", 
++     month_end_max_rain == 4 & month %in% c(8, 9, 10) ~ "Opposite max rain", 
++     month_end_max_rain == 5 & month %in% c(9, 10, 11) ~ "Opposite max rain", 
++     month_end_max_rain == 6 & month %in% c(10, 11, 12) ~ "Opposite max rain", 
++     TRUE ~ ""
++   )
++ )
+> 
+> table(!is.na(df$month), df$rain_quartile)
+      
+       Max rain Opposite max rain Post-max rain Pre-max rain
+  TRUE   155520            164085        165462       155925
+> 
+> 
+> #Drop observations without a month variable
+> df <- df %>% filter(rain_quartile!="")
+> df <- droplevels(df)
+> 
+> #Set reference levels
+> df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-max rain", "Pre-max rain", "Max rain"))
+> 
+> 
+> d <- subset(df, select = c(studyid, subjid, id, country, agedays, whz, haz, month, rain_quartile))
+> head(d)
+         studyid subjid id country agedays   whz   haz month     rain_quartile
+1 CMC-V-BCS-2002      1  1   India      33  0.55 -3.56     1 Opposite max rain
+2 CMC-V-BCS-2002      1  1   India      67 -2.91 -1.93     2 Opposite max rain
+3 CMC-V-BCS-2002      1  1   India      95 -2.45 -2.67     3 Opposite max rain
+4 CMC-V-BCS-2002      1  1   India     130 -1.44 -2.35     4      Pre-max rain
+5 CMC-V-BCS-2002      1  1   India     159 -1.27 -2.95     5      Pre-max rain
+6 CMC-V-BCS-2002      1  1   India     190 -2.18 -2.08     6      Pre-max rain
+> 
+> 
+> 
+> 
+> #Mark age categories for tmle analysis and subset to wasting or stunting data
+> #drop outliers 
+> dim(d)
+[1] 640992      9
+> d_whz <- d %>% filter(!is.na(whz)) %>% filter(whz < 5 & whz > (-5))
+> d_haz <- d %>% filter(!is.na(haz)) %>% filter(haz < 6 & haz > (-6))
+> dim(d_whz)
+[1] 598842      9
+> dim(d_haz)
+[1] 639745      9
+> 
+> # define age windows
+> dprev_whz <- calc.prev.agecat(d_whz)
+> dprev_haz <- calc.prev.agecat(d_haz)
+> 
+> #Get N's for table 1
+> mode <- function(codes){
++   which.max(tabulate(codes))
++ }
+> 
+> Ndf <- dprev_haz %>% filter(agecat=="24 months") %>% group_by(studyid, subjid) %>% summarize(rain_quartile=mode(rain_quartile))
+> Ndf %>% ungroup %>% summarize(N=n())
+# A tibble: 1 x 1
+      N
+  <int>
+1 25276
+> table(Ndf$rain_quartile)
+
+   1    2    3    4 
+6227 6475 6242 6332 
+> prop.table(table(Ndf$rain_quartile))*100
+
+       1        2        3        4 
+24.63602 25.61719 24.69536 25.05143 
+> 
+> #--------------------------------------
+> # Calculate prevalence of
+> # Wasting in certain ages for the
+> # risk factor analysis
+> #--------------------------------------
+> 
+> 
+> # take mean of multiple measurements within age window
+> dmn_wast <- dprev_whz %>%
++   filter(!is.na(agecat)) %>%
++   group_by(studyid,country,id, subjid,agecat) %>%
++   arrange(agedays) %>%
++   summarise(whz=mean(whz), month= median(as.numeric(month)), rain_quartile= mode(rain_quartile)) %>%
++   mutate(wasted=ifelse(whz< -2, 1,0),swasted=ifelse(whz< -3, 1,0)) %>% 
++   filter(agecat=="Birth" | agecat=="6 months" | agecat=="24 months")
+> 
+> 
+> # export
+> wastprev = dmn_wast %>% 
++   select(studyid,subjid, id, country,agecat, rain_quartile, wasted, swasted)
+> 
+> # save mean Z scores at each age
+> meanWHZ = dmn_wast %>% 
++   select(studyid,subjid, id, country,agecat, rain_quartile, whz)
+> 
+> 
+> #--------------------------------------
+> # Calculate prevalence of
+> # Wasting in certain ages for the
+> # risk factor analysis
+> #--------------------------------------
+> 
+> dmn_stunt <- dprev_haz %>%
++   filter(!is.na(agecat)) %>%
++   group_by(studyid,country,subjid,id, agecat) %>%
++   arrange(agedays) %>%
++   summarise(haz=mean(haz), month= median(as.numeric(month)), rain_quartile= mode(rain_quartile)) %>%
++   mutate(stunted=ifelse(haz< -2, 1,0),sstunted=ifelse(haz< -3, 1,0)) %>% 
++   filter(agecat=="Birth" | agecat=="6 months" | agecat=="24 months")
+> 
+> 
+> # export
+> stuntprev = dmn_stunt %>% 
++   select(studyid,subjid, id, country,agecat, rain_quartile, stunted, sstunted)
+> 
+> # save mean Z scores at each age
+> meanHAZ = dmn_stunt %>% 
++   select(studyid,subjid, id, country,agecat, rain_quartile, haz)
+> 
+> 
+> 
+> #save analysis dataset
+> save(meanWHZ, file = paste0(ghapdata_dir, "seasonality_rf_whz.Rdata"))
+> save(meanHAZ, file = paste0(ghapdata_dir, "seasonality_rf_haz.Rdata"))
+> save(wastprev, file = paste0(ghapdata_dir, "seasonality_rf_wast.Rdata"))
+> save(stuntprev, file = paste0(ghapdata_dir, "seasonality_rf_stunt.Rdata"))
+> 
+> #Specify analyses
+> specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country","agecat"), id="id", adj_sets=adjustment_sets){
++   
++   analyses <- expand.grid(A=A,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
++   analyses$id <- id
++   analyses$strata <- list(V)
++   if(is.null(W)){analyses$W <- adj_sets[analyses$A]}else{
++     analyses$W <- list(W)
++   }
++   names(analyses$W) <- NULL
++   analyses$file <- file
++   
++   return(analyses)
++ }
+> 
+> 
+> WHZanalyses <- specify_rf_analysis(A="rain_quartile", Y="whz", file="seasonality_rf_whz.Rdata", adj_sets=NULL)
+> HAZanalyses <- specify_rf_analysis(A="rain_quartile", Y="haz", file="seasonality_rf_haz.Rdata", adj_sets=NULL)
+> wastanalyses <- specify_rf_analysis(A="rain_quartile", Y=c("wasted", "swasted"), file="seasonality_rf_wast.Rdata", adj_sets=NULL)
+> stuntanalyses <- specify_rf_analysis(A="rain_quartile", Y=c("stunted", "sstunted"), file="seasonality_rf_stunt.Rdata", adj_sets=NULL)
+> 
+> 
+> #Save analysis specification
+> analyses <- rbind(WHZanalyses, HAZanalyses)
+> save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/seasonality_rf_Zscore_analyses.rdata"))
+> 
+> analyses <- rbind(wastanalyses, stuntanalyses)
+> save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/seasonality_rf_prev_analyses.rdata"))
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+406.275 287.133 693.546 
