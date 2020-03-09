@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
@@ -223,10 +225,10 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 > 
-> Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-03-05.rds"))
+> Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-03-07.rds"))
 Error in gzfile(file, "rb") : cannot open the connection
 Calls: readRDS -> gzfile
 In addition: Warning message:
 In gzfile(file, "rb") :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts//results/rf results/raw longbow results/results_cont_2020-03-05.rds', probable reason 'No such file or directory'
+  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts//results/rf results/raw longbow results/results_cont_2020-03-07.rds', probable reason 'No such file or directory'
 Execution halted

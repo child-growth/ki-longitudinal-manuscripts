@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
@@ -250,9 +252,19 @@ The following objects are masked from ‘package:base’:
 > 
 > 
 > d_adj <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
+> d_unadj <- readRDS(paste0(here::here(),"/results/rf results/full_RF_unadj_results.rds"))
+> d_adj$adjusted = 1
+> d_unadj$adjusted = 0
+> 
+> d <- rbind(d_adj, d_unadj)
+> d$pooled <- 0
+> d$RE <- 2
+> 
+> 
+> dRR <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 Error in gzfile(file, "rb") : cannot open the connection
 Calls: readRDS -> gzfile
 In addition: Warning message:
 In gzfile(file, "rb") :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/full_RF_results.rds', probable reason 'No such file or directory'
+  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/pooled_RR_results.rds', probable reason 'No such file or directory'
 Execution halted

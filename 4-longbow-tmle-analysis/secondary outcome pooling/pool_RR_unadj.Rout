@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
@@ -226,9 +228,125 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > #Load data
 > dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_unadj_results.rds"))
-Error in gzfile(file, "rb") : cannot open the connection
-Calls: readRDS -> gzfile
+> head(dfull)
+  agecat        studyid country
+1  Birth CMC-V-BCS-2002   INDIA
+2  Birth CMC-V-BCS-2002   INDIA
+3  Birth CMC-V-BCS-2002   INDIA
+4  Birth CMC-V-BCS-2002   INDIA
+5  Birth CMC-V-BCS-2002   INDIA
+6  Birth CMC-V-BCS-2002   INDIA
+                                            strata_label adjustment_set
+1 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+2 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+3 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+4 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+5 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+6 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+  intervention_variable outcome_variable type                         parameter
+1                   sex              haz  TSM                   E[Y_{A=Female}]
+2                   sex              haz  TSM                     E[Y_{A=Male}]
+3                   sex              haz E(Y)                              E[Y]
+4                   sex              haz  ATE E[Y_{A=Female}] - E[Y_{A=Female}]
+5                   sex              haz  ATE   E[Y_{A=Male}] - E[Y_{A=Female}]
+6                   sex              haz  PAR              PAR(E[Y_{A=Female}])
+  intervention_level baseline_level   estimate   ci_lower    ci_upper
+1             Female           <NA> -0.8177174 -1.0962275 -0.53920726
+2               Male           <NA> -1.1046739 -1.4309358 -0.77841205
+3               <NA>           <NA> -0.9611957 -1.1776967 -0.74469464
+4             Female         Female  0.0000000  0.0000000  0.00000000
+5               Male         Female -0.2869565 -0.7159259  0.14201282
+6             Female           <NA> -0.1434783 -0.3599793  0.07302275
+  untransformed_estimate untransformed_se     region continuous n_cell  n prev
+1             -0.8177174        0.1420996 South Asia          1     NA NA   NA
+2             -1.1046739        0.1664632 South Asia          1     NA NA   NA
+3             -0.9611957        0.1104617 South Asia          1     NA NA   NA
+4              0.0000000        0.0000000 South Asia          1     NA NA   NA
+5             -0.2869565        0.2188659 South Asia          1     NA NA   NA
+6             -0.1434783        0.1104617 South Asia          1     NA NA   NA
+  adjusted
+1        0
+2        0
+3        0
+4        0
+5        0
+6        0
+> 
+> 
+> unique(dfull$type)
+[1] "TSM"  "E(Y)" "ATE"  "PAR"  "RR"   "PAF" 
+> d <- dfull %>% filter(type=="RR")
+> 
+> #drop morbidity and mortality analysis
+> d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")
+> 
+> 
+> #Subset agecat
+> d <- droplevels(d)
+> 
+> RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
++   do(poolRR(.)) %>% as.data.frame()
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 In addition: Warning message:
-In gzfile(file, "rb") :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/full_RF_unadj_results.rds', probable reason 'No such file or directory'
-Execution halted
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Warning message:
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+> RMAest$region <- "Pooled"
+> 
+> RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
++   do(poolRR(.)) %>% as.data.frame()
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: Warning message:
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: Warning message:
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+> 
+> RMAest_raw <- rbind(RMAest, RMAest_region)
+> 
+> 
+> 
+> #Clean up dataframe for plotting
+> RMAest_clean <- RMA_clean(RMAest_raw)
+> 
+> 
+> #Add reference level to label
+> RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
+> 
+> #Save cleaned data
+> saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_RR_results_unadj.rds"))
+> 
+> proc.time()
+   user  system elapsed 
+ 49.682   1.537  91.703 

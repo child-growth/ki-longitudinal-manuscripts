@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > 
 > rm(list=ls())
@@ -225,9 +227,110 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > #Load data
 > d <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-Error in gzfile(file, "rb") : cannot open the connection
-Calls: readRDS -> gzfile
-In addition: Warning message:
-In gzfile(file, "rb") :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/full_RF_results.rds', probable reason 'No such file or directory'
-Execution halted
+> 
+> d$agecat[grepl("0-24 months",d$agecat)] <- "0-24 months"
+> d$agecat[grepl("0-6 months",d$agecat)] <- "0-6 months"
+> 
+> 
+> #Drop duplicated (unadjusted sex and month variables)
+> dim(d)
+[1] 119573     22
+> d <- distinct(d)
+> dim(d)
+[1] 119573     22
+> 
+> d <- droplevels(d)
+> 
+> 
+> prev <- d %>% filter(type=="E(Y)")
+> dpaf <- d %>% filter(type=="PAF")
+> d <- d %>% filter(type=="PAR")
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
++   do(pool.par(., method="FE")) %>% as.data.frame()
+> RMAest$region <- "Pooled"
+> 
+> RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
++   do(pool.par(., method="FE")) %>% as.data.frame()
+> 
+> RMAest_raw <- rbind(RMAest, RMAest_region)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> #Calculate pooled prevalences
+> Prev_est <- prev %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
++   do(pool.prev(., method="FE")) %>% as.data.frame()
+> Prev_est$region <- "Pooled"
+> 
+> Prev_est_region <- prev %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
++   do(pool.prev(., method="FE")) %>% as.data.frame()
+> 
+> Prev_est_raw <- rbind(Prev_est, Prev_est_region)
+> Prev_est_raw <- Prev_est_raw %>% subset(., select = - c(CI1, CI2, Nstudies, baseline_level, intervention_level))
+> 
+> 
+> 
+> 
+> 
+> 
+> dim(RMAest_raw)
+[1] 5555   12
+> df <- left_join(RMAest_raw, Prev_est_raw, by = c("outcome_variable","intervention_variable", "agecat","region"))
+> dim(df)
+[1] 5555   13
+> 
+> 
+> #temp
+> df <- df %>% filter(!is.na(prev))
+> 
+> 
+> 
+> #Calculate PAF 
+> df2 <- df %>% group_by(intervention_variable, agecat, outcome_variable, region) %>%
++   mutate(PAF=PAR/prev*100, PAF.CI1=CI1/prev*100, PAF.CI2=CI2/prev*100)
+> summary(df2$PAR)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.752217 -0.005099  0.000856 -0.001953  0.007779  0.607858 
+> summary(df2$prev)
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-3.03475  0.02021  0.10737  0.19250  0.34385  3.72341 
+> summary(df2$PAF)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-3841.014    -0.868     1.430     4.130     8.756  2712.264 
+> summary(df2$PAF.CI1)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-3692.175    -6.288    -0.805    -1.616     5.005  6728.350 
+> summary(df2$PAF.CI2)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-7560.919     0.282     4.924     9.875    17.716  4699.221 
+> 
+> 
+> 
+> RMAest <- df2
+> 
+> 
+> #Clean up dataframe for plotting
+> RMAest_clean <- RMA_clean(RMAest)
+> 
+> 
+> #Add reference level to label
+> RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
+> 
+> 
+> # save pooled PAF's
+> saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_PAF_results_FE.rds"))
+> 
+> proc.time()
+   user  system elapsed 
+ 67.131   2.037  96.646 

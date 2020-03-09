@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > 
 > 
@@ -226,9 +228,69 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > 
 > dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-Error in gzfile(file, "rb") : cannot open the connection
-Calls: readRDS -> gzfile
+> 
+> d <- dfull %>% filter(type=="ATE", agecat!="All")
+> 
+> #Drop reference levels
+> d <- d %>% filter(intervention_level != d$baseline_level)
+> 
+> 
+> RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
++   do(pool.cont(.)) %>% as.data.frame()
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 In addition: Warning message:
-In gzfile(file, "rb") :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/full_RF_results.rds', probable reason 'No such file or directory'
-Execution halted
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Warning message:
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+> RMAest$region <- "Pooled"
+> 
+> RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
++   do(pool.cont(.)) %>% as.data.frame()
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: Warning messages:
+1: In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+2: In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+3: In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Warning message:
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+> 
+> RMAest_raw <- rbind(RMAest, RMAest_region)
+> 
+> 
+> 
+> #Clean up dataframe for plotting
+> RMAest_clean <- RMA_clean(RMAest_raw)
+> 
+> 
+> #Add reference level to labe
+> RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$baseline_level)
+> 
+> saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_ATE_results.rds"))
+> 
+> proc.time()
+   user  system elapsed 
+ 37.889   0.981  47.277 

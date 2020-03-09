@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > 
 > rm(list=ls())
@@ -226,9 +228,137 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > #Load data
 > d <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-Error in gzfile(file, "rb") : cannot open the connection
-Calls: readRDS -> gzfile
-In addition: Warning message:
-In gzfile(file, "rb") :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/full_RF_results.rds', probable reason 'No such file or directory'
-Execution halted
+> 
+> 
+> #Drop duplicated (unadjusted sex and month variables)
+> dim(d)
+[1] 119573     22
+> d <- distinct(d)
+> dim(d)
+[1] 119573     22
+> 
+> d <- droplevels(d)
+> 
+> 
+> prev <- d %>% filter(type=="E(Y)")
+> dpaf <- d %>% filter(type=="PAF")
+> d <- d %>% filter(type=="PAR")
+> 
+> 
+> 
+> RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
++   do(pool.par(.)) %>% as.data.frame()
+There were 12 warnings (use warnings() to see them)
+> RMAest$region <- "Pooled"
+> 
+> RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
++   do(pool.par(.)) %>% as.data.frame()
+Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: There were 12 warnings (use warnings() to see them)
+> 
+> RMAest_raw <- rbind(RMAest, RMAest_region)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> #Calculate pooled prevalences
+> Prev_est <- prev %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
++   do(pool.prev(.)) %>% as.data.frame()
+> Prev_est$region <- "Pooled"
+> 
+> Prev_est_region <- prev %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
++   do(pool.prev(.)) %>% as.data.frame()
+Warning message:
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+  Fisher scoring algorithm may have gotten stuck at a local maximum.
+  Setting tau^2 = 0. Check the profile likelihood plot with profile().
+> 
+> Prev_est_raw <- rbind(Prev_est, Prev_est_region)
+> Prev_est_raw <- Prev_est_raw %>% subset(., select = - c(CI1, CI2, Nstudies, baseline_level, intervention_level))
+> 
+> 
+> 
+> 
+> 
+> 
+> dim(RMAest_raw)
+[1] 5555   12
+> df <- left_join(RMAest_raw, Prev_est_raw, by = c("outcome_variable","intervention_variable", "agecat","region"))
+> dim(df)
+[1] 5555   13
+> 
+> 
+> #temp
+> df <- df %>% filter(!is.na(prev))
+> 
+> 
+> 
+> #Calculate PAF 
+> df2 <- df %>% group_by(intervention_variable, agecat, outcome_variable, region) %>%
++   mutate(PAF=PAR/prev*100, PAF.CI1=CI1/prev*100, PAF.CI2=CI2/prev*100)
+> summary(df2$PAR)
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.7760307 -0.0059765  0.0009994 -0.0018765  0.0094086  0.7109762 
+> summary(df2$prev)
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-3.03475  0.02557  0.12915  0.21532  0.39488  3.72341 
+> summary(df2$PAF)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-6400.836    -0.892     1.642     3.543     9.385  2473.401 
+> summary(df2$PAF.CI1)
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-22992.457     -7.637     -1.304     -5.177      4.362   6728.350 
+> summary(df2$PAF.CI2)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-7560.919     0.419     5.909    12.262    20.500 10190.786 
+> 
+> #------------------------------------------
+> # Check that pooled estimate is reasonable:
+> #------------------------------------------
+> 
+> # df3 <- df2 %>% filter(agecat=="24 months", outcome_variable=="stunted", intervention_variable=="hhwealth_quart", region=="Pooled") %>% mutate(studyid="Pooled")
+> # df3_study <- dpaf %>% filter(agecat=="24 months", outcome_variable=="stunted", intervention_variable=="hhwealth_quart") %>%
+> #     rename(PAF=estimate, PAF.CI1=ci_lower, PAF.CI2=ci_upper) %>% mutate(PAF=PAF*100,PAF.CI1=PAF.CI1*100,PAF.CI2=PAF.CI2*100)
+> # df3 <- bind_rows(df3, df3_study)
+> # ggplot(df3, aes(x=studyid)) + 
+> #   geom_point(aes(y=PAF,  color=studyid), size = 4) +
+> #   geom_linerange(aes(ymin=PAF.CI1, ymax=PAF.CI2, color=studyid)) +
+> #   coord_flip(ylim=c(-10, 40)) +
+> #   labs(x = "Exposure", y = "Attributable Fraction") +
+> #   geom_hline(yintercept = 0) +
+> #   theme(strip.background = element_blank(),
+> #         legend.position="right",
+> #         axis.text.y = element_text(hjust = 1),
+> #         strip.text.x = element_text(size=12),
+> #         axis.text.x = element_text(size=12, 
+> #                                    margin = margin(t = -20)),
+> #         axis.title.x = element_text(margin = margin(t = 20))) +
+> #   ggtitle(paste0("Population attributable fractions (%),\nPrevalence of stunting")) + 
+> #   guides(color=FALSE, shape=FALSE)
+> 
+> 
+> 
+> 
+> 
+> RMAest <- df2
+> 
+> 
+> #Clean up dataframe for plotting
+> RMAest_clean <- RMA_clean(RMAest)
+> 
+> 
+> #Add reference level to label
+> RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
+> 
+> 
+> # save pooled PAF's
+> saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_PAF_results.rds"))
+> 
+> proc.time()
+   user  system elapsed 
+ 91.511   2.464 168.312 
