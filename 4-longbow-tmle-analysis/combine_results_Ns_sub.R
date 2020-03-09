@@ -6,15 +6,13 @@ library(progress)
 library(longbowRiskFactors)
 
 
-load(here("/results/rf results/raw longbow results/results_bin_obs_counts_2019-11-16.rdata"))
-d <- obs_counts
+d <- readRDS(here("/results/rf results/raw longbow results/results_bin_obs_counts_2020-03-08.RDS"))
 #drop EE gestational age
 d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
 
 
-load(here("/results/rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2019-12-17.rdata"))
-d2 <- obs_counts
-d2 <- obs_counts %>% mutate(rain_quartile=case_when(
+d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2020-03-08.RDS"))
+d2 <- d2 %>% mutate(rain_quartile=case_when(
   rain_quartile==1 ~ "Opposite max rain",
   rain_quartile==2 ~ "Pre-max rain",
   rain_quartile==3 ~ "Max rain",
