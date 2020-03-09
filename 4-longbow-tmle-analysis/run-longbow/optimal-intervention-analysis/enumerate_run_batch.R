@@ -1,14 +1,15 @@
 
+rm(list=ls())
+.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
+
+source(paste0(here::here(), "/0-config.R"))
+.libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
 library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
 library(longbowOptTX)
-library(tidyverse)
-library(here)
-#note: every "here" in this script is the working directory where all the repos live on your laptop
-#for example: here = "C:/Users/rolan/Documents/repos"
 
 
 
@@ -30,26 +31,7 @@ analyses$count_Y <- FALSE
 analyses$maximize <- TRUE
 
 analyses <- analyses %>% filter(Y %in% c("haz","whz"))
-
-#analyses_2 <- analyses
-#analyses <- rbindlist(list(analyses_2, analyses_1), fill=TRUE)
-analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-
-
-
-
-i=1
-enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
-  analysis <- analyses[i,]
-  analysis_params <- default_params
-  analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
-  analysis_nodes$W <- gsub("W_bmi", "W_mbmi", analysis_nodes$W[[1]])
-  analysis_params$nodes <- analysis_nodes
-  analysis_params$data$repository_path <- analysis$file
-  analysis_params$script_params$count_Y <- analysis$count_Y
-  analysis_params$script_params$maximize <- analysis$maximize
-  return(analysis_params)
-})
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 writeLines(toJSON(enumerated_analyses[[10]]),"single_analysis.json")
 writeLines(toJSON(enumerated_analyses),"all_analyses.json")
@@ -67,11 +49,12 @@ rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX
 inputs <- "single_analysis.json"
 
 #run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_analyses.json"
 batch_id <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
+batch_id
 
 # wait for the batch to finish and track progress
 wait_for_batch(batch_id)

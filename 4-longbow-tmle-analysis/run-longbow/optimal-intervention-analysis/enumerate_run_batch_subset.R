@@ -1,16 +1,14 @@
 
+rm(list=ls())
+.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
+
+source(paste0(here::here(), "/0-config.R"))
+.libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
 library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
-library(longbowOptTX)
-library(tidyverse)
-library(here)
-#note: every "here" in this script is the working directory where all the repos live on your laptop
-#for example: here = "C:/Users/rolan/Documents/repos"
-
-
 
 # 1. enumerate analysis
 
