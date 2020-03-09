@@ -9,22 +9,22 @@ library(longbowRiskFactors)
 
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
-bin_batch_id <- 60116
-bin_batch_id
+batch_id_cont <- 60031
+batch_id_cont
 
 # wait for the batch to finish and track progress
-wait_for_batch(bin_batch_id)
+wait_for_batch(batch_id_cont)
 
 # download the longbow outputs
-get_batch_results(bin_batch_id, results_folder="results_bin")
-length(dir("results_bin"))
+get_batch_results(batch_id_cont, results_folder="results_cont")
+length(dir("results_cont"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results_bin")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin")
+results <- load_batch_results("results.rdata", results_folder = "results_cont")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_cont")
 
 # save concatenated results
-filename1 <- paste(paste('results_bin',Sys.Date( ),sep='_'),'RDS',sep='.')
-filename2 <- paste(paste('results_bin_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename1 <- paste(paste('results_cont',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('results_cont_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
 saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
 saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))

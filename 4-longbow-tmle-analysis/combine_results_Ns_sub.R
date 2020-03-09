@@ -1,6 +1,6 @@
 
 rm(list=ls())
-library(tidyverse)
+source(paste0(here::here(), "/0-config.R"))
 library(longbowtools)
 library(progress)
 library(longbowRiskFactors)

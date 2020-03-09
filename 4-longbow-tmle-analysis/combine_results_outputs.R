@@ -64,9 +64,9 @@ d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3",
 #----------------------------------------------------------
 # Merge in Ns
 #----------------------------------------------------------
-readRDS("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns_sub.rds")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns_sub.rdata")
 N_sums_bin <- N_sums %>% mutate(continuous = 0)
-readRDS("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rds")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rdata")
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
