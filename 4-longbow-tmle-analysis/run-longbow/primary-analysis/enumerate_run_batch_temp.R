@@ -9,7 +9,7 @@ library(longbowRiskFactors)
 
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
-batch_id_cont <- 60031
+batch_id_cont <- 61347
 batch_id_cont
 
 # wait for the batch to finish and track progress

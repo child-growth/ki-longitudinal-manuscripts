@@ -5,6 +5,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 
 require(cowplot)
+require(ggmap)
 theme_set(theme_ki())
 
 
@@ -27,7 +28,7 @@ plot_list[[3]]$`data` %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 #Figure 3 
 p_seasonRR <- readRDS(here("/figures/plot-objects/season_RR_plot.rds"))
 
-seasonbirth_plot_list <- readRDS(paste0(here(),"/figures/plot-objects/season_plots.RDS"))
+seasonbirth_plot_list <- readRDS(paste0(here(),"/figures/plot-objects/season_plots.rds"))
 seasonbirth_diff <- readRDS(here("/figures/plot-objects/season_birth_wlz_diff_plot.rds"))
 
 #Add birth diff inset plot
