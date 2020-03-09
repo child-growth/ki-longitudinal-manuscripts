@@ -52,9 +52,9 @@ results <- load_batch_results("results.rdata", results_folder = "results")
 obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results")
 
 # save concatenated results
-filename1 <- paste(paste('mortality',Sys.Date( ),sep='_'),'rdata',sep='.')
-filename2 <- paste(paste('mortality_obs_counts',Sys.Date( ),sep='_'),'rdata',sep='.')
-save(results, file=here("results","rf results","raw longbow results",filename1))
-save(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+filename1 <- paste(paste('mortality',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('mortality_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
+saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
+saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
 
 
