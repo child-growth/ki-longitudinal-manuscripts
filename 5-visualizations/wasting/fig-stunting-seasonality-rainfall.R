@@ -23,12 +23,14 @@ rain$country <- tolower(rain$country)
 d$country <- tolower(d$country)
 colnames(rain)[1] <- "studyid"
 rain$studyid <- as.character(rain$studyid)
-rain$studyid[rain$studyid == "PROVIDE "] <-  "PROVIDE"
 d$country[d$country=="tanzania, united republic of"] <- "tanzania"
 
+
+
 #remove grant identifiers from studyid
-d$studyid <- gsub("^k.*?-" , "", d$studyid)
+# d$studyid <- gsub("^k.*?-" , "", d$studyid)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
+rain$studyid[rain$studyid == "PROVIDE "] <-  "PROVIDE"
 
 #Transform rain dataset
 rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
@@ -45,6 +47,7 @@ rain2$month = factor(rain2$month, levels=c("Jan", "Feb", "Mar", "Apr", "May","Ju
 head(rain2)
 
 rain2$month_day = as.numeric(rain2$month) * 30.4167
+rain2$studyid[rain2$studyid == "PROVIDE "] <-  "PROVIDE"
 
 
 
@@ -59,6 +62,7 @@ d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
 
 rain2 <- droplevels(rain2)
 cohorts=levels(rain2$cohort)
+cohorts
 
 df <- d
 rain <- rain2
