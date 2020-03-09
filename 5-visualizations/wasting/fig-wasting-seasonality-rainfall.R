@@ -38,8 +38,9 @@ rain <- rain %>%
 table(rain$seasonality_category)
 
 #remove grant identifiers from studyid
-d$studyid <- gsub("^k.*?-" , "", d$studyid)
+#d$studyid <- gsub("^k.*?-" , "", d$studyid)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
+rain$studyid[rain$studyid == "PROVIDE "] <-  "PROVIDE"
 
 #Transform rain dataset
 rain <- rain %>% subset(., select = c("studyid", "country", "seasonality_category", "season_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
