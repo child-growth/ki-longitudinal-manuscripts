@@ -193,7 +193,7 @@ ggsave(plot_grid, file=paste0(here(),"/figures/manuscript-figure-composites/wast
 
 
 plot_list=list()
-for(i in 1:length(cohorts)){
+for(i in 1:length(cohorts)){gi
   print(cohorts[i])
   plot_list[[i]] <- rain_plot(df=d, rain=rain2, cohort_name=cohorts[i], leftlab = c(1,4,7,10,13, 16), rightlab = c(3,6,9,12,15,18))
 }
