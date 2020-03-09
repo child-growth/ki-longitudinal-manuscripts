@@ -335,9 +335,8 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > saveRDS(plot_data_pooled, file=paste0(figdata_dir_wasting, "/figdata-",bar_plot_RE_name,".RDS"))
 > 
 > saveRDS(bar_plot_RE, file=paste0(here::here(),"/figures/plot-objects/co_flow_object.rds"))
-Error in gzfile(file, mode) : cannot open the connection
-Calls: saveRDS -> gzfile
-In addition: Warning message:
-In gzfile(file, mode) :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/plot-objects/co_flow_object.rds', probable reason 'No such file or directory'
-Execution halted
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  5.288   0.490   6.237 

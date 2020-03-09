@@ -356,9 +356,41 @@ Warning message:
 Removed 3559 rows containing missing values (geom_text). 
 > 
 > saveRDS(rec_violin_plot, file=paste0(here::here(),"/figures/plot-objects/rec_violin_plot_object.rds"))
-Error in gzfile(file, mode) : cannot open the connection
-Calls: saveRDS -> gzfile
-In addition: Warning message:
-In gzfile(file, mode) :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/plot-objects/rec_violin_plot_object.rds', probable reason 'No such file or directory'
-Execution halted
+> 
+> #Get N's for figure caption
+> df %>% ungroup() %>% filter(agedays <= 24*30.4167) %>% 
++   summarize(N=n(), nchild=length(unique(subjid)), nstudies=length(unique(paste0(studyid,country))))
+# A tibble: 1 x 3
+      N nchild nstudies
+  <int>  <int>    <int>
+1  3563   2205       18
+> 
+> df %>% group_by(studyid, country) %>% filter(agedays <= 24*30.4167) %>% 
++   summarize(N=n(), nchild=length(unique(subjid)), nstudies=length(unique(paste0(studyid,country))))
+# A tibble: 18 x 5
+# Groups:   studyid [12]
+   studyid        country                          N nchild nstudies
+   <chr>          <chr>                        <int>  <int>    <int>
+ 1 CMC-V-BCS-2002 INDIA                          265    210        1
+ 2 CMIN           BANGLADESH                     109     86        1
+ 3 CONTENT        PERU                             5      4        1
+ 4 EE             PAKISTAN                       181    151        1
+ 5 GMS-Nepal      NEPAL                          385    288        1
+ 6 Guatemala BSC  GUATEMALA                       22     18        1
+ 7 IRC            INDIA                          297    241        1
+ 8 Keneba         GAMBIA                        1109    900        1
+ 9 MAL-ED         BANGLADESH                      79     68        1
+10 MAL-ED         BRAZIL                          16     16        1
+11 MAL-ED         INDIA                          121     93        1
+12 MAL-ED         NEPAL                           71     62        1
+13 MAL-ED         PERU                            20     18        1
+14 MAL-ED         SOUTH AFRICA                    67     54        1
+15 MAL-ED         TANZANIA, UNITED REPUBLIC OF    37     29        1
+16 PROVIDE        BANGLADESH                     188    170        1
+17 ResPak         PAKISTAN                       101     86        1
+18 TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   490    413        1
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 10.118   0.693  11.296 

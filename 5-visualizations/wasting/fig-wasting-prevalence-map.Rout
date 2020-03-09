@@ -359,4 +359,4 @@ Using size for a discrete variable is not advised.
 > 
 > proc.time()
    user  system elapsed 
-  9.934   0.739  12.039 
+ 10.843   0.813  12.305 
