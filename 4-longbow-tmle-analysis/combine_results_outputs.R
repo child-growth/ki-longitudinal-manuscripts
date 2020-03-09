@@ -6,27 +6,27 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-03-05.rds"))
+Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-03-07.rds"))
 
-bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-03-05.rds"))
+bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-03-08.rds"))
 
-mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-03-05.rds"))
+mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-03-08.rds"))
 
-Zscores_unadj <- readRDS(here("/results/rf results/raw longbow results/results_cont_unadj_2020-03-05.rds"))
+Zscores_unadj <- readRDS(here("/results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
 
-bin_unadj <- readRDS(here("/results/rf results/raw longbow results/results_bin_unadj_2020-03-05.rds"))
+bin_unadj <- readRDS(here("/results/rf results/raw longbow results/results_bin_unadj_2020-03-06.rds"))
 
-lagwhz <- readRDS(here("/results/rf results/raw longbow results/results_bin_lagwhz_2020-03-05.rds"))
+#lagwhz <- readRDS(here("/results/rf results/raw longbow results/results_bin_lagwhz_2020-03-07.rds"))
 
-velocity <- readRDS(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-03-05.rds"))
+velocity <- readRDS(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-03-08.rds"))
 
-velocity_wlz_quart <- readRDS(here("/results/rf results/raw longbow results/results_vel_2020-03-05.rds"))
+velocity_wlz_quart <- readRDS(here("/results/rf results/raw longbow results/results_vel_2020-03-08.rds"))
 
-season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-03-05.rds"))
+season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-03-08.rds"))
 
-season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2020-03-05.rds"))
+season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2020-03-08.rds"))
 
-season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2020-03-05.rds"))
+season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2020-03-08.rds"))
 
 
 
@@ -64,9 +64,9 @@ d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3",
 #----------------------------------------------------------
 # Merge in Ns
 #----------------------------------------------------------
-readRDS("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns_sub.rds")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns_sub.rdata")
 N_sums_bin <- N_sums %>% mutate(continuous = 0)
-readRDS("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rds")
+load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rdata")
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 

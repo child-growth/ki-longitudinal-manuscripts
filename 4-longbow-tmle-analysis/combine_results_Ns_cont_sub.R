@@ -1,19 +1,18 @@
 
 rm(list=ls())
-library(tidyverse)
+source(paste0(here::here(), "/0-config.R"))
 library(longbowtools)
 library(progress)
 library(longbowRiskFactors)
 
 
-load(here("/results/rf results/raw longbow results/results_cont_obs_counts_2019-11-18.rdata"))
-d <- obs_counts
+d <- readRDS(here("/results/rf results/raw longbow results/results_cont_obs_counts_2020-03-09.RDS"))
 #drop EE gestational age
 d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
 
 
-load(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2019-12-17.rdata"))
-d2 <- obs_counts %>% mutate(rain_quartile=case_when(
+d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2020-03-08.RDS"))
+d2 <- d2 %>% mutate(rain_quartile=case_when(
   rain_quartile==1 ~ "Opposite max rain",
   rain_quartile==2 ~ "Pre-max rain",
   rain_quartile==3 ~ "Max rain",
@@ -22,7 +21,7 @@ d2 <- obs_counts %>% mutate(rain_quartile=case_when(
 
  d <- bind_rows(d, d2)
 
-
+if(is.null(d$outcome_variable)) d$outcome_variable <- NA
 
 exposure_vars <- c(
   "gagebrth",        "birthlen",      "enwast",        "vagbrth",      
@@ -74,6 +73,7 @@ Ndf <- rbind(Ndf_laz, Ndf_wlz)
 N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, intervention_level) %>%
   summarize(n_cell=sum(n_cell), n=sum(n)) %>%
   mutate(prev=n_cell/n)
+
 
 
 # save concatenated Ns
