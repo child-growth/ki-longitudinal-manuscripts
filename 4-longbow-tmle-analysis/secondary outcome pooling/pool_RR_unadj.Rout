@@ -349,4 +349,4 @@ Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
 > 
 > proc.time()
    user  system elapsed 
- 49.682   1.537  91.703 
+ 42.870   0.922  43.774 

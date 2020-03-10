@@ -262,9 +262,288 @@ The following objects are masked from ‘package:base’:
 > 
 > 
 > dRR <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
-Error in gzfile(file, "rb") : cannot open the connection
-Calls: readRDS -> gzfile
+> dATE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results.rds"))
+> dZ_PAR <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
+> dPAF <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results.rds"))
+> 
+> dRR_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds"))
+> dATE_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_FE.rds"))
+> dZ_PAR_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_FE.rds"))
+> dPAF_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_FE.rds"))
+> 
+> dRR_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results_unadj.rds"))
+> dATE_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_unadj.rds"))
+> dZ_PAR_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_unadj.rds"))
+> dPAF_unadj <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_unadj.rds"))
+> 
+> dRR_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results_unadj_FE.rds"))
+> dATE_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_ATE_results_unadj_FE.rds"))
+> dZ_PAR_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_unadj_FE.rds"))
+> dPAF_unadj_FE <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results_unadj_FE.rds"))
+> 
+> 
+> 
+> 
+> 
+> head(d)
+  agecat        studyid country
+1  Birth CMC-V-BCS-2002   INDIA
+2  Birth CMC-V-BCS-2002   INDIA
+3  Birth CMC-V-BCS-2002   INDIA
+4  Birth CMC-V-BCS-2002   INDIA
+5  Birth CMC-V-BCS-2002   INDIA
+6  Birth CMC-V-BCS-2002   INDIA
+                                            strata_label adjustment_set
+1 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+2 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+3 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+4 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+5 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+6 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+  intervention_variable outcome_variable type                         parameter
+1                   sex              haz  TSM                   E[Y_{A=Female}]
+2                   sex              haz  TSM                     E[Y_{A=Male}]
+3                   sex              haz E(Y)                              E[Y]
+4                   sex              haz  ATE E[Y_{A=Female}] - E[Y_{A=Female}]
+5                   sex              haz  ATE   E[Y_{A=Male}] - E[Y_{A=Female}]
+6                   sex              haz  PAR              PAR(E[Y_{A=Female}])
+  intervention_level baseline_level   estimate   ci_lower    ci_upper
+1             Female           <NA> -0.8177174 -1.0962275 -0.53920726
+2               Male           <NA> -1.1046739 -1.4309358 -0.77841205
+3               <NA>           <NA> -0.9611957 -1.1776967 -0.74469464
+4             Female         Female  0.0000000  0.0000000  0.00000000
+5               Male         Female -0.2869565 -0.7159259  0.14201282
+6             Female           <NA> -0.1434783 -0.3599793  0.07302275
+  untransformed_estimate untransformed_se     region continuous n_cell  n prev
+1             -0.8177174        0.1420996 South Asia          1     NA NA   NA
+2             -1.1046739        0.1664632 South Asia          1     NA NA   NA
+3             -0.9611957        0.1104617 South Asia          1     NA NA   NA
+4              0.0000000        0.0000000 South Asia          1     NA NA   NA
+5             -0.2869565        0.2188659 South Asia          1     NA NA   NA
+6             -0.1434783        0.1104617 South Asia          1     NA NA   NA
+  adjusted pooled RE
+1        1      0  2
+2        1      0  2
+3        1      0  2
+4        1      0  2
+5        1      0  2
+6        1      0  2
+> head(dRR)
+  intervention_variable    agecat intervention_level baseline_level
+1             anywast06 24 months                 No             No
+2             anywast06 24 months                 No             No
+3             anywast06 24 months                Yes             No
+4             anywast06 24 months                Yes             No
+5             anywast06  6 months                 No             No
+6             anywast06  6 months                 No             No
+  outcome_variable    logRR.psi      logSE        RR    RR.CI1   RR.CI2
+1         sstunted  1.000000000 0.00000000 1.0000000 1.0000000 1.000000
+2          stunted  1.000000000 0.00000000 1.0000000 1.0000000 1.000000
+3         sstunted  0.164544040 0.07754206 1.1788555 1.0126408 1.372353
+4          stunted -0.004445797 0.03403971 0.9955641 0.9313095 1.064252
+5         sstunted  1.000000000 0.00000000 1.0000000 1.0000000 1.000000
+6          stunted  1.000000000 0.00000000 1.0000000 1.0000000 1.000000
+  Nstudies region             RFlabel                 RFtype
+1       10 Pooled Any wasting  <6 mo. Postnatal child health
+2       11 Pooled Any wasting  <6 mo. Postnatal child health
+3       10 Pooled Any wasting  <6 mo. Postnatal child health
+4       11 Pooled Any wasting  <6 mo. Postnatal child health
+5        8 Pooled Any wasting  <6 mo. Postnatal child health
+6       13 Pooled Any wasting  <6 mo. Postnatal child health
+                    RFlabel_ref
+1  Any wasting  <6 mo., ref: No
+2  Any wasting  <6 mo., ref: No
+3 Any wasting  <6 mo., ref: Yes
+4 Any wasting  <6 mo., ref: Yes
+5  Any wasting  <6 mo., ref: No
+6  Any wasting  <6 mo., ref: No
+> 
+> dRR <- dRR %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 1, pooled = 1, RE = 1)
+> dRR_unadj <- dRR_unadj %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 0, pooled = 1, RE = 1)
+> dRR_FE <- dRR_FE %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 1, pooled = 1, RE = 0)
+> dRR_unadj_FE <- dRR_unadj_FE %>% rename(estimate=RR, ci_lower=RR.CI1, ci_upper=RR.CI2) %>% mutate(type="RR", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 0, pooled = 1, RE = 0)
+> 
+> 
+> head(dATE)
+  intervention_variable       agecat intervention_level baseline_level
+1             anywast06   0-3 months                Yes             No
+2             anywast06   0-3 months                Yes             No
+3             anywast06 12-15 months                Yes             No
+4             anywast06 12-15 months                Yes             No
+5             anywast06 15-18 months                Yes             No
+6             anywast06 15-18 months                Yes             No
+  outcome_variable           ATE         CI1         CI2 Nstudies region
+1       y_rate_haz -0.0297753066 -0.08999003 0.030439413       15 Pooled
+2       y_rate_len  0.0050586220 -0.16233989 0.172457131       15 Pooled
+3       y_rate_haz -0.0044620576 -0.01775711 0.008832999       16 Pooled
+4       y_rate_len -0.0061158360 -0.03947355 0.027241874       16 Pooled
+5       y_rate_haz -0.0010722671 -0.01297710 0.010832567       15 Pooled
+6       y_rate_len -0.0002667533 -0.03239724 0.031863732       15 Pooled
+              RFlabel                 RFtype                  RFlabel_ref
+1 Any wasting  <6 mo. Postnatal child health Any wasting  <6 mo., ref: No
+2 Any wasting  <6 mo. Postnatal child health Any wasting  <6 mo., ref: No
+3 Any wasting  <6 mo. Postnatal child health Any wasting  <6 mo., ref: No
+4 Any wasting  <6 mo. Postnatal child health Any wasting  <6 mo., ref: No
+5 Any wasting  <6 mo. Postnatal child health Any wasting  <6 mo., ref: No
+6 Any wasting  <6 mo. Postnatal child health Any wasting  <6 mo., ref: No
+> dATE <- dATE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 1, pooled = 1, RE = 1)
+> dATE_unadj <- dATE_unadj %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 0, pooled = 1, RE = 1)
+> dATE_FE <- dATE_FE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 1, pooled = 1, RE = 0)
+> dATE_unadj_FE <- dATE_unadj_FE %>% rename(estimate=ATE, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="ATE", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 0, pooled = 1, RE = 0)
+> 
+> 
+> head(dZ_PAR)
+  intervention_variable       agecat intervention_level baseline_level
+1             anywast06   0-3 months                 No           <NA>
+2             anywast06   0-3 months                 No           <NA>
+3             anywast06 12-15 months                 No           <NA>
+4             anywast06 12-15 months                 No           <NA>
+5             anywast06 15-18 months                 No           <NA>
+6             anywast06 15-18 months                 No           <NA>
+  outcome_variable n_cell  n           PAR          CI1         CI2 Nstudies
+1       y_rate_haz     NA NA -1.126578e-02 -0.026841932 0.004310364       15
+2       y_rate_len     NA NA -2.330723e-02 -0.051481272 0.004866815       15
+3       y_rate_haz     NA NA -5.626650e-04 -0.002700302 0.001574972       16
+4       y_rate_len     NA NA -2.034164e-03 -0.007500140 0.003431812       16
+5       y_rate_haz     NA NA -4.106053e-05 -0.001988278 0.001906157       15
+6       y_rate_len     NA NA -2.896351e-04 -0.004492239 0.003912968       15
+  region             RFlabel                 RFtype
+1 Pooled Any wasting  <6 mo. Postnatal child health
+2 Pooled Any wasting  <6 mo. Postnatal child health
+3 Pooled Any wasting  <6 mo. Postnatal child health
+4 Pooled Any wasting  <6 mo. Postnatal child health
+5 Pooled Any wasting  <6 mo. Postnatal child health
+6 Pooled Any wasting  <6 mo. Postnatal child health
+                   RFlabel_ref
+1 Any wasting  <6 mo., ref: No
+2 Any wasting  <6 mo., ref: No
+3 Any wasting  <6 mo., ref: No
+4 Any wasting  <6 mo., ref: No
+5 Any wasting  <6 mo., ref: No
+6 Any wasting  <6 mo., ref: No
+> dZ_PAR <- dZ_PAR %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 1, pooled = 1, RE = 1)
+> dZ_PAR_unadj <- dZ_PAR_unadj %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 0, pooled = 1, RE = 1)
+> dZ_PAR_FE <- dZ_PAR_FE %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 1, pooled = 1, RE = 0)
+> dZ_PAR_unadj_FE <- dZ_PAR_unadj_FE %>% rename(estimate=PAR, ci_lower=CI1, ci_upper=CI2) %>% mutate(type="PAR", studyid="Pooled", country="", continuous=1) %>% mutate(adjusted = 0, pooled = 1, RE = 0)
+> 
+> head(dPAF)
+# A tibble: 6 x 19
+# Groups:   intervention_variable, agecat, outcome_variable, region [6]
+  intervention_va… agecat intervention_le… baseline_level outcome_variable
+  <fct>            <chr>  <fct>            <chr>          <chr>           
+1 anywast06        0-3 m… No               <NA>           y_rate_haz      
+2 anywast06        0-3 m… No               <NA>           y_rate_len      
+3 anywast06        12-15… No               <NA>           y_rate_haz      
+4 anywast06        12-15… No               <NA>           y_rate_len      
+5 anywast06        15-18… No               <NA>           y_rate_haz      
+6 anywast06        15-18… No               <NA>           y_rate_len      
+# … with 14 more variables: n_cell <int>, n <int>, PAR <dbl>, CI1 <dbl>,
+#   CI2 <dbl>, Nstudies <int>, region <chr>, prev <dbl>, PAF <dbl>,
+#   PAF.CI1 <dbl>, PAF.CI2 <dbl>, RFlabel <chr>, RFtype <chr>,
+#   RFlabel_ref <chr>
+> dPAF <- dPAF %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 1, pooled = 1, RE = 1)
+Warning messages:
+1: Factor `intervention_variable` contains implicit NA, consider using `forcats::fct_explicit_na` 
+2: Factor `intervention_variable` contains implicit NA, consider using `forcats::fct_explicit_na` 
+> dPAF_unadj <- dPAF_unadj %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 0, pooled = 1, RE = 1)
+> dPAF_FE <- dPAF_FE %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 1, pooled = 1, RE = 0)
+Warning messages:
+1: Factor `intervention_variable` contains implicit NA, consider using `forcats::fct_explicit_na` 
+2: Factor `intervention_variable` contains implicit NA, consider using `forcats::fct_explicit_na` 
+> dPAF_unadj_FE <- dPAF_unadj_FE %>% rename(estimate=PAF, ci_lower=PAF.CI1, ci_upper=PAF.CI2) %>% mutate(type="PAF", studyid="Pooled", country="", continuous=0) %>% mutate(adjusted = 0, pooled = 1, RE = 0)
+> 
+> 
+> 
+> df <- bind_rows(dRR, 
++                 dATE, 
++                 dZ_PAR, 
++                 dPAF, 
++                 dRR_unadj, 
++                 dATE_unadj, 
++                 dZ_PAR_unadj, 
++                 dPAF_unadj, 
++                 dRR_FE, 
++                 dATE_FE, 
++                 dZ_PAR_FE, 
++                 dPAF_FE, 
++                 dRR_unadj_FE, 
++                 dATE_unadj_FE, 
++                 dZ_PAR_unadj_FE, 
++                 dPAF_unadj_FE, 
++                 d) 
+There were 19 warnings (use warnings() to see them)
+>                 
+> 
+> unique(df$type)
+[1] "RR"   "ATE"  "PAR"  "PAF"  "TSM"  "E(Y)"
+> df <- df %>% filter(type=="RR" | type=="ATE" | type=="PAR" | type=="PAF")
+> df <- df %>% select("agecat","studyid","country","strata_label","adjustment_set","intervention_variable", "outcome_variable","type","parameter","intervention_level","baseline_level","region","continuous","RE","adjusted", "pooled", "estimate",   "ci_lower", "ci_upper")
+> 
+> #Fill in attributable parameter baseline levels
+> df$baseline_level[df$type=="PAR" | df$type=="PAF"] <- df$intervention_level[df$type=="PAR" | df$type=="PAF"]
+> 
+> #Clean up dataframe 
+> df <- RMA_clean(df)
+> 
+> 
+> #remove grant identifiers from studyid
+> df$studyid <- gsub("^k.*?-" , "", df$studyid)
+> 
+> #Cohort specific ids
+> df$country[df$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+> df$country <- capitalize(tolower(df$country))
+> df$country[df$country=="South africa"] <- "South Africa"
+> df$country[df$country=="Guinea-bissau"] <- "Guinea-Bissau"
+> df$country[df$country=="Burkina faso"] <- "Burkina Faso"
+> 
+> df$studyid <- paste0(df$studyid, ", ", df$country)
+> df$studyid <- gsub("Pooled,","Pooled",df$studyid)
+> 
+> 
+> df$pooled <- factor(df$pooled, levels=c("1","0"))
+> df <- df %>% arrange(pooled, studyid)
+> 
+> head(df)
+     agecat studyid country strata_label adjustment_set intervention_variable
+1 24 months Pooled                  <NA>           <NA>             anywast06
+2 24 months Pooled                  <NA>           <NA>             anywast06
+3 24 months Pooled                  <NA>           <NA>             anywast06
+4 24 months Pooled                  <NA>           <NA>             anywast06
+5  6 months Pooled                  <NA>           <NA>             anywast06
+6  6 months Pooled                  <NA>           <NA>             anywast06
+  outcome_variable type parameter intervention_level baseline_level region
+1         sstunted   RR      <NA>                 No             No Pooled
+2          stunted   RR      <NA>                 No             No Pooled
+3         sstunted   RR      <NA>                Yes             No Pooled
+4          stunted   RR      <NA>                Yes             No Pooled
+5         sstunted   RR      <NA>                 No             No Pooled
+6          stunted   RR      <NA>                 No             No Pooled
+  continuous RE adjusted pooled  estimate  ci_lower ci_upper
+1          0  1        1      1 1.0000000 1.0000000 1.000000
+2          0  1        1      1 1.0000000 1.0000000 1.000000
+3          0  1        1      1 1.1788555 1.0126408 1.372353
+4          0  1        1      1 0.9955641 0.9313095 1.064252
+5          0  1        1      1 1.0000000 1.0000000 1.000000
+6          0  1        1      1 1.0000000 1.0000000 1.000000
+              RFlabel                 RFtype
+1 Any wasting  <6 mo. Postnatal child health
+2 Any wasting  <6 mo. Postnatal child health
+3 Any wasting  <6 mo. Postnatal child health
+4 Any wasting  <6 mo. Postnatal child health
+5 Any wasting  <6 mo. Postnatal child health
+6 Any wasting  <6 mo. Postnatal child health
+> df <- df %>% select("agecat", "studyid", "country", "adjustment_set", 
++                     "intervention_variable", "outcome_variable", "type", 
++                     "intervention_level", "baseline_level", "region", "continuous", 
++                     "adjusted", "RE", "pooled", "estimate", "ci_lower", "ci_upper", "RFlabel")
+> 
+> 
+> 
+> 
+> var_key = read.csv("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/data/C&C Variable Transformation.csv")
+Error in file(file, "rt") : cannot open the connection
+Calls: read.csv -> read.table -> file
 In addition: Warning message:
-In gzfile(file, "rb") :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/pooled_RR_results.rds', probable reason 'No such file or directory'
+In file(file, "rt") :
+  cannot open file 'C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/data/C&C Variable Transformation.csv': No such file or directory
 Execution halted

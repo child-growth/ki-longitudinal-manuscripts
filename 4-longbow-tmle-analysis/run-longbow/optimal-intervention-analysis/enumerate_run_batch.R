@@ -27,8 +27,8 @@ default_params <- fromJSON(inputs)
 # # Continious
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
-analyses$count_Y <- FALSE
 default_params$script_params$maximize <- TRUE
+default_params$script_params$count_Y <- FALSE
 
 analyses <- analyses %>% filter(Y %in% c("haz","whz"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)

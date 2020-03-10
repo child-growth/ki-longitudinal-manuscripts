@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
@@ -228,7 +230,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
 > 
 > 
-> d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2020-03-08.RDS"))
+> d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2020-03-09.RDS"))
 > d2 <- d2 %>% mutate(rain_quartile=case_when(
 +   rain_quartile==1 ~ "Opposite max rain",
 +   rain_quartile==2 ~ "Pre-max rain",
@@ -249,7 +251,6 @@ Warning messages:
 6: In bind_rows_(x, .id) :
   binding character and factor vector, coercing into character vector
 > 
-> if(is.null(d$outcome_variable)) d$outcome_variable <- NA
 > 
 > exposure_vars <- c(
 +   "gagebrth",        "birthlen",      "enwast",        "vagbrth",      
@@ -273,7 +274,7 @@ Warning messages:
 [1] 4014   49
 > d <- distinct(d)
 > dim(d)
-[1] 2998   49
+[1] 4014   49
 > 
 > exposures <- d[,which(colnames(d) %in% exposure_vars)]
 > 
@@ -2298,993 +2299,2009 @@ Warning messages:
 2009                   sex                       Male
 2010                   sex                     Female
 2011                   sex                       Male
-2012               brthmon                          1
-2013               brthmon                          2
-2014               brthmon                          3
-2015               brthmon                          4
-2016               brthmon                          5
-2017               brthmon                          6
-2018               brthmon                          7
-2019               brthmon                          8
-2020               brthmon                          9
-2021               brthmon                         10
-2022               brthmon                         11
-2023               brthmon                         12
-2024               brthmon                          1
-2025               brthmon                          2
-2026               brthmon                          3
-2027               brthmon                          4
-2028               brthmon                          5
-2029               brthmon                          6
-2030               brthmon                          7
-2031               brthmon                          8
-2032               brthmon                          9
-2033               brthmon                         10
-2034               brthmon                         11
-2035               brthmon                         12
-2036               brthmon                          1
-2037               brthmon                          2
-2038               brthmon                          3
-2039               brthmon                          4
-2040               brthmon                          5
-2041               brthmon                          6
-2042               brthmon                          7
-2043               brthmon                          8
-2044               brthmon                          9
-2045               brthmon                         10
-2046               brthmon                         11
-2047               brthmon                         12
-2048               brthmon                          1
-2049               brthmon                          2
-2050               brthmon                          3
-2051               brthmon                          4
-2052               brthmon                          5
-2053               brthmon                          6
-2054               brthmon                          7
-2055               brthmon                          8
-2056               brthmon                          9
-2057               brthmon                         10
-2058               brthmon                         11
-2059               brthmon                         12
-2060               brthmon                          1
-2061               brthmon                          2
-2062               brthmon                          3
-2063               brthmon                          4
-2064               brthmon                          5
-2065               brthmon                          6
-2066               brthmon                          7
-2067               brthmon                          8
-2068               brthmon                          9
-2069               brthmon                         10
-2070               brthmon                         11
-2071               brthmon                         12
-2072               brthmon                          1
-2073               brthmon                          2
-2074               brthmon                          3
-2075               brthmon                          4
-2076               brthmon                          5
-2077               brthmon                          6
-2078               brthmon                          7
-2079               brthmon                          8
-2080               brthmon                          9
-2081               brthmon                         10
-2082               brthmon                         11
-2083               brthmon                         12
-2084               brthmon                          1
-2085               brthmon                          2
-2086               brthmon                          3
-2087               brthmon                          4
-2088               brthmon                          5
-2089               brthmon                          6
-2090               brthmon                          7
-2091               brthmon                          8
-2092               brthmon                          9
-2093               brthmon                         10
-2094               brthmon                         11
-2095               brthmon                         12
-2096               brthmon                          1
-2097               brthmon                          2
-2098               brthmon                          3
-2099               brthmon                          4
-2100               brthmon                          5
-2101               brthmon                          6
-2102               brthmon                          7
-2103               brthmon                          8
-2104               brthmon                          9
-2105               brthmon                         10
-2106               brthmon                         11
-2107               brthmon                         12
-2108               brthmon                          1
-2109               brthmon                          2
-2110               brthmon                          3
-2111               brthmon                          4
-2112               brthmon                          5
-2113               brthmon                          6
-2114               brthmon                          7
-2115               brthmon                          8
-2116               brthmon                          9
-2117               brthmon                         10
-2118               brthmon                         11
-2119               brthmon                         12
-2120               brthmon                          1
-2121               brthmon                          2
-2122               brthmon                          3
-2123               brthmon                          4
-2124               brthmon                          5
-2125               brthmon                          6
-2126               brthmon                          7
-2127               brthmon                          8
-2128               brthmon                          9
-2129               brthmon                         10
-2130               brthmon                         11
-2131               brthmon                         12
-2132               brthmon                          1
-2133               brthmon                          2
-2134               brthmon                          3
-2135               brthmon                          4
-2136               brthmon                          5
-2137               brthmon                          6
-2138               brthmon                          7
-2139               brthmon                          8
-2140               brthmon                          9
-2141               brthmon                         10
-2142               brthmon                         11
-2143               brthmon                         12
-2144               brthmon                          1
-2145               brthmon                          2
-2146               brthmon                          3
-2147               brthmon                          4
-2148               brthmon                          5
-2149               brthmon                          6
-2150               brthmon                          7
-2151               brthmon                          8
-2152               brthmon                          9
-2153               brthmon                         10
-2154               brthmon                         11
-2155               brthmon                         12
-2156                 month                          1
-2157                 month                          2
-2158                 month                          3
-2159                 month                          4
-2160                 month                          5
-2161                 month                          6
-2162                 month                          7
-2163                 month                          8
-2164                 month                          9
-2165                 month                         10
-2166                 month                         11
-2167                 month                         12
-2168                 month                          1
-2169                 month                          2
-2170                 month                          3
-2171                 month                          4
-2172                 month                          5
-2173                 month                          6
-2174                 month                          7
-2175                 month                          8
-2176                 month                          9
-2177                 month                         10
-2178                 month                         11
-2179                 month                         12
-2180                 month                          1
-2181                 month                          2
-2182                 month                          3
-2183                 month                          4
-2184                 month                          5
-2185                 month                          6
-2186                 month                          7
-2187                 month                          8
-2188                 month                          9
-2189                 month                         10
-2190                 month                         11
-2191                 month                         12
-2192                 month                          1
-2193                 month                          2
-2194                 month                          3
-2195                 month                          4
-2196                 month                          5
-2197                 month                          6
-2198                 month                          7
-2199                 month                          8
-2200                 month                          9
-2201                 month                         10
-2202                 month                         11
-2203                 month                         12
-2204                 month                          1
-2205                 month                          2
-2206                 month                          3
-2207                 month                          4
-2208                 month                          5
-2209                 month                          6
-2210                 month                          7
-2211                 month                          8
-2212                 month                          9
-2213                 month                         10
-2214                 month                         11
-2215                 month                         12
-2216                 month                          1
-2217                 month                          2
-2218                 month                          3
-2219                 month                          4
-2220                 month                          5
-2221                 month                          6
-2222                 month                          7
-2223                 month                          8
-2224                 month                          9
-2225                 month                         10
-2226                 month                         11
-2227                 month                         12
-2228                 month                          1
-2229                 month                          2
-2230                 month                          3
-2231                 month                          4
-2232                 month                          5
-2233                 month                          6
-2234                 month                          7
-2235                 month                          8
-2236                 month                          9
-2237                 month                         10
-2238                 month                         11
-2239                 month                         12
-2240                 month                          1
-2241                 month                          2
-2242                 month                          3
-2243                 month                          4
-2244                 month                          5
-2245                 month                          6
-2246                 month                          7
-2247                 month                          8
-2248                 month                          9
-2249                 month                         10
-2250                 month                         11
-2251                 month                         12
-2252                 month                          1
-2253                 month                          2
-2254                 month                          3
-2255                 month                          4
-2256                 month                          5
-2257                 month                          6
-2258                 month                          7
-2259                 month                          8
-2260                 month                          9
-2261                 month                         10
-2262                 month                         11
-2263                 month                         12
-2264                 month                          1
-2265                 month                          2
-2266                 month                          3
-2267                 month                          4
-2268                 month                          5
-2269                 month                          6
-2270                 month                          7
-2271                 month                          8
-2272                 month                          9
-2273                 month                         10
-2274                 month                         11
-2275                 month                         12
-2276                 month                          1
-2277                 month                          2
-2278                 month                          3
-2279                 month                          4
-2280                 month                          5
-2281                 month                          6
-2282                 month                          7
-2283                 month                          8
-2284                 month                          9
-2285                 month                         10
-2286                 month                         11
-2287                 month                         12
-2288              gagebrth          Full or late term
-2289              gagebrth                    Preterm
-2290              gagebrth                 Early term
-2291              gagebrth          Full or late term
-2292              gagebrth                    Preterm
-2293              gagebrth                 Early term
-2294              gagebrth          Full or late term
-2295              gagebrth                    Preterm
-2296              gagebrth                 Early term
-2297              gagebrth          Full or late term
-2298              gagebrth                    Preterm
-2299              gagebrth                 Early term
-2300              gagebrth          Full or late term
-2301              gagebrth                    Preterm
-2302              gagebrth                 Early term
-2303              gagebrth          Full or late term
-2304              gagebrth                    Preterm
-2305              gagebrth                 Early term
-2306              gagebrth          Full or late term
-2307              gagebrth                    Preterm
-2308              gagebrth                 Early term
-2309               birthwt Normal or high birthweight
-2310               birthwt            Low birthweight
-2311               birthwt Normal or high birthweight
-2312               birthwt            Low birthweight
-2313               birthwt Normal or high birthweight
-2314               birthwt            Low birthweight
-2315               birthwt Normal or high birthweight
-2316               birthwt            Low birthweight
-2317               birthwt Normal or high birthweight
-2318               birthwt            Low birthweight
-2319               birthwt Normal or high birthweight
-2320               birthwt            Low birthweight
-2321               birthwt Normal or high birthweight
-2322               birthwt            Low birthweight
-2323               birthwt Normal or high birthweight
-2324               birthwt            Low birthweight
-2325               birthwt Normal or high birthweight
-2326               birthwt            Low birthweight
-2327               birthwt Normal or high birthweight
-2328               birthwt            Low birthweight
-2329               birthwt Normal or high birthweight
-2330               birthwt            Low birthweight
-2331               birthwt Normal or high birthweight
-2332               birthwt            Low birthweight
-2333               birthwt Normal or high birthweight
-2334               birthwt            Low birthweight
-2335              birthlen                    >=50 cm
-2336              birthlen                     <48 cm
-2337              birthlen                 [48-50) cm
-2338              birthlen                    >=50 cm
-2339              birthlen                     <48 cm
-2340              birthlen                 [48-50) cm
-2341              birthlen                    >=50 cm
-2342              birthlen                     <48 cm
-2343              birthlen                 [48-50) cm
-2344              birthlen                    >=50 cm
-2345              birthlen                     <48 cm
-2346              birthlen                 [48-50) cm
-2347              birthlen                    >=50 cm
-2348              birthlen                     <48 cm
-2349              birthlen                 [48-50) cm
-2350              birthlen                    >=50 cm
-2351              birthlen                     <48 cm
-2352              birthlen                 [48-50) cm
-2353              birthlen                    >=50 cm
-2354              birthlen                     <48 cm
-2355              birthlen                 [48-50) cm
-2356              birthlen                    >=50 cm
-2357              birthlen                     <48 cm
-2358              birthlen                 [48-50) cm
-2359              birthlen                    >=50 cm
-2360              birthlen                     <48 cm
-2361              birthlen                 [48-50) cm
-2362              birthlen                    >=50 cm
-2363              birthlen                     <48 cm
-2364              birthlen                 [48-50) cm
-2365              birthlen                    >=50 cm
-2366              birthlen                     <48 cm
-2367              birthlen                 [48-50) cm
-2368              birthlen                    >=50 cm
-2369              birthlen                     <48 cm
-2370              birthlen                 [48-50) cm
-2371               enstunt                          0
-2372               enstunt                          1
-2373               enstunt                          0
-2374               enstunt                          1
-2375               enstunt                          0
-2376               enstunt                          1
-2377               enstunt                          0
-2378               enstunt                          1
-2379               enstunt                          0
-2380               enstunt                          1
-2381               enstunt                          0
-2382               enstunt                          1
-2383               enstunt                          0
-2384               enstunt                          1
-2385               enstunt                          0
-2386               enstunt                          1
-2387               enstunt                          0
-2388               enstunt                          1
-2389               enstunt                          0
-2390               enstunt                          1
-2391               enstunt                          0
-2392               enstunt                          1
-2393               enstunt                          0
-2394               enstunt                          1
-2395               enstunt                          0
-2396               enstunt                          1
-2397               enstunt                          0
-2398               enstunt                          1
-2399               enstunt                          0
-2400               enstunt                          1
-2401               vagbrth                          0
-2402               vagbrth                          1
-2403               vagbrth                          0
-2404               vagbrth                          1
-2405               vagbrth                          0
-2406               vagbrth                          1
-2407               vagbrth                          0
-2408               vagbrth                          1
-2409               vagbrth                          0
-2410               vagbrth                          1
-2411               vagbrth                          0
-2412               vagbrth                          1
-2413                hdlvry                          0
-2414                hdlvry                          1
-2415                hdlvry                          0
-2416                hdlvry                          1
-2417                hdlvry                          0
-2418                hdlvry                          1
-2419                hdlvry                          0
-2420                hdlvry                          1
-2421                hdlvry                          0
-2422                hdlvry                          1
-2423                hdlvry                          0
-2424                hdlvry                          1
-2425                hdlvry                          0
-2426                hdlvry                          1
-2427                  mage                    [20-30)
-2428                  mage                        <20
-2429                  mage                       >=30
-2430                  mage                    [20-30)
-2431                  mage                        <20
-2432                  mage                       >=30
-2433                  mage                    [20-30)
-2434                  mage                        <20
-2435                  mage                       >=30
-2436                  mage                    [20-30)
-2437                  mage                        <20
-2438                  mage                       >=30
-2439                  mage                    [20-30)
-2440                  mage                        <20
-2441                  mage                       >=30
-2442                  mage                    [20-30)
-2443                  mage                        <20
-2444                  mage                       >=30
-2445                  mage                    [20-30)
-2446                  mage                        <20
-2447                  mage                       >=30
-2448                  mage                    [20-30)
-2449                  mage                        <20
-2450                  mage                       >=30
-2451                  mage                    [20-30)
-2452                  mage                        <20
-2453                  mage                       >=30
-2454                  mage                    [20-30)
-2455                  mage                        <20
-2456                  mage                       >=30
-2457                  mage                    [20-30)
-2458                  mage                        <20
-2459                  mage                       >=30
-2460                  mage                    [20-30)
-2461                  mage                        <20
-2462                  mage                       >=30
-2463                  mage                    [20-30)
-2464                  mage                        <20
-2465                  mage                       >=30
-2466                  fage                       >=38
-2467                  fage                        <32
-2468                  fage                    [32-38)
-2469                  fage                       >=38
-2470                  fage                        <32
-2471                  fage                    [32-38)
-2472                  fage                       >=38
-2473                  fage                        <32
-2474                  fage                    [32-38)
-2475                 mhtcm                   >=155 cm
-2476                 mhtcm                    <151 cm
-2477                 mhtcm               [151-155) cm
-2478                 mhtcm                   >=155 cm
-2479                 mhtcm                    <151 cm
-2480                 mhtcm               [151-155) cm
-2481                 mhtcm                   >=155 cm
-2482                 mhtcm                    <151 cm
-2483                 mhtcm               [151-155) cm
-2484                 mhtcm                   >=155 cm
-2485                 mhtcm                    <151 cm
-2486                 mhtcm               [151-155) cm
-2487                 mhtcm                   >=155 cm
-2488                 mhtcm                    <151 cm
-2489                 mhtcm               [151-155) cm
-2490                 mhtcm                   >=155 cm
-2491                 mhtcm                    <151 cm
-2492                 mhtcm               [151-155) cm
-2493                 mhtcm                   >=155 cm
-2494                 mhtcm                    <151 cm
-2495                 mhtcm               [151-155) cm
-2496                 mhtcm                   >=155 cm
-2497                 mhtcm                    <151 cm
-2498                 mhtcm               [151-155) cm
-2499                 mhtcm                   >=155 cm
-2500                 mhtcm                    <151 cm
-2501                 mhtcm               [151-155) cm
-2502                 mhtcm                   >=155 cm
-2503                 mhtcm                    <151 cm
-2504                 mhtcm               [151-155) cm
-2505                 mwtkg                    >=58 kg
-2506                 mwtkg                     <52 kg
-2507                 mwtkg                 [52-58) kg
-2508                 mwtkg                    >=58 kg
-2509                 mwtkg                     <52 kg
-2510                 mwtkg                 [52-58) kg
-2511                 mwtkg                    >=58 kg
-2512                 mwtkg                     <52 kg
-2513                 mwtkg                 [52-58) kg
-2514                 mwtkg                    >=58 kg
-2515                 mwtkg                     <52 kg
-2516                 mwtkg                 [52-58) kg
-2517                 mwtkg                    >=58 kg
-2518                 mwtkg                     <52 kg
-2519                 mwtkg                 [52-58) kg
-2520                 mwtkg                    >=58 kg
-2521                 mwtkg                     <52 kg
-2522                 mwtkg                 [52-58) kg
-2523                  mbmi              Normal weight
-2524                  mbmi                Underweight
-2525                  mbmi              Normal weight
-2526                  mbmi                Underweight
-2527                  mbmi              Normal weight
-2528                  mbmi                Underweight
-2529                  mbmi              Normal weight
-2530                  mbmi                Underweight
-2531                  mbmi              Normal weight
-2532                  mbmi                Underweight
-2533                  mbmi              Normal weight
-2534                  mbmi                Underweight
-2535                single                          0
-2536                single                          1
-2537                single                          0
-2538                single                          1
-2539                single                          0
-2540                single                          1
-2541                single                          0
-2542                single                          1
-2543                single                          0
-2544                single                          1
-2545                single                          0
-2546                single                          1
-2547                 fhtcm                   >=167 cm
-2548                 fhtcm                    <162 cm
-2549                 fhtcm               [162-167) cm
-2550                 fhtcm                   >=167 cm
-2551                 fhtcm                    <162 cm
-2552                 fhtcm               [162-167) cm
-2553                 fhtcm                   >=167 cm
-2554                 fhtcm                    <162 cm
-2555                 fhtcm               [162-167) cm
-2556                nrooms                         4+
-2557                nrooms                          1
-2558                nrooms                          2
-2559                nrooms                          3
-2560                nrooms                         4+
-2561                nrooms                          1
-2562                nrooms                          2
-2563                nrooms                          3
-2564                nrooms                         4+
-2565                nrooms                          1
-2566                nrooms                          2
-2567                nrooms                          3
-2568                nrooms                         4+
-2569                nrooms                          1
-2570                nrooms                          2
-2571                nrooms                          3
-2572                nrooms                         4+
-2573                nrooms                          1
-2574                nrooms                          2
-2575                nrooms                          3
-2576                nrooms                         4+
-2577                nrooms                          1
-2578                nrooms                          2
-2579                nrooms                          3
-2580                   nhh                  3 or less
-2581                   nhh                        4-5
-2582                   nhh                        6-7
-2583                   nhh                         8+
-2584                   nhh                  3 or less
-2585                   nhh                        4-5
-2586                   nhh                        6-7
-2587                   nhh                         8+
-2588                   nhh                  3 or less
-2589                   nhh                        4-5
-2590                   nhh                        6-7
-2591                   nhh                         8+
-2592              nchldlt5                          1
-2593              nchldlt5                         2+
-2594              nchldlt5                          1
-2595              nchldlt5                         2+
-2596              nchldlt5                          1
-2597              nchldlt5                         2+
-2598        hhwealth_quart                  Wealth Q4
-2599        hhwealth_quart                  Wealth Q1
-2600        hhwealth_quart                  Wealth Q2
-2601        hhwealth_quart                  Wealth Q3
-2602        hhwealth_quart                  Wealth Q4
-2603        hhwealth_quart                  Wealth Q1
-2604        hhwealth_quart                  Wealth Q2
-2605        hhwealth_quart                  Wealth Q3
-2606        hhwealth_quart                  Wealth Q4
-2607        hhwealth_quart                  Wealth Q1
-2608        hhwealth_quart                  Wealth Q2
-2609        hhwealth_quart                  Wealth Q3
-2610        hhwealth_quart                  Wealth Q4
-2611        hhwealth_quart                  Wealth Q1
-2612        hhwealth_quart                  Wealth Q2
-2613        hhwealth_quart                  Wealth Q3
-2614        hhwealth_quart                  Wealth Q4
-2615        hhwealth_quart                  Wealth Q1
-2616        hhwealth_quart                  Wealth Q2
-2617        hhwealth_quart                  Wealth Q3
-2618        hhwealth_quart                  Wealth Q4
-2619        hhwealth_quart                  Wealth Q1
-2620        hhwealth_quart                  Wealth Q2
-2621        hhwealth_quart                  Wealth Q3
-2622        hhwealth_quart                  Wealth Q4
-2623        hhwealth_quart                  Wealth Q1
-2624        hhwealth_quart                  Wealth Q2
-2625        hhwealth_quart                  Wealth Q3
-2626        hhwealth_quart                  Wealth Q4
-2627        hhwealth_quart                  Wealth Q1
-2628        hhwealth_quart                  Wealth Q2
-2629        hhwealth_quart                  Wealth Q3
-2630                parity                          1
-2631                parity                          2
-2632                parity                         3+
-2633                parity                          1
-2634                parity                          2
-2635                parity                         3+
-2636                parity                          1
-2637                parity                          2
-2638                parity                         3+
-2639                parity                          1
-2640                parity                          2
-2641                parity                         3+
-2642                parity                          1
-2643                parity                          2
-2644                parity                         3+
-2645                parity                          1
-2646                parity                          2
-2647                parity                         3+
-2648                parity                          1
-2649                parity                          2
-2650                parity                         3+
-2651              meducyrs                       High
-2652              meducyrs                        Low
-2653              meducyrs                     Medium
-2654              meducyrs                       High
-2655              meducyrs                        Low
-2656              meducyrs                     Medium
-2657              meducyrs                       High
-2658              meducyrs                        Low
-2659              meducyrs                     Medium
-2660              meducyrs                       High
-2661              meducyrs                        Low
-2662              meducyrs                     Medium
-2663              meducyrs                       High
-2664              meducyrs                        Low
-2665              meducyrs                     Medium
-2666              meducyrs                       High
-2667              meducyrs                        Low
-2668              meducyrs                     Medium
-2669              meducyrs                       High
-2670              meducyrs                        Low
-2671              meducyrs                     Medium
-2672              meducyrs                       High
-2673              meducyrs                        Low
-2674              meducyrs                     Medium
-2675              meducyrs                       High
-2676              meducyrs                        Low
-2677              meducyrs                     Medium
-2678              meducyrs                       High
-2679              meducyrs                        Low
-2680              meducyrs                     Medium
-2681              meducyrs                       High
-2682              meducyrs                        Low
-2683              meducyrs                     Medium
-2684              meducyrs                       High
-2685              meducyrs                        Low
-2686              meducyrs                     Medium
-2687              meducyrs                       High
-2688              meducyrs                        Low
-2689              meducyrs                     Medium
-2690              feducyrs                       High
-2691              feducyrs                        Low
-2692              feducyrs                     Medium
-2693              feducyrs                       High
-2694              feducyrs                        Low
-2695              feducyrs                     Medium
-2696              feducyrs                       High
-2697              feducyrs                        Low
-2698              feducyrs                     Medium
-2699              feducyrs                       High
-2700              feducyrs                        Low
-2701              feducyrs                     Medium
-2702              feducyrs                       High
-2703              feducyrs                        Low
-2704              feducyrs                     Medium
-2705              feducyrs                       High
-2706              feducyrs                        Low
-2707              feducyrs                     Medium
-2708              feducyrs                       High
-2709              feducyrs                        Low
-2710              feducyrs                     Medium
-2711              feducyrs                       High
-2712              feducyrs                        Low
-2713              feducyrs                     Medium
-2714              feducyrs                       High
-2715              feducyrs                        Low
-2716              feducyrs                     Medium
-2717              feducyrs                       High
-2718              feducyrs                        Low
-2719              feducyrs                     Medium
-2720              hfoodsec                Food Secure
-2721              hfoodsec       Mildly Food Insecure
-2722              hfoodsec              Food Insecure
-2723              hfoodsec                Food Secure
-2724              hfoodsec       Mildly Food Insecure
-2725              hfoodsec              Food Insecure
-2726              hfoodsec                Food Secure
-2727              hfoodsec       Mildly Food Insecure
-2728              hfoodsec              Food Insecure
-2729              hfoodsec                Food Secure
-2730              hfoodsec       Mildly Food Insecure
-2731              hfoodsec              Food Insecure
-2732                trth2o                          1
-2733                trth2o                          0
-2734               cleanck                          1
-2735               cleanck                          0
-2736               cleanck                          1
-2737               cleanck                          0
-2738               cleanck                          1
-2739               cleanck                          0
-2740              impfloor                          1
-2741              impfloor                          0
-2742              impfloor                          1
-2743              impfloor                          0
-2744              impfloor                          1
-2745              impfloor                          0
-2746              impfloor                          1
-2747              impfloor                          0
-2748              impfloor                          1
-2749              impfloor                          0
-2750              impfloor                          1
-2751              impfloor                          0
-2752                impsan                          1
-2753                impsan                          0
-2754                impsan                          1
-2755                impsan                          0
-2756                impsan                          1
-2757                impsan                          0
-2758                impsan                          1
-2759                impsan                          0
-2760                impsan                          1
-2761                impsan                          0
-2762                impsan                          1
-2763                impsan                          0
-2764                impsan                          1
-2765                impsan                          0
-2766               safeh20                          1
-2767               safeh20                          0
-2768               safeh20                          1
-2769               safeh20                          0
-2770               safeh20                          1
-2771               safeh20                          0
-2772               safeh20                          1
-2773               safeh20                          0
-2774              perdiar6                         0%
-2775              perdiar6                   (0%, 5%]
-2776              perdiar6                        >5%
-2777              perdiar6                         0%
-2778              perdiar6                   (0%, 5%]
-2779              perdiar6                        >5%
-2780              perdiar6                         0%
-2781              perdiar6                   (0%, 5%]
-2782              perdiar6                        >5%
-2783              perdiar6                         0%
-2784              perdiar6                   (0%, 5%]
-2785              perdiar6                        >5%
-2786             perdiar24                         0%
-2787             perdiar24                   (0%, 5%]
-2788             perdiar24                        >5%
-2789             perdiar24                         0%
-2790             perdiar24                   (0%, 5%]
-2791             perdiar24                        >5%
-2792             perdiar24                         0%
-2793             perdiar24                   (0%, 5%]
-2794             perdiar24                        >5%
-2795             perdiar24                         0%
-2796             perdiar24                   (0%, 5%]
-2797             perdiar24                        >5%
-2798             perdiar24                         0%
-2799             perdiar24                   (0%, 5%]
-2800             perdiar24                        >5%
-2801             predfeed3                          1
-2802             predfeed3                          0
-2803             predfeed3                          1
-2804             predfeed3                          0
-2805             predfeed6                          1
-2806             predfeed6                          0
-2807             predfeed6                          1
-2808             predfeed6                          0
-2809             predfeed6                          1
-2810             predfeed6                          0
-2811             predfeed6                          1
-2812             predfeed6                          0
-2813            predfeed36                          1
-2814            predfeed36                          0
-2815            predfeed36                          1
-2816            predfeed36                          0
-2817            predfeed36                          1
-2818            predfeed36                          0
-2819            predfeed36                          1
-2820            predfeed36                          0
-2821             exclfeed3                          1
-2822             exclfeed3                          0
-2823             exclfeed3                          1
-2824             exclfeed3                          0
-2825             exclfeed3                          1
-2826             exclfeed3                          0
-2827             exclfeed3                          1
-2828             exclfeed3                          0
-2829             exclfeed6                          1
-2830             exclfeed6                          0
-2831             exclfeed6                          1
-2832             exclfeed6                          0
-2833             exclfeed6                          1
-2834             exclfeed6                          0
-2835             exclfeed6                          1
-2836             exclfeed6                          0
-2837             exclfeed6                          1
-2838             exclfeed6                          0
-2839             exclfeed6                          1
-2840             exclfeed6                          0
-2841            exclfeed36                          1
-2842            exclfeed36                          0
-2843            exclfeed36                          1
-2844            exclfeed36                          0
-2845            exclfeed36                          1
-2846            exclfeed36                          0
-2847            exclfeed36                          1
-2848            exclfeed36                          0
-2849            exclfeed36                          1
-2850            exclfeed36                          0
-2851             predexfd6                          1
-2852             predexfd6                          0
-2853             predexfd6                          1
-2854             predexfd6                          0
-2855             predexfd6                          1
-2856             predexfd6                          0
-2857             predexfd6                          1
-2858             predexfd6                          0
-2859             predexfd6                          1
-2860             predexfd6                          0
-2861             predexfd6                          1
-2862             predexfd6                          0
-2863               earlybf                          1
-2864               earlybf                          0
-2865               earlybf                          1
-2866               earlybf                          0
-2867               earlybf                          1
-2868               earlybf                          0
-2869               earlybf                          1
-2870               earlybf                          0
-2871         rain_quartile          Opposite max rain
-2872         rain_quartile               Pre-max rain
-2873         rain_quartile                   Max rain
-2874         rain_quartile              Post-max rain
-2875         rain_quartile          Opposite max rain
-2876         rain_quartile               Pre-max rain
-2877         rain_quartile                   Max rain
-2878         rain_quartile              Post-max rain
-2879         rain_quartile          Opposite max rain
-2880         rain_quartile               Pre-max rain
-2881         rain_quartile                   Max rain
-2882         rain_quartile              Post-max rain
-2883         rain_quartile          Opposite max rain
-2884         rain_quartile               Pre-max rain
-2885         rain_quartile                   Max rain
-2886         rain_quartile              Post-max rain
-2887         rain_quartile          Opposite max rain
-2888         rain_quartile               Pre-max rain
-2889         rain_quartile                   Max rain
-2890         rain_quartile              Post-max rain
-2891         rain_quartile          Opposite max rain
-2892         rain_quartile               Pre-max rain
-2893         rain_quartile                   Max rain
-2894         rain_quartile              Post-max rain
-2895         rain_quartile          Opposite max rain
-2896         rain_quartile               Pre-max rain
-2897         rain_quartile                   Max rain
-2898         rain_quartile              Post-max rain
-2899         rain_quartile          Opposite max rain
-2900         rain_quartile               Pre-max rain
-2901         rain_quartile                   Max rain
-2902         rain_quartile              Post-max rain
-2903         rain_quartile          Opposite max rain
-2904         rain_quartile               Pre-max rain
-2905         rain_quartile                   Max rain
-2906         rain_quartile              Post-max rain
-2907         rain_quartile          Opposite max rain
-2908         rain_quartile               Pre-max rain
-2909         rain_quartile                   Max rain
-2910         rain_quartile              Post-max rain
-2911         rain_quartile          Opposite max rain
-2912         rain_quartile               Pre-max rain
-2913         rain_quartile                   Max rain
-2914         rain_quartile              Post-max rain
-2915         rain_quartile          Opposite max rain
-2916         rain_quartile               Pre-max rain
-2917         rain_quartile                   Max rain
-2918         rain_quartile              Post-max rain
-2919         rain_quartile          Opposite max rain
-2920         rain_quartile               Pre-max rain
-2921         rain_quartile                   Max rain
-2922         rain_quartile              Post-max rain
-2923         rain_quartile          Opposite max rain
-2924         rain_quartile               Pre-max rain
-2925         rain_quartile                   Max rain
-2926         rain_quartile              Post-max rain
-2927         rain_quartile          Opposite max rain
-2928         rain_quartile               Pre-max rain
-2929         rain_quartile                   Max rain
-2930         rain_quartile              Post-max rain
-2931         rain_quartile          Opposite max rain
-2932         rain_quartile               Pre-max rain
-2933         rain_quartile                   Max rain
-2934         rain_quartile              Post-max rain
-2935         rain_quartile          Opposite max rain
-2936         rain_quartile               Pre-max rain
-2937         rain_quartile                   Max rain
-2938         rain_quartile              Post-max rain
-2939         rain_quartile          Opposite max rain
-2940         rain_quartile               Pre-max rain
-2941         rain_quartile                   Max rain
-2942         rain_quartile              Post-max rain
-2943         rain_quartile          Opposite max rain
-2944         rain_quartile               Pre-max rain
-2945         rain_quartile                   Max rain
-2946         rain_quartile              Post-max rain
-2947         rain_quartile          Opposite max rain
-2948         rain_quartile               Pre-max rain
-2949         rain_quartile                   Max rain
-2950         rain_quartile              Post-max rain
-2951         rain_quartile          Opposite max rain
-2952         rain_quartile               Pre-max rain
-2953         rain_quartile                   Max rain
-2954         rain_quartile              Post-max rain
-2955         rain_quartile          Opposite max rain
-2956         rain_quartile               Pre-max rain
-2957         rain_quartile                   Max rain
-2958         rain_quartile              Post-max rain
-2959         rain_quartile          Opposite max rain
-2960         rain_quartile               Pre-max rain
-2961         rain_quartile                   Max rain
-2962         rain_quartile              Post-max rain
-2963         rain_quartile          Opposite max rain
-2964         rain_quartile               Pre-max rain
-2965         rain_quartile                   Max rain
-2966         rain_quartile              Post-max rain
-2967         rain_quartile          Opposite max rain
-2968         rain_quartile               Pre-max rain
-2969         rain_quartile                   Max rain
-2970         rain_quartile              Post-max rain
-2971         rain_quartile          Opposite max rain
-2972         rain_quartile               Pre-max rain
-2973         rain_quartile                   Max rain
-2974         rain_quartile              Post-max rain
-2975         rain_quartile          Opposite max rain
-2976         rain_quartile               Pre-max rain
-2977         rain_quartile                   Max rain
-2978         rain_quartile              Post-max rain
-2979         rain_quartile          Opposite max rain
-2980         rain_quartile               Pre-max rain
-2981         rain_quartile                   Max rain
-2982         rain_quartile              Post-max rain
-2983         rain_quartile          Opposite max rain
-2984         rain_quartile               Pre-max rain
-2985         rain_quartile                   Max rain
-2986         rain_quartile              Post-max rain
-2987         rain_quartile          Opposite max rain
-2988         rain_quartile               Pre-max rain
-2989         rain_quartile                   Max rain
-2990         rain_quartile              Post-max rain
-2991         rain_quartile          Opposite max rain
-2992         rain_quartile               Pre-max rain
-2993         rain_quartile                   Max rain
-2994         rain_quartile              Post-max rain
-2995         rain_quartile          Opposite max rain
-2996         rain_quartile               Pre-max rain
-2997         rain_quartile                   Max rain
-2998         rain_quartile              Post-max rain
+2012                   sex                     Female
+2013                   sex                       Male
+2014                   sex                     Female
+2015                   sex                       Male
+2016                   sex                     Female
+2017                   sex                       Male
+2018                   sex                     Female
+2019                   sex                       Male
+2020                   sex                     Female
+2021                   sex                       Male
+2022                   sex                     Female
+2023                   sex                       Male
+2024                   sex                     Female
+2025                   sex                       Male
+2026                   sex                     Female
+2027                   sex                       Male
+2028                   sex                     Female
+2029                   sex                       Male
+2030                   sex                     Female
+2031                   sex                       Male
+2032                   sex                     Female
+2033                   sex                       Male
+2034               brthmon                          1
+2035               brthmon                          2
+2036               brthmon                          3
+2037               brthmon                          4
+2038               brthmon                          5
+2039               brthmon                          6
+2040               brthmon                          7
+2041               brthmon                          8
+2042               brthmon                          9
+2043               brthmon                         10
+2044               brthmon                         11
+2045               brthmon                         12
+2046               brthmon                          1
+2047               brthmon                          2
+2048               brthmon                          3
+2049               brthmon                          4
+2050               brthmon                          5
+2051               brthmon                          6
+2052               brthmon                          7
+2053               brthmon                          8
+2054               brthmon                          9
+2055               brthmon                         10
+2056               brthmon                         11
+2057               brthmon                         12
+2058               brthmon                          1
+2059               brthmon                          2
+2060               brthmon                          3
+2061               brthmon                          4
+2062               brthmon                          5
+2063               brthmon                          6
+2064               brthmon                          7
+2065               brthmon                          8
+2066               brthmon                          9
+2067               brthmon                         10
+2068               brthmon                         11
+2069               brthmon                         12
+2070               brthmon                          1
+2071               brthmon                          2
+2072               brthmon                          3
+2073               brthmon                          4
+2074               brthmon                          5
+2075               brthmon                          6
+2076               brthmon                          7
+2077               brthmon                          8
+2078               brthmon                          9
+2079               brthmon                         10
+2080               brthmon                         11
+2081               brthmon                         12
+2082               brthmon                          1
+2083               brthmon                          2
+2084               brthmon                          3
+2085               brthmon                          4
+2086               brthmon                          5
+2087               brthmon                          6
+2088               brthmon                          7
+2089               brthmon                          8
+2090               brthmon                          9
+2091               brthmon                         10
+2092               brthmon                         11
+2093               brthmon                         12
+2094               brthmon                          1
+2095               brthmon                          2
+2096               brthmon                          3
+2097               brthmon                          4
+2098               brthmon                          5
+2099               brthmon                          6
+2100               brthmon                          7
+2101               brthmon                          8
+2102               brthmon                          9
+2103               brthmon                         10
+2104               brthmon                         11
+2105               brthmon                         12
+2106               brthmon                          1
+2107               brthmon                          2
+2108               brthmon                          3
+2109               brthmon                          4
+2110               brthmon                          5
+2111               brthmon                          6
+2112               brthmon                          7
+2113               brthmon                          8
+2114               brthmon                          9
+2115               brthmon                         10
+2116               brthmon                         11
+2117               brthmon                         12
+2118               brthmon                          1
+2119               brthmon                          2
+2120               brthmon                          3
+2121               brthmon                          4
+2122               brthmon                          5
+2123               brthmon                          6
+2124               brthmon                          7
+2125               brthmon                          8
+2126               brthmon                          9
+2127               brthmon                         10
+2128               brthmon                         11
+2129               brthmon                         12
+2130               brthmon                          1
+2131               brthmon                          2
+2132               brthmon                          3
+2133               brthmon                          4
+2134               brthmon                          5
+2135               brthmon                          6
+2136               brthmon                          7
+2137               brthmon                          8
+2138               brthmon                          9
+2139               brthmon                         10
+2140               brthmon                         11
+2141               brthmon                         12
+2142               brthmon                          1
+2143               brthmon                          2
+2144               brthmon                          3
+2145               brthmon                          4
+2146               brthmon                          5
+2147               brthmon                          6
+2148               brthmon                          7
+2149               brthmon                          8
+2150               brthmon                          9
+2151               brthmon                         10
+2152               brthmon                         11
+2153               brthmon                         12
+2154               brthmon                          1
+2155               brthmon                          2
+2156               brthmon                          3
+2157               brthmon                          4
+2158               brthmon                          5
+2159               brthmon                          6
+2160               brthmon                          7
+2161               brthmon                          8
+2162               brthmon                          9
+2163               brthmon                         10
+2164               brthmon                         11
+2165               brthmon                         12
+2166               brthmon                          1
+2167               brthmon                          2
+2168               brthmon                          3
+2169               brthmon                          4
+2170               brthmon                          5
+2171               brthmon                          6
+2172               brthmon                          7
+2173               brthmon                          8
+2174               brthmon                          9
+2175               brthmon                         10
+2176               brthmon                         11
+2177               brthmon                         12
+2178               brthmon                          1
+2179               brthmon                          2
+2180               brthmon                          3
+2181               brthmon                          4
+2182               brthmon                          5
+2183               brthmon                          6
+2184               brthmon                          7
+2185               brthmon                          8
+2186               brthmon                          9
+2187               brthmon                         10
+2188               brthmon                         11
+2189               brthmon                         12
+2190               brthmon                          1
+2191               brthmon                          2
+2192               brthmon                          3
+2193               brthmon                          4
+2194               brthmon                          5
+2195               brthmon                          6
+2196               brthmon                          7
+2197               brthmon                          8
+2198               brthmon                          9
+2199               brthmon                         10
+2200               brthmon                         11
+2201               brthmon                         12
+2202               brthmon                          1
+2203               brthmon                          2
+2204               brthmon                          3
+2205               brthmon                          4
+2206               brthmon                          5
+2207               brthmon                          6
+2208               brthmon                          7
+2209               brthmon                          8
+2210               brthmon                          9
+2211               brthmon                         10
+2212               brthmon                         11
+2213               brthmon                         12
+2214               brthmon                          1
+2215               brthmon                          2
+2216               brthmon                          3
+2217               brthmon                          4
+2218               brthmon                          5
+2219               brthmon                          6
+2220               brthmon                          7
+2221               brthmon                          8
+2222               brthmon                          9
+2223               brthmon                         10
+2224               brthmon                         11
+2225               brthmon                         12
+2226               brthmon                          1
+2227               brthmon                          2
+2228               brthmon                          3
+2229               brthmon                          4
+2230               brthmon                          5
+2231               brthmon                          6
+2232               brthmon                          7
+2233               brthmon                          8
+2234               brthmon                          9
+2235               brthmon                         10
+2236               brthmon                         11
+2237               brthmon                         12
+2238               brthmon                          1
+2239               brthmon                          2
+2240               brthmon                          3
+2241               brthmon                          4
+2242               brthmon                          5
+2243               brthmon                          6
+2244               brthmon                          7
+2245               brthmon                          8
+2246               brthmon                          9
+2247               brthmon                         10
+2248               brthmon                         11
+2249               brthmon                         12
+2250               brthmon                          1
+2251               brthmon                          2
+2252               brthmon                          3
+2253               brthmon                          4
+2254               brthmon                          5
+2255               brthmon                          6
+2256               brthmon                          7
+2257               brthmon                          8
+2258               brthmon                          9
+2259               brthmon                         10
+2260               brthmon                         11
+2261               brthmon                         12
+2262               brthmon                          1
+2263               brthmon                          2
+2264               brthmon                          3
+2265               brthmon                          4
+2266               brthmon                          5
+2267               brthmon                          6
+2268               brthmon                          7
+2269               brthmon                          8
+2270               brthmon                          9
+2271               brthmon                         10
+2272               brthmon                         11
+2273               brthmon                         12
+2274               brthmon                          1
+2275               brthmon                          2
+2276               brthmon                          3
+2277               brthmon                          4
+2278               brthmon                          5
+2279               brthmon                          6
+2280               brthmon                          7
+2281               brthmon                          8
+2282               brthmon                          9
+2283               brthmon                         10
+2284               brthmon                         11
+2285               brthmon                         12
+2286               brthmon                          1
+2287               brthmon                          2
+2288               brthmon                          3
+2289               brthmon                          4
+2290               brthmon                          5
+2291               brthmon                          6
+2292               brthmon                          7
+2293               brthmon                          8
+2294               brthmon                          9
+2295               brthmon                         10
+2296               brthmon                         11
+2297               brthmon                         12
+2298                 month                          1
+2299                 month                          2
+2300                 month                          3
+2301                 month                          4
+2302                 month                          5
+2303                 month                          6
+2304                 month                          7
+2305                 month                          8
+2306                 month                          9
+2307                 month                         10
+2308                 month                         11
+2309                 month                         12
+2310                 month                          1
+2311                 month                          2
+2312                 month                          3
+2313                 month                          4
+2314                 month                          5
+2315                 month                          6
+2316                 month                          7
+2317                 month                          8
+2318                 month                          9
+2319                 month                         10
+2320                 month                         11
+2321                 month                         12
+2322                 month                          1
+2323                 month                          2
+2324                 month                          3
+2325                 month                          4
+2326                 month                          5
+2327                 month                          6
+2328                 month                          7
+2329                 month                          8
+2330                 month                          9
+2331                 month                         10
+2332                 month                         11
+2333                 month                         12
+2334                 month                          1
+2335                 month                          2
+2336                 month                          3
+2337                 month                          4
+2338                 month                          5
+2339                 month                          6
+2340                 month                          7
+2341                 month                          8
+2342                 month                          9
+2343                 month                         10
+2344                 month                         11
+2345                 month                         12
+2346                 month                          1
+2347                 month                          2
+2348                 month                          3
+2349                 month                          4
+2350                 month                          5
+2351                 month                          6
+2352                 month                          7
+2353                 month                          8
+2354                 month                          9
+2355                 month                         10
+2356                 month                         11
+2357                 month                         12
+2358                 month                          1
+2359                 month                          2
+2360                 month                          3
+2361                 month                          4
+2362                 month                          5
+2363                 month                          6
+2364                 month                          7
+2365                 month                          8
+2366                 month                          9
+2367                 month                         10
+2368                 month                         11
+2369                 month                         12
+2370                 month                          1
+2371                 month                          2
+2372                 month                          3
+2373                 month                          4
+2374                 month                          5
+2375                 month                          6
+2376                 month                          7
+2377                 month                          8
+2378                 month                          9
+2379                 month                         10
+2380                 month                         11
+2381                 month                         12
+2382                 month                          1
+2383                 month                          2
+2384                 month                          3
+2385                 month                          4
+2386                 month                          5
+2387                 month                          6
+2388                 month                          7
+2389                 month                          8
+2390                 month                          9
+2391                 month                         10
+2392                 month                         11
+2393                 month                         12
+2394                 month                          1
+2395                 month                          2
+2396                 month                          3
+2397                 month                          4
+2398                 month                          5
+2399                 month                          6
+2400                 month                          7
+2401                 month                          8
+2402                 month                          9
+2403                 month                         10
+2404                 month                         11
+2405                 month                         12
+2406                 month                          1
+2407                 month                          2
+2408                 month                          3
+2409                 month                          4
+2410                 month                          5
+2411                 month                          6
+2412                 month                          7
+2413                 month                          8
+2414                 month                          9
+2415                 month                         10
+2416                 month                         11
+2417                 month                         12
+2418                 month                          1
+2419                 month                          2
+2420                 month                          3
+2421                 month                          4
+2422                 month                          5
+2423                 month                          6
+2424                 month                          7
+2425                 month                          8
+2426                 month                          9
+2427                 month                         10
+2428                 month                         11
+2429                 month                         12
+2430                 month                          1
+2431                 month                          2
+2432                 month                          3
+2433                 month                          4
+2434                 month                          5
+2435                 month                          6
+2436                 month                          7
+2437                 month                          8
+2438                 month                          9
+2439                 month                         10
+2440                 month                         11
+2441                 month                         12
+2442                 month                          1
+2443                 month                          2
+2444                 month                          3
+2445                 month                          4
+2446                 month                          5
+2447                 month                          6
+2448                 month                          7
+2449                 month                          8
+2450                 month                          9
+2451                 month                         10
+2452                 month                         11
+2453                 month                         12
+2454                 month                          1
+2455                 month                          2
+2456                 month                          3
+2457                 month                          4
+2458                 month                          5
+2459                 month                          6
+2460                 month                          7
+2461                 month                          8
+2462                 month                          9
+2463                 month                         10
+2464                 month                         11
+2465                 month                         12
+2466                 month                          1
+2467                 month                          2
+2468                 month                          3
+2469                 month                          4
+2470                 month                          5
+2471                 month                          6
+2472                 month                          7
+2473                 month                          8
+2474                 month                          9
+2475                 month                         10
+2476                 month                         11
+2477                 month                         12
+2478                 month                          1
+2479                 month                          2
+2480                 month                          3
+2481                 month                          4
+2482                 month                          5
+2483                 month                          6
+2484                 month                          7
+2485                 month                          8
+2486                 month                          9
+2487                 month                         10
+2488                 month                         11
+2489                 month                         12
+2490                 month                          1
+2491                 month                          2
+2492                 month                          3
+2493                 month                          4
+2494                 month                          5
+2495                 month                          6
+2496                 month                          7
+2497                 month                          8
+2498                 month                          9
+2499                 month                         10
+2500                 month                         11
+2501                 month                         12
+2502                 month                          1
+2503                 month                          2
+2504                 month                          3
+2505                 month                          4
+2506                 month                          5
+2507                 month                          6
+2508                 month                          7
+2509                 month                          8
+2510                 month                          9
+2511                 month                         10
+2512                 month                         11
+2513                 month                         12
+2514                 month                          1
+2515                 month                          2
+2516                 month                          3
+2517                 month                          4
+2518                 month                          5
+2519                 month                          6
+2520                 month                          7
+2521                 month                          8
+2522                 month                          9
+2523                 month                         10
+2524                 month                         11
+2525                 month                         12
+2526                 month                          1
+2527                 month                          2
+2528                 month                          3
+2529                 month                          4
+2530                 month                          5
+2531                 month                          6
+2532                 month                          7
+2533                 month                          8
+2534                 month                          9
+2535                 month                         10
+2536                 month                         11
+2537                 month                         12
+2538                 month                          1
+2539                 month                          2
+2540                 month                          3
+2541                 month                          4
+2542                 month                          5
+2543                 month                          6
+2544                 month                          7
+2545                 month                          8
+2546                 month                          9
+2547                 month                         10
+2548                 month                         11
+2549                 month                         12
+2550              gagebrth          Full or late term
+2551              gagebrth                    Preterm
+2552              gagebrth                 Early term
+2553              gagebrth          Full or late term
+2554              gagebrth                    Preterm
+2555              gagebrth                 Early term
+2556              gagebrth          Full or late term
+2557              gagebrth                    Preterm
+2558              gagebrth                 Early term
+2559              gagebrth          Full or late term
+2560              gagebrth                    Preterm
+2561              gagebrth                 Early term
+2562              gagebrth          Full or late term
+2563              gagebrth                    Preterm
+2564              gagebrth                 Early term
+2565              gagebrth          Full or late term
+2566              gagebrth                    Preterm
+2567              gagebrth                 Early term
+2568              gagebrth          Full or late term
+2569              gagebrth                    Preterm
+2570              gagebrth                 Early term
+2571              gagebrth          Full or late term
+2572              gagebrth                    Preterm
+2573              gagebrth                 Early term
+2574              gagebrth          Full or late term
+2575              gagebrth                    Preterm
+2576              gagebrth                 Early term
+2577              gagebrth          Full or late term
+2578              gagebrth                    Preterm
+2579              gagebrth                 Early term
+2580               birthwt Normal or high birthweight
+2581               birthwt            Low birthweight
+2582               birthwt Normal or high birthweight
+2583               birthwt            Low birthweight
+2584               birthwt Normal or high birthweight
+2585               birthwt            Low birthweight
+2586               birthwt Normal or high birthweight
+2587               birthwt            Low birthweight
+2588               birthwt Normal or high birthweight
+2589               birthwt            Low birthweight
+2590               birthwt Normal or high birthweight
+2591               birthwt            Low birthweight
+2592               birthwt Normal or high birthweight
+2593               birthwt            Low birthweight
+2594               birthwt Normal or high birthweight
+2595               birthwt            Low birthweight
+2596               birthwt Normal or high birthweight
+2597               birthwt            Low birthweight
+2598               birthwt Normal or high birthweight
+2599               birthwt            Low birthweight
+2600               birthwt Normal or high birthweight
+2601               birthwt            Low birthweight
+2602               birthwt Normal or high birthweight
+2603               birthwt            Low birthweight
+2604               birthwt Normal or high birthweight
+2605               birthwt            Low birthweight
+2606               birthwt Normal or high birthweight
+2607               birthwt            Low birthweight
+2608               birthwt Normal or high birthweight
+2609               birthwt            Low birthweight
+2610               birthwt Normal or high birthweight
+2611               birthwt            Low birthweight
+2612               birthwt Normal or high birthweight
+2613               birthwt            Low birthweight
+2614               birthwt Normal or high birthweight
+2615               birthwt            Low birthweight
+2616               birthwt Normal or high birthweight
+2617               birthwt            Low birthweight
+2618               birthwt Normal or high birthweight
+2619               birthwt            Low birthweight
+2620               birthwt Normal or high birthweight
+2621               birthwt            Low birthweight
+2622               birthwt Normal or high birthweight
+2623               birthwt            Low birthweight
+2624               birthwt Normal or high birthweight
+2625               birthwt            Low birthweight
+2626               birthwt Normal or high birthweight
+2627               birthwt            Low birthweight
+2628               birthwt Normal or high birthweight
+2629               birthwt            Low birthweight
+2630              birthlen                    >=50 cm
+2631              birthlen                     <48 cm
+2632              birthlen                 [48-50) cm
+2633              birthlen                    >=50 cm
+2634              birthlen                     <48 cm
+2635              birthlen                 [48-50) cm
+2636              birthlen                    >=50 cm
+2637              birthlen                     <48 cm
+2638              birthlen                 [48-50) cm
+2639              birthlen                    >=50 cm
+2640              birthlen                     <48 cm
+2641              birthlen                 [48-50) cm
+2642              birthlen                    >=50 cm
+2643              birthlen                     <48 cm
+2644              birthlen                 [48-50) cm
+2645              birthlen                    >=50 cm
+2646              birthlen                     <48 cm
+2647              birthlen                 [48-50) cm
+2648              birthlen                    >=50 cm
+2649              birthlen                     <48 cm
+2650              birthlen                 [48-50) cm
+2651              birthlen                    >=50 cm
+2652              birthlen                     <48 cm
+2653              birthlen                 [48-50) cm
+2654              birthlen                    >=50 cm
+2655              birthlen                     <48 cm
+2656              birthlen                 [48-50) cm
+2657              birthlen                    >=50 cm
+2658              birthlen                     <48 cm
+2659              birthlen                 [48-50) cm
+2660              birthlen                    >=50 cm
+2661              birthlen                     <48 cm
+2662              birthlen                 [48-50) cm
+2663              birthlen                    >=50 cm
+2664              birthlen                     <48 cm
+2665              birthlen                 [48-50) cm
+2666              birthlen                    >=50 cm
+2667              birthlen                     <48 cm
+2668              birthlen                 [48-50) cm
+2669              birthlen                    >=50 cm
+2670              birthlen                     <48 cm
+2671              birthlen                 [48-50) cm
+2672              birthlen                    >=50 cm
+2673              birthlen                     <48 cm
+2674              birthlen                 [48-50) cm
+2675              birthlen                    >=50 cm
+2676              birthlen                     <48 cm
+2677              birthlen                 [48-50) cm
+2678              birthlen                    >=50 cm
+2679              birthlen                     <48 cm
+2680              birthlen                 [48-50) cm
+2681              birthlen                    >=50 cm
+2682              birthlen                     <48 cm
+2683              birthlen                 [48-50) cm
+2684              birthlen                    >=50 cm
+2685              birthlen                     <48 cm
+2686              birthlen                 [48-50) cm
+2687              birthlen                    >=50 cm
+2688              birthlen                     <48 cm
+2689              birthlen                 [48-50) cm
+2690              birthlen                    >=50 cm
+2691              birthlen                     <48 cm
+2692              birthlen                 [48-50) cm
+2693              birthlen                    >=50 cm
+2694              birthlen                     <48 cm
+2695              birthlen                 [48-50) cm
+2696              birthlen                    >=50 cm
+2697              birthlen                     <48 cm
+2698              birthlen                 [48-50) cm
+2699              birthlen                    >=50 cm
+2700              birthlen                     <48 cm
+2701              birthlen                 [48-50) cm
+2702               enstunt                          0
+2703               enstunt                          1
+2704               enstunt                          0
+2705               enstunt                          1
+2706               enstunt                          0
+2707               enstunt                          1
+2708               enstunt                          0
+2709               enstunt                          1
+2710               enstunt                          0
+2711               enstunt                          1
+2712               enstunt                          0
+2713               enstunt                          1
+2714               enstunt                          0
+2715               enstunt                          1
+2716               enstunt                          0
+2717               enstunt                          1
+2718               enstunt                          0
+2719               enstunt                          1
+2720               enstunt                          0
+2721               enstunt                          1
+2722               enstunt                          0
+2723               enstunt                          1
+2724               enstunt                          0
+2725               enstunt                          1
+2726               enstunt                          0
+2727               enstunt                          1
+2728               enstunt                          0
+2729               enstunt                          1
+2730               enstunt                          0
+2731               enstunt                          1
+2732               enstunt                          0
+2733               enstunt                          1
+2734               enstunt                          0
+2735               enstunt                          1
+2736               enstunt                          0
+2737               enstunt                          1
+2738               enstunt                          0
+2739               enstunt                          1
+2740               enstunt                          0
+2741               enstunt                          1
+2742               enstunt                          0
+2743               enstunt                          1
+2744               enstunt                          0
+2745               enstunt                          1
+2746               enstunt                          0
+2747               enstunt                          1
+2748               enstunt                          0
+2749               enstunt                          1
+2750               enstunt                          0
+2751               enstunt                          1
+2752               enstunt                          0
+2753               enstunt                          1
+2754               vagbrth                          0
+2755               vagbrth                          1
+2756               vagbrth                          0
+2757               vagbrth                          1
+2758               vagbrth                          0
+2759               vagbrth                          1
+2760               vagbrth                          0
+2761               vagbrth                          1
+2762               vagbrth                          0
+2763               vagbrth                          1
+2764               vagbrth                          0
+2765               vagbrth                          1
+2766               vagbrth                          0
+2767               vagbrth                          1
+2768               vagbrth                          0
+2769               vagbrth                          1
+2770               vagbrth                          0
+2771               vagbrth                          1
+2772                hdlvry                          0
+2773                hdlvry                          1
+2774                hdlvry                          0
+2775                hdlvry                          1
+2776                hdlvry                          0
+2777                hdlvry                          1
+2778                hdlvry                          0
+2779                hdlvry                          1
+2780                hdlvry                          0
+2781                hdlvry                          1
+2782                hdlvry                          0
+2783                hdlvry                          1
+2784                hdlvry                          0
+2785                hdlvry                          1
+2786                hdlvry                          0
+2787                hdlvry                          1
+2788                hdlvry                          0
+2789                hdlvry                          1
+2790                hdlvry                          0
+2791                hdlvry                          1
+2792                  mage                    [20-30)
+2793                  mage                        <20
+2794                  mage                       >=30
+2795                  mage                    [20-30)
+2796                  mage                        <20
+2797                  mage                       >=30
+2798                  mage                    [20-30)
+2799                  mage                        <20
+2800                  mage                       >=30
+2801                  mage                    [20-30)
+2802                  mage                        <20
+2803                  mage                       >=30
+2804                  mage                    [20-30)
+2805                  mage                        <20
+2806                  mage                       >=30
+2807                  mage                    [20-30)
+2808                  mage                        <20
+2809                  mage                       >=30
+2810                  mage                    [20-30)
+2811                  mage                        <20
+2812                  mage                       >=30
+2813                  mage                    [20-30)
+2814                  mage                        <20
+2815                  mage                       >=30
+2816                  mage                    [20-30)
+2817                  mage                        <20
+2818                  mage                       >=30
+2819                  mage                    [20-30)
+2820                  mage                        <20
+2821                  mage                       >=30
+2822                  mage                    [20-30)
+2823                  mage                        <20
+2824                  mage                       >=30
+2825                  mage                    [20-30)
+2826                  mage                        <20
+2827                  mage                       >=30
+2828                  mage                    [20-30)
+2829                  mage                        <20
+2830                  mage                       >=30
+2831                  mage                    [20-30)
+2832                  mage                        <20
+2833                  mage                       >=30
+2834                  mage                    [20-30)
+2835                  mage                        <20
+2836                  mage                       >=30
+2837                  mage                    [20-30)
+2838                  mage                        <20
+2839                  mage                       >=30
+2840                  mage                    [20-30)
+2841                  mage                        <20
+2842                  mage                       >=30
+2843                  mage                    [20-30)
+2844                  mage                        <20
+2845                  mage                       >=30
+2846                  mage                    [20-30)
+2847                  mage                        <20
+2848                  mage                       >=30
+2849                  mage                    [20-30)
+2850                  mage                        <20
+2851                  mage                       >=30
+2852                  mage                    [20-30)
+2853                  mage                        <20
+2854                  mage                       >=30
+2855                  mage                    [20-30)
+2856                  mage                        <20
+2857                  mage                       >=30
+2858                  mage                    [20-30)
+2859                  mage                        <20
+2860                  mage                       >=30
+2861                  fage                       >=38
+2862                  fage                        <32
+2863                  fage                    [32-38)
+2864                  fage                       >=38
+2865                  fage                        <32
+2866                  fage                    [32-38)
+2867                  fage                       >=38
+2868                  fage                        <32
+2869                  fage                    [32-38)
+2870                  fage                       >=38
+2871                  fage                        <32
+2872                  fage                    [32-38)
+2873                  fage                       >=38
+2874                  fage                        <32
+2875                  fage                    [32-38)
+2876                  fage                       >=38
+2877                  fage                        <32
+2878                  fage                    [32-38)
+2879                  fage                       >=38
+2880                  fage                        <32
+2881                  fage                    [32-38)
+2882                  fage                       >=38
+2883                  fage                        <32
+2884                  fage                    [32-38)
+2885                  fage                       >=38
+2886                  fage                        <32
+2887                  fage                    [32-38)
+2888                  fage                       >=38
+2889                  fage                        <32
+2890                  fage                    [32-38)
+2891                  fage                       >=38
+2892                  fage                        <32
+2893                  fage                    [32-38)
+2894                 mhtcm                   >=155 cm
+2895                 mhtcm                    <151 cm
+2896                 mhtcm               [151-155) cm
+2897                 mhtcm                   >=155 cm
+2898                 mhtcm                    <151 cm
+2899                 mhtcm               [151-155) cm
+2900                 mhtcm                   >=155 cm
+2901                 mhtcm                    <151 cm
+2902                 mhtcm               [151-155) cm
+2903                 mhtcm                   >=155 cm
+2904                 mhtcm                    <151 cm
+2905                 mhtcm               [151-155) cm
+2906                 mhtcm                   >=155 cm
+2907                 mhtcm                    <151 cm
+2908                 mhtcm               [151-155) cm
+2909                 mhtcm                   >=155 cm
+2910                 mhtcm                    <151 cm
+2911                 mhtcm               [151-155) cm
+2912                 mhtcm                   >=155 cm
+2913                 mhtcm                    <151 cm
+2914                 mhtcm               [151-155) cm
+2915                 mhtcm                   >=155 cm
+2916                 mhtcm                    <151 cm
+2917                 mhtcm               [151-155) cm
+2918                 mhtcm                   >=155 cm
+2919                 mhtcm                    <151 cm
+2920                 mhtcm               [151-155) cm
+2921                 mhtcm                   >=155 cm
+2922                 mhtcm                    <151 cm
+2923                 mhtcm               [151-155) cm
+2924                 mhtcm                   >=155 cm
+2925                 mhtcm                    <151 cm
+2926                 mhtcm               [151-155) cm
+2927                 mhtcm                   >=155 cm
+2928                 mhtcm                    <151 cm
+2929                 mhtcm               [151-155) cm
+2930                 mhtcm                   >=155 cm
+2931                 mhtcm                    <151 cm
+2932                 mhtcm               [151-155) cm
+2933                 mhtcm                   >=155 cm
+2934                 mhtcm                    <151 cm
+2935                 mhtcm               [151-155) cm
+2936                 mhtcm                   >=155 cm
+2937                 mhtcm                    <151 cm
+2938                 mhtcm               [151-155) cm
+2939                 mhtcm                   >=155 cm
+2940                 mhtcm                    <151 cm
+2941                 mhtcm               [151-155) cm
+2942                 mhtcm                   >=155 cm
+2943                 mhtcm                    <151 cm
+2944                 mhtcm               [151-155) cm
+2945                 mhtcm                   >=155 cm
+2946                 mhtcm                    <151 cm
+2947                 mhtcm               [151-155) cm
+2948                 mhtcm                   >=155 cm
+2949                 mhtcm                    <151 cm
+2950                 mhtcm               [151-155) cm
+2951                 mwtkg                    >=58 kg
+2952                 mwtkg                     <52 kg
+2953                 mwtkg                 [52-58) kg
+2954                 mwtkg                    >=58 kg
+2955                 mwtkg                     <52 kg
+2956                 mwtkg                 [52-58) kg
+2957                 mwtkg                    >=58 kg
+2958                 mwtkg                     <52 kg
+2959                 mwtkg                 [52-58) kg
+2960                 mwtkg                    >=58 kg
+2961                 mwtkg                     <52 kg
+2962                 mwtkg                 [52-58) kg
+2963                 mwtkg                    >=58 kg
+2964                 mwtkg                     <52 kg
+2965                 mwtkg                 [52-58) kg
+2966                 mwtkg                    >=58 kg
+2967                 mwtkg                     <52 kg
+2968                 mwtkg                 [52-58) kg
+2969                 mwtkg                    >=58 kg
+2970                 mwtkg                     <52 kg
+2971                 mwtkg                 [52-58) kg
+2972                 mwtkg                    >=58 kg
+2973                 mwtkg                     <52 kg
+2974                 mwtkg                 [52-58) kg
+2975                 mwtkg                    >=58 kg
+2976                 mwtkg                     <52 kg
+2977                 mwtkg                 [52-58) kg
+2978                 mwtkg                    >=58 kg
+2979                 mwtkg                     <52 kg
+2980                 mwtkg                 [52-58) kg
+2981                 mwtkg                    >=58 kg
+2982                 mwtkg                     <52 kg
+2983                 mwtkg                 [52-58) kg
+2984                 mwtkg                    >=58 kg
+2985                 mwtkg                     <52 kg
+2986                 mwtkg                 [52-58) kg
+2987                 mwtkg                    >=58 kg
+2988                 mwtkg                     <52 kg
+2989                 mwtkg                 [52-58) kg
+2990                 mwtkg                    >=58 kg
+2991                 mwtkg                     <52 kg
+2992                 mwtkg                 [52-58) kg
+2993                 mwtkg                    >=58 kg
+2994                 mwtkg                     <52 kg
+2995                 mwtkg                 [52-58) kg
+2996                  mbmi              Normal weight
+2997                  mbmi                Underweight
+2998                  mbmi              Normal weight
+2999                  mbmi                Underweight
+3000                  mbmi              Normal weight
+3001                  mbmi                Underweight
+3002                  mbmi              Normal weight
+3003                  mbmi                Underweight
+3004                  mbmi              Normal weight
+3005                  mbmi                Underweight
+3006                  mbmi              Normal weight
+3007                  mbmi                Underweight
+3008                  mbmi              Normal weight
+3009                  mbmi                Underweight
+3010                  mbmi              Normal weight
+3011                  mbmi                Underweight
+3012                  mbmi              Normal weight
+3013                  mbmi                Underweight
+3014                  mbmi              Normal weight
+3015                  mbmi                Underweight
+3016                  mbmi              Normal weight
+3017                  mbmi                Underweight
+3018                  mbmi              Normal weight
+3019                  mbmi                Underweight
+3020                  mbmi              Normal weight
+3021                  mbmi                Underweight
+3022                  mbmi              Normal weight
+3023                  mbmi                Underweight
+3024                  mbmi              Normal weight
+3025                  mbmi                Underweight
+3026                single                          0
+3027                single                          1
+3028                single                          0
+3029                single                          1
+3030                single                          0
+3031                single                          1
+3032                single                          0
+3033                single                          1
+3034                single                          0
+3035                single                          1
+3036                single                          0
+3037                single                          1
+3038                single                          0
+3039                single                          1
+3040                single                          0
+3041                single                          1
+3042                single                          0
+3043                single                          1
+3044                single                          0
+3045                single                          1
+3046                single                          0
+3047                single                          1
+3048                single                          0
+3049                single                          1
+3050                single                          0
+3051                single                          1
+3052                single                          0
+3053                single                          1
+3054                 fhtcm                   >=167 cm
+3055                 fhtcm                    <162 cm
+3056                 fhtcm               [162-167) cm
+3057                 fhtcm                   >=167 cm
+3058                 fhtcm                    <162 cm
+3059                 fhtcm               [162-167) cm
+3060                 fhtcm                   >=167 cm
+3061                 fhtcm                    <162 cm
+3062                 fhtcm               [162-167) cm
+3063                nrooms                         4+
+3064                nrooms                          1
+3065                nrooms                          2
+3066                nrooms                          3
+3067                nrooms                         4+
+3068                nrooms                          1
+3069                nrooms                          2
+3070                nrooms                          3
+3071                nrooms                         4+
+3072                nrooms                          1
+3073                nrooms                          2
+3074                nrooms                          3
+3075                nrooms                         4+
+3076                nrooms                          1
+3077                nrooms                          2
+3078                nrooms                          3
+3079                nrooms                         4+
+3080                nrooms                          1
+3081                nrooms                          2
+3082                nrooms                          3
+3083                nrooms                         4+
+3084                nrooms                          1
+3085                nrooms                          2
+3086                nrooms                          3
+3087                nrooms                         4+
+3088                nrooms                          1
+3089                nrooms                          2
+3090                nrooms                          3
+3091                nrooms                         4+
+3092                nrooms                          1
+3093                nrooms                          2
+3094                nrooms                          3
+3095                nrooms                         4+
+3096                nrooms                          1
+3097                nrooms                          2
+3098                nrooms                          3
+3099                nrooms                         4+
+3100                nrooms                          1
+3101                nrooms                          2
+3102                nrooms                          3
+3103                nrooms                         4+
+3104                nrooms                          1
+3105                nrooms                          2
+3106                nrooms                          3
+3107                nrooms                         4+
+3108                nrooms                          1
+3109                nrooms                          2
+3110                nrooms                          3
+3111                nrooms                         4+
+3112                nrooms                          1
+3113                nrooms                          2
+3114                nrooms                          3
+3115                nrooms                         4+
+3116                nrooms                          1
+3117                nrooms                          2
+3118                nrooms                          3
+3119                nrooms                         4+
+3120                nrooms                          1
+3121                nrooms                          2
+3122                nrooms                          3
+3123                nrooms                         4+
+3124                nrooms                          1
+3125                nrooms                          2
+3126                nrooms                          3
+3127                   nhh                  3 or less
+3128                   nhh                        4-5
+3129                   nhh                        6-7
+3130                   nhh                         8+
+3131                   nhh                  3 or less
+3132                   nhh                        4-5
+3133                   nhh                        6-7
+3134                   nhh                         8+
+3135                   nhh                  3 or less
+3136                   nhh                        4-5
+3137                   nhh                        6-7
+3138                   nhh                         8+
+3139                   nhh                  3 or less
+3140                   nhh                        4-5
+3141                   nhh                        6-7
+3142                   nhh                         8+
+3143                   nhh                  3 or less
+3144                   nhh                        4-5
+3145                   nhh                        6-7
+3146                   nhh                         8+
+3147              nchldlt5                          1
+3148              nchldlt5                         2+
+3149              nchldlt5                          1
+3150              nchldlt5                         2+
+3151              nchldlt5                          1
+3152              nchldlt5                         2+
+3153              nchldlt5                          1
+3154              nchldlt5                         2+
+3155              nchldlt5                          1
+3156              nchldlt5                         2+
+3157              nchldlt5                          1
+3158              nchldlt5                         2+
+3159        hhwealth_quart                  Wealth Q4
+3160        hhwealth_quart                  Wealth Q1
+3161        hhwealth_quart                  Wealth Q2
+3162        hhwealth_quart                  Wealth Q3
+3163        hhwealth_quart                  Wealth Q4
+3164        hhwealth_quart                  Wealth Q1
+3165        hhwealth_quart                  Wealth Q2
+3166        hhwealth_quart                  Wealth Q3
+3167        hhwealth_quart                  Wealth Q4
+3168        hhwealth_quart                  Wealth Q1
+3169        hhwealth_quart                  Wealth Q2
+3170        hhwealth_quart                  Wealth Q3
+3171        hhwealth_quart                  Wealth Q4
+3172        hhwealth_quart                  Wealth Q1
+3173        hhwealth_quart                  Wealth Q2
+3174        hhwealth_quart                  Wealth Q3
+3175        hhwealth_quart                  Wealth Q4
+3176        hhwealth_quart                  Wealth Q1
+3177        hhwealth_quart                  Wealth Q2
+3178        hhwealth_quart                  Wealth Q3
+3179        hhwealth_quart                  Wealth Q4
+3180        hhwealth_quart                  Wealth Q1
+3181        hhwealth_quart                  Wealth Q2
+3182        hhwealth_quart                  Wealth Q3
+3183        hhwealth_quart                  Wealth Q4
+3184        hhwealth_quart                  Wealth Q1
+3185        hhwealth_quart                  Wealth Q2
+3186        hhwealth_quart                  Wealth Q3
+3187        hhwealth_quart                  Wealth Q4
+3188        hhwealth_quart                  Wealth Q1
+3189        hhwealth_quart                  Wealth Q2
+3190        hhwealth_quart                  Wealth Q3
+3191        hhwealth_quart                  Wealth Q4
+3192        hhwealth_quart                  Wealth Q1
+3193        hhwealth_quart                  Wealth Q2
+3194        hhwealth_quart                  Wealth Q3
+3195        hhwealth_quart                  Wealth Q4
+3196        hhwealth_quart                  Wealth Q1
+3197        hhwealth_quart                  Wealth Q2
+3198        hhwealth_quart                  Wealth Q3
+3199        hhwealth_quart                  Wealth Q4
+3200        hhwealth_quart                  Wealth Q1
+3201        hhwealth_quart                  Wealth Q2
+3202        hhwealth_quart                  Wealth Q3
+3203        hhwealth_quart                  Wealth Q4
+3204        hhwealth_quart                  Wealth Q1
+3205        hhwealth_quart                  Wealth Q2
+3206        hhwealth_quart                  Wealth Q3
+3207        hhwealth_quart                  Wealth Q4
+3208        hhwealth_quart                  Wealth Q1
+3209        hhwealth_quart                  Wealth Q2
+3210        hhwealth_quart                  Wealth Q3
+3211        hhwealth_quart                  Wealth Q4
+3212        hhwealth_quart                  Wealth Q1
+3213        hhwealth_quart                  Wealth Q2
+3214        hhwealth_quart                  Wealth Q3
+3215        hhwealth_quart                  Wealth Q4
+3216        hhwealth_quart                  Wealth Q1
+3217        hhwealth_quart                  Wealth Q2
+3218        hhwealth_quart                  Wealth Q3
+3219        hhwealth_quart                  Wealth Q4
+3220        hhwealth_quart                  Wealth Q1
+3221        hhwealth_quart                  Wealth Q2
+3222        hhwealth_quart                  Wealth Q3
+3223        hhwealth_quart                  Wealth Q4
+3224        hhwealth_quart                  Wealth Q1
+3225        hhwealth_quart                  Wealth Q2
+3226        hhwealth_quart                  Wealth Q3
+3227        hhwealth_quart                  Wealth Q4
+3228        hhwealth_quart                  Wealth Q1
+3229        hhwealth_quart                  Wealth Q2
+3230        hhwealth_quart                  Wealth Q3
+3231                parity                          1
+3232                parity                          2
+3233                parity                         3+
+3234                parity                          1
+3235                parity                          2
+3236                parity                         3+
+3237                parity                          1
+3238                parity                          2
+3239                parity                         3+
+3240                parity                          1
+3241                parity                          2
+3242                parity                         3+
+3243                parity                          1
+3244                parity                          2
+3245                parity                         3+
+3246                parity                          1
+3247                parity                          2
+3248                parity                         3+
+3249                parity                          1
+3250                parity                          2
+3251                parity                         3+
+3252                parity                          1
+3253                parity                          2
+3254                parity                         3+
+3255                parity                          1
+3256                parity                          2
+3257                parity                         3+
+3258              meducyrs                       High
+3259              meducyrs                        Low
+3260              meducyrs                     Medium
+3261              meducyrs                       High
+3262              meducyrs                        Low
+3263              meducyrs                     Medium
+3264              meducyrs                       High
+3265              meducyrs                        Low
+3266              meducyrs                     Medium
+3267              meducyrs                       High
+3268              meducyrs                        Low
+3269              meducyrs                     Medium
+3270              meducyrs                       High
+3271              meducyrs                        Low
+3272              meducyrs                     Medium
+3273              meducyrs                       High
+3274              meducyrs                        Low
+3275              meducyrs                     Medium
+3276              meducyrs                       High
+3277              meducyrs                        Low
+3278              meducyrs                     Medium
+3279              meducyrs                       High
+3280              meducyrs                        Low
+3281              meducyrs                     Medium
+3282              meducyrs                       High
+3283              meducyrs                        Low
+3284              meducyrs                     Medium
+3285              meducyrs                       High
+3286              meducyrs                        Low
+3287              meducyrs                     Medium
+3288              meducyrs                       High
+3289              meducyrs                        Low
+3290              meducyrs                     Medium
+3291              meducyrs                       High
+3292              meducyrs                        Low
+3293              meducyrs                     Medium
+3294              meducyrs                       High
+3295              meducyrs                        Low
+3296              meducyrs                     Medium
+3297              meducyrs                       High
+3298              meducyrs                        Low
+3299              meducyrs                     Medium
+3300              meducyrs                       High
+3301              meducyrs                        Low
+3302              meducyrs                     Medium
+3303              meducyrs                       High
+3304              meducyrs                        Low
+3305              meducyrs                     Medium
+3306              meducyrs                       High
+3307              meducyrs                        Low
+3308              meducyrs                     Medium
+3309              meducyrs                       High
+3310              meducyrs                        Low
+3311              meducyrs                     Medium
+3312              meducyrs                       High
+3313              meducyrs                        Low
+3314              meducyrs                     Medium
+3315              meducyrs                       High
+3316              meducyrs                        Low
+3317              meducyrs                     Medium
+3318              meducyrs                       High
+3319              meducyrs                        Low
+3320              meducyrs                     Medium
+3321              meducyrs                       High
+3322              meducyrs                        Low
+3323              meducyrs                     Medium
+3324              meducyrs                       High
+3325              meducyrs                        Low
+3326              meducyrs                     Medium
+3327              feducyrs                       High
+3328              feducyrs                        Low
+3329              feducyrs                     Medium
+3330              feducyrs                       High
+3331              feducyrs                        Low
+3332              feducyrs                     Medium
+3333              feducyrs                       High
+3334              feducyrs                        Low
+3335              feducyrs                     Medium
+3336              feducyrs                       High
+3337              feducyrs                        Low
+3338              feducyrs                     Medium
+3339              feducyrs                       High
+3340              feducyrs                        Low
+3341              feducyrs                     Medium
+3342              feducyrs                       High
+3343              feducyrs                        Low
+3344              feducyrs                     Medium
+3345              feducyrs                       High
+3346              feducyrs                        Low
+3347              feducyrs                     Medium
+3348              feducyrs                       High
+3349              feducyrs                        Low
+3350              feducyrs                     Medium
+3351              feducyrs                       High
+3352              feducyrs                        Low
+3353              feducyrs                     Medium
+3354              feducyrs                       High
+3355              feducyrs                        Low
+3356              feducyrs                     Medium
+3357              feducyrs                       High
+3358              feducyrs                        Low
+3359              feducyrs                     Medium
+3360              feducyrs                       High
+3361              feducyrs                        Low
+3362              feducyrs                     Medium
+3363              feducyrs                       High
+3364              feducyrs                        Low
+3365              feducyrs                     Medium
+3366              feducyrs                       High
+3367              feducyrs                        Low
+3368              feducyrs                     Medium
+3369              feducyrs                       High
+3370              feducyrs                        Low
+3371              feducyrs                     Medium
+3372              feducyrs                       High
+3373              feducyrs                        Low
+3374              feducyrs                     Medium
+3375              feducyrs                       High
+3376              feducyrs                        Low
+3377              feducyrs                     Medium
+3378              feducyrs                       High
+3379              feducyrs                        Low
+3380              feducyrs                     Medium
+3381              hfoodsec                Food Secure
+3382              hfoodsec       Mildly Food Insecure
+3383              hfoodsec              Food Insecure
+3384              hfoodsec                Food Secure
+3385              hfoodsec       Mildly Food Insecure
+3386              hfoodsec              Food Insecure
+3387              hfoodsec                Food Secure
+3388              hfoodsec       Mildly Food Insecure
+3389              hfoodsec              Food Insecure
+3390              hfoodsec                Food Secure
+3391              hfoodsec       Mildly Food Insecure
+3392              hfoodsec              Food Insecure
+3393              hfoodsec                Food Secure
+3394              hfoodsec       Mildly Food Insecure
+3395              hfoodsec              Food Insecure
+3396              hfoodsec                Food Secure
+3397              hfoodsec       Mildly Food Insecure
+3398              hfoodsec              Food Insecure
+3399              hfoodsec                Food Secure
+3400              hfoodsec       Mildly Food Insecure
+3401              hfoodsec              Food Insecure
+3402              hfoodsec                Food Secure
+3403              hfoodsec       Mildly Food Insecure
+3404              hfoodsec              Food Insecure
+3405              hfoodsec                Food Secure
+3406              hfoodsec       Mildly Food Insecure
+3407              hfoodsec              Food Insecure
+3408              hfoodsec                Food Secure
+3409              hfoodsec       Mildly Food Insecure
+3410              hfoodsec              Food Insecure
+3411              hfoodsec                Food Secure
+3412              hfoodsec       Mildly Food Insecure
+3413              hfoodsec              Food Insecure
+3414                trth2o                          1
+3415                trth2o                          0
+3416                trth2o                          1
+3417                trth2o                          0
+3418                trth2o                          1
+3419                trth2o                          0
+3420                trth2o                          1
+3421                trth2o                          0
+3422                trth2o                          1
+3423                trth2o                          0
+3424                trth2o                          1
+3425                trth2o                          0
+3426                trth2o                          1
+3427                trth2o                          0
+3428                trth2o                          1
+3429                trth2o                          0
+3430                trth2o                          1
+3431                trth2o                          0
+3432                trth2o                          1
+3433                trth2o                          0
+3434                trth2o                          1
+3435                trth2o                          0
+3436                trth2o                          1
+3437                trth2o                          0
+3438               cleanck                          1
+3439               cleanck                          0
+3440               cleanck                          1
+3441               cleanck                          0
+3442               cleanck                          1
+3443               cleanck                          0
+3444               cleanck                          1
+3445               cleanck                          0
+3446               cleanck                          1
+3447               cleanck                          0
+3448               cleanck                          1
+3449               cleanck                          0
+3450              impfloor                          1
+3451              impfloor                          0
+3452              impfloor                          1
+3453              impfloor                          0
+3454              impfloor                          1
+3455              impfloor                          0
+3456              impfloor                          1
+3457              impfloor                          0
+3458              impfloor                          1
+3459              impfloor                          0
+3460              impfloor                          1
+3461              impfloor                          0
+3462              impfloor                          1
+3463              impfloor                          0
+3464              impfloor                          1
+3465              impfloor                          0
+3466              impfloor                          1
+3467              impfloor                          0
+3468              impfloor                          1
+3469              impfloor                          0
+3470              impfloor                          1
+3471              impfloor                          0
+3472              impfloor                          1
+3473              impfloor                          0
+3474              impfloor                          1
+3475              impfloor                          0
+3476              impfloor                          1
+3477              impfloor                          0
+3478              impfloor                          1
+3479              impfloor                          0
+3480              impfloor                          1
+3481              impfloor                          0
+3482                impsan                          1
+3483                impsan                          0
+3484                impsan                          1
+3485                impsan                          0
+3486                impsan                          1
+3487                impsan                          0
+3488                impsan                          1
+3489                impsan                          0
+3490                impsan                          1
+3491                impsan                          0
+3492                impsan                          1
+3493                impsan                          0
+3494                impsan                          1
+3495                impsan                          0
+3496                impsan                          1
+3497                impsan                          0
+3498                impsan                          1
+3499                impsan                          0
+3500                impsan                          1
+3501                impsan                          0
+3502                impsan                          1
+3503                impsan                          0
+3504                impsan                          1
+3505                impsan                          0
+3506                impsan                          1
+3507                impsan                          0
+3508                impsan                          1
+3509                impsan                          0
+3510                impsan                          1
+3511                impsan                          0
+3512                impsan                          1
+3513                impsan                          0
+3514                impsan                          1
+3515                impsan                          0
+3516               safeh20                          1
+3517               safeh20                          0
+3518               safeh20                          1
+3519               safeh20                          0
+3520               safeh20                          1
+3521               safeh20                          0
+3522               safeh20                          1
+3523               safeh20                          0
+3524               safeh20                          1
+3525               safeh20                          0
+3526               safeh20                          1
+3527               safeh20                          0
+3528               safeh20                          1
+3529               safeh20                          0
+3530               safeh20                          1
+3531               safeh20                          0
+3532               safeh20                          1
+3533               safeh20                          0
+3534               safeh20                          1
+3535               safeh20                          0
+3536               safeh20                          1
+3537               safeh20                          0
+3538               safeh20                          1
+3539               safeh20                          0
+3540               safeh20                          1
+3541               safeh20                          0
+3542               safeh20                          1
+3543               safeh20                          0
+3544              perdiar6                         0%
+3545              perdiar6                   (0%, 5%]
+3546              perdiar6                        >5%
+3547              perdiar6                         0%
+3548              perdiar6                   (0%, 5%]
+3549              perdiar6                        >5%
+3550              perdiar6                         0%
+3551              perdiar6                   (0%, 5%]
+3552              perdiar6                        >5%
+3553              perdiar6                         0%
+3554              perdiar6                   (0%, 5%]
+3555              perdiar6                        >5%
+3556              perdiar6                         0%
+3557              perdiar6                   (0%, 5%]
+3558              perdiar6                        >5%
+3559              perdiar6                         0%
+3560              perdiar6                   (0%, 5%]
+3561              perdiar6                        >5%
+3562              perdiar6                         0%
+3563              perdiar6                   (0%, 5%]
+3564              perdiar6                        >5%
+3565              perdiar6                         0%
+3566              perdiar6                   (0%, 5%]
+3567              perdiar6                        >5%
+3568              perdiar6                         0%
+3569              perdiar6                   (0%, 5%]
+3570              perdiar6                        >5%
+3571              perdiar6                         0%
+3572              perdiar6                   (0%, 5%]
+3573              perdiar6                        >5%
+3574              perdiar6                         0%
+3575              perdiar6                   (0%, 5%]
+3576              perdiar6                        >5%
+3577              perdiar6                         0%
+3578              perdiar6                   (0%, 5%]
+3579              perdiar6                        >5%
+3580              perdiar6                         0%
+3581              perdiar6                   (0%, 5%]
+3582              perdiar6                        >5%
+3583             perdiar24                         0%
+3584             perdiar24                   (0%, 5%]
+3585             perdiar24                        >5%
+3586             perdiar24                         0%
+3587             perdiar24                   (0%, 5%]
+3588             perdiar24                        >5%
+3589             perdiar24                         0%
+3590             perdiar24                   (0%, 5%]
+3591             perdiar24                        >5%
+3592             perdiar24                         0%
+3593             perdiar24                   (0%, 5%]
+3594             perdiar24                        >5%
+3595             perdiar24                         0%
+3596             perdiar24                   (0%, 5%]
+3597             perdiar24                        >5%
+3598             perdiar24                         0%
+3599             perdiar24                   (0%, 5%]
+3600             perdiar24                        >5%
+3601             perdiar24                         0%
+3602             perdiar24                   (0%, 5%]
+3603             perdiar24                        >5%
+3604             perdiar24                         0%
+3605             perdiar24                   (0%, 5%]
+3606             perdiar24                        >5%
+3607             perdiar24                         0%
+3608             perdiar24                   (0%, 5%]
+3609             perdiar24                        >5%
+3610             perdiar24                         0%
+3611             perdiar24                   (0%, 5%]
+3612             perdiar24                        >5%
+3613             perdiar24                         0%
+3614             perdiar24                   (0%, 5%]
+3615             perdiar24                        >5%
+3616             perdiar24                         0%
+3617             perdiar24                   (0%, 5%]
+3618             perdiar24                        >5%
+3619             perdiar24                         0%
+3620             perdiar24                   (0%, 5%]
+3621             perdiar24                        >5%
+3622             perdiar24                         0%
+3623             perdiar24                   (0%, 5%]
+3624             perdiar24                        >5%
+3625             predfeed3                          1
+3626             predfeed3                          0
+3627             predfeed3                          1
+3628             predfeed3                          0
+3629             predfeed3                          1
+3630             predfeed3                          0
+3631             predfeed3                          1
+3632             predfeed3                          0
+3633             predfeed3                          1
+3634             predfeed3                          0
+3635             predfeed3                          1
+3636             predfeed3                          0
+3637             predfeed3                          1
+3638             predfeed3                          0
+3639             predfeed3                          1
+3640             predfeed3                          0
+3641             predfeed3                          1
+3642             predfeed3                          0
+3643             predfeed3                          1
+3644             predfeed3                          0
+3645             predfeed3                          1
+3646             predfeed3                          0
+3647             predfeed6                          1
+3648             predfeed6                          0
+3649             predfeed6                          1
+3650             predfeed6                          0
+3651             predfeed6                          1
+3652             predfeed6                          0
+3653             predfeed6                          1
+3654             predfeed6                          0
+3655             predfeed6                          1
+3656             predfeed6                          0
+3657             predfeed6                          1
+3658             predfeed6                          0
+3659             predfeed6                          1
+3660             predfeed6                          0
+3661             predfeed6                          1
+3662             predfeed6                          0
+3663             predfeed6                          1
+3664             predfeed6                          0
+3665             predfeed6                          1
+3666             predfeed6                          0
+3667             predfeed6                          1
+3668             predfeed6                          0
+3669             predfeed6                          1
+3670             predfeed6                          0
+3671            predfeed36                          1
+3672            predfeed36                          0
+3673            predfeed36                          1
+3674            predfeed36                          0
+3675            predfeed36                          1
+3676            predfeed36                          0
+3677            predfeed36                          1
+3678            predfeed36                          0
+3679            predfeed36                          1
+3680            predfeed36                          0
+3681            predfeed36                          1
+3682            predfeed36                          0
+3683            predfeed36                          1
+3684            predfeed36                          0
+3685            predfeed36                          1
+3686            predfeed36                          0
+3687            predfeed36                          1
+3688            predfeed36                          0
+3689            predfeed36                          1
+3690            predfeed36                          0
+3691            predfeed36                          1
+3692            predfeed36                          0
+3693            predfeed36                          1
+3694            predfeed36                          0
+3695             exclfeed3                          1
+3696             exclfeed3                          0
+3697             exclfeed3                          1
+3698             exclfeed3                          0
+3699             exclfeed3                          1
+3700             exclfeed3                          0
+3701             exclfeed3                          1
+3702             exclfeed3                          0
+3703             exclfeed3                          1
+3704             exclfeed3                          0
+3705             exclfeed3                          1
+3706             exclfeed3                          0
+3707             exclfeed3                          1
+3708             exclfeed3                          0
+3709             exclfeed3                          1
+3710             exclfeed3                          0
+3711             exclfeed3                          1
+3712             exclfeed3                          0
+3713             exclfeed3                          1
+3714             exclfeed3                          0
+3715             exclfeed3                          1
+3716             exclfeed3                          0
+3717             exclfeed3                          1
+3718             exclfeed3                          0
+3719             exclfeed3                          1
+3720             exclfeed3                          0
+3721             exclfeed3                          1
+3722             exclfeed3                          0
+3723             exclfeed3                          1
+3724             exclfeed3                          0
+3725             exclfeed6                          1
+3726             exclfeed6                          0
+3727             exclfeed6                          1
+3728             exclfeed6                          0
+3729             exclfeed6                          1
+3730             exclfeed6                          0
+3731             exclfeed6                          1
+3732             exclfeed6                          0
+3733             exclfeed6                          1
+3734             exclfeed6                          0
+3735             exclfeed6                          1
+3736             exclfeed6                          0
+3737             exclfeed6                          1
+3738             exclfeed6                          0
+3739             exclfeed6                          1
+3740             exclfeed6                          0
+3741             exclfeed6                          1
+3742             exclfeed6                          0
+3743             exclfeed6                          1
+3744             exclfeed6                          0
+3745             exclfeed6                          1
+3746             exclfeed6                          0
+3747             exclfeed6                          1
+3748             exclfeed6                          0
+3749             exclfeed6                          1
+3750             exclfeed6                          0
+3751             exclfeed6                          1
+3752             exclfeed6                          0
+3753             exclfeed6                          1
+3754             exclfeed6                          0
+3755             exclfeed6                          1
+3756             exclfeed6                          0
+3757            exclfeed36                          1
+3758            exclfeed36                          0
+3759            exclfeed36                          1
+3760            exclfeed36                          0
+3761            exclfeed36                          1
+3762            exclfeed36                          0
+3763            exclfeed36                          1
+3764            exclfeed36                          0
+3765            exclfeed36                          1
+3766            exclfeed36                          0
+3767            exclfeed36                          1
+3768            exclfeed36                          0
+3769            exclfeed36                          1
+3770            exclfeed36                          0
+3771            exclfeed36                          1
+3772            exclfeed36                          0
+3773            exclfeed36                          1
+3774            exclfeed36                          0
+3775            exclfeed36                          1
+3776            exclfeed36                          0
+3777            exclfeed36                          1
+3778            exclfeed36                          0
+3779            exclfeed36                          1
+3780            exclfeed36                          0
+3781            exclfeed36                          1
+3782            exclfeed36                          0
+3783            exclfeed36                          1
+3784            exclfeed36                          0
+3785            exclfeed36                          1
+3786            exclfeed36                          0
+3787            exclfeed36                          1
+3788            exclfeed36                          0
+3789             predexfd6                          1
+3790             predexfd6                          0
+3791             predexfd6                          1
+3792             predexfd6                          0
+3793             predexfd6                          1
+3794             predexfd6                          0
+3795             predexfd6                          1
+3796             predexfd6                          0
+3797             predexfd6                          1
+3798             predexfd6                          0
+3799             predexfd6                          1
+3800             predexfd6                          0
+3801             predexfd6                          1
+3802             predexfd6                          0
+3803             predexfd6                          1
+3804             predexfd6                          0
+3805             predexfd6                          1
+3806             predexfd6                          0
+3807             predexfd6                          1
+3808             predexfd6                          0
+3809             predexfd6                          1
+3810             predexfd6                          0
+3811             predexfd6                          1
+3812             predexfd6                          0
+3813             predexfd6                          1
+3814             predexfd6                          0
+3815             predexfd6                          1
+3816             predexfd6                          0
+3817             predexfd6                          1
+3818             predexfd6                          0
+3819             predexfd6                          1
+3820             predexfd6                          0
+3821               earlybf                          1
+3822               earlybf                          0
+3823               earlybf                          1
+3824               earlybf                          0
+3825               earlybf                          1
+3826               earlybf                          0
+3827               earlybf                          1
+3828               earlybf                          0
+3829               earlybf                          1
+3830               earlybf                          0
+3831               earlybf                          1
+3832               earlybf                          0
+3833               earlybf                          1
+3834               earlybf                          0
+3835               earlybf                          1
+3836               earlybf                          0
+3837               earlybf                          1
+3838               earlybf                          0
+3839               earlybf                          1
+3840               earlybf                          0
+3841               earlybf                          1
+3842               earlybf                          0
+3843               earlybf                          1
+3844               earlybf                          0
+3845               earlybf                          1
+3846               earlybf                          0
+3847         rain_quartile          Opposite max rain
+3848         rain_quartile               Pre-max rain
+3849         rain_quartile                   Max rain
+3850         rain_quartile              Post-max rain
+3851         rain_quartile          Opposite max rain
+3852         rain_quartile               Pre-max rain
+3853         rain_quartile                   Max rain
+3854         rain_quartile              Post-max rain
+3855         rain_quartile          Opposite max rain
+3856         rain_quartile               Pre-max rain
+3857         rain_quartile                   Max rain
+3858         rain_quartile              Post-max rain
+3859         rain_quartile          Opposite max rain
+3860         rain_quartile               Pre-max rain
+3861         rain_quartile                   Max rain
+3862         rain_quartile              Post-max rain
+3863         rain_quartile          Opposite max rain
+3864         rain_quartile               Pre-max rain
+3865         rain_quartile                   Max rain
+3866         rain_quartile              Post-max rain
+3867         rain_quartile          Opposite max rain
+3868         rain_quartile               Pre-max rain
+3869         rain_quartile                   Max rain
+3870         rain_quartile              Post-max rain
+3871         rain_quartile          Opposite max rain
+3872         rain_quartile               Pre-max rain
+3873         rain_quartile                   Max rain
+3874         rain_quartile              Post-max rain
+3875         rain_quartile          Opposite max rain
+3876         rain_quartile               Pre-max rain
+3877         rain_quartile                   Max rain
+3878         rain_quartile              Post-max rain
+3879         rain_quartile          Opposite max rain
+3880         rain_quartile               Pre-max rain
+3881         rain_quartile                   Max rain
+3882         rain_quartile              Post-max rain
+3883         rain_quartile          Opposite max rain
+3884         rain_quartile               Pre-max rain
+3885         rain_quartile                   Max rain
+3886         rain_quartile              Post-max rain
+3887         rain_quartile          Opposite max rain
+3888         rain_quartile               Pre-max rain
+3889         rain_quartile                   Max rain
+3890         rain_quartile              Post-max rain
+3891         rain_quartile          Opposite max rain
+3892         rain_quartile               Pre-max rain
+3893         rain_quartile                   Max rain
+3894         rain_quartile              Post-max rain
+3895         rain_quartile          Opposite max rain
+3896         rain_quartile               Pre-max rain
+3897         rain_quartile                   Max rain
+3898         rain_quartile              Post-max rain
+3899         rain_quartile          Opposite max rain
+3900         rain_quartile               Pre-max rain
+3901         rain_quartile                   Max rain
+3902         rain_quartile              Post-max rain
+3903         rain_quartile          Opposite max rain
+3904         rain_quartile               Pre-max rain
+3905         rain_quartile                   Max rain
+3906         rain_quartile              Post-max rain
+3907         rain_quartile          Opposite max rain
+3908         rain_quartile               Pre-max rain
+3909         rain_quartile                   Max rain
+3910         rain_quartile              Post-max rain
+3911         rain_quartile          Opposite max rain
+3912         rain_quartile               Pre-max rain
+3913         rain_quartile                   Max rain
+3914         rain_quartile              Post-max rain
+3915         rain_quartile          Opposite max rain
+3916         rain_quartile               Pre-max rain
+3917         rain_quartile                   Max rain
+3918         rain_quartile              Post-max rain
+3919         rain_quartile          Opposite max rain
+3920         rain_quartile               Pre-max rain
+3921         rain_quartile                   Max rain
+3922         rain_quartile              Post-max rain
+3923         rain_quartile          Opposite max rain
+3924         rain_quartile               Pre-max rain
+3925         rain_quartile                   Max rain
+3926         rain_quartile              Post-max rain
+3927         rain_quartile          Opposite max rain
+3928         rain_quartile               Pre-max rain
+3929         rain_quartile                   Max rain
+3930         rain_quartile              Post-max rain
+3931         rain_quartile          Opposite max rain
+3932         rain_quartile               Pre-max rain
+3933         rain_quartile                   Max rain
+3934         rain_quartile              Post-max rain
+3935         rain_quartile          Opposite max rain
+3936         rain_quartile               Pre-max rain
+3937         rain_quartile                   Max rain
+3938         rain_quartile              Post-max rain
+3939         rain_quartile          Opposite max rain
+3940         rain_quartile               Pre-max rain
+3941         rain_quartile                   Max rain
+3942         rain_quartile              Post-max rain
+3943         rain_quartile          Opposite max rain
+3944         rain_quartile               Pre-max rain
+3945         rain_quartile                   Max rain
+3946         rain_quartile              Post-max rain
+3947         rain_quartile          Opposite max rain
+3948         rain_quartile               Pre-max rain
+3949         rain_quartile                   Max rain
+3950         rain_quartile              Post-max rain
+3951         rain_quartile          Opposite max rain
+3952         rain_quartile               Pre-max rain
+3953         rain_quartile                   Max rain
+3954         rain_quartile              Post-max rain
+3955         rain_quartile          Opposite max rain
+3956         rain_quartile               Pre-max rain
+3957         rain_quartile                   Max rain
+3958         rain_quartile              Post-max rain
+3959         rain_quartile          Opposite max rain
+3960         rain_quartile               Pre-max rain
+3961         rain_quartile                   Max rain
+3962         rain_quartile              Post-max rain
+3963         rain_quartile          Opposite max rain
+3964         rain_quartile               Pre-max rain
+3965         rain_quartile                   Max rain
+3966         rain_quartile              Post-max rain
+3967         rain_quartile          Opposite max rain
+3968         rain_quartile               Pre-max rain
+3969         rain_quartile                   Max rain
+3970         rain_quartile              Post-max rain
+3971         rain_quartile          Opposite max rain
+3972         rain_quartile               Pre-max rain
+3973         rain_quartile                   Max rain
+3974         rain_quartile              Post-max rain
+3975         rain_quartile          Opposite max rain
+3976         rain_quartile               Pre-max rain
+3977         rain_quartile                   Max rain
+3978         rain_quartile              Post-max rain
+3979         rain_quartile          Opposite max rain
+3980         rain_quartile               Pre-max rain
+3981         rain_quartile                   Max rain
+3982         rain_quartile              Post-max rain
+3983         rain_quartile          Opposite max rain
+3984         rain_quartile               Pre-max rain
+3985         rain_quartile                   Max rain
+3986         rain_quartile              Post-max rain
+3987         rain_quartile          Opposite max rain
+3988         rain_quartile               Pre-max rain
+3989         rain_quartile                   Max rain
+3990         rain_quartile              Post-max rain
+3991         rain_quartile          Opposite max rain
+3992         rain_quartile               Pre-max rain
+3993         rain_quartile                   Max rain
+3994         rain_quartile              Post-max rain
+3995         rain_quartile          Opposite max rain
+3996         rain_quartile               Pre-max rain
+3997         rain_quartile                   Max rain
+3998         rain_quartile              Post-max rain
+3999         rain_quartile          Opposite max rain
+4000         rain_quartile               Pre-max rain
+4001         rain_quartile                   Max rain
+4002         rain_quartile              Post-max rain
+4003         rain_quartile          Opposite max rain
+4004         rain_quartile               Pre-max rain
+4005         rain_quartile                   Max rain
+4006         rain_quartile              Post-max rain
+4007         rain_quartile          Opposite max rain
+4008         rain_quartile               Pre-max rain
+4009         rain_quartile                   Max rain
+4010         rain_quartile              Post-max rain
+4011         rain_quartile          Opposite max rain
+4012         rain_quartile               Pre-max rain
+4013         rain_quartile                   Max rain
+4014         rain_quartile              Post-max rain
 > 
 > Ns <- d %>% subset(., select = c(studyid, country, agecat, n_cell, n,outcome_variable))
 > 
@@ -3302,9 +4319,6 @@ Warning messages:
 > N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, intervention_level) %>%
 +   summarize(n_cell=sum(n_cell), n=sum(n)) %>%
 +   mutate(prev=n_cell/n)
-Warning messages:
-1: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-2: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
 > 
 > 
 > 

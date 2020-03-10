@@ -361,4 +361,4 @@ In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
 > 
 > proc.time()
    user  system elapsed 
- 91.511   2.464 168.312 
+ 78.559   2.240  82.346 

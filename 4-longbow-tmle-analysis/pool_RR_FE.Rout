@@ -350,4 +350,4 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > proc.time()
    user  system elapsed 
- 37.147   1.392  76.102 
+ 32.028   1.071  33.082 

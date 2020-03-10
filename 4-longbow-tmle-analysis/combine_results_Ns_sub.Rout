@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
@@ -318,4 +320,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-167.463   0.796 168.313 
+172.472  13.902 208.849 
