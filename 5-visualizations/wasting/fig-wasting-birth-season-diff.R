@@ -144,6 +144,7 @@ p_season_birth_diff_FE <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   geom_point(aes(fill=seasonality_category, color=seasonality_category), size = 3) +
   geom_text(aes(label=ref), hjust = 0, vjust=0, nudge_y = 0.08) +
   scale_color_manual(values=tableau11[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure)) +
+  coord_cartesian(ylim=c(-1, 0.2)) +
   geom_hline(yintercept = 0) + 
   xlab("")+
   ylab("WLZ difference") +

@@ -29,7 +29,7 @@ plot_list[[3]]$`data` %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 p_seasonRR <- readRDS(here("/figures/plot-objects/season_RR_plot.rds"))
 
 seasonbirth_plot_list <- readRDS(paste0(here(),"/figures/plot-objects/season_plots.rds"))
-seasonbirth_diff <- readRDS(here("/figures/plot-objects/season_birth_wlz_diff_plot.rds"))
+seasonbirth_diff <- readRDS(here("/figures/plot-objects/season_birth_wlz_diff_plot_FE.rds"))
 
 #Add birth diff inset plot
 seasonbirth_plot <- seasonbirth_plot_list[[2]] + inset(ggplotGrob(seasonbirth_diff), xmin = 80, xmax = 300, ymin = -0.8, ymax = 0) 
