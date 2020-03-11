@@ -1,0 +1,236 @@
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/de27c42d-6af0-45d8-bc3b-7e61f6cca362/4314b317-d3dd-40b6-ad21-20d6ad67ee1e
+cd /tmp;tar xvzf tmp5k05tddd.tar.gz --strip 1;cd /tmp/de27c42d-6af0-45d8-bc3b-7e61f6cca362;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/61567/append_log/;screen -d -m python x.py;sleep 1
+tmp5k05tddd/de27c42d-6af0-45d8-bc3b-7e61f6cca362/
+tmp5k05tddd/de27c42d-6af0-45d8-bc3b-7e61f6cca362/provision.sh
+tmp5k05tddd/de27c42d-6af0-45d8-bc3b-7e61f6cca362/x.py
+tmp5k05tddd/de27c42d-6af0-45d8-bc3b-7e61f6cca362/wrapper.sh
+tmp5k05tddd/de27c42d-6af0-45d8-bc3b-7e61f6cca362/script.Rmd
+tmp5k05tddd/de27c42d-6af0-45d8-bc3b-7e61f6cca362/4314b317-d3dd-40b6-ad21-20d6ad67ee1e/
+tmp5k05tddd/de27c42d-6af0-45d8-bc3b-7e61f6cca362/runner.R
+tmp5k05tddd/de27c42d-6af0-45d8-bc3b-7e61f6cca362/inputs.json
+Requirement already satisfied (use --upgrade to upgrade): requests in /usr/lib/python2.7/site-packages
+You are using pip version 18.1, however version 20.0.2 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+{"job": {"status": "running", "created_at": "2020-03-10T04:25:18.576", "results_url": "/jobs/61567/", "jobs": []}}Making sure longbowtools package is available for runner
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
+> 
+> 
+Installing pandoc
+pandoc-2.3.1/
+pandoc-2.3.1/bin/
+pandoc-2.3.1/bin/pandoc
+pandoc-2.3.1/bin/pandoc-citeproc
+pandoc-2.3.1/share/
+pandoc-2.3.1/share/man/
+pandoc-2.3.1/share/man/man1/
+pandoc-2.3.1/share/man/man1/pandoc.1.gz
+pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
+Running provision script
+skipping provisioning because this is a child job
+Making sure longbowtools package is available for runner
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
+> 
+> 
+Starting analysis
+
+
+processing file: REPORT.Rmd
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
+  ordinary text without R code
+
+  |                                                                              |.....                                                                 |   8%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |........                                                              |  12%
+  ordinary text without R code
+
+  |                                                                              |...........                                                           |  15%
+label: params (with options) 
+List of 2
+ $ warning: logi FALSE
+ $ message: logi FALSE
+
+Loading required package: graphics
+earlybfc("arm", "sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec", "W_mhtcm", "W_mwtkg", "W_mbmi", "W_fhtcm", "vagbrth", "hdlvry", "W_gagebrth", "W_birthwt", "W_birthlen", "single", "W_nrooms", "W_nhh", "W_nchldlt5", "brthmon", "W_parity", "trth2o", "cleanck", "impfloor", "impsan", "safeh20")hazidc("agecat", "studyid", "country")
+TRUEFALSETRUEFALSENULL
+  |                                                                              |.............                                                         |  19%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  23%
+label: preprocessing
+  |                                                                              |...................                                                   |  27%
+   inline R code fragments
+
+  |                                                                              |......................                                                |  31%
+label: print_adjustment_set (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |........................                                              |  35%
+  ordinary text without R code
+
+  |                                                                              |...........................                                           |  38%
+label: print_strata_variables (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |..............................                                        |  42%
+  ordinary text without R code
+
+  |                                                                              |................................                                      |  46%
+label: data_summary
+  |                                                                              |...................................                                   |  50%
+  ordinary text without R code
+
+  |                                                                              |......................................                                |  54%
+label: print_strata (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |........................................                              |  58%
+  ordinary text without R code
+
+  |                                                                              |...........................................                           |  62%
+label: drop_strata (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |..............................................                        |  65%
+  ordinary text without R code
+
+  |                                                                              |................................................                      |  69%
+label: stratified_tmle (with options) 
+List of 1
+ $ message: logi FALSE
+
+tmle for:	agecat: Birth, studyid: EE, country: PAKISTAN
+tmle for:	agecat: Birth, studyid: GMS-Nepal, country: NEPAL
+tmle for:	agecat: Birth, studyid: JiVitA-3, country: BANGLADESH
+tmle for:	agecat: Birth, studyid: JiVitA-4, country: BANGLADESH
+tmle for:	agecat: Birth, studyid: MAL-ED, country: BANGLADESH
+tmle for:	agecat: Birth, studyid: MAL-ED, country: BRAZIL
+tmle for:	agecat: Birth, studyid: MAL-ED, country: INDIA
+tmle for:	agecat: Birth, studyid: MAL-ED, country: NEPAL
+tmle for:	agecat: Birth, studyid: MAL-ED, country: PERU
+tmle for:	agecat: Birth, studyid: MAL-ED, country: SOUTH AFRICA
+tmle for:	agecat: Birth, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+tmle for:	agecat: Birth, studyid: NIH-Crypto, country: BANGLADESH
+tmle for:	agecat: Birth, studyid: SAS-CompFeed, country: INDIA
+tmle for:	agecat: Birth, studyid: ZVITAMBO, country: ZIMBABWE
+tmle for:	agecat: 6 months, studyid: EE, country: PAKISTAN
+tmle for:	agecat: 6 months, studyid: GMS-Nepal, country: NEPAL
+tmle for:	agecat: 6 months, studyid: JiVitA-3, country: BANGLADESH
+tmle for:	agecat: 6 months, studyid: JiVitA-4, country: BANGLADESH
+tmle for:	agecat: 6 months, studyid: MAL-ED, country: BANGLADESH
+tmle for:	agecat: 6 months, studyid: MAL-ED, country: BRAZIL
+tmle for:	agecat: 6 months, studyid: MAL-ED, country: INDIA
+tmle for:	agecat: 6 months, studyid: MAL-ED, country: NEPAL
+tmle for:	agecat: 6 months, studyid: MAL-ED, country: PERU
+tmle for:	agecat: 6 months, studyid: MAL-ED, country: SOUTH AFRICA
+tmle for:	agecat: 6 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+tmle for:	agecat: 6 months, studyid: NIH-Crypto, country: BANGLADESH
+tmle for:	agecat: 6 months, studyid: SAS-CompFeed, country: INDIA
+tmle for:	agecat: 6 months, studyid: ZVITAMBO, country: ZIMBABWE
+tmle for:	agecat: 24 months, studyid: EE, country: PAKISTAN
+tmle for:	agecat: 24 months, studyid: GMS-Nepal, country: NEPAL
+tmle for:	agecat: 24 months, studyid: JiVitA-4, country: BANGLADESH
+tmle for:	agecat: 24 months, studyid: MAL-ED, country: BANGLADESH
+tmle for:	agecat: 24 months, studyid: MAL-ED, country: BRAZIL
+tmle for:	agecat: 24 months, studyid: MAL-ED, country: INDIA
+tmle for:	agecat: 24 months, studyid: MAL-ED, country: NEPAL
+tmle for:	agecat: 24 months, studyid: MAL-ED, country: PERU
+tmle for:	agecat: 24 months, studyid: MAL-ED, country: SOUTH AFRICA
+tmle for:	agecat: 24 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
+tmle for:	agecat: 24 months, studyid: NIH-Crypto, country: BANGLADESH
+tmle for:	agecat: 24 months, studyid: ZVITAMBO, country: ZIMBABWE
+  |                                                                              |...................................................                   |  73%
+  ordinary text without R code
+
+  |                                                                              |......................................................                |  77%
+label: save_results
+  |                                                                              |.........................................................             |  81%
+  ordinary text without R code
+
+  |                                                                              |...........................................................           |  85%
+label: plot_tsm (with options) 
+List of 2
+ $ warning: logi FALSE
+ $ message: logi FALSE
+
+  |                                                                              |..............................................................        |  88%
+  ordinary text without R code
+
+  |                                                                              |.................................................................     |  92%
+label: plot_rr (with options) 
+List of 2
+ $ warning: logi FALSE
+ $ message: logi FALSE
+
+  |                                                                              |...................................................................   |  96%
+  ordinary text without R code
+
+  |                                                                              |......................................................................| 100%
+label: results_tables (with options) 
+List of 1
+ $ results: chr "asis"
+
+
+output file: REPORT.knit.md
+
+/usr/local/pandoc/pandoc-1.17/pandoc +RTS -K512m -RTS REPORT.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output /tmp/de27c42d-6af0-45d8-bc3b-7e61f6cca362/4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /home/andrew.mertens/rlibs/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/Rtmp4wKznc/rmarkdown-str2e4a1d6530b7.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' 
+
+Output created: 4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT.html
+[1] "/tmp/de27c42d-6af0-45d8-bc3b-7e61f6cca362/4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT.html"
+Running analysis succeeded
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT.Rmd
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/inputs.json
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/obs_counts.rdata
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/results.rdata
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT_files/
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT_files/figure-html/
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT_files/figure-html/plot_tsm-1.png
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT.html
+4314b317-d3dd-40b6-ad21-20d6ad67ee1e/REPORT.md
+{"status": "executed"}
