@@ -64,7 +64,7 @@ d <- droplevels(d)
 p <-  ggplot(d, aes(x=(studyid))) + 
   geom_point(aes(shape=pooled, y=RR, fill=region, color=region), size = 4) +
   geom_errorbar(aes(ymin=RR.CI1, ymax=RR.CI2, color=region)) +
-  coord_flip(ylim=range(0.75,10)) +
+  coord_flip(ylim=range(0.75,2.5)) +
   #labs(x = "Study-specific results stratified by risk factor level\nwith reference category N's and cases printed", y = Ylab) +
   ylab("Girls have                                        Boys have\nhigher risk                                       higher risk") +
   xlab("Cohort") +
@@ -73,7 +73,7 @@ p <-  ggplot(d, aes(x=(studyid))) +
   geom_vline(xintercept = 5.5) +
   #geom_text(aes(y=0.5, label=Ns), size=3,  hjust=0) +
   #geom_text(aes(y=3, label=adjustment_set), size=3,  hjust=0) +
-  scale_y_continuous(breaks= c( 0.75, 1.00, 2.00, 4.00, 8.00), trans='log10', labels=scaleFUN) +
+  scale_y_continuous(breaks= c( 0.75, 1.00, 2.00, 4.00), trans='log10', labels=scaleFUN) +
   #scale_x_discrete(labels= df$studyid2) +
   scale_shape_manual(values=c(21, 23)) +
   scale_colour_manual(values=tableau11[c(1,1:5)]) +
@@ -82,14 +82,14 @@ p <-  ggplot(d, aes(x=(studyid))) +
   theme(strip.background = element_blank(),
         legend.position="none",
         strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12, angle = 0, hjust = 1),
+        axis.text.x = element_text(size=12),
         axis.title.x = element_text(size=12, hjust = .1)) +
   ggtitle("Associations between sex and stunting incidence\nfrom birth-24 months: cohort-specific and pooled results") +guides(shape=FALSE)
-#print(p)
+print(p)
 
 
 
-ggsave(p, file=paste0(here::here(), "/figures/risk factor/example_forest_plot_wasting.png"), height=14, width=10)
+ggsave(p, file=paste0(here::here(), "/figures/risk-factor/example_forest_plot_wasting.png"), height=14, width=10)
 
 
 
