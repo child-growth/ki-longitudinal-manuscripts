@@ -1,0 +1,515 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
+> 
+> 
+> #Load haz and whz data
+> d <- readRDS(rf_co_occurrence_path)
+> d <- d %>% subset(., select=-c(tr))
+> 
+> 
+> 
+> #merge WLZ outcomes with covariates
+> cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+> 
+> 
+> cov <- cov %>% subset(., select=-c( region, month, W_gagebrth,    W_birthwt,     W_birthlen,   
++                                     W_mage,        W_mhtcm,       W_mwtkg,       W_mbmi,        W_fage,        W_fhtcm,       W_meducyrs,    W_feducyrs,   
++                                     W_nrooms,      W_nhh,         W_nchldlt5,    W_parity,         
++                                     W_perdiar6,    W_perdiar24))
+> dim(d)
+[1] 714805     14
+> d <- left_join(d, cov, by=c("studyid","country","subjid"))
+Warning message:
+Column `country` joining character vector and factor, coercing into character vector 
+> dim(d)
+[1] 714805     75
+> d <- d %>% filter(agedays < 24 * 30.4167) 
+> d <- subset(d, select = -c(id, arm, tr))
+> dim(d)
+[1] 613408     72
+> 
+> 
+> #N's for figure caption
+> d %>% ungroup() %>%  filter(!is.na(mhtcm)) %>% summarize(N=n(), Nchild=length(unique(paste0(studyid, country, subjid))), Nstudies=length(unique(paste0(studyid, country))))
+# A tibble: 1 x 3
+       N Nchild Nstudies
+   <int>  <int>    <int>
+1 462078  71286       23
+> d %>% ungroup() %>%  filter(!is.na(mwtkg)) %>% summarize(N=n(), Nchild=length(unique(paste0(studyid, country, subjid))), Nstudies=length(unique(paste0(studyid, country))))
+# A tibble: 1 x 3
+       N Nchild Nstudies
+   <int>  <int>    <int>
+1 381160  63551       17
+> d %>% ungroup() %>%  filter(!is.na(mbmi)) %>% summarize(N=n(), Nchild=length(unique(paste0(studyid, country, subjid))),  Nstudies=length(unique(paste0(studyid, country))))
+# A tibble: 1 x 3
+       N Nchild Nstudies
+   <int>  <int>    <int>
+1 373382  61933       17
+> 
+> 
+> #Adapted from: 
+> #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
+> 
+> spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps", mean_aic=F){
++   
++   # LOAD THE PACKAGES (mvmeta PACKAGE IS ASSUMED TO BE INSTALLED)
++   require(mvmeta)
++   require(dlnm)
++   
++   colnames(d)[which(colnames(d)==Avar)] <- "Avar"
++   colnames(d)[which(colnames(d)==Y)] <- "Y"
++   
++   d <- d %>% filter(!is.na(Y) & !is.na(Avar))
++   
++   #Number of exposure levels
++   nlevels <- length(unique(d$Avar))
++   
++   #Number of cohorts
++   d$id <- paste0(d$studyid, d$country,"__", d$Avar)
++   m <- length(unique(d$id))
++   
++   d <- droplevels(d)
++   
++   # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
++   # NOTE: set bound as average bound across studies and knots based on average quantiles, (same as example script, may need to save studies as a list first)
++   # if that fails, set splines specific to each study
++   # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
++   
++   
++   # DEFINE THE AVERAGE RANGE, CENTERING POINT, DEGREE AND TYPE OF THE SPLINE
++   # (THESE PARAMETERS CAN BE CHANGED BY THE USER FOR ADDITIONAL ANALYSES)
++   bound <- c(1,730)
++   degree <- 3
++   df <- 10
++   
++   
++   
++   
++   # BUILT OBJECTS WHERE RESULTS WILL BE STORED:
++   #   ymat IS THE MATRIX FOR THE OUTCOME PARAMETERS
++   #   Slist IS THE LIST WITH (CO)VARIANCE MATRICES
++   ymat <- matrix(NA,m,df,dimnames=list(unique(d$id),paste("spl",seq(df),sep="")))
++   Slist <- vector("list",m)
++   names(Slist) <- unique(d$id)
++   
++   ####################################################################
++   # RUN THE FIRST-STAGE ANALYSIS
++   fullres <-NULL
++   for(i in 1:m){
++     
++     res <- get_df_aic(data=d[d$id==unique(d$id)[i],], splinetype=type, splinedegree=degree, degreefreedom=df)
++     fullres <- bind_rows(fullres, res)
++   }
++   bestdf <- fullres %>% group_by(df) %>% summarize(med_aic=median(aic, na.rm=T), mean_aic=mean(aic, na.rm=T)) 
++   if(mean_aic){ #Use mean when median is too low for fit
++     bestdf <- bestdf %>%  filter(mean_aic==min(mean_aic))
++   }else{
++     bestdf <- bestdf %>%  filter(med_aic==min(med_aic))
++   }
++     
++   bestdf <- bestdf$df
++     bestdf
++   
++   for(i in 1:m){
++     
++     # PRINT ITERATION
++     cat(i,"")
++   
++     # LOAD
++     data <- d[d$id==unique(d$id)[i],]
++     
++ 
++     # CREATE THE SPLINE
++     bt <- onebasis(data$agedays,fun=type,
++                    degree=degree, 
++                    df=bestdf)
++ 
++     # RUN THE MODEL
++     #Note: add cv cross-validation
++     model <- glm(Y ~ bt,family=gaussian(), data)
++     
++     # EXTRACT AND SAVE THE RELATED COEF AND VCOV
++     predbt <- NULL
++     try(predbt <- crosspred(bt,model,cen=cen))
++     if(!is.null(predbt)){
++     ymat[i,1:length(predbt$coef)] <- predbt$coef
++     Slist[[i]] <- predbt$vcov
++     }
++   }
++   
++   Slist <- Filter(Negate(is.null), Slist)
++   #Drop missing columns
++   ymat<-ymat[!is.na(ymat[,1]),]
++   #drop missing rows
++   ymat<-ymat[, colSums(is.na(ymat)) != nrow(ymat)]
++   
++   ####################################################################
++   # PERFORM MULTIVARIATE META-ANALYSIS
++   ####################################################################
++   
++   
++   # 1) MULTIVARIATE META-ANALYSIS
++   if(overall){
++    mv <- mvmeta(ymat,Slist,method="ml")
++    
++    # PREDICTION FROM SIMPLE META-ANALYSES WITH NO PREDICTORS
++    # CENTERED TO SPECIFIC VALUE
++    tmean <- seq(bound[1],bound[2],length=30)
++    btmean <- onebasis(tmean,fun=type, degree=degree, df=bestdf #,
++                       #knots=knots,
++                       #Bound=bound
++                       )
++    cp <- crosspred(btmean,coef=coef(mv),vcov=vcov(mv), by=0.1, cen=cen)
++    return(cp)
++   }else{
++     
++   # 2) MULTIVARIATE META-REGRESSION - Avar-level has to be study specific predictor
++   Avar_lev<- stringr::str_split(rownames(ymat),"__", simplify=T)[,2]
++   (mvlat <- mvmeta(ymat~Avar_lev,Slist,method="reml"))
++   
++   # NB: IN VERSION 0.4.1, CONVERGENCE MAY BE INSPECTED USING THE ARGUMENT:
++   #   control=list(showiter=T)
++   # NB: LESS STRICT CONVERGENCE CRITERIA, USEFUL FOR HIGH DIMENSIONAL
++   #   MODELS, MAY BE SELECTED BY ADDING A reltol ARGUMENT, FOR EXAMPLE:
++   #   control=list(showiter=T,reltol=10^-3)
++   
++   ####################################################################
++   # CREATE BASIS FOR PREDICTION
++   ####################################################################
++   
++   # BASIS USED TO PREDICT AGE, EQUAL TO THAT USED FOR ESTIMATION
++   #   NOTE: INTERNAL AND BOUNDARY KNOTS PLACED AT SAME VALUES AS IN ESTIMATION
++   tmean <- seq(bound[1],bound[2],length=30)
++   btmean <- onebasis(tmean,fun=type)
++                      
++   
++   ####################################################################
++   # PREDICTION FROM MODELS
++   ####################################################################
++   
++   # USE OF crosspred TO PREDICT THE EFFECTS FOR THE CHOSEN VALUES
++ 
++   
++   # COMPUTE PREDICTION FOR MULTIVARIATE META-REGRESSION MODELS
++   #   1ST STEP: PREDICT THE OUTCOME PARAMETERS FOR SPECIFIC VALUES OF META-PREDICTOR
++   #   2ND STEP: PREDICT THE RELATIONSHIP AT CHOSEN VALUES GIVEN THE PARAMETERS
++         
++   predAvar <- predict(mvlat,data.frame(Avar=factor(unique(d$Avar))),vcov=T)
++   predlist <- list()
++   for(i in 1:nlevels){
++     pred <- crosspred(btmean,coef=predAvar[[i]]$fit,vcov=predAvar[[i]]$vcov, model.link="log",by=0.1,cen=cen)
++     predlist[[i]] <- pred 
++   }
++   names(predlist) <- unique(d$Avar)
++   return(predlist)
++   }
++ }
+> 
+> 
+> create_plotdf <- function(predlist, overall=F, stratlevel=NULL){
++   if(overall){
++       df <- data.frame(
++         level=stratlevel,
++         agedays=as.numeric(rownames(predlist$matfit)),
++         est=predlist$matfit[,1],
++         se=predlist$matse[,1]
++       )
++       df <- df %>%
++         mutate(ci.lb=est-1.96*se,
++                ci.ub=est+1.96*se)
++   }else{
++     df <- NULL
++     for(i in 1:length(predlist)){
++       temp <- data.frame(
++         level=names(predlist)[i],
++         agedays=as.numeric(rownames(predlist[[i]]$matfit)),
++         est=predlist[[i]]$matfit[,1],
++         se=predlist[[i]]$matse[,1]
++       )
++       temp <- temp %>%
++         mutate(ci.lb=est-1.96*se,
++                ci.ub=est+1.96*se)
++       df <- rbind(df, temp)
++     }
++   }
++     return(df)    
++ }
+> 
+> 
+> offset_fun <- function(d, Y="haz", Avar, cen=365, range=60){
++   
++   df <- d[!is.na(d[,Avar]),]
++   
++   df <- df %>% filter(agedays < cen + range & agedays > cen - range) %>% mutate(agecat="first", agecat=factor(agecat)) 
++   
++   z.summary <- cohort.summary(d=df, var=Y, ci=F, continious=T, severe=F, minN=50, measure="",  strata=c("region","studyid","country","agecat",Avar))
++   z.res <- summarize_over_strata(cohort.sum=z.summary, proportion=F, continious=T, measure = "GEN",  method = "REML", strata=c("region","studyid","country","agecat",Avar),  region=F, cohort=F)
++   
++   z.res <- data.frame(level=z.res[,2], offset=z.res[,5])
++   return(z.res)
++ } 
+>   
+> 
+> #Function to pick degrees of freedom from lowest mean AIC across cohorts
+> get_df_aic <- function(data, splinetype=type, splinedegree=degree, degreefreedom=df){
++   res <- NULL
++   for(i in splinedegree:degreefreedom){
++     # CREATE THE SPLINE
++     bt <- onebasis(data$agedays,fun=splinetype,
++                    degree=splinedegree, 
++                    df=i)
++     
++     # RUN THE MODEL
++     #Note: add cv cross-validation
++     model <- glm(Y ~ bt,family=gaussian(), data)
++     
++     res <- bind_rows(res, data.frame(cohort=data$id[1] , df=i, aic=model$aic))    
++   }
++ 
++ return(res)
++ 
++ }
+> 
+> #------------------------------------------------------------------------------------------------
+> # WLZ- maternal weight
+> #------------------------------------------------------------------------------------------------
+> 
+> predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
+Loading required package: mvmeta
+This is mvmeta 1.0.3. For an overview type: help('mvmeta-package').
+
+Attaching package: ‘mvmeta’
+
+The following object is masked from ‘package:metafor’:
+
+    blup
+
+Loading required package: dlnm
+Error in onebasis(data$agedays, fun = splinetype, degree = splinedegree,  : 
+  could not find function "onebasis"
+Calls: spline_meta -> get_df_aic
+In addition: Warning message:
+In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
+  there is no package called ‘dlnm’
+Execution halted

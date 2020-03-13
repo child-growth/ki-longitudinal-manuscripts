@@ -13,7 +13,7 @@ results_full <- readRDS(here("results/rf results/raw longbow results/opttx_vim_r
 
 
 #Load subset run after full longbow job errored 80% of the way through
-results_sub <-readRDS(here("results/rf results/raw longbow results/opttx_vim_results_subset_2020-03-11.RDS"))
+results_sub <-readRDS(here("results/rf results/raw longbow results/opttx_vim_results_subset_2020-03-13.RDS"))
  
 
 #load seasonal VIM
