@@ -9,16 +9,16 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-load(here("results/rf results/raw longbow results/opttx_vim_results_2019-11-18.rdata"))
-results_full <- results
+results_full <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-03-11.RDS"))
+
 
 #Load subset run after full longbow job errored 80% of the way through
-load(here("results/rf results/raw longbow results/opttx_vim_results_subset_2019-11-18.rdata"))
-results_sub <- results
+results_sub <-readRDS(here("results/rf results/raw longbow results/opttx_vim_results_subset_2020-03-11.RDS"))
+ 
 
 #load seasonal VIM
-load(here("results/rf results/raw longbow results/opttx_vim_season_results_2019-12-17.rdata"))
-results_season <- results
+results_season <-readRDS(here("results/rf results/raw longbow results/opttx_vim_season_results_2020-03-10.RDS"))
+ 
 
 results <- rbind(results_full, results_sub, results_season)
 

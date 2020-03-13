@@ -17,14 +17,14 @@ inputs <- "inputs_template.json"
 default_params <- fromJSON(inputs)
 
 #Load existing results
-load(here("results/rf results/raw longbow results/opttx_vim_results_2019-11-18.rdata"))   
+results <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-03-11.RDS"))   
 
 
 # # Continious
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
-analyses$count_Y <- FALSE
-analyses$maximize <- TRUE
+default_params$script_params$maximize <- TRUE
+default_params$script_params$count_Y <- FALSE
 
 
 #Subset analysis to jobs not yet run
@@ -33,26 +33,7 @@ analyses <- analyses %>% filter((Y == "whz" & !(A %in% results$intervention_vari
                                 (Y == "haz" & !(A %in% results$intervention_variable[results$outcome_variable=="haz"])))
 table(analyses$A, analyses$Y)
 
-#analyses_2 <- analyses
-#analyses <- rbindlist(list(analyses_2, analyses_1), fill=TRUE)
-analyses$file <- sprintf("Manuscript analysis data/%s",analyses$file)
-analyses <- analyses %>% filter(!(A %in% c("sex","brthmon", "month","gagebrth","birthwt","birthlen", "enstunt", "vagbrth")))
-
-
-
-
-i=1
-enumerated_analyses <- lapply(seq_len(nrow(analyses)),function(i){
-  analysis <- analyses[i,]
-  analysis_params <- default_params
-  analysis_nodes <- as.list(analysis)[c("W","A","Y","strata","id")]
-  analysis_nodes$W <- gsub("W_bmi", "W_mbmi", analysis_nodes$W[[1]])
-  analysis_params$nodes <- analysis_nodes
-  analysis_params$data$repository_path <- analysis$file
-  analysis_params$script_params$count_Y <- analysis$count_Y
-  analysis_params$script_params$maximize <- analysis$maximize
-  return(analysis_params)
-})
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 writeLines(toJSON(enumerated_analyses),"sub_analyses.json")
 
@@ -60,7 +41,6 @@ writeLines(toJSON(enumerated_analyses),"sub_analyses.json")
 
 
 # 2. run batch
-
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 
@@ -72,6 +52,7 @@ rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "sub_analyses.json"
 batch_id <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
+batch_id
 
 # wait for the batch to finish and track progress
 wait_for_batch(batch_id)
