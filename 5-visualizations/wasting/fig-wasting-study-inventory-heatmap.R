@@ -194,7 +194,7 @@ hm <- ggplot(dd,aes(x=as.numeric(agecat),y=studycountry)) +
     #set x axis text size and colour
     axis.text.x=element_text(size=8,colour=textcol,angle=0,vjust=0.5),
     #set y axis text colour and adjust vertical justification
-    axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
+    axis.text.y=element_text(size=8,vjust = 0.5,colour=textcol),
     #change axis ticks thickness
     axis.ticks=element_line(size=0.4),
     # axis.ticks.x=element_blank(),
@@ -329,8 +329,10 @@ nagebar <- ggplot(dd, aes(y = N/1000, x = as.numeric(agecat))) +
 
 # add margin around plots
 wastphm2 = wastphm + theme(plot.margin = unit(c(0, 0.25, 0, 0.25), "cm"))
-wpbar2 = wpbar + theme(plot.margin = unit(c(1.1,0.3,1.08,0.1), "cm"))
-nbar2 = nbar + theme(plot.margin = unit(c(1.1,0.25,1.08,0.1), "cm"))
+# wpbar2 = wpbar + theme(plot.margin = unit(c(1.6,0.3,0.9,0.1), "cm"))
+# nbar2 = nbar + theme(plot.margin = unit(c(1.6,0.25,0.9,0.1), "cm"))
+nbar2 = nbar + theme(plot.margin = unit(c(1,0.25,1.3,0.1), "cm"))
+wpbar2 = wpbar + theme(plot.margin = unit(c(1,0.3,1.3,0.1), "cm"))
 nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.13, -0.9 ,4.05), "cm"))
 empty <- grid::textGrob("")
 
