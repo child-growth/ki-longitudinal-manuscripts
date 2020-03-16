@@ -67,7 +67,6 @@ RMAest_season_index <- d %>% group_by(seasonality_category, intervention_variabl
 df <- rbind(RMAest, RMAest_season_index)
 
 
-
 #Add reference level to labe
 df$RFlabel_ref <- paste0(df$RFlabel, ", ref: ", df$baseline_level)
 
