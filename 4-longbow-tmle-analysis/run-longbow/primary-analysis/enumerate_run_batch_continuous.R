@@ -31,7 +31,7 @@ dim(analyses)
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
-writeLines(toJSON(enumerated_analyses[[1]]),"single_cont_analysis.json")
+writeLines(toJSON(enumerated_analyses[[17]]),"single_cont_analysis.json")
 writeLines(toJSON(enumerated_analyses),"all_cont_analyses.json")
 
 
@@ -39,11 +39,10 @@ writeLines(toJSON(enumerated_analyses),"all_cont_analyses.json")
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
-# inputs <- "inputs_template.json"
-#inputs <- "single_cont_analysis.json"
+inputs <- "single_cont_analysis.json"
 
 #run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_cont_analyses.json"

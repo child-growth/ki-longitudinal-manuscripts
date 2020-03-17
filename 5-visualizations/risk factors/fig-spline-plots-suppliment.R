@@ -96,7 +96,7 @@ ggsave(res[[1]], file=paste0(here(),"/figures/risk-factor/spline-plots/",outcome
 
 
 #Save plot data
-saveRDS(res[[2]],  file=paste0(here(),"/figures/risk factor/figure-data/",outcome,"-",Avar,"-spline.RDS"))
+saveRDS(res[[2]],  file=paste0(here(),"/figures/risk-factor/figure-data/",outcome,"-",Avar,"-spline.RDS"))
 
 
 #Make LAZ plot here:
