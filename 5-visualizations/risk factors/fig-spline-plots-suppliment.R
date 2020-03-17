@@ -92,7 +92,7 @@ outcome="whz"
 res <- rf_spline_meta(d=d, Avar="hhwealth_quart", outcome="whz", degree=6)
 print(res[[1]])
 
-ggsave(res[[1]], file=paste0(here(),"/figures/risk factor/spline plots/",outcome,"-",Avar,"-spline.png"), width=6, height=6)
+ggsave(res[[1]], file=paste0(here(),"/figures/risk-factor/spline-plots/",outcome,"-",Avar,"-spline.png"), width=6, height=6)
 
 
 #Save plot data

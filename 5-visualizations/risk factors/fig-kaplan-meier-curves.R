@@ -15,7 +15,7 @@ d <- d %>% mutate(status = dead+1) #%>%
 d$maxage[d$maxage>730] <- 730
 
 #Load wasting measures
-load(paste0(ghapdata_dir,"mort_exposures.rdata"))
+load(paste0(ghapdata_dir,"mort_exposures.RData"))
 
 
 #Join in growth measures
@@ -73,9 +73,7 @@ p6 <- surv_plot(df=d, Avar="ever_underweight06",  legend_labs= c("Not underwight
 p7 <- surv_plot(df=d, Avar="ever_sunderweight06",  legend_labs= c("Not Severely underwight <6mo", "Severely underwight <6mo"))
 p8 <- surv_plot(df=d, Avar="ever_co06",  legend_labs= c("Not wasted and stunted <6mo", "Wasted and stunted <6mo"))
 
-
-saveRDS(list(p1, p2, p3, p4, p5, p6, p7, p8), file=paste0(here::here(),"/figures/plot objects/kaplan_meier_objects.RDS"))
-saveRDS(list(p1, p2, p3, p4, p5, p6, p7, p8), file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/plot objects/kaplan_meier_objects.RDS"))
+saveRDS(list(p1, p2, p3, p4, p5, p6, p7, p8), file=paste0(here::here(),"/figures/plot-objects/risk-factor/kaplan_meier_objects.RDS"))
 
 
   
