@@ -18,8 +18,8 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-vel = readRDS(paste0(res_dir, "stunt_velocity_incage.RDS"))
-vel_monthly = readRDS(paste0(res_dir, "stunt_velocity_incage_monthly.RDS"))
+vel = readRDS(paste0(res_dir, "/stunt_velocity_incage.RDS"))
+vel_monthly = readRDS(paste0(res_dir, "/stunt_velocity_incage_monthly.RDS"))
 
 # define color palette
 cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")

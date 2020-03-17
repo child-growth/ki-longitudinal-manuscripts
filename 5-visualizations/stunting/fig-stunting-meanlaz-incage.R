@@ -18,8 +18,8 @@
 rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 
-plotdf = readRDS(paste0(res_dir, "meanlaz_age_incage.RDS"))
-plotdf_monthly = readRDS(paste0(res_dir, "meanlaz_age_incage_monthly.RDS"))
+plotdf = readRDS(paste0(res_dir, "/meanlaz_age_incage.RDS"))
+plotdf_monthly = readRDS(paste0(res_dir, "/meanlaz_age_incage_monthly.RDS"))
 
 prep_data = function(data){
   data$agecat <- as.character(data$agecat)

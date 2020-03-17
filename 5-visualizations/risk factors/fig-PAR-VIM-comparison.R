@@ -52,8 +52,8 @@ is_outlier <- function(x, thres=1.5) {
 
 
 
-dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=2.5), as.character(dhaz$RFlabel.x),NA)
-dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.5), as.character(dwhz$RFlabel.x),NA)
+dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=3), as.character(dhaz$RFlabel.x),NA)
+dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.35), as.character(dwhz$RFlabel.x),NA)
 dhaz$is_outlier <- ifelse(is.na(dhaz$outlier), "0", "1")
 dwhz$is_outlier <- ifelse(is.na(dwhz$outlier), "0", "1")
 dhaz$outlier
@@ -161,6 +161,8 @@ pVIMwhz
 
 
 save(pVIMhaz, pVIMwhz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
+saveRDS(pVIMhaz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-LAZ.RDS"))
+saveRDS(pVIMwhz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-WLZ.RDS"))
 
 
 
