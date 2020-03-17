@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+Warning: namespace ‘ggmap’ is not available and has been replaced
+by .GlobalEnv when processing object ‘p2embed’
 [Previously saved workspace restored]
 
 > 
@@ -371,4 +373,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-  6.185   0.349   6.564 
+ 10.478   0.884  16.997 

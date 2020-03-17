@@ -303,19 +303,19 @@ In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
 +   mutate(PAF=PAR/prev*100, PAF.CI1=CI1/prev*100, PAF.CI2=CI2/prev*100)
 > summary(df2$PAR)
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.7760307 -0.0059765  0.0009994 -0.0018765  0.0094086  0.7109762 
+-0.7760307 -0.0059765  0.0009994 -0.0017885  0.0094086  0.7109762 
 > summary(df2$prev)
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 -3.03475  0.02557  0.12915  0.21532  0.39488  3.72341 
 > summary(df2$PAF)
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--6400.836    -0.892     1.642     3.543     9.385  2473.401 
+-6400.836    -0.892     1.642     3.539     9.375  2473.401 
 > summary(df2$PAF.CI1)
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--22992.457     -7.637     -1.304     -5.177      4.362   6728.350 
+-22992.457     -7.637     -1.304     -5.184      4.362   6728.350 
 > summary(df2$PAF.CI2)
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--7560.919     0.419     5.909    12.262    20.500 10190.786 
+-7560.919     0.419     5.905    12.262    20.500 10190.786 
 > 
 > #------------------------------------------
 > # Check that pooled estimate is reasonable:
@@ -361,4 +361,4 @@ In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
 > 
 > proc.time()
    user  system elapsed 
- 78.559   2.240  82.346 
+ 96.282   2.751 161.369 

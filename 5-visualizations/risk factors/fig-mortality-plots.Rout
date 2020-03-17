@@ -684,4 +684,4 @@ Persistently wasted             Stunted         Underweight              Wasted
 > 
 > proc.time()
    user  system elapsed 
-  9.713   0.454  10.151 
+ 11.999   0.582  19.759 

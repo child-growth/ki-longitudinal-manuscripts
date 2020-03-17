@@ -222,5 +222,65 @@ The following objects are masked from ‘package:base’:
 Warning message:
 New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > library(survminer)
-Error in library(survminer) : there is no package called ‘survminer’
+Loading required package: ggpubr
+Loading required package: magrittr
+
+Attaching package: ‘magrittr’
+
+The following object is masked from ‘package:rlang’:
+
+    set_names
+
+The following object is masked from ‘package:purrr’:
+
+    set_names
+
+The following object is masked from ‘package:tidyr’:
+
+    extract
+
+
+Attaching package: ‘ggpubr’
+
+The following object is masked _by_ ‘.GlobalEnv’:
+
+    mean_sd
+
+> library(cowplot)
+
+********************************************************
+Note: As of version 1.0.0, cowplot does not change the
+  default ggplot2 theme anymore. To recover the previous
+  behavior, execute:
+  theme_set(theme_cowplot())
+********************************************************
+
+
+Attaching package: ‘cowplot’
+
+The following object is masked from ‘package:ggpubr’:
+
+    get_legend
+
+The following object is masked from ‘package:ggthemes’:
+
+    theme_map
+
+> 
+> #read in mortality data
+> d <- readRDS(mortality_path)
+> 
+> #transform data to form for survfit() function
+> d <- d %>% mutate(status = dead+1) #%>%
+>           #filter(maxage <= 730)
+> 
+> d$maxage[d$maxage>730] <- 730
+> 
+> #Load wasting measures
+> load(paste0(ghapdata_dir,"mort_exposures.rdata"))
+Error in readChar(con, 5L, useBytes = TRUE) : cannot open the connection
+Calls: load -> readChar
+In addition: Warning message:
+In readChar(con, 5L, useBytes = TRUE) :
+  cannot open compressed file '/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/mort_exposures.rdata', probable reason 'No such file or directory'
 Execution halted

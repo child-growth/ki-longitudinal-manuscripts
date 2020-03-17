@@ -851,5 +851,5 @@ Removed 669 rows containing missing values (geom_path).
 > 
 > 
 > proc.time()
-   user  system elapsed 
-459.771 172.541 668.924 
+    user   system  elapsed 
+ 460.730  195.327 1110.164 

@@ -225,10 +225,12 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 > 
-> Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-03-07.rds"))
+> Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-03-07.RDS"))
+> 
+> bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-03-08.rds"))
 Error in gzfile(file, "rb") : cannot open the connection
 Calls: readRDS -> gzfile
 In addition: Warning message:
 In gzfile(file, "rb") :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts//results/rf results/raw longbow results/results_cont_2020-03-07.rds', probable reason 'No such file or directory'
+  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts//results/rf results/raw longbow results/results_bin_2020-03-08.rds', probable reason 'No such file or directory'
 Execution halted

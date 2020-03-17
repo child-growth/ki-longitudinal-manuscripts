@@ -841,10 +841,86 @@ Normal weight   Underweight
 > 
 > 
 > #Save plot objects
-> saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot-objects/risk-factor//rf_spline_objects.RDS"))
-Error in gzfile(file, mode) : cannot open the connection
-Calls: saveRDS -> gzfile
-In addition: Warning message:
-In gzfile(file, mode) :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/plot-objects/risk-factor//rf_spline_objects.RDS', probable reason 'No such file or directory'
-Execution halted
+> saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
+> 
+> #save plot data
+> saveRDS(list(plotdf_wlz_mwtkg,plotdf_laz_mwtkg,plotdf_wlz_mhtcm,plotdf_laz_mhtcm,plotdf_wlz_mbmi,plotdf_laz_mbmi), 
++         file=paste0(here(),"/figures/risk-factor/figure-data/rf_spline_data.RDS"))
+> 
+> #------------------------------------------------------------------------------------------------
+> # Plot as a grid
+> #------------------------------------------------------------------------------------------------
+> 
+> pos = c(0.2,0.25)
+> 
+> p1 <- p1 + ggtitle("Spline curves of WLZ, stratified by\ncategories of maternal weight") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +  guides(color = guide_legend("Maternal\nweight", nrow=3)) +scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+Scale for 'y' is already present. Adding another scale for 'y', which will
+replace the existing scale.
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+> p2 <- p2  + ggtitle("Stratified by\ncategories of maternal height") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6))+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
+Scale for 'y' is already present. Adding another scale for 'y', which will
+replace the existing scale.
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+> p3 <- p3  + ggtitle("Spline curves of LAZ, stratified by\ncategories of maternal weight") + theme(legend.position = "none") + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + theme(legend.key = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+Scale for 'y' is already present. Adding another scale for 'y', which will
+replace the existing scale.
+> p4 <- p4  + ggtitle("Stratified by\ncategories of maternal height") +  theme(legend.position = "none") +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+Scale for 'y' is already present. Adding another scale for 'y', which will
+replace the existing scale.
+> p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) 
+Scale for 'colour' is already present. Adding another scale for 'colour',
+which will replace the existing scale.
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+Scale for 'y' is already present. Adding another scale for 'y', which will
+replace the existing scale.
+> p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none")+ scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+Scale for 'y' is already present. Adding another scale for 'y', which will
+replace the existing scale.
+> 
+> 
+> 
+> # Combine plot objects
+> 
+> require(cowplot)
+Loading required package: cowplot
+
+********************************************************
+Note: As of version 1.0.0, cowplot does not change the
+  default ggplot2 theme anymore. To recover the previous
+  behavior, execute:
+  theme_set(theme_cowplot())
+********************************************************
+
+
+Attaching package: ‘cowplot’
+
+The following object is masked from ‘package:ggthemes’:
+
+    theme_map
+
+> 
+> p_grid <- plot_grid(p1, p3, p2, p4, p5, p6,  labels = rep("",6), ncol = 2, align = 'v', axis = 'l')
+> 
+> ggsave(p_grid, file=paste0(here(),"/figures/risk-factor/spline_grid.png"), width=10, height=10)
+> 
+> 
+> ggsave(p1, file=paste0(here(),"/figures/risk-factor/spline_wlz_mwtkg.png"), width=10, height=5)
+> ggsave(p2, file=paste0(here(),"/figures/risk-factor/spline_wlz_mhtcm.png"), width=10, height=5)
+> ggsave(p3, file=paste0(here(),"/figures/risk-factor/spline_laz_mwtkg.png"), width=10, height=5)
+> ggsave(p4, file=paste0(here(),"/figures/risk-factor/spline_laz_mhtcm.png"), width=10, height=5)
+> ggsave(p5, file=paste0(here(),"/figures/risk-factor/spline_wlz_mbmi.png"), width=10, height=5)
+> ggsave(p6, file=paste0(here(),"/figures/risk-factor/spline_laz_mbmi.png"), width=10, height=5)
+> 
+> 
+> proc.time()
+    user   system  elapsed 
+ 532.565  188.749 1341.254 

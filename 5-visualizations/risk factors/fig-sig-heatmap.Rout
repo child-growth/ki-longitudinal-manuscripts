@@ -359,11 +359,11 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > d$pval <- exp(-0.717*abs(d$Z) - 0.416*d$Z^2)
 > summary(d$pval)
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-0.000000 0.007327 0.172406 0.294528 0.538938 0.999172 
+0.000000 0.007353 0.172842 0.294623 0.538938 0.999172 
 > 
 > d$sig <- ifelse(d$pval < 0.05, 1, 0)
 > mean(d$sig)
-[1] 0.3585612
+[1] 0.3582734
 > 
 > #Get direction of estimate
 > d$sign <- sign(d$est)
@@ -378,9 +378,9 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 <0.001 decrease risk <0.001 increase risk  <0.05 decrease risk 
                   53                  623                   71 
  <0.05 increase risk   <0.2 decrease risk   <0.2 increase risk 
-                 499                  105                  473 
+                 498                  105                  473 
                0.2-1 
-                1651 
+                1652 
 > d$pval_cat <- factor(d$pval_cat, levels = c("<0.001 decrease risk", "<0.05 decrease risk", "<0.2 decrease risk", "0.2-1", "<0.2 increase risk", "<0.05 increase risk", "<0.001 increase risk"))
 > 
 > 
@@ -711,4 +711,4 @@ Levels: Pooled South Asia Africa Latin America
 > 
 > proc.time()
    user  system elapsed 
-  7.679   0.388   8.077 
+  9.219   0.651  15.018 
