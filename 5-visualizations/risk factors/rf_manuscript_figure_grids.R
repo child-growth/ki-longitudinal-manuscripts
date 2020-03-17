@@ -52,7 +52,7 @@ ggsave(fig2, file=paste0(here(),"/figures/manuscript-figure-composites/risk-fact
 #Figure 3
 p_severecomp <- readRDS(here("/results/fig-severe-outcome-comps.RDS"))[[1]]
 p_ageRR <- readRDS(here("/results/fig-age-strat-wast-plot-objects.RDS"))[[1]]
-splines <- readRDS(here("/results/rf_spline_objects.RDS"))
+splines <- readRDS(here("/figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
 
 #pos = c(0.75,0.83) #For 2 panels
 #pos = c(0.45,0.83)
