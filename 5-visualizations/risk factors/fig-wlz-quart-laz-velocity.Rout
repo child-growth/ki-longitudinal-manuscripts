@@ -267,9 +267,9 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > ggsave(plen_lagwhz, file=here("figures/risk-factor/fig-WLZ-quart-len-vel.png"), height=4, width=10)
 > 
 > saveRDS(plen_lagwhz, file=here("figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds"))
-Error in gzfile(file, mode) : cannot open the connection
-Calls: saveRDS -> gzfile
-In addition: Warning message:
-In gzfile(file, mode) :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds', probable reason 'No such file or directory'
-Execution halted
+> saveRDS(plen_plotdf, file=here("figures/risk-factor/figure-data/fig-WLZ-quart-len-vel.rds"))
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  6.569   0.524  10.006 

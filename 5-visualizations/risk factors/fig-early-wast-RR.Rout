@@ -306,9 +306,9 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > ggsave(p_earlywast, file=here("figures/risk-factor/fig-wasting-prior-to-stunting.png"), height=4, width=10)
 > 
 > saveRDS(plotdf2, file=here("figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds"))
-Error in gzfile(file, mode) : cannot open the connection
-Calls: saveRDS -> gzfile
-In addition: Warning message:
-In gzfile(file, mode) :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds', probable reason 'No such file or directory'
-Execution halted
+> saveRDS(p_earlywast, file=here("figures/plot-objects/risk-factor/fig-wasting-prior-to-stunting.rds"))
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  9.877   0.992  21.665 

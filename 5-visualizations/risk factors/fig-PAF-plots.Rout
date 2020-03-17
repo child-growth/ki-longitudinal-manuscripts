@@ -434,7 +434,10 @@ The following object is masked from ‘package:ggthemes’:
 > plot_PAF = plot_grid(pPAF_stunt, pPAF_wast, labels = c("A","B"), ncol = 2, nrow = 1)
 > 
 > ggsave(plot_PAF, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-PAF.png"), height=14, width=14)
-Error in grid.newpage() : 
-  could not open file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/manuscript-figure-composites/risk-factor/extended-data/fig-PAF.png'
-Calls: ggsave ... grid.draw.ggplot -> print -> print.ggplot -> grid.newpage
-Execution halted
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  7.856   0.601  15.981 

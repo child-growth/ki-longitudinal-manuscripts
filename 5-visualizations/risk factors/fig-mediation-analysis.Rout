@@ -226,10 +226,10 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 > 
 > #Load mediation results
-> load(here("results/rf results/raw longbow results/mediation_2019-11-18.rdata"))
-Error in readChar(con, 5L, useBytes = TRUE) : cannot open the connection
-Calls: load -> readChar
+> results <- readRDS(here("results/rf results/raw longbow results/mediation_2020-03-08.rds"))
+Error in gzfile(file, "rb") : cannot open the connection
+Calls: readRDS -> gzfile
 In addition: Warning message:
-In readChar(con, 5L, useBytes = TRUE) :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/raw longbow results/mediation_2019-11-18.rdata', probable reason 'No such file or directory'
+In gzfile(file, "rb") :
+  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results/rf results/raw longbow results/mediation_2020-03-08.rds', probable reason 'No such file or directory'
 Execution halted

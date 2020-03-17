@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > #-----------------------------------
 > # study-inventory-heatmaps.R
 > #
@@ -38,7 +40,7 @@ Type 'q()' to quit R.
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
 ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
 ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ✔ readr   1.3.1     ✔ forcats 0.4.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -574,7 +576,8 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > # save plot 
 > ggsave(filename=here("figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.png"),
 +        plot = rfhmgrid,device='png',width=12,height=9)
-Error in grid.Call(C_getEngineDLon) : 
-  could not open file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.png'
-Calls: ggsave -> grid.draw -> grid.draw.gTree -> grid.Call
-Execution halted
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 12.129   0.859  25.599 

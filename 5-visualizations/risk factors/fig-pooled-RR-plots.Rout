@@ -356,7 +356,3 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > #Plots over all exposures
 > RRplotdf <- d %>% group_by(intervention_variable) %>% do(res=RR_plot(.))
-Error in grid.newpage() : 
-  could not open file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/risk-factor/RR-plots/fig-RR-sex.png'
-Calls: %>% ... grid.draw.ggplot -> print -> print.ggplot -> grid.newpage
-Execution halted

@@ -297,7 +297,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 -2.30793 -0.29551 -0.11476 -0.15525  0.01547  1.46480 
 > summary(d_adj$estimate)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--2.3079 -0.2897 -0.1047 -0.1527  0.0204  1.4650 
+-2.3079 -0.2895 -0.1047 -0.1525  0.0204  1.4650 
 > 
 > #number of selected covariates
 > d_adj$num_cov <- str_count(d_adj$adjustment_set, ",") + 1
@@ -402,7 +402,7 @@ TRUE
 > 
 > 
 > mean(df$diff, na.rm=T)
-[1] 0.01967438
+[1] 0.01988689
 > ave_abs_diff = round(mean(df$abs_diff, na.rm=T),2)
 > 
 > p <-  ggplot(df, aes(x=num_cov , y=diff)) + 
@@ -421,4 +421,4 @@ TRUE
 > 
 > proc.time()
    user  system elapsed 
-  7.643   0.465   8.151 
+  9.195   0.736  16.632 
