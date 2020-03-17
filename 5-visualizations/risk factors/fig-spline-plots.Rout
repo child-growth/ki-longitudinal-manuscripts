@@ -506,10 +506,345 @@ The following object is masked from ‘package:metafor’:
     blup
 
 Loading required package: dlnm
-Error in onebasis(data$agedays, fun = splinetype, degree = splinedegree,  : 
-  could not find function "onebasis"
-Calls: spline_meta -> get_df_aic
+This is dlnm 2.3.9. For details: help(dlnm) and vignette('dlnmOverview').
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 There were 18 warnings (use warnings() to see them)
+> plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=58 kg")
+> predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 There were 18 warnings (use warnings() to see them)
+> plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<52 kg")
+> predlist3 <- spline_meta(d[d$mwtkg=="[52-58) kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 There were 18 warnings (use warnings() to see them)
+> plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[52-58) kg")
+> plotdf_wlz_mwtkg <- rbind(plotdf1,plotdf2,plotdf3)
+> 
+> offsetZ_wlz_mwtkg <- offset_fun(d, Y="whz", Avar="mwtkg", cen=365)
+> 
+> 
+> plotdf_wlz_mwtkg <- left_join(plotdf_wlz_mwtkg, offsetZ_wlz_mwtkg, by="level")
+> plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% 
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
+>   
+> 
+> Avarwt="Maternal weight"
+> 
+> purple_color_gradient = c("#7644ff", "#b3adff", "#e4dbff")
+>   
+> p1 <- ggplot() +
++   geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
++   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean WLZ") +
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p1)
+> 
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # WLZ- maternal height
+> #------------------------------------------------------------------------------------------------
+> 
+> predlist1 <- predlist2 <- predlist3 <- NULL
+> 
+> table(d$mhtcm)
+
+    >=155 cm      <151 cm [151-155) cm 
+      253073       129453        79552 
+> predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
+1 2 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 24 warnings (use warnings() to see them)
+3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 Warning message:
+In mvmeta.fit(X, y, S, offset, method, bscov, control) :
+  convergence not reached after maximum number of iterations
+> plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
+> predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
+1 2 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 24 warnings (use warnings() to see them)
+3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 > plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
+> predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
+1 2 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 24 warnings (use warnings() to see them)
+3 4 5 6 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 > plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
+> plotdf_wlz_mhtcm <- rbind(plotdf1,plotdf2,plotdf3)
+> 
+> offsetZ_wlz_mhtcm <- offset_fun(d, Y="whz", Avar="mhtcm")
+> 
+> 
+> plotdf_wlz_mhtcm <- left_join(plotdf_wlz_mhtcm, offsetZ_wlz_mhtcm, by="level")
+> plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>% 
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>% mutate(level = factor(level, levels=c( ">=155 cm", "[151-155) cm", "<151 cm")))
+> 
+> Avar="Maternal height"
+> 
+> light_blue_color_gradient = c("#0fb3bf", "#83ced3", "#c5e0e2")
+> 
+> p2 <- ggplot() + 
++   geom_line(data=plotdf_wlz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   #geom_ribbon(data=plotdf_wlz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
++   scale_color_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
++   scale_fill_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean WLZ") + 
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
++   theme(legend.position = c(0.8,0.9))
+> print(p2)
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal weight
+> #------------------------------------------------------------------------------------------------
+> 
+> df <- d %>% filter(!is.na(mwtkg)) %>% filter(agedays < 24* 30.4167)
+> dim(df)
+[1] 381160     72
+> df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(n(), Nstudies=length(unique(paste0(studyid, country))))
+# A tibble: 1 x 2
+  `n()` Nstudies
+  <int>    <int>
+1 63551       17
+> 
+> 
+> predlist1 <- predlist2 <- predlist3 <- NULL
+> 
+> 
+> predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="haz", Avar="mwtkg", overall=T)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 There were 18 warnings (use warnings() to see them)
+> plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=58 kg")
+> predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="haz", Avar="mwtkg", overall=T)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 There were 18 warnings (use warnings() to see them)
+> plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<52 kg")
+> predlist3 <- spline_meta(d[d$mwtkg=="[52-58) kg",], Y="haz", Avar="mwtkg", overall=T)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 There were 18 warnings (use warnings() to see them)
+> plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[52-58) kg")
+> plotdf_laz_mwtkg <- rbind(plotdf1,plotdf2,plotdf3)
+> 
+> offsetZ_laz_mwtkg <- offset_fun(d, Y="haz", Avar="mwtkg")
+> 
+> 
+> plotdf_laz_mwtkg <- left_join(plotdf_laz_mwtkg, offsetZ_laz_mwtkg, by="level")
+> plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% 
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
+> 
+> 
+> Avarwt="Maternal weight"
+> 
+> p3 <- ggplot() + 
++   geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   #geom_ribbon(data=plotdf_laz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
++   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean LAZ") + 
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> print(p3)
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal height
+> #------------------------------------------------------------------------------------------------
+> 
+> df <- d %>% filter(!is.na(mhtcm)) %>% filter(agedays < 24* 30.4167)
+> dim(df)
+[1] 462078     72
+> df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(n(), Nstudies=length(unique(paste0(studyid, country))))
+# A tibble: 1 x 2
+  `n()` Nstudies
+  <int>    <int>
+1 71286       23
+> 
+> 
+> predlist1 <- predlist2 <- predlist3 <- NULL
+> 
+> predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)
+1 2 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 26 warnings (use warnings() to see them)
+3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 > plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
+> predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="haz", Avar="mhtcm", overall=T)
+1 2 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 26 warnings (use warnings() to see them)
+3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 > plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
+> predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)#, forcedf=) #forced df due to fit issues
+1 2 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 25 warnings (use warnings() to see them)
+3 4 5 6 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 > plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
+> plotdf_laz_mhtcm <- rbind(plotdf1,plotdf2,plotdf3)
+> 
+> offsetZ_laz_mhtcm <- offset_fun(d, Y="haz", Avar="mhtcm")
+> 
+> 
+> plotdf_laz_mhtcm <- left_join(plotdf_laz_mhtcm, offsetZ_laz_mhtcm, by="level")
+> plotdf_laz_mhtcm <- plotdf_laz_mhtcm %>% 
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_laz_mhtcm <- plotdf_laz_mhtcm %>% mutate(level = factor(level, levels=c( ">=155 cm", "[151-155) cm", "<151 cm")))
+> 
+> Avar="Maternal height"
+> 
+> p4 <- ggplot() + 
++   geom_line(data=plotdf_laz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   #geom_ribbon(data=plotdf_laz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
++   scale_color_manual(values =light_blue_color_gradient, name = paste0( Avar)) +
++   scale_fill_manual(values = light_blue_color_gradient, name = paste0( Avar)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean LAZ") + 
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
++   theme(legend.position = c(0.8,0.9))
+> print(p4)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # WLZ- maternal BMI
+> #------------------------------------------------------------------------------------------------
+> 
+> predlist1 <- predlist2 <- predlist3 <- NULL
+> 
+> table(d$mbmi)
+
+Normal weight   Underweight 
+       316447         56935 
+> predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=365)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 There were 19 warnings (use warnings() to see them)
+> plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
+> predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=365)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 There were 17 warnings (use warnings() to see them)
+> plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
+> 
+> plotdf_wlz_mbmi <- rbind(plotdf1,plotdf2)
+> 
+> offsetZ_wlz_mbmi <- offset_fun(d, Y="whz", Avar="mbmi", cen=365)
+> 
+> 
+> plotdf_wlz_mbmi <- left_join(plotdf_wlz_mbmi, offsetZ_wlz_mbmi, by="level")
+> plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% 
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
+> 
+> Avar="Maternal BMI"
+> brown_color_gradient = c(tableau10[6], "#c99a6b")
+> 
+> p5 <- ggplot() + 
++   geom_line(data=plotdf_wlz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   scale_color_manual(values=brown_color_gradient, name = paste0( Avar)) +
++   scale_fill_manual(values=brown_color_gradient, name = paste0( Avar)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean WLZ") + 
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
++   theme(legend.position = c(0.8,0.9))
+> print(p5)
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal BMI
+> #------------------------------------------------------------------------------------------------
+> 
+> df <- d %>% filter(!is.na(mbmi))
+> dim(df)
+[1] 373382     72
+> df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(n(), Nstudies=length(unique(paste0(studyid, country))))
+# A tibble: 1 x 2
+  `n()` Nstudies
+  <int>    <int>
+1 61933       17
+> 
+> #Normal weight   Underweight 
+> 
+> predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="haz", Avar="mbmi", overall=T, cen=365)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 There were 18 warnings (use warnings() to see them)
+> plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
+> predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="haz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 There were 17 warnings (use warnings() to see them)
+> plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
+> 
+> plotdf_laz_mbmi <- rbind(plotdf1,plotdf2)
+> 
+> offsetZ_laz_mbmi <- offset_fun(d, Y="haz", Avar="mbmi", cen=365)
+> 
+> 
+> plotdf_laz_mbmi <- left_join(plotdf_laz_mbmi, offsetZ_laz_mbmi, by="level")
+> plotdf_laz_mbmi <- plotdf_laz_mbmi %>% 
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_laz_mbmi <- plotdf_laz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
+> 
+> 
+> Avarwt="Maternal BMI"
+> 
+> 
+> p6 <- ggplot() +
++   geom_line(data=plotdf_laz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   scale_color_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean LAZ") +
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p6)
+> 
+> 
+> 
+> #Save plot objects
+> saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot-objects/risk-factor//rf_spline_objects.RDS"))
+Error in gzfile(file, mode) : cannot open the connection
+Calls: saveRDS -> gzfile
 In addition: Warning message:
-In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
-  there is no package called ‘dlnm’
+In gzfile(file, mode) :
+  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/figures/plot-objects/risk-factor//rf_spline_objects.RDS', probable reason 'No such file or directory'
 Execution halted

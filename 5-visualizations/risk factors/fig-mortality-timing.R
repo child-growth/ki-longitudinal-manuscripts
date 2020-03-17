@@ -5,7 +5,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 
 #Load mortality outcomes
-df <- mort <- readRDS("U:/UCB-SuperLearner/Manuscript analysis data/mortality.rds")
+df <- mort <- readRDS(paste0(ghapdata_dir,"/mortality.rds"))
 
 #N's for figure legend
 Ns <- mort %>% filter(!is.na(dead)) %>% group_by(studyid, subjid) %>% slice(1) %>%

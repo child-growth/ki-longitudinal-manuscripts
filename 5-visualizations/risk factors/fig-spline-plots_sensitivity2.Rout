@@ -1,0 +1,464 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> 
+> 
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
+> 
+> 
+> #Load haz and whz data
+> d <- readRDS(rf_co_occurrence_path)
+> d <- d %>% subset(., select=-c(tr))
+> 
+> 
+> 
+> #merge WLZ outcomes with covariates
+> cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+> 
+> 
+> cov <- cov %>% subset(., select=-c( region, month, W_gagebrth,    W_birthwt,     W_birthlen,   
++                                     W_mage,        W_mhtcm,       W_mwtkg,       W_mbmi,        W_fage,        W_fhtcm,       W_meducyrs,    W_feducyrs,   
++                                     W_nrooms,      W_nhh,         W_nchldlt5,    W_parity,         
++                                     W_perdiar6,    W_perdiar24))
+> dim(d)
+[1] 714805     14
+> d <- left_join(d, cov, by=c("studyid","country","subjid"))
+Warning message:
+Column `country` joining character vector and factor, coercing into character vector 
+> dim(d)
+[1] 714805     75
+> d <- d %>% filter(agedays < 24 * 30.4167) 
+> d <- subset(d, select = -c(id, arm, tr))
+> dim(d)
+[1] 613408     72
+> 
+> d <- droplevels(d)
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # WLZ- maternal weight
+> #------------------------------------------------------------------------------------------------
+> 
+> purple_color_gradient = c("#7644ff", "#b3adff", "#e4dbff")
+> Avarwt="Maternal weight"
+> 
+> p1 <- ggplot(data=d[!is.na(d$mwtkg),]) +
++   geom_smooth(aes(x=agedays, y=whz, group=mwtkg, color=mwtkg), size=1.25, se=F) +
++   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean WLZ") +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p1)
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # WLZ- maternal height
+> #------------------------------------------------------------------------------------------------
+> 
+> Avar="Maternal height"
+> light_blue_color_gradient = c("#0fb3bf", "#83ced3", "#c5e0e2")
+> 
+> p2 <- ggplot(data=d[!is.na(d$mhtcm),]) +
++   geom_smooth(aes(x=agedays, y=whz, group=mhtcm, color=mhtcm), size=1.25, se=F) +
++   scale_color_manual(values=light_blue_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=light_blue_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean WLZ") +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p2)
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal weight
+> #------------------------------------------------------------------------------------------------
+> 
+> Avarwt="Maternal weight"
+> 
+> p3 <- ggplot(data=d[!is.na(d$mwtkg),]) +
++   geom_smooth(aes(x=agedays, y=haz, group=mwtkg, color=mwtkg), size=1.25, se=F) +
++   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean LAZ") +
++   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p3)
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal height
+> #------------------------------------------------------------------------------------------------
+> 
+> 
+> Avar="Maternal height"
+> 
+> p4 <- ggplot(data=d[!is.na(d$mhtcm),]) +
++   geom_smooth(aes(x=agedays, y=haz, group=mhtcm, color=mhtcm), size=1.25, se=F) +
++   scale_color_manual(values=light_blue_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=light_blue_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean LAZ") +
++   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p4)
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+> 
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # WLZ- maternal BMI
+> #------------------------------------------------------------------------------------------------
+> 
+> 
+> Avarwt="Maternal BMI"
+> 
+> brown_color_gradient = c(tableau10[6], "#c99a6b")
+> 
+> p5 <- ggplot(data=d[!is.na(d$mbmi),]) +
++   geom_smooth(aes(x=agedays, y=whz, group=mbmi, color=mbmi), size=1.25, se=F) +
++   scale_color_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean WLZ") +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p5)
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+> 
+> 
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal BMI
+> #------------------------------------------------------------------------------------------------
+> 
+> p6 <- ggplot(data=d[!is.na(d$mbmi),]) +
++   geom_smooth(aes(x=agedays, y=haz, group=mbmi, color=mbmi), size=1.25, se=F) +
++   scale_color_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean LAZ") +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p6)
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+> 
+> 
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # Format plots
+> #------------------------------------------------------------------------------------------------
+> 
+> pos = c(0.2,0.25)
+> 
+> p1 <- p1 + ggtitle("Spline curves of WLZ, stratified by\ncategories of maternal weight") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +  guides(color = guide_legend("Maternal\nweight", nrow=3))
+> p2 <- p2  + ggtitle("Stratified by\ncategories of maternal height") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6))
+> p3 <- p3  + ggtitle("Spline curves of LAZ, stratified by\ncategories of maternal weight") + theme(legend.position = "none") + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + theme(legend.key = element_blank())
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+> p4 <- p4  + ggtitle("Stratified by\ncategories of maternal height") +  theme(legend.position = "none") +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+> p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5"))
+Scale for 'colour' is already present. Adding another scale for 'colour',
+which will replace the existing scale.
+> p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none")+ scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())
+Scale for 'x' is already present. Adding another scale for 'x', which will
+replace the existing scale.
+> 
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # Save plots
+> #------------------------------------------------------------------------------------------------
+> 
+> 
+> # Combine plot objects
+> 
+> require(cowplot)
+Loading required package: cowplot
+
+********************************************************
+Note: As of version 1.0.0, cowplot does not change the
+  default ggplot2 theme anymore. To recover the previous
+  behavior, execute:
+  theme_set(theme_cowplot())
+********************************************************
+
+
+Attaching package: ‘cowplot’
+
+The following object is masked from ‘package:ggthemes’:
+
+    theme_map
+
+> p_grid <- plot_grid(p1, p3, p2, p4, p5,  p6,   labels = rep("",6), ncol = 2, align = 'v', axis = 'l')
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+> 
+> ggsave(p_grid, file=paste0(here(),"/figures/risk-factor/spline_grid_sens2.png"), width=10, height=10)
+> 
+> 
+> #Save plot objects
+> save(p1, p2, p3, p4, p5, p6,  file=paste0(here(),"/figures/plot-objects/risk-factor/rf_spline_sens_objects2.Rdata"))
+> 
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 96.925   3.164 115.053 

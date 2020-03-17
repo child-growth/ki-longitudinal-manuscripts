@@ -1,0 +1,701 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
+> 
+> 
+> #Load haz and whz data
+> d <- readRDS(rf_co_occurrence_path)
+> d <- d %>% subset(., select=-c(tr))
+> 
+> 
+> 
+> #merge WLZ outcomes with covariates
+> cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+> 
+> 
+> cov <- cov %>% subset(., select=-c( region, month, W_gagebrth,    W_birthwt,     W_birthlen,   
++                                     W_mage,        W_mhtcm,       W_mwtkg,       W_mbmi,        W_fage,        W_fhtcm,       W_meducyrs,    W_feducyrs,   
++                                     W_nrooms,      W_nhh,         W_nchldlt5,    W_parity,         
++                                     W_perdiar6,    W_perdiar24))
+> dim(d)
+[1] 714805     14
+> d <- left_join(d, cov, by=c("studyid","country","subjid"))
+Warning message:
+Column `country` joining character vector and factor, coercing into character vector 
+> rm(cov)
+> 
+> dim(d)
+[1] 714805     75
+> d <- d %>% filter(agedays < 24 * 30.4167) 
+> d <- subset(d, select = -c(id, arm, tr))
+> dim(d)
+[1] 613408     72
+> 
+> 
+> #Set global parameters
+> cen=1
+> 
+> #Adapted from: 
+> #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
+> 
+> spline_meta <- function(d, Y="haz", Avar, overall=F, cen=1, type="bs", d_f=8){
++   
++   # LOAD THE PACKAGES (mvmeta PACKAGE IS ASSUMED TO BE INSTALLED)
++   require(mvmeta)
++   require(dlnm)
++   
++   colnames(d)[which(colnames(d)==Avar)] <- "Avar"
++   colnames(d)[which(colnames(d)==Y)] <- "Y"
++   
++   d <- d %>% filter(!is.na(Y) & !is.na(Avar))
++   
++   #Number of exposure levels
++   nlevels <- length(unique(d$Avar))
++   
++   #Number of cohorts
++   d$id <- paste0(d$studyid, d$country,"__", d$Avar)
++   m <- length(unique(d$id))
++   
++   d <- droplevels(d)
++   
++   # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
++   # NOTE: set bound as average bound across studies and knots based on average quantiles, (same as example script, may need to save studies as a list first)
++   # if that fails, set splines specific to each study
++   # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
++   
++   
++   # DEFINE THE AVERAGE RANGE, CENTERING POINT, DEGREE AND TYPE OF THE SPLINE
++   # (THESE PARAMETERS CAN BE CHANGED BY THE USER FOR ADDITIONAL ANALYSES)
++   bound <- c(1,730)
++   degree <- 3
++   df <- d_f
++   
++   
++   
++   
++   # BUILT OBJECTS WHERE RESULTS WILL BE STORED:
++   #   ymat IS THE MATRIX FOR THE OUTCOME PARAMETERS
++   #   Slist IS THE LIST WITH (CO)VARIANCE MATRICES
++   ymat <- matrix(NA,m,df,dimnames=list(unique(d$id),paste("spl",seq(df),sep="")))
++   Slist <- vector("list",m)
++   names(Slist) <- unique(d$id)
++   
++   ####################################################################
++   # RUN THE FIRST-STAGE ANALYSIS
++   
++   for(i in 1:m){
++     
++     # PRINT ITERATION
++     cat(i,"")
++     
++     # LOAD
++     data <- d[d$id==unique(d$id)[i],]
++     
++     
++     # CREATE THE SPLINE
++     bt <- onebasis(data$agedays,fun=type,
++                    degree=degree, 
++                    df=df)
++     
++     # RUN THE MODEL
++     #Note: add cv cross-validation
++     model <- glm(Y ~ bt,family=gaussian(), data)
++     
++     # EXTRACT AND SAVE THE RELATED COEF AND VCOV
++     predbt <- NULL
++     try(predbt <- crosspred(bt,model,cen=cen))
++     if(!is.null(predbt)){
++       ymat[i,1:length(predbt$coef)] <- predbt$coef
++       Slist[[i]] <- predbt$vcov
++     }
++   }
++   
++   Slist <- Filter(Negate(is.null), Slist)
++   #Drop missing columns
++   ymat<-ymat[!is.na(ymat[,1]),]
++   #drop missing rows
++   ymat<-ymat[, colSums(is.na(ymat)) != nrow(ymat)]
++   
++   ####################################################################
++   # PERFORM MULTIVARIATE META-ANALYSIS
++   ####################################################################
++   
++   
++   # 1) MULTIVARIATE META-ANALYSIS
++   if(overall){
++     mv <- mvmeta(ymat,Slist,method="ml")
++     
++     # PREDICTION FROM SIMPLE META-ANALYSES WITH NO PREDICTORS
++     # CENTERED TO SPECIFIC VALUE
++     tmean <- seq(bound[1],bound[2],length=30)
++     btmean <- onebasis(tmean,fun=type, degree=degree, df=df #,
++                        #knots=knots,
++                        #Bound=bound
++     )
++     cp <- crosspred(btmean,coef=coef(mv),vcov=vcov(mv), by=0.1, cen=cen)
++     return(cp)
++   }else{
++     
++     # 2) MULTIVARIATE META-REGRESSION - Avar-level has to be study specific predictor
++     Avar_lev<- stringr::str_split(rownames(ymat),"__", simplify=T)[,2]
++     (mvlat <- mvmeta(ymat~Avar_lev,Slist,method="reml"))
++     
++     # NB: IN VERSION 0.4.1, CONVERGENCE MAY BE INSPECTED USING THE ARGUMENT:
++     #   control=list(showiter=T)
++     # NB: LESS STRICT CONVERGENCE CRITERIA, USEFUL FOR HIGH DIMENSIONAL
++     #   MODELS, MAY BE SELECTED BY ADDING A reltol ARGUMENT, FOR EXAMPLE:
++     #   control=list(showiter=T,reltol=10^-3)
++     
++     ####################################################################
++     # CREATE BASIS FOR PREDICTION
++     ####################################################################
++     
++     # BASIS USED TO PREDICT AGE, EQUAL TO THAT USED FOR ESTIMATION
++     #   NOTE: INTERNAL AND BOUNDARY KNOTS PLACED AT SAME VALUES AS IN ESTIMATION
++     tmean <- seq(bound[1],bound[2],length=30)
++     btmean <- onebasis(tmean,fun=type, degree=degree, df=df)
++     
++     
++     ####################################################################
++     # PREDICTION FROM MODELS
++     ####################################################################
++     
++     # USE OF crosspred TO PREDICT THE EFFECTS FOR THE CHOSEN VALUES
++     
++     
++     # COMPUTE PREDICTION FOR MULTIVARIATE META-REGRESSION MODELS
++     #   1ST STEP: PREDICT THE OUTCOME PARAMETERS FOR SPECIFIC VALUES OF META-PREDICTOR
++     #   2ND STEP: PREDICT THE RELATIONSHIP AT CHOSEN VALUES GIVEN THE PARAMETERS
++     
++     predAvar <- predict(mvlat,data.frame(Avar=factor(unique(d$Avar))),vcov=T)
++     predlist <- list()
++     for(i in 1:nlevels){
++       pred <- crosspred(btmean,coef=predAvar[[i]]$fit,vcov=predAvar[[i]]$vcov, model.link="log",by=0.1,cen=cen)
++       predlist[[i]] <- pred 
++     }
++     names(predlist) <- unique(d$Avar)
++     return(predlist)
++   }
++ }
+> 
+> 
+> create_plotdf <- function(predlist, overall=F, stratlevel=NULL){
++   if(overall){
++     df <- data.frame(
++       level=stratlevel,
++       agedays=as.numeric(rownames(predlist$matfit)),
++       est=predlist$matfit[,1],
++       se=predlist$matse[,1]
++     )
++     df <- df %>%
++       mutate(ci.lb=est-1.96*se,
++              ci.ub=est+1.96*se)
++   }else{
++     df <- NULL
++     for(i in 1:length(predlist)){
++       temp <- data.frame(
++         level=names(predlist)[i],
++         agedays=as.numeric(rownames(predlist[[i]]$matfit)),
++         est=predlist[[i]]$matfit[,1],
++         se=predlist[[i]]$matse[,1]
++       )
++       temp <- temp %>%
++         mutate(ci.lb=est-1.96*se,
++                ci.ub=est+1.96*se)
++       df <- rbind(df, temp)
++     }
++   }
++   return(df)    
++ }
+> 
+> 
+> offset_fun <- function(d, Y="haz", Avar, cen=1){
++   
++   df <- d[!is.na(d[,Avar]),]
++   
++   df <- df %>% filter(agedays < cen + 30 & agedays > cen - 30) %>% mutate(agecat="first", agecat=factor(agecat)) 
++   
++   z.summary <- cohort.summary(d=df, var=Y, ci=F, continious=T, severe=F, minN=50, measure="",  strata=c("region","studyid","country","agecat",Avar))
++   z.res <- summarize_over_strata(cohort.sum=z.summary, proportion=F, continious=T, measure = "GEN",  method = "REML", strata=c("region","studyid","country","agecat",Avar),  region=F, cohort=F)
++   
++   z.res <- data.frame(level=z.res[,2], offset=z.res[,5])
++   return(z.res)
++ } 
+> 
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # WLZ- maternal weight
+> #------------------------------------------------------------------------------------------------
+> 
+> predlist <- list()
+> predlist <- spline_meta(d, Y="whz", Avar="mwtkg", overall=F, cen=cen)
+Loading required package: mvmeta
+This is mvmeta 1.0.3. For an overview type: help('mvmeta-package').
+
+Attaching package: ‘mvmeta’
+
+The following object is masked from ‘package:metafor’:
+
+    blup
+
+Loading required package: dlnm
+This is dlnm 2.3.9. For details: help(dlnm) and vignette('dlnmOverview').
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 50 or more warnings (use warnings() to see the first 50)
+50 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+51 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+Warning message:
+'newdata' had 3 rows but variables found have 48 rows 
+> plotdf_wlz_mwtkg <- create_plotdf(predlist, overall=F)
+> 
+> offsetZ_wlz_mwtkg <- offset_fun(d, Y="whz", Avar="mwtkg")
+> 
+> 
+> plotdf_wlz_mwtkg <- left_join(plotdf_wlz_mwtkg, offsetZ_wlz_mwtkg, by="level")
+Warning message:
+Column `level` joining factors with different levels, coercing to character vector 
+> plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% 
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
+> 
+> 
+> Avarwt="Maternal weight"
+> 
+> purple_color_gradient = c("#7644ff", "#b3adff", "#e4dbff")
+> 
+> p1 <- ggplot() +
++   geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
++   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
++   xlab("Child age in months") + ylab("Mean WLZ") +
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> 
+> print(p1)
+> 
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # WLZ- maternal height
+> #------------------------------------------------------------------------------------------------
+> 
+> 
+> predlist <- spline_meta(d, Y="whz", Avar="mhtcm", overall=F, cen=cen, d_f=7)
+1 2 3 4 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+5 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+6 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 There were 50 or more warnings (use warnings() to see the first 50)
+> plotdf_wlz_mhtcm <- create_plotdf(predlist, overall=F)
+> 
+> offsetZ_wlz_mhtcm <- offset_fun(d, Y="whz", Avar="mhtcm")
+> 
+> 
+> plotdf_wlz_mhtcm <- left_join(plotdf_wlz_mhtcm, offsetZ_wlz_mhtcm, by="level")
+Warning message:
+Column `level` joining factors with different levels, coercing to character vector 
+> plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>%
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>% mutate(level = factor(level, levels=c( ">=155 cm", "[151-155) cm", "<151 cm")))
+> 
+> Avar="Maternal height"
+> 
+> light_blue_color_gradient = c("#0fb3bf", "#83ced3", "#c5e0e2")
+> 
+> p2 <- ggplot() +
++   geom_line(data=plotdf_wlz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   #geom_ribbon(data=plotdf_wlz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
++   scale_color_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
++   scale_fill_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   #scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) +
++   xlab("Child age in months") + ylab("Mean WLZ") +
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
++   theme(legend.position = c(0.8,0.9))
+> print(p2)
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal weight
+> #------------------------------------------------------------------------------------------------
+> 
+> df <- d %>% filter(!is.na(mwtkg))
+> 
+> predlist <- spline_meta(d, Y="haz", Avar="mwtkg", overall=F, cen=cen, d_f=7)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 There were 50 or more warnings (use warnings() to see the first 50)
+> plotdf_laz_mwtkg <- create_plotdf(predlist, overall=F)
+> rm(predlist)
+> gc()
+           used  (Mb) gc trigger  (Mb)  max used  (Mb)
+Ncells  2507443 134.0    4601038 245.8   4601038 245.8
+Vcells 46948386 358.2  110924673 846.3 110924649 846.3
+> offsetZ_laz_mwtkg <- offset_fun(d, Y="haz", Avar="mwtkg")
+> 
+> 
+> plotdf_laz_mwtkg <- left_join(plotdf_laz_mwtkg, offsetZ_laz_mwtkg, by="level")
+Warning message:
+Column `level` joining factors with different levels, coercing to character vector 
+> plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>%
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c(  ">=58 kg", "[52-58) kg", "<52 kg")))
+> 
+> 
+> 
+> Avarwt="Maternal weight"
+> 
+> p3 <- ggplot() +
++   geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   #geom_ribbon(data=plotdf_laz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
++   scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   scale_y_continuous(limits=c(-2.2, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) +
++   xlab("Child age in months") + ylab("Mean LAZ") +
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avarwt)) +
++   theme(legend.position = c(0.8,0.9))
+> print(p3)
+> 
+> saveRDS(list(p1, p2, p3),  file=paste0(here(),"/results/rf_spline_sens4_objects1.RDS"))
+> rm(p1,p2,p3)
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal height
+> #------------------------------------------------------------------------------------------------
+> rm(plotdf_laz_mwtkg, plotdf_wlz_mhtcm, plotdf_wlz_mwtkg)
+> gc()
+           used  (Mb) gc trigger  (Mb)  max used  (Mb)
+Ncells  2506475 133.9    4601038 245.8   4601038 245.8
+Vcells 46679718 356.2  110924673 846.3 110924649 846.3
+> df <- d %>% filter(!is.na(mhtcm))# %>% filter(agedays < 24* 30.4167)
+> dim(df)
+[1] 462078     72
+> 
+> predlist <- spline_meta(df, Y="haz", Avar="mhtcm", overall=F, cen=cen)
+1 2 3 4 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+5 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+6 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 50 or more warnings (use warnings() to see the first 50)
+68 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+69 Warning messages:
+1: In mvmeta.fit(X, y, S, offset, method, bscov, control) :
+  convergence not reached after maximum number of iterations
+2: 'newdata' had 3 rows but variables found have 64 rows 
+> plotdf_laz_mhtcm <- create_plotdf(predlist, overall=F)
+> 
+> 
+> offsetZ_laz_mhtcm <- offset_fun(d, Y="haz", Avar="mhtcm")
+> 
+> 
+> plotdf_laz_mhtcm <- left_join(plotdf_laz_mhtcm, offsetZ_laz_mhtcm, by="level")
+Warning message:
+Column `level` joining factors with different levels, coercing to character vector 
+> plotdf_laz_mhtcm <- plotdf_laz_mhtcm %>%
++   mutate(est= est + offset,
++          ci.lb= ci.lb + offset,
++          ci.ub= ci.ub + offset)
+> 
+> plotdf_laz_mhtcm <- plotdf_laz_mhtcm %>% mutate(level = factor(level, levels=c( ">=155 cm", "[151-155) cm", "<151 cm")))
+> 
+> Avar="Maternal height"
+> 
+> p4 <- ggplot() +
++   geom_line(data=plotdf_laz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
++   #geom_ribbon(data=plotdf_laz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
++   scale_color_manual(values =light_blue_color_gradient, name = paste0( Avar)) +
++   scale_fill_manual(values = light_blue_color_gradient, name = paste0( Avar)) +
++   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
++                      breaks = 0:12*30.41*2, labels = 0:12*2) +
++   xlab("Child age in months") + ylab("Mean LAZ") +
++   #coord_cartesian(ylim=c(-2,1)) +
++   ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
++   theme(legend.position = c(0.8,0.9))
+> print(p4)
+> 
+> 
+> 
+> #------------------------------------------------------------------------------------------------
+> # LAZ- maternal BMI
+> #------------------------------------------------------------------------------------------------
+> 
+> df <- d %>% filter(!is.na(mbmi))
+> dim(df)
+[1] 373382     72
+> 
+> predlist <- spline_meta(df, Y="haz", Avar="mbmi", overall=F, cen=cen)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+In addition: There were 38 warnings (use warnings() to see them)
+33 Error in crosspred(bt, model, cen = cen) : 
+  coef/vcov not consistent with basis matrix. See help(crosspred)
+Warning message:
+'newdata' had 2 rows but variables found have 31 rows 
+> plotdf_laz_mbmi <- create_plotdf(predlist, overall=F)
+> 
+> offsetZ_laz_mbmi <- offset_fun(df, Y="haz", Avar="temp", cen=cen)
+Error: Can't find column `temp` in `.data`.
+Backtrace:
+     █
+  1. └─global::offset_fun(df, Y = "haz", Avar = "temp", cen = cen)
+  2.   ├─d[!is.na(d[, Avar]), ]
+  3.   ├─dplyr:::`[.grouped_df`(d, !is.na(d[, Avar]), )
+  4.   ├─base::NextMethod()
+  5.   ├─tibble:::`[.tbl_df`(d, !is.na(d[, Avar]), )
+  6.   ├─d[, Avar]
+  7.   ├─dplyr:::`[.grouped_df`(d, , Avar)
+  8.   ├─base::NextMethod()
+  9.   └─tibble:::`[.tbl_df`(d, , Avar)
+ 10.     └─tibble:::check_names_df(j, x)
+ 11.       └─tibble:::check_names_before_after_character(j, names(unclass(x)))
+Execution halted

@@ -21,7 +21,9 @@ p2 <- pPAR_wlz + xlab("") #+ theme(axis.text = element_text(size=12))
 blank <- grid.rect(gp=gpar(col="white"))
 
 #VIM Plots below
-load(paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
+pVIMhaz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-LAZ.RDS"))
+pVIMwhz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-WLZ.RDS"))
+
 
 #embedded plots 
 #https://www.r-bloggers.com/plots-within-plots-with-ggplot2-and-ggmap/
