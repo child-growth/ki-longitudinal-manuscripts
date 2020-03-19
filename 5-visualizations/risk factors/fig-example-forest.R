@@ -11,7 +11,7 @@ dpool <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"
   filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region!="N.America & Europe") %>%
   mutate(pooled=1)
 dFE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds")) %>% 
-  filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled") %>%
+  filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled - FE") %>%
         mutate(pooled=1, region="Pooled - FE")
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds")) %>% 
   filter(type=="RR",  intervention_variable=="sex", outcome_variable=="ever_stunted", ci_lower != ci_upper, agecat=="0-24 months") %>%
@@ -19,7 +19,6 @@ dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
   rename(RR=estimate, RR.CI1=ci_lower, RR.CI2=ci_upper)
 
 dfull <- RMA_clean(dfull)
-
 
 
 d <- bind_rows(dpool, dFE, dfull)
@@ -66,7 +65,7 @@ p <-  ggplot(d, aes(x=(studyid))) +
   geom_errorbar(aes(ymin=RR.CI1, ymax=RR.CI2, color=region)) +
   coord_flip(ylim=range(0.75,2.5)) +
   #labs(x = "Study-specific results stratified by risk factor level\nwith reference category N's and cases printed", y = Ylab) +
-  ylab("Girls have                                        Boys have\nhigher risk                                       higher risk") +
+  ylab("      Girls have                                                                Boys have\n      higher risk                                                                higher risk") +
   xlab("Cohort") +
   geom_hline(yintercept = 1) +
   geom_vline(xintercept = 2.5, linetype=2) +
@@ -85,8 +84,6 @@ p <-  ggplot(d, aes(x=(studyid))) +
         axis.text.x = element_text(size=12),
         axis.title.x = element_text(size=12, hjust = .1)) +
   ggtitle("Associations between sex and stunting incidence\nfrom birth-24 months: cohort-specific and pooled results") +guides(shape=FALSE)
-print(p)
-
 
 
 ggsave(p, file=paste0(here::here(), "/figures/risk-factor/example_forest_plot_wasting.png"), height=14, width=10)
