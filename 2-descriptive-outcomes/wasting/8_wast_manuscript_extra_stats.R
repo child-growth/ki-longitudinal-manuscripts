@@ -81,7 +81,8 @@ b/a
 dat=table(-d$wast06, -d$co24)
 
 epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100, 
-         homogeneity = "breslow.day", outcome = "as.columns")
+         #homogeneity = "breslow.day", 
+         outcome = "as.columns")
 
 #Save dataset for longbow analysis
 save(d, file=paste0(ghapdata_dir,"earlywast_strat_co_rf.Rdata"))
@@ -102,7 +103,7 @@ prop.table(table(d$stunt24[d$wast06==1]))
 
 dat=table(-d$wast06, -d$stunt24)
 epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100, 
-         homogeneity = "breslow.day", outcome = "as.columns")
+          outcome = "as.columns")
 
 #Save dataset for longbow analysis
 save(d, file=paste0(ghapdata_dir,"earlywast_strat_stunt_rf.Rdata"))
