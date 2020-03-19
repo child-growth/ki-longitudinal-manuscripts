@@ -2,8 +2,11 @@
 
 
 rm(list=ls())
-source(paste0(here::here(), "/0-config.R"))
+try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) ))
 library("tlverse")
+
+source(paste0(here::here(), "/0-config.R"))
+try(.libPaths( "~/rlibs" ))
 library("sl3")
 library("tmle3")
 library("skimr")
@@ -297,9 +300,11 @@ res_whz <- whz %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="whz"
 
 
 
-filename <- paste(paste('R2_results',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename_whz <- paste(paste('R2_results_whz',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename_haz <- paste(paste('R2_results_haz',Sys.Date( ),sep='_'),'RDS',sep='.')
 
-save(res_haz, res_whz, file=here::here("results",filename))
+saveRDS(res_whz, file=here::here("results",filename_whz))
+saveRDS(res_haz, file=here::here("results",filename_haz))
 
 # save(res_haz, res_whz, file=here("results/R2_results.rdata"))
 
@@ -309,8 +314,9 @@ save(res_haz, res_whz, file=here::here("results",filename))
 
 
 
-
-"Pool R2"
+#-------------------------
+#Pool R2
+#-------------------------
 
 
 
