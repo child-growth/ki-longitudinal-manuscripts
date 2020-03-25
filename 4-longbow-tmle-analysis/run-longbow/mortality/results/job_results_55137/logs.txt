@@ -1,156 +1,0 @@
-Command to run:
-Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/d5659d6b-16fb-4c77-8f6d-286237bc9dec
-cd /tmp;tar xvzf tmpw9pgrg29.tar.gz --strip 1;cd /tmp/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/55137/append_log/;screen -d -m python x.py;sleep 1
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/runner.R
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/runner.R: time stamp 2019-12-06 16:27:25 is 0.018098605 s in the future
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/x.py
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/ensure_git_dataset.sh
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/wrapper.sh
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/d5659d6b-16fb-4c77-8f6d-286237bc9dec/
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/provision.sh
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/script.Rmd
-tmpw9pgrg29/07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/inputs.json
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/x.py: time stamp 2019-12-06 16:27:25 is 0.017904332 s in the future
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/ensure_git_dataset.sh: time stamp 2019-12-06 16:27:25 is 0.017827514 s in the future
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/wrapper.sh: time stamp 2019-12-06 16:27:25 is 0.017764146 s in the future
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/d5659d6b-16fb-4c77-8f6d-286237bc9dec: time stamp 2019-12-06 16:27:25 is 0.017684111 s in the future
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/provision.sh: time stamp 2019-12-06 16:27:25 is 0.017633121 s in the future
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/script.Rmd: time stamp 2019-12-06 16:27:25 is 0.017550499 s in the future
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf/inputs.json: time stamp 2019-12-06 16:27:25 is 0.017439848 s in the future
-tar: 07be36c9-f9c0-4359-a9b9-a1e1f6295dcf: time stamp 2019-12-06 16:27:25 is 0.017383793 s in the future
-Requirement already satisfied: requests in /opt/anaconda2/lib/python2.7/site-packages
-You are using pip version 9.0.1, however version 19.3.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-{"job": {"status": "running", "created_at": "2019-12-06T16:27:13.369", "results_url": "/jobs/55137/", "jobs": []}}Making sure longbowtools package is available for runner
-
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-redhat-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
-> 
-> 
-Installing pandoc
-Running provision script
-skipping provisioning because this is a child job
-Making sure longbowtools package is available for runner
-
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-redhat-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
-> 
-> 
-Starting analysis
-
-
-processing file: REPORT.Rmd
-  |                                                                         |                                                                 |   0%  |                                                                         |..                                                               |   3%
-  ordinary text without R code
-
-  |                                                                         |....                                                             |   6%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                         |......                                                           |   9%
-  ordinary text without R code
-
-  |                                                                         |........                                                         |  12%
-label: params (with options) 
-List of 2
- $ warning: logi FALSE
- $ message: logi FALSE
-
-Loading required package: graphics
-ever_wasted06c("sex", "arm", "brthmon", "vagbrth", "hdlvry", "single", "trth2o", "cleanck", "impfloor", "hfoodsec", "hhwealth_quart", "W_mage", "W_mhtcm", "W_mwtkg", "W_mbmi", "W_fage", "W_fhtcm", "W_meducyrs", "W_feducyrs", "W_nrooms", "W_nhh", "W_nchldlt5", "W_parity", "impsan", "safeh20")deadidc("studyid", "country")
-TRUETRUEFALSENULL
-  |                                                                         |..........                                                       |  16%
-  ordinary text without R code
-
-  |                                                                         |............                                                     |  19%
-label: preprocessing
-  |                                                                         |..............                                                   |  22%
-   inline R code fragments
-
-  |                                                                         |................                                                 |  25%
-label: print_adjustment_set (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |..................                                               |  28%
-  ordinary text without R code
-
-  |                                                                         |....................                                             |  31%
-label: print_strata_variables (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |......................                                           |  34%
-  ordinary text without R code
-
-  |                                                                         |........................                                         |  38%
-label: data_summary
-  |                                                                         |..........................                                       |  41%
-  ordinary text without R code
-
-  |                                                                         |............................                                     |  44%
-label: print_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |..............................                                   |  47%
-  ordinary text without R code
-
-  |                                                                         |................................                                 |  50%
-label: drop_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |...................................                              |  53%
-  ordinary text without R code
-
-  |                                                                         |.....................................                            |  56%
-label: stratified_tmle (with options) 
-List of 1
- $ message: logi FALSE
-
-tmle for:	studyid: ki1000304-VITAMIN-A, country: INDIA
-tmle for:	studyid: ki1000304b-SAS-CompFeed, country: INDIA
-tmle for:	studyid: ki1101329-Keneba, country: GAMBIA
-tmle for:	studyid: ki1126311-ZVITAMBO, country: ZIMBABWE
-tmle for:	studyid: ki1148112-iLiNS-DYAD-M, country: MALAWI
-tmle for:	studyid: kiGH5241-JiVitA-3, country: BANGLADESH
-tmle for:	studyid: kiGH5241-JiVitA-4, country: BANGLADESH
-  |                                                                         |.......................................                          |  59%
-
