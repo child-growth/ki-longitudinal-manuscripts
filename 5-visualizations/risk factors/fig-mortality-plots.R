@@ -354,7 +354,8 @@ ggsave(pmort, file=here("/figures/risk-factor/fig-mort+morb-RR_FE.png"), width=1
 
 
 
-d4 <- d %>% filter(analysis=="Region")
+d4 <- d %>% filter(analysis=="Region", region!="N.America & Europe")
+d4 <- droplevels(d4)
 
 pregion <- ggplot(d4, aes(x=outcome_label, group=region)) +
   geom_point(aes(y=RR, color=Measure, shape=region), size=3, stroke = 1.5, position = position_dodge(0.4)) +
@@ -362,7 +363,7 @@ pregion <- ggplot(d4, aes(x=outcome_label, group=region)) +
   #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
   labs(y = "", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1, linetype = "dashed") +
-  scale_y_continuous(breaks=c(1, 2, 4, 8, 16), trans='log10', labels=scaleFUN) +
+  scale_y_continuous(breaks=c(1, 2, 4, 8, 16, 32), trans='log10', labels=scaleFUN) +
   scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_size_manual(values=c(4,5)) +
@@ -371,14 +372,14 @@ pregion <- ggplot(d4, aes(x=outcome_label, group=region)) +
         panel.spacing = unit(0, "lines"),
         plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        text = element_text(size=16), 
-        legend.position = "right") + 
+        text = element_text(size=16),
+        legend.position = "right") +
   facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
   #guides(shape="Region") +
-  coord_flip(ylim=c(1,16)) +
+  coord_flip(ylim=c(1,20)) +
   guides(
     shape = guide_legend(reverse = TRUE))
-pregion
+
 
 ggsave(pregion, file=here("/figures/risk-factor/fig-mort+morb-RR_Region.png"), width=16, height=5.2)
 
