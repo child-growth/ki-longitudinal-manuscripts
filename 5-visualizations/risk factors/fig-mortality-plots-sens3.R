@@ -3,7 +3,8 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
-
+require(ggmap)
+require(cowplot)
 
 
 #Plot parameters
@@ -234,15 +235,23 @@ pmort_FE <- ggplot(d3, aes(x=outcome_label)) +
 #expand=c(0,0)) 
 pmort_FE
 
-ggsave(pmort, file=here("/figures/risk factor/fig-mort-RR-time-death.png"), width=5.2, height=10)
-ggsave(pmort, file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/fig-mort-RR-time-death.png"), width=5.2, height=10)
+ggsave(pmort, file=here("/figures/risk-factor/fig-mort-RR-time-death.png"), width=5.2, height=10)
 
-ggsave(pmort_FE, file=here("/figures/risk factor/fig-mort-RR-time-death_FE.png"), width=5.2, height=10)
-ggsave(pmort_FE, file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/fig-mort-RR-time-death_FE.png"), width=5.2, height=10)
+ggsave(pmort_FE, file=here("/figures/risk-factor/fig-mort-RR-time-death_FE.png"), width=5.2, height=10)
 
 #Save plot object
 saveRDS(pmort, file=here("results/fig-mort-RR-time-death.RDS"))
-saveRDS(pmort, file=here("/8-supplement/3-causes-and-consequences/figure-copies/plot objects/fig-mort-RR-time-death.RDS"))
 
 saveRDS(pmort_FE, file=here("results/fig-mort-RR-time-death.RDS"))
-saveRDS(pmort_FE, file=here("/8-supplement/3-causes-and-consequences/figure-copies/plot objects/fig-mort-RR-time-death.RDS"))
+
+
+
+pmort <- pmort + ylab("Random-effects pooled\nrelative risks")
+pmort_FE <- pmort_FE + ylab("Fixed-effects pooled\nrelative risks")
+
+
+
+fig <- plot_grid(pmort, pmort_FE, ncol = 2, labels = c("a","b"), rel_widths = c(1, 1))
+ggsave(fig, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/mort_timing_comp.png"), width=16, height=8)
+
+

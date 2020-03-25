@@ -31,8 +31,7 @@ clean_agecat<-function(agecat){
 
 
 #Load data
-load(paste0(here::here(),"/results/rf results/raw longbow results/mortality_024_2019-12-06.Rdata"))
-dfull<-results
+dfull<-readRDS(paste0(here::here(),"/results/rf results/raw longbow results/mortality_2020-03-08.RDS"))
 head(dfull)
 
 
@@ -225,11 +224,9 @@ pmort_FE <- ggplot(d3, aes(x=outcome_label)) +
 #expand=c(0,0)) 
 
 
-ggsave(pmort, file=here("/figures/risk factor/fig-mort-024.png"), width=5.2, height=5.2)
-ggsave(pmort, file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/fig-mort-024.png"), width=5.2, height=5.2)
+ggsave(pmort, file=here("/figures/risk-factor/fig-mort-024.png"), width=5.2, height=5.2)
 
-ggsave(pmort_FE, file=here("/figures/risk factor/fig-mort-024_FE.png"), width=5.2, height=5.2)
-ggsave(pmort_FE, file=paste0(here(),"/8-supplement/3-causes-and-consequences/figure-copies/fig-mort-024_FE.png"), width=5.2, height=5.2)
+ggsave(pmort_FE, file=here("/figures/risk-factor/fig-mort-024_FE.png"), width=5.2, height=5.2)
 
 #Save plot object
 saveRDS(pmort, file=here("results/rf_mort-024-object.RDS"))

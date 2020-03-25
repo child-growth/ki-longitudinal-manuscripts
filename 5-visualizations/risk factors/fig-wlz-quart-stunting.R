@@ -36,7 +36,7 @@ plotdf1 <- df %>%
           filter(!is.na(intervention_variable))# %>%
          # filter(agecat!="15-18 months") #Drop agecat with only 1 study
         
-        plotdf1$agecat <- factor(plotdf1$agecat, levels = c("3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "21-24 months"))
+        plotdf1$agecat <- factor(plotdf1$agecat, levels = c("3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months"))
         plotdf1 <- droplevels(plotdf1)
         
         p_lagwhz <- ggplot(plotdf1, aes(x=intervention_level)) + 
