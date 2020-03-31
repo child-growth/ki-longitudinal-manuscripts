@@ -65,7 +65,7 @@ p_earlywast <- ggplot(plotdf2, aes(x=Xvar)) +
         panel.spacing = unit(0, "lines")) #+
   #ggtitle("Risk of stunting onset\nby measure of early wasting")
 
-ggsave(p_earlywast, file=here("figures/risk-factor/fig-wasting-prior-to-stunting.png"), height=4, width=10)
+ggsave(p_earlywast, file=here("figures/risk-factor/fig-wasting-prior-to-stunting.png"), height=4, width=4)
 
 saveRDS(plotdf2, file=here("figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds"))
 saveRDS(p_earlywast, file=here("figures/plot-objects/risk-factor/fig-wasting-prior-to-stunting.rds"))

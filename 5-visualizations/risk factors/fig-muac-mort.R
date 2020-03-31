@@ -34,18 +34,28 @@ clean_agecat<-function(agecat){
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
+#load muac results
+muac <- readRDS(paste0(here::here(),"/results/rf results/raw longbow results/muac_mortality_2020-03-25.RDS"))
+muac$adjusted<-1
+
+#subset primary results to studies measuring muac
+dfull <- dfull %>% filter(studyid %in% unique(muac$studyid), intervention_variable %in% c("ever_wasted06", "ever_swasted06"), !(studyid=="JiVitA-4" & intervention_variable=="ever_swasted06"))
+
+#bind together
+dfull <- bind_rows(dfull, muac)
+
 
 unique(dfull$type)
-d <- dfull %>% filter(type=="RR", adjusted==1)
-
-#keep only morbidity and mortality analysis
-d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
-
-table(d$outcome_variable)
-d <- droplevels(d)
+d <- dfull %>% filter(type=="RR", adjusted==1, outcome_variable=="dead")
 
 #drop reference levels
 d <- d %>% filter( ci_lower !=  ci_upper)
+
+
+d <- droplevels(d)
+table(d$outcome_variable)
+
+
 
 
 poolRR <- function(d, method="REML"){
@@ -82,3 +92,49 @@ poolRR <- function(d, method="REML"){
 
 RMAest <- d %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
+
+RMAest$studyid <- "Pooled"
+
+
+d <- d %>% rename(RR=estimate, RR.CI1=ci_lower, RR.CI2=ci_upper)
+plotdf <- bind_rows(d, RMAest)
+plotdf$severe <- factor(ifelse(grepl("ever_s", plotdf$intervention_variable), "Severe wasting\nunder 6mo", "Moderate wasting\nunder 6mo"))
+plotdf$muac <- factor(ifelse(grepl("mwast", plotdf$intervention_variable), "MUAC", "WLZ"))
+
+
+
+
+table(plotdf$outcome_variable)
+plotdf$outcome_variable <- factor(plotdf$outcome_variable, levels=c("dead",  "dead0plus", "dead624", "dead6plus"))
+levels(plotdf$outcome_variable) <- c("Relative risk of\nmortality by 24 months",
+                                "Relative risk of\nany mortality",
+                                "Relative risk of\nmortality 6-24 months",
+                                "Relative risk of\nmortality after 6 months")
+
+
+plotdf$studyid <- factor(plotdf$studyid, levels=rev(c("Keneba", "JiVitA-3", "JiVitA-4", "Pooled")))
+
+pmuac <- ggplot(plotdf,aes(y=RR,x=studyid)) +
+  geom_errorbar(aes(color=muac, ymin=RR.CI1, ymax=RR.CI2, group=muac), width = 0, position = position_dodge(0.4)) +
+  geom_point(aes(color=muac, shape=muac, group=muac), size =3, position = position_dodge(0.4)) +
+  scale_fill_manual(values=tableau11, guide = guide_legend(reverse = TRUE)) +
+  scale_color_manual(values=tableau11, guide = guide_legend(reverse = TRUE)) +
+  xlab("Cohort")+
+  ylab("Relative risk of\nmortality by 24 months") +
+  scale_shape_manual(values = c(4, 16), guide = guide_legend(reverse = TRUE)) +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_x_discrete(expand = expand_scale(add = 1)) +
+  scale_y_continuous(breaks=c(1, 2, 4, 8, 16, 32), trans='log10', labels=scaleFUN) +
+  coord_flip() +
+  theme(axis.title.y = element_text(size = 14)) +
+  ggtitle("") + 
+  facet_grid(~severe) +
+  scale_linetype_manual( guide = guide_legend(reverse = TRUE) ) +
+  theme(strip.text = element_text(size=12, margin = margin(t = 0)),
+        legend.position = "right",
+        axis.text.y = element_text( hjust = 0)) +
+  labs(shape="Anthropometric\nmeasure used to\nclassify wasting",
+       color="Anthropometric\nmeasure used to\nclassify wasting")
+
+ggsave(pmuac, file=here("/figures/risk-factor/fig-muac-wast-mort.png"), width=5, height=3.5)
+
