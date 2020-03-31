@@ -21,7 +21,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-epi-functions.R"))
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.RDS"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 

@@ -22,7 +22,7 @@ source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-e
 
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.RDS"))
+d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 

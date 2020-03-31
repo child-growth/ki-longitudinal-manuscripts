@@ -2,7 +2,7 @@ rm(list = ls())
 source(file.path(here::here(), "0-config.R"))
 
 #Plot themes
-source("5-visualizations/0-plot-themes.R")
+source(here("5-visualizations/0-plot-themes.R"))
 theme_set(theme_ki())
 
 #Load data
@@ -24,7 +24,7 @@ d <- merge(dhs, ki.monthly,
 d <- merge(d, ki.quarterly,
   by = c("quantile", "region", "measure"))
 
-tableau10 <- tableau_color_pal("tableau10")
+tableau10 <- tableau_color_pal("Tableau 10")
 pcols <- c("black", tableau10(10)[c(1:3)])
 
 d2 <- d %>%

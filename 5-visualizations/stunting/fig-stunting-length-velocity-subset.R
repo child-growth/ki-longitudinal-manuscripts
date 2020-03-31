@@ -159,7 +159,7 @@ plot_laz_cohort_asia <- ggplot(velplot_laz_asia, aes(y=Mean,x=strata))+
   geom_hline(yintercept = -0) +
   facet_wrap( ~  country_cohort) +
   ggtitle("A) Monthly change in LAZ") 
-ggsave(plot_laz_cohort_asia, file="figures/stunting/fig_stunt_vel_cm_asia_sub.png", width=18, height=10)
+ggsave(plot_laz_cohort_asia, file=here("figures/stunting/fig_stunt_vel_cm_asia_sub.png"), width=18, height=10)
 
 # define standardized plot names
 plot_laz_cohort_asia_name = create_name(
