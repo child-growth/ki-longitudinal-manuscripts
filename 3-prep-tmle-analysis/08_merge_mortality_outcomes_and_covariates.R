@@ -167,6 +167,20 @@ d %>% filter(tot_dead>10) %>% #group_by(studyid, country) %>%
 save(d, file=paste0(ghapdata_dir,"stuntwast_mortality.Rdata"))
 
 
+#Examine case fatality
+prop.table(table(d$ever_swasted06, d$dead), 1) * 100
+prop.table(table(d$ever_swasted06[d$region=="South Asia"], d$dead[d$region=="South Asia"]), 1)* 100
+prop.table(table(d$ever_swasted06[d$region=="Africa"], d$dead[d$region=="Africa"]), 1)* 100
+
+prop.table(table(d$ever_wasted06, d$dead), 1) * 100
+prop.table(table(d$ever_wasted06[d$region=="South Asia"], d$dead[d$region=="South Asia"]), 1)* 100
+prop.table(table(d$ever_wasted06[d$region=="Africa"], d$dead[d$region=="Africa"]), 1)* 100
+
+prop.table(table(d$ever_sunderweight06, d$dead), 1) * 100
+prop.table(table(d$ever_sunderweight06[d$region=="South Asia"], d$dead[d$region=="South Asia"]), 1)* 100
+prop.table(table(d$ever_sunderweight06[d$region=="Africa"], d$dead[d$region=="Africa"]), 1)* 100
+
+
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # Create morbidity datasets
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -328,6 +342,11 @@ d %>% filter(tot_dead>10) %>% #group_by(studyid, country) %>%
 
 
 save(d, file=paste0(ghapdata_dir,"stuntwast_mortality_024.Rdata"))
+
+#Examine case fatality
+prop.table(table(d$ever_swasted024, d$dead), 1) * 100
+prop.table(table(d$ever_swasted024[d$region=="South Asia"], d$dead[d$region=="South Asia"]), 1)* 100
+prop.table(table(d$ever_swasted024[d$region=="Africa"], d$dead[d$region=="Africa"]), 1)* 100
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # Create list of adjustment variables
