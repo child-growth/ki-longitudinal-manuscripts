@@ -244,8 +244,9 @@ table(d$studyid, is.na(d$birthwt))
 table(d$sex)
 table(is.na(d$sex))
 
-d$birthlen2 <- who_zscore2htcm(d$birthmeas_age, d$birthLAZ, sex = d$sex)
-d$birthwt2 <- who_zscore2wtkg(d$birthmeas_age, d$birthWAZ, sex = d$sex) * 1000
+#Use agedays-1 as function codes birth age=0
+d$birthlen2 <- who_zscore2htcm(d$birthmeas_age-1, d$birthLAZ, sex = d$sex)
+d$birthwt2 <- who_zscore2wtkg(d$birthmeas_age-1, d$birthWAZ, sex = d$sex) * 1000
 d$birthlen2[!is.finite(d$birthlen2)] <- NA
 d$birthwt2[!is.finite(d$birthwt2)] <- NA
 
