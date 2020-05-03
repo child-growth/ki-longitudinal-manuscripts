@@ -6,7 +6,7 @@ library(progress)
 library(longbowRiskFactors)
 
 
-d <- readRDS(here("/results/rf results/raw longbow results/results_bin_obs_counts_2020-03-08.RDS"))
+d <- readRDS(here("/results/rf results/raw longbow results/results_bin_obs_counts_2020-05-03.RDS"))
 #drop EE gestational age
 d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
 

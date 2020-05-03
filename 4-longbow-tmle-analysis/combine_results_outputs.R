@@ -6,11 +6,11 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-03-07.RDS"))
+Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))
 
-bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-03-08.rds"))
+bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
 
-mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-03-08.rds"))
+mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-05-02.rds"))
 
 Zscores_unadj <- readRDS(here("/results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
 
@@ -18,9 +18,12 @@ bin_unadj <- readRDS(here("/results/rf results/raw longbow results/results_bin_u
 
 #lagwhz <- readRDS(here("/results/rf results/raw longbow results/results_bin_lagwhz_2020-03-07.rds"))
 
-velocity <- readRDS(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-03-08.rds"))
+velocity_wlz_quart <- readRDS(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-05-03.rds"))
+velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
+velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
-velocity_wlz_quart <- readRDS(here("/results/rf results/raw longbow results/results_vel_2020-03-08.rds"))
+
+velocity <- readRDS(here("/results/rf results/raw longbow results/results_vel_2020-03-08.rds"))
 
 season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-03-08.rds"))
 
