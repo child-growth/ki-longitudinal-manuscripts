@@ -22,6 +22,8 @@ wast_ci_6_24<- wast_ci_0_24<- stunt_ci_6_24<- stunt_ci_0_24<- wast_ci_0_6_no_bir
   co_prev18<- co_ci_6_24<- co_ci_0_24<- underweight_ci_6_24<- underweight_ci_0_24 <- NULL
 
 
+
+
 #--------------------------------------
 # Calculate cumulative incidence of
 # wasting in certain age ranges for the

@@ -10,4 +10,7 @@
 .gitignore
 .httr-oauth
 *.RProfile
+*.html
+*.md
+*Rmd
 8-supplement/1-stunting/_book/

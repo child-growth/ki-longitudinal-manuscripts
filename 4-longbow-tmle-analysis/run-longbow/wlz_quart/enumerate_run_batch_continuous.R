@@ -23,6 +23,15 @@ default_params$script_params$count_Y <- FALSE
 
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous_lagwhz.rdata"))
+
+#Add in a non-age stratified version
+analyses_unstrat <- analyses
+analyses_unstrat$strata[[1]] <- c("studyid", "country")
+analyses_unstrat$strata[[2]] <- c("studyid", "country")
+
+analyses <- rbind(analyses, analyses_unstrat)
+
+#Change analyses to list form
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 writeLines(toJSON(enumerated_analyses[[1]]),"single_cont_analysis.json")
