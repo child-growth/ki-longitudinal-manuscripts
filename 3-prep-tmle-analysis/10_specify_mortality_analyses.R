@@ -108,3 +108,23 @@ analyses <- specify_rf_analysis(A=Avars, Y=c("dead", "dead624", "dead0plus", "de
                                  file="stuntwast_mortality_024.Rdata")
 
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/mortality_analyses_024.rdata"))
+
+
+
+
+#Specify the mortality analyses
+Avars <- c("ever_wasted06",
+           "ever_swasted06",
+           "pers_wasted06",
+           "ever_stunted06",
+           "ever_sstunted06",
+           "ever_underweight06",
+           "ever_sunderweight06",
+           "ever_co06"
+)
+
+analyses <- specify_rf_analysis(A=Avars, Y=c("dead"), 
+                                V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality, 
+                                file="stuntwast_mortality_sens.Rdata")
+
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/mortality_analyses_sens.rdata"))

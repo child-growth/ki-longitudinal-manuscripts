@@ -11,12 +11,12 @@
 "10","parity","2",17125,29.5
 "11","parity","3+",20878,36
 "12","birthwt","Total",80154,100
-"13","birthwt","Normal or high birthweight",63623,79.4
-"14","birthwt","Low birthweight",16531,20.6
+"13","birthwt","Normal or high birthweight",63567,79.3
+"14","birthwt","Low birthweight",16587,20.7
 "15","birthlen","Total",75832,100
-"16","birthlen",">=50 cm",26909,35.5
-"17","birthlen","<48 cm",29615,39.1
-"18","birthlen","[48-50) cm",19308,25.5
+"16","birthlen",">=50 cm",26805,35.3
+"17","birthlen","<48 cm",29698,39.2
+"18","birthlen","[48-50) cm",19329,25.5
 "19","vagbrth","Total",66826,100
 "20","vagbrth","0",5684,8.5
 "21","vagbrth","1",61142,91.5
