@@ -12,7 +12,7 @@ library("tmle3")
 library("skimr")
 library("data.table")
 library("SuperLearner")
-
+library("caret")
 
 
 #Load and clean data
@@ -146,23 +146,29 @@ whz %>% ungroup() %>%
 
 
 #Set up SL components
-lrnr_glm <- make_learner(Lrnr_glm)
-lrnr_mean <- make_learner(Lrnr_mean)
-lrnr_glmnet <- make_learner(Lrnr_glmnet)
-lrnr_ranger100 <- make_learner(Lrnr_ranger, num.trees = 100)
-lrnr_hal_simple <- make_learner(Lrnr_hal9001, degrees = 1, n_folds = 2)
-lrnr_gam <- Lrnr_pkg_SuperLearner$new("SL.gam")
-lrnr_bayesglm <- Lrnr_pkg_SuperLearner$new("SL.bayesglm")
+# lrnr_glm <- make_learner(Lrnr_glm)
+# lrnr_mean <- make_learner(Lrnr_mean)
+# lrnr_glmnet <- make_learner(Lrnr_glmnet)
+# lrnr_ranger100 <- make_learner(Lrnr_ranger, num.trees = 100)
+# lrnr_hal_simple <- make_learner(Lrnr_hal9001, degrees = 1, n_folds = 2)
+# lrnr_gam <- Lrnr_pkg_SuperLearner$new("SL.gam")
+# lrnr_bayesglm <- Lrnr_pkg_SuperLearner$new("SL.bayesglm")
 
 
 
 
-stack <- make_learner(
-  Stack,
-  lrnr_glm, lrnr_mean, lrnr_ranger100, lrnr_glmnet,
-  lrnr_gam, lrnr_bayesglm
-)
+# stack <- make_learner(
+#   Stack,
+#   lrnr_glm, lrnr_mean, lrnr_ranger100, lrnr_glmnet,
+#   lrnr_gam, lrnr_bayesglm
+# )
 
+
+stack <- make_learner_stack("Lrnr_mean",
+                   "Lrnr_glm_fast",
+                   "Lrnr_glmnet",
+                   "Lrnr_gam",
+                   list("Lrnr_xgboost", nthread=1))
 screen_cor <- Lrnr_pkg_SuperLearner_screener$new("screen.corP")
 
 cor_pipeline <- make_learner(Pipeline, screen_cor, stack)
@@ -185,6 +191,7 @@ sl <- make_learner(Lrnr_sl,
 
 SL_R2 <- function(dat, outcome, covars){
   
+  cat(paste0(dat$studyid[1], " ",dat$country[1],"\n"))
   
   #Drop missingness
   node_list <- list(
@@ -196,8 +203,17 @@ SL_R2 <- function(dat, outcome, covars){
   dat <- processed$data
   
   # define covars
-  X <- dat[, -outcome, with=FALSE]
+  X <- data.frame(dat[, -outcome, with=FALSE])
+  
+  #Drop near-zero variance predictors
+  nzv_cols <- nearZeroVar(X)
+  dropped_covars <-  colnames(X)[nzv_cols]
+  cat("Dropping for low variance: ", dropped_covars)
+  if(length(nzv_cols) > 0){ 
+    X <- X[,-nzv_cols]
+  }
   covars <- colnames(X)
+  
 
   n= nrow(dat)
   y <- as.matrix(dat[, outcome, with=FALSE])
@@ -209,8 +225,7 @@ SL_R2 <- function(dat, outcome, covars){
   #fit lm
   y_lm <- y
   colnames(y_lm) <- "y_lm"
-  dat_lm <- dat[, -outcome, with=FALSE]
-  dat_lm  <- cbind(y_lm,dat_lm)
+  dat_lm  <- cbind(y_lm,X)
   
   fit_lm <- lm( y_lm ~ .,data = dat_lm )
   
@@ -220,11 +235,13 @@ SL_R2 <- function(dat, outcome, covars){
   R2_lm <- 1 - mse_lm/var((y_lm))
   colnames( R2_lm ) <- NULL
   row.names(R2_lm) <- NULL
-     
   
+  df <- data.frame(y, X)  
+  colnames(df)[1] <- outcome
+    
   # create the sl3 task
   washb_task <- make_sl3_Task(
-    data = dat,
+    data = df,
     covariates = covars,
     outcome = outcome
   )
@@ -287,19 +304,24 @@ SL_R2 <- function(dat, outcome, covars){
 
 
 #Apply function to all cohorts that measure the covariates of interest
-# res_haz <- d %>% group_by(studyid, country) %>% do(res = SL_R2(dat=.,  outcome="haz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
-# res_whz <- d %>% group_by(studyid, country) %>% do(res = SL_R2(dat=.,  outcome="whz", covars=c("parity", "birthlen", "meducyrs", "nrooms", "mwtkg")))
+res_haz_list <- haz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="haz", covars=covars)))
+res_whz_list <- whz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="whz", covars=covars)))
 
-res_haz <- haz %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="haz", covars=covars))
+res_haz<-NULL
+for(i in 1:nrow(res_haz_list)){
+  if(class(res_haz_list$res[[i]]) !="try-error"){
+    res_haz <- try(bind_rows(res_haz, data.frame(studyid=res_haz_list$studyid[i], country=res_haz_list$country[i], res_haz_list$res[[i]])))
+  }
+}
 
-res_whz <- whz %>% group_by(studyid, country) %>% do(SL_R2(dat=.,  outcome="whz", covars=covars))
-
-
+res_whz<-NULL
+for(i in 1:nrow(res_whz_list)){
+  if(class(res_whz_list$res[[i]]) !="try-error"){
+    res_whz <- try(bind_rows(res_whz, data.frame(studyid=res_whz_list$studyid[i], country=res_whz_list$country[i], res_whz_list$res[[i]])))
+  }
+}
 
 #Save results
-
-
-
 filename_whz <- paste(paste('R2_results_whz',Sys.Date( ),sep='_'),'RDS',sep='.')
 filename_haz <- paste(paste('R2_results_haz',Sys.Date( ),sep='_'),'RDS',sep='.')
 
@@ -319,8 +341,6 @@ saveRDS(res_haz, file=here::here("results",filename_haz))
 #-------------------------
 
 
-
-source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
 
 
 # Calculate pooled cv-R2 for haz dataset
@@ -379,11 +399,10 @@ print(c(pooled_r2_haz , pooled_r2_whz))
 
 
 
-"Pool R2 (direct method, with CI)"
+#"Pool R2 (direct method, with CI)"
 
 
 
-source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R "))
 
 
 # Calculate pooled cv-R2 for haz dataset
@@ -434,6 +453,6 @@ pooled_r2_results <- data.frame(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_C
 
 
 
-filename <- paste(paste('pooled_R2_results',Sys.Date( ),sep='_'),'rdata',sep='.')
+filename <- paste(paste('pooled_R2_results',Sys.Date( ),sep='_'),'RDS',sep='.')
 
-save(pooled_r2_results, file=here::here("results",filename))
+saveRDS(pooled_r2_results, file=here::here("results",filename))

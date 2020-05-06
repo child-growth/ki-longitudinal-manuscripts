@@ -7,14 +7,14 @@ source(paste0(here::here(), "/0-config.R"))
 .libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
-library(jsonlite)
+#library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
 
 # 1. enumerate analysis
 setwd(here("4-longbow-tmle-analysis","run-longbow","seasonality"))
 inputs <- "inputs_template.json"
-default_params <- fromJSON(inputs)
+default_params <- jsonlite::fromJSON(inputs)
 
 #Set to continious
 default_params$script_params$count_Y <- TRUE
@@ -23,7 +23,7 @@ load(here("4-longbow-tmle-analysis","analysis specification","seasonality_rf_pre
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
-writeLines(toJSON(enumerated_analyses),"seasonality_rf_bin_analyses.json")
+writeLines(jsonlite::toJSON(enumerated_analyses),"seasonality_rf_bin_analyses.json")
 
 
 # 2. run batch

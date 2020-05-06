@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 .libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
-library(jsonlite)
+#library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
 
@@ -14,7 +14,7 @@ library(longbowRiskFactors)
 
 setwd(here("4-longbow-tmle-analysis","run-longbow","mediation"))
 inputs <- "inputs_template.json"
-default_params <- fromJSON(inputs)
+default_params <- jsonlite::fromJSON(inputs)
 default_params$script_params$count_Y <- FALSE
 
 load(here("4-longbow-tmle-analysis","analysis specification","mediation.RData"))
@@ -24,8 +24,8 @@ analyses <- analyses %>% filter(A %in% c("fhtcm","mhtcm","mwtkg","mbmi"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
-writeLines(toJSON(enumerated_analyses[[1]]),"single_mediation_analyses.json")
-writeLines(toJSON(enumerated_analyses),"all_mediation_analyses.json")
+writeLines(jsonlite::toJSON(enumerated_analyses[[1]]),"single_mediation_analyses.json")
+writeLines(jsonlite::toJSON(enumerated_analyses),"all_mediation_analyses.json")
 
 
 

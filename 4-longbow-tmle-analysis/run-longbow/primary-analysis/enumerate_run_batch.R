@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 try(.libPaths( "~/rlibs" ))
 library(data.table)
 library(longbowtools)
-library(jsonlite)
+#library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
 
@@ -15,13 +15,13 @@ library(longbowRiskFactors)
 
 setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
-default_params <- fromJSON(inputs)
+default_params <- jsonlite::fromJSON(inputs)
 
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(toJSON(enumerated_analyses[[1]]),"single_bin_analysis.json")
-writeLines(toJSON(enumerated_analyses),"all_bin_analyses.json")
+writeLines(jsonlite::toJSON(enumerated_analyses[[1]]),"single_bin_analysis.json")
+writeLines(jsonlite::toJSON(enumerated_analyses),"all_bin_analyses.json")
 
 
 

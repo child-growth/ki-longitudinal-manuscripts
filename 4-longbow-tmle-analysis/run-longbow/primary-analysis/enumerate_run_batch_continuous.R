@@ -31,7 +31,7 @@ dim(analyses)
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
-writeLines(toJSON(enumerated_analyses[[17]]),"single_cont_analysis.json")
+writeLines(toJSON(enumerated_analyses[[16]]),"single_cont_analysis.json")
 writeLines(toJSON(enumerated_analyses),"all_cont_analyses.json")
 
 
@@ -42,7 +42,7 @@ rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbo
 inputs <- "single_cont_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_cont_analyses.json"
