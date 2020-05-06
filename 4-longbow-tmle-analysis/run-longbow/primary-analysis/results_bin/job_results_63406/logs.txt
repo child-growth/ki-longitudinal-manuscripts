@@ -1,0 +1,37 @@
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/4316d038-29a1-4e67-8b89-715713b9ee16/77b76c2f-a8c6-4764-8dd8-3a3c07349b60
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/6ad30d55-80e3-48f4-84f4-0de3646bf683/20626034-0379-44af-babf-bda0eb6183bd
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/8513b668-e97c-4476-a086-18dc973fc4e5/000c37f6-53b5-4f76-8c02-8612f05f0662
+Traceback (most recent call last):
+  File "/app/cluster/redirect_logs.py", line 13, in redirect_logs
+    yield
+  File "/app/cluster/ghap/submit_jobs.py", line 230, in submit_job
+    run_ghap_job(job)
+  File "/app/cluster/ghap/submit_jobs.py", line 219, in run_ghap_job
+    output = upload_to_ghap(c, job, username, password)
+  File "/app/.heroku/python/lib/python3.6/site-packages/backoff/_sync.py", line 94, in retry
+    ret = target(*args, **kwargs)
+  File "/app/cluster/ghap/submit_jobs.py", line 193, in upload_to_ghap
+    c.put(tar_fullpath, remote=temp_base_dir)
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/connection.py", line 767, in put
+    return Transfer(self).put(*args, **kwargs)
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/transfer.py", line 212, in put
+    elif self.is_remote_dir(remote):
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/transfer.py", line 37, in is_remote_dir
+    return stat.S_ISDIR(self.sftp.stat(path).st_mode)
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/transfer.py", line 33, in sftp
+    return self.connection.sftp()
+  File "<decorator-gen-5>", line 2, in sftp
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/connection.py", line 29, in opens
+    self.open()
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/connection.py", line 615, in open
+    self.client.connect(**kwargs)
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/client.py", line 437, in connect
+    passphrase,
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/client.py", line 750, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+

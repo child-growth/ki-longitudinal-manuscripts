@@ -50,7 +50,7 @@ par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
  
 unique(par$RFlabel_ref)
 
-df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref, n_cell, n)) %>% 
+df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref,  RFtype, n_cell, n)) %>% 
   filter(!is.na(PAR)) %>% mutate(measure="PAR")
 
 

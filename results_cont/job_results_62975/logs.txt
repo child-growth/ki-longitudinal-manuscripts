@@ -1,0 +1,52 @@
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/d6d77c26-562a-4e53-9428-96575801b1a7/907d063c-4f5a-4b87-a316-f4a8b0898f16
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/b3032bac-0b14-4e72-bc69-1beabccf7804/b73a66b0-794c-48ce-b16c-9db1567ead32
+Command to run:
+Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/9bef4660-daea-4037-87dc-ec1117ec69cb/2d55d5ea-75c7-4f57-b677-330ec70282ae
+Traceback (most recent call last):
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/transport.py", line 2138, in _check_banner
+    buf = self.packetizer.readline(timeout)
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/packet.py", line 367, in readline
+    buf += self._read_timeout(timeout)
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/packet.py", line 563, in _read_timeout
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/cluster/redirect_logs.py", line 13, in redirect_logs
+    yield
+  File "/app/cluster/ghap/submit_jobs.py", line 230, in submit_job
+    run_ghap_job(job)
+  File "/app/cluster/ghap/submit_jobs.py", line 219, in run_ghap_job
+    output = upload_to_ghap(c, job, username, password)
+  File "/app/.heroku/python/lib/python3.6/site-packages/backoff/_sync.py", line 94, in retry
+    ret = target(*args, **kwargs)
+  File "/app/cluster/ghap/submit_jobs.py", line 193, in upload_to_ghap
+    c.put(tar_fullpath, remote=temp_base_dir)
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/connection.py", line 767, in put
+    return Transfer(self).put(*args, **kwargs)
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/transfer.py", line 212, in put
+    elif self.is_remote_dir(remote):
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/transfer.py", line 37, in is_remote_dir
+    return stat.S_ISDIR(self.sftp.stat(path).st_mode)
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/transfer.py", line 33, in sftp
+    return self.connection.sftp()
+  File "<decorator-gen-5>", line 2, in sftp
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/connection.py", line 29, in opens
+    self.open()
+  File "/app/.heroku/python/lib/python3.6/site-packages/fabric/connection.py", line 615, in open
+    self.client.connect(**kwargs)
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/client.py", line 397, in connect
+    t.start_client(timeout=timeout)
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/transport.py", line 587, in start_client
+    raise e
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/transport.py", line 1966, in run
+    self._check_banner()
+  File "/app/.heroku/python/lib/python3.6/site-packages/paramiko/transport.py", line 2143, in _check_banner
+    "Error reading SSH protocol banner" + str(e)
+paramiko.ssh_exception.SSHException: Error reading SSH protocol banner
+
+
