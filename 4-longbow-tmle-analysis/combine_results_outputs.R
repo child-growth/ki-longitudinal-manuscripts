@@ -10,7 +10,7 @@ Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_20
 
 bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-03-08.rds"))
 
-mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-03-08.rds"))
+mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-05-04.rds"))
 
 Zscores_unadj <- readRDS(here("/results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
 
