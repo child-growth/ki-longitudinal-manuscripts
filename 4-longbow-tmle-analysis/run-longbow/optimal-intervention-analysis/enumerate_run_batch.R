@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 .libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
-library(jsonlite)
+#library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
 library(longbowOptTX)
@@ -17,7 +17,7 @@ library(longbowOptTX)
 
 setwd(here("4-longbow-tmle-analysis","run-longbow","optimal-intervention-analysis"))
 inputs <- "inputs_template.json"
-default_params <- fromJSON(inputs)
+default_params <- jsonlite::fromJSON(inputs)
 
 # # Binary
 # load('../Manuscript analysis/adjusted_binary_analyses_sub.rdata')
@@ -33,8 +33,8 @@ default_params$script_params$count_Y <- FALSE
 analyses <- analyses %>% filter(Y %in% c("haz","whz"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(toJSON(enumerated_analyses[[10]]),"single_analysis.json")
-writeLines(toJSON(enumerated_analyses),"all_analyses.json")
+writeLines(jsonlite::toJSON(enumerated_analyses[[10]]),"single_analysis.json")
+writeLines(jsonlite::toJSON(enumerated_analyses),"all_analyses.json")
 
 
 
@@ -49,7 +49,7 @@ rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX
 inputs <- "single_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_analyses.json"

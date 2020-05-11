@@ -17,20 +17,19 @@ inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 
 #Load existing results
-results <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-05-08.RDS"))   
+results <- readRDS(here("results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))   
 
 
 # # Continious
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
-default_params$script_params$maximize <- TRUE
 default_params$script_params$count_Y <- FALSE
 
 
 #Subset analysis to jobs not yet run
 analyses <- analyses %>% filter(Y %in% c("whz","haz"))
 analyses <- analyses %>% filter((Y == "whz" & !(A %in% results$intervention_variable[results$outcome_variable=="whz"])) |
-                                (Y == "haz" & !(A %in% results$intervention_variable[results$outcome_variable=="haz"])))
+                                  (Y == "haz" & !(A %in% results$intervention_variable[results$outcome_variable=="haz"])))
 table(analyses$A, analyses$Y)
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
@@ -44,7 +43,7 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"sub_analyses.json")
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 
-rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX")
+rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
 
 
 
