@@ -20,7 +20,7 @@ d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 #--------------------------------------------
 
 
-d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
+d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, sex, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
 
 
 #d <- d %>% filter(studyid == "PROVIDE")
