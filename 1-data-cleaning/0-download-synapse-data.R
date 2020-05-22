@@ -11,7 +11,7 @@ synLogin('amertens','!1a2n3m4!')
 
 #Download final.csv dataset
 # Obtain a pointer and download the data 
-syn21680644 <- synGet(entity='syn21680644', downloadLocation = "/home/andrew.mertens/data/KI/") 
+syn21554250 <- synGet(entity='syn21554250', downloadLocation = "/home/andrew.mertens/data/KI/") 
 
 
 

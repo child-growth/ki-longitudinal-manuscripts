@@ -48,30 +48,6 @@ d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
 gc()
 
 
-#temp- merge in Jivitia
-jiv<-fread("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data old/FINAL.csv", header = T,
-         drop = c( "AGEIMPFL",  #"WTKG", "REGION",   
-                   #"HTCM",    "LENCM", 
-                   "BAZ", "HCAZ",      
-                   "REGCTRY", "REGCTYP", #"CITYTOWN",
-                   "HHID",    
-                   "FEEDING", "DURBRST", #"BRTHYR", 
-                   "ENSTUNT", "FWTKG", "FBMI",
-                   "BRFEED", "SUMEP",   "SUMDIAR", "SUMDAYS",
-                   "PCTDIAR", "IMPSAN",  "SOAP",    "SAFEH2O", "H2OTIME",
-                   "CHICKEN", "COW",     "CATTLE",  "INCTOT", 
-                   "INCTOTU", "BFEDFL",  "EXBFEDFL","WEANFL",  "ANMLKFL", "PWMLKFL",
-                   "FORMLKFL","BOTTLEFL","H20FEDFL","OTHFEDFL","SLDFEDFL","NBFYES",   "CMFDINT", "DIARFL",  "LSSTLFL",
-                   "NUMLS",   "BLDSTLFL","DIARFL_R","LSSTFL_R","NUMLS_R", "BLDSTL_R",
-                   "DUR_R"))
-gc()
-jiv <- jiv[STUDYID=="kiGH5241-JiVitA-3" | STUDYID == "kiGH5241-JiVitA-4"]
-gc()
-#strip grant identifiers
-jiv$STUDYID <- gsub("^k.*?-" , "", jiv$STUDYID)
-unique(jiv$STUDYID)
-
-d <- rbind(d, jiv)
 unique(d$STUDYID)
 
 colnames(d) <- tolower(colnames(d))
@@ -79,7 +55,7 @@ gc()
 
 #Drop studies Vishak added to data product that don't meet inclusion criteria
 dim(d)
-d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP"))]
+d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP", "ILINS-DYAD-G"))]
 dim(d)
 gc()
 
@@ -94,6 +70,7 @@ d <- d[studyid=="BurkinaFasoZn", studyid := "Burkina Faso Zn"]
 d <- d[studyid=="ILINS-DOSE", studyid := "iLiNS-DOSE"]
 d <- d[studyid=="ILINS-DYAD-M", studyid := "iLiNS-DYAD-M"]
 
+unique(d$studyid)
 
 
 monthly_vec <- c("MAL-ED",   
