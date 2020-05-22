@@ -49,4 +49,12 @@ source(here("5-visualizations/risk factors/fig-spline-plots_sensitivity.R"))
 
 source(here("5-visualizations/risk factors/fig-pooled-RR-plots.R"))
 
+source('~/HBGDki/ki-longitudinal-manuscripts/5-visualizations/risk factors/fig-muac-mort.R', echo=TRUE)
+source('~/HBGDki/ki-longitudinal-manuscripts/5-visualizations/risk factors/fig-mortality-plots-sens-birth.R', echo=TRUE)
+source('~/HBGDki/ki-longitudinal-manuscripts/5-visualizations/risk factors/fig-mortality-plots-sens.R', echo=TRUE)
+source('~/HBGDki/ki-longitudinal-manuscripts/5-visualizations/risk factors/fig-mortality-plots-sens2.R', echo=TRUE)
+source('~/HBGDki/ki-longitudinal-manuscripts/5-visualizations/risk factors/fig-mortality-plots-sens3.R', echo=TRUE)
+source('~/HBGDki/ki-longitudinal-manuscripts/5-visualizations/risk factors/fig-muac-mort.R', echo=TRUE)
+
+
 

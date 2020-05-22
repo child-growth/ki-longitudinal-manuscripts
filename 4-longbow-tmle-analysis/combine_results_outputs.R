@@ -9,6 +9,19 @@ Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <
 Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))
 
 bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
+bin_sub <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
+bin_sub2 <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-20.rds"))
+bin_sub3 <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-20_part2.rds"))
+bin <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
+dim(bin)
+
+bin_old <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-03-08.RDS"))
+bin_old <- bin_old %>% select("agecat", "studyid", "country", "strata_label", "intervention_variable", 
+                              "outcome_variable","type","parameter","intervention_level",  "baseline_level")
+dim(bin)
+bin <- left_join(bin_old, bin, by=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
+  "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
+dim(bin)
 
 mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-05-04.rds"))
 
@@ -18,25 +31,26 @@ bin_unadj <- readRDS(here("/results/rf results/raw longbow results/results_bin_u
 
 #lagwhz <- readRDS(here("/results/rf results/raw longbow results/results_bin_lagwhz_2020-03-07.rds"))
 
-velocity_wlz_quart <- readRDS(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-05-03.rds"))
+velocity_wlz_quart <- readRDS(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-05-06.rds"))
 velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
 
 velocity <- readRDS(here("/results/rf results/raw longbow results/results_vel_2020-03-08.rds"))
 
-season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-03-08.rds"))
+season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-05-06.rds"))
 
-season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2020-03-08.rds"))
+season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2020-05-06.rds"))
 
-season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2020-03-08.rds"))
-
-
+season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2020-05-06.rds"))
 
 
 
 
-d <- bind_rows(Zscores, Zscores_unadj, bin, bin_unadj, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
+
+
+d <- bind_rows(Zscores, Zscores_unadj, bin, 
+               bin_unadj, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"
@@ -49,10 +63,27 @@ d <- d %>% filter(!(studyid=="EE" & intervention_variable=="gagebrth"))
 dim(d)
 
 
+#Exclude extreme estimates from TMLE sparsity
+dim(d)
+d <- d %>% filter(abs(estimate) < 100)
+d <- d[1/d$estimate[d$type=="RR"] < 100,]
+dim(d)
+
 #Drop duplicated (unadjusted sex and month variables)
-dim(d)
-d <- distinct(d)
-dim(d)
+d1 <- d %>% filter(adjustment_set=="unadjusted")
+d2 <- d %>% filter(adjustment_set!="unadjusted")
+
+dim(d1)
+dim(d2)
+d1 <- d1 %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
+                                    "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
+                         .keep_all=TRUE)
+d2 <- d2 %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
+                                    "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
+                         .keep_all=TRUE)
+dim(d1)
+dim(d2)
+d <- bind_rows(d1, d2)
 
 #Mark region
 d <- mark_region(d)

@@ -35,7 +35,7 @@ dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
 #load muac results
-muac <- readRDS(paste0(here::here(),"/results/rf results/raw longbow results/muac_mortality_2020-03-25.RDS"))
+muac <- readRDS(paste0(here::here(),"/results/rf results/raw longbow results/muac_mortality_2020-05-02.RDS"))
 muac$adjusted<-1
 
 #subset primary results to studies measuring muac

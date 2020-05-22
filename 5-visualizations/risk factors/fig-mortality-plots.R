@@ -222,7 +222,8 @@ saveRDS(pmort, file=here("results/rf_mort+morb_plot_object.RDS"))
 
 
 #Save single plot
-dsub <- d2[d2$outcome_variable=="Relative risk of\nmortality by 24 months",]
+dsub <- d2[d2$outcome_variable=="Relative risk of\nmortality by 24 months",] %>% arrange(RR) %>%
+  mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label))) 
 p1 <- ggplot(dsub, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +

@@ -27,6 +27,7 @@ dim(results)
 results <- results %>% filter(!(studyid=="EE" & intervention_variable=="gagebrth"))
 dim(results)
 
+
 saveRDS(results, paste0(here::here(),"/results/rf results/full_VIM_results.rds"))
 
 

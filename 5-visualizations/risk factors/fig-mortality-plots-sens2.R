@@ -31,7 +31,7 @@ clean_agecat<-function(agecat){
 
 
 #Load data
-dfull<-readRDS(paste0(here::here(),"/results/rf results/raw longbow results/mortality_2020-03-08.RDS"))
+dfull<-readRDS(paste0(here::here(),"/results/rf results/raw longbow results/mortality_2020-05-04.RDS"))
 head(dfull)
 
 
@@ -49,7 +49,8 @@ d <- d %>% filter( ci_lower !=  ci_upper)
 
 poolRR <- function(d, method="REML"){
   #nstudies=length(unique(d$studyid))
-  nstudies <- d %>% summarize(N=n())
+  #nstudies <- d %>% summarize(N=n())
+  nstudies=length(unique(paste0(d$studyid, d$country)))
   
   if(d$intervention_level[1] == d$baseline_level[1]){
     est <- data.frame(logRR.psi=1, logSE=0, RR=1, RR.CI1=1, RR.CI2=1, Nstudies= nstudies$N)
@@ -72,7 +73,7 @@ poolRR <- function(d, method="REML"){
       est$RR.CI1<-exp(est$logRR.psi - 1.96 * est$logSE)
       est$RR.CI2<-exp(est$logRR.psi + 1.96 * est$logSE)
       
-      est$Nstudies <- nstudies$N
+      est$Nstudies <- nstudies
     }
   }
   

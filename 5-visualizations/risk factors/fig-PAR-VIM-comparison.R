@@ -52,8 +52,8 @@ is_outlier <- function(x, thres=1.5) {
 
 
 
-dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=2.8), as.character(dhaz$RFlabel.x),NA)
-dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.35), as.character(dwhz$RFlabel.x),NA)
+dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=3), as.character(dhaz$RFlabel.x),NA)
+dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.25), as.character(dwhz$RFlabel.x),NA)
 dhaz$is_outlier <- ifelse(is.na(dhaz$outlier), "0", "1")
 dwhz$is_outlier <- ifelse(is.na(dwhz$outlier), "0", "1")
 dhaz$outlier
@@ -67,8 +67,8 @@ dwhz$outlier
 # dhaz$outlier[dhaz$outlier == "Birth order"] <- "Birth\norder"
 # dhaz$outlier[dhaz$outlier == "# of people in HH"] <- "# of people\nin HH"
 
-dhaz$x <- -dhaz$PAR + 0.05
-dhaz$y <- -dhaz$VIM + 0.1
+# dhaz$x <- -dhaz$PAR + 0.05
+# dhaz$y <- -dhaz$VIM + 0.1
 #dhaz$y[dhaz$outlier == "# of children <5 in HH\nSafe water source\nSingle parent" & !is.na(dhaz$outlier)] <- dhaz$y[dhaz$outlier == "# of children <5 in HH\nSafe water source\nSingle parent"& !is.na(dhaz$outlier)] +0.1
 
 

@@ -57,8 +57,8 @@ get_batch_results(batch_id_cont, results_folder="results_cont")
 length(dir("results_cont"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results_cont_temp")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_cont_temp")
+results <- load_batch_results("results.rdata", results_folder = "results_cont")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_cont")
 
 # save concatenated results
 filename1 <- paste(paste('results_con_tempt',Sys.Date( ),sep='_'),'RDS',sep='.')

@@ -128,3 +128,13 @@ analyses <- specify_rf_analysis(A=Avars, Y=c("dead"),
                                 file="stuntwast_mortality_sens.Rdata")
 
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/mortality_analyses_sens.rdata"))
+
+
+
+
+#Specify sex-mortality analysis
+analyses_sex <- specify_rf_analysis(A="sex", Y=c("dead"), 
+                                V= c("studyid","country"), id="id", adj_sets=NULL, 
+                                file="stuntwast_mortality_sens.Rdata")
+
+save(analyses_sex, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/mortality_analyses_sex.rdata"))

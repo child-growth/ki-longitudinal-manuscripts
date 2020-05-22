@@ -54,9 +54,8 @@ d <- d %>% filter( ci_lower !=  ci_upper)
 
 
 poolRR <- function(d){
-  #nstudies=length(unique(d$studyid))
-  nstudies <- d %>% summarize(N=n())
-  
+  nstudies=length(unique(paste0(d$studyid, d$country)))
+
   if(d$intervention_level[1] == d$baseline_level[1]){
     est <- data.frame(logRR.psi=1, logSE=0, RR=1, RR.CI1=1, RR.CI2=1, Nstudies= nstudies$N)
   }else{
@@ -78,7 +77,7 @@ poolRR <- function(d){
       est$RR.CI1<-exp(est$logRR.psi - 1.96 * est$logSE)
       est$RR.CI2<-exp(est$logRR.psi + 1.96 * est$logSE)
       
-      est$Nstudies <- nstudies$N
+      est$Nstudies <- nstudies
     }
   }
   

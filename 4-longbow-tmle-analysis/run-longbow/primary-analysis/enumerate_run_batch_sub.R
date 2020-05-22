@@ -21,9 +21,11 @@ default_params <- jsonlite::fromJSON(inputs)
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
 
 #Load existing results
-results <- readRDS(here("results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))   
-
-
+results <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.RDS"))   
+results_sub <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-19.RDS"))   
+results_sub2 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20.RDS"))   
+results <- bind_rows(results, results_sub, results_sub2)
+#63738
 
 #Subset analysis to jobs not yet run
 analyses <- analyses %>% filter((Y == "stunted" & !(A %in% results$intervention_variable[results$outcome_variable=="stunted"])) |
@@ -52,13 +54,12 @@ configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
 # inputs <- "inputs_template.json"
-inputs <- "single_bin_analysis.json"
 
 #run test/provisioning job
 #run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
-bin_batch_inputs <- "all_bin_analyses.json"
+bin_batch_inputs <- "sub_analyses.json"
 bin_batch_id <-  run_on_longbow(rmd_filename, bin_batch_inputs, provision = FALSE)
 bin_batch_id
 

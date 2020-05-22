@@ -33,7 +33,7 @@ default_params$script_params$count_Y <- FALSE
 analyses <- analyses %>% filter(Y %in% c("haz","whz"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(jsonlite::toJSON(enumerated_analyses[[10]]),"single_analysis.json")
+writeLines(jsonlite::toJSON(enumerated_analyses[[21]]),"single_analysis.json")
 writeLines(jsonlite::toJSON(enumerated_analyses),"all_analyses.json")
 
 
@@ -49,7 +49,7 @@ rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX
 inputs <- "single_analysis.json"
 
 #run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_analyses.json"

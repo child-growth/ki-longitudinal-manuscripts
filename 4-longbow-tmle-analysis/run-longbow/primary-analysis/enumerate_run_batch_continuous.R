@@ -31,7 +31,7 @@ dim(analyses)
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
-writeLines(toJSON(enumerated_analyses[[16]]),"single_cont_analysis.json")
+writeLines(toJSON(enumerated_analyses[[17]]),"single_cont_analysis.json")
 writeLines(toJSON(enumerated_analyses),"all_cont_analyses.json")
 
 

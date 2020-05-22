@@ -17,7 +17,7 @@ inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 
 #Load existing results
-results <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-05-08.RDS"))   
+results <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-05-18.RDS"))   
 
 
 # # Continious
