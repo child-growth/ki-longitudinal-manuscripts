@@ -285,20 +285,20 @@ The following object is masked from ‘package:ggthemes’:
 5  281.8000  37.16667 1140.0000    0.8946784
 6  880.7333 456.73333 2403.3000    0.4058170
 > head(d)
-         studyid subjid id country     region agedays measurefreq month   whz
-1 CMC-V-BCS-2002      1  1   INDIA South Asia      33     monthly     1  0.55
-2 CMC-V-BCS-2002      1  1   INDIA South Asia      67     monthly     2 -2.91
-3 CMC-V-BCS-2002      1  1   INDIA South Asia      95     monthly     3 -2.45
-4 CMC-V-BCS-2002      1  1   INDIA South Asia     130     monthly     4 -1.44
-5 CMC-V-BCS-2002      1  1   INDIA South Asia     159     monthly     5 -1.27
-6 CMC-V-BCS-2002      1  1   INDIA South Asia     190     monthly     6 -2.18
-    haz   waz latitude longitud brthweek brthmon birthday studyday jday
-1 -3.56 -2.74    78.93    12.85       50      12      343      376   12
-2 -1.93 -3.62    78.93    12.85       50      12      343      410   46
-3 -2.67 -3.91    78.93    12.85       50      12      343      438   74
-4 -2.35 -2.74    78.93    12.85       50      12      343      473  109
-5 -2.95 -3.02    78.93    12.85       50      12      343      502  138
-6 -2.08 -2.90    78.93    12.85       50      12      343      533  169
+         studyid subjid id country     region agedays  sex measurefreq month
+1 CMC-V-BCS-2002      1  1   INDIA South Asia      33 Male     monthly     1
+2 CMC-V-BCS-2002      1  1   INDIA South Asia      67 Male     monthly     2
+3 CMC-V-BCS-2002      1  1   INDIA South Asia      95 Male     monthly     3
+4 CMC-V-BCS-2002      1  1   INDIA South Asia     130 Male     monthly     4
+5 CMC-V-BCS-2002      1  1   INDIA South Asia     159 Male     monthly     5
+6 CMC-V-BCS-2002      1  1   INDIA South Asia     190 Male     monthly     6
+    whz   haz   waz latitude longitud brthweek brthmon birthday studyday jday
+1  0.55 -3.56 -2.74    78.93    12.85       50      12      343      376   12
+2 -2.91 -1.93 -3.62    78.93    12.85       50      12      343      410   46
+3 -2.45 -2.67 -3.91    78.93    12.85       50      12      343      438   74
+4 -1.44 -2.35 -2.74    78.93    12.85       50      12      343      473  109
+5 -1.27 -2.95 -3.02    78.93    12.85       50      12      343      502  138
+6 -2.18 -2.08 -2.90    78.93    12.85       50      12      343      533  169
 > 
 > # rain$country <- toupper(rain$country)
 > # rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
@@ -510,7 +510,7 @@ The following object is masked from ‘package:ggthemes’:
 > dim(df)
 [1] 178244      6
 > dim(cov)
-[1] 76559    83
+[1] 109366     83
 > d <- left_join(df, cov, by = c("studyid", "subjid", "country"))
 > dim(d)
 [1] 178244     86
@@ -560,4 +560,4 @@ The following object is masked from ‘package:ggthemes’:
 > 
 > proc.time()
    user  system elapsed 
- 17.860   1.185  19.029 
+ 12.381   0.698  18.468 

@@ -679,4 +679,4 @@ Detecting old grouped_df format, replacing `vars` attribute by `groups`
 > 
 > proc.time()
    user  system elapsed 
- 14.169   0.599  14.749 
+ 14.731   0.737  15.483 

@@ -363,3 +363,240 @@ Warning messages:
 > 
 > df <- calc.prev.agecat(df)
 > prev.data <-  summary.prev.whz(df, method="FE")
+Warning messages:
+1: Extra argument ('method') disregarded. 
+2: Extra argument ('method') disregarded. 
+3: Extra argument ('method') disregarded. 
+4: Extra argument ('method') disregarded. 
+5: Extra argument ('method') disregarded. 
+6: Extra argument ('method') disregarded. 
+7: Extra argument ('method') disregarded. 
+8: Extra argument ('method') disregarded. 
+9: Extra argument ('method') disregarded. 
+> prev.region <- df %>% group_by(region) %>% do(summary.prev.whz(., method="FE")$prev.res)
+There were 27 warnings (use warnings() to see them)
+> prev.country <- df %>% group_by(country) %>% do(summary.prev.whz(., method="FE")$prev.res) %>% mutate(region=country)
+There were 50 or more warnings (use warnings() to see the first 50)
+> prev.cohort <-
++   prev.data$prev.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
++   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
+> 
+> underweight.prev <- bind_rows(
++   data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
++   data.frame(cohort = "pooled", prev.region),
++   data.frame(cohort = "pooled", prev.country),
++   prev.cohort
++ )
+Warning messages:
+1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+6: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+7: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+8: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> 
+> 
+> #mean waz
+> waz.data <- summary.waz(df, method="FE")
+Warning messages:
+1: Extra argument ('method') disregarded. 
+2: Extra argument ('method') disregarded. 
+3: Extra argument ('method') disregarded. 
+4: Extra argument ('method') disregarded. 
+5: Extra argument ('method') disregarded. 
+6: Extra argument ('method') disregarded. 
+7: Extra argument ('method') disregarded. 
+8: Extra argument ('method') disregarded. 
+9: Extra argument ('method') disregarded. 
+> waz.region <- d %>% group_by(region) %>% do(summary.waz(., method="FE")$waz.res)
+There were 27 warnings (use warnings() to see them)
+> waz.country <- d %>% group_by(country) %>% do(summary.waz(., method="FE")$waz.res) %>% mutate(region=country)
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> waz.cohort <-
++   waz.data$waz.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  meanwaz,  ci.lb,  ci.ub)) %>%
++   rename(est = meanwaz,  lb = ci.lb,  ub = ci.ub)
+> 
+> waz <- bind_rows(
++   data.frame(cohort = "pooled", region = "Overall", waz.data$waz.res),
++   data.frame(cohort = "pooled", waz.region),
++   data.frame(cohort = "pooled", waz.country),
++   waz.cohort
++ )
+Warning messages:
+1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+6: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> 
+> #monthly mean waz
+> df <- calc.monthly.agecat(df)
+> monthly.data <- summary.waz(df, method="FE")
+There were 25 warnings (use warnings() to see them)
+> monthly.region <- df %>% group_by(region) %>% do(summary.waz(., method="FE")$waz.res)
+There were 50 or more warnings (use warnings() to see the first 50)
+> monthly.country <- df %>% group_by(country) %>% do(summary.waz(., method="FE")$waz.res) %>% mutate(region=country)
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> monthly.cohort <-
++   monthly.data$waz.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  meanwaz,  ci.lb,  ci.ub)) %>%
++   rename(est = meanwaz,  lb = ci.lb,  ub = ci.ub)
+> 
+> monthly.waz <- bind_rows(
++   data.frame(cohort = "pooled", region = "Overall", monthly.data$waz.res),
++   data.frame(cohort = "pooled", monthly.region),
++   data.frame(cohort = "pooled", monthly.country),
++   monthly.cohort
++ )
+Warning messages:
+1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+6: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> 
+> 
+> 
+> #Prevalence of wasting based on MUAC
+> d <- calc.prev.agecat(d)
+> m.prev.data <- summary.prev.muaz(d, method="FE")
+There were 16 warnings (use warnings() to see them)
+> m.prev.region <- d %>% group_by(region) %>% do(summary.prev.muaz(., method="FE")$m.prev.res)
+There were 50 or more warnings (use warnings() to see the first 50)
+> m.prev.country <- d %>% filter(!is.na(muaz)) %>% group_by(country) %>% do(summary.prev.muaz(., method="FE")$m.prev.res) %>% mutate(region=country)
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> m.prev.cohort <-
++   m.prev.data$m.prev.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
++   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
+> 
+> muaz.prev <- bind_rows(
++   data.frame(cohort = "pooled", region = "Overall", m.prev.data$m.prev.res),
++   data.frame(cohort = "pooled", m.prev.region),
++   data.frame(cohort = "pooled", m.prev.country),
++   m.prev.cohort
++ )
+Warning messages:
+1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+6: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> #make wasting comparison in same subset
+> prev.region <- d %>% group_by(region) %>% do(summary.prev.muaz(., method="FE")$prev.res)
+There were 50 or more warnings (use warnings() to see the first 50)
+> prev.country <- d %>% filter(!is.na(muaz)) %>% group_by(country) %>% do(summary.prev.muaz(., method="FE")$prev.res) %>% mutate(region=country)
+There were 50 or more warnings (use warnings() to see the first 50)
+> prev.cohort <-
++   m.prev.data$prev.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
++   rename(est = prev,  lb = ci.lb,  ub = ci.ub)
+> 
+> m.whz.prev <- bind_rows(
++   data.frame(cohort = "pooled", region = "Overall", m.prev.data$prev.res),
++   data.frame(cohort = "pooled", prev.region),
++   data.frame(cohort = "pooled", prev.country),
++   prev.cohort
++ )
+Warning messages:
+1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+6: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> 
+> 
+> co_desc_data <- bind_rows(
++   data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
++   data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
++   data.frame(disease = "Underweight", age_range="3 months",   birth="yes", severe="no", measure= "Mean WAZ",  waz),
++   data.frame(disease = "Underweight", age_range="1 month",   birth="yes", severe="no", measure= "Mean WAZ",  monthly.waz),
++   data.frame(disease = "Underweight", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence",  underweight.prev),
++   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC Prevalence",  muaz.prev),
++   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC WHZ Prevalence",  m.whz.prev)
++ )
+There were 28 warnings (use warnings() to see them)
+> 
+> 
+> co_desc_data <- co_desc_data %>% subset(., select = -c(se, nmeas.f,  ptest.f))
+> 
+> 
+> unique(co_desc_data$agecat)
+ [1] "Birth"     "3 months"  "6 months"  "9 months"  "12 months" "15 months"
+ [7] "18 months" "21 months" "24 months" "Two weeks" "One month" "2 months" 
+[13] "4 months"  "5 months"  "7 months"  "8 months"  "10 months" "11 months"
+[19] "13 months" "14 months" "16 months" "17 months" "19 months" "20 months"
+[25] "22 months" "23 months"
+> co_desc_data$agecat <- factor(co_desc_data$agecat, levels=unique(co_desc_data$agecat))
+> 
+> #Clean up region marking
+> co_desc_data$region <- as.character(co_desc_data$region)
+> 
+> fix_region <- mark_region(co_desc_data[co_desc_data$region=="Other",])
+> co_desc_data$region[co_desc_data$region=="Other"] <- as.character(fix_region$region)
+> table(co_desc_data$region)
+
+       Africa    Bangladesh        Brazil        Gambia     Guatemala 
+          338            61            61            73            36 
+        India Latin America         Nepal       Overall      Pakistan 
+           61           283            61            77            77 
+         Peru  South Africa    South Asia      Tanzania 
+           61            61           671            75 
+> 
+> 
+> co_desc_data <- co_desc_data %>% 
++   mutate(pooling = case_when(
++     cohort != "pooled" ~ "no pooling",
++     cohort == "pooled" & !is.na(country) ~ "country",
++     region != "Overall" ~ "regional",
++     region == "Overall" ~ "overall"
++   ))
+> 
+> 
+> saveRDS(co_desc_data, file = paste0(here(),"/results/co_desc_data_no_Kenaba.rds"))
+> 
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 99.223  12.241 147.797 

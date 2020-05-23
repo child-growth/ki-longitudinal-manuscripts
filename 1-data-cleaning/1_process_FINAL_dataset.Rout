@@ -266,69 +266,38 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +                    "DUR_R"))
 > gc()
             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1962431  104.9    3022948  161.5   3022948  161.5
-Vcells 315686523 2408.5  641402759 4893.6 636568685 4856.7
+Ncells   1962442  104.9    3022948  161.5   3022948  161.5
+Vcells 405824960 3096.2  908520396 6931.5 779872329 5950.0
 > 
 > 
-> #temp- merge in Jivitia
-> jiv<-fread("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data old/FINAL.csv", header = T,
-+          drop = c( "AGEIMPFL",  #"WTKG", "REGION",   
-+                    #"HTCM",    "LENCM", 
-+                    "BAZ", "HCAZ",      
-+                    "REGCTRY", "REGCTYP", #"CITYTOWN",
-+                    "HHID",    
-+                    "FEEDING", "DURBRST", #"BRTHYR", 
-+                    "ENSTUNT", "FWTKG", "FBMI",
-+                    "BRFEED", "SUMEP",   "SUMDIAR", "SUMDAYS",
-+                    "PCTDIAR", "IMPSAN",  "SOAP",    "SAFEH2O", "H2OTIME",
-+                    "CHICKEN", "COW",     "CATTLE",  "INCTOT", 
-+                    "INCTOTU", "BFEDFL",  "EXBFEDFL","WEANFL",  "ANMLKFL", "PWMLKFL",
-+                    "FORMLKFL","BOTTLEFL","H20FEDFL","OTHFEDFL","SLDFEDFL","NBFYES",   "CMFDINT", "DIARFL",  "LSSTLFL",
-+                    "NUMLS",   "BLDSTLFL","DIARFL_R","LSSTFL_R","NUMLS_R", "BLDSTL_R",
-+                    "DUR_R"))
-> gc()
-            used   (Mb) gc trigger    (Mb)   max used   (Mb)
-Ncells   1962549  104.9    3022948   161.5    3022948  161.5
-Vcells 717893421 5477.1 1357518496 10357.1 1130313787 8623.7
-> jiv <- jiv[STUDYID=="kiGH5241-JiVitA-3" | STUDYID == "kiGH5241-JiVitA-4"]
-> gc()
-            used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1983633  106.0    3022948  161.5    3022948  161.5
-Vcells 405204558 3091.5 1086014797 8285.7 1130313787 8623.7
-> #strip grant identifiers
-> jiv$STUDYID <- gsub("^k.*?-" , "", jiv$STUDYID)
-> unique(jiv$STUDYID)
-[1] "JiVitA-3" "JiVitA-4"
-> 
-> d <- rbind(d, jiv)
 > unique(d$STUDYID)
  [1] "AgaKhanUniv"      "BurkinaFasoZn"    "CMC-V-BCS-2002"   "CMIN"            
  [5] "COHORTS"          "CONTENT"          "DIVIDS"           "EE"              
  [9] "EU"               "GMS-Nepal-201606" "Guatemala BSC"    "ILINS-DOSE"      
-[13] "ILINS-DYAD-M"     "ILINS-Zinc"       "INCAP"            "IRC"             
-[17] "Keneba"           "LCNI-5"           "MAL-ED"           "NIH-Birth"       
-[21] "NIH-Crypto"       "PROBIT"           "PROVIDE"          "Respak"          
-[25] "SAS-CompFeed"     "SAS-FoodSuppl"    "Serrinha-VitA"    "TanzaniaChild2"  
-[29] "VITAMIN-A"        "VITAMIN-B12"      "WASH-BK"          "WASH-Bangladesh" 
-[33] "WomenFirst"       "ZINC-MORTALITY"   "ZVITAMBO"         "JiVitA-3"        
-[37] "JiVitA-4"        
+[13] "ILINS-DYAD-G"     "ILINS-DYAD-M"     "ILINS-Zinc"       "INCAP"           
+[17] "IRC"              "JiVitA-3"         "JiVitA-4"         "Keneba"          
+[21] "LCNI-5"           "MAL-ED"           "NIH-Birth"        "NIH-Crypto"      
+[25] "PROBIT"           "PROVIDE"          "Respak"           "SAS-CompFeed"    
+[29] "SAS-FoodSuppl"    "Serrinha-VitA"    "TanzaniaChild2"   "VITAMIN-A"       
+[33] "VITAMIN-B12"      "WASH-BK"          "WASH-Bangladesh"  "WomenFirst"      
+[37] "ZINC-MORTALITY"   "ZVITAMBO"        
 > 
 > colnames(d) <- tolower(colnames(d))
 > gc()
-            used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1987830  106.2    3022948  161.5    3022948  161.5
-Vcells 494680497 3774.2 1086014797 8285.7 1130313787 8623.7
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells   1964463  105.0    3022948  161.5   3022948  161.5
+Vcells 405830328 3096.3  908520396 6931.5 779872329 5950.0
 > 
 > #Drop studies Vishak added to data product that don't meet inclusion criteria
 > dim(d)
-[1] 9570371      55
-> d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP"))]
+[1] 9586452      55
+> d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP", "ILINS-DYAD-G"))]
 > dim(d)
 [1] 9525336      55
 > gc()
-            used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1994935  106.6    3022948  161.5    3022948  161.5
-Vcells 492810067 3759.9 1086014797 8285.7 1130313787 8623.7
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells   1992691  106.5    3022948  161.5   3022948  161.5
+Vcells 403337958 3077.3  908520396 6931.5 830307516 6334.8
 > 
 > #update study names where they have changed during BlueVelvet switch
 > d <- d[studyid=="ZINC-MORTALITY", studyid := "ZnMort"]
@@ -341,6 +310,16 @@ Vcells 492810067 3759.9 1086014797 8285.7 1130313787 8623.7
 > d <- d[studyid=="ILINS-DOSE", studyid := "iLiNS-DOSE"]
 > d <- d[studyid=="ILINS-DYAD-M", studyid := "iLiNS-DYAD-M"]
 > 
+> unique(d$studyid)
+ [1] "AgaKhanUniv"     "Burkina Faso Zn" "CMC-V-BCS-2002"  "CMIN"           
+ [5] "COHORTS"         "CONTENT"         "EE"              "EU"             
+ [9] "GMS-Nepal"       "Guatemala BSC"   "iLiNS-DOSE"      "iLiNS-DYAD-M"   
+[13] "iLiNS-Zinc"      "IRC"             "JiVitA-3"        "JiVitA-4"       
+[17] "Keneba"          "LCNI-5"          "MAL-ED"          "NIH-Birth"      
+[21] "NIH-Crypto"      "PROBIT"          "PROVIDE"         "ResPak"         
+[25] "SAS-CompFeed"    "SAS-FoodSuppl"   "Serrinha-VitA"   "TanzaniaChild2" 
+[29] "VITAMIN-A"       "Vitamin-B12"     "WASH-Kenya"      "WASH-Bangladesh"
+[33] "ZnMort"          "ZVITAMBO"       
 > 
 > 
 > monthly_vec <- c("MAL-ED",   
@@ -386,32 +365,32 @@ Vcells 492810067 3759.9 1086014797 8285.7 1130313787 8623.7
 +                                2 * (studyid %in% quarterly_vec) + 
 +                                3 * (studyid %in% yearly_vec)]]
 > gc()
-            used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995534  106.6    3022948  161.5    3022948  161.5
-Vcells 502444927 3833.4 1086014797 8285.7 1130313787 8623.7
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells   1994081  106.5    3022948  161.5   3022948  161.5
+Vcells 412974807 3150.8  908520396 6931.5 830307516 6334.8
 > 
 > 
 > 
 > #Drop CMIN cohorts with less than 200 children
 > d <- d[!(studyid=="CMIN" & country != "BANGLADESH")]
 > gc()
-            used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995257  106.6    3022948  161.5    3022948  161.5
-Vcells 435967047 3326.2 1086014797 8285.7 1130313787 8623.7
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells   1994392  106.6    3022948  161.5   3022948  161.5
+Vcells 346500343 2643.6  908520396 6931.5 830307516 6334.8
 > 
 > #Mark yearly COHORTS
 > d <- d[studyid=="COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
 > gc()
-            used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995291  106.6    3022948  161.5    3022948  161.5
-Vcells 439968462 3356.7 1086014797 8285.7 1130313787 8623.7
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells   1994426  106.6    3022948  161.5   3022948  161.5
+Vcells 350501758 2674.2  908520396 6931.5 830307516 6334.8
 > 
 > #Drop yearly studies except for four with high quality mortality data used in the mortality analysis
 > d <- d[measurefreq!="yearly" | studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","Burkina Faso Zn", "VITAMIN-A" )]
 > gc()
-            used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995239  106.6    3022948  161.5    3022948  161.5
-Vcells 416989587 3181.4 1086014797 8285.7 1130313787 8623.7
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells   1994375  106.6    3022948  161.5   3022948  161.5
+Vcells 327522883 2498.9  908520396 6931.5 830307516 6334.8
 > 
 > 
 > # #fix sex and Z-scores in PROBIT and CONTENT
@@ -470,10 +449,10 @@ Vcells 416989587 3181.4 1086014797 8285.7 1130313787 8623.7
 > 
 > saveRDS(d, included_studies_path)
 > gc()
-            used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   1995465  106.6    3022948  161.5    3022948  161.5
-Vcells 416987993 3181.4 1086014797 8285.7 1130313787 8623.7
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells   1994601  106.6    3022948  161.5   3022948  161.5
+Vcells 327521289 2498.8  908520396 6931.5 830307516 6334.8
 > 
 > proc.time()
    user  system elapsed 
-164.167  11.310 101.532 
+132.398  25.369  98.509 

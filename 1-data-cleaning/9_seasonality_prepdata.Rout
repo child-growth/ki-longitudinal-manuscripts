@@ -239,7 +239,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > #--------------------------------------------
 > 
 > 
-> d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
+> d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, sex, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
 > 
 > 
 > #d <- d %>% filter(studyid == "PROVIDE")
@@ -319,4 +319,4 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > proc.time()
    user  system elapsed 
- 21.515   0.648  22.143 
+ 22.293   0.999  23.275 

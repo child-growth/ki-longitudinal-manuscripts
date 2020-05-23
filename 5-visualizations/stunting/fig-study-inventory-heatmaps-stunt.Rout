@@ -600,4 +600,4 @@ Removed 101 rows containing missing values (position_stack).
 > 
 > proc.time()
    user  system elapsed 
-  6.510   0.451  10.040 
+  8.526   0.586  13.109 

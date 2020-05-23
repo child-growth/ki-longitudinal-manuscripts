@@ -278,5 +278,177 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > rm(list = ls())
 > library(epiR)
-Error in library(epiR) : there is no package called ‘epiR’
-Execution halted
+Package epiR 1.0-13 is loaded
+Type help(epi.about) for summary information
+
+
+> 
+> source(paste0(here::here(), "/0-config.R"))
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
+> 
+> dfull <- readRDS(paste0(ghapdata_dir,"co_occurrence_data.rds"))
+> dfull <- dfull %>% filter(measurefreq=="monthly")
+> 
+> #load covariates for clustering id
+> cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
+> cov <- cov %>% subset(., select = c(studyid, subjid, country, id))
+> dfull <- left_join(dfull, cov, by=c("studyid", "subjid", "country"))
+Warning message:
+Column `country` joining character vector and factor, coercing into character vector 
+> 
+> #Proportion of co-occurrent wasting and stunting among children wasted under 3 months
+> dfull <- calc.ci.agecat(dfull, range = 6)
+> 
+> d <- dfull %>% filter(agedays < 24 * 30.4167) %>% 
++   group_by(studyid, country, subjid) %>% 
++   mutate(wast=1*(whz < (-2)), co = 1*(whz < (-2) & haz < (-2))) %>%
++   group_by(studyid, country, subjid, agecat) %>% 
++   arrange(studyid, country, subjid, agecat) %>% 
++   mutate(wast=max(wast), co=last(co)) %>%
++   filter(agecat %in% c("0-6 months","18-24 months")) %>%
++   group_by(studyid, country, subjid) %>% 
++   mutate(wast06=first(wast), co24=last(co)) %>% slice(1)
+> 
+> table(d$wast06, d$co24)
+   
+       0    1
+  0 7925  213
+  1 2210  247
+> a<-prop.table(table(d$co24[d$wast06==0]))
+> b<-prop.table(table(d$co24[d$wast06==1]))
+> 
+> b/a
+
+       0        1 
+0.923646 3.840872 
+> 
+> dat=table(-d$wast06, -d$co24)
+> 
+> epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100, 
++          #homogeneity = "breslow.day", 
++          outcome = "as.columns")
+             Outcome +    Outcome -      Total        Prevalence *        Odds
+Exposed +          247         2210       2457               10.05      0.1118
+Exposed -          213         7925       8138                2.62      0.0269
+Total              460        10135      10595                4.34      0.0454
+
+Point estimates and 95% CIs:
+-------------------------------------------------------------------
+Prevalence ratio                             3.84 (3.22, 4.59)
+Odds ratio                                   4.16 (3.44, 5.02)
+Attrib prevalence *                          7.44 (6.20, 8.67)
+Attrib prevalence in population *            1.72 (1.20, 2.24)
+Attrib fraction in exposed (%)              73.96 (68.90, 78.20)
+Attrib fraction in population (%)           39.72 (33.62, 45.25)
+-------------------------------------------------------------------
+ Test that OR = 1: chi2(1) = 251.229 Pr>chi2 = <0.001
+ Wald confidence limits
+ CI: confidence interval
+ * Outcomes per 100 population units 
+Warning messages:
+1: In N0 * (N0 + N1) * a : NAs produced by integer overflow
+2: In N0 * N1 * (c + a) : NAs produced by integer overflow
+3: In N0 * N1 * (c + a) : NAs produced by integer overflow
+4: In N0 * (N0 + N1) * a : NAs produced by integer overflow
+5: In N0 * N1 * (c + a) : NAs produced by integer overflow
+6: In N0 * N1 * (c + a) : NAs produced by integer overflow
+> 
+> #Save dataset for longbow analysis
+> save(d, file=paste0(ghapdata_dir,"earlywast_strat_co_rf.Rdata"))
+> 
+> 
+> 
+> 
+> 
+> df <- dfull %>% group_by(studyid, subjid, agecat) %>% mutate(anywast=1*(min(whz) < (-2)), anystunt=1*(min(haz) < (-2)))
+Warning messages:
+1: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
+2: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
+> d <- df %>% group_by(studyid, subjid) %>% filter(agecat %in% c("0-6 months", "18-24 months")) %>% arrange(agecat) %>% 
++   mutate(wast06=first(anywast), stunt24=last(anystunt)) %>% slice(1)
+> table(d$wast06, d$stunt24)
+   
+       0    1
+  0 4933 3205
+  1 1240 1217
+> 
+> prop.table(table(d$stunt24[d$wast06==0]))
+
+        0         1 
+0.6061686 0.3938314 
+> prop.table(table(d$stunt24[d$wast06==1]))
+
+        0         1 
+0.5046805 0.4953195 
+> 
+> 
+> 
+> dat=table(-d$wast06, -d$stunt24)
+> epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100, 
++           outcome = "as.columns")
+             Outcome +    Outcome -      Total        Prevalence *        Odds
+Exposed +         1217         1240       2457                49.5       0.981
+Exposed -         3205         4933       8138                39.4       0.650
+Total             4422         6173      10595                41.7       0.716
+
+Point estimates and 95% CIs:
+-------------------------------------------------------------------
+Prevalence ratio                             1.26 (1.20, 1.32)
+Odds ratio                                   1.51 (1.38, 1.65)
+Attrib prevalence *                          10.15 (7.90, 12.39)
+Attrib prevalence in population *            2.35 (0.94, 3.77)
+Attrib fraction in exposed (%)              20.49 (16.57, 24.23)
+Attrib fraction in population (%)           5.64 (4.37, 6.89)
+-------------------------------------------------------------------
+ Test that OR = 1: chi2(1) = 79.935 Pr>chi2 = <0.001
+ Wald confidence limits
+ CI: confidence interval
+ * Outcomes per 100 population units 
+Warning messages:
+1: In N0 * (N0 + N1) * a : NAs produced by integer overflow
+2: In N0 * N1 * (c + a) : NAs produced by integer overflow
+3: In N0 * N1 * (c + a) : NAs produced by integer overflow
+4: In N0 * (N0 + N1) * a : NAs produced by integer overflow
+5: In N0 * N1 * (c + a) : NAs produced by integer overflow
+6: In N0 * N1 * (c + a) : NAs produced by integer overflow
+> 
+> #Save dataset for longbow analysis
+> save(d, file=paste0(ghapdata_dir,"earlywast_strat_stunt_rf.Rdata"))
+> 
+> 
+> 
+> #Save analysis specifications
+> load(here("/results/adjustment_sets_list.Rdata"))
+> A <- names(adjustment_sets)
+> Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
+> 
+> specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","country"), id="id", adj_sets=adjustment_sets){
++   
++   analyses <- expand.grid(A=A,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
++   analyses$id <- id
++   analyses$strata <- list(V)
++   if(is.null(W)){analyses$W <- adj_sets[analyses$A]}else{
++     analyses$W <- list(W)
++   }
++   names(analyses$W) <- NULL
++   analyses$file <- file
++   
++   return(analyses)
++ }
+> 
+> 
+> earlywast_strat_co <- specify_rf_analysis(A="wast06", Y=c("co24"), file="earlywast_strat_co_rf.Rdata")
+> earlywast_strat_stunt <- specify_rf_analysis(A="wast06", Y=c("stunt24"), file="earlywast_strat_stunt_rf.Rdata")
+> 
+> #bind together datasets
+> analyses <- rbind(earlywast_strat_stunt, earlywast_strat_co)
+> 
+> #Save analysis specification
+> save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/earlywast_strat_analyses.rdata"))
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 35.691   1.787  54.473 

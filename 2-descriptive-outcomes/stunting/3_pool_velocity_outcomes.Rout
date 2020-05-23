@@ -241,7 +241,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 # A tibble: 1 x 1
       N
   <int>
-1 50006
+1 50022
 > d %>% group_by(studyid, country, subjid) %>% slice(1) %>%  group_by(studyid, country)  %>% summarize(N=n()) %>% as.data.frame()
           studyid                      country     N
 1  CMC-V-BCS-2002                        INDIA   372
@@ -254,7 +254,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 8   Guatemala BSC                    GUATEMALA   221
 9             IRC                        INDIA   410
 10       JiVitA-3                   BANGLADESH 10758
-11       JiVitA-4                   BANGLADESH  1318
+11       JiVitA-4                   BANGLADESH  1334
 12         Keneba                       GAMBIA  2265
 13         LCNI-5                       MALAWI   706
 14         MAL-ED                   BANGLADESH   249
@@ -280,7 +280,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > table(d$diffcat)
 
   0-3 months   3-6 months   6-9 months  9-12 months 12-15 months 15-18 months 
-      163420       141818       113504       106994        47748        42420 
+      164170       141818       113504       106994        47748        42420 
 18-21 months 21-24 months 
        32252        27790 
 > 
@@ -450,9 +450,197 @@ Warning messages:
 > 
 > saveRDS(pooled_vel, 
 +         file=paste0(res_dir,"stunting/pool_vel.RDS"))
-Error in gzfile(file, mode) : cannot open the connection
-Calls: saveRDS -> gzfile
-In addition: Warning message:
-In gzfile(file, mode) :
-  cannot open compressed file '/home/andrew.mertens/ki-longitudinal-manuscripts/results//stunting/pool_vel.RDS', probable reason 'No such file or directory'
-Execution halted
+> 
+> 
+> #----------------------------------------------------
+> # pool results -- all quarterly studies -- fixed effects
+> #----------------------------------------------------
+> 
+> poolhaz_boys_fe <- RE_pool(d, ycategory="haz", gender="Male", method="FE")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poolhaz_girls_fe <- RE_pool(d, ycategory="haz", gender="Female", method="FE")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poollencm_boys_fe <- RE_pool(d, ycategory="lencm", gender="Male", method="FE")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poollencm_girls_fe <- RE_pool(d, ycategory="lencm", gender="Female", method="FE")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> pooled_vel_fe <- rbind(
++   poolhaz_boys_fe, poolhaz_girls_fe, poollencm_boys_fe, poollencm_girls_fe
++ )
+> 
+> saveRDS(pooled_vel_fe, 
++         file=paste0(res_dir,"stunting/pool_vel_fe.RDS"))
+> 
+> #----------------------------------------------------
+> # pool results -- sensitivity analysis with monthly 
+> # cohorts with measurements at each age up to 24 months of age
+> #----------------------------------------------------
+> study24 = c("MAL-ED", "CMC-V-BCS-2002", "IRC", 
++             "Keneba", "GMS-Nepal", "CMIN", 
++             "CONTENT", "PROVIDE")
+> 
+> dmonth24 <- d %>% filter(studyid %in% study24)
+> 
+> poolhaz_boys_month24 <- RE_pool(dmonth24, ycategory="haz", gender="Male")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poolhaz_girls_month24 <- RE_pool(dmonth24, ycategory="haz", gender="Female")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poollencm_boys_month24 <- RE_pool(dmonth24, ycategory="lencm", gender="Male")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poollencm_girls_month24 <- RE_pool(dmonth24, ycategory="lencm", gender="Female")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> pooled_vel_month24 <- rbind(
++   poolhaz_boys_month24, poolhaz_girls_month24, 
++   poollencm_boys_month24, poollencm_girls_month24
++ )
+> 
+> saveRDS(pooled_vel_month24,
++         file=paste0(res_dir,"stunting/pool_vel_month24.RDS"))
+> 
+> 
+> #----------------------------------------------------
+> #Pool velocity - sensitivity analysis dropping CONTENT and Cohorts Guat.
+> #----------------------------------------------------
+> dsub <- d %>% filter(studyid!="CONTENT") %>% filter(!(studyid=="COHORTS" & country=="GUATEMALA"))
+> poolhaz_boys <- RE_pool(dsub, ycategory="haz", gender="Male")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poolhaz_girls <- RE_pool(dsub, ycategory="haz", gender="Female")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poollencm_boys <- RE_pool(dsub, ycategory="lencm", gender="Male")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> poollencm_girls <- RE_pool(dsub, ycategory="lencm", gender="Female")
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) :
+  binding factor and character vector, coercing into character vector
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> pooled_vel_sub <- rbind(
++   poolhaz_boys, poolhaz_girls, poollencm_boys, poollencm_girls
++ )
+> 
+> saveRDS(pooled_vel_sub,
++         file=paste0(res_dir,"stunting/pool_vel_sub.RDS"))
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 24.152   0.895  25.344 

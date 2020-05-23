@@ -408,7 +408,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > # length velocity
 > #----------------------------------------
 > poollencm_boys = lapply(stunt_inc_age_list, function(x) RE_pool(d_st, ycategory="lencm", gender="Male", age_stunt_onset = x))
-There were 40 warnings (use warnings() to see them)
+There were 38 warnings (use warnings() to see them)
 > poollencm_boys = as.data.frame(do.call(rbind, poollencm_boys))
 > 
 > poollencm_girls = lapply(stunt_inc_age_list, function(x) RE_pool(d_st, ycategory="lencm", gender="Female", age_stunt_onset = x))
@@ -421,7 +421,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > # LAZ velocity
 > #----------------------------------------
 > poolhaz_boys = lapply(stunt_inc_age_list, function(x) RE_pool(d_st, ycategory="haz", gender="Male", age_stunt_onset = x))
-There were 40 warnings (use warnings() to see them)
+There were 38 warnings (use warnings() to see them)
 > poolhaz_boys = as.data.frame(do.call(rbind, poolhaz_boys))
 > 
 > poolhaz_girls = lapply(stunt_inc_age_list, function(x) RE_pool(d_st, ycategory="haz", gender="Female", age_stunt_onset = x))
@@ -471,4 +471,4 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > proc.time()
    user  system elapsed 
- 58.075   1.087  59.140 
+ 65.869   2.531  74.136 

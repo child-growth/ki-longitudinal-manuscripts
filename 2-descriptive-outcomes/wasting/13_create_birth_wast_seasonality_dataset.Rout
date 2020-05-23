@@ -245,6 +245,7 @@ The following object is masked from ‘package:ggthemes’:
 > 
 > d <- readRDS(seasonality_data_path)
 > 
+> 
 > #subset to monthly cohorts
 > d <- d %>% filter(measurefreq=="monthly", region=="South Asia", agedays<=7)
 > 
@@ -263,8 +264,85 @@ The following object is masked from ‘package:ggthemes’:
   1   2   3   4   5   6   7   8   9  10  11  12 
 138 118 118  98 102 290 385 367 113 126 141 130 
 > 
-> #Set reference levels
-> df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-max rain", "Pre-max rain", "Max rain"))
-Error in df$rain_quartile : object of type 'closure' is not subsettable
-Calls: factor
-Execution halted
+> #Set up dataset for longbow analysis
+> df <- filter(d, agedays < 24 * 30.4167)
+> 
+> df <- subset(df, select = c(studyid, subjid, country, whz, brthmon))
+> head(df)
+         studyid subjid country   whz brthmon
+1 CMC-V-BCS-2002      3   India  0.90       9
+2 CMC-V-BCS-2002     13   India  1.79       5
+3 CMC-V-BCS-2002     20   India  0.28      11
+4 CMC-V-BCS-2002     24   India -0.87       3
+5 CMC-V-BCS-2002     25   India -0.25       4
+6 CMC-V-BCS-2002     28   India -1.98       4
+> 
+> 
+> #Load covariate dataset
+> cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
+> cov$country <- as.character(cov$country)
+> cov$country[cov$country=="TANZANIA, UNITED REPUBLIC OF"]<-"TANZANIA"
+> cov <- mark_region(cov)
+> cov$region <- factor(cov$region, levels = c("South Asia","Africa","Latin America"))
+> cov$country <- tolower(cov$country)
+> cov$studyid <- gsub("^k.*?-" , "", cov$studyid)
+> cov$country <- str_to_title(cov$country)
+> #drop duplicate birthmonth
+> cov <- cov %>% subset(., select = -c(brthmon))
+> 
+> 
+> #Merge WLZ, birthmonth, and ID from covariates
+> dim(df)
+[1] 2126    5
+> dim(cov)
+[1] 109366     82
+> d <- left_join(df, cov, by = c("studyid", "subjid", "country"))
+> dim(d)
+[1] 2126   84
+> 
+> #Set adjustment variables
+> W <- NULL
+> 
+> 
+> #save analysis dataset
+> save(d, file = paste0(ghapdata_dir, "seasonality_birth_rf.Rdata"))
+> 
+> #get N's for figure caption
+> d %>% summarize(N=n(), nchild=length(unique(subjid)))
+     N nchild
+1 2126   1368
+> cohort_Ns <- d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid)))
+> 
+> #Specify analysis
+> specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country"), id="id", adj_sets=adjustment_sets){
++   
++   analyses <- expand.grid(A=A,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
++   analyses$id <- id
++   analyses$strata <- list(V)
++   if(is.null(W)){analyses$W <- adj_sets[analyses$A]}else{
++     analyses$W <- list(W)
++   }
++   names(analyses$W) <- NULL
++   analyses$file <- file
++   
++   return(analyses)
++ }
+> 
+> 
+> analyses <- specify_rf_analysis(A="brthmon", Y="whz", file="seasonality_birth_rf.Rdata", adj_sets=NULL)
+> 
+> 
+> #Save analysis specification
+> save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/seasonality_birth_analyses.rdata"))
+> 
+> #Save cohort Ns
+> saveRDS(cohort_Ns, file=paste0(here(),"/results/season_birthTMLE_Ns.rds")) 
+> 
+> 
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  8.189   0.645  11.787 

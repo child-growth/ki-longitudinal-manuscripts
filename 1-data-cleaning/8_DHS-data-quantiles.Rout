@@ -409,4 +409,4 @@ Overall    AFRO   SEARO    PAHO
 > 
 > proc.time()
    user  system elapsed 
- 49.312   2.554  51.846 
+ 50.175   4.047  54.251 

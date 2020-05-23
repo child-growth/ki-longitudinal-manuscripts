@@ -426,13 +426,13 @@ Registered S3 method overwritten by 'pryr':
 > 
 > gc()
           used  (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells 2195655 117.3    4465378  238.5   4465378  238.5
-Vcells 9013150  68.8  632580222 4826.3 790725277 6032.8
+Ncells 2195652 117.3    4465302  238.5   4465302  238.5
+Vcells 9013149  68.8  673791618 5140.7 784711771 5986.9
 > d$subjid <- as.numeric(d$subjid)
 > gc()
           used  (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells 2195324 117.3    4465378  238.5   4465378  238.5
-Vcells 9012624  68.8  506064178 3861.0 790725277 6032.8
+Ncells 2195321 117.3    4465302  238.5   4465302  238.5
+Vcells 9012623  68.8  539033295 4112.5 784711771 5986.9
 > 
 > 
 > provide <- readRDS(paste0(ghapdata_dir, "covariate creation intermediate datasets/derived covariate datasets/PROVIDE_birthmonth.rds"))
@@ -1013,8 +1013,9 @@ Female   Male
  FALSE 
 109366 
 > 
-> d$birthlen2 <- who_zscore2htcm(d$birthmeas_age, d$birthLAZ, sex = d$sex)
-> d$birthwt2 <- who_zscore2wtkg(d$birthmeas_age, d$birthWAZ, sex = d$sex) * 1000
+> #Use agedays-1 as function codes birth age=0
+> d$birthlen2 <- who_zscore2htcm(d$birthmeas_age-1, d$birthLAZ, sex = d$sex)
+> d$birthwt2 <- who_zscore2wtkg(d$birthmeas_age-1, d$birthWAZ, sex = d$sex) * 1000
 > d$birthlen2[!is.finite(d$birthlen2)] <- NA
 > d$birthwt2[!is.finite(d$birthwt2)] <- NA
 > 
@@ -1028,13 +1029,13 @@ Female   Male
   21.80   46.80   48.70   48.76   50.90   68.00   37396 
 > summary(d$birthlen2)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  21.96   46.76   48.58   48.68   50.27   65.20   38546 
+  21.81   46.60   48.41   48.51   50.10   65.01   38546 
 > summary(d$birthwt)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
     620    2560    2920    2945    3300    7000   32597 
 > summary(d$birthwt2)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  629.9  2497.1  2854.1  2863.0  3205.0  5647.8   38727 
+  619.8  2511.7  2872.2  2886.5  3225.7  5653.1   38727 
 > 
 > table(is.na(d$birthlen), is.na(d$birthlen2))
        
@@ -1585,16 +1586,16 @@ Groups: <by row>
                                              
                                               Low birthweight
   CMC-V-BCS-2002 INDIA                                     43
-  CMIN BANGLADESH                                          12
+  CMIN BANGLADESH                                          13
   COHORTS GUATEMALA                                        85
   COHORTS INDIA                                          1395
   COHORTS PHILIPPINES                                     295
   CONTENT PERU                                              0
   EE PAKISTAN                                             134
-  GMS-Nepal NEPAL                                         220
+  GMS-Nepal NEPAL                                         231
   iLiNS-DYAD-M MALAWI                                     136
   IRC INDIA                                                69
-  JiVitA-3 BANGLADESH                                    9858
+  JiVitA-3 BANGLADESH                                    9890
   JiVitA-4 BANGLADESH                                    1179
   Keneba GAMBIA                                           222
   MAL-ED BANGLADESH                                        57
@@ -1604,27 +1605,27 @@ Groups: <by row>
   MAL-ED PERU                                              17
   MAL-ED SOUTH AFRICA                                      22
   MAL-ED TANZANIA, UNITED REPUBLIC OF                      10
-  NIH-Birth BANGLADESH                                    185
+  NIH-Birth BANGLADESH                                    196
   NIH-Crypto BANGLADESH                                   177
   PROBIT BELARUS                                            0
   PROVIDE BANGLADESH                                      168
-  ResPak PAKISTAN                                           7
+  ResPak PAKISTAN                                           8
   SAS-CompFeed INDIA                                     2322
   TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF              82
   ZVITAMBO ZIMBABWE                                      1934
                                              
                                               Normal or high birthweight
   CMC-V-BCS-2002 INDIA                                               322
-  CMIN BANGLADESH                                                     14
+  CMIN BANGLADESH                                                     13
   COHORTS GUATEMALA                                                  859
   COHORTS INDIA                                                     5385
   COHORTS PHILIPPINES                                               2716
   CONTENT PERU                                                         2
   EE PAKISTAN                                                        245
-  GMS-Nepal NEPAL                                                    477
+  GMS-Nepal NEPAL                                                    466
   iLiNS-DYAD-M MALAWI                                                894
   IRC INDIA                                                          335
-  JiVitA-3 BANGLADESH                                              13041
+  JiVitA-3 BANGLADESH                                              13009
   JiVitA-4 BANGLADESH                                               3329
   Keneba GAMBIA                                                     1316
   MAL-ED BANGLADESH                                                  205
@@ -1634,50 +1635,50 @@ Groups: <by row>
   MAL-ED PERU                                                        282
   MAL-ED SOUTH AFRICA                                                290
   MAL-ED TANZANIA, UNITED REPUBLIC OF                                187
-  NIH-Birth BANGLADESH                                               423
+  NIH-Birth BANGLADESH                                               412
   NIH-Crypto BANGLADESH                                              581
   PROBIT BELARUS                                                   16898
   PROVIDE BANGLADESH                                                 532
-  ResPak PAKISTAN                                                     35
+  ResPak PAKISTAN                                                     34
   SAS-CompFeed INDIA                                                7159
   TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF                       2289
   ZVITAMBO ZIMBABWE                                                12107
 
            Low birthweight Normal or high birthweight 
-                     18696                      70563 
+                     18752                      70507 
 > d$birthlen <- quantile_rf(d, d$W_birthlen, Acuts=c(0,48, 50, max(d$W_birthlen, na.rm=T)), units="cm")
                                      
                                       <48 cm [48-50) cm >=50 cm
   CMC-V-BCS-2002 INDIA                    50         40      16
-  CMIN BANGLADESH                         16          8       2
+  CMIN BANGLADESH                         19          5       2
   COHORTS GUATEMALA                      163        252     437
   COHORTS INDIA                         2779       2440    1426
   COHORTS PHILIPPINES                    762       1159    1129
   CONTENT PERU                             1          0       1
-  EE PAKISTAN                            164         54      24
-  GMS-Nepal NEPAL                        374        208     115
-  iLiNS-DYAD-M MALAWI                      9          8       6
+  EE PAKISTAN                            174         46      22
+  GMS-Nepal NEPAL                        385        208     104
+  iLiNS-DYAD-M MALAWI                     10          8       5
   IRC INDIA                              111        138     142
-  JiVitA-3 BANGLADESH                  16208       5088    1259
+  JiVitA-3 BANGLADESH                  16235       5091    1229
   JiVitA-4 BANGLADESH                   2174       1077    1232
   Keneba GAMBIA                          293        495     764
-  MAL-ED BANGLADESH                      113         79      39
-  MAL-ED BRAZIL                           17         18      30
-  MAL-ED INDIA                            20         18       9
-  MAL-ED NEPAL                            12          7       8
-  MAL-ED PERU                             88         93      52
-  MAL-ED SOUTH AFRICA                     33         46      44
-  MAL-ED TANZANIA, UNITED REPUBLIC OF     42         51      32
-  NIH-Birth BANGLADESH                   240        229     139
+  MAL-ED BANGLADESH                      117         79      35
+  MAL-ED BRAZIL                           18         24      23
+  MAL-ED INDIA                            22         16       9
+  MAL-ED NEPAL                            12          8       7
+  MAL-ED PERU                             92        100      41
+  MAL-ED SOUTH AFRICA                     36         52      35
+  MAL-ED TANZANIA, UNITED REPUBLIC OF     44         61      20
+  NIH-Birth BANGLADESH                   253        231     124
   NIH-Crypto BANGLADESH                  292        298     168
   PROBIT BELARUS                         191       1395   15312
   PROVIDE BANGLADESH                     248        283     169
-  ResPak PAKISTAN                         16         14      12
+  ResPak PAKISTAN                         19         13      10
   SAS-CompFeed INDIA                    5050       3004    1406
   ZVITAMBO ZIMBABWE                     4482       5341    4126
 
     <48 cm [48-50) cm    >=50 cm 
-     33948      21843      28099 
+     34032      21864      27994 
 > 
 > # Fix Ages in Burkino Faso Zinc so they are categorized correctly by the function, which are based on these categories:
 > #Categories: <20 years old; 20-29 years old; 30-39 years old; 40-49 years old; 50+ years old
@@ -3573,16 +3574,16 @@ NULL
                                              
                                               Normal or high birthweight
   CMC-V-BCS-2002 INDIA                                               322
-  CMIN BANGLADESH                                                     14
+  CMIN BANGLADESH                                                     13
   COHORTS GUATEMALA                                                  859
   COHORTS INDIA                                                     5385
   COHORTS PHILIPPINES                                               2716
   CONTENT PERU                                                         2
   EE PAKISTAN                                                        245
-  GMS-Nepal NEPAL                                                    477
+  GMS-Nepal NEPAL                                                    466
   iLiNS-DYAD-M MALAWI                                                894
   IRC INDIA                                                          335
-  JiVitA-3 BANGLADESH                                              13041
+  JiVitA-3 BANGLADESH                                              13009
   JiVitA-4 BANGLADESH                                               3329
   Keneba GAMBIA                                                     1316
   MAL-ED BANGLADESH                                                  205
@@ -3592,27 +3593,27 @@ NULL
   MAL-ED PERU                                                        282
   MAL-ED SOUTH AFRICA                                                290
   MAL-ED TANZANIA, UNITED REPUBLIC OF                                187
-  NIH-Birth BANGLADESH                                               423
+  NIH-Birth BANGLADESH                                               412
   NIH-Crypto BANGLADESH                                              581
   PROBIT BELARUS                                                   16898
   PROVIDE BANGLADESH                                                 532
-  ResPak PAKISTAN                                                     35
+  ResPak PAKISTAN                                                     34
   SAS-CompFeed INDIA                                                7159
   TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF                       2289
   ZVITAMBO ZIMBABWE                                                12107
                                              
                                               Low birthweight
   CMC-V-BCS-2002 INDIA                                     43
-  CMIN BANGLADESH                                          12
+  CMIN BANGLADESH                                          13
   COHORTS GUATEMALA                                        85
   COHORTS INDIA                                          1395
   COHORTS PHILIPPINES                                     295
   CONTENT PERU                                              0
   EE PAKISTAN                                             134
-  GMS-Nepal NEPAL                                         220
+  GMS-Nepal NEPAL                                         231
   iLiNS-DYAD-M MALAWI                                     136
   IRC INDIA                                                69
-  JiVitA-3 BANGLADESH                                    9858
+  JiVitA-3 BANGLADESH                                    9890
   JiVitA-4 BANGLADESH                                    1179
   Keneba GAMBIA                                           222
   MAL-ED BANGLADESH                                        57
@@ -3622,11 +3623,11 @@ NULL
   MAL-ED PERU                                              17
   MAL-ED SOUTH AFRICA                                      22
   MAL-ED TANZANIA, UNITED REPUBLIC OF                      10
-  NIH-Birth BANGLADESH                                    185
+  NIH-Birth BANGLADESH                                    196
   NIH-Crypto BANGLADESH                                   177
   PROBIT BELARUS                                            0
   PROVIDE BANGLADESH                                      168
-  ResPak PAKISTAN                                           7
+  ResPak PAKISTAN                                           8
   SAS-CompFeed INDIA                                     2322
   TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF              82
   ZVITAMBO ZIMBABWE                                      1934
@@ -3634,30 +3635,30 @@ NULL
                                      
                                       >=50 cm <48 cm [48-50) cm
   CMC-V-BCS-2002 INDIA                     16     50         40
-  CMIN BANGLADESH                           2     16          8
+  CMIN BANGLADESH                           2     19          5
   COHORTS GUATEMALA                       437    163        252
   COHORTS INDIA                          1426   2779       2440
   COHORTS PHILIPPINES                    1129    762       1159
   CONTENT PERU                              1      1          0
-  EE PAKISTAN                              24    164         54
-  GMS-Nepal NEPAL                         115    374        208
-  iLiNS-DYAD-M MALAWI                       6      9          8
+  EE PAKISTAN                              22    174         46
+  GMS-Nepal NEPAL                         104    385        208
+  iLiNS-DYAD-M MALAWI                       5     10          8
   IRC INDIA                               142    111        138
-  JiVitA-3 BANGLADESH                    1259  16208       5088
+  JiVitA-3 BANGLADESH                    1229  16235       5091
   JiVitA-4 BANGLADESH                    1232   2174       1077
   Keneba GAMBIA                           764    293        495
-  MAL-ED BANGLADESH                        39    113         79
-  MAL-ED BRAZIL                            30     17         18
-  MAL-ED INDIA                              9     20         18
-  MAL-ED NEPAL                              8     12          7
-  MAL-ED PERU                              52     88         93
-  MAL-ED SOUTH AFRICA                      44     33         46
-  MAL-ED TANZANIA, UNITED REPUBLIC OF      32     42         51
-  NIH-Birth BANGLADESH                    139    240        229
+  MAL-ED BANGLADESH                        35    117         79
+  MAL-ED BRAZIL                            23     18         24
+  MAL-ED INDIA                              9     22         16
+  MAL-ED NEPAL                              7     12          8
+  MAL-ED PERU                              41     92        100
+  MAL-ED SOUTH AFRICA                      35     36         52
+  MAL-ED TANZANIA, UNITED REPUBLIC OF      20     44         61
+  NIH-Birth BANGLADESH                    124    253        231
   NIH-Crypto BANGLADESH                   168    292        298
   PROBIT BELARUS                        15312    191       1395
   PROVIDE BANGLADESH                      169    248        283
-  ResPak PAKISTAN                          12     16         14
+  ResPak PAKISTAN                          10     19         13
   SAS-CompFeed INDIA                     1406   5050       3004
   ZVITAMBO ZIMBABWE                      4126   4482       5341
 > tabRF(d, "parity") 
@@ -3897,4 +3898,4 @@ NULL
 > 
 > proc.time()
    user  system elapsed 
-147.164   4.687 151.830 
+139.509   8.279 148.393 

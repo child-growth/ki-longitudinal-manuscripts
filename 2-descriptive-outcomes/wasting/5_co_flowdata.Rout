@@ -525,4 +525,4 @@ Error in rma(data = data, ni = data[[ni]], method = "ML", xi = data[[xi]],  :
 > 
 > proc.time()
    user  system elapsed 
- 25.137   4.392  29.508 
+ 28.597   4.571  46.078 

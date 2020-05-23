@@ -272,8 +272,8 @@ Female   Male
   Guatemala BSC       0   2551
   iLiNS-Zinc          0  10552
   IRC             14170    672
-  JiVitA-3            0 123257
-  JiVitA-4            0  39814
+  JiVitA-3       103017  20240
+  JiVitA-4        33978   5836
   Keneba          27409  16311
   LCNI-5              0   5923
   MAL-ED          21266  26696
@@ -298,8 +298,8 @@ Female   Male
   Guatemala BSC       0   2551
   iLiNS-Zinc          0  10552
   IRC             14629    213
-  JiVitA-3            0 123257
-  JiVitA-4            0  39814
+  JiVitA-3       104606  18651
+  JiVitA-4        34174   5640
   Keneba          27236  16484
   LCNI-5              0   5923
   MAL-ED          45748   2214
@@ -316,30 +316,30 @@ Female   Male
 > dblenwt <- dblenwt[!(is.na(W_birthwt) & is.na(W_birthlen)), ]
 > dblenwt[is.na(W_birthlen), ]
        studyid    country subjid W_birthwt W_birthlen    sex
-   1:   MAL-ED BANGLADESH    101      3000         NA   Male
-   2:   MAL-ED BANGLADESH    113      3500         NA Female
-   3:   MAL-ED BANGLADESH    116      3450         NA Female
-   4:   MAL-ED BANGLADESH    141      2500         NA   Male
-   5:   MAL-ED BANGLADESH    157      3500         NA   Male
+   1: JiVitA-3 BANGLADESH  10019      2120         NA   Male
+   2: JiVitA-3 BANGLADESH  10181      2710         NA   Male
+   3: JiVitA-3 BANGLADESH  10301      1660         NA Female
+   4: JiVitA-3 BANGLADESH  10335      2980         NA   Male
+   5: JiVitA-3 BANGLADESH  10519      1920         NA   Male
   ---                                                       
-4152: ZVITAMBO   ZIMBABWE 229741      2880         NA Female
-4153: ZVITAMBO   ZIMBABWE 240211      3360         NA   Male
-4154: ZVITAMBO   ZIMBABWE 240481      2760         NA Female
-4155: ZVITAMBO   ZIMBABWE 240501      3000         NA Female
-4156: ZVITAMBO   ZIMBABWE 240811      3340         NA   Male
+4527: ZVITAMBO   ZIMBABWE 229741      2880         NA Female
+4528: ZVITAMBO   ZIMBABWE 240211      3360         NA   Male
+4529: ZVITAMBO   ZIMBABWE 240481      2760         NA Female
+4530: ZVITAMBO   ZIMBABWE 240501      3000         NA Female
+4531: ZVITAMBO   ZIMBABWE 240811      3340         NA   Male
 > dblenwt[is.na(W_birthwt), ]
-      studyid  country subjid W_birthwt W_birthlen    sex
-  1:   Keneba   GAMBIA   1809        NA       50.0   Male
-  2:   Keneba   GAMBIA   1863        NA       52.0   Male
-  3:   Keneba   GAMBIA   1902        NA       54.4   Male
-  4:   Keneba   GAMBIA   1903        NA       51.0   Male
-  5:   Keneba   GAMBIA   1912        NA       50.0 Female
- ---                                                     
-177: ZVITAMBO ZIMBABWE 226981        NA       49.4 Female
-178: ZVITAMBO ZIMBABWE 230231        NA       51.0 Female
-179: ZVITAMBO ZIMBABWE 236451        NA       49.0   Male
-180: ZVITAMBO ZIMBABWE 237251        NA       46.5 Female
-181: ZVITAMBO ZIMBABWE 237621        NA       46.2   Male
+      studyid    country subjid W_birthwt W_birthlen    sex
+  1: JiVitA-3 BANGLADESH  20357        NA       44.4 Female
+  2: JiVitA-4 BANGLADESH   2131        NA       67.9   Male
+  3: JiVitA-4 BANGLADESH    228        NA       62.0   Male
+  4: JiVitA-4 BANGLADESH   2703        NA       62.7   Male
+  5: JiVitA-4 BANGLADESH    317        NA       64.3   Male
+ ---                                                       
+183: ZVITAMBO   ZIMBABWE 226981        NA       49.4 Female
+184: ZVITAMBO   ZIMBABWE 230231        NA       51.0 Female
+185: ZVITAMBO   ZIMBABWE 236451        NA       49.0   Male
+186: ZVITAMBO   ZIMBABWE 237251        NA       46.5 Female
+187: ZVITAMBO   ZIMBABWE 237621        NA       46.2   Male
 > dblenwt[, agedays := 0]
 > dblenwt[, waz := round(who_wtkg2zscore(agedays, W_birthwt/1000, sex = sex),2)]
 > dblenwt[, haz := round(who_htcm2zscore(agedays, W_birthlen, sex = sex),2)]
@@ -375,106 +375,122 @@ Female   Male
 11:  0.95  78.3 10.39   NA Other    10       27   2012    0     NA    25.25
 12:  0.10  82.0 10.70   NA Other     1       27   2012    0     NA    25.25
 13: -0.32    NA 10.45 85.0 Other     7       27   2012    0     NA    25.25
-    longitud causedth     region siteid  arm gagebrth brthmon parity birthwt
- 1:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
- 2:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
- 3:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
- 4:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
- 5:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
- 6:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
- 7:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
- 8:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
- 9:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
-10:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
-11:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
-12:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
-13:     89.5          South Asia   <NA> <NA>     <NA>    <NA>   <NA>    <NA>
-    birthlen vagbrth hdlvry mage mhtcm mwtkg mbmi meducyrs single fage fhtcm
- 1:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
- 2:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
- 3:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
- 4:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
- 5:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
- 6:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
- 7:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
- 8:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
- 9:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
-10:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
-11:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
-12:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
-13:     <NA>    <NA>   <NA> <NA>  <NA>  <NA> <NA>     <NA>   <NA> <NA>  <NA>
-    feducyrs trth2o cleanck impfloor nrooms  nhh nchldlt5 earlybf hfoodsec
- 1:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
- 2:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
- 3:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
- 4:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
- 5:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
- 6:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
- 7:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
- 8:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
- 9:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
-10:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
-11:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
-12:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
-13:     <NA>   <NA>    <NA>     <NA>   <NA> <NA>     <NA>    <NA>     <NA>
-    anywast06 pers_wast enstunt enwast hhwealth_quart id W_gagebrth W_birthwt
- 1:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
- 2:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
- 3:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
- 4:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
- 5:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
- 6:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
- 7:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
- 8:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
- 9:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
-10:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
-11:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
-12:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
-13:      <NA>      <NA>    <NA>   <NA>           <NA> NA         NA        NA
-    W_birthlen W_mage W_mhtcm W_mwtkg W_mbmi W_fage W_fhtcm W_meducyrs
- 1:         NA     NA      NA      NA     NA     NA      NA         NA
- 2:         NA     NA      NA      NA     NA     NA      NA         NA
- 3:         NA     NA      NA      NA     NA     NA      NA         NA
- 4:         NA     NA      NA      NA     NA     NA      NA         NA
- 5:         NA     NA      NA      NA     NA     NA      NA         NA
- 6:         NA     NA      NA      NA     NA     NA      NA         NA
- 7:         NA     NA      NA      NA     NA     NA      NA         NA
- 8:         NA     NA      NA      NA     NA     NA      NA         NA
- 9:         NA     NA      NA      NA     NA     NA      NA         NA
-10:         NA     NA      NA      NA     NA     NA      NA         NA
-11:         NA     NA      NA      NA     NA     NA      NA         NA
-12:         NA     NA      NA      NA     NA     NA      NA         NA
-13:         NA     NA      NA      NA     NA     NA      NA         NA
+    longitud causedth     region siteid                     arm   gagebrth
+ 1:     89.5          South Asia      1 Multiple Micronutrients Early term
+ 2:     89.5          South Asia      1 Multiple Micronutrients Early term
+ 3:     89.5          South Asia      1 Multiple Micronutrients Early term
+ 4:     89.5          South Asia      1 Multiple Micronutrients Early term
+ 5:     89.5          South Asia      1 Multiple Micronutrients Early term
+ 6:     89.5          South Asia      1 Multiple Micronutrients Early term
+ 7:     89.5          South Asia      1              Plumpy Doz       <NA>
+ 8:     89.5          South Asia      1              Plumpy Doz       <NA>
+ 9:     89.5          South Asia      1              Plumpy Doz       <NA>
+10:     89.5          South Asia      1              Plumpy Doz       <NA>
+11:     89.5          South Asia      1              Plumpy Doz       <NA>
+12:     89.5          South Asia      1              Plumpy Doz       <NA>
+13:     89.5          South Asia      1              Plumpy Doz       <NA>
+    brthmon parity                    birthwt   birthlen vagbrth hdlvry    mage
+ 1:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
+ 2:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
+ 3:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
+ 4:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
+ 5:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
+ 6:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
+ 7:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
+ 8:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
+ 9:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
+10:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
+11:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
+12:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
+13:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
+      mhtcm  mwtkg        mbmi meducyrs single fage fhtcm feducyrs trth2o
+ 1: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
+ 2: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
+ 3: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
+ 4: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
+ 5: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
+ 6: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
+ 7:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
+ 8:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
+ 9:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
+10:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
+11:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
+12:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
+13:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
+    cleanck impfloor nrooms  nhh nchldlt5 earlybf    hfoodsec anywast06
+ 1:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
+ 2:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
+ 3:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
+ 4:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
+ 5:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
+ 6:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
+ 7:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
+ 8:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
+ 9:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
+10:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
+11:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
+12:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
+13:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
+    pers_wast enstunt enwast hhwealth_quart    id W_gagebrth W_birthwt
+ 1:      <NA>       0      0      Wealth Q4 35131        268      2710
+ 2:      <NA>       0      0      Wealth Q4 35131        268      2710
+ 3:      <NA>       0      0      Wealth Q4 35131        268      2710
+ 4:      <NA>       0      0      Wealth Q4 35131        268      2710
+ 5:      <NA>       0      0      Wealth Q4 35131        268      2710
+ 6:      <NA>       0      0      Wealth Q4 35131        268      2710
+ 7:      <NA>       0      0      Wealth Q3 19171         NA      2710
+ 8:      <NA>       0      0      Wealth Q3 19171         NA      2710
+ 9:      <NA>       0      0      Wealth Q3 19171         NA      2710
+10:      <NA>       0      0      Wealth Q3 19171         NA      2710
+11:      <NA>       0      0      Wealth Q3 19171         NA      2710
+12:      <NA>       0      0      Wealth Q3 19171         NA      2710
+13:      <NA>       0      0      Wealth Q3 19171         NA      2710
+    W_birthlen W_mage W_mhtcm W_mwtkg   W_mbmi W_fage W_fhtcm W_meducyrs
+ 1:       48.2     21     145    37.3 17.74078     NA      NA          7
+ 2:       48.2     21     145    37.3 17.74078     NA      NA          7
+ 3:       48.2     21     145    37.3 17.74078     NA      NA          7
+ 4:       48.2     21     145    37.3 17.74078     NA      NA          7
+ 5:       48.2     21     145    37.3 17.74078     NA      NA          7
+ 6:       48.2     21     145    37.3 17.74078     NA      NA          7
+ 7:       46.6     NA      NA      NA       NA     NA      NA         13
+ 8:       46.6     NA      NA      NA       NA     NA      NA         13
+ 9:       46.6     NA      NA      NA       NA     NA      NA         13
+10:       46.6     NA      NA      NA       NA     NA      NA         13
+11:       46.6     NA      NA      NA       NA     NA      NA         13
+12:       46.6     NA      NA      NA       NA     NA      NA         13
+13:       46.6     NA      NA      NA       NA     NA      NA         13
     W_feducyrs W_nrooms W_nhh W_nchldlt5 W_parity impsan safeh20 perdiar6
- 1:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
- 2:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
- 3:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
- 4:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
- 5:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
- 6:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
- 7:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
- 8:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
- 9:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
-10:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
-11:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
-12:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
-13:         NA       NA    NA         NA       NA   <NA>    <NA>     <NA>
+ 1:          2        2    NA          1        2      1       1     <NA>
+ 2:          2        2    NA          1        2      1       1     <NA>
+ 3:          2        2    NA          1        2      1       1     <NA>
+ 4:          2        2    NA          1        2      1       1     <NA>
+ 5:          2        2    NA          1        2      1       1     <NA>
+ 6:          2        2    NA          1        2      1       1     <NA>
+ 7:          0        1    NA         NA       NA      1       1     <NA>
+ 8:          0        1    NA         NA       NA      1       1     <NA>
+ 9:          0        1    NA         NA       NA      1       1     <NA>
+10:          0        1    NA         NA       NA      1       1     <NA>
+11:          0        1    NA         NA       NA      1       1     <NA>
+12:          0        1    NA         NA       NA      1       1     <NA>
+13:          0        1    NA         NA       NA      1       1     <NA>
     perdiar24 W_perdiar6 W_perdiar24 predexfd6
- 1:      <NA>         NA          NA      <NA>
- 2:      <NA>         NA          NA      <NA>
- 3:      <NA>         NA          NA      <NA>
- 4:      <NA>         NA          NA      <NA>
- 5:      <NA>         NA          NA      <NA>
- 6:      <NA>         NA          NA      <NA>
- 7:      <NA>         NA          NA      <NA>
- 8:      <NA>         NA          NA      <NA>
- 9:      <NA>         NA          NA      <NA>
-10:      <NA>         NA          NA      <NA>
-11:      <NA>         NA          NA      <NA>
-12:      <NA>         NA          NA      <NA>
-13:      <NA>         NA          NA      <NA>
+ 1:      <NA>         NA          NA         0
+ 2:      <NA>         NA          NA         0
+ 3:      <NA>         NA          NA         0
+ 4:      <NA>         NA          NA         0
+ 5:      <NA>         NA          NA         0
+ 6:      <NA>         NA          NA         0
+ 7:  (0%, 5%]         NA  0.01092896      <NA>
+ 8:  (0%, 5%]         NA  0.01092896      <NA>
+ 9:  (0%, 5%]         NA  0.01092896      <NA>
+10:  (0%, 5%]         NA  0.01092896      <NA>
+11:  (0%, 5%]         NA  0.01092896      <NA>
+12:  (0%, 5%]         NA  0.01092896      <NA>
+13:  (0%, 5%]         NA  0.01092896      <NA>
 > dblenwt[subjid==5444, ]
-Empty data.table (0 rows and 9 cols): studyid,country,subjid,W_birthwt,W_birthlen,sex...
+    studyid    country subjid W_birthwt W_birthlen    sex agedays  waz   haz
+1: JiVitA-3 BANGLADESH   5444      2710       48.2 Female       0 -1.2 -0.51
+2: JiVitA-4 BANGLADESH   5444      2710       46.6 Female       0 -1.2 -1.37
 > dblenwt[, W_birthwt := NULL][, W_birthlen := NULL]
 > 
 > ## merge birth haz / waz into main dataset
@@ -566,9 +582,9 @@ Observations with agedays value of 6139, 4301, 6253, 5826, 4298, 5260, 4857, 585
 (t1 - t2) in months:  0 - 3 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  76584 
+No. of subjects with y avail in window of t1:  77749 
 No. of subjects with y avail in window of t2:  67963 
-No. of subjects with both y avail (t1,t2):  59530 
+No. of subjects with both y avail (t1,t2):  60241 
 (t1 - t2) in months:  3 - 6 
 y outcome:  haz 
 tgap value:  14 
@@ -614,9 +630,9 @@ No. of subjects with both y avail (t1,t2):  7996
 (t1 - t2) in months:  0 - 3 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  81045 
+No. of subjects with y avail in window of t1:  82216 
 No. of subjects with y avail in window of t2:  68391 
-No. of subjects with both y avail (t1,t2):  63295 
+No. of subjects with both y avail (t1,t2):  64001 
 (t1 - t2) in months:  3 - 6 
 y outcome:  waz 
 tgap value:  14 
@@ -662,9 +678,9 @@ No. of subjects with both y avail (t1,t2):  7148
 (t1 - t2) in months:  0 - 3 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  76584 
+No. of subjects with y avail in window of t1:  77749 
 No. of subjects with y avail in window of t2:  67963 
-No. of subjects with both y avail (t1,t2):  59530 
+No. of subjects with both y avail (t1,t2):  60241 
 (t1 - t2) in months:  3 - 6 
 y outcome:  lencm 
 tgap value:  14 
@@ -710,9 +726,9 @@ No. of subjects with both y avail (t1,t2):  7996
 (t1 - t2) in months:  0 - 3 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  81045 
+No. of subjects with y avail in window of t1:  82216 
 No. of subjects with y avail in window of t2:  68391 
-No. of subjects with both y avail (t1,t2):  63295 
+No. of subjects with both y avail (t1,t2):  64001 
 (t1 - t2) in months:  3 - 6 
 y outcome:  wtkg 
 tgap value:  14 
@@ -776,16 +792,16 @@ No. of subjects with both y avail (t1,t2):  7148
 > df <- df %>% filter(agedays!=0) %>% subset(., select = c("studyid","subjid","tr")) %>% group_by(studyid, subjid) %>% slice(1)
 > 
 > dim(dd_sub)
-[1] 953036     14
+[1] 955870     14
 > dd_sub <- left_join(dd_sub, df, by=c("studyid","subjid"))
 > dim(dd_sub)
-[1] 953036     15
+[1] 955870     15
 > dd_sub$tr[is.na(dd_sub$tr)]<-""
 > 
 > 
 > 
 > dim(dd_sub)
-[1] 953036     15
+[1] 955870     15
 > dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-4" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="PROBIT" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="iLiNS-Zinc" & dd_sub$tr!="Control"),]
@@ -793,11 +809,11 @@ No. of subjects with both y avail (t1,t2):  7148
 > dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-3" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="COHORTS" & dd_sub$tr=="Other"),]
 > dim(dd_sub)
-[1] 675946     15
+[1] 676696     15
 > 
 > saveRDS(dd_sub, file=paste0(ghapdata_dir,"velocity_longfmt.rds"))
 > 
 > 
 > proc.time()
    user  system elapsed 
- 98.000   1.838  80.935 
+108.708  11.408  87.818 

@@ -652,4 +652,4 @@ Column `country` joining character vector and factor, coercing into character ve
 > 
 > proc.time()
    user  system elapsed 
- 98.484  14.453 112.773 
+106.777   4.338 138.748 

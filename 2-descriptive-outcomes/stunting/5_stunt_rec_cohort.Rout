@@ -314,4 +314,4 @@ Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na`
 > 
 > proc.time()
    user  system elapsed 
- 11.398   2.692  14.071 
+ 13.113   2.935  16.196 
