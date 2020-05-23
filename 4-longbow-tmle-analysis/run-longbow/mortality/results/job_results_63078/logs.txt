@@ -1,185 +1,0 @@
-Command to run:
-Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/ca0b99ec-7b50-475c-9954-67705befd4ff/124af430-c71f-42e6-8e07-d23a301c46f9
-cd /tmp;tar xvzf tmp50ytco2o.tar.gz --strip 1;cd /tmp/ca0b99ec-7b50-475c-9954-67705befd4ff;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/63078/append_log/;screen -d -m python x.py;sleep 1
-tmp50ytco2o/ca0b99ec-7b50-475c-9954-67705befd4ff/
-tmp50ytco2o/ca0b99ec-7b50-475c-9954-67705befd4ff/124af430-c71f-42e6-8e07-d23a301c46f9/
-tmp50ytco2o/ca0b99ec-7b50-475c-9954-67705befd4ff/wrapper.sh
-tmp50ytco2o/ca0b99ec-7b50-475c-9954-67705befd4ff/inputs.json
-tmp50ytco2o/ca0b99ec-7b50-475c-9954-67705befd4ff/script.Rmd
-tmp50ytco2o/ca0b99ec-7b50-475c-9954-67705befd4ff/x.py
-tmp50ytco2o/ca0b99ec-7b50-475c-9954-67705befd4ff/runner.R
-tmp50ytco2o/ca0b99ec-7b50-475c-9954-67705befd4ff/provision.sh
-Requirement already satisfied (use --upgrade to upgrade): requests in /usr/lib/python2.7/site-packages
-You are using pip version 18.1, however version 20.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-{"job": {"status": "running", "created_at": "2020-05-04T23:18:14.774", "results_url": "/jobs/63078/", "jobs": []}}Making sure longbowtools package is available for runner
-
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
-> 
-> 
-Installing pandoc
-pandoc-2.3.1/
-pandoc-2.3.1/bin/
-pandoc-2.3.1/bin/pandoc
-pandoc-2.3.1/bin/pandoc-citeproc
-pandoc-2.3.1/share/
-pandoc-2.3.1/share/man/
-pandoc-2.3.1/share/man/man1/
-pandoc-2.3.1/share/man/man1/pandoc.1.gz
-pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
-Running provision script
-skipping provisioning because this is a child job
-Making sure longbowtools package is available for runner
-
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
-> 
-> 
-Starting analysis
-
-
-processing file: REPORT.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   5%
-  ordinary text without R code
-
-  |                                                                              |.......                                                               |  10%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                              |..........                                                            |  14%
-  ordinary text without R code
-
-  |                                                                              |.............                                                         |  19%
-label: params (with options) 
-List of 2
- $ warning: logi FALSE
- $ message: logi FALSE
-
-Loading required package: graphics
-ever_co06c("sex", "arm", "brthmon", "vagbrth", "hdlvry", "single", "trth2o", "cleanck", "impfloor", "hfoodsec", "hhwealth_quart", "W_mage", "W_mhtcm", "W_mwtkg", "W_mbmi", "W_fage", "W_fhtcm", "W_meducyrs", "W_feducyrs", "W_nrooms", "W_nhh", "W_nchldlt5", "W_parity", "impsan", "safeh20")co_occurenceidc("studyid", "country")
-TRUETRUEFALSENULL
-  |                                                                              |.................                                                     |  24%
-  ordinary text without R code
-
-  |                                                                              |....................                                                  |  29%
-label: preprocessing
-  |                                                                              |.......................                                               |  33%
-   inline R code fragments
-
-  |                                                                              |...........................                                           |  38%
-label: print_adjustment_set (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |..............................                                        |  43%
-  ordinary text without R code
-
-  |                                                                              |.................................                                     |  48%
-label: print_strata_variables (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |.....................................                                 |  52%
-  ordinary text without R code
-
-  |                                                                              |........................................                              |  57%
-label: data_summary
-  |                                                                              |...........................................                           |  62%
-  ordinary text without R code
-
-  |                                                                              |...............................................                       |  67%
-label: print_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |..................................................                    |  71%
-  ordinary text without R code
-
-  |                                                                              |.....................................................                 |  76%
-label: drop_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |.........................................................             |  81%
-  ordinary text without R code
-
-  |                                                                              |............................................................          |  86%
-label: stratified_tmle (with options) 
-List of 1
- $ message: logi FALSE
-
-tmle for:	studyid: CMC-V-BCS-2002, country: INDIA
-tmle for:	studyid: CMIN, country: BANGLADESH
-tmle for:	studyid: COHORTS, country: PHILIPPINES
-tmle for:	studyid: EE, country: PAKISTAN
-tmle for:	studyid: GMS-Nepal, country: NEPAL
-tmle for:	studyid: IRC, country: INDIA
-tmle for:	studyid: JiVitA-4, country: BANGLADESH
-tmle for:	studyid: Keneba, country: GAMBIA
-tmle for:	studyid: MAL-ED, country: INDIA
-tmle for:	studyid: NIH-Birth, country: BANGLADESH
-tmle for:	studyid: NIH-Crypto, country: BANGLADESH
-tmle for:	studyid: PROVIDE, country: BANGLADESH
-tmle for:	studyid: SAS-CompFeed, country: INDIA
-tmle for:	studyid: SAS-FoodSuppl, country: INDIA
-tmle for:	studyid: ZVITAMBO, country: ZIMBABWE
-  |                                                                              |...............................................................       |  90%
-  ordinary text without R code
-
-  |                                                                              |...................................................................   |  95%
-label: save_results
-  |                                                                              |......................................................................| 100%
-  ordinary text without R code
-
-
-output file: REPORT.knit.md
-
-/usr/local/pandoc/pandoc-1.17/pandoc +RTS -K512m -RTS REPORT.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output /tmp/ca0b99ec-7b50-475c-9954-67705befd4ff/124af430-c71f-42e6-8e07-d23a301c46f9/REPORT.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /home/andrew.mertens/rlibs/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/RtmpRQdl1c/rmarkdown-str445b20ad097a.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' 
-
-Output created: 124af430-c71f-42e6-8e07-d23a301c46f9/REPORT.html
-[1] "/tmp/ca0b99ec-7b50-475c-9954-67705befd4ff/124af430-c71f-42e6-8e07-d23a301c46f9/REPORT.html"
-Running analysis succeeded
-124af430-c71f-42e6-8e07-d23a301c46f9/
-124af430-c71f-42e6-8e07-d23a301c46f9/REPORT.Rmd
-124af430-c71f-42e6-8e07-d23a301c46f9/inputs.json
-124af430-c71f-42e6-8e07-d23a301c46f9/obs_counts.rdata
-124af430-c71f-42e6-8e07-d23a301c46f9/results.rdata
-124af430-c71f-42e6-8e07-d23a301c46f9/REPORT.html
-124af430-c71f-42e6-8e07-d23a301c46f9/REPORT.md
-{"status": "executed"}
