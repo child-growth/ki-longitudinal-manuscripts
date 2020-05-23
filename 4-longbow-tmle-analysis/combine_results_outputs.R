@@ -23,7 +23,7 @@ bin <- left_join(bin_old, bin, by=c("agecat", "studyid", "country", "strata_labe
   "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
 dim(bin)
 
-mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-05-04.rds"))
+mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-05-22.rds"))
 
 Zscores_unadj <- readRDS(here("/results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
 
