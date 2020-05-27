@@ -18,7 +18,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load country mediods
-mediods <- read.csv('data/non-secure data/country_centroids/country_centroids_primary.csv', header=T, sep = "\t")
+mediods <- read.csv(here('data/non-secure data/country_centroids/country_centroids_primary.csv'), header=T, sep = "\t")
 head(mediods)
 mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
 mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
