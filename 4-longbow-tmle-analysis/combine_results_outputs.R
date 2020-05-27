@@ -36,7 +36,10 @@ velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
 
-velocity <- readRDS(here("/results/rf results/raw longbow results/results_vel_2020-03-08.rds"))
+results <- readRDS(here("results/rf results/raw longbow results/results_vel_2020-05-22.RDS"))   
+results_2 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-23.RDS"))   
+results_3 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-26.RDS"))   
+velocity <- bind_rows(results, results_2, results_3)
 
 season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-05-06.rds"))
 

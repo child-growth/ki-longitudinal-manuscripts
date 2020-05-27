@@ -12,7 +12,7 @@ library(longbowRiskFactors)
 
 # 1. enumerate analysis
 
-setwd(here("4-longbow-tmle-analysis","run-longbow","optimal-intervention-analysis"))
+setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 

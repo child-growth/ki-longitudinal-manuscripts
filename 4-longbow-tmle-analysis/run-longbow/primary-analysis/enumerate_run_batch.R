@@ -20,7 +20,7 @@ default_params <- jsonlite::fromJSON(inputs)
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(jsonlite::toJSON(enumerated_analyses[[1]]),"single_bin_analysis.json")
+writeLines(jsonlite::toJSON(enumerated_analyses[[5]]),"single_bin_analysis.json")
 writeLines(jsonlite::toJSON(enumerated_analyses),"all_bin_analyses.json")
 
 
