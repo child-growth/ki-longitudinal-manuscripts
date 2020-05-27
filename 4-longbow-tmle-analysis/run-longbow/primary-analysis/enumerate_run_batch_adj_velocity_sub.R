@@ -25,8 +25,9 @@ load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuou
 #Load existing results
 results <- readRDS(here("results/rf results/raw longbow results/results_vel_2020-05-22.RDS"))   
 results_2 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-23.RDS"))   
+results_3 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-26.RDS"))   
 
-results <- bind_rows(results, results_2)
+results <- bind_rows(results, results_2, results_3)
 
 #Subset to growth velocity
 analyses <- analyses %>% filter(Y!="haz" & Y!="whz")

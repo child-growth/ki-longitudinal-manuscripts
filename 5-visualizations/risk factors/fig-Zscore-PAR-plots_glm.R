@@ -22,7 +22,7 @@ dglm <- readRDS(here("results","rf results","raw longbow results","results_cont_
 
 #Subset to outcomes of interest
 tmlePAR <- tmlePAR %>% filter(outcome_variable %in% c("haz","whz")) 
-dglm <- dglm %>% filter(outcome_variable %in% c("haz","whz"), type=="PAR") 
+dglm <- dglm %>% filter(outcome_variable %in% c("haz","whz"), type=="PAR", intervention_variable!="trth2o") 
 
 
 
@@ -63,7 +63,7 @@ RMAest_clean$Analysis <- "GLM"
 tmlePAR$Analysis <- "TMLE"
 par <- bind_rows(RMAest_clean, tmlePAR)
 
-par <- par %>% filter(intervention_variable %in% unique(RMAest_clean$intervention_variable))
+par <- par %>% filter(intervention_variable %in% unique(tmlePAR$intervention_variable), intervention_variable %in% unique(RMAest_clean$intervention_variable))
 
 
 
