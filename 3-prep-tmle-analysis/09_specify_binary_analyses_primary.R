@@ -20,7 +20,7 @@ save(cuminc, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript anal
 save(cuminc_nobirth, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_nobirth_primary.rdata")
 save(cuminc_sev, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/swast_cuminc_primary.rdata")
 save(cuminc_nobirth_sev, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/swast_cuminc_nobirth_primary.rdata")
-save(pers_wast, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/pers_wast.rdata_primary")
+save(pers_wast, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/pers_wast_primary.rdata")
 
 load(file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/st_cuminc_outcomes.rdata")
 cuminc_sev <- cuminc %>% filter(agecat=="0-24 months")
