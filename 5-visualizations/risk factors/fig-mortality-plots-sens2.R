@@ -31,7 +31,7 @@ clean_agecat<-function(agecat){
 
 
 #Load data
-dfull<-readRDS(paste0(here::here(),"/results/rf results/raw longbow results/mortality_2020-05-04.RDS"))
+dfull<-readRDS(paste0(here::here(),"/results/rf results/raw longbow results/mortality_024_2020-05-02.RDS"))
 head(dfull)
 
 
@@ -169,7 +169,8 @@ d = d %>% mutate(Measure=tolower(Measure),
   type = gsub("Yes", "Severely", type),
   type = gsub(" 0-24 months", "", type))
   
-d = d %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
+d = d %>% arrange(RR) %>%
+  mutate(outcome_label = paste(type, " ", Measure, sep = ""),
                    outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
                    outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
                    outcome_label = factor(outcome_label, levels=unique(outcome_label)))
