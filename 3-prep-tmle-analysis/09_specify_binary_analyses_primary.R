@@ -62,7 +62,7 @@ st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mht
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
-                                 Y=c("ever_stunted"), file="st_cuminc_rf_primary.Rdata")
+                                 Y=c("ever_stunted"), file="st_cuminc_rf_primary.rdata")
 
 st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
                                               "birthlen",       "vagbrth",       "hdlvry",    
@@ -72,13 +72,13 @@ st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                               "perdiar6", "perdiar24", 
                                               "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
                                               "predexfd6", "earlybf", "month"),
-                                         Y=c("ever_stunted"), file="st_cuminc_nobirth_rf_primary.Rdata")
+                                         Y=c("ever_stunted"), file="st_cuminc_nobirth_rf_primary.rdata")
 sst_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
                                       "mbmi",          "single",        "fage",          "fhtcm",       
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
-                                 Y=c("ever_sstunted"), file="sst_cuminc_rf_primary.Rdata")
+                                 Y=c("ever_sstunted"), file="sst_cuminc_rf_primary.rdata")
 
 sst_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
                                               "birthlen",       "vagbrth",       "hdlvry",    
@@ -88,7 +88,7 @@ sst_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                               "perdiar6", "perdiar24", 
                                               "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
                                               "predexfd6", "earlybf", "month"),
-                                         Y=c("ever_sstunted"), file="sst_cuminc_nobirth_rf_primary.Rdata")
+                                         Y=c("ever_sstunted"), file="sst_cuminc_nobirth_rf_primary.rdata")
 
 
 
@@ -97,7 +97,7 @@ cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm"
                                    "nrooms",      "nchldlt5",    "nhh",              
                                    "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                    "feducyrs", "hfoodsec"),
-                              Y=c("ever_wasted"), file="wast_cuminc_rf_primary.Rdata")
+                              Y=c("ever_wasted"), file="wast_cuminc_rf_primary.rdata")
 
 cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
                                            "birthlen",       "vagbrth",       "hdlvry",    
@@ -107,14 +107,14 @@ cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                            "perdiar6", "perdiar24", 
                                            "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
                                            "predexfd6", "earlybf", "month"),
-                                      Y=c("ever_wasted"), file="wast_cuminc_nobirth_rf_primary.Rdata")
+                                      Y=c("ever_wasted"), file="wast_cuminc_nobirth_rf_primary.rdata")
 
 swast_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
                                    "mbmi",          "single",        "fage",          "fhtcm",       
                                    "nrooms",      "nchldlt5",    "nhh",              
                                    "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                    "feducyrs", "hfoodsec"),
-                              Y=c("ever_swasted"), file="swast_cuminc_rf_primary.Rdata")
+                              Y=c("ever_swasted"), file="swast_cuminc_rf_primary.rdata")
 
 swast_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
                                            "birthlen",       "vagbrth",       "hdlvry",    
@@ -124,11 +124,11 @@ swast_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                            "perdiar6", "perdiar24", 
                                            "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", "predfeed36", "exclfeed36",
                                            "predexfd6", "earlybf", "month"),
-                                      Y=c("ever_swasted"), file="swast_cuminc_nobirth_rf_primary.Rdata")
+                                      Y=c("ever_swasted"), file="swast_cuminc_nobirth_rf_primary.rdata")
 
 
 
-pers_wast <- specify_rf_analysis(A=Avars, Y="pers_wast", file="pers_wast_rf_primary.Rdata")
+pers_wast <- specify_rf_analysis(A=Avars, Y="pers_wast", file="pers_wast_rf_primary.rdata")
 
 #bind together datasets
 analyses <- rbind(st_cuminc, st_cuminc_nobirth, sst_cuminc, sst_cuminc_nobirth, swast_cuminc, swast_cuminc_nobirth, cuminc, cuminc_nobirth, pers_wast)
