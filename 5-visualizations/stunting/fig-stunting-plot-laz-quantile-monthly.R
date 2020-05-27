@@ -67,7 +67,7 @@ mean_laz_quantile_plot <- ggplot(df_quantile,aes(x = agecat, group = region)) +
   geom_smooth(aes(y = LAZ, color = region, group = interval, linetype = interval), se = F, span = 0.5) +
   
   
-  facet_grid(~region_who) +
+  facet_grid(~region) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,6), labels = seq(0,24,6)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
