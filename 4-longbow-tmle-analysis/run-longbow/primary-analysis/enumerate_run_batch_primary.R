@@ -16,20 +16,23 @@ library(longbowRiskFactors)
 setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
-default_params$script_params$parallelize=TRUE
 
 analyses <- readRDS(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses_primary.rds"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
+writeLines(toJSON(enumerated_analyses[[8]]),"single_primary_analysis.json")
 writeLines(jsonlite::toJSON(enumerated_analyses),"primary_bin_analyses.json")
 
 
 
 # 2. run batch
-
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
+inputs <- "single_primary_analysis.json"
+
+#run test/provisioning job
+run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 
 bin_batch_inputs <- "primary_bin_analyses.json"
