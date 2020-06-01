@@ -17,8 +17,9 @@ inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 
 #Load existing results
-results <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-05-18.RDS"))   
-
+results <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-05-31.RDS"))   
+results_sub <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_subset_2020-06-01.RDS"))   
+results <- rbind(results, results_sub)
 
 # # Continious
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))

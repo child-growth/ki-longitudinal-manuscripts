@@ -8,20 +8,25 @@ Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <
 
 Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))
 
+
+bin_primary <- readRDS(here("/results/rf results/raw longbow results/results_bin_primary_2020-05-28.RDS"))
+
 bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
 bin_sub <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
 bin_sub2 <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-20.rds"))
 bin_sub3 <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-20_part2.rds"))
 bin <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
+bin <- bin %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
+                                    "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
+                         .keep_all=TRUE)
 dim(bin)
+bin_other <- anti_join(bin, bin_primary, by = c("agecat", "studyid", "country", "strata_label", "intervention_variable",
+                                                "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
+dim(bin_primary)
+dim(bin_other) 
+nrow(bin_primary) + nrow(bin_other)
+bin <- rbind(bin_primary, bin_other)
 
-bin_old <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-03-08.RDS"))
-bin_old <- bin_old %>% select("agecat", "studyid", "country", "strata_label", "intervention_variable", 
-                              "outcome_variable","type","parameter","intervention_level",  "baseline_level")
-dim(bin)
-bin <- left_join(bin_old, bin, by=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
-  "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
-dim(bin)
 
 mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-05-22.rds"))
 
