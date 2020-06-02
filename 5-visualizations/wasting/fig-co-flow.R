@@ -14,7 +14,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load data
-co_pool = readRDS(paste0(res_dir, "co_flow_pooled.RDS"))
+co_pool = readRDS(paste0(res_dir, "/co_flow_pooled.RDS"))
 
 #Scale sum to 100
 co_pool <- co_pool %>% group_by(agem) %>%
