@@ -9,18 +9,22 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
+#results_full <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-05-31.RDS"))
 results_full <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-03-11.RDS"))
 
 
 #Load subset run after full longbow job errored 80% of the way through
+#results_sub <-readRDS(here("results/rf results/raw longbow results/opttx_vim_results_subset_2020-06-01.RDS"))
 results_sub <-readRDS(here("results/rf results/raw longbow results/opttx_vim_results_subset_2020-03-13.RDS"))
- 
+
 
 #load seasonal VIM
-results_season <-readRDS(here("results/rf results/raw longbow results/opttx_vim_season_results_2020-03-10.RDS"))
+results_season <-readRDS(here("results/rf results/raw longbow results/opttx_vim_season_results_2020-05-29.RDS"))
  
 
 results <- rbind(results_full, results_sub, results_season)
+
+
 
 #drop EE gestational age
 dim(results)

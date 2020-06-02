@@ -63,8 +63,8 @@ df <- results %>% filter(type=="PAR", agecat=="24 months")
 pool.Zpar(df) %>% as.data.frame()
 
 # save concatenated results
-filename1 <- paste(paste('opttx_vim_results_fhtcm',Sys.Date( ),sep='_'),'RDS',sep='.')
-filename2 <- paste(paste('opttx_vim_obs_count_fhtcms',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename1 <- paste(paste('results_cont_fhtcm',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('results_cont_obs_count_fhtcms',Sys.Date( ),sep='_'),'RDS',sep='.')
 saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
 saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
 

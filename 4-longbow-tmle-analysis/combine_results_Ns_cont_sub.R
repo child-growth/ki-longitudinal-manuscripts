@@ -11,7 +11,7 @@ d <- readRDS(here("/results/rf results/raw longbow results/results_cont_obs_coun
 d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
 
 
-d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2020-03-09.RDS"))
+d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2020-05-29.RDS"))
 d2 <- d2 %>% mutate(rain_quartile=case_when(
   rain_quartile==1 ~ "Opposite max rain",
   rain_quartile==2 ~ "Pre-max rain",
