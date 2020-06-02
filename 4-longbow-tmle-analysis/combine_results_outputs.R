@@ -6,10 +6,10 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))
-Zscores_fhtcm <- readRDS(here("/results/rf results/raw longbow results/results_cont_fhtcm_2020-05-29.RDS"))
-Zscores <- Zscores %>% filter(!(intervention_variable=="fhtcm" & outcome_variable=="haz"))
-Zscores <- bind_rows(Zscores, Zscores_fhtcm)
+Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-06-02.RDS"))
+# Zscores_fhtcm <- readRDS(here("/results/rf results/raw longbow results/results_cont_fhtcm_2020-05-29.RDS"))
+# Zscores <- Zscores %>% filter(!(intervention_variable=="fhtcm" & outcome_variable=="haz"))
+# Zscores <- bind_rows(Zscores, Zscores_fhtcm)
 
 
 bin_primary <- readRDS(here("/results/rf results/raw longbow results/results_bin_primary_2020-05-28.RDS"))

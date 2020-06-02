@@ -52,7 +52,7 @@ is_outlier <- function(x, thres=1.5) {
 
 
 
-dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=1.95), as.character(dhaz$RFlabel.x),NA)
+dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=2), as.character(dhaz$RFlabel.x),NA)
 dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.25), as.character(dwhz$RFlabel.x),NA)
 dhaz$is_outlier <- ifelse(is.na(dhaz$outlier), "0", "1")
 dwhz$is_outlier <- ifelse(is.na(dwhz$outlier), "0", "1")
