@@ -94,6 +94,10 @@ whz <- bind_rows(
 
 #monthly mean whz
 d <- calc.monthly.agecat(d)
+#get range of N obs for figure caption
+d %>% filter(!is.na(agecat)) %>% group_by(agecat) %>% summarize(N=n()) %>% ungroup() %>% summarise(min(N), max(N))
+d %>% filter(!is.na(agecat)) %>% group_by(agecat, region) %>% summarize(N=n()) %>% group_by(region) %>% summarise(min(N), max(N))
+
 monthly.data <- summary.whz(d)
 monthly.region <- d %>% group_by(region) %>% do(summary.whz(.)$whz.res)
 monthly.country <- d %>% group_by(region, country) %>% do(summary.whz(.)$whz.res) 
