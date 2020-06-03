@@ -141,7 +141,10 @@ summary = summary %>%
   mutate(sum = stunted + wasted + underwt +
            wu + su + co + recovered + healthy)
 
-summary
+summary 
+summary %>% summarize(min(nchild), max(nchild))
+summary %>% summarize(min(N), max(N))
+
 
 
 # aggregate data within study, country, and agecat

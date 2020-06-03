@@ -45,7 +45,9 @@ length(unique(paste0(d$studyid,d$subjid)))
 d <- d %>% group_by(studyid, subjid) %>% filter(!(born_wast==1 & sum(wast_rec)==0))
 dim(d)
 length(unique(paste0(d$studyid,d$subjid)))
-
+df <- d %>% group_by(studyid, subjid) %>% slice(1) 
+table(d$born_wast[d$agedays<24*30.4167])
+table(df$born_wast)
 
 # estimate a pooled fit, over birth wasting status
 plotdf <- NULL

@@ -87,7 +87,7 @@ rain_quartile <- rain_long %>% group_by(studyid, country) %>%
   mutate(roll_sum2 = roll_sum(rain, 3, align = "right", fill = 0, na.rm=T),
          max_rain_quarter = ifelse(roll_sum1>roll_sum2, roll_sum1, roll_sum2),
          month_end_max_rain = month_number[max_rain_quarter==max(max_rain_quarter)]) %>%
-  select(studyid, country, month_end_max_rain) %>% unique(.)
+  select(studyid, country, cohort_index, month_end_max_rain) %>% unique(.)
 head(rain_quartile, 12)
 
 
@@ -164,7 +164,7 @@ df$rain_quartile <- factor(df$rain_quartile, levels=c("Opposite max rain","Post-
 #Set up dataset for longbow analysis
 df <- filter(df, agedays < 24 * 30.4167)
 
-df <- subset(df, select = c(studyid, subjid, agedays, country, whz, rain_quartile))
+df <- subset(df, select = c(studyid, subjid, agedays, country, cohort_index, whz, rain_quartile))
 head(df)
 
 
@@ -209,10 +209,6 @@ W <- NULL
 #save analysis dataset
 save(d, file = paste0(ghapdata_dir, "seasonality_rf.Rdata"))
 
-#get N's for figure caption
-d %>% summarize(N=n(), nchild=length(unique(subjid)))
-cohort_Ns <- d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid)))
-
 #Specify analysis
 specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country"), id="id", adj_sets=adjustment_sets){
   
@@ -234,6 +230,21 @@ analyses <- specify_rf_analysis(A="rain_quartile", Y="whz", file="seasonality_rf
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/seasonality_analyses.rdata"))
+
+
+
+#get N's for figure caption
+cohort_Ns <- d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid)))
+
+#all
+d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+#high
+d %>% filter(cohort_index>=0.8) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+#med
+d %>% filter(cohort_index<0.8 & cohort_index>=0.5) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+#low
+d %>% filter(cohort_index<0.5) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+
 
 #Save cohort Ns
 saveRDS(cohort_Ns, file=paste0(here(),"/results/seasonTMLE_Ns.rds")) 
