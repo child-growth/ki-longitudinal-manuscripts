@@ -19,7 +19,7 @@ default_params <- jsonlite::fromJSON(inputs)
 load(here("4-longbow-tmle-analysis","analysis specification","earlywast_strat_analyses.rdata"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(jsonlite::toJSON(enumerated_analyses[[1]]),"single_bin_analysis.json")
+#writeLines(jsonlite::toJSON(enumerated_analyses[[1]]),"single_bin_analysis.json")
 writeLines(jsonlite::toJSON(enumerated_analyses),"all_bin_analyses.json")
 
 
@@ -30,7 +30,7 @@ configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
 # inputs <- "inputs_template.json"
-inputs <- "single_bin_analysis.json"
+#inputs <- "single_bin_analysis.json"
 
 
 
@@ -43,15 +43,15 @@ bin_batch_id
 wait_for_batch(bin_batch_id)
 
 # download the longbow outputs
-get_batch_results(bin_batch_id, results_folder="results_bin")
-length(dir("results_bin"))
+get_batch_results(bin_batch_id, results_folder="results_early_wast")
+length(dir("results_early_wast"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results_bin")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin")
+results <- load_batch_results("results.rdata", results_folder = "results_early_wast")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_early_wast")
 
 # save concatenated results
-filename1 <- paste(paste('results_bin',Sys.Date( ),sep='_'),'RDS',sep='.')
-filename2 <- paste(paste('results_bin_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename1 <- paste(paste('results_early_wast',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('results_early_wast_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
 saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
 saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))

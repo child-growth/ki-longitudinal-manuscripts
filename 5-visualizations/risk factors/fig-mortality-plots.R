@@ -47,6 +47,8 @@ d <- droplevels(d)
 #drop reference levels
 d <- d %>% filter( ci_lower !=  ci_upper)
 
+df <- d %>% filter(outcome_variable=="dead")
+table(paste0(df$studyid, df$country))
 
 poolRR <- function(d, method="REML"){
   #nstudies=length(unique(d$studyid))
@@ -185,12 +187,12 @@ d = d %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
 
 d$severe<-factor(ifelse(grepl("evere",d$RFlabel),1,0),levels=c("0","1"))
 
-d2 <- d %>% filter(analysis=="Random Effects")
+d2 <- d %>% filter(analysis=="Random Effects") %>% arrange(outcome_variable, RR) %>%
+  mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label))) 
 
 pmort <- ggplot(d2, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  #geom_tmext(aes(x=as.numeric(intervention_variable)+0.1, y=RR+0.1, label=BW), size=8) +
   labs(y = "", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
@@ -205,9 +207,7 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
         text = element_text(size=16), 
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
-  #coord_cartesian(ylim=c(1,9)) + 
   coord_flip(ylim=c(1,9))
-    #expand=c(0,0)) 
 
 
 ggsave(pmort, file=here("/figures/risk-factor/fig-mort+morb-RR.png"), width=14, height=5.2)

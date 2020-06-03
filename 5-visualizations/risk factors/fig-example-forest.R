@@ -11,7 +11,7 @@ dpool <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"
   filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region!="N.America & Europe") %>%
   mutate(pooled=1)
 dFE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds")) %>% 
-  filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled - FE") %>%
+  filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled") %>%
         mutate(pooled=1, region="Pooled - FE")
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds")) %>% 
   filter(type=="RR",  intervention_variable=="sex", outcome_variable=="ever_stunted", ci_lower != ci_upper, agecat=="0-24 months") %>%

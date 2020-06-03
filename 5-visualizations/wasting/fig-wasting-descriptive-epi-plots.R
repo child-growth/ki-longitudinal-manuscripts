@@ -239,7 +239,7 @@ prev_plot[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(region, n
 #-------------------------------------------------------------------------------------------
 # Wasting cumulative incidence
 #-------------------------------------------------------------------------------------------
-ci_plot <- ki_combo_plot(d,
+ci_plot_primary <- ki_combo_plot(d,
                         Disease="Wasting",
                         Measure=c("Cumulative incidence", "Incidence proportion"), 
                         Birth="yes", 
@@ -261,15 +261,15 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
+ggsave(ci_plot_primary[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
 
-saveRDS(ci_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,".RDS"))
+saveRDS(ci_plot_primary[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,".RDS"))
 
 #Save plot-objects for figure grid
-saveRDS(list(mean_wlz_plot, prev_plot, ci_plot), file=paste0(here::here(),"/figures/plot-objects/fig2_plot_objects.rds"))
+saveRDS(list(mean_wlz_plot, prev_plot, ci_plot_primary), file=paste0(here::here(),"/figures/plot-objects/fig2_plot_objects.rds"))
 
-ci_plot[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
-ci_plot[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
+ci_plot_primary[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
+ci_plot_primary[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 
 
 #-------------------------------------------------------------------------------------------
@@ -387,7 +387,7 @@ d <- d %>% mutate(birth=factor(birth, levels=c("yes","no"))) %>% arrange(birth)
 
 
 
-inc_plot <- inc_combo_plot(d,
+inc_plot_primary <- inc_combo_plot(d,
                    Disease="Wasting",
                    Measure="Incidence rate", 
                    Birth=c("yes","no"), 
@@ -412,12 +412,12 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
+ggsave(inc_plot_primary$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
-saveRDS(inc_plot$data, file=paste0(figdata_dir_wasting,"figdata-",inc_plot_name,".RDS"))
-saveRDS(inc_plot, file=paste0(here::here(),"/figures/plot-objects/inc_plot_object.rds"))
+saveRDS(inc_plot_primary$data, file=paste0(figdata_dir_wasting,"figdata-",inc_plot_name,".RDS"))
+saveRDS(inc_plot_primary, file=paste0(here::here(),"/figures/plot-objects/inc_plot_object.rds"))
 
-inc_plot$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
+inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 
 
 #-------------------------------------------------------------------------------------------
@@ -1059,3 +1059,10 @@ saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",sevwast_pl
 
 
 
+
+#Get N's for figure captions
+prev_plot[[2]] %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
+ci_plot_primary[[2]] %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
+inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
+rec_plot[[2]]%>% group_by(region) %>% filter(age_range=="90 days") %>% summarize(min(nmeas), max(nmeas), sum(nmeas))
+co_plot[[2]]%>% group_by(region) %>% summarize(min(nmeas), max(nmeas))

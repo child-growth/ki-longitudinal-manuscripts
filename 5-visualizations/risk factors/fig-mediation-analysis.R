@@ -90,7 +90,7 @@ p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))
              switch = "y")+
   labs(x = "Exposure level", y = "Adjusted Z-score difference") +
   geom_hline(yintercept = 0) +
-  scale_y_continuous(limits = c(-1, 0.55), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-.75, 0.25), breaks=c(-0.6, -0.4, -0.2, 0, 0.2), labels=scaleFUN, expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,3)]) +  
   ggtitle("LAZ                                                       WLZ")+
   theme(strip.background = element_blank(),
