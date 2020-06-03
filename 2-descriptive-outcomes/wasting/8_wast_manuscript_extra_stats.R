@@ -70,9 +70,13 @@ d <- dfull %>% filter(agedays < 24 * 30.4167) %>%
   mutate(wast=max(wast), co=last(co)) %>%
   filter(agecat %in% c("0-6 months","18-24 months")) %>%
   group_by(studyid, country, subjid) %>% 
-  mutate(wast06=first(wast), co24=last(co)) %>% slice(1)
+  mutate(wast06=first(wast), co24=last(co)) %>% 
+  filter(first(agecat)=="0-6 months", last(agecat)=="18-24 months") %>%
+  slice(1)
 
 table(d$wast06, d$co24)
+table(d$wast06, d$co24, paste0(d$studyid, d$country))
+
 a<-prop.table(table(d$co24[d$wast06==0]))
 b<-prop.table(table(d$co24[d$wast06==1]))
 
@@ -93,8 +97,12 @@ save(d, file=paste0(ghapdata_dir,"earlywast_strat_co_rf.Rdata"))
 
 df <- dfull %>% group_by(studyid, subjid, agecat) %>% mutate(anywast=1*(min(whz) < (-2)), anystunt=1*(min(haz) < (-2)))
 d <- df %>% group_by(studyid, subjid) %>% filter(agecat %in% c("0-6 months", "18-24 months")) %>% arrange(agecat) %>% 
-  mutate(wast06=first(anywast), stunt24=last(anystunt)) %>% slice(1)
+  filter(first(agecat)=="0-6 months", last(agecat)=="18-24 months") %>%
+  mutate(N=n(), wast06=first(anywast), stunt24=last(anystunt)) %>% slice(1) 
+table(d$N)
+
 table(d$wast06, d$stunt24)
+table(d$wast06, d$stunt24, paste0(d$studyid, d$country))
 
 prop.table(table(d$stunt24[d$wast06==0]))
 prop.table(table(d$stunt24[d$wast06==1]))

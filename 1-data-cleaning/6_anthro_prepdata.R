@@ -217,3 +217,13 @@ length(unique(Ndf$country)) #Countries
 length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
 length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
 
+
+#--------------------------------------------
+# Get C+C manuscript N's
+#--------------------------------------------
+Ndf <- rbind(stunt, wast, waz) %>% filter(agedays < 24 * 30.4167)
+length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
+length(unique(Ndf$country)) #Countries
+length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
+length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
+
