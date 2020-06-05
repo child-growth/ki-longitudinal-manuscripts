@@ -7,6 +7,21 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
+
+#Function to drop correct trial arms
+drop_int_arms <- function(d){
+  if(length(which(d$studyid=="JiVitA-4" & d$tr!="Control")) > 0){
+    d=d[-which(d$studyid=="JiVitA-4" & d$tr!="Control"),]
+    d=d[-which(d$studyid=="JiVitA-3" & d$tr!="Control"),]
+  }
+  d=d[-which(d$studyid=="PROBIT" & d$tr!="Control"),]
+  d=d[-which(d$studyid=="iLiNS-Zinc" & d$tr!="Control"),]
+  d=d[-which(d$studyid=="SAS-CompFeed" & d$tr!="Control"),]
+  d=d[-which(d$studyid=="COHORTS" & d$tr=="Other"),]
+  return(d)
+}
+
+
 #--------------------------------------------
 # Read in master data file
 #--------------------------------------------
@@ -42,7 +57,8 @@ table(d$studyid,d$country)
 # anthropometry measure
 #--------------------------------------------
 nobs <- nrow(d)
-nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz)))
+nobsq_cc <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz)))
+nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz)) %>% do(drop_int_arms(.)))
 nobsm <- nrow(d %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(haz)))
 stunt_mort <- d %>% filter(haz >= -6 & haz <=6, !is.na(haz)) %>%
   subset(., select = - c(whz, waz, muaz)) %>%
@@ -52,9 +68,19 @@ stunt_mort <- d %>% filter(haz >= -6 & haz <=6, !is.na(haz)) %>%
   mutate(measid=seq_along(subjid)) 
 #Observations dropped
 nobs - nrow(stunt_mort)
-dropped <- nobsq - nrow(stunt_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167))
+
+
+#C+C manuscript dropped
+dropped <- nobsq_cc - nrow(stunt_mort %>% ungroup())
+dropped
+dropped/nobsq_cc * 100 #percentage dropped
+
+
+#Stunting manuscript dropped
+dropped <- nobsq - nrow(stunt_mort %>% ungroup() %>% filter(measurefreq!="yearly" & agedays < 24*30.4167) %>% do(drop_int_arms(.)))
 dropped
 dropped/nobsq * 100 #percentage dropped
+
 
 
 
@@ -140,6 +166,7 @@ length(unique(Ndf$country)) #Countries
 length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
 length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
 
+
 #Get N's for mortality studies
 mort_Ndf <- rbind(stunt_mort, wast_mort, waz_mort) %>% filter(measurefreq=="yearly", agedays < 24 * 30.4167)
 length(unique(paste0(mort_Ndf$studyid, mort_Ndf$country))) #cohorts
@@ -162,17 +189,6 @@ d %>% filter(tr!="", !is.na(haz)) %>% group_by(studyid, country, tr) %>%
   mutate(ci.lb = mn_haz-1.96*sd, ci.ub = mn_haz+1.96*sd) %>%
   as.data.frame()
 
-drop_int_arms <- function(d){
-  if(length(which(d$studyid=="JiVitA-4" & d$tr!="Control")) > 0){
-    d=d[-which(d$studyid=="JiVitA-4" & d$tr!="Control"),]
-    d=d[-which(d$studyid=="JiVitA-3" & d$tr!="Control"),]
-  }
-  d=d[-which(d$studyid=="PROBIT" & d$tr!="Control"),]
-  d=d[-which(d$studyid=="iLiNS-Zinc" & d$tr!="Control"),]
-  d=d[-which(d$studyid=="SAS-CompFeed" & d$tr!="Control"),]
-  d=d[-which(d$studyid=="COHORTS" & d$tr=="Other"),]
-  return(d)
-}
 
 
 stunt <- drop_int_arms(stunt_rf) 
@@ -199,13 +215,14 @@ length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
 length(unique(Ndf$country)) #Countries
 length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
 length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
+nrow(Ndf) #Observations
 
 #Monthly N's
 Ndf <- stunt %>% filter(agedays < 24 * 30.4167, measurefreq=="monthly")
 length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
 length(unique(Ndf$country)) #Countries
 length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
-length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
+nrow(Ndf) #Observations
 
 
 #--------------------------------------------
