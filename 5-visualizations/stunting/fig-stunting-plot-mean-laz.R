@@ -48,7 +48,7 @@ d_fe <- d %>% filter(analysis == "Fixed effects")
 # Mean LAZ by month (primary & monthly from 0-24 months)
 #-------------------------------------------------------------------------------------------
 
-df_primary <- filter_df(d_primary, "Mean LAZ")
+df_primary <- filter_df(d_primary, "Mean LAZ", agerange="3 months")
 
 df_monthly <- filter_df(d_monthly, "Mean LAZ - monthly cohorts")
 

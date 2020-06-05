@@ -10,13 +10,13 @@
 # Mean LAZ by month (primary & monthly from 0-24 months)
 #-------------------------------------------------------------------------------------------
 
-filter_df <- function(df, meas) {
+filter_df <- function(df, meas, agerange="1 month") {
   new <- df %>% filter(
     disease == "Stunting" &
       measure == meas &
       birth == "yes" &
       severe == "no" &
-      age_range == "1 month" &
+      age_range == agerange &
       cohort == "pooled"
   )
   
