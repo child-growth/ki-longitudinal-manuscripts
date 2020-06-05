@@ -22,7 +22,7 @@ p1 <- ggplot(df1, aes(x=agedays)) + geom_histogram()
 p2 <- ggplot(df1, aes(x=agedays)) + geom_histogram() + facet_wrap(~studyid, scales = "free")
 
 ggsave(p1, file = here::here("/figures/shared/age_histogram_first_month.png"), width=8, height=4)
-ggsave(p2, file = here::here("/figures/shared/age_histogram_first_month_cohort.png"), width=8, height=4)
+ggsave(p2, file = here::here("/figures/shared/age_histogram_first_month_cohort.png"), width=10, height=6)
 
 
 
@@ -37,6 +37,6 @@ p3 <- ggplot(df2, aes(x=firstage/30.4167)) + geom_histogram(binwidth=1) + xlab("
 p4 <- ggplot(df2, aes(x=firstage/30.4167)) + geom_histogram(binwidth=1) + facet_wrap(~studyid, scales = "free_y") + xlab("Age of enrollment (months)") + coord_cartesian(xlim = c(0, 24))
 
 ggsave(p3, file = here::here("/figures/shared/enrollment_age_histogram_over_7d.png"), width=8, height=4)
-ggsave(p4, file = here::here("/figures/shared/enrollment_age_histogram_over_7d_cohort.png"), width=8, height=4)
+ggsave(p4, file = here::here("/figures/shared/enrollment_age_histogram_over_7d_cohort.png"), width=10, height=6)
 
 
