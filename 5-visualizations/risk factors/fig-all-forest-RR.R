@@ -57,6 +57,7 @@ d$studyid <- as.character(d$studyid)
 d$studyid <- factor(d$studyid, levels=unique(d$studyid))
 d$order <- as.numeric(d$studyid)
 
+d <- d%>% filter(!is.na(intervention_variable),!is.na(intervention_level), !is.na(outcome_variable), !is.na(agecat))
 d <- droplevels(d)
 
 #Test data set
@@ -67,6 +68,8 @@ forest_plot <- function(df){
 
   nlevels <- length(unique(df$intervention_level))
   npooled <- sum(grepl("Pooled",df$studyid))/nlevels
+  
+  df <- df%>% filter(!is.na(intervention_variable),!is.na(intervention_level), !is.na(outcome_variable), !is.na(agecat))
   
   title <- paste0(
     "Outcome: ", df$outcome_variable[1],
@@ -106,6 +109,7 @@ forest_plot <- function(df){
 res <- d %>% group_by(intervention_variable, outcome_variable, agecat) %>%
   do(plot = forest_plot(.))
 res$plot[[1]]
+length(res[[4]])
 
 saveRDS(res, file=here( "/figures/risk-factor/figure-data/all_forest_plot_RR.RDS"))
 
