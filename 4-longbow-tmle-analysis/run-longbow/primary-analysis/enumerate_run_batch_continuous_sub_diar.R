@@ -16,16 +16,27 @@ setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 
+<<<<<<< HEAD
+#Set to continious
+default_params$script_params$count_Y <- FALSE
+=======
+>>>>>>> 39aa47d133f442fae6974102841326207c99f6cd
 
 
 # # Continious
 #load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
+<<<<<<< HEAD
+load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous_diar2.rdata"))
+
+#specify analyses
+=======
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
 default_params$script_params$count_Y <- FALSE
 
 
 #Subset analysis to jobs not yet run
 analyses <- analyses %>% filter(Y %in% c("haz"), A=="perdiar24")
+>>>>>>> 39aa47d133f442fae6974102841326207c99f6cd
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
@@ -59,7 +70,13 @@ length(dir("results_diar"))
 results <- load_batch_results("results.rdata","results_diar")
 obs_counts <- load_batch_results("obs_counts.rdata","results_diar")
 
+<<<<<<< HEAD
+df <- results %>% filter(outcome_variable=="haz", type=="PAR", agecat=="24 months")
+pool.Zpar(df) %>% as.data.frame()
+df <- results %>% filter(outcome_variable=="whz", type=="PAR", agecat=="24 months")
+=======
 df <- results %>% filter(type=="PAR", agecat=="24 months")
+>>>>>>> 39aa47d133f442fae6974102841326207c99f6cd
 pool.Zpar(df) %>% as.data.frame()
 
 # save concatenated results
@@ -68,5 +85,8 @@ filename2 <- paste(paste('results_cont_obs_count_diars',Sys.Date( ),sep='_'),'RD
 saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
 saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
 
+<<<<<<< HEAD
+=======
 results %>% filter(type=="PAR",agecat=="24 months")
+>>>>>>> 39aa47d133f442fae6974102841326207c99f6cd
 

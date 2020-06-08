@@ -122,9 +122,24 @@ table(paste0(d$studyid, " ", d$country), d$perdiar6)
 d$perdiar24 <- as.character(cut(d$W_perdiar24, breaks=c(0, 0.05, 1), include.lowest=F, 
                                labels = c("(0%, 5%]",">5%")))
 d$perdiar24[d$W_perdiar24==0] <-"0%"
-d$perdiar6 <- factor(d$perdiar6, levels = c("(0%, 5%]","0%",">5%"))
+d$perdiar24 <- factor(d$perdiar24, levels = c("0%","(0%, 5%]",">5%"))
 table(d$perdiar24)
 table(paste0(d$studyid, " ", d$country), d$perdiar24)
+
+d$perdiar6_2 <- as.character(cut(d$W_perdiar6, breaks=c(0, 0.02, 1), include.lowest=F, 
+                               labels = c("(0%, 2%]",">2%")))
+d$perdiar6_2 <- factor(d$perdiar6_2, levels = c("(0%, 2%]",">2%"))
+table(d$perdiar6_2)
+table(paste0(d$studyid, " ", d$country), d$perdiar6_2)
+
+
+
+d$perdiar24_2 <- as.character(cut(d$W_perdiar24, breaks=c(0, 0.02, 1), include.lowest=F, 
+                                labels = c("(0%, 2%]",">2%")))
+d$perdiar24_2 <- factor(d$perdiar24_2, levels = c("(0%, 2%]",">2%"))
+table(d$perdiar24_2)
+table(paste0(d$studyid, " ", d$country), d$perdiar24_2)
+
 
 #breastfeeding
 d <- left_join(d, bf, by=c("studyid", "country", "subjid"))
