@@ -72,7 +72,7 @@ p <-  ggplot(d, aes(x=(studyid))) +
   geom_vline(xintercept = 5.5) +
   #geom_text(aes(y=0.5, label=Ns), size=3,  hjust=0) +
   #geom_text(aes(y=3, label=adjustment_set), size=3,  hjust=0) +
-  scale_y_continuous(breaks= c( 0.75, 1.00, 2.00, 4.00), trans='log10', labels=scaleFUN) +
+  scale_y_continuous(breaks= c( 0.75, 1.00, 1.50, 2.00, 4.00), trans='log10', labels=scaleFUN) +
   #scale_x_discrete(labels= df$studyid2) +
   scale_shape_manual(values=c(21, 23)) +
   scale_colour_manual(values=tableau11[c(1,1:5)]) +
@@ -82,6 +82,7 @@ p <-  ggplot(d, aes(x=(studyid))) +
         legend.position="none",
         strip.text.x = element_text(size=12),
         axis.text.x = element_text(size=12),
+        panel.grid.minor=element_blank(),
         axis.title.x = element_text(size=12, hjust = .1)) +
   ggtitle("Associations between sex and stunting incidence\nfrom birth-24 months: cohort-specific and pooled results") +guides(shape=FALSE)
 
