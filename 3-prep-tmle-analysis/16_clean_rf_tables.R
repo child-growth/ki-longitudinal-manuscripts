@@ -72,7 +72,7 @@ full_names = list("sex" = "Sex",
                   "exclfeed6" = "Exclusive breastfeeding under 6 mo.",
                   "month" = "Month of measurement",
                   "brthmon" = "Birth month",
-                  "lag_WHZ_quart" = "Rain quartile",
+                  "lag_WHZ_quart" = "Lag WLZ",
                   "rain_quartile" = "Rain quartile")
 
 clean_rf = clean_rf %>% mutate(Variable = as.character(full_names[as.character(Variable)]))

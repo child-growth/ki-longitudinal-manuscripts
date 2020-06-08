@@ -11,7 +11,7 @@ source(paste0(here::here(), "/0-config.R"))
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
 #Drop wasting risk factors
-#cov <- cov %>% subset(., select=c(studyid, subjid, country,perdiar6_2, perdiar24_2))
+#cov <- cov %>% subset(., select=c(studyid, subjid, country,perdiar6, perdiar24))
 
 setwd(ghapdata_dir)
 
@@ -34,9 +34,9 @@ meanWHZ$subjid <- as.character(meanWHZ$subjid)
 
 #merge in covariates
 d <- left_join(meanHAZ, cov, by=c("studyid", "subjid", "country"))
-d <- d %>% filter(!is.na(perdiar6_2) | !is.na(perdiar24_2))
+d <- d %>% filter(!is.na(perdiar6) | !is.na(perdiar24))
 head(d)
-table(d$studyid, d$perdiar24_2)
+table(d$studyid, d$perdiar24)
 
 
 
@@ -44,7 +44,7 @@ save(d,  file="st_meanZ_rf2.Rdata")
 
 
 d <- left_join(meanWHZ, cov, by=c("studyid", "subjid", "country"))
-d <- d %>% filter(!is.na(perdiar6_2) | !is.na(perdiar24_2))
+d <- d %>% filter(!is.na(perdiar6) | !is.na(perdiar24))
 head(d)
 
 
@@ -62,7 +62,7 @@ save(d,  file="wast_meanZ_rf2.Rdata")
 
 adjustment_sets <- list( 
   
-  perdiar6_2=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+  perdiar6=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
              "vagbrth","hdlvry",
              "W_gagebrth","W_birthwt","W_birthlen",
@@ -71,7 +71,7 @@ adjustment_sets <- list(
              "month","brthmon","W_parity",
              "trth2o","cleanck","impfloor","impsan","safeh20"), 
   
-  perdiar24_2=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+  perdiar24=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
               "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
               "vagbrth","hdlvry",
               "W_gagebrth","W_birthwt","W_birthlen",
