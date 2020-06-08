@@ -43,8 +43,7 @@ cov <- cov %>% subset(., select = c(studyid, subjid, siteid, country, arm,
                                     W_mwtkg, W_mbmi, W_fage, W_fhtcm, W_meducyrs, W_feducyrs, 
                                     W_nrooms, W_nhh, W_nchldlt5, W_parity, impsan, safeh20, 
                                     perdiar6, perdiar24, W_perdiar6, W_perdiar24, 
-                                    predexfd6,
-                                    perdiar6_2, perdiar24_2))
+                                    predexfd6))
 
 
 Zscores$subjid <- as.character(Zscores$subjid)
