@@ -110,12 +110,13 @@ summary(d$perdiar6)
 summary(d$perdiar24)
 
 #Cut diarrhea at standard points. Quartiling by overall distribution leads to sparsity
-d$perdiar6 <- as.character(cut(d$W_perdiar6, breaks=c(0, 0.05, 1), include.lowest=F, 
-                               labels = c("(0%, 5%]",">5%")))
-d$perdiar6[d$W_perdiar6==0] <-"0%"
-d$perdiar6 <- factor(d$perdiar6, levels = c("0%","(0%, 5%]",">5%"))
-table(d$perdiar6)
-table(paste0(d$studyid, " ", d$country), d$perdiar6)
+
+# d$perdiar6 <- as.character(cut(d$W_perdiar6, breaks=c(0, 0.05, 1), include.lowest=F, 
+#                                labels = c("(0%, 5%]",">5%")))
+# d$perdiar6[d$W_perdiar6==0] <-"0%"
+# d$perdiar6 <- factor(d$perdiar6, levels = c("0%","(0%, 5%]",">5%"))
+# table(d$perdiar6)
+# table(paste0(d$studyid, " ", d$country), d$perdiar6)
 
 
 
@@ -183,8 +184,8 @@ d$predexfd6 <- relevel(d$predexfd6, ref="1")
 table(d$studyid, d$perdiar6)
 table(d$studyid, d$perdiar24)
 
-d$perdiar6 <- relevel(d$perdiar6, ref="0%")
-d$perdiar24 <- relevel(d$perdiar24, ref="0%")
+# d$perdiar6 <- relevel(d$perdiar6, ref="0%")
+# d$perdiar24 <- relevel(d$perdiar24, ref="0%")
 
 #Save dataset
 saveRDS(d, clean_covariates_path)
