@@ -131,3 +131,321 @@ analyses$W <- NULL
 save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/unadjusted_continuous_diar2.rdata")))
 
 
+
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#Stunting
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+setwd(ghapdata_dir)
+
+
+#load outcomes
+load("st_prev_outcomes.RData")
+load("st_meanZ_outcomes.RData")
+load("st_cuminc_outcomes.rdata")
+load("st_cuminc_outcomes_nobirth.rdata")
+load("st_rec_outcomes.RData")
+load("st_vel_outcomes.RData")
+load("waz_vel_outcomes.RData")
+
+
+
+#convert subjid to character for the merge with covariate dataset
+cov$subjid <- as.character(cov$subjid)
+prev$subjid <- as.character(prev$subjid)
+cuminc$subjid <- as.character(cuminc$subjid)
+cuminc_nobirth$subjid <- as.character(cuminc_nobirth$subjid)
+rev$subjid <- as.character(rev$subjid)
+vel_haz$subjid <- as.character(vel_haz$subjid)
+vel_lencm$subjid <- as.character(vel_lencm$subjid)
+vel_waz$subjid <- as.character(vel_waz$subjid)
+vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
+meanHAZ$subjid <- as.character(meanHAZ$subjid)
+
+
+
+
+#------------------------------------
+# Create cumulative incidence dataset
+#------------------------------------
+
+#merge in covariates
+cuminc <- cuminc %>% subset(., select = -c(tr))
+
+d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc)))], 
+               by=c("studyid", "subjid", "country"))
+
+save(d,  file="st_cuminc_rf_diar.Rdata")
+
+
+#------------------------------------
+# Create cumulative incidence dataset
+# - no birth incidence
+#------------------------------------
+
+#merge in covariates
+cuminc_nobirth <- cuminc_nobirth %>% subset(., select = -c(tr))
+cuminc_nobirth <- bind_rows(cuminc_nobirth, cuminc[cuminc$agecat=="6-24 months",])
+
+d <- left_join(cuminc_nobirth, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
+               by=c("studyid", "subjid", "country"))
+
+save(d,  file="st_cuminc_nobirth_rf_diar.Rdata")
+
+
+#------------------------------------
+# Create prevalence dataset
+#------------------------------------
+
+
+#merge in covariates
+d <- left_join(prev, cov, by=c("studyid", "subjid", "country"))
+
+
+save(d,  file="st_prev_rf_diar.Rdata")
+
+
+
+#------------------------------------
+# Create recovery dataset
+#------------------------------------
+
+#merge in covariates
+d <- left_join(rev, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+save(d, file="st_rec_rf_diar.Rdata")
+
+
+
+
+#------------------------------------
+# Create growth velocity dataset
+#------------------------------------
+
+#HAZ
+
+#merge in covariates
+d <- left_join(vel_haz, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+#Change outcome name to differentiate from lencm velocity outcome
+d <- d %>% rename(y_rate_haz=y_rate)
+
+save(d, file="st_haz_vel_rf_diar.Rdata")
+
+
+# Height in cm
+
+#merge in covariates
+d <- left_join(vel_lencm, cov, by=c("studyid", "subjid", "country"))
+
+d <- d %>% rename(y_rate_len=y_rate)
+
+
+save(d, file="st_len_vel_rf_diar.Rdata")
+
+
+
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#WASTING
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#Drop wasting risk factors
+cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
+
+
+#load outcomes
+load("wast_prev.RData")
+load("wast_meanZ_outcomes.RData")
+load("wast_cuminc.rdata")
+load("wast_cuminc_nobirth.rdata")
+load("pers_wast.rdata")
+load("wast_rec.rdata")
+
+
+
+#convert subjid to character for the merge with covariate dataset
+cov$subjid <- as.character(cov$subjid)
+prev$subjid <- as.character(prev$subjid)
+cuminc$subjid <- as.character(cuminc$subjid)
+cuminc_nobirth$subjid <- as.character(cuminc_nobirth$subjid)
+rec$subjid <- as.character(rec$subjid)
+pers_wast$subjid <- as.character(pers_wast$subjid)
+vel_waz$subjid <- as.character(vel_waz$subjid)
+vel_wtkg$subjid <- as.character(vel_wtkg$subjid)
+meanWHZ$subjid <- as.character(meanWHZ$subjid)
+
+
+
+#------------------------------------
+# Create cumulative incidence dataset
+#------------------------------------
+
+#merge in covariates
+dim(cuminc)
+dim(cov)
+d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc)))], 
+               by=c("studyid", "subjid", "country"))
+
+save(d,  file="wast_cuminc_rf_diar.Rdata")
+
+
+#------------------------------------
+# Create cumulative incidence dataset
+# - no birth incidence
+#------------------------------------
+
+#merge in covariates
+cuminc_nobirth <- bind_rows(cuminc_nobirth, cuminc[cuminc$agecat=="6-24 months",])
+
+dim(cuminc_nobirth)
+d <- left_join(cuminc_nobirth, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
+               by=c("studyid", "subjid", "country"))
+dim(d)
+
+
+
+save(d,  file="wast_cuminc_nobirth_rf_diar.Rdata")
+
+
+#------------------------------------
+# Create prevalence dataset
+#------------------------------------
+
+
+#merge in covariates
+dim(prev)
+d <- left_join(prev, cov, by=c("studyid", "subjid", "country"))
+
+
+
+save(d,  file="wast_prev_rf_diar.Rdata")
+
+#------------------------------------
+# Create Z-score dataset
+#------------------------------------
+
+
+# #merge in covariates
+# dim(meanWHZ)
+# d <- left_join(meanWHZ, cov, by=c("studyid", "subjid", "country"))
+# 
+# save(d,  file="wast_rec_rf_diar.Rdata")
+
+#------------------------------------
+# Create persistant wasting dataset
+#------------------------------------
+
+#merge in covariates
+dim(pers_wast)
+d <- left_join(pers_wast, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(pers_wast)))], 
+               by=c("studyid", "subjid", "country"))
+
+
+save(d, file="pers_wast_rf_diar.Rdata")
+
+
+
+
+#------------------------------------
+# Create growth velocity dataset
+#------------------------------------
+
+#WAZ
+
+#merge in covariates
+d <- left_join(vel_waz, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+#Change outcome name to differentiate from lencm velocity outcome
+d <- d %>% rename(y_rate_haz=y_rate)
+
+save(d, file="wast_waz_vel_rf_diar.Rdata")
+
+
+# Height in cm
+
+#merge in covariates
+d <- left_join(vel_wtkg, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+
+d <- d %>% rename(y_rate_wtkg=y_rate)
+
+
+save(d, file="wast_wtkg_vel_rf_diar.Rdata")
+
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# Co-occurrence
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+load("co_cuminc.rdata")
+
+
+#merge in covariates
+dim(cuminc)
+dim(cov)
+d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc)))], 
+               by=c("studyid", "subjid", "country"))
+
+
+#Vector of outcome names
+Y<-c("ever_co")
+
+
+save(d,  file="co_cuminc_rf_diar.Rdata")
+
+
+
+
+#---------------------------------------------
+# Specify the binary analyses
+#---------------------------------------------
+
+
+st_cuminc <- specify_rf_analysis(A=Avars,
+                                 Y=c("ever_stunted", "ever_sstunted"), file="st_cuminc_rf_diar.rdata")
+
+st_cuminc_nobirth <- specify_rf_analysis(A=Avars,
+                                         Y=c("ever_stunted", "ever_sstunted"), file="st_cuminc_nobirth_rf_diar.rdata")
+
+
+
+cuminc <- specify_rf_analysis(A=Avars,
+                              Y=c("ever_wasted", "ever_swasted"), file="wast_cuminc_rf_diar.rdata")
+
+cuminc_nobirth <- specify_rf_analysis(A=Avars,
+                                      Y=c("ever_wasted","ever_swasted"), file="wast_cuminc_nobirth_rf_diar.rdata")
+
+
+
+pers_wast <- specify_rf_analysis(A=Avars, Y="pers_wast", file="pers_wast_rf_diar.rdata")
+
+
+st_prev <- specify_rf_analysis(A=Avars, Y=c("stunted","sstunted"), file="st_prev_rf_diar.Rdata")
+
+prev <- specify_rf_analysis(A=Avars, Y=c("wasted","swasted"), file="wast_prev_rf_diar.Rdata")
+
+rec <- specify_rf_analysis(A=Avars, id="subjid", Y="wast_rec90d", file="wast_rec_rf_diar.Rdata")
+
+
+
+#bind together datasets
+analyses <- rbind(st_prev, prev, st_cuminc, st_cuminc_nobirth, cuminc, cuminc_nobirth, pers_wast, rec)
+
+
+
+#Save analysis specification
+saveRDS(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses_diar.rds")))
+
+
