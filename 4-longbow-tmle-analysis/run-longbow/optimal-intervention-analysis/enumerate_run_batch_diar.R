@@ -17,7 +17,7 @@ inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 
 
-load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous_diar2.rdata"))
+load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous_diar2.Rdata"))
 default_params$script_params$maximize <- TRUE
 default_params$script_params$count_Y <- FALSE
 
