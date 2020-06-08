@@ -113,7 +113,6 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 # Specify the continuous analyses
 #---------------------------------------------
 
-Avars <- c( names(adjustment_sets))
 
 
 haz <- specify_rf_analysis(A=Avars, Y="haz", file="st_meanZ_rf2.Rdata")
