@@ -9,6 +9,7 @@ library(longbowRiskFactors)
 d <- readRDS(here("/results/rf results/raw longbow results/results_cont_obs_counts_2020-06-02.RDS"))
 #drop EE gestational age
 d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
+d <- d %>% filter(!is.na(perdiar6) & !is.na(perdiar24))
 
 
 d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2020-05-29.RDS"))
@@ -19,7 +20,12 @@ d2 <- d2 %>% mutate(rain_quartile=case_when(
   rain_quartile==4 ~ "Post-max rain"
 ))
 
- d <- bind_rows(d, d2)
+
+d3 <- readRDS(here("/results/rf results/raw longbow results/results_cont_obs_count_diars_2020-06-07.RDS"))
+colnames(d3)[colnames(d3)=="perdiar6_2"] <- "perdiar6"
+colnames(d3)[colnames(d3)=="perdiar24_2"] <- "perdiar24"
+
+ d <- bind_rows(d, d2, d3)
 
 
 exposure_vars <- c(
