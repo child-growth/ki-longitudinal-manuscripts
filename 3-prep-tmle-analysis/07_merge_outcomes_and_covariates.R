@@ -188,8 +188,6 @@ save(d, Y, A,V, id,  file="st_prev_rf.Rdata")
 d <- left_join(meanHAZ, cov, by=c("studyid", "subjid", "country"))
 head(d)
 
-tmle()
-
 
 #Vector of outcome names
 Y<-c("haz")
