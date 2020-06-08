@@ -118,20 +118,21 @@ dd <- mutate(dd,
 
 #Clean up risk factor names
 dd$RFlabel <- NA
-dd$RFlabel[dd$risk_factor=="sex"] <-  "Gender"
-dd$RFlabel[dd$risk_factor=="enstunt"] <-  "Enrolled stunted"
+dd$RFlabel[dd$risk_factor=="sex"] <-  "Sex"
 dd$RFlabel[dd$risk_factor=="enwast"] <-  "Enrolled wasted"
+dd$RFlabel[dd$risk_factor=="enstunt"] <-  "Enrolled stunted"
 dd$RFlabel[dd$risk_factor=="gagebrth"] <-  "Gestational age at birth"
-dd$RFlabel[dd$risk_factor=="predexfd6"] <-  "Excl./Pred. breastfeeding under 6 months"
+dd$RFlabel[dd$risk_factor=="predexfd6"] <-  "Excl/Pred breastfed <6mo."
 dd$RFlabel[dd$risk_factor=="mage"] <- "Mother's age" 
 dd$RFlabel[dd$risk_factor=="mhtcm"] <- "Mother's height" 
 dd$RFlabel[dd$risk_factor=="mwtkg"] <- "Mother's weight" 
 dd$RFlabel[dd$risk_factor=="mbmi"] <- "Mother's BMI" 
 dd$RFlabel[dd$risk_factor=="meducyrs"] <- "Mother's education" 
+dd$RFlabel[dd$risk_factor=="feducyrs"] <- "Father's education" 
 dd$RFlabel[dd$risk_factor=="parity"] <-  "Birth order" 
-dd$RFlabel[dd$risk_factor=="hfoodsec"] <- "Household food security" 
-dd$RFlabel[dd$risk_factor=="nchldlt5"] <-   "Number of children <5 in household"
-dd$RFlabel[dd$risk_factor=="hhwealth_quart"] <-  "Household wealth" 
+dd$RFlabel[dd$risk_factor=="hfoodsec"] <- "HH food security" 
+dd$RFlabel[dd$risk_factor=="nchldlt5"] <-   "# of children <5 in HH"
+dd$RFlabel[dd$risk_factor=="hhwealth_quart"] <-  "HH wealth" 
 dd$RFlabel[dd$risk_factor=="fage"] <- "Father's age" 
 dd$RFlabel[dd$risk_factor=="fhtcm"] <- "Father's height" 
 dd$RFlabel[dd$risk_factor=="birthwt"] <- "Birthweight (kg)" 
@@ -139,29 +140,27 @@ dd$RFlabel[dd$risk_factor=="birthlen"] <- "Birth length (cm)"
 dd$RFlabel[dd$risk_factor=="vagbrth"] <- "Vaginal birth" 
 dd$RFlabel[dd$risk_factor=="hdlvry"] <- "Child delivered at home" 
 dd$RFlabel[dd$risk_factor=="single"] <- "Single parent" 
-dd$RFlabel[dd$risk_factor=="nrooms"] <- "Number of rooms in household" 
-dd$RFlabel[dd$risk_factor=="nhh"] <- "Number of people in household" 
-dd$RFlabel[dd$risk_factor=="meducyrs"] <- "Maternal education quartile" 
-dd$RFlabel[dd$risk_factor=="feducyrs"] <- "Paternal education quartile" 
-dd$RFlabel[dd$risk_factor=="anywast06"] <- "Any wasting before 6 months age" 
-dd$RFlabel[dd$risk_factor=="pers_wast"] <- "Persistent wasting before 6 months age" 
+dd$RFlabel[dd$risk_factor=="nrooms"] <- "# of rooms in HH" 
+dd$RFlabel[dd$risk_factor=="nhh"] <- "# of people in HH" 
+dd$RFlabel[dd$risk_factor=="anywast06"] <- "Any wasting  <6 mo." 
+dd$RFlabel[dd$risk_factor=="pers_wast"] <- "Persistent wasting  <6 mo." 
 dd$RFlabel[dd$risk_factor=="trth2o"] <- "Treats drinking water" 
 dd$RFlabel[dd$risk_factor=="cleanck"] <- "Clean cooking fuel usage" 
 dd$RFlabel[dd$risk_factor=="impfloor"] <- "Improved floor" 
 dd$RFlabel[dd$risk_factor=="impsan"] <- "Improved sanitation" 
 dd$RFlabel[dd$risk_factor=="safeh20"] <- "Safe water source" 
-dd$RFlabel[dd$risk_factor=="perdiar6"] <- "Percent days with diarrhea under 6 months" 
-dd$RFlabel[dd$risk_factor=="perdiar24"] <- "Percent days with diarrhea under 24 months" 
-dd$RFlabel[dd$risk_factor=="earlybf"] <- "Breastfeed within an hour of birth" 
-dd$RFlabel[dd$risk_factor=="predfeed3"] <-  "Predominant breastfeeding under 3 months"
-dd$RFlabel[dd$risk_factor=="predfeed36"] <-  "Predominant breastfeeding from 3-6 months"
-dd$RFlabel[dd$risk_factor=="predfeed6"] <-  "Predominant breastfeeding under 6 months"
-dd$RFlabel[dd$risk_factor=="exclfeed3"] <-  "Exclusive breastfeeding under 3 months"
-dd$RFlabel[dd$risk_factor=="exclfeed36"] <-  "Exclusive breastfeeding from 3-6 months"
-dd$RFlabel[dd$risk_factor=="exclfeed6"] <-  "Exclusive breastfeeding under 6 months"
+dd$RFlabel[dd$risk_factor=="perdiar6"] <- "Diarrhea <6 mo. (% days)" 
+dd$RFlabel[dd$risk_factor=="perdiar24"] <- "Diarrhea <24 mo.  (% days)" 
+dd$RFlabel[dd$risk_factor=="earlybf"] <- "Breastfed hour after birth" 
+dd$RFlabel[dd$risk_factor=="predfeed3"] <-  "Predominant breastfeeding under 3 mo."
+dd$RFlabel[dd$risk_factor=="predfeed36"] <-  "Predominant breastfeeding from 3-6 mo."
+dd$RFlabel[dd$risk_factor=="predfeed6"] <-  "Predominant breastfeeding under 6 mo."
+dd$RFlabel[dd$risk_factor=="exclfeed3"] <-  "Exclusive breastfeeding under 3 mo."
+dd$RFlabel[dd$risk_factor=="exclfeed36"] <-  "Exclusive breastfeeding from 3-6 mo."
+dd$RFlabel[dd$risk_factor=="exclfeed6"] <-  "Exclusive breastfeeding under 6 mo."
 dd$RFlabel[dd$risk_factor=="month"] <-  "Month of measurement"
 dd$RFlabel[dd$risk_factor=="brthmon"] <-  "Birth month"
-dd$RFlabel[dd$risk_factor=="lag_WHZ_quart"] <-  "Mean WHZ in the prior 3 months"
+dd$RFlabel[dd$risk_factor=="lag_WHZ_quart"] <-  "Prior WLZ"
 dd$RFlabel[dd$risk_factor=="rain_quartile"] <-  "Rain quartile"
 
 table(dd$risk_factor, is.na(dd$RFlabel))
@@ -294,12 +293,11 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000, fill=region)
 
 
 # add margin around plots
-# hm2 = hm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm")) #top, right, bottom, left
-# sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,4.22,0), "cm"))
-# nrfbar2 = nrfbar + theme(plot.margin = unit(c(0,2.3,0,5.45), "cm"))
 hm2 = hm + theme(plot.margin = unit(c(0,0,0,0), "cm")) #top, right, bottom, left
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,2.955,-2.75), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 3.5, 0, 6.655), "cm"))
+#sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,2.955,-2.75), "cm"))
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,1.5,-2), "cm"))
+#nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 3.5, 0, 6.655), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 2.7, 0, 5.75), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2,empty, 
