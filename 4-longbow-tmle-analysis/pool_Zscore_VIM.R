@@ -25,6 +25,15 @@ results_season <-readRDS(here("results/rf results/raw longbow results/opttx_vim_
 results <- rbind(results_full, results_sub, results_season)
 
 
+#load seasonal VIM
+results_diar <-readRDS(here("results/rf results/raw longbow results/opttx_vim_diar_2020-06-8.RDS"))
+
+results_diar$intervention_variable[results_diar$intervention_variable=="perdiar6_2"] <- "perdiar6"
+results_diar$intervention_variable[results_diar$intervention_variable=="perdiar24_2"] <- "perdiar24"
+results <- results %>% filter(intervention_variable!="perdiar24" & intervention_variable!="perdiar6")
+results <- bind_rows(results, results_diar)
+
+
 
 #drop EE gestational age
 dim(results)
