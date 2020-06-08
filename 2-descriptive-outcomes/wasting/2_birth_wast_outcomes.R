@@ -55,7 +55,8 @@ set.seed(12345)
 for(i in 1:length(unique(d$born_wast))){
   cat=unique(d$born_wast)[i]
   di <- filter(d, born_wast==cat)
-  fiti <- mgcv::gam(whz~s(agedays,bs="cr", k=10),data=di)
+  #fiti <- mgcv::gam(whz~s(agedays,bs="cr", k=10),data=di)
+  fiti <- mgcv::gam(whz~s(agedays,bs="cr"),data=di)
   range=min(di$agedays):max(di$agedays)
   agedays=1:(diff(range(range))+1)
   newd <- data.frame(agedays=range)

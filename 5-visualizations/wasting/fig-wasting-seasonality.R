@@ -148,7 +148,8 @@ plotdf <- NULL
 for(i in 1:length(levels(d$birthcat))){
     cat=levels(d$birthcat)[i]
     di <- filter(d, birthcat==cat)
-    fiti <- mgcv::gam(whz~s(studyday,bs="cr", k=10),data=di)
+    fiti <- mgcv::gam(whz~s(studyday,bs="cr"),data=di)
+    #fiti <- mgcv::gam(whz~s(studyday,bs="cr", k=10),data=di)
     range=min(di$studyday):max(di$studyday)
     agedays=1:(diff(range(range))+1)
     newd <- data.frame(studyday=range)

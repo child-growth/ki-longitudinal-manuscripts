@@ -105,10 +105,9 @@ mort <- subset(mort, select = c(studyid, country, subjid, maxage, dead, agedth, 
 saveRDS(mort, mortality_path)
 
 
-
-
-
-
+#mortality within studies measuring anthro before 6 months and had sufficient mortality to be in the primary analysis
+table(mort$dead[mort$studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","JiVitA-3","JiVitA-4","Keneba", "SAS-CompFeed","VITAMIN-A","ZVITAMBO")])
+prop.table(table(mort$dead[mort$studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","JiVitA-3","JiVitA-4","Keneba", "SAS-CompFeed","VITAMIN-A","ZVITAMBO")]))
 
 
 
