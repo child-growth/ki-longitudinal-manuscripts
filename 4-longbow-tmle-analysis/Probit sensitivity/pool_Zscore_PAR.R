@@ -219,5 +219,5 @@ pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref, shape=Analysis, group=Analysi
 library(cowplot)
 
 p <- grid.arrange(pPAR_laz, pPAR_wlz, ncol=2)
-ggsave(p, file=paste0(here::here(), "/8-supplement/3-causes-and-consequences/figure-copies/fig-PAR-Probit-sensitivity.png"), height=10, width=16)
+ggsave(p, file=paste0(here::here(), "/figures/risk-factor/fig-PAR-Probit-sensitivity.png"), height=10, width=16)
 
