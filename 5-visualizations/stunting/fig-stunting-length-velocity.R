@@ -35,13 +35,13 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load length velocity data
-vel <- readRDS(paste0(res_dir,"stunting/pool_vel.RDS"))
+vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
 meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocity.RDS"))
 meanlaz = meanlaz %>% filter(method.used == "REML")
 
 # load who standard
-who_cm = readRDS(paste0(res_dir, "WHO_linear_growth_velocity_standard.RDS"))
+who_cm = readRDS(paste0(res_dir, "/WHO_linear_growth_velocity_standard.RDS"))
 
 #-------------------------------------
 # prep data

@@ -23,7 +23,7 @@ unique(d$outcome_variable)
 d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
                     outcome_variable=="y_rate_wtkg"|outcome_variable=="haz"|
                     outcome_variable=="whz")
-
+d %>% filter(type=="PAR",agecat=="24 months",outcome_variable=="haz", intervention_variable=="perdiar24")
 
 d <- droplevels(d)
 
