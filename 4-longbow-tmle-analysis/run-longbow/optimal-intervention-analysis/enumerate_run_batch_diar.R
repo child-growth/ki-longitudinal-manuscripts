@@ -9,6 +9,7 @@ library(longbowtools)
 #library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
+library(longbowOptTX)
 
 # 1. enumerate analysis
 
@@ -34,7 +35,7 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"diar_analyses.json")
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 
-rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
+rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX")
 
 
 
