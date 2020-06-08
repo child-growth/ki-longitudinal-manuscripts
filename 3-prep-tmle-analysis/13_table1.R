@@ -12,6 +12,10 @@ source(paste0(here::here(), "/0-config.R"))
 #load covariates
 cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
 
+#Use non-spares diarrhea coding
+cov$perdiar6 <- cov$perdiar6_2
+cov$perdiar24 <- cov$perdiar24_2
+
 #Check reference levels
 for(i in 3:ncol(cov)){
   cat(colnames(cov)[i],":\n")

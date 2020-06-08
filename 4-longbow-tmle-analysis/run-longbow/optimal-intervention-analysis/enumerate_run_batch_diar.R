@@ -12,15 +12,13 @@ library(longbowRiskFactors)
 
 # 1. enumerate analysis
 
-setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
+setwd(here("4-longbow-tmle-analysis","run-longbow","optimal-intervention-analysis"))
 inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 
-#Set to continious
-default_params$script_params$count_Y <- FALSE
 
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous_diar2.rdata"))
-
+default_params$script_params$maximize <- TRUE
 default_params$script_params$count_Y <- FALSE
 
 
@@ -58,7 +56,7 @@ results <- load_batch_results("results.rdata","results_diar")
 obs_counts <- load_batch_results("obs_counts.rdata","results_diar")
 
 # save concatenated results
-filename1 <- paste(paste('results_cont_diar',Sys.Date( ),sep='_'),'RDS',sep='.')
-filename2 <- paste(paste('results_cont_obs_count_diars',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename1 <- paste(paste('opttx_vim_diar',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('opttx_vim_obs_count_diar',Sys.Date( ),sep='_'),'RDS',sep='.')
 saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
 saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))

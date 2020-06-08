@@ -29,10 +29,10 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"diar_bin_analyses.json")
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
-inputs <- "single_diar_analysis.json"
-
-#run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+# inputs <- "single_diar_analysis.json"
+# 
+# #run test/provisioning job
+# run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 
 bin_batch_inputs <- "diar_bin_analyses.json"
