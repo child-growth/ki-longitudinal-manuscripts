@@ -6,19 +6,10 @@ library(progress)
 library(longbowRiskFactors)
 
 bin_primary <- readRDS(here("/results/rf results/raw longbow results/results_bin_primary_obs_counts_2020-05-28.RDS"))
+bin_primary <- bin_primary %>% filter(is.na(perdiar6) & is.na(perdiar24))
+bin_diar <- readRDS(here("/results/rf results/raw longbow results/results_bin_diar_obs_counts_2020-06-08.RDS"))
+bin_primary <- bind_rows(bin_primary, bin_diar)
 
-# d <- bin_primary %>% group_by(agecat,          studyid,         country,         !is.na(sex),             !is.na(ever_stunted),   
-#     outcome_variable, !is.na(mage),            !is.na(mhtcm),          
-#     !is.na(mwtkg),           !is.na(mbmi),            !is.na(single),          !is.na(fage),            !is.na(fhtcm),          
-#     !is.na(nrooms),          !is.na(nchldlt5),        !is.na(nhh),             !is.na(hhwealth_quart),  !is.na(brthmon),        
-#     !is.na(parity),          !is.na(meducyrs),        !is.na(feducyrs),        !is.na(hfoodsec),        !is.na(gagebrth),       
-#     !is.na(birthwt),         !is.na(birthlen),        !is.na(vagbrth),         !is.na(hdlvry),          !is.na(trth2o),         
-#     !is.na(cleanck),         !is.na(impfloor),        !is.na(impsan),          !is.na(safeh20),         !is.na(perdiar6),       
-#     !is.na(perdiar24),       !is.na(predfeed3),       !is.na(exclfeed3),       !is.na(predfeed6),       !is.na(exclfeed6),      
-#     !is.na(predfeed36),      !is.na(exclfeed36),      !is.na(predexfd6),       !is.na(earlybf),         !is.na(month),          
-#     !is.na(ever_sstunted),   !is.na(ever_swasted),    !is.na(enstunt),         !is.na(ever_wasted),     !is.na(pers_wast)) %>%
-#   mutate(min_n_cell=min(n_cell)) %>%
-#   filter(min_n_cell < 5)
 
 #Drop sparse estimates
 dim(bin_primary)

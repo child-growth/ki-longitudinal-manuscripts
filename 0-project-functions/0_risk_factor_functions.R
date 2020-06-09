@@ -216,7 +216,7 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                "<151 cm", "[151-155) cm", ">=155 cm",
                                                "<52 kg", "[52-58) kg", ">=58 kg",
                                                "2+","3 or less","4-5","6-7","8+","3+","4+",                                                 
-                                               "0%","(0%, 5%]",">5%","Female","Male",
+                                               "[0%, 2%]",">2%","Female","Male",
                                                "Opposite max rain", "Pre-max rain","Max rain",
                                                "Post-max rain",
                                                "WHZ Q1", "WHZ Q2", "WHZ Q3", "WHZ Q4"))
@@ -280,7 +280,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFlabel[RMAest$intervention_variable=="impsan"] <- "Improved sanitation" 
   RMAest$RFlabel[RMAest$intervention_variable=="safeh20"] <- "Safe water source" 
   RMAest$RFlabel[RMAest$intervention_variable=="perdiar6"] <- "Diarrhea <6 mo. (% days)" 
-  RMAest$RFlabel[RMAest$intervention_variable=="perdiar24"] <- "Diarrhea <24 mo.  (% days" 
+  RMAest$RFlabel[RMAest$intervention_variable=="perdiar24"] <- "Diarrhea <24 mo.  (% days)" 
   RMAest$RFlabel[RMAest$intervention_variable=="earlybf"] <- "Breastfed hour after birth" 
   RMAest$RFlabel[RMAest$intervention_variable=="predfeed3"] <-  "Predominant breastfeeding under 3 mo."
   RMAest$RFlabel[RMAest$intervention_variable=="predfeed36"] <-  "Predominant breastfeeding from 3-6 mo."

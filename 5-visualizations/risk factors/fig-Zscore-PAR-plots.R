@@ -19,7 +19,7 @@ unique(par$intervention_level)
 unique(par$intervention_variable)
 par$intervention_level <- as.character(par$intervention_level)
 par$intervention_level[par$intervention_level=="Full or late term"] <- "Full/late term"
-par$intervention_level[par$intervention_level=="(0%, 5%]"] <- "(0%,5%]"
+par$intervention_level[par$intervention_level=="[0%, 2%]"] <- "[0%,2%]"
 par$intervention_level[par$intervention_level=="No"] <- "None"
 par$intervention_level[par$intervention_level=="Yes"] <- "All"
 par$intervention_level[par$intervention_level=="Normal weight"] <- ">=18.5 BMI"

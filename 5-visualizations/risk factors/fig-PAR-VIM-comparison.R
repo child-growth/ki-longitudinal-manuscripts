@@ -50,9 +50,15 @@ is_outlier <- function(x, thres=1.5) {
   return(x < quantile(x, 0.25) - thres * IQR(x) | x > quantile(x, 0.75) + thres * IQR(x))
 }
 
+dhaz$diff <- abs(dhaz$PAR-dhaz$VIM)
+dwhz$diff <- abs(dwhz$PAR-dwhz$VIM)
 
+dhaz <- dhaz %>% arrange(rev(diff))
+dwhz <- dwhz %>% arrange(rev(diff))
+head(dhaz)
+head(dwhz)
 
-dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=2), as.character(dhaz$RFlabel.x),NA)
+dhaz$outlier <- ifelse(is_outlier(dhaz$PAR-dhaz$VIM, thres=2.5), as.character(dhaz$RFlabel.x),NA)
 dwhz$outlier <- ifelse(is_outlier(dwhz$PAR-dwhz$VIM, thres=1.25), as.character(dwhz$RFlabel.x),NA)
 dhaz$is_outlier <- ifelse(is.na(dhaz$outlier), "0", "1")
 dwhz$is_outlier <- ifelse(is.na(dwhz$outlier), "0", "1")

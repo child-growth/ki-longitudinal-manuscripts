@@ -11,9 +11,18 @@ bin_sub2 <- readRDS(here("/results/rf results/raw longbow results/results_bin_su
 bin_sub3 <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_obs_counts_2020-05-20_part2.rds"))
 bin_sub3$pers_wast <- factor(bin_sub3$pers_wast)
 d <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
+
+d <- d %>% filter(is.na(perdiar6) & is.na(perdiar24))
+bin_diar <- readRDS(here("/results/rf results/raw longbow results/results_bin_diar_obs_counts_2020-06-08.RDS"))
+bin_diar$pers_wast <- factor(bin_diar$pers_wast)
+d <- bind_rows(d, bin_diar)
+
+
 dim(d)
 d <- distinct(d)
 dim(d)
+
+
 
 
 outcome_vars <- c( "wasted","swasted","wast_rec90d",   "ever_wasted",   "ever_swasted", 
@@ -69,6 +78,7 @@ N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, inte
 
 
 # save concatenated Ns
-save(N_sums, Ndf, Ndf_Ystrat, Ns, outcome_df, exposure_df, file=here("results/stunting_rf_Ns.rdata"))
+save(N_sums, Ndf, Ndf_Ystrat, Ns, #outcome_df, 
+     exposure_df, file=here("results/stunting_rf_Ns.rdata"))
 
 

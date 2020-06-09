@@ -6,15 +6,19 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-06-02.RDS"))
-Zscores_diar <- readRDS(here("/results/rf results/raw longbow results/results_cont_diar_2020-06-07.RDS")) 
-Zscores_diar$intervention_variable[Zscores_diar$intervention_variable=="perdiar6_2"] <- "perdiar6"
-Zscores_diar$intervention_variable[Zscores_diar$intervention_variable=="perdiar24_2"] <- "perdiar24"
-Zscores <- Zscores %>% filter(intervention_variable!="perdiar24" & intervention_variable!="perdiar6")
-Zscores <- bind_rows(Zscores, Zscores_diar)
+Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))
+Zscores_diar <- readRDS(here("/results/rf results/raw longbow results/results_cont_diar_2020-06-08.RDS")) 
+Zscores_fhtcm <- readRDS(here("/results/rf results/raw longbow results/results_cont_fhtcm_2020-05-29.RDS"))
+dim(Zscores_diar)
+dim(Zscores_fhtcm)
+dim(Zscores)
+Zscores <- Zscores %>% filter(intervention_variable!="perdiar24" & intervention_variable!="perdiar6" & !(intervention_variable=="fhtcm" & outcome_variable=="haz"))
+dim(Zscores)
 
+Zscores <- bind_rows(Zscores, Zscores_diar, Zscores_fhtcm)
 
 bin_primary <- readRDS(here("/results/rf results/raw longbow results/results_bin_primary_2020-05-28.RDS"))
+
 
 bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
 bin_sub <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
@@ -32,8 +36,10 @@ dim(bin_other)
 nrow(bin_primary) + nrow(bin_other)
 bin <- rbind(bin_primary, bin_other)
 
-#Drop outliers
-
+#Merge in new diarrhea estimates
+bin <- bin %>% filter(intervention_variable!="perdiar24" & intervention_variable!="perdiar6")
+bin_diar <- readRDS(here("/results/rf results/raw longbow results/results_bin_diar_2020-06-08.RDS")) 
+bin <- bind_rows(bin, bin_diar)
 
 
 mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-05-22.rds"))
@@ -133,7 +139,7 @@ df <- d[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months",]
 df[is.na(df$n) & !is.na(df$estimate),]
 
 #drop estimates from rare cells
-load("results/stunting_rf_Ns.rdata")
+load(here("results/stunting_rf_Ns.rdata"))
 rare_strat <- Ndf_Ystrat %>% group_by(studyid, country, agecat, outcome_variable, intervention_variable) %>%
               mutate(min_n_cell =  min(n_cell)) %>%
               select(studyid, country, agecat, outcome_variable, intervention_variable, min_n_cell)
