@@ -193,8 +193,8 @@ cov$exclfeed6 <- relevel(cov$exclfeed6, ref="1")
 cov$predfeed36 <- relevel(cov$predfeed36, ref="1")
 cov$exclfeed36 <- relevel(cov$exclfeed36, ref="1")
 cov$predexfd6 <- relevel(cov$predexfd6, ref="1")
-cov$perdiar6 <- relevel(cov$perdiar6, ref="0%")
-cov$perdiar24 <- relevel(cov$perdiar24, ref="0%")
+# cov$perdiar6 <- relevel(cov$perdiar6, ref="0%")
+# cov$perdiar24 <- relevel(cov$perdiar24, ref="0%")
 
 #Merge WLZ, season, and covariates
 dim(df)
