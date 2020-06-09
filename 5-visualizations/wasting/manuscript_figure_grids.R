@@ -14,8 +14,8 @@ plot_list <- readRDS(here("/figures/plot-objects/fig2_plot_objects.RDS"))
 
 prev_p <- plot_list[[2]]$`plot`
 prev_p <- prev_p + theme(legend.position = "none") + coord_cartesian(ylim=c(0, 37))
-
-fig2 <- plot_grid(plot_list[[1]], prev_p, plot_list[[3]]$`plot`, labels = "auto", ncol = 1, align = 'v', axis = 'l')
+ci_plot <- plot_list[[3]]$`plot` + theme(legend.position = c(.075,.9))
+fig2 <- plot_grid(plot_list[[1]], prev_p, ci_plot, labels = "auto", ncol = 1, align = 'v', axis = 'l')
 
 ggsave(fig2, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/fig2.png"), width=14, height=14)
 

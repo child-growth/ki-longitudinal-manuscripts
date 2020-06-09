@@ -354,7 +354,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
           legend.title = element_blank(),
           legend.text = element_text(size = 10),
           legend.background = element_blank(),
-          legend.margin = margin(0.5, 1.5, 0.5, 0.5),
+          legend.margin = margin(1, 1.5, 1, 1),
           legend.box.background = element_rect(colour = "black"))
   
   if(!is.null(yrange)){
