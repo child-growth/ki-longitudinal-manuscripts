@@ -40,6 +40,29 @@ plotdf = plotdf %>% filter(cohort == "pooled", region == "Overall")
 plotdf_monthly = prep_data(plotdf_monthly)
 plotdf_monthly = plotdf_monthly %>% filter(cohort == "pooled", region == "Overall")
 
+
+###################################
+# Obtain N's for in-text description
+# of the percentage of children born 
+# in the three major groupings
+###################################
+N = plotdf %>% filter(agecat=="0.5 months") %>% summarise(N = sum(nmeas)) %>% pull()
+
+plotdf %>% filter(agecat=="0.5 months" & (stunt_inc_age=="Birth"|stunt_inc_age=="0-3 months")) %>%
+  summarise(n = sum(nmeas)) %>%
+  mutate(proportion = n/N)
+
+plotdf %>% filter(agecat=="0.5 months" & stunt_inc_age!="Birth" &
+                    stunt_inc_age!="0-3 months" & 
+                    stunt_inc_age!="Never") %>%
+  summarise(n = sum(nmeas)) %>%
+  mutate(proportion = n/N)
+
+plotdf %>% filter(agecat=="0.5 months" & stunt_inc_age=="Never") %>%
+  summarise(n = sum(nmeas)) %>%
+  mutate(proportion = n/N)
+
+
 ###################################
 # Generate plots
 ###################################
