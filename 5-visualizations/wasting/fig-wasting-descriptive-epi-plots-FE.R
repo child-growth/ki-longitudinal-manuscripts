@@ -84,12 +84,12 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",prev_plot_name, "_FE.png"), width=14, height=3)
-# ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","prev_plot_africa", "_FE.png"), width=10, height=5)
-# ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","prev_plot_lam", "_FE.png"), width=10, height=5)
-# ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","prev_plot_sasia", "_FE.png"), width=10, height=5)
+ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",prev_plot_name, "_FE.png"), width=14, height=3)
+# ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","prev_plot_africa", "_FE.png"), width=10, height=5)
+# ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","prev_plot_lam", "_FE.png"), width=10, height=5)
+# ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","prev_plot_sasia", "_FE.png"), width=10, height=5)
 
-saveRDS(prev_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/figure-data/figdata-",prev_plot_name,"_FE.RDS"))
+saveRDS(prev_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",prev_plot_name,"_FE.RDS"))
 
 
 
@@ -118,9 +118,9 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",ci_plot_name, "_FE.png"), width=14, height=3)
+ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",ci_plot_name, "_FE.png"), width=14, height=3)
 
-saveRDS(ci_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/figure-data/figdata-",ci_plot_name,"_FE.RDS"))
+saveRDS(ci_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",ci_plot_name,"_FE.RDS"))
 
 
 
@@ -231,9 +231,9 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",inc_plot_name, "_FE.png"), width=14, height=3)
+ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",inc_plot_name, "_FE.png"), width=14, height=3)
 
-saveRDS(inc_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/figure-data/figdata-",inc_plot_name,"_FE.RDS"))
+saveRDS(inc_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",inc_plot_name,"_FE.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -268,7 +268,7 @@ inc_plot_name = create_name(
 
 # save plot and underlying data
 
-ggsave(inc_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",inc_plot_name,"_FE.png"), width=14, height=4.5)
+ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",inc_plot_name,"_FE.png"), width=14, height=4.5)
 
 
 
@@ -386,8 +386,8 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",rec_plot_name, "_FE.png"), width=14, height=3)
-saveRDS(rec_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/figure-data/figdata-",rec_plot_name,"_FE.RDS"))
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",rec_plot_name, "_FE.png"), width=14, height=3)
+saveRDS(rec_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",rec_plot_name,"_FE.RDS"))
 
 
 
@@ -459,12 +459,12 @@ perswast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(perswast_plot$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","perswast_plot", "_FE.png"), width=6, height=5)
-# ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","perswast_plot_africa", "_FE.png"), width=10, height=5)
-# ggsave(perswast_plot_lam$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","perswast_plot_lam", "_FE.png"), width=10, height=5)
-# ggsave(perswast_plot_sasia$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","perswast_plot_sasia", "_FE.png"), width=10, height=5)
+ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","perswast_plot", "_FE.png"), width=6, height=5)
+# ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","perswast_plot_africa", "_FE.png"), width=10, height=5)
+# ggsave(perswast_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","perswast_plot_lam", "_FE.png"), width=10, height=5)
+# ggsave(perswast_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","perswast_plot_sasia", "_FE.png"), width=10, height=5)
 
-saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/figure-data/figdata-",perswast_plot_name,"_FE.RDS"))
+saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",perswast_plot_name,"_FE.RDS"))
 
 
 
@@ -536,12 +536,12 @@ co_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",co_plot_name, "_FE.png"), width=14, height=3)
-# ggsave(co_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","co_plot_africa", "_FE.png"), width=10, height=5)
-# ggsave(co_plot_lam$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","co_plot_lam", "_FE.png"), width=10, height=5)
-# ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","co_plot_sasia", "_FE.png"), width=10, height=5)
+ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",co_plot_name, "_FE.png"), width=14, height=3)
+# ggsave(co_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","co_plot_africa", "_FE.png"), width=10, height=5)
+# ggsave(co_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","co_plot_lam", "_FE.png"), width=10, height=5)
+# ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","co_plot_sasia", "_FE.png"), width=10, height=5)
 
-saveRDS(co_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/figure-data/figdata-",co_plot_name,"_FE.RDS"))
+saveRDS(co_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",co_plot_name,"_FE.RDS"))
 
 
 
@@ -608,12 +608,12 @@ underweight_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(underweight_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",underweight_plot_name, "_FE.png"), width=14, height=3)
-# ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_africa", "_FE.png"), width=10, height=5)
-# ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_lam", "_FE.png"), width=10, height=5)
-# ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-","underweight_plot_sasia", "_FE.png"), width=10, height=5)
+ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",underweight_plot_name, "_FE.png"), width=14, height=3)
+# ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","underweight_plot_africa", "_FE.png"), width=10, height=5)
+# ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","underweight_plot_lam", "_FE.png"), width=10, height=5)
+# ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/FE/fig-","underweight_plot_sasia", "_FE.png"), width=10, height=5)
 
-saveRDS(underweight_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/figure-data/figdata-",underweight_plot_name,"_FE.RDS"))
+saveRDS(underweight_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",underweight_plot_name,"_FE.RDS"))
 
 
 
@@ -646,8 +646,8 @@ sevwast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-",sevwast_plot_name, "_FE.png"), width=14, height=3)
+ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",sevwast_plot_name, "_FE.png"), width=14, height=3)
 
-saveRDS(sevwast_plot[[2]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/figure-data/figdata-",sevwast_plot_name,"_FE.RDS"))
+saveRDS(sevwast_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",sevwast_plot_name,"_FE.RDS"))
 
 

@@ -60,7 +60,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=here::here("/8-supplement/2-wasting/figure-copies/WLZ_by_region-no-Kenaba-BW.png"), width=10, height=4)
+ggsave(p, file=here::here("/figures/wasting/no-kenaba-BW/WLZ_by_region-no-Kenaba-BW.png"), width=10, height=4)
 
 
 
@@ -84,7 +84,7 @@ prev_plot <- ki_desc_plot(d,
 
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-wast-prev-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-wast-prev-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-wast-prev-no-Kenaba-BW.RDS"))
 
@@ -108,7 +108,7 @@ ci_plot <- ki_combo_plot(d,
 
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-wast-ci-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-wast-ci-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(ci_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-wast-ci-no-Kenaba-BW.RDS"))
 
@@ -211,7 +211,7 @@ inc_plot <- inc_combo_plot(d,
 
 
 # save plot and underlying data
-ggsave(inc_plot$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-wast-ir-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-wast-ir-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(inc_plot$data, file=paste0(figdata_dir_wasting,"figdata-wast-ir-no-Kenaba-BW.RDS"))
 
@@ -318,7 +318,7 @@ rec_plot <- rec_combo_plot(d,
 
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-wast-rec-no-Kenaba-BW.png"), width=14, height=4.5)
+ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-wast-rec-no-Kenaba-BW.png"), width=14, height=4.5)
 saveRDS(rec_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-wast-rec-no-Kenaba-BW.RDS"))
 
 #-------------------------------------------------------------------------------------------
@@ -338,7 +338,7 @@ perswast_plot <- ki_desc_plot(d,
                    returnData=T)
 
 # save plot and underlying data
-ggsave(perswast_plot$plot, file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-pers-wast-no-Kenaba-BW.png"), width=10, height=5)
+ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-pers-wast-no-Kenaba-BW.png"), width=10, height=5)
 
 saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-pers-wast-no-Kenaba-BW.RDS"))
 
@@ -365,7 +365,7 @@ co_plot <- ki_desc_plot(d,
 
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-co-prev-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-co-prev-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(co_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-co-prev-no-Kenaba-BW.RDS"))
 
@@ -388,7 +388,7 @@ underweight_plot <- ki_desc_plot(d,
 
 
 # save plot and underlying data
-ggsave(underweight_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-uw-prev-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-uw-prev-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-uw-prev-no-Kenaba-BW.RDS"))
 
@@ -411,7 +411,7 @@ sevwast_plot <- ki_desc_plot(d,
 
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/8-supplement/2-wasting/figure-copies/fig-sev-wast-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-sev-wast-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-sev-wast-no-Kenaba-BW.RDS"))
 
