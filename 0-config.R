@@ -52,7 +52,15 @@ res_dir                           = here::here("results/")
 dhs_res_dir                       = here::here("results", "dhs")
 data_dir                          = here::here("data")
 metadata_dir                      = "U:/results/Metadata/"
-ghapdata_dir                      = "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
+
+
+if(here::here()=="/home/andrew.mertens/ki-longitudinal-manuscripts"){ 
+  ghapdata_dir                      = "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
+}
+if(here::here()=="/home/haodong.li/ki-longitudinal-manuscripts"){ 
+  ghapdata_dir                      = "/home/haodong.li/data/KI/UCB-SuperLearner/Manuscript analysis data/"
+}
+
     
 project_functions_dir             = here::here("0-project-functions/")
 data_cleaning_dir                 = here::here("1-data-cleaning")
