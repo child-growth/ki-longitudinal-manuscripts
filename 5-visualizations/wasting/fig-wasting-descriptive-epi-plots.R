@@ -7,20 +7,28 @@ d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 quantiles <- readRDS(paste0(here::here(),"/results/quantile_data_wasting.RDS"))
 
 #Subset to primary analysis
-d <- d %>% filter(analysis=="Primary", (pooling!="country" | is.na(pooling)))
+d <- d %>% mutate(pooling=ifelse(cohort=="pooled" & is.na(pooling),region,pooling)) %>%
+  filter(analysis=="Primary", (pooling!="country" | is.na(pooling)))
 
 #subset to regional and overall pooled estimates
 #d <- d %>% filter(cohort=="pooled", pooling!="country" | is.na(pooling))
 
 #convert cohort specific estimates to percents
-d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
-  d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
-d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
-  d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
-d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
-  d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
+# d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
+#   d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
+# d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
+#   d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
+# d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
+#   d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
 
+d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
+  d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
+d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
+  d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
+d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
+  d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
 
+#d %>% filter(measure=="Prevalence", disease=="co-occurrence", cohort!="pooled")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 d$nstudy.f <- gsub("N=","",d$nstudy.f)
