@@ -42,8 +42,35 @@ d$studyid[d$studyid=="Pooled - South Asia, "] <- "Pooled - South Asia"
 d$studyid[d$studyid=="Pooled - Latin America, "] <- "Pooled - Latin America"
 
 
-
-
+unique(d$outcome_variable)
+d <- d %>% 
+  filter(!(outcome_variable %in% c( "dead0plus", "dead624",  "dead6plus", "dead", "pers_wasted624", "co_occurence"))) %>%
+  mutate(
+    outcome_variable = case_when(
+      outcome_variable== "stunted"~ "Stunting prev.",
+      outcome_variable== "wasted"~ "Wasting prev.",
+      outcome_variable== "ever_stunted"~ "Stunting CI",
+      outcome_variable== "ever_wasted"~ "Wasting CI",
+      outcome_variable== "sstunted"~ "Severe stunting prev.",
+      outcome_variable== "swasted"~ "Severe wasting prev.",
+      outcome_variable== "ever_sstunted"~ "Severe stunting CI",
+      outcome_variable== "ever_swasted"~ "Severe wasting CI",
+      outcome_variable== "pers_wast"~ "Persistent wasting",
+      outcome_variable== "ever_co" ~ "Concurrent wasting and stunting",
+      outcome_variable== "wast_rec90d" ~ "Wasting recovery within 90 days"
+    ),
+    outcome_variable=factor("Stunting prev.",
+                            "Wasting prev.",
+                            "Stunting CI",
+                            "Wasting CI",
+                            "Severe stunting prev.",
+                            "Severe wasting prev.",
+                            "Severe stunting CI",
+                            "Severe wasting CI",
+                            "Persistent wasting",
+                            "Concurrent wasting and stunting",
+                            "Wasting recovery within 90 days")
+  )
 
 #order by Region
 d$region <- as.character(d$region)
@@ -112,7 +139,6 @@ res$plot[[1]]
 length(res[[4]])
 
 saveRDS(res, file=here( "/figures/risk-factor/figure-data/all_forest_plot_RR.RDS"))
-
 
 
 
