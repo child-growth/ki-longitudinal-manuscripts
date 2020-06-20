@@ -1,4 +1,4 @@
-# ki-longitudinal-manuscripts
+# ki-longitudinal-growth
 This repository includes scripts to replicate the analyses included in the UC Berkeley team's analysis of wasting and stunting as part of the Bill and Melinda Gates Foundation's KI project.
 
 ### Directory structure
@@ -11,12 +11,44 @@ This repository includes scripts to replicate the analyses included in the UC Be
 
 **`3-prep-tmle-analysis`** :  scripts to prepare data for tmle
 
-**`4-tmle3`** :  folder to be added later containing risk factor analysis scripts
+**`4-longbow-tmle-analysis** :  scripts to run TMLE analysis on the Longbow platform (within the "run-longbow" subfolder) as well as scripts to compile and pool results
 
 **`5-visualizations`** :  scripts that produce figures
 
 * risk factors
-    *  [Andrew to add]
+    *  `fig-rf-study-inventory-heatmap.R` corresponds to C+C manuscript __Fig 1__
+    *  `fig-Zscore-PAR-plots.R` corresponds to C+C manuscript __Fig 2__
+    *  `fig-PAR-VIM-comparison.R` corresponds to C+C manuscript __Fig 2__ inset
+    *  `fig-age-strat-rf-comp.R` corresponds to C+C manuscript __Fig 3b__
+    *  `fig-wast-perswast-comp.R` corresponds to C+C manuscript __Fig 3c__
+    *  `fig-spline-plots.R` corresponds to C+C manuscript __Fig 3a__
+    *  `fig-early-wast.R` corresponds to C+C manuscript __Fig 4b__
+    *  `fig-wlz-quart-laz-velocity.R` corresponds to C+C manuscript __Fig 4a__
+    *  `fig-mortality-plots.R` corresponds to C+C manuscript __Fig 4c__
+    *  `rf_manuscript_figure_grids.R` compiles figures into manuscript grids
+    *  Extended data figures
+    	*  `fig-example-forest.R`  corresponds to C+C manuscript __Extended Fig 1__
+    	*  `fig-sig-heatmap.R`  corresponds to C+C manuscript __Extended Fig 2__
+    	*  `fig-Zscore-PAR-extended-data-plots.R`  corresponds to C+C manuscript __Extended Fig 3,4,7,8__
+    	*  `fig-PAF-plots.R`  corresponds to C+C manuscript __Extended Fig 5__
+    	*  `fig-mediation-analysis.R`  corresponds to C+C manuscript __Extended Fig 6__    	
+    	*  `fig-wlz-quart-stunting.R` corresponds to C+C manuscript __Extended Fig 9__
+    	*  `fig-mortality-timing.R` corresponds to C+C manuscript __Extended Fig 10__
+    	*  `fig-adjustment-effect-by-cov-number.R` corresponds to C+C manuscript __Extended Fig 11__
+    	*  `fig-EValues.R` corresponds to C+C manuscript __Extended Fig 12__
+    *  Supplimental figures - used in online supplimentary information
+	 *  `fig-kaplan-meier-curves.R`
+	 *  `fig-Zscore-PAR-extended-data-plots-FE.R` 
+    	 *  `fig.RR-plots.R`
+   	 *  `fig-spline-plots_sensitivity.R`
+   	 *  `fig-sig-heatmap-FE.R`
+   	 *  `fig-pooled.RR-plots.R`
+   	 *  `fig-muac-mort.R`
+  	 *  `fig-mortality-plots-sens-birth.R`
+  	 *  `fig-mortality-plots-sens.R`
+  	 *  `fig-mortality-plots-sens2.R`
+  	 *  `fig-mortality-plots-sens3.R`
+  	 *  `fig-muac-mort.R`
 * shared
     *  `fig-CONSORT-figure1`  corresponds to stunting and wasting manuscripts __Extended Fig 1__
 * stunting
@@ -48,7 +80,7 @@ This repository includes scripts to replicate the analyses included in the UC Be
     * `fig-wasting-traj.R` archived; not used
 
     
-**`data`** : folder containing datasets that live off GHAP (agregate results or external data, but no subject-level data)
+**`data`** : folder containing datasets that live off secure remote data server (agregate results or external data, but no subject-level data)
 
 **`figures`** : folder containing figure outputs from scripts from `5-visualizations`  
 
