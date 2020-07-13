@@ -1,0 +1,577 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> 
+> 
+> rm(list=ls())
+> library(tidyverse)
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
+✔ tidyr   1.0.2     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+> library(data.table)
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+> source(paste0(here::here(), "/0-config.R"))
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following objects are masked from ‘package:data.table’:
+
+    dcast, melt
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> 
+> 
+> bfzn <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_bfzn.rds"))  
+> ee <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_ee.rds"))
+> gmsn <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_gmsn.rds"))
+> jvt3 <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt3.rds"))
+> jvt4 <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_jvt4.rds"))
+> mled <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_mled.rds")) 
+> prbt <- readRDS(paste0(ghapdata_dir, "/covariate creation intermediate datasets/Breastfeeding datasets/bf_prbt.rds"))   
+> 
+> head(bfzn)    	
+  subjido agemo bfedfl nbfyes anmlkfl pwmlkfl formlkfl h20fedfl othfedfl
+1  100101     8      0      4       1       1        1       NA        1
+2  100101    10      0      4       1       1        1       NA        1
+3  100101    15      0      4       1       1        1       NA        1
+4  100101    17      0      4       1       1        1       NA        1
+5  100101    19      0      4       1       1        1       NA        1
+6  100101    19      0      4       1       1        1       NA        1
+> head(ee)    	
+       studyid  country subjid agedays bfedfl nbfyes anmlkfl pwmlkfl formlkfl
+1 ki1000109-EE PAKISTAN      1       1     NA     NA      NA      NA       NA
+2 ki1000109-EE PAKISTAN      1       7     NA     NA      NA      NA       NA
+3 ki1000109-EE PAKISTAN      1      21     NA     NA      NA      NA       NA
+4 ki1000109-EE PAKISTAN      1      26     NA     NA      NA      NA       NA
+5 ki1000109-EE PAKISTAN      1      35     NA     NA      NA      NA       NA
+6 ki1000109-EE PAKISTAN      1      49     NA     NA      NA      NA       NA
+  h20fedfl othfedfl weanfl
+1       NA       NA     NA
+2       NA       NA     NA
+3       NA       NA     NA
+4       NA       NA     NA
+5       NA       NA     NA
+6       NA       NA     NA
+> head(gmsn)    	
+              studyid country subjid agedays visit bfedfl nbfyes anmlkfl
+1 ki1113344-GMS-Nepal   NEPAL     30       6     0     NA     NA      NA
+2 ki1113344-GMS-Nepal   NEPAL     50       2     0     NA     NA      NA
+3 ki1113344-GMS-Nepal   NEPAL     50      30     1     NA     NA      NA
+4 ki1113344-GMS-Nepal   NEPAL     50      58     2     NA     NA      NA
+5 ki1113344-GMS-Nepal   NEPAL     50      86     3      1     14       0
+6 ki1113344-GMS-Nepal   NEPAL     50     114     4     NA     NA      NA
+  pwmlkfl formlkfl h20fedfl othfedfl
+1      NA       NA       NA       NA
+2      NA       NA       NA       NA
+3      NA       NA       NA       NA
+4      NA       NA       NA       NA
+5       0        0        0        0
+6      NA       NA       NA       NA
+> head(jvt3)    	
+            studyid    country subjid subjido agedays              visit
+1 kiGH5241-JiVitA-3 BANGLADESH      1   22988    -221      1st trimester
+2 kiGH5241-JiVitA-3 BANGLADESH      1   22988     -70      3rd trimester
+3 kiGH5241-JiVitA-3 BANGLADESH      1   22988       1   Birth Assessment
+4 kiGH5241-JiVitA-3 BANGLADESH      1   22988       2   Birth Assessment
+5 kiGH5241-JiVitA-3 BANGLADESH      1   22988      33 1 Month Postpartum
+6 kiGH5241-JiVitA-3 BANGLADESH      1   22988      91 3 Month Postpartum
+                      antpt bfedfl nbfyes anmlkfl pwmlkfl formlkfl h20fedfl
+1      Infant 1st trimester     NA     NA      NA      NA       NA       NA
+2      Infant 3rd trimester     NA     NA      NA      NA       NA       NA
+3   Infant Birth Assessment     NA     NA      NA      NA       NA       NA
+4   Infant Birth Assessment     NA     NA      NA      NA       NA       NA
+5 Infant 1 Month Postpartum      1      1       0       0        0        0
+6 Infant 3 Month Postpartum      1      2       0       0        0        0
+  othfedfl
+1       NA
+2       NA
+3       NA
+4       NA
+5        0
+6        0
+> head(jvt4)    	
+            studyid    country subjid agedays               visit subjido
+1 kiGH5241-JiVitA-4 BANGLADESH      1       2       1 Month Visit       1
+2 kiGH5241-JiVitA-4 BANGLADESH      1      94       3 Month Visit       1
+3 kiGH5241-JiVitA-4 BANGLADESH      1     212       7 Month Visit       1
+4 kiGH5241-JiVitA-4 BANGLADESH      1     213 CEI 6moi assessment       1
+5 kiGH5241-JiVitA-4 BANGLADESH      1     243       8 Month Visit       1
+6 kiGH5241-JiVitA-4 BANGLADESH      1     282       9 Month Visit       1
+  hbgdkid ibbfed ibbfedo ibbfedo1 ibbfedo2 ibbfedo3 ibbfedob bfedfl nbfyes
+1      NA     NA      NA       NA       NA       NA       NA     NA     NA
+2      NA     NA      NA       NA       NA       NA       NA      1      2
+3      NA     NA      NA       NA       NA       NA       NA     NA     NA
+4      NA     NA      NA       NA       NA       NA       NA      1      2
+5      NA     NA      NA       NA       NA       NA       NA     NA     NA
+6      NA     NA      NA       NA       NA       NA       NA      1      2
+  anmlkfl pwmlkfl formlkfl h20fedfl othfedfl
+1      NA      NA       NA       NA       NA
+2       0       0        1        0        0
+3      NA      NA       NA       NA       NA
+4       0       0        0       NA        1
+5      NA      NA       NA       NA       NA
+6       0       0        0       NA        1
+> head(mled)    	
+# A tibble: 6 x 10
+  studyid   country  subjid subjido agedays visit cumexc cumpred cumpart cumnobf
+  <chr>     <chr>     <dbl> <chr>     <dbl> <chr>  <dbl>   <dbl>   <dbl>   <dbl>
+1 ki004707… BANGLAD…      1 BG1C00…       1 Mont…      2       0       0       0
+2 ki004707… BANGLAD…      1 BG1C00…       3 Mont…      4       0       0       0
+3 ki004707… BANGLAD…      1 BG1C00…      29 Mont…     30       0       0       0
+4 ki004707… BANGLAD…      1 BG1C00…      30 Mont…     31       0       0       0
+5 ki004707… BANGLAD…      1 BG1C00…      57 Mont…     58       0       0       0
+6 ki004707… BANGLAD…      1 BG1C00…      62 Mont…     63       0       0       0
+> head(prbt)  
+# A tibble: 6 x 11
+  subjid exbf1   bf1 exbf2   bf2 exbf3   bf3 exbf6   bf6   bf9  bf12
+   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+1      1    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+2      2     1     1     1     1     0     1     0     1     1     1
+3      3     1     1     0     1     0     1     0     1     1     1
+4      4     0     1     0     1     0     1     0     0     0     0
+5      5     1     1     1     1     0     1     0     1     1     0
+6      6     1     1     1     1     1     1     0     0     0     0
+> 
+> 
+> 
+> #Combine raw data BF datasets
+> # - don't add in mled and prbt - they already have aggregate variables
+> bf_df <- bind_rows(bfzn, ee)
+> bf_df <- bind_rows(bf_df, gmsn)
+Warning messages:
+1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+4: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
+5: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+6: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> bf_df$visit <- as.character(bf_df$visit)
+> bf_df <- bind_rows(bf_df, jvt3)
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> bf_df <- bind_rows(bf_df, jvt4)
+Warning messages:
+1: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+2: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
+> 
+> 
+> d <- bf_df
+> 
+> 
+> 
+> #Code variables
+> d$anmlkfl[is.na(d$anmlkfl)] <- 99  
+> d$pwmlkfl[is.na(d$pwmlkfl)] <- 99  
+> d$formlkfl[is.na(d$formlkfl)] <- 99  
+> d$bottlefl<- 99  #bottlefl not present in any of these studies
+> d$othfedfl[is.na(d$othfedfl)] <- 99  
+> d$h20fedfl[is.na(d$h20fedfl)] <- 99  
+> 
+> d$exbfedfl <- NA
+> 
+> #Exclusive breastfeeding
+> d$exclfeed_fl2 <- d$exbfedfl 
+> d$exclfeed_fl <- -(as.numeric((d$bfedfl==0 | (d$h20fedfl==1 |d$anmlkfl==1 | d$pwmlkfl==1 | d$formlkfl==1 | d$bottlefl==1 | d$othfedfl==1)))) + 1
+> d$exclfeed_fl[is.na(d$bfedfl) | (d$h20fedfl==99 & d$anmlkfl==99 & d$pwmlkfl==99 & d$formlkfl==99 &  d$bottlefl==99 & d$othfedfl==99)] <- NA
+> 
+> d$exclfeed_fl[is.na(d$exclfeed_fl)] <- 99
+> d$exclfeed_fl[d$exclfeed_fl!=1 & !is.na(d$exclfeed_fl2)] <- d$exclfeed_fl2[d$exclfeed_fl!=1 & !is.na(d$exclfeed_fl2)]
+> d$exclfeed_fl[d$exclfeed_fl==99] <- NA
+> 
+> table(d$exclfeed_fl)
+
+     0      1 
+108460  40692 
+> table(d$studyid, d$exclfeed_fl)
+                     
+                          0     1
+  ki1000109-EE           73    59
+  ki1113344-GMS-Nepal  1285  2596
+  kiGH5241-JiVitA-3   20687 32444
+  kiGH5241-JiVitA-4   44568  5589
+> 
+> 
+> 
+> #predominant breastfeeding
+> d$predfeed_fl <- -(as.numeric(d$bfedfl==0 | (d$anmlkfl==1 | d$pwmlkfl==1 | d$formlkfl==1 | d$bottlefl==1 | d$othfedfl==1))) + 1
+> d$predfeed_fl[is.na(d$bfedfl) | (d$anmlkfl==99 & d$pwmlkfl==99 & d$formlkfl==99 &  d$bottlefl==99 & d$othfedfl==99)] <- NA
+> table(d$predfeed_fl)
+
+     0      1 
+108192  40960 
+> table(d$studyid,d$predfeed_fl)
+                     
+                          0     1
+  ki1000109-EE           73    59
+  ki1113344-GMS-Nepal  1262  2619
+  kiGH5241-JiVitA-3   20459 32672
+  kiGH5241-JiVitA-4   44551  5606
+> 
+> #Summarize under 6 month  exclusive and predominant breastfeeding
+> bf_6mo<-d %>% #filter(!is.na(predfeed_fl)) %>% 
++   filter(agedays < 30.4167*6) %>%
++   group_by(studyid,  subjid) %>%
++   mutate(predfeed6=as.numeric(mean(predfeed_fl==1, na.rm=T)==1),
++          exclfeed6=as.numeric(mean(exclfeed_fl==1, na.rm=T)==1)) %>% #%>% summarize(predfeed6=mean(predfeed))
++   slice(1)
+> table(bf_6mo$predfeed6)
+
+    0     1 
+ 4864 17173 
+> table(bf_6mo$exclfeed6)
+
+    0     1 
+ 4900 17137 
+> mean(bf_6mo$predfeed6, na.rm=T)
+[1] 0.7792803
+> mean(bf_6mo$exclfeed6, na.rm=T)
+[1] 0.7776467
+> 
+> table(bf_6mo$studyid, bf_6mo$predfeed6)
+                     
+                          0     1
+  ki1000109-EE            5    43
+  ki1113344-GMS-Nepal   145   420
+  kiGH5241-JiVitA-3    3662 13006
+  kiGH5241-JiVitA-4    1052  3704
+> table(bf_6mo$studyid, bf_6mo$exclfeed6)
+                     
+                          0     1
+  ki1000109-EE            5    43
+  ki1113344-GMS-Nepal   145   420
+  kiGH5241-JiVitA-3    3684 12984
+  kiGH5241-JiVitA-4    1066  3690
+> 
+> bf_6mo %>% group_by(studyid) %>% summarize(mean(predfeed6, na.rm=T), mean(exclfeed6, na.rm=T)) %>% as.data.frame()
+              studyid mean(predfeed6, na.rm = T) mean(exclfeed6, na.rm = T)
+1        ki1000109-EE                  0.8958333                  0.8958333
+2 ki1113344-GMS-Nepal                  0.7433628                  0.7433628
+3   kiGH5241-JiVitA-3                  0.7802976                  0.7789777
+4   kiGH5241-JiVitA-4                  0.7788057                  0.7758621
+> bf_6mo_raw <- bf_6mo
+> 
+> 
+> 
+> 
+> 
+> #Summarize under 3 month  exclusive and predominant breastfeeding
+> bf_3mo<-d %>% #filter(!is.na(predfeed_fl)) %>% 
++   filter(agedays < 30.4167*3) %>%
++   group_by(studyid,  subjid) %>%
++   mutate(predfeed3=as.numeric(mean(predfeed_fl==1, na.rm=T)==1),
++          exclfeed3=as.numeric(mean(exclfeed_fl==1, na.rm=T)==1)) %>% 
++   slice(1)
+> table(bf_3mo$predfeed3)
+
+    0     1 
+ 1578 14749 
+> table(bf_3mo$exclfeed3)
+
+    0     1 
+ 1581 14746 
+> mean(bf_3mo$predfeed3, na.rm=T)
+[1] 0.9033503
+> mean(bf_3mo$exclfeed3, na.rm=T)
+[1] 0.9031665
+> 
+> table(bf_3mo$studyid, bf_3mo$predfeed3)
+                     
+                          0     1
+  ki1000109-EE            0    39
+  ki1113344-GMS-Nepal    78   380
+  kiGH5241-JiVitA-3    1483 14182
+  kiGH5241-JiVitA-4      17   148
+> table(bf_3mo$studyid, bf_3mo$exclfeed3)
+                     
+                          0     1
+  ki1000109-EE            0    39
+  ki1113344-GMS-Nepal    78   380
+  kiGH5241-JiVitA-3    1486 14179
+  kiGH5241-JiVitA-4      17   148
+> 
+> bf_3mo %>% group_by(studyid) %>% summarize(mean(predfeed3, na.rm=T), mean(exclfeed3, na.rm=T)) %>% as.data.frame()
+              studyid mean(predfeed3, na.rm = T) mean(exclfeed3, na.rm = T)
+1        ki1000109-EE                  1.0000000                  1.0000000
+2 ki1113344-GMS-Nepal                  0.8296943                  0.8296943
+3   kiGH5241-JiVitA-3                  0.9053304                  0.9051388
+4   kiGH5241-JiVitA-4                  0.8969697                  0.8969697
+> bf_3mo_raw <- bf_3mo
+> 
+> 
+> #Summarize 3-6 month  exclusive and predominant breastfeeding
+> bf_3_6mo<-d %>% #filter(!is.na(predfeed_fl)) %>% 
++   filter(agedays >= 30.4167*3 & agedays < 30.4167*6) %>%
++   group_by(studyid,  subjid) %>%
++   mutate(predfeed36=as.numeric(mean(predfeed_fl==1, na.rm=T)==1),
++          exclfeed36=as.numeric(mean(exclfeed_fl==1, na.rm=T)==1)) %>% #%>% summarize(predfeed6=mean(predfeed))
++   slice(1)
+> table(bf_3_6mo$predfeed36)
+
+    0     1 
+ 4078 14374 
+> table(bf_3_6mo$exclfeed36)
+
+    0     1 
+ 4112 14340 
+> mean(bf_3_6mo$predfeed36, na.rm=T)
+[1] 0.7789941
+> mean(bf_3_6mo$exclfeed36, na.rm=T)
+[1] 0.7771515
+> 
+> table(bf_3_6mo$studyid, bf_3_6mo$predfeed36)
+                     
+                          0     1
+  ki1000109-EE            5     4
+  ki1113344-GMS-Nepal   105   423
+  kiGH5241-JiVitA-3    2933 10390
+  kiGH5241-JiVitA-4    1035  3557
+> table(bf_3_6mo$studyid, bf_3_6mo$exclfeed36)
+                     
+                          0     1
+  ki1000109-EE            5     4
+  ki1113344-GMS-Nepal   105   423
+  kiGH5241-JiVitA-3    2953 10370
+  kiGH5241-JiVitA-4    1049  3543
+> 
+> bf_3_6mo %>% group_by(studyid) %>% summarize(mean(predfeed36, na.rm=T), mean(exclfeed36, na.rm=T)) %>% as.data.frame()
+              studyid mean(predfeed36, na.rm = T) mean(exclfeed36, na.rm = T)
+1        ki1000109-EE                   0.4444444                   0.4444444
+2 ki1113344-GMS-Nepal                   0.8011364                   0.8011364
+3   kiGH5241-JiVitA-3                   0.7798544                   0.7783532
+4   kiGH5241-JiVitA-4                   0.7746080                   0.7715592
+> bf_3_6mo_raw <- bf_3_6mo
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> #-------------------------------------------
+> #read full data csv file
+> #-------------------------------------------
+> 
+> d<-fread("H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv", header = T)
+Error in fread("H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv",  : 
+  File 'H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv' does not exist or is non-readable. getwd()=='/home/andrew.mertens/ki-longitudinal-manuscripts/1-data-cleaning/raw-data-cleaning'
+Execution halted

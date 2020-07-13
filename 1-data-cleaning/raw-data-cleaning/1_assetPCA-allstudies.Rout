@@ -1,0 +1,2656 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> 
+> 
+> 
+> 
+> 
+> 
+> #------------------------------------------------------
+> # Author: Andrew Mertens
+> # amertens@berkeley.edu
+> #
+> # Calculate household wealth score from the first
+> # principal component of household asset ownership
+> # indicators
+> #-----------------------------------------------------
+> 
+> 
+> 
+> 
+> 
+> 
+> #------------------------------------
+> # Household asset PCA
+> #------------------------------------
+> 
+> rm(list=ls())
+> source(paste0(here::here(), "/0-config.R"))
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.3
+✔ tidyr   1.0.0     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+here() starts at /home/andrew.mertens/ki-longitudinal-manuscripts
+
+Attaching package: ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+Attaching package: ‘reshape2’
+
+The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loading 'metafor' package (version 2.1-0). For an overview 
+and introduction to the package please type: help(metafor).
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+Loading required package: viridisLite
+
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:purrr’:
+
+    map
+
+
+Attaching package: ‘ggridges’
+
+The following object is masked from ‘package:ggplot2’:
+
+    scale_discrete_manual
+
+
+Attaching package: ‘assertthat’
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+
+Attaching package: ‘lazyeval’
+
+The following objects are masked from ‘package:purrr’:
+
+    is_atomic, is_formula
+
+
+Attaching package: ‘rlang’
+
+The following objects are masked from ‘package:lazyeval’:
+
+    as_name, call_modify, call_standardise, expr_label, expr_text,
+    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
+    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
+
+The following object is masked from ‘package:assertthat’:
+
+    has_name
+
+The following object is masked from ‘package:data.table’:
+
+    :=
+
+The following objects are masked from ‘package:purrr’:
+
+    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
+    splice
+
+
+Attaching package: ‘scales’
+
+The following object is masked from ‘package:viridis’:
+
+    viridis_pal
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+The following object is masked from ‘package:readr’:
+
+    col_factor
+
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: bit
+Attaching package bit
+package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
+creators: bit bitwhich
+coercion: as.logical as.integer as.bit as.bitwhich which
+operator: ! & | xor != ==
+querying: print length any all min max range sum summary
+bit access: length<- [ [<- [[ [[<-
+for more help type ?bit
+
+Attaching package: ‘bit’
+
+The following object is masked from ‘package:data.table’:
+
+    setattr
+
+The following object is masked from ‘package:base’:
+
+    xor
+
+Attaching package bit64
+package:bit64 (c) 2011-2012 Jens Oehlschlaegel
+creators: integer64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+logical operator: ! & | xor != == < <= >= >
+arithmetic operator: + - * / %/% %% ^
+math: sign abs sqrt log log2 log10
+math: floor ceiling trunc round
+querying: is.integer64 is.vector [is.atomic} [length] format print str
+values: is.na is.nan is.finite is.infinite
+aggregation: any all min max range sum prod
+cumulation: diff cummin cummax cumsum cumprod
+access: length<- [ [<- [[ [[<-
+combine: c rep cbind rbind as.data.frame
+WARNING don't use as subscripts
+WARNING semantics differ from integer
+for more help type ?bit64
+
+Attaching package: ‘bit64’
+
+The following object is masked from ‘package:bit’:
+
+    still.identical
+
+The following objects are masked from ‘package:base’:
+
+    :, %in%, is.double, match, order, rank
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+> library(caret)
+Loading required package: lattice
+
+Attaching package: ‘caret’
+
+The following object is masked from ‘package:survival’:
+
+    cluster
+
+The following object is masked from ‘package:purrr’:
+
+    lift
+
+> 
+> #Open log
+> #sink("U:/results/assetPCA-allstudies.txt")
+> 
+> 
+> 
+> 
+> #Function to select one observation per child with asset data (some studies only have 
+> # asset information on one row of child longitudinal anthro observations, but some have
+> # the time-invariate baseline asset information filled in for all rows)
+> read_asset_data <- function(study, varlist){
++   
++   d <- readRDS(paste0(cohortdata_dir, study,".rds")) 
++   
++   d <- d %>% 
++     group_by(SUBJID) %>% 
++     subset(., select = c("STUDYID", "SUBJID", "COUNTRY", "AGEDAYS", varlist)) %>%
++     fill(!!!varlist) %>% #default direction down
++     fill(!!!varlist, .direction = "up") %>% 
++     arrange(AGEDAYS) %>% slice(1) %>%
++     ungroup()
++   
++   return(d)
++ }
+> 
+> 
+> 
+> #Function to calculate PCA of asset based wealth by enrollment
+> #Method based on: https://programming-r-pro-bro.blogspot.com/2011/10/principal-component-analysis-use.html
+> 
+> assetPCA<-function(dfull, varlist, reorder=F ){
++   
++   varlist<-c("STUDYID","SUBJID","COUNTRY",varlist)
++   
++   #Subset to only needed variables for subgroup analysis
++   ret <- dfull %>%
++     subset(select=c(varlist)) 
++   
++ 
++   
++   #Select assets
++   ret<-as.data.frame(ret) 
++   id<-subset(ret, select=c("STUDYID","SUBJID","COUNTRY")) #drop subjectid
++   ret<-ret[,which(!(colnames(ret) %in% c("STUDYID","SUBJID","COUNTRY")))]
++   
++   
++   for(i in 1:ncol(ret)){
++     ret[,i]<-ifelse(ret[,i]=="",NA,ret[,i])
++   } 
++   
++   #drop rows with no asset data
++   id<-id[rowSums(is.na(ret[,4:ncol(ret)])) != ncol(ret)-3,]  
++   ret<-ret[rowSums(is.na(ret[,4:ncol(ret)])) != ncol(ret)-3,]  
++   
++ 
++   #Drop assets with great missingness
++   for(i in 1:ncol(ret)){
++     cat(colnames(ret)[i],"\n")
++     print(table(is.na(ret[,i])))
++     print(class((ret[,i])))
++   }
++   
++   #Set missingness to zero
++   table(is.na(ret))
++   for(i in 1:ncol(ret)){
++     ret[,i]<-as.character(ret[,i])
++     ret[is.na(ret[,i]),i]<-"miss"
++     ret[,i]<-as.factor(ret[,i])
++     
++   }
++   table(is.na(ret))
++   
++   #Remove columns with almost no variance
++   if(length(nearZeroVar(ret))>0){
++     ret<-ret[,-nearZeroVar(ret)]
++   }
++   
++   #Convert factors into indicators
++   ret<-droplevels(ret)
++   ret<-design_matrix(ret)
++   if(length(nearZeroVar(ret))>0){
++     ret<-ret[,-nearZeroVar(ret)]
++   }
++   
++   
++   #Set missingness to zero
++   table(is.na(ret))
++   ret[is.na(ret)]<-0
++   table(is.na(ret))
++   
++   #Remove columns with almost no variance
++   if(length(nearZeroVar(ret))>0){
++     ret<-ret[,-nearZeroVar(ret)]
++   }
++   
++   ## Convert the data into matrix ##
++   ret<-as.matrix(ret)
++   
++   
++   ##Computing the principal component using eigenvalue decomposition ##
++   princ.return <- princomp(ret) 
++   
++   
++   ## To get the first principal component in a variable ##
++   load <- loadings(princ.return)[,1]   
++   
++   pr.cp <- ret %*% load  ## Matrix multiplication of the input data with the loading for the 1st PC gives us the 1st PC in matrix form. 
++   
++   HHwealth <- as.numeric(pr.cp) ## Gives us the 1st PC in numeric form in pr.
++   
++   #Create 4-level household weath index
++   quartiles<-quantile(HHwealth, probs=seq(0, 1, 0.25))
++   print(quartiles)
++   ret<-as.data.frame(ret)
++   ret$HHwealth_quart<-rep(1, nrow(ret))
++   ret$HHwealth_quart[HHwealth>=quartiles[2]]<-2
++   ret$HHwealth_quart[HHwealth>=quartiles[3]]<-3
++   ret$HHwealth_quart[HHwealth>=quartiles[4]]<-4
++   table(ret$HHwealth_quart)
++   ret$HHwealth_quart<-factor(ret$HHwealth_quart)
++   
++   if(reorder==T){
++     levels(ret$HHwealth_quart)<-c("Wealth Q4","Wealth Q3","Wealth Q2","Wealth Q1")
++     ret$HHwealth_quart<-factor(ret$HHwealth_quart, levels=c("Wealth Q1", "Wealth Q2","Wealth Q3","Wealth Q4"))
++   }else{
++     levels(ret$HHwealth_quart)<-c("Wealth Q1", "Wealth Q2","Wealth Q3","Wealth Q4")
++   }
++   
++   #Table assets by pca quartile to identify wealth/poverty levels
++   d<-data.frame(id, ret)
++   wealth.tab <- d %>% subset(., select=-c(STUDYID, SUBJID, COUNTRY)) %>%
++     group_by(HHwealth_quart) %>%
++     summarise_all(funs(mean)) %>% as.data.frame()
++   print(wealth.tab)
++   
++   #Save just the wealth data
++   pca.wealth<-d %>% subset(select=c(STUDYID, SUBJID, COUNTRY, HHwealth_quart))
++   
++   pca.wealth$SUBJID<-as.numeric(as.character(pca.wealth$SUBJID))
++   
++   d <-dfull %>% subset(., select=c("STUDYID","SUBJID","COUNTRY"))
++   d$SUBJID<-as.numeric(as.character(d$SUBJID))
++   d<-left_join(d, pca.wealth, by=c("STUDYID","SUBJID","COUNTRY"))
++   return(d)
++ }
+> 
+> 
+> 
+> #function to convert all asset variables to indicators
+> design_matrix <- function(W){
++   if (class(W) != "matrix" & class(W) != "data.frame") {
++     W <- data.frame(W)
++     if (is.null(ncol(W)) | ncol(W) == 0) {
++       stop("Something is wrong with W.\nTo be safe, please try specifying it as class=data.frame.")
++     }
++   }
++   ncolW <- ncol(W)
++   flist <- numeric()
++   for (i in 1:ncolW) {
++     if (class(W[, i]) != "factor") {
++       next
++     }
++     else {
++       flist <- c(flist, i)
++       W[, i] <- factor(W[, i])
++       mm <- model.matrix(~-1 + W[, i])
++       mW <- mm[, -c(1)]
++       levs <- gsub(" ", "", levels(W[, i]))[-c(1)]
++       if (length(levs) < 2) 
++         mW <- matrix(mW, ncol = 1)
++       colnames(mW) <- paste(names(W)[i], levs, sep = "")
++       W <- data.frame(W, mW)
++     }
++   }
++   if (length(flist) > 0) {
++     W <- subset(W, select = -c(flist))
++   }
++   return(W)
++ }
+> 
+> 
+> 
+> #---------
+> # akup
+> #---------
+> 
+> 
+> study<-"akup"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds"))
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SUBJIDO", "SITEID", "SEXN", "SEX", "ARMCD", "ARM", "PREGOUTN", "PREGOUT", "BRTHYR", "BRTHWEEK", "BIRTHWT", "BIRTHLEN", "BIRTHHC", "CTRYCD", "COUNTRY", "REGCTRY", "REGCTYP", "CITYTOWN", "LATITUDE", "LONGITUD", "AGEDAYS", "VISITNUM", "VISIT", "VISITDY", "WTKG", "HTCM", "LENCM", "BMI", "HCIRCM", "MUACCM", "WAZ", "HAZ", "WHZ", "BAZ", "HCAZ", "MUAZ", "MAGE", "MEDUCYRS", "SESN", "SES", "LVBRTH", "NUMHCVIS", "DLVLOCN", "DLVLOC", "DLVPSNN", "DLVPSN", "COUGHFL", "DIARFL", "DYSPNFL", "FEVERFL", "TACHPNFL", "NROOMS", "ANIMALS", "BICYCLE", "CAR", "CART", "CEILFAN", "COOKFUEL", "DRAIN", "ELEC", "FRIG", "H2OSRC", "HOMESWR", "LANTERN", "MCYCLE", "PHONE", "RADIO", "SANITATN", "SEWING", "TV", "WASHMAC", "CATTLE", "COW", "GOAT", "SHEEP", "M_WTKG", "M_HTCM", "M_BMI", "M_MUACCM", "M_MUACCM2"> varlist<-colnames(d)[colnames(d) %in% c("NROOMS","BICYCLE",  "CAR","CART","COOKFUEL","ELEC","FRIG","MCYCLE",  
++                                         "PHONE","RADIO", "SEWING",   "TV" ,"WASHMAC" )]
+> 
+> akup <- read_asset_data(study, varlist)
+> akup<-assetPCA(akup, varlist, reorder=T)
+NROOMS 
+
+FALSE 
+  687 
+[1] "integer"
+BICYCLE 
+
+FALSE 
+  687 
+[1] "integer"
+CAR 
+
+FALSE 
+  687 
+[1] "integer"
+CART 
+
+FALSE 
+  687 
+[1] "integer"
+COOKFUEL 
+
+FALSE 
+  687 
+[1] "integer"
+ELEC 
+
+FALSE  TRUE 
+  684     3 
+[1] "integer"
+FRIG 
+
+FALSE 
+  687 
+[1] "integer"
+MCYCLE 
+
+FALSE 
+  687 
+[1] "integer"
+PHONE 
+
+FALSE 
+  687 
+[1] "integer"
+RADIO 
+
+FALSE 
+  687 
+[1] "integer"
+SEWING 
+
+FALSE 
+  687 
+[1] "integer"
+TV 
+
+FALSE 
+  687 
+[1] "integer"
+WASHMAC 
+
+FALSE 
+  687 
+[1] "integer"
+        0%        25%        50%        75%       100% 
+-2.3988365 -1.1574026 -0.4540883  0.1275580  0.5458457 
+  HHwealth_quart   NROOMS1   NROOMS2   NROOMS3   BICYCLE3      CART3  COOKFUEL3
+1      Wealth Q1 0.9827586 0.0000000 0.0000000 0.06321839 0.07471264 0.02873563
+2      Wealth Q2 0.3470588 0.4882353 0.1000000 0.15294118 0.10588235 0.02352941
+3      Wealth Q3 0.2163743 0.5029240 0.1345029 0.30994152 0.14035088 0.11111111
+4      Wealth Q4 0.0755814 0.4127907 0.2848837 0.26162791 0.11627907 0.32558140
+  COOKFUEL4       FRIG3    MCYCLE3    PHONE3     RADIO3    SEWING3       TV3
+1 0.9655172 0.005747126 0.01724138 0.0000000 0.01724138 0.04022989 0.1436782
+2 0.9647059 0.011764706 0.02352941 0.2529412 0.08235294 0.24117647 0.3058824
+3 0.8830409 0.152046784 0.17543860 0.6023392 0.08187135 0.52631579 0.7309942
+4 0.6395349 0.581395349 0.38953488 0.9418605 0.15116279 0.88953488 0.9593023
+     WASHMAC3
+1 0.005747126
+2 0.041176471
+3 0.181286550
+4 0.674418605
+Warning message:
+funs() is soft deprecated as of dplyr 0.8.0
+Please use a list of either functions or lambdas: 
+
+  # Simple named list: 
+  list(mean = mean, median = median)
+
+  # Auto named with `tibble::lst()`: 
+  tibble::lst(mean, median)
+
+  # Using lambdas
+  list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+This warning is displayed once per session. 
+> 
+> table(akup$HHwealth_quart)
+
+Wealth Q1 Wealth Q2 Wealth Q3 Wealth Q4 
+      174       170       171       172 
+> saveRDS(akup, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> 
+> #---------
+> # cmc
+> #---------
+> study<-"cmc"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SITEID", "SEXN", "SEX", "FEEDINGN", "FEEDING", "BRTHYR", "BRTHWEEK", "BIRTHWT", "BIRTHLEN", "DELIVERY", "APGAR5", "CRY", "CTRYCD", "COUNTRY", "REGCTRY", "REGCTYP", "LATITUDE", "LONGITUD", "ELEVATN", "AGEDAYS", "WTKG", "HTCM", "LENCM", "BMI", "WAZ", "HAZ", "WHZ", "BAZ", "MEDUCYRS", "SESN", "SES", "GRAVIDA", "NABT", "NSTLBRTH", "NLCHILD", "DLVLOCN", "DLVLOC", "EDUCCRGV", "EDUCFAM", "EDUCHH", "NADULT", "NCHLD", "NPERSON", "NROOMS", "CAR", "CLTHCAB", "COOKFUEL", "COOKPLAC", "FAMTYP", "FLOOR", "H2OTRTP", "OCCUP", "OWNHOME", "ROOF", "TAPEREC", "TV", "WALL", "GENIQ", "PIQ", "VIQ", "SUMEP", "SUMDIAR", "SUMDAYS", "PCTDIAR"> varlist<-colnames(d)[colnames(d) %in% c("NROOMS","CAR","CLTHCAB", "COOKPLAC","OWNHOME","ROOF","TV","WALL")]
+> 
+> cmc <- read_asset_data(study, varlist)
+> cmc <- assetPCA(cmc, varlist, reorder=F)
+NROOMS 
+
+FALSE 
+  373 
+[1] "integer"
+CAR 
+
+FALSE 
+  373 
+[1] "integer"
+CLTHCAB 
+
+FALSE 
+  373 
+[1] "integer"
+COOKPLAC 
+
+FALSE 
+  373 
+[1] "integer"
+OWNHOME 
+
+FALSE 
+  373 
+[1] "integer"
+ROOF 
+
+FALSE  TRUE 
+  261   112 
+[1] "integer"
+TV 
+
+FALSE 
+  373 
+[1] "integer"
+WALL 
+
+FALSE  TRUE 
+  261   112 
+[1] "integer"
+          0%          25%          50%          75%         100% 
+-1.503346548 -0.947562620  0.007128906  0.308718386  0.902942466 
+  HHwealth_quart   NROOMS2    NROOMS3      CAR2  CLTHCAB2  COOKPLAC2 COOKPLAC3
+1      Wealth Q1 0.1978022 0.07692308 0.3516484 0.6043956 0.01098901 0.8351648
+2      Wealth Q2 0.2000000 0.11578947 0.4421053 0.5789474 0.06315789 0.8526316
+3      Wealth Q3 0.2967033 0.15384615 0.3296703 0.6263736 0.03296703 0.7692308
+4      Wealth Q4 0.4375000 0.19791667 0.6666667 0.7187500 0.36458333 0.2083333
+   OWNHOME2     ROOF3  ROOFmiss       TV2  WALLmiss
+1 0.3076923 0.0000000 1.0000000 0.6153846 1.0000000
+2 0.1894737 0.1789474 0.2210526 0.5052632 0.2210526
+3 0.6153846 0.2747253 0.0000000 0.5934066 0.0000000
+4 0.8854167 0.1979167 0.0000000 0.7812500 0.0000000
+> saveRDS(cmc, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> 
+> #---------
+> # cntt 
+> #---------
+> study<-"cntt"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SITEID", "SEXN", "SEX", "BRTHYR", "BRTHWEEK", "CTRYCD", "COUNTRY", "CITYTOWN", "LATITUDE", "LONGITUD", "ELEVATN", "AGEDAYS", "WTKG", "LENCM", "BMI", "WAZ", "HAZ", "WHZ", "BAZ", "NUMLS", "SUMEP", "SUMDIAR", "SUMDAYS", "PCTDIAR", "SESN", "SES", "ANIMALS", "CAR", "FRIG", "H2OSRC", "H2OSRCC", "LLPHONE", "NROOMS", "NSLEEP", "NSLROOM", "RADIO", "RODENTS", "SANITATN", "TV", "RESP", "TEMP", "COUGHFL", "DIARFL", "DYSPNFL", "FEVERFL", "SPUTUMFL", "WHEEZFL"> varlist<-colnames(d)[colnames(d) %in% c("CAR", "FRIG", "LLPHONE", "NROOMS",  "RADIO",  "TV")]
+> 
+> cntt <- read_asset_data(study, varlist)
+> cntt <- assetPCA(cntt, varlist, reorder=T)
+CAR 
+
+FALSE  TRUE 
+  205    10 
+[1] "integer"
+FRIG 
+
+FALSE  TRUE 
+  211     4 
+[1] "integer"
+LLPHONE 
+
+FALSE  TRUE 
+  214     1 
+[1] "integer"
+NROOMS 
+
+FALSE 
+  215 
+[1] "integer"
+RADIO 
+
+FALSE  TRUE 
+  211     4 
+[1] "integer"
+TV 
+
+FALSE  TRUE 
+  214     1 
+[1] "integer"
+        0%        25%        50%        75%       100% 
+-0.4342925  0.3590120  0.6953568  1.3041303  1.6633714 
+  HHwealth_quart       CAR1      FRIG1  LLPHONE1   NROOMS2    NROOMS3   NROOMS4
+1      Wealth Q1 0.13333333 1.00000000 0.9666667 0.0000000 0.23333333 0.3500000
+2      Wealth Q2 0.07142857 0.58928571 0.8750000 0.1964286 0.30357143 0.1607143
+3      Wealth Q3 0.02127660 0.19148936 0.7021277 0.1914894 0.10638298 0.1063830
+4      Wealth Q4 0.01923077 0.03846154 0.6730769 0.6538462 0.05769231 0.0000000
+     NROOMS5    RADIO1
+1 0.23333333 1.0000000
+2 0.17857143 0.6964286
+3 0.04255319 0.7021277
+4 0.00000000 0.3653846
+> saveRDS(cntt, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> 
+> #---------
+> # gmsn
+> #---------
+> study<-"gmsn"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SITEID", "SEXN", "SEX", "GAGEBRTH", "DEAD", "AGEDTH", "CAUSEDTH", "FEEDINGN", "FEEDING", "BRTHYR", "BRTHWEEK", "BWTREPT", "CRY", "MULTBRTH", "CTRYCD", "COUNTRY", "REGCTRY", "REGCTYP", "LATITUDE", "LONGITUD", "AGEDAYS", "AGEIMPFL", "AGEIMPCM", "VISITNUM", "VISIT", "VISITDY", "WTKG", "HTCM", "LENCM", "BMI", "WAZ", "HAZ", "WHZ", "BAZ", "GSDRNKCP", "GSHHSIT", "GSIMITAT", "GSONEWRD", "GSROLLS", "GSRSPCH", "GSSFOOT", "GSSITWS", "GSSMILE", "GSSTANDW", "GSWLKOWN", "MAGE", "METHNIC", "MEDUCYRS", "FEDUCYRS", "SMOKED", "SMOKAMT", "SMOK2EXP", "MVIT", "MAGE1ST", "PARITY", "NLCHILD", "NFCHILD", "NMCHILD", "DLVLOCN", "DLVLOC", "DLVPSNN", "DLVPSN", "GHTN", "LVBRTHHX", "COMPRISK", "AGLAND", "AGLANDSZ", "BICYCLE", "CAR", "CASTE", "ELEC", "FLOOR", "H2OSRC", "H2OTRTP", "HUNGER", "LLPHONE", "MCYCLE", "MOBILE", "NEEDS", "NROOMS", "PUMP", "RADIO", "RICKSHAW", "ROOF", "SEWING", "TV", "WALL", "WASHANIM", "WASHCCHD", "WASHCOOK", "WASHDEFC"> varlist<-colnames(d)[colnames(d) %in%   c("AGLAND",  "BICYCLE", "CAR", "ELEC",  "LLPHONE", "MCYCLE", "MOBILE","NROOMS", "RADIO", "RICKSHAW", "ROOF", "SEWING", "TV", "WALL")]
+> 
+> gmsn <- read_asset_data(study, varlist)
+> gmsn <- assetPCA(gmsn, varlist, reorder=F)
+AGLAND 
+
+FALSE 
+  698 
+[1] "integer"
+BICYCLE 
+
+FALSE 
+  698 
+[1] "integer"
+CAR 
+
+FALSE 
+  698 
+[1] "integer"
+ELEC 
+
+FALSE 
+  698 
+[1] "integer"
+LLPHONE 
+
+FALSE 
+  698 
+[1] "integer"
+MCYCLE 
+
+FALSE 
+  698 
+[1] "integer"
+MOBILE 
+
+FALSE 
+  698 
+[1] "integer"
+NROOMS 
+
+FALSE 
+  698 
+[1] "integer"
+RADIO 
+
+FALSE 
+  698 
+[1] "integer"
+RICKSHAW 
+
+FALSE 
+  698 
+[1] "integer"
+ROOF 
+
+FALSE  TRUE 
+  643    55 
+[1] "integer"
+SEWING 
+
+FALSE 
+  698 
+[1] "integer"
+TV 
+
+FALSE 
+  698 
+[1] "integer"
+WALL 
+
+FALSE  TRUE 
+  515   183 
+[1] "integer"
+         0%         25%         50%         75%        100% 
+-0.77680016 -0.01738732  0.33550382  1.00243260  2.27337563 
+  HHwealth_quart   AGLAND1  BICYCLE1     ELEC1   LLPHONE1    MCYCLE1   MOBILE1
+1      Wealth Q1 0.7371429 0.3485714 0.6457143 0.02285714 0.01142857 0.7142857
+2      Wealth Q2 0.9137931 0.6436782 0.9425287 0.05747126 0.08045977 0.8908046
+3      Wealth Q3 0.9597701 0.7126437 0.9540230 0.09770115 0.11494253 0.8965517
+4      Wealth Q4 1.0000000 0.6971429 0.9600000 0.13142857 0.25142857 0.9257143
+     NROOMS2   NROOMS3    NROOMS4    NROOMS5    NROOMS6    RADIO1     ROOF13
+1 0.46285714 0.3371429 0.05142857 0.01142857 0.01714286 0.1142857 0.06857143
+2 0.16666667 0.3850575 0.18965517 0.08045977 0.02298851 0.4712644 0.14367816
+3 0.12643678 0.1666667 0.37356322 0.14942529 0.08045977 0.6091954 0.17241379
+4 0.07428571 0.1485714 0.33142857 0.14285714 0.17714286 0.6800000 0.07428571
+      ROOF15    ROOF17       ROOF2    ROOFmiss       TV1     WALL7    WALLmiss
+1 0.14285714 0.4742857 0.000000000 0.160000000 0.1885714 0.9885714 0.000000000
+2 0.14367816 0.4367816 0.005747126 0.086206897 0.6149425 0.9367816 0.005747126
+3 0.18390805 0.2873563 0.011494253 0.063218391 0.7528736 0.6149425 0.109195402
+4 0.04571429 0.1371429 0.531428571 0.005714286 0.7885714 0.0000000 0.931428571
+> saveRDS(gmsn, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> #---------
+> # ilnd
+> #---------
+> study<-"ilnd"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SUBJIDO", "SITEID", "SEXN", "SEX", "ARMCD", "ARM", "FEEDINGN", "FEEDING", "DURBRST", "BRTHYR", "BRTHWEEK", "DEAD", "AGEDTH", "RESPRELN", "RESPREL", "MULTBRTH", "CTRYCD", "COUNTRY", "CITYTOWN", "LATITUDE", "LONGITUD", "ELEVATN", "AGEDAYS", "WTKG", "HTCM", "LENCM", "BMI", "HCIRCM", "MUACCM", "WAZ", "HAZ", "WHZ", "BAZ", "HCAZ", "MUAZ", "MAGE", "MTRIBE", "MMARITN", "MMARIT", "MEDUCYRS", "MWORK", "MHOUSEH", "FTRIBE", "FAGE", "FEDUCYRS", "FWORK", "FHOUSEH", "NLCHILD", "FBLOCK", "FBOOKS", "FDOLL", "FDRAW", "FHOMTOY", "FHSOBJ", "FMAG", "FMOVARND", "FMUSIC", "FPICBK", "FSHAPE", "FSHPTOY", "K2BDSLC", "KAS3BXC", "KAS3BXNC", "KBDCB112", "KBDCB78", "KBDCB910", "KCIRCLE", "KDRPBCN", "KGRPRDT", "KGRRDTS", "KHLD2CBO", "KHLDEOB", "KHLDPNAD", "KHLDPNAY", "KLFLDOBX", "KLIFUPB", "KLTOSNH", "KLTOSPUH", "KMATGRSP", "KNOHLAG", "KOPN2BX", "KPCKCUB", "KPKBDPG", "KPKBTFL", "KPKBTFR", "KPKCNANL", "KPKCNANR", "KPSOBHH", "KPT1CBX", "KPT2CBLB", "KPT2CBX", "KPT6CNBL", "KPT6CNBR", "KPTCNRBL", "KPTCNRBR", "KPTCNSHL", "KPTCNSHR", "KPTCNSVL", "KPTCNSVR", "KPTLDADJ", "KPTLIDBK", "KRATBOX", "KRCHSIT", "KREL1ON1", "KREM2CBX", "KRET2CB", "KRETCUB", "KRETCUBS", "KRHDRNG", "KRLSDBK", "KSCRBPN", "KSITSDNH", "KSITSDWH", "KSITWSUP", "KSTLINE", "KSTOSRL", "KTCBOBX", "KTK1CBBX", "KTKDRNG", "KUPBTAL", "KUPBTWS", "LACHI", "LACHO", "LAGOGO", "LAKO", "LAKU", "LALLGON", "LANACH", "LAWA", "LAWO", "LAYAYA", "LBABA", "LBISIKET", "LBOTOLO", "LCHOME", "LDOTHI", "LDUDUDU", "LERE", "LEXTARM", "LGALIMOT", "LGESTCOM", "LGONA", "LIMANGA", "LJUSI", "LJUWISI", "LKABUD", "LKAMA", "LKAMBA", "LKEPU", "LKOMGA", "LKUDA", "LKUGWA", "LKUIMA", "LKUKMULA", "LKULEKA", "LKULIRA", "LKULU", "LKULYA", "LKUMWA", "LKUNYA", "LKUPONYA", "LKUTAMA", "LKUWAL", "LKWIMUKA", "LLIGASA", "LMAGOMBO", "LMALAYA", "LMAMA", "LMASAMB", "LMASAWU", "LMATOPE", "LMBALE", "LMBAMBA", "LMBATATA", "LMBOGA", "LMBUSI", "LMBWANDA", "LMENO", "LMESI", "LMIMBA", "LMKAKA", "LMKEKA", "LMMEE", "LMPANDO", "LMPIRA", "LMPUNGA", "LMSIKA", "LMTENGO", "LMTIKO", "LMTUKUTA", "LMUWA", "LMWE", "LNDASI", "LNGANDA", "LNGIRIRI", "LNGOMBE", "LNGUKU", "LNJINGA", "LNJOJE", "LNSALU", "LNYUMBA", "LPAKAMW", "LPANTI", "LPAPAYA", "LPASI", "LPIPII", "LPOINT", "LPUSI", "LSASU", "LSHKNO", "LSHKYES", "LSOMBA", "LSOPO", "LSUKULU", "LSUPUNI", "LTCHPSI", "LTIYI", "LUGALI", "LUNE", "LVONI", "LWAILESI", "LWULA", "LWUMBO", "LYALA", "LYEMBE", "LYIDOLE", "LZAPATO", "PANGRY", "PCRYEXST", "PCRYLEV", "PDEMHELP", "PDESTRY", "PHIBITKY", "PHISHKCK", "PJEALOS", "PNOATTL", "PNORULE", "PNOSHARE", "PNOWAIT", "PNPLYWL", "PQUARRL", "PREFEAT", "PRSTLESS", "PTRBCHG", "PTRSLP", "PYUUPST", "KCATBARM", "KCATHAND", "KRELBL", "KTHBLTOW", "KTHCT", "KHOPONE", "KHOPONEM", "KJMP2FT", "KJMPLNF", "KJMPPKS", "KKICKBMV", "KKICKBST", "KPLSLF", "KPLSLFNA", "KSTDONE", "KTIPTOE", "KTIPTOEM", "KWLKBCK", "KWLKBCKA", "KWLKHTOM", "KWLKHTOT", "KWLKSFE", "PFEAR", "PATYPBH", "PDETCH", "PDISSTFM", "PETNONED", "PFRZUPS", "PINAPEXP", "PNOAFF", "PNOEYEC", "PREPTBH", "PUNWARE", "KCACT", "KCINT", "KCMOOD", "L2WORDS", "LACTIV", "LPAST", "LSINULR", "LSOUND", "BLD_WBC", "BLD_MALARIA", "GSDRNKCP", "GSEATSPN", "GSONEWRD", "GSWAVES", "GSGETCR", "GSMK3CBR", "GSMKTW6", "GSROLLS", "GSWLKWH", "KBLKTOWS", "KCONBXLS", "KCONBXRS", "KCONCUBS", "KCORNUM", "KERRNUM", "GSJUMP", "GSSFOOT", "GSCRAWL", "GSPULLST", "GSRUN", "GSSITWS", "GSSTANDW", "GSWLKOWN", "GSWALKS", "AGLAND", "AXESICK", "BED", "BEDNET", "BEERDRUM", "BICYCLE", "BOATM", "CAR", "CART", "CDPLAY", "CHAIR", "CHICKEN", "COW", "ELEC", "FAN", "FISHNET", "FRIG", "GOAT", "HANDSPRY", "HFCRCBM", "HFCRCLOE", "HFCRCOH", "HFCRCUC", "HFIASENF", "HFIASFFD", "HFIASFM", "HFIASLV", "HFIASNEF", "HFIASNRF", "HFIASSH", "HFIASSM", "HFIASUF", "HOE", "LANTERN", "MATTRESS", "MCYCLE", "MINIBUS", "NCHLDLT5", "NPERSON", "NROOMS", "PHONE", "RADIO", "SEWING", "SHEEP", "SLEEPAC", "STOVE", "TABLE", "TRUCK", "TV", "WASHMAC", "WBARROW", "INCTOT", "COOKFUEL", "COOKPLAC", "H2OSRCP", "ROOF", "SANITATN", "WALL", "RESP", "TEMP", "FEVERFL", "VOMFL", "DIARFL", "COUGHFL", "DYSPNFL", "PNEUMOFL", "MUCSTLFL", "M_COUGHFL", "M_FEVERFL", "M_DYSPNFL", "M_DIARFL", "M_VOMFL", "M_WTKG", "M_HTCM", "M_BMI", "M_MUACCM", "HOTERM"> varlist<-colnames(d)[colnames(d) %in% c("AGLAND", "AXESICK", "BED", "BEDNET", "BEERDRUM", "BICYCLE", "BOATM", "CAR", "CART", "CDPLAY", "CHAIR", "CHICKEN", 
++                                         "COW", "ELEC", "FAN", "FISHNET", "FRIG", "GOAT", "HANDSPRY", "HOE", "LANTERN", "MATTRESS", "MCYCLE", "MINIBUS",  
++                                         "NROOMS", "PHONE", "RADIO", "SEWING", "SHEEP", "SLEEPAC", "STOVE", "TABLE", "TRUCK", "TV", "WASHMAC", "WBARROW", 
++                                         "INCTOT", "COOKFUEL", "COOKPLAC")]
+> 
+> ilnd <- read_asset_data(study, varlist)
+> ilnd <- assetPCA(ilnd, varlist, reorder=T)
+AGLAND 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+AXESICK 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+BED 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+BEDNET 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+BEERDRUM 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+BICYCLE 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+BOATM 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+CAR 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+CART 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+CDPLAY 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+CHAIR 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+CHICKEN 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+COW 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+ELEC 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+FAN 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+FISHNET 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+FRIG 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+GOAT 
+
+FALSE 
+ 1879 
+[1] "integer"
+HANDSPRY 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+HOE 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+LANTERN 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+MATTRESS 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+MCYCLE 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+MINIBUS 
+
+FALSE  TRUE 
+ 1807    72 
+[1] "integer"
+NROOMS 
+
+FALSE  TRUE 
+ 1824    55 
+[1] "integer"
+PHONE 
+
+FALSE  TRUE 
+ 1878     1 
+[1] "integer"
+RADIO 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+SEWING 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+SHEEP 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+SLEEPAC 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+STOVE 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+TABLE 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+TRUCK 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+TV 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+WASHMAC 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+WBARROW 
+
+FALSE  TRUE 
+ 1829    50 
+[1] "integer"
+INCTOT 
+
+FALSE  TRUE 
+  309  1570 
+[1] "numeric"
+COOKFUEL 
+
+FALSE  TRUE 
+   15  1864 
+[1] "integer"
+COOKPLAC 
+
+FALSE  TRUE 
+   15  1864 
+[1] "integer"
+        0%        25%        50%        75%       100% 
+-3.2899556 -1.7799709 -0.9472685 -0.3466561  0.1297480 
+  HHwealth_quart   AGLAND1  AXESICK1      BED1    BEDNET1   BICYCLE1
+1      Wealth Q1 0.7851064 0.3936170 0.1404255 0.07446809 0.06170213
+2      Wealth Q2 0.8936170 0.5638298 0.5510638 0.14042553 0.33191489
+3      Wealth Q3 0.8550107 0.5309168 0.8400853 0.13006397 0.51599147
+4      Wealth Q4 0.7957447 0.4276596 0.9680851 0.18510638 0.74893617
+      CDPLAY1      CHAIR1  CHICKEN1       ELEC1      GOAT1      HOE1
+1 0.004255319 0.004255319 0.1127660 0.004255319 0.06382979 0.7170213
+2 0.027659574 0.108510638 0.3148936 0.014893617 0.11702128 0.8638298
+3 0.115138593 0.464818763 0.3582090 0.034115139 0.16631130 0.8550107
+4 0.459574468 0.940425532 0.4489362 0.244680851 0.17659574 0.8468085
+    MATTRESS1    NROOMS1   NROOMS2   NROOMS3    NROOMS4    PHONE1     RADIO1
+1 0.006382979 0.22978723 0.5170213 0.1106383 0.01914894 0.1255319 0.08085106
+2 0.119148936 0.23829787 0.4127660 0.2808511 0.04255319 0.3553191 0.28936170
+3 0.362473348 0.18550107 0.3773987 0.2857143 0.12366738 0.5970149 0.47547974
+4 0.842553191 0.09574468 0.2319149 0.3148936 0.26595745 0.8468085 0.65957447
+      TABLE1        TV1
+1 0.00000000 0.00212766
+2 0.05106383 0.01063830
+3 0.43070362 0.02985075
+4 0.92127660 0.38723404
+> saveRDS(ilnd, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> #---------
+> # ildm
+> #---------
+> study<-"ildm"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SITEID", "SEXN", "SEX", "ARMCD", "ARM", "GAGEBRTH", "GAGECM", "GAGEFB", "GAGEUS", "DEAD", "AGEDTH", "FEEDINGN", "FEEDING", "DURBRST", "BRTHYR", "BRTHWEEK", "BIRTHWT", "BIRTHHC", "DELIVERY", "APGAR1", "APGAR5", "RESPRELN", "RESPREL", "MULTBRTH", "CTRYCD", "COUNTRY", "CITYTOWN", "LATITUDE", "LONGITUD", "ELEVATN", "AGEDAYS", "GAGEDAYS", "VISIT", "WTKG", "HTCM", "LENCM", "BMI", "HCIRCM", "MUACCM", "WAZ", "HAZ", "WHZ", "BAZ", "HCAZ", "MUAZ", "IGBWAZ", "IGBHAZ", "IGBHCAZ", "WLR", "IGBWLRAZ", "CHCIRCM", "MAGE", "MTRIBE", "MMARITN", "MMARIT", "MEDUCYRS", "MWORK", "FTRIBE", "FAGE", "FEDUCYRS", "FWORK", "FHOUSEH", "M_DIABP", "M_SYSBP", "M_TEMP", "M_RESP", "M_PULSE", "TEMP", "RESP", "PULSE", "DIABP", "SYSBP", "M_BLD_HGB", "M_BLD_WBC", "M_BLD_ZNPPP", "M_RBC_ZNPPP", "BLD_WBC", "BLD_ZNPPP", "RBC_ZNPPP", "KHELTH", "M_PSTRQ01", "M_PSTRQ02", "M_PSTRQ03", "M_PSTRQ04", "M_PSTRQ05", "M_PSTRQ06", "M_PSTRQ07", "M_PSTRQ08", "M_PSTRQ09", "M_PSTRQ10", "FBOOKS", "FMAG", "FSHPCOL", "M_SRQDQ01", "M_SRQDQ02", "M_SRQDQ03", "M_SRQDQ04", "M_SRQDQ05", "M_SRQDQ06", "M_SRQDQ07", "M_SRQDQ08", "M_SRQDQ09", "M_SRQDQ10", "M_SRQDQ11", "M_SRQDQ12", "M_SRQDQ13", "M_SRQDQ14", "M_SRQDQ15", "M_SRQDQ16", "M_SRQDQ17", "M_SRQDQ18", "M_SRQDQ19", "M_SRQDQ20", "GSFRND", "GSLAUGH", "GSSITSUP", "GSSTART", "GSVISUAL", "MOT_STND", "MOT_WALK", "FBLOCK", "FDOLL", "FDRAW", "FHOMTOY", "FHSOBJ", "FMOVARND", "FMUSIC", "FPICBK", "FSHAPE", "FSHPTOY", "K2BDSLC", "KAS3BXC", "KAS3BXNC", "KBDCB112", "KBDCB78", "KBDCB910", "KCACT", "KCINT", "KCIRCLE", "KCMOOD", "KDRPBCN", "KGRPRDT", "KGRRDTS", "KHLD2CBO", "KHLDEOB", "KHLDPNAD", "KHLDPNAY", "KHOPONE", "KHOPONEM", "KJMP2FT", "KJMPLNF", "KJMPPKS", "KLFLDOBX", "KLIFUPB", "KLTOSNH", "KLTOSPUH", "KMATGRSP", "KNOHLAG", "KOPN2BX", "KPCKCUB", "KPKBDPG", "KPKBTFL", "KPKBTFR", "KPKCNANL", "KPKCNANR", "KPLSLFNA", "KPSOBHH", "KPT1CBX", "KPT2CBLB", "KPT2CBX", "KPT6CNBL", "KPT6CNBR", "KPTCNRBL", "KPTCNRBR", "KPTCNSHL", "KPTCNSHR", "KPTCNSVL", "KPTCNSVR", "KPTLDADJ", "KPTLIDBK", "KRATBOX", "KRCHSIT", "KREL1ON1", "KREM2CBX", "KRET2CB", "KRETCUB", "KRETCUBS", "KRHDRNG", "KRLSDBK", "KSCRBPN", "KSITSDNH", "KSITSDWH", "KSITWSUP", "KSTDONE", "KSTLINE", "KSTOSRL", "KTCBOBX", "KTIPTOE", "KTIPTOEM", "KTK1CBBX", "KTKDRNG", "KWLKBCK", "KWLKBCKA", "KWLKHTOM", "KWLKHTOT", "KWLKSFE", "L2WORDS", "LACHI", "LACHO", "LACTIV", "LAGOGO", "LAKO", "LAKU", "LALLGON", "LANACH", "LAWA", "LAWO", "LAYAYA", "LBISIKET", "LBOTOLO", "LCHOME", "LDOTHI", "LDUDUDU", "LERE", "LEXTARM", "LGALIMOT", "LGESTCOM", "LGONA", "LIMANGA", "LJUSI", "LJUWISI", "LKABUD", "LKAMA", "LKAMBA", "LKEPU", "LKOMGA", "LKUDA", "LKUGWA", "LKUIMA", "LKUKMULA", "LKULEKA", "LKULIRA", "LKULU", "LKULYA", "LKUMWA", "LKUNYA", "LKUPONYA", "LKUTAMA", "LKUWAL", "LKWIMUKA", "LLIGASA", "LMAGOMBO", "LMALAYA", "LMAMA", "LMASAMB", "LMASAWU", "LMATOPE", "LMBALE", "LMBAMBA", "LMBATATA", "LMBOGA", "LMBUSI", "LMBWANDA", "LMENO", "LMESI", "LMIMBA", "LMKAKA", "LMKEKA", "LMMEE", "LMPANDO", "LMPIRA", "LMPUNGA", "LMSIKA", "LMTENGO", "LMTIKO", "LMTUKUTA", "LMUWA", "LMWE", "LNDASI", "LNGANDA", "LNGIRIRI", "LNGOMBE", "LNGUKU", "LNJINGA", "LNJOJE", "LNSALU", "LNYUMBA", "LPAKAMW", "LPANTI", "LPAPAYA", "LPASI", "LPAST", "LPIPII", "LPOINT", "LPUSI", "LSASU", "LSHKNO", "LSHKYES", "LSINULR", "LSOMBA", "LSOPO", "LSOUND", "LSUKULU", "LSUPUNI", "LTCHPSI", "LTIYI", "LUGALI", "LUNE", "LVONI", "LWAILESI", "LWULA", "LWUMBO", "LYALA", "LYEMBE", "LYIDOLE", "LZAPATO", "PANGRY", "PCRYEXST", "PCRYLEV", "PDEMHELP", "PDESTRY", "PHIBITKY", "PHISHKCK", "PJEALOS", "PNOATTL", "PNORULE", "PNOSHARE", "PNOWAIT", "PNPLYWL", "PQUARRL", "PREFEAT", "PRSTLESS", "PTRBCHG", "PTRSLP", "PYUUPST", "FCI_TOT", "KDI_MOOD", "KDI_PACT", "KDI_PINT", "MOTORDEV", "SOCEMO_S", "VOCAB_T", "KCATBARM", "KCATHAND", "KDIAB1", "KDIAB2", "KDIAB3", "KDIAB4", "KDI_AB", "KKICKBMV", "KKICKBST", "KRELBL", "KTHBLTOW", "KTHCT", "LBABA", "KDIAB10", "KDIAB5", "KDIAB6", "KDIAB7", "KDIAB8", "KDIAB9", "KPLSLF", "KUPBTAL", "KUPBTWS", "PATYPBH", "PDETCH", "PDISSTFM", "PETNONED", "PFEAR", "PFRZUPS", "PINAPEXP", "PNOAFF", "PNOEYEC", "PREPTBH", "PUNWARE", "M_SSQQ01", "M_SSQQ02", "M_SSQQ03", "M_SSQQ04", "M_SSQQ05", "M_SSQQ06", "M_SSQQ07", "M_SSQQ08", "M_SSQQ09", "M_SSQQ10", "M_SSQQ11", "M_SSQQ12", "GSCRAWL", "GSDRNKCP", "GSEATSPN", "GSONEWRD", "GSPULLST", "GSRUN", "GSSITWS", "GSSMILE", "GSSTANDW", "GSWALKS", "GSWAVES", "GSWLKOWN", "M_EPDSQ01", "M_EPDSQ02", "M_EPDSQ03", "M_EPDSQ04", "M_EPDSQ05", "M_EPDSQ06", "M_EPDSQ07", "M_EPDSQ08", "M_EPDSQ09", "M_EPDSQ10", "GSGETCR", "GSJUMP", "GSMK3CBR", "GSMKTW6", "GSROLLS", "GSSFOOT", "GSWALKO", "GSWLKWH", "KBLKTOWS", "KCONBXLS", "KCONBXRS", "KCONCUBS", "KCORNUM", "KERRNUM", "M_BLD_SYPHILIS_MELI", "M_BLD_SYPHILIS_M36C", "M_BLD_MALARIA_MELI", "M_BLD_MALARIA_M32C", "M_BLD_MALARIA_M36C", "M_BLD_SYPHILIS_SYP1", "M_PLS_SYPHILIS_SYP2", "M_BLD_MALARIA_130C", "M_BLD_MALARIA_C26C", "M_BLD_SYPHILIS_C26C", "M_BLD_MALARIA_C78C", "ROOF", "WALL", "COOKFUEL", "COOKPLAC", "H2OSRCP", "SANITATN", "GOAT", "PHONE", "AGLAND", "AXESICK", "BED", "BEDNET", "BEERDRUM", "BICYCLE", "BOATM", "BOOKS", "BOWL", "CAR", "CDPLAY", "CHAIR", "CHICKEN", "COW", "ELEC", "FAN", "FISHNET", "FRIG", "HANDSPRY", "HFCRCBM", "HFCRCLOE", "HFCRCOH", "HFCRCUC", "HFIASENF", "HFIASFFD", "HFIASFM", "HFIASLV", "HFIASNEF", "HFIASNRF", "HFIASSH", "HFIASSM", "HFIASUF", "HOE", "LANTERN", "MATTRESS", "MCYCLE", "MOBILE", "NCHLDLT5", "NDRAW", "NPERSON", "NROOMS", "NTOYS", "RADIO", "SEWING", "SHEEP", "SLEEPAC", "STOVE", "TABLE", "TOYSBB", "TOYSMU", "TRUCK", "TV", "WASHMAC", "WBARROW", "INCTOT", "PARITY", "GRAVIDA", "NSTLBRTH", "NLIVBRTH", "NLCHILD", "NDCHILD", "DSPPREG", "DLVLOCN", "DLVLOC", "DLVPSNN", "DLVPSN", "M_WTKG", "M_GWTGAIN", "M_HTCM", "M_BMI", "M_MUACCM", "M_TSFTMM", "M_SSFTMM", "ABCIRCM1", "ACAZ1", "BPDCM1", "BPDAZ1", "FEMURCM1", "FLAZ1", "ABCIRCM2", "ACAZ2", "BPDCM2", "BPDAZ2", "FEMURCM2", "FLAZ2"> varlist<-colnames(d)[colnames(d) %in%  c( "COOKFUEL",  "GOAT", "PHONE", "AGLAND", "AXESICK", "BED", "BEDNET", "BEERDRUM", "BICYCLE", "BOATM", "BOOKS", "BOWL", 
++                                           "CAR", "CDPLAY", "CHAIR", "CHICKEN", "COW", "ELEC", "FAN", "FISHNET", "FRIG", "HANDSPRY",  "HOE", "LANTERN", "MATTRESS", 
++                                           "MCYCLE", "MOBILE", "NROOMS", "NTOYS", "RADIO", "SEWING", "SHEEP", "SLEEPAC", "STOVE", "TABLE", "TOYSBB", "TOYSMU",
++                                           "TRUCK", "TV", "WASHMAC", "WBARROW", "INCTOT")]
+> 
+> ildm <- read_asset_data(study, varlist)
+> ildm <- assetPCA(ildm, varlist, reorder=T)
+COOKFUEL 
+
+FALSE  TRUE 
+    4  1241 
+[1] "integer"
+GOAT 
+
+FALSE 
+ 1245 
+[1] "integer"
+PHONE 
+
+FALSE  TRUE 
+ 1236     9 
+[1] "integer"
+AGLAND 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+AXESICK 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+BED 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+BEDNET 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+BEERDRUM 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+BICYCLE 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+BOATM 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+BOOKS 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+BOWL 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+CAR 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+CDPLAY 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+CHAIR 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+CHICKEN 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+COW 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+ELEC 
+
+FALSE 
+ 1245 
+[1] "integer"
+FAN 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+FISHNET 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+FRIG 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+HANDSPRY 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+HOE 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+LANTERN 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+MATTRESS 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+MCYCLE 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+MOBILE 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+NROOMS 
+
+FALSE  TRUE 
+ 1239     6 
+[1] "integer"
+NTOYS 
+
+FALSE  TRUE 
+ 1237     8 
+[1] "integer"
+RADIO 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+SEWING 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+SHEEP 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+SLEEPAC 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+STOVE 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+TABLE 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+TOYSBB 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+TOYSMU 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+TRUCK 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+TV 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+WASHMAC 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+WBARROW 
+
+FALSE  TRUE 
+ 1240     5 
+[1] "integer"
+INCTOT 
+
+FALSE  TRUE 
+  193  1052 
+[1] "integer"
+         0%         25%         50%         75%        100% 
+-0.01657805  0.80538195  1.33746728  1.98310981  3.80597505 
+  HHwealth_quart      GOAT1    PHONE1   AGLAND1  AXESICK1      BED1   BEDNET1
+1      Wealth Q1 0.18269231 0.4775641 0.9711538 0.5256410 0.9711538 0.8365385
+2      Wealth Q2 0.13183280 0.2443730 0.9356913 0.6109325 0.8424437 0.7491961
+3      Wealth Q3 0.12820513 0.1634615 0.9134615 0.5544872 0.7628205 0.5961538
+4      Wealth Q4 0.09354839 0.1096774 0.7258065 0.3612903 0.4967742 0.3032258
+    BICYCLE1     BOWL1     CDPLAY1     CHAIR1  CHICKEN1       ELEC1      HOE1
+1 0.75961538 0.6057692 0.448717949 0.77884615 0.6666667 0.205128205 0.8814103
+2 0.53054662 0.5466238 0.144694534 0.26366559 0.6237942 0.032154341 0.8938907
+3 0.28205128 0.3525641 0.028846154 0.11538462 0.4743590 0.028846154 0.8429487
+4 0.05806452 0.1838710 0.009677419 0.01290323 0.2483871 0.006451613 0.7774194
+   LANTERN1  MATTRESS1   MOBILE1   NROOMS2    NROOMS3    NROOMS4     RADIO1
+1 0.4358974 0.69871795 0.8397436 0.3461538 0.29807692 0.15705128 0.62500000
+2 0.3118971 0.22508039 0.5980707 0.4180064 0.17363344 0.07395498 0.48874598
+3 0.2692308 0.12500000 0.2948718 0.4423077 0.10897436 0.05448718 0.24358974
+4 0.2548387 0.02580645 0.0516129 0.3935484 0.09677419 0.02580645 0.05483871
+       TABLE1         TV1 INCTOTmiss
+1 0.756410256 0.339743590  0.8621795
+2 0.205787781 0.051446945  0.8488746
+3 0.067307692 0.009615385  0.8301282
+4 0.006451613 0.003225806  0.8387097
+> saveRDS(ildm, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> #---------
+> # irc
+> #---------
+> study<-"irc"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SUBJIDO", "SITEID", "SEXN", "SEX", "GAGEBRTH", "GAGECM", "BRTHYR", "BRTHWEEK", "BIRTHWT", "BIRTHLEN", "DELIVERY", "APGAR5", "CRY", "CTRYCD", "COUNTRY", "REGCTRY", "REGCTYP", "LATITUDE", "LONGITUD", "ELEVATN", "AGEDAYS", "GAGEDAYS", "WTKG", "HTCM", "LENCM", "BMI", "WAZ", "HAZ", "WHZ", "BAZ", "MEDUCYRS", "SESN", "SES", "GAGEHX", "GRAVIDA", "NABT", "NSTLBRTH", "NLCHILD", "DLVLOCN", "DLVLOC", "COMPRISK", "EDUCCRGV", "EDUCFAM", "EDUCHH", "NADULT", "NCHLD", "NCHLDLT5", "NPERSON", "NROOMS", "CAR", "CLTHCAB", "COOKFUEL", "COOKPLAC", "FAMTYP", "FLOOR", "LLPHONE", "MOBILE", "OCCUP", "OWNHOME", "ROOF", "TAPEREC", "TV", "WALL", "H2OTRTP", "SUMEP", "SUMDIAR", "SUMDAYS", "PCTDIAR"> varlist<-colnames(d)[colnames(d) %in% c("NROOMS", "CAR", "CLTHCAB", "COOKPLAC", "FLOOR", "LLPHONE", "MOBILE", "OWNHOME", "ROOF", "TV", "WALL")]
+> 
+> irc <- read_asset_data(study, varlist)
+> irc <- assetPCA(irc, varlist, reorder=T)
+NROOMS 
+
+FALSE 
+  410 
+[1] "numeric"
+CAR 
+
+FALSE  TRUE 
+  381    29 
+[1] "character"
+CLTHCAB 
+
+FALSE 
+  410 
+[1] "character"
+COOKPLAC 
+
+FALSE 
+  410 
+[1] "character"
+FLOOR 
+
+FALSE  TRUE 
+  306   104 
+[1] "character"
+LLPHONE 
+
+FALSE  TRUE 
+  179   231 
+[1] "character"
+MOBILE 
+
+FALSE  TRUE 
+  386    24 
+[1] "character"
+OWNHOME 
+
+FALSE 
+  410 
+[1] "character"
+ROOF 
+
+FALSE  TRUE 
+  306   104 
+[1] "character"
+TV 
+
+FALSE 
+  410 
+[1] "character"
+WALL 
+
+FALSE  TRUE 
+  306   104 
+[1] "character"
+        0%        25%        50%        75%       100% 
+-1.4589555 -0.9252084 -0.1454984  0.5811795  1.8901391 
+  HHwealth_quart   NROOMS1   NROOMS2    NROOMS3    CARYes CLTHCABYes
+1      Wealth Q1 0.7714286 0.1904762 0.03809524 1.0000000  0.5238095
+2      Wealth Q2 0.6176471 0.2941176 0.05882353 0.9803922  0.7647059
+3      Wealth Q3 0.3980583 0.4854369 0.07766990 0.9223301  0.9611650
+4      Wealth Q4 0.0000000 0.7000000 0.18000000 0.8100000  0.9900000
+  COOKPLACinsidethehouse COOKPLACoutsidethehouse FLOORmiss   LLPHONENo
+1              0.1047619               0.7428571 0.3428571 0.980952381
+2              0.3039216               0.5490196 0.3627451 0.352941176
+3              0.4368932               0.4368932 0.2912621 0.009708738
+4              0.9300000               0.0000000 0.0100000 0.000000000
+  LLPHONEYes    MOBILENo  MOBILEYes  ROOFmiss ROOFTHATCHED     TVYes  WALLmiss
+1 0.00952381 0.980952381 0.00952381 0.3428571   0.26666667 0.4285714 0.3428571
+2 0.09803922 0.352941176 0.54901961 0.3627451   0.12745098 0.6372549 0.3627451
+3 0.11650485 0.009708738 0.90291262 0.2912621   0.04854369 0.8640777 0.2912621
+4 0.16000000 0.000000000 0.96000000 0.0100000   0.02000000 0.9700000 0.0100000
+> saveRDS(irc, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> #---------
+> # jvt3
+> #---------
+> study<-"jvt3"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SUBJIDO", "CLUSTID", "SITEID", "SEXN", "SEX", "ARMCD", "ARM", "GAGEBRTH", "GAGECM", "GAGECRL", "GAGELMP", "GAGEUS", "GAGERW", "GAGERWSP", "PREGOUTN", "PREGOUT", "DEAD", "AGEDTH", "BRTHYR", "BRTHWEEK", "BIRTHWT", "BIRTHLEN", "BIRTHHC", "DELIVERY", "CRY", "PLCNTWT", "IMMBCG", "IMMOPV", "RESPRELN", "RESPREL", "MULTBRTH", "CTRYCD", "COUNTRY", "CITYTOWN", "EPOCH", "AGEDAYS", "WTKG", "HTCM", "LENCM", "BMI", "HCIRCM", "MUACCM", "WAZ", "HAZ", "WHZ", "BAZ", "HCAZ", "MUAZ", "IGBWAZ", "IGBHAZ", "IGBHCAZ", "WLR", "IGBWLRAZ", "GAGEDUSS", "GAGEDCTR", "GAGESCTR", "CHCIRCM", "CTORDCM", "CTORAZ", "VISIT", "GAGEDAYS", "M_ACARO_1", "M_ATOCO_1", "M_BCARO_1", "M_BCRYP_1", "M_GTOCO_1", "M_HGB_1", "M_LUTZ_1", "M_LYCOP_1", "M_PH_1", "M_RETINOL_1", "M_AGP_1", "M_CHOL_1", "M_FERRITIN_1", "M_FOLATE_1", "M_THYRGLB_1", "M_TRIG_1", "M_VITAB12_1", "M_VITD_1", "M_ZN_1", "M_STRF_1", "M_VITAB2_1", "M_VITAB2_2", "M_VITAB2_3", "M_VITAB6_1", "M_CRP_1", "M_CU_1", "M_SEL_1", "M_GLUC_1", "M_PROT_1", "BALYCOGC1", "BALYCOGR1", "BALYCOGS1", "BALYECMR1", "BALYECMS1", "BALYFMTR1", "BALYFMTS1", "BALYGMTR1", "BALYGMTS1", "BALYLNGC1", "BALYLNGS1", "BALYMOTC1", "BALYMOTS1", "BALYRCMR1", "BALYRCMS1", "BR9ACT1", "BR9APP1", "BR9COP1", "BR9GET1", "BR9VOC1", "BALYCOGC2", "BALYCOGR2", "BALYCOGS2", "BALYECMR2", "BALYECMS2", "BALYFMTR2", "BALYFMTS2", "BALYGMTR2", "BALYGMTS2", "BALYLNGC2", "BALYLNGS2", "BALYMOTC2", "BALYMOTS2", "BALYRCMR2", "BALYRCMS2", "BR9ACT2", "BR9APP2", "BR9COP2", "BR9GET2", "BR9VOC2", "M_WTKG", "M_HTCM", "M_BMI", "M_MUACCM", "M_TSFTMM", "M_SSFTMM", "M_DIABP1", "M_DIABP2", "M_SYSBP1", "M_SYSBP2", "M_TEMP1", "AGEIMPFL", "AGEIMPCM", "BED", "BICYCLE", "CATTLE", "CHICKEN", "CLTHCAB", "DAI", "DCI", "DTABLE", "DUCK", "ELEC", "GOAT", "LOI", "LSI", "MCYCLE", "MOBILE", "NADULT", "NCHLDLT5", "NROOMS", "PAI", "PUMP", "RADIO", "RICKSHAW", "SEWING", "SOAP", "TV", "WATCH", "WI", "LOAN", "FLOOR", "H2OSRCB", "H2OSRCC", "H2OSRCK", "H2OSRCP", "H2OSRCS", "KITCHDSC", "ROOF", "SANITATN", "MAGE", "MHTCM", "MWTKG", "MBMI", "MPREG", "MEDUCYRS", "MWORK", "MWORKTM", "MHGB", "FSMKSTAT", "FEDUCYRS", "FWORK", "FWORKTM", "GAGEHX", "PREGNUM", "ABT", "MSCR", "STLBRTH", "LVBRTH", "MAGE1ST", "PARITY", "GRAVIDA", "DSPPREG", "DLVLOCN", "DLVLOC", "DLVPSNN", "DLVPSN", "ECLMP"> varlist<-colnames(d)[colnames(d) %in% c("BED", "BICYCLE",  "CLTHCAB", "ELEC", "GOAT", "MCYCLE", "MOBILE", "NROOMS", "RADIO", "RICKSHAW", "SEWING", "SOAP", "TV","WATCH",  "KITCHDSC", "ROOF")]
+> 
+> jvt3 <- read_asset_data(study, varlist)
+> jvt3 <- assetPCA(jvt3, varlist, reorder=T)
+BED 
+
+FALSE  TRUE 
+44698     9 
+[1] "integer"
+BICYCLE 
+
+FALSE 
+44707 
+[1] "integer"
+CLTHCAB 
+
+FALSE  TRUE 
+44706     1 
+[1] "integer"
+ELEC 
+
+FALSE  TRUE 
+44703     4 
+[1] "integer"
+GOAT 
+
+FALSE  TRUE 
+44685    22 
+[1] "integer"
+MCYCLE 
+
+FALSE 
+44707 
+[1] "integer"
+MOBILE 
+
+FALSE 
+44707 
+[1] "integer"
+NROOMS 
+
+FALSE  TRUE 
+44696    11 
+[1] "integer"
+RADIO 
+
+FALSE 
+44707 
+[1] "integer"
+RICKSHAW 
+
+FALSE 
+44707 
+[1] "integer"
+SEWING 
+
+FALSE 
+44707 
+[1] "integer"
+SOAP 
+
+FALSE  TRUE 
+44689    18 
+[1] "integer"
+TV 
+
+FALSE 
+44707 
+[1] "integer"
+WATCH 
+
+FALSE  TRUE 
+44694    13 
+[1] "integer"
+KITCHDSC 
+
+FALSE  TRUE 
+44643    64 
+[1] "integer"
+ROOF 
+
+FALSE  TRUE 
+44644    63 
+[1] "integer"
+        0%        25%        50%        75%       100% 
+-0.1080637  0.5026330  1.0394275  1.7641017  2.9227035 
+  HHwealth_quart   BICYCLE1   CLTHCAB1      ELEC1      GOAT1     MOBILE1
+1      Wealth Q1 0.79302697 0.91288148 0.52058197 0.34528034 0.833303762
+2      Wealth Q2 0.53318345 0.44928058 0.22356115 0.23776978 0.419244604
+3      Wealth Q3 0.20958512 0.12517883 0.08145565 0.23631974 0.165772532
+4      Wealth Q4 0.01320636 0.00548019 0.02075285 0.09801455 0.007995688
+     NROOMS2     NROOMS3     RADIO1  RICKSHAW1     SOAP1        TV1    WATCH1
+1 0.38697658 0.238466998 0.16465578 0.04577715 0.9783534 0.51073456 0.9510291
+2 0.32535971 0.066097122 0.10026978 0.09154676 0.9268885 0.11627698 0.8167266
+3 0.26904506 0.027896996 0.07635908 0.13295780 0.8925250 0.02816524 0.6213340
+4 0.09612793 0.005210673 0.02686192 0.20330608 0.7435091 0.00224598 0.2583775
+  KITCHDSC3  KITCHDSC4
+1 0.9034776 0.02164656
+2 0.7226619 0.04667266
+3 0.5084943 0.06080114
+4 0.2127392 0.08355044
+> saveRDS(jvt3, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> #---------
+> # jvt4
+> #---------
+> study<-"jvt4"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "CLUSTID", "SITEID", "SEXN", "SEX", "ARMCD", "ARM", "STRATUMN", "STRATUM", "PREGOUTN", "PREGOUT", "DEAD", "AGEDTH", "FEEDINGN", "FEEDING", "DURBRST", "BRTHYR", "BRTHWEEK", "BIRTHWT", "BIRTHLEN", "BIRTHHC", "DELIVERY", "CRY", "IMMBCG", "IMMOPV", "RESPRELN", "RESPREL", "MULTBRTH", "CTRYCD", "COUNTRY", "CITYTOWN", "EPOCH", "AGEDAYS", "WTKG", "HTCM", "LENCM", "BMI", "HCIRCM", "MUACCM", "WAZ", "HAZ", "WHZ", "BAZ", "HCAZ", "MUAZ", "CHCIRCM", "VISIT", "AGEIMPFL", "AGEIMPCM", "GS20WRD", "GSCRAWL", "GSFEED", "GSIDOBJ", "GSJABBER", "GSJUMP", "GSONEWRD", "GSPOINT", "GSPULLST", "GSREFER", "GSRUN", "GSSFOOT", "GSSITUP", "GSSIXWRD", "GSSTANDW", "GSTBALLL", "GSTHRWRD", "GSTTOY", "GSWALKB", "GSWALKO", "GSWALKS", "GSWLKOWN", "BALYCOGR", "BALYCOGS", "BALYECMR", "BALYECMS", "BALYFMTR", "BALYFMTS", "BALYGMTR", "BALYGMTS", "BALYLNGC", "BALYLNGS", "BALYMOTC", "BALYMOTS", "BALYRCMR", "BALYRCMS", "BR9ACT", "BR9APP", "BR9COP", "BR9GET", "BR9VOC", "M_MUACCM", "LVBRTH", "NSTLBRTH", "NLIVBRTH", "DURLBR", "DLVLOCN", "DLVLOC", "DLVPSNN", "DLVPSN", "MMARITN", "MMARIT", "MEDUCYRS", "MWORK", "FEDUCYRS", "FWORK", "BED", "BICYCLE", "CATTLE", "CHICKEN", "CLTHCAB", "DAI", "DCI", "DTABLE", "DUCK", "ELEC", "FPOND", "GARDEN", "GOAT", "GROVE", "HFCRCBM", "HFCRCLOE", "HFCRCUC", "HFIASSM", "HFIASUF", "INCTOT", "LOI", "LSI", "MCYCLE", "MOBILE", "NROOMS", "PAI", "PUMP", "RADIO", "RICKSHAW", "SEWING", "SOAP", "TUBEWELL", "TV", "WATCH", "WI", "FLOOR", "H2OSRCB", "H2OSRCC", "H2OSRCK", "H2OSRCP", "H2OSRCS", "HOMESZ", "KITCHDSC", "ROOF", "SANITATN", "CROP", "OTHLAND"> varlist<-colnames(d)[colnames(d) %in%  c("BED", "BICYCLE", "CLTHCAB", "DTABLE",  "ELEC", "FPOND", "GARDEN",  "GROVE", "MCYCLE", "MOBILE", 
++                                          "NROOMS",  "RADIO", "RICKSHAW", "SEWING", "TV", "KITCHDSC","WATCH", "ROOF")]
+> d <- read_asset_data(study, varlist)
+> d<-assetPCA(d, varlist, reorder=T)
+BED 
+
+FALSE  TRUE 
+ 5430     3 
+[1] "integer"
+BICYCLE 
+
+FALSE 
+ 5433 
+[1] "integer"
+CLTHCAB 
+
+FALSE 
+ 5433 
+[1] "integer"
+DTABLE 
+
+FALSE 
+ 5433 
+[1] "integer"
+ELEC 
+
+FALSE  TRUE 
+ 5432     1 
+[1] "integer"
+FPOND 
+
+FALSE  TRUE 
+ 5355    78 
+[1] "integer"
+GARDEN 
+
+FALSE  TRUE 
+ 5408    25 
+[1] "integer"
+GROVE 
+
+FALSE  TRUE 
+ 5354    79 
+[1] "integer"
+MCYCLE 
+
+FALSE 
+ 5433 
+[1] "integer"
+MOBILE 
+
+FALSE  TRUE 
+ 5432     1 
+[1] "integer"
+NROOMS 
+
+FALSE 
+ 5433 
+[1] "integer"
+RADIO 
+
+FALSE 
+ 5433 
+[1] "integer"
+RICKSHAW 
+
+FALSE 
+ 5433 
+[1] "integer"
+SEWING 
+
+FALSE 
+ 5433 
+[1] "integer"
+TV 
+
+FALSE 
+ 5433 
+[1] "integer"
+WATCH 
+
+FALSE 
+ 5433 
+[1] "integer"
+KITCHDSC 
+
+FALSE  TRUE 
+ 5432     1 
+[1] "integer"
+ROOF 
+
+FALSE  TRUE 
+ 5432     1 
+[1] "integer"
+         0%         25%         50%         75%        100% 
+-0.09799245  0.64759006  1.23882688  1.93660233  3.47838816 
+  HHwealth_quart   BICYCLE1   CLTHCAB1     DTABLE1      ELEC1     FPOND1
+1      Wealth Q1 0.77336277 0.95217071 0.549668874 0.64679912 0.64606328
+2      Wealth Q2 0.54197349 0.76288660 0.180412371 0.32400589 0.22312224
+3      Wealth Q3 0.26965467 0.47979427 0.053637032 0.20720059 0.07200588
+4      Wealth Q4 0.07749077 0.08265683 0.005904059 0.07084871 0.02140221
+     GARDEN1     GROVE1     MCYCLE1   MOBILE1   NROOMS2     NROOMS3  RICKSHAW1
+1 0.41353937 0.76894776 0.219278882 0.9742458 0.3598234 0.296541575 0.07358352
+2 0.13107511 0.36450663 0.034609720 0.8770250 0.3703976 0.087628866 0.08026510
+3 0.05804555 0.16899339 0.007347539 0.7325496 0.1858927 0.023512123 0.12637766
+4 0.01033210 0.04059041 0.000000000 0.4723247 0.1062731 0.005904059 0.16088561
+     SEWING1         TV1    WATCH1 KITCHDSC3  KITCHDSC4
+1 0.10228109 0.520971302 0.8903606 0.9190581 0.02354673
+2 0.04712813 0.189248895 0.6973490 0.7216495 0.06921944
+3 0.03379868 0.052902278 0.5025716 0.5334313 0.10800882
+4 0.01697417 0.009594096 0.1837638 0.2206642 0.15424354
+> saveRDS(d, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> #---------
+> # lcn5
+> #---------
+> study<-"lcn5"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SITEID", "SEXN", "SEX", "ARMCD", "ARM", "FEEDINGN", "FEEDING", "DURBRST", "BRTHYR", "BRTHWEEK", "MEDUCYRS", "FEDUCYRS", "CTRYCD", "COUNTRY", "BEDNCHLD", "BEDNET", "BICYCLE", "CAR", "CHICKEN", "COW", "GOAT", "MATTRESS", "NCHLDLT5", "NPERSON", "NPRSNINC", "OTHANML", "RADIO", "SHEEP", "H2OSRCP", "ROOF", "SANITATN", "WALL", "BEDNTRT", "AGEDAYS", "VISITNUM", "VISIT", "WTKG", "LENCM", "BMI", "HCIRCM", "MUACCM", "WAZ", "HAZ", "WHZ", "BAZ", "HCAZ", "MUAZ", "M_WTKG", "M_HTCM", "M_MUACCM", "COLLGNX", "RESP", "TEMP", "GSDRNKCP", "GSEATSPN", "GSRUN", "GSSIMPLE", "GSSITWS", "GSSTANDW", "GSWALKS", "GSWAVES", "GSWLKOWN"> varlist<-colnames(d)[colnames(d) %in% c( "BEDNET", "BICYCLE", "CAR", "MATTRESS", "RADIO", "ROOF", "WALL")]
+> 
+> lcn5 <- read_asset_data(study, varlist)
+> lcn5 <- assetPCA(lcn5, varlist, reorder=F)
+BEDNET 
+
+FALSE  TRUE 
+  806    11 
+[1] "integer"
+BICYCLE 
+
+FALSE  TRUE 
+  812     5 
+[1] "integer"
+CAR 
+
+FALSE  TRUE 
+  813     4 
+[1] "integer"
+MATTRESS 
+
+FALSE  TRUE 
+  813     4 
+[1] "integer"
+RADIO 
+
+FALSE  TRUE 
+  813     4 
+[1] "integer"
+ROOF 
+
+FALSE  TRUE 
+  816     1 
+[1] "integer"
+WALL 
+
+FALSE  TRUE 
+  816     1 
+[1] "integer"
+        0%        25%        50%        75%       100% 
+-1.8267482 -0.7774640 -0.1871261  0.2262974  0.6712053 
+  HHwealth_quart   BEDNET1    BEDNET2    BEDNET3  BICYCLE1  MATTRESS1    RADIO1
+1      Wealth Q1 0.2176166 0.43523316 0.12953368 0.8963731 0.58549223 0.9481865
+2      Wealth Q2 0.5794393 0.14018692 0.05607477 0.7850467 0.14018692 0.7242991
+3      Wealth Q3 0.5737705 0.06010929 0.03825137 0.3442623 0.16393443 0.3934426
+4      Wealth Q4 0.6079295 0.10132159 0.01762115 0.0000000 0.01762115 0.0000000
+        ROOF3     WALL5
+1 0.476683938 0.2383420
+2 0.093457944 0.5981308
+3 0.054644809 0.7868852
+4 0.004405286 0.9030837
+> saveRDS(lcn5, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> 
+> #---------
+> # mled
+> #---------
+> study<-"mled"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> #d<-read.csv("U:/git/hbgd/201707/adam/full_ki0047075b_MALED_201707.csv")
+> 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SUBJIDO", "SITEID", "SEXN", "SEX", "RACEN", "RACE", "DEAD", "AGEDTH", "BRTHYR", "BRTHWEEK", "BIRTHWT", "BIRTHLEN", "BIRTHHC", "IMMBCG", "IMMOPV", "CTRYCD", "COUNTRY", "CITYTOWN", "AGEDAYS", "VISIT", "WTKG", "HTCM", "LENCM", "BMI", "HCIRCM", "HAZ", "WAZ", "WHZ", "BAZ", "HCAZ", "R_HAZ", "R_WAZ", "R_WHZ", "R_BAZ", "R_HCAZ", "AGLAND", "BICYCLE", "ELEC", "FAN", "FRIG", "INCTOT", "MOBILE", "NROOMS", "NSLEEP", "NSLROOM", "RADIO", "TV", "WATCH", "CHAIR", "CHICKEN", "COMPUTER", "COW", "H2OTIME", "MATTRESS", "SOFA", "TABLE", "WAMI", "BOOKS", "TOYS", "TOYSMU", "EDUCHH", "EDUCCRGV", "ALA", "MPO", "NEOPTN", "LACTMAN", "LACTMANZ", "I", "AGP", "FERRITIN", "RETINOL", "STRF", "ZN", "HGB", "PB", "BALYCOGR", "BALYECMR", "BALYFMTR", "BALYGMTR", "BALYRLAE", "BALYSER", "HOMINVC", "SDQEXS", "SDQINS", "SDQPSS", "WPPSBDR", "WPPSCDR", "WPPSINFR", "WPPSMR", "WPPSPCR", "WPPSPR", "WPPSVR", "WPPSWRR", "EFTCBTC", "EFTCSC", "EFTFWSC", "EFTGNGC", "WPPSOAR", "WPPSCSSR", "CAMPYLB1", "EVERMI1", "EVERMI2", "GIARDIA1", "GIARDIA2", "ECOLI1", "CAMPJJN1", "SHIGFLX1", "SHIGBYD1", "ASCARIS1", "ASCARIS2", "TRICH1", "TRICH2", "CRYPTO1", "SHIGDYS1", "SHIGSNN1", "VCHLOGW1", "SALMNL1", "ECOLI2", "ECOLI3", "YRSN1", "BCOLI1", "BCOLI2", "CMESNL1", "CMESNL2", "ENANA1", "ENANA2", "ENTAHIS1", "ENTAHIS2", "HDMINUT1", "HDMINUT2", "HELMHN1", "HELMHN2", "HELMHW1", "HELMHW2", "HELMSS1", "HELMSS2", "HELMTT1", "HELMTT2", "IBUTSCH1", "IBUTSCH2", "ISOSPOR1", "ISOSPOR2", "SCHISTM1", "SCHISTM2", "TAENIAS1", "TAENIAS2", "SALMPTY1", "PSSHIGA1", "VBRO1", "AEROMNS1", "SALMTYP1", "VCHLINB1", "SHIGSPP1", "AEROHYD1", "CYCLOS1", "CAMPYLB2", "CAMPJJN2", "VCHLPHE1", "VCHL1391", "MAGE", "MHTCM", "MWTKG", "MBMI", "MAGEMRT", "MMARITN", "MMARIT", "MEDUCYRS", "FEDUCYRS", "SMOKED", "SMOKAMT", "ETOH", "ETOHAMT", "MAGE1ST", "GRAVIDA", "NLCHILD", "INFDTH"> varlist<-colnames(d)[colnames(d) %in% c( "AGLAND", "BICYCLE", "ELEC", "FAN", "FRIG", "INCTOT", "MOBILE", "NROOMS", "RADIO", "TV", "WATCH", "CHAIR", "COMPUTER","MATTRESS", "SOFA", "TABLE", "BOOKS")]
+> 
+> mled <- read_asset_data(study, varlist)
+> 
+> d1<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[1],], varlist, reorder=F)
+AGLAND 
+
+FALSE 
+  242 
+[1] "numeric"
+BICYCLE 
+
+FALSE 
+  242 
+[1] "numeric"
+ELEC 
+
+FALSE 
+  242 
+[1] "numeric"
+FAN 
+
+FALSE 
+  242 
+[1] "numeric"
+FRIG 
+
+FALSE 
+  242 
+[1] "numeric"
+INCTOT 
+
+FALSE 
+  242 
+[1] "numeric"
+MOBILE 
+
+FALSE 
+  242 
+[1] "numeric"
+NROOMS 
+
+FALSE 
+  242 
+[1] "numeric"
+RADIO 
+
+FALSE 
+  242 
+[1] "numeric"
+TV 
+
+FALSE 
+  242 
+[1] "numeric"
+WATCH 
+
+FALSE 
+  242 
+[1] "numeric"
+CHAIR 
+
+FALSE  TRUE 
+  193    49 
+[1] "numeric"
+COMPUTER 
+
+FALSE  TRUE 
+  193    49 
+[1] "numeric"
+MATTRESS 
+
+FALSE  TRUE 
+  193    49 
+[1] "numeric"
+SOFA 
+
+FALSE  TRUE 
+  193    49 
+[1] "numeric"
+TABLE 
+
+FALSE  TRUE 
+  193    49 
+[1] "numeric"
+BOOKS 
+
+FALSE  TRUE 
+  190    52 
+[1] "numeric"
+        0%        25%        50%        75%       100% 
+-2.0423271  0.6443954  0.9030110  1.1214583  1.3385350 
+  HHwealth_quart    AGLAND1     FRIG1 INCTOT12000 INCTOT15000 INCTOT20000
+1      Wealth Q1 0.01666667 0.2333333  0.05000000  0.06666667  0.06666667
+2      Wealth Q2 0.06557377 0.1311475  0.06557377  0.03278689  0.04918033
+3      Wealth Q3 0.05000000 0.2333333  0.10000000  0.00000000  0.06666667
+4      Wealth Q4 0.09836066 0.5245902  0.04918033  0.11475410  0.06557377
+  INCTOT5000 INCTOT6000 INCTOT7000 INCTOT8000 INCTOT9000   MOBILE1   NROOMS2
+1 0.08333333 0.11666667 0.16666667 0.10000000 0.06666667 0.8500000 0.3166667
+2 0.18032787 0.16393443 0.08196721 0.08196721 0.03278689 0.8360656 0.1147541
+3 0.10000000 0.08333333 0.08333333 0.23333333 0.08333333 0.7833333 0.1833333
+4 0.06557377 0.13114754 0.03278689 0.09836066 0.03278689 0.8852459 0.2131148
+     NROOMS3     RADIO1       TV1    WATCH1    CHAIR1 CHAIRmiss  COMPUTER1
+1 0.05000000 0.03333333 0.7166667 0.5333333 0.0500000 0.8166667 0.01666667
+2 0.09836066 0.09836066 0.6393443 0.6393443 0.1147541 0.0000000 0.01639344
+3 0.05000000 0.05000000 0.7833333 0.7333333 0.8666667 0.0000000 0.00000000
+4 0.26229508 0.08196721 0.8524590 0.9180328 1.0000000 0.0000000 0.19672131
+  COMPUTERmiss MATTRESS1 MATTRESSmiss  SOFAmiss     TABLE1 TABLEmiss    BOOKS1
+1    0.8166667 0.1166667    0.8166667 0.8166667 0.05000000 0.8166667 0.1333333
+2    0.0000000 0.9180328    0.0000000 0.0000000 0.08196721 0.0000000 1.0000000
+3    0.0000000 1.0000000    0.0000000 0.0000000 0.28333333 0.0000000 0.9833333
+4    0.0000000 1.0000000    0.0000000 0.0000000 0.98360656 0.0000000 1.0000000
+  BOOKSmiss
+1 0.8666667
+2 0.0000000
+3 0.0000000
+4 0.0000000
+> d2<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[2],], varlist, reorder=T) #Not enough variables
+AGLAND 
+
+FALSE 
+  210 
+[1] "numeric"
+BICYCLE 
+
+FALSE 
+  210 
+[1] "numeric"
+ELEC 
+
+FALSE 
+  210 
+[1] "numeric"
+FAN 
+
+FALSE 
+  210 
+[1] "numeric"
+FRIG 
+
+FALSE 
+  210 
+[1] "numeric"
+INCTOT 
+
+FALSE 
+  210 
+[1] "numeric"
+MOBILE 
+
+FALSE 
+  210 
+[1] "numeric"
+NROOMS 
+
+FALSE 
+  210 
+[1] "numeric"
+RADIO 
+
+FALSE 
+  210 
+[1] "numeric"
+TV 
+
+FALSE 
+  210 
+[1] "numeric"
+WATCH 
+
+FALSE 
+  210 
+[1] "numeric"
+CHAIR 
+
+FALSE  TRUE 
+  132    78 
+[1] "numeric"
+COMPUTER 
+
+FALSE  TRUE 
+  132    78 
+[1] "numeric"
+MATTRESS 
+
+FALSE  TRUE 
+  132    78 
+[1] "numeric"
+SOFA 
+
+FALSE  TRUE 
+  132    78 
+[1] "numeric"
+TABLE 
+
+FALSE  TRUE 
+  132    78 
+[1] "numeric"
+BOOKS 
+
+FALSE  TRUE 
+  122    88 
+[1] "numeric"
+       0%       25%       50%       75%      100% 
+-1.928702 -1.815132  1.012379  1.290278  1.559251 
+  HHwealth_quart  BICYCLE1      FAN1     FRIG1  INCTOT600  INCTOT650 INCTOT800
+1      Wealth Q1 0.6603774 0.9811321 0.9622642 0.22641509 0.07547170 0.1132075
+2      Wealth Q2 0.6415094 0.9622642 0.9622642 0.11320755 0.07547170 0.1698113
+3      Wealth Q3 0.6078431 0.9019608 0.8823529 0.17647059 0.09803922 0.1176471
+4      Wealth Q4 0.5471698 0.9056604 0.9245283 0.01886792 0.00000000 0.1132075
+    MOBILE1    NROOMS2   NROOMS3   NROOMS4    NROOMS5    NROOMS6    RADIO1
+1 0.9622642 0.05660377 0.1698113 0.2641509 0.24528302 0.13207547 0.8679245
+2 0.9433962 0.09433962 0.3018868 0.2830189 0.16981132 0.05660377 0.7547170
+3 0.9019608 0.11764706 0.2745098 0.1568627 0.23529412 0.11764706 0.7058824
+4 0.8113208 0.11320755 0.3773585 0.3962264 0.03773585 0.01886792 0.6226415
+     WATCH1    CHAIR1 CHAIRmiss  COMPUTER1 COMPUTERmiss MATTRESS1 MATTRESSmiss
+1 0.9245283 1.0000000 0.0000000 0.33962264    0.0000000 1.0000000    0.0000000
+2 0.8113208 0.9811321 0.0000000 0.05660377    0.0000000 1.0000000    0.0000000
+3 0.8235294 0.4705882 0.4901961 0.01960784    0.4901961 0.4901961    0.4901961
+4 0.5471698 0.0000000 1.0000000 0.00000000    1.0000000 0.0000000    1.0000000
+      SOFA1  SOFAmiss    TABLE1 TABLEmiss    BOOKS1 BOOKSmiss
+1 0.9056604 0.0000000 1.0000000 0.0000000 0.9245283 0.0000000
+2 0.2641509 0.0000000 0.9811321 0.0000000 0.3962264 0.0000000
+3 0.1960784 0.4901961 0.2745098 0.4901961 0.1176471 0.6862745
+4 0.0000000 1.0000000 0.0000000 1.0000000 0.0000000 1.0000000
+> d3<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[3],], varlist, reorder=T)
+AGLAND 
+
+FALSE 
+  235 
+[1] "numeric"
+BICYCLE 
+
+FALSE 
+  235 
+[1] "numeric"
+ELEC 
+
+FALSE 
+  235 
+[1] "numeric"
+FAN 
+
+FALSE 
+  235 
+[1] "numeric"
+FRIG 
+
+FALSE 
+  235 
+[1] "numeric"
+INCTOT 
+
+FALSE 
+  235 
+[1] "numeric"
+MOBILE 
+
+FALSE 
+  235 
+[1] "numeric"
+NROOMS 
+
+FALSE 
+  235 
+[1] "numeric"
+RADIO 
+
+FALSE 
+  235 
+[1] "numeric"
+TV 
+
+FALSE 
+  235 
+[1] "numeric"
+WATCH 
+
+FALSE 
+  235 
+[1] "numeric"
+CHAIR 
+
+FALSE  TRUE 
+  212    23 
+[1] "numeric"
+COMPUTER 
+
+FALSE  TRUE 
+  212    23 
+[1] "numeric"
+MATTRESS 
+
+FALSE  TRUE 
+  212    23 
+[1] "numeric"
+SOFA 
+
+FALSE  TRUE 
+  212    23 
+[1] "numeric"
+TABLE 
+
+FALSE  TRUE 
+  212    23 
+[1] "numeric"
+BOOKS 
+
+FALSE  TRUE 
+  212    23 
+[1] "numeric"
+        0%        25%        50%        75%       100% 
+-1.7939612  0.7808322  1.1121041  1.3427366  1.8169280 
+  HHwealth_quart  BICYCLE1      FRIG1 INCTOT1500 INCTOT2000 INCTOT2500
+1      Wealth Q1 0.6101695 0.47457627 0.05084746 0.08474576 0.03389831
+2      Wealth Q2 0.5000000 0.18333333 0.06666667 0.13333333 0.05000000
+3      Wealth Q3 0.3103448 0.15517241 0.05172414 0.08620690 0.06896552
+4      Wealth Q4 0.2068966 0.03448276 0.06896552 0.15517241 0.05172414
+  INCTOT3000 INCTOT4000 INCTOT5000 INCTOT6000   MOBILE1   NROOMS2   NROOMS3
+1  0.2881356 0.10169492 0.13559322 0.05084746 0.9830508 0.2881356 0.3220339
+2  0.2666667 0.01666667 0.13333333 0.05000000 0.9333333 0.2833333 0.2500000
+3  0.2931034 0.05172414 0.10344828 0.05172414 0.7931034 0.4137931 0.1206897
+4  0.2586207 0.08620690 0.06896552 0.06896552 0.6379310 0.3448276 0.1206897
+     NROOMS4       TV1    WATCH1    CHAIR1 CHAIRmiss COMPUTERmiss  MATTRESS1
+1 0.18644068 0.9830508 0.9661017 1.0000000 0.0000000    0.0000000 0.94915254
+2 0.10000000 0.9833333 0.8666667 0.9500000 0.0000000    0.0000000 0.31666667
+3 0.05172414 0.9655172 0.8103448 0.7758621 0.0000000    0.0000000 0.20689655
+4 0.01724138 0.8448276 0.6034483 0.2586207 0.3965517    0.3965517 0.03448276
+  MATTRESSmiss      SOFA1  SOFAmiss    TABLE1 TABLEmiss    BOOKS1 BOOKSmiss
+1    0.0000000 0.49152542 0.0000000 0.9322034 0.0000000 1.0000000 0.0000000
+2    0.0000000 0.13333333 0.0000000 0.7833333 0.0000000 0.9833333 0.0000000
+3    0.0000000 0.05172414 0.0000000 0.3793103 0.0000000 0.9310345 0.0000000
+4    0.3965517 0.00000000 0.3965517 0.2241379 0.3965517 0.3275862 0.3965517
+> d4<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[4],], varlist, reorder=T)
+AGLAND 
+
+FALSE 
+  236 
+[1] "numeric"
+BICYCLE 
+
+FALSE 
+  236 
+[1] "numeric"
+ELEC 
+
+FALSE 
+  236 
+[1] "numeric"
+FAN 
+
+FALSE 
+  236 
+[1] "numeric"
+FRIG 
+
+FALSE 
+  236 
+[1] "numeric"
+INCTOT 
+
+FALSE 
+  236 
+[1] "numeric"
+MOBILE 
+
+FALSE 
+  236 
+[1] "numeric"
+NROOMS 
+
+FALSE 
+  236 
+[1] "numeric"
+RADIO 
+
+FALSE 
+  236 
+[1] "numeric"
+TV 
+
+FALSE 
+  236 
+[1] "numeric"
+WATCH 
+
+FALSE 
+  236 
+[1] "numeric"
+CHAIR 
+
+FALSE  TRUE 
+  128   108 
+[1] "numeric"
+COMPUTER 
+
+FALSE  TRUE 
+  128   108 
+[1] "numeric"
+MATTRESS 
+
+FALSE  TRUE 
+  128   108 
+[1] "numeric"
+SOFA 
+
+FALSE  TRUE 
+  128   108 
+[1] "numeric"
+TABLE 
+
+FALSE  TRUE 
+  128   108 
+[1] "numeric"
+BOOKS 
+
+FALSE  TRUE 
+  128   108 
+[1] "numeric"
+        0%        25%        50%        75%       100% 
+-2.0443605 -1.9872130  0.3623296  1.0554820  1.3579104 
+  HHwealth_quart   AGLAND1  BICYCLE1      FAN1      FRIG1 INCTOT10000
+1      Wealth Q1 0.6779661 0.4067797 0.8813559 0.42372881  0.06779661
+2      Wealth Q2 0.7627119 0.4237288 0.6101695 0.11864407  0.25423729
+3      Wealth Q3 0.7457627 0.4067797 0.8305085 0.28813559  0.11864407
+4      Wealth Q4 0.6271186 0.4915254 0.4576271 0.05084746  0.22033898
+  INCTOT12000 INCTOT15000 INCTOT30000 INCTOT5000 INCTOT6000 INCTOT7000
+1  0.10169492  0.10169492  0.08474576 0.06779661 0.03389831 0.05084746
+2  0.06779661  0.06779661  0.01694915 0.10169492 0.13559322 0.08474576
+3  0.05084746  0.16949153  0.06779661 0.08474576 0.08474576 0.08474576
+4  0.03389831  0.15254237  0.03389831 0.01694915 0.03389831 0.05084746
+  INCTOT8000    NROOMS2    NROOMS3    NROOMS4    NROOMS5    NROOMS6    NROOMS7
+1 0.06779661 0.08474576 0.11864407 0.18644068 0.11864407 0.08474576 0.03389831
+2 0.06779661 0.20338983 0.10169492 0.15254237 0.10169492 0.03389831 0.08474576
+3 0.03389831 0.10169492 0.10169492 0.16949153 0.13559322 0.06779661 0.06779661
+4 0.15254237 0.13559322 0.05084746 0.01694915 0.08474576 0.13559322 0.10169492
+     NROOMS8    RADIO1    WATCH1    CHAIR1 CHAIRmiss COMPUTER1 COMPUTERmiss
+1 0.11864407 0.7118644 0.8983051 1.0000000 0.0000000 0.5762712    0.0000000
+2 0.01694915 0.6440678 0.9491525 0.8135593 0.0000000 0.1016949    0.0000000
+3 0.08474576 0.5932203 0.9322034 0.0000000 0.8305085 0.0000000    0.8305085
+4 0.03389831 0.8474576 0.9491525 0.0000000 1.0000000 0.0000000    1.0000000
+  MATTRESS1 MATTRESSmiss      SOFA1  SOFAmiss    TABLE1 TABLEmiss    BOOKS1
+1 1.0000000    0.0000000 0.84745763 0.0000000 1.0000000 0.0000000 0.3898305
+2 0.9830508    0.0000000 0.03389831 0.0000000 0.7966102 0.0000000 0.2372881
+3 0.1694915    0.8305085 0.00000000 0.8305085 0.0000000 0.8305085 0.0000000
+4 0.0000000    1.0000000 0.00000000 1.0000000 0.0000000 1.0000000 0.0000000
+  BOOKSmiss
+1 0.0000000
+2 0.0000000
+3 0.8305085
+4 1.0000000
+> d5<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[5],], varlist, reorder=T)
+AGLAND 
+
+FALSE 
+  272 
+[1] "numeric"
+BICYCLE 
+
+FALSE 
+  272 
+[1] "numeric"
+ELEC 
+
+FALSE 
+  272 
+[1] "numeric"
+FAN 
+
+FALSE 
+  272 
+[1] "numeric"
+FRIG 
+
+FALSE 
+  272 
+[1] "numeric"
+INCTOT 
+
+FALSE 
+  272 
+[1] "numeric"
+MOBILE 
+
+FALSE 
+  272 
+[1] "numeric"
+NROOMS 
+
+FALSE 
+  272 
+[1] "numeric"
+RADIO 
+
+FALSE 
+  272 
+[1] "numeric"
+TV 
+
+FALSE 
+  272 
+[1] "numeric"
+WATCH 
+
+FALSE 
+  272 
+[1] "numeric"
+CHAIR 
+
+FALSE  TRUE 
+  112   160 
+[1] "numeric"
+COMPUTER 
+
+FALSE  TRUE 
+  112   160 
+[1] "numeric"
+MATTRESS 
+
+FALSE  TRUE 
+  112   160 
+[1] "numeric"
+SOFA 
+
+FALSE  TRUE 
+  112   160 
+[1] "numeric"
+TABLE 
+
+FALSE  TRUE 
+  112   160 
+[1] "numeric"
+BOOKS 
+
+TRUE 
+ 272 
+[1] "logical"
+        0%        25%        50%        75%       100% 
+-1.1086307 -0.9824578  1.7920481  1.8387938  1.9080679 
+  HHwealth_quart    AGLAND1   BICYCLE1     ELEC1       FAN1      FRIG1
+1      Wealth Q1 0.14705882 0.16176471 0.9264706 0.00000000 0.16176471
+2      Wealth Q2 0.05633803 0.08450704 0.7042254 0.01408451 0.08450704
+3      Wealth Q3 0.07692308 0.12307692 0.6000000 0.13846154 0.12307692
+4      Wealth Q4 0.05882353 0.11764706 0.7205882 0.20588235 0.20588235
+   INCTOT200  INCTOT300  INCTOT400  INCTOT450  INCTOT500   MOBILE1   NROOMS2
+1 0.00000000 0.41176471 0.29411765 0.07352941 0.05882353 0.2941176 0.1617647
+2 0.05633803 0.16901408 0.02816901 0.08450704 0.04225352 0.3239437 0.2253521
+3 0.12307692 0.23076923 0.06153846 0.07692308 0.07692308 0.4153846 0.1538462
+4 0.07352941 0.02941176 0.02941176 0.11764706 0.16176471 0.3529412 0.2205882
+    NROOMS3   NROOMS4   NROOMS5    NROOMS6    RADIO1       TV1    WATCH1
+1 0.2205882 0.2500000 0.2058824 0.04411765 0.3529412 0.9117647 0.3676471
+2 0.2394366 0.2112676 0.1267606 0.07042254 0.4788732 0.4084507 0.1971831
+3 0.2000000 0.2307692 0.1384615 0.10769231 0.4461538 0.4769231 0.3230769
+4 0.2500000 0.1470588 0.1617647 0.11764706 0.6470588 0.4558824 0.3382353
+     CHAIR1 CHAIRmiss COMPUTERmiss MATTRESS1 MATTRESSmiss  SOFAmiss    TABLE1
+1 0.0000000 1.0000000    1.0000000 0.0000000    1.0000000 1.0000000 0.0000000
+2 0.0000000 1.0000000    1.0000000 0.0000000    1.0000000 1.0000000 0.0000000
+3 0.6307692 0.3230769    0.3230769 0.4307692    0.3230769 0.3230769 0.6461538
+4 1.0000000 0.0000000    0.0000000 1.0000000    0.0000000 0.0000000 1.0000000
+  TABLEmiss
+1 1.0000000
+2 1.0000000
+3 0.3230769
+4 0.0000000
+> d6<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[6],], varlist, reorder=F)
+AGLAND 
+
+FALSE 
+  257 
+[1] "numeric"
+BICYCLE 
+
+FALSE 
+  257 
+[1] "numeric"
+ELEC 
+
+FALSE 
+  257 
+[1] "numeric"
+FAN 
+
+FALSE 
+  257 
+[1] "numeric"
+FRIG 
+
+FALSE 
+  257 
+[1] "numeric"
+INCTOT 
+
+FALSE 
+  257 
+[1] "numeric"
+MOBILE 
+
+FALSE 
+  257 
+[1] "numeric"
+NROOMS 
+
+FALSE 
+  257 
+[1] "numeric"
+RADIO 
+
+FALSE 
+  257 
+[1] "numeric"
+TV 
+
+FALSE 
+  257 
+[1] "numeric"
+WATCH 
+
+FALSE 
+  257 
+[1] "numeric"
+CHAIR 
+
+FALSE  TRUE 
+  233    24 
+[1] "numeric"
+COMPUTER 
+
+FALSE  TRUE 
+  233    24 
+[1] "numeric"
+MATTRESS 
+
+FALSE  TRUE 
+  233    24 
+[1] "numeric"
+SOFA 
+
+FALSE  TRUE 
+  233    24 
+[1] "numeric"
+TABLE 
+
+FALSE  TRUE 
+  233    24 
+[1] "numeric"
+BOOKS 
+
+FALSE  TRUE 
+  233    24 
+[1] "numeric"
+       0%       25%       50%       75%      100% 
+-1.768153  1.251306  1.629751  1.927097  2.231890 
+  HHwealth_quart   AGLAND1  BICYCLE1    ELEC1      FAN1    FRIG1 INCTOT1500
+1      Wealth Q1 0.4375000 0.0625000 0.640625 0.0781250 0.359375 0.04687500
+2      Wealth Q2 0.6250000 0.0937500 0.781250 0.0781250 0.609375 0.01562500
+3      Wealth Q3 0.6250000 0.2343750 0.953125 0.1875000 0.859375 0.10937500
+4      Wealth Q4 0.5230769 0.2153846 1.000000 0.4923077 1.000000 0.06153846
+  INCTOT2000  INCTOT800    NROOMS2    NROOMS3    NROOMS4   NROOMS5    NROOMS6
+1 0.00000000 0.04687500 0.23437500 0.15625000 0.07812500 0.0781250 0.17187500
+2 0.10937500 0.03125000 0.06250000 0.06250000 0.28125000 0.1718750 0.15625000
+3 0.15625000 0.09375000 0.03125000 0.12500000 0.15625000 0.2031250 0.17187500
+4 0.06153846 0.03076923 0.01538462 0.04615385 0.09230769 0.2153846 0.06153846
+  NROOMS7   NROOMS8   NROOMS9    RADIO1      TV1    WATCH1   CHAIR1 CHAIRmiss
+1 0.09375 0.0625000 0.0156250 0.6250000 0.500000 0.3437500 0.468750     0.375
+2 0.09375 0.0156250 0.0312500 0.6718750 0.671875 0.3750000 1.000000     0.000
+3 0.12500 0.0156250 0.0781250 0.9375000 0.953125 0.4062500 0.984375     0.000
+4 0.20000 0.1076923 0.1076923 0.9846154 1.000000 0.6615385 1.000000     0.000
+  COMPUTER1 COMPUTERmiss MATTRESS1 MATTRESSmiss    SOFA1 SOFAmiss   TABLE1
+1 0.0625000        0.375  0.562500        0.375 0.015625    0.375 0.218750
+2 0.0468750        0.000  0.984375        0.000 0.328125    0.000 0.859375
+3 0.1250000        0.000  1.000000        0.000 0.671875    0.000 1.000000
+4 0.4153846        0.000  1.000000        0.000 1.000000    0.000 1.000000
+  TABLEmiss BOOKSmiss
+1     0.375   0.34375
+2     0.000   0.00000
+3     0.000   0.03125
+4     0.000   0.00000
+> d7<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[7],], varlist, reorder=F)
+AGLAND 
+
+FALSE 
+  250 
+[1] "numeric"
+BICYCLE 
+
+FALSE 
+  250 
+[1] "numeric"
+ELEC 
+
+FALSE 
+  250 
+[1] "numeric"
+FAN 
+
+FALSE 
+  250 
+[1] "numeric"
+FRIG 
+
+FALSE 
+  250 
+[1] "numeric"
+INCTOT 
+
+FALSE  TRUE 
+  249     1 
+[1] "numeric"
+MOBILE 
+
+FALSE 
+  250 
+[1] "numeric"
+NROOMS 
+
+FALSE 
+  250 
+[1] "numeric"
+RADIO 
+
+FALSE 
+  250 
+[1] "numeric"
+TV 
+
+FALSE 
+  250 
+[1] "numeric"
+WATCH 
+
+FALSE 
+  250 
+[1] "numeric"
+CHAIR 
+
+FALSE  TRUE 
+  178    72 
+[1] "numeric"
+COMPUTER 
+
+FALSE  TRUE 
+  115   135 
+[1] "numeric"
+MATTRESS 
+
+FALSE  TRUE 
+  178    72 
+[1] "numeric"
+SOFA 
+
+FALSE  TRUE 
+  115   135 
+[1] "numeric"
+TABLE 
+
+FALSE  TRUE 
+  178    72 
+[1] "numeric"
+BOOKS 
+
+FALSE  TRUE 
+  185    65 
+[1] "numeric"
+         0%         25%         50%         75%        100% 
+-2.31102342 -1.96983553 -0.04607519  0.19070833  0.89816475 
+  HHwealth_quart  BICYCLE1 INCTOT15000 INCTOT20000 INCTOT30000 INCTOT50000
+1      Wealth Q1 0.6349206  0.11111111  0.14285714  0.07936508  0.06349206
+2      Wealth Q2 0.5967742  0.08064516  0.14516129  0.08064516  0.08064516
+3      Wealth Q3 0.4838710  0.04838710  0.08064516  0.16129032  0.08064516
+4      Wealth Q4 0.8253968  0.03174603  0.23809524  0.04761905  0.12698413
+    MOBILE1   NROOMS2   NROOMS3   NROOMS4    NROOMS5    NROOMS6    RADIO1
+1 0.5555556 0.3174603 0.2539683 0.1111111 0.09523810 0.01587302 0.3809524
+2 0.4193548 0.2580645 0.2741935 0.1451613 0.16129032 0.04838710 0.3548387
+3 0.4193548 0.2903226 0.2741935 0.1451613 0.09677419 0.09677419 0.3870968
+4 0.7936508 0.1428571 0.2539683 0.1587302 0.12698413 0.11111111 0.6507937
+     WATCH1    CHAIR1 CHAIRmiss COMPUTERmiss MATTRESS1 MATTRESSmiss  SOFAmiss
+1 0.3650794 0.0000000 1.0000000    1.0000000 0.0000000    1.0000000 1.0000000
+2 0.5161290 0.1290323 0.1451613    0.9516129 0.2580645    0.1451613 0.9516129
+3 0.3870968 0.2258065 0.0000000    0.2096774 0.2096774    0.0000000 0.2096774
+4 0.6666667 0.4285714 0.0000000    0.0000000 0.7301587    0.0000000 0.0000000
+      TABLE1 TABLEmiss  BOOKSmiss
+1 0.00000000 1.0000000 1.00000000
+2 0.09677419 0.1451613 0.03225806
+3 0.22580645 0.0000000 0.00000000
+4 0.60317460 0.0000000 0.00000000
+> 
+> mled<-rbind(d1,d2,d3,d4,d5,d6,d7)
+> saveRDS(mled, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> 
+> 
+> 
+> #---------
+> # prvd
+> #---------
+> study<-"prvd"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SUBJIDO", "SITEID", "SEXN", "SEX", "ARMCD", "ARM", "DEAD", "AGEDTH", "FEEDINGN", "FEEDING", "DURBRST", "AGEMNRCH", "BIRTHWT", "BIRTHLEN", "DELIVERY", "IMMBCG", "CTRYCD", "COUNTRY", "CITYTOWN", "LATITUDE", "LONGITUD", "ELEVATN", "AGEDAYS", "WTKG", "HTCM", "LENCM", "BMI", "WAZ", "HAZ", "WHZ", "BAZ", "SUMEP", "SUMDIAR", "SUMDAYS", "PCTDIAR", "MAGE1ST", "PARITY", "NSTLBRTH", "NLIVBRTH", "NLCHILD", "DLVLOCN", "DLVLOC", "DIARFL", "FEVERFL", "VOMFL", "STL_C10_0", "STL_C12_0", "STL_C14_0", "STL_C16_0", "STL_C16_0N7T", "STL_C16_0NT", "STL_C18_0", "STL_C18_1N9", "STL_C18_1T", "STL_C18_2N6", "STL_C18_2N6T", "STL_C18_3N3", "STL_C18_3N6", "STL_C20_0", "STL_C20_2N6", "STL_C20_3N6", "STL_C20_4N6", "STL_C20_5N3", "STL_C22_0", "STL_C22_4N6", "STL_C22_5N3", "STL_C22_5N6", "STL_C22_6N3", "STL_C24_0", "STL_C24_1N9", "M_BMLK_EGF", "STL_MFA20_1", "BLD_MFGE8", "BLD_RBITTR", "BLD_RBITTRA", "BLD_RBITTRAV", "BLD_RBITTRB", "STL_TFA", "BLD_ACTVINA", "BLD_ALPS", "BLD_CRP", "BLD_ENDOIGG", "BLD_FERRITIN", "BLD_RBP", "STL_REG1", "BLD_RPAEP", "BLD_RPAEP2", "BLD_RPAGMTTR", "BLD_RPANTTR", "BLD_RPANTTR2", "BLD_RPATTRA", "BLD_RPATTRAV", "BLD_RPATTRB", "BLD_RPGREJ", "BLD_RPGRTTR", "BLD_RPGTTRA", "BLD_RPGTTRAV", "BLD_RPGTTRB", "BLD_SCD14", "BLD_VITD", "BLD_ZN", "STL_ALA", "STL_CALP", "BLD_MPO", "STL_NEOPTN", "BLD_IFNG", "BLD_IL10", "BLD_IL1B", "BLD_IL4", "BLD_IL6", "BLD_IL8", "BLD_MIP1B", "BLD_TETIGG", "BLD_TNFA", "BLD_FHA", "BLD_PRA", "BLD_IL5", "BLD_IL7", "URN_HCT", "M_BMLK_EOTAXIN", "M_BMLK_FGF", "M_BMLK_GCSF", "M_BMLK_GMCSF", "M_BMLK_IFNG", "M_BMLK_IL10", "M_BMLK_IL12P70", "M_BMLK_IL13", "M_BMLK_IL15", "M_BMLK_IL17A", "M_BMLK_IL1B", "M_BMLK_IL1RA", "M_BMLK_IL2", "M_BMLK_IL4", "M_BMLK_IL5", "M_BMLK_IL6", "M_BMLK_IL7", "M_BMLK_IL8", "M_BMLK_IL9", "M_BMLK_IP10", "M_BMLK_MCP1", "M_BMLK_MIP1A", "M_BMLK_MIP1B", "M_BMLK_PDGFBB", "M_BMLK_RANTES", "M_BMLK_TNFA", "M_BMLK_VEGF", "M_BLD_GCSF", "M_BLD_GMCSF", "M_BLD_IFNG", "M_BLD_IL10", "M_BLD_IL12P70", "M_BLD_IL13", "M_BLD_IL17A", "M_BLD_IL1B", "M_BLD_IL2", "M_BLD_IL4", "M_BLD_IL5", "M_BLD_IL6", "M_BLD_IL7", "M_BLD_IL8", "M_BLD_MCP1", "M_BLD_MIP1B", "M_BLD_TNFA", "BLD_GCSF", "BLD_GMCSF", "BLD_IL12P70", "BLD_IL13", "BLD_IL17A", "BLD_IL2", "BLD_MCP1", "BLD_LEPT", "BLD_HLAAA1", "BLD_HLAAA2", "BLD_HLABA1", "BLD_HLABA2", "BLD_HLADRB31", "BLD_HLADRB32", "STL_BLOOD", "STL_MPHAGE", "STL_MUCUS", "STL_PUS", "STL_RBC", "M_BLD_ABTIT_POLIO_S1", "M_BLD_ABTIT_POLIO_S2", "M_BLD_ABTIT_POLIO_S3", "BLD_ABTIT_POLIO_S1", "BLD_ABTIT_POLIO_S2", "BLD_ABTIT_POLIO_S3", "BLD__POLIO_S1", "BLD__POLIO_S3", "STL_PCR_ADEN4041", "STL_PCR_ADENOPAN", "STL_PCR_AEROMNS", "STL_PCR_ANCYLOST", "STL_PCR_ASCARIS", "STL_PCR_ASTRO", "STL_PCR_BFRAGI", "STL_PCR_CAMPJC", "STL_PCR_CAMPPAN", "STL_PCR_CDIFFIC", "STL_PCR_CMV", "STL_PCR_CMVSSPK", "STL_PCR_CRYPHOM", "STL_PCR_CRYPPAR", "STL_PCR_CRYPTO", "STL_PCR_CYCLOS", "STL_PCR_EAECAAIC", "STL_PCR_EAECAATA", "STL_PCR_EBIENSI", "STL_PCR_EIECSH", "STL_PCR_EINTEST", "STL_PCR_ENTAHIST", "STL_PCR_ENTERO", "STL_PCR_EPECBFPA", "STL_PCR_EPECEAE", "STL_PCR_ETECLT", "STL_PCR_ETECSTH", "STL_PCR_ETECSTP", "STL_PCR_GIARDIA", "STL_PCR_GIARTP1A", "STL_PCR_GIARTP1B", "STL_PCR_HPYLORI", "STL_PCR_ISOSPORA", "STL_PCR_MS2", "STL_PCR_MTB", "STL_PCR_NORO1", "STL_PCR_NORO2", "STL_PCR_NTOR", "STL_PCR_PHHV", "STL_PCR_ROTA", "STL_PCR_SALMNL", "STL_PCR_SAPO", "STL_PCR_STECSTX1", "STL_PCR_STECSTX2", "STL_PCR_STRNGLD", "STL_PCR_TRCHRS", "STL_PCR_VCHL", "STL_ELISA_ROTA", "DSTL_MQRTP_ASTRO", "DSTL_MQRTP_NORO", "DSTL_MQRTP_ROTA", "DSTL_MQRTP_SAPO", "DSTL_PCREL_ADEN4041", "DSTL_PCREL_ADENOPAN", "DSTL_PCREL_AEROMNS", "DSTL_PCREL_ANCYLOST", "DSTL_PCREL_ASCARIS", "DSTL_PCREL_ASTRO", "DSTL_PCREL_BFRAGI", "DSTL_PCREL_CAMP16S", "DSTL_PCREL_CAMPJC", "DSTL_PCREL_CAMPPAN", "DSTL_PCREL_CDIFFIC", "DSTL_PCREL_CRYPHOM", "DSTL_PCREL_CRYPPAR", "DSTL_PCREL_CRYPTO", "DSTL_PCREL_CYCLOS", "DSTL_PCREL_EAECAAIC", "DSTL_PCREL_EAECAAR", "DSTL_PCREL_EAECAATA", "DSTL_PCREL_EAECAGGR", "DSTL_PCREL_EBIENSI", "DSTL_PCREL_EIECSH", "DSTL_PCREL_EINTEST", "DSTL_PCREL_ENTAHIST", "DSTL_PCREL_ENTERO", "DSTL_PCREL_EPECBFPA", "DSTL_PCREL_EPECEAE", "DSTL_PCREL_ETECLT", "DSTL_PCREL_ETECSTH", "DSTL_PCREL_ETECSTP", "DSTL_PCREL_GIARDIA", "DSTL_PCREL_GIARTP1A", "DSTL_PCREL_GIARTP1B", "DSTL_PCREL_HPYLORI", "DSTL_PCREL_ISOSPORA", "DSTL_PCREL_MS2", "DSTL_PCREL_MTB", "DSTL_PCREL_NORO1", "DSTL_PCREL_NORO2", "DSTL_PCREL_NTOR", "DSTL_PCREL_OPV1", "DSTL_PCREL_OPV2", "DSTL_PCREL_OPV3", "DSTL_PCREL_PHHV", "DSTL_PCREL_ROTA", "DSTL_PCREL_ROTAG1", "DSTL_PCREL_ROTAG10", "DSTL_PCREL_ROTAG12", "DSTL_PCREL_ROTAG2", "DSTL_PCREL_ROTAG3", "DSTL_PCREL_ROTAG8", "DSTL_PCREL_ROTAG9", "DSTL_PCREL_ROTAP10", "DSTL_PCREL_ROTAP11", "DSTL_PCREL_ROTAP4", "DSTL_PCREL_ROTAP6", "DSTL_PCREL_ROTAP8", "DSTL_PCREL_ROTAP9", "DSTL_PCREL_SALMNL", "DSTL_PCREL_SAPO", "DSTL_PCREL_STECSTX1", "DSTL_PCREL_STECSTX2", "DSTL_PCREL_STRNGLD", "DSTL_PCREL_TRCHRS", "DSTL_PCREL_VCHL", "DSTL_PCR_CRYPTO", "DSTL_PCR_ENTAHIST", "DSTL_PCR_GIARDIA", "BLD__CMV", "BLD__CMVMBC", "BLD__CMVSUBC1", "BLD__CMVSUBC2", "BLD__CMVSUBOD", "BLD__CMVSUBSC", "STL_PCR_POLIO_S1", "STL_PCR_POLIO_S2", "STL_PCR_POLIO_S3", "BLD__DIPTHER", "BLD__MEASLES", "BLD__PERTUSIS", "BLD__TETANUS", "BLD__POLIO_S2", "STL_PCR_POLIO_NS", "STL_PCR_POLIO_S", "STL__POLIO", "DSTL_PCREL_ROTAG4", "STL__ECOLI", "STL__ENANA", "STL__HELMAL", "STL__HELMHN", "STL__HELMHW", "STL__HELMSS", "STL__IBUTSCH", "STL__PRBH", "STL__PREHED", "STL__THOMINIS", "STL__TRICH", "MSGMR", "MSVRR", "MSVRT", "MSVRP", "MSFMR", "MSFMT", "MSFMP", "MSRLT", "MSRLP", "MSELR", "MSELT", "MSELP", "BALYCOGR", "BALYCOGS", "BALYCOGC", "BALYRCMR", "BALYRCMS", "BALYECMR", "BALYECMS", "BALYLGS", "BALYLNGC", "BALYFMTR", "BALYFMTS", "BALYGMTR", "BALYGMTS", "BALYMOS", "BALYMOTC", "BALYSER", "BALYSEMS", "BALYSEMC", "FCITOTS", "M_EPDSTOT", "RAVTOTA", "RAVTOTAB", "RAVTOTB", "RAVTOTC", "RAVTOTD", "RAVTOTE", "RAVTOTS", "WPPSBDR", "WPPSBDS", "WPPSINFR", "WPPSINFC", "WPPSMR", "WPPSMRS", "WPPSVR", "WPPSVS", "WPPSCMR", "WPPSCMS", "WPPSCDR", "WPPSCDS", "WPPSPR", "WPPSPCS", "WPPSVIQ", "WPPSPIQ", "WPPSFSIQ", "M_MPSCORE", "ASQCM", "ASQCMRPT", "ASQGM", "ASQGMRPT", "ASQFM", "ASQFMRPT", "ASQPR", "ASQPRRPT", "ASQPS", "ASQPSRPT", "ASQTOT", "MSVRD", "MSRLD", "MSELD", "M_EPDSQ01", "M_EPDSQ02", "M_EPDSQ04", "M_EPDSQ03", "M_EPDSQ05", "M_EPDSQ06", "M_EPDSQ07", "M_EPDSQ08", "M_EPDSQ09", "M_EPDSQ10", "BED", "BENCH", "BICYCLE", "CEILFAN", "CHAIR", "CLTHCAB", "DRAIN", "ELEC", "EXPENSE", "FOODDFCT", "HHDOM", "HOMEYRS", "INCTOT", "MCYCLE", "NCHLDLT5", "NPERSON", "NROOMS", "NSLEEP", "NTRLGAS", "OWNHOME", "PHONE", "RADIO", "READNEWS", "SANSHR", "SEWING", "TABLE", "TV", "WASHANIM", "WASHBOTL", "WASHDEFC", "WASHEAT", "WATCH", "COOKFUEL", "COOKPLAC", "FAMTYP", "FLOOR", "H20SRCAN", "H2OSRCP", "H2OSRCWB", "H2OSRCWD", "H2OSRCWE", "H2OTRTP", "NAILCUT", "ROOF", "SANITATN", "WALL", "TEMP", "CMTRT"> varlist<-colnames(d)[colnames(d) %in%  c("BED", "BENCH", "BICYCLE", "CEILFAN", "CHAIR", "CLTHCAB", "DRAIN", "ELEC", "MCYCLE","NROOMS", "OWNHOME", "PHONE", "RADIO","SEWING", "TABLE", "TV", "WATCH",  "COOKPLAC", "ROOF", "WALL")]
+> 
+> prvd <- read_asset_data(study, varlist)
+> prvd <- assetPCA(prvd, varlist, reorder=F)
+BED 
+
+FALSE 
+  700 
+[1] "integer"
+BENCH 
+
+FALSE 
+  700 
+[1] "integer"
+BICYCLE 
+
+FALSE 
+  700 
+[1] "integer"
+CEILFAN 
+
+FALSE 
+  700 
+[1] "integer"
+CHAIR 
+
+FALSE 
+  700 
+[1] "integer"
+CLTHCAB 
+
+FALSE 
+  700 
+[1] "integer"
+DRAIN 
+
+FALSE 
+  700 
+[1] "integer"
+ELEC 
+
+FALSE 
+  700 
+[1] "integer"
+MCYCLE 
+
+FALSE 
+  700 
+[1] "integer"
+NROOMS 
+
+FALSE 
+  700 
+[1] "integer"
+OWNHOME 
+
+FALSE 
+  700 
+[1] "integer"
+PHONE 
+
+FALSE 
+  700 
+[1] "integer"
+RADIO 
+
+FALSE 
+  700 
+[1] "integer"
+SEWING 
+
+FALSE 
+  700 
+[1] "integer"
+TABLE 
+
+FALSE 
+  700 
+[1] "integer"
+TV 
+
+FALSE 
+  700 
+[1] "integer"
+WATCH 
+
+FALSE 
+  700 
+[1] "integer"
+COOKPLAC 
+
+FALSE  TRUE 
+   60   640 
+[1] "integer"
+ROOF 
+
+FALSE  TRUE 
+   60   640 
+[1] "integer"
+WALL 
+
+FALSE  TRUE 
+   60   640 
+[1] "integer"
+        0%        25%        50%        75%       100% 
+-0.1565054  0.8373804  1.4042190  2.0058809  2.9119428 
+  HHwealth_quart     BENCH1     CHAIR1   CLTHCAB1    DRAIN1    NROOMS2
+1      Wealth Q1 0.01714286 0.01142857 0.05142857 0.4571429 0.02285714
+2      Wealth Q2 0.04571429 0.20000000 0.20571429 0.3942857 0.08000000
+3      Wealth Q3 0.05917160 0.52662722 0.45562130 0.4556213 0.18343195
+4      Wealth Q4 0.14364641 0.95580110 0.88397790 0.3370166 0.32596685
+     NROOMS3   OWNHOME1    PHONE1    SEWING1     TABLE1       TV1    WATCH1
+1 0.00000000 0.09714286 0.6114286 0.02285714 0.05142857 0.2514286 0.1885714
+2 0.02285714 0.28571429 0.8228571 0.05142857 0.21142857 0.7428571 0.5828571
+3 0.07692308 0.36686391 0.9171598 0.05917160 0.31360947 0.9112426 0.8402367
+4 0.24861878 0.62983425 0.9723757 0.15469613 0.80110497 0.9723757 0.9558011
+   COOKPLAC3 COOKPLACmiss      ROOF4  ROOFmiss      WALL3  WALLmiss
+1 0.10857143    0.8514286 0.13142857 0.8514286 0.08000000 0.8514286
+2 0.06857143    0.8914286 0.06857143 0.8914286 0.08000000 0.8914286
+3 0.00591716    0.9704142 0.02958580 0.9704142 0.00591716 0.9704142
+4 0.01657459    0.9447514 0.04419890 0.9447514 0.04419890 0.9447514
+> saveRDS(prvd, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> #---------
+> # tzc2
+> #---------
+> study<-"tzc2"
+> d<-readRDS(paste0(cohortdata_dir,study,".rds")) 
+> cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+"STUDYID", "SUBJID", "SITEID", "SEXN", "SEX", "ARMCD", "ARM", "GAGEBRTH", "BRTHYR", "BRTHWEEK", "BIRTHWT", "BIRTHHC", "DELIVERY", "APGAR5", "AGEDTH", "MAGE", "MHTCM", "MWTKG", "MMUAC", "MMARITN", "MMARIT", "MEDUCYRS", "MWORK", "FEDUCYRS", "FWORK", "PARITY", "GRAVIDA", "DLVLOCN", "DLVLOC", "CTRYCD", "COUNTRY", "FAN", "FRIG", "INCFOOD", "NADULT", "NCHLD", "NCHLDLT5", "RADIO", "SOFA", "TV", "AGEDAYS", "AGEIMPFL", "VISITNUM", "VISIT", "WTKG", "HTCM", "LENCM", "BMI", "HCIRCM", "MUACCM", "TSFTMM", "WAZ", "HAZ", "WHZ", "BAZ", "HCAZ", "MUAZ", "TSFTAZ", "AGP", "CRP", "IGF1", "IGFBP3", "VITD", "COLLGNX", "FLCIGA", "FLCIGG", "LPSIGA", "LPSIGG", "BALYCOGR", "BALYECMR", "BALYFMTR", "BALYGMTR", "BALYRCMR", "DIABP", "RESP", "SYSBP", "TEMP"> varlist<-colnames(d)[colnames(d) %in% c("FAN", "FRIG", "RADIO", "SOFA", "TV")]
+> 
+> tzc2 <- read_asset_data(study, varlist)
+> tzc2 <- assetPCA(tzc2, varlist, reorder=T)
+FAN 
+
+FALSE  TRUE 
+ 2383     5 
+[1] "integer"
+FRIG 
+
+FALSE  TRUE 
+ 2383     5 
+[1] "integer"
+RADIO 
+
+FALSE 
+ 2388 
+[1] "integer"
+SOFA 
+
+FALSE 
+ 2388 
+[1] "integer"
+TV 
+
+FALSE 
+ 2388 
+[1] "integer"
+       0%       25%       50%       75%      100% 
+0.0000000 0.0000000 0.5209181 1.3335016 2.1068951 
+  HHwealth_quart      FAN1     FRIG1     RADIO1      SOFA1       TV1
+1      Wealth Q2 0.9339775 0.9935588 0.42834138 0.37037037 0.9822866
+2      Wealth Q3 0.2330294 0.8915907 0.10435664 0.10233029 0.2573455
+3      Wealth Q4 0.0000000 0.0000000 0.04487179 0.03717949 0.0000000
+> saveRDS(tzc2, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+> 
+> 
+> 
+> 
+> #----------------------------------------------
+> # Bind studies
+> #----------------------------------------------
+> 
+> asset_study <- c(
++   "akup",
++   "cmc",
++   "cntt",
++   "gmsn",
++   "ilnd",
++   "ildm",
++   "irc",
++   "jvt3",
++   "jvt4",
++   "lcn5",
++   "mled",
++   "prvd",
++   "tzc2")
+> 
+> #Add in study id
+> d<-NULL
+> for(i in 1:length(asset_study)){
++   temp<-readRDS(paste0(deriveddata_dir, asset_study[i], '.HHwealth.rds'))
++   if("HHwealth_quart" %in% colnames(temp)){
++     d <- rbind(d, temp)
++   }
++ }
+> colnames(d) <- tolower(colnames(d))
+> 
+> 
+> #check which studies don't have wealth quartile
+> asset_study
+ [1] "akup" "cmc"  "cntt" "gmsn" "ilnd" "ildm" "irc"  "jvt3" "jvt4" "lcn5"
+[11] "mled" "prvd" "tzc2"
+> unique(d$studyid)
+ [1] ki1000125-AgaKhanUniv    ki1000108-CMC-V-BCS-2002 ki1114097-CONTENT       
+ [4] ki1113344-GMS-Nepal      ki1148112-iLiNS-DOSE     ki1148112-iLiNS-DYAD-M  
+ [7] ki1000108-IRC            kiGH5241-JiVitA-3        kiGH5241-JiVitA-4       
+[10] ki1148112-LCNI-5         ki0047075b-MAL-ED        ki1017093b-PROVIDE      
+[13] ki1066203-TanzaniaChild2
+13 Levels: ki1000125-AgaKhanUniv ki1000108-CMC-V-BCS-2002 ... ki1066203-TanzaniaChild2
+> 
+> length(asset_study)
+[1] 13
+> length(unique(d$studyid))
+[1] 13
+> 
+> 
+> pca<-d
+> saveRDS(pca, file=paste0(deriveddata_dir,"allGHAPstudies-HHwealth.rds"))
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+113.971  48.015 164.681 
