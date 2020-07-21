@@ -48,6 +48,34 @@ dim(d)
 
 
 
+#--------------------------------------------------------
+# Calculate longitudinal prevalence of wasting and stunting
+# in the first 6 months.
+#--------------------------------------------------------
+
+lprev <- d %>% group_by(studyid, country, subjid) %>%
+  #only keep it in monthly studies
+  filter(measurefreq=="monthly") %>%
+  filter(agedays<6*30.4167) %>%
+  mutate(wast=as.numeric(whz < -2), stunt=as.numeric(haz < -2)) %>%
+  summarize(N=n(), wastprev06=mean(wast, na.rm=T), stuntprev06=mean(stunt, na.rm=T), anywast06=as.numeric(wastprev06>0), anystunt06=as.numeric(stuntprev06>0), 
+            pers_wast=as.numeric(wastprev06>=0.5)) %>%
+  mutate(pers_wast=ifelse(N>=4,pers_wast,NA))
+head(lprev)
+
+table(lprev$anywast06)
+table(lprev$anystunt06)
+table(lprev$pers_wast)
+
+#Merge in new variables
+lprev <- lprev %>% subset(., select = c(studyid, country,subjid, anywast06,  pers_wast))
+
+dim(d)
+d <- left_join(d, lprev, by=c("studyid","country","subjid"))
+dim(d)
+
+
+
 
 #--------------------------------------------------------
 # Calculate birth month and month from birth week if birthmonth is missing
