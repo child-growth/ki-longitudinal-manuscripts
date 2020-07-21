@@ -93,8 +93,8 @@ saveRDS(list(quantile_d=quantile_d_BW,
 
 
 stunting_desc_data <- bind_rows(
-  data.frame(disease = "stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean WLZ",  monthly.haz),
-  data.frame(disease = "stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean WLZ - BW",  monthly.haz.BW)
+  data.frame(disease = "stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ",  monthly.haz),
+  data.frame(disease = "stunting", age_range="1 month",   birth="yes", severe="no", measure= "Mean LAZ - BW",  monthly.haz.BW)
   )
 
 stunting_desc_data <- droplevels(stunting_desc_data)
