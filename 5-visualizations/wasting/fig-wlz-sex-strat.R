@@ -69,6 +69,31 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
 
 ggsave(p, file=here::here("/figures/wasting/WLZ_by_sex.png"), width=10, height=4)
 
+
+df2 <- df %>% mutate(agecat=ifelse(agecat==0.5,0,agecat))
+
+p <- ggplot(df2,aes(y=est,x=agecat, group=sex, color=sex)) +
+  geom_point(aes(fill=sex), position = position_dodge(0.5)) +
+  geom_errorbar(aes(ymin=lb, ymax=ub), width = 0, position = position_dodge(0.5)) +
+  facet_wrap(~region) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10),
+                     limits = c(-1.5, 2)) +
+  scale_x_continuous(limits = c(-0.5,24.5), breaks = seq(0,24,2), labels = seq(0,24,2)) +
+  scale_fill_manual(values=tableau10, drop=TRUE, name = 'Sex') +
+  scale_color_manual(values=tableau10, drop=TRUE, name = 'Sex') +
+  xlab("Child age, months") +
+  ylab("Weight-for-length Z-score") +
+  ggtitle("") +
+  coord_cartesian(xlim = c(0,24), ylim = c(-1.4, 1.7)) +
+  theme(legend.position="bottom")
+
+p
+
+ggsave(p, file=here::here("/figures/wasting/WLZ_by_sex_alt.png"), width=10, height=8)
+
+
+
 #-------------------------------------------------------------------------------------------
 # Mean WLZ by month - birthweight strat
 #-------------------------------------------------------------------------------------------
@@ -115,6 +140,30 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
 
 ggsave(p, file=here::here("/figures/wasting/WLZ_by_sex_and_BW.png"), width=10, height=4)
 
+
+
+df2 <- df %>% mutate(agecat=ifelse(agecat==0.5,0,agecat))
+
+p <- ggplot(df2,aes(y=est,x=agecat, group=sex, color=sex)) +
+  geom_point(aes(fill=sex), position = position_dodge(0.5)) +
+  geom_errorbar(aes(ymin=lb, ymax=ub), width = 0, position = position_dodge(0.5)) +
+  facet_wrap(region~birthwt, ncol=2) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10),
+                     limits = c(-2.5, 1.1)) +
+  scale_x_continuous(limits = c(-0.5,24.5), breaks = seq(0,24,2), labels = seq(0,24,2)) +
+  scale_fill_manual(values=tableau10, drop=TRUE, name = 'Sex') +
+  scale_color_manual(values=tableau10, drop=TRUE, name = 'Sex') +
+  xlab("Child age, months") +
+  ylab("Weight-for-length Z-score") +
+  ggtitle("") +
+  coord_cartesian(xlim = c(0,24), ylim = c(-2.5, 1)) +
+  theme(legend.position="bottom")
+
+p
+
+
+ggsave(p, file=here::here("/figures/wasting/wlz_by_sex_and_BW_alt.png"), width=10, height=4)
 
 
 #-------------------------------------------------------------------------------------------

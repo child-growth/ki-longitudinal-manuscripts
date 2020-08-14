@@ -63,11 +63,35 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   scale_color_manual(values=tableau11, drop=TRUE,
                      name = 'Region') +
   xlab("Child age, months")+
-  ylab("Weight-for-length Z-score") +
+  ylab("Length-for-age Z-score") +
   ggtitle("") +
   theme(legend.position="right")
 
 ggsave(p, file=here::here("/figures/stunting/laz_by_sex.png"), width=10, height=4)
+
+
+df2 <- df %>% mutate(agecat=ifelse(agecat==0.5,0,agecat))
+
+p <- ggplot(df2,aes(y=est,x=agecat, group=sex, color=sex)) +
+  geom_point(aes(fill=sex), position = position_dodge(0.5)) +
+  geom_errorbar(aes(ymin=lb, ymax=ub), width = 0, position = position_dodge(0.5)) +
+  facet_wrap(~region) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10),
+                     limits = c(-3, 1.5)) +
+  scale_x_continuous(limits = c(-0.5,24.5), breaks = seq(0,24,2), labels = seq(0,24,2)) +
+  scale_fill_manual(values=tableau10, drop=TRUE, name = 'Sex') +
+  scale_color_manual(values=tableau10, drop=TRUE, name = 'Sex') +
+  xlab("Child age, months") +
+  ylab("Length-for-age Z-score") +
+  ggtitle("") +
+  coord_cartesian(xlim = c(0,24), ylim = c(-2.6, 0.5)) +
+  theme(legend.position="bottom")
+
+p
+
+ggsave(p, file=here::here("/figures/stunting/laz_by_sex_alt.png"), width=10, height=4)
+
 
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month - birthweight strat
@@ -109,11 +133,36 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   scale_color_manual(values=tableau11, drop=TRUE,
                      name = 'Region') +
   xlab("Child age, months")+
-  ylab("Weight-for-length Z-score") +
+  ylab("Length-for-age Z-score") +
   ggtitle("") +
   theme(legend.position="right")
 
 ggsave(p, file=here::here("/figures/stunting/laz_by_sex_and_BW.png"), width=10, height=4)
+
+
+
+df2 <- df %>% mutate(agecat=ifelse(agecat==0.5,0,agecat))
+
+p <- ggplot(df2,aes(y=est,x=agecat, group=sex, color=sex)) +
+  geom_point(aes(fill=sex), position = position_dodge(0.5)) +
+  geom_errorbar(aes(ymin=lb, ymax=ub), width = 0, position = position_dodge(0.5)) +
+  facet_wrap(region~birthwt, ncol=2) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10),
+                     limits = c(-4, 0.25)) +
+  scale_x_continuous(limits = c(-0.5,24.5), breaks = seq(0,24,2), labels = seq(0,24,2)) +
+  scale_fill_manual(values=tableau10, drop=TRUE, name = 'Sex') +
+  scale_color_manual(values=tableau10, drop=TRUE, name = 'Sex') +
+  xlab("Child age, months") +
+  ylab("Length-for-age Z-score") +
+  ggtitle("") +
+  coord_cartesian(xlim = c(0,24), ylim = c(-4, 0.25)) +
+  theme(legend.position="bottom")
+
+p
+
+
+ggsave(p, file=here::here("/figures/stunting/laz_by_sex_and_BW_alt.png"), width=10, height=8)
 
 
 
@@ -166,7 +215,7 @@ mean_laz_plot <- ggplot(df,aes(x = agecat, group = region)) +
                                    "fifth_perc"),
                         labels = c("Mean", "95th percentile", "5th percentile")) +
   xlab("Child age, months") +
-  ylab("Weight-for-length Z-score") +
+  ylab("Length-for-age Z-score") +
   ggtitle("") +
   theme(strip.text = element_text(margin=margin(t=5))) +
   guides(linetype = guide_legend(override.aes = list(col = 'black'), 
@@ -210,7 +259,7 @@ mean_laz_plot2 <- ggplot(df2, aes(x = agecat, group = region)) +
                                    "fifth_perc"),
                         labels = c("Mean", "95th percentile", "5th percentile")) +
   xlab("Child age, months") +
-  ylab("Weight-for-length Z-score") +
+  ylab("Length-for-age Z-score") +
   ggtitle("") +
   theme(strip.text = element_text(margin=margin(t=5))) +
   guides(linetype = guide_legend(override.aes = list(col = 'black'), 
@@ -226,7 +275,7 @@ mean_laz_plot2 <- ggplot(df2, aes(x = agecat, group = region)) +
 
 # save plot and underlying data
 ggsave(mean_laz_plot2, file=paste0(here::here(),
-                                   "/figures/stunting/fig-laz-2-mean-overall_region--allage-sex-stratified2.png"), 
+       "/figures/stunting/fig-laz-2-mean-overall_region--allage-sex-stratified2.png"), 
        width=8, height=6)
 
 
@@ -285,7 +334,7 @@ mean_laz_plot <- ggplot(df,aes(x = agecat, group = region)) +
                                    "fifth_perc"),
                         labels = c("Mean", "95th percentile", "5th percentile")) +
   xlab("Child age, months") +
-  ylab("Weight-for-length Z-score") +
+  ylab("Length-for-age Z-score") +
   ggtitle("") +
   theme(strip.text = element_text(margin=margin(t=5))) +
   guides(linetype = guide_legend(override.aes = list(col = 'black'), 
@@ -329,7 +378,7 @@ mean_laz_plot2 <- ggplot(df2, aes(x = agecat, group = region)) +
                                    "fifth_perc"),
                         labels = c("Mean", "95th percentile", "5th percentile")) +
   xlab("Child age, months") +
-  ylab("Weight-for-length Z-score") +
+  ylab("Length-for-age Z-score") +
   ggtitle("") +
   theme(strip.text = element_text(margin=margin(t=5))) +
   guides(linetype = guide_legend(override.aes = list(col = 'black'), 
@@ -345,7 +394,7 @@ mean_laz_plot2 <- ggplot(df2, aes(x = agecat, group = region)) +
 
 # save plot and underlying data
 ggsave(mean_laz_plot2, file=paste0(here::here(),
-                                   "/figures/stunting/fig-laz-2-mean-overall_region--allage-sex-BW-stratified2.png"), 
+       "/figures/stunting/fig-laz-2-mean-overall_region--allage-sex-BW-stratified2.png"), 
        width=8, height=6)
 
 
