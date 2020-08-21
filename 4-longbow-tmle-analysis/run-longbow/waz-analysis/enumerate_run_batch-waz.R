@@ -8,7 +8,7 @@ library(data.table)
 library(longbowtools)
 library(jsonlite)
 library(progress)
-library(longbowRiskFactors)
+
 
 
 # 1. enumerate analysis
