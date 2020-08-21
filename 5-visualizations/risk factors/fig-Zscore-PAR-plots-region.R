@@ -178,4 +178,4 @@ plot_waz_af_24 = plot_region(par_regionstrat_Africa, "WAZ", "24 months",  Yrange
 plot_waz_Africa = grid.arrange(plot_waz_af_birth, plot_waz_af_6, plot_waz_af_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in WAZ in Latin American cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_waz_Africa, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-PAR-strat-LA.png"), height=18, width=15)
+ggsave(plot_waz_Africa, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-PAR-strat-Africa.png"), height=18, width=15)
