@@ -43,7 +43,7 @@ unique(df$outcome_variable)
 unique(df$intervention_variable)
 
 plotdf <- df %>% 
-  filter(region=="Pooled",
+  filter(region!="N.America & Europe",
          intervention_variable %in% c("sex", "hhwealth_quart",  "meducyrs", "mwtkg" )) %>%
          #outcome_variable %in% c("Ever stunted", "Ever wasted"),
          #agecat %in% c("0-24 months", "6-24 months")) %>%
@@ -77,7 +77,7 @@ plotdf$RFlabel_ref[plotdf$RFlabel=="Mother's education"] <- "Mother's education:
 plotdf$RFlabel_ref[plotdf$RFlabel=="HH wealth"] <- "HH wealth:\nQ1 vs Q4 (ref.)"
 
 
-p_severecomp <- ggplot(plotdf, aes(x=Outcome, group=intervention_level)) + 
+p_severecomp <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=Outcome, group=intervention_level)) + 
   geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
                  alpha=0.5, size = 1) +
@@ -101,3 +101,70 @@ p_severecomp
 ggsave(p_severecomp, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp.png"), height=8, width=10)
 
 saveRDS(list(p_severecomp, plotdf), file = paste0(here::here(), "/results/fig-severe-outcome-comps.RDS"))
+
+
+
+
+#Region specific
+p_severecomp_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=Outcome, group=intervention_level)) + 
+  geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+                 alpha=0.5, size = 1) +
+  facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
+  labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
+  geom_hline(yintercept = 1) +
+  #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
+  scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        axis.text.y = element_text(size=12),
+        strip.text.x = element_text(size=10),
+        axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
+        panel.spacing = unit(0, "lines")) +
+  coord_flip()
+
+p_severecomp_LA <- ggplot(plotdf[plotdf$region=="Latin America",], aes(x=Outcome, group=intervention_level)) + 
+  geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+                 alpha=0.5, size = 1) +
+  facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
+  labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
+  geom_hline(yintercept = 1) +
+  #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
+  scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        axis.text.y = element_text(size=12),
+        strip.text.x = element_text(size=10),
+        axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
+        panel.spacing = unit(0, "lines")) +
+  coord_flip()
+
+p_severecomp_Africa <- ggplot(plotdf[plotdf$region=="Africa",], aes(x=Outcome, group=intervention_level)) + 
+  geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+                 alpha=0.5, size = 1) +
+  facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
+  labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
+  geom_hline(yintercept = 1) +
+  #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
+  scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        axis.text.y = element_text(size=12),
+        strip.text.x = element_text(size=10),
+        axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
+        panel.spacing = unit(0, "lines")) +
+  coord_flip()
+
+
+
+ggsave(p_severecomp_SA, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp-SA.png"), height=8, width=10)
+ggsave(p_severecomp_LA, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp-LA.png"), height=8, width=10)
+ggsave(p_severecomp_Africa, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp-Africa.png"), height=8, width=10)

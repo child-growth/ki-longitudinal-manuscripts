@@ -43,7 +43,7 @@ unique(df$outcome_variable)
 unique(df$intervention_variable)
 
 plotdf <- df %>% 
-  filter(region=="Pooled",
+  filter(region!="N.America & Europe",
          intervention_variable %in% c("gagebrth", "hfoodsec", "hhwealth_quart", "meducyrs", "mhtcm", "parity" ),
          outcome_variable %in% c("Ever stunted", "Ever wasted"),
          agecat %in% c("0-6 months", "6-24 months")) %>%
@@ -82,7 +82,7 @@ outcomes <- c(
   `Ever wasted` = "")
 
 
-p_ageRR <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))) + 
+p_ageRR <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
   geom_point(aes(y=RR, color=Outcome), size = 3, position = pd) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
                  alpha=0.5, size = 1, position = pd) +
@@ -116,4 +116,91 @@ ggsave(p_ageRR, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wa
 saveRDS(list(p_ageRR=p_ageRR, plotdf=plotdf), file = paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.RDS"))
 
 
+
+
+
+p_ageRR_Africa <- ggplot(plotdf[plotdf$region=="Africa",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
+  geom_point(aes(y=RR, color=Outcome), size = 3, position = pd) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+                 alpha=0.5, size = 1, position = pd) +
+  facet_grid(RFlabel~ Outcome + agecat, scales="free", labeller = labeller(Outcome = outcomes), switch = "y")+
+  labs(x = "Exposure level", y = "Adjusted CIR") +
+  geom_hline(yintercept = 1) +
+  geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, 
+                     limits = c(0.688,2.0), 
+                     expand=c(0.05,0)) +
+  coord_cartesian(ylim = c(0.8,2)) +
+  scale_colour_manual(values=tableau10[c(2,3)]) +  
+  ggtitle("Stunting incidence                                                                Wasting incidence")+
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        axis.text.y = element_text(size=8, hjust = 1),
+        strip.text.x = element_text(size=8, face = "bold"),
+        strip.text.y = element_text(size=8, angle = 180, face = "bold"),
+        strip.placement = "outside",
+        axis.text.x = element_text(size=10, vjust = 0.5),
+        panel.spacing = unit(0, "lines"),
+        legend.box.background = element_rect(colour = "black"), 
+        title = element_text(margin=margin(0,0,-10,0))) +
+  coord_flip()
+
+p_ageRR_LA <- ggplot(plotdf[plotdf$region=="Latin America",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
+  geom_point(aes(y=RR, color=Outcome), size = 3, position = pd) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+                 alpha=0.5, size = 1, position = pd) +
+  facet_grid(RFlabel~ Outcome + agecat, scales="free", labeller = labeller(Outcome = outcomes), switch = "y")+
+  labs(x = "Exposure level", y = "Adjusted CIR") +
+  geom_hline(yintercept = 1) +
+  geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, 
+                     limits = c(0.688,2.0), 
+                     expand=c(0.05,0)) +
+  coord_cartesian(ylim = c(0.8,2)) +
+  scale_colour_manual(values=tableau10[c(2,3)]) +  
+  ggtitle("Stunting incidence                                                                Wasting incidence")+
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        axis.text.y = element_text(size=8, hjust = 1),
+        strip.text.x = element_text(size=8, face = "bold"),
+        strip.text.y = element_text(size=8, angle = 180, face = "bold"),
+        strip.placement = "outside",
+        axis.text.x = element_text(size=10, vjust = 0.5),
+        panel.spacing = unit(0, "lines"),
+        legend.box.background = element_rect(colour = "black"), 
+        title = element_text(margin=margin(0,0,-10,0))) +
+  coord_flip()
+
+p_ageRR_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
+  geom_point(aes(y=RR, color=Outcome), size = 3, position = pd) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+                 alpha=0.5, size = 1, position = pd) +
+  facet_grid(RFlabel~ Outcome + agecat, scales="free", labeller = labeller(Outcome = outcomes), switch = "y")+
+  labs(x = "Exposure level", y = "Adjusted CIR") +
+  geom_hline(yintercept = 1) +
+  geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, 
+                     limits = c(0.688,2.2), 
+                     expand=c(0.05,0)) +
+  coord_cartesian(ylim = c(0.8,2.2)) +
+  scale_colour_manual(values=tableau10[c(2,3)]) +  
+  ggtitle("Stunting incidence                                                                Wasting incidence")+
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        axis.text.y = element_text(size=8, hjust = 1),
+        strip.text.x = element_text(size=8, face = "bold"),
+        strip.text.y = element_text(size=8, angle = 180, face = "bold"),
+        strip.placement = "outside",
+        axis.text.x = element_text(size=10, vjust = 0.5),
+        panel.spacing = unit(0, "lines"),
+        legend.box.background = element_rect(colour = "black"), 
+        title = element_text(margin=margin(0,0,-10,0))) +
+  coord_flip()
+
+
+
+#Region stratified
+ggsave(p_ageRR_Africa, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wast_Africa.png"), height=8, width=10)
+ggsave(p_ageRR_LA, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wast_LA.png"), height=8, width=10)
+ggsave(p_ageRR_SA, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wast_SA.png"), height=8, width=10)
 
