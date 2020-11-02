@@ -9,7 +9,6 @@ Zscores<- Zscores_unadj<- Zscores_waz<- bin<- mort<- lagwhz <-velocity <- veloci
 Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))
 Zscores_diar <- readRDS(here("/results/rf results/raw longbow results/results_cont_diar_2020-06-08.RDS")) 
 Zscores_fhtcm <- readRDS(here("/results/rf results/raw longbow results/results_cont_fhtcm_2020-05-29.RDS"))
-Zscores_waz <- readRDS(here("/results/rf results/raw longbow results/results_waz_2020-08-21.RDS"))
 dim(Zscores_diar)
 dim(Zscores_fhtcm)
 dim(Zscores)

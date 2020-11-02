@@ -53,6 +53,9 @@ unique(d$STUDYID)
 colnames(d) <- tolower(colnames(d))
 gc()
 
+# df <- d %>% filter(studyid=="COHORTS" & subjid %in% c("20000270", "20000391", "20000672", "20001129", "20001453"))
+# head(df)
+
 #Drop studies Vishak added to data product that don't meet inclusion criteria
 dim(d)
 d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP", "ILINS-DYAD-G"))]
