@@ -80,25 +80,25 @@ summary(df2$PAF.CI2)
 # Check that pooled estimate is reasonable:
 #------------------------------------------
 
-# df3 <- df2 %>% filter(agecat=="24 months", outcome_variable=="stunted", intervention_variable=="hhwealth_quart", region=="Pooled") %>% mutate(studyid="Pooled")
-# df3_study <- dpaf %>% filter(agecat=="24 months", outcome_variable=="stunted", intervention_variable=="hhwealth_quart") %>%
-#     rename(PAF=estimate, PAF.CI1=ci_lower, PAF.CI2=ci_upper) %>% mutate(PAF=PAF*100,PAF.CI1=PAF.CI1*100,PAF.CI2=PAF.CI2*100)
-# df3 <- bind_rows(df3, df3_study)
-# ggplot(df3, aes(x=studyid)) + 
-#   geom_point(aes(y=PAF,  color=studyid), size = 4) +
-#   geom_linerange(aes(ymin=PAF.CI1, ymax=PAF.CI2, color=studyid)) +
-#   coord_flip(ylim=c(-10, 40)) +
-#   labs(x = "Exposure", y = "Attributable Fraction") +
-#   geom_hline(yintercept = 0) +
-#   theme(strip.background = element_blank(),
-#         legend.position="right",
-#         axis.text.y = element_text(hjust = 1),
-#         strip.text.x = element_text(size=12),
-#         axis.text.x = element_text(size=12, 
-#                                    margin = margin(t = -20)),
-#         axis.title.x = element_text(margin = margin(t = 20))) +
-#   ggtitle(paste0("Population attributable fractions (%),\nPrevalence of stunting")) + 
-#   guides(color=FALSE, shape=FALSE)
+df3 <- df2 %>% filter(agecat=="24 months", outcome_variable=="stunted", intervention_variable=="hhwealth_quart", region=="Pooled") %>% mutate(studyid="Pooled")
+df3_study <- dpaf %>% filter(agecat=="24 months", outcome_variable=="stunted", intervention_variable=="hhwealth_quart") %>%
+    rename(PAF=estimate, PAF.CI1=ci_lower, PAF.CI2=ci_upper) %>% mutate(PAF=PAF*100,PAF.CI1=PAF.CI1*100,PAF.CI2=PAF.CI2*100)
+df3 <- bind_rows(df3, df3_study)
+ggplot(df3, aes(x=studyid)) +
+  geom_point(aes(y=PAF,  color=studyid), size = 4) +
+  geom_linerange(aes(ymin=PAF.CI1, ymax=PAF.CI2, color=studyid)) +
+  coord_flip(ylim=c(-10, 40)) +
+  labs(x = "Exposure", y = "Attributable Fraction") +
+  geom_hline(yintercept = 0) +
+  theme(strip.background = element_blank(),
+        legend.position="right",
+        axis.text.y = element_text(hjust = 1),
+        strip.text.x = element_text(size=12),
+        axis.text.x = element_text(size=12,
+                                   margin = margin(t = -20)),
+        axis.title.x = element_text(margin = margin(t = 20))) +
+  ggtitle(paste0("Population attributable fractions (%),\nPrevalence of stunting")) +
+  guides(color=FALSE, shape=FALSE)
 
 
 

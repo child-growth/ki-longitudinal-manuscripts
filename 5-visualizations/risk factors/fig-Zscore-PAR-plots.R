@@ -159,9 +159,28 @@ pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) +
 ggsave(pPAR_laz, file=paste0(here::here(), "/figures/risk-factor/fig-laz-PAR.png"), height=10, width=8)
 ggsave(pPAR_wlz, file=paste0(here::here(), "/figures/risk-factor/fig-wlz-PAR.png"), height=10, width=8)
 
+
+
 saveRDS(list(pPAR_laz, pPAR_wlz), file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
 
 
+pPAR_wlz2 <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) + 
+  geom_point(aes(y=-PAR), color=main_color, size = 4) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color=main_color) +
+  coord_flip(ylim=c(-0.05, 0.3)) +
+  labs(x = "Exposure", y = "Attributable difference in WLZ") +
+  geom_hline(yintercept = 0) +
+  theme(strip.background = element_blank(),
+        legend.position="right",
+        axis.text.y = element_text(size=10, hjust = 1),
+        axis.text.x = element_text(size=12),
+        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  guides(color=FALSE, shape=FALSE)
+
+
+
+
+ggsave(pPAR_wlz2, file=paste0(here::here(), "/figures/risk-factor/fig-wlz-PAR_presentation.png"), height=6, width=8)
 
 
 #----------------------------------------------------------
