@@ -19,21 +19,20 @@ d <- dfull %>% filter(type=="PAR")
 
 #Subset to continious outcomes
 unique(d$outcome_variable)
-d <- d %>% filter(outcome_variable=="waz")
+d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
+                    outcome_variable=="y_rate_wtkg"|outcome_variable=="haz"|
+                    outcome_variable=="whz")
+d %>% filter(type=="PAR",agecat=="24 months",outcome_variable=="haz", intervention_variable=="perdiar24")
 
 d <- droplevels(d)
 
-d <- d %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
-                                    "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
-                         .keep_all=TRUE)
-#Mark region
-d <- mark_region(d)
 
-RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
+
+RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.Zpar(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
 
-RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
+RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.Zpar(.)) %>% as.data.frame()
 
 RMAest_raw <- rbind(RMAest, RMAest_region)
@@ -52,4 +51,4 @@ table(is.na(RMAest_clean$intervention_variable))
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
 
 #Save cleaned data
-saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_waz.rds"))
+saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
