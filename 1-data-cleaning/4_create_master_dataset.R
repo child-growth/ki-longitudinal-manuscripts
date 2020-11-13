@@ -20,7 +20,7 @@ table(df$country, 1*(df$lencm < 45))
 dput(colnames(Zscores))
 Zscores <- Zscores %>% 
   subset(., select = c(studyid, country, measurefreq, subjid, sex, agedays, 
-                       waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, month, brthweek, brthyr,  dead, agedth, 
+                       waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, arm,  month, brthweek, brthyr,  dead, agedth, 
                        latitude, longitud, causedth))
 
 #mark regions 
@@ -33,7 +33,7 @@ cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
 dput(colnames(cov))
 
-cov <- cov %>% subset(., select = c(studyid, subjid, siteid, country, arm,  
+cov <- cov %>% subset(., select = c(studyid, subjid, siteid, country, 
                                     gagebrth, brthmon, parity, birthwt, birthlen, vagbrth, 
                                     hdlvry, mage, mhtcm, mwtkg, mbmi, meducyrs, single, 
                                     fage, fhtcm, feducyrs, trth2o, cleanck, impfloor, 
