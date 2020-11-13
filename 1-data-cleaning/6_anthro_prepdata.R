@@ -120,6 +120,8 @@ droppedm/nobsm * 100 #percentage dropped monthly
 
 nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz), !is.na(whz)))
 
+
+#double check calculations above
 co_mort <- d %>% filter(haz >= -6 & haz <=6 & whz >= -5 & whz <=5) %>%
   arrange(studyid,subjid,agedays) %>%
   group_by(studyid,subjid) %>%
@@ -178,19 +180,28 @@ length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid, "_", mort_Ndf$ageda
 mort_Ndf <- rbind(stunt_mort, wast_mort, waz_mort) %>% filter(agedays < 24 * 30.4167)
 length(unique(paste0(mort_Ndf$studyid, mort_Ndf$country))) #cohorts
 length(unique(mort_Ndf$country)) #Countries
-length(unique(paste0(mort_Ndf$studyid, mort_Ndf$subjid))) #Children
+length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid))) #Children
 length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid, "_", mort_Ndf$agedays))) #Observations
 
 mort_Ndf2 <- mort_Ndf %>% distinct(studyid, subjid, agedays)
 length(unique(paste0(mort_Ndf2$studyid,"_", mort_Ndf2$subjid,"_", mort_Ndf2$agedays))) #Observations
 
 
+#double check calculations above
 cc_tab1 <- d %>% ungroup() %>% filter(agedays < 24 * 30.4167) %>%
   filter(!is.na(whz) | !is.na(waz) | !is.na(haz)) %>% 
   filter(abs(whz) <= 5 | abs(haz) <= 6 | (waz >= (-6) & waz <= 5)) %>% 
   distinct(studyid, subjid, agedays) %>%
-  summarize(nobs=n(), nchild=length(unique(paste0(subjid))))
+  summarize(nobs=n(), nchild=length(unique(paste0(studyid, "_",subjid))))
 cc_tab1
+
+#children under 6
+cc_tab_u6 <- d %>% ungroup() %>% filter(agedays < 6 * 30.4167) %>%
+  filter(!is.na(whz) | !is.na(waz) | !is.na(haz)) %>% 
+  filter(abs(whz) <= 5 | abs(haz) <= 6 | (waz >= (-6) & waz <= 5)) %>% 
+  distinct(studyid, subjid, agedays) %>%
+  summarize(nobs=n(), nchild=length(unique(paste0(studyid, "_",subjid))))
+cc_tab_u6
 
 #--------------------------------------------
 # Subset to and save descriptive epi data
