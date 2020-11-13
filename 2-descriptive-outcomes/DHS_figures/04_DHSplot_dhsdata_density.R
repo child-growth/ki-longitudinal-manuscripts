@@ -52,6 +52,15 @@ dhsz <- bind_rows(dhaz, dwaz, dwhz) %>%
 dhsz <- dhsz %>%
   mutate(wgt = weight / 1000000)
 
+#---------------------------------------
+# calculate under 6-mo prevalence
+#---------------------------------------
+dhsz %>% filter(agem <=6) %>%
+  group_by(measure, region) %>%
+  summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100)
+
+
+
 
 #---------------------------------------
 # estimate DHS z-score densities

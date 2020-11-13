@@ -220,11 +220,15 @@ dhsfits <- dhsfits %>%
                                labels = c("Overall", "Africa", "Latin America", "South Asia")
   ))
 
-dhsfits <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
 dhsfits$measure[dhsfits$measure=="WHZ"] <- "WLZ"
 dhsfits$measure[dhsfits$measure=="HAZ"] <- "LAZ"
+
+dhsfits_full <- dhsfits %>%
+  filter(!(dsource %in% c("ki cohorts", "DHS, ki countries")))
+dhsfits <- dhsfits %>%
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
+
 
 saveRDS(dhsfits, file = here::here("results/dhs", "wasting-DHSandKI-by-region.rds"))
 
@@ -241,3 +245,6 @@ dhs_plotd <- dhsfits %>%
   filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
 saveRDS(dhs_plotd, file = paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_byage.RDS"))
+
+
+saveRDS(dhsfits_full, file = paste0(figdata_dir_wasting, "figdata-fig_dhs_full_zscores_byage.RDS"))
