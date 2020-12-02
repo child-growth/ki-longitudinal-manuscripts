@@ -55,9 +55,45 @@ dhsz <- dhsz %>%
 #---------------------------------------
 # calculate under 6-mo prevalence
 #---------------------------------------
-dhsz %>% filter(agem <=6) %>%
+mean_region=dhsz %>% filter(agem <=6) %>%
   group_by(measure, region) %>%
   summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100)
+
+mean_pooled=dhsz %>% filter(agem <=6) %>%
+  group_by(measure) %>%
+  summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100) %>%
+  mutate(region="Overall")
+
+mndf <- bind_rows(mean_region, mean_pooled)
+mndf$measure <- as.character(mndf$measure)
+mndf$measure[mndf$measure=="WHZ"] <- "Wasting"
+mndf$measure[mndf$measure=="LAZ"] <- "Stunting"
+mndf$measure[mndf$measure=="WAZ"] <- "Underweight"
+
+mndf$region <- factor(mndf$region, levels = c("Overall", "Africa","Latin America","South Asia"))
+
+p<-ggplot(data=mndf, aes(x=measure, y=Mean,  color=region,  fill=region)) +
+  facet_wrap(~region, nrow=1) +
+  geom_bar(stat="identity", alpha=0.5) +  theme_ki() + theme(panel.grid = element_blank()) +
+  scale_fill_manual(values = tableau11, guide = FALSE, name = "") +
+  scale_color_manual(values = tableau11, guide = FALSE, name = "") +
+  ylab("Prevalence") + xlab("Anthropometry measure")+
+  theme(axis.text.x = element_text(angle = 20, vjust = 0.75, hjust=0.6)) +
+  geom_text(aes(label=round(Mean,1)), position=position_dodge(width=0.9), vjust=-0.25)
+p
+
+p2<-ggplot(data=mndf, aes(x=region, y=Mean,  color=region,  fill=region)) +
+  facet_wrap(~measure, nrow=1) +
+  geom_bar(stat="identity", alpha=0.5) + theme_ki() + theme(panel.grid = element_blank()) +
+  scale_fill_manual(values = tableau11, guide = FALSE, name = "") +
+  scale_color_manual(values = tableau11, guide = FALSE, name = "") +
+  scale_y_continuous(limits=c(0, 33), expand = c(0,0)) +
+  ylab("Prevalence") + xlab("Anthropometry measure") + 
+  theme(axis.text.x = element_text(angle = 20, vjust = 0.75, hjust=0.6)) +
+  geom_text(aes(label=round(Mean,1)), position=position_dodge(width=0.9), vjust=-0.25)
+p2
+
+ggsave(p2, file = paste0(fig_dir, "wasting/fig_dhs_prev_barplot.png"), width = 6, height = 3)
 
 
 
