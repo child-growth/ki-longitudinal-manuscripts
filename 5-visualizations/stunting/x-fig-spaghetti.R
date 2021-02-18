@@ -70,7 +70,7 @@ df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
 p <- ggplot(df,aes(y=est,x=agecat)) +
   
   # pooled 
-  geom_point(aes(fill=region, color=region), size = 2,
+  geom_point(aes(fill=region, color=region), size = 2, stroke = 0,
              data = df %>% filter(ispooled == "yes")) +
   geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0, 
                 data = df %>% filter(ispooled == "yes")) +
@@ -79,7 +79,7 @@ p <- ggplot(df,aes(y=est,x=agecat)) +
 
   # cohort-stratified 
 
-  geom_point(aes(fill=region, col = region), size = 1.5, 
+  geom_point(color = "#878787", fill = "#878787", size = 1.5, 
              data = df %>% filter(ispooled == "no"),
              position = position_jitter(width = 0.15), alpha = 0.25) +
   # geom_linerange(aes(color=region, ymin=lb, ymax=ub),
