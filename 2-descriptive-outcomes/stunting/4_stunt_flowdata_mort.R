@@ -51,12 +51,13 @@ d %>% group_by(agecat) %>%
             max = max(agedays)/30.4167)
 
 #--------------------------------------------------
-# create category for age of death
+# create category for age of dead
 #--------------------------------------------------
 # drop studies that are not in stunting dataset
 st_studies = unique(d$studyid)
 
 mort <- mort %>% 
+  filter(dead==0) %>% 
   filter(studyid %in% st_studies) %>% 
   mutate(agemort= round(maxage / 30.4167)) %>% 
   filter(agemort <=24)
@@ -130,29 +131,28 @@ d %>% filter(agedays<=16 * 30.4167) %>% ungroup() %>%
 #--------------------------------------------------
 # merge stunting and mortality data
 #--------------------------------------------------
-mort_merge <- mort %>% dplyr::select(studyid, country, subjid, agemort) %>% 
+mort_merge <- mort %>% dplyr::select(studyid, country, subjid, agemort, dead) %>% 
   rename(agem = agemort) %>% 
-  filter(agem<24) %>% 
-  mutate(death = 1) 
+  filter(agem<24)
 
 flow_m_mort <- left_join(flow_m, mort_merge, by = c("studyid", "country", "subjid", "agem"))
 ## TO DO - 200 children in the mortality dataset are not merging with stunting data 
 # is it because they did not have laz measured or had abs(laz)>6?
 
-flow_m_mort <- flow_m_mort %>% mutate(death = ifelse(is.na(death), 0, death))
+flow_m_mort <- flow_m_mort %>% mutate(dead = ifelse(is.na(dead), 0, dead))
 
 # if the child died at a given age, reset stunting 
 # variables to 0 
 flow_m_mort <- flow_m_mort %>% 
-  mutate(stunted_at_death = ifelse(death==1 & stunted ==1, 1, 0)) %>% 
+  mutate(stunted_at_dead = ifelse(dead==1 & stunted ==1, 1, 0)) %>% 
   mutate(
-    stunted = ifelse(death == 1, 0, stunted),
-    never_stunted = ifelse(death == 1, 0, never_stunted),
-    newly_stunted = ifelse(death == 1, 0, newly_stunted),
-    relapse = ifelse(death == 1, 0, relapse),
-    recover = ifelse(death == 1, 0, recover),
-    still_stunted = ifelse(death == 1, 0, still_stunted),
-    not_stunted = ifelse(death == 1, 0, not_stunted)
+    stunted = ifelse(dead == 1, 0, stunted),
+    never_stunted = ifelse(dead == 1, 0, never_stunted),
+    newly_stunted = ifelse(dead == 1, 0, newly_stunted),
+    relapse = ifelse(dead == 1, 0, relapse),
+    recover = ifelse(dead == 1, 0, recover),
+    still_stunted = ifelse(dead == 1, 0, still_stunted),
+    not_stunted = ifelse(dead == 1, 0, not_stunted)
 )
 
 #--------------------------------------------------
@@ -164,12 +164,12 @@ assert_that(names(table(is.na(flow_m_mort$relapse)))=="FALSE")
 assert_that(names(table(is.na(flow_m_mort$still_stunted)))=="FALSE")
 assert_that(names(table(is.na(flow_m_mort$not_stunted)))=="FALSE")
 assert_that(names(table(is.na(flow_m_mort$never_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m_mort$death)))=="FALSE")
+assert_that(names(table(is.na(flow_m_mort$dead)))=="FALSE")
 
 # check for multiple categories
 flow_m_mort = flow_m_mort %>% mutate(sum = newly_stunted + 
                              still_stunted + recover + not_stunted + never_stunted + 
-                             relapse + death)
+                             relapse + dead)
 assert_that(names(table(flow_m_mort$sum))=="1")
 
 
@@ -187,11 +187,11 @@ summary = flow_m_mort %>%
     not_stunted = mean(not_stunted, na.rm = TRUE),
     never_stunted = mean(never_stunted, na.rm = TRUE),
     relapse = mean(relapse, na.rm = TRUE),
-    death = mean(death, na.rm = TRUE))
+    dead = mean(dead, na.rm = TRUE))
 
 summary = summary %>%
   mutate(sum = still_stunted + newly_stunted + recover + 
-           never_stunted + not_stunted + relapse + death)
+           never_stunted + not_stunted + relapse + dead)
 
 summary
 
@@ -210,7 +210,7 @@ stunt_agg = flow_m_mort %>%
     not_stunted = sum(not_stunted),
     never_stunted = sum(never_stunted),
     relapse = sum(relapse),
-    death = sum(death))  
+    dead = sum(dead))  
 
 #--------------------------------------------------
 # estimate random effects, format results
@@ -251,10 +251,10 @@ pooled_never = run_rma_agem(data = stunt_agg,
                             label = "Never stunted",
                             method = "REML")
 
-pooled_death = run_rma_agem(data = stunt_agg, 
+pooled_dead = run_rma_agem(data = stunt_agg, 
                             n_name = "nchild", 
-                            x_name = "death",
-                            label = "Death",
+                            x_name = "dead",
+                            label = "dead",
                             method = "REML")
 
 stunt_pooled = bind_rows(pooled_newly, 
@@ -263,7 +263,7 @@ stunt_pooled = bind_rows(pooled_newly,
                          pooled_relapse,
                          pooled_not,
                          pooled_never,
-                         pooled_death
+                         pooled_dead
 )
 
 #--------------------------------------------------
@@ -305,10 +305,10 @@ pooled_never_fe = run_rma_agem(data = stunt_agg,
                                label = "Never stunted",
                                method = "FE")
 
-pooled_death_fe = run_rma_agem(data = stunt_agg, 
+pooled_dead_fe = run_rma_agem(data = stunt_agg, 
                                n_name = "nchild", 
-                               x_name = "death",
-                               label = "Death",
+                               x_name = "dead",
+                               label = "dead",
                                method = "FE")
 
 stunt_pooled_fe = bind_rows(pooled_newly_fe, 
@@ -317,7 +317,7 @@ stunt_pooled_fe = bind_rows(pooled_newly_fe,
                             pooled_relapse_fe,
                             pooled_not_fe,
                             pooled_never_fe,
-                            pooled_death
+                            pooled_dead
 )
 
 
@@ -333,7 +333,7 @@ rec_0 = as.character(summary$agem[summary$recover==0])
 relapse_0 = as.character(summary$agem[summary$relapse==0])
 not_0 = as.character(summary$agem[summary$not_stunted==0])
 never_0 = as.character(summary$agem[summary$never_stunted==0])
-death_0 = as.character(summary$agem[summary$death==0])
+dead_0 = as.character(summary$agem[summary$dead==0])
 
 # function to replace est, se, lb, ub, est.f if
 # no observations in summary
@@ -376,8 +376,8 @@ stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
                                  label = "Never stunted")
 
 stunt_pooled_corr = replace_zero(data = stunt_pooled_corr,
-                                 age_list = death_0,
-                                 label = "Death")
+                                 age_list = dead_0,
+                                 label = "dead")
 
 
 stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_fe,
@@ -405,8 +405,8 @@ stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
                                     label = "Never stunted")
 
 stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
-                                    age_list = death_0,
-                                    label = "Death")
+                                    age_list = dead_0,
+                                    label = "dead")
 
 saveRDS(flow_m_mort, file=paste0(res_dir, "stuntflow_mort.RDS"))
 saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stuntflow_pooled_mort.RDS"))
