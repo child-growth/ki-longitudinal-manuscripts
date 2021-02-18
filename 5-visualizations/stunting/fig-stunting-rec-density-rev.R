@@ -185,6 +185,34 @@ ggplot(xl, aes(x = haz)) +
         panel.grid.minor.y = element_blank()) +
   ggtitle("Distribution of LAZ")
 
+#-----------------------------------------
+# violin plot of laz distribution
+#-----------------------------------------
+ggplot(xl, aes(y = haz, x = category)) +
+  geom_violin(aes(fill = category), alpha = 0.6, col = "black", size = 0.05) + 
+  scale_fill_manual(values = c(pink_green[1], pink_green[2], "#E8F592",
+                               pink_green[6], pink_green[4])) +
+  # geom_vline(xintercept = -2) +
+  facet_wrap(~agemf, nrow=3) +
+  theme_bw()+
+  theme(legend.position = "bottom",
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank()) +
+  ggtitle("Distribution of LAZ")
+
+ggplot(xl, aes(y = haz, x = agemf)) +
+  geom_violin(aes(fill = agemf), alpha = 0.6, col = "black", size = 0.05) + 
+  # scale_fill_manual(values = c(pink_green[1], pink_green[2], "#E8F592",
+  #                              pink_green[6], pink_green[4])) +
+  # geom_vline(xintercept = -2) +
+  facet_wrap(~category, nrow=3) +
+  theme_bw()+
+  theme(legend.position = "bottom",
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank()) +
+  ggtitle("Distribution of LAZ")
+
+
 
 #-----------------------------------------
 # plot of change in laz distribution
