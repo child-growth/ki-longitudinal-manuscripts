@@ -88,11 +88,6 @@ plot_other = ggplot(d_plot %>% filter(!is.na(agecat) &
 
 grid.arrange(plot_sa, plot_af, plot_other, nrow=3, heights = c(4,1.5,2.3))
 
-# start here, organizing different panels by region 
-# South asia = 18
-# other = 1
-# lat amer = 5
-# africa = 7
 
 # gamma1 denotes the Pearson’s index of skewness
 # The direction of skewness is given by the sign.
