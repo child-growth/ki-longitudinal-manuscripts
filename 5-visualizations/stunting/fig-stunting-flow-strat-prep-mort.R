@@ -55,7 +55,7 @@ format_plot_data = function(data, group_vars = NULL){
         still_stunted == 1 ~ "Still stunted",
         newly_stunted == 1 ~ "Newly stunted",
         relapse == 1 ~ "Stunting relapse",
-        death == 1 ~ "Death"
+        dead == 1 ~ "Death"
         
       )
     ) %>%
@@ -72,11 +72,11 @@ format_plot_data = function(data, group_vars = NULL){
   
   if(!is.null(group_vars)){
     data_fn = data_fn %>% 
-      select(!!!(group_vars_sym), subjid, agem, classif) %>%
+      dplyr::select(!!!(group_vars_sym), subjid, agem, classif) %>%
       mutate(freq = 1) 
   }else{
     data_fn = data_fn %>% 
-      select(subjid, agem, classif) %>%
+      dplyr::select(subjid, agem, classif) %>%
       mutate(freq = 1) 
   }
   
