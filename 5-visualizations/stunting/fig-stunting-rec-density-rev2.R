@@ -53,7 +53,7 @@ get_rec = function(data, age_upper){
   # this age range
   rec_data = data %>% 
     filter(prev_stunted == 1 & agecat == age_range) %>%
-    select(studyid, country, subjid) %>%
+    dplyr::select(studyid, country, subjid) %>%
     mutate(age_rec = age_range) %>% 
     distinct()
   
@@ -62,7 +62,7 @@ get_rec = function(data, age_upper){
   rec_data_haz = full_join(rec_data, data, 
                            by = c("studyid", "country", "subjid")) %>%
     filter(!is.na(age_rec)) %>%
-    select(studyid, country, subjid, agedays, haz, age_rec)
+    dplyr::select(studyid, country, subjid, agedays, haz, age_rec)
   
   # add other phenotypes
   rec_pheno = rec_data_haz %>% 
@@ -381,24 +381,24 @@ plot_data_sub = plot_data_sub %>% mutate(pheno= case_when(
 # --------------------------------------------
 # stacked histogram plot
 # --------------------------------------------
-# # define color palette
+# define color palette
 # bluegreen = brewer.pal(n = 5, name = "YlGnBu")[2:5]
 # 
-# rec_histogram_plot = ggplot(plot_data_sub, 
-#                             aes(x=haz, y = age_meas_n, fill = age_rec_f), alpha=0.5) + 
-#   geom_density_ridges_gradient(stat = "binline", 
-#                                binwidth=.1, 
+# rec_histogram_plot = ggplot(plot_data_sub,
+#                             aes(x=haz, y = age_meas_n, fill = pheno), alpha=0.5) +
+#   geom_density_ridges_gradient(stat = "binline",
+#                                binwidth=.1,
 #                                scale=0.8,
-#                                size=0.01) + 
+#                                size=0.01) +
 #   facet_grid(~age_rec_f) +
 #   ylab("Measurement age, months")+
 #   xlab("Length-for-age Z-score")+
 #   scale_y_discrete(expand = c(0.01, 0)) +
-#   scale_x_continuous(breaks = seq(-5, 3.5, 1), 
+#   scale_x_continuous(breaks = seq(-5, 3.5, 1),
 #                      labels = seq(-5, 3.5, 1)) +
 #   geom_vline(xintercept = -2, linetype="dashed") +
 #   scale_fill_manual("Age in months when\nLAZ rose above -2",
-#                                values = bluegreen) +
+#                                values = pink_green) +
 #   theme(
 #     legend.position = "bottom"
 #   )
@@ -420,7 +420,7 @@ pink_green = rev(brewer.pal(n = 4, name = "PiYG"))[2:4]
 
 ggplot(plot_data_sub, aes(x=haz)) +
   geom_histogram(aes(fill = pheno),  bins = 80) +
-  facet_wrap(~ age_rec_f+age_meas, scales = "free_y", ncol = 4, strip.position="left") +
+  facet_wrap(age_rec_f~ age_meas, scales = "free_y", ncol = 4) +
   ylab("Measurement age, months")+
   xlab("Length-for-age Z-score")+
   scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
@@ -433,10 +433,7 @@ ggplot(plot_data_sub, aes(x=haz)) +
          panel.grid.major.y = element_blank(),
          panel.grid.minor.y = element_blank()) 
 
-# stacked histo
-ggplot(plot_data_sub %>% filter(age_meas == "15 month measurement" & 
-                                  age_rec_f == "Stunting reversal\nat 12 months"), aes(x=haz)) +
-  geom_histogram(aes(fill = pheno))
+
 
 
 # # define standardized plot names
