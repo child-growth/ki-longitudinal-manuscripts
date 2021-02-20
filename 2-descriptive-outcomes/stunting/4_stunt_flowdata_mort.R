@@ -57,7 +57,7 @@ d %>% group_by(agecat) %>%
 st_studies = unique(d$studyid)
 
 mort <- mort %>% 
-  filter(dead==0) %>% 
+  filter(dead==1) %>% 
   filter(studyid %in% st_studies) %>% 
   mutate(agemort= round(maxage / 30.4167)) %>% 
   filter(agemort <=24)
@@ -136,8 +136,6 @@ mort_merge <- mort %>% dplyr::select(studyid, country, subjid, agemort, dead) %>
   filter(agem<24)
 
 flow_m_mort <- left_join(flow_m, mort_merge, by = c("studyid", "country", "subjid", "agem"))
-## TO DO - 200 children in the mortality dataset are not merging with stunting data 
-# is it because they did not have laz measured or had abs(laz)>6?
 
 flow_m_mort <- flow_m_mort %>% mutate(dead = ifelse(is.na(dead), 0, dead))
 
