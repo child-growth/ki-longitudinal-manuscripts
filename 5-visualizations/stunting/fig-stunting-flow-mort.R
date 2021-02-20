@@ -120,7 +120,7 @@ pink_green[7] = "#000000"
 
 
 #-----------------------------------------
-# test plot 1
+# process data for plot
 #-----------------------------------------
 plot_overall = plot_overall %>% mutate(stuntcat = case_when(
   classif == "Never stunted" ~ "Never stunted or stunting reversed",
@@ -132,33 +132,6 @@ plot_overall = plot_overall %>% mutate(stuntcat = case_when(
   classif == "Death" ~ "Stunted or relapsed"
 ))
 
-p1 = ggplot(plot_overall %>% filter(stuntcat == "Never stunted or stunting reversed"), aes(x=agem, y = percent, group = classif))+
-  geom_point(aes(col = classif, fill = classif), alpha = 0.5, shape = 19) +
-  geom_line(aes(col = classif)) +
-  scale_color_manual("", values = pink_green[1:7]) +
-  scale_fill_manual("", values = pink_green[1:7]) +
-  scale_y_continuous(limits = c(0,85)) +
-  xlab("Child age, months") +
-  ylab("Percentage") +
-  facet_wrap(~stuntcat) + 
-  theme(legend.position = "bottom") 
-  
-p2 = ggplot(plot_overall %>% filter(stuntcat == "Stunted or relapsed"), aes(x=agem, y = percent, group = classif))+
-  geom_point(aes(col = classif, fill = classif), alpha = 0.5, shape = 19) +
-  geom_line(aes(col = classif)) +
-  scale_color_manual("", values = pink_green[4:7]) +
-  scale_fill_manual("", values = pink_green[4:7]) +
-  scale_y_continuous(limits = c(0,85)) +
-  xlab("Child age, months") +
-  ylab("Percentage") +
-  facet_wrap(~stuntcat) + 
-  theme(legend.position = "bottom") 
-
-grid.arrange(p1, p2, ncol =2)
-
-#-----------------------------------------
-# test plot 2
-#-----------------------------------------
 plot_overall = plot_overall %>% mutate(classif2 = case_when(
   classif == "Never stunted" ~ "Never stunted",
   classif == "No longer stunted" ~ "Stunting reversed",
@@ -169,9 +142,12 @@ plot_overall = plot_overall %>% mutate(classif2 = case_when(
   classif == "Death" ~ "Death"
 ))
 
+#-----------------------------------------
+# make plot
+#-----------------------------------------
 plot_overall2 = plot_overall %>% group_by(agem, region, classif2) %>% 
   summarize(n = sum(n),
-            tot = sum(tot)) %>% 
+            tot = mean(tot)) %>% 
   mutate(percent = n/tot *100) %>% 
   mutate(classif2 = factor(classif2, levels = c("Never stunted",
                                                 "Stunting reversed",
@@ -185,7 +161,7 @@ ggplot(plot_overall2 %>% filter(classif2 !="Never stunted"), aes(x=agem, y = per
   geom_line(aes(col = classif2)) +
   scale_color_manual("", values = pink_green[c(2,5,6,7)]) +
   scale_fill_manual("", values = pink_green[c(2,5,6,7)]) +
-  # scale_y_continuous(limits = c(0,85)) +
+  scale_y_continuous(limits = c(0,34), breaks = seq(0,34,2), labels = seq(0,34,2)) +
   xlab("Child age, months") +
   ylab("Percentage") +
   theme(legend.position = "bottom") 
