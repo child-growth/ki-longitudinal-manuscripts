@@ -118,6 +118,7 @@ pink_green[7] = "#000000"
 # saveRDS(plot_region, file=paste0(figdata_dir_stunting, "figdata-",
 #                                  bar_plot_noRE_region_name,".RDS"))
 
+
 #-----------------------------------------
 # test plot 1
 #-----------------------------------------
