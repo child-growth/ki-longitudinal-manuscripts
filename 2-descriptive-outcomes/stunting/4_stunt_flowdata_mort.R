@@ -141,8 +141,8 @@ flow_m_mort <- flow_m_mort %>% mutate(dead = ifelse(is.na(dead), 0, dead))
 
 # if the child died at a given age, reset stunting 
 # variables to 0 
-flow_m_mort <- flow_m_mort %>% 
-  mutate(stunted_at_dead = ifelse(dead==1 & stunted ==1, 1, 0)) %>% 
+flow_m_mort <- flow_m_mort %>%
+  mutate(stunted_at_dead = ifelse(dead==1 & stunted ==1, 1, 0)) %>%
   mutate(
     stunted = ifelse(dead == 1, 0, stunted),
     never_stunted = ifelse(dead == 1, 0, never_stunted),
