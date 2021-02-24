@@ -62,6 +62,12 @@ d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP", "ILINS-DYAD-G"))]
 dim(d)
 gc()
 
+#Drop children born before 1990
+dim(d)
+d <- d[brthyr>=1990]
+dim(d)
+
+
 #update study names where they have changed during BlueVelvet switch
 d <- d[studyid=="ZINC-MORTALITY", studyid := "ZnMort"]
 d <- d[studyid=="VITAMIN-B12", studyid := "Vitamin-B12"]
@@ -123,8 +129,8 @@ gc()
 
 
 #Drop CMIN cohorts with less than 200 children
-d <- d[!(studyid=="CMIN" & country != "BANGLADESH")]
-gc()
+# d <- d[!(studyid=="CMIN" & country != "BANGLADESH")]
+# gc()
 
 #Mark yearly COHORTS
 d <- d[studyid=="COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
@@ -134,59 +140,6 @@ gc()
 d <- d[measurefreq!="yearly" | studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","Burkina Faso Zn", "VITAMIN-A" )]
 gc()
 
-
-# #fix sex and Z-scores in PROBIT and CONTENT
-# dfull <- d %>% filter(!(studyid %in% c("PROBIT","CONTENT")))
-# dsub <- d %>% filter((studyid %in% c("PROBIT","CONTENT")))
-# rm(d)
-# gc()
-# 
-# dsub$sex2 <- ifelse(dsub$sex=="Male", "Female", "Male")
-# dsub$sex2[is.na(dsub$sex) | dsub$sex==""] <- NA
-# table(dsub$sex)
-# table(dsub$sex2)
-# dsub$sex <- dsub$sex2
-# 
-# dsub <- dsub %>% filter(!is.na(sex))
-
-# #recalculate Z-scores
-# 
-# #whz
-# #use length or height standards, depending on age
-# dsub$whz2 <- ifelse(!is.na(dsub$lencm),
-#                     who_value2zscore2(dsub$lencm, dsub$wtkg, x_var = "lencm", y_var = "wtkg", sex = dsub$sex),    
-#                     who_value2zscore(dsub$htcm, dsub$wtkg, x_var = "htcm", y_var = "wtkg", sex = dsub$sex)
-#                     )
-# 
-# 
-# #temporarily combine length and height variables
-# dsub$lencm[is.na(dsub$lencm) & !is.na(dsub$htcm)] <- dsub$htcm[is.na(dsub$lencm) & !is.na(dsub$htcm)] 
-# 
-# #haz and waz
-# dsub$haz2 <- who_value2zscore(dsub$agedays, dsub$lencm, x_var = "agedays", y_var = "htcm", sex = dsub$sex)
-# dsub$waz2 <- who_value2zscore(dsub$agedays, dsub$wtkg, x_var = "agedays", y_var = "wtkg", sex = dsub$sex)
-# 
-# 
-# summary(dsub$haz)
-# summary(dsub$haz2)
-# 
-# summary(dsub$haz[dsub$sex=="Male"])
-# summary(dsub$haz[dsub$sex=="Female"])
-# summary(dsub$haz2[dsub$sex=="Male"])
-# summary(dsub$haz2[dsub$sex=="Female"])
-# 
-# summary(dsub$waz)
-# summary(dsub$waz2)
-# 
-# summary(dsub$whz)
-# summary(dsub$whz2)
-# 
-# dsub$haz <- dsub$haz2
-# dsub$waz <- dsub$waz2
-# dsub$whz <- dsub$whz2
-# 
-# dsub <- dsub %>% subset(., select = -c(sex2, haz2, waz2, whz2))
-# d <- bind_rows(dfull, dsub)
 
 
 saveRDS(d, included_studies_path)

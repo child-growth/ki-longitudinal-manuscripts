@@ -49,7 +49,8 @@ library(zoo)
 
 # Define directories
 res_dir                           = here::here("results/")
-dhs_res_dir                       = here::here("results", "dhs")
+#dhs_res_dir                       = here::here("results", "dhs")
+dhs_res_dir                       = "/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs/"
 data_dir                          = here::here("data")
 metadata_dir                      = "U:/results/Metadata/"
 
