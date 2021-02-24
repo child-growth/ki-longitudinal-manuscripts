@@ -48,17 +48,16 @@ d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m")
 d_fe <- d %>% filter(analysis == "Fixed effects")
 
 #-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion (primary)
+# Stunting incidence proportion (primary)
 #-------------------------------------------------------------------------------------------
-
-ci_inc_plot_primary <- plot_ci_inc(d_primary, birth="strat", sev="no", returnData=T)
-ci_inc_plot_primary$plot
-
+# TODO: COMPARE TO LINE 133: birth strat vs yes
+ip_plot_primary <- plot_ip(d_primary, birth="strat", sev="no", returnData=T)
+ip_plot_primary$plot
 
 # get N's for figure caption
 inc_n_primary = d_primary %>%
   filter(disease == "Stunting" &
-           (measure == "Cumulative incidence" | measure== "Incidence proportion") &
+           measure== "Incidence proportion" &
            age_range == "3 months" &
            birth == "strat" &
            cohort == "pooled" &
@@ -69,45 +68,44 @@ inc_n_primary = d_primary %>%
             min_n = min(nmeas, na.rm=TRUE),
             max_n = max(nmeas, na.rm=TRUE))
 
-ci_inc_plot_name_primary = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$p)
+ip_plot_name_primary = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$p)
 
 # save plot and underlying data
-ggsave(ci_inc_plot_primary$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name_primary,".png"), width=16, height=4)
-saveRDS(ci_inc_plot_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_name_primary,".RDS"))
+ggsave(ip_plot_primary$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_primary,".png"), width=16, height=4)
+saveRDS(ip_plot_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_primary,".RDS"))
 
 
 
 #-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion (monthly from 0-24 months)
+# Stunting incidence proportion (monthly from 0-24 months)
 #-------------------------------------------------------------------------------------------
-ci_inc_plot_monthly <- plot_ci_inc(d_monthly, 
-                                   meas=c("Cumulative incidence - monthly cohorts", "Incidence proportion - monthly cohorts"), 
-                                   birth="yes", 
-                                   sev="no")
-
-ci_inc_plot_monthly
+ip_plot_monthly <- plot_ip(d_monthly, 
+                               meas="Incidence proportion - monthly cohorts", 
+                               birth="yes", 
+                               sev="no")
+ip_plot_monthly
 
 
 # define standardized plot names
-ci_inc_plot_name_monthly <- name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$m)
+ip_plot_name_monthly <- name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$m)
 
 # save plot and underlying data
-ggsave(ci_inc_plot_monthly, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name_monthly,".png"), width=14, height=3)
+ggsave(ip_plot_monthly, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_monthly,".png"), width=14, height=3)
 
-saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_name_monthly,".RDS"))
+saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_monthly,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion (fixed effects)
+# Stunting incidence proportion (fixed effects)
 #-------------------------------------------------------------------------------------------
-ci_inc_plot_fe <- plot_ci_inc(d_fe, birth="strat", sev="no", returnData=T)
-ci_inc_plot_fe$plot
+ip_plot_fe <- plot_ip(d_fe, birth="strat", sev="no", returnData=T)
+ip_plot_fe$plot
 
 
 # get N's for figure caption
 inc_n_fe = d_fe %>%
   filter(disease == "Stunting" & 
-           (measure == "Cumulative incidence" | measure== "Incidence proportion") & 
+           measure== "Incidence proportion" & 
            region!="Overall" &
            age_range == "3 months" &
            birth == "strat" & 
@@ -120,12 +118,12 @@ inc_n_fe = d_fe %>%
             max_n = max(nmeas, na.rm=TRUE))
 
 # define standardized plot names
-ci_inc_plot_name_fe = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$f)
+ip_plot_name_fe = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$f)
 
 # save plot and underlying data
-ggsave(ci_inc_plot_fe$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_name_fe,".png"), width=16, height=4)
+ggsave(ip_plot_fe$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_fe,".png"), width=16, height=4)
 
-saveRDS(ci_inc_plot_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_name_fe,".RDS"))
+saveRDS(ip_plot_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_fe,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -162,51 +160,51 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), wid
 
 
 #-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion - severe (primary)
+# Stunting incidence proportion - severe (primary)
 #-------------------------------------------------------------------------------------------
-ci_inc_plot_sev_primary <- plot_ci_inc(d_primary, birth="yes", sev="yes", returnData=T) #h1=85,
-ci_inc_plot_sev_primary$plot
+ip_plot_sev_primary <- plot_ip(d_primary, birth="yes", sev="yes", returnData=T) #h1=85,
+ip_plot_sev_primary$plot
 
 
 # define standardized plot names
-ci_inc_plot_sev_name_primary = name_inc_plots(cut=3, pop=pop_list$o, loc="", ana=analysis_list$p)
+ip_plot_sev_name_primary = name_inc_plots(cut=3, pop=pop_list$o, loc="", ana=analysis_list$p)
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev_primary$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name_primary,".png"), width=14, height=4)
-saveRDS(ci_inc_plot_sev_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_sev_name_primary,".RDS"))
+ggsave(ip_plot_sev_primary$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_sev_name_primary,".png"), width=14, height=4)
+saveRDS(ip_plot_sev_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_sev_name_primary,".RDS"))
 
 #-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion - severe (monthly)
+# Stunting incidence proportion - severe (monthly)
 #-------------------------------------------------------------------------------------------
-ci_inc_plot_sev_monthly <- plot_ci_inc(d_monthly, 
-                                       meas=c("Cumulative incidence - monthly cohorts", "Incidence proportion - monthly cohorts"),
-                                       birth="yes", 
-                                       sev="yes") 
-ci_inc_plot_sev_monthly
+ip_plot_sev_monthly <- plot_ip(d_monthly, 
+                               meas="Incidence proportion - monthly cohorts",
+                               birth="yes", 
+                               sev="yes") 
+ip_plot_sev_monthly
 
 
 # define standardized plot names
-ci_inc_plot_sev_name_monthly <- name_inc_plots(cut=3, pop=pop_list$o, loc="", ana=analysis_list$m)
+ip_plot_sev_name_monthly <- name_inc_plots(cut=3, pop=pop_list$o, loc="", ana=analysis_list$m)
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev_monthly, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name_monthly,".png"), width=14, height=3)
-saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_sev_name_monthly,".RDS"))
+ggsave(ip_plot_sev_monthly, file=paste0(fig_dir, "stunting/fig-",ip_plot_sev_name_monthly,".png"), width=14, height=3)
+saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_sev_name_monthly,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion - severe (fixed effects)
+# Stunting incidence proportion - severe (fixed effects)
 #-------------------------------------------------------------------------------------------
 
-ci_inc_plot_sev_fe <- plot_ci_inc(d_fe, birth="yes", sev="yes", returnData=T)
-ci_inc_plot_sev_fe$plot
+ip_plot_sev_fe <- plot_ip(d_fe, birth="yes", sev="yes", returnData=T)
+ip_plot_sev_fe$plot
 
 
 # define standardized plot names
-ci_inc_plot_sev_name_fe = name_inc_plots(cut=3, pop=pop_list$o, loc="", ana=analysis_list$f)
+ip_plot_sev_name_fe = name_inc_plots(cut=3, pop=pop_list$o, loc="", ana=analysis_list$f)
 
 # save plot and underlying data
-ggsave(ci_inc_plot_sev_fe$plot, file=paste0(fig_dir, "stunting/fig-",ci_inc_plot_sev_name_fe,".png"), width=14, height=4)
-saveRDS(ci_inc_plot_sev_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ci_inc_plot_sev_name_fe,".RDS"))
+ggsave(ip_plot_sev_fe$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_sev_name_fe,".png"), width=14, height=4)
+saveRDS(ip_plot_sev_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_sev_name_fe,".RDS"))
 
 
 #-------------------------------------------------------------------------------------------
