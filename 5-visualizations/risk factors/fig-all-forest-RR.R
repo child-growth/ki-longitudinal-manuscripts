@@ -84,6 +84,8 @@ d$studyid <- as.character(d$studyid)
 d$studyid <- factor(d$studyid, levels=unique(d$studyid))
 d$order <- as.numeric(d$studyid)
 
+d$intervention_level[d$intervention_variable=="birthwt"] <- "< 2500 g"
+
 d <- d%>% filter(!is.na(intervention_variable),!is.na(intervention_level), !is.na(outcome_variable), !is.na(agecat))
 d <- droplevels(d)
 
