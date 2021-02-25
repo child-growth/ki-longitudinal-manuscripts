@@ -116,6 +116,20 @@ plot_ci_inc <- function(d, meas=c("Cumulative incidence", "Incidence proportion"
                 ...)
 }
 
+plot_ip <- function(d, meas="Incidence proportion", birth, sev, ...) {
+  ki_combo_plot(d,
+                Disease="Stunting",
+                Measure=meas, 
+                Birth=birth, 
+                Severe=sev, 
+                Age_range="3 months", 
+                Cohort="pooled",
+                xlabel="Child age, months",
+                h1=90,
+                h2=90,
+                ...)
+}
+
 # define standardized plot names
 name_inc_plots <- function(cut=2, pop, loc="", ana) {
   create_name(
