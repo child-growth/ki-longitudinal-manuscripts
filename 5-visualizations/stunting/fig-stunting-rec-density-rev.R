@@ -22,7 +22,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 # 
 # # load stunting recovery cohort data
-# d = readRDS(paste0(res_dir, "stunt_rec_cohort.RDS"))
+# d = readRDS(paste0(resstunt_rec_cohort.RDS_dir, "stunt_rec_cohort.RDS"))
 # 
 # d$subjid <- as.numeric(d$subjid)
 # 
@@ -123,7 +123,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 
 
-d = readRDS(paste0(res_dir, "stuntflow_mort.RDS"))
+d = readRDS(paste0(res_bluevelvet_dir, "stuntflow_mort.RDS"))
 d$test = d$never_stunted+d$not_stunted+d$recover+d$newly_stunted+
      d$relapse+d$still_stunted
 
