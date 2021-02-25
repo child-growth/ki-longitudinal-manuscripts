@@ -588,7 +588,7 @@ run_rma_agem <- function(data, n_name, x_name, label, method) {
   res$ptest.f <- sprintf("%0.0f", res$est)
   res$label <- label
 
-  res <- res %>% select(label, agem, nstudies, nmeas, everything())
+  res <- res %>% dplyr::select(label, agem, nstudies, nmeas, everything())
 
   return(res)
 }

@@ -7,6 +7,8 @@
 # proportion of children who were newly stunted, 
 # still stunted, relapsed, recovered, never stunted
 
+# includes mortality category
+
 # inputs: 
 # stuntflow.RDS
 
@@ -18,7 +20,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load data
-stunt_data = readRDS(paste0(res_bluevelvet_dir, "stuntflow.RDS"))
+stunt_data = readRDS(paste0(res_bluevelvet_dir, "stuntflow_mort.RDS"))
 
 # number of studies, countries, children included
 length(names(table(stunt_data$studyid)))
@@ -52,7 +54,8 @@ format_plot_data = function(data, group_vars = NULL){
         not_stunted == 1 ~ "No longer stunted",
         still_stunted == 1 ~ "Still stunted",
         newly_stunted == 1 ~ "Newly stunted",
-        relapse == 1 ~ "Stunting relapse"
+        relapse == 1 ~ "Stunting relapse",
+        dead == 1 ~ "Death"
         
       )
     ) %>%
@@ -63,7 +66,8 @@ format_plot_data = function(data, group_vars = NULL){
                        "Stunting reversed",
                        "Newly stunted",
                        "Stunting relapse",
-                       "Still stunted")
+                       "Still stunted",
+                       "Death")
     ))
   
   if(!is.null(group_vars)){
@@ -140,8 +144,8 @@ plot_region %>%
   summarise(min = min(n),
             max = max(n))
 
-saveRDS(plot_overall, file = paste0(res_dir, "stunt-flow-data-pooled.RDS"))
-saveRDS(plot_region, file = paste0(res_dir, "stunt-flow-data-region.RDS"))
+saveRDS(plot_overall, file = paste0(res_dir, "stunt-flow-data-pooled-mort.RDS"))
+saveRDS(plot_region, file = paste0(res_dir, "stunt-flow-data-region-mort.RDS"))
 
 
 

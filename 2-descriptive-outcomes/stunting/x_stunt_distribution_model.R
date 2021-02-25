@@ -7,6 +7,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 library(fitdistrplus)
+library(sn)
 
 d <- readRDS(stunting_data_path)
 
@@ -31,69 +32,45 @@ agelst3_birthstrat = list(
 #------------------------------
 # fit skewed normal model 
 #------------------------------
-myfn = function(data, age){
-  dsub = data %>% filter(agecat == age)
-}
-
-test = lapply(agelst3_birthstrat, 
-              function(x)
-              myfn(data = xd, age = x))
-
-
 fit_sn = function(data){
   fit = selm(haz ~ 1, data = data)
   out = as.data.frame(t(fit@param$cp))
   out$agecat = unique(data$agecat)
+  assert_that(length(unique(data$studyid))==1)
+  out$studyid = unique(data$studyid)
   return(out)
 }
 
-sn_fits = agelst3_birthstrat %>% 
-  map_dfr(~fit_sn(data = xd %>% filter(agecat == .x)))
+studyid_list = as.list(unique(d_clean$studyid))
 
-sn_fits$mean_f = paste0("Mean: ", sprintf("%0.02f", sn_fits$mean))
-sn_fits$sd_f = paste0("SD: ", sprintf("%0.02f", sn_fits$`s.d.`))
-sn_fits$gamma1_f = paste0("Gamma: ", sprintf("%0.02f", sn_fits$gamma1))
-sn_fits$label = paste0(sn_fits$mean_f, "\n", 
-                       sn_fits$sd_f, "\n",
-                       sn_fits$gamma1_f)
+sn_fits_list = list()
+sn_fits_age_list = list()
 
-#------------------------------
-# plot empirical distribution over different ages 
-#------------------------------
+for(i in 1:length(studyid_list)){
+  print(paste0("i: ", i))
+  for(j in 1:length(agelst3_birthstrat)){
+    print(paste0("j: ", j))
+    fit_data = d_clean %>% 
+      filter(agecat == agelst3_birthstrat[[j]]) %>% 
+      filter(studyid==studyid_list[[i]])
+    if(nrow(fit_data)<30){
+      sn_fits_age_list[[j]] = data.frame(mean = NA, `s.d.` = NA, gamma1 = NA)
+    }else{
+      sn_fits_age_list[[j]] = fit_sn(data = fit_data)
+    }
+  }
+  sn_fits_list[[i]] = bind_rows(sn_fits_age_list)
+  sn_fits_age_list[[j]] = NULL
+  
+}
 
-library(viridis)
-# version with overlay
-ggplot(xd %>% filter(!is.na(agecat)), aes(x = haz)) +
-  geom_density(aes(col = agecat)) +
-  geom_point(data = sn_fits, aes(x=mean, y = 0, col = agecat), shape = 1, size = 3, 
-             stroke=1) + 
-  scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.9) +
-  scale_x_continuous(limits = c(-6,6), breaks=seq(-6,6,1), labels=seq(-6,6,1)) +
-  theme(legend.position = "right",
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank())
+sn_fits_age_df = bind_rows(sn_fits_list)
 
-# version with facet grid
-ggplot(xd %>% filter(!is.na(agecat)), aes(x = haz)) +
-  geom_density(aes(col = agecat)) +
-  scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.8) +
-  scale_x_continuous(limits = c(-6,6), breaks=seq(-6,6,1), labels=seq(-6,6,1)) +
-  geom_label(aes(x = -5.4, y = 0.25, label = label, col = agecat), data = sn_fits,
-             size = 3) +
-  facet_wrap(~agecat, ncol=1)+
-  theme(
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank())
+sn_fits_age_df$mean_f = paste0("Mean: ", sprintf("%0.02f", sn_fits_age_df$mean))
+sn_fits_age_df$sd_f = paste0("SD: ", sprintf("%0.02f", sn_fits_age_df$`s.d.`))
+sn_fits_age_df$gamma1_f = paste0("Gamma: ", sprintf("%0.02f", sn_fits_age_df$gamma1))
+sn_fits_age_df$label = paste0(sn_fits_age_df$mean_f, "\n", 
+                              sn_fits_age_df$sd_f, "\n",
+                              sn_fits_age_df$gamma1_f)
 
-
-# gamma1 denotes the Pearson’s index of skewness
-# The direction of skewness is given by the sign.
-# The coefficient compares the sample distribution with a normal distribution. The larger the value, the larger the distribution differs from a normal distribution.
-# A value of zero means no skewness at all.
-# A large negative value means the distribution is negatively skewed.
-# A large positive value means the distribution is positively skewed.
-
-
-
+saveRDS(sn_fits_age_df, paste0(here::here(), "/results/stunt_skewed_normal.RDS"))

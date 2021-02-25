@@ -307,17 +307,17 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
               position = position_dodge(width = dodge),
               vjust = 0.5) + 
     
-    geom_text(data=df[df$measure =="Cumulative incidence",],              
+    geom_text(data=df[df$measure =="Cumulative incidence",],
               aes(x = agecat, y = est, label = round(est.f)),
-              hjust = 1.5, 
+              hjust = 1.5,
               position = position_dodge(width = dodge),
-              vjust = 0.5) + 
-    
-    geom_text(data=df[df$measure =="Cumulative incidence - monthly cohorts",],              
+              vjust = 0.5) +
+
+    geom_text(data=df[df$measure =="Cumulative incidence - monthly cohorts",],
               aes(x = agecat, y = est, label = round(est.f)),
-              hjust = 1.5, 
+              hjust = 1.5,
               position = position_dodge(width = dodge),
-              vjust = 0.5) + 
+              vjust = 0.5) +
     
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
