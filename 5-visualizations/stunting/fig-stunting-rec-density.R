@@ -22,7 +22,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load stunting recovery cohort data
-d = readRDS(paste0(res_dir, "stunt_rec_cohort.RDS"))
+d = readRDS(paste0(stunt_rec_cohort.RDS, "stunt_rec_cohort.RDS"))
 
 d$subjid <- as.numeric(d$subjid)
 
