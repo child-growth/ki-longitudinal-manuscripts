@@ -51,10 +51,13 @@ library(zoo)
 # results that can be pushed to github:
 res_dir                           = here::here("results/")
 
+
 # results that cannot be pushed to github:
 res_bluevelvet_dir                = "/data/KI/UCB-SuperLearner/ki-results/"
 
-dhs_res_dir                       = here::here("results", "dhs")
+#dhs_res_dir                       = here::here("results", "dhs")
+dhs_res_dir                       = "/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs/"
+
 data_dir                          = here::here("data")
 metadata_dir                      = "U:/results/Metadata/"
 

@@ -73,6 +73,7 @@ table(d$month)
 
 # Save dataset
 saveRDS(d, ki_manuscript_dataset_path)
+write.csv(d, "/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-manuscript-dataset.csv")
 
 
 # Create dataset of study start years
