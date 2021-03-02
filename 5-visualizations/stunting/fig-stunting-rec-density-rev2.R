@@ -22,7 +22,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load stunting recovery cohort data
-d = readRDS(paste0(stunt_rec_cohort.RDS, "stunt_rec_cohort.RDS"))
+d = readRDS(paste0(res_bluevelvet_dir, "stunt_rec_cohort.RDS"))
 
 d$subjid <- as.numeric(d$subjid)
 
@@ -53,26 +53,84 @@ get_rec = function(data, age_upper){
   # this age range
   rec_data = data %>% 
     filter(prev_stunted == 1 & agecat == age_range) %>%
-    select(studyid, country, subjid) %>%
-    mutate(age_rec = age_range)
+    dplyr::select(studyid, country, subjid) %>%
+    mutate(age_rec = age_range) %>% 
+    distinct()
   
   rec_data = rec_data[!duplicated(rec_data),]
   
   rec_data_haz = full_join(rec_data, data, 
                            by = c("studyid", "country", "subjid")) %>%
-    
     filter(!is.na(age_rec)) %>%
-    select(studyid, country, subjid, agedays, haz, age_rec)
+    dplyr::select(studyid, country, subjid, agedays, haz, age_rec)
+  
+  # add other phenotypes
+  rec_pheno = rec_data_haz %>% 
+    group_by(studyid,country,subjid) %>%
+    mutate(laghaz = lag(haz)) %>%
+    mutate(agem = agedays / 30.4167)  %>% 
+    
+    # create reverse measid
+    mutate(measid = seq_along(agem),
+           revmeasid = rev(seq_along(agem))) %>%
+    
+    mutate(stunted=ifelse(haz< -2,1,0),
+           lagstunted=lag(stunted),
+           lageverstunted = lag(cummax(stunted))) %>%
+    
+    mutate(newly_stunted = ifelse(stunted==1 & 
+                                    lageverstunted == 0 , 1, 0),
+           
+           recover =       ifelse(stunted==0 &
+                                    lagstunted==1 &
+                                    lageverstunted==1, 1, 0),
+           
+           never_stunted =       ifelse(stunted==0 &
+                                          lagstunted==0 &
+                                          lageverstunted==0, 1, 0)) %>%
+    
+    # recoding indicators at first measurement since lag is NA
+    mutate(newly_stunted = ifelse(stunted==1 & measid==1, 1, newly_stunted),
+           
+           never_stunted = ifelse(stunted==0 & measid==1, 1, never_stunted),
+           
+           recover = ifelse(stunted==0 & measid==1, 0, recover)) %>%
+    
+    # code relapse 
+    mutate(everrecover = cummax(recover),
+           evernew = cummax(newly_stunted),
+           
+           relapse =       ifelse(stunted==1 &
+                                    lageverstunted==1 &
+                                    lagstunted==0 &
+                                    everrecover==1, 1, 0),
+           
+           still_stunted = ifelse(stunted==1 & 
+                                    evernew==1 &
+                                    lagstunted==1, 1, 0),
+           
+           not_stunted =   ifelse(stunted==0 & 
+                                    lagstunted==0 &
+                                    everrecover==1, 1, 0))  %>%
+    
+    # recode still stunted at first measurement  
+    mutate(still_stunted = ifelse(measid==1, 0, still_stunted))  %>% 
+    
+    # drop extra columns
+    dplyr::select(-c(laghaz, measid, revmeasid, lagstunted, stunted,
+                     lageverstunted, everrecover, evernew))
   
   # subsequent measurement ages after recovery
   age_meas = seq(age_upper, 15, 3) 
   
   rec_meas_sub_list = lapply(age_meas, function(x) 
-    subset_rec(data = rec_data_haz, 
+    subset_rec(data = rec_pheno, 
                age_months = x,
                age_range = age_range))
   
-  rec_meas_sub = bind_rows(rec_meas_sub_list)
+  rec_meas_sub = bind_rows(rec_meas_sub_list) 
+  
+  
   
 }
 
@@ -103,6 +161,9 @@ rec_data = lapply(age_range_list, function(x)
 
 # bind list elements
 plot_data = bind_rows(rec_data) 
+
+# check that never stunted children are not included
+assert_that(names(table(plot_data$never_stunted))=="0")
 
 summary = plot_data %>%
   group_by(age_rec, age_meas) %>%
@@ -271,80 +332,125 @@ plot_data_sub = plot_data_sub %>%
   )))
 
 plot_data_sub = plot_data_sub %>%
-  mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
-  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
+  mutate(age_meas_n = gsub(" month measurement", "", age_meas))
+# mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
 
+# phenotype categories
+plot_data_sub = plot_data_sub %>% mutate(pheno= case_when(
+  still_stunted==1 ~ "Still stunted",
+  newly_stunted==1 ~ "Newly stunted/relapsed",
+  relapse==1 ~ "Newly stunted/relapsed",
+  recover==1 ~ "Recovered/not stunted",
+  not_stunted==1 ~ "Recovered/not stunted",
+  never_stunted==1 ~ "Never stunted",
+  
+)) %>% 
+  mutate(pheno = factor(pheno, levels = c("Never stunted", "Recovered/not stunted",
+                                          "Newly stunted/relapsed", "Still stunted")))
 
 
 # --------------------------------------------
 # prepare label for each panel of the plot
 # --------------------------------------------
-results_df = results_df %>% 
-  mutate(lab = paste0("% Stunted:\n", sprintf("%0.0f", stunting_prev*100), " ",
-                      "(95% CI ", sprintf("%0.0f", prev_lb*100), ", ",
-                      sprintf("%0.0f", prev_ub*100), ")") ) %>%
-  mutate(x = -5,
-         y = case_when(
-           age_meas == "3 month measurement" ~ 5.4,
-           age_meas == "6 month measurement" ~ 4.85,
-           age_meas == "9 month measurement" ~ 3.85,
-           age_meas == "12 month measurement" ~ 2.85,
-           age_meas == "15 month measurement" ~ 1.85
-         )) %>%
-  mutate(age_rec_f = case_when(
-    age_rec == "0-3 months" ~ "Stunting reversal\nat 3 months",
-    age_rec == "3-6 months" ~ "Stunting reversal\nat 6 months",
-    age_rec == "6-9 months" ~ "Stunting reversal\nat 9 months",
-    age_rec == "9-12 months" ~ "Stunting reversal\nat 12 months"
-  )) %>%
-  mutate(age_rec_f = factor(age_rec_f, levels = c(
-    "Stunting reversal\nat 3 months",
-    "Stunting reversal\nat 6 months",
-    "Stunting reversal\nat 9 months",
-    "Stunting reversal\nat 12 months"
-  ))) 
+# results_df = results_df %>% 
+#   mutate(lab = paste0("% Stunted:\n", sprintf("%0.0f", stunting_prev*100), " ",
+#                       "(95% CI ", sprintf("%0.0f", prev_lb*100), ", ",
+#                       sprintf("%0.0f", prev_ub*100), ")") ) %>%
+#   mutate(x = -5,
+#          y = case_when(
+#            age_meas == "3 month measurement" ~ 5.4,
+#            age_meas == "6 month measurement" ~ 4.85,
+#            age_meas == "9 month measurement" ~ 3.85,
+#            age_meas == "12 month measurement" ~ 2.85,
+#            age_meas == "15 month measurement" ~ 1.85
+#          )) %>%
+#   mutate(age_rec_f = case_when(
+#     age_rec == "0-3 months" ~ "Stunting reversal\nat 3 months",
+#     age_rec == "3-6 months" ~ "Stunting reversal\nat 6 months",
+#     age_rec == "6-9 months" ~ "Stunting reversal\nat 9 months",
+#     age_rec == "9-12 months" ~ "Stunting reversal\nat 12 months"
+#   )) %>%
+#   mutate(age_rec_f = factor(age_rec_f, levels = c(
+#     "Stunting reversal\nat 3 months",
+#     "Stunting reversal\nat 6 months",
+#     "Stunting reversal\nat 9 months",
+#     "Stunting reversal\nat 12 months"
+#   ))) 
 
 
 # --------------------------------------------
 # stacked histogram plot
 # --------------------------------------------
 # define color palette
-bluegreen = brewer.pal(n = 5, name = "YlGnBu")[2:5]
+# bluegreen = brewer.pal(n = 5, name = "YlGnBu")[2:5]
+# 
+# rec_histogram_plot = ggplot(plot_data_sub,
+#                             aes(x=haz, y = age_meas_n, fill = pheno), alpha=0.5) +
+#   geom_density_ridges_gradient(stat = "binline",
+#                                binwidth=.1,
+#                                scale=0.8,
+#                                size=0.01) +
+#   facet_grid(~age_rec_f) +
+#   ylab("Measurement age, months")+
+#   xlab("Length-for-age Z-score")+
+#   scale_y_discrete(expand = c(0.01, 0)) +
+#   scale_x_continuous(breaks = seq(-5, 3.5, 1),
+#                      labels = seq(-5, 3.5, 1)) +
+#   geom_vline(xintercept = -2, linetype="dashed") +
+#   scale_fill_manual("Age in months when\nLAZ rose above -2",
+#                                values = pink_green) +
+#   theme(
+#     legend.position = "bottom"
+#   )
+# rec_histogram_plot
+# 
+# plot_data_sub$age_meas_n = factor(plot_data_sub$age_meas_n , 
+#                                  levels = c("3", "6", "9", "12", "15"))
+# plot_data_sub$age_meas = factor(plot_data_sub$age_meas, 
+#                                   levels = c("3 month measurement", 
+#                                              "6 month measurement", 
+#                                              "9 month measurement", 
+#                                              "12 month measurement", 
+#                                              "15 month measurement"))
 
-rec_histogram_plot = ggplot(plot_data_sub, 
-                            aes(x=haz, y = age_meas_n, fill = age_rec_f)) + 
-  geom_density_ridges_gradient(stat = "binline", 
-                               binwidth=.1, 
-                               scale=0.8,
-                               size=0.01) + 
-  facet_grid(~age_rec_f) +
+#-----------------------------------------
+# define color palette
+#-----------------------------------------
+pink_green = rev(brewer.pal(n = 4, name = "PiYG"))[2:4]
+
+ggplot(plot_data_sub, aes(x=haz)) +
+  geom_histogram(aes(fill = pheno),  bins = 80) +
+  facet_wrap(age_rec_f~ age_meas, scales = "free_y", ncol = 4) +
   ylab("Measurement age, months")+
   xlab("Length-for-age Z-score")+
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(breaks = seq(-5, 3.5, 1), 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
                      labels = seq(-5, 3.5, 1)) +
   geom_vline(xintercept = -2, linetype="dashed") +
   scale_fill_manual("Age in months when\nLAZ rose above -2",
-                               values = bluegreen) +
-  theme(
-    legend.position = "bottom"
-  )
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank()) 
 
-# define standardized plot names
-rec_histogram_plot_name = create_name(
-  outcome = "LAZ",
-  cutoff = 2,
-  measure = "distribution after laz >= -2",
-  population = "overall",
-  location = "",
-  age = "All ages",
-  analysis = "primary"
-)
 
-# save plot 
 
-ggsave(rec_histogram_plot, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,
-       ".png"), width=8, height=5)
 
-saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,".RDS"))
+# # define standardized plot names
+# rec_histogram_plot_name = create_name(
+#   outcome = "LAZ",
+#   cutoff = 2,
+#   measure = "distribution after laz >= -2",
+#   population = "overall",
+#   location = "",
+#   age = "All ages",
+#   analysis = "primary"
+# )
+# 
+# # save plot 
+# 
+# ggsave(rec_histogram_plot, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,
+#        ".png"), width=8, height=5)
+# 
+# saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,".RDS"))
 

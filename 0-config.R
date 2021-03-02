@@ -48,9 +48,16 @@ library(bit64)
 library(zoo)
 
 # Define directories
+# results that can be pushed to github:
 res_dir                           = here::here("results/")
+
+
+# results that cannot be pushed to github:
+res_bluevelvet_dir                = "/data/KI/UCB-SuperLearner/ki-results/"
+
 #dhs_res_dir                       = here::here("results", "dhs")
 dhs_res_dir                       = "/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs/"
+
 data_dir                          = here::here("data")
 metadata_dir                      = "U:/results/Metadata/"
 
@@ -60,7 +67,7 @@ metadata_dir                      = "U:/results/Metadata/"
 
 
     
-project_functions_dir             = here::here("0-project-functions/")
+project_functions_dir             = here::here("0-project-functions")
 data_cleaning_dir                 = here::here("1-data-cleaning")
 descriptive_outcomes_dir          = here::here("2-descriptive-outcomes")
 prep_tmle_analysis_dir            = here::here("3-prep-tmle-analysis")
