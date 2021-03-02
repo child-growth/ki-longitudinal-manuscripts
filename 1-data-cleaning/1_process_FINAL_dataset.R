@@ -48,9 +48,26 @@ d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
 gc()
 
 
-unique(d$STUDYID)
 
+#Load in TDC and Ecuador egg
+tdc <- read.csv(paste0(ghapdata_dir,"raw individual study datasets/KI1000108_TDC.csv")) %>% mutate(STUDYID="TDC")
+tdc %>% group_by(SUBJID) %>% mutate(lagage=AGEDAYS-lag(AGEDAYS)) %>% ungroup() %>% summarize(mn=mean(lagage,na.rm=T), md=median(lagage,na.rm=T))
+
+colnames(d)
+colnames(tdc)
+tdc <- tdc %>% rename(NHH=NPERSON) %>% mutate(BRTHORDR=GRAVIDA - NABT - NSTLBRTH, 
+                                              HDLVRY=case_when(
+                                                DLVLOC=="Hospital" ~ 0,
+                                                DLVLOC=="Home" ~ 1
+                                              ))
+
+
+d$SUBJID <- as.numeric(d$SUBJID)
+d <- bind_rows(d, tdc)
+
+unique(d$STUDYID)
 colnames(d) <- tolower(colnames(d))
+rm(tdc)
 gc()
 
 # df <- d %>% filter(studyid=="COHORTS" & subjid %in% c("20000270", "20000391", "20000672", "20001129", "20001453"))
@@ -79,12 +96,18 @@ d <- d[studyid=="BurkinaFasoZn", studyid := "Burkina Faso Zn"]
 d <- d[studyid=="ILINS-DOSE", studyid := "iLiNS-DOSE"]
 d <- d[studyid=="ILINS-DYAD-M", studyid := "iLiNS-DYAD-M"]
 
+#distinguish CMIN cohorts
+d$studyid[d$studyid=="CMIN"] <- paste0(d$studyid[d$studyid=="CMIN"], d$siteid[d$studyid=="CMIN"])
+
 unique(d$studyid)
+
+d %>% filter(!is.na(waz)|!is.na(haz)) %>% group_by(studyid, country, subjid) %>% mutate(lagage=agedays-lag(agedays)) %>% group_by(studyid) %>% summarize(mn=mean(lagage,na.rm=T), md=median(lagage,na.rm=T))
 
 
 monthly_vec <- c("MAL-ED",   
   "CMC-V-BCS-2002",              
-  "IRC",               
+  "IRC",    
+  "TDC",
   "EE",           
   "ResPak",  
   "PROVIDE",  
@@ -92,13 +115,17 @@ monthly_vec <- c("MAL-ED",
   "Keneba",  
   "Guatemala BSC",       
   "GMS-Nepal",    
-  "CMIN",                 
+  "CMIN2",                 
+  "CMIN3",                 
+  "CMIN7",                 
   "CONTENT")
 
 quarterly_vec <- c("iLiNS-Zinc",  
   "JiVitA-3",          
   "JiVitA-4", 
   "LCNI-5",          
+  "CMIN4",                 
+  "CMIN6",                 
   "NIH-Birth",
   "NIH-Crypto",   
   "PROBIT",         

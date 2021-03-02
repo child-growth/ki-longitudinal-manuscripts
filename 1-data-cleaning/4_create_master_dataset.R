@@ -33,7 +33,7 @@ cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
 dput(colnames(cov))
 
-cov <- cov %>% subset(., select = c(studyid, subjid, siteid, country, 
+cov <- cov %>% subset(., select = c(studyid, subjid,  country, 
                                     gagebrth, brthmon, parity, birthwt, birthlen, vagbrth, 
                                     hdlvry, mage, mhtcm, mwtkg, mbmi, meducyrs, single, 
                                     fage, fhtcm, feducyrs, trth2o, cleanck, impfloor, 

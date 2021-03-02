@@ -97,6 +97,12 @@ assetPCA<-function(dfull, varlist, reorder=F ){
   }
   table(is.na(ret))
   
+  #if income is present, median impute
+  if("INCTOT" %in% colnames(ret)){
+    ret[["INCTOT"]] <- as.numeric(as.character(ret[["INCTOT"]]))
+    ret[["INCTOT"]][is.na( ret[["INCTOT"]])] <- median(ret[["INCTOT"]], na.rm=T)
+  }
+  
   #Remove columns with almost no variance
   if(length(nearZeroVar(ret))>0){
     ret<-ret[,-nearZeroVar(ret)]
@@ -143,6 +149,15 @@ assetPCA<-function(dfull, varlist, reorder=F ){
   ret$HHwealth_quart[HHwealth>=quartiles[2]]<-2
   ret$HHwealth_quart[HHwealth>=quartiles[3]]<-3
   ret$HHwealth_quart[HHwealth>=quartiles[4]]<-4
+  if(length(unique(ret$HHwealth_quart))==3){ #make sure there are 4 levels if the 0 level is high
+    quartiles<-quantile(HHwealth, probs=seq(0, 1, 0.2))
+    print(quartiles)
+    ret<-as.data.frame(ret)
+    ret$HHwealth_quart<-rep(1, nrow(ret))
+    ret$HHwealth_quart[HHwealth>=quartiles[3]]<-2
+    ret$HHwealth_quart[HHwealth>=quartiles[4]]<-3
+    ret$HHwealth_quart[HHwealth>=quartiles[5]]<-4
+  }
   table(ret$HHwealth_quart)
   ret$HHwealth_quart<-factor(ret$HHwealth_quart)
   
@@ -204,6 +219,30 @@ design_matrix <- function(W){
   }
   return(W)
 }
+
+
+
+#---------
+# TDS
+#---------
+study<-"tds"
+d <- read.csv(paste0(ghapdata_dir,"raw individual study datasets/KI1000108_TDC.csv")) %>% mutate(STUDYID="TDC")
+cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
+varlist<-colnames(d)[colnames(d) %in% c( "NROOMS", "CAR", "CLTHCAB", "COOKFUEL", "COOKPLAC", "FAMTYP", "FAN", "FLOOR", "LLPHONE", "MOBILE", "OWNHOME", "ROOF", "TAPEREC", "TV", "WALL" )]
+
+tds <- d %>% 
+  group_by(SUBJID) %>% 
+  subset(., select = c("STUDYID", "SUBJID", "COUNTRY", "AGEDAYS", varlist)) %>%
+  fill(!!!varlist) %>% #default direction down
+  fill(!!!varlist, .direction = "up") %>% 
+  arrange(AGEDAYS) %>% slice(1) %>%
+  ungroup()
+
+tds<-assetPCA(tds, varlist, reorder=T)
+
+table(tds$HHwealth_quart)
+saveRDS(tds, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
+
 
 
 
@@ -389,7 +428,7 @@ cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
 varlist<-colnames(d)[colnames(d) %in% c("FAN", "FRIG", "RADIO", "SOFA", "TV")]
 
 tzc2 <- read_asset_data(study, varlist)
-tzc2 <- assetPCA(tzc2, varlist, reorder=T)
+tzc2 <- assetPCA(tzc2, varlist, reorder=F)
 saveRDS(tzc2, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 
@@ -401,6 +440,7 @@ saveRDS(tzc2, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 asset_study <- c(
   "akup",
+  "tds",
   "cmc",
   "cntt",
   "gmsn",
@@ -422,6 +462,7 @@ for(i in 1:length(asset_study)){
     d <- rbind(d, temp)
   }
 }
+
 colnames(d) <- tolower(colnames(d))
 
 
