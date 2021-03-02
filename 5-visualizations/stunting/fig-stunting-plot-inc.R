@@ -50,8 +50,8 @@ d_fe <- d %>% filter(analysis == "Fixed effects")
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (primary)
 #-------------------------------------------------------------------------------------------
-# TODO: COMPARE TO LINE 133: birth strat vs yes
-ip_plot_primary <- plot_ip(d_primary, birth="strat", sev="no", returnData=T)
+
+ip_plot_primary <- plot_ip_spaghetti(d_primary, birth="strat", sev="no", returnData=T)
 ip_plot_primary$plot
 
 # get N's for figure caption
@@ -129,6 +129,8 @@ saveRDS(ip_plot_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_na
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (primary)
 #-------------------------------------------------------------------------------------------
+
+# different from line 54 due to birth label
 inc_plot <- ip_plot(d_primary,
                     Disease = "Stunting",
                     Measure = "Incidence proportion",
@@ -162,7 +164,7 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), wid
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - severe (primary)
 #-------------------------------------------------------------------------------------------
-ip_plot_sev_primary <- plot_ip(d_primary, birth="yes", sev="yes", returnData=T) #h1=85,
+ip_plot_sev_primary <- plot_ip_spaghetti(d_primary, birth="yes", sev="yes", returnData=T)
 ip_plot_sev_primary$plot
 
 

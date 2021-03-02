@@ -278,12 +278,12 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     df <- df %>% mutate(est.f = ifelse(agecat=="Birth" & 
                                          measure=="Incidence proportion", NA, est))
   }
-
+  
   # remove N= labels for incidence proportion
   df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence proportion', '', nmeas.f)) %>%
     mutate(nstudy.f = ifelse(measure == 'Incidence proportion', '', nstudy.f))
   
-
+  
   if (min(df$lb) < 0) {
     print("Warning: some lower bounds < 0")
   }
@@ -307,24 +307,24 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
               position = position_dodge(width = dodge),
               vjust = 0.5) + 
     
-    geom_text(data=df[df$measure =="Cumulative incidence",],
+    geom_text(data=df[df$measure =="Cumulative incidence",],              
               aes(x = agecat, y = est, label = round(est.f)),
-              hjust = 1.5,
+              hjust = 1.5, 
               position = position_dodge(width = dodge),
-              vjust = 0.5) +
-
-    geom_text(data=df[df$measure =="Cumulative incidence - monthly cohorts",],
+              vjust = 0.5) + 
+    
+    geom_text(data=df[df$measure =="Cumulative incidence - monthly cohorts",],              
               aes(x = agecat, y = est, label = round(est.f)),
-              hjust = 1.5,
+              hjust = 1.5, 
               position = position_dodge(width = dodge),
-              vjust = 0.5) +
+              vjust = 0.5) + 
     
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
     scale_size_manual(values = c(2, 1.5), guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
                        name = 'Measure')+
-                       #labels = c('Cumulative Incidence', 'New Incident Cases')) + 
+    #labels = c('Cumulative Incidence', 'New Incident Cases')) + 
     scale_fill_manual(values=tableau11, guide = FALSE) +
     
     xlab(xlabel)+
@@ -367,6 +367,163 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     return(p)
   }
 }
+
+
+ki_combo_spaghetti_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+                                    xlabel="Age category",
+                                    ylabel="Incidence proportion (95% CI)",
+                                    h1=0,
+                                    h2=3,
+                                    yrange=NULL,
+                                    dodge=0,
+                                    returnData=F){
+  
+  df <- d %>% filter(
+    disease == Disease &
+      measure %in% Measure &
+      birth == Birth &
+      severe == Severe &
+      age_range == Age_range &
+      !is.na(region) & !is.na(agecat)
+  )
+  df <- droplevels(df)
+  
+  # remove N= from labels
+  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub('N=', '', nstudy.f))
+  
+  # remove text from labels
+  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
+  
+  # Remove 'months' from x axis labels  
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  
+  df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
+  
+  # fix factor levels if birth strat
+  if (Birth == "strat") {
+    df <- df %>%
+      mutate(agecat = as.character(agecat)) %>%
+      mutate(agecat = ifelse(agecat=="8 days-3", "0-3", agecat)) %>%
+      mutate(agecat = factor(agecat, levels = c(
+        "Birth",
+        "0-3", 
+        "3-6",
+        "6-9",
+        "9-12",
+        "12-15",
+        "15-18",
+        "18-21",
+        "21-24"
+      )))
+  }
+  
+  
+  # remove extra text from label at birth
+  # that overlaps between CI and IP
+  if(Birth!="strat"){
+    df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
+                                         measure=="Incidence proportion", NA, est))
+  }else{
+    df <- df %>% mutate(est.f = ifelse(agecat=="Birth" & 
+                                         measure=="Incidence proportion", NA, est))
+  }
+  
+  # remove N= labels for incidence proportion
+  df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence proportion', '', nmeas.f)) %>%
+    mutate(nstudy.f = ifelse(measure == 'Incidence proportion', '', nstudy.f))
+  
+  
+  if (min(df$lb) < 0) {
+    print("Warning: some lower bounds < 0")
+  }
+  
+  p <- ggplot(df,aes(y=est,x=agecat)) +
+    
+    # pooled 
+    geom_point(aes(shape=measure, size=measure, fill=region, color=region), 
+               size = 2, stroke = 0,
+               data = df %>% filter(ispooled == "yes"),
+               position = position_dodge(dodge)) +
+    
+    geom_errorbar(aes(color=region, group=interaction(measure, region),
+                      ymin=lb, ymax=ub), width = 0,
+                  data = df %>% filter(ispooled == "yes"),
+                  position = position_dodge(dodge)) +
+    
+    geom_text(data=df[df$measure =='Incidence proportion',] %>% 
+                filter(ispooled == "yes"), 
+              aes(x = agecat, y = est, label = round(est.f)),
+              hjust = 1.5, 
+              position = position_dodge(width = dodge),
+              vjust = 0.5) + 
+    
+    geom_text(data=df[df$measure =='Incidence proportion - monthly cohorts',] %>%
+                filter(ispooled == "yes"), 
+              aes(x = agecat, y = est, label = round(est.f)),
+              hjust = 1.5, 
+              position = position_dodge(width = dodge),
+              vjust = 0.5) + 
+    
+    # cohort-stratified 
+    
+    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
+               data = df %>% filter(ispooled == "no"),
+               position = position_jitter(width = 0.15), alpha = 0.25) +
+    
+    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) +
+    scale_size_manual(values = c(2, 1.5), guide = FALSE) +
+    scale_shape_manual(values = c(16, 17),
+                       name = 'Measure')+
+    #labels = c('Cumulative Incidence', 'New Incident Cases')) + 
+    scale_fill_manual(values=tableau11, guide = FALSE) +
+    
+    xlab(xlabel)+
+    ylab(ylabel) +
+    
+    # add space to the left and right of points on x axis
+    # to accommodate point estimate labels
+    scale_x_discrete(expand = expand_scale(add = 1)) +
+    
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
+    
+    theme(axis.text.x = element_text(margin = 
+                                       margin(t = 0, r = 0, b = 0, l = 0),
+                                     size = 9)) +
+    theme(axis.title.x = element_text(margin = 
+                                        margin(t = 5, r = 0, b = 0, l = 0),
+                                      size = 14)) +
+    theme(axis.title.y = element_text(size = 14)) +
+    
+    ggtitle("") +
+    facet_grid(~region) +
+    
+    guides(color = FALSE) +
+    
+    theme(legend.position = c(.06,.83),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 10),
+          legend.background = element_blank(),
+          legend.margin = margin(1, 1.5, 1, 1),
+          legend.box.background = element_rect(colour = "black"))
+  
+  if(!is.null(yrange)){
+    p <- p + coord_cartesian(ylim=yrange)
+  }
+  
+  if(returnData){
+    return(list(plot=p,data=df))
+  }else{
+    return(p)
+  }
+}
+
 
 ip_plot <- function(d,
                     Disease,
