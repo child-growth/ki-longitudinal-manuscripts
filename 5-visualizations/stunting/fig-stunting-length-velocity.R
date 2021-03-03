@@ -38,7 +38,6 @@ source(paste0(here::here(), "/0-config.R"))
 vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
 meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocity.RDS"))
-meanlaz = meanlaz %>% filter(method.used == "REML")
 
 # load who standard
 who_cm = readRDS(paste0(res_dir, "/WHO_linear_growth_velocity_standard.RDS"))
@@ -98,13 +97,18 @@ vel_n
 # mean LAZ plot - pooled
 #-------------------------------------
 meanlaz_overall = meanlaz %>% 
-  filter(region=="Overall") %>%
+  # filter(method.used == "REML") %>% 
+  mutate(pooled = ifelse(is.na(method.used),0,1)) %>% 
+  # filter(region=="Overall") %>%
   mutate(agecat = factor(agecat, 
                          levels = c("0-3", "3-6", "6-9",
                                     "9-12", "12-15", "15-18",
                                     "18-21", "21-24")))
 
-plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) + 
+plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall"), aes(y=est, x = agecat)) + 
+  geom_point(data = meanlaz_overall %>% filter(pooled==0),
+             aes(col=sex), position = position_jitterdodge(),
+             size=3, alpha = 0.1) +
   geom_point(aes(col=sex), position = position_dodge(width=0.5), size=3) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
                  position = position_dodge(width=0.5)) +
@@ -120,7 +124,7 @@ plot_mean_laz = ggplot(meanlaz_overall, aes(y=est, x = agecat)) +
         legend.box.background = element_rect(colour = "black"),
         plot.title = element_text(hjust=0))
 
-
+plot_mean_laz
 
 #-------------------------------------
 # mean LAZ plot stratified by region
@@ -155,11 +159,13 @@ plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) +
 #-------------------------------------
 # LAZ plot - pooled
 #-------------------------------------
-velplot_laz = vel %>% filter(country_cohort=="Pooled - All" &
-                               ycat == "LAZ change (Z-score per month)") %>%
+velplot_laz = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
   mutate(sex = factor(sex))
 
-plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
+plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y=Mean,x=strata))+
+  geom_point(data = velplot_laz %>% filter(country_cohort!="Pooled - All"), 
+             aes(fill=sex, color=sex), size = 2, 
+             position = position_jitterdodge(), alpha =0.1) +
   geom_point(aes(fill=sex, color=sex), size = 2, position = position_dodge(width = 0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  position = position_dodge(width = 0.5)) +
@@ -170,6 +176,7 @@ plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
   geom_hline(yintercept = -0) +
   ggtitle("b\n") +
   theme(plot.title = element_text(hjust=0))
+plot_laz
 
 # define standardized plot names
 plot_laz_name = create_name(
@@ -303,21 +310,33 @@ saveRDS(velplot_laz_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_c
 #-------------------------------------
 # absolute length plot - pooled
 #-------------------------------------
-velplot_cm = vel %>% filter(country_cohort=="Pooled - All" &
-                              ycat == "Length velocity (cm per month)") %>%
-  select(Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
+velplot_cm = vel %>% filter(ycat == "Length velocity (cm per month)") %>%
+  dplyr::select(country_cohort, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
   mutate(sex = as.factor(sex)) %>% 
   gather(`pct_15`, `pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>% 
   mutate(linecol = ifelse(msmt_type != "Mean", "black", 
                           ifelse(sex == "Male", "male_color", "female_color")), 
          sexcol = ifelse(sex == "Male", "male_color2", "female_color2"))
 
-plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
-  # geom_point(data = subset(velplot_cm, msmt_type == "Mean"), aes(color = sexcol), size = 3, shape = 4) +
-  geom_line(aes(y = length_cm, group = msmt_type, color = linecol, linetype = msmt_type)) +
+
+velplot_cm_cohort_data = velplot_cm %>%  filter(country_cohort!="Pooled - All" & 
+                             country_cohort!="Pooled - Asia" & 
+                             country_cohort!="Pooled - Africa" & 
+                             country_cohort!="Pooled - Amer." & 
+                             msmt_type=="Mean")
+
+plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"), 
+                  aes(y = length_cm, x = strata)) +
+  # geom_point(data = velplot_cm_cohort_data, size = 1, alpha=0.05) +
+  geom_line(data = velplot_cm_cohort_data, aes(group = country_cohort),
+            alpha=0.12) +
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
+                linetype = msmt_type), size=1,
+            data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
+                                            msmt_type=="Mean"|msmt_type=="pct_25")) +
 
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
-                 alpha=0.5) +
+                 alpha=0.5, size=1) +
 
   scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
                                                                      "pct_50" = "solid",
@@ -355,6 +374,7 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata)) +
         legend.box.background = element_rect(colour = "black"),
         plot.title = element_text(hjust=0))
 
+plot_cm
 
 # define standardized plot names
 plot_cm_name = create_name(
@@ -378,7 +398,7 @@ saveRDS(velplot_cm, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_name,".
 velplot_cm_strat = vel %>% 
   filter(ycat == "Length velocity (cm per month)") %>%
   filter(pooled==1) %>%
-  select(region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
+  dplyr::select(region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
   mutate(sex = as.factor(sex),
          region = ifelse(region == "Asia", "South Asia", region)) %>%
   mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
