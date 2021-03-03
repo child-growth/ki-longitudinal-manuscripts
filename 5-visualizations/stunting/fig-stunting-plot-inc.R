@@ -27,23 +27,9 @@ d <- droplevels(d)
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
-# subset to primary analysis
-d_primary <- d %>% filter(analysis == "Primary")
-
 # scale cohort-specific estimates
-d_primary = d_primary %>% mutate(
-  est = ifelse(disease=="Stunting"  & cohort!="pooled",
-               est*100, est),
-  lb = ifelse(disease=="Stunting"  & cohort!="pooled",
-              lb*100, lb),
-  ub = ifelse(disease=="Stunting"  & cohort!="pooled",
-              ub*100, ub)
-)
-
-# subset to primary analysis, monthly measurements from 0 to 24 months
-d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m") 
-
-d_monthly <- d_monthly %>% mutate(
+scale_estimates <- function(d) {
+  d = d %>% mutate(
     est = ifelse(disease=="Stunting"  & cohort!="pooled",
                  est*100, est),
     lb = ifelse(disease=="Stunting"  & cohort!="pooled",
@@ -51,18 +37,20 @@ d_monthly <- d_monthly %>% mutate(
     ub = ifelse(disease=="Stunting"  & cohort!="pooled",
                 ub*100, ub)
   )
+  return(d)
+}
+
+# subset to primary analysis
+d_primary <- d %>% filter(analysis == "Primary")
+d_primary = scale_estimates(d_primary)
+
+# subset to primary analysis, monthly measurements from 0 to 24 months
+d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m") 
+d_monthly <- scale_estimates(d_monthly)
 
 # subset to fixed effects analysis
 d_fe <- d %>% filter(analysis == "Fixed effects")
-
-d_fe <- d_fe %>% mutate(
-  est = ifelse(disease=="Stunting"  & cohort!="pooled",
-               est*100, est),
-  lb = ifelse(disease=="Stunting"  & cohort!="pooled",
-              lb*100, lb),
-  ub = ifelse(disease=="Stunting"  & cohort!="pooled",
-              ub*100, ub)
-)
+d_fe <- scale_estimates(d_fe)
 
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (primary)
