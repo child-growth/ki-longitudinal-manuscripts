@@ -480,7 +480,6 @@ ki_combo_spaghetti_plot <- function(d, Disease, Measure, Birth, Severe, Age_rang
     scale_size_manual(values = c(2, 1.5), guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
                        name = 'Measure')+
-    #labels = c('Cumulative Incidence', 'New Incident Cases')) + 
     scale_fill_manual(values=tableau11, guide = FALSE) +
     
     xlab(xlabel)+
@@ -506,12 +505,6 @@ ki_combo_spaghetti_plot <- function(d, Disease, Measure, Birth, Severe, Age_rang
     
     guides(color = FALSE) +
     
-    theme(legend.position = c(.06,.83),
-          legend.title = element_blank(),
-          legend.text = element_text(size = 10),
-          legend.background = element_blank(),
-          legend.margin = margin(1, 1.5, 1, 1),
-          legend.box.background = element_rect(colour = "black"))
   
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)

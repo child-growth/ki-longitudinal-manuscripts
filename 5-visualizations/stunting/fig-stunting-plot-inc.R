@@ -19,7 +19,6 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-epi-functions.R"))
 
-
 #Load data
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 d <- d %>% filter(!is.na(agecat))
@@ -42,10 +41,28 @@ d_primary = d_primary %>% mutate(
 )
 
 # subset to primary analysis, monthly measurements from 0 to 24 months
-d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m")
+d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m") 
+
+d_monthly <- d_monthly %>% mutate(
+    est = ifelse(disease=="Stunting"  & cohort!="pooled",
+                 est*100, est),
+    lb = ifelse(disease=="Stunting"  & cohort!="pooled",
+                lb*100, lb),
+    ub = ifelse(disease=="Stunting"  & cohort!="pooled",
+                ub*100, ub)
+  )
 
 # subset to fixed effects analysis
 d_fe <- d %>% filter(analysis == "Fixed effects")
+
+d_fe <- d_fe %>% mutate(
+  est = ifelse(disease=="Stunting"  & cohort!="pooled",
+               est*100, est),
+  lb = ifelse(disease=="Stunting"  & cohort!="pooled",
+              lb*100, lb),
+  ub = ifelse(disease=="Stunting"  & cohort!="pooled",
+              ub*100, ub)
+)
 
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (primary)
@@ -68,6 +85,8 @@ inc_n_primary = d_primary %>%
             min_n = min(nmeas, na.rm=TRUE),
             max_n = max(nmeas, na.rm=TRUE))
 
+# define transformations globally if name_inc_plots is not working
+# transformations <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vREmg4PurW2AKddhf1Mtj9dAyaeCeYPUpHurNUe3r0gVVeeLrkS3aU-4XlYhZ96iWsBpr-R9sDT8Alp/pub?gid=0&single=true&output=csv")
 ip_plot_name_primary = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$p)
 
 # save plot and underlying data
@@ -79,10 +98,10 @@ saveRDS(ip_plot_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ip_pl
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (monthly from 0-24 months)
 #-------------------------------------------------------------------------------------------
-ip_plot_monthly <- plot_ip(d_monthly, 
-                               meas="Incidence proportion - monthly cohorts", 
-                               birth="yes", 
-                               sev="no")
+ip_plot_monthly <- plot_ip_spaghetti(d_monthly, 
+                           meas="Incidence proportion - monthly cohorts", 
+                           birth="yes", 
+                           sev="no")
 ip_plot_monthly
 
 
@@ -98,7 +117,7 @@ saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_mon
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (fixed effects)
 #-------------------------------------------------------------------------------------------
-ip_plot_fe <- plot_ip(d_fe, birth="strat", sev="no", returnData=T)
+ip_plot_fe <- plot_ip_spaghetti(d_fe, birth="strat", sev="no", returnData=T)
 ip_plot_fe$plot
 
 
@@ -178,7 +197,7 @@ saveRDS(ip_plot_sev_primary$data, file=paste0(figdata_dir_stunting, "figdata-",i
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - severe (monthly)
 #-------------------------------------------------------------------------------------------
-ip_plot_sev_monthly <- plot_ip(d_monthly, 
+ip_plot_sev_monthly <- plot_ip_spaghetti(d_monthly, 
                                meas="Incidence proportion - monthly cohorts",
                                birth="yes", 
                                sev="yes") 
@@ -197,7 +216,7 @@ saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_sev_name
 # Stunting incidence proportion - severe (fixed effects)
 #-------------------------------------------------------------------------------------------
 
-ip_plot_sev_fe <- plot_ip(d_fe, birth="yes", sev="yes", returnData=T)
+ip_plot_sev_fe <- plot_ip_spaghetti(d_fe, birth="yes", sev="yes", returnData=T)
 ip_plot_sev_fe$plot
 
 
