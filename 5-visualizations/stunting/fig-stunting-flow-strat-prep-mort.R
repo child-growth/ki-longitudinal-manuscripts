@@ -20,7 +20,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load data
-stunt_data = readRDS(paste0(res_dir, "stuntflow_mort.RDS"))
+stunt_data = readRDS(paste0(res_bluevelvet_dir, "stuntflow_mort.RDS"))
 
 # number of studies, countries, children included
 length(names(table(stunt_data$studyid)))

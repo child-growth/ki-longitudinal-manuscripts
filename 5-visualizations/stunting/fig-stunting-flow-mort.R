@@ -166,3 +166,14 @@ ggplot(plot_overall2 %>% filter(classif2 !="Never stunted"), aes(x=agem, y = per
   ylab("Percentage") +
   theme(legend.position = "bottom") 
 
+# plot among ever-stunted
+ggplot(plot_overall, aes(x=agem, y = percent, group = classif))+
+  geom_point(aes(col = classif, fill = classif), alpha = 0.5, shape = 19) +
+  geom_line(aes(col = classif)) +
+  scale_color_manual("", values = pink_green) +
+  scale_fill_manual("", values = pink_green) +
+  scale_y_continuous(limits = c(0,34), breaks = seq(0,34,2), labels = seq(0,34,2)) +
+  xlab("Child age, months") +
+  ylab("Percentage") +
+  theme(legend.position = "bottom") 
+

@@ -224,6 +224,7 @@ table(d$studyid[!is.na(d$parity)], d$parity[!is.na(d$parity)])
 table(d$studyid[!is.na(d$brthordr)], d$brthordr[!is.na(d$brthordr)])
 
 d$parity[is.na(d$parity)] <- d$brthordr[is.na(d$parity)]
+d$parity[is.na(d$parity)] <- d$gravida[is.na(d$parity)]
 
 
 #Shift obs in SAS-FoodSuppl to make 1==firstborn
@@ -246,7 +247,7 @@ table(d$sex)
 table(is.na(d$sex))
 
 #Use agedays-1 as function codes birth age=0
-d$birthlen2 <- who_zscore2htcm(d$birthmeas_age-1, d$birthLAZ, sex = d$sex)
+d$birthlen2 <- who_zscore2value(d$birthmeas_age-1, d$birthLAZ, y_var = "lenhtcm" , x_var = "agedays", sex = d$sex)
 d$birthwt2 <- who_zscore2wtkg(d$birthmeas_age-1, d$birthWAZ, sex = d$sex) * 1000
 d$birthlen2[!is.finite(d$birthlen2)] <- NA
 d$birthwt2[!is.finite(d$birthwt2)] <- NA
@@ -478,9 +479,15 @@ d$tr[d$studyid=="JiVitA-4" & d$arm=="Plumpy Doz"] <- "LNS"
 #--------------------------------------------------------
 
 colnames(d)
-d <- subset(d, select = -c(brthweek,   brthordr, 
-                           ses, birthlen2, birthwt2, 
-                           birthmeas_age, birthLAZ, birthWAZ))
+
+d <- subset(d, select = c(studyid,       subjid,        sex,           month,  country,       region,         arm,           tr,            gagebrth,     
+                           brthmon,       parity,       
+                           birthwt,       birthlen,      vagbrth,       hdlvry,        mage,          mhtcm,        
+                           mwtkg,         mbmi,          meducyrs,      single,        fage,          fhtcm,         feducyrs,     
+                           trth2o,        cleanck,       impfloor,      nrooms,        nhh,           nchldlt5,      ses,          
+                           earlybf,       hfoodsec,   measurefreq,   anywast06,    
+                           pers_wast,     enstunt,       enwast,     hhwealth_quart,      id))
+
 
 #--------------------------------------------------------
 # Convert continious variables to quartiled categorical 
@@ -666,11 +673,13 @@ quantile_rf_edu <- function(d, Avar="meducyrs", to.character=F){
   return(dfull)
 }
 
+d$meducyrs <- as.numeric(as.character(d$meducyrs))
 d <- d %>% group_by(studyid, country) %>%
-  do(quantile_rf_edu(., Avar="meducyrs"))
+  do(quantile_rf_edu(., Avar="meducyrs", to.character=T))
 #d <- d %>% arrange(feducyrs, studyid, country, subjid)
 d <- d %>% group_by(studyid, country) %>%
   do(quantile_rf_edu(., Avar="feducyrs", to.character=T))
+d$meducyrs <- factor(d$meducyrs, levels = c("Low","Medium","High"))
 d$feducyrs <- factor(d$feducyrs, levels = c("Low","Medium","High"))
 
 table(d$meducyrs)

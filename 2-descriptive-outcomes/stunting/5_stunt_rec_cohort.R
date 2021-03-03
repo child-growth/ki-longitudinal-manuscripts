@@ -75,5 +75,5 @@ ds = d %>%
   mutate(prev_stunted = ifelse(is.na(minhaz_prev) & 
                                  agecat=="Birth", 0, prev_stunted ))
 
-saveRDS(ds, file=paste0(res_dir, "stunt_rec_cohort.RDS"))
+saveRDS(ds, file=paste0(res_bluevelvet_dir, "stunt_rec_cohort.RDS"))
 

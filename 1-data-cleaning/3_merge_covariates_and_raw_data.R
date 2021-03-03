@@ -66,6 +66,7 @@ load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covar
 #Strip grant identifiers from study id's
 bf$studyid<- gsub("^k.*?-" , "", bf$studyid)
 diar$studyid<- gsub("^k.*?-" , "", diar$studyid)
+dh20 <- dh20 %>% ungroup()
 dh20$studyid<- gsub("^k.*?-" , "", dh20$studyid)
 dsan$studyid<- gsub("^k.*?-" , "", dsan$studyid)
 
@@ -137,7 +138,6 @@ d$perdiar24 <- as.character(cut(d$W_perdiar24, breaks=c(0, 0.02, 1), include.low
                                 labels = c("[0%, 2%]",">2%")))
 d$perdiar24 <- factor(d$perdiar24, levels = c("[0%, 2%]",">2%"))
 table(d$perdiar24)
-table(paste0(d$studyid, " ", d$country), d$perdiar24_2)
 
 
 #breastfeeding
