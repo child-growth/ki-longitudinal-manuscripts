@@ -56,7 +56,7 @@ d_fe <- scale_estimates(d_fe)
 # Stunting incidence proportion (primary)
 #-------------------------------------------------------------------------------------------
 
-ip_plot_primary <- plot_ip_spaghetti(d_primary, birth="strat", sev="no", returnData=T)
+ip_plot_primary <- plot_ip(d_primary, birth="strat", sev="no", returnData=T)
 ip_plot_primary$plot
 
 # get N's for figure caption
@@ -86,7 +86,7 @@ saveRDS(ip_plot_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ip_pl
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (monthly from 0-24 months)
 #-------------------------------------------------------------------------------------------
-ip_plot_monthly <- plot_ip_spaghetti(d_monthly, 
+ip_plot_monthly <- plot_ip(d_monthly, 
                            meas="Incidence proportion - monthly cohorts", 
                            birth="yes", 
                            sev="no")
@@ -105,7 +105,7 @@ saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_mon
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (fixed effects)
 #-------------------------------------------------------------------------------------------
-ip_plot_fe <- plot_ip_spaghetti(d_fe, birth="strat", sev="no", returnData=T)
+ip_plot_fe <- plot_ip(d_fe, birth="strat", sev="no", returnData=T)
 ip_plot_fe$plot
 
 
@@ -171,7 +171,7 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), wid
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - severe (primary)
 #-------------------------------------------------------------------------------------------
-ip_plot_sev_primary <- plot_ip_spaghetti(d_primary, birth="yes", sev="yes", returnData=T)
+ip_plot_sev_primary <- plot_ip(d_primary, birth="yes", sev="yes", returnData=T)
 ip_plot_sev_primary$plot
 
 
@@ -185,7 +185,7 @@ saveRDS(ip_plot_sev_primary$data, file=paste0(figdata_dir_stunting, "figdata-",i
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - severe (monthly)
 #-------------------------------------------------------------------------------------------
-ip_plot_sev_monthly <- plot_ip_spaghetti(d_monthly, 
+ip_plot_sev_monthly <- plot_ip(d_monthly, 
                                meas="Incidence proportion - monthly cohorts",
                                birth="yes", 
                                sev="yes") 
@@ -204,7 +204,7 @@ saveRDS(d_monthly, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_sev_name
 # Stunting incidence proportion - severe (fixed effects)
 #-------------------------------------------------------------------------------------------
 
-ip_plot_sev_fe <- plot_ip_spaghetti(d_fe, birth="yes", sev="yes", returnData=T)
+ip_plot_sev_fe <- plot_ip(d_fe, birth="yes", sev="yes", returnData=T)
 ip_plot_sev_fe$plot
 
 

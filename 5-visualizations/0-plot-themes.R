@@ -369,7 +369,7 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 }
 
 
-ki_combo_spaghetti_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+ki_ip_all_cohorts_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                                     xlabel="Age category",
                                     ylabel="Incidence proportion (95% CI)",
                                     h1=0,
@@ -422,17 +422,6 @@ ki_combo_spaghetti_plot <- function(d, Disease, Measure, Birth, Severe, Age_rang
       )))
   }
   
-  
-  # remove extra text from label at birth
-  # that overlaps between CI and IP
-  if(Birth!="strat"){
-    df <- df %>% mutate(est.f = ifelse(agecat=="0-3" & 
-                                         measure=="Incidence proportion", NA, est))
-  }else{
-    df <- df %>% mutate(est.f = ifelse(agecat=="Birth" & 
-                                         measure=="Incidence proportion", NA, est))
-  }
-  
   # remove N= labels for incidence proportion
   df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence proportion', '', nmeas.f)) %>%
     mutate(nstudy.f = ifelse(measure == 'Incidence proportion', '', nstudy.f))
@@ -457,14 +446,14 @@ ki_combo_spaghetti_plot <- function(d, Disease, Measure, Birth, Severe, Age_rang
     
     geom_text(data=df[df$measure =='Incidence proportion',] %>% 
                 filter(ispooled == "yes"), 
-              aes(x = agecat, y = est, label = round(est.f)),
+              aes(x = agecat, y = est, label = round(est)),
               hjust = 1.5, 
               position = position_dodge(width = dodge),
               vjust = 0.5) + 
     
     geom_text(data=df[df$measure =='Incidence proportion - monthly cohorts',] %>%
                 filter(ispooled == "yes"), 
-              aes(x = agecat, y = est, label = round(est.f)),
+              aes(x = agecat, y = est, label = round(est)),
               hjust = 1.5, 
               position = position_dodge(width = dodge),
               vjust = 0.5) + 
