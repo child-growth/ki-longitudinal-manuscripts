@@ -71,7 +71,6 @@ table(d$month)
 #--------------------------------------------------------
 d <- d %>% group_by(studyid, subjid) %>% 
   arrange(studyid, subjid, agedays) %>% 
-  filter(!is.na(haz)) %>% #Note that this is dropping covariates for children with only WAZ
   mutate(enstunt= as.numeric(haz < -2),
          enwast= as.numeric(whz < -2),
          birthLAZ= haz,
