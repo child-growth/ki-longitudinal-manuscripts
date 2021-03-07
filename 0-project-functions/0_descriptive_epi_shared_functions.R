@@ -1002,7 +1002,7 @@ mean95CI <- function(Y, id = rep(1:length(Y)), persontime = NULL, proportion = F
 create_name = function(outcome, cutoff, measure, population, 
                        location, age, analysis){
   
-  transformations = read.csv(paste0(data_dir, "/Variable Transformation.csv"))
+  transformations = read.csv(filenames)
   
   # define short versions of each feature
   outcome_s = transformations %>% 

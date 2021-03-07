@@ -116,6 +116,7 @@ icc_res_path                          = paste0(res_dir,"icc_res.rds")
 test_data_path                       = "C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/data/simulated test data/testdata.rds"
 asset_PCA_allstudies_path       = paste0(project_functions_dir, "1_assetPCA-allstudies.R")
 
+filenames = paste0(here::here(), "/ki-filenames.csv")
 
 ##################################
 
