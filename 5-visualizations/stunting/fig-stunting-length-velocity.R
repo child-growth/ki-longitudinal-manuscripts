@@ -333,7 +333,8 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
   geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
                 linetype = msmt_type), size=1,
             data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
-                                            msmt_type=="Mean"|msmt_type=="pct_25")) +
+                                            msmt_type=="Mean"|msmt_type=="pct_25"|
+                                            msmt_type=="pct_50")) +
 
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                  alpha=0.5, size=1) +
