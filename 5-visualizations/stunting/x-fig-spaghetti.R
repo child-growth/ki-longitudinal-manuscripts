@@ -88,7 +88,7 @@ p <- ggplot(df,aes(y=est,x=agecat)) +
   
   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
   scale_alpha_manual(values=c(0.25, 1)) +
-  xlab(xlabel)+
+  xlab(xlabel) +
   ylab(ylabel) +
   
   # add space to the left and right of points on x axis
@@ -116,10 +116,7 @@ p <- ggplot(df,aes(y=est,x=agecat)) +
 
 p
 
-# 
-# 
-# 
-# 
+
 # if(!is.null(yrange)){
 #   p <- p + coord_cartesian(ylim=yrange)
 # }

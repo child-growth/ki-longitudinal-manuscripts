@@ -996,7 +996,7 @@ mean95CI <- function(Y, id = rep(1:length(Y)), persontime = NULL, proportion = F
 
 # returns a string with a standardized naming convention
 # To get a link to the csv version of a Google Sheet do the following commands:
-#     - File > Publish to Web > Link > Comma Seperated Values (csv) 
+#     - File > Publish to Web > Link > Comma Separated Values (csv) 
 #----------------------------------------------
 
 create_name = function(outcome, cutoff, measure, population, 

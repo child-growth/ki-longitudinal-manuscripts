@@ -19,7 +19,6 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-epi-functions.R"))
 
-
 #Load data
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 d <- d %>% filter(!is.na(agecat))
@@ -28,29 +27,35 @@ d <- droplevels(d)
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
+# scale cohort-specific estimates
+scale_estimates <- function(d) {
+  d = d %>% mutate(
+    est = ifelse(disease=="Stunting"  & cohort!="pooled",
+                 est*100, est),
+    lb = ifelse(disease=="Stunting"  & cohort!="pooled",
+                lb*100, lb),
+    ub = ifelse(disease=="Stunting"  & cohort!="pooled",
+                ub*100, ub)
+  )
+  return(d)
+}
+
 # subset to primary analysis
 d_primary <- d %>% filter(analysis == "Primary")
-
-# scale cohort-specific estimates
-d_primary = d_primary %>% mutate(
-  est = ifelse(disease=="Stunting"  & cohort!="pooled",
-               est*100, est),
-  lb = ifelse(disease=="Stunting"  & cohort!="pooled",
-              lb*100, lb),
-  ub = ifelse(disease=="Stunting"  & cohort!="pooled",
-              ub*100, ub)
-)
+d_primary = scale_estimates(d_primary)
 
 # subset to primary analysis, monthly measurements from 0 to 24 months
-d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m")
+d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m") 
+d_monthly <- scale_estimates(d_monthly)
 
 # subset to fixed effects analysis
 d_fe <- d %>% filter(analysis == "Fixed effects")
+d_fe <- scale_estimates(d_fe)
 
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (primary)
 #-------------------------------------------------------------------------------------------
-# TODO: COMPARE TO LINE 133: birth strat vs yes
+
 ip_plot_primary <- plot_ip(d_primary, birth="strat", sev="no", returnData=T)
 ip_plot_primary$plot
 
@@ -68,6 +73,8 @@ inc_n_primary = d_primary %>%
             min_n = min(nmeas, na.rm=TRUE),
             max_n = max(nmeas, na.rm=TRUE))
 
+# define transformations globally if name_inc_plots is not working
+# transformations <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vREmg4PurW2AKddhf1Mtj9dAyaeCeYPUpHurNUe3r0gVVeeLrkS3aU-4XlYhZ96iWsBpr-R9sDT8Alp/pub?gid=0&single=true&output=csv")
 ip_plot_name_primary = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$p)
 
 # save plot and underlying data
@@ -80,9 +87,9 @@ saveRDS(ip_plot_primary$data, file=paste0(figdata_dir_stunting, "figdata-",ip_pl
 # Stunting incidence proportion (monthly from 0-24 months)
 #-------------------------------------------------------------------------------------------
 ip_plot_monthly <- plot_ip(d_monthly, 
-                               meas="Incidence proportion - monthly cohorts", 
-                               birth="yes", 
-                               sev="no")
+                           meas="Incidence proportion - monthly cohorts", 
+                           birth="yes", 
+                           sev="no")
 ip_plot_monthly
 
 
@@ -129,6 +136,8 @@ saveRDS(ip_plot_fe$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_na
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion (primary)
 #-------------------------------------------------------------------------------------------
+
+# different from line 54 due to birth label
 inc_plot <- ip_plot(d_primary,
                     Disease = "Stunting",
                     Measure = "Incidence proportion",
@@ -162,7 +171,7 @@ ggsave(inc_plot, file=paste0(fig_dir, "stunting/fig-",inc_plot_name,".png"), wid
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - severe (primary)
 #-------------------------------------------------------------------------------------------
-ip_plot_sev_primary <- plot_ip(d_primary, birth="yes", sev="yes", returnData=T) #h1=85,
+ip_plot_sev_primary <- plot_ip(d_primary, birth="yes", sev="yes", returnData=T)
 ip_plot_sev_primary$plot
 
 
