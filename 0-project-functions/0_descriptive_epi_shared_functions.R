@@ -1002,13 +1002,13 @@ mean95CI <- function(Y, id = rep(1:length(Y)), persontime = NULL, proportion = F
 create_name = function(outcome, cutoff, measure, population, 
                        location, age, analysis){
   
-  transformations = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vREmg4PurW2AKddhf1Mtj9dAyaeCeYPUpHurNUe3r0gVVeeLrkS3aU-4XlYhZ96iWsBpr-R9sDT8Alp/pub?gid=0&single=true&output=csv")
+  transformations = read.csv(filenames)
   
   # define short versions of each feature
   outcome_s = transformations %>% 
     filter(variable.type == "outcome") %>% 
     filter(description == outcome) %>% 
-    select(variable) %>%
+    dplyr::select(variable) %>%
     first()
   
   cutoff_s = cutoff
@@ -1016,31 +1016,31 @@ create_name = function(outcome, cutoff, measure, population,
   measure_s = transformations %>% 
     filter(variable.type == "measure") %>% 
     filter(description == measure) %>% 
-    select(variable) %>%
+    dplyr::select(variable) %>%
     first()
   
   population_s = transformations %>% 
     filter(variable.type == "population") %>% 
     filter(description == population) %>% 
-    select(variable) %>%
+    dplyr::select(variable) %>%
     first()
   
   location_s = transformations %>% 
     filter(variable.type == "location") %>% 
     filter(description == location) %>% 
-    select(variable) %>%
+    dplyr::select(variable) %>%
     first()
   
   age_s = transformations %>% 
     filter(variable.type == "age") %>% 
     filter(description == age) %>%
-    select(variable) %>%
+    dplyr::select(variable) %>%
     first()
   
   analysis_s = transformations %>% 
     filter(variable.type == "analysis") %>% 
     filter(description == analysis) %>%
-    select(variable) %>%
+    dplyr::select(variable) %>%
     first()
   
   # create figure name string using short versions of each feature
