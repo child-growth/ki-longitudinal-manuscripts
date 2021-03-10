@@ -314,9 +314,9 @@ nagebar <- ggplot(dd, aes(y = N/1000, x = as.numeric(agecat))) +
 
 # add margin around plots
 stphm = stphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-stpbar = stpbar + theme(plot.margin = unit(c(0,0.3,0.50,0.2), "cm"))
-nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.50,0.2), "cm"))
-nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.1,0,4.4), "cm"))
+stpbar = stpbar + theme(plot.margin = unit(c(0,0.3,0.55,0.2), "cm"))
+nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.55,0.2), "cm"))
+nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.15,0,4.45), "cm"))
 empty <- grid::textGrob("") 
 
 # arrange components into single plot
