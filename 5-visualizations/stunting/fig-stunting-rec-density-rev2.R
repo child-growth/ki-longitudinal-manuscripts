@@ -420,7 +420,7 @@ pink_green = rev(brewer.pal(n = 4, name = "PiYG"))[2:4]
 
 ggplot(plot_data_sub, aes(x=haz)) +
   geom_histogram(aes(fill = pheno),  bins = 80) +
-  facet_wrap(age_rec_f~ age_meas, scales = "free_y", ncol = 4) +
+  facet_grid(age_rec_f~ age_meas, scales = "free_y") +
   ylab("Measurement age, months")+
   xlab("Length-for-age Z-score")+
   scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),

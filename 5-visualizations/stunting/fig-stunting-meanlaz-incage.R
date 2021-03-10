@@ -99,7 +99,7 @@ plot_nmeas = function(data){
   )
   
   plotN = ggplot(plotdf_N, aes(x = agemonths, y = N, group=stunt_inc_age, color=stunt_inc_age)) + 
-    geom_col(aes(fill=stunt_inc_age, color=stunt_inc_age), width=0.5) + 
+    geom_col(position = "fill", stat = "identity", aes(fill=stunt_inc_age, color=stunt_inc_age), width=0.5) + 
     xlab("Child age, months") +
     ylab("N") +
     scale_x_continuous(limits = c(-1,16), breaks = seq(0,15,1), labels = seq(0,15,1),
@@ -128,8 +128,8 @@ mean_laz_line_plot = grid.arrange(blank,
 
 mean_laz_plot = grid.arrange(mean_laz_line_plot,
                              nmeas_plot,
-                             nrow = 2,
-                             heights = c(5, 3))
+                             nrow = 1,
+                             heights = 3)
 
 ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"), width=10, height=6)
 
@@ -148,8 +148,7 @@ mean_laz_line_plot_monthly = grid.arrange(blank,
 
 mean_laz_plot_monthly = grid.arrange(mean_laz_line_plot_monthly,
                              nmeas_plot_monthly,
-                             nrow = 2,
-                             heights = c(5, 3))
+                             nrow = 1,
+                             heights = 3)
 
 ggsave(mean_laz_plot_monthly, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_monthly.png"), width=10, height=6)
-
