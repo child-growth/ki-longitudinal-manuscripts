@@ -11,6 +11,7 @@ kiPath <- c("/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths())
 library(tidyverse)
 library(here)
 library(ggplot2)
+library(ggpubr)
 #library(dplyr)
 library(gridExtra)
 library(reshape2)
@@ -62,11 +63,11 @@ data_dir                          = here::here("data")
 metadata_dir                      = "U:/results/Metadata/"
 
 
-  #ghapdata_dir                      = "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
-  ghapdata_dir                      = "/data/KI/UCB-SuperLearner/Manuscript analysis data/"
+#ghapdata_dir                      = "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
+ghapdata_dir                      = "/data/KI/UCB-SuperLearner/Manuscript analysis data/"
 
 
-    
+
 project_functions_dir             = here::here("0-project-functions")
 data_cleaning_dir                 = here::here("1-data-cleaning")
 descriptive_outcomes_dir          = here::here("2-descriptive-outcomes")
@@ -85,7 +86,7 @@ deriveddata_dir                   = paste0(ghapdata_dir, "covariate creation int
 fig_dir                           = paste0(here::here(),"/figures/")
 figdata_dir_stunting              = paste0(here::here(),"/figures/stunting/figure-data/")
 figdata_dir_wasting               = paste0(here::here(),"/figures/wasting/figure-data/")
-    
+
 #################################
 # Data Cleaning Scripts
 included_studies_path             = paste0(ghapdata_dir, "FINAL_only_included_studies.rds")
