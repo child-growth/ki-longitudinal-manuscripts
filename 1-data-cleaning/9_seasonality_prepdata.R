@@ -20,7 +20,7 @@ d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 #--------------------------------------------
 
 
-d<-d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, sex, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon))
+d <- d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, sex, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon, brthyr))
 
 
 #d <- d %>% filter(studyid == "PROVIDE")
@@ -61,3 +61,9 @@ d <- d %>% filter(agedays < 24 * 30.4167)
 
 saveRDS(d, seasonality_data_path)
 
+
+#Make GPS location dataset
+gps <- d %>% mutate(year=floor(brthyr + (birthday + agedays)/365)) %>%
+  distinct(studyid,country, month, year, latitude, longitud) %>% arrange(studyid,country, year,month)
+dim(gps)
+gps

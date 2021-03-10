@@ -49,7 +49,7 @@ gc()
 
 
 
-#Load in TDC and Ecuador egg
+#Load in TDC 
 tdc <- read.csv(paste0(ghapdata_dir,"raw individual study datasets/KI1000108_TDC.csv")) %>% mutate(STUDYID="TDC")
 tdc %>% group_by(SUBJID) %>% mutate(lagage=AGEDAYS-lag(AGEDAYS)) %>% ungroup() %>% summarize(mn=mean(lagage,na.rm=T), md=median(lagage,na.rm=T))
 
@@ -79,13 +79,26 @@ d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP", "ILINS-DYAD-G"))]
 dim(d)
 gc()
 
-#Drop children born before 1990
-dim(d)
-d <- d[brthyr>=1990]
-dim(d)
+#check birthyear distribution
+df <- d %>% filter(!is.na(brthyr)) %>% group_by(studyid, country, subjid) %>% slice(1) %>%
+  mutate(cohort=paste0(studyid,"_",country))
+df$cohort[df$studyid=="CMIN"] <- paste0(df$studyid[df$studyid=="CMIN"],"_",df$country[df$studyid=="CMIN"],"_",df$siteid[df$studyid=="CMIN"])
+p<-ggplot(df, aes(brthyr)) + geom_histogram(aes(y = stat(density))) + geom_vline(xintercept=1990) + facet_wrap(~cohort)
+
+#distinguish CMIN cohorts
+d$studyid[d$studyid=="CMIN"] <- paste0(d$studyid[d$studyid=="CMIN"], d$siteid[d$studyid=="CMIN"])
+
+#Drop studies with the median birth before 1990
+d <- d %>% group_by(studyid, country) %>% 
+  mutate(med_start=median(brthyr, na.rm=T)) %>% 
+  filter(med_start>=1990) %>% ungroup()
+table(d$studyid)
+#add in CMIN GPS
+
 
 
 #update study names where they have changed during BlueVelvet switch
+d <- data.table(d)
 d <- d[studyid=="ZINC-MORTALITY", studyid := "ZnMort"]
 d <- d[studyid=="VITAMIN-B12", studyid := "Vitamin-B12"]
 d <- d[studyid=="WASH-BK", studyid := "WASH-Kenya"]
@@ -96,11 +109,11 @@ d <- d[studyid=="BurkinaFasoZn", studyid := "Burkina Faso Zn"]
 d <- d[studyid=="ILINS-DOSE", studyid := "iLiNS-DOSE"]
 d <- d[studyid=="ILINS-DYAD-M", studyid := "iLiNS-DYAD-M"]
 
-#distinguish CMIN cohorts
-d$studyid[d$studyid=="CMIN"] <- paste0(d$studyid[d$studyid=="CMIN"], d$siteid[d$studyid=="CMIN"])
 
-unique(d$studyid)
 
+
+
+#Check measurement frequency
 d %>% filter(!is.na(waz)|!is.na(haz)) %>% group_by(studyid, country, subjid) %>% mutate(lagage=agedays-lag(agedays)) %>% group_by(studyid) %>% summarize(mn=mean(lagage,na.rm=T), md=median(lagage,na.rm=T))
 
 

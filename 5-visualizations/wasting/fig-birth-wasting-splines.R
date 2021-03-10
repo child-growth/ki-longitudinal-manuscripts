@@ -4,6 +4,7 @@ rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 
 plotdf <- readRDS(paste0(ghapdata_dir, "birthwast_strat_whz_plot_data.rds"))
+plotdf_strat <- readRDS(paste0(ghapdata_dir, "birthwast_and_cohort_strat_whz_plot_data.rds"))
 
 p <- ggplot(data=plotdf, aes(x=agedays, y=fit, group=born_wast, color=born_wast,  fill=born_wast)) +
   geom_line(size=2) +

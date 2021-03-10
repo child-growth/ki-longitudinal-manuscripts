@@ -72,6 +72,39 @@ plotdf$born_wast <- factor(ifelse(plotdf$born_wast==1, "Born wasted", "Not born 
 
 saveRDS(plotdf, paste0(ghapdata_dir,"/birthwast_strat_whz_plot_data.rds"))
 
+#Make a cohort-stratified dataset
+# estimate a pooled fit, over birth wasting status
+plotdf <- NULL
+set.seed(12345)
+for(i in 1:length(unique(d$born_wast))){
+  for(j in 1:length(unique(d$studyid))){
+    cat=unique(d$born_wast)[i]
+    study=unique(d$studyid)[j]
+    df <- filter(d, born_wast==cat, studyid==study)
+    for(k in 1:length(unique(df$country))){
+      country=unique(df$country)[k]
+      di <- filter(d, country==country)
+      
+  #fiti <- mgcv::gam(whz~s(agedays,bs="cr", k=10),data=di)
+  fiti <- mgcv::gam(whz~s(agedays,bs="cr"),data=di)
+  range=min(di$agedays):max(di$agedays)
+  agedays=1:(diff(range(range))+1)
+  newd <- data.frame(agedays=range)
+  fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
+  dfit <- data.frame(studyid=study, country=country,
+                     born_wast=cat, agedays=agedays,
+                     fit=fitci$fit,fit_se=fitci$se.fit,
+                     fit_lb=fitci$lwrS,fit_ub=fitci$uprS)
+  plotdf<-rbind(plotdf,dfit)
+    }
+  }  
+}
+plotdf
+
+plotdf$born_wast <- factor(ifelse(plotdf$born_wast==1, "Born wasted", "Not born wasted"))
+
+saveRDS(plotdf, paste0(ghapdata_dir,"/birthwast_and_cohort_strat_whz_plot_data.rds"))
+
 
 
 

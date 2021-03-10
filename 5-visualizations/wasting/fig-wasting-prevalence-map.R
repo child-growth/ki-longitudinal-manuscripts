@@ -20,9 +20,11 @@ df <- d %>% filter(!is.na(whz)) %>% group_by(studyid,cohort) %>%
   filter(agedays < 30.4167 * 24) %>%
   summarise(n=n(),
             wast = mean(whz < (-2)),
-            lat=mean(latitude),
-            long=mean(longitud),
+            lat=mean(latitude,na.rm=T),
+            long=mean(longitud,na.rm=T),
             country=first(country)) 
+
+
 
 #need to merge in all coordinates
 df <- left_join(df, mediods, by="country")

@@ -17,7 +17,7 @@ drop_int_arms <- function(d){
   d=d[-which(d$studyid=="PROBIT" & d$tr!="Control"),]
   d=d[-which(d$studyid=="iLiNS-Zinc" & d$tr!="Control"),]
   d=d[-which(d$studyid=="SAS-CompFeed" & d$tr!="Control"),]
-  d=d[-which(d$studyid=="COHORTS" & d$tr=="Other"),]
+  #d=d[-which(d$studyid=="COHORTS" & d$tr=="Other"),] #no longer included because < 1990
   return(d)
 }
 
