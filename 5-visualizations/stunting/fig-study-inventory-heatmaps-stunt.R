@@ -108,9 +108,9 @@ dd <- dd  %>% mutate(studycountry=factor(studycountry)) %>%
 
 dd$hazcat = as.character(dd$hazcat)
 dd$hazcat = ifelse(is.na(dd$hazcat), "Fewer than 50\nobservations", dd$hazcat)
-dd$hazcat<- factor(dd$hazcat, levels = c("<= -3","(-3,-2.5]",
-                                               "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",
-                                               "(-0.5,0]", ">0", "Fewer than 50\nobservations"))
+dd$hazcat<- factor(dd$hazcat, levels = c("(-3,-2.5]", "(-2.5,-2]", "(-2,-1.5]",
+                                         "(-1.5,-1]", "(-1,-0.5]", "(-0.5,0]",
+                                         ">0", "Fewer than 50\nobservations"))
 
 
 
@@ -119,7 +119,6 @@ dd <- dd %>%
   dplyr::arrange(stuntprev, .by_group = TRUE) 
 dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
 dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
-
 
 
 
