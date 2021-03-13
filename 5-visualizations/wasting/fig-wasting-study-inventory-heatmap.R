@@ -328,19 +328,18 @@ nagebar <- ggplot(dd, aes(y = N/1000, x = as.numeric(agecat))) +
 
 
 # add margin around plots
-wastphm2 = wastphm + theme(plot.margin = unit(c(0, 0.25, 0, 0.25), "cm"))
+wastphm2 = wastphm + theme(plot.margin = unit(c(0.5, 0.5, 0, 1), "cm"))
 # wpbar2 = wpbar + theme(plot.margin = unit(c(1.6,0.3,0.9,0.1), "cm"))
 # nbar2 = nbar + theme(plot.margin = unit(c(1.6,0.25,0.9,0.1), "cm"))
-nbar2 = nbar + theme(plot.margin = unit(c(1,0.25,1.3,0.1), "cm"))
-wpbar2 = wpbar + theme(plot.margin = unit(c(1,0.3,1.3,0.1), "cm"))
-nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.13, -0.9 ,4.05), "cm"))
+nbar2 = nbar + theme(plot.margin = unit(c(1,0.25,0.75,0.1), "cm"))
+wpbar2 = wpbar + theme(plot.margin = unit(c(1,0.3,0.75,0.1), "cm"))
+nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.4,-0.9,4.95), "cm"))
 empty <- grid::textGrob("")
 
 awstpgrid <- grid.arrange(nagebar2,empty, empty,
                           wastphm2, nbar2, wpbar2, nrow = 2, ncol = 3,
                           heights = c(25,100),
                           widths=c(100,20,20))
-
 
 
 # define standardized plot names

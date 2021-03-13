@@ -108,9 +108,9 @@ dd <- dd  %>% mutate(studycountry=factor(studycountry)) %>%
 
 dd$hazcat = as.character(dd$hazcat)
 dd$hazcat = ifelse(is.na(dd$hazcat), "Fewer than 50\nobservations", dd$hazcat)
-dd$hazcat<- factor(dd$hazcat, levels = c("<= -3","(-3,-2.5]",
-                                               "(-2.5,-2]", "(-2,-1.5]", "(-1.5,-1]", "(-1,-0.5]",
-                                               "(-0.5,0]", ">0", "Fewer than 50\nobservations"))
+dd$hazcat<- factor(dd$hazcat, levels = c("(-3,-2.5]", "(-2.5,-2]", "(-2,-1.5]",
+                                         "(-1.5,-1]", "(-1,-0.5]", "(-0.5,0]",
+                                         ">0", "Fewer than 50\nobservations"))
 
 
 
@@ -119,7 +119,6 @@ dd <- dd %>%
   dplyr::arrange(stuntprev, .by_group = TRUE) 
 dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
 dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
-
 
 
 
@@ -314,9 +313,9 @@ nagebar <- ggplot(dd, aes(y = N/1000, x = as.numeric(agecat))) +
 
 # add margin around plots
 stphm = stphm + theme(plot.margin = unit(c(0,0.25,0.25,0.25), "cm"))
-stpbar = stpbar + theme(plot.margin = unit(c(0,0.3,0.50,0.2), "cm"))
-nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.50,0.2), "cm"))
-nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.1,0,4.4), "cm"))
+stpbar = stpbar + theme(plot.margin = unit(c(0,0.3,0.55,0.2), "cm"))
+nbar = nbar + theme(plot.margin = unit(c(0,0.25,0.55,0.2), "cm"))
+nagebar = nagebar + theme(plot.margin = unit(c(0.25,0.15,0,4.45), "cm"))
 empty <- grid::textGrob("") 
 
 # arrange components into single plot
