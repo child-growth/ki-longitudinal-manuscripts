@@ -66,4 +66,6 @@ saveRDS(d, seasonality_data_path)
 gps <- d %>% mutate(year=floor(brthyr + (birthday + agedays)/365)) %>%
   distinct(studyid,country, month, year, latitude, longitud) %>% arrange(studyid,country, year,month)
 dim(gps)
-gps
+
+saveRDS(gps, paste0(ghapdata_dir,"ki_cohort_gps_data.rds"))
+

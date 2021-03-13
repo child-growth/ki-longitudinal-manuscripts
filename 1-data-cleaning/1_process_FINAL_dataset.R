@@ -87,16 +87,31 @@ p<-ggplot(df, aes(brthyr)) + geom_histogram(aes(y = stat(density))) + geom_vline
 
 #distinguish CMIN cohorts
 d$studyid[d$studyid=="CMIN"] <- paste0(d$studyid[d$studyid=="CMIN"], d$siteid[d$studyid=="CMIN"])
+table(d$studyid[d$studyid=="CMIN"], d$country[d$studyid=="CMIN"])
+d$studyid[d$studyid=="CMIN2"] <- "CMIN Peru89" 
+d$studyid[d$studyid=="CMIN3"] <- "CMIN Peru95" 
+d$studyid[d$studyid=="CMIN4"] <- "CMIN Brazil89" 
+d$studyid[d$studyid=="CMIN6"] <- "CMIN GB94" 
+d$studyid[d$studyid=="CMIN7"] <- "CMIN Bangladesh93" 
 
 #Drop studies with the median birth before 1990
 d <- d %>% group_by(studyid, country) %>% 
   mutate(med_start=median(brthyr, na.rm=T)) %>% 
   filter(med_start>=1990) %>% ungroup()
 table(d$studyid)
+
 #add in CMIN GPS
-
-
-
+d$latitude[d$studyid=="CMIN Peru89"] <- -12.15585
+d$longitud[d$studyid=="CMIN Peru89"] <- -76.97213
+d$latitude[d$studyid=="CMIN Peru95"] <- -12.15585
+d$longitud[d$studyid=="CMIN Peru95"] <- -76.97213
+d$latitude[d$studyid=="CMIN Brazil89"] <- -3.7430107485648314 
+d$longitud[d$studyid=="CMIN Brazil89"] <- -38.554750860572774
+d$latitude[d$studyid=="CMIN GB94"] <- 11.852849306288046
+d$longitud[d$studyid=="CMIN GB94"] <- -15.598650188638768
+d$latitude[d$studyid=="CMIN Bangladesh93"] <- 24.106381157160424 
+d$longitud[d$studyid=="CMIN Bangladesh93"] <- 90.10170489157913
+  
 #update study names where they have changed during BlueVelvet switch
 d <- data.table(d)
 d <- d[studyid=="ZINC-MORTALITY", studyid := "ZnMort"]
@@ -128,17 +143,17 @@ monthly_vec <- c("MAL-ED",
   "Keneba",  
   "Guatemala BSC",       
   "GMS-Nepal",    
-  "CMIN2",                 
-  "CMIN3",                 
-  "CMIN7",                 
+  "CMIN Peru89",                 
+  "CMIN Peru95",                 
+  "CMIN Bangladesh93",                 
   "CONTENT")
 
 quarterly_vec <- c("iLiNS-Zinc",  
   "JiVitA-3",          
   "JiVitA-4", 
   "LCNI-5",          
-  "CMIN4",                 
-  "CMIN6",                 
+  "CMIN Brazil89",                 
+  "CMIN GB94",                 
   "NIH-Birth",
   "NIH-Crypto",   
   "PROBIT",         

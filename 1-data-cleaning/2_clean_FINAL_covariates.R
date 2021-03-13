@@ -243,6 +243,7 @@ table(d$studyid, is.na(d$birthwt))
 
 #sex must be "Male" or "Female" for growthstandards package
 table(d$sex)
+d$sex[!(d$sex %in% c("Male","Female"))] <- NA
 table(is.na(d$sex))
 
 #Use agedays-1 as function codes birth age=0
