@@ -95,6 +95,10 @@ d <- left_join(d, dh20, by=c("studyid", "country", "subjid"))
 table(d$safeh20)
 table(d$studyid, d$safeh20)
 
+#breastfeeding
+d <- left_join(d, bf, by=c("studyid", "country", "subjid"))
+table(d$exclfeed3)
+
 #diarrhea
 #temp change studyid so CMIN merge works
 studyid <- d$studyid
@@ -108,6 +112,29 @@ d$studyid <- studyid
 summary(d$perdiar6)
 summary(d$perdiar24)
 table(d$studyid, is.na(d$perdiar24))
+
+
+#merge in TDC diarrhea and breastfeeding
+TDC <- readRDS(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/TDC_BF_diar.RDS")) %>%
+     rename(predfeed3_TDC=predfeed3, exclfeed3_TDC=exclfeed3, predfeed6_TDC=predfeed6,
+            exclfeed6_TDC=exclfeed6, predfeed36_TDC=predfeed36, exclfeed36_TDC=exclfeed36, 
+            predexfd6_TDC=predexfd6, perdiar6_TDC=perdiar6, perdiar24_TDC=perdiar24)
+TDC$subjid <- as.character(TDC$subjid)
+table(TDC$perdiar6_TDC)
+d <- left_join(d, TDC, by = c("studyid", "subjid"))
+table(d$perdiar6_TDC)
+
+d$predfeed3[is.na(d$predfeed3)] <- d$predfeed3_TDC[is.na(d$predfeed3)] 
+d$predfeed36[is.na(d$predfeed36)] <- d$predfeed36_TDC[is.na(d$predfeed36)] 
+d$predfeed6[is.na(d$predfeed6)] <- d$predfeed6_TDC[is.na(d$predfeed6)] 
+d$exclfeed3[is.na(d$exclfeed3)] <- d$exclfeed3_TDC[is.na(d$exclfeed3)] 
+d$exclfeed36[is.na(d$exclfeed36)] <- d$exclfeed36_TDC[is.na(d$exclfeed36)] 
+d$exclfeed6[is.na(d$exclfeed6)] <- d$exclfeed6_TDC[is.na(d$exclfeed6)] 
+d$predexfd6[is.na(d$predexfd6)] <- d$predexfd6_TDC[is.na(d$predexfd6)] 
+d$perdiar6[is.na(d$perdiar6)] <- d$perdiar6_TDC[is.na(d$perdiar6)] 
+d$perdiar24[is.na(d$perdiar24)] <- d$perdiar24_TDC[is.na(d$perdiar24)] 
+d <- d[,!grepl("_TDC",colnames(d))] 
+
 
 #Save continious version of variables for adjustment set
 d$W_perdiar6 <- d$perdiar6
@@ -146,9 +173,7 @@ d$perdiar24 <- factor(d$perdiar24, levels = c("[0%, 2%]",">2%"))
 table(d$perdiar24)
 
 
-#breastfeeding
-d <- left_join(d, bf, by=c("studyid", "country", "subjid"))
-table(d$exclfeed3)
+
 
 #Convert all columns to factors exceot continious adjustment vars
 for(i in 3:ncol(d)){
@@ -158,7 +183,7 @@ for(i in 3:ncol(d)){
 }
 d$id <- as.numeric(d$id)
 
-#drop duplicated Jivita covariates
+#drop duplicated Jivita and TDC covariates
 dim(d)
 d <- distinct(d, .keep_all=T )
 dim(d)

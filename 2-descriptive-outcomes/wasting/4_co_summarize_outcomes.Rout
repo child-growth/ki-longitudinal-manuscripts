@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -26,11 +26,11 @@ Type 'q()' to quit R.
 > rm(list = ls())
 > 
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -57,7 +57,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -83,13 +83,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -104,7 +97,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -168,14 +161,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -188,9 +173,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -207,10 +192,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -222,8 +203,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
 > 
 > d <- readRDS(rf_co_occurrence_path)
@@ -251,24 +230,26 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > table(df$co)
 
    0    1 
-9296 1508 
+9240 1458 
 > prop.table(table(df$co))
 
         0         1 
-0.8604221 0.1395779 
+0.8637128 0.1362872 
 > table(df$sevco)
 
     0     1 
-10571   233 
+10468   230 
 > prop.table(table(df$sevco))
 
          0          1 
-0.97843391 0.02156609 
+0.97850065 0.02149935 
 > 
 > 
 > #Prevalence
 > d <- calc.prev.agecat(d)
 > prev.data <- summary.prev.co(d)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -279,11 +260,44 @@ Warning messages:
 7: Extra argument ('method') disregarded. 
 8: Extra argument ('method') disregarded. 
 9: Extra argument ('method') disregarded. 
-10: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
-This warning is displayed once per session. 
+10: `as.tibble()` is deprecated as of tibble 2.0.0.
+Please use `as_tibble()` instead.
+The signature and semantics have changed, see `?as_tibble`.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_warnings()` to see where this warning was generated. 
 > prev.region <- d %>% group_by(region) %>% do(summary.prev.co(.)$prev.res)
-There were 27 warnings (use warnings() to see them)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: There were 27 warnings (use warnings() to see them)
+Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 > prev.country <- d %>% group_by(country) %>% do(summary.prev.co(.)$prev.res) %>% mutate(region=country)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > prev.cohort <-
@@ -296,22 +310,40 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   data.frame(cohort = "pooled", prev.region),
 +   prev.cohort
 + )
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-6: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > #Severe wasting and stunting prevalence
 > sev.prev.data <- summary.prev.co(d, severe = T)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: Warning messages:
+1: Extra argument ('method') disregarded. 
+2: Extra argument ('method') disregarded. 
+3: Extra argument ('method') disregarded. 
+4: Extra argument ('method') disregarded. 
+5: Extra argument ('method') disregarded. 
+6: Extra argument ('method') disregarded. 
+7: Extra argument ('method') disregarded. 
+8: Extra argument ('method') disregarded. 
+9: Extra argument ('method') disregarded. 
+Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+Error in rma(data = data, ni = data[[ni]], method = "ML", xi = data[[xi]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+> sev.prev.region <-
++   d %>% group_by(region) %>% do(summary.prev.co(., severe = T)$prev.res)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: There were 18 warnings (use warnings() to see them)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -322,10 +354,27 @@ Warning messages:
 7: Extra argument ('method') disregarded. 
 8: Extra argument ('method') disregarded. 
 9: Extra argument ('method') disregarded. 
-> sev.prev.region <-
-+   d %>% group_by(region) %>% do(summary.prev.co(., severe = T)$prev.res)
-There were 27 warnings (use warnings() to see them)
 > sev.prev.country <- d %>% group_by(country) %>% do(summary.prev.co(., severe = T)$prev.res) %>% mutate(region=country)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > sev.prev.cohort <-
@@ -338,27 +387,17 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   data.frame(cohort = "pooled", sev.prev.country),
 +   sev.prev.cohort
 + )
-Warning messages:
-1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-6: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > #Underweight Prevalence
 > df <- waz %>% subset(., select = -c(whz)) %>% mutate(whz=waz)
 > summary(df$whz)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- -6.000  -1.820  -1.010  -1.002  -0.190   5.000 
+-6.0000 -1.7800 -0.9600 -0.9509 -0.1100  5.0000 
 > 
 > df <- calc.prev.agecat(df)
 > prev.data <-  summary.prev.whz(df)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -370,8 +409,34 @@ Warning messages:
 8: Extra argument ('method') disregarded. 
 9: Extra argument ('method') disregarded. 
 > prev.region <- df %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 27 warnings (use warnings() to see them)
 > prev.country <- df %>% group_by(country) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(region=country)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > prev.cohort <-
 +   prev.data$prev.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
@@ -383,27 +448,13 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   data.frame(cohort = "pooled", prev.country),
 +   prev.cohort
 + )
-Warning messages:
-1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-6: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-7: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-8: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > 
 > 
 > #mean waz
 > waz.data <- summary.waz(df)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -415,8 +466,34 @@ Warning messages:
 8: Extra argument ('method') disregarded. 
 9: Extra argument ('method') disregarded. 
 > waz.region <- d %>% group_by(region) %>% do(summary.waz(.)$waz.res)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 27 warnings (use warnings() to see them)
 > waz.country <- d %>% group_by(country) %>% do(summary.waz(.)$waz.res) %>% mutate(region=country)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > waz.cohort <-
@@ -429,27 +506,43 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   data.frame(cohort = "pooled", waz.country),
 +   waz.cohort
 + )
-Warning messages:
-1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-6: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > 
 > #monthly mean waz
 > df <- calc.monthly.agecat(df)
 > monthly.data <- summary.waz(df)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 25 warnings (use warnings() to see them)
 > monthly.region <- df %>% group_by(region) %>% do(summary.waz(.)$waz.res)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > monthly.country <- df %>% group_by(country) %>% do(summary.waz(.)$waz.res) %>% mutate(region=country)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > monthly.cohort <-
@@ -462,18 +555,6 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   data.frame(cohort = "pooled", monthly.country),
 +   monthly.cohort
 + )
-Warning messages:
-1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-6: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > 
 > 
@@ -481,10 +562,26 @@ Warning messages:
 > #Prevalence of wasting based on MUAC
 > d <- calc.prev.agecat(d)
 > m.prev.data <- summary.prev.muaz(d)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 16 warnings (use warnings() to see them)
 > m.prev.region <- d %>% group_by(region) %>% do(summary.prev.muaz(.)$m.prev.res)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > m.prev.country <- d %>% filter(!is.na(muaz)) %>% group_by(country) %>% do(summary.prev.muaz(.)$m.prev.res) %>% mutate(region=country)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > m.prev.cohort <-
@@ -497,23 +594,25 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   data.frame(cohort = "pooled", m.prev.country),
 +   m.prev.cohort
 + )
-Warning messages:
-1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-6: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > #make wasting comparison in same subset
 > prev.region <- d %>% group_by(region) %>% do(summary.prev.muaz(.)$prev.res)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > prev.country <- d %>% filter(!is.na(muaz)) %>% group_by(country) %>% do(summary.prev.muaz(.)$prev.res) %>% mutate(region=country)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 There were 50 or more warnings (use warnings() to see the first 50)
 > prev.cohort <-
 +   m.prev.data$prev.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
@@ -525,18 +624,6 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   data.frame(cohort = "pooled", prev.country),
 +   prev.cohort
 + )
-Warning messages:
-1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-6: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > 
 > 
@@ -549,7 +636,6 @@ Warning messages:
 +   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC Prevalence",  muaz.prev),
 +   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "MUAC WHZ Prevalence",  m.whz.prev)
 + )
-There were 28 warnings (use warnings() to see them)
 > 
 > 
 > co_desc_data <- co_desc_data %>% subset(., select = -c(se, nmeas.f,  ptest.f))
@@ -573,9 +659,9 @@ There were 28 warnings (use warnings() to see them)
        Africa    Bangladesh        Brazil        Gambia     Guatemala 
           342            61            61            77            36 
         India Latin America         Nepal       Overall      Pakistan 
-           61           283            61            77            77 
+           61           388            61            77            77 
          Peru  South Africa    South Asia      Tanzania 
-           61            61           671            75 
+           61            61           669            75 
 > 
 > 
 > 
@@ -596,4 +682,4 @@ There were 28 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-102.738  11.161 148.258 
+152.977   1.403 154.363 

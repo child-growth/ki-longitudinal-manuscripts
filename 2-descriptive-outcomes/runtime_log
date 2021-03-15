@@ -1,0 +1,15 @@
+>>> Running descriptive outcomes stunting
+
+0-run-descriptive-outcomes.sh: line 5: ./2-descriptive-outcomes/stunting/0-run-descriptive-outcomes-stunting.sh: No such file or directory
+
+real	0m0.001s
+user	0m0.000s
+sys	0m0.001s
+
+>>> Running descriptive outcomes wasting
+
+0-run-descriptive-outcomes.sh: line 10: ./2-descriptive-outcomes/wasting/0-run-descriptive-outcomes-wasting.sh: No such file or directory
+
+real	0m0.001s
+user	0m0.001s
+sys	0m0.000s
