@@ -209,3 +209,19 @@ The following objects are masked from ‘package:base’:
 > dfull <- d
 > df <- d
 > d <- df %>% group_by(studyid, country) %>% do(WastIncCalc(.))
+> d_noBW <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., dropBornWasted=T))
+> 
+> save(d, d_noBW, file=paste0(ghapdata_dir, "Wasting_inc_rf_data.RData"))
+> 
+> #subset to monthly cohorts for descriptive epi analysis
+> 
+> d <- d %>% filter(measurefreq=="monthly")
+> d_noBW <- d_noBW %>% filter(measurefreq=="monthly")
+> save(d, d_noBW, file=paste0(ghapdata_dir, "Wasting_inc_data.RData"))
+> 
+> 
+> load(paste0(ghapdata_dir, "mortality_anthro_data.RData"))
+> d_mort <- wast_mort %>% group_by(studyid, country) %>% do(WastIncCalc(.))
+> d_mort_noBW <- wast_mort %>% group_by(studyid, country) %>% do(WastIncCalc(., dropBornWasted=T))
+> d_waz_mort <- waz_mort %>% subset(., select = -c(haz, whz, muaz)) %>% rename(whz=waz) %>% 
++               group_by(studyid, country) %>% do(WastIncCalc(.)) 
