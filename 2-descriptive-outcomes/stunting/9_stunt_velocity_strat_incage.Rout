@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -39,11 +39,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -70,7 +70,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -96,13 +96,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -117,7 +110,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -181,14 +174,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -201,9 +186,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -220,10 +205,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -235,8 +216,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functions.R"))
@@ -250,20 +229,20 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > # Analyze data
 > #######################################################################
 > head(d)
-     country studyid subjid    sex t1agedays   t1y t2agedays   t2y diffdays
-1 BANGLADESH    CMIN 130052   Male        14 -1.92        82 -2.50       68
-2 BANGLADESH    CMIN 130055 Female        13 -2.41       100 -2.98       87
-3 BANGLADESH    CMIN 130086   Male        12 -3.00       103 -3.77       91
-4 BANGLADESH    CMIN 130087   Male        10 -3.76       100 -2.92       90
-5 BANGLADESH    CMIN 130088   Male        10 -4.65        99 -3.46       89
-6 BANGLADESH    CMIN 130114   Male        10 -0.98        99 -1.47       89
-  diffmths y_diff     y_rate    diffcat ycat tr
-1 2.235614  -0.58 -0.2594366 0-3 months  haz   
-2 2.860271  -0.57 -0.1992818 0-3 months  haz   
-3 2.991778  -0.77 -0.2573721 0-3 months  haz   
-4 2.958901   0.84  0.2838892 0-3 months  haz   
-5 2.926024   1.19  0.4066952 0-3 months  haz   
-6 2.926024  -0.49 -0.1674627 0-3 months  haz   
+     country           studyid subjid    sex t1agedays   t1y t2agedays   t2y
+1 BANGLADESH CMIN Bangladesh93 130052   Male        14 -1.92        82 -2.50
+2 BANGLADESH CMIN Bangladesh93 130055 Female        13 -2.41       100 -2.98
+3 BANGLADESH CMIN Bangladesh93 130086   Male        12 -3.00       103 -3.77
+4 BANGLADESH CMIN Bangladesh93 130087   Male        10 -3.76       100 -2.92
+5 BANGLADESH CMIN Bangladesh93 130088   Male        10 -4.65        99 -3.46
+6 BANGLADESH CMIN Bangladesh93 130114   Male        10 -0.98        99 -1.47
+  diffdays diffmths y_diff     y_rate    diffcat ycat tr
+1       68 2.235614  -0.58 -0.2594366 0-3 months  haz   
+2       87 2.860271  -0.57 -0.1992818 0-3 months  haz   
+3       91 2.991778  -0.77 -0.2573721 0-3 months  haz   
+4       90 2.958901   0.84  0.2838892 0-3 months  haz   
+5       89 2.926024   1.19  0.4066952 0-3 months  haz   
+6       89 2.926024  -0.49 -0.1674627 0-3 months  haz   
 > #----------------------------------------
 > # Format results for stunting indicator generation
 > #----------------------------------------
@@ -297,6 +276,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > #----------------------------------------
 > d_st_prepped = d %>% mutate(measurefreq = "monthly") %>% filter(ycat == "haz")
 > d_indicators = create_stunting_age_indicators(data = d_st_prepped, create_agecats = FALSE) %>% select(-c(measurefreq, haz))
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 > d_st = left_join(d, d_indicators, by = colnames(d_indicators %>% select(-stunt_inc_age))) %>% distinct()
 > 
 > #----------------------------------------
@@ -307,6 +287,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +   mutate(ci.lb=mean - 1.96 * sd, 
 +          ci.ub=mean + 1.96 * sd,
 +          country_cohort=paste0(studyid," ", country))
+`summarise()` regrouping output by 'studyid', 'country', 'agecat', 'ycat', 'sex', 'stunt_inc_age' (override with `.groups` argument)
 > 
 > d_st$agecat <- factor(d_st$agecat)
 > 
@@ -408,10 +389,23 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > # length velocity
 > #----------------------------------------
 > poollencm_boys = lapply(stunt_inc_age_list, function(x) RE_pool(d_st, ycategory="lencm", gender="Male", age_stunt_onset = x))
-There were 38 warnings (use warnings() to see them)
+There were 44 warnings (use warnings() to see them)
 > poollencm_boys = as.data.frame(do.call(rbind, poollencm_boys))
 > 
 > poollencm_girls = lapply(stunt_inc_age_list, function(x) RE_pool(d_st, ycategory="lencm", gender="Female", age_stunt_onset = x))
+Error in rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: Warning messages:
+1: In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
+2: In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
+3: In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
+4: In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
+5: In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
 There were 50 or more warnings (use warnings() to see the first 50)
 > poollencm_girls = as.data.frame(do.call(rbind, poollencm_girls))
 > 
@@ -421,7 +415,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > # LAZ velocity
 > #----------------------------------------
 > poolhaz_boys = lapply(stunt_inc_age_list, function(x) RE_pool(d_st, ycategory="haz", gender="Male", age_stunt_onset = x))
-There were 38 warnings (use warnings() to see them)
+There were 44 warnings (use warnings() to see them)
 > poolhaz_boys = as.data.frame(do.call(rbind, poolhaz_boys))
 > 
 > poolhaz_girls = lapply(stunt_inc_age_list, function(x) RE_pool(d_st, ycategory="haz", gender="Female", age_stunt_onset = x))
@@ -433,11 +427,15 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > # length velocity
 > #----------------------------------------
 > poollencm_boys_monthly = lapply(stunt_inc_age_list, function(x) RE_pool(d_st_monthly, ycategory="lencm", gender="Male", age_stunt_onset = x))
-There were 34 warnings (use warnings() to see them)
+Warning messages:
+1: In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
+2: In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
 > poollencm_boys_monthly = as.data.frame(do.call(rbind, poollencm_boys_monthly))
 > 
 > poollencm_girls_monthly = lapply(stunt_inc_age_list, function(x) RE_pool(d_st_monthly, ycategory="lencm", gender="Female", age_stunt_onset = x))
-There were 50 or more warnings (use warnings() to see the first 50)
+There were 45 warnings (use warnings() to see them)
 > poollencm_girls_monthly = as.data.frame(do.call(rbind, poollencm_girls_monthly))
 > 
 > 
@@ -446,11 +444,20 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > # LAZ velocity
 > #----------------------------------------
 > poolhaz_boys_monthly = lapply(stunt_inc_age_list, function(x) RE_pool(d_st_monthly, ycategory="haz", gender="Male", age_stunt_onset = x))
-There were 34 warnings (use warnings() to see them)
+Error in rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: Warning message:
+In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
+Error in rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  : 
+  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
+In addition: Warning message:
+In rma(data = data, mi = data[[yi]], sdi = sqrt(data[[vi]]), ni = data[[ni]],  :
+  Studies with NAs omitted from model fitting.
 > poolhaz_boys_monthly = as.data.frame(do.call(rbind, poolhaz_boys_monthly))
 > 
 > poolhaz_girls_monthly = lapply(stunt_inc_age_list, function(x) RE_pool(d_st_monthly, ycategory="haz", gender="Female", age_stunt_onset = x))
-There were 50 or more warnings (use warnings() to see the first 50)
+There were 45 warnings (use warnings() to see them)
 > poolhaz_girls_monthly = as.data.frame(do.call(rbind, poolhaz_girls_monthly))
 > 
 > #######################################################################
@@ -471,4 +478,4 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > proc.time()
    user  system elapsed 
- 65.869   2.531  74.136 
+107.906   0.940 108.820 

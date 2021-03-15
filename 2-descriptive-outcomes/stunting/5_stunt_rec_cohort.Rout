@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -32,11 +32,11 @@ Type 'q()' to quit R.
 > #-----------------------------------------
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -63,7 +63,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -89,13 +89,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -110,7 +103,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -174,14 +167,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -194,9 +179,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -213,10 +198,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -228,8 +209,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
 > 
 > d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
@@ -269,21 +248,20 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +             min=min(agedays/30.4167),
 +             mean=mean(agedays/30.4167),
 +             max=max(agedays/30.4167))
+`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 10 x 5
    agecat           n     min    mean     max
    <fct>        <int>   <dbl>   <dbl>   <dbl>
- 1 Birth         2166  0.0329  0.0329  0.0329
- 2 0-3 months   28524  0.0658  1.64    2.99  
- 3 3-6 months   29520  3.02    4.47    5.98  
- 4 6-9 months   24595  6.02    7.50    8.98  
- 5 9-12 months  24366  9.01   10.4    12.0   
- 6 12-15 months 20564 12.0    13.3    15.0   
- 7 15-18 months 18714 15.0    16.3    18.0   
- 8 18-21 months 16016 18.0    19.2    21.0   
- 9 21-24 months 14320 21.0    22.3    24.0   
-10 <NA>         24994 24.0    36.3    69.3   
-Warning message:
-Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
+ 1 Birth         2195  0.0329  0.0329  0.0329
+ 2 0-3 months   27370  0.0658  1.64    2.99  
+ 3 3-6 months   28360  3.02    4.49    5.98  
+ 4 6-9 months   26086  6.02    7.50    8.98  
+ 5 9-12 months  24570  9.01   10.5    12.0   
+ 6 12-15 months 20631 12.0    13.4    15.0   
+ 7 15-18 months 19351 15.0    16.4    18.0   
+ 8 18-21 months 16523 18.0    19.3    21.0   
+ 9 21-24 months 14806 21.0    22.3    24.0   
+10 <NA>         23518 24.0    35.5    69.3   
 > 
 > # drop measurements with ages over 24 months
 > d = d %>% filter(!is.na(agecat)) 
@@ -309,9 +287,9 @@ Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na`
 +   mutate(prev_stunted = ifelse(is.na(minhaz_prev) & 
 +                                  agecat=="Birth", 0, prev_stunted ))
 > 
-> saveRDS(ds, file=paste0(res_dir, "stunt_rec_cohort.RDS"))
+> saveRDS(ds, file=paste0(res_bluevelvet_dir, "stunt_rec_cohort.RDS"))
 > 
 > 
 > proc.time()
    user  system elapsed 
- 13.113   2.935  16.196 
+ 18.405   0.626  19.011 
