@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -26,11 +26,11 @@ Type 'q()' to quit R.
 > #-----------------------------------------
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -57,7 +57,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -83,13 +83,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -104,7 +97,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -168,14 +161,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -188,9 +173,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -207,10 +192,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -222,8 +203,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 > require(cowplot)
 Loading required package: cowplot
@@ -285,20 +264,27 @@ The following object is masked from ‘package:ggthemes’:
 5  281.8000  37.16667 1140.0000    0.8946784
 6  880.7333 456.73333 2403.3000    0.4058170
 > head(d)
-         studyid subjid id country     region agedays  sex measurefreq month
-1 CMC-V-BCS-2002      1  1   INDIA South Asia      33 Male     monthly     1
-2 CMC-V-BCS-2002      1  1   INDIA South Asia      67 Male     monthly     2
-3 CMC-V-BCS-2002      1  1   INDIA South Asia      95 Male     monthly     3
-4 CMC-V-BCS-2002      1  1   INDIA South Asia     130 Male     monthly     4
-5 CMC-V-BCS-2002      1  1   INDIA South Asia     159 Male     monthly     5
-6 CMC-V-BCS-2002      1  1   INDIA South Asia     190 Male     monthly     6
-    whz   haz   waz latitude longitud brthweek brthmon birthday studyday jday
-1  0.55 -3.56 -2.74    78.93    12.85       50      12      343      376   12
-2 -2.91 -1.93 -3.62    78.93    12.85       50      12      343      410   46
-3 -2.45 -2.67 -3.91    78.93    12.85       50      12      343      438   74
-4 -1.44 -2.35 -2.74    78.93    12.85       50      12      343      473  109
-5 -1.27 -2.95 -3.02    78.93    12.85       50      12      343      502  138
-6 -2.18 -2.08 -2.90    78.93    12.85       50      12      343      533  169
+          studyid subjid id country     region agedays  sex measurefreq month
+1: CMC-V-BCS-2002      1  1   INDIA South Asia      33 Male     monthly     1
+2: CMC-V-BCS-2002      1  1   INDIA South Asia      67 Male     monthly     2
+3: CMC-V-BCS-2002      1  1   INDIA South Asia      95 Male     monthly     3
+4: CMC-V-BCS-2002      1  1   INDIA South Asia     130 Male     monthly     4
+5: CMC-V-BCS-2002      1  1   INDIA South Asia     159 Male     monthly     5
+6: CMC-V-BCS-2002      1  1   INDIA South Asia     190 Male     monthly     6
+     whz   haz   waz latitude longitud brthweek brthmon brthyr birthday
+1:  0.55 -3.56 -2.74    78.93    12.85       50      12   2002      343
+2: -2.91 -1.93 -3.62    78.93    12.85       50      12   2002      343
+3: -2.45 -2.67 -3.91    78.93    12.85       50      12   2002      343
+4: -1.44 -2.35 -2.74    78.93    12.85       50      12   2002      343
+5: -1.27 -2.95 -3.02    78.93    12.85       50      12   2002      343
+6: -2.18 -2.08 -2.90    78.93    12.85       50      12   2002      343
+   studyday jday
+1:      376   12
+2:      410   46
+3:      438   74
+4:      473  109
+5:      502  138
+6:      533  169
 > 
 > # rain$country <- toupper(rain$country)
 > # rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
@@ -371,24 +357,24 @@ The following object is masked from ‘package:ggthemes’:
 +   mutate(roll_sum2 = roll_sum(rain, 3, align = "right", fill = 0, na.rm=T),
 +          max_rain_quarter = ifelse(roll_sum1>roll_sum2, roll_sum1, roll_sum2),
 +          month_end_max_rain = month_number[max_rain_quarter==max(max_rain_quarter)]) %>%
-+   select(studyid, country, month_end_max_rain) %>% unique(.)
++   select(studyid, country, cohort_index, month_end_max_rain) %>% unique(.)
 > head(rain_quartile, 12)
-# A tibble: 12 x 3
+# A tibble: 12 x 4
 # Groups:   studyid, country [12]
-   studyid         country      month_end_max_rain
-   <chr>           <chr>                     <dbl>
- 1 Burkina Faso Zn Burkina Faso                  9
- 2 CMC-V-BCS-2002  India                         9
- 3 CMIN            Bangladesh                    8
- 4 COHORTS         Guatemala                     9
- 5 COHORTS         India                         8
- 6 COHORTS         Philippines                  10
- 7 CONTENT         Peru                          3
- 8 EE              Pakistan                      9
- 9 GMS-Nepal       Nepal                         9
-10 Guatemala BSC   Guatemala                     9
-11 iLiNS-DOSE      Malawi                        3
-12 iLiNS-DYAD-M    Malawi                        3
+   studyid         country      cohort_index month_end_max_rain
+   <chr>           <chr>               <dbl>              <dbl>
+ 1 Burkina Faso Zn Burkina Faso        1.00                   9
+ 2 CMC-V-BCS-2002  India               0.845                  9
+ 3 CMIN            Bangladesh          0.800                  8
+ 4 COHORTS         Guatemala           0.673                  9
+ 5 COHORTS         India               0.895                  8
+ 6 COHORTS         Philippines         0.406                 10
+ 7 CONTENT         Peru                0.368                  3
+ 8 EE              Pakistan            0.532                  9
+ 9 GMS-Nepal       Nepal               0.773                  9
+10 Guatemala BSC   Guatemala           0.578                  9
+11 iLiNS-DOSE      Malawi              0.976                  3
+12 iLiNS-DYAD-M    Malawi              0.948                  3
 > 
 > 
 > df <- left_join(d, rain_quartile, by = c("studyid","country"))
@@ -453,8 +439,8 @@ The following object is masked from ‘package:ggthemes’:
 > 
 > table(!is.na(df$month), df$rain_quartile)
       
-       Max rain Opposite max rain Post-max rain Pre-max rain
-  TRUE    45776             43503         45233        43732
+             Max rain Opposite max rain Post-max rain Pre-max rain
+  TRUE 15682    42108             39869         41389        40304
 > 
 > 
 > #Drop observations without a month variable
@@ -467,15 +453,15 @@ The following object is masked from ‘package:ggthemes’:
 > #Set up dataset for longbow analysis
 > df <- filter(df, agedays < 24 * 30.4167)
 > 
-> df <- subset(df, select = c(studyid, subjid, agedays, country, whz, rain_quartile))
+> df <- subset(df, select = c(studyid, subjid, agedays, country, cohort_index, whz, rain_quartile))
 > head(df)
-         studyid subjid agedays country   whz     rain_quartile
-1 CMC-V-BCS-2002      1      33   India  0.55 Opposite max rain
-2 CMC-V-BCS-2002      1      67   India -2.91 Opposite max rain
-3 CMC-V-BCS-2002      1      95   India -2.45 Opposite max rain
-4 CMC-V-BCS-2002      1     130   India -1.44      Pre-max rain
-5 CMC-V-BCS-2002      1     159   India -1.27      Pre-max rain
-6 CMC-V-BCS-2002      1     190   India -2.18      Pre-max rain
+          studyid subjid agedays country cohort_index   whz     rain_quartile
+1: CMC-V-BCS-2002      1      33   India    0.8453586  0.55 Opposite max rain
+2: CMC-V-BCS-2002      1      67   India    0.8453586 -2.91 Opposite max rain
+3: CMC-V-BCS-2002      1      95   India    0.8453586 -2.45 Opposite max rain
+4: CMC-V-BCS-2002      1     130   India    0.8453586 -1.44      Pre-max rain
+5: CMC-V-BCS-2002      1     159   India    0.8453586 -1.27      Pre-max rain
+6: CMC-V-BCS-2002      1     190   India    0.8453586 -2.18      Pre-max rain
 > 
 > 
 > #Load covariate dataset
@@ -503,17 +489,17 @@ The following object is masked from ‘package:ggthemes’:
 > cov$predfeed36 <- relevel(cov$predfeed36, ref="1")
 > cov$exclfeed36 <- relevel(cov$exclfeed36, ref="1")
 > cov$predexfd6 <- relevel(cov$predexfd6, ref="1")
-> cov$perdiar6 <- relevel(cov$perdiar6, ref="0%")
-> cov$perdiar24 <- relevel(cov$perdiar24, ref="0%")
+> # cov$perdiar6 <- relevel(cov$perdiar6, ref="0%")
+> # cov$perdiar24 <- relevel(cov$perdiar24, ref="0%")
 > 
 > #Merge WLZ, season, and covariates
 > dim(df)
-[1] 178244      6
+[1] 163670      7
 > dim(cov)
-[1] 109366     83
+[1] 97560    69
 > d <- left_join(df, cov, by = c("studyid", "subjid", "country"))
 > dim(d)
-[1] 178244     86
+[1] 163670     73
 > 
 > #Set adjustment variables
 > W <- NULL
@@ -521,12 +507,6 @@ The following object is masked from ‘package:ggthemes’:
 > 
 > #save analysis dataset
 > save(d, file = paste0(ghapdata_dir, "seasonality_rf.Rdata"))
-> 
-> #get N's for figure caption
-> d %>% summarize(N=n(), nchild=length(unique(subjid)))
-       N nchild
-1 178244   6692
-> cohort_Ns <- d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid)))
 > 
 > #Specify analysis
 > specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country"), id="id", adj_sets=adjustment_sets){
@@ -550,6 +530,42 @@ The following object is masked from ‘package:ggthemes’:
 > #Save analysis specification
 > save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/seasonality_analyses.rdata"))
 > 
+> 
+> 
+> #get N's for figure caption
+> cohort_Ns <- d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid)))
+`summarise()` regrouping output by 'studyid' (override with `.groups` argument)
+> 
+> #all
+> d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+`summarise()` regrouping output by 'studyid' (override with `.groups` argument)
+# A tibble: 1 x 2
+  `min(N)` `max(N)`
+     <int>    <int>
+1     2545    40115
+> #high
+> d %>% filter(cohort_index>=0.8) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+`summarise()` regrouping output by 'studyid' (override with `.groups` argument)
+# A tibble: 1 x 2
+  `min(N)` `max(N)`
+     <int>    <int>
+1     5592    40115
+> #med
+> d %>% filter(cohort_index<0.8 & cohort_index>=0.5) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+`summarise()` regrouping output by 'studyid' (override with `.groups` argument)
+# A tibble: 1 x 2
+  `min(N)` `max(N)`
+     <int>    <int>
+1     2545    29518
+> #low
+> d %>% filter(cohort_index<0.5) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+`summarise()` regrouping output by 'studyid' (override with `.groups` argument)
+# A tibble: 1 x 2
+  `min(N)` `max(N)`
+     <int>    <int>
+1     4837     8339
+> 
+> 
 > #Save cohort Ns
 > saveRDS(cohort_Ns, file=paste0(here(),"/results/seasonTMLE_Ns.rds")) 
 > 
@@ -560,4 +576,4 @@ The following object is masked from ‘package:ggthemes’:
 > 
 > proc.time()
    user  system elapsed 
- 12.381   0.698  18.468 
+ 18.842   0.572  19.619 
