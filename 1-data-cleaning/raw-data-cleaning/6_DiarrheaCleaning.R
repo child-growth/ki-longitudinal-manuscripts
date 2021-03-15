@@ -242,3 +242,7 @@ summary(diar$perdiar24)
 
 table(diar$studyid, diar$perdiar6 < 0.05)
 table(diar$studyid, diar$perdiar24< 0.05)
+
+
+load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/rawdiar_df.Rdata"))
+

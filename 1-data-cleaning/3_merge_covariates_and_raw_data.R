@@ -96,12 +96,18 @@ table(d$safeh20)
 table(d$studyid, d$safeh20)
 
 #diarrhea
+#temp change studyid so CMIN merge works
+studyid <- d$studyid
+d$studyid[grepl("CMIN", d$studyid)] <- "CMIN"
 diar$subjid <- as.character(diar$subjid)
+dim(d)
 d <- left_join(d, diar, by=c("studyid", "subjid"))
-
+dim(d)
+d$studyid <- studyid
 #quartile diarrhea
 summary(d$perdiar6)
 summary(d$perdiar24)
+table(d$studyid, is.na(d$perdiar24))
 
 #Save continious version of variables for adjustment set
 d$W_perdiar6 <- d$perdiar6
@@ -184,8 +190,8 @@ d$predexfd6 <- relevel(d$predexfd6, ref="1")
 table(d$studyid, d$perdiar6)
 table(d$studyid, d$perdiar24)
 
-# d$perdiar6 <- relevel(d$perdiar6, ref="0%")
-# d$perdiar24 <- relevel(d$perdiar24, ref="0%")
+d$perdiar6 <- relevel(d$perdiar6, ref="[0%, 2%]")
+d$perdiar24 <- relevel(d$perdiar24, ref="[0%, 2%]")
 
 #Save dataset
 saveRDS(d, clean_covariates_path)
