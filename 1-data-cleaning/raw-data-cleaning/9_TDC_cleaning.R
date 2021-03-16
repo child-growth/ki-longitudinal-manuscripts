@@ -6,6 +6,8 @@ library(haven)
 
 
 #breastfeeding in baseline
+anthro <- read_sas(paste0(ghapdata_dir, "/raw SAS datasets/TDC/tdc_growth_raw.sas7bdat"))
+
 baseline <- read_sas(paste0(ghapdata_dir, "/raw SAS datasets/TDC/tdc_baseline_raw.sas7bdat"))
 colnames(baseline) <- tolower(colnames(baseline))
 

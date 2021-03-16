@@ -29,6 +29,10 @@ table(d$causedth)
 table(1*!is.na(d$dead),is.na(d$agedth))
 table(1*!is.na(d$dead),(d$causedth==""))
 
+df <- d %>% group_by(studyid, subjid) %>% slice(1)
+table(1*!is.na(df$dead),(df$causedth==""))
+table(df$causedth)
+
 #mark dead if have a cause or age death
 d$agedth[!is.na(d$agedth) & is.na(d$dead)]
 d$dead[!is.na(d$agedth) & is.na(d$dead)] <- 1
