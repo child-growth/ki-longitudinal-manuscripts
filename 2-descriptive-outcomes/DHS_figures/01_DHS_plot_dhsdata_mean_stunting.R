@@ -84,7 +84,7 @@ dhs_pooled <- dhs_pooled %>%
 df_survey_output <- bind_rows(df_survey, dhs_pooled) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 df_survey_output$measure <- "LAZ" # rename HAZ to LAZ
-saveRDS(df_survey_output, file = here::here("results/dhs", "DHS-stunting-by-region.rds"))
+saveRDS(df_survey_output, dhs_res_dir)
 
 #---------------------------------------
 # estimate spline fit to mean z-scores by age
@@ -181,7 +181,7 @@ dhsfits <- filter(dhsfits, measure == "LAZ")
 
 dhsfits = dhsfits %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
-saveRDS(dhsfits, file = here::here("results/dhs", "stunting-DHSandKI-by-region.rds"))
+saveRDS(dhsfits, dhs_res_dir)
 
 
 
@@ -213,4 +213,4 @@ laz_ageplot_name <- create_name(
   analysis = "primary"
 )
 
-saveRDS(dhs_plotd_laz, file = paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
+saveRDS(dhs_plotd_laz, dhs_res_dir)
