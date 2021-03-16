@@ -285,9 +285,11 @@ ip_plot_primary[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(m
 
 
 #-------------------------------------------------------------------------------------------
-# Wasting cumulative incidence -birthstrat
+# Wasting incidence -birthstrat
 #-------------------------------------------------------------------------------------------
-ci_plot <- ki_ip_flurry_plot(scale_estimates(d),
+
+# TODO: add cumulative incidence plot
+ip_plot <- ki_ip_flurry_plot(scale_estimates(d),
                          Disease="Wasting",
                          Measure="Incidence proportion",
                          # Measure=c("Cumulative incidence", "Incidence proportion"), 
@@ -299,10 +301,10 @@ ci_plot <- ki_ip_flurry_plot(scale_estimates(d),
                          # yrange=c(0,60),
                          returnData=T)
 
-ci_plot_name = create_name(
+ip_plot_name = create_name(
   outcome = "wasting",
   cutoff = 2,
-  measure = "cumulative incidence",
+  measure = "incidence",
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
@@ -310,9 +312,9 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, "_birthstrat.png"), width=14, height=3)
+ggsave(ip_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ip_plot_name, "_birthstrat.png"), width=14, height=3)
 
-saveRDS(ci_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,"_birthstrat.RDS"))
+saveRDS(ip_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ip_plot_name,"_birthstrat.RDS"))
 
 #ggsave(ci_plot[[1]] + ggtitle("Wasting incidence"), file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, "_birthstrat_presentation.png"), width=13, height=3)
 
