@@ -483,14 +483,14 @@ ki_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 }
 
 
-ki_ip_all_cohorts_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-                                    xlabel="Age category",
-                                    ylabel="Incidence proportion (95% CI)",
-                                    h1=0,
-                                    h2=3,
-                                    yrange=NULL,
-                                    dodge=0,
-                                    returnData=F){
+ki_ip_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+                              xlabel="Age category",
+                              ylabel="Incidence proportion (95% CI)",
+                              h1=0,
+                              h2=3,
+                              yrange=NULL,
+                              dodge=0,
+                              returnData=F){
   
   df <- d %>% filter(
     disease == Disease &

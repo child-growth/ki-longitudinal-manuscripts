@@ -36,7 +36,15 @@ d$nmeas.f <- gsub("N=","",d$nmeas.f)
 d$nstudy.f <- gsub(" studies","",d$nstudy.f)
 d$nmeas.f <- gsub(" children","",d$nmeas.f)
 
-
+# scale cohort-specific estimates
+scale_estimates <- function(d) {
+  d = d %>% mutate(
+    est = ifelse(cohort!="pooled", est*100, est),
+    lb = ifelse(cohort!="pooled", lb*100, lb),
+    ub = ifelse(cohort!="pooled", ub*100, ub)
+  )
+  return(d)
+}
 #-------------------------------------------------------------------------------------------
 # Mean WLZ by month 
 #-------------------------------------------------------------------------------------------
@@ -173,7 +181,6 @@ prev_plot <- ki_desc_flurry_plot(d,
                      Birth="yes", 
                      Severe="no", 
                      Age_range="3 months", 
-                     # Cohort="pooled",
                      xlabel="Child age, months",
                      ylabel='Point prevalence (95% CI)',
                      yrange=c(0,24),
@@ -242,23 +249,23 @@ prev_plot[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(region, n
 
 
 #-------------------------------------------------------------------------------------------
-# Wasting cumulative incidence
+# Wasting incidence proportion
 #-------------------------------------------------------------------------------------------
-ci_plot_primary <- ki_combo_plot(d,
-                        Disease="Wasting",
-                        Measure=c("Cumulative incidence", "Incidence proportion"), 
-                        Birth="yes", 
-                        Severe="no", 
-                        Age_range="3 months", 
-                        Cohort="pooled",
-                        xlabel="Child age, months",
-                    yrange=c(0,60),
-                    returnData=T)
 
-ci_plot_name = create_name(
+# TODO: add cumulative incidence plot
+ip_plot_primary <- ki_ip_flurry_plot(scale_estimates(d),
+                        Disease="Wasting",
+                        Measure="Incidence proportion",
+                        Birth="yes",
+                        Severe="no",
+                        Age_range="3 months",
+                        xlabel="Child age, months",
+                        returnData=T)
+
+ip_plot_name = create_name(
   outcome = "wasting",
   cutoff = 2,
-  measure = "cumulative incidence",
+  measure = "incidence",
   population = "overall and region-stratified",
   location = "",
   age = "All ages",
@@ -266,15 +273,15 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot_primary[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, ".png"), width=14, height=3)
+ggsave(ip_plot_primary[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ip_plot_name, ".png"), width=14, height=3)
 
-saveRDS(ci_plot_primary[[2]], file=paste0(figdata_dir_wasting,"figdata-",ci_plot_name,".RDS"))
+saveRDS(ip_plot_primary[[2]], file=paste0(figdata_dir_wasting,"figdata-",ip_plot_name,".RDS"))
 
 #Save plot-objects for figure grid
-saveRDS(list(mean_wlz_plot, prev_plot, ci_plot_primary), file=paste0(here::here(),"/figures/plot-objects/fig2_plot_objects.rds"))
+saveRDS(list(mean_wlz_plot, prev_plot, ip_plot_primary), file=paste0(here::here(),"/figures/plot-objects/fig2_plot_objects.rds"))
 
-ci_plot_primary[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
-ci_plot_primary[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
+ip_plot_primary[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
+ip_plot_primary[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 
 
 #-------------------------------------------------------------------------------------------
