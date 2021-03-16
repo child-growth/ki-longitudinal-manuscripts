@@ -287,15 +287,16 @@ ip_plot_primary[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(m
 #-------------------------------------------------------------------------------------------
 # Wasting cumulative incidence -birthstrat
 #-------------------------------------------------------------------------------------------
-ci_plot <- ki_combo_plot(d,
+ci_plot <- ki_ip_flurry_plot(scale_estimates(d),
                          Disease="Wasting",
-                         Measure=c("Cumulative incidence", "Incidence proportion"), 
+                         Measure="Incidence proportion",
+                         # Measure=c("Cumulative incidence", "Incidence proportion"), 
                          Severe="no", 
                          Age_range="3 months", 
-                         Cohort="pooled",
+                         # Cohort="pooled",
                          xlabel="Child age, months",
                          Birth = "strat",
-                         yrange=c(0,60),
+                         # yrange=c(0,60),
                          returnData=T)
 
 ci_plot_name = create_name(
