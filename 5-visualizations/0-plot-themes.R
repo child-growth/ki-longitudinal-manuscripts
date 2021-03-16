@@ -26,6 +26,120 @@ theme_set(theme_ki)
 #-------------------------------------------------------------------------------------------
 # Plot functions
 #-------------------------------------------------------------------------------------------
+ki_desc_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
+                         xlabel="Age category",
+                         ylabel="",
+                         Region=NULL,
+                         h2=3,
+                         strip.text.size=18,
+                         yrange=NULL,
+                         returnData=F) {
+  
+  df <- d %>% filter(
+    disease == Disease &
+      measure == Measure &
+      birth == Birth &
+      severe == Severe &
+      age_range == Age_range &
+      !is.na(region) & !is.na(agecat)
+  )
+  df <- droplevels(df)
+  
+  # remove N= from labels
+  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub('N=', '', nstudy.f))
+  
+  # remove text from labels
+  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
+  
+  # Remove 'months' from x axis labels
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  
+  ### new
+  df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
+  
+  if (min(df$lb) < 0) {
+    print("Warning: some lower bounds < 0")
+  }
+  
+  p <- ggplot(df,aes(y=est,x=agecat)) +
+    
+    # pooled 
+    geom_point(aes(shape=measure, size=measure, fill=region, color=region), 
+               size = 2, stroke = 0,
+               data = df %>% filter(ispooled == "yes")) +
+    
+    geom_errorbar(aes(color=region, group=interaction(measure, region),
+                      ymin=lb, ymax=ub), width = 0,
+                  data = df %>% filter(ispooled == "yes")) +
+    
+    geom_text(data=df[df$measure ==Measure,] %>% 
+                filter(ispooled == "yes"), 
+              aes(x = agecat, y = est, label = round(est)),
+              hjust = 1.5, 
+              vjust = 0.5) + 
+    
+    geom_text(data=df[df$measure == Measure,] %>% 
+                filter(ispooled == "yes"), 
+              aes(x = agecat, y = est, label = round(est)),
+              hjust = 1.5, 
+              vjust = 0.5) + 
+    
+    # cohort-stratified 
+    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
+               data = df %>% filter(ispooled == "no"),
+               position = position_jitter(width = 0.15), alpha = 0.25) +
+    
+    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) +
+    scale_size_manual(values = c(2, 1.5), guide = FALSE) +
+    scale_shape_manual(values = c(16, 17),
+                       name = 'Measure')+
+    scale_fill_manual(values=tableau11, guide = FALSE) +
+    
+    xlab(xlabel)+
+    ylab(ylabel) +
+
+    # add space to the left and right of points on x axis
+    # to accommodate point estimate labels
+    scale_x_discrete(expand = expand_scale(add = 1)) +
+    
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
+    
+    theme(
+      axis.text.x = element_text(margin =
+                                   margin(t = 0, r = 0, b = 0, l = 0),
+                                 size = 14)) +
+    theme(axis.title.y = element_text(size = 14)) +
+    
+    ggtitle("")
+  
+  if(!is.null(Region)) {
+    p <- p + facet_wrap(~cohort) +
+      theme(strip.text = element_text(size=strip.text.size, margin = margin(t = 0)))
+  }else {
+    p <- p + facet_grid(~region) +
+      theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
+  }
+  
+  if(!is.null(yrange)){
+    p <- p + coord_cartesian(ylim=yrange)
+  }
+  
+  
+  
+  if(returnData){
+    return(list(plot=p,data=df))
+  }else{
+    return(list(plot=p))
+  }
+}
+
+
 ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                          Cohort="pooled",
                          xlabel="Age category",
