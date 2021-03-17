@@ -72,7 +72,7 @@ cuminc <- bind_rows(co_ci_0_6, co_ci_6_24, co_ci_0_24)
 #--------------------------------------
 
 
-save(cuminc, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/co_cuminc.rdata")
+save(cuminc, file=paste0(ghapdata_dir,"co_cuminc.rdata"))
 
 
 

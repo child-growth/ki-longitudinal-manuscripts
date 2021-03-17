@@ -68,7 +68,6 @@ d <- full_join(d, co_ci_0_6, by=c("studyid","country", "subjid"))
 dim(d)
 
 #Merge in covariates
-cov <- cov %>% subset(., select = - c(dead, agedth, causedth))
 dim(d)
 df <- merge(as.data.frame(d), cov, by=c("studyid", "subjid", "country"), all.x = T, all.y = F)
 dim(df)

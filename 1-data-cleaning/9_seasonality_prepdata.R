@@ -63,6 +63,11 @@ saveRDS(d, seasonality_data_path)
 
 
 #Make GPS location dataset
+
+#drop quarterly studies
+d <- d %>% filter(measurefreq=="monthly")
+unique(d$studyid)
+
 gps <- d %>% mutate(year=floor(brthyr + (birthday + agedays)/365)) %>%
   distinct(studyid,country, month, year, latitude, longitud) %>% arrange(studyid,country, year,month)
 dim(gps)

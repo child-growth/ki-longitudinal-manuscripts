@@ -221,12 +221,12 @@ rec <- bind_rows(wast_rec_0_6, wast_rec_6_24, wast_rec_0_24)
 #--------------------------------------
 
 
-save(prev, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_prev.RData")
-save(meanWHZ, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_outcomes.RData")
-save(cuminc, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc.rdata")
-save(cuminc_nobirth, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_nobirth.rdata")
-save(pers_wast, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/pers_wast.rdata")
-save(rec, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_rec.rdata")
+save(prev, file=paste0(ghapdata_dir,"wast_prev.RData"))
+save(meanWHZ, file=paste0(ghapdata_dir,"wast_meanZ_outcomes.RData"))
+save(cuminc, file=paste0(ghapdata_dir,"wast_cuminc.rdata"))
+save(cuminc_nobirth, file=paste0(ghapdata_dir,"wast_cuminc_nobirth.rdata"))
+save(pers_wast, file=paste0(ghapdata_dir,"pers_wast.rdata"))
+save(rec, file=paste0(ghapdata_dir,"wast_rec.rdata"))
 
 
 

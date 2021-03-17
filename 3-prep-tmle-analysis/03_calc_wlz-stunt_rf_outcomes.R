@@ -22,7 +22,7 @@ d <- d %>% filter(measurefreq=="monthly")
 #--------------------------------------
 # Format and subset the growth velocity dataset
 #--------------------------------------
-vel <- readRDS(file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt_rf.rds")
+vel <- readRDS(file=paste0(ghapdata_dir,"velocity_longfmt_rf.rds"))
 
 vel<- mark_measure_freq(vel)
 
@@ -30,11 +30,11 @@ vel <- vel %>% filter(measurefreq=="monthly")
 
 
 #Get only HAZ change from growth velocity dataset, and format names
-vel_haz <- vel %>% filter(ycat=="haz") %>% subset(., select=c(studyid, country, subjid, y_rate, diffcat)) %>%
+vel_haz <- vel %>% filter(ycat=="haz") %>% dplyr::select(studyid, country, subjid, y_rate, diffcat) %>%
   rename(agecat = diffcat)
 
 #Get only length velocity from growth velocity dataset, and format names
-vel_lencm <- vel %>% filter(ycat=="lencm") %>% subset(., select=c(studyid, country, subjid, y_rate, diffcat)) %>%
+vel_lencm <- vel %>% filter(ycat=="lencm") %>% dplyr::select(studyid, country, subjid, y_rate, diffcat) %>%
   rename(agecat = diffcat)
 
 
@@ -118,7 +118,7 @@ for(i in 2:length(agecat_vec)){
     mutate( ever_stunted=ifelse(min(haz)< -2,1,0), Nobs=n()) %>% slice(1) %>%
     mutate(N=n()) %>%
     ungroup() %>%
-    select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat, ever_stunted,Nobs, N)
+    dplyr::select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat, ever_stunted,Nobs, N)
   
   stunt_ci <- rbind(stunt_ci, temp)
   

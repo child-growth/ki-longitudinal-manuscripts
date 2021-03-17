@@ -1,11 +1,13 @@
 rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
 
-library(dplyr)
 library(tictoc)
-
 library(sf)
 library(ncdf4)
 library(raster)
+#remotes::install_github("mikejohnson51/AOI") #to get climateR
+#remotes::install_github("mikejohnson51/climateR")
+library(AOI)
 library(climateR)
 
 #library(rgee)
@@ -17,11 +19,25 @@ library(climateR)
 # remotes::install_github("mikejohnson51/climateR")
 
 
-ki_cohort_filepath = "~/data/KI/UCB-SuperLearner/Manuscript analysis data/ki_cohort_gps_data.rds"
+ki_cohort_filepath = "/data/KI/UCB-SuperLearner/Manuscript analysis data/ki_cohort_gps_data.rds"
 ki_cohorts = readRDS(ki_cohort_filepath)
+
+# #check locations:
+# gps_loc <- ki_cohorts %>% distinct(studyid, latitude, longitud) %>%
+#   rename(lat=latitude, long=longitud)
+# 
+# world <- map_data('world')
+#   map_plot <- ggplot(world, aes(long, lat)) +
+#   geom_map(map=world, aes(map_id=region), fill=NA, color="grey20") +
+#   coord_quickmap() + theme_bw() + 
+#   geom_point(data=gps_loc, aes(x = long, y = lat), size=1) 
+# map_plot
+
+
+
 cohort_ids = unique(ki_cohorts$studyid)
 
-process_cohort_ppts = function(cohort_id){
+process_cohort_ppts = function(cohort_id, data_radius=1000){
   tic()
   print(cohort_id)
   cohort_lls = ki_cohorts %>% 
@@ -49,15 +65,15 @@ process_cohort_ppts = function(cohort_id){
     dat_sf = st_as_sf(cohort_ll_df, coords = c("longitud", "latitude"), crs = 4326) %>% 
       st_transform(3035)
     
-    # Buffer circles by 100m
-    dat_circles <- st_buffer(dat_sf, dist = 1000)
+    # Buffer circles by 10k
+    dat_circles <- st_buffer(dat_sf, dist = data_radius)
     
     find_ppt_values = function(cohort_dates){
       ppt = getTerraClim(dat_circles, 
                          "prcp", 
                          startDate = cohort_dates[["start_date"]], 
                          endDate = cohort_dates[["start_date"]])
-      ppt_mean = mean(getValues(ppt$prcp))
+      ppt_mean = mean(getValues(ppt$prcp), na.rm=T)
       return(ppt_mean)
     }
     
@@ -77,6 +93,12 @@ monthy_ppt_values = lapply(cohort_ids, process_cohort_ppts) %>% bind_rows()
 colnames(monthy_ppt_values) = c("long", "lat", "month", "year", "avg_ppt", "studyid")
 
 saveRDS(monthy_ppt_values, "~/data/KI/UCB-SuperLearner/Manuscript analysis data/monthy_ppt_values.RDS")
+
+#10km radius
+monthy_ppt_values_10km = lapply(cohort_ids, process_cohort_ppts, 10000) %>% bind_rows()
+colnames(monthy_ppt_values_10km) = c("long", "lat", "month", "year", "avg_ppt", "studyid")
+
+saveRDS(monthy_ppt_values_10km, "~/data/KI/UCB-SuperLearner/Manuscript analysis data/monthy_ppt_values.RDS")
 
 # Start of GEE code, but didn't have the permisssions to install some of the dependencies on bluevelvet
 # ee_Initialize()

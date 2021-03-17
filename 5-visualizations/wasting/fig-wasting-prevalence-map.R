@@ -58,11 +58,7 @@ d$long[d$ncountry>1] <- d$x[d$ncountry>1]
 d$lat[d$studyid=="ResPak"] <- 27
 d$lat[d$country=="BRAZIL"] <- -4.5
 
-#latitude and longitude swiched for two India cohorts
-d$long[d$studyid=="CMC-V-BCS-2002"] <- 80
-d$long[d$studyid=="IRC"] <- 79
-d$lat[d$studyid=="CMC-V-BCS-2002"] <- 15
-d$lat[d$studyid=="IRC"] <- 14
+
 
 
 

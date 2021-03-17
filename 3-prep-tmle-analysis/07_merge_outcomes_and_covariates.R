@@ -34,8 +34,8 @@ cov$predexfd6 <- relevel(cov$predexfd6, ref="1")
 
 
 
-cov$perdiar6 <- relevel(cov$perdiar6, ref="0%")
-cov$perdiar24 <- relevel(cov$perdiar24, ref="0%")
+cov$perdiar6 <- relevel(cov$perdiar6, ref="[0%, 2%]")
+cov$perdiar24 <- relevel(cov$perdiar24, ref="[0%, 2%]")
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

@@ -6,7 +6,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #load covariates
-cov <- readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+cov <- readRDS(paste0(ghapdata_dir,"/FINAL_clean_covariates.rds"))
 
 
 #remove grant identifiers from studyid
@@ -32,7 +32,7 @@ exposures <- c("studyid", "country", "sex",                   "gagebrth",       
 
 
 #Calculate presence by study
-cov_presence <- cov %>% select(exposures) %>%
+cov_presence <- cov %>% dplyr::select(exposures) %>%
   group_by(studyid, country) %>%
   summarise_all(., funs(sum_not_na)) %>%
   group_by(studyid, country) %>%
@@ -40,12 +40,9 @@ cov_presence <- cov %>% select(exposures) %>%
 
 
 #Calculate N's by study
-cov_N <- cov %>% select(exposures) %>%
+cov_N <- cov %>% dplyr::select(exposures) %>%
   group_by(studyid, country) %>%
-  summarise_all(., funs(sum_not_na))# %>%
-  #group_by(studyid, country) %>%
-  #mutate_all(ifelse_present)
-
+  summarise_all(., funs(sum_not_na))
 
 saveRDS(cov_presence, file = paste0(here(),"/results/cov_presence.rds"))
 saveRDS(cov_N, file = paste0(here(),"/results/cov_N.rds"))

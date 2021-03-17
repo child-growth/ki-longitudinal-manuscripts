@@ -100,6 +100,8 @@ d <- d %>% group_by(studyid, country) %>%
   filter(med_start>=1990) %>% ungroup()
 table(d$studyid)
 
+
+
 #add in CMIN GPS
 d$latitude[d$studyid=="CMIN Peru89"] <- -12.15585
 d$longitud[d$studyid=="CMIN Peru89"] <- -76.97213
@@ -111,7 +113,20 @@ d$latitude[d$studyid=="CMIN GB94"] <- 11.852849306288046
 d$longitud[d$studyid=="CMIN GB94"] <- -15.598650188638768
 d$latitude[d$studyid=="CMIN Bangladesh93"] <- 24.106381157160424 
 d$longitud[d$studyid=="CMIN Bangladesh93"] <- 90.10170489157913
-  
+
+#fix flipped latitude and longitude switched for three India cohorts
+d$longitud[d$studyid=="CMC-V-BCS-2002"] <- 78.930000
+d$longitud[d$studyid=="IRC"] <- 78.930000
+d$longitud[d$studyid=="TDC"] <- 78.928800
+d$latitude[d$studyid=="CMC-V-BCS-2002"] <- 15
+d$latitude[d$studyid=="IRC"] <-   12.85000
+d$latitude[d$studyid=="TDC"] <-   12.84650
+
+#Fix GPS for Mal-ed Brazil and ZVitambo
+d$latitude[d$studyid=="ZVITAMBO"] <-   (-17.86)
+d$latitude[d$studyid=="MAL-ED" & d$country=="BRAZIL"] <- (-3.8)
+
+
 #update study names where they have changed during BlueVelvet switch
 d <- data.table(d)
 d <- d[studyid=="ZINC-MORTALITY", studyid := "ZnMort"]
