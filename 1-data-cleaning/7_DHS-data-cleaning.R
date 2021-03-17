@@ -229,7 +229,7 @@ d_whz_long = d_whz_long %>%
 
 
 # save cleaned data as RDS
-saveRDS(d_haz_long, clean_DHS_haz_path)
-saveRDS(d_waz_long, clean_DHS_waz_path)
-saveRDS(d_whz_long, clean_DHS_whz_path)
+saveRDS(d_haz_long, dhs_res_dir)
+saveRDS(d_waz_long, dhs_res_dir)
+saveRDS(d_whz_long, dhs_res_dir)
 
