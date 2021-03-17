@@ -44,17 +44,6 @@ generate_dag = function(structural_equation_list){
 }
 
 
-"growth failure"
-"Treatment arm"
-"Sex" 
-"Parental age" 
-"Mother's age" 
-"Father's age" 
-"Parental education" 
-"Mother's education" 
-"Father's education" 
- 
-
 
 
 
@@ -190,6 +179,60 @@ ggdag_parents(dag, "W_mwtkg",
 #                      effect = "total") + # could also be "direct" 
 #   theme_dag_blank() 
 
+
+#------------------------------------------------------------
+#Simplified DAG
+#------------------------------------------------------------
+
+structural_equations = list(
+  unidirectional = list(
+    "W_mwtkg" = c("arm",
+                  "sex",
+                  "W_mage",
+                  "meducyrs",
+                  "hhwealth_quart", 
+                  "hfoodsec",
+                  "W_nrooms"),
+    "wast" = c("arm",
+               "sex",
+               "W_mage",
+               "meducyrs",
+               "hhwealth_quart", 
+               "hfoodsec",
+               "W_mhtcm",
+               "W_gagebrth",
+               "W_birthwt",
+               "W_nrooms",
+               "predexfd6"),
+    "W_mhtcm" =c("W_mwtkg"),
+    "W_gagebrth" =c("W_mwtkg"),
+    "W_birthwt" =c("W_mwtkg"),
+    "predexfd6" =c("W_mwtkg")
+  ),
+  labels = c("arm"="Intervention",
+             "sex"="Sex", 
+             "W_mage"="Parental age", 
+             "meducyrs"="Parental education", 
+             "hhwealth_quart"="HH wealth", 
+             "hfoodsec"="HH food security",
+             "W_mhtcm"="Parental anthropometry",
+             "W_birthwt"="Birth size",
+             "predexfd6"="Breastfeeding practice",
+             "W_gagebrth"="Birth characteristics",
+             "single"="Single parent",
+             "W_nrooms"="Household size and WASH characteristics",
+             "wast"="Child growth failure")
+)
+
+dag = generate_dag(structural_equations)
+
+
+
+### Plot parents of exposure
+ggdag_parents(dag, "W_mwtkg", 
+              use_labels = "label",
+              text = FALSE) + 
+  theme_dag_blank() 
 
 
 
