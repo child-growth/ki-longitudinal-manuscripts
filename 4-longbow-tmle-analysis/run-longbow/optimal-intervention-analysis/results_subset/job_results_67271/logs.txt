@@ -1,172 +1,0 @@
-Command to run:
-Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/03317467-2629-4fc6-b7f9-ed3991d57d78/aebd202b-1fbb-4581-80be-996ae96d4073
-cd /tmp;tar xvzf tmpcku4t6kz.tar.gz --strip 1;cd /tmp/03317467-2629-4fc6-b7f9-ed3991d57d78;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/67271/append_log/;screen -d -m python x.py;sleep 1
-tmpcku4t6kz/03317467-2629-4fc6-b7f9-ed3991d57d78/
-tmpcku4t6kz/03317467-2629-4fc6-b7f9-ed3991d57d78/script.Rmd
-tmpcku4t6kz/03317467-2629-4fc6-b7f9-ed3991d57d78/wrapper.sh
-tmpcku4t6kz/03317467-2629-4fc6-b7f9-ed3991d57d78/aebd202b-1fbb-4581-80be-996ae96d4073/
-tmpcku4t6kz/03317467-2629-4fc6-b7f9-ed3991d57d78/provision.sh
-tmpcku4t6kz/03317467-2629-4fc6-b7f9-ed3991d57d78/x.py
-tmpcku4t6kz/03317467-2629-4fc6-b7f9-ed3991d57d78/runner.R
-tmpcku4t6kz/03317467-2629-4fc6-b7f9-ed3991d57d78/inputs.json
-Requirement already satisfied (use --upgrade to upgrade): requests in /usr/lib/python2.7/site-packages
-You are using pip version 18.1, however version 20.1.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-{"job": {"status": "running", "created_at": "2020-05-31T23:33:15.694", "results_url": "/jobs/67271/", "jobs": []}}Making sure longbowtools package is available for runner
-
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
-> 
-> 
-Installing pandoc
-pandoc-2.3.1/
-pandoc-2.3.1/bin/
-pandoc-2.3.1/bin/pandoc
-Running provision script
-skipping provisioning because this is a child job
-Making sure longbowtools package is available for runner
-
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
-> 
-> 
-Starting analysis
-
-
-processing file: REPORT.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
-  ordinary text without R code
-
-  |                                                                              |.....                                                                 |   8%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                              |........                                                              |  12%
-  ordinary text without R code
-
-  |                                                                              |...........                                                           |  15%
-label: params (with options) 
-List of 2
- $ warning: logi FALSE
- $ message: logi FALSE
-
-Loading required package: graphics
-fhtcmc("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec", "W_mhtcm", "W_mwtkg", "W_mbmi", "single", "W_nrooms", "trth2o", "cleanck", "impfloor", "impsan", "safeh20")hazidc("agecat", "studyid", "country")
-TRUEFALSETRUEFALSENULL
-  |                                                                              |.............                                                         |  19%
-  ordinary text without R code
-
-  |                                                                              |................                                                      |  23%
-label: preprocessing
-  |                                                                              |...................                                                   |  27%
-   inline R code fragments
-
-  |                                                                              |......................                                                |  31%
-label: print_adjustment_set (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |........................                                              |  35%
-  ordinary text without R code
-
-  |                                                                              |...........................                                           |  38%
-label: print_strata_variables (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |..............................                                        |  42%
-  ordinary text without R code
-
-  |                                                                              |................................                                      |  46%
-label: data_summary
-  |                                                                              |...................................                                   |  50%
-  ordinary text without R code
-
-  |                                                                              |......................................                                |  54%
-label: print_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |........................................                              |  58%
-  ordinary text without R code
-
-  |                                                                              |...........................................                           |  62%
-label: drop_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |..............................................                        |  65%
-  ordinary text without R code
-
-  |                                                                              |................................................                      |  69%
-label: stratified_tmle (with options) 
-List of 1
- $ message: logi FALSE
-
-tmle for:	agecat: Birth, studyid: COHORTS, country: GUATEMALA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: Birth, studyid: Keneba, country: GAMBIA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: Birth, studyid: PROBIT, country: BELARUS
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: Birth, studyid: SAS-CompFeed, country: INDIA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: 6 months, studyid: COHORTS, country: GUATEMALA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: 6 months, studyid: Keneba, country: GAMBIA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: 6 months, studyid: PROBIT, country: BELARUS
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: 6 months, studyid: SAS-CompFeed, country: INDIA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: 6 months, studyid: SAS-FoodSuppl, country: INDIA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: 24 months, studyid: COHORTS, country: GUATEMALA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: 24 months, studyid: Keneba, country: GAMBIA
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-tmle for:	agecat: 24 months, studyid: PROBIT, country: BELARUS
-Failed on Lrnr_gam_NULL_NULL_GCV.Cp
-Quitting from lines 242-250 (REPORT.Rmd) 
-Error in setnames(matches, c("intervention", "baseline")) : 
-  Can't assign 2 names to a 0 column data.table
-Calls: run_internal ... format_results -> get_intervention_levels -> setnames
-
-Execution halted
-Running analysis failed
-{"status": "error"}
