@@ -54,29 +54,9 @@ generate_dag = function(structural_equation_list){
 "Mother's education" 
 "Father's education" 
  
-"hhwealth_quart" 
-"hfoodsec"
-"W_mhtcm"
-"W_mwtkg"
-"W_bmi" 
-"W_fhtcm"
-"vagbrth"
-"hdlvry"
-"W_gagebrth"
-"W_birthwt"
-"W_birthlen"
-"single"
-"W_nrooms"
-"W_nhh"
-"W_nchldlt5"
-"month"
-"brthmon"
-"W_parity"
-"trth2o"
-"cleanck"
-"impfloor"
-"impsan"
-"safeh20"
+
+
+
 
 
 structural_equations = list(
@@ -85,39 +65,149 @@ structural_equations = list(
     "y" = c("x", "z1", "z2"),
     "z2" = c("z1")
   ),
-  labels = c("arm",
-             "sex", 
-             "W_mage", 
-             "W_fage", 
-             "meducyrs", 
-             "feducyrs", 
-             "hhwealth_quart", 
-             "hfoodsec",
-             "W_mhtcm",
-             "W_mwtkg",
-             "W_bmi", 
-             "W_fhtcm",
-             "vagbrth",
-             "hdlvry",
-             "W_gagebrth",
-             "W_birthwt",
-             "W_birthlen",
-             "single",
-             "W_nrooms",
-             "W_nhh",
-             "W_nchldlt5",
-             "month",
-             "brthmon",
-             "W_parity",
-             "trth2o",
-             "cleanck",
-             "impfloor",
-             "impsan",
-             "safeh20")
+  bidirectional = list(
+    "x" = c("z1")
+  ), 
+  labels = c("x" = "Sanitation Intervention",
+             "y" = "Child Length", 
+             "z1" = "Household Income",
+             "z2" = "Latrine Access")
 )
 
 dag = generate_dag(structural_equations)
 dag
+
+
+
+structural_equations = list(
+  unidirectional = list(
+    "W_mwtkg" = c("arm",
+                    "sex",
+                    "W_mage",
+                    "W_fage",
+                    "meducyrs",
+                    "feducyrs",
+                    "hhwealth_quart", 
+                    "hfoodsec",
+                    "W_fhtcm",
+                    "vagbrth",
+                    "hdlvry",
+                    "single",
+                    "W_nrooms",
+                    "W_nhh",
+                    "W_nchldlt5",
+                    "month",
+                    "brthmon",
+                    "W_parity",
+                    "cleanck",
+                    "impfloor",
+                    "impsan",
+                    "safeh20"),
+    "wast" = c("arm",
+               "sex",
+               "W_mage",
+               "W_fage",
+               "meducyrs",
+               "feducyrs",
+               "hhwealth_quart", 
+               "hfoodsec",
+               "W_mhtcm",
+               "W_mwtkg",
+               "W_bmi" ,
+               "W_fhtcm",
+               "vagbrth",
+               "hdlvry",
+               "W_gagebrth",
+               "W_birthwt",
+               "W_birthlen",
+               "single",
+               "W_nrooms",
+               "W_nhh",
+               "W_nchldlt5",
+               "month",
+               "brthmon",
+               "W_parity",
+               "cleanck",
+               "impfloor",
+               "impsan",
+               "safeh20",
+               "predexfd6"),
+    "W_mhtcm" =c("W_mwtkg"),
+    "W_bmi" =c("W_mwtkg"),
+    "W_gagebrth" =c("W_mwtkg"),
+    "W_birthwt" =c("W_mwtkg"),
+    "W_birthlen" =c("W_mwtkg"),
+    "predexfd6" =c("W_mwtkg")
+    ),
+  labels = c("arm"="Intervention",
+             "sex"="Sex", 
+             "W_mage"="Mom age", 
+             "W_fage"="Dad age", 
+             "meducyrs"="Mom education", 
+             "feducyrs"="Dad education", 
+             "hhwealth_quart"="HH wealth", 
+             "hfoodsec"="HH food security",
+             "W_mhtcm"="Mom height",
+             "W_mwtkg"="Mom weight",
+             "W_bmi"="Mom BMI", 
+             "W_fhtcm"="Dad height",
+             "vagbrth"="Vaginal birth",
+             "hdlvry"="Home delivery",
+             "W_gagebrth"="Gestational age",
+             "W_birthwt"="Birthweight",
+             "W_birthlen"="Birthlength",
+             "single"="Single parent",
+             "W_nrooms"="Number of rooms in HH",
+             "W_nhh"="Number of people in HH",
+             "W_nchldlt5"="Number of children under 5 in HH",
+             "month"="Month of measurement",
+             "brthmon"="Birth month",
+             "W_parity"="Birth order",
+             "cleanck"="Cooking fuel",
+             "impfloor"="Floor",
+             "impsan"="Sanitation access",
+             "safeh20"="Water source",
+             "wast"="Child growth failure")
+)
+
+dag = generate_dag(structural_equations)
+dag
+
+
+### Plot parents of exposure
+ggdag_parents(dag, "W_mwtkg", 
+              use_labels = "label",
+              text = FALSE) + 
+  theme_dag_blank() 
+
+
+
+# ### Plot minimally sufficient adjustment set
+# ggdag_adjustment_set(dag, 
+#                      exposure = "W_mwtkg", 
+#                      outcome = "wast", 
+#                      type = "minimal", # could also be "all" or "canonical"
+#                      effect = "total") + # could also be "direct" 
+#   theme_dag_blank() 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
