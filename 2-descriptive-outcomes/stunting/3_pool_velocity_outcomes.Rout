@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -30,11 +30,11 @@ Type 'q()' to quit R.
 > # load packages
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -61,7 +61,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -87,13 +87,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -108,7 +101,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -172,14 +165,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -192,9 +177,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -211,10 +196,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -226,8 +207,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
 > 
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
@@ -241,38 +220,39 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 # A tibble: 1 x 1
       N
   <int>
-1 50022
+1 41302
 > d %>% group_by(studyid, country, subjid) %>% slice(1) %>%  group_by(studyid, country)  %>% summarize(N=n()) %>% as.data.frame()
-          studyid                      country     N
-1  CMC-V-BCS-2002                        INDIA   372
-2            CMIN                   BANGLADESH   248
-3         COHORTS                    GUATEMALA   615
-4         COHORTS                        INDIA  7390
-5         CONTENT                         PERU   215
-6              EE                     PAKISTAN   376
-7       GMS-Nepal                        NEPAL   591
-8   Guatemala BSC                    GUATEMALA   221
-9             IRC                        INDIA   410
-10       JiVitA-3                   BANGLADESH 10758
-11       JiVitA-4                   BANGLADESH  1334
-12         Keneba                       GAMBIA  2265
-13         LCNI-5                       MALAWI   706
-14         MAL-ED                   BANGLADESH   249
-15         MAL-ED                       BRAZIL   218
-16         MAL-ED                        INDIA   242
-17         MAL-ED                        NEPAL   238
-18         MAL-ED                         PERU   283
-19         MAL-ED                 SOUTH AFRICA   274
-20         MAL-ED TANZANIA, UNITED REPUBLIC OF   254
-21      NIH-Birth                   BANGLADESH   583
-22     NIH-Crypto                   BANGLADESH   740
-23         PROBIT                      BELARUS  7864
-24        PROVIDE                   BANGLADESH   644
-25         ResPak                     PAKISTAN   225
-26   SAS-CompFeed                        INDIA   442
-27  SAS-FoodSuppl                        INDIA   368
-28 TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2171
-29       ZVITAMBO                     ZIMBABWE  9726
+`summarise()` regrouping output by 'studyid' (override with `.groups` argument)
+             studyid                      country     N
+1     CMC-V-BCS-2002                        INDIA   372
+2  CMIN Bangladesh93                   BANGLADESH   248
+3      CMIN Brazil89                       BRAZIL   117
+4          CMIN GB94                GUINEA-BISSAU   590
+5        CMIN Peru89                         PERU   179
+6        CMIN Peru95                         PERU   205
+7            CONTENT                         PERU   215
+8                 EE                     PAKISTAN   376
+9          GMS-Nepal                        NEPAL   591
+10     Guatemala BSC                    GUATEMALA   221
+11               IRC                        INDIA   410
+12          JiVitA-3                   BANGLADESH 10759
+13          JiVitA-4                   BANGLADESH  1334
+14            Keneba                       GAMBIA  2265
+15            LCNI-5                       MALAWI   706
+16            MAL-ED                   BANGLADESH   249
+17            MAL-ED                       BRAZIL   218
+18            MAL-ED                        INDIA   242
+19            MAL-ED                        NEPAL   238
+20            MAL-ED                         PERU   283
+21            MAL-ED                 SOUTH AFRICA   274
+22            MAL-ED TANZANIA, UNITED REPUBLIC OF   254
+23            PROBIT                      BELARUS  7864
+24            ResPak                     PAKISTAN   225
+25      SAS-CompFeed                        INDIA   442
+26     SAS-FoodSuppl                        INDIA   368
+27    TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2171
+28               TDC                        INDIA   160
+29          ZVITAMBO                     ZIMBABWE  9726
 > 
 > 
 > 
@@ -280,9 +260,9 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > table(d$diffcat)
 
   0-3 months   3-6 months   6-9 months  9-12 months 12-15 months 15-18 months 
-      164170       141818       113504       106994        47748        42420 
+      129540       108782        84816        80206        41508        36636 
 18-21 months 21-24 months 
-       32252        27790 
+       26762        21898 
 > 
 > d <- d %>% rename(agecat = diffcat) %>%
 +   group_by(studyid, country, agecat, ycat, sex) %>%
@@ -307,6 +287,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +     TRUE ~ "Other"
 +   ),
 +   country_cohort=paste0(studyid," ", country))
+`summarise()` regrouping output by 'studyid', 'country', 'agecat', 'ycat' (override with `.groups` argument)
 > 
 > 
 > #----------------------------------------------------
@@ -396,53 +377,9 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > #----------------------------------------------------
 > 
 > poolhaz_boys <- RE_pool(d, ycategory="haz", gender="Male")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poolhaz_girls <- RE_pool(d, ycategory="haz", gender="Female")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poollencm_boys <- RE_pool(d, ycategory="lencm", gender="Male")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poollencm_girls <- RE_pool(d, ycategory="lencm", gender="Female")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > pooled_vel <- rbind(
 +   poolhaz_boys, poolhaz_girls, poollencm_boys, poollencm_girls
@@ -457,53 +394,9 @@ Warning messages:
 > #----------------------------------------------------
 > 
 > poolhaz_boys_fe <- RE_pool(d, ycategory="haz", gender="Male", method="FE")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poolhaz_girls_fe <- RE_pool(d, ycategory="haz", gender="Female", method="FE")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poollencm_boys_fe <- RE_pool(d, ycategory="lencm", gender="Male", method="FE")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poollencm_girls_fe <- RE_pool(d, ycategory="lencm", gender="Female", method="FE")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > pooled_vel_fe <- rbind(
 +   poolhaz_boys_fe, poolhaz_girls_fe, poollencm_boys_fe, poollencm_girls_fe
@@ -523,53 +416,9 @@ Warning messages:
 > dmonth24 <- d %>% filter(studyid %in% study24)
 > 
 > poolhaz_boys_month24 <- RE_pool(dmonth24, ycategory="haz", gender="Male")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poolhaz_girls_month24 <- RE_pool(dmonth24, ycategory="haz", gender="Female")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poollencm_boys_month24 <- RE_pool(dmonth24, ycategory="lencm", gender="Male")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poollencm_girls_month24 <- RE_pool(dmonth24, ycategory="lencm", gender="Female")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > pooled_vel_month24 <- rbind(
 +   poolhaz_boys_month24, poolhaz_girls_month24, 
@@ -585,53 +434,9 @@ Warning messages:
 > #----------------------------------------------------
 > dsub <- d %>% filter(studyid!="CONTENT") %>% filter(!(studyid=="COHORTS" & country=="GUATEMALA"))
 > poolhaz_boys <- RE_pool(dsub, ycategory="haz", gender="Male")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poolhaz_girls <- RE_pool(dsub, ycategory="haz", gender="Female")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poollencm_boys <- RE_pool(dsub, ycategory="lencm", gender="Male")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > poollencm_girls <- RE_pool(dsub, ycategory="lencm", gender="Female")
-Warning messages:
-1: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-2: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
-4: In bind_rows_(x, .id) :
-  binding factor and character vector, coercing into character vector
-5: In bind_rows_(x, .id) :
-  binding character and factor vector, coercing into character vector
 > 
 > pooled_vel_sub <- rbind(
 +   poolhaz_boys, poolhaz_girls, poollencm_boys, poollencm_girls
@@ -643,4 +448,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
- 24.152   0.895  25.344 
+ 47.423   0.752  48.151 

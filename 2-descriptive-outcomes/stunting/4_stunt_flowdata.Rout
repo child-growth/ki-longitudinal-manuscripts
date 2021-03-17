@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -32,11 +32,11 @@ Type 'q()' to quit R.
 > #-----------------------------------------
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -63,7 +63,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -89,13 +89,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -110,7 +103,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -174,14 +167,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -194,9 +179,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -213,10 +198,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -228,8 +209,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
 > d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 > 
@@ -267,6 +246,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > d %>% group_by(agecat) %>%
 +   summarise(min = min(agedays)/30.4167,
 +             max = max(agedays)/30.4167)
+`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 10 x 3
    agecat           min    max
    <fct>          <dbl>  <dbl>
@@ -280,8 +260,6 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
  8 18-21 months 18.0    21.0  
  9 21-24 months 21.0    24.0  
 10 <NA>         24.0    69.3  
-Warning message:
-Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
 > 
 > 
 > #--------------------------------------------------
@@ -337,6 +315,7 @@ Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na`
 +   
 +   # recode still stunted at first measurement  
 +   mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
+`summarise()` regrouping output by 'studyid', 'country', 'subjid', 'region' (override with `.groups` argument)
 > 
 > 
 > # drop measurements with ages over 24 months
@@ -350,13 +329,13 @@ Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na`
 # A tibble: 1 x 1
   Nchild
    <int>
-1  10669
+1  10563
 > d %>% filter(agedays<=16 * 30.4167) %>% ungroup() %>%
 +   summarize(Nchild=length(unique(paste0(studyid, subjid))))
 # A tibble: 1 x 1
   Nchild
    <int>
-1  10677
+1  10571
 > 
 > 
 > #--------------------------------------------------
@@ -397,6 +376,7 @@ Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na`
 +     not_stunted = mean(not_stunted, na.rm = TRUE),
 +     never_stunted = mean(never_stunted, na.rm = TRUE),
 +     relapse = mean(relapse, na.rm = TRUE))
+`summarise()` ungrouping output (override with `.groups` argument)
 > 
 > summary = summary %>%
 +   mutate(sum = still_stunted + newly_stunted + recover + 
@@ -406,16 +386,16 @@ Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na`
 # A tibble: 25 x 9
     agem nchild newly_stunted still_stunted recover not_stunted never_stunted
    <dbl>  <int>         <dbl>         <dbl>   <dbl>       <dbl>         <dbl>
- 1     0   3077        0.140         0       0           0              0.860
- 2     1   5328        0.0945        0.0520  0.0287      0              0.825
- 3     2   5596        0.0647        0.0937  0.0415      0.0195         0.775
- 4     3   5568        0.0402        0.110   0.0486      0.0441         0.743
- 5     4   5569        0.0338        0.115   0.0432      0.0688         0.719
- 6     5   4855        0.0359        0.128   0.0428      0.0914         0.684
- 7     6   5411        0.0314        0.132   0.0416      0.104          0.668
- 8     7   4657        0.0289        0.148   0.0410      0.123          0.635
- 9     8   4605        0.0265        0.159   0.0351      0.133          0.616
-10     9   4970        0.0260        0.179   0.0311      0.136          0.598
+ 1     0   2596        0.144         0       0           0              0.856
+ 2     1   5343        0.0934        0.0495  0.0274      0              0.830
+ 3     2   5524        0.0654        0.0899  0.0404      0.0189         0.780
+ 4     3   5498        0.0405        0.106   0.0481      0.0426         0.749
+ 5     4   5542        0.0349        0.110   0.0440      0.0671         0.725
+ 6     5   5231        0.0347        0.121   0.0425      0.0881         0.696
+ 7     6   5412        0.0321        0.127   0.0413      0.104          0.673
+ 8     7   5146        0.0291        0.142   0.0402      0.119          0.647
+ 9     8   5083        0.0268        0.153   0.0347      0.128          0.628
+10     9   4939        0.0228        0.176   0.0322      0.137          0.602
 # … with 15 more rows, and 2 more variables: relapse <dbl>, sum <dbl>
 > 
 > #--------------------------------------------------
@@ -433,6 +413,7 @@ Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na`
 +     not_stunted = sum(not_stunted),
 +     never_stunted = sum(never_stunted),
 +     relapse = sum(relapse))  
+`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
 > 
 > #--------------------------------------------------
 > # estimate random effects, format results
@@ -443,8 +424,11 @@ Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na`
 +                        label = "Newly stunted",
 +                        method = "REML")
 Warning message:
-`as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
-This warning is displayed once per session. 
+`as.tibble()` is deprecated as of tibble 2.0.0.
+Please use `as_tibble()` instead.
+The signature and semantics have changed, see `?as_tibble`.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_warnings()` to see where this warning was generated. 
 > 
 > pooled_still = run_rma_agem(data = stunt_agg, 
 +                        n_name = "nchild", 
@@ -610,7 +594,7 @@ This warning is displayed once per session.
 +                                     label = "Never stunted")
 > 
 > 
-> saveRDS(flow_m, file=paste0(res_dir, "stuntflow.RDS"))
+> saveRDS(flow_m, file=paste0(res_bluevelvet_dir, "stuntflow.RDS"))
 > saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stuntflow_pooled.RDS"))
 > saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stuntflow_pooled_fe.RDS"))
 > 
@@ -618,4 +602,4 @@ This warning is displayed once per session.
 > 
 > proc.time()
    user  system elapsed 
- 18.974   0.868  19.914 
+ 36.990   1.264  38.249 

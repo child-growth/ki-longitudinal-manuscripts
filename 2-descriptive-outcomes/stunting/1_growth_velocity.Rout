@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -27,11 +27,11 @@ Type 'q()' to quit R.
 > ##########################################
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -58,7 +58,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -84,13 +84,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -105,7 +98,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -169,14 +162,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -189,9 +174,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -208,10 +193,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -223,8 +204,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > library(growthstandards)
 Registered S3 method overwritten by 'pryr':
   method      from
@@ -246,7 +225,7 @@ Registered S3 method overwritten by 'pryr':
 > table(d$sex)
 
 Female   Male 
-382809 408304 
+321709 340390 
 > #set blank sex to missing
 > d$sex[d$sex=="" | d$sex=="Unknown"]<-NA
 > #drop kids missing sex
@@ -261,85 +240,87 @@ Female   Male
 > # convert to waz / haz and add to main data set as a new row with "agedays=0"
 > #--------------------------------------------------------------------------
 > table(d$studyid, is.na(d$W_birthlen))
-                
-                  FALSE   TRUE
-  CMC-V-BCS-2002   4948  11568
-  CMIN              283   5174
-  COHORTS         99782  13051
-  CONTENT            86   8253
-  EE               5825   3218
-  GMS-Nepal       14140     23
-  Guatemala BSC       0   2551
-  iLiNS-Zinc          0  10552
-  IRC             14170    672
-  JiVitA-3       103017  20240
-  JiVitA-4        33978   5836
-  Keneba          27409  16311
-  LCNI-5              0   5923
-  MAL-ED          21266  26696
-  NIH-Birth       11441    387
-  NIH-Crypto      10542      0
-  PROBIT         175496      0
-  PROVIDE         14807      0
-  ResPak            452   2725
-  SAS-CompFeed     9460     81
-  SAS-FoodSuppl       0   2247
-  TanzaniaChild2      0  32326
-  ZVITAMBO        74929    895
+                   
+                     FALSE   TRUE
+  CMC-V-BCS-2002      4810  11706
+  CMIN Bangladesh93      0   5457
+  CMIN Brazil89          0    889
+  CMIN GB94              0   8522
+  CMIN Peru89            0   2775
+  CMIN Peru95            0   5038
+  CONTENT                0   8339
+  EE                     0   9043
+  GMS-Nepal              0  14163
+  Guatemala BSC          0   2551
+  iLiNS-Zinc             0  10552
+  IRC                14170    672
+  JiVitA-3           96070  27187
+  JiVitA-4           33978   5836
+  Keneba             27370  16350
+  LCNI-5                 0   5923
+  MAL-ED              1309  46653
+  PROBIT            175496      0
+  ResPak                 0   3177
+  SAS-CompFeed        9460     81
+  SAS-FoodSuppl          0   2247
+  TanzaniaChild2         0  32326
+  TDC                  493   3279
+  ZVITAMBO           74929    895
 > table(d$studyid, is.na(d$W_birthwt))
-                
-                  FALSE   TRUE
-  CMC-V-BCS-2002  16167    349
-  CMIN              283   5174
-  COHORTS        101672  11161
-  CONTENT            86   8253
-  EE               9025     18
-  GMS-Nepal       14140     23
-  Guatemala BSC       0   2551
-  iLiNS-Zinc          0  10552
-  IRC             14629    213
-  JiVitA-3       104606  18651
-  JiVitA-4        34174   5640
-  Keneba          27236  16484
-  LCNI-5              0   5923
-  MAL-ED          45748   2214
-  NIH-Birth       11441    387
-  NIH-Crypto      10542      0
-  PROBIT         175496      0
-  PROVIDE         14807      0
-  ResPak            452   2725
-  SAS-CompFeed     9481     60
-  SAS-FoodSuppl       0   2247
-  TanzaniaChild2  32029    297
-  ZVITAMBO        75540    284
+                   
+                     FALSE   TRUE
+  CMC-V-BCS-2002     16167    349
+  CMIN Bangladesh93      0   5457
+  CMIN Brazil89          0    889
+  CMIN GB94              0   8522
+  CMIN Peru89            0   2775
+  CMIN Peru95            0   5038
+  CONTENT                0   8339
+  EE                  9025     18
+  GMS-Nepal              0  14163
+  Guatemala BSC          0   2551
+  iLiNS-Zinc             0  10552
+  IRC                14629    213
+  JiVitA-3           97754  25503
+  JiVitA-4           34181   5633
+  Keneba                 0  43720
+  LCNI-5                 0   5923
+  MAL-ED             43805   4157
+  PROBIT            175496      0
+  ResPak                 0   3177
+  SAS-CompFeed        9483     58
+  SAS-FoodSuppl          0   2247
+  TanzaniaChild2     32033    293
+  TDC                 3567    205
+  ZVITAMBO           75558    266
 > dblenwt <- d[,list(W_birthwt=first(W_birthwt), W_birthlen=first(W_birthlen), sex=first(sex)), by = list(studyid, country, subjid)]
 > dblenwt <- dblenwt[!(is.na(W_birthwt) & is.na(W_birthlen)), ]
 > dblenwt[is.na(W_birthlen), ]
        studyid    country subjid W_birthwt W_birthlen    sex
    1: JiVitA-3 BANGLADESH  10019      2120         NA   Male
-   2: JiVitA-3 BANGLADESH  10181      2710         NA   Male
-   3: JiVitA-3 BANGLADESH  10301      1660         NA Female
-   4: JiVitA-3 BANGLADESH  10335      2980         NA   Male
-   5: JiVitA-3 BANGLADESH  10519      1920         NA   Male
+   2: JiVitA-3 BANGLADESH  10099      1520         NA   Male
+   3: JiVitA-3 BANGLADESH  10181      2710         NA   Male
+   4: JiVitA-3 BANGLADESH  10301      1660         NA Female
+   5: JiVitA-3 BANGLADESH  10335      2980         NA   Male
   ---                                                       
-4527: ZVITAMBO   ZIMBABWE 229741      2880         NA Female
-4528: ZVITAMBO   ZIMBABWE 240211      3360         NA   Male
-4529: ZVITAMBO   ZIMBABWE 240481      2760         NA Female
-4530: ZVITAMBO   ZIMBABWE 240501      3000         NA Female
-4531: ZVITAMBO   ZIMBABWE 240811      3340         NA   Male
+5401: ZVITAMBO   ZIMBABWE 229741      2880         NA Female
+5402: ZVITAMBO   ZIMBABWE 240211      3360         NA   Male
+5403: ZVITAMBO   ZIMBABWE 240481      2760         NA Female
+5404: ZVITAMBO   ZIMBABWE 240501      3000         NA Female
+5405: ZVITAMBO   ZIMBABWE 240811      3340         NA   Male
 > dblenwt[is.na(W_birthwt), ]
-      studyid    country subjid W_birthwt W_birthlen    sex
-  1: JiVitA-3 BANGLADESH  20357        NA       44.4 Female
-  2: JiVitA-4 BANGLADESH   2131        NA       67.9   Male
-  3: JiVitA-4 BANGLADESH    228        NA       62.0   Male
-  4: JiVitA-4 BANGLADESH   2703        NA       62.7   Male
-  5: JiVitA-4 BANGLADESH    317        NA       64.3   Male
- ---                                                       
-183: ZVITAMBO   ZIMBABWE 226981        NA       49.4 Female
-184: ZVITAMBO   ZIMBABWE 230231        NA       51.0 Female
-185: ZVITAMBO   ZIMBABWE 236451        NA       49.0   Male
-186: ZVITAMBO   ZIMBABWE 237251        NA       46.5 Female
-187: ZVITAMBO   ZIMBABWE 237621        NA       46.2   Male
+       studyid    country subjid W_birthwt W_birthlen    sex
+   1: JiVitA-3 BANGLADESH  20357        NA       44.4 Female
+   2: JiVitA-4 BANGLADESH   2131        NA       67.9   Male
+   3: JiVitA-4 BANGLADESH    228        NA       62.0   Male
+   4: JiVitA-4 BANGLADESH   2703        NA       62.7   Male
+   5: JiVitA-4 BANGLADESH    317        NA       64.3   Male
+  ---                                                       
+1604: ZVITAMBO   ZIMBABWE 226981        NA       49.4 Female
+1605: ZVITAMBO   ZIMBABWE 230231        NA       51.0 Female
+1606: ZVITAMBO   ZIMBABWE 236451        NA       49.0   Male
+1607: ZVITAMBO   ZIMBABWE 237251        NA       46.5 Female
+1608: ZVITAMBO   ZIMBABWE 237621        NA       46.2   Male
 > dblenwt[, agedays := 0]
 > dblenwt[, waz := round(who_wtkg2zscore(agedays, W_birthwt/1000, sex = sex),2)]
 > dblenwt[, haz := round(who_htcm2zscore(agedays, W_birthlen, sex = sex),2)]
@@ -361,136 +342,122 @@ Female   Male
 11: JiVitA-4 BANGLADESH   quarterly   5444 Female     459  0.63  0.27  0.69
 12: JiVitA-4 BANGLADESH   quarterly   5444 Female     552  0.34  0.41  0.20
 13: JiVitA-4 BANGLADESH   quarterly   5444 Female     734 -0.78 -0.24 -0.99
-     muaz lencm  wtkg htcm    tr month brthweek brthyr dead agedth latitude
- 1:    NA  48.2  2.71   NA Other     6       26   2010   NA     NA    25.25
- 2:    NA  54.5  4.15   NA Other     8       26   2010   NA     NA    25.25
- 3:  0.07  60.7  5.15   NA Other     9       26   2010   NA     NA    25.25
- 4: -0.62  65.0  6.79   NA Other    12       26   2010   NA     NA    25.25
- 5: -1.09  71.0  7.62   NA Other     7       26   2010   NA     NA    25.25
- 6: -1.61    NA  8.60 80.5 Other     7       26   2010   NA     NA    25.25
- 7:    NA  46.6  2.71   NA Other     7       27   2012    0     NA    25.25
- 8:  0.67  66.3  7.74   NA Other     1       27   2012    0     NA    25.25
- 9:  0.84  69.4  8.93   NA Other     4       27   2012    0     NA    25.25
-10:  0.49  74.4  9.57   NA Other     7       27   2012    0     NA    25.25
-11:  0.95  78.3 10.39   NA Other    10       27   2012    0     NA    25.25
-12:  0.10  82.0 10.70   NA Other     1       27   2012    0     NA    25.25
-13: -0.32    NA 10.45 85.0 Other     7       27   2012    0     NA    25.25
-    longitud causedth     region siteid                     arm   gagebrth
- 1:     89.5          South Asia      1 Multiple Micronutrients Early term
- 2:     89.5          South Asia      1 Multiple Micronutrients Early term
- 3:     89.5          South Asia      1 Multiple Micronutrients Early term
- 4:     89.5          South Asia      1 Multiple Micronutrients Early term
- 5:     89.5          South Asia      1 Multiple Micronutrients Early term
- 6:     89.5          South Asia      1 Multiple Micronutrients Early term
- 7:     89.5          South Asia      1              Plumpy Doz       <NA>
- 8:     89.5          South Asia      1              Plumpy Doz       <NA>
- 9:     89.5          South Asia      1              Plumpy Doz       <NA>
-10:     89.5          South Asia      1              Plumpy Doz       <NA>
-11:     89.5          South Asia      1              Plumpy Doz       <NA>
-12:     89.5          South Asia      1              Plumpy Doz       <NA>
-13:     89.5          South Asia      1              Plumpy Doz       <NA>
-    brthmon parity                    birthwt   birthlen vagbrth hdlvry    mage
- 1:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
- 2:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
- 3:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
- 4:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
- 5:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
- 6:       6      2 Normal or high birthweight [48-50) cm       1   <NA> [20-30)
- 7:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
- 8:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
- 9:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
-10:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
-11:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
-12:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
-13:       7   <NA> Normal or high birthweight     <48 cm       1      0    <NA>
-      mhtcm  mwtkg        mbmi meducyrs single fage fhtcm feducyrs trth2o
- 1: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
- 2: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
- 3: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
- 4: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
- 5: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
- 6: <151 cm <52 kg Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>
- 7:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
- 8:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
- 9:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
-10:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
-11:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
-12:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
-13:    <NA>   <NA>        <NA>     High      0 <NA>  <NA>      Low   <NA>
-    cleanck impfloor nrooms  nhh nchldlt5 earlybf    hfoodsec anywast06
- 1:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
- 2:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
- 3:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
- 4:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
- 5:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
- 6:    <NA>        0      2 <NA>        1       0 Food Secure      <NA>
- 7:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
- 8:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
- 9:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
-10:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
-11:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
-12:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
-13:    <NA>        0      1 <NA>     <NA>       0        <NA>      <NA>
-    pers_wast enstunt enwast hhwealth_quart    id W_gagebrth W_birthwt
- 1:      <NA>       0      0      Wealth Q4 35131        268      2710
- 2:      <NA>       0      0      Wealth Q4 35131        268      2710
- 3:      <NA>       0      0      Wealth Q4 35131        268      2710
- 4:      <NA>       0      0      Wealth Q4 35131        268      2710
- 5:      <NA>       0      0      Wealth Q4 35131        268      2710
- 6:      <NA>       0      0      Wealth Q4 35131        268      2710
- 7:      <NA>       0      0      Wealth Q3 19171         NA      2710
- 8:      <NA>       0      0      Wealth Q3 19171         NA      2710
- 9:      <NA>       0      0      Wealth Q3 19171         NA      2710
-10:      <NA>       0      0      Wealth Q3 19171         NA      2710
-11:      <NA>       0      0      Wealth Q3 19171         NA      2710
-12:      <NA>       0      0      Wealth Q3 19171         NA      2710
-13:      <NA>       0      0      Wealth Q3 19171         NA      2710
-    W_birthlen W_mage W_mhtcm W_mwtkg   W_mbmi W_fage W_fhtcm W_meducyrs
- 1:       48.2     21     145    37.3 17.74078     NA      NA          7
- 2:       48.2     21     145    37.3 17.74078     NA      NA          7
- 3:       48.2     21     145    37.3 17.74078     NA      NA          7
- 4:       48.2     21     145    37.3 17.74078     NA      NA          7
- 5:       48.2     21     145    37.3 17.74078     NA      NA          7
- 6:       48.2     21     145    37.3 17.74078     NA      NA          7
- 7:       46.6     NA      NA      NA       NA     NA      NA         13
- 8:       46.6     NA      NA      NA       NA     NA      NA         13
- 9:       46.6     NA      NA      NA       NA     NA      NA         13
-10:       46.6     NA      NA      NA       NA     NA      NA         13
-11:       46.6     NA      NA      NA       NA     NA      NA         13
-12:       46.6     NA      NA      NA       NA     NA      NA         13
-13:       46.6     NA      NA      NA       NA     NA      NA         13
-    W_feducyrs W_nrooms W_nhh W_nchldlt5 W_parity impsan safeh20 perdiar6
- 1:          2        2    NA          1        2      1       1     <NA>
- 2:          2        2    NA          1        2      1       1     <NA>
- 3:          2        2    NA          1        2      1       1     <NA>
- 4:          2        2    NA          1        2      1       1     <NA>
- 5:          2        2    NA          1        2      1       1     <NA>
- 6:          2        2    NA          1        2      1       1     <NA>
- 7:          0        1    NA         NA       NA      1       1     <NA>
- 8:          0        1    NA         NA       NA      1       1     <NA>
- 9:          0        1    NA         NA       NA      1       1     <NA>
-10:          0        1    NA         NA       NA      1       1     <NA>
-11:          0        1    NA         NA       NA      1       1     <NA>
-12:          0        1    NA         NA       NA      1       1     <NA>
-13:          0        1    NA         NA       NA      1       1     <NA>
-    perdiar24 W_perdiar6 W_perdiar24 predexfd6
- 1:      <NA>         NA          NA         0
- 2:      <NA>         NA          NA         0
- 3:      <NA>         NA          NA         0
- 4:      <NA>         NA          NA         0
- 5:      <NA>         NA          NA         0
- 6:      <NA>         NA          NA         0
- 7:  (0%, 5%]         NA  0.01092896      <NA>
- 8:  (0%, 5%]         NA  0.01092896      <NA>
- 9:  (0%, 5%]         NA  0.01092896      <NA>
-10:  (0%, 5%]         NA  0.01092896      <NA>
-11:  (0%, 5%]         NA  0.01092896      <NA>
-12:  (0%, 5%]         NA  0.01092896      <NA>
-13:  (0%, 5%]         NA  0.01092896      <NA>
+     muaz lencm  wtkg htcm    tr                     arm month brthweek brthyr
+ 1:    NA  48.2  2.71   NA Other Multiple Micronutrients     6       26   2010
+ 2:    NA  54.5  4.15   NA Other Multiple Micronutrients     8       26   2010
+ 3:  0.07  60.7  5.15   NA Other Multiple Micronutrients     9       26   2010
+ 4: -0.62  65.0  6.79   NA Other Multiple Micronutrients    12       26   2010
+ 5: -1.09  71.0  7.62   NA Other Multiple Micronutrients     7       26   2010
+ 6: -1.61    NA  8.60 80.5 Other Multiple Micronutrients     7       26   2010
+ 7:    NA  46.6  2.71   NA Other              Plumpy Doz     7       27   2012
+ 8:  0.67  66.3  7.74   NA Other              Plumpy Doz     1       27   2012
+ 9:  0.84  69.4  8.93   NA Other              Plumpy Doz     4       27   2012
+10:  0.49  74.4  9.57   NA Other              Plumpy Doz     7       27   2012
+11:  0.95  78.3 10.39   NA Other              Plumpy Doz    10       27   2012
+12:  0.10  82.0 10.70   NA Other              Plumpy Doz     1       27   2012
+13: -0.32    NA 10.45 85.0 Other              Plumpy Doz     7       27   2012
+    dead agedth latitude longitud causedth     region   gagebrth brthmon parity
+ 1:   NA     NA    25.25     89.5          South Asia Early term       6      2
+ 2:   NA     NA    25.25     89.5          South Asia Early term       6      2
+ 3:   NA     NA    25.25     89.5          South Asia Early term       6      2
+ 4:   NA     NA    25.25     89.5          South Asia Early term       6      2
+ 5:   NA     NA    25.25     89.5          South Asia Early term       6      2
+ 6:   NA     NA    25.25     89.5          South Asia Early term       6      2
+ 7:    0     NA    25.25     89.5          South Asia       <NA>       7   <NA>
+ 8:    0     NA    25.25     89.5          South Asia       <NA>       7   <NA>
+ 9:    0     NA    25.25     89.5          South Asia       <NA>       7   <NA>
+10:    0     NA    25.25     89.5          South Asia       <NA>       7   <NA>
+11:    0     NA    25.25     89.5          South Asia       <NA>       7   <NA>
+12:    0     NA    25.25     89.5          South Asia       <NA>       7   <NA>
+13:    0     NA    25.25     89.5          South Asia       <NA>       7   <NA>
+                       birthwt   birthlen vagbrth hdlvry    mage   mhtcm  mwtkg
+ 1: Normal or high birthweight [48-50) cm       1   <NA> [20-30) <151 cm <52 kg
+ 2: Normal or high birthweight [48-50) cm       1   <NA> [20-30) <151 cm <52 kg
+ 3: Normal or high birthweight [48-50) cm       1   <NA> [20-30) <151 cm <52 kg
+ 4: Normal or high birthweight [48-50) cm       1   <NA> [20-30) <151 cm <52 kg
+ 5: Normal or high birthweight [48-50) cm       1   <NA> [20-30) <151 cm <52 kg
+ 6: Normal or high birthweight [48-50) cm       1   <NA> [20-30) <151 cm <52 kg
+ 7: Normal or high birthweight     <48 cm       1      0    <NA>    <NA>   <NA>
+ 8: Normal or high birthweight     <48 cm       1      0    <NA>    <NA>   <NA>
+ 9: Normal or high birthweight     <48 cm       1      0    <NA>    <NA>   <NA>
+10: Normal or high birthweight     <48 cm       1      0    <NA>    <NA>   <NA>
+11: Normal or high birthweight     <48 cm       1      0    <NA>    <NA>   <NA>
+12: Normal or high birthweight     <48 cm       1      0    <NA>    <NA>   <NA>
+13: Normal or high birthweight     <48 cm       1      0    <NA>    <NA>   <NA>
+           mbmi meducyrs single fage fhtcm feducyrs trth2o cleanck impfloor
+ 1: Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>    <NA>        0
+ 2: Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>    <NA>        0
+ 3: Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>    <NA>        0
+ 4: Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>    <NA>        0
+ 5: Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>    <NA>        0
+ 6: Underweight   Medium   <NA> <NA>  <NA>   Medium   <NA>    <NA>        0
+ 7:        <NA>     High      0 <NA>  <NA>      Low   <NA>    <NA>        0
+ 8:        <NA>     High      0 <NA>  <NA>      Low   <NA>    <NA>        0
+ 9:        <NA>     High      0 <NA>  <NA>      Low   <NA>    <NA>        0
+10:        <NA>     High      0 <NA>  <NA>      Low   <NA>    <NA>        0
+11:        <NA>     High      0 <NA>  <NA>      Low   <NA>    <NA>        0
+12:        <NA>     High      0 <NA>  <NA>      Low   <NA>    <NA>        0
+13:        <NA>     High      0 <NA>  <NA>      Low   <NA>    <NA>        0
+    nrooms  nhh nchldlt5 earlybf    hfoodsec anywast06 pers_wast enstunt enwast
+ 1:      2 <NA>        1       0 Food Secure      <NA>      <NA>       0      0
+ 2:      2 <NA>        1       0 Food Secure      <NA>      <NA>       0      0
+ 3:      2 <NA>        1       0 Food Secure      <NA>      <NA>       0      0
+ 4:      2 <NA>        1       0 Food Secure      <NA>      <NA>       0      0
+ 5:      2 <NA>        1       0 Food Secure      <NA>      <NA>       0      0
+ 6:      2 <NA>        1       0 Food Secure      <NA>      <NA>       0      0
+ 7:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
+ 8:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
+ 9:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
+10:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
+11:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
+12:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
+13:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
+    hhwealth_quart    id W_gagebrth W_birthwt W_birthlen W_mage W_mhtcm W_mwtkg
+ 1:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
+ 2:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
+ 3:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
+ 4:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
+ 5:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
+ 6:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
+ 7:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
+ 8:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
+ 9:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
+10:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
+11:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
+12:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
+13:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
+      W_mbmi W_fage W_fhtcm W_meducyrs W_feducyrs W_nrooms W_nhh W_nchldlt5
+ 1: 17.74078     NA      NA          7          2        2    NA          1
+ 2: 17.74078     NA      NA          7          2        2    NA          1
+ 3: 17.74078     NA      NA          7          2        2    NA          1
+ 4: 17.74078     NA      NA          7          2        2    NA          1
+ 5: 17.74078     NA      NA          7          2        2    NA          1
+ 6: 17.74078     NA      NA          7          2        2    NA          1
+ 7:       NA     NA      NA         13          0        1    NA         NA
+ 8:       NA     NA      NA         13          0        1    NA         NA
+ 9:       NA     NA      NA         13          0        1    NA         NA
+10:       NA     NA      NA         13          0        1    NA         NA
+11:       NA     NA      NA         13          0        1    NA         NA
+12:       NA     NA      NA         13          0        1    NA         NA
+13:       NA     NA      NA         13          0        1    NA         NA
+    W_parity impsan safeh20 perdiar6 perdiar24 W_perdiar6 W_perdiar24 predexfd6
+ 1:        2      1       1     <NA>      <NA>         NA          NA         0
+ 2:        2      1       1     <NA>      <NA>         NA          NA         0
+ 3:        2      1       1     <NA>      <NA>         NA          NA         0
+ 4:        2      1       1     <NA>      <NA>         NA          NA         0
+ 5:        2      1       1     <NA>      <NA>         NA          NA         0
+ 6:        2      1       1     <NA>      <NA>         NA          NA         0
+ 7:       NA      1       1     <NA>  [0%, 2%]         NA  0.01092896      <NA>
+ 8:       NA      1       1     <NA>  [0%, 2%]         NA  0.01092896      <NA>
+ 9:       NA      1       1     <NA>  [0%, 2%]         NA  0.01092896      <NA>
+10:       NA      1       1     <NA>  [0%, 2%]         NA  0.01092896      <NA>
+11:       NA      1       1     <NA>  [0%, 2%]         NA  0.01092896      <NA>
+12:       NA      1       1     <NA>  [0%, 2%]         NA  0.01092896      <NA>
+13:       NA      1       1     <NA>  [0%, 2%]         NA  0.01092896      <NA>
 > dblenwt[subjid==5444, ]
     studyid    country subjid W_birthwt W_birthlen    sex agedays  waz   haz
-1: JiVitA-3 BANGLADESH   5444      2710       48.2 Female       0 -1.2 -0.51
-2: JiVitA-4 BANGLADESH   5444      2710       46.6 Female       0 -1.2 -1.37
+1: JiVitA-3 BANGLADESH   5444      2710       48.2 Female       0 -1.2 -0.13
+2: JiVitA-4 BANGLADESH   5444      2710       46.6 Female       0 -1.2 -0.99
 > dblenwt[, W_birthwt := NULL][, W_birthlen := NULL]
 > 
 > ## merge birth haz / waz into main dataset
@@ -510,8 +477,6 @@ Female   Male
 > #setnames(d, c("wtkg", "lencm"), c("wtkg.orig", "lencm.orig"))
 > d[agedays==0, wtkg := round(who_zscore2wtkg(agedays, waz, sex = sex),3)]
 > d[agedays>0, wtkg := round(who_zscore2wtkg(agedays-1, waz, sex = sex),3)]
-Observations with agedays value of 4628, 6045, 5044, 4089, 5037, 4348, 4584, 5215, 4469, 4809, 5382, 5228, 5878, 4712, 4858, 6422, 4853, 6011, 3948, 4112, 5467, 4409, 5842, 4210, 4569, 5732, 4872, 5120, 4228, 5831, 6191, 5616, 6255, 5062, 4311, 5419, 4686, 4231, 5572, 4956, 4554, 6304, 4415, 5806, 6254, 4407, 6213, 5642, 6343, 5186, 4897, 6559, 6242, 6239, 6151, 6423, 5687, 5600, 5848, 5394, 6498, 5006, 5741, 5086, 5764, 4848, 6568, 6164, 5879, 5193, 5968, 5409, 4681, 4750, 5341, 5992, 5145, 4533, 5178, 5773, 4498, 4398, 5238, 6226, 4487, 5740, 5215, 4814, 6074, 6052, 4117, 4698, 4823, 6138, 6203, 4225, 4070, 5329, 5017, 6296, 4729, 6294, 4604, 5442, 6473, 5203, 5944, 4125, 6515, 5055, 4946, 5914, 4258, 5955, 6530, 6475, 4028, 4011, 4326, 4164, 6022, 4276, 5619, 4299, 6415, 5168, 6456, 4189, 4901, 6114, 5959, 4924, 5712, 5114, 4212, 5165, 5924, 4893, 5619, 5161, 4098, 6128, 4291, 4812, 4103, 4278, 4936, 4148, 4151, 4843, 4622, 5384, 5521, 4460, 5561, 5333, 4354, 4092, 5220, 4407, 4286, 4485, 4409, 6503, 6446, 5886, 4835, 6341, 6082, 4445, 6023, 6135, 4728, 6543, 5170, 5926, 5162, 4847, 4858, 5156, 5287, 6560, 5451, 6499, 5711, 5853, 5375, 5055, 5019, 5984, 4767, 6303, 6205, 5613, 5596, 5166, 6061, 5925, 5336, 5742, 4885, 6557, 6390, 5982, 4760, 4865, 5704, 5012, 5187, 4777, 4427, 5161, 4919, 6470, 4877, 4823, 5040, 4126, 4690, 5973, 4521, 5952, 4255, 5451, 5924, 4914, 4701, 5550, 6347, 4236, 5790, 5767, 5273, 4444, 6138, 4638, 4837, 5898, 6485, 4973, 4373, 5161, 6093, 4355, 4622, 5837, 4438, 6542, 6356, 4361, 5371, 4878, 5771, 4507, 6017, 4899, 6013, 5298, 4254, 5878, 5185, 4298, 5012, 4127, 5286, 5575, 6454, 5920, 4272, 6387, 6300, 5099, 4030, 6010, 5148, 5308, 5074, 6572, 5746, 4762, 5743, 6357, 5744, 4585, 5502, 6356, 5420, 6414, 5704, 4822, 4045, 5601, 4819, 5233, 4243, 4968, 6263, 5917, 5745, 4068, 6391, 6394, 6339, 6163, 5202, 5752, 5550, 5021, 5184, 5060, 4892, 5828, 6176, 6181, 4518, 4874, 5718, 4173, 4792, 5470, 5054, 4636, 5037, 5209, 4964, 4465, 4386, 6002, 4517, 5133, 6108, 6258, 4613, 4799, 4218, 5319, 4483, 5984, 6567, 4029, 4841, 5812, 4608, 4310, 6208, 4508, 4095, 4484, 5446, 4300, 5291, 6454, 5739, 5221, 4339, 4554, 4968, 5662, 4364, 5057, 4206, 4222, 4433, 5517, 6183, 6233, 4702, 5155, 4211, 6111, 4148, 5629, 5828, 4248, 4890, 5355, 4322, 5218, 4297, 6292, 5894, 6367, 6454, 5873, 5526, 6374, 5860, 6342, 6012, 5870, 5000, 6442, 5617, 6375, 6052, 4532, 6089, 6508, 5651, 6280, 6533, 5695, 4844, 5386, 5591, 6008, 6099, 4998, 5451, 5293, 5520, 4573, 5552, 4599, 6285, 4024, 5087, 5279, 4339, 5602, 4043, 4676, 4216, 4277, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5647, 5607, 6896, 5640, 5649, 5629, 5605, 5574, 5561, 5572, 5537, 6831, 5549, 5572, 5547, 6935, 5530, 5552, 5610, 5509, 6802, 5590, 5497, 5506, 5486, 5545, 5544, 5533, 5507, 5529, 5521, 5529, 5461, 5508, 5472, 5468, 5444, 5530, 5397, 5429, 5331, 5306, 5440, 6737, 5372, 5322, 5389, 5353, 5294, 5207, 5654, 5744, 6903, 5583, 5574, 5683, 5532, 5564, 5664, 5398, 5670, 5372, 5449, 5309, 5511, 5383, 5382, 5208, 5610, 5581, 5604, 6926, 5904, 5594, 5696, 5464, 5723, 5660, 5540, 5562, 5649, 5475, 5485, 5676, 6849, 5690, 5484, 5617, 5503, 5461, 6788, 5560, 6902, 5477, 6805, 5637, 5491, 5500, 5416, 6753, 5612, 5592, 5463, 6928, 5452, 5456, 5539, 5592, 5566, 5450, 6883, 5530, 5439, 5426, 5446, 5386, 5409, 5387, 5416, 5348, 5358, 5341, 5372, 5433, 6756, 5361, 5362, 6693, 5379, 5371, 6688, 5580, 5371, 6696, 5364, 5501, 5327, 5369, 5368, 5361, 5677, 5387, 5282, 5297, 5549, 5670, 5566, 5524, 5555, 5477, 5409, 5454, 6861, 5438, 5605, 5566, 5539, 5497, 5421, 5388, 6792, 5361, 5423, 5591, 6904, 5369, 5459, 5343, 5393, 5458, 5462, 5405, 5499, 5292, 5336, 6742, 5484, 5298, 5399, 5259, 5518, 5506, 5597, 5484, 5727, 5546, 5774, 5560, 5553, 5533, 5590, 5565, 5562, 5554, 5538, 5627, 5623, 5512, 5492, 5482, 5531, 5479, 5451, 5470, 5389, 5424, 6901, 5618, 5457, 5452, 5434, 5501, 5365, 5401, 5511, 6872, 5317, 5319, 5333, 5281, 5471, 5343, 5282, 5408, 5326, 5232, 5247, 5329, 5237, 5702, 5641, 5633, 5597, 5619, 5588, 5593, 5563, 5816, 5543, 5517, 5520, 5475, 5490, 5520, 5510, 5515, 6798, 5491, 5433, 5437, 5391, 5421, 5466, 5464, 5469, 5418, 5449, 5353, 5503, 5375, 5409, 5505, 5360, 6647, 5375, 5355, 5319, 5362, 5297, 5298, 5305, 5660, 5534, 5401, 5520, 5533, 5503, 5527, 5492, 6908, 5513, 5563, 5460, 5399, 6812, 5477, 5416, 5641, 5428, 5541, 5284, 5438, 5437, 5427, 5362, 5384, 5330, 5674, 6882, 5483, 5378, 5358, 5584, 5470, 5485, 5298, 5316, 5229, 5204, 5255, 5255, 5231, 5446, 5460, 6708, 5362, 5325, 5675, 5695, 5689, 5678, 5685, 5650, 5665, 5673, 5641, 5621, 5606, 6914, 5641, 5625, 6920, 5598, 5630, 5605, 5602, 5607, 5573, 5570, 5581, 5544, 5589, 5532, 6837, 5509, 5597, 5523, 5469, 5524, 5456, 5514, 5578, 5533, 5599, 5552, 5456, 5490, 5450, 5576, 5548, 5511, 5486, 5549, 5555, 5471, 5542, 5503, 5587, 5458, 5500, 5502, 5493, 5467, 5505, 5416, 6726, 5500, 5419, 5478, 5359, 5458, 5365, 5405, 5354, 5395, 5366, 5346, 6646, 5373, 5375, 5345, 5778, 5521, 5580, 5537, 5630, 5503, 5484, 5459, 5468, 5542, 5392, 5441, 5489, 5441, 5487, 5642, 5370, 6792, 5581, 5607, 5362, 5521, 5487, 5424, 5480, 5548, 5418, 6945, 5662, 5345, 5348, 5366, 5624, 5336, 5304, 6818, 5522, 6802, 5550, 5340, 5431, 6725, 5259, 5277, 5258, 5378, 5322, 5266, 6731, 5230, 5334, 5373, 5205, 5200, 5721, 5720, 5738, 5725, 5721, 5710, 5712, 5774, 5729, 5689, 5693, 5675, 5614, 5624, 5627, 5605, 5604, 5568, 5577, 6881, 5644, 5569, 5609, 6923, 5462, 5523, 5641, 5548, 5486, 5443, 5507, 6774, 5434, 5407, 6746, 5454, 5432, 5371, 6668, 5401, 5461, 5431, 5456, 5418, 5377, 5436, 5424, 5661, 5760, 5668, 5603, 5601, 5619, 5599, 5709, 5546, 5538, 5728, 5541, 6920, 5531, 5518, 5579, 5556, 5506, 5487, 5493, 5484, 5459, 5478, 5523, 5551, 5590, 5423, 5504, 5438, 5455, 5427, 5443, 5278, 5396, 5270, 5773, 5636, 5622, 5611, 5622, 5615, 5588, 5612, 5625, 5577, 5626, 6930, 5596, 5574, 5583, 5538, 6855, 5568, 5558, 5579, 5583, 5544, 5664, 5522, 5601, 5521, 5522, 5527, 5532, 5612, 5581, 5530, 5602, 5521, 5511, 6808, 5492, 5517, 5539, 5484, 5457, 5486, 5467, 5566, 5490, 5504, 5499, 5466, 5658, 5540, 5537, 5491, 5456, 5523, 6818, 5495, 5497, 5495, 5451, 5456, 5462, 5413, 5462, 5393, 5426, 5333, 6627, 5382, 5431, 5415, 5476, 5346, 5473, 5308, 5345, 5341, 5336, 5300, 5282, 5323, 5325, 5337, 5278, 5436, 5332, 5314, 5307, 5571, 5576, 5570, 5521, 5654, 5523, 5615, 5615, 5562, 5437, 5440, 5359, 5502, 5521, 5621, 5350, 5436, 5302, 5355, 5407, 5413, 5354, 5361, 5345, 5510, 5344, 5399, 5286, 5238, 5256, 6664, 5286, 5228, 5210, 5216, 5723, 5683, 5669, 5626, 5679, 5617, 5662, 5597, 5642, 5567, 5594, 5590, 5611, 5579, 5542, 5648, 5563, 5506, 5475, 5509, 5407, 5548, 5406, 5613, 5567, 5502, 6803, 5427, 5422, 5428, 6760, 5407, 5543, 5634, 5767, 5739, 5638, 5468, 5545, 5482, 5734, 5631, 5430, 5404, 6832, 5609, 5576, 5447, 5438, 6871, 5489, 5376, 5484, 5385, 5369, 5374, 5589, 5420, 5304, 5359, 6787, 5277, 5318, 5202, 5200, 5355, 5338, 5580, 5655, 5513, 5606, 5481, 5501, 5630, 5616, 6900, 5685, 5742, 5615, 5493, 5718, 5531, 5468, 5516, 5503, 5507, 5665, 5550, 5714, 5426, 5368, 6779, 5501, 5418, 6810, 5398, 5550, 5458, 5614, 5313, 6719, 5656, 5810, 6773, 5639, 5549, 5343, 5490, 5340, 5582, 6839, 5498, 5622, 5436, 5473, 5539, 5491, 5416, 5596, 5298, 5451, 5312, 5490, 5409, 5413, 5284, 5352, 5535, 5511, 5440, 6733, 5287, 5278, 5250, 5346, 5234, 5263, 5218, 6685, 5276, 5227, 5184, 5282, 5427, 6590, 5335, 5456, 5780, 5758, 5749, 5627, 5669, 5611, 5567, 5535, 5584, 5488, 5558, 5572, 5538, 6877, 5408, 6954, 5399, 5408, 6752, 5572, 5584, 5506, 5567, 5501, 6953, 5543, 5316, 6739, 5560, 5336, 5276, 5260, 5603, 5746, 5706, 5710, 5731, 5678, 5687, 5658, 5670, 5651, 5629, 5656, 6928, 5649, 5530, 5489, 5524, 5528, 5524, 5472, 5483, 5419, 5474, 5410, 5492, 5464, 5499, 6772, 5438, 5431, 5400, 6715, 5458, 6777, 5403, 5564, 5488, 5453, 5406, 5359, 5387, 5342, 5778, 5691, 5671, 5540, 5508, 5432, 6829, 5417, 5562, 5766, 5760, 5707, 5692, 5659, 5613, 5605, 5673, 5566, 5428, 5628, 5645, 5482, 6875, 5451, 5643, 5645, 5564, 5523, 5604, 5519, 5641, 5431, 5514, 5370, 5458, 6804, 5551, 5337, 5732, 5595, 5534, 5533, 5487, 5556, 5473, 5683, 5513, 5613, 5343, 5454, 6885, 5500, 5406, 5497, 5423, 5360, 5357, 5294, 5720, 5722, 5683, 5703, 5676, 5722, 5699, 5599, 5654, 5662, 5617, 5618, 5589, 5595, 5575, 5574, 5622, 5504, 5648, 5594, 5582, 5655, 5458, 5455, 5411, 5719, 5591, 5453, 6882, 5582, 5573, 5580, 5543, 5550, 5509, 5540, 5508, 5553, 5483, 5452, 5546, 6924, 5390, 5540, 5533, 5470, 5459, 5410, 5443, 5488, 6919, 5376, 6795, 5400, 6845, 5562, 5349, 5455, 5357, 5398, 5305, 5338, 5325, 5292, 5260, 5309, 5301, 5408, 5290, 5284, 5245, 6701, 5289, 6808, 5229, 6670, 5275, 5238, 5245, 5237, 5243, 6769, 5752, 5730, 5741, 5713, 5709, 5682, 5532, 5650, 5525, 6835, 5615, 5512, 5475, 5472, 5410, 5436, 5413, 5693, 5686, 5674, 5697, 5650, 5650, 5399, 5532, 5478, 6771, 5468, 5575, 5496, 5446, 5367, 5440, 5430, 5377, 5360, 5401, 5360, 5354, 6641, 5364, 5346, 5352, 5790, 5751, 5624, 5678, 5701, 5670, 5612, 5531, 5604, 5611, 5497, 5489, 5563, 5472, 5475, 5474, 6800, 5405, 6723, 5587, 5484, 5565, 5452, 5491, 5497, 5428, 5455, 5440, 5402, 5434, 5477, 5342, 5326, 5278, 5269, 5717, 5692, 5489 are outside the range of the standard. Setting to NA.
-Observations with agedays value of 6139, 4301, 6253, 5826, 4298, 5260, 4857, 5852, 5593, 4221, 6311, 5594, 5154, 4036, 5903, 5213, 6388, 3992, 6508, 4025, 6253, 4814, 5011, 5966, 5818, 5473, 6201, 4915, 6061, 3948, 4329, 6450, 5459, 4019, 5585, 4901, 6200, 4356, 5113, 4643, 5945, 4792, 5993, 5540, 4454, 5536, 6171, 4420, 6521, 5395, 5986, 5660, 5547, 4604, 5929, 4549, 5659, 5036, 4495, 5438, 4388, 4776, 4546, 5259, 4153, 5237, 5218, 4785, 5989, 6366, 4998, 4915, 4586, 6113, 4585, 4325, 4287, 4238, 4085, 5261, 4183, 5634, 4985, 4442, 6034, 6139, 6402, 5204, 5628, 6168, 5938, 6543, 5964, 6327, 5867, 6449, 5218, 5614, 5882, 5378, 5996, 6285, 4637, 4668, 4791, 4474, 5588, 5746, 5707, 5263, 4012, 5320, 5943, 4898, 6311, 5365, 4745, 6254, 6188, 5013, 3921, 4685, 5959, 5517, 4605, 5177, 4360, 6448, 6363, 4955, 5190, 4169, 4831, 6197, 6572, 5600, 4087, 4907, 4454, 4038, 5834, 5076, 4000, 4617, 5178, 6281, 4557, 5714, 5057, 4193, 5508, 5029, 4821, 3982, 4843, 5058, 4363, 4419, 6429, 5771, 4140, 5904, 4380, 5606, 6051, 5377, 5941, 4684, 5077, 4511, 5324, 4150, 5244, 6092, 4964, 6121, 4136, 5014, 3959, 5865, 5126, 4349, 6005, 5233, 5609, 4531, 6082, 5662, 4520, 4454, 4204, 4060, 5178, 4822, 5038, 4458, 4608, 4533, 4684, 4531, 4450, 3961, 4646, 4606, 4415, 6192, 4316, 3936, 6420, 5712, 4403, 5255, 5959, 4164, 5979, 6073, 6351, 5970, 5018, 6506, 6391, 5843, 6375, 5234, 6318, 6044, 5497, 5537, 6100, 6397, 5459, 6433, 5879, 5768, 6212, 5910, 6084, 5614, 5720, 5449, 6067, 6500, 3980, 6241, 5133, 5014, 4792, 4335, 4437, 6321, 4360, 6481, 5747, 6485, 6549, 5283, 6357, 5074, 4504, 5772, 6170, 5376, 5863, 6214, 4944, 6493, 5314, 5856, 5185, 6296, 4393, 5051, 4179, 5912, 5917, 4429, 5209, 4914, 5380, 4601, 5022, 4686, 6147, 4978, 5367, 4470, 4496, 6464, 5748, 6253, 5795, 6324, 4649, 5298, 5196, 4505, 4871, 6197, 4500, 5919, 5488, 5871, 5087, 4510, 5479, 5381, 4636, 4167, 4962, 5216, 4522, 4223, 4395, 5138, 4508, 6489, 5030, 4419, 6333, 4922, 6290, 4213, 6008, 6365, 4407, 4265, 4865, 6474, 6526, 5951, 5770, 6568, 6166, 5976, 5995, 5254, 5897, 4328, 6443, 4268, 5381, 4482, 5882, 5598, 6493, 6543, 5953, 4335, 5124, 5940, 5848, 5876, 4989, 5924, 5096, 4271, 4202, 5805, 5626, 4913, 4597, 6540, 5937, 5179, 4318, 5966, 5223, 6542, 6317, 5089, 6469, 5673, 4124, 5976, 4254, 6555, 5434, 5576, 5448, 5997, 5262, 6074, 6006, 4382, 6544, 4782, 5467, 4604, 6509, 4017, 4753, 4787, 5386, 5678, 4699, 4721, 5743, 4223, 5097, 5512, 6076, 4913, 6208, 5741, 4994, 5788, 6408, 4767, 4166, 6013, 5636, 4138, 4388, 4368, 4631, 4880, 4326, 5000, 4110, 5754, 4324, 4585, 5219, 5554, 4630, 5695, 4954, 5075, 4913, 5251, 5066, 4636, 4398, 4862, 4246, 4531, 6114, 5630, 4456, 4037, 4118, 4500, 5214, 4994, 6176, 6346, 5997, 6197, 6405, 6152, 4891, 5842, 5322, 5674, 6228, 5433, 4767, 5469, 5324, 5918, 5272, 4073, 4739, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5478, 5938, 5956, 5926, 5908, 5902, 5933, 5888, 5892, 5918, 5906, 5816, 5825, 5804, 5800, 5869, 5862, 5913, 5893, 5848, 5857, 5792, 5802, 5806, 5734, 5850, 5809, 5772, 5916, 5899, 5736, 5638, 5619, 5745, 5654, 5706, 5633, 5597, 5610, 6647, 5654, 5672, 5665, 5854, 5625, 5619, 5621, 5785, 5934, 5931, 5905, 5893, 5865, 6048, 5896, 5848, 6825, 5796, 5901, 5818, 5754, 5790, 5894, 5971, 5845, 6872, 5923, 5815, 5802, 6819, 5686, 5667, 5861, 6835, 5646, 5670, 5647, 5614, 5647, 6634, 5965, 5968, 5949, 5936, 5977, 5940, 6921, 5941, 5910, 5963, 5919, 6905, 5902, 5883, 5882, 5942, 5897, 6074, 5917, 5820, 6033, 5852, 5859, 5880, 5825, 5843, 6893, 5872, 6850, 5787, 5775, 5822, 5833, 5788, 5876, 5816, 5910, 5830, 5938, 6924, 5752, 5858, 5892, 5809, 5979, 5734, 5683, 5790, 5836, 5767, 5727, 5745, 5737, 5796, 5871, 5911, 5706, 5720, 5671, 5662, 6640, 5884, 5667, 5714, 5877, 5741, 5622, 5636, 5879, 5669, 6670, 5806, 5670, 5632, 5643, 6014, 5980, 6077, 5990, 6099, 5970, 5969, 5984, 5978, 5976, 5964, 5963, 5912, 5865, 6103, 5976, 5892, 5910, 5921, 5856, 5840, 5864, 5855, 5825, 5868, 5833, 5844, 5886, 5906, 5855, 5779, 5924, 5778, 5865, 5851, 5878, 5745, 5795, 5824, 5792, 5736, 5779, 5709, 5750, 5687, 5702, 5718, 6672, 5676, 5669, 5700, 6651, 5661, 5755, 5703, 5664, 5988, 5932, 5927, 5884, 5963, 5904, 5838, 5738, 6015, 6029, 6010, 6108, 6001, 6006, 5945, 5943, 5993, 5946, 5907, 5908, 5862, 6000, 5791, 5966, 5906, 5871, 5889, 5946, 5880, 5873, 5820, 5909, 5878, 5843, 5804, 5805, 5859, 5790, 5770, 5736, 5722, 5721, 5692, 5956, 6000, 5918, 5936, 5900, 5989, 5885, 6865, 5902, 6900, 5889, 5842, 5851, 5861, 5817, 5778, 5850, 5856, 6075, 5882, 5826, 5816, 5782, 5999, 5768, 5782, 5826, 5863, 5762, 6744, 5732, 5740, 6723, 5730, 5756, 5694, 5667, 6939, 5700, 5844, 5813, 5814, 5729, 5801, 5823, 5797, 6869, 5708, 5716, 5701, 5688, 5626, 5645, 5679, 5630, 5657, 5666, 5659, 5614, 5641, 5620, 6001, 5998, 5921, 5915, 5954, 5980, 5851, 5895, 5836, 5873, 5821, 5835, 5944, 5849, 5825, 5808, 5709, 5737, 5813, 6811, 5705, 6701, 5752, 5713, 6057, 6095, 6038, 6080, 6074, 6061, 6068, 6043, 6006, 5986, 5992, 6007, 5983, 5982, 5991, 6008, 5950, 6031, 5993, 5995, 6022, 5987, 5955, 5992, 6014, 5994, 6903, 5925, 5942, 5957, 5909, 5940, 6021, 5948, 5809, 5913, 5866, 5919, 5871, 5844, 5949, 5876, 5835, 5875, 5964, 5932, 5863, 5921, 5843, 5879, 5828, 5813, 5821, 5788, 5854, 5833, 5831, 5885, 5862, 5826, 5778, 5811, 5731, 5769, 5782, 5798, 5730, 5736, 5705, 5956, 6013, 5942, 5907, 5935, 5933, 5845, 6816, 5907, 6904, 5898, 5841, 5837, 5898, 5872, 5870, 5845, 5860, 6951, 5953, 5889, 5984, 5879, 5875, 5786, 5796, 5910, 6858, 5863, 5911, 5776, 5985, 5785, 5858, 5943, 5855, 5833, 5808, 5718, 6954, 5747, 5758, 5757, 5783, 5815, 5776, 5691, 5752, 5674, 5700, 5693, 5695, 5644, 5674, 6142, 6107, 6100, 6106, 6117, 6090, 6125, 6048, 6042, 6059, 6940, 6041, 6929, 6046, 6028, 6051, 5983, 6133, 6122, 6088, 6073, 5984, 6003, 6905, 5951, 5946, 5989, 6048, 5934, 6043, 5958, 6856, 5882, 6008, 5957, 5918, 5938, 5862, 5994, 6013, 5873, 5881, 5809, 5897, 6793, 5855, 6743, 5795, 6734, 5804, 5888, 5840, 5793, 5795, 5789, 5795, 5806, 6057, 6056, 6052, 6030, 6046, 6038, 6062, 6035, 6035, 6042, 6024, 6033, 6028, 5993, 6008, 6069, 5999, 5973, 6012, 6049, 5923, 5969, 5899, 5933, 5906, 5845, 5877, 5802, 5780, 5714, 6871, 5737, 5780, 5762, 5705, 6142, 5919, 5945, 5940, 5930, 5915, 5892, 5954, 5967, 5914, 5922, 5907, 5989, 5873, 5922, 5924, 5903, 6064, 6103, 5910, 5935, 5857, 5927, 5868, 5885, 5908, 5871, 5954, 6852, 5886, 5864, 5854, 6864, 5859, 6867, 5857, 5891, 5923, 5906, 5898, 5853, 5916, 5880, 5826, 5816, 5835, 5817, 5865, 6885, 5810, 5845, 5822, 5787, 5994, 5803, 5794, 6003, 5799, 5804, 5798, 5774, 5780, 5829, 5788, 5776, 5851, 5907, 5800, 5840, 5742, 6019, 5766, 5832, 5808, 5844, 5755, 6750, 5796, 5717, 5769, 5724, 5798, 5794, 6051, 5779, 5702, 5858, 5818, 5797, 5852, 5770, 5810, 5804, 5773, 5752, 5711, 5704, 6033, 5755, 5771, 5678, 5717, 6727, 5688, 5723, 5733, 5723, 5740, 5725, 5753, 5696, 5756, 5686, 5715, 5664, 5686, 5690, 5654, 5671, 5891, 5853, 5668, 5848, 5669, 5833, 5628, 5631, 5617, 5584, 5638, 5623, 5809, 5635, 5615, 5610, 5592, 5622, 5579, 5626, 5602, 5594, 6009, 5972, 5995, 5950, 5944, 5976, 5917, 5887, 5994, 5939, 5944, 5876, 5786, 5814, 5744, 5772, 5710, 5686, 5721, 5699, 6140, 6160, 6150, 6089, 6066, 6060, 6038, 6052, 6051, 6043, 6003, 6047, 6006, 5973, 5992, 5967, 5987, 6002, 5971, 6842, 5974, 5846, 5871, 5773, 5840, 5861, 5891, 5990, 5881, 5867, 5838, 5869, 5780, 6675, 5811, 6722, 5804, 5913, 5950, 5926, 5893, 5879, 5820, 5847, 5875, 5916, 5920, 5847, 5827, 5822, 5860, 5898, 5763, 5956, 5814, 5771, 5781, 5738, 5682, 5714, 5699, 5674, 6656, 5987, 5975, 5963, 6069, 5965, 5932, 5979, 6909, 5966, 5918, 5901, 5968, 5929, 5928, 5901, 5884, 5945, 5892, 5880, 5855, 5858, 6836, 5861, 5865, 5868, 5865, 5852, 5837, 5990, 5821, 5960, 5938, 6109, 6025, 5943, 5829, 5769, 5843, 5912, 5824, 5786, 5862, 5833, 5843, 5791, 5854, 5854, 5854, 6814, 5918, 5854, 6049, 5811, 5808, 5910, 5839, 5893, 5821, 5804, 5786, 5871, 5730, 5741, 6711, 5757, 5866, 5789, 5713, 5761, 5684, 6642, 5707, 5675, 5701, 5662, 5656, 5725, 5655, 5686, 5643, 5628, 5678, 6034, 6128, 6096, 6025, 6025, 6012, 6067, 6005, 5910, 5868, 5872, 5968, 5891, 5916, 5810, 5866, 5787, 5811, 5776, 6043, 6085, 5976, 5898, 5814, 5750, 5783, 5711, 5722, 6060, 6143, 6064, 6089, 6096, 6099, 6069, 6025, 6054, 5985, 5963, 6058, 6023, 5946, 5979, 5892, 5842, 5835, 5866, 5864, 5829, 5775, 5806, 5841, 5727, 5819, 5824, 6008, 5971, 5833, 5909, 5813, 5727, 5697, 6105, 6048, 5962, 5983, 5976, 6131, 6091, 6029, 5978, 5985, 6922, 5917, 5920, 6037, 6033, 6013, 5854, 5831, 5931, 5824, 6060, 6027, 5982, 5930, 5898, 5959, 6929, 5846, 5922, 5784, 5735, 5750, 5737, 6011, 5961, 5999, 5970, 6006, 5993, 5993, 5960, 5952, 5976, 5977, 6038, 5887, 6002, 5858, 6815, 5964, 5796, 5764, 5937, 5944, 5835, 5921, 6805, 5863, 5877, 5798, 6763, 6082, 6075, 6072, 6052, 5962, 6050, 5929, 5961, 5939, 5944, 6042, 5931, 5902, 6892, 5998, 5982, 5948, 5909, 6042, 5959, 5903, 5874, 5912, 6914, 5842, 5793, 5848, 5798, 6028, 6000, 5971, 6041, 5948, 5985, 5922, 5938, 5935, 5905, 5886, 5946, 5951, 6010, 6004, 5933, 5901, 5897, 5827, 5877, 6905, 5876, 5884, 6849, 5830, 5821, 5772, 5920, 5833, 6827, 5885, 5764, 5652, 5793, 5818, 5810, 5763, 5778, 5790, 5921, 5740, 5774, 5796, 5812, 5704, 6681, 5739, 5697, 5766, 5748, 5722, 5810, 5715, 5703, 5730, 5685, 5701, 5821, 6711, 5695, 5714, 6089, 6122, 6070, 6057, 6106, 6060, 6010, 6047, 6044, 6033, 6079, 5992, 5960, 5936, 5979, 6005, 6942, 5919, 6874, 5928, 5835, 5862, 5812, 5797, 5787, 5840, 5835, 5740, 6714, 5732, 6074, 6056, 5989, 5951, 5914, 5987, 6005, 5919, 5864, 5914, 5909, 5911, 5887, 5833, 5785, 6684, 5744, 6078, 6094, 6026, 5992, 5952, 5992, 5933, 5950, 6036, 5946, 5954, 5908, 5887, 5894, 5794, 5774, 6037, 5974, 5948, 5874, 5981, 5876, 5893, 5939, 5936, 6850, 5885, 5838, 5849, 5838, 5786, 5788, 5828, 5738, 6110, 6024, 5976, 5928, 5940, 5938, 5774, 5767 are outside the range of the standard. Setting to NA.
 > d[agedays==0, lencm := round(who_zscore2htcm(agedays, haz, sex = sex),1)]
 > d[agedays>0, lencm := round(who_zscore2htcm(agedays-1, haz, sex = sex),1)]
 > 
@@ -582,195 +547,195 @@ Observations with agedays value of 6139, 4301, 6253, 5826, 4298, 5260, 4857, 585
 (t1 - t2) in months:  0 - 3 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  77749 
-No. of subjects with y avail in window of t2:  67963 
-No. of subjects with both y avail (t1,t2):  60241 
+No. of subjects with y avail in window of t1:  65382 
+No. of subjects with y avail in window of t2:  58756 
+No. of subjects with both y avail (t1,t2):  51294 
 (t1 - t2) in months:  3 - 6 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  67963 
-No. of subjects with y avail in window of t2:  62438 
-No. of subjects with both y avail (t1,t2):  50878 
+No. of subjects with y avail in window of t1:  58756 
+No. of subjects with y avail in window of t2:  51283 
+No. of subjects with both y avail (t1,t2):  42314 
 (t1 - t2) in months:  6 - 9 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  62438 
-No. of subjects with y avail in window of t2:  45043 
-No. of subjects with both y avail (t1,t2):  38197 
+No. of subjects with y avail in window of t1:  51283 
+No. of subjects with y avail in window of t2:  37472 
+No. of subjects with both y avail (t1,t2):  30616 
 (t1 - t2) in months:  9 - 12 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  45043 
-No. of subjects with y avail in window of t2:  58967 
-No. of subjects with both y avail (t1,t2):  38606 
+No. of subjects with y avail in window of t1:  37472 
+No. of subjects with y avail in window of t2:  48970 
+No. of subjects with both y avail (t1,t2):  31442 
 (t1 - t2) in months:  12 - 15 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  58967 
-No. of subjects with y avail in window of t2:  20648 
-No. of subjects with both y avail (t1,t2):  17905 
+No. of subjects with y avail in window of t1:  48970 
+No. of subjects with y avail in window of t2:  18719 
+No. of subjects with both y avail (t1,t2):  15893 
 (t1 - t2) in months:  15 - 18 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  20648 
-No. of subjects with y avail in window of t2:  23111 
-No. of subjects with both y avail (t1,t2):  16164 
+No. of subjects with y avail in window of t1:  18719 
+No. of subjects with y avail in window of t2:  19012 
+No. of subjects with both y avail (t1,t2):  14309 
 (t1 - t2) in months:  18 - 21 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  23111 
-No. of subjects with y avail in window of t2:  10847 
-No. of subjects with both y avail (t1,t2):  9133 
+No. of subjects with y avail in window of t1:  19012 
+No. of subjects with y avail in window of t2:  9041 
+No. of subjects with both y avail (t1,t2):  7358 
 (t1 - t2) in months:  21 - 24 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  10847 
-No. of subjects with y avail in window of t2:  30182 
-No. of subjects with both y avail (t1,t2):  7996 
+No. of subjects with y avail in window of t1:  9041 
+No. of subjects with y avail in window of t2:  20429 
+No. of subjects with both y avail (t1,t2):  6091 
 (t1 - t2) in months:  0 - 3 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  82216 
-No. of subjects with y avail in window of t2:  68391 
-No. of subjects with both y avail (t1,t2):  64001 
+No. of subjects with y avail in window of t1:  69743 
+No. of subjects with y avail in window of t2:  58957 
+No. of subjects with both y avail (t1,t2):  54860 
 (t1 - t2) in months:  3 - 6 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  68391 
-No. of subjects with y avail in window of t2:  62507 
-No. of subjects with both y avail (t1,t2):  51198 
+No. of subjects with y avail in window of t1:  58957 
+No. of subjects with y avail in window of t2:  51347 
+No. of subjects with both y avail (t1,t2):  42417 
 (t1 - t2) in months:  6 - 9 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  62507 
-No. of subjects with y avail in window of t2:  44633 
-No. of subjects with both y avail (t1,t2):  37917 
+No. of subjects with y avail in window of t1:  51347 
+No. of subjects with y avail in window of t2:  37019 
+No. of subjects with both y avail (t1,t2):  30291 
 (t1 - t2) in months:  9 - 12 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  44633 
-No. of subjects with y avail in window of t2:  58093 
-No. of subjects with both y avail (t1,t2):  37780 
+No. of subjects with y avail in window of t1:  37019 
+No. of subjects with y avail in window of t2:  48086 
+No. of subjects with both y avail (t1,t2):  30566 
 (t1 - t2) in months:  12 - 15 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  58093 
-No. of subjects with y avail in window of t2:  19746 
-No. of subjects with both y avail (t1,t2):  17222 
+No. of subjects with y avail in window of t1:  48086 
+No. of subjects with y avail in window of t2:  17807 
+No. of subjects with both y avail (t1,t2):  15194 
 (t1 - t2) in months:  15 - 18 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  19746 
-No. of subjects with y avail in window of t2:  22169 
-No. of subjects with both y avail (t1,t2):  15345 
+No. of subjects with y avail in window of t1:  17807 
+No. of subjects with y avail in window of t2:  18046 
+No. of subjects with both y avail (t1,t2):  13473 
 (t1 - t2) in months:  18 - 21 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  22169 
-No. of subjects with y avail in window of t2:  9754 
-No. of subjects with both y avail (t1,t2):  8204 
+No. of subjects with y avail in window of t1:  18046 
+No. of subjects with y avail in window of t2:  7934 
+No. of subjects with both y avail (t1,t2):  6411 
 (t1 - t2) in months:  21 - 24 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  9754 
-No. of subjects with y avail in window of t2:  29427 
-No. of subjects with both y avail (t1,t2):  7148 
+No. of subjects with y avail in window of t1:  7934 
+No. of subjects with y avail in window of t2:  19674 
+No. of subjects with both y avail (t1,t2):  5212 
 (t1 - t2) in months:  0 - 3 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  77749 
-No. of subjects with y avail in window of t2:  67963 
-No. of subjects with both y avail (t1,t2):  60241 
+No. of subjects with y avail in window of t1:  65382 
+No. of subjects with y avail in window of t2:  58756 
+No. of subjects with both y avail (t1,t2):  51294 
 (t1 - t2) in months:  3 - 6 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  67963 
-No. of subjects with y avail in window of t2:  62438 
-No. of subjects with both y avail (t1,t2):  50878 
+No. of subjects with y avail in window of t1:  58756 
+No. of subjects with y avail in window of t2:  51283 
+No. of subjects with both y avail (t1,t2):  42314 
 (t1 - t2) in months:  6 - 9 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  62438 
-No. of subjects with y avail in window of t2:  45043 
-No. of subjects with both y avail (t1,t2):  38197 
+No. of subjects with y avail in window of t1:  51283 
+No. of subjects with y avail in window of t2:  37472 
+No. of subjects with both y avail (t1,t2):  30616 
 (t1 - t2) in months:  9 - 12 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  45043 
-No. of subjects with y avail in window of t2:  58967 
-No. of subjects with both y avail (t1,t2):  38606 
+No. of subjects with y avail in window of t1:  37472 
+No. of subjects with y avail in window of t2:  48970 
+No. of subjects with both y avail (t1,t2):  31442 
 (t1 - t2) in months:  12 - 15 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  58967 
-No. of subjects with y avail in window of t2:  20648 
-No. of subjects with both y avail (t1,t2):  17905 
+No. of subjects with y avail in window of t1:  48970 
+No. of subjects with y avail in window of t2:  18719 
+No. of subjects with both y avail (t1,t2):  15893 
 (t1 - t2) in months:  15 - 18 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  20648 
-No. of subjects with y avail in window of t2:  23111 
-No. of subjects with both y avail (t1,t2):  16164 
+No. of subjects with y avail in window of t1:  18719 
+No. of subjects with y avail in window of t2:  19012 
+No. of subjects with both y avail (t1,t2):  14309 
 (t1 - t2) in months:  18 - 21 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  23111 
-No. of subjects with y avail in window of t2:  10847 
-No. of subjects with both y avail (t1,t2):  9133 
+No. of subjects with y avail in window of t1:  19012 
+No. of subjects with y avail in window of t2:  9041 
+No. of subjects with both y avail (t1,t2):  7358 
 (t1 - t2) in months:  21 - 24 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  10847 
-No. of subjects with y avail in window of t2:  30182 
-No. of subjects with both y avail (t1,t2):  7996 
+No. of subjects with y avail in window of t1:  9041 
+No. of subjects with y avail in window of t2:  20429 
+No. of subjects with both y avail (t1,t2):  6091 
 (t1 - t2) in months:  0 - 3 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  82216 
-No. of subjects with y avail in window of t2:  68391 
-No. of subjects with both y avail (t1,t2):  64001 
+No. of subjects with y avail in window of t1:  69743 
+No. of subjects with y avail in window of t2:  58957 
+No. of subjects with both y avail (t1,t2):  54860 
 (t1 - t2) in months:  3 - 6 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  68391 
-No. of subjects with y avail in window of t2:  62507 
-No. of subjects with both y avail (t1,t2):  51198 
+No. of subjects with y avail in window of t1:  58957 
+No. of subjects with y avail in window of t2:  51347 
+No. of subjects with both y avail (t1,t2):  42417 
 (t1 - t2) in months:  6 - 9 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  62507 
-No. of subjects with y avail in window of t2:  44633 
-No. of subjects with both y avail (t1,t2):  37917 
+No. of subjects with y avail in window of t1:  51347 
+No. of subjects with y avail in window of t2:  37019 
+No. of subjects with both y avail (t1,t2):  30291 
 (t1 - t2) in months:  9 - 12 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  44633 
-No. of subjects with y avail in window of t2:  58093 
-No. of subjects with both y avail (t1,t2):  37780 
+No. of subjects with y avail in window of t1:  37019 
+No. of subjects with y avail in window of t2:  48086 
+No. of subjects with both y avail (t1,t2):  30566 
 (t1 - t2) in months:  12 - 15 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  58093 
-No. of subjects with y avail in window of t2:  19746 
-No. of subjects with both y avail (t1,t2):  17222 
+No. of subjects with y avail in window of t1:  48086 
+No. of subjects with y avail in window of t2:  17807 
+No. of subjects with both y avail (t1,t2):  15194 
 (t1 - t2) in months:  15 - 18 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  19746 
-No. of subjects with y avail in window of t2:  22169 
-No. of subjects with both y avail (t1,t2):  15345 
+No. of subjects with y avail in window of t1:  17807 
+No. of subjects with y avail in window of t2:  18046 
+No. of subjects with both y avail (t1,t2):  13473 
 (t1 - t2) in months:  18 - 21 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  22169 
-No. of subjects with y avail in window of t2:  9754 
-No. of subjects with both y avail (t1,t2):  8204 
+No. of subjects with y avail in window of t1:  18046 
+No. of subjects with y avail in window of t2:  7934 
+No. of subjects with both y avail (t1,t2):  6411 
 (t1 - t2) in months:  21 - 24 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  9754 
-No. of subjects with y avail in window of t2:  29427 
-No. of subjects with both y avail (t1,t2):  7148 
+No. of subjects with y avail in window of t1:  7934 
+No. of subjects with y avail in window of t2:  19674 
+No. of subjects with both y avail (t1,t2):  5212 
 > dd_out = rbindlist(dd_diff)
 > diffcatlevs = paste0(t1vec, "-", t2vec, " months")
 > dd_out[, "diffcat" := factor(diffcat, levels = diffcatlevs)]
@@ -792,16 +757,16 @@ No. of subjects with both y avail (t1,t2):  7148
 > df <- df %>% filter(agedays!=0) %>% subset(., select = c("studyid","subjid","tr")) %>% group_by(studyid, subjid) %>% slice(1)
 > 
 > dim(dd_sub)
-[1] 955870     14
+[1] 795482     14
 > dd_sub <- left_join(dd_sub, df, by=c("studyid","subjid"))
 > dim(dd_sub)
-[1] 955870     15
+[1] 795482     15
 > dd_sub$tr[is.na(dd_sub$tr)]<-""
 > 
 > 
 > 
 > dim(dd_sub)
-[1] 955870     15
+[1] 795482     15
 > dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-4" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="PROBIT" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="iLiNS-Zinc" & dd_sub$tr!="Control"),]
@@ -809,11 +774,11 @@ No. of subjects with both y avail (t1,t2):  7148
 > dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-3" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="COHORTS" & dd_sub$tr=="Other"),]
 > dim(dd_sub)
-[1] 676696     15
+[1] 530148     15
 > 
 > saveRDS(dd_sub, file=paste0(ghapdata_dir,"velocity_longfmt.rds"))
 > 
 > 
 > proc.time()
    user  system elapsed 
-108.708  11.408  87.818 
+194.164   4.240 175.535 

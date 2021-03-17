@@ -3,7 +3,7 @@
 
 rm(list=ls())
 try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) ))
-library("tlverse")
+#library("tlverse")
 
 source(paste0(here::here(), "/0-config.R"))
 try(.libPaths( "~/rlibs" ))
