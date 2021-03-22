@@ -178,5 +178,6 @@ dhssubden <- bind_rows(dhssubden, dhssubden_pool) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 
 #Save densities
-saveRDS(dhsallden, dhs_res_dir)
-saveRDS(dhssubden, dhs_res_dir)
+
+saveRDS(dhsallden, file = paste0(dhs_res_dir,"/results/dhs.density.all-countries.rds"))
+saveRDS(dhssubden, file = paste0(dhs_res_dir,"/results/dhs.density.ki-countries.rds"))

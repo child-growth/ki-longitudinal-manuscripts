@@ -29,7 +29,7 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"all_bin_analyses.json")
 
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
-rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
+rmd_filename <- here("4-longitudinal-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
 # inputs <- "inputs_template.json"
 inputs <- "single_bin_analysis.json"
 

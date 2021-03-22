@@ -23,6 +23,15 @@ d <- d %>% filter(!is.na(whz)) %>% filter(whz < 5 & whz > (-5))
 head(rain)
 head(d)
 
+XXXXXXXXXXXXXXXXXXX
+Keep working below
+Add year from birth year and age to the child data below
+XXXXXXXXXXXXXXXXXXX
+d <- left_join(d, rain, by = c("studyid", "month", "year"))
+
+
+
+
 # rain$country <- toupper(rain$country)
 # rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
 rain <- mark_region(rain)

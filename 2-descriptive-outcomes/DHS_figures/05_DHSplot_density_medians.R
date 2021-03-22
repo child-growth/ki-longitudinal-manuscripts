@@ -62,5 +62,6 @@ calc_medians = function(ki_medians){
 medians_quarterly = calc_medians(ki_medians_quarterly) %>% rbind(., dhs_medians)
 medians_monthly = calc_medians(ki_medians_monthly) %>% rbind(., dhs_medians)
 
-saveRDS(medians_quarterly, dhs_res_dir)
-saveRDS(medians_monthly, dhs_res_dir)
+
+saveRDS(medians_quarterly, file = paste0(dhs_res_dir,"/results/dhs.ki.zscore.medians.quarterly.rds"))
+saveRDS(medians_monthly, file = paste0(dhs_res_dir,"/results/dhs.ki.zscore.medians.monthly.rds"))
