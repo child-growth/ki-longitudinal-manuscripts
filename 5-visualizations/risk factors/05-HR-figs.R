@@ -3,7 +3,7 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-d <- readRDS(here("results/full_cox_results.RDS"))
+d <- readRDS(here("results/mortality-results/full_cox_results.RDS"))
 dim(d)
 
 head(d)
@@ -58,25 +58,6 @@ d <- d %>%
       "Ever stunted + underweight",   
       "Ever wasted + underweight",    
       "Ever wasted + stunted" ))))
-
-
-# plot functions
-pooled_plots <- function((pooled==1, Xvar=!grepl("ever_",X), method=="RE", is.na(sex), is.na(region), agecat=="overall", adj==1, df=="res"){
-  p <- d %>% filter(pooled==pooled, X==Xvar, method==method, is.na(sex), is.na(region), agecat=="overall", adj==1, df=="res") %>% 
-    droplevels(.) %>%
-    #mutate(X=factor(X, levels = rev(levels(X)))) %>%
-    ggplot(., aes(y=HR, x=Xname),color="black") +
-    #facet_grid(~Y) +
-    geom_point() + 
-    geom_linerange(aes(ymin=ci.lb, ymax=ci.ub )) +
-    #scale_color_manual(values=tableau10) +
-    geom_hline(yintercept = 1) +
-    scale_y_continuous(breaks=c(0.25, 0.5,1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-    coord_flip() +
-    xlab("") + ylab("Hazard Ratio")
-  
-  return(p)
-}
 
 
 p_prim_pooled <- d %>% filter(pooled==1, !grepl("ever_",X), method=="RE", is.na(sex), is.na(region), agecat=="overall", adj==1, df=="res") %>% 
