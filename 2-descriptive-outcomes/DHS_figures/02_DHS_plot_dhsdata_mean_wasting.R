@@ -92,7 +92,7 @@ dhs_pooled <- dhs_pooled %>%
   select(measure, region, agem, fit, fit_se, fit_lb, fit_ub)
 df_survey_output <- bind_rows(df_survey, dhs_pooled) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
-saveRDS(df_survey_output, file = here::here("results/dhs", "DHS-wasting-by-region.rds"))
+saveRDS(df_survey_output, file = paste0(dhs_res_dir, "DHS-wasting-by-region.rds"))
 
 #---------------------------------------
 # repeat the analysis for country specific results
@@ -229,8 +229,7 @@ dhsfits_full <- dhsfits %>%
 dhsfits <- dhsfits %>%
   filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 
-
-saveRDS(dhsfits, file = here::here("results/dhs", "wasting-DHSandKI-by-region.rds"))
+saveRDS(dhsfits, file = paste0(dhs_res_dir, "wasting-DHSandKI-by-region.rds"))
 
 #---------------------------------------
 # make z-score by age figure

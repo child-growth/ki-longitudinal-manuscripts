@@ -34,7 +34,7 @@ writeLines(toJSON(enumerated_analyses),"all_waz_analyses.json")
 # 2. run batch
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
-rmd_filename <- system.file("templates/longbow_RiskFactors.Rmd", package="longbowRiskFactors")
+rmd_filename <- here("4-longitudinal-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
 inputs <- "single_waz_analysis.json"
 
 #run test/provisioning job
