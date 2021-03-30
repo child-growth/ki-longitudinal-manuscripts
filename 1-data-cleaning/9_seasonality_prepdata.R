@@ -23,7 +23,6 @@ d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 d <- d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, sex, measurefreq, month, whz, haz, waz, latitude, longitud, brthweek, brthmon, brthyr))
 
 
-#d <- d %>% filter(studyid == "PROVIDE")
 
 #Fill in birth week as middle of the month from birthmonth from PROVIDE datasets
 d$brthweek[d$studyid=="PROVIDE"] <- round(as.numeric(d$brthmon[d$studyid=="PROVIDE"])  * 4.3333 ) -2 
@@ -53,6 +52,12 @@ d$studyday <-  d$birthday + d$agedays
 d$jday <- round(((d$birthday + d$agedays)/364)%%1 * 364, 0)
 summary(d$jday)
 table(is.na(d$month))
+
+#calculate year of measurement
+d$year <- d$brthyr + floor(d$jday/364)
+table(d$year)
+table(d$studyid, d$year)
+round(prop.table(table(d$year, d$month),1),2)
 
 #RF dataset (with ages up to 25 months for 24 month mean WLZ)
 saveRDS(d, paste0(ghapdata_dir,"seasonality_rf_data.rds"))

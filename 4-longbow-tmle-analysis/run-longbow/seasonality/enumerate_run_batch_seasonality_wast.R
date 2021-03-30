@@ -27,7 +27,7 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"seasonality_analyses.json")
 
 # 2. run batch
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
-rmd_filename <- here("4-longitudinal-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
+rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "seasonality_analyses.json"

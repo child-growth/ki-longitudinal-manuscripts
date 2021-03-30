@@ -7,8 +7,8 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 require(cowplot)
 
-
 rain <- read.csv(here("/data/monthly_rainfall.csv"))
+head(rain)
 
 d <- readRDS(seasonality_data_path)
 d <- d %>% filter(measurefreq=="monthly")
@@ -16,12 +16,12 @@ head(rain)
 head(d)
 
 rain$country <- toupper(rain$country)
-rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
+rain$country[rain$country=="TANZANIA, UNITED REPUBLIC OF"]<-"TANZANIA"
 rain <- mark_region(rain)
+rain <- rain %>% subset(., select = -c(X))
 rain$region <- factor(rain$region, levels = c("South Asia","Africa","Latin America"))
 rain$country <- tolower(rain$country)
 d$country <- tolower(d$country)
-colnames(rain)[1] <- "studyid"
 rain$studyid <- as.character(rain$studyid)
 rain$studyid[rain$studyid == "PROVIDE "] <-  "PROVIDE"
 d$country[d$country=="tanzania, united republic of"] <- "tanzania"
@@ -31,16 +31,11 @@ rain <- rain %>%
   arrange(season_index) %>%
   mutate(seasonality_category = 
            case_when(
-             season_index >= 0.8 ~ "High seasonality",
-             season_index < 0.5 ~ "Low seasonality",
+             season_index >= 0.9 ~ "High seasonality",
+             season_index < 0.7 ~ "Low seasonality",
              TRUE ~ "Medium seasonality"),
          seasonality_category = factor(seasonality_category, levels=c("High seasonality", "Medium seasonality", "Low seasonality")))
 table(rain$seasonality_category)
-
-#remove grant identifiers from studyid
-#d$studyid <- gsub("^k.*?-" , "", d$studyid)
-rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
-rain$studyid[rain$studyid == "PROVIDE "] <-  "PROVIDE"
 
 #Transform rain dataset
 rain <- rain %>% subset(., select = c("studyid", "country", "seasonality_category", "season_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
@@ -51,7 +46,8 @@ d$country <- str_to_title(d$country)
 
 # gather meanWHZ by month data into long format
 rain2 <- rain %>%
-  gather(month,rain, -studyid, -country, -season_index, -seasonality_category) 
+  pivot_longer(cols=Jan_pre:Dec_pre, names_to = "month", values_to = "rain")
+  #gather(month,rain, -studyid, -country, -season_index, -seasonality_category) 
 rain2$month = gsub("_pre","",rain2$month)
 rain2$month = factor(rain2$month, levels=c("Jan", "Feb", "Mar", "Apr", "May","Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
 head(rain2)
@@ -76,6 +72,10 @@ df <- d
 rain <- rain2
 cohort_name <- cohorts[[1]]
 
+table(df$studyid)
+table(rain$studyid)
+table(df$cohort)
+table(rain$cohort)
 
 
 #Rain_plot function
@@ -176,31 +176,29 @@ for(i in 1:length(cohorts)){
 #Save plot objects
 saveRDS(plot_list, file=paste0(here(),"/figures/plot-objects/rain_seasonality_plot_objects.rds"))
 
-
+# plot_grid <- plot_grid(
+#   plot_list[[1]], plot_list[[10]], plot_list[[2]],
+#   plot_list[[11]], plot_list[[3]], plot_list[[12]],
+#   plot_list[[4]], plot_list[[13]], plot_list[[5]],
+#   plot_list[[14]], plot_list[[6]], plot_list[[15]],
+#   plot_list[[7]], plot_list[[16]], plot_list[[8]],
+#   plot_list[[17]], plot_list[[9]], plot_list[[18]],
+#   labels = rep("", 18), ncol = 2, align = 'v', axis = 'l')
 
 plot_grid <- plot_grid(
-  plot_list[[1]], plot_list[[10]], plot_list[[2]],
-  plot_list[[11]], plot_list[[3]], plot_list[[12]],
-  plot_list[[4]], plot_list[[13]], plot_list[[5]],
-  plot_list[[14]], plot_list[[6]], plot_list[[15]],
-  plot_list[[7]], plot_list[[16]], plot_list[[8]],
-  plot_list[[17]], plot_list[[9]], plot_list[[18]],
-  labels = rep("", 18), ncol = 2, align = 'v', axis = 'l')
+  plot_list[[1]], plot_list[[11]], 
+  plot_list[[2]], plot_list[[12]], 
+  plot_list[[3]], plot_list[[13]], 
+  plot_list[[4]], plot_list[[14]], 
+  plot_list[[5]], plot_list[[15]], 
+  plot_list[[6]], plot_list[[16]], 
+  plot_list[[7]], plot_list[[17]], 
+  plot_list[[8]], plot_list[[18]], 
+  plot_list[[9]], plot_list[[19]], 
+  plot_list[[10]], plot_list[[20]], 
+  labels = rep("", 20), ncol = 2, align = 'v', axis = 'l')
 
 ggsave(plot_grid, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/rain_seasonality_plot.png"), width=10, height=24)
 
 
 
-
-plot_list=list()
-for(i in 1:length(cohorts)){gi
-  print(cohorts[i])
-  plot_list[[i]] <- rain_plot(df=d, rain=rain2, cohort_name=cohorts[i], leftlab = c(1,4,7,10,13, 16), rightlab = c(3,6,9,12,15,18))
-}
-
-plot_grid2 <- plot_grid(
-  plot_list[[1]], plot_list[[2]], plot_list[[3]], plot_list[[4]], plot_list[[5]], plot_list[[6]],
-  plot_list[[7]], plot_list[[8]], plot_list[[9]], plot_list[[10]], plot_list[[11]], plot_list[[12]],
-  plot_list[[13]], plot_list[[14]], plot_list[[15]], plot_list[[16]], plot_list[[17]], plot_list[[18]],
-  labels = rep("", 18), ncol = 3, align = 'v', axis = 'l')
-ggsave(plot_grid2, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/rain_seasonality_plot_alt.png"), width=14, height=12)
