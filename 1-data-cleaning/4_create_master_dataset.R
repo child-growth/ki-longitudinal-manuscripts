@@ -69,7 +69,9 @@ d$month[is.na(d$month)] <- ceiling((as.numeric(d$brthmon[is.na(d$month)]) + d$ag
 table(is.na(d$month))
 table(d$month)
 
-
+#Rename tanzania
+d$country[d$country=="TANZANIA, UNITED REPUBLIC OF"]<-"TANZANIA"
+table(d$country)
 
 # Save dataset
 saveRDS(d, ki_manuscript_dataset_path)

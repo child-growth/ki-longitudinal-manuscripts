@@ -8,13 +8,13 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load longbow results
-results <- readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-05-29.RDS"))
+results <- readRDS(here("results","rf results","raw longbow results","seasonality_results_2021-03-29.RDS"))
 
 
 
 #Load cohort Ns
 cohort_Ns <- readRDS(paste0(here(),"/results/seasonTMLE_Ns.rds")) 
-
+cohort_Ns$country <- str_to_title(cohort_Ns$country)
 
 #Load seasonality index and prep for merge
 rain <- readRDS(here("/data/cohort_rain_data.rds"))
@@ -23,8 +23,8 @@ rain <- rain %>% subset(., select = c(studyid, country, cohort_index)) %>%
   arrange(season_index) %>%
   mutate(seasonality_category = 
            case_when(
-             season_index >= 0.8 ~ "High seasonality",
-             season_index < 0.5 ~ "Low seasonality",
+             season_index >= 0.9 ~ "High seasonality",
+             season_index < 0.7 ~ "Low seasonality",
              TRUE ~ "Medium seasonality"),
          seasonality_category = factor(seasonality_category, levels=c("High seasonality", "Medium seasonality", "Low seasonality")))
 table(rain$seasonality_category)
@@ -32,11 +32,15 @@ table(rain$seasonality_category)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
 rain$country <- as.character(rain$country)
 rain$country <- str_to_title(rain$country)
+results$country <- as.character(results$country)
+results$country <- str_to_title(results$country)
 
 #Merge resulta and seasonality index
-dim(results)
+head(results)
+head(rain)
 d <- left_join(results, rain, by = c("studyid","country"))
 dim(d)
+table(d$seasonality_category)
 
 d <- d %>% filter(type=="ATE")
 
