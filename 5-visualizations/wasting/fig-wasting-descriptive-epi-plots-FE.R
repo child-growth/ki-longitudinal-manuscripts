@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds")) %>% filter(analysis=="Fixed effects")
 
 #subset to regional and overall pooled estimates
-d <- d %>% filter(cohort=="pooled", pooling!="country" | is.na(pooling))
+d <- d %>% filter(pooling!="country" | is.na(pooling))
   
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
@@ -15,19 +15,26 @@ d$nmeas.f <- gsub("N=","",d$nmeas.f)
 d$nstudy.f <- gsub(" studies","",d$nstudy.f)
 d$nmeas.f <- gsub(" children","",d$nmeas.f)
 
-
+scale_estimates <- function(d) {
+  d = d %>% mutate(
+    est = ifelse(cohort!="pooled", est*100, est),
+    lb = ifelse(cohort!="pooled", lb*100, lb),
+    ub = ifelse(cohort!="pooled", ub*100, ub)
+  )
+  return(d)
+}
+d <- scale_estimates(d)
 
 
 #-------------------------------------------------------------------------------------------
 # Wasting prevalence
 #-------------------------------------------------------------------------------------------
-prev_plot <- ki_desc_plot(d,
+prev_plot <- ki_desc_flurry_plot(d,
                    Disease="Wasting",
                    Measure="Prevalence", 
                    Birth="yes", 
                    Severe="no", 
                    Age_range="3 months", 
-                   Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,24),
@@ -96,18 +103,20 @@ saveRDS(prev_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-dat
 #-------------------------------------------------------------------------------------------
 # Wasting cumulative incidence
 #-------------------------------------------------------------------------------------------
-ci_plot <- ki_combo_plot(d,
-                        Disease="Wasting",
-                        Measure=c("Cumulative incidence", "Incidence proportion"), 
-                        Birth="yes", 
-                        Severe="no", 
-                        Age_range="3 months", 
-                        Cohort="pooled",
-                        xlabel="Child age, months",
-                    yrange=c(0,55),
-                    returnData=T)
 
-ci_plot_name = create_name(
+# TODO: add cumulative incidence
+# duplicate of l. 254
+ip_only_plot <- ki_ip_flurry_plot(d,
+                             Disease="Wasting",
+                             Measure="Incidence proportion",
+                             # Measure=c("Cumulative incidence", "Incidence proportion"), 
+                             Birth="yes", 
+                             Severe="no", 
+                             Age_range="3 months", 
+                             xlabel="Child age, months",
+                             returnData=T)
+
+ip_plot_name = create_name(
   outcome = "wasting",
   cutoff = 2,
   measure = "cumulative incidence",
@@ -118,9 +127,9 @@ ci_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",ci_plot_name, "_FE.png"), width=14, height=3)
+ggsave(ip_only_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",ip_plot_name, "_FE.png"), width=14, height=3)
 
-saveRDS(ci_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",ci_plot_name,"_FE.RDS"))
+saveRDS(ip_only_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",ip_plot_name,"_FE.RDS"))
 
 
 
@@ -280,7 +289,6 @@ ggsave(inc_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",inc_pl
 
 
 rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-                          Cohort="pooled",
                           xlabel="Age at wasting episode onset",
                           ylabel="",
                           yrange=c(0,90),
@@ -293,7 +301,6 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
       birth == Birth &
       severe == Severe &
       age_range %in% Age_range &
-      cohort == Cohort &
       !is.na(region) & !is.na(agecat)
   )
   df <- droplevels(df)
@@ -316,12 +323,30 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
 
+  ### new
+  df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
+  
+  if (min(df$lb) < 0) {
+    print("Warning: some lower bounds < 0")
+  }
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
+    
+    # pooled 
     geom_errorbar(aes(color=region, 
                       group=interaction(age_range, region), ymin=lb, ymax=ub), 
-                  width = 0, position = position_dodge(0.5)) +
-    geom_point(aes(shape=age_range, fill=region, color=region, group=interaction(age_range, region)
-    ), size = 2, position = position_dodge(0.5)) +
+                  width = 0, position = position_dodge(0.5),
+                  data = df %>% filter(ispooled == "yes")) +
+    geom_point(aes(shape=age_range, fill=region, color=region, group=interaction(age_range, region)), 
+               size = 2, position = position_dodge(0.5),
+               data = df %>% filter(ispooled == "yes")) +
+    
+    # cohort-stratified
+    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
+               data = df %>% filter(ispooled == "no"),
+               position = position_jitter(width = 0.15), alpha = 0.25) +
+    
+
     scale_color_manual(values=tableau11,
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17, 18),
@@ -368,7 +393,6 @@ rec_plot <- rec_combo_plot(d,
                    Birth="yes", 
                    Severe="no", 
                    Age_range=c("30 days","60 days","90 days"), 
-                   Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Percent recovered\n(95% CI)',
                    yrange=c(0,100),
@@ -395,13 +419,12 @@ saveRDS(rec_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data
 # Persistent Wasting 
 #-------------------------------------------------------------------------------------------
 
-perswast_plot <- ki_desc_plot(d,
+perswast_plot <- ki_desc_flurry_plot(d,
                    Disease="Wasting",
                    Measure="Persistent wasting", 
                    Birth="yes", 
                    Severe="no", 
                    Age_range="6 months", 
-                   Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel = 'Proportion (%)',
                    yrange=c(0,20),
@@ -473,13 +496,12 @@ saveRDS(perswast_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
 #-------------------------------------------------------------------------------------------
-co_plot <- ki_desc_plot(d,
+co_plot <- ki_desc_flurry_plot(d,
                    Disease="co-occurrence",
                    Measure="Prevalence", 
                    Birth="yes", 
                    Severe="no", 
                    Age_range="3 months", 
-                   Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
                    yrange=c(0,11),
@@ -548,17 +570,16 @@ saveRDS(co_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/
 #-------------------------------------------------------------------------------------------
 # Underweight prevalence 
 #-------------------------------------------------------------------------------------------
-underweight_plot <- ki_desc_plot(d,
-                   Disease="Underweight",
-                   Measure="Prevalence", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="3 months", 
-                   Cohort="pooled",
-                   xlabel="Child age, months",
-                   ylabel='Point prevalence (95% CI)',
-                   returnData = T,
-                   yrange=c(0,45))
+underweight_plot <- ki_desc_flurry_plot(d,
+                         Disease="Underweight",
+                         Measure="Prevalence", 
+                         Birth="yes", 
+                         Severe="no", 
+                         Age_range="3 months", 
+                         xlabel="Child age, months",
+                         ylabel='Point prevalence (95% CI)',
+                         returnData = T,
+                         yrange=c(0,45))
 
 # underweight_plot_africa <- ki_desc_plot(d,
 #                                  Disease="Underweight",
@@ -621,13 +642,12 @@ saveRDS(underweight_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/fig
 # Severe Wasting prevalence
 #-------------------------------------------------------------------------------------------
 
-sevwast_plot <- ki_desc_plot(d,
+sevwast_plot <- ki_desc_flurry_plot(d,
                    Disease="Wasting",
                    Measure="Prevalence", 
                    Birth="yes", 
                    Severe="yes", 
                    Age_range="3 months", 
-                   Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,10),
