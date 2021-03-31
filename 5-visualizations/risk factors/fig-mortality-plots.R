@@ -238,7 +238,7 @@ pmort <- ggplot(pmort_data, aes(x=outcome_label)) +
         text = element_text(size=16), 
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
-  coord_flip(ylim=c(1,9))
+  coord_flip(ylim=c(1,12))
 
 ggsave(pmort, file=here("/figures/risk-factor/fig-mort+morb-RR.png"), width=14, height=5.2)
 
