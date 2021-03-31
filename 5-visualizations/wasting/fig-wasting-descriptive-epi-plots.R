@@ -79,7 +79,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=here::here("/figures/wasting/WLZ_by_region.png"), width=10, height=4)
+ggsave(p, file=here::here("figures/wasting/WLZ_by_region.png"), width=10, height=4)
 
 
 

@@ -9,7 +9,6 @@ shorten_descriptions<-function(dd){
   dd$short_description[dd$studyid=='AgaKhanUniv'] <- 'Aga Khan Nutr RCT'
   dd$short_description[dd$studyid=='SAS-FoodSuppl'] <- 'Food Suppl RCT'
   dd$short_description[dd$studyid=="MAL-ED"] <- 'MAL-ED'
-  dd$short_description[dd$studyid=='CMIN'] <- 'CMIN'
   dd$short_description[dd$studyid=='Guatemala BSC'] <- 'Bovine Serum RCT'
   dd$short_description[dd$studyid=='Peru Huascar'] <- 'Infant growth in Huascar'
   dd$short_description[dd$studyid=='EE'] <- 'Biomarkers for EE'
@@ -35,6 +34,12 @@ shorten_descriptions<-function(dd){
   dd$short_description[dd$studyid=='COHORTS' & dd$country=='GUATEMALA'] <- 'INCAP Nutr Supp RCT'
   dd$short_description[dd$studyid=='COHORTS' & dd$country=='INDIA'] <- 'New Delhi Birth Cohort'
   
+  dd$short_description[dd$studyid=='CMIN2'] <- 'CMIN'
+  dd$short_description[dd$studyid=='CMIN3'] <- 'CMIN'
+  dd$short_description[dd$studyid=='CMIN4'] <- 'CMIN'
+  dd$short_description[dd$studyid=='CMIN6'] <- 'CMIN'
+  dd$short_description[dd$studyid=='CMIN7'] <- 'CMIN'
+  dd$short_description[dd$studyid=='TDC'] <- 'Transmission Dyn. Crypto'
   
   return(dd)
 }
