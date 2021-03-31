@@ -131,6 +131,32 @@ ggsave(ip_only_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",ip
 
 saveRDS(ip_only_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",ip_plot_name,"_FE.RDS"))
 
+# old code
+# ci_plot <- ki_combo_plot(d,
+#                          Disease="Wasting",
+#                          Measure=c("Cumulative incidence", "Incidence proportion"), 
+#                          Birth="yes", 
+#                          Severe="no", 
+#                          Age_range="3 months", 
+#                          Cohort="pooled",
+#                          xlabel="Child age, months",
+#                          yrange=c(0,55),
+#                          returnData=T)
+# 
+# ci_plot_name = create_name(
+#   outcome = "wasting",
+#   cutoff = 2,
+#   measure = "cumulative incidence",
+#   population = "overall and region-stratified",
+#   location = "",
+#   age = "All ages",
+#   analysis = "primary"
+# )
+# 
+# # save plot and underlying data
+# ggsave(ci_plot[[1]], file=paste0(here::here(),"/figures/wasting/FE/fig-",ci_plot_name, "_FE.png"), width=14, height=3)
+# 
+# saveRDS(ci_plot[[2]], file=paste0(here::here(),"/figures/wasting/FE/figure-data/figdata-",ci_plot_name,"_FE.RDS"))
 
 
 #-------------------------------------------------------------------------------------------
