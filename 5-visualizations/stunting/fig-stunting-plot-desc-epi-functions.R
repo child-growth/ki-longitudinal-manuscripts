@@ -103,16 +103,16 @@ name_prev_plots <- function(cut=2, pop, loc="", ana) {
 #-------------------------------------------------------------------------------------------
 
 plot_ip <- function(d, meas="Incidence proportion", birth, sev, ...) {
-  ki_ip_all_cohorts_plot(d,
-                          Disease="Stunting",
-                          Measure=meas, 
-                          Birth=birth, 
-                          Severe=sev, 
-                          Age_range="3 months", 
-                          xlabel="Child age, months",
-                          h1=90,
-                          h2=90,
-                          ...)
+  ki_ip_flurry_plot(d,
+                    Disease="Stunting",
+                    Measure=meas, 
+                    Birth=birth, 
+                    Severe=sev, 
+                    Age_range="3 months", 
+                    xlabel="Child age, months",
+                    h1=90,
+                    h2=90,
+                    ...)
 }
 
 
