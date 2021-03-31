@@ -91,77 +91,45 @@ dpool <- df %>% ungroup() %>%
            outcome_variable) 
 
 #----------------------------------------------------------
-# Plot LAZ PAR
+# Plot PAR - combined LAZ and WLZ
 #----------------------------------------------------------
-
 plotdf_laz <- dpool %>% filter(outcome_variable=="LAZ") %>%
   arrange(-PAR) 
 rflevels = unique(plotdf_laz$RFlabel_ref)
 plotdf_laz$RFlabel_ref=factor(plotdf_laz$RFlabel_ref, levels=rflevels)
 
-#nlab <- paste0(round((plotdf$n_cell-plotdf$n)/1000),"k (",round((1-plotdf$ref_prev)*100),"%) to ref: ",plotdf$intervention_level)
-#RFlabel <- plotdf$RFlabel_ref
-#PAR <- plotdf$PAR
-#plotdf$PAR2 <- ifelse(plotdf$measure=="Population attributable difference", PAR, NA)
-
-# plotdf$measure = "Population attributable difference"
-# 
-# #copy existing data, offset by 0.1
-# plotdf_copy = plotdf
-# plotdf_copy$measure = "Variable importance measure"
-# plotdf_copy$PAR = plotdf_copy$PAR + 0.1
-# plotdf_copy$CI1 = plotdf_copy$CI1 + 0.1
-# plotdf_copy$CI2 = plotdf_copy$CI2 + 0.1
-
-
-
-pPAR_laz <-  ggplot(plotdf_laz, aes(x=RFlabel_ref)) + 
-  geom_point(aes(y=-PAR), color=main_color, size = 4) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color=main_color) +
-  coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(#x = "Exposure, and to which level of exposure the cohorts are shifted",
-       x = "Exposure",
-       y = "Attributable difference in LAZ") +
-  geom_hline(yintercept = 0) +
-  theme(strip.background = element_blank(),
-        legend.position="right",
-        axis.text.y = element_text(size=, hjust = 1),
-        axis.text.x = element_text(size=12)) +
-  guides(color=FALSE, shape=FALSE)
-pPAR_laz
-
-
-
-#----------------------------------------------------------
-# Plot WLZ PAR
-#----------------------------------------------------------
-
-plotdf_wlz <- dpool %>% filter(outcome_variable=="WLZ") %>%
-  arrange(-PAR) 
+plotdf_wlz <- dpool %>% filter(outcome_variable=="WLZ") %>% 
+  arrange(-PAR)
 rflevels = unique(plotdf_wlz$RFlabel_ref)
-plotdf_wlz$RFlabel_ref=factor(plotdf_wlz$RFlabel_ref, levels = rflevels)
+plotdf_wlz$RFlabel_ref=factor(plotdf_wlz$RFlabel_ref, levels=rflevels)
 
+plotdf <- dpool %>% arrange(outcome_variable)
+plotdf <- plotdf %>% arrange(outcome_variable, -PAR) 
+rflevels = unique(plotdf$RFlabel_ref)
+plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
 
-pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) + 
+pPAR <- ggplot(plotdf, aes(x=RFlabel_ref)) + 
   geom_point(aes(y=-PAR), color=main_color, size = 4) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2), color=main_color) +
   coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(x = "Exposure", y = "Attributable difference in WLZ") +
+  labs(x = "Exposure",
+       y = "Attributable differences") +
   geom_hline(yintercept = 0) +
   theme(strip.background = element_blank(),
         legend.position="right",
         axis.text.y = element_text(size=10, hjust = 1),
         axis.text.x = element_text(size=12),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE)
+  guides(color=FALSE, shape=FALSE) + 
+  facet_wrap(~outcome_variable)
+
+pPAR
+
+ggsave(pPAR, file=paste0(here::here(), "/figures/risk-factor/fig-PAR-combined.png"), height=10, width=8)
 
 
-ggsave(pPAR_laz, file=paste0(here::here(), "/figures/risk-factor/fig-laz-PAR.png"), height=10, width=8)
-ggsave(pPAR_wlz, file=paste0(here::here(), "/figures/risk-factor/fig-wlz-PAR.png"), height=10, width=8)
 
-
-
-saveRDS(list(pPAR_laz, pPAR_wlz), file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
+saveRDS(pPAR, file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
 
 
 pPAR_wlz2 <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) + 
@@ -176,8 +144,6 @@ pPAR_wlz2 <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) +
         axis.text.x = element_text(size=12),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   guides(color=FALSE, shape=FALSE)
-
-
 
 
 ggsave(pPAR_wlz2, file=paste0(here::here(), "/figures/risk-factor/fig-wlz-PAR_presentation.png"), height=6, width=8)
