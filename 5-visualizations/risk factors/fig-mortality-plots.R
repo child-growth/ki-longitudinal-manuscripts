@@ -32,7 +32,6 @@ clean_agecat<-function(agecat){
 
 #Load data
 dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-head(dfull)
 
 
 unique(dfull$type)
@@ -98,7 +97,6 @@ RMAest <- bind_rows(data.frame(RMAest, analysis="Random Effects"),
 
 #Save cleaned data
 saveRDS(RMAest, paste0(here::here(),"/results/rf results/pooled_mortality_RR_results.rds"))
-
 
 d <- RMAest
 d <- droplevels(d)
@@ -190,15 +188,48 @@ d$severe<-factor(ifelse(grepl("evere",d$RFlabel),1,0),levels=c("0","1"))
 d2 <- d %>% filter(analysis=="Random Effects") %>% arrange(outcome_variable, RR) %>%
   mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label))) 
 
-pmort <- ggplot(d2, aes(x=outcome_label)) +
+# Drop 'RR of mortality by 24 months' from d2
+pmort_data <- d2 %>%
+  dplyr::filter(outcome_variable != "Relative risk of\nmortality by 24 months")
+
+# Import hazard ratios data from 05-HR-figs.R
+p_prim_pooled <- readRDS(paste0(here::here(), "/results/p_prim_pooled.RDS")) %>% 
+  filter(pooled==1, !grepl("ever_",X), method=="RE", is.na(sex), is.na(region), agecat=="overall", adj==1, df=="res") %>% 
+  droplevels(.) %>%
+  dplyr::filter(Xname != "Wasted (MUAC)", 
+                  Xname != "Wasted + underweight",
+                  Xname != "Stunted + underweight", 
+                  Xname != "Severely wasted (MUAC)",
+                  Xname != "Underweight",
+                  Xname != "Wasted",
+                  Xname != "Stunted")
+p_prim_pooled$Xname <- recode(p_prim_pooled$Xname, "Wasted + stunted" = "Wasted and stunted")
+
+names(p_prim_pooled)[names(p_prim_pooled) == 'Xname'] <- 'outcome_label' 
+names(p_prim_pooled)[names(p_prim_pooled) == 'HR'] <- 'RR'
+names(p_prim_pooled)[names(p_prim_pooled) == 'ci.lb'] <- 'RR.CI1'
+names(p_prim_pooled)[names(p_prim_pooled) == 'ci.ub'] <- 'RR.CI2'
+
+p_prim_pooled <- p_prim_pooled %>%
+  add_column(Measure = "HR") %>%
+  add_column(severe = c(1, 1, 1, 0)) %>%
+  add_column(outcome_variable = 'Hazard ratios of\nmortality before 24 months')
+
+dropped <- c("studyid", "region", "est", "se", "N", "sparseN", "pooled", "Nstudies", "method", "X", "Y", "adj", "agecat", "df", "sex", "logHR.psi", "logSE", "HR.CI1", "HR.CI2")
+p_prim_pooled <- p_prim_pooled[ , !(names(p_prim_pooled) %in% dropped)]
+
+# Merge HR data into pmort_data
+pmort_data <- merge(x = p_prim_pooled, y = pmort_data, all = TRUE)
+
+pmort <- ggplot(pmort_data, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   labs(y = "", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
-  scale_size_manual(values=c(4,5)) +
+  scale_colour_manual(values=tableau10[c(4,1,3,2,7,5)]) +
+  scale_fill_manual(values=tableau10[c(4,1,3,2,7,5)]) +
+  scale_size_manual(values=c(4,5)) + 
   scale_shape_manual(values=c(16,21)) +
   theme(strip.placement = "outside",
         panel.spacing = unit(0, "lines"),
@@ -208,7 +239,6 @@ pmort <- ggplot(d2, aes(x=outcome_label)) +
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
   coord_flip(ylim=c(1,9))
-
 
 ggsave(pmort, file=here("/figures/risk-factor/fig-mort+morb-RR.png"), width=14, height=5.2)
 
