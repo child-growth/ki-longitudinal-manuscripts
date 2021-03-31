@@ -93,6 +93,15 @@ dpool <- df %>% ungroup() %>%
 #----------------------------------------------------------
 # Plot PAR - combined LAZ and WLZ
 #----------------------------------------------------------
+plotdf_laz <- dpool %>% filter(outcome_variable=="LAZ") %>%
+  arrange(-PAR) 
+rflevels = unique(plotdf_laz$RFlabel_ref)
+plotdf_laz$RFlabel_ref=factor(plotdf_laz$RFlabel_ref, levels=rflevels)
+
+plotdf_wlz <- dpool %>% filter(outcome_variable=="WLZ") %>% 
+  arrange(-PAR)
+rflevels = unique(plotdf_wlz$RFlabel_ref)
+plotdf_wlz$RFlabel_ref=factor(plotdf_wlz$RFlabel_ref, levels=rflevels)
 
 plotdf <- dpool %>% arrange(outcome_variable)
 plotdf <- plotdf %>% arrange(outcome_variable, -PAR) 
