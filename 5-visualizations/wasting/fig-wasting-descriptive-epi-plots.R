@@ -660,13 +660,12 @@ saveRDS(df, file=paste0(figdata_dir_wasting,"figdata-",rec_plot_name,".RDS"))
 # Persistent Wasting 
 #-------------------------------------------------------------------------------------------
 
-perswast_plot <- ki_desc_plot(d,
+perswast_plot <- ki_desc_flurry_plot(d,
                    Disease="Wasting",
                    Measure="Persistent wasting", 
                    Birth="yes", 
                    Severe="no", 
                    Age_range="6 months", 
-                   Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel = 'Proportion (%)',
                    yrange=c(0,20),
@@ -739,13 +738,12 @@ saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
 #-------------------------------------------------------------------------------------------
-co_plot <- ki_desc_plot(d,
+co_plot <- ki_desc_flurry_plot(d,
                    Disease="co-occurrence",
                    Measure="Prevalence", 
                    Birth="yes", 
                    Severe="no", 
                    Age_range="3 months", 
-                   Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
                    yrange=c(0,11),
@@ -815,17 +813,16 @@ saveRDS(co_plot, file=paste0(here::here(),"/figures/plot-objects/co_plot_object.
 #-------------------------------------------------------------------------------------------
 # Underweight prevalence 
 #-------------------------------------------------------------------------------------------
-underweight_plot <- ki_desc_plot(d,
-                   Disease="Underweight",
-                   Measure="Prevalence", 
-                   Birth="yes", 
-                   Severe="no", 
-                   Age_range="3 months", 
-                   Cohort="pooled",
-                   xlabel="Child age, months",
-                   ylabel='Point prevalence (95% CI)',
-                   returnData = T,
-                   yrange=c(0,45))
+underweight_plot <- ki_desc_flurry_plot(d,
+                                 Disease="Underweight",
+                                 Measure="Prevalence", 
+                                 Birth="yes", 
+                                 Severe="no", 
+                                 Age_range="3 months", 
+                                 xlabel="Child age, months",
+                                 ylabel='Point prevalence (95% CI)',
+                                 returnData = T,
+                                 yrange=c(0,45))
 
 underweight_plot_africa <- ki_desc_plot(d,
                                  Disease="Underweight",
@@ -887,7 +884,7 @@ saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",underw
 #-------------------------------------------------------------------------------------------
 
 ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-         Cohort="pooled",
+         # Cohort="pooled",
          xlabel="Age category",
          ylabel="Proportion (95% CI)",
          yrange=NULL,
@@ -900,7 +897,7 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
       birth == Birth &
       severe == Severe &
       age_range == Age_range &
-      cohort == Cohort &
+      # cohort == Cohort &
       !is.na(region) & !is.na(agecat)
   )
   df <- droplevels(df)
@@ -911,12 +908,27 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
+  df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
+  
+  # df <- scale_estimates(df)
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
+    
+    # pooled 
     geom_errorbar(aes(color=region, 
                       group=interaction(measure, region), ymin=lb, ymax=ub), 
-                  width = 0, position = position_dodge(dodge)) +
-    geom_point(aes(shape=measure, fill=region, color=region
-    ), size = 2, position = position_dodge(dodge)) +
+                  width = 0, position = position_dodge(dodge),
+                  data = df %>% filter(ispooled == "yes")) +
+    geom_point(aes(shape=measure, fill=region, color=region), 
+               size = 2, position = position_dodge(dodge),
+               data = df %>% filter(ispooled == "yes")) +
+    
+    # cohort-stratified 
+    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
+               data = df %>% filter(ispooled == "no"),
+               position = position_jitter(width = 0.15), alpha = 0.25) +
+    
+    
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
@@ -948,14 +960,13 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
   return(list(plot=p,data=df))
 }
 
-
 muac_plot <- ki_combo_plot2(d,
               Disease="Wasting",
               Measure=c("MUAC WHZ Prevalence", "MUAC Prevalence"), 
               Birth="yes", 
               Severe="no", 
               Age_range="3 months", 
-              Cohort="pooled",
+              # Cohort="pooled",
               xlabel="Child age, months",
               yrange=c(0,65), dodge = 0.5,
               legend.pos=c(.15,.92)) 
@@ -989,7 +1000,7 @@ ir_sens_plot <- rec_combo_plot(d.ir,
                      Birth="yes", 
                      Severe="no", 
                      Age_range=c("30 days","60 days","90 days"), 
-                     Cohort="pooled",
+                     # Cohort="pooled",
                      xlabel="Child age, months",
                      ylabel='Episodes per 1000 person-days at risk',
                      yrange=c(0,4),
@@ -1016,13 +1027,12 @@ saveRDS(ir_sens_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ir_sens_pl
 # Severe Wasting prevalence
 #-------------------------------------------------------------------------------------------
 
-sevwast_plot <- ki_desc_plot(d,
+sevwast_plot <- ki_desc_flurry_plot(d,
                    Disease="Wasting",
                    Measure="Prevalence", 
                    Birth="yes", 
                    Severe="yes", 
                    Age_range="3 months", 
-                   Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Point prevalence (95% CI)',
                    yrange=c(0,13),
