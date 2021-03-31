@@ -474,7 +474,7 @@ ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_
 #-------------------------------------------------------------------------------------------
 
 rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-                          Cohort="pooled",
+                          # Cohort="pooled",
                           xlabel="Age at wasting episode onset",
                           ylabel="",
                           yrange=c(0,90),
@@ -487,7 +487,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
       birth == Birth &
       severe == Severe &
       age_range %in% Age_range &
-      cohort == Cohort &
+      # cohort == Cohort &
       !is.na(region) & !is.na(agecat)
   )
   df <- droplevels(df)
@@ -510,12 +510,29 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
 
+  ### new
+  df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
+  
+  if (min(df$lb) < 0) {
+    print("Warning: some lower bounds < 0")
+  }
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
+    
+    # pooled 
     geom_errorbar(aes(color=region, 
                       group=interaction(age_range, region), ymin=lb, ymax=ub), 
-                  width = 0, position = position_dodge(0.5)) +
-    geom_point(aes(shape=age_range, fill=region, color=region, group=interaction(age_range, region)
-    ), size = 2, position = position_dodge(0.5)) +
+                  width = 0, position = position_dodge(0.5),
+                  data = df %>% filter(ispooled == "yes")) +
+    geom_point(aes(shape=age_range, fill=region, color=region, group=interaction(age_range, region)), 
+               size = 2, position = position_dodge(0.5),
+               data = df %>% filter(ispooled == "yes")) +
+    
+    # cohort-stratified
+    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
+               data = df %>% filter(ispooled == "no"),
+               position = position_jitter(width = 0.15), alpha = 0.25) +
+    
     scale_color_manual(values=tableau11,
                        guide = FALSE) +
     scale_shape_manual(values = c(16, 17, 18),
@@ -562,7 +579,7 @@ rec_plot <- rec_combo_plot(d,
                    Birth="yes", 
                    Severe="no", 
                    Age_range=c("30 days","60 days","90 days"), 
-                   Cohort="pooled",
+                   # Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Percent recovered\n(95% CI)',
                    yrange=c(0,100),
