@@ -438,6 +438,8 @@ inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 #-------------------------------------------------------------------------------------------
 # Wasting incidence proportion
 #-------------------------------------------------------------------------------------------
+
+#duplicate of ip_plot (l. 292) - not updated
 inc_plot <- ip_plot(
   d,
   Disease = "Wasting",
