@@ -59,6 +59,7 @@ d <- d %>%
       "Ever wasted + underweight",    
       "Ever wasted + stunted" ))))
 
+saveRDS(d, paste0(here::here(), "/results/p_prim_pooled.RDS"))
 
 p_prim_pooled <- d %>% filter(pooled==1, !grepl("ever_",X), method=="RE", is.na(sex), is.na(region), agecat=="overall", adj==1, df=="res") %>% 
   droplevels(.) %>%

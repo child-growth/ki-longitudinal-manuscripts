@@ -105,151 +105,35 @@ dwhz$outlier_color = fdata1
 #Main color
 main_color <- "#287D8EFF"
 
-#Viridis colors
-#287D8EFF
-#29AF7FFF
 
 #make plots
 set.seed(12346)
-#set.seed(123456)
-pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM, color=outlier_color, shape=outlier_color,  size=outlier_color)) + 
-  geom_point(aes(alpha=is_outlier)) +
+pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
+  geom_point() +
+  geom_label_repel(aes(label=RFlabel.x), size=2, hjust=-0.1, vjust=0) +
   scale_colour_manual(values=c(main_color, "grey30", "grey30")) +
   scale_alpha_manual(values=c(0.5, 1))+
   scale_size_manual(values=c(4, 4, 4))+
   scale_shape_manual(values=c(19,9,13))+
   coord_fixed(xlim = c(-0.1,0.4), ylim = c(-0.1,0.4)) +
-  labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\nLAZ, optimal intervention") +
+  labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\n optimal intervention") +
   geom_abline(slope=1,intercept=0) +
   geom_vline(xintercept = 0, linetype="dashed") +
   geom_hline(yintercept = 0, linetype="dashed") +
-  #original - geom_text_repel(aes(label = outlier), lineheight = .7, na.rm = TRUE, size = 2.5,  
-                                         #xlim=c(-0.2, 0.2), ylim = c(0.15, 0.4), direction = "both", force=3, nudge_x = -0.05, color="grey40")+
-  #version with labeling - geom_text_repel(aes(label = outlier), lineheight = 0.7, na.rm = TRUE, size = 2.5,  
-                 #direction = "both", xlim = c(-0.25, 0.4), arrow = arrow(length = unit(0.05, "npc")), force=3, nudge_x = -0.18, nudge_y = 0.16, color="grey40", min.segment.length = 0)+
   scale_x_continuous(breaks=c(-0.2,0,0.2,0.4)) +
   scale_y_continuous(breaks=c(0,0.2,0.4)) +
   theme(strip.background = element_blank(),
         axis.title = element_text(size=9),
         axis.text = element_text(size=8),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE)
+  guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE) +
+  facet_wrap(~outcome_variable)
 
-pVIMhaz
-
-
-set.seed(156)
-pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM, color=outlier_color, shape=outlier_color,  size=outlier_color)) + 
-  geom_point(aes(alpha=is_outlier)) +
-  scale_colour_manual(values=c(main_color, "grey30", "grey30")) +
-  scale_alpha_manual(values=c(0.5, 1))+
-  scale_size_manual(values=c(4, 4, 4))+
-  scale_shape_manual(values=c(19,9,13))+
-  coord_fixed(xlim = c(-0.1,0.25), ylim = c(-0.1,0.25)) +
-  labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\noptimal intervention") +
-  geom_abline(slope=1,intercept=0) +
-  geom_vline(xintercept = 0, linetype="dashed") +
-  geom_hline(yintercept = 0, linetype="dashed") +
-  # geom_text_repel(aes(label = outlier), na.rm = TRUE, nudge_x = 0, size = 2, color="grey40",  xlim=c(-0.2, -0.05), ylim = c(-10,0.5)
-  #                 ) +
-  #geom_text_repel(aes(label = outlier), na.rm = TRUE, size = 2,  xlim=c(-0.2, -0.05), nudge_y = -0.05)+
-  # ORIGINAL - geom_text(aes(label = outlier), na.rm = TRUE, size = 2.5,   nudge_x = 0.13, color="grey40")+
-  #geom_text_repel(aes(label = outlier), lineheight = 0.7, na.rm = TRUE, size = 2.5,  
-  #                direction = "both", arrow = arrow(length = unit(0.05, "npc")), force=3, nudge_x = -0.18, nudge_y = 0.16, color="grey40", min.segment.length = 0)+
-  scale_x_continuous(breaks=c(-0.1, 0,0.1,0.2)) +
-  scale_y_continuous(breaks=c(-0.1,0,0.1,0.2)) +
-  theme(strip.background = element_blank(),
-        axis.title = element_text(size=9),
-        axis.text = element_text(size=8),
-        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE)
-pVIMwhz
+pVIMcombined
 
 
-save(pVIMhaz, pVIMwhz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
-saveRDS(pVIMhaz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-LAZ.RDS"))
-saveRDS(pVIMwhz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-WLZ.RDS"))
+save(pVIMcombined, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
+saveRDS(pVIMcombined, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-combined.RDS"))
 
-
-
-
-ggsave(pVIMhaz, file=here("figures/risk-factor/fig-VIM-PAR-comp-haz.png"), height=2, width=2)
-ggsave(pVIMwhz, file=here("figures/risk-factor/fig-VIM-PAR-comp-whz.png"), height=2, width=2)
-
-
-
-
-
-#Make dissertation style plots
-
-#make plots
-set.seed(12346)
-#set.seed(123456)
-pVIMhaz <- ggplot(dhaz, aes(x=-PAR, y=-VIM, color=outlier_color, shape=outlier_color,  size=outlier_color)) + 
-  geom_point(aes(alpha=is_outlier)) +
-  scale_colour_manual(values=c("grey30", "grey30", "grey30")) +
-  scale_alpha_manual(values=c(0.5, 1))+
-  scale_size_manual(values=c(4, 4, 4))+
-  scale_shape_manual(values=c(19,9,13))+
-  coord_fixed(xlim = c(-0.1,0.4), ylim = c(-0.1,0.4)) +
-  labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\nLAZ, optimal intervention") +
-  geom_abline(slope=1,intercept=0) +
-  geom_vline(xintercept = 0, linetype="dashed") +
-  geom_hline(yintercept = 0, linetype="dashed") +
-  #original - geom_text_repel(aes(label = outlier), lineheight = .7, na.rm = TRUE, size = 2.5,  
-  #xlim=c(-0.2, 0.2), ylim = c(0.15, 0.4), direction = "both", force=3, nudge_x = -0.05, color="grey40")+
-  #version with labeling - geom_text_repel(aes(label = outlier), lineheight = 0.7, na.rm = TRUE, size = 2.5,  
-  #direction = "both", xlim = c(-0.25, 0.4), arrow = arrow(length = unit(0.05, "npc")), force=3, nudge_x = -0.18, nudge_y = 0.16, color="grey40", min.segment.length = 0)+
-  scale_x_continuous(breaks=c(-0.2,0,0.2,0.4)) +
-  scale_y_continuous(breaks=c(0,0.2,0.4)) +
-  theme(strip.background = element_blank(),
-        axis.title = element_text(size=9),
-        axis.text = element_text(size=8),
-        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE)
-
-pVIMhaz
-
-
-set.seed(156)
-pVIMwhz <- ggplot(dwhz, aes(x=-PAR, y=-VIM, color=outlier_color, shape=outlier_color,  size=outlier_color)) + 
-  geom_point(aes(alpha=is_outlier)) +
-  scale_colour_manual(values=c("grey30", "grey30", "grey30")) +
-  scale_alpha_manual(values=c(0.5, 1))+
-  scale_size_manual(values=c(4, 4, 4))+
-  scale_shape_manual(values=c(19,9,13))+
-  coord_fixed(xlim = c(-0.1,0.25), ylim = c(-0.1,0.25)) +
-  labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\noptimal intervention") +
-  geom_abline(slope=1,intercept=0) +
-  geom_vline(xintercept = 0, linetype="dashed") +
-  geom_hline(yintercept = 0, linetype="dashed") +
-  # geom_text_repel(aes(label = outlier), na.rm = TRUE, nudge_x = 0, size = 2, color="grey40",  xlim=c(-0.2, -0.05), ylim = c(-10,0.5)
-  #                 ) +
-  #geom_text_repel(aes(label = outlier), na.rm = TRUE, size = 2,  xlim=c(-0.2, -0.05), nudge_y = -0.05)+
-  # ORIGINAL - geom_text(aes(label = outlier), na.rm = TRUE, size = 2.5,   nudge_x = 0.13, color="grey40")+
-  #geom_text_repel(aes(label = outlier), lineheight = 0.7, na.rm = TRUE, size = 2.5,  
-  #                direction = "both", arrow = arrow(length = unit(0.05, "npc")), force=3, nudge_x = -0.18, nudge_y = 0.16, color="grey40", min.segment.length = 0)+
-  scale_x_continuous(breaks=c(-0.1, 0,0.1,0.2)) +
-  scale_y_continuous(breaks=c(-0.1,0,0.1,0.2)) +
-  theme(strip.background = element_blank(),
-        axis.title = element_text(size=9),
-        axis.text = element_text(size=8),
-        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE)
-pVIMwhz
-
-
-save(pVIMhaz, pVIMwhz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-objects-dissertation.Rdata"))
-saveRDS(pVIMhaz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-LAZ-dissertation.RDS"))
-saveRDS(pVIMwhz, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-WLZ-dissertation.RDS"))
-
-
-
-
-
-
-
-
-
-
+ggsave(pVIMcombined, file=here("figures/risk-factor/fig-VIM-PAR-comp-combined.png"), height=5, width=10)
 

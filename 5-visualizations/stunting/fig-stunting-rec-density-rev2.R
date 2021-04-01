@@ -12,6 +12,8 @@
 # outputs: 
 # fig-laz-2-rec_dist-overall--allage-primary.png
 # figdata-laz-2-rec_dist-overall--allage-primary.RDS
+# fig-stunting-rec-density-rev2-Fig_4B.png
+# fig-stunting-rec-density-rev2-Fig_4B_legend.png
 
 ##########################################
 
@@ -418,11 +420,56 @@ plot_data_sub = plot_data_sub %>% mutate(pheno= case_when(
 #-----------------------------------------
 pink_green = rev(brewer.pal(n = 4, name = "PiYG"))[2:4]
 
-ggplot(plot_data_sub, aes(x=haz)) +
-  geom_histogram(aes(fill = pheno),  bins = 80) +
-  facet_grid(age_rec_f~ age_meas, scales = "free_y") +
-  ylab("Measurement age, months")+
-  xlab("Length-for-age Z-score")+
+################################################################################
+# Figure 4B
+################################################################################
+#### Generate Plotting Data ####
+stunt_3_meas_9 <- plot_data_sub %>% filter(age_meas == '9 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
+stunt_3_meas_6 <- plot_data_sub %>% filter(age_meas == '6 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
+stunt_3_meas_3 <- plot_data_sub %>% filter(age_meas == '3 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
+stunt_3_meas_15 <- plot_data_sub %>% filter(age_meas == '15 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
+stunt_3_meas_12 <- plot_data_sub %>% filter(age_meas == '12 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
+
+stunt_6_meas_9 <- plot_data_sub %>% filter(age_meas == '9 month measurement' & age_rec_f == "Stunting reversal\nat 6 months")
+stunt_6_meas_6 <- plot_data_sub %>% filter(age_meas == '6 month measurement' & age_rec_f == "Stunting reversal\nat 6 months")
+stunt_6_meas_15 <- plot_data_sub %>% filter(age_meas == '15 month measurement' & age_rec_f == "Stunting reversal\nat 6 months")
+stunt_6_meas_12 <- plot_data_sub %>% filter(age_meas == '12 month measurement' & age_rec_f == "Stunting reversal\nat 6 months")
+
+stunt_9_meas_9 <- plot_data_sub %>% filter(age_meas == '9 month measurement' & age_rec_f == "Stunting reversal\nat 9 months")
+stunt_9_meas_15 <- plot_data_sub %>% filter(age_meas == '15 month measurement' & age_rec_f == "Stunting reversal\nat 9 months")
+stunt_9_meas_12 <- plot_data_sub %>% filter(age_meas == '12 month measurement' & age_rec_f == "Stunting reversal\nat 9 months")
+
+stunt_12_meas_15 <- plot_data_sub %>% filter(age_meas == '15 month measurement' & age_rec_f == "Stunting reversal\nat 12 months")
+stunt_12_meas_12 <- plot_data_sub %>% filter(age_meas == '12 month measurement' & age_rec_f == "Stunting reversal\nat 12 months")
+
+#### Stunting Reversal at 3 Months Plots ####
+stunt_3_meas_3_plot <- ggplot(stunt_3_meas_3, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = c("#999999", pink_green), drop = FALSE) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,1), "cm"),
+         plot.title = element_text(size = 16, face = "bold"),
+         legend.text = element_text(size=13),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey')) + 
+  geom_text(x = -5.8, y = 0, label = "3", size = 5) + 
+  coord_cartesian(clip = 'off') + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title") + 
+  ggtitle("Stunting reversal at 3 months")
+
+stunt_3_meas_6_plot <- ggplot(stunt_3_meas_6, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
   scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
                      labels = seq(-5, 3.5, 1)) +
   geom_vline(xintercept = -2, linetype="dashed") +
@@ -431,12 +478,361 @@ ggplot(plot_data_sub, aes(x=haz)) +
   theme_bw() +
   theme( legend.position = "bottom",
          panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank()) 
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,1), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  geom_text(x = -5.8, y = 0, label = "6", size = 5) + 
+  coord_cartesian(clip = 'off') + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
 
+stunt_3_meas_9_plot <- ggplot(stunt_3_meas_9, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,1), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  geom_text(x = -5.8, y = 0, label = "9", size = 5) + 
+  coord_cartesian(clip = 'off') + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
 
+stunt_3_meas_12_plot <- ggplot(stunt_3_meas_12, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,1), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  geom_text(x = -5.8, y = 0, label = "12", size = 5) + 
+  coord_cartesian(clip = 'off') + 
+  rremove("y.grid") + 
+  rremove("x.text") +
+  rremove("axis.title")
 
+stunt_3_meas_15_plot <- ggplot(stunt_3_meas_15, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.x = element_text(size = 13),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,1), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  geom_text(x = -5.8, y = 0, label = "15", size = 5) + 
+  coord_cartesian(clip = 'off') + 
+  rremove("y.grid") + 
+  rremove("axis.title")
 
-# # define standardized plot names
+#### Stunting Reversal at 6 Months Plots ####
+stunt_6_meas_3_plot <- ggplot() + 
+  ggtitle("Stunting reversal at 6 months") + 
+  theme_bw() + 
+  theme(plot.margin = unit(c(0,0.25,0,0.25), "cm"), 
+        panel.border = element_rect(colour = "white", fill = NA),
+        plot.title = element_text(size = 16, face = "bold"))
+
+stunt_6_meas_6_plot <- ggplot(stunt_6_meas_6, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
+
+stunt_6_meas_9_plot <- ggplot(stunt_6_meas_9, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
+
+stunt_6_meas_12_plot <- ggplot(stunt_6_meas_12, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
+
+stunt_6_meas_15_plot <- ggplot(stunt_6_meas_15, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.x = element_text(size = 13),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("axis.title")
+
+#### Stunting Reversal at 9 months Plots ####
+stunt_9_meas_3_plot <- ggplot() + 
+  ggtitle("Stunting reversal at 9 months") + 
+  theme_bw() + 
+  theme(plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+        panel.border = element_rect(colour = "white", fill = NA),
+        plot.title = element_text(size = 16, face = "bold"),)
+
+stunt_9_meas_6_plot <- ggplot(stunt_9_meas_9, aes(x=haz)) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  theme_bw() +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
+
+stunt_9_meas_9_plot <- ggplot(stunt_9_meas_9, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
+
+stunt_9_meas_12_plot <- ggplot(stunt_9_meas_12, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
+
+stunt_9_meas_15_plot <- ggplot(stunt_9_meas_15, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.x = element_text(size = 13),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("axis.title")
+#### Stunting Reversal at 12 months Plots ####
+stunt_12_meas_3_plot <- ggplot() + 
+  ggtitle("Stunting reversal at 12 months") + 
+  theme_bw() + 
+  theme(plot.margin = unit(c(0,0.25,0,0.25), "cm"), 
+        panel.border = element_rect(colour = "white", fill = NA),
+        plot.title = element_text(size = 16, face = "bold"),)
+
+stunt_12_meas_6_plot <- ggplot(stunt_12_meas_15, aes(x=haz)) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  theme_bw() +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
+
+stunt_12_meas_9_plot <- ggplot(stunt_12_meas_15, aes(x=haz)) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  theme_bw() +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") + 
+  rremove("axis.title")
+
+stunt_12_meas_12_plot <- ggplot(stunt_12_meas_12, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") + 
+  rremove("x.text") +
+  rremove("axis.title")
+
+stunt_12_meas_15_plot <- ggplot(stunt_12_meas_15, aes(x=haz)) + 
+  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+                     labels = seq(-5, 3.5, 1)) +
+  geom_vline(xintercept = -2, linetype="dashed") +
+  scale_fill_manual("Age in months when\nLAZ rose above -2",
+                    values = pink_green) +
+  theme_bw() +
+  theme( legend.position = "bottom",
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.y = element_blank(),
+         axis.text.x = element_text(size = 13),
+         axis.text.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
+         panel.border = element_rect(colour = "white", fill = NA),
+         axis.line.x.bottom = element_line(color = 'grey'))  + 
+  rremove("y.grid") +  
+  rremove("axis.title")
+
+#### Generating Plots ####
+Fig_4B_legend <- as_ggplot(get_legend(stunt_3_meas_3_plot))
+stunt_3_meas_3_plot <- stunt_3_meas_3_plot + theme(legend.position = "none")
+ggsave("fig-stunting-rec-density-rev2-Fig_4B_legend.png", 
+       Fig_4B_legend, "png", paste0(here::here(), 
+                                    "/5-visualizations/stunting/"),
+       width = 25, height = 5, units = "cm", dpi = "retina")
+
+Fig_4B <- ggarrange(stunt_3_meas_3_plot, stunt_6_meas_3_plot, stunt_9_meas_3_plot, stunt_12_meas_3_plot,
+                    stunt_3_meas_6_plot, stunt_6_meas_6_plot, NULL, NULL,
+                    stunt_3_meas_9_plot, stunt_6_meas_9_plot, stunt_9_meas_9_plot, NULL,
+                    stunt_3_meas_12_plot, stunt_6_meas_12_plot, stunt_9_meas_12_plot, stunt_12_meas_12_plot,
+                    stunt_3_meas_15_plot, stunt_6_meas_15_plot, stunt_9_meas_15_plot, stunt_12_meas_15_plot,
+                    nrow = 5, ncol = 4)
+Fig_4B <- annotate_figure(Fig_4B, 
+                          bottom = text_grob("Length-for-age Z-score", size = 15, vjust = 0.5),
+                          left = text_grob("Measurement age, months", size = 15, rot = 90, vjust = 1.5))
+
+ggsave("fig-stunting-rec-density-rev2-Fig_4B.png", 
+       Fig_4B, "png", paste0(here::here(), "/5-visualizations/stunting/"),
+       width = 60, height = 35, units = "cm", dpi = "retina")
+
+# define standardized plot names
 # rec_histogram_plot_name = create_name(
 #   outcome = "LAZ",
 #   cutoff = 2,
@@ -453,4 +849,3 @@ ggplot(plot_data_sub, aes(x=haz)) +
 #        ".png"), width=8, height=5)
 # 
 # saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,".RDS"))
-
