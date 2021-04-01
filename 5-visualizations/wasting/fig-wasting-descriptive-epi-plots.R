@@ -252,7 +252,6 @@ prev_plot[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(region, n
 # Wasting incidence proportion
 #-------------------------------------------------------------------------------------------
 
-# TODO: add cumulative incidence plot
 ip_plot_primary <- ki_ip_flurry_plot(scale_estimates(d),
                         Disease="Wasting",
                         Measure="Incidence proportion",
