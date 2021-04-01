@@ -223,36 +223,36 @@ The following objects are masked from ‘package:base’:
 1 41302
 > d %>% group_by(studyid, country, subjid) %>% slice(1) %>%  group_by(studyid, country)  %>% summarize(N=n()) %>% as.data.frame()
 `summarise()` regrouping output by 'studyid' (override with `.groups` argument)
-             studyid                      country     N
-1     CMC-V-BCS-2002                        INDIA   372
-2  CMIN Bangladesh93                   BANGLADESH   248
-3      CMIN Brazil89                       BRAZIL   117
-4          CMIN GB94                GUINEA-BISSAU   590
-5        CMIN Peru89                         PERU   179
-6        CMIN Peru95                         PERU   205
-7            CONTENT                         PERU   215
-8                 EE                     PAKISTAN   376
-9          GMS-Nepal                        NEPAL   591
-10     Guatemala BSC                    GUATEMALA   221
-11               IRC                        INDIA   410
-12          JiVitA-3                   BANGLADESH 10759
-13          JiVitA-4                   BANGLADESH  1334
-14            Keneba                       GAMBIA  2265
-15            LCNI-5                       MALAWI   706
-16            MAL-ED                   BANGLADESH   249
-17            MAL-ED                       BRAZIL   218
-18            MAL-ED                        INDIA   242
-19            MAL-ED                        NEPAL   238
-20            MAL-ED                         PERU   283
-21            MAL-ED                 SOUTH AFRICA   274
-22            MAL-ED TANZANIA, UNITED REPUBLIC OF   254
-23            PROBIT                      BELARUS  7864
-24            ResPak                     PAKISTAN   225
-25      SAS-CompFeed                        INDIA   442
-26     SAS-FoodSuppl                        INDIA   368
-27    TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2171
-28               TDC                        INDIA   160
-29          ZVITAMBO                     ZIMBABWE  9726
+             studyid       country     N
+1     CMC-V-BCS-2002         INDIA   372
+2  CMIN Bangladesh93    BANGLADESH   248
+3      CMIN Brazil89        BRAZIL   117
+4          CMIN GB94 GUINEA-BISSAU   590
+5        CMIN Peru89          PERU   179
+6        CMIN Peru95          PERU   205
+7            CONTENT          PERU   215
+8                 EE      PAKISTAN   376
+9          GMS-Nepal         NEPAL   591
+10     Guatemala BSC     GUATEMALA   221
+11               IRC         INDIA   410
+12          JiVitA-3    BANGLADESH 10759
+13          JiVitA-4    BANGLADESH  1334
+14            Keneba        GAMBIA  2265
+15            LCNI-5        MALAWI   706
+16            MAL-ED    BANGLADESH   249
+17            MAL-ED        BRAZIL   218
+18            MAL-ED         INDIA   242
+19            MAL-ED         NEPAL   238
+20            MAL-ED          PERU   283
+21            MAL-ED  SOUTH AFRICA   274
+22            MAL-ED      TANZANIA   254
+23            PROBIT       BELARUS  7864
+24            ResPak      PAKISTAN   225
+25      SAS-CompFeed         INDIA   442
+26     SAS-FoodSuppl         INDIA   368
+27    TanzaniaChild2      TANZANIA  2171
+28               TDC         INDIA   160
+29          ZVITAMBO      ZIMBABWE  9726
 > 
 > 
 > 
@@ -448,4 +448,4 @@ The following objects are masked from ‘package:base’:
 > 
 > proc.time()
    user  system elapsed 
- 47.423   0.752  48.151 
+ 49.948   0.941  50.866 
