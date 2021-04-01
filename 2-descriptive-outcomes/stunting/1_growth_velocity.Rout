@@ -781,4 +781,4 @@ No. of subjects with both y avail (t1,t2):  5212
 > 
 > proc.time()
    user  system elapsed 
-194.164   4.240 175.535 
+201.552   4.797 183.512 
