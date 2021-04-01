@@ -199,11 +199,12 @@ p_prim_pooled <- readRDS(paste0(here::here(), "/results/p_prim_pooled.RDS")) %>%
   dplyr::filter(Xname != "Wasted (MUAC)", 
                   Xname != "Wasted + underweight",
                   Xname != "Stunted + underweight", 
-                  Xname != "Severely wasted (MUAC)",
-                  Xname != "Underweight",
-                  Xname != "Wasted",
-                  Xname != "Stunted")
-p_prim_pooled$Xname <- recode(p_prim_pooled$Xname, "Wasted + stunted" = "Wasted and stunted")
+                  Xname != "Severely wasted (MUAC)")
+p_prim_pooled$Xname <- recode(p_prim_pooled$Xname, 
+                              "Wasted + stunted" = "Wasted and stunted", 
+                              "Underweight" = "Moderately underweight", 
+                              "Wasted" = "Moderately wasted", 
+                              "Stunted" = "Moderately stunted")
 
 names(p_prim_pooled)[names(p_prim_pooled) == 'Xname'] <- 'outcome_label' 
 names(p_prim_pooled)[names(p_prim_pooled) == 'HR'] <- 'RR'
@@ -211,8 +212,8 @@ names(p_prim_pooled)[names(p_prim_pooled) == 'ci.lb'] <- 'RR.CI1'
 names(p_prim_pooled)[names(p_prim_pooled) == 'ci.ub'] <- 'RR.CI2'
 
 p_prim_pooled <- p_prim_pooled %>%
-  add_column(Measure = "HR") %>%
-  add_column(severe = c(1, 1, 1, 0)) %>%
+  add_column(Measure = c("stunted", "wasted", "underweight", "stunted", "wasted", "underweight", "wasted and stunted")) %>%
+  add_column(severe = c(0, 0, 0, 1, 1, 1, 0)) %>%
   add_column(outcome_variable = 'Hazard ratios of\nmortality before 24 months')
 
 dropped <- c("studyid", "region", "est", "se", "N", "sparseN", "pooled", "Nstudies", "method", "X", "Y", "adj", "agecat", "df", "sex", "logHR.psi", "logSE", "HR.CI1", "HR.CI2")
@@ -221,14 +222,18 @@ p_prim_pooled <- p_prim_pooled[ , !(names(p_prim_pooled) %in% dropped)]
 # Merge HR data into pmort_data
 pmort_data <- merge(x = p_prim_pooled, y = pmort_data, all = TRUE)
 
+# Drop persistent wasting from all 3 plot facets (will be moved to supplementary material)
+pmort_data <- pmort_data %>%
+  dplyr::filter(outcome_label != "Persistently wasted")
+
 pmort <- ggplot(pmort_data, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   labs(y = "", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=tableau10[c(4,1,3,2,7,5)]) +
-  scale_fill_manual(values=tableau10[c(4,1,3,2,7,5)]) +
+  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
   scale_size_manual(values=c(4,5)) + 
   scale_shape_manual(values=c(16,21)) +
   theme(strip.placement = "outside",
