@@ -1,9 +1,8 @@
 
 rm(list=ls())
-.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
 
 source(paste0(here::here(), "/0-config.R"))
-.libPaths( "~/rlibs" )
+#.libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
 #library(jsonlite)
@@ -43,8 +42,7 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"all_analyses.json")
 
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
-
-rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX")
+rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_OptTX.Rmd")
 
 inputs <- "single_analysis.json"
 

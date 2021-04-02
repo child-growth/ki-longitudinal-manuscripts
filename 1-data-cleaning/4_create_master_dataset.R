@@ -29,7 +29,7 @@ table(Zscores$region)
 
 
 #load covariate dataset (one row per child)
-cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
+cov <- readRDS(clean_covariates_path)
 
 dput(colnames(cov))
 

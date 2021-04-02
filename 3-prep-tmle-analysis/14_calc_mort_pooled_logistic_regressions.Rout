@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -29,11 +29,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -60,7 +60,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -86,13 +86,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -107,7 +100,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -171,14 +164,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -191,9 +176,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -210,10 +195,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -225,8 +206,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
 > #read in data
 > mort <- readRDS(mortality_path)
@@ -312,11 +291,54 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > 
 > irr <- poissonRB(fmla="dead~wast",dat=d)
-Error in estfun(fm) : could not find function "estfun"
-Calls: poissonRB -> cl -> apply
-In addition: Warning messages:
-1: In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
-  there is no package called ‘sandwich’
-2: In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
-  there is no package called ‘lmtest’
-Execution halted
+N obs= 295228
+z test of coefficients:
+
+              Estimate Std. Error   z value  Pr(>|z|)    
+(Intercept) -10.437581   0.038849 -268.6720 < 2.2e-16 ***
+wastTRUE      0.579416   0.061764    9.3811 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+> irr
+$fit
+
+Call:  glm(formula = fmla, family = poisson, data = dat, model = FALSE, 
+    x = TRUE)
+
+Coefficients:
+(Intercept)     wastTRUE  
+   -10.4376       0.5794  
+
+Degrees of Freedom: 295227 Total (i.e. Null);  295226 Residual
+Null Deviance:	    43420 
+Residual Deviance: 43260 	AIC: 51580
+
+$rfit
+
+z test of coefficients:
+
+              Estimate Std. Error   z value  Pr(>|z|)    
+(Intercept) -10.437581   0.038849 -268.6720 < 2.2e-16 ***
+wastTRUE      0.579416   0.061764    9.3811 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+$vcovCL
+              (Intercept)      wastTRUE
+(Intercept)  0.0015092277 -0.0007732365
+wastTRUE    -0.0007732365  0.0038147788
+
+> 
+> # library(tmle)
+> # library(SuperLearner)
+> # 
+> # 
+> # lib=c("SL.glm") 
+> # test<-tmle(Y=dat$wast, A=dat$ELEC, W=data.frame(W1=rep(1, nrow(dat)),W2=rep(1, nrow(dat))), Q.SL.library=lib , g.SL.library=lib)
+> # test
+> 
+> proc.time()
+   user  system elapsed 
+ 31.549   0.879  32.401 

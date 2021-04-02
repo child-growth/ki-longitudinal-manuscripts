@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -28,11 +28,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -59,7 +59,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -85,13 +85,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -106,7 +99,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -170,14 +163,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -190,9 +175,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -209,10 +194,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -224,8 +205,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 > 
 > 
@@ -241,7 +220,7 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > #--------------------------------------
 > # Format and subset the growth velocity dataset
 > #--------------------------------------
-> vel <- readRDS(file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/velocity_longfmt_rf.rds")
+> vel <- readRDS(file=paste0(ghapdata_dir,"velocity_longfmt_rf.rds"))
 > 
 > vel<- mark_measure_freq(vel)
 > 
@@ -249,11 +228,11 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > 
 > #Get only HAZ change from growth velocity dataset, and format names
-> vel_haz <- vel %>% filter(ycat=="haz") %>% subset(., select=c(studyid, country, subjid, y_rate, diffcat)) %>%
+> vel_haz <- vel %>% filter(ycat=="haz") %>% dplyr::select(studyid, country, subjid, y_rate, diffcat) %>%
 +   rename(agecat = diffcat)
 > 
 > #Get only length velocity from growth velocity dataset, and format names
-> vel_lencm <- vel %>% filter(ycat=="lencm") %>% subset(., select=c(studyid, country, subjid, y_rate, diffcat)) %>%
+> vel_lencm <- vel %>% filter(ycat=="lencm") %>% dplyr::select(studyid, country, subjid, y_rate, diffcat) %>%
 +   rename(agecat = diffcat)
 > 
 > 
@@ -278,9 +257,9 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > table(d$agecat)
 
   0-3 months   3-6 months   6-9 months  9-12 months 12-15 months 15-18 months 
-       30196        29458        24552        24318        20508        18683 
+       29077        28301        26043        24522        20575        19319 
 18-21 months 21-24 months 
-       16000        14307 
+       16508        14793 
 > 
 > 
 > 
@@ -296,26 +275,19 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +   filter(!is.na(lag_WHZ_quart)) %>%
 +   filter(agelevel==lag_agelevel+1) %>%
 +   mutate(lag_WHZ_quart=factor(lag_WHZ_quart))
-Warning messages:
-1: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-2: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-3: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-4: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-5: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-6: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
 > 
 > 
 > table(d_whzcat$agecat, d_whzcat$WHZ_quart)
               
                   1    2    3    4
   0-3 months      0    0    0    0
-  3-6 months   1445 1457 1464 1477
-  6-9 months   1302 1311 1314 1299
-  9-12 months  1205 1225 1213 1230
-  12-15 months 1213 1213 1210 1205
-  15-18 months 1063 1074 1070 1083
-  18-21 months  950  960  968  970
-  21-24 months  723  734  740  725
+  3-6 months   1439 1459 1469 1471
+  6-9 months   1430 1443 1437 1433
+  9-12 months  1329 1343 1341 1339
+  12-15 months 1209 1210 1200 1206
+  15-18 months 1063 1074 1073 1098
+  18-21 months  955  962  976  963
+  21-24 months  714  732  728  716
 > 
 > 
 > d_hazcat <- d %>% group_by(subjid, agecat) %>% mutate(meanHAZ = mean(haz)) %>% slice(1) %>% arrange(subjid,agecat, agedays) %>%
@@ -325,13 +297,6 @@ Warning messages:
 +   filter(!is.na(lag_HAZ_quart)) %>%
 +   filter(agelevel==lag_agelevel+1) %>%
 +   mutate(lag_HAZ_quart=factor(lag_HAZ_quart))
-Warning messages:
-1: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-2: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-3: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-4: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-5: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-6: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
 > 
 > 
 > 
@@ -366,7 +331,7 @@ Warning messages:
 +     mutate( ever_stunted=ifelse(min(haz)< -2,1,0), Nobs=n()) %>% slice(1) %>%
 +     mutate(N=n()) %>%
 +     ungroup() %>%
-+     select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat, ever_stunted,Nobs, N)
++     dplyr::select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat, ever_stunted,Nobs, N)
 +   
 +   stunt_ci <- rbind(stunt_ci, temp)
 +   
@@ -376,13 +341,13 @@ Warning messages:
               
                   0    1
   0-3 months      0    0
-  3-6 months   6860 1625
-  6-9 months   5368  883
-  9-12 months  5004  813
-  12-15 months 4116  642
-  15-18 months 3461  626
-  18-21 months 3052  530
-  21-24 months 2237  381
+  3-6 months   6892 1581
+  6-9 months   5798  937
+  9-12 months  4925  748
+  12-15 months 4047  672
+  15-18 months 3429  639
+  18-21 months 2967  507
+  21-24 months 2152  364
 > 
 > 
 > 
@@ -413,9 +378,9 @@ Warning messages:
 > table(dprev$agecat)
 
     Birth  3 months  6 months  9 months 12 months 15 months 18 months 21 months 
-     2022     21030     17758     17095     15545     13580     12520     10302 
+     2051     20105     18156     16889     15278     13847     12696     10413 
 24 months 
-     9136 
+     9021 
 > 
 > #  Get the observation closest to prevalence times
 > dprev <- dprev %>%
@@ -433,15 +398,15 @@ Warning messages:
 > table(dprev$agecat, dprev$stunted)
            
                0    1
-  Birth     1934   88
-  3 months  7813 1556
-  6 months  7410 1709
-  9 months  6656 2043
-  12 months 5722 2421
-  15 months 5009 2645
-  18 months 4336 2790
-  21 months 3355 2657
-  24 months 3365 2271
+  Birth     1961   90
+  3 months  7780 1497
+  6 months  7422 1655
+  9 months  6660 1972
+  12 months 5677 2353
+  15 months 4954 2593
+  18 months 4280 2692
+  21 months 3262 2553
+  24 months 3205 2175
 > 
 > dprev <- dprev %>% filter(agecat!="Birth")
 > 
@@ -457,121 +422,155 @@ Warning messages:
               
                   1    2    3    4
   0-3 months      0    0    0    0
-  3-6 months   1070 1109 1093  964
-  6-9 months    818  804  873  822
-  9-12 months   615  689  712  759
-  12-15 months  494  587  652  738
-  15-18 months  344  433  528  635
-  18-21 months  275  362  433  541
-  21-24 months  190  243  261  265
+  3-6 months   1093 1117 1112  988
+  6-9 months    919  909  979  935
+  9-12 months   685  758  805  878
+  12-15 months  497  590  626  752
+  15-18 months  344  436  523  650
+  18-21 months  286  347  428  545
+  21-24 months  179  233  233  288
 
 , ,  = 1
 
               
                   1    2    3    4
   0-3 months      0    0    0    0
-  3-6 months    249  228  232  263
-  6-9 months    154  159  140  105
-  9-12 months   130  114  118   69
-  12-15 months   99  114   95   66
-  15-18 months  102  106   96   63
-  18-21 months   54   67   82   62
-  21-24 months   34   49   39   49
+  3-6 months    242  223  212  246
+  6-9 months    181  169  143  115
+  9-12 months   151  138  114   86
+  12-15 months  108  127  102   71
+  15-18 months  104  108   99   66
+  18-21 months   59   69   87   57
+  21-24 months   33   50   43   42
 
 > 
 > table(stuntCI_whz$agecat, stuntCI_whz$studyid, stuntCI_whz$ever_stunted)
 , ,  = 0
 
               
-               CMC-V-BCS-2002 CMIN CONTENT   EE GMS-Nepal Guatemala BSC  IRC
-  0-3 months                0    0       0    0         0             0    0
-  3-6 months              200  124     192  124       386           202  257
-  6-9 months              156  101     184   80       337           151  225
-  9-12 months             116   78     181   59       297            95  207
-  12-15 months             86   65     173   49       257            74  192
-  15-18 months             60   50     159   45       198            21  186
-  18-21 months             46   36     150   40       183             0  173
-  21-24 months             30   35     145   35       165             0  151
+               CMC-V-BCS-2002 CMIN Bangladesh93 CMIN Peru89 CMIN Peru95 CONTENT
+  0-3 months                0                 0           0           0       0
+  3-6 months              200               124         186         197     192
+  6-9 months              156               101         167         179     184
+  9-12 months             116                78         136         154     181
+  12-15 months             86                65         101         129     173
+  15-18 months             60                50          72         118     159
+  18-21 months             46                36          48         104     150
+  21-24 months             30                35          29          85     145
               
-               Keneba MAL-ED PROVIDE ResPak TanzaniaChild2
-  0-3 months        0      0       0      0              0
-  3-6 months     1700   1253     484    115           1823
-  6-9 months     1461   1062      31     88           1492
-  9-12 months    1301    931     462     81           1196
-  12-15 months   1057    821     376     63            903
-  15-18 months    986    727     291     35            703
-  18-21 months    913    669     296      0            546
-  21-24 months    773    624     255      0             24
+                 EE GMS-Nepal Guatemala BSC  IRC Keneba MAL-ED ResPak
+  0-3 months      0         0             0    0      0      0      0
+  3-6 months    124       386           202  257   1700   1253    115
+  6-9 months     80       337           151  225   1461   1062     88
+  9-12 months    59       297            95  207   1301    931     81
+  12-15 months   49       257            74  192   1057    821     63
+  15-18 months   45       198            21  186    986    727     35
+  18-21 months   40       183             0  173    913    669      0
+  21-24 months   35       165             0  151    773    624      0
+              
+               TanzaniaChild2  TDC
+  0-3 months                0    0
+  3-6 months             1823  133
+  6-9 months             1492  115
+  9-12 months            1196   93
+  12-15 months            903   77
+  15-18 months            703   69
+  18-21 months            546   59
+  21-24 months             24   56
 
 , ,  = 1
 
               
-               CMC-V-BCS-2002 CMIN CONTENT   EE GMS-Nepal Guatemala BSC  IRC
-  0-3 months                0    0       0    0         0             0    0
-  3-6 months               94   42       3   93        99            93  105
-  6-9 months               57   20       6   30        90            64   41
-  9-12 months              57   27       5   28        73            38   24
-  12-15 months             48   25       9   20        61            16   21
-  15-18 months             48   21      11   10        83             5   13
-  18-21 months             28   21       6    8        48             0   18
-  21-24 months             22    9       4    3        24             0   27
+               CMC-V-BCS-2002 CMIN Bangladesh93 CMIN Peru89 CMIN Peru95 CONTENT
+  0-3 months                0                 0           0           0       0
+  3-6 months               94                42          13          13       3
+  6-9 months               57                20          13          17       6
+  9-12 months              57                27          21          19       5
+  12-15 months             48                25          18          15       9
+  15-18 months             48                21          10          14      11
+  18-21 months             28                21           8           8       6
+  21-24 months             22                 9           3           7       4
               
-               Keneba MAL-ED PROVIDE ResPak TanzaniaChild2
-  0-3 months        0      0       0      0              0
-  3-6 months      398    262      93     79            264
-  6-9 months      220    135       4     16            200
-  9-12 months     164    123     133      9            132
-  12-15 months    175    144      35      6             82
-  15-18 months    191    122      24      1             97
-  18-21 months    232     81      49      0             39
-  21-24 months    194     56      32      0             10
+                 EE GMS-Nepal Guatemala BSC  IRC Keneba MAL-ED ResPak
+  0-3 months      0         0             0    0      0      0      0
+  3-6 months     93        99            93  105    398    262     79
+  6-9 months     30        90            64   41    220    135     16
+  9-12 months    28        73            38   24    164    123      9
+  12-15 months   20        61            16   21    175    144      6
+  15-18 months   10        83             5   13    191    122      1
+  18-21 months    8        48             0   18    232     81      0
+  21-24 months    3        24             0   27    194     56      0
+              
+               TanzaniaChild2  TDC
+  0-3 months                0    0
+  3-6 months              264   23
+  6-9 months              200   28
+  9-12 months             132   28
+  12-15 months             82   32
+  15-18 months             97   13
+  18-21 months             39   10
+  21-24 months             10    5
 
 > 
 > table(d_whzcat$agecat)
 
   0-3 months   3-6 months   6-9 months  9-12 months 12-15 months 15-18 months 
-           0         5843         5226         4873         4841         4290 
+           0         5838         5743         5352         4825         4308 
 18-21 months 21-24 months 
-        3848         2922 
+        3856         2890 
 > dprev_whzcat <- d_whzcat 
 > dprev_whzcat$agecat <- factor(paste0(sapply(strsplit(as.character(dprev_whzcat$agecat), "-", fixed=T), `[`, 2)," months"))
 > table(dprev_whzcat$agecat)
 
 12 months months 15 months months 18 months months 21 months months 
-            4873             4841             4290             3848 
+            5352             4825             4308             3856 
 24 months months  6 months months  9 months months 
-            2922             5843             5226 
+            2890             5838             5743 
 > 
 > 
 > stuntprev_whz <- left_join(dprev, dprev_whzcat, by=c("studyid","country","subjid", "agecat"))
-Warning message:
-Column `agecat` joining factors with different levels, coercing to character vector 
 > table(stuntprev_whz$agecat, stuntprev_whz$lag_WHZ_quart, stuntprev_whz$stunted)
 , ,  = 0
 
-           
-            1 2 3 4
-  12 months 0 0 0 0
-  15 months 0 0 0 0
-  18 months 0 0 0 0
-  21 months 0 0 0 0
-  24 months 0 0 0 0
-  3 months  0 0 0 0
-  6 months  0 0 0 0
-  9 months  0 0 0 0
+                  
+                   1 2 3 4
+  Birth            0 0 0 0
+  3 months         0 0 0 0
+  6 months         0 0 0 0
+  9 months         0 0 0 0
+  12 months        0 0 0 0
+  15 months        0 0 0 0
+  18 months        0 0 0 0
+  21 months        0 0 0 0
+  24 months        0 0 0 0
+  12 months months 0 0 0 0
+  15 months months 0 0 0 0
+  18 months months 0 0 0 0
+  21 months months 0 0 0 0
+  24 months months 0 0 0 0
+  6 months months  0 0 0 0
+  9 months months  0 0 0 0
 
 , ,  = 1
 
-           
-            1 2 3 4
-  12 months 0 0 0 0
-  15 months 0 0 0 0
-  18 months 0 0 0 0
-  21 months 0 0 0 0
-  24 months 0 0 0 0
-  3 months  0 0 0 0
-  6 months  0 0 0 0
-  9 months  0 0 0 0
+                  
+                   1 2 3 4
+  Birth            0 0 0 0
+  3 months         0 0 0 0
+  6 months         0 0 0 0
+  9 months         0 0 0 0
+  12 months        0 0 0 0
+  15 months        0 0 0 0
+  18 months        0 0 0 0
+  21 months        0 0 0 0
+  24 months        0 0 0 0
+  12 months months 0 0 0 0
+  15 months months 0 0 0 0
+  18 months months 0 0 0 0
+  21 months months 0 0 0 0
+  24 months months 0 0 0 0
+  6 months months  0 0 0 0
+  9 months months  0 0 0 0
 
 > 
 > 
@@ -595,8 +594,6 @@ Column `agecat` joining factors with different levels, coercing to character vec
 > 
 > #Merge in covariates
 > d <- left_join(stuntprev_whz, cov, by=c("studyid", "subjid", "country"))
-Warning message:
-Column `country` joining character vector and factor, coercing into character vector 
 > 
 > 
 > #Treatment name
@@ -628,8 +625,6 @@ Column `country` joining character vector and factor, coercing into character ve
 > #CI outcomes
 > stuntCI_whz <- stuntCI_whz %>% subset(., select = -c(sex))
 > d <- left_join(stuntCI_whz, cov, by=c("studyid", "subjid", "country"))
-Warning message:
-Column `country` joining character vector and factor, coercing into character vector 
 > Y<-c("ever_stunted")
 > save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"stuntCI_whz_rf.Rdata"))
 > 
@@ -638,18 +633,14 @@ Column `country` joining character vector and factor, coercing into character ve
 > #growth velocity
 > vel_haz_whz2 <- vel_haz_whz %>% subset(., select = -c(tr, sex))
 > d <- left_join(vel_haz_whz2, cov, by=c("studyid", "subjid", "country"))
-Warning message:
-Column `country` joining character vector and factor, coercing into character vector 
 > Y<-c("y_rate")
 > save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"laz_vel_whz_rf.Rdata"))
 > 
 > vel_lencm_whz2 <- vel_lencm_whz %>% subset(., select = -c(tr, sex))
 > d <- left_join(vel_lencm_whz2, cov, by=c("studyid", "subjid", "country"))
-Warning message:
-Column `country` joining character vector and factor, coercing into character vector 
 > Y<-c("y_rate")
 > save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"len_vel_whz_rf.Rdata"))
 > 
 > proc.time()
    user  system elapsed 
-106.777   4.338 138.748 
+100.609   3.320 103.769 
