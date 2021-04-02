@@ -160,8 +160,11 @@ df <- d %>% filter(!is.na(hhwealth_quart)) %>% group_by(studyid, subjid) %>% sli
 table(pca$studyid, pca$hhwealth_quart)
 table(df$studyid, df$hhwealth_quart)
 
-
-
+#remove space for longbow
+df$hhwealth_quart <- as.character(df$hhwealth_quart)
+df$hhwealth_quart <- gsub(" ", "", df$hhwealth_quart)
+df$hhwealth_quart <- factor(df$hhwealth_quart, levels=c("WealthQ4","WealthQ3","WealthQ2","WealthQ1"))
+table(df$hhwealth_quart)
 
 #--------------------------------------------------------------------------
 # Code Food security
@@ -358,19 +361,19 @@ d$id[d$studyid %in% c("iLiNS-Zinc",
                       "JiVitA-4",
                       "PROBIT",
                       "SAS-CompFeed")] <-d$clustid[d$studyid %in% c("iLiNS-Zinc",
-                                                                               "JiVitA-3",    
-                                                                               "JiVitA-4",
-                                                                               "PROBIT",
-                                                                               "SAS-CompFeed")]
+                                                                    "JiVitA-3",    
+                                                                    "JiVitA-4",
+                                                                    "PROBIT",
+                                                                    "SAS-CompFeed")]
 d$id[!(d$studyid %in% c("iLiNS-Zinc",
                         "JiVitA-3",    
                         "JiVitA-4",
                         "PROBIT",
                         "SAS-CompFeed"))] <-d$subjid[!(d$studyid %in% c("iLiNS-Zinc",
-                                                                                   "JiVitA-3",    
-                                                                                   "JiVitA-4",
-                                                                                   "PROBIT",
-                                                                                   "SAS-CompFeed"))]
+                                                                        "JiVitA-3",    
+                                                                        "JiVitA-4",
+                                                                        "PROBIT",
+                                                                        "SAS-CompFeed"))]
 
 #use siteid from PROBIT
 d$id[d$studyid %in% c("PROBIT")] <-d$siteid[d$studyid %in% c("PROBIT")]
@@ -481,12 +484,12 @@ d$tr[d$studyid=="JiVitA-4" & d$arm=="Plumpy Doz"] <- "LNS"
 colnames(d)
 
 d <- subset(d, select = c(studyid,       subjid,        sex,           month,  country,       region,         arm,           tr,            gagebrth,     
-                           brthmon,       parity,       
-                           birthwt,       birthlen,      vagbrth,       hdlvry,        mage,          mhtcm,        
-                           mwtkg,         mbmi,          meducyrs,      single,        fage,          fhtcm,         feducyrs,     
-                           trth2o,        cleanck,       impfloor,      nrooms,        nhh,           nchldlt5,      ses,          
-                           earlybf,       hfoodsec,   measurefreq,   anywast06,    
-                           pers_wast,     enstunt,       enwast,     hhwealth_quart,      id))
+                          brthmon,       parity,       
+                          birthwt,       birthlen,      vagbrth,       hdlvry,        mage,          mhtcm,        
+                          mwtkg,         mbmi,          meducyrs,      single,        fage,          fhtcm,         feducyrs,     
+                          trth2o,        cleanck,       impfloor,      nrooms,        nhh,           nchldlt5,      ses,          
+                          earlybf,       hfoodsec,   measurefreq,   anywast06,    
+                          pers_wast,     enstunt,       enwast,     hhwealth_quart,      id))
 
 
 #--------------------------------------------------------
@@ -554,17 +557,17 @@ quantile_rf <- function(data, A, labs=NULL, Acuts=NULL, units=NULL){
 
 
 #A-priori categorical levels
-  #gestational age at birth
-  #<37 weeks = preterm
-  #37-38 weeks = early term
-  #39-40 weeks = full term (baseline)
-  #>=41 weeks = late/post term
+#gestational age at birth
+#<37 weeks = preterm
+#37-38 weeks = early term
+#39-40 weeks = full term (baseline)
+#>=41 weeks = late/post term
 
-  #maternal BMI
-  #<18.5 = underweight
-  #>=18.5 and <25 = normal weight (baseline)
-  #>=25 and <30 = overweight
-  #>=30 = obese
+#maternal BMI
+#<18.5 = underweight
+#>=18.5 and <25 = normal weight (baseline)
+#>=25 and <30 = overweight
+#>=30 = obese
 
 
 #Save continious variables as seperate variables to use as adjustment covariates
@@ -604,7 +607,7 @@ d$mbmi <- quantile_rf(d, d$W_mbmi, Acuts=c(0,18.5,max(d$W_mbmi, na.rm=T)), labs=
 d$fage <- quantile_rf(d, d$W_fage, Acuts=c(0,32,38,max(d$W_fage, na.rm=T)))
 d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,167,max(d$W_fhtcm, na.rm=T)), units="cm")
 
- 
+
 
 
 #Make education categorizing function that handles the irregular distribution across studies.
@@ -667,7 +670,7 @@ quantile_rf_edu <- function(d, Avar="meducyrs", to.character=F){
   }
   dfull <-as.data.frame(dfull)
   if(to.character){
-  dfull[,Avar] <- as.character(dfull[,Avar])
+    dfull[,Avar] <- as.character(dfull[,Avar])
   }
   print(class(dfull[,Avar]))
   return(dfull)
@@ -767,7 +770,7 @@ d$birthlen <- relevel(d$birthlen, ref=">=50 cm")
 #wealth index: 
 #wealthiest quartile - Q4 is baseline
 table(paste0(d$studyid," ", d$country), d$hhwealth_quart)
-d$hhwealth_quart <- relevel(d$hhwealth_quart, ref="Wealth Q4")
+d$hhwealth_quart <- relevel(d$hhwealth_quart, ref="WealthQ4")
 
 # children < 5 in HH
 #not sure how this could be zero - can you double check this? 
