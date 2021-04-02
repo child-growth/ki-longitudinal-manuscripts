@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -28,11 +28,11 @@ Type 'q()' to quit R.
 > #-----------------------------------
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -59,7 +59,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -85,13 +85,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -106,7 +99,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -170,14 +163,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -190,9 +175,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -209,10 +194,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -224,8 +205,6 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
 > #Load WHZ data
 > load(paste0(ghapdata_dir, "mortality_anthro_data.RData"))
@@ -259,19 +238,19 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > table(wast_ci_0_6$ever_wasted06)
 
     0     1 
-75673 20514 
+67063 16924 
 > table(wast_ci_0_6$ever_swasted06)
 
     0     1 
-90196  5991 
+79039  4948 
 > table(d$wast_inc[d$agedays<=6*30.4167])
 
      0      1 
-259759  18912 
+233209  15657 
 > table(d$sevwast_inc[d$agedays<=6*30.4167])
 
      0      1 
-273184   5487 
+244293   4573 
 > 
 > # #calculate any wasting from 6-24
 > # wast_ci_6_24 = d %>% ungroup() %>%
@@ -347,9 +326,6 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +   group_by(studyid,country,subjid, agecat) %>% 
 +   mutate(minhaz_agecat=min(haz)) %>% 
 +   ungroup() 
-Warning messages:
-1: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
-2: Factor `agecat` contains implicit NA, consider using `forcats::fct_explicit_na` 
 > 
 > 
 > #calculate any stunting from 0-6
@@ -457,7 +433,7 @@ Warning messages:
 > table(d6$co)
 
      0      1 
-737959  24290 
+634989  19615 
 > 
 > #calculate any co-occurrence from 0-6
 > co_ci_0_6 = d6 %>% group_by(studyid,country,subjid) %>%
@@ -503,7 +479,7 @@ Warning messages:
 > table(co_prev18$co_occurence)
 
     0     1 
-23267  1647 
+19576  1330 
 > 
 > 
 > 
@@ -520,4 +496,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-143.463   1.856 145.297 
+267.552   2.714 270.234 

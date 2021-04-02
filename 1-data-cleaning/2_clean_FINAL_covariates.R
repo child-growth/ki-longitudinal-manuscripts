@@ -137,8 +137,11 @@ table(pca$studyid, pca$hhwealth_quart)
 #Merge into main dataframe
 pca <- as.data.frame(pca)
 pca$subjid <-as.character(pca$subjid)
-d <- left_join(d, pca, by=c("studyid", "country", "subjid"))
 
+dim(pca)
+dim(d)
+d <- left_join(d, pca, by=c("studyid", "country", "subjid"))
+dim(d)
 #Note, only the COHORTS study has SES categories from a PCA, but no/incomplete indicators to calculate PCA from
 #Clean and merge that data here:
 #merge in ses variable for COHORTS for all countries except INDIA. The other countries have wealth based on 
@@ -157,14 +160,22 @@ d$hhwealth_quart <- factor(d$hhwealth_quart)
 
 #Check and make sure all merged correctly
 df <- d %>% filter(!is.na(hhwealth_quart)) %>% group_by(studyid, subjid) %>% slice(1)
-table(pca$studyid, pca$hhwealth_quart)
+pca_unique <- pca %>% filter(!is.na(hhwealth_quart)) %>% group_by(studyid, subjid) %>% slice(1)
+table(pca_unique$studyid, pca_unique$hhwealth_quart)
 table(df$studyid, df$hhwealth_quart)
 
 #remove space for longbow
+<<<<<<< HEAD
 df$hhwealth_quart <- as.character(df$hhwealth_quart)
 df$hhwealth_quart <- gsub(" ", "", df$hhwealth_quart)
 df$hhwealth_quart <- factor(df$hhwealth_quart, levels=c("WealthQ4","WealthQ3","WealthQ2","WealthQ1"))
 table(df$hhwealth_quart)
+=======
+d$hhwealth_quart <- as.character(d$hhwealth_quart)
+d$hhwealth_quart <- gsub(" ", "", d$hhwealth_quart)
+d$hhwealth_quart <- factor(d$hhwealth_quart, levels=c("WealthQ4","WealthQ3","WealthQ2","WealthQ1"))
+table(d$hhwealth_quart)
+>>>>>>> d90f027d1d656c349340f3e49e9b4a9425971534
 
 #--------------------------------------------------------------------------
 # Code Food security
@@ -248,6 +259,8 @@ table(d$studyid, is.na(d$birthwt))
 table(d$sex)
 d$sex[!(d$sex %in% c("Male","Female"))] <- NA
 table(is.na(d$sex))
+#Drop children with missing sex
+d <- d %>% filter(!is.na(sex))
 
 #Use agedays-1 as function codes birth age=0
 d$birthlen2 <- who_zscore2value(d$birthmeas_age-1, d$birthLAZ, y_var = "lenhtcm" , x_var = "agedays", sex = d$sex)

@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -29,11 +29,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -60,7 +60,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -86,13 +86,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -107,7 +100,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -171,14 +164,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -191,9 +176,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -210,10 +195,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -225,11 +206,11 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
 > 
 > #load covariates
 > cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+> 
+> 
 > 
 > #Check reference levels
 > for(i in 3:ncol(cov)){
@@ -1397,9 +1378,9 @@ impsan :
 safeh20 :
 [1] "1" "0"
 perdiar6 :
-[1] "0%"       "(0%, 5%]" ">5%"     
+[1] "[0%, 2%]" ">2%"     
 perdiar24 :
-[1] "0%"       "(0%, 5%]" ">5%"     
+[1] "[0%, 2%]" ">2%"     
 W_perdiar6 :
 NULL
 W_perdiar24 :
@@ -1459,18 +1440,16 @@ predexfd6 :
 > #merge in covariates
 > cuminc <- cuminc %>% subset(., select = -c(tr, sex))
 > d <- left_join(cuminc, cov, by=c("studyid", "subjid", "country"))
-Warning message:
-Column `country` joining character vector and factor, coercing into character vector 
 > head(d)
 # A tibble: 6 x 96
-  studyid subjid country region.x measurefreq.x agedays   haz latitude.x
-  <chr>   <chr>  <chr>   <fct>    <chr>           <int> <dbl>      <dbl>
-1 CMC-V-… 1      INDIA   South A… monthly            33 -3.56       78.9
-2 CMC-V-… 10     INDIA   South A… monthly            22 -0.2        78.9
-3 CMC-V-… 100    INDIA   South A… monthly             1 -0.47       78.9
-4 CMC-V-… 101    INDIA   South A… monthly            28 -2.19       78.9
-5 CMC-V-… 102    INDIA   South A… monthly            33 -0.79       78.9
-6 CMC-V-… 103    INDIA   South A… monthly            55  0.01       78.9
+  studyid        subjid country region.x  measurefreq.x agedays   haz latitude.x
+  <chr>          <chr>  <chr>   <fct>     <chr>           <int> <dbl>      <dbl>
+1 CMC-V-BCS-2002 1      INDIA   South As… monthly            33 -3.56       78.9
+2 CMC-V-BCS-2002 10     INDIA   South As… monthly            22 -0.2        78.9
+3 CMC-V-BCS-2002 100    INDIA   South As… monthly             1 -0.47       78.9
+4 CMC-V-BCS-2002 101    INDIA   South As… monthly            28 -2.19       78.9
+5 CMC-V-BCS-2002 102    INDIA   South As… monthly            33 -0.79       78.9
+6 CMC-V-BCS-2002 103    INDIA   South As… monthly            55  0.01       78.9
 # … with 88 more variables: longitud.x <dbl>, measid <int>, agecat <chr>,
 #   minhaz <dbl>, ever_stunted <dbl>, ever_sstunted <dbl>, Nobs <int>, N <int>,
 #   sex <fct>, month <fct>, wtkg <fct>, htcm <fct>, lencm <fct>, hcircm <fct>,
@@ -1509,9 +1488,9 @@ Column `country` joining character vector and factor, coercing into character ve
 > 
 > exposure_tab(d, Avar="sex")
     Avar     N  prop
-1  Total 93756 100.0
-2 Female 45638  48.7
-3   Male 48118  51.3
+1  Total 79549 100.0
+2 Female 38873  48.9
+3   Male 40676  51.1
 > 
 > 
 > exposures <- c("sex",                   "gagebrth",         "parity",        "birthwt",      
@@ -1532,235 +1511,232 @@ Column `country` joining character vector and factor, coercing into character ve
 
  sex 
     Avar     N  prop
-1  Total 93756 100.0
-2 Female 45638  48.7
-3   Male 48118  51.3
+1  Total 79549 100.0
+2 Female 38873  48.9
+3   Male 40676  51.1
 
  gagebrth 
                Avar     N  prop
-1             Total 53500 100.0
-2 Full or late term 27079  50.6
-3           Preterm  8044  15.0
-4        Early term 18377  34.3
+1             Total 47523 100.0
+2 Full or late term 24703  52.0
+3           Preterm  6678  14.1
+4        Early term 16142  34.0
 
  parity 
    Avar     N  prop
-1 Total 58044 100.0
-2     1 20041  34.5
-3     2 17125  29.5
-4    3+ 20878  36.0
+1 Total 48296 100.0
+2     1 18067  37.4
+3     2 14814  30.7
+4    3+ 15415  31.9
 
  birthwt 
                         Avar     N  prop
-1                      Total 80154 100.0
-2 Normal or high birthweight 63623  79.4
-3            Low birthweight 16531  20.6
+1                      Total 67346 100.0
+2 Normal or high birthweight 53082  78.8
+3            Low birthweight 14264  21.2
 
  birthlen 
         Avar     N  prop
-1      Total 75832 100.0
-2    >=50 cm 26909  35.5
-3     <48 cm 29615  39.1
-4 [48-50) cm 19308  25.5
+1      Total 63197 100.0
+2    >=50 cm 23350  36.9
+3     <48 cm 25186  39.9
+4 [48-50) cm 14661  23.2
 
  vagbrth 
    Avar     N  prop
-1 Total 66826 100.0
-2     0  5684   8.5
-3     1 61142  91.5
+1 Total 65626 100.0
+2     0  5320   8.1
+3     1 60306  91.9
 
  hdlvry 
    Avar     N  prop
-1 Total 17158 100.0
-2     0  9123  53.2
-3     1  8035  46.8
+1 Total 10601 100.0
+2     0  4870  45.9
+3     1  5731  54.1
 
  mage 
      Avar     N  prop
-1   Total 85002 100.0
-2 [20-30) 50917  59.9
-3     <20 19310  22.7
-4    >=30 14775  17.4
+1   Total 73186 100.0
+2 [20-30) 43418  59.3
+3     <20 18009  24.6
+4    >=30 11759  16.1
 
  mhtcm 
           Avar     N  prop
-1        Total 71666 100.0
-2     >=155 cm 35237  49.2
-3      <151 cm 23433  32.7
-4 [151-155) cm 12996  18.1
+1        Total 63357 100.0
+2     >=155 cm 33473  52.8
+3      <151 cm 19041  30.1
+4 [151-155) cm 10843  17.1
 
  mwtkg 
         Avar     N  prop
-1      Total 63917 100.0
-2    >=58 kg 20534  32.1
-3     <52 kg 33515  52.4
-4 [52-58) kg  9868  15.4
+1      Total 61864 100.0
+2    >=58 kg 20140  32.6
+3     <52 kg 32224  52.1
+4 [52-58) kg  9500  15.4
 
  mbmi 
            Avar     N  prop
-1         Total 62281 100.0
-2 Normal weight 49423  79.4
-3   Underweight 12858  20.6
+1         Total 60228 100.0
+2 Normal weight 47671  79.2
+3   Underweight 12557  20.8
 
  meducyrs 
     Avar     N  prop
-1  Total 84912 100.0
-2   High 26564  31.3
-3    Low 28029  33.0
-4 Medium 30319  35.7
+1  Total 72574 100.0
+2   High 23645  32.6
+3    Low 23848  32.9
+4 Medium 25081  34.6
 
  single 
-   Avar     N  prop
-1 Total 50468 100.0
-2     0 48223  95.6
-3     1  2245   4.4
+   Avar     N prop
+1 Total 40859  100
+2     0 38796   95
+3     1  2063    5
 
  fage 
      Avar     N  prop
-1   Total 23328 100.0
-2    >=38  1873   8.0
-3     <32 17543  75.2
-4 [32-38)  3912  16.8
+1   Total 19076 100.0
+2    >=38  1157   6.1
+3     <32 14851  77.9
+4 [32-38)  3068  16.1
 
  fhtcm 
           Avar     N  prop
-1        Total 16268 100.0
-2     >=167 cm 13569  83.4
-3      <162 cm   986   6.1
-4 [162-167) cm  1713  10.5
+1        Total 15772 100.0
+2     >=167 cm 13505  85.6
+3      <162 cm   693   4.4
+4 [162-167) cm  1574  10.0
 
  feducyrs 
     Avar     N  prop
-1  Total 75358 100.0
-2   High 15623  20.7
-3    Low 26767  35.5
-4 Medium 32968  43.7
+1  Total 68323 100.0
+2   High 13263  19.4
+3    Low 24420  35.7
+4 Medium 30640  44.8
 
  trth2o 
-   Avar    N  prop
-1 Total 2138 100.0
-2     1  952  44.5
-3     0 1186  55.5
+   Avar   N  prop
+1 Total 680 100.0
+2     1 509  74.9
+3     0 171  25.1
 
  cleanck 
-   Avar    N prop
-1 Total 2678  100
-2     1 1338   50
-3     0 1340   50
+   Avar    N  prop
+1 Total 1401 100.0
+2     1  407  29.1
+3     0  994  70.9
 
  impfloor 
    Avar     N  prop
-1 Total 37686 100.0
-2     1  6477  17.2
-3     0 31209  82.8
+1 Total 35602 100.0
+2     1  4707  13.2
+3     0 30895  86.8
 
  nrooms 
    Avar     N  prop
-1 Total 42851 100.0
-2    4+  2819   6.6
-3     1 24526  57.2
-4     2 11351  26.5
-5     3  4155   9.7
+1 Total 36019 100.0
+2    4+  2595   7.2
+3     1 20132  55.9
+4     2  9498  26.4
+5     3  3794  10.5
 
  nhh 
        Avar    N  prop
-1     Total 3732 100.0
-2 3 or less  692  18.5
-3       4-5 1609  43.1
-4       6-7  887  23.8
-5        8+  544  14.6
+1     Total 1645 100.0
+2 3 or less  321  19.5
+3       4-5  681  41.4
+4       6-7  416  25.3
+5        8+  227  13.8
 
  nchldlt5 
    Avar     N  prop
-1 Total 35453 100.0
-2     1 21653  61.1
-3    2+ 13800  38.9
+1 Total 33995 100.0
+2     1 20600  60.6
+3    2+ 13395  39.4
 
  earlybf 
    Avar     N  prop
-1 Total 50188 100.0
-2     1 12483  24.9
-3     0 37705  75.1
+1 Total 49430 100.0
+2     1 11826  23.9
+3     0 37604  76.1
 
  hfoodsec 
                   Avar     N  prop
-1                Total 25848 100.0
-2          Food Secure 13082  50.6
-3 Mildly Food Insecure  8632  33.4
-4        Food Insecure  4134  16.0
+1                Total 24461 100.0
+2          Food Secure 12534  51.2
+3 Mildly Food Insecure  7921  32.4
+4        Food Insecure  4006  16.4
 
  anywast06 
-   Avar     N prop
-1 Total 10328  100
-2     0  7849   76
-3     1  2479   24
+   Avar    N prop
+1 Total 9357  100
+2     0 7109   76
+3     1 2248   24
 
  pers_wast 
    Avar    N  prop
-1 Total 9631 100.0
-2     0 9176  95.3
-3     1  455   4.7
+1 Total 8662 100.0
+2     0 8249  95.2
+3     1  413   4.8
 
  enstunt 
-   Avar     N prop
-1 Total 93756  100
-2     0 76868   82
-3     1 16888   18
+   Avar     N  prop
+1 Total 79549 100.0
+2     0 64480  81.1
+3     1 15069  18.9
 
  enwast 
-   Avar     N prop
-1 Total 86641  100
-2     0 73673   85
-3     1 12968   15
+   Avar     N  prop
+1 Total 73155 100.0
+2     0 62625  85.6
+3     1 10530  14.4
 
  hhwealth_quart 
        Avar     N  prop
-1     Total 44263 100.0
-2 Wealth Q4 11671  26.4
-3 Wealth Q1 10844  24.5
-4 Wealth Q2 10496  23.7
-5 Wealth Q3 11252  25.4
+1     Total 39228 100.0
+2 Wealth Q4 10168  25.9
+3 Wealth Q1  9738  24.8
+4 Wealth Q2  9518  24.3
+5 Wealth Q3  9804  25.0
 
  impsan 
    Avar     N  prop
-1 Total 44216 100.0
-2     1 27350  61.9
-3     0 16866  38.1
+1 Total 35327 100.0
+2     1 24119  68.3
+3     0 11208  31.7
 
  safeh20 
    Avar     N  prop
-1 Total 36980 100.0
-2     1 35392  95.7
-3     0  1588   4.3
+1 Total 35533 100.0
+2     1 33947  95.5
+3     0  1586   4.5
 
  perdiar6 
       Avar    N  prop
-1    Total 4812 100.0
-2       0% 2196  45.6
-3 (0%, 5%] 1336  27.8
-4      >5% 1280  26.6
+1    Total 2451 100.0
+2 [0%, 2%] 1621  66.1
+3      >2%  830  33.9
 
  perdiar24 
       Avar     N  prop
-1    Total 13430 100.0
-2       0%  1600  11.9
-3 (0%, 5%]  8705  64.8
-4      >5%  3125  23.3
+1    Total 11069 100.0
+2 [0%, 2%]  5721  51.7
+3      >2%  5348  48.3
 
  predexfd6 
    Avar     N  prop
-1 Total 26948 100.0
-2     1 18471  68.5
-3     0  8477  31.5
+1 Total 26248 100.0
+2     1 18261  69.6
+3     0  7987  30.4
 > 
 > saveRDS(rf_table1_list, file=here("/results/rf_table1.RDS"))
 > 
 > 
 > tab <- bind_rows(rf_table1_list, .id="Variable")
-There were 35 warnings (use warnings() to see them)
 > colnames(tab) <- c("Variable","Level", "N", "Proportion")
 > write.csv(tab, file =here("/results/rf_table.csv"))
 > 
 > proc.time()
    user  system elapsed 
-  7.713   0.594   8.288 
+ 14.565   0.721  15.259 

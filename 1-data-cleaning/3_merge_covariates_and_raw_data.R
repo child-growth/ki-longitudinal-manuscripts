@@ -55,8 +55,9 @@ quantile_rf <- function(A, labs=NULL, Acuts=NULL){
 
 
 #load covariates
-d<-readRDS(paste0(ghapdata_dir,"FINAL_temp_clean_covariates.rds"))
+d<-readRDS(temp_clean_covariates_path)
 d$arm<-factor(d$arm)
+table(d$hhwealth_quart)
 
 load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/BF_dataset.Rdata"))
 load(paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/rawdiar_df.Rdata"))
