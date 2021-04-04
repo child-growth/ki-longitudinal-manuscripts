@@ -1,167 +1,0 @@
-Command to run:
-Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/54f14fe0-0039-447a-969e-d489a54167a4/f3493892-710a-4cc4-a2d6-fd4f0cbcff9c
-cd /tmp;tar xvzf tmpr8c9h8eo.tar.gz --strip 1;cd /tmp/54f14fe0-0039-447a-969e-d489a54167a4;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/68839/append_log/;screen -d -m python x.py;sleep 1
-tmpr8c9h8eo/54f14fe0-0039-447a-969e-d489a54167a4/
-tmpr8c9h8eo/54f14fe0-0039-447a-969e-d489a54167a4/f3493892-710a-4cc4-a2d6-fd4f0cbcff9c/
-tmpr8c9h8eo/54f14fe0-0039-447a-969e-d489a54167a4/provision.sh
-tmpr8c9h8eo/54f14fe0-0039-447a-969e-d489a54167a4/wrapper.sh
-tmpr8c9h8eo/54f14fe0-0039-447a-969e-d489a54167a4/script.Rmd
-tmpr8c9h8eo/54f14fe0-0039-447a-969e-d489a54167a4/inputs.json
-tmpr8c9h8eo/54f14fe0-0039-447a-969e-d489a54167a4/runner.R
-tmpr8c9h8eo/54f14fe0-0039-447a-969e-d489a54167a4/x.py
-Requirement already satisfied (use --upgrade to upgrade): requests in /usr/lib/python2.7/site-packages
-You are using pip version 18.1, however version 21.0.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-{"job": {"status": "running", "created_at": "2021-03-18T03:03:22.449", "results_url": "/jobs/68839/", "jobs": []}}Making sure longbowtools package is available for runner
-
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
-> 
-> 
-Installing pandoc
-pandoc-2.3.1/
-pandoc-2.3.1/bin/
-pandoc-2.3.1/bin/pandoc
-pandoc-2.3.1/bin/pandoc-citeproc
-pandoc-2.3.1/share/
-pandoc-2.3.1/share/man/
-pandoc-2.3.1/share/man/man1/
-pandoc-2.3.1/share/man/man1/pandoc.1.gz
-pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
-Running provision script
-skipping provisioning because this is a child job
-Making sure longbowtools package is available for runner
-
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
-> 
-> 
-Starting analysis
-
-
-processing file: REPORT.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |....                                                                  |   5%
-  ordinary text without R code
-
-  |                                                                              |.......                                                               |  10%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                              |..........                                                            |  15%
-  ordinary text without R code
-
-  |                                                                              |..............                                                        |  20%
-label: params (with options) 
-List of 2
- $ warning: logi FALSE
- $ message: logi FALSE
-
-Loading required package: graphics
-list()nchldlt5list()y_rate_wtkgidc("agecat", "studyid", "country")
-TRUEFALSEFALSENULL
-  |                                                                              |..................                                                    |  25%
-  ordinary text without R code
-
-  |                                                                              |.....................                                                 |  30%
-label: preprocessing
-  |                                                                              |........................                                              |  35%
-   inline R code fragments
-
-  |                                                                              |............................                                          |  40%
-label: print_adjustment_set (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |................................                                      |  45%
-  ordinary text without R code
-
-  |                                                                              |...................................                                   |  50%
-label: print_strata_variables (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |......................................                                |  55%
-  ordinary text without R code
-
-  |                                                                              |..........................................                            |  60%
-label: data_summary
-  |                                                                              |..............................................                        |  65%
-  ordinary text without R code
-
-  |                                                                              |.................................................                     |  70%
-label: print_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |....................................................                  |  75%
-  ordinary text without R code
-
-  |                                                                              |........................................................              |  80%
-label: drop_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |............................................................          |  85%
-  ordinary text without R code
-
-  |                                                                              |...............................................................       |  90%
-label: stratified_tmle (with options) 
-List of 1
- $ message: logi FALSE
-
-tmle for:	agecat: 0-3 months, studyid: IRC, country: INDIA
-tmle for:	agecat: 0-3 months, studyid: JiVitA-3, country: BANGLADESH
-tmle for:	agecat: 0-3 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 3-6 months, studyid: IRC, country: INDIA
-tmle for:	agecat: 3-6 months, studyid: JiVitA-3, country: BANGLADESH
-tmle for:	agecat: 3-6 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 6-9 months, studyid: IRC, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: LCNI-5, country: MALAWI
-tmle for:	agecat: 6-9 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 9-12 months, studyid: iLiNS-Zinc, country: BURKINA FASO
-tmle for:	agecat: 9-12 months, studyid: IRC, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: LCNI-5, country: MALAWI
-tmle for:	agecat: 9-12 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 12-15 months, studyid: iLiNS-Zinc, country: BURKINA FASO
-tmle for:	agecat: 12-15 months, studyid: IRC, country: INDIA
-tmle for:	agecat: 12-15 months, studyid: LCNI-5, country: MALAWI
-tmle for:	agecat: 12-15 months, studyid: TanzaniaChild2, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 15-18 months, studyid: iLiNS-Zinc, country: BURKINA FASO
-tmle for:	agecat: 15-18 months, studyid: IRC, country: INDIA
-tmle for:	agecat: 15-18 months, studyid: LCNI-5, country: MALAWI
-

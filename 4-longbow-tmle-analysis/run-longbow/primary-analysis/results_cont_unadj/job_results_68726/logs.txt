@@ -1,256 +1,0 @@
-Command to run:
-Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/c3bb5633-f21a-4774-8c88-9f6357d3466c/82281605-dc5c-46e9-adc7-1e7016467959
-cd /tmp;tar xvzf tmpxwcg1dji.tar.gz --strip 1;cd /tmp/c3bb5633-f21a-4774-8c88-9f6357d3466c;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/68726/append_log/;screen -d -m python x.py;sleep 1
-tmpxwcg1dji/c3bb5633-f21a-4774-8c88-9f6357d3466c/
-tmpxwcg1dji/c3bb5633-f21a-4774-8c88-9f6357d3466c/provision.sh
-tmpxwcg1dji/c3bb5633-f21a-4774-8c88-9f6357d3466c/wrapper.sh
-tmpxwcg1dji/c3bb5633-f21a-4774-8c88-9f6357d3466c/script.Rmd
-tmpxwcg1dji/c3bb5633-f21a-4774-8c88-9f6357d3466c/inputs.json
-tmpxwcg1dji/c3bb5633-f21a-4774-8c88-9f6357d3466c/82281605-dc5c-46e9-adc7-1e7016467959/
-tmpxwcg1dji/c3bb5633-f21a-4774-8c88-9f6357d3466c/runner.R
-tmpxwcg1dji/c3bb5633-f21a-4774-8c88-9f6357d3466c/x.py
-Requirement already satisfied (use --upgrade to upgrade): requests in /usr/lib/python2.7/site-packages
-You are using pip version 18.1, however version 21.0.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-{"job": {"status": "running", "created_at": "2021-03-18T03:03:18.936", "results_url": "/jobs/68726/", "jobs": []}}Making sure longbowtools package is available for runner
-
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
-> 
-> 
-Installing pandoc
-pandoc-2.3.1/
-pandoc-2.3.1/bin/
-pandoc-2.3.1/bin/pandoc
-pandoc-2.3.1/bin/pandoc-citeproc
-pandoc-2.3.1/share/
-pandoc-2.3.1/share/man/
-pandoc-2.3.1/share/man/man1/
-pandoc-2.3.1/share/man/man1/pandoc.1.gz
-pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
-Running provision script
-skipping provisioning because this is a child job
-Making sure longbowtools package is available for runner
-
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
-> 
-> 
-Starting analysis
-
-
-processing file: REPORT.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |....                                                                  |   5%
-  ordinary text without R code
-
-  |                                                                              |.......                                                               |  10%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                              |..........                                                            |  15%
-  ordinary text without R code
-
-  |                                                                              |..............                                                        |  20%
-label: params (with options) 
-List of 2
- $ warning: logi FALSE
- $ message: logi FALSE
-
-Loading required package: graphics
-list()perdiar6list()y_rate_hazidc("agecat", "studyid", "country")
-TRUEFALSEFALSENULL
-  |                                                                              |..................                                                    |  25%
-  ordinary text without R code
-
-  |                                                                              |.....................                                                 |  30%
-label: preprocessing
-  |                                                                              |........................                                              |  35%
-   inline R code fragments
-
-  |                                                                              |............................                                          |  40%
-label: print_adjustment_set (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |................................                                      |  45%
-  ordinary text without R code
-
-  |                                                                              |...................................                                   |  50%
-label: print_strata_variables (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |......................................                                |  55%
-  ordinary text without R code
-
-  |                                                                              |..........................................                            |  60%
-label: data_summary
-  |                                                                              |..............................................                        |  65%
-  ordinary text without R code
-
-  |                                                                              |.................................................                     |  70%
-label: print_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |....................................................                  |  75%
-  ordinary text without R code
-
-  |                                                                              |........................................................              |  80%
-label: drop_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |............................................................          |  85%
-  ordinary text without R code
-
-  |                                                                              |...............................................................       |  90%
-label: stratified_tmle (with options) 
-List of 1
- $ message: logi FALSE
-
-tmle for:	agecat: 0-3 months, studyid: CMIN Bangladesh93, country: BANGLADESH
-tmle for:	agecat: 0-3 months, studyid: CMIN Brazil89, country: BRAZIL
-tmle for:	agecat: 0-3 months, studyid: CMIN Peru95, country: PERU
-tmle for:	agecat: 0-3 months, studyid: CONTENT, country: PERU
-tmle for:	agecat: 0-3 months, studyid: EE, country: PAKISTAN
-tmle for:	agecat: 0-3 months, studyid: MAL-ED, country: BANGLADESH
-tmle for:	agecat: 0-3 months, studyid: MAL-ED, country: BRAZIL
-tmle for:	agecat: 0-3 months, studyid: MAL-ED, country: INDIA
-tmle for:	agecat: 0-3 months, studyid: MAL-ED, country: NEPAL
-tmle for:	agecat: 0-3 months, studyid: MAL-ED, country: PERU
-tmle for:	agecat: 0-3 months, studyid: MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 0-3 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 0-3 months, studyid: TDC, country: INDIA
-tmle for:	agecat: 3-6 months, studyid: CMIN Bangladesh93, country: BANGLADESH
-tmle for:	agecat: 3-6 months, studyid: CMIN Brazil89, country: BRAZIL
-tmle for:	agecat: 3-6 months, studyid: CMIN GB94, country: GUINEA-BISSAU
-tmle for:	agecat: 3-6 months, studyid: CMIN Peru89, country: PERU
-tmle for:	agecat: 3-6 months, studyid: CMIN Peru95, country: PERU
-tmle for:	agecat: 3-6 months, studyid: CONTENT, country: PERU
-tmle for:	agecat: 3-6 months, studyid: EE, country: PAKISTAN
-tmle for:	agecat: 3-6 months, studyid: MAL-ED, country: BANGLADESH
-tmle for:	agecat: 3-6 months, studyid: MAL-ED, country: BRAZIL
-tmle for:	agecat: 3-6 months, studyid: MAL-ED, country: INDIA
-tmle for:	agecat: 3-6 months, studyid: MAL-ED, country: NEPAL
-tmle for:	agecat: 3-6 months, studyid: MAL-ED, country: PERU
-tmle for:	agecat: 3-6 months, studyid: MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 3-6 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 3-6 months, studyid: TDC, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: CMIN Bangladesh93, country: BANGLADESH
-tmle for:	agecat: 6-9 months, studyid: CMIN Brazil89, country: BRAZIL
-tmle for:	agecat: 6-9 months, studyid: CMIN GB94, country: GUINEA-BISSAU
-tmle for:	agecat: 6-9 months, studyid: CMIN Peru89, country: PERU
-tmle for:	agecat: 6-9 months, studyid: CMIN Peru95, country: PERU
-tmle for:	agecat: 6-9 months, studyid: CONTENT, country: PERU
-tmle for:	agecat: 6-9 months, studyid: MAL-ED, country: BANGLADESH
-tmle for:	agecat: 6-9 months, studyid: MAL-ED, country: BRAZIL
-tmle for:	agecat: 6-9 months, studyid: MAL-ED, country: INDIA
-tmle for:	agecat: 6-9 months, studyid: MAL-ED, country: NEPAL
-tmle for:	agecat: 6-9 months, studyid: MAL-ED, country: PERU
-tmle for:	agecat: 6-9 months, studyid: MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 6-9 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 6-9 months, studyid: TDC, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: CMIN Bangladesh93, country: BANGLADESH
-tmle for:	agecat: 9-12 months, studyid: CMIN Brazil89, country: BRAZIL
-tmle for:	agecat: 9-12 months, studyid: CMIN GB94, country: GUINEA-BISSAU
-tmle for:	agecat: 9-12 months, studyid: CMIN Peru89, country: PERU
-tmle for:	agecat: 9-12 months, studyid: CMIN Peru95, country: PERU
-tmle for:	agecat: 9-12 months, studyid: CONTENT, country: PERU
-tmle for:	agecat: 9-12 months, studyid: MAL-ED, country: BANGLADESH
-tmle for:	agecat: 9-12 months, studyid: MAL-ED, country: BRAZIL
-tmle for:	agecat: 9-12 months, studyid: MAL-ED, country: INDIA
-tmle for:	agecat: 9-12 months, studyid: MAL-ED, country: NEPAL
-tmle for:	agecat: 9-12 months, studyid: MAL-ED, country: PERU
-tmle for:	agecat: 9-12 months, studyid: MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 9-12 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 9-12 months, studyid: TDC, country: INDIA
-tmle for:	agecat: 12-15 months, studyid: CMIN Bangladesh93, country: BANGLADESH
-tmle for:	agecat: 12-15 months, studyid: CMIN Brazil89, country: BRAZIL
-tmle for:	agecat: 12-15 months, studyid: CMIN GB94, country: GUINEA-BISSAU
-tmle for:	agecat: 12-15 months, studyid: CMIN Peru89, country: PERU
-tmle for:	agecat: 12-15 months, studyid: CMIN Peru95, country: PERU
-tmle for:	agecat: 12-15 months, studyid: CONTENT, country: PERU
-tmle for:	agecat: 12-15 months, studyid: EE, country: PAKISTAN
-tmle for:	agecat: 12-15 months, studyid: MAL-ED, country: BANGLADESH
-tmle for:	agecat: 12-15 months, studyid: MAL-ED, country: BRAZIL
-tmle for:	agecat: 12-15 months, studyid: MAL-ED, country: INDIA
-tmle for:	agecat: 12-15 months, studyid: MAL-ED, country: NEPAL
-tmle for:	agecat: 12-15 months, studyid: MAL-ED, country: PERU
-tmle for:	agecat: 12-15 months, studyid: MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 12-15 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 12-15 months, studyid: TDC, country: INDIA
-tmle for:	agecat: 15-18 months, studyid: CMIN Bangladesh93, country: BANGLADESH
-tmle for:	agecat: 15-18 months, studyid: CMIN Brazil89, country: BRAZIL
-tmle for:	agecat: 15-18 months, studyid: CMIN GB94, country: GUINEA-BISSAU
-tmle for:	agecat: 15-18 months, studyid: CMIN Peru89, country: PERU
-tmle for:	agecat: 15-18 months, studyid: CMIN Peru95, country: PERU
-tmle for:	agecat: 15-18 months, studyid: CONTENT, country: PERU
-tmle for:	agecat: 15-18 months, studyid: MAL-ED, country: BANGLADESH
-tmle for:	agecat: 15-18 months, studyid: MAL-ED, country: BRAZIL
-tmle for:	agecat: 15-18 months, studyid: MAL-ED, country: INDIA
-tmle for:	agecat: 15-18 months, studyid: MAL-ED, country: NEPAL
-tmle for:	agecat: 15-18 months, studyid: MAL-ED, country: PERU
-tmle for:	agecat: 15-18 months, studyid: MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 15-18 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 15-18 months, studyid: TDC, country: INDIA
-tmle for:	agecat: 18-21 months, studyid: CMIN Bangladesh93, country: BANGLADESH
-tmle for:	agecat: 18-21 months, studyid: CMIN Brazil89, country: BRAZIL
-tmle for:	agecat: 18-21 months, studyid: CMIN GB94, country: GUINEA-BISSAU
-tmle for:	agecat: 18-21 months, studyid: CMIN Peru89, country: PERU
-tmle for:	agecat: 18-21 months, studyid: CMIN Peru95, country: PERU
-tmle for:	agecat: 18-21 months, studyid: CONTENT, country: PERU
-tmle for:	agecat: 18-21 months, studyid: MAL-ED, country: BANGLADESH
-tmle for:	agecat: 18-21 months, studyid: MAL-ED, country: BRAZIL
-tmle for:	agecat: 18-21 months, studyid: MAL-ED, country: INDIA
-tmle for:	agecat: 18-21 months, studyid: MAL-ED, country: NEPAL
-tmle for:	agecat: 18-21 months, studyid: MAL-ED, country: PERU
-tmle for:	agecat: 18-21 months, studyid: MAL-ED, country: SOUTH AFRICA
-tmle for:	agecat: 18-21 months, studyid: MAL-ED, country: TANZANIA, UNITED REPUBLIC OF
-tmle for:	agecat: 18-21 months, studyid: TDC, country: INDIA
-tmle for:	agecat: 21-24 months, studyid: CMIN Bangladesh93, country: BANGLADESH
-tmle for:	agecat: 21-24 months, studyid: CMIN GB94, country: GUINEA-BISSAU
-tmle for:	agecat: 21-24 months, studyid: CMIN Peru89, country: PERU
-tmle for:	agecat: 21-24 months, studyid: CMIN Peru95, country: PERU
-tmle for:	agecat: 21-24 months, studyid: CONTENT, country: PERU
-tmle for:	agecat: 21-24 months, studyid: MAL-ED, country: BANGLADESH
-tmle for:	agecat: 21-24 months, studyid: MAL-ED, country: BRAZIL
-tmle for:	agecat: 21-24 months, studyid: MAL-ED, country: INDIA
-tmle for:	agecat: 21-24 months, studyid: MAL-ED, country: NEPAL
-tmle for:	agecat: 21-24 months, studyid: MAL-ED, country: PERU
-
