@@ -6,24 +6,16 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- Zscores_waz<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-Zscores <- readRDS(here("/results/rf results/raw longbow results/results_cont_2020-05-02.RDS"))
-Zscores_diar <- readRDS(here("/results/rf results/raw longbow results/results_cont_diar_2020-06-08.RDS")) 
-Zscores_fhtcm <- readRDS(here("/results/rf results/raw longbow results/results_cont_fhtcm_2020-05-29.RDS"))
-dim(Zscores_diar)
-dim(Zscores_fhtcm)
-dim(Zscores)
-Zscores <- Zscores %>% filter(intervention_variable!="perdiar24" & intervention_variable!="perdiar6" & !(intervention_variable=="fhtcm" & outcome_variable=="haz"))
+Zscores <- readRDS(here("results/rf results/raw longbow results/results_cont_2021-03-18.RDS"))
 dim(Zscores)
 
-Zscores <- bind_rows(Zscores, Zscores_diar, Zscores_fhtcm, Zscores_waz)
-
-bin_primary <- readRDS(here("/results/rf results/raw longbow results/results_bin_primary_2020-05-28.RDS"))
+bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-03-18.RDS"))
 
 
-bin <- readRDS(here("/results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
-bin_sub <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
-bin_sub2 <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-20.rds"))
-bin_sub3 <- readRDS(here("/results/rf results/raw longbow results/results_bin_sub_2020-05-20_part2.rds"))
+bin <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
+bin_sub <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
+bin_sub2 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20.rds"))
+bin_sub3 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20_part2.rds"))
 bin <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
 bin <- bin %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
                                     "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
@@ -38,17 +30,15 @@ bin <- rbind(bin_primary, bin_other)
 
 #Merge in new diarrhea estimates
 bin <- bin %>% filter(intervention_variable!="perdiar24" & intervention_variable!="perdiar6")
-bin_diar <- readRDS(here("/results/rf results/raw longbow results/results_bin_diar_2020-06-08.RDS")) 
+bin_diar <- readRDS(here("results/rf results/raw longbow results/results_bin_diar_2020-06-08.RDS")) 
 bin <- bind_rows(bin, bin_diar)
 
 
-mort <- readRDS(here("/results/rf results/raw longbow results/mortality_2020-05-22.rds"))
+Zscores_unadj <- readRDS(here("results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
 
-Zscores_unadj <- readRDS(here("/results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
+bin_unadj <- readRDS(here("results/rf results/raw longbow results/results_bin_unadj_2020-03-06.rds"))
 
-bin_unadj <- readRDS(here("/results/rf results/raw longbow results/results_bin_unadj_2020-03-06.rds"))
-
-velocity_wlz_quart <- readRDS(here("/results/rf results/raw longbow results/vel_wlz_quart_2020-05-29.rds"))
+velocity_wlz_quart <- readRDS(here("results/rf results/raw longbow results/vel_wlz_quart_2020-05-29.rds"))
 velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
@@ -70,17 +60,13 @@ season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seas
 
 
 d <- bind_rows(Zscores, Zscores_unadj, bin, 
-               bin_unadj, mort, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
+               bin_unadj, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="4"] <- "Post-max rain"
 d$baseline_level[d$intervention_variable=="rain_quartile"] <- "Opposite max rain"
 
-#drop EE gestational age
-dim(d)
-d <- d %>% filter(!(studyid=="EE" & intervention_variable=="gagebrth"))
-dim(d)
 
 
 #Exclude extreme estimates from TMLE sparsity
