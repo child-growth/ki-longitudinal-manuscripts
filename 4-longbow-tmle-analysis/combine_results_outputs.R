@@ -36,11 +36,11 @@ Zscores_unadj <- readRDS(here("results/rf results/raw longbow results/results_co
 
 bin_unadj <- readRDS(here("results/rf results/raw longbow results/results_bin_unadj_2020-03-06.rds"))
 
-velocity_wlz_quart <- readRDS(here("results/rf results/raw longbow results/vel_wlz_quart_2020-05-29.rds"))
+velocity_wlz_quart <- readRDS(here("results/rf results/raw longbow results/vel_wlz_quart_2021-04-04.rds"))
 velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
-stunt_bin_wlz_quart <- readRDS(here("results/rf results/raw longbow results/stunt_bin_wlz_quart_2020-05-29.rds"))
+stunt_bin_wlz_quart <- readRDS(here("results/rf results/raw longbow results/stunt_bin_wlz_quart_2021-04-04.rds"))
 velocity_wlz_quart$agecat <- as.character(stunt_bin_wlz_quart$agecat)
 stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 
