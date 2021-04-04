@@ -6,11 +6,11 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- Zscores_waz<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-Zscores <- readRDS(here("results/rf results/raw longbow results/results_cont_2021-03-18.RDS"))
+Zscores <- readRDS(here("results/rf results/raw longbow results/results_cont_2021-04-02.RDS"))
 dim(Zscores)
 
-bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-03-18.RDS"))
-
+bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-03.RDS"))
+table(bin_primary$intervention_variable, bin_primary$outcome_variable)
 
 bin <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
 bin_sub <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
@@ -23,15 +23,13 @@ bin <- bin %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_la
 dim(bin)
 bin_other <- anti_join(bin, bin_primary, by = c("agecat", "studyid", "country", "strata_label", "intervention_variable",
                                                 "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
+#temp
+bin <- NULL
+
 dim(bin_primary)
 dim(bin_other) 
 nrow(bin_primary) + nrow(bin_other)
 bin <- rbind(bin_primary, bin_other)
-
-#Merge in new diarrhea estimates
-bin <- bin %>% filter(intervention_variable!="perdiar24" & intervention_variable!="perdiar6")
-bin_diar <- readRDS(here("results/rf results/raw longbow results/results_bin_diar_2020-06-08.RDS")) 
-bin <- bind_rows(bin, bin_diar)
 
 
 Zscores_unadj <- readRDS(here("results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
@@ -42,12 +40,18 @@ velocity_wlz_quart <- readRDS(here("results/rf results/raw longbow results/vel_w
 velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
+stunt_bin_wlz_quart <- readRDS(here("results/rf results/raw longbow results/stunt_bin_wlz_quart_2020-05-29.rds"))
+velocity_wlz_quart$agecat <- as.character(stunt_bin_wlz_quart$agecat)
+stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 
-results <- readRDS(here("results/rf results/raw longbow results/results_vel_2020-05-22.RDS"))   
-results_2 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-23.RDS"))   
-results_3 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-26.RDS"))   
-velocity <- bind_rows(results, results_2, results_3)
 
+# results <- readRDS(here("results/rf results/raw longbow results/results_vel_2020-05-22.RDS"))   
+# results_2 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-23.RDS"))   
+# results_3 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-26.RDS"))   
+# velocity <- bind_rows(results, results_2, results_3)
+velocity <- readRDS(here("results/rf results/raw longbow results/results_vel_2021-04-04.RDS"))   
+#NEED to add estimates that previously failed to run
+  
 season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-05-29.rds"))
 
 season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2020-05-29.rds"))
