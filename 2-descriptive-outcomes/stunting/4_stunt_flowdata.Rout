@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -34,7 +34,7 @@ Type 'q()' to quit R.
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
 ✔ ggplot2 3.3.2     ✔ purrr   0.3.4
-✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
 ✔ tidyr   1.1.1     ✔ stringr 1.4.0
 ✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -246,7 +246,6 @@ The following objects are masked from ‘package:base’:
 > d %>% group_by(agecat) %>%
 +   summarise(min = min(agedays)/30.4167,
 +             max = max(agedays)/30.4167)
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 10 x 3
    agecat           min    max
    <fct>          <dbl>  <dbl>
@@ -315,7 +314,7 @@ The following objects are masked from ‘package:base’:
 +   
 +   # recode still stunted at first measurement  
 +   mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
-`summarise()` regrouping output by 'studyid', 'country', 'subjid', 'region' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid', 'region'. You can override using the `.groups` argument.
 > 
 > 
 > # drop measurements with ages over 24 months
@@ -376,7 +375,6 @@ The following objects are masked from ‘package:base’:
 +     not_stunted = mean(not_stunted, na.rm = TRUE),
 +     never_stunted = mean(never_stunted, na.rm = TRUE),
 +     relapse = mean(relapse, na.rm = TRUE))
-`summarise()` ungrouping output (override with `.groups` argument)
 > 
 > summary = summary %>%
 +   mutate(sum = still_stunted + newly_stunted + recover + 
@@ -413,7 +411,7 @@ The following objects are masked from ‘package:base’:
 +     not_stunted = sum(not_stunted),
 +     never_stunted = sum(never_stunted),
 +     relapse = sum(relapse))  
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 > 
 > #--------------------------------------------------
 > # estimate random effects, format results
@@ -424,7 +422,7 @@ The following objects are masked from ‘package:base’:
 +                        label = "Newly stunted",
 +                        method = "REML")
 Warning message:
-`as.tibble()` is deprecated as of tibble 2.0.0.
+`as.tibble()` was deprecated in tibble 2.0.0.
 Please use `as_tibble()` instead.
 The signature and semantics have changed, see `?as_tibble`.
 This warning is displayed once every 8 hours.
@@ -602,4 +600,4 @@ Call `lifecycle::last_warnings()` to see where this warning was generated.
 > 
 > proc.time()
    user  system elapsed 
- 38.292   1.492  39.761 
+ 39.652   0.735  40.361 

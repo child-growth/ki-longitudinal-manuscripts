@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -27,7 +27,7 @@ Type 'q()' to quit R.
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
 ✔ ggplot2 3.3.2     ✔ purrr   0.3.4
-✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
 ✔ tidyr   1.1.1     ✔ stringr 1.4.0
 ✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -224,7 +224,6 @@ The following objects are masked from ‘package:base’:
 > 
 > #Incidence rate - 30 days
 > ir.data <- summary.ir(d30)
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case     ptar cruderate
   <fct>           <dbl>    <dbl>     <dbl>
@@ -233,7 +232,7 @@ The following objects are masked from ‘package:base’:
 3 12-18 months     1203 1278174.  0.000941
 4 18-24 months      856 1124680   0.000761
 5 <NA>              639 1725451   0.000370
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 78 x 7
 # Groups:   studyid, country [20]
    studyid           country    agecat         ptar ncase nchild nstudy
@@ -255,7 +254,6 @@ Warning messages:
 3: Extra argument ('method') disregarded. 
 4: Extra argument ('method') disregarded. 
 > ir.region <- d30 %>% group_by(region) %>% do(summary.ir(.)$ir.res)
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -264,28 +262,27 @@ Warning messages:
 3 12-18 months      566 648245   0.000873
 4 18-24 months      387 550389   0.000703
 5 <NA>              202 548312   0.000368
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 16 x 7
 # Groups:   studyid, country [4]
-   studyid       country                  agecat        ptar ncase nchild nstudy
-   <chr>         <chr>                    <fct>        <dbl> <dbl>  <int>  <int>
- 1 Keneba        GAMBIA                   0-6 months  3.06e5   759   2466      1
- 2 Keneba        GAMBIA                   6-12 months 3.70e5   545   2388      1
- 3 Keneba        GAMBIA                   12-18 mont… 3.44e5   373   2283      1
- 4 Keneba        GAMBIA                   18-24 mont… 4.16e5   339   2206      1
- 5 MAL-ED        SOUTH AFRICA             0-6 months  3.87e4    39    312      1
- 6 MAL-ED        SOUTH AFRICA             6-12 months 4.57e4    27    259      1
- 7 MAL-ED        SOUTH AFRICA             12-18 mont… 4.37e4    19    253      1
- 8 MAL-ED        SOUTH AFRICA             18-24 mont… 4.37e4    12    242      1
- 9 MAL-ED        TANZANIA, UNITED REPUBL… 0-6 months  3.83e4    14    261      1
-10 MAL-ED        TANZANIA, UNITED REPUBL… 6-12 months 4.38e4    19    245      1
-11 MAL-ED        TANZANIA, UNITED REPUBL… 12-18 mont… 4.00e4    12    233      1
-12 MAL-ED        TANZANIA, UNITED REPUBL… 18-24 mont… 4.07e4    11    228      1
-13 TanzaniaChil… TANZANIA, UNITED REPUBL… 0-6 months  3.22e5   356   2396      1
-14 TanzaniaChil… TANZANIA, UNITED REPUBL… 6-12 months 2.97e5   236   1996      1
-15 TanzaniaChil… TANZANIA, UNITED REPUBL… 12-18 mont… 2.20e5   162   1455      1
-16 TanzaniaChil… TANZANIA, UNITED REPUBL… 18-24 mont… 5.00e4    25    960      1
-`summarise()` ungrouping output (override with `.groups` argument)
+   studyid        country      agecat          ptar ncase nchild nstudy
+   <chr>          <chr>        <fct>          <dbl> <dbl>  <int>  <int>
+ 1 Keneba         GAMBIA       0-6 months   305675    759   2466      1
+ 2 Keneba         GAMBIA       6-12 months  370493    545   2388      1
+ 3 Keneba         GAMBIA       12-18 months 344342.   373   2283      1
+ 4 Keneba         GAMBIA       18-24 months 416050.   339   2206      1
+ 5 MAL-ED         SOUTH AFRICA 0-6 months    38688.    39    312      1
+ 6 MAL-ED         SOUTH AFRICA 6-12 months   45745     27    259      1
+ 7 MAL-ED         SOUTH AFRICA 12-18 months  43749     19    253      1
+ 8 MAL-ED         SOUTH AFRICA 18-24 months  43688.    12    242      1
+ 9 MAL-ED         TANZANIA     0-6 months    38262.    14    261      1
+10 MAL-ED         TANZANIA     6-12 months   43782.    19    245      1
+11 MAL-ED         TANZANIA     12-18 months  40048.    12    233      1
+12 MAL-ED         TANZANIA     18-24 months  40677     11    228      1
+13 TanzaniaChild2 TANZANIA     0-6 months   322024.   356   2396      1
+14 TanzaniaChild2 TANZANIA     6-12 months  296664.   236   1996      1
+15 TanzaniaChild2 TANZANIA     12-18 months 220105    162   1455      1
+16 TanzaniaChild2 TANZANIA     18-24 months  49974     25    960      1
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -294,7 +291,7 @@ Warning messages:
 3 12-18 months      614 451892.  0.00136 
 4 18-24 months      454 432024   0.00105 
 5 <NA>              426 903552.  0.000471
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 39 x 7
 # Groups:   studyid, country [10]
    studyid           country    agecat         ptar ncase nchild nstudy
@@ -310,7 +307,6 @@ Warning messages:
  9 EE                PAKISTAN   0-6 months   50660.   136    380      1
 10 EE                PAKISTAN   6-12 months  59166.    69    374      1
 # … with 29 more rows
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -319,7 +315,7 @@ Warning messages:
 3 12-18 months       23 178037  0.000129 
 4 18-24 months       15 142267  0.000105 
 5 <NA>               11 273586. 0.0000402
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 23 x 7
 # Groups:   studyid, country [6]
    studyid     country agecat         ptar ncase nchild nstudy
@@ -349,7 +345,6 @@ There were 12 warnings (use warnings() to see them)
 > 
 > #Incidence rate - 60 days
 > ir.data <- summary.ir(d)
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case     ptar cruderate
   <fct>           <dbl>    <dbl>     <dbl>
@@ -358,7 +353,7 @@ There were 12 warnings (use warnings() to see them)
 3 12-18 months      987 1223366.  0.000807
 4 18-24 months      710 1081632.  0.000656
 5 <NA>              548 1702955   0.000322
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 78 x 7
 # Groups:   studyid, country [20]
    studyid           country    agecat         ptar ncase nchild nstudy
@@ -380,7 +375,6 @@ Warning messages:
 3: Extra argument ('method') disregarded. 
 4: Extra argument ('method') disregarded. 
 > ir.region <- d %>% group_by(region) %>% do(summary.ir(.)$ir.res)
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case   ptar cruderate
   <fct>           <dbl>  <dbl>     <dbl>
@@ -389,28 +383,27 @@ Warning messages:
 3 12-18 months      485 622889  0.000779
 4 18-24 months      342 533542  0.000641
 5 <NA>              180 542801  0.000332
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 16 x 7
 # Groups:   studyid, country [4]
-   studyid       country                  agecat        ptar ncase nchild nstudy
-   <chr>         <chr>                    <fct>        <dbl> <dbl>  <int>  <int>
- 1 Keneba        GAMBIA                   0-6 months  2.86e5   724   2466      1
- 2 Keneba        GAMBIA                   6-12 months 3.56e5   489   2388      1
- 3 Keneba        GAMBIA                   12-18 mont… 3.28e5   317   2283      1
- 4 Keneba        GAMBIA                   18-24 mont… 4.02e5   298   2206      1
- 5 MAL-ED        SOUTH AFRICA             0-6 months  3.79e4    36    312      1
- 6 MAL-ED        SOUTH AFRICA             6-12 months 4.49e4    23    259      1
- 7 MAL-ED        SOUTH AFRICA             12-18 mont… 4.25e4    18    253      1
- 8 MAL-ED        SOUTH AFRICA             18-24 mont… 4.28e4    10    242      1
- 9 MAL-ED        TANZANIA, UNITED REPUBL… 0-6 months  3.80e4    14    261      1
-10 MAL-ED        TANZANIA, UNITED REPUBL… 6-12 months 4.32e4    16    245      1
-11 MAL-ED        TANZANIA, UNITED REPUBL… 12-18 mont… 3.91e4    11    233      1
-12 MAL-ED        TANZANIA, UNITED REPUBL… 18-24 mont… 4.02e4    10    228      1
-13 TanzaniaChil… TANZANIA, UNITED REPUBL… 0-6 months  3.13e5   340   2396      1
-14 TanzaniaChil… TANZANIA, UNITED REPUBL… 6-12 months 2.88e5   210   1996      1
-15 TanzaniaChil… TANZANIA, UNITED REPUBL… 12-18 mont… 2.13e5   139   1455      1
-16 TanzaniaChil… TANZANIA, UNITED REPUBL… 18-24 mont… 4.85e4    24    960      1
-`summarise()` ungrouping output (override with `.groups` argument)
+   studyid        country      agecat          ptar ncase nchild nstudy
+   <chr>          <chr>        <fct>          <dbl> <dbl>  <int>  <int>
+ 1 Keneba         GAMBIA       0-6 months   285788.   724   2466      1
+ 2 Keneba         GAMBIA       6-12 months  356000.   489   2388      1
+ 3 Keneba         GAMBIA       12-18 months 328275    317   2283      1
+ 4 Keneba         GAMBIA       18-24 months 402040    298   2206      1
+ 5 MAL-ED         SOUTH AFRICA 0-6 months    37930     36    312      1
+ 6 MAL-ED         SOUTH AFRICA 6-12 months   44895     23    259      1
+ 7 MAL-ED         SOUTH AFRICA 12-18 months  42525     18    253      1
+ 8 MAL-ED         SOUTH AFRICA 18-24 months  42836.    10    242      1
+ 9 MAL-ED         TANZANIA     0-6 months    37988     14    261      1
+10 MAL-ED         TANZANIA     6-12 months   43160     16    245      1
+11 MAL-ED         TANZANIA     12-18 months  39144.    11    233      1
+12 MAL-ED         TANZANIA     18-24 months  40216.    10    228      1
+13 TanzaniaChild2 TANZANIA     0-6 months   312924.   340   2396      1
+14 TanzaniaChild2 TANZANIA     6-12 months  288492.   210   1996      1
+15 TanzaniaChild2 TANZANIA     12-18 months 212946.   139   1455      1
+16 TanzaniaChild2 TANZANIA     18-24 months  48451     24    960      1
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -419,7 +412,7 @@ Warning messages:
 3 12-18 months      480 423556.  0.00113 
 4 18-24 months      353 406512.  0.000868
 5 <NA>              358 886815   0.000404
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 39 x 7
 # Groups:   studyid, country [10]
    studyid           country    agecat         ptar ncase nchild nstudy
@@ -435,7 +428,6 @@ Warning messages:
  9 EE                PAKISTAN   0-6 months   47991    127    380      1
 10 EE                PAKISTAN   6-12 months  55494.    62    374      1
 # … with 29 more rows
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -444,7 +436,7 @@ Warning messages:
 3 12-18 months       22 176921  0.000124 
 4 18-24 months       15 141577  0.000106 
 5 <NA>               10 273339  0.0000366
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 23 x 7
 # Groups:   studyid, country [6]
    studyid     country agecat         ptar ncase nchild nstudy
@@ -474,7 +466,6 @@ There were 12 warnings (use warnings() to see them)
 > 
 > #Incidence rate - 90 days
 > ir.data <- summary.ir(d90)
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case     ptar cruderate
   <fct>           <dbl>    <dbl>     <dbl>
@@ -483,7 +474,7 @@ There were 12 warnings (use warnings() to see them)
 3 12-18 months      874 1188997   0.000735
 4 18-24 months      613 1055910.  0.000581
 5 <NA>              493 1689890.  0.000292
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 78 x 7
 # Groups:   studyid, country [20]
    studyid           country    agecat         ptar ncase nchild nstudy
@@ -505,7 +496,6 @@ Warning messages:
 3: Extra argument ('method') disregarded. 
 4: Extra argument ('method') disregarded. 
 > ir.region <- d90 %>% group_by(region) %>% do(summary.ir(.)$ir.res)
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -514,28 +504,27 @@ Warning messages:
 3 12-18 months      441 602666.  0.000732
 4 18-24 months      314 521274   0.000602
 5 <NA>              171 538983   0.000317
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 16 x 7
 # Groups:   studyid, country [4]
-   studyid       country                  agecat        ptar ncase nchild nstudy
-   <chr>         <chr>                    <fct>        <dbl> <dbl>  <int>  <int>
- 1 Keneba        GAMBIA                   0-6 months  2.73e5   697   2466      1
- 2 Keneba        GAMBIA                   6-12 months 3.48e5   459   2388      1
- 3 Keneba        GAMBIA                   12-18 mont… 3.13e5   291   2283      1
- 4 Keneba        GAMBIA                   18-24 mont… 3.92e5   274   2206      1
- 5 MAL-ED        SOUTH AFRICA             0-6 months  3.73e4    35    312      1
- 6 MAL-ED        SOUTH AFRICA             6-12 months 4.46e4    22    259      1
- 7 MAL-ED        SOUTH AFRICA             12-18 mont… 4.17e4    13    253      1
- 8 MAL-ED        SOUTH AFRICA             18-24 mont… 4.24e4     9    242      1
- 9 MAL-ED        TANZANIA, UNITED REPUBL… 0-6 months  3.78e4    13    261      1
-10 MAL-ED        TANZANIA, UNITED REPUBL… 6-12 months 4.28e4    14    245      1
-11 MAL-ED        TANZANIA, UNITED REPUBL… 12-18 mont… 3.88e4    11    233      1
-12 MAL-ED        TANZANIA, UNITED REPUBL… 18-24 mont… 4.00e4     9    228      1
-13 TanzaniaChil… TANZANIA, UNITED REPUBL… 0-6 months  3.10e5   337   2396      1
-14 TanzaniaChil… TANZANIA, UNITED REPUBL… 6-12 months 2.83e5   192   1996      1
-15 TanzaniaChil… TANZANIA, UNITED REPUBL… 12-18 mont… 2.09e5   126   1455      1
-16 TanzaniaChil… TANZANIA, UNITED REPUBL… 18-24 mont… 4.72e4    22    960      1
-`summarise()` ungrouping output (override with `.groups` argument)
+   studyid        country      agecat          ptar ncase nchild nstudy
+   <chr>          <chr>        <fct>          <dbl> <dbl>  <int>  <int>
+ 1 Keneba         GAMBIA       0-6 months   273060    697   2466      1
+ 2 Keneba         GAMBIA       6-12 months  348300    459   2388      1
+ 3 Keneba         GAMBIA       12-18 months 313466    291   2283      1
+ 4 Keneba         GAMBIA       18-24 months 391593    274   2206      1
+ 5 MAL-ED         SOUTH AFRICA 0-6 months    37338.    35    312      1
+ 6 MAL-ED         SOUTH AFRICA 6-12 months   44556     22    259      1
+ 7 MAL-ED         SOUTH AFRICA 12-18 months  41742     13    253      1
+ 8 MAL-ED         SOUTH AFRICA 18-24 months  42441      9    242      1
+ 9 MAL-ED         TANZANIA     0-6 months    37775     13    261      1
+10 MAL-ED         TANZANIA     6-12 months   42827     14    245      1
+11 MAL-ED         TANZANIA     12-18 months  38777     11    233      1
+12 MAL-ED         TANZANIA     18-24 months  39996.     9    228      1
+13 TanzaniaChild2 TANZANIA     0-6 months   309964.   337   2396      1
+14 TanzaniaChild2 TANZANIA     6-12 months  283081    192   1996      1
+15 TanzaniaChild2 TANZANIA     12-18 months 208680.   126   1455      1
+16 TanzaniaChild2 TANZANIA     18-24 months  47244.    22    960      1
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -544,7 +533,7 @@ Warning messages:
 3 12-18 months      412 409844.  0.00101 
 4 18-24 months      289 393477   0.000734
 5 <NA>              313 877760   0.000357
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 39 x 7
 # Groups:   studyid, country [10]
    studyid           country    agecat         ptar ncase nchild nstudy
@@ -560,7 +549,6 @@ Warning messages:
  9 EE                PAKISTAN   0-6 months   46582    126    380      1
 10 EE                PAKISTAN   6-12 months  53815     52    374      1
 # … with 29 more rows
-`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -569,7 +557,7 @@ Warning messages:
 3 12-18 months       21 176487  0.000119 
 4 18-24 months       10 141160. 0.0000708
 5 <NA>                9 273146. 0.0000329
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 # A tibble: 23 x 7
 # Groups:   studyid, country [6]
    studyid     country agecat         ptar ncase nchild nstudy
@@ -627,4 +615,4 @@ There were 12 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
- 42.725   1.584  44.301 
+ 43.240   1.472  44.688 

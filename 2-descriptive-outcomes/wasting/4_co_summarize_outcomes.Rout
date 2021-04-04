@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -28,7 +28,7 @@ Type 'q()' to quit R.
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
 ✔ ggplot2 3.3.2     ✔ purrr   0.3.4
-✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
 ✔ tidyr   1.1.1     ✔ stringr 1.4.0
 ✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -248,8 +248,8 @@ The following objects are masked from ‘package:base’:
 > #Prevalence
 > d <- calc.prev.agecat(d)
 > prev.data <- summary.prev.co(d)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -260,44 +260,44 @@ Warning messages:
 7: Extra argument ('method') disregarded. 
 8: Extra argument ('method') disregarded. 
 9: Extra argument ('method') disregarded. 
-10: `as.tibble()` is deprecated as of tibble 2.0.0.
+10: `as.tibble()` was deprecated in tibble 2.0.0.
 Please use `as_tibble()` instead.
 The signature and semantics have changed, see `?as_tibble`.
 This warning is displayed once every 8 hours.
 Call `lifecycle::last_warnings()` to see where this warning was generated. 
 > prev.region <- d %>% group_by(region) %>% do(summary.prev.co(.)$prev.res)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
   Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 In addition: There were 27 warnings (use warnings() to see them)
 Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
   Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 > prev.country <- d %>% group_by(country) %>% do(summary.prev.co(.)$prev.res) %>% mutate(region=country)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > prev.cohort <-
@@ -313,8 +313,8 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > #Severe wasting and stunting prevalence
 > sev.prev.data <- summary.prev.co(d, severe = T)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
   Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 In addition: Warning messages:
@@ -335,15 +335,15 @@ Error in rma(data = data, ni = data[[ni]], method = "ML", xi = data[[xi]],  :
   Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 > sev.prev.region <-
 +   d %>% group_by(region) %>% do(summary.prev.co(., severe = T)$prev.res)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  : 
   Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 In addition: There were 18 warnings (use warnings() to see them)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -355,26 +355,26 @@ Warning messages:
 8: Extra argument ('method') disregarded. 
 9: Extra argument ('method') disregarded. 
 > sev.prev.country <- d %>% group_by(country) %>% do(summary.prev.co(., severe = T)$prev.res) %>% mutate(region=country)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > sev.prev.cohort <-
@@ -396,8 +396,8 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > df <- calc.prev.agecat(df)
 > prev.data <-  summary.prev.whz(df)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -409,34 +409,34 @@ Warning messages:
 8: Extra argument ('method') disregarded. 
 9: Extra argument ('method') disregarded. 
 > prev.region <- df %>% group_by(region) %>% do(summary.prev.whz(.)$prev.res)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 27 warnings (use warnings() to see them)
 > prev.country <- df %>% group_by(country) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(region=country)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > prev.cohort <-
 +   prev.data$prev.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
@@ -453,8 +453,8 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > #mean waz
 > waz.data <- summary.waz(df)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -466,34 +466,34 @@ Warning messages:
 8: Extra argument ('method') disregarded. 
 9: Extra argument ('method') disregarded. 
 > waz.region <- d %>% group_by(region) %>% do(summary.waz(.)$waz.res)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 27 warnings (use warnings() to see them)
 > waz.country <- d %>% group_by(country) %>% do(summary.waz(.)$waz.res) %>% mutate(region=country)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > waz.cohort <-
@@ -511,38 +511,38 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > #monthly mean waz
 > df <- calc.monthly.agecat(df)
 > monthly.data <- summary.waz(df)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 25 warnings (use warnings() to see them)
 > monthly.region <- df %>% group_by(region) %>% do(summary.waz(.)$waz.res)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > monthly.country <- df %>% group_by(country) %>% do(summary.waz(.)$waz.res) %>% mutate(region=country)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > monthly.cohort <-
@@ -562,26 +562,26 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > #Prevalence of wasting based on MUAC
 > d <- calc.prev.agecat(d)
 > m.prev.data <- summary.prev.muaz(d)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 16 warnings (use warnings() to see them)
 > m.prev.region <- d %>% group_by(region) %>% do(summary.prev.muaz(.)$m.prev.res)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > m.prev.country <- d %>% filter(!is.na(muaz)) %>% group_by(country) %>% do(summary.prev.muaz(.)$m.prev.res) %>% mutate(region=country)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > m.prev.cohort <-
@@ -597,22 +597,22 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > #make wasting comparison in same subset
 > prev.region <- d %>% group_by(region) %>% do(summary.prev.muaz(.)$prev.res)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > prev.country <- d %>% filter(!is.na(muaz)) %>% group_by(country) %>% do(summary.prev.muaz(.)$prev.res) %>% mutate(region=country)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country', 'subjid' (override with `.groups` argument)
-`summarise()` regrouping output by 'studyid', 'country' (override with `.groups` argument)
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 There were 50 or more warnings (use warnings() to see the first 50)
 > prev.cohort <-
 +   m.prev.data$prev.cohort %>% subset(., select = c(cohort, region, country, agecat, nmeas,  prev,  ci.lb,  ci.ub)) %>%
@@ -682,4 +682,4 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > proc.time()
    user  system elapsed 
-152.977   1.403 154.363 
+155.034   1.219 156.228 

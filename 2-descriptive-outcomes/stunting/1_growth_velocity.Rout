@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -29,7 +29,7 @@ Type 'q()' to quit R.
 > source(paste0(here::here(), "/0-config.R"))
 ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
 ✔ ggplot2 3.3.2     ✔ purrr   0.3.4
-✔ tibble  3.0.3     ✔ dplyr   1.0.1
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
 ✔ tidyr   1.1.1     ✔ stringr 1.4.0
 ✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -242,52 +242,52 @@ Female   Male
 > table(d$studyid, is.na(d$W_birthlen))
                    
                      FALSE   TRUE
-  CMC-V-BCS-2002      4810  11706
-  CMIN Bangladesh93      0   5457
-  CMIN Brazil89          0    889
-  CMIN GB94              0   8522
-  CMIN Peru89            0   2775
-  CMIN Peru95            0   5038
-  CONTENT                0   8339
+  CMC-V-BCS-2002      4858  11658
+  CMIN Bangladesh93     13   5444
+  CMIN Brazil89        861     28
+  CMIN GB94             72   8450
+  CMIN Peru89           66   2709
+  CMIN Peru95          248   4790
+  CONTENT               86   8253
   EE                     0   9043
-  GMS-Nepal              0  14163
+  GMS-Nepal           2898  11265
   Guatemala BSC          0   2551
   iLiNS-Zinc             0  10552
   IRC                14170    672
-  JiVitA-3           96070  27187
+  JiVitA-3          102700  20557
   JiVitA-4           33978   5836
-  Keneba             27370  16350
+  Keneba             27409  16311
   LCNI-5                 0   5923
   MAL-ED              1309  46653
   PROBIT            175496      0
-  ResPak                 0   3177
+  ResPak               452   2725
   SAS-CompFeed        9460     81
   SAS-FoodSuppl          0   2247
   TanzaniaChild2         0  32326
-  TDC                  493   3279
+  TDC                  518   3254
   ZVITAMBO           74929    895
 > table(d$studyid, is.na(d$W_birthwt))
                    
                      FALSE   TRUE
   CMC-V-BCS-2002     16167    349
-  CMIN Bangladesh93      0   5457
-  CMIN Brazil89          0    889
-  CMIN GB94              0   8522
-  CMIN Peru89            0   2775
-  CMIN Peru95            0   5038
-  CONTENT                0   8339
+  CMIN Bangladesh93     14   5443
+  CMIN Brazil89        861     28
+  CMIN GB94             72   8450
+  CMIN Peru89           66   2709
+  CMIN Peru95          248   4790
+  CONTENT               86   8253
   EE                  9025     18
-  GMS-Nepal              0  14163
+  GMS-Nepal           2898  11265
   Guatemala BSC          0   2551
   iLiNS-Zinc             0  10552
   IRC                14629    213
-  JiVitA-3           97754  25503
+  JiVitA-3          104463  18794
   JiVitA-4           34181   5633
-  Keneba                 0  43720
+  Keneba             35797   7923
   LCNI-5                 0   5923
-  MAL-ED             43805   4157
+  MAL-ED             44189   3773
   PROBIT            175496      0
-  ResPak                 0   3177
+  ResPak               452   2725
   SAS-CompFeed        9483     58
   SAS-FoodSuppl          0   2247
   TanzaniaChild2     32033    293
@@ -296,31 +296,93 @@ Female   Male
 > dblenwt <- d[,list(W_birthwt=first(W_birthwt), W_birthlen=first(W_birthlen), sex=first(sex)), by = list(studyid, country, subjid)]
 > dblenwt <- dblenwt[!(is.na(W_birthwt) & is.na(W_birthlen)), ]
 > dblenwt[is.na(W_birthlen), ]
-       studyid    country subjid W_birthwt W_birthlen    sex
-   1: JiVitA-3 BANGLADESH  10019      2120         NA   Male
-   2: JiVitA-3 BANGLADESH  10099      1520         NA   Male
-   3: JiVitA-3 BANGLADESH  10181      2710         NA   Male
-   4: JiVitA-3 BANGLADESH  10301      1660         NA Female
-   5: JiVitA-3 BANGLADESH  10335      2980         NA   Male
-  ---                                                       
-5401: ZVITAMBO   ZIMBABWE 229741      2880         NA Female
-5402: ZVITAMBO   ZIMBABWE 240211      3360         NA   Male
-5403: ZVITAMBO   ZIMBABWE 240481      2760         NA Female
-5404: ZVITAMBO   ZIMBABWE 240501      3000         NA Female
-5405: ZVITAMBO   ZIMBABWE 240811      3340         NA   Male
+                studyid    country subjid W_birthwt W_birthlen    sex
+   1: CMIN Bangladesh93 BANGLADESH 130039  2698.791         NA Female
+   2:          JiVitA-3 BANGLADESH  10019  2120.000         NA   Male
+   3:          JiVitA-3 BANGLADESH  10099  1520.000         NA   Male
+   4:          JiVitA-3 BANGLADESH  10181  2710.000         NA   Male
+   5:          JiVitA-3 BANGLADESH  10301  1660.000         NA Female
+  ---                                                                
+6019:          ZVITAMBO   ZIMBABWE 229741  2880.000         NA Female
+6020:          ZVITAMBO   ZIMBABWE 240211  3360.000         NA   Male
+6021:          ZVITAMBO   ZIMBABWE 240481  2760.000         NA Female
+6022:          ZVITAMBO   ZIMBABWE 240501  3000.000         NA Female
+6023:          ZVITAMBO   ZIMBABWE 240811  3340.000         NA   Male
 > dblenwt[is.na(W_birthwt), ]
-       studyid    country subjid W_birthwt W_birthlen    sex
-   1: JiVitA-3 BANGLADESH  20357        NA       44.4 Female
-   2: JiVitA-4 BANGLADESH   2131        NA       67.9   Male
-   3: JiVitA-4 BANGLADESH    228        NA       62.0   Male
-   4: JiVitA-4 BANGLADESH   2703        NA       62.7   Male
-   5: JiVitA-4 BANGLADESH    317        NA       64.3   Male
-  ---                                                       
-1604: ZVITAMBO   ZIMBABWE 226981        NA       49.4 Female
-1605: ZVITAMBO   ZIMBABWE 230231        NA       51.0 Female
-1606: ZVITAMBO   ZIMBABWE 236451        NA       49.0   Male
-1607: ZVITAMBO   ZIMBABWE 237251        NA       46.5 Female
-1608: ZVITAMBO   ZIMBABWE 237621        NA       46.2   Male
+     studyid    country     subjid W_birthwt W_birthlen    sex
+ 1: JiVitA-3 BANGLADESH      20357        NA  44.400000 Female
+ 2: JiVitA-4 BANGLADESH       2131        NA  67.900000   Male
+ 3: JiVitA-4 BANGLADESH        228        NA  62.000000   Male
+ 4: JiVitA-4 BANGLADESH       2703        NA  62.700000   Male
+ 5: JiVitA-4 BANGLADESH        317        NA  64.300000   Male
+ 6: JiVitA-4 BANGLADESH       5114        NA  63.500000   Male
+ 7:   Keneba     GAMBIA       1809        NA  50.000000   Male
+ 8:   Keneba     GAMBIA       1863        NA  52.000000   Male
+ 9:   Keneba     GAMBIA       1902        NA  54.400000   Male
+10:   Keneba     GAMBIA       1903        NA  51.000000   Male
+11:   Keneba     GAMBIA       1912        NA  50.000000 Female
+12:   Keneba     GAMBIA       1980        NA  48.000000 Female
+13:   Keneba     GAMBIA       1984        NA  48.000000   Male
+14:   Keneba     GAMBIA       2500        NA  53.500000   Male
+15:   Keneba     GAMBIA       2506        NA  53.000000   Male
+16:   Keneba     GAMBIA       2511        NA  54.000000   Male
+17:   Keneba     GAMBIA       2585        NA  49.000000 Female
+18:   Keneba     GAMBIA       2587        NA  46.700000 Female
+19:   Keneba     GAMBIA        359        NA  46.500000 Female
+20:   Keneba     GAMBIA        728        NA  49.000000 Female
+21:      IRC      INDIA        206        NA  51.000000   Male
+22:      IRC      INDIA        301        NA  55.100000 Female
+23:      IRC      INDIA        395        NA  47.000000 Female
+24:      IRC      INDIA        408        NA  48.000000   Male
+25:      IRC      INDIA         74        NA  45.000000   Male
+26:      TDC      INDIA 1380070104        NA   9.993792 Female
+27: ZVITAMBO   ZIMBABWE     100021        NA  52.000000   Male
+28: ZVITAMBO   ZIMBABWE     101791        NA  50.000000   Male
+29: ZVITAMBO   ZIMBABWE     104431        NA  43.000000 Female
+30: ZVITAMBO   ZIMBABWE     105111        NA  47.000000   Male
+31: ZVITAMBO   ZIMBABWE     105301        NA  47.500000 Female
+32: ZVITAMBO   ZIMBABWE     105741        NA  47.300000 Female
+33: ZVITAMBO   ZIMBABWE     106911        NA  46.200000   Male
+34: ZVITAMBO   ZIMBABWE     113691        NA  49.200000   Male
+35: ZVITAMBO   ZIMBABWE     116231        NA  49.000000 Female
+36: ZVITAMBO   ZIMBABWE     131221        NA  48.500000   Male
+37: ZVITAMBO   ZIMBABWE     134401        NA  50.000000   Male
+38: ZVITAMBO   ZIMBABWE     136851        NA  51.000000   Male
+39: ZVITAMBO   ZIMBABWE     138411        NA  51.000000   Male
+40: ZVITAMBO   ZIMBABWE     150141        NA  47.000000   Male
+41: ZVITAMBO   ZIMBABWE     151341        NA  49.100000 Female
+42: ZVITAMBO   ZIMBABWE     152931        NA  44.500000 Female
+43: ZVITAMBO   ZIMBABWE     154581        NA  59.000000   Male
+44: ZVITAMBO   ZIMBABWE     156481        NA  50.000000 Female
+45: ZVITAMBO   ZIMBABWE     157121        NA  48.200000 Female
+46: ZVITAMBO   ZIMBABWE     157181        NA  50.200000   Male
+47: ZVITAMBO   ZIMBABWE     163701        NA  46.000000 Female
+48: ZVITAMBO   ZIMBABWE     164221        NA  48.900000   Male
+49: ZVITAMBO   ZIMBABWE     164661        NA  46.200000 Female
+50: ZVITAMBO   ZIMBABWE     164851        NA  50.000000   Male
+51: ZVITAMBO   ZIMBABWE     165921        NA  48.400000   Male
+52: ZVITAMBO   ZIMBABWE     181351        NA  50.000000 Female
+53: ZVITAMBO   ZIMBABWE     187891        NA  50.000000   Male
+54: ZVITAMBO   ZIMBABWE     195441        NA  49.000000   Male
+55: ZVITAMBO   ZIMBABWE     199931        NA  49.000000   Male
+56: ZVITAMBO   ZIMBABWE     200741        NA  50.000000   Male
+57: ZVITAMBO   ZIMBABWE     207401        NA  49.200000 Female
+58: ZVITAMBO   ZIMBABWE     207771        NA  50.000000   Male
+59: ZVITAMBO   ZIMBABWE     210321        NA  50.000000   Male
+60: ZVITAMBO   ZIMBABWE     212401        NA  49.900000 Female
+61: ZVITAMBO   ZIMBABWE     215931        NA  55.000000   Male
+62: ZVITAMBO   ZIMBABWE     217261        NA  51.000000   Male
+63: ZVITAMBO   ZIMBABWE     217971        NA  50.000000 Female
+64: ZVITAMBO   ZIMBABWE     218791        NA  47.900000   Male
+65: ZVITAMBO   ZIMBABWE     221291        NA  47.700000   Male
+66: ZVITAMBO   ZIMBABWE     222101        NA  48.100000   Male
+67: ZVITAMBO   ZIMBABWE     224071        NA  34.200000 Female
+68: ZVITAMBO   ZIMBABWE     226981        NA  49.400000 Female
+69: ZVITAMBO   ZIMBABWE     230231        NA  51.000000 Female
+70: ZVITAMBO   ZIMBABWE     236451        NA  49.000000   Male
+71: ZVITAMBO   ZIMBABWE     237251        NA  46.500000 Female
+72: ZVITAMBO   ZIMBABWE     237621        NA  46.200000   Male
+     studyid    country     subjid W_birthwt W_birthlen    sex
 > dblenwt[, agedays := 0]
 > dblenwt[, waz := round(who_wtkg2zscore(agedays, W_birthwt/1000, sex = sex),2)]
 > dblenwt[, haz := round(who_htcm2zscore(agedays, W_birthlen, sex = sex),2)]
@@ -413,19 +475,19 @@ Female   Male
 12:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
 13:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
     hhwealth_quart    id W_gagebrth W_birthwt W_birthlen W_mage W_mhtcm W_mwtkg
- 1:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
- 2:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
- 3:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
- 4:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
- 5:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
- 6:      Wealth Q1 22603        268      2710       48.2     21     145    37.3
- 7:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
- 8:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
- 9:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
-10:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
-11:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
-12:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
-13:      Wealth Q2 17280         NA      2710       46.6     NA      NA      NA
+ 1:       WealthQ1 22598        268      2710       48.2     21     145    37.3
+ 2:       WealthQ1 22598        268      2710       48.2     21     145    37.3
+ 3:       WealthQ1 22598        268      2710       48.2     21     145    37.3
+ 4:       WealthQ1 22598        268      2710       48.2     21     145    37.3
+ 5:       WealthQ1 22598        268      2710       48.2     21     145    37.3
+ 6:       WealthQ1 22598        268      2710       48.2     21     145    37.3
+ 7:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
+ 8:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
+ 9:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
+10:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
+11:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
+12:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
+13:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
       W_mbmi W_fage W_fhtcm W_meducyrs W_feducyrs W_nrooms W_nhh W_nchldlt5
  1: 17.74078     NA      NA          7          2        2    NA          1
  2: 17.74078     NA      NA          7          2        2    NA          1
@@ -547,9 +609,9 @@ Female   Male
 (t1 - t2) in months:  0 - 3 
 y outcome:  haz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  65382 
+No. of subjects with y avail in window of t1:  65387 
 No. of subjects with y avail in window of t2:  58756 
-No. of subjects with both y avail (t1,t2):  51294 
+No. of subjects with both y avail (t1,t2):  51296 
 (t1 - t2) in months:  3 - 6 
 y outcome:  haz 
 tgap value:  14 
@@ -595,7 +657,7 @@ No. of subjects with both y avail (t1,t2):  6091
 (t1 - t2) in months:  0 - 3 
 y outcome:  waz 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  69743 
+No. of subjects with y avail in window of t1:  69744 
 No. of subjects with y avail in window of t2:  58957 
 No. of subjects with both y avail (t1,t2):  54860 
 (t1 - t2) in months:  3 - 6 
@@ -643,9 +705,9 @@ No. of subjects with both y avail (t1,t2):  5212
 (t1 - t2) in months:  0 - 3 
 y outcome:  lencm 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  65382 
+No. of subjects with y avail in window of t1:  65387 
 No. of subjects with y avail in window of t2:  58756 
-No. of subjects with both y avail (t1,t2):  51294 
+No. of subjects with both y avail (t1,t2):  51296 
 (t1 - t2) in months:  3 - 6 
 y outcome:  lencm 
 tgap value:  14 
@@ -691,7 +753,7 @@ No. of subjects with both y avail (t1,t2):  6091
 (t1 - t2) in months:  0 - 3 
 y outcome:  wtkg 
 tgap value:  14 
-No. of subjects with y avail in window of t1:  69743 
+No. of subjects with y avail in window of t1:  69744 
 No. of subjects with y avail in window of t2:  58957 
 No. of subjects with both y avail (t1,t2):  54860 
 (t1 - t2) in months:  3 - 6 
@@ -757,16 +819,16 @@ No. of subjects with both y avail (t1,t2):  5212
 > df <- df %>% filter(agedays!=0) %>% subset(., select = c("studyid","subjid","tr")) %>% group_by(studyid, subjid) %>% slice(1)
 > 
 > dim(dd_sub)
-[1] 795482     14
+[1] 795486     14
 > dd_sub <- left_join(dd_sub, df, by=c("studyid","subjid"))
 > dim(dd_sub)
-[1] 795482     15
+[1] 795486     15
 > dd_sub$tr[is.na(dd_sub$tr)]<-""
 > 
 > 
 > 
 > dim(dd_sub)
-[1] 795482     15
+[1] 795486     15
 > dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-4" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="PROBIT" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="iLiNS-Zinc" & dd_sub$tr!="Control"),]
@@ -774,11 +836,11 @@ No. of subjects with both y avail (t1,t2):  5212
 > dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-3" & dd_sub$tr!="Control"),]
 > dd_sub=dd_sub[!(dd_sub$studyid=="COHORTS" & dd_sub$tr=="Other"),]
 > dim(dd_sub)
-[1] 530148     15
+[1] 530150     15
 > 
 > saveRDS(dd_sub, file=paste0(ghapdata_dir,"velocity_longfmt.rds"))
 > 
 > 
 > proc.time()
    user  system elapsed 
-201.552   4.797 183.512 
+207.191   5.547 177.753 
