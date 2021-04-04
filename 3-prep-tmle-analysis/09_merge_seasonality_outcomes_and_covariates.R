@@ -35,20 +35,20 @@ d$studyid <- gsub("^k.*?-" , "", d$studyid)
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
 
 
-#Transform rain dataset
-rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan", "Feb", "Mar", "Apr", "May",
-                                      "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+# #Transform rain dataset
+# rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan", "Feb", "Mar", "Apr", "May",
+#                                       "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
 
 rain$country <- str_to_title(rain$country)
 d$country <- str_to_title(d$country)
 
 # gather meanWHZ by month data into long format
-rain_long <- rain %>%
-  gather(month,rain, -studyid, -country, -cohort_index, -region) 
-rain_long$month = gsub("_pre","",rain_long$month)
-rain_long$month = factor(rain_long$month, levels=c("Jan", "Feb", "Mar", "Apr", "May","Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
-head(rain_long)
-
+# rain_long <- rain %>%
+#   gather(month,rain, -studyid, -country, -cohort_index, -region) 
+# rain_long$month = gsub("_pre","",rain_long$month)
+# rain_long$month = factor(rain_long$month, levels=c("Jan", "Feb", "Mar", "Apr", "May","Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+# head(rain_long)
+rain_long <- rain
 rain_long$month_day = as.numeric(rain_long$month) * 30.4167
 
 

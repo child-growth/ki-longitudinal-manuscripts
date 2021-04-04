@@ -17,7 +17,14 @@ setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
 inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 
+analyses_prim <- readRDS(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses_primary.rds"))
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses.rdata"))
+#only run secondary- primary in seperate script
+dim(analyses)
+dim(analyses_prim)
+analyses <- anti_join(analyses, analyses_prim, by = c("A","Y","id","strata", "W"))
+dim(analyses)
+
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 writeLines(jsonlite::toJSON(enumerated_analyses[[5]]),"single_bin_analysis.json")
