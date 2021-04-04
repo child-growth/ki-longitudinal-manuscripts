@@ -28,7 +28,7 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"primary_bin_analyses.json")
 # 2. run batch
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
-rmd_filename <- here("4-longitudinal-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
+rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
 inputs <- "single_primary_analysis.json"
 
 #run test/provisioning job

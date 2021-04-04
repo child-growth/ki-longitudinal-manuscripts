@@ -100,7 +100,7 @@ co_cuminc <- specify_rf_analysis(A=Avars,
 
 
 #bind together datasets
-analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, WHZ_quart_prev, WHZ_quart_cuminc, pers_wast, co_cuminc)
+analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cuminc_nobirth, pers_wast, co_cuminc)
 
 
 
@@ -148,7 +148,7 @@ WHZ_quart_lenvel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm"
 
 
 #primary outcomes 
-analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz, WHZ_quart_vel)
+analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
 
 #Save analysis specification
@@ -162,7 +162,11 @@ save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification
 
 
 
-#lagged WLZ analysis 
+#lagged WLZ analysis -continious
 analyses <- rbind(WHZ_quart_lenvel, WHZ_quart_vel)
 save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_continuous_lagwhz.rdata")))
+
+#lagged WLZ analysis -binary
+analyses <- rbind(WHZ_quart_prev, WHZ_quart_cuminc)
+save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_binary_lagwhz.rdata")))
 

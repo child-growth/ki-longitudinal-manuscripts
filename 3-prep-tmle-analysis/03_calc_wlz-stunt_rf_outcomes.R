@@ -13,8 +13,9 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_function
 d <- readRDS(rf_co_occurrence_path)
 
 
-#Subset analysis to monthly studies
-d <- d %>% filter(measurefreq=="monthly")
+#Subset analysis to monthly studies and only ID and growth variables
+d <- d %>% filter(measurefreq=="monthly") %>%
+  subset(., select=c(studyid, country, subjid, agedays, haz, whz))
 
 
 
@@ -46,16 +47,16 @@ vel_lencm <- vel %>% filter(ycat=="lencm") %>% dplyr::select(studyid, country, s
 
 
 # define age windows
-d <- d %>% filter(agedays <= 25*30.4167)
+#d <- d %>% filter(agedays <= 25*30.4167)
 
 #Cut into 3 month quartiles
 d <- d %>% mutate(agemonth = agedays/30.4167)
 
 d$agecat <- cut(d$agemonth, 
-                breaks=c(0,3,6,9,12,15,18,21,24),
-                labels=c("0-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months"),
+                breaks=c(0,3,6,9,12,15,18,21,24, 100),
+                labels=c("0-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months",  "24-27 months"),
                 include.lowest=T, right=T)
-d$agecat <-factor(d$agecat, labels=c("0-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months"))
+d$agecat <-factor(d$agecat, labels=c("0-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months", "24-27 months"))
 table(d$agecat)
 
 
@@ -65,21 +66,20 @@ table(d$agecat)
 
 
 #Quartile WHZ and HAZ
-d_whzcat <- d %>% group_by(subjid, agecat) %>% mutate(meanWHZ = mean(whz)) %>% slice(1) %>% arrange(subjid,agecat, agedays) %>%
+d_whzcat <- d %>% group_by(subjid, agecat) %>% mutate(meanWHZ = mean(whz, na.rm=T)) %>% slice(1) %>% arrange(subjid,agecat, agedays) %>%
   group_by(agecat) %>% mutate(agelevel=as.numeric(agecat),WHZ_quart = (ntile(meanWHZ, 4))) %>% 
-  subset(., select = -c(haz, whz, agedays, measurefreq)) %>% ungroup() %>%
+  subset(., select = -c(haz, whz, agedays)) %>% ungroup() %>%
   mutate(lag_agelevel= lag(agelevel), lag_WHZ_quart=lag(WHZ_quart)) %>%
   filter(!is.na(lag_WHZ_quart)) %>%
   filter(agelevel==lag_agelevel+1) %>%
   mutate(lag_WHZ_quart=factor(lag_WHZ_quart))
-
 
 table(d_whzcat$agecat, d_whzcat$WHZ_quart)
 
 
 d_hazcat <- d %>% group_by(subjid, agecat) %>% mutate(meanHAZ = mean(haz)) %>% slice(1) %>% arrange(subjid,agecat, agedays) %>%
   group_by(agecat) %>% mutate(agelevel=as.numeric(agecat),HAZ_quart = (ntile(meanHAZ, 4))) %>% 
-  subset(., select = -c(haz, whz, agedays, measurefreq)) %>% ungroup() %>%
+  subset(., select = -c(haz, whz, agedays)) %>% ungroup() %>%
   mutate(lag_agelevel= lag(agelevel), lag_HAZ_quart=lag(HAZ_quart)) %>%
   filter(!is.na(lag_HAZ_quart)) %>%
   filter(agelevel==lag_agelevel+1) %>%
@@ -87,18 +87,18 @@ d_hazcat <- d %>% group_by(subjid, agecat) %>% mutate(meanHAZ = mean(haz)) %>% s
 
 
 
-
-df <- left_join(d, d_whzcat, by=c("subjid", "agecat"))
-df <- df %>% filter(!is.na(lag_WHZ_quart))
-df <- droplevels(df)
-
-df_HAZ <- left_join(d, d_hazcat, by=c("subjid", "agecat"))
-df_HAZ <- df_HAZ %>% filter(!is.na(lag_HAZ_quart))
-df_HAZ <- droplevels(df_HAZ)
+# dim(d)
+# dim(d_whzcat)
+# df <- left_join(d, d_whzcat, by=c("studyid","subjid","agemonth", "agecat"))
+# df <- df %>% filter(!is.na(lag_WHZ_quart))
+# df <- droplevels(df)
+# dim(df)
+# 
+# df_HAZ <- left_join(d, d_hazcat, by=c("studyid","subjid", "agemonth","agecat"))
+# df_HAZ <- df_HAZ %>% filter(!is.na(lag_HAZ_quart))
+# df_HAZ <- droplevels(df_HAZ)
 
 #Calculate CI across 3 month age ranges.
-
-#calculate any stunting from 3-24
 stunt_ci <- NULL
 
 agecat_vec <- c("0-3 months", "3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months")
@@ -118,7 +118,7 @@ for(i in 2:length(agecat_vec)){
     mutate( ever_stunted=ifelse(min(haz)< -2,1,0), Nobs=n()) %>% slice(1) %>%
     mutate(N=n()) %>%
     ungroup() %>%
-    dplyr::select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat, ever_stunted,Nobs, N)
+    dplyr::select(studyid,subjid, country,agedays,haz, agecat, ever_stunted,Nobs, N)
   
   stunt_ci <- rbind(stunt_ci, temp)
   
@@ -130,13 +130,13 @@ table(stunt_ci$agecat, stunt_ci$ever_stunted)
 
 
 #--------------------------------
-# Prevalence outcome 
+# Prevalence outcome
 #--------------------------------
 
 
 
 # define age windows
-dprev = d %>% 
+dprev = d %>%
   arrange(studyid,subjid,agedays) %>%
   mutate(agecat=ifelse(agedays==1,"Birth",
                        ifelse(agedays>2*30.4167 & agedays<4*30.4167,"3 months",
@@ -175,19 +175,23 @@ dprev <- dprev %>% filter(agecat!="Birth")
 # Merge stunting outcomes and WHZ quartiles.
 #--------------------------------
 
-stuntCI_whz <- left_join(stunt_ci, d_whzcat, by=c("studyid","country","subjid", "agecat"))
+stuntCI_whz <- left_join(stunt_ci, d_whzcat, by=c("studyid","country","subjid", "agecat")) %>% droplevels(.)
 
 table(stuntCI_whz$agecat, stuntCI_whz$lag_WHZ_quart, stuntCI_whz$ever_stunted)
 
 table(stuntCI_whz$agecat, stuntCI_whz$studyid, stuntCI_whz$ever_stunted)
 
 table(d_whzcat$agecat)
-dprev_whzcat <- d_whzcat 
-dprev_whzcat$agecat <- factor(paste0(sapply(strsplit(as.character(dprev_whzcat$agecat), "-", fixed=T), `[`, 2)," months"))
+dprev_whzcat <- d_whzcat
+dprev_whzcat$agecat <- factor(paste0(sapply(strsplit(as.character(dprev_whzcat$agecat), "-", fixed=T), `[`, 1)," months"))
+table(dprev$agecat)
 table(dprev_whzcat$agecat)
 
-
+dim(dprev)
+dim(dprev_whzcat)
 stuntprev_whz <- left_join(dprev, dprev_whzcat, by=c("studyid","country","subjid", "agecat"))
+dim(stuntprev_whz)
+
 table(stuntprev_whz$agecat, stuntprev_whz$lag_WHZ_quart, stuntprev_whz$stunted)
 
 
@@ -240,7 +244,6 @@ save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"stuntprev_whz_rf.Rdata"))
 
 
 #CI outcomes
-stuntCI_whz <- stuntCI_whz %>% subset(., select = -c(sex))
 d <- left_join(stuntCI_whz, cov, by=c("studyid", "subjid", "country"))
 Y<-c("ever_stunted")
 save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"stuntCI_whz_rf.Rdata"))
@@ -248,12 +251,10 @@ save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"stuntCI_whz_rf.Rdata"))
 
 
 #growth velocity
-vel_haz_whz2 <- vel_haz_whz %>% subset(., select = -c(tr, sex))
-d <- left_join(vel_haz_whz2, cov, by=c("studyid", "subjid", "country"))
+d <- left_join(vel_haz_whz, cov, by=c("studyid", "subjid", "country"))
 Y<-c("y_rate")
 save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"laz_vel_whz_rf.Rdata"))
 
-vel_lencm_whz2 <- vel_lencm_whz %>% subset(., select = -c(tr, sex))
-d <- left_join(vel_lencm_whz2, cov, by=c("studyid", "subjid", "country"))
+d <- left_join(vel_lencm_whz, cov, by=c("studyid", "subjid", "country"))
 Y<-c("y_rate")
 save(d, Y, A, W, V, id, file=paste0(ghapdata_dir,"len_vel_whz_rf.Rdata"))
