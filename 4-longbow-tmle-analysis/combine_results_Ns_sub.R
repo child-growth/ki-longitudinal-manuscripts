@@ -5,10 +5,7 @@ library(longbowtools)
 library(progress)
 library(longbowRiskFactors)
 
-bin_primary <- readRDS(here("/results/rf results/raw longbow results/results_bin_primary_obs_counts_2020-05-28.RDS"))
-bin_primary <- bin_primary %>% filter(is.na(perdiar6) & is.na(perdiar24))
-bin_diar <- readRDS(here("/results/rf results/raw longbow results/results_bin_diar_obs_counts_2020-06-08.RDS"))
-bin_primary <- bind_rows(bin_primary, bin_diar)
+bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_obs_counts_2021-04-03.RDS"))
 
 
 #Drop sparse estimates
@@ -32,7 +29,7 @@ dim(d)
 d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
 
 
-d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2020-05-29.RDS"))
+d2 <- readRDS(here("results/rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2021-04-04.RDS"))
 d2 <- d2 %>% mutate(rain_quartile=case_when(
   rain_quartile==1 ~ "Opposite max rain",
   rain_quartile==2 ~ "Pre-max rain",

@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load mediation results
-results <- readRDS(here("results/rf results/raw longbow results/mediation_2020-03-08.rds"))
+results <- readRDS(here("results/rf results/raw longbow results/mediation_2021-04-04.RDS"))
 md <- results %>% filter(type=="ATE") %>% mutate(analysis="med")
 head(md)
 

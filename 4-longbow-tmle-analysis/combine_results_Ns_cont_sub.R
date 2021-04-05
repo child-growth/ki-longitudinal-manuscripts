@@ -6,13 +6,12 @@ library(progress)
 library(longbowRiskFactors)
 
 
-d <- readRDS(here("/results/rf results/raw longbow results/results_cont_obs_counts_2020-06-02.RDS"))
+d <- readRDS(here("results/rf results/raw longbow results/results_cont_obs_counts_2021-04-02.RDS"))
 #drop EE gestational age
 d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
-d <- d %>% filter(is.na(perdiar6) & is.na(perdiar24))
 
 
-d2 <- readRDS(here("/results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2020-05-29.RDS"))
+d2 <- readRDS(here("results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2021-04-04.RDS"))
 d2 <- d2 %>% mutate(rain_quartile=case_when(
   rain_quartile==1 ~ "Opposite max rain",
   rain_quartile==2 ~ "Pre-max rain",
@@ -21,10 +20,8 @@ d2 <- d2 %>% mutate(rain_quartile=case_when(
 ))
 
 
-d3 <- readRDS(here("/results/rf results/raw longbow results/results_cont_obs_count_diars_2020-06-08.RDS"))
 
-
- d <- bind_rows(d, d2, d3)
+ d <- bind_rows(d, d2)
 
 
 exposure_vars <- c(
@@ -61,7 +58,7 @@ for(i in 1:nrows){
 
 exposure_df 
 
-Ns <- d %>% subset(., select = c(studyid, country, agecat, n_cell, n,outcome_variable))
+Ns <- d %>% subset(., select = c(studyid, country, agecat, n_cell, n, outcome_variable))
 
 Ndf <- cbind(Ns, exposure_df)
 # 

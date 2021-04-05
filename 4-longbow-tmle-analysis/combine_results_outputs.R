@@ -4,7 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores<- Zscores_unadj<- Zscores_waz<- bin<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
+Zscores<- Zscores_unadj<- Zscores_waz<- bin<-bin_unadj<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
 Zscores <- readRDS(here("results/rf results/raw longbow results/results_cont_2021-04-02.RDS"))
 dim(Zscores)
@@ -12,19 +12,19 @@ dim(Zscores)
 bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-03.RDS"))
 table(bin_primary$intervention_variable, bin_primary$outcome_variable)
 
-bin <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
-bin_sub <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
-bin_sub2 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20.rds"))
-bin_sub3 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20_part2.rds"))
-bin <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
-bin <- bin %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
-                                    "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
-                         .keep_all=TRUE)
-dim(bin)
+bin_other <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
+# bin_sub <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
+# bin_sub2 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20.rds"))
+# bin_sub3 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20_part2.rds"))
+# bin <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
+# bin <- bin %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
+#                                     "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
+#                          .keep_all=TRUE)
+# dim(bin)
 bin_other <- anti_join(bin, bin_primary, by = c("agecat", "studyid", "country", "strata_label", "intervention_variable",
                                                 "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
 #temp
-bin <- NULL
+bin_other <- NULL
 
 dim(bin_primary)
 dim(bin_other) 
@@ -41,7 +41,7 @@ velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
 stunt_bin_wlz_quart <- readRDS(here("results/rf results/raw longbow results/stunt_bin_wlz_quart_2021-04-04.rds"))
-velocity_wlz_quart$agecat <- as.character(stunt_bin_wlz_quart$agecat)
+stunt_bin_wlz_quart$agecat <- as.character(stunt_bin_wlz_quart$agecat)
 stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 
 
@@ -52,11 +52,11 @@ stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 velocity <- readRDS(here("results/rf results/raw longbow results/results_vel_2021-04-04.RDS"))   
 #NEED to add estimates that previously failed to run
   
-season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2020-05-29.rds"))
+season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2021-03-29.rds"))
 
-season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2020-05-29.rds"))
+season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2021-04-04.rds"))
 
-season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2020-05-29.rds"))
+season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2021-04-04.rds"))
 
 
 
@@ -64,7 +64,8 @@ season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seas
 
 
 d <- bind_rows(Zscores, Zscores_unadj, bin, 
-               bin_unadj, lagwhz, velocity, velocity_wlz_quart, season, season_cont_rf, season_bin_rf)
+               bin_unadj, lagwhz, velocity, velocity_wlz_quart, stunt_bin_wlz_quart,
+               season, season_cont_rf, season_bin_rf)
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"
