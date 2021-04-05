@@ -30,6 +30,8 @@ default_params$script_params$maximize <- TRUE
 default_params$script_params$count_Y <- FALSE
 
 analyses <- analyses %>% filter(Y %in% c("haz","whz"))
+analyses <- analyses[!sapply(analyses$W,is.null),] # Drop unadjusted estimates
+
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 writeLines(jsonlite::toJSON(enumerated_analyses[[21]]),"single_analysis.json")
