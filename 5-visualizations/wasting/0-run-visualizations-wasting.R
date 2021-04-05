@@ -1,6 +1,6 @@
 
 rm(list=ls())
-source(paste0(here::here(), "0-config.R"))
+source(paste0(here::here(), "/0-config.R"))
 
 source(here("5-visualizations/wasting/fig-wasting-study-inventory-heatmap.R"))
 
