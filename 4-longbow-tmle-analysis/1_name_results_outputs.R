@@ -10,7 +10,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 Zscores <- readRDS(here("results/rf results/raw longbow results/results_cont_2021-04-05.RDS"))
 saveRDS(Zscores, here("results/rf results/longbow results/results_cont.RDS"))
 
-bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-03.RDS"))
+bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-05.RDS"))
 saveRDS(bin_primary, here("results/rf results/longbow results/results_bin_primary.RDS"))
 
 bin_other <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.rds"))

@@ -5,7 +5,7 @@ library(longbowtools)
 library(progress)
 library(longbowRiskFactors)
 
-bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_obs_counts_2021-04-03.RDS"))
+bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_obs_counts_2021-04-05.RDS"))
 
 
 #Drop sparse estimates

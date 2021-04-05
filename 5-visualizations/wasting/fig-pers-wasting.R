@@ -63,5 +63,5 @@ p <- ggplot(d,aes(y=est,x=region)) +
 
 p
 
-ggsave(p, file=here("/figures/wasting/pooled_pers024.png"), width=8, height=5)
+ggsave(p, file=here("figures/wasting/pooled_pers024.png"), width=8, height=5)
 
