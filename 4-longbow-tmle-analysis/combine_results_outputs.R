@@ -6,16 +6,16 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- Zscores_waz<- bin<-bin_unadj<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-Zscores <- readRDS(here("results/rf results/raw longbow results/results_cont_2021-04-02.RDS"))
+Zscores <- readRDS(here("results/rf results/longbow results/results_cont.RDS"))
 dim(Zscores)
 
-bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-03.RDS"))
+bin_primary <- readRDS(here("results/rf results/longbow results/results_bin_primary.RDS"))
 table(bin_primary$intervention_variable, bin_primary$outcome_variable)
 
-bin_other <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
-# bin_sub <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-19.rds"))
-# bin_sub2 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20.rds"))
-# bin_sub3 <- readRDS(here("results/rf results/raw longbow results/results_bin_sub_2020-05-20_part2.rds"))
+bin_other <- readRDS(here("results/rf results/longbow results/results_bin.rds"))
+# bin_sub <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-19.rds"))
+# bin_sub2 <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-20.rds"))
+# bin_sub3 <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-20_part2.rds"))
 # bin <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
 # bin <- bin %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
 #                                     "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
@@ -32,31 +32,31 @@ nrow(bin_primary) + nrow(bin_other)
 bin <- rbind(bin_primary, bin_other)
 
 
-Zscores_unadj <- readRDS(here("results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
+Zscores_unadj <- readRDS(here("results/rf results/longbow results/results_cont_unadj.rds"))
 
-bin_unadj <- readRDS(here("results/rf results/raw longbow results/results_bin_unadj_2020-03-06.rds"))
+bin_unadj <- readRDS(here("results/rf results/longbow results/results_bin_unadj.rds"))
 
-velocity_wlz_quart <- readRDS(here("results/rf results/raw longbow results/vel_wlz_quart_2021-04-04.rds"))
+velocity_wlz_quart <- readRDS(here("results/rf results/longbow results/vel_wlz_quart.rds"))
 velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
-stunt_bin_wlz_quart <- readRDS(here("results/rf results/raw longbow results/stunt_bin_wlz_quart_2021-04-04.rds"))
+stunt_bin_wlz_quart <- readRDS(here("results/rf results/longbow results/stunt_bin_wlz_quart.rds"))
 stunt_bin_wlz_quart$agecat <- as.character(stunt_bin_wlz_quart$agecat)
 stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 
 
-# results <- readRDS(here("results/rf results/raw longbow results/results_vel_2020-05-22.RDS"))   
-# results_2 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-23.RDS"))   
-# results_3 <- readRDS(here("results/rf results/raw longbow results/results_vel_sub_2020-05-26.RDS"))   
+# results <- readRDS(here("results/rf results/longbow results/results_vel_2020-05-22.RDS"))   
+# results_2 <- readRDS(here("results/rf results/longbow results/results_vel_sub_2020-05-23.RDS"))   
+# results_3 <- readRDS(here("results/rf results/longbow results/results_vel_sub_2020-05-26.RDS"))   
 # velocity <- bind_rows(results, results_2, results_3)
-velocity <- readRDS(here("results/rf results/raw longbow results/results_vel_2021-04-04.RDS"))   
+velocity <- readRDS(here("results/rf results/longbow results/results_vel.RDS"))   
 #NEED to add estimates that previously failed to run
   
-season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2021-03-29.rds"))
+season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results.rds"))
 
-season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2021-04-04.rds"))
+season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results.rds"))
 
-season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results_2021-04-04.rds"))
+season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results.rds"))
 
 
 
