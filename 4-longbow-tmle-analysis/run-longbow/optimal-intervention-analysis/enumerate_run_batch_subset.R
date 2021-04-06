@@ -28,9 +28,12 @@ default_params$script_params$count_Y <- FALSE
 
 #Subset analysis to jobs not yet run
 analyses <- analyses %>% filter(Y %in% c("whz","haz"))
+dim(analyses)
 analyses <- analyses %>% filter((Y == "whz" & !(A %in% results$intervention_variable[results$outcome_variable=="whz"])) |
                                 (Y == "haz" & !(A %in% results$intervention_variable[results$outcome_variable=="haz"])))
+dim(analyses)
 table(analyses$A, analyses$Y)
+
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
@@ -43,7 +46,7 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"sub_analyses.json")
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 
-rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX")
+rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_OptTX.Rmd")
 
 
 
