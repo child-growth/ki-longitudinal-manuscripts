@@ -40,14 +40,17 @@ plot_list <- readRDS(paste0(here(),"/figures/plot-objects/rain_seasonality_plot_
 
 #Left plot
 left_plot <- plot_grid(
-  plot_list[[1]], plot_list[[10]], plot_list[[2]], plot_list[[11]],
-  plot_list[[3]], plot_list[[12]], 
-  plot_list[[4]], plot_list[[13]], plot_list[[5]],
-  plot_list[[14]], plot_list[[6]], plot_list[[15]],
-  plot_list[[7]], plot_list[[16]], plot_list[[8]],
-  plot_list[[17]], plot_list[[9]], 
-  plot_list[[18]], 
-  labels = rep("", 18), ncol = 2, align = 'v', axis = 'l')
+  plot_list[[1]], plot_list[[11]], 
+  plot_list[[2]], plot_list[[12]], 
+  plot_list[[3]], plot_list[[13]], 
+  plot_list[[4]], plot_list[[14]], 
+  plot_list[[5]], plot_list[[15]], 
+  plot_list[[6]], plot_list[[16]], 
+  plot_list[[7]], plot_list[[17]], 
+  plot_list[[8]], plot_list[[18]], 
+  plot_list[[9]], plot_list[[19]], 
+  plot_list[[10]], plot_list[[20]], 
+  labels = rep("", 20), ncol = 2, align = 'v', axis = 'l')
 
 #Right plot
 #p_seasonRR <- p_seasonRR + coord_flip() + 
