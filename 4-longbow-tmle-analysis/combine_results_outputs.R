@@ -4,7 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores<- Zscores_unadj<- Zscores_waz<- bin<-bin_unadj<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
+Zscores<- Zscores_unadj<- Zscores_waz<- bin<-bin_other<-bin_unadj<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
 Zscores <- readRDS(here("results/rf results/longbow results/results_cont.RDS"))
 dim(Zscores)
@@ -36,11 +36,11 @@ Zscores_unadj <- readRDS(here("results/rf results/longbow results/results_cont_u
 
 bin_unadj <- readRDS(here("results/rf results/longbow results/results_bin_unadj.rds"))
 
-velocity_wlz_quart <- readRDS(here("results/rf results/longbow results/vel_wlz_quart.rds"))
+velocity_wlz_quart <- readRDS(here("results/rf results/longbow results/velocity_wlz_quart.RDS"))
 velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
-stunt_bin_wlz_quart <- readRDS(here("results/rf results/longbow results/stunt_bin_wlz_quart.rds"))
+stunt_bin_wlz_quart <- readRDS(here("results/rf results/longbow results/stunt_bin_wlz_quart.RDS"))
 stunt_bin_wlz_quart$agecat <- as.character(stunt_bin_wlz_quart$agecat)
 stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 
@@ -52,20 +52,17 @@ stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 velocity <- readRDS(here("results/rf results/longbow results/results_vel.RDS"))   
 #NEED to add estimates that previously failed to run
   
-season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results.rds"))
+season <-  readRDS(here("results","rf results","longbow results","seasonality_results.RDS"))
 
-season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results.rds"))
+season_cont_rf <- readRDS(here("results","rf results","longbow results","season_cont_rf_results.RDS"))
 
-season_bin_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_bin_results.rds"))
-
-
-
-
+season_bin_rf <- readRDS(here("results","rf results","longbow results","season_bin_rf_results.RDS"))
 
 
 d <- bind_rows(Zscores, Zscores_unadj, bin, 
                bin_unadj, lagwhz, velocity, velocity_wlz_quart, stunt_bin_wlz_quart,
                season, season_cont_rf, season_bin_rf)
+
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="3"] <- "Max rain"

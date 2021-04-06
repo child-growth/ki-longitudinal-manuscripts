@@ -10,7 +10,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 Zscores <- readRDS(here("results/rf results/raw longbow results/results_cont_2021-04-05.RDS"))
 saveRDS(Zscores, here("results/rf results/longbow results/results_cont.RDS"))
 
-bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-03.RDS"))
+bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-05.RDS"))
 saveRDS(bin_primary, here("results/rf results/longbow results/results_bin_primary.RDS"))
 
 bin_other <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
@@ -43,4 +43,7 @@ saveRDS(season_bin_rf, here("results/rf results/longbow results/season_bin_rf_re
 mediation <- readRDS(here("results","rf results","raw longbow results","mediation_2021-04-04.RDS"))
 saveRDS(season_bin_rf, here("results/rf results/longbow results/mediation.RDS"))
 
+
+optx_results <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2021-04-05.RDS"))   
+saveRDS(optx_results, here("results/rf results/longbow results/opttx_vim_results.RDS"))
 
