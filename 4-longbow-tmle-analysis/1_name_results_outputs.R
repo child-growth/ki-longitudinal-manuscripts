@@ -44,3 +44,6 @@ mediation <- readRDS(here("results","rf results","raw longbow results","mediatio
 saveRDS(season_bin_rf, here("results/rf results/longbow results/mediation.RDS"))
 
 
+optx_results <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2021-04-05.RDS"))   
+saveRDS(optx_results, here("results/rf results/longbow results/opttx_vim_results.RDS"))
+

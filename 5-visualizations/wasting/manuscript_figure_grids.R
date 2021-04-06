@@ -10,7 +10,7 @@ theme_set(theme_ki())
 
 
 #Figure 2
-plot_list <- readRDS(here("/figures/plot-objects/fig2_plot_objects.RDS"))
+plot_list <- readRDS(here("figures/plot-objects/fig2_plot_objects.RDS"))
 
 prev_p <- plot_list[[2]]$`plot`
 prev_p <- prev_p + theme(legend.position = "none") + coord_cartesian(ylim=c(0, 37))
@@ -61,13 +61,13 @@ ggsave(fig3, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/f
 
 
 #Figure 4
-rec_plot <- readRDS(here("/figures/plot-objects/rec_plot_object.rds"))
-inc_plot <- readRDS(here("/figures/plot-objects/inc_plot_object.rds"))
+rec_plot <- readRDS(here("figures/plot-objects/rec_plot_object.rds"))
+inc_plot <- readRDS(here("figures/plot-objects/inc_plot_object.rds"))
 
-rec_violin_plot <- readRDS(here("/figures/plot-objects/rec_violin_plot_object.rds"))
-birthstrat_stats_plot <- readRDS(here("/figures/plot-objects/birthstrat_stats_plot_object.rds"))
-birthstrat_curve <- readRDS(here("/figures/plot-objects/birthwast_strat_growth_curve_object.rds"))
-ind_traj <- readRDS(here("/figures/plot-objects/ind_traj_plot_object.rds"))
+rec_violin_plot <- readRDS(here("figures/plot-objects/rec_violin_plot_object.rds"))
+birthstrat_stats_plot <- readRDS(here("figures/plot-objects/birthstrat_stats_plot_object.rds"))
+birthstrat_curve <- readRDS(here("figures/plot-objects/birthwast_strat_growth_curve_object.rds"))
+ind_traj <- readRDS(here("figures/plot-objects/ind_traj_plot_object.rds"))
 
 colors <-  c("green", "orange", "red", "grey80", "grey40")
 names(colors) = c("Not wasted", "Wasted", "Severe wasted", "Born wasted", "Born severe wasted")
@@ -82,8 +82,8 @@ ggsave(fig4, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/f
 
 
 #Figure 5
-co_plot <- readRDS(here("/figures/plot-objects/co_plot_object.rds"))
-bar_plot_RE <- readRDS(here("/figures/plot-objects/co_flow_object.rds"))
+co_plot <- readRDS(here("figures/plot-objects/co_plot_object.rds"))
+bar_plot_RE <- readRDS(here("figures/plot-objects/co_flow_object.rds"))
 plot_data_pooled <- readRDS(paste0(figdata_dir_wasting, "figdata-co-2-coflow-overall--allage-primary.RDS"))
 
 co_p <- co_plot[[1]]
