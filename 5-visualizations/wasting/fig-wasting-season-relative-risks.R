@@ -8,7 +8,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load longbow results
-results <- readRDS(here("results","rf results","raw longbow results","seasonality_results_2021-03-29.RDS"))
+results <- readRDS(here("results","rf results","longbow results","seasonality_results.RDS"))
 
 
 

@@ -14,7 +14,7 @@ source(here("5-visualizations/wasting/fig-birth-wasting-recovery-stats.R"))
 
 source(here("5-visualizations/wasting/fig-wasting-seasonality.R"))
 source(here("5-visualizations/wasting/fig-wasting-seasonality-rainfall.R"))
-source(here("5-visualizations/wasting/fig-season_relative risks.R"))
+source(here("5-visualizations/wasting/fig-wasting-season-relative-risks.R"))
 
 source(here("5-visualizations/wasting/fig-wasting-rec-hist.R"))
 
