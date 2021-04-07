@@ -8,7 +8,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load longbow results
-results <- readRDS(here("results","rf results","raw longbow results","seasonality_birth_results_2020-05-29.RDS"))
+results <- readRDS(here("results","rf results","longbow results","seasonality_birth_results.RDS"))
 
 
 
@@ -97,8 +97,8 @@ theme(panel.background=element_blank(),
 
 
 
-saveRDS(p_season_birth_diff, file = here("/figures/plot-objects/season_birth_wlz_diff_plot.rds"))
-ggsave(p_season_birth_diff, file=paste0(here::here(),"/figures/wasting/season_birth_wlz_diff.png"), width=5, height=4)
+saveRDS(p_season_birth_diff, file = here("figures/plot-objects/season_birth_wlz_diff_plot.rds"))
+ggsave(p_season_birth_diff, file= here("figures/wasting/season_birth_wlz_diff.png"), width=5, height=4)
 
 
 
@@ -173,7 +173,7 @@ p_season_birth_diff_FE <- ggplot(df, aes(y=ATE,x=intervention_level)) +
 
 
 
-saveRDS(p_season_birth_diff_FE, file = here("/figures/plot-objects/season_birth_wlz_diff_plot_FE.rds"))
-ggsave(p_season_birth_diff_FE, file=paste0(here::here(),"/figures/wasting/season_birth_wlz_diff_FE.png"), width=5, height=4)
+saveRDS(p_season_birth_diff_FE, file = here("figures/plot-objects/season_birth_wlz_diff_plot_FE.rds"))
+ggsave(p_season_birth_diff_FE, file=here("figures/wasting/season_birth_wlz_diff_FE.png"), width=5, height=4)
 
 

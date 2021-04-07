@@ -176,14 +176,6 @@ for(i in 1:length(cohorts)){
 #Save plot objects
 saveRDS(plot_list, file=paste0(here(),"/figures/plot-objects/rain_seasonality_plot_objects.rds"))
 
-# plot_grid <- plot_grid(
-#   plot_list[[1]], plot_list[[10]], plot_list[[2]],
-#   plot_list[[11]], plot_list[[3]], plot_list[[12]],
-#   plot_list[[4]], plot_list[[13]], plot_list[[5]],
-#   plot_list[[14]], plot_list[[6]], plot_list[[15]],
-#   plot_list[[7]], plot_list[[16]], plot_list[[8]],
-#   plot_list[[17]], plot_list[[9]], plot_list[[18]],
-#   labels = rep("", 18), ncol = 2, align = 'v', axis = 'l')
 
 plot_grid <- plot_grid(
   plot_list[[1]], plot_list[[11]], 

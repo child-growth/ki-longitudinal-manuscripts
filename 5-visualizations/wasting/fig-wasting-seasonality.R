@@ -235,6 +235,6 @@ ggsave(p4, file=paste0(here(),"/figures/wasting/fig-birthmont-strat-seasonality-
 
 
 #Save plot-objects
-saveRDS(list(p1, p2, p3, p4), file=here("/figures/plot-objects/season_plots.rds"))
+saveRDS(list(p1, p2, p3, p4), file=here("figures/plot-objects/season_plots.rds"))
 
 
