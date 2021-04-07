@@ -13,7 +13,7 @@ saveRDS(Zscores, here("results/rf results/longbow results/results_cont.RDS"))
 bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-05.RDS"))
 saveRDS(bin_primary, here("results/rf results/longbow results/results_bin_primary.RDS"))
 
-bin_other <- readRDS(here("results/rf results/raw longbow results/results_bin_2020-05-03.rds"))
+bin_other <- readRDS(here("results/rf results/raw longbow results/results_bin_2021-04-06.RDS"))
 saveRDS(bin_other, here("results/rf results/longbow results/results_bin_other.RDS"))
 
 Zscores_unadj <- readRDS(here("results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
@@ -31,8 +31,11 @@ saveRDS(stunt_bin_wlz_quart, here("results/rf results/longbow results/stunt_bin_
 velocity <- readRDS(here("results/rf results/raw longbow results/results_vel_2021-04-04.RDS"))   
 saveRDS(velocity, here("results/rf results/longbow results/results_vel.RDS"))
 
-season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2021-03-29.rds"))
+season <-  readRDS(here("results","rf results","raw longbow results","seasonality_results_2021-04-06.rds"))
 saveRDS(season, here("results/rf results/longbow results/seasonality_results.RDS"))
+
+season_birth <-  readRDS(here("results","rf results","raw longbow results","seasonality_birth_results_2021-04-06.rds"))
+saveRDS(season_birth, here("results/rf results/longbow results/seasonality_birth_results.RDS"))
 
 season_cont_rf <- readRDS(here("results","rf results","raw longbow results","seasonality_rf_cont_results_2021-04-04.rds"))
 saveRDS(season_cont_rf, here("results/rf results/longbow results/season_cont_rf_results.RDS"))
