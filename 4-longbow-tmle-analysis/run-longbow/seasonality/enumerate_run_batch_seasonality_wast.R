@@ -1,6 +1,6 @@
 
 rm(list=ls())
-.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
+.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths() ) )
 
 source(paste0(here::here(), "/0-config.R"))
 .libPaths( "~/rlibs" )
