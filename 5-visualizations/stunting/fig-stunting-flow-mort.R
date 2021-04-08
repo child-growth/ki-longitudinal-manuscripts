@@ -37,143 +37,33 @@ pink_green[5] = "#EA67AE"
 pink_green[4] = "#FFB7DC"
 pink_green[6] = "#BF0C6D"
 pink_green[7] = "#000000"
-  
-# #-----------------------------------------
-# # create plot - overall
-# #-----------------------------------------
-# bar_plot_noRE = ggplot(plot_overall) +
-#   geom_bar(aes(x = agem, y = percent, fill = classif), 
-#            stat="identity", width=0.5, col = "black") +
-#   scale_fill_manual("", values = pink_green) +
-#   scale_color_manual(values = c(NA, 'black'), guide=F) +
-#   scale_y_continuous(limits = c(0,101),
-#                      breaks = seq(0,100,20),
-#                      labels = seq(0,100,20)) +
-#   theme(axis.title.x = element_text(size=14),
-#         axis.title.y = element_text(size=14),
-#         legend.position = "bottom",
-#         legend.text = element_text(size=12)) +
-#   xlab("Child age, months") + 
-#   ylab("Percentage of children (%)")  + 
-#   guides(fill = guide_legend(nrow = 1)) 
-# bar_plot_noRE
-# 
-# #-----------------------------------------
-# # create plot - stratified by region
-# #-----------------------------------------
-# bar_plot_noRE_region = ggplot(plot_region) +
-#   geom_bar(aes(x = agem, y = percent, fill = classif), 
-#            stat="identity", width=0.5, col = "black") +
-#   scale_fill_manual("", values = pink_green) +
-#   scale_color_manual(values = c(NA, 'black'), guide=F) +
-#   scale_y_continuous(limits = c(0,101),
-#                      breaks = seq(0,100,20),
-#                      labels = seq(0,100,20)) +
-#   theme(axis.title.x = element_text(size=14),
-#         axis.title.y = element_text(size=14),
-#         legend.position = "bottom",
-#         legend.text = element_text(size=12)) +
-#   xlab("Child age, months") + 
-#   ylab("Percentage of children (%)")  + 
-#   guides(fill = guide_legend(nrow = 1)) +
-#   facet_grid(~region)
-# bar_plot_noRE_region
-# 
-# 
-# 
-# #-----------------------------------------
-# # define standardized plot names
-# #-----------------------------------------
-# bar_plot_noRE_name = create_name(
-#   outcome = "stunting",
-#   cutoff = 2,
-#   measure = "change in stunting status",
-#   population = "overall",
-#   location = "",
-#   age = "All ages",
-#   analysis = "primary"
-# )
-# 
-# bar_plot_noRE_region_name = create_name(
-#   outcome = "stunting",
-#   cutoff = 2,
-#   measure = "change in stunting status",
-#   population = "region-stratified",
-#   location = "",
-#   age = "All ages",
-#   analysis = "primary"
-# )
-# 
-# 
-# #-----------------------------------------
-# # save plot and underlying data
-# #-----------------------------------------
-# ggsave(bar_plot_noRE, file=paste0(fig_dir, "stunting/fig-",
-#            bar_plot_noRE_name,".png"), width=10, height=4)
-# ggsave(bar_plot_noRE_region, file=paste0(fig_dir, "stunting/fig-",
-#             bar_plot_noRE_region_name,".png"), width=15, height=4)
-# 
-# saveRDS(plot_overall, file=paste0(figdata_dir_stunting, "figdata-",
-#                                    bar_plot_noRE_name,".RDS"))
-# saveRDS(plot_region, file=paste0(figdata_dir_stunting, "figdata-",
-#                                  bar_plot_noRE_region_name,".RDS"))
-
+pink_green = pink_green[2:7]
 
 #-----------------------------------------
-# process data for plot
+# exclude never stunted from plot
 #-----------------------------------------
-plot_overall = plot_overall %>% mutate(stuntcat = case_when(
-  classif == "Never stunted" ~ "Never stunted or stunting reversed",
-  classif == "No longer stunted" ~ "Never stunted or stunting reversed",
-  classif == "Stunting reversed" ~ "Never stunted or stunting reversed",
-  classif == "Newly stunted" ~ "Stunted or relapsed",
-  classif == "Stunting relapse" ~ "Stunted or relapsed",
-  classif == "Still stunted" ~ "Stunted or relapsed",
-  classif == "Death" ~ "Stunted or relapsed"
-))
-
-plot_overall = plot_overall %>% mutate(classif2 = case_when(
-  classif == "Never stunted" ~ "Never stunted",
-  classif == "No longer stunted" ~ "Stunting reversed",
-  classif == "Stunting reversed" ~ "Stunting reversed",
-  classif == "Newly stunted" ~ "Newly stunted",
-  classif == "Stunting relapse" ~ "Stunted",
-  classif == "Still stunted" ~ "Stunted",
-  classif == "Death" ~ "Death"
-))
+plot_overall = plot_overall %>% filter(classif!="Never stunted")
 
 #-----------------------------------------
 # make plot
 #-----------------------------------------
-plot_overall2 = plot_overall %>% group_by(agem, region, classif2) %>% 
-  summarize(n = sum(n),
-            tot = mean(tot)) %>% 
-  mutate(percent = n/tot *100) %>% 
-  mutate(classif2 = factor(classif2, levels = c("Never stunted",
-                                                "Stunting reversed",
-                                                "Newly stunted",
-                                                "Stunted",
-                                                "Death")))
 
 # plot among ever-stunted
-ggplot(plot_overall2 %>% filter(classif2 !="Never stunted"), aes(x=agem, y = percent, group = classif2))+
-  geom_point(aes(col = classif2, fill = classif2), alpha = 0.5, shape = 19) +
-  geom_line(aes(col = classif2)) +
-  scale_color_manual("", values = pink_green[c(2,5,6,7)]) +
-  scale_fill_manual("", values = pink_green[c(2,5,6,7)]) +
-  scale_y_continuous(limits = c(0,34), breaks = seq(0,34,2), labels = seq(0,34,2)) +
-  xlab("Child age, months") +
-  ylab("Percentage") +
-  theme(legend.position = "bottom") 
-
-# plot among ever-stunted
-ggplot(plot_overall, aes(x=agem, y = percent, group = classif))+
+p = ggplot(plot_overall, aes(x=agem, y = percent, group = classif))+
   geom_point(aes(col = classif, fill = classif), alpha = 0.5, shape = 19) +
   geom_line(aes(col = classif)) +
   scale_color_manual("", values = pink_green) +
   scale_fill_manual("", values = pink_green) +
-  scale_y_continuous(limits = c(0,34), breaks = seq(0,34,2), labels = seq(0,34,2)) +
+  scale_y_continuous(limits = c(0,34), breaks = seq(0,35,5), labels = seq(0,35,5)) +
   xlab("Child age, months") +
   ylab("Percentage") +
-  theme(legend.position = "bottom") 
+  theme(legend.position = "bottom",
+        legend.text=element_text(size=12)) 
 
+
+#-----------------------------------------
+# save plot and underlying data
+#-----------------------------------------
+ggsave(p, file=paste0(fig_dir, "stunting/fig-stunt-2-flow-line-overall-allage-primary.png"), 
+       width=5, height=3)
+saveRDS(plot_overall, file=paste0(figdata_dir_stunting, "figdata-stunt-2-flow-line-overall-allage-primary.RDS"))
