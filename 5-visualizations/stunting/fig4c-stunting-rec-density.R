@@ -204,6 +204,7 @@ plot_data = plot_data %>%
   )
   )
 
+saveRDS(plot_data, file = paste0(res_dir, "stunting_rec_cohorts.RDS"))
 
 # --------------------------------------------
 # % stunted / median 
