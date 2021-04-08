@@ -122,7 +122,7 @@ blank = ggplot() + theme_void()
 
 mean_laz_plot = ggarrange(mean_laz_line_plot, nmeas_plot, nrow = 1, ncol = 2, align = "hv", common.legend = TRUE, legend = "bottom")
 
-ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"), width=10, height=6)
+ggsave(mean_laz_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"), width=10, height=4)
 
 #####################################
 # Create figure for monthly cohorts
@@ -133,4 +133,4 @@ blank = ggplot() + theme_void()
 
 mean_laz_plot_monthly = ggarrange(mean_laz_line_plot_monthly, nmeas_plot_monthly, nrow = 1, ncol = 2, align = "hv", common.legend = TRUE, legend = "bottom")
 
-ggsave(mean_laz_plot_monthly, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_monthly.png"), width=10, height=6)
+ggsave(mean_laz_plot_monthly, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_monthly.png"), width=10, height=4)

@@ -49,9 +49,10 @@ bar_plot_noRE = ggplot(plot_overall) +
         axis.title.y = element_text(size=14),
         legend.position = "bottom",
         legend.text = element_text(size=12)) +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   xlab("Child age, months") + 
   ylab("Percentage of children (%)")  + 
-  guides(fill = guide_legend(nrow = 1)) 
+  guides(fill = guide_legend(nrow = 2)) 
 bar_plot_noRE
 
 #-----------------------------------------
@@ -105,7 +106,7 @@ bar_plot_noRE_region_name = create_name(
 # save plot and underlying data
 #-----------------------------------------
 ggsave(bar_plot_noRE, file=paste0(fig_dir, "stunting/fig-",
-           bar_plot_noRE_name,".png"), width=10, height=4)
+           bar_plot_noRE_name,".png"), width=6, height=4)
 ggsave(bar_plot_noRE_region, file=paste0(fig_dir, "stunting/fig-",
             bar_plot_noRE_region_name,".png"), width=15, height=4)
 
