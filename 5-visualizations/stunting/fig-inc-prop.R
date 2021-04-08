@@ -18,7 +18,9 @@ source(paste0(here::here(), "/0-config.R"))
 #Load data
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
-
+#-----------------------------------------
+# Prepare data for plot
+#-----------------------------------------
 # scale cohort-specific estimates
 d = d %>% mutate(
   est = ifelse(disease=="Stunting"  & cohort!="pooled",
@@ -31,7 +33,7 @@ d = d %>% mutate(
 
 Disease = "Stunting"
 Measure="Incidence proportion"
-Birth="yes"
+Birth="strat"
 Severe="no" 
 Age_range="3 months"
 xlabel="Child age, months"
@@ -65,6 +67,17 @@ df$agecat <- factor(df$agecat, levels=unique(df$agecat))
 
 df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
 
+df <- df %>% 
+  mutate(agecat = as.character(agecat)) %>% 
+  mutate(agecat = ifelse(agecat == "8 days-3", "0-3", agecat)) %>% 
+  mutate(agecat = factor(agecat, levels = c(
+    "Birth", "0-3", "3-6", "6-9", "9-12", "12-15", 
+    "15-18", "18-21", "21-24"
+  )))
+
+#-----------------------------------------
+# Make plot
+#-----------------------------------------
 p <- ggplot(df,aes(y=est,x=agecat)) +
   
   # pooled 
