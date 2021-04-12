@@ -46,19 +46,29 @@ plotdf_monthly = plotdf_monthly %>% filter(cohort == "pooled", region == "Overal
 # of the percentage of children born 
 # in the three major groupings
 ###################################
-N = plotdf %>% filter(agecat=="0.5 months") %>% summarise(N = sum(nmeas)) %>% pull()
+N = plotdf_monthly %>% filter(agecat=="0.5 months") %>% summarise(N = sum(nmeas)) %>% pull()
 
-plotdf %>% filter(agecat=="0.5 months" & (stunt_inc_age=="Birth"|stunt_inc_age=="0-3 months")) %>%
+#--------------------------------
+# stunted by 3 months
+#--------------------------------
+plotdf_monthly %>% filter(agecat=="0.5 months" & 
+                            (stunt_inc_age=="Birth"|stunt_inc_age=="0-3 months")) %>%
   summarise(n = sum(nmeas)) %>%
   mutate(proportion = n/N)
 
-plotdf %>% filter(agecat=="0.5 months" & stunt_inc_age!="Birth" &
+#--------------------------------
+# stunted after 3 months
+#--------------------------------
+plotdf_monthly %>% filter(agecat=="0.5 months" & stunt_inc_age!="Birth" &
                     stunt_inc_age!="0-3 months" & 
                     stunt_inc_age!="Never") %>%
   summarise(n = sum(nmeas)) %>%
   mutate(proportion = n/N)
 
-plotdf %>% filter(agecat=="0.5 months" & stunt_inc_age=="Never") %>%
+#--------------------------------
+# never stunted
+#--------------------------------
+plotdf_monthly %>% filter(agecat=="0.5 months" & (stunt_inc_age=="Never")) %>%
   summarise(n = sum(nmeas)) %>%
   mutate(proportion = n/N)
 
