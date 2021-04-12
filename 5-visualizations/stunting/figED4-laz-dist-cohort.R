@@ -10,7 +10,6 @@ source(paste0(here::here(), "/0-config.R"))
 library(viridis)
 
 d <- readRDS(stunting_data_path)
-# sn <- readRDS(paste0(here::here(), "/results/stunt_skewed_normal.RDS"))
 
 #------------------------------
 # combine study id and country
@@ -33,13 +32,8 @@ d_plot <- d_clean %>%
   mutate(n=n()) %>% 
   filter(n > 80)
 
-# sn_plot <- sn %>% filter(cohortid %in%
-#                            unique(d_plot$cohortid))
-
-
-
 #------------------------------
-# number in kernel density plot
+# plot N's
 #------------------------------
 # number of studies
 d_plot$region_comb = d_plot$region
@@ -121,31 +115,3 @@ plot_other = ggplot(d_plot %>% filter(!is.na(agecat) &
 plot_dist = grid.arrange(plot_sa, plot_af, plot_other, nrow=3, heights = c(2.8,1.7,2.1))
 
 ggsave(plot_dist, file=paste0(fig_dir, "stunting/fig-laz-cohort-dist.png"), width=12, height=12)
-
-# gamma1 denotes the Pearson’s index of skewness
-# The direction of skewness is given by the sign.
-# The coefficient compares the sample distribution with a normal distribution. The larger the value, the larger the distribution differs from a normal distribution.
-# A value of zero means no skewness at all.
-# A large negative value means the distribution is negatively skewed.
-# A large positive value means the distribution is positively skewed.
-
-# #------------------------------
-# # plot of mean, sd, skew
-# #------------------------------
-# sn_fits_age_df_l = sn_fits_age_df %>% 
-#   dplyr::select(-c(mean_f, sd_f, gamma1_f, label)) %>% 
-#   pivot_longer(cols = c(`mean`, `s.d.`, gamma1),
-#                names_to = "parameter",
-#                values_to = "estimate")
-# 
-# ggplot(sn_fits_age_df_l %>% filter(!is.na(agecat)), aes(x = agecat, y = estimate)) +
-#   geom_violin(aes(col = agecat)) +
-#   geom_point(aes(col = agecat), position = position_jitter(width=0.2), alpha = 0.5) +
-#   scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.8) +
-#   facet_wrap(~parameter, ncol=1,scales = "free")+
-#   theme(
-#     panel.grid.major.x = element_blank(),
-#     panel.grid.minor.x = element_blank(),
-#     panel.grid.minor.y = element_blank(),
-#     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
