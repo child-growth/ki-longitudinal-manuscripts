@@ -42,19 +42,19 @@ d_plot <- d_clean %>%
 
 plot_sa = ggplot(d_plot %>% filter(!is.na(agecat) & !is.na(cohortid) & region=="South Asia"), 
        aes(x = haz)) +
-  geom_density(aes(col = agecat), bw = 0.3) +
+  geom_density(aes(col = agecat), bw = 0.5) +
   scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.8) +
   scale_x_continuous(limits = c(-6,6), breaks=seq(-6,6,1), labels=seq(-6,6,1)) +
-  # geom_label(aes(x = 4, y = 0.25, label = label, col = agecat), data = sn_plot,
-  #            size = 3) +
   ggtitle("South Asia") +
-  facet_wrap(~cohortid, scales = "free", ncol=7)+
+  ylab("Density") +
+  facet_wrap(~cohortid, scales = "free", ncol=4)+
   theme(legend.position = "none",
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank(),
         axis.title.x=element_blank(),
-        plot.title = element_text(hjust = 0)) 
+        strip.text.x = element_text(size = 12),
+        plot.title = element_text(hjust = 0, margin=margin(20,0,10,0))) 
 
 
 plot_af = ggplot(d_plot %>% filter(!is.na(agecat) & !is.na(cohortid) & region=="Africa"), 
@@ -62,14 +62,16 @@ plot_af = ggplot(d_plot %>% filter(!is.na(agecat) & !is.na(cohortid) & region=="
   geom_density(aes(col = agecat), bw = 0.3) +
   scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.8) +
   scale_x_continuous(limits = c(-6,6), breaks=seq(-6,6,1), labels=seq(-6,6,1)) +
-  facet_wrap(~cohortid, scales = "free", nrow=2, ncol=7)+
+  facet_wrap(~cohortid, scales = "free", nrow=2, ncol=4)+
   ggtitle("Africa") +
+  ylab("Density") +
   theme(legend.position = "none",
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank(),
         axis.title.x=element_blank(),
-        plot.title = element_text(hjust = 0)) 
+        strip.text.x = element_text(size = 12),
+        plot.title = element_text(hjust = 0, margin=margin(20,0,10,0))) 
 
 plot_other = ggplot(d_plot %>% filter(!is.na(agecat) & 
                                         !is.na(cohortid) & 
@@ -77,17 +79,21 @@ plot_other = ggplot(d_plot %>% filter(!is.na(agecat) &
   geom_density(aes(col = agecat), bw = 0.3) +
   scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.8) +
   scale_x_continuous(limits = c(-6,6), breaks=seq(-6,6,1), labels=seq(-6,6,1)) +
-  facet_wrap(~cohortid, scales = "free", ncol=7)+ 
+  facet_wrap(~cohortid, scales = "free", ncol=4)+ 
+  xlab("Length-for-age Z-score") +
   ggtitle("Europe and Latin America") +
+  ylab("Density") +
   theme(legend.position = "bottom",
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank(),
-        plot.title = element_text(hjust = 0))  +
+        strip.text.x = element_text(size = 12),
+        plot.title = element_text(hjust = 0, margin=margin(20,0,10,0)))  +
   guides(color = guide_legend(nrow = 1))
 
-grid.arrange(plot_sa, plot_af, plot_other, nrow=3, heights = c(4,1.5,2.3))
+plot_dist = grid.arrange(plot_sa, plot_af, plot_other, nrow=3, heights = c(2.8,1.7,2.1))
 
+ggsave(plot_dist, file=paste0(fig_dir, "stunting/fig-laz-cohort-dist.png"), width=12, height=12)
 
 # gamma1 denotes the Pearson’s index of skewness
 # The direction of skewness is given by the sign.
