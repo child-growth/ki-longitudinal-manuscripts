@@ -36,6 +36,33 @@ d_plot <- d_clean %>%
 # sn_plot <- sn %>% filter(cohortid %in%
 #                            unique(d_plot$cohortid))
 
+
+
+#------------------------------
+# number in kernel density plot
+#------------------------------
+# number of studies
+d_plot$region_comb = d_plot$region
+d_plot$region_comb = as.character(d_plot$region_comb)
+d_plot$region_comb = ifelse(d_plot$region_comb == "Latin America" |
+                              d_plot$region_comb == "N.America & Europe", "LA Eur", d_plot$region_comb)
+
+d_plot %>% ungroup() %>% dplyr::select(region_comb, studyid, country) %>% 
+  group_by(region_comb) %>% 
+  distinct() %>% 
+  summarise(n=n()) 
+  
+# number of people
+d_plot %>% ungroup() %>% dplyr::select(region_comb, studyid, country, subjid) %>% 
+  distinct() %>% 
+  group_by(region_comb) %>% 
+  summarise(n=n()) 
+
+# number of measurements
+d_plot %>% ungroup() %>% dplyr::select(region_comb, studyid, country, subjid) %>% 
+  group_by(region_comb) %>% 
+  summarise(n=n())
+
 #------------------------------
 # plot empirical distribution over different ages 
 #------------------------------
@@ -59,7 +86,7 @@ plot_sa = ggplot(d_plot %>% filter(!is.na(agecat) & !is.na(cohortid) & region=="
 
 plot_af = ggplot(d_plot %>% filter(!is.na(agecat) & !is.na(cohortid) & region=="Africa"), 
                  aes(x = haz)) +
-  geom_density(aes(col = agecat), bw = 0.3) +
+  geom_density(aes(col = agecat), bw = 0.5) +
   scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.8) +
   scale_x_continuous(limits = c(-6,6), breaks=seq(-6,6,1), labels=seq(-6,6,1)) +
   facet_wrap(~cohortid, scales = "free", nrow=2, ncol=4)+
@@ -76,7 +103,7 @@ plot_af = ggplot(d_plot %>% filter(!is.na(agecat) & !is.na(cohortid) & region=="
 plot_other = ggplot(d_plot %>% filter(!is.na(agecat) & 
                                         !is.na(cohortid) & 
                                         region!="South Asia" & region!="Africa"), aes(x = haz)) +
-  geom_density(aes(col = agecat), bw = 0.3) +
+  geom_density(aes(col = agecat), bw = 0.5) +
   scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.8) +
   scale_x_continuous(limits = c(-6,6), breaks=seq(-6,6,1), labels=seq(-6,6,1)) +
   facet_wrap(~cohortid, scales = "free", ncol=4)+ 
