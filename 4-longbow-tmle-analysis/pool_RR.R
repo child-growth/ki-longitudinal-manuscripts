@@ -20,8 +20,8 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 #Subset agecat
 d <- droplevels(d)
 
-
-
+#temp
+d <- d %>% filter(intervention_variable=="hhwealth_quart", intervention_level  %in% c("WealthQ1"))
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
@@ -39,7 +39,7 @@ RMAest_clean <- RMA_clean(RMAest_raw)
 
 
 #Add reference level to label
-RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
+RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$baseline_level)
 
 #Save cleaned data
 saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))

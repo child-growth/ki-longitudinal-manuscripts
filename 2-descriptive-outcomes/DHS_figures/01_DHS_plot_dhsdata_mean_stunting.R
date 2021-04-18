@@ -88,6 +88,42 @@ df_survey_output$measure <- "LAZ" # rename HAZ to LAZ
 saveRDS(df_survey_output, file = paste0(dhs_res_dir, "DHS-stunting-by-region.rds"))
 
 
+
+#---------------------------------------
+# for each country, do the cluster based pooling for each child age
+#---------------------------------------
+
+df_survey_country <- foreach(measure_here = unique(dhsz$measure), .combine = rbind, .packages=c('tidyverse','survey')) %:%
+  foreach(country_here = unique(dhsz$country), .combine = rbind) %dopar% {
+    options(survey.lonely.psu = "adjust")
+    
+    result_svymean<-data.frame(agem=NA, zscore=NA, se=NA, ci_l=NA, ci_u=NA, wgt_sum=NA)
+    
+    df <- dhsz %>% filter(measure == measure_here & country == country_here)
+    try(result_svymean <- compute_ci_with_sampling_weights(df))
+    result_svymean$measure <- measure_here
+    result_svymean$country <- country_here
+    result_svymean$region <- df$region[1]
+    result_svymean
+  }
+
+df_survey_country <- df_survey_country %>% filter(!is.na(df_survey_country))
+
+#There are some (measure, region) pair with very few samples. Therefore the software will (honestly) compute the `se` to be zero. 
+#This will throw error down the pipeline when we do meta-analysis. #To avoid this, truncate lowest SE to the 5th percentile
+#df_survey$se[df_survey$se <= 1e-1] <- 1e-1
+quantile_se <- quantile(df_survey_country$se, prob = 0.05)
+df_survey_country$se[df_survey_country$se <= quantile_se] <- quantile_se
+
+df_survey_country <- df_survey_country %>%
+  rename(fit = zscore, fit_lb = ci_l, fit_ub = ci_u, fit_se = se) %>%
+  select(measure, region, country, agem, fit, fit_se, fit_lb, fit_ub)
+
+df_survey_country$measure <- "LAZ" # rename HAZ to LAZ
+
+saveRDS(df_survey_country, file = paste0(dhs_res_dir, "DHS-stunting-by-country.rds"))
+
+
 #---------------------------------------
 # estimate spline fit to mean z-scores by age
 #---------------------------------------
@@ -111,6 +147,19 @@ dhssubfits <- bind_rows(dhssubfits, dhssub_pool) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 
 
+# estimate country-specific fits
+d_country <- dhsz %>% filter(!is.na(country))
+dhssubfits_country <- foreach(ctry = unique(d_country$country), .combine = rbind, .packages = "dplyr") %dopar% {
+  di <-  d_country %>% filter(country == ctry & inghap == 1)
+  try(fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di))
+  newd <- data.frame(agem = 0:24)
+  # estimate approximate simultaneous confidence intervals
+  fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
+  try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
+  dfit <- data.frame(measure = "LAZ", country = ctry, region = di$region[1], agem = 0:24, fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
+  dfit
+}
+
 #---------------------------------------
 # Grab GHAP KI cohort estimated mean Z-scores
 # by age, and format the data for this analysis
@@ -119,12 +168,36 @@ d <- readRDS(paste0(here(),"/results/desc_data_cleaned.rds"))
 d$region <- as.character(d$region)
 d$region[d$region=="Asia"] <- "South Asia"
 
+
+
 ghapd <- d %>%
   filter(
     measure %in% c("Mean LAZ"),
     birth == "yes",
     age_range == "1 month",
-    cohort == "pooled"#,
+    cohort == "pooled",
+    analysis == "Primary"
+  ) %>%
+  mutate(
+    measure = str_sub(measure, 6, 9),
+    measure = factor(measure, levels = c("LAZ", "WAZ", "WLZ"), labels = c("LAZ", "WAZ", "WHZ")),
+    agecat2 = as.character(agecat),
+    agems = str_trim(str_sub(agecat2, 1, 2)),
+    agem = as.integer(
+      case_when(
+        agems == "Tw" ~ "0",
+        agems == "On" ~ "1",
+        !is.na(agems) ~ agems
+      )
+    )
+  )
+
+ghapd_country <- d %>%
+  filter(
+    measure %in% c("Mean LAZ"),
+    birth == "yes",
+    age_range == "1 month",
+    !is.na(country)#,
     #analysis == "Primary"
   ) %>%
   mutate(
@@ -141,19 +214,34 @@ ghapd <- d %>%
     )
   )
 
-ghapd$region <- factor(ghapd$region)
+ghapd_country$country <- factor(ghapd_country$country)
 
 
 #---------------------------------------
 # fit smooths to GHAP data
 #---------------------------------------
-ghapfits <- foreach(rgn = levels(ghapd$region), .combine = rbind, .packages = "dplyr") %do% {
+ghapfits <- foreach(rgn = unique(ghapd$region), .combine = rbind, .packages = "dplyr") %do% {
+  
   di <- ghapd %>% filter(region == rgn)
-  fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di)
+  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
   newd <- data.frame(agem = 0:24)
-  fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
+  fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
+  try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
   dfit <- data.frame(
     measure = "LAZ", region = rgn, agem = 0:24,
+    fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS
+  )
+  dfit
+}
+
+ghapfits_country <- foreach(rgn = unique(ghapd_country$country), .combine = rbind, .packages = "dplyr") %do% {
+  di <- ghapd_country %>% filter(country == rgn)
+  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+  newd <- data.frame(agem = 0:24)
+  fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
+  try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
+  dfit <- data.frame(
+    measure = "LAZ", region = di$region[1], country=rgn, agem = 0:24,
     fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS
   )
   dfit
@@ -186,6 +274,28 @@ dhsfits = dhsfits %>% mutate(region = factor(region, levels = c("Overall", "Afri
 saveRDS(dhsfits, file = paste0(dhs_res_dir, "stunting-DHSandKI-by-region.rds"))
 
 
+
+#---------------------------------------
+# Append the fits into a single data frame
+# for plotting
+#---------------------------------------
+ghapfits_country <- ghapfits_country %>% mutate(dsource = "ki cohorts", measure = as.character(measure))
+dhssubfits_country <- dhssubfits_country %>% mutate(dsource = "DHS, ki countries", measure = as.character(measure))
+# dhsallfits <- dhsallfits %>% mutate(dsource="DHS") # std_err based on bootstrapping GAM
+dhsallfits_country <- df_survey_country %>% mutate(dsource = "DHS") # std_err based on survey_avg using sampling weight
+
+dhsfits_country <- bind_rows(ghapfits_country, dhssubfits_country, dhsallfits_country) %>%
+  mutate(dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries", "DHS"))) %>%
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
+
+#dhsfits_country$region <- replace(dhsfits_country$region,is.na(dhsfits_country$region),"Overall")
+
+dhsfits_country <- filter(dhsfits_country, measure == "LAZ")
+#dhsfits_country = dhsfits_country %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+
+saveRDS(dhsfits_country, file = paste0(dhs_res_dir, "stunting-DHSandKI-by-country.rds"))
+
+
 #---------------------------------------
 # Filter for LAZ measures with data source of ki cohorts or DHS
 #---------------------------------------
@@ -215,3 +325,28 @@ laz_ageplot_name <- create_name(
 )
 
 saveRDS(dhs_plotd_laz, file = paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
+
+
+
+
+
+#---------------------------------------
+# Filter for LAZ measures with data source of ki cohorts or DHS
+#---------------------------------------
+
+
+dhs_plotd_country <- dhsfits_country %>%
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
+
+#dhs_plotd$region <- replace(dhs_plotd$region,is.na(dhs_plotd$region),"Overall")
+
+dhs_plotd_laz_country <- filter(dhs_plotd_country, measure == "LAZ")
+
+#dhs_plotd_laz = dhs_plotd_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
+
+
+#---------------------------------------
+# Save data for LAZ mean by age plots
+#---------------------------------------
+
+saveRDS(dhs_plotd_laz, file = paste0(figdata_dir_stunting, "figdata-laz-2-mean_dhs-country--allage-primary.RDS"))

@@ -26,10 +26,11 @@ d <- bind_rows(dpool, dFE, dfull)
 
 d$pooled <- factor(d$pooled, levels=c("1","0"))
 
+d$studyid <- as.character(d$studyid)
 d$studyid[is.na(d$studyid)] <- paste0("Pooled - ",d$region[is.na(d$studyid)])
+unique(d$studyid)
 
 #Strip grant identifier and add country
-d$studyid <- gsub("^k.*?-" , "", d$studyid)
 d$studyid <- paste0(d$studyid, ", ", paste0(substring(as.character(d$country),1,1), tolower(substring(as.character(d$country),2))))
 d$studyid <- gsub("Tanzania, united republic of", "Tanzania", d$studyid)
 d$studyid <- gsub("africa", "Africa", d$studyid)
@@ -40,6 +41,7 @@ d$studyid[d$studyid=="Pooled - Pooled - FE, "] <- "Pooled - FE"
 d$studyid[d$studyid=="Pooled - Africa, "] <- "Pooled - Africa"
 d$studyid[d$studyid=="Pooled - South Asia, "] <- "Pooled - South Asia"
 d$studyid[d$studyid=="Pooled - Latin America, "] <- "Pooled - Latin America"
+unique(d$studyid)
 
 
 unique(d$outcome_variable)
@@ -140,7 +142,9 @@ res <- d %>% group_by(intervention_variable, outcome_variable, agecat) %>%
 res$plot[[1]]
 length(res[[4]])
 
-saveRDS(res, file=here( "/figures/risk-factor/figure-data/all_forest_plot_RR.RDS"))
+res$plot[res$intervention_variable=="hhwealth_quart" & res$outcome_variable=="ever_stunted" & res$agecat=="0-6 months"]
+
+saveRDS(res, file=here("figures/risk-factor/figure-data/all_forest_plot_RR.RDS"))
 
 
 

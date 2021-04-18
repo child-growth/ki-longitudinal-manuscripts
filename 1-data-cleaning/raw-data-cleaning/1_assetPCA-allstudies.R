@@ -238,7 +238,7 @@ tds <- d %>%
   arrange(AGEDAYS) %>% slice(1) %>%
   ungroup()
 
-tds<-assetPCA(tds, varlist, reorder=T)
+tds<-assetPCA(tds, varlist, reorder=F)
 
 table(tds$HHwealth_quart)
 saveRDS(tds, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
@@ -286,7 +286,7 @@ cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
 varlist<-colnames(d)[colnames(d) %in% c("CAR", "FRIG", "LLPHONE", "NROOMS",  "RADIO",  "TV")]
 
 cntt <- read_asset_data(study, varlist)
-cntt <- assetPCA(cntt, varlist, reorder=T)
+cntt <- assetPCA(cntt, varlist, reorder=F)
 saveRDS(cntt, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 
@@ -329,7 +329,7 @@ varlist<-colnames(d)[colnames(d) %in%  c( "COOKFUEL",  "GOAT", "PHONE", "AGLAND"
                                           "TRUCK", "TV", "WASHMAC", "WBARROW", "INCTOT")]
 
 ildm <- read_asset_data(study, varlist)
-ildm <- assetPCA(ildm, varlist, reorder=T)
+ildm <- assetPCA(ildm, varlist, reorder=F)
 saveRDS(ildm, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 #---------
@@ -353,7 +353,7 @@ cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
 varlist<-colnames(d)[colnames(d) %in% c("BED", "BICYCLE",  "CLTHCAB", "ELEC", "GOAT", "MCYCLE", "MOBILE", "NROOMS", "RADIO", "RICKSHAW", "SEWING", "SOAP", "TV","WATCH",  "KITCHDSC", "ROOF")]
 
 jvt3 <- read_asset_data(study, varlist)
-jvt3 <- assetPCA(jvt3, varlist, reorder=T)
+jvt3 <- assetPCA(jvt3, varlist, reorder=F)
 saveRDS(jvt3, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 #---------
@@ -365,7 +365,7 @@ cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
 varlist<-colnames(d)[colnames(d) %in%  c("BED", "BICYCLE", "CLTHCAB", "DTABLE",  "ELEC", "FPOND", "GARDEN",  "GROVE", "MCYCLE", "MOBILE", 
                                          "NROOMS",  "RADIO", "RICKSHAW", "SEWING", "TV", "KITCHDSC","WATCH", "ROOF")]
 d <- read_asset_data(study, varlist)
-d<-assetPCA(d, varlist, reorder=T)
+d<-assetPCA(d, varlist, reorder=F)
 saveRDS(d, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 #---------
@@ -377,7 +377,7 @@ cat(paste(shQuote(colnames(d), type="cmd"), collapse=", "))
 varlist<-colnames(d)[colnames(d) %in% c( "BEDNET", "BICYCLE", "CAR", "MATTRESS", "RADIO", "ROOF", "WALL")]
 
 lcn5 <- read_asset_data(study, varlist)
-lcn5 <- assetPCA(lcn5, varlist, reorder=F)
+lcn5 <- assetPCA(lcn5, varlist, reorder=T)
 saveRDS(lcn5, file=paste0(deriveddata_dir, study, '.HHwealth.rds') )
 
 
@@ -394,10 +394,10 @@ varlist<-colnames(d)[colnames(d) %in% c( "AGLAND", "BICYCLE", "ELEC", "FAN", "FR
 mled <- read_asset_data(study, varlist)
 
 d1<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[1],], varlist, reorder=F)
-d2<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[2],], varlist, reorder=T) #Not enough variables
-d3<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[3],], varlist, reorder=T)
-d4<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[4],], varlist, reorder=T)
-d5<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[5],], varlist, reorder=T)
+d2<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[2],], varlist, reorder=F) #Not enough variables
+d3<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[3],], varlist, reorder=F)
+d4<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[4],], varlist, reorder=F)
+d5<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[5],], varlist, reorder=F)
 d6<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[6],], varlist, reorder=F)
 d7<- assetPCA(mled[mled$COUNTRY==unique(d$COUNTRY)[7],], varlist, reorder=F)
 
