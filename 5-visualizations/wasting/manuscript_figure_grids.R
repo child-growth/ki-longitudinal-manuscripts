@@ -10,7 +10,7 @@ theme_set(theme_ki())
 
 
 #Figure 2
-plot_list <- readRDS(here("figures/plot-objects/fig2_plot_objects.rds"))
+plot_list <- readRDS(here("figures/plot-objects/fig2_plot_objects.RDS"))
 
 prev_p <- plot_list[[2]]$`plot`
 prev_p <- prev_p + theme(legend.position = "none") + coord_cartesian(ylim=c(0, 37))
