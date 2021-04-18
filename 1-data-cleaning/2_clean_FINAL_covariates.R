@@ -165,17 +165,10 @@ table(pca_unique$studyid, pca_unique$hhwealth_quart)
 table(df$studyid, df$hhwealth_quart)
 
 #remove space for longbow
-<<<<<<< HEAD
-df$hhwealth_quart <- as.character(df$hhwealth_quart)
-df$hhwealth_quart <- gsub(" ", "", df$hhwealth_quart)
-df$hhwealth_quart <- factor(df$hhwealth_quart, levels=c("WealthQ4","WealthQ3","WealthQ2","WealthQ1"))
-table(df$hhwealth_quart)
-=======
 d$hhwealth_quart <- as.character(d$hhwealth_quart)
 d$hhwealth_quart <- gsub(" ", "", d$hhwealth_quart)
 d$hhwealth_quart <- factor(d$hhwealth_quart, levels=c("WealthQ4","WealthQ3","WealthQ2","WealthQ1"))
 table(d$hhwealth_quart)
->>>>>>> d90f027d1d656c349340f3e49e9b4a9425971534
 
 #--------------------------------------------------------------------------
 # Code Food security

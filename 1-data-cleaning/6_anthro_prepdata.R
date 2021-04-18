@@ -166,7 +166,7 @@ saveRDS(co_rf, rf_co_occurrence_path)
 Ndf <- rbind(stunt_rf, wast_rf, waz_rf) %>% filter(agedays < 24 * 30.4167)
 length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
 length(unique(Ndf$country)) #Countries
-length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
+length(unique(paste0(Ndf$studyid, "_", Ndf$subjid))) #Children
 length(unique(paste0(Ndf$studyid, "_",Ndf$subjid, "_", Ndf$agedays))) #Observations
 
 
@@ -174,7 +174,7 @@ length(unique(paste0(Ndf$studyid, "_",Ndf$subjid, "_", Ndf$agedays))) #Observati
 mort_Ndf <- rbind(stunt_mort, wast_mort, waz_mort) %>% filter(measurefreq=="yearly", agedays < 24 * 30.4167)
 length(unique(paste0(mort_Ndf$studyid, mort_Ndf$country))) #cohorts
 length(unique(mort_Ndf$country)) #Countries
-length(unique(paste0(mort_Ndf$studyid, mort_Ndf$subjid))) #Children
+length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid))) #Children
 length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid, "_", mort_Ndf$agedays))) #Observations
 
 mort_Ndf <- rbind(stunt_mort, wast_mort, waz_mort) %>% filter(agedays < 24 * 30.4167)
@@ -242,7 +242,7 @@ saveRDS(co, co_occurrence_data_path)
 Ndf <- stunt %>% filter(agedays < 24 * 30.4167)
 length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
 length(unique(Ndf$country)) #Countries
-length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
+length(unique(paste0(Ndf$studyid,"_", Ndf$subjid))) #Children
 length(unique(paste0(Ndf$studyid, "_",Ndf$subjid, "_",Ndf$agedays))) #Observations
 nrow(Ndf) #Observations
 
@@ -250,7 +250,7 @@ nrow(Ndf) #Observations
 Ndf <- stunt %>% filter(agedays < 24 * 30.4167, measurefreq=="monthly")
 length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
 length(unique(Ndf$country)) #Countries
-length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
+length(unique(paste0(Ndf$studyid, "_", Ndf$subjid))) #Children
 nrow(Ndf) #Observations
 
 
@@ -260,6 +260,6 @@ nrow(Ndf) #Observations
 Ndf <- rbind(stunt, wast, waz) %>% filter(agedays < 24 * 30.4167, measurefreq=="monthly")
 length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
 length(unique(Ndf$country)) #Countries
-length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
+length(unique(paste0(Ndf$studyid,"_", Ndf$subjid))) #Children
 length(unique(paste0(Ndf$studyid, "_", Ndf$subjid, "_", Ndf$agedays))) #Observations
 
