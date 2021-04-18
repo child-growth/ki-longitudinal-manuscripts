@@ -89,8 +89,12 @@ df$ref <- ifelse(df$intervention_level=="Opposite\nmax rain","(ref.)",NA)
 
 
 p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
-  geom_errorbar(aes(color=seasonality_category, ymin=CI1, ymax=CI2), width = 0) +
-  geom_point(aes(fill=seasonality_category, color=seasonality_category), size = 3) +
+  geom_errorbar(aes(color=seasonality_category, ymin=CI1, ymax=CI2), 
+                width = 0, 
+                position = position_dodge(0.3)) +
+  geom_point(aes(fill=seasonality_category, color=seasonality_category), 
+             size = 3, 
+             position = position_dodge(0.3)) +
   geom_text(aes(label=ref), hjust = 1) +
   scale_color_manual(values=tableau11[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure)) +
   geom_hline(yintercept = 0) + coord_flip() +
@@ -103,13 +107,14 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
                                size = 14 #, angle = 45, hjust = 1, vjust =1
                                )) +
   theme(axis.title.y = element_text(size = 14)) +
-  ggtitle("") + facet_wrap(~seasonality_category, ncol=2) +
-    theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
+  theme(legend.position="right") +
+  ggtitle("") + 
+  theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
 
 print(p_seasonRR)
 
 saveRDS(p_seasonRR, file = here("/figures/plot-objects/season_RR_plot.rds"))
-ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=5, height=6)
+ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=7, height=6)
 
 
 
