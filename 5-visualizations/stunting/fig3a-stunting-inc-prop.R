@@ -1,3 +1,13 @@
+##########################################
+# ki longitudinal manuscripts
+# stunting analysis
+#
+# plotof stunting incidence
+# showing cohort-specific results
+# and pooled results by region
+
+#  primary analysis
+##########################################
 
 #-----------------------------------
 # preamble
@@ -8,7 +18,9 @@ source(paste0(here::here(), "/0-config.R"))
 #Load data
 d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
 
-
+#-----------------------------------------
+# Prepare data for plot
+#-----------------------------------------
 # scale cohort-specific estimates
 d = d %>% mutate(
   est = ifelse(disease=="Stunting"  & cohort!="pooled",
@@ -20,19 +32,19 @@ d = d %>% mutate(
 )
 
 Disease = "Stunting"
-Measure="Prevalence"
-Birth="yes"
+Measure="Incidence proportion"
+Birth="strat"
 Severe="no" 
 Age_range="3 months"
-# Cohort="pooled"
 xlabel="Child age, months"
-ylabel='Point Prevalence (95% CI)'
+ylabel='Incidence Proportion (95% CI)'
 h1=69
 h2=72
 returnData=T
 Analysis="Primary"
 
-### TURN INTO FUNCTION: 
+
+# subset results data frame 
 df <- d %>% filter(
   disease == Disease &
     measure == Measure &
@@ -45,28 +57,27 @@ df <- d %>% filter(
 df <- droplevels(df)
 strip.text.size=14
 Region = T
-# 
-# 
-# # remove N= from labels
-# df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
-#   mutate(nstudy.f = gsub('N=', '', nstudy.f))
-# 
-# # remove text from labels
-# df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
-#   mutate(nstudy.f = gsub(' studies', '', nstudy.f))
-# 
+
 # Remove 'months' from x axis labels
 df <- df %>% arrange(agecat)
 df$agecat <- as.character(df$agecat)
+
 df$agecat <- gsub(" months", "", df$agecat)
 df$agecat <- factor(df$agecat, levels=unique(df$agecat))
 
-# if (min(df$lb) < 0) {
-#   print("Warning: some lower bounds < 0")
-# }
-
 df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
 
+df <- df %>% 
+  mutate(agecat = as.character(agecat)) %>% 
+  mutate(agecat = ifelse(agecat == "8 days-3", "0-3", agecat)) %>% 
+  mutate(agecat = factor(agecat, levels = c(
+    "Birth", "0-3", "3-6", "6-9", "9-12", "12-15", 
+    "15-18", "18-21", "21-24"
+  )))
+
+#-----------------------------------------
+# Make plot
+#-----------------------------------------
 p <- ggplot(df,aes(y=est,x=agecat)) +
   
   # pooled 
@@ -75,16 +86,12 @@ p <- ggplot(df,aes(y=est,x=agecat)) +
   geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0, 
                 data = df %>% filter(ispooled == "yes")) +
   geom_text(aes(x = agecat, y = est, label = round(est)), hjust = 1.35, 
-            data = df %>% filter(ispooled == "yes")) +
+            data = df %>% filter(ispooled == "yes"), size=4.5) +
 
   # cohort-stratified 
-
   geom_point(color = "#878787", fill = "#878787", size = 1.5, 
              data = df %>% filter(ispooled == "no"),
              position = position_jitter(width = 0.15), alpha = 0.25) +
-  # geom_linerange(aes(color=region, ymin=lb, ymax=ub),
-  #               data = df %>% filter(ispooled == "no"),
-  #               position = position_jitter(width = 0.2), alpha = 0.25) +
   
   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
   scale_alpha_manual(values=c(0.25, 1)) +
@@ -97,35 +104,16 @@ p <- ggplot(df,aes(y=est,x=agecat)) +
   
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
   
-  theme(
-    axis.text.x = element_text(margin =
-                                 margin(t = 0, r = 0, b = 0, l = 0),
-                               size = 14)) +
-  theme(axis.title.y = element_text(size = 14)) +
+  facet_grid(~region) +
   
+  theme(
+    axis.text.x = element_text(size = 14, angle = 45, vjust=0.5),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    strip.text.x = element_text(size = 16, margin = margin(t = 0))) +
   ggtitle("")
-
-
-# if(!is.null(Region)) {
-#   p <- p + facet_wrap(~cohort) +
-#     theme(strip.text = element_text(size=strip.text.size, margin = margin(t = 0)))
-# }else {
-  p <- p + facet_grid(~region) +
-    theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
-# }
 
 p
 
-
-# if(!is.null(yrange)){
-#   p <- p + coord_cartesian(ylim=yrange)
-# }
-# 
-# 
-# 
-# if(returnData){
-#   return(list(plot=p,data=df))
-# }else{
-#   return(list(plot=p))
-# }
-# }
+ggsave(p, filename = paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region_cohort--allage.png"),
+       width=12, height=4)

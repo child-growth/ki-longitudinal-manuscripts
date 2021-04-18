@@ -80,9 +80,13 @@ df <- df %>% group_by(agecat) %>%
                                 agedays==first(agedays), firstMedianRecZ,NA))
 
 rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) + 
-  geom_violin(alpha=0.5, draw_quantiles = c(0.25, 0.5, 0.75)) + 
+  geom_violin(alpha=0.2, draw_quantiles = c(0.25, 0.5, 0.75)) + 
+  geom_point(data=df %>% group_by(studyid, agecat) %>% summarize(recZ = mean(recZ)),
+             color = "#464646", fill = "#464646", size = 1.5,
+             position = position_jitter(width = 0.15), alpha = 0.25) +
+  
    geom_text(aes(y=firstMedianRecZ+0.1,  label=(round(firstMedianRecZ,2)))) +
-  geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
+   geom_text(data=pvals, aes(x=comp, y=-3, label=pvalcat, fill = NULL)) +
    ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
    xlab("Age at wasting episode onset")+
    geom_hline(yintercept = -2, linetype="dashed") +
