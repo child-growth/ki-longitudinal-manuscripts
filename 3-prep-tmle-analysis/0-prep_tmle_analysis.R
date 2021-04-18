@@ -2,6 +2,8 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
+source(here("3-prep-tmle-analysis/01_risk_factor_presence.R"))
+
 source(here("3-prep-tmle-analysis/02_calc_wast_rf_outcome.R"))
 source(here("3-prep-tmle-analysis/03_calc_wlz-stunt_rf_outcomes.R"))
 source(here("3-prep-tmle-analysis/04_calc_stunt_rf_outcomes.R"))
@@ -18,4 +20,3 @@ source(here("3-prep-tmle-analysis/13_table1.R"))
 source(here("3-prep-tmle-analysis/14_calc_mort_pooled_logistic_regressions.R"))
 source(here("3-prep-tmle-analysis/15_R2_estimation.R"))
 
-source(here("3-prep-tmle-analysis/01_risk_factor_presence.R"))
