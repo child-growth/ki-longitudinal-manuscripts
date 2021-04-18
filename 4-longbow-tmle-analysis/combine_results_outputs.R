@@ -69,7 +69,10 @@ d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_l
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="4"] <- "Post-max rain"
 d$baseline_level[d$intervention_variable=="rain_quartile"] <- "Opposite max rain"
 
-
+d$intervention_level <- gsub("Wealth ","",d$intervention_level)
+d$intervention_level <- gsub("Wealth","",d$intervention_level)
+d$baseline_level <- gsub("Wealth ","",d$baseline_level)
+d$baseline_level <- gsub("Wealth","",d$baseline_level)
 
 #Exclude extreme estimates from TMLE sparsity
 # dim(d)
