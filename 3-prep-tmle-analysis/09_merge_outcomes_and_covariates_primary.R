@@ -69,28 +69,24 @@ cuminc_nobirth_sev$subjid <- as.character(cuminc_nobirth_sev$subjid)
 #------------------------------------
 
 #merge in covariates
-cuminc <- cuminc %>% subset(., select = -c(tr))
 
 d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc)))], 
                by=c("studyid", "subjid", "country"))
 
 save(d,  file="st_cuminc_rf_primary.rdata")
 
-cuminc_sev <- cuminc_sev %>% subset(., select = -c(tr))
 
 d <- left_join(cuminc_sev, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_sev)))], 
                by=c("studyid", "subjid", "country"))
 
 save(d,  file="sst_cuminc_rf_primary.rdata")
 
-cuminc_nobirth <- cuminc_nobirth %>% subset(., select = -c(tr))
 
 d <- left_join(cuminc_nobirth, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
                by=c("studyid", "subjid", "country"))
 
 save(d,  file="st_cuminc_nobirth_rf_primary.rdata")
 
-cuminc_nobirth_sev <- cuminc_nobirth_sev %>% subset(., select = -c(tr))
 
 d <- left_join(cuminc_nobirth_sev, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
                by=c("studyid", "subjid", "country"))
@@ -122,28 +118,23 @@ pers_wast$subjid <- as.character(pers_wast$subjid)
 
 
 #merge in covariates
-cuminc <- cuminc %>% subset(., select = -c(tr))
-
 d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc)))], 
                by=c("studyid", "subjid", "country"))
 
 save(d,  file="wast_cuminc_rf_primary.rdata")
 
-cuminc_sev <- cuminc_sev %>% subset(., select = -c(tr))
 
 d <- left_join(cuminc_sev, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_sev)))], 
                by=c("studyid", "subjid", "country"))
 
 save(d,  file="swast_cuminc_rf_primary.rdata")
 
-cuminc_nobirth <- cuminc_nobirth %>% subset(., select = -c(tr))
 
 d <- left_join(cuminc_nobirth, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
                by=c("studyid", "subjid", "country"))
 
 save(d,  file="wast_cuminc_nobirth_rf_primary.rdata")
 
-cuminc_nobirth_sev <- cuminc_nobirth_sev %>% subset(., select = -c(tr))
 
 d <- left_join(cuminc_nobirth_sev, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
                by=c("studyid", "subjid", "country"))

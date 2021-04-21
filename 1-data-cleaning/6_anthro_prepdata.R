@@ -28,6 +28,7 @@ drop_int_arms <- function(d){
 
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 dim(d)
+unique(paste0(d$studyid,"-",d$country))
 length(unique(paste0(d$studyid,d$country,d$subjid)))
 
 

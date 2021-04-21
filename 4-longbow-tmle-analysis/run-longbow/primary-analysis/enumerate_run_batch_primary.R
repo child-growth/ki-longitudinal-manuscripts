@@ -20,7 +20,7 @@ default_params <- jsonlite::fromJSON(inputs)
 analyses <- readRDS(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses_primary.rds"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(toJSON(enumerated_analyses[[8]]),"single_primary_analysis.json")
+writeLines(jsonlite::toJSON(enumerated_analyses[[18]]),"single_primary_analysis.json")
 writeLines(jsonlite::toJSON(enumerated_analyses),"primary_bin_analyses.json")
 
 
@@ -32,7 +32,7 @@ rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rm
 inputs <- "single_primary_analysis.json"
 
 #run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 
 bin_batch_inputs <- "primary_bin_analyses.json"

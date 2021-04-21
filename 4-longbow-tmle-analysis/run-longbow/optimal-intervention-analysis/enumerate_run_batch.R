@@ -34,7 +34,7 @@ analyses <- analyses[!sapply(analyses$W,is.null),] # Drop unadjusted estimates
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(jsonlite::toJSON(enumerated_analyses[[21]]),"single_analysis.json")
+writeLines(jsonlite::toJSON(enumerated_analyses[[17]]),"single_analysis.json")
 writeLines(jsonlite::toJSON(enumerated_analyses),"all_analyses.json")
 
 
