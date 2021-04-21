@@ -8,15 +8,31 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 Zscores <- readRDS(here("results/rf results/raw longbow results/results_cont_2021-04-05.RDS"))
+cont_wealth <- readRDS(here("results/rf results/raw longbow results/results_cont_wealth_2021-04-18.RDS"))
+#Merge in wealth
+cont_wealth <- bin_wealth %>% filter(outcome_variable %in% unique(bin_other$outcome_variable))
+Zscores <- Zscores %>% filter(intervention_variable != "hhwealth_quart")
+Zscores <- bind_rows(Zscores, cont_wealth)
+
 saveRDS(Zscores, here("results/rf results/longbow results/results_cont.RDS"))
 
-bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-05.RDS"))
-saveRDS(bin_primary, here("results/rf results/longbow results/results_bin_primary.RDS"))
 
+bin_primary <- readRDS(here("results/rf results/raw longbow results/results_bin_primary_2021-04-19.RDS"))
 bin_other <- readRDS(here("results/rf results/raw longbow results/results_bin_2021-04-06.RDS"))
+bin_wealth <- readRDS(here("results/rf results/raw longbow results/results_bin_wealth_2021-04-18.RDS"))
+
+# d <- bin_primary %>% filter(agecat %in% c("0-24 months", "0-6 months","6-24 months")) %>% droplevels(.)
+# table(d$intervention_variable, d$agecat)
+
+#Merge in wealth
+bin_wealth_other <- bin_wealth %>% filter(outcome_variable %in% unique(bin_other$outcome_variable))
+bin_other <- bin_other %>% filter(intervention_variable != "hhwealth_quart")
+bin_other <- bind_rows(bin_other, bin_wealth_other)
+
+saveRDS(bin_primary, here("results/rf results/longbow results/results_bin_primary.RDS"))
 saveRDS(bin_other, here("results/rf results/longbow results/results_bin_other.RDS"))
 
-Zscores_unadj <- readRDS(here("results/rf results/raw longbow results/results_cont_unadj_2020-03-06.rds"))
+Zscores_unadj <- readRDS(here("results/rf results/raw longbow results/results_cont_unadj_2020-04-19.rds"))
 saveRDS(Zscores_unadj, here("results/rf results/longbow results/results_cont_unadj.RDS"))
 
 bin_unadj <- readRDS(here("results/rf results/raw longbow results/results_bin_unadj_2020-03-06.rds"))

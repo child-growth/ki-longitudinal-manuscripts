@@ -21,8 +21,6 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 d <- droplevels(d)
 
 #temp
-d <- d %>% filter(intervention_variable=="hhwealth_quart", intervention_level  %in% c("WealthQ1"))
-
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
