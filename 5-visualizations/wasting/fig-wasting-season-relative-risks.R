@@ -95,9 +95,9 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   geom_point(aes(fill=seasonality_category, color=seasonality_category), 
              size = 3, 
              position = position_dodge(0.3)) +
-  geom_text(aes(label=ref), hjust = 1) +
+  geom_text(aes(label=ref), hjust = 1.2) +
   scale_color_manual(values=tableau11[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure)) +
-  geom_hline(yintercept = 0) + coord_flip() +
+  coord_flip() +
   xlab("3-month quarter of the year, grouped by rainfall")+
   ylab("WLZ difference") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 5))  +
