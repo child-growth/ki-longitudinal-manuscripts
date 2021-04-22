@@ -74,23 +74,28 @@ saveRDS(plotdf, paste0(ghapdata_dir,"/birthwast_strat_whz_plot_data.rds"))
 
 #Make a cohort-stratified dataset
 # estimate a pooled fit, over birth wasting status
+df <- d %>% group_by(studyid, country) %>% mutate(N=length(unique(born_wast))) %>% 
+  filter(N==2) %>% droplevels()
+
 plotdf <- NULL
 set.seed(12345)
-for(i in 1:length(unique(d$born_wast))){
-  for(j in 1:length(unique(d$studyid))){
-    cat=unique(d$born_wast)[i]
-    study=unique(d$studyid)[j]
-    df <- filter(d, born_wast==cat, studyid==study)
-    for(k in 1:length(unique(df$country))){
-      country=unique(df$country)[k]
-      di <- filter(d, country==country)
+for(i in 1:length(unique(df$born_wast))){
+  for(j in 1:length(unique(df$studyid))){
+    cat=unique(df$born_wast)[i]
+    study=unique(df$studyid)[j]
+    subdf <- filter(df, born_wast==cat, studyid==study)
+    for(k in 1:length(unique(subdf$country))){
+      country=unique(subdf$country)[k]
+      di <- filter(subdf, country==country)
       
+      #cat(k," ",study," ",country," ",cat," ",length(agedays)," ",length(fitci$fit),"\n")
   #fiti <- mgcv::gam(whz~s(agedays,bs="cr", k=10),data=di)
-  fiti <- mgcv::gam(whz~s(agedays,bs="cr"),data=di)
+      fiti <- NULL
+  try(fiti <- mgcv::gam(whz~s(agedays,bs="cr"),data=di))
   range=min(di$agedays):max(di$agedays)
   agedays=1:(diff(range(range))+1)
   newd <- data.frame(agedays=range)
-  fitci <- gamCI(m=fiti,newdata=newd,nreps=1000)
+  try(fitci <- gamCI(m=fiti,newdata=newd,nreps=1000))
   dfit <- data.frame(studyid=study, country=country,
                      born_wast=cat, agedays=agedays,
                      fit=fitci$fit,fit_se=fitci$se.fit,
@@ -99,6 +104,7 @@ for(i in 1:length(unique(d$born_wast))){
     }
   }  
 }
+
 plotdf
 
 plotdf$born_wast <- factor(ifelse(plotdf$born_wast==1, "Born wasted", "Not born wasted"))

@@ -27,6 +27,11 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 #######################################################################
 d <- readRDS(paste0(ghapdata_dir, "velocity_longfmt.rds"))
 
+#Check that all monthly cohorts are in the dataset
+assert_that(all(monthly_cohorts %in% unique(d$studyid)))
+
+
+
 #######################################################################
 # Analyze data
 #######################################################################

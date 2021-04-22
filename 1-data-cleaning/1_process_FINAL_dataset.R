@@ -94,12 +94,36 @@ d$studyid[d$studyid=="CMIN4"] <- "CMIN Brazil89"
 d$studyid[d$studyid=="CMIN6"] <- "CMIN GB94" 
 d$studyid[d$studyid=="CMIN7"] <- "CMIN Bangladesh93" 
 
-#Drop studies with the median birth before 1990
-d <- d %>% group_by(studyid, country) %>% 
-  mutate(med_start=median(brthyr, na.rm=T)) %>% 
-  filter(med_start>=1990) %>% ungroup()
-table(d$studyid)
+#fill in missing country labels
+d$country[d$studyid=="Respak"] <- "PAKISTAN" 
+d$country[d$studyid=="CONTENT"] <- "PERU" 
 
+
+#Drop studies with the median birth before 1990
+table(d$studyid, is.na(d$brthyr))
+#temp fill in missing years of birth
+d$flag<-0
+d$flag[d$studyid=="NIH-Birth" & is.na(d$brthyr)] <- 1
+d$flag[d$studyid=="PROVIDE" & is.na(d$brthyr)] <- 1
+d$flag[d$studyid=="NIH-Crypto" & is.na(d$brthyr)] <- 1
+d$brthyr[d$studyid=="NIH-Birth" & is.na(d$brthyr)] <- 2008
+d$brthyr[d$studyid=="PROVIDE" & is.na(d$brthyr)] <- 2011
+d$brthyr[d$studyid=="NIH-Crypto" & is.na(d$brthyr)] <- 2014
+table(d$studyid, is.na(d$brthyr))
+
+
+
+all_studies <- unique(paste0(d$studyid,"-",d$country))
+d <- d %>% group_by(studyid, country) %>% 
+  mutate(med_start=median(brthyr, na.rm=T)) 
+d %>% group_by(studyid, country) %>% summarise(first(med_start)) %>% as.data.frame()
+d <- d %>% filter(med_start>=1990) %>% ungroup()
+#dropped studies
+all_studies[!(all_studies %in% unique(paste0(d$studyid,"-",d$country)))]
+
+d$brthyr[d$studyid=="NIH-Birth" & d$flag==1] <- NA
+d$brthyr[d$studyid=="PROVIDE" & d$flag==1] <- NA
+d$brthyr[d$studyid=="NIH-Crypto" & d$flag==1] <- NA
 
 
 #add in CMIN GPS

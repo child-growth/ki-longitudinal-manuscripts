@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -46,11 +46,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -77,7 +77,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -103,13 +103,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -124,7 +117,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -188,14 +181,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -208,9 +193,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -227,10 +212,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -242,8 +223,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > 
 > 
 > 
@@ -266,9 +248,50 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 +                    "DUR_R"))
 > gc()
             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1962442  104.9    3022948  161.5   3022948  161.5
-Vcells 405824960 3096.2  908520396 6931.5 779872329 5950.0
+Ncells   2275536  121.6    4297900  229.6   2686965  143.5
+Vcells 406298410 3099.9  909338508 6937.8 780345708 5953.6
 > 
+> 
+> 
+> #Load in TDC 
+> tdc <- read.csv(paste0(ghapdata_dir,"raw individual study datasets/KI1000108_TDC.csv")) %>% mutate(STUDYID="TDC")
+> tdc %>% group_by(SUBJID) %>% mutate(lagage=AGEDAYS-lag(AGEDAYS)) %>% ungroup() %>% summarize(mn=mean(lagage,na.rm=T), md=median(lagage,na.rm=T))
+# A tibble: 1 x 2
+     mn    md
+  <dbl> <dbl>
+1  32.2    30
+> 
+> colnames(d)
+ [1] "STUDYID"  "SUBJID"   "SEX"      "AGEDAYS"  "MONTH"    "WTKG"    
+ [7] "HTCM"     "LENCM"    "HCIRCM"   "MUACCM"   "WAZ"      "HAZ"     
+[13] "WHZ"      "MUAZ"     "SITEID"   "CTRYCD"   "COUNTRY"  "REGION"  
+[19] "CITYTOWN" "LATITUDE" "LONGITUD" "CLUSTID"  "ARM"      "TR"      
+[25] "GAGEBRTH" "DEAD"     "AGEDTH"   "CAUSEDTH" "BRTHYR"   "BRTHWEEK"
+[31] "BRTHMON"  "PARITY"   "BRTHORDR" "BIRTHWT"  "BIRTHLEN" "VAGBRTH" 
+[37] "HDLVRY"   "MAGE"     "MHTCM"    "MWTKG"    "MBMI"     "MEDUCYRS"
+[43] "SINGLE"   "FAGE"     "FHTCM"    "FEDUCYRS" "TRTH2O"   "CLEANCK" 
+[49] "IMPFLOOR" "NROOMS"   "NHH"      "NCHLDLT5" "SES"      "EARLYBF" 
+[55] "HFOODSEC"
+> colnames(tdc)
+ [1] "STUDYID"  "SUBJID"   "SITEID"   "SEXN"     "SEX"      "FEEDINGN"
+ [7] "FEEDING"  "BRTHYR"   "BRTHWEEK" "BIRTHWT"  "BIRTHLEN" "DELIVERY"
+[13] "CTRYCD"   "COUNTRY"  "REGCTRY"  "REGCTYP"  "LATITUDE" "LONGITUD"
+[19] "ELEVATN"  "AGEDAYS"  "WTKG"     "HTCM"     "LENCM"    "BMI"     
+[25] "WAZ"      "HAZ"      "WHZ"      "BAZ"      "GRAVIDA"  "NABT"    
+[31] "NSTLBRTH" "NLCHILD"  "DLVLOCN"  "DLVLOC"   "ABORTHX"  "NADULT"  
+[37] "NCHLD"    "NPERSON"  "NROOMS"   "CAR"      "CLTHCAB"  "COOKFUEL"
+[43] "COOKPLAC" "FAMTYP"   "FAN"      "FLOOR"    "LLPHONE"  "MOBILE"  
+[49] "OWNHOME"  "ROOF"     "TAPEREC"  "TV"       "WALL"     "H2OTRTP" 
+[55] "SUMEP"    "SUMDIAR"  "SUMDAYS"  "PCTDIAR" 
+> tdc <- tdc %>% rename(NHH=NPERSON) %>% mutate(BRTHORDR=GRAVIDA - NABT - NSTLBRTH, 
++                                               HDLVRY=case_when(
++                                                 DLVLOC=="Hospital" ~ 0,
++                                                 DLVLOC=="Home" ~ 1
++                                               ))
+> 
+> 
+> d$SUBJID <- as.numeric(d$SUBJID)
+> d <- bind_rows(d, tdc)
 > 
 > unique(d$STUDYID)
  [1] "AgaKhanUniv"      "BurkinaFasoZn"    "CMC-V-BCS-2002"   "CMIN"            
@@ -280,26 +303,245 @@ Vcells 405824960 3096.2  908520396 6931.5 779872329 5950.0
 [25] "PROBIT"           "PROVIDE"          "Respak"           "SAS-CompFeed"    
 [29] "SAS-FoodSuppl"    "Serrinha-VitA"    "TanzaniaChild2"   "VITAMIN-A"       
 [33] "VITAMIN-B12"      "WASH-BK"          "WASH-Bangladesh"  "WomenFirst"      
-[37] "ZINC-MORTALITY"   "ZVITAMBO"        
-> 
+[37] "ZINC-MORTALITY"   "ZVITAMBO"         "TDC"             
 > colnames(d) <- tolower(colnames(d))
+> rm(tdc)
 > gc()
-            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1964463  105.0    3022948  161.5   3022948  161.5
-Vcells 405830328 3096.3  908520396 6931.5 779872329 5950.0
+            used   (Mb) gc trigger    (Mb)   max used    (Mb)
+Ncells   2354000  125.8    4297900   229.6    2686965   143.5
+Vcells 699139606 5334.1 1927208057 14703.5 1828425470 13949.8
+> 
+> # df <- d %>% filter(studyid=="COHORTS" & subjid %in% c("20000270", "20000391", "20000672", "20001129", "20001453"))
+> # head(df)
 > 
 > #Drop studies Vishak added to data product that don't meet inclusion criteria
 > dim(d)
-[1] 9586452      55
+[1] 9590232      92
 > d <- d[!(studyid %in% c("DIVIDS", "WomenFirst", "INCAP", "ILINS-DYAD-G"))]
 > dim(d)
-[1] 9525336      55
+[1] 9529116      92
 > gc()
-            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1992691  106.5    3022948  161.5   3022948  161.5
-Vcells 403337958 3077.3  908520396 6931.5 830307516 6334.8
+            used   (Mb) gc trigger    (Mb)   max used    (Mb)
+Ncells   2381596  127.2    4297900   229.6    2686965   143.5
+Vcells 694775977 5300.8 1927208057 14703.5 1828425470 13949.8
+> 
+> #check birthyear distribution
+> df <- d %>% filter(!is.na(brthyr)) %>% group_by(studyid, country, subjid) %>% slice(1) %>%
++   mutate(cohort=paste0(studyid,"_",country))
+> df$cohort[df$studyid=="CMIN"] <- paste0(df$studyid[df$studyid=="CMIN"],"_",df$country[df$studyid=="CMIN"],"_",df$siteid[df$studyid=="CMIN"])
+> p<-ggplot(df, aes(brthyr)) + geom_histogram(aes(y = stat(density))) + geom_vline(xintercept=1990) + facet_wrap(~cohort)
+> 
+> #distinguish CMIN cohorts
+> d$studyid[d$studyid=="CMIN"] <- paste0(d$studyid[d$studyid=="CMIN"], d$siteid[d$studyid=="CMIN"])
+> table(d$studyid[d$studyid=="CMIN"], d$country[d$studyid=="CMIN"])
+< table of extent 0 x 0 >
+> d$studyid[d$studyid=="CMIN2"] <- "CMIN Peru89" 
+> d$studyid[d$studyid=="CMIN3"] <- "CMIN Peru95" 
+> d$studyid[d$studyid=="CMIN4"] <- "CMIN Brazil89" 
+> d$studyid[d$studyid=="CMIN6"] <- "CMIN GB94" 
+> d$studyid[d$studyid=="CMIN7"] <- "CMIN Bangladesh93" 
+> 
+> #fill in missing country labels
+> d$country[d$studyid=="Respak"] <- "PAKISTAN" 
+> d$country[d$studyid=="CONTENT"] <- "PERU" 
+> 
+> 
+> #Drop studies with the median birth before 1990
+> table(d$studyid, is.na(d$brthyr))
+                   
+                      FALSE    TRUE
+  AgaKhanUniv          4405       1
+  BurkinaFasoZn       73412    2577
+  CMC-V-BCS-2002      30706       0
+  CMIN Bangladesh93  183864       0
+  CMIN Brazil89      244323       0
+  CMIN GB94          425312       0
+  CMIN Peru89         85173       0
+  CMIN Peru95        156731       0
+  CMIN1              251439       0
+  CMIN5              380345       0
+  COHORTS            155926       0
+  CONTENT            138592   11573
+  EE                 257596       0
+  EU                  38314       0
+  GMS-Nepal-201606    19810       0
+  Guatemala BSC       64996       0
+  ILINS-DOSE          23679       0
+  ILINS-DYAD-M        19045       0
+  ILINS-Zinc         582489       0
+  IRC                 22225       0
+  JiVitA-3           240496       0
+  JiVitA-4          1889576       0
+  Keneba              43735       0
+  LCNI-5              25401       0
+  MAL-ED            1198295       0
+  NIH-Birth               0  786911
+  NIH-Crypto              0  557266
+  PROBIT             289809       0
+  PROVIDE                 0  532518
+  Respak               3177  104152
+  SAS-CompFeed        19596       0
+  SAS-FoodSuppl       77752       0
+  Serrinha-VitA        4451       0
+  TanzaniaChild2      36518       0
+  TDC                  3780       0
+  VITAMIN-A           85913       0
+  VITAMIN-B12        178730       0
+  WASH-Bangladesh     23124       0
+  WASH-BK             20588       0
+  ZINC-MORTALITY     134253       0
+  ZVITAMBO           100542       0
+> #temp fill in missing years of birth
+> d$flag<-0
+> d$flag[d$studyid=="NIH-Birth" & is.na(d$brthyr)] <- 1
+> d$flag[d$studyid=="PROVIDE" & is.na(d$brthyr)] <- 1
+> d$flag[d$studyid=="NIH-Crypto" & is.na(d$brthyr)] <- 1
+> d$brthyr[d$studyid=="NIH-Birth" & is.na(d$brthyr)] <- 2008
+> d$brthyr[d$studyid=="PROVIDE" & is.na(d$brthyr)] <- 2011
+> d$brthyr[d$studyid=="NIH-Crypto" & is.na(d$brthyr)] <- 2014
+> table(d$studyid, is.na(d$brthyr))
+                   
+                      FALSE    TRUE
+  AgaKhanUniv          4405       1
+  BurkinaFasoZn       73412    2577
+  CMC-V-BCS-2002      30706       0
+  CMIN Bangladesh93  183864       0
+  CMIN Brazil89      244323       0
+  CMIN GB94          425312       0
+  CMIN Peru89         85173       0
+  CMIN Peru95        156731       0
+  CMIN1              251439       0
+  CMIN5              380345       0
+  COHORTS            155926       0
+  CONTENT            138592   11573
+  EE                 257596       0
+  EU                  38314       0
+  GMS-Nepal-201606    19810       0
+  Guatemala BSC       64996       0
+  ILINS-DOSE          23679       0
+  ILINS-DYAD-M        19045       0
+  ILINS-Zinc         582489       0
+  IRC                 22225       0
+  JiVitA-3           240496       0
+  JiVitA-4          1889576       0
+  Keneba              43735       0
+  LCNI-5              25401       0
+  MAL-ED            1198295       0
+  NIH-Birth          786911       0
+  NIH-Crypto         557266       0
+  PROBIT             289809       0
+  PROVIDE            532518       0
+  Respak               3177  104152
+  SAS-CompFeed        19596       0
+  SAS-FoodSuppl       77752       0
+  Serrinha-VitA        4451       0
+  TanzaniaChild2      36518       0
+  TDC                  3780       0
+  VITAMIN-A           85913       0
+  VITAMIN-B12        178730       0
+  WASH-Bangladesh     23124       0
+  WASH-BK             20588       0
+  ZINC-MORTALITY     134253       0
+  ZVITAMBO           100542       0
+> 
+> 
+> 
+> all_studies <- unique(paste0(d$studyid,"-",d$country))
+> d <- d %>% group_by(studyid, country) %>% 
++   mutate(med_start=median(brthyr, na.rm=T)) 
+> d %>% group_by(studyid, country) %>% summarise(first(med_start)) %>% as.data.frame()
+`summarise()` has grouped output by 'studyid'. You can override using the `.groups` argument.
+             studyid                      country first(med_start)
+1        AgaKhanUniv                     PAKISTAN             2008
+2      BurkinaFasoZn                 BURKINA FASO             2010
+3     CMC-V-BCS-2002                        INDIA             2002
+4  CMIN Bangladesh93                   BANGLADESH             1994
+5      CMIN Brazil89                       BRAZIL             1990
+6          CMIN GB94                GUINEA-BISSAU             1995
+7        CMIN Peru89                         PERU             1990
+8        CMIN Peru95                         PERU             1995
+9              CMIN1                         PERU             1984
+10             CMIN5                GUINEA-BISSAU             1986
+11           COHORTS                       BRAZIL             1982
+12           COHORTS                    GUATEMALA             1969
+13           COHORTS                        INDIA             1969
+14           COHORTS                  PHILIPPINES             1983
+15           COHORTS                 SOUTH AFRICA             1990
+16           CONTENT                         PERU             2007
+17                EE                     PAKISTAN             2013
+18                EU                        INDIA             1997
+19  GMS-Nepal-201606                        NEPAL             2012
+20     Guatemala BSC                    GUATEMALA             1997
+21        ILINS-DOSE                       MALAWI             2010
+22      ILINS-DYAD-M                       MALAWI             2012
+23        ILINS-Zinc                 BURKINA FASO             2010
+24               IRC                        INDIA             2009
+25          JiVitA-3                   BANGLADESH             2010
+26          JiVitA-4                   BANGLADESH             2012
+27            Keneba                       GAMBIA             2003
+28            LCNI-5                       MALAWI             2008
+29            MAL-ED                   BANGLADESH             2011
+30            MAL-ED                       BRAZIL             2011
+31            MAL-ED                        INDIA             2011
+32            MAL-ED                        NEPAL             2011
+33            MAL-ED                         PERU             2011
+34            MAL-ED                 SOUTH AFRICA             2011
+35            MAL-ED TANZANIA, UNITED REPUBLIC OF             2010
+36         NIH-Birth                   BANGLADESH             2008
+37        NIH-Crypto                   BANGLADESH             2014
+38            PROBIT                      BELARUS             1997
+39           PROVIDE                   BANGLADESH             2011
+40            Respak                     PAKISTAN             2012
+41      SAS-CompFeed                        INDIA             1999
+42     SAS-FoodSuppl                        INDIA             1995
+43     Serrinha-VitA                       BRAZIL             1988
+44    TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF             2008
+45               TDC                        INDIA             2008
+46         VITAMIN-A                        INDIA             1995
+47       VITAMIN-B12                        INDIA             2009
+48   WASH-Bangladesh                   BANGLADESH             2013
+49           WASH-BK                        KENYA             2013
+50    ZINC-MORTALITY                        INDIA             2001
+51          ZVITAMBO                     ZIMBABWE             1998
+> d <- d %>% filter(med_start>=1990) %>% ungroup()
+> #dropped studies
+> all_studies[!(all_studies %in% unique(paste0(d$studyid,"-",d$country)))]
+[1] "CMIN5-GUINEA-BISSAU"  "CMIN1-PERU"           "COHORTS-BRAZIL"      
+[4] "COHORTS-GUATEMALA"    "COHORTS-INDIA"        "COHORTS-PHILIPPINES" 
+[7] "Serrinha-VitA-BRAZIL"
+> 
+> d$brthyr[d$studyid=="NIH-Birth" & d$flag==1] <- NA
+> d$brthyr[d$studyid=="PROVIDE" & d$flag==1] <- NA
+> d$brthyr[d$studyid=="NIH-Crypto" & d$flag==1] <- NA
+> 
+> 
+> #add in CMIN GPS
+> d$latitude[d$studyid=="CMIN Peru89"] <- -12.15585
+> d$longitud[d$studyid=="CMIN Peru89"] <- -76.97213
+> d$latitude[d$studyid=="CMIN Peru95"] <- -12.15585
+> d$longitud[d$studyid=="CMIN Peru95"] <- -76.97213
+> d$latitude[d$studyid=="CMIN Brazil89"] <- -3.7430107485648314 
+> d$longitud[d$studyid=="CMIN Brazil89"] <- -38.554750860572774
+> d$latitude[d$studyid=="CMIN GB94"] <- 11.852849306288046
+> d$longitud[d$studyid=="CMIN GB94"] <- -15.598650188638768
+> d$latitude[d$studyid=="CMIN Bangladesh93"] <- 24.106381157160424 
+> d$longitud[d$studyid=="CMIN Bangladesh93"] <- 90.10170489157913
+> 
+> #fix flipped latitude and longitude switched for three India cohorts
+> d$longitud[d$studyid=="CMC-V-BCS-2002"] <- 78.930000
+> d$longitud[d$studyid=="IRC"] <- 78.930000
+> d$longitud[d$studyid=="TDC"] <- 78.928800
+> d$latitude[d$studyid=="CMC-V-BCS-2002"] <- 15
+> d$latitude[d$studyid=="IRC"] <-   12.85000
+> d$latitude[d$studyid=="TDC"] <-   12.84650
+> 
+> #Fix GPS for Mal-ed Brazil and ZVitambo
+> d$latitude[d$studyid=="ZVITAMBO"] <-   (-17.86)
+> d$latitude[d$studyid=="MAL-ED" & d$country=="BRAZIL"] <- (-3.8)
+> 
 > 
 > #update study names where they have changed during BlueVelvet switch
+> d <- data.table(d)
 > d <- d[studyid=="ZINC-MORTALITY", studyid := "ZnMort"]
 > d <- d[studyid=="VITAMIN-B12", studyid := "Vitamin-B12"]
 > d <- d[studyid=="WASH-BK", studyid := "WASH-Kenya"]
@@ -310,21 +552,32 @@ Vcells 403337958 3077.3  908520396 6931.5 830307516 6334.8
 > d <- d[studyid=="ILINS-DOSE", studyid := "iLiNS-DOSE"]
 > d <- d[studyid=="ILINS-DYAD-M", studyid := "iLiNS-DYAD-M"]
 > 
-> unique(d$studyid)
- [1] "AgaKhanUniv"     "Burkina Faso Zn" "CMC-V-BCS-2002"  "CMIN"           
- [5] "COHORTS"         "CONTENT"         "EE"              "EU"             
- [9] "GMS-Nepal"       "Guatemala BSC"   "iLiNS-DOSE"      "iLiNS-DYAD-M"   
-[13] "iLiNS-Zinc"      "IRC"             "JiVitA-3"        "JiVitA-4"       
-[17] "Keneba"          "LCNI-5"          "MAL-ED"          "NIH-Birth"      
-[21] "NIH-Crypto"      "PROBIT"          "PROVIDE"         "ResPak"         
-[25] "SAS-CompFeed"    "SAS-FoodSuppl"   "Serrinha-VitA"   "TanzaniaChild2" 
-[29] "VITAMIN-A"       "Vitamin-B12"     "WASH-Kenya"      "WASH-Bangladesh"
-[33] "ZnMort"          "ZVITAMBO"       
+> 
+> 
+> 
+> 
+> #Check measurement frequency
+> d %>% filter(!is.na(waz)|!is.na(haz)) %>% group_by(studyid, country, subjid) %>% mutate(lagage=agedays-lag(agedays)) %>% group_by(studyid) %>% summarize(mn=mean(lagage,na.rm=T), md=median(lagage,na.rm=T))
+# A tibble: 38 x 3
+   studyid               mn    md
+   <chr>              <dbl> <dbl>
+ 1 AgaKhanUniv        174.    162
+ 2 Burkina Faso Zn    132.    112
+ 3 CMC-V-BCS-2002      30.5    30
+ 4 CMIN Bangladesh93   33.4    31
+ 5 CMIN Brazil89       97.6    91
+ 6 CMIN GB94           87.4    70
+ 7 CMIN Peru89         36.4    30
+ 8 CMIN Peru95         33.2    31
+ 9 COHORTS           1240.    684
+10 CONTENT             17.3    14
+# … with 28 more rows
 > 
 > 
 > monthly_vec <- c("MAL-ED",   
 +   "CMC-V-BCS-2002",              
-+   "IRC",               
++   "IRC",    
++   "TDC",
 +   "EE",           
 +   "ResPak",  
 +   "PROVIDE",  
@@ -332,13 +585,17 @@ Vcells 403337958 3077.3  908520396 6931.5 830307516 6334.8
 +   "Keneba",  
 +   "Guatemala BSC",       
 +   "GMS-Nepal",    
-+   "CMIN",                 
++   "CMIN Peru89",                 
++   "CMIN Peru95",                 
++   "CMIN Bangladesh93",                 
 +   "CONTENT")
 > 
 > quarterly_vec <- c("iLiNS-Zinc",  
 +   "JiVitA-3",          
 +   "JiVitA-4", 
 +   "LCNI-5",          
++   "CMIN Brazil89",                 
++   "CMIN GB94",                 
 +   "NIH-Birth",
 +   "NIH-Crypto",   
 +   "PROBIT",         
@@ -365,94 +622,38 @@ Vcells 403337958 3077.3  908520396 6931.5 830307516 6334.8
 +                                2 * (studyid %in% quarterly_vec) + 
 +                                3 * (studyid %in% yearly_vec)]]
 > gc()
-            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1994081  106.5    3022948  161.5   3022948  161.5
-Vcells 412974807 3150.8  908520396 6931.5 830307516 6334.8
+            used   (Mb) gc trigger    (Mb)   max used    (Mb)
+Ncells   2667184  142.5    6069358   324.2    6069358   324.2
+Vcells 688386416 5252.0 1859815743 14189.3 2181089188 16640.4
 > 
 > 
 > 
 > #Drop CMIN cohorts with less than 200 children
-> d <- d[!(studyid=="CMIN" & country != "BANGLADESH")]
-> gc()
-            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1994392  106.6    3022948  161.5   3022948  161.5
-Vcells 346500343 2643.6  908520396 6931.5 830307516 6334.8
+> # d <- d[!(studyid=="CMIN" & country != "BANGLADESH")]
+> # gc()
 > 
 > #Mark yearly COHORTS
 > d <- d[studyid=="COHORTS" & country %in% c("BRAZIL", "SOUTH AFRICA"), measurefreq := "yearly"]
 > gc()
-            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1994426  106.6    3022948  161.5   3022948  161.5
-Vcells 350501758 2674.2  908520396 6931.5 830307516 6334.8
+            used   (Mb) gc trigger    (Mb)   max used    (Mb)
+Ncells   2667201  142.5    6069358   324.2    6069358   324.2
+Vcells 692768470 5285.5 1859815743 14189.3 2181089188 16640.4
 > 
 > #Drop yearly studies except for four with high quality mortality data used in the mortality analysis
 > d <- d[measurefreq!="yearly" | studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","Burkina Faso Zn", "VITAMIN-A" )]
 > gc()
-            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1994375  106.6    3022948  161.5   3022948  161.5
-Vcells 327522883 2498.9  908520396 6931.5 830307516 6334.8
+            used   (Mb) gc trigger    (Mb)   max used    (Mb)
+Ncells   2667732  142.5    6069358   324.2    6069358   324.2
+Vcells 656871971 5011.6 1859815743 14189.3 2181089188 16640.4
 > 
-> 
-> # #fix sex and Z-scores in PROBIT and CONTENT
-> # dfull <- d %>% filter(!(studyid %in% c("PROBIT","CONTENT")))
-> # dsub <- d %>% filter((studyid %in% c("PROBIT","CONTENT")))
-> # rm(d)
-> # gc()
-> # 
-> # dsub$sex2 <- ifelse(dsub$sex=="Male", "Female", "Male")
-> # dsub$sex2[is.na(dsub$sex) | dsub$sex==""] <- NA
-> # table(dsub$sex)
-> # table(dsub$sex2)
-> # dsub$sex <- dsub$sex2
-> # 
-> # dsub <- dsub %>% filter(!is.na(sex))
-> 
-> # #recalculate Z-scores
-> # 
-> # #whz
-> # #use length or height standards, depending on age
-> # dsub$whz2 <- ifelse(!is.na(dsub$lencm),
-> #                     who_value2zscore2(dsub$lencm, dsub$wtkg, x_var = "lencm", y_var = "wtkg", sex = dsub$sex),    
-> #                     who_value2zscore(dsub$htcm, dsub$wtkg, x_var = "htcm", y_var = "wtkg", sex = dsub$sex)
-> #                     )
-> # 
-> # 
-> # #temporarily combine length and height variables
-> # dsub$lencm[is.na(dsub$lencm) & !is.na(dsub$htcm)] <- dsub$htcm[is.na(dsub$lencm) & !is.na(dsub$htcm)] 
-> # 
-> # #haz and waz
-> # dsub$haz2 <- who_value2zscore(dsub$agedays, dsub$lencm, x_var = "agedays", y_var = "htcm", sex = dsub$sex)
-> # dsub$waz2 <- who_value2zscore(dsub$agedays, dsub$wtkg, x_var = "agedays", y_var = "wtkg", sex = dsub$sex)
-> # 
-> # 
-> # summary(dsub$haz)
-> # summary(dsub$haz2)
-> # 
-> # summary(dsub$haz[dsub$sex=="Male"])
-> # summary(dsub$haz[dsub$sex=="Female"])
-> # summary(dsub$haz2[dsub$sex=="Male"])
-> # summary(dsub$haz2[dsub$sex=="Female"])
-> # 
-> # summary(dsub$waz)
-> # summary(dsub$waz2)
-> # 
-> # summary(dsub$whz)
-> # summary(dsub$whz2)
-> # 
-> # dsub$haz <- dsub$haz2
-> # dsub$waz <- dsub$waz2
-> # dsub$whz <- dsub$whz2
-> # 
-> # dsub <- dsub %>% subset(., select = -c(sex2, haz2, waz2, whz2))
-> # d <- bind_rows(dfull, dsub)
 > 
 > 
 > saveRDS(d, included_studies_path)
 > gc()
-            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   1994601  106.6    3022948  161.5   3022948  161.5
-Vcells 327521289 2498.8  908520396 6931.5 830307516 6334.8
+            used   (Mb) gc trigger    (Mb)   max used    (Mb)
+Ncells   2667958  142.5    6069358   324.2    6069358   324.2
+Vcells 656870340 5011.6 1859815743 14189.3 2181089188 16640.4
 > 
 > proc.time()
    user  system elapsed 
-132.398  25.369  98.509 
+751.428 116.524 769.797 

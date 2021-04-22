@@ -201,6 +201,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > source(paste0(here::here(),"/0-project-functions/0_wast_inc_functions.R"))
 > 
 > d <- readRDS(paste0(ghapdata_dir,"rf_wasting_data.rds"))
@@ -284,4 +287,4 @@ The following objects are masked from ‘package:base’:
 > 
 > proc.time()
     user   system  elapsed 
-5754.843   28.500 5783.993 
+5858.043   22.949 5880.864 

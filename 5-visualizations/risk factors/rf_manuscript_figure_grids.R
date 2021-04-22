@@ -7,95 +7,51 @@ require(ggmap)
 require(cowplot)
 
 #Figure 2
-rf_Zpar_plot_objects <- readRDS(paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
-pPAR_laz <- rf_Zpar_plot_objects[[1]]
-pPAR_wlz <- rf_Zpar_plot_objects[[2]]
+# rf_Zpar_plot_objects <- readRDS(paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
+# pPAR_laz <- rf_Zpar_plot_objects[[1]]
+# pPAR_wlz <- rf_Zpar_plot_objects[[2]]
+pPAR <- readRDS(here("results/rf results/rf_Zpar_plot_objects.RDS"))
+
 
 rf_Zpar_margin_plot_objects <- readRDS(paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
 mtab_df_laz_tbl <- rf_Zpar_margin_plot_objects[[1]]
 mtab_df_wlz_tbl <- rf_Zpar_margin_plot_objects[[2]]
 
-p1 <- pPAR_laz + xlab("") #+ theme(axis.text = element_text(size=12))
-p2 <- pPAR_wlz + xlab("") #+ theme(axis.text = element_text(size=12))
+# p1 <- pPAR_laz + xlab("") #+ theme(axis.text = element_text(size=12))
+# p2 <- pPAR_wlz + xlab("") #+ theme(axis.text = element_text(size=12))
 
 blank <- grid.rect(gp=gpar(col="white"))
 
-#VIM Plots below
-pVIMhaz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-LAZ.RDS"))
-pVIMwhz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-WLZ.RDS"))
-
+# #VIM Plots below
+# pVIMhaz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-LAZ.RDS"))
+# pVIMwhz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-WLZ.RDS"))
 
 #embedded plots 
 #https://www.r-bloggers.com/plots-within-plots-with-ggplot2-and-ggmap/
-p1embed <- p1 + inset(ggplotGrob(pVIMhaz), xmin = 0, xmax = 10, ymin = 0.12, ymax = 0.58) 
-#p1embed <- p1 + inset(ggplotGrob(pVIMhaz), xmin = 0, xmax = 9, ymin = 0.12, ymax = 0.58) 
-p2embed <- p2 + inset(ggplotGrob(pVIMwhz), xmin = 0, xmax = 10, ymin = 0.12, ymax = 0.58)
-
-pPar_laz_plot = grid.arrange(blank, p1embed, nrow = 2, heights = c(1.3, 20))
-#pPar_laz_plot = grid.arrange(blank, p1embed, nrow = 2, heights = c(0.9, 20))
-pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.55))
-#pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.65))
-pPar_laz_combined = plot_grid(pPar_laz_plot, NULL, pPar_laz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
-
-
-pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(1.3, 20))
-#pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(0.9, 20))
-pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.5))
-#pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.65))
-pPar_wlz_combined = plot_grid(pPar_wlz_plot, NULL, pPar_wlz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
-
-fig2 <- plot_grid(pPar_laz_combined, NULL, pPar_wlz_combined, ncol = 3, labels = c("a","", "b"), rel_widths = c(1, -0.05, 1))
-ggsave(fig2, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
-
-
-
-# #Figure 2 - dissertation style
-# rf_Zpar_plot_objects <- readRDS(paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects_dissertation.RDS"))
-# pPAR_laz <- rf_Zpar_plot_objects[[1]]
-# pPAR_wlz <- rf_Zpar_plot_objects[[2]]
-# 
-# rf_Zpar_margin_plot_objects <- readRDS(paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
-# mtab_df_laz_tbl <- rf_Zpar_margin_plot_objects[[1]]
-# mtab_df_wlz_tbl <- rf_Zpar_margin_plot_objects[[2]]
-# 
-# p1 <- pPAR_laz + xlab("") + theme(legend.position = c(0.77,0.425)) 
-# p2 <- pPAR_wlz + xlab("") + theme(legend.position =  c(0.77,0.425)) 
-# 
-# blank <- grid.rect(gp=gpar(col="white"))
-# 
-# #VIM Plots below
-# pVIMhaz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-LAZ-dissertation.RDS"))
-# pVIMwhz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-WLZ-dissertation.RDS"))
-# 
-# 
-# #embedded plots 
-# #https://www.r-bloggers.com/plots-within-plots-with-ggplot2-and-ggmap/
 # p1embed <- p1 + inset(ggplotGrob(pVIMhaz), xmin = 0, xmax = 10, ymin = 0.12, ymax = 0.58) 
-# #p1embed <- p1 + inset(ggplotGrob(pVIMhaz), xmin = 0, xmax = 9, ymin = 0.12, ymax = 0.58) 
 # p2embed <- p2 + inset(ggplotGrob(pVIMwhz), xmin = 0, xmax = 10, ymin = 0.12, ymax = 0.58)
-# 
+
 # pPar_laz_plot = grid.arrange(blank, p1embed, nrow = 2, heights = c(1.3, 20))
-# #pPar_laz_plot = grid.arrange(blank, p1embed, nrow = 2, heights = c(0.9, 20))
-# pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.55))
-# #pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.65))
+pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.55))
 # pPar_laz_combined = plot_grid(pPar_laz_plot, NULL, pPar_laz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
 # 
 # 
 # pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(1.3, 20))
-# #pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(0.9, 20))
-# pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.5))
-# #pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.65))
+pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.5))
 # pPar_wlz_combined = plot_grid(pPar_wlz_plot, NULL, pPar_wlz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
-# 
-# fig2_diss <- plot_grid(pPar_laz_combined, NULL, pPar_wlz_combined, ncol = 3, labels = c("a","", "b"), rel_widths = c(1, -0.05, 1))
-# ggsave(fig2_diss, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig2-dissertation.png"), width=16, height=8)
+
+fig2 = plot_grid(pPAR, pPar_laz_plot_table, pPar_wlz_plot_table, ncol = 3, rel_widths = c(1, 0.3, 0.3))
+
+# fig2 <- plot_grid(pPar_laz_combined, NULL, pPar_wlz_combined, ncol = 3, labels = c("a","", "b"), rel_widths = c(1, -0.05, 1))
+ggsave(fig2, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
+
 
 
 
 #Figure 3
-p_severecomp <- readRDS(here("/results/fig-severe-outcome-comps.RDS"))[[1]]
-p_ageRR <- readRDS(here("/results/fig-age-strat-wast-plot-objects.RDS"))[[1]]
-splines <- readRDS(here("/figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
+p_severecomp <- readRDS(here("results/fig-severe-outcome-comps.RDS"))[[1]]
+p_ageRR <- readRDS(here("results/fig-age-strat-wast-plot-objects.RDS"))[[1]]
+splines <- readRDS(here("figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
 
 #pos = c(0.75,0.83) #For 2 panels
 #pos = c(0.45,0.83)

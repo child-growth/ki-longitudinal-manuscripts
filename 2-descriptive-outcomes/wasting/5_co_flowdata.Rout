@@ -209,6 +209,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > 
 > d <- readRDS(paste0(ghapdata_dir,"/co_occurrence_data.rds"))
 > 
@@ -515,4 +518,4 @@ Error in rma(data = data, ni = data[[ni]], method = method, xi = data[[xi]],  :
 > 
 > proc.time()
    user  system elapsed 
- 56.280   0.769  57.044 
+ 56.516   0.784  57.288 

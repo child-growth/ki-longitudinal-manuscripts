@@ -22,6 +22,8 @@ source(here("/1-data-cleaning/6_anthro_prepdata.R"))
 source(here("/1-data-cleaning/7_DHS-data-cleaning.R"))
 source(here("/1-data-cleaning/8_DHS-data-quantiles.R"))
 source(here("/1-data-cleaning/9_seasonality_prepdata.R"))
+source(here("/1-data-cleaning/10-monthly-ppt-processing.R"))
+source(here("/1-data-cleaning/11_rainfall_prepdata.R"))
 
 
 source(here("/1-data-cleaning/metadata scripts/1_create_KI_wasting_consort_data.R"))

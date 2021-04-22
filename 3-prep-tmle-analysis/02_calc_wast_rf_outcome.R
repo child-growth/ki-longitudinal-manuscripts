@@ -130,7 +130,7 @@ wast_ci_0_24_no_birth = d6_nobirth %>% ungroup() %>%
   mutate(N=n()) %>%
   ungroup()
 
-cuminc_nobirth <- rbind(wast_ci_0_6_no_birth, wast_ci_0_24_no_birth)
+cuminc_nobirth <- rbind(wast_ci_0_6_no_birth, wast_ci_0_24_no_birth, wast_ci_6_24)
 
 
 table(cuminc$ever_wasted[cuminc$agecat=="0-6 months"])

@@ -33,11 +33,12 @@ save(d_mort, d_mort_noBW, d_waz_mort, file=paste0(ghapdata_dir, "Wasting_mort_in
 
 
 #Sensitivity outcomes
+d30 <- d_noBW30 <-d90<- d_noBW90 <- NULL
 d30 <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., washout=30))
-d_noBW30 <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., washout=30, dropBornWasted=T))
+#d_noBW30 <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., washout=30, dropBornWasted=T))
 
 d90 <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., washout=90))
-d_noBW90 <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., washout=90, dropBornWasted=T))
+#d_noBW90 <- df %>% group_by(studyid, country) %>% do(WastIncCalc(., washout=90, dropBornWasted=T))
 
 save(d30, d_noBW30, d90, d_noBW90, file=paste0(ghapdata_dir, "Wasting_inc_sens_data.RData"))
 

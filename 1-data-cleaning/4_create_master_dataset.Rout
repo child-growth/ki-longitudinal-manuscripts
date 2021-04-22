@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -24,11 +24,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -55,7 +55,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -81,13 +81,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -102,7 +95,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -166,14 +159,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -186,9 +171,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -205,10 +190,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -220,175 +201,11 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > 
 > #load longform anthropometry and mortality data
 > Zscores <- readRDS(included_studies_path)
-> 
-> 
-> # Check how many at-birth measurements have
-> # length < 45cm and therefore no Z-scores
-> df <- Zscores %>% filter(agedays <= 7)
-> dim(df)
-[1] 108941     56
-> mean(df$lencm < 45, na.rm=T)*100
-[1] 9.4351
-> table(1*(df$lencm < 45), is.na(df$whz))
-   
-    FALSE  TRUE
-  0 62876   178
-  1     0  6569
-> table(df$country, 1*(df$lencm < 45))
-                              
-                                   0     1
-                                   0     0
-  BANGLADESH                   22529  4995
-  BELARUS                      13913     7
-  BRAZIL                          62     3
-  GAMBIA                        1515    49
-  GUATEMALA                      829    23
-  INDIA                         6737   441
-  MALAWI                          20     3
-  NEPAL                          672    52
-  PAKISTAN                       219    66
-  PERU                           230     5
-  PHILIPPINES                   2950   100
-  SOUTH AFRICA                   121     2
-  TANZANIA, UNITED REPUBLIC OF   115    10
-  ZIMBABWE                     13142   813
-> 
-> #keep only Z-scores and mortality variables, and month of measurement
-> dput(colnames(Zscores))
-c("studyid", "subjid", "sex", "agedays", "month", "wtkg", "htcm", 
-"lencm", "hcircm", "muaccm", "waz", "haz", "whz", "muaz", "siteid", 
-"ctrycd", "country", "region", "citytown", "latitude", "longitud", 
-"clustid", "arm", "tr", "gagebrth", "dead", "agedth", "causedth", 
-"brthyr", "brthweek", "brthmon", "parity", "brthordr", "birthwt", 
-"birthlen", "vagbrth", "hdlvry", "mage", "mhtcm", "mwtkg", "mbmi", 
-"meducyrs", "single", "fage", "fhtcm", "feducyrs", "trth2o", 
-"cleanck", "impfloor", "nrooms", "nhh", "nchldlt5", "ses", "earlybf", 
-"hfoodsec", "measurefreq")
-> Zscores <- Zscores %>% 
-+   subset(., select = c(studyid, country, measurefreq, subjid, sex, agedays, 
-+                        waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, month, brthweek, brthyr,  dead, agedth, 
-+                        latitude, longitud, causedth))
-> 
-> #mark regions 
-> Zscores <- mark_region(Zscores)
-> table(Zscores$region)
-
-            Africa         South Asia      Latin America N.America & Europe 
-           1269180            5322304             543660             289809 
-             Other 
-            115725 
-> 
-> 
-> #load covariate dataset (one row per child)
-> cov <- readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
-> 
-> dput(colnames(cov))
-c("studyid", "subjid", "sex", "month", "wtkg", "htcm", "lencm", 
-"hcircm", "muaccm", "muaz", "siteid", "ctrycd", "country", "region", 
-"citytown", "latitude", "longitud", "clustid", "arm", "tr", "gagebrth", 
-"dead", "agedth", "causedth", "brthyr", "brthmon", "parity", 
-"birthwt", "birthlen", "vagbrth", "hdlvry", "mage", "mhtcm", 
-"mwtkg", "mbmi", "meducyrs", "single", "fage", "fhtcm", "feducyrs", 
-"trth2o", "cleanck", "impfloor", "nrooms", "nhh", "nchldlt5", 
-"earlybf", "hfoodsec", "measurefreq", "anywast06", "pers_wast", 
-"enstunt", "enwast", "hhwealth_quart", "id", "W_gagebrth", "W_birthwt", 
-"W_birthlen", "W_mage", "W_mhtcm", "W_mwtkg", "W_mbmi", "W_fage", 
-"W_fhtcm", "W_meducyrs", "W_feducyrs", "W_nrooms", "W_nhh", "W_nchldlt5", 
-"W_parity", "impsan", "safeh20", "perdiar6", "perdiar24", "W_perdiar6", 
-"W_perdiar24", "predfeed3", "exclfeed3", "predfeed6", "exclfeed6", 
-"predfeed36", "exclfeed36", "predexfd6")
-> 
-> cov <- cov %>% subset(., select = c(studyid, subjid, siteid, country, arm,  
-+                                     gagebrth, brthmon, parity, birthwt, birthlen, vagbrth, 
-+                                     hdlvry, mage, mhtcm, mwtkg, mbmi, meducyrs, single, 
-+                                     fage, fhtcm, feducyrs, trth2o, cleanck, impfloor, 
-+                                     nrooms, nhh, nchldlt5, earlybf, hfoodsec,  
-+                                     anywast06, pers_wast, enstunt, enwast, hhwealth_quart, 
-+                                     id, W_gagebrth, W_birthwt, W_birthlen, W_mage, W_mhtcm, 
-+                                     W_mwtkg, W_mbmi, W_fage, W_fhtcm, W_meducyrs, W_feducyrs, 
-+                                     W_nrooms, W_nhh, W_nchldlt5, W_parity, impsan, safeh20, 
-+                                     perdiar6, perdiar24, W_perdiar6, W_perdiar24, 
-+                                     predexfd6))
-> 
-> 
-> Zscores$subjid <- as.character(Zscores$subjid)
-> 
-> dim(Zscores)
-[1] 7540678      23
-> dim(cov)
-[1] 109366     57
-> d <- left_join(Zscores, cov, by = c("studyid", "subjid", "country"))
-Warning message:
-Column `country` joining character vector and factor, coercing into character vector 
-> dim(d)
-[1] 7540678      77
-> 
-> rm(Zscores, cov)
-> gc()
-            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   2126529  113.6    3800420  203.0   3344917  178.7
-Vcells 404113417 3083.2  652306974 4976.8 574278686 4381.4
-> 
-> ##Drop observations missing all anthropometry
-> dim(d)
-[1] 7540678      77
-> d <- d %>% filter(!is.na(haz) | !is.na(whz) | !is.na(waz) | !is.na(muaz))
-> dim(d)
-[1] 872348     77
-> 
-> 
-> #Fill in missing month of measurement for cohorts that measure birth month  
-> table(is.na(d$month), is.na(d$brthmon))
-       
-         FALSE   TRUE
-  FALSE 686739    373
-  TRUE   61860 123376
-> table(is.na(d$month))
-
- FALSE   TRUE 
-687112 185236 
-> d$month[is.na(d$month)] <- ceiling((as.numeric(d$brthmon[is.na(d$month)]) + d$agedays[is.na(d$month)]/30.4167)%%12) 
-> table(is.na(d$month))
-
- FALSE   TRUE 
-748972 123376 
-> table(d$month)
-
-    1     2     3     4     5     6     7     8     9    10    11    12 
-66593 58936 64647 59302 62670 58245 61706 60218 65256 64413 61703 65283 
-> 
-> 
-> 
-> # Save dataset
-> saveRDS(d, ki_manuscript_dataset_path)
-> 
-> 
-> # Create dataset of study start years
-> start_year <- d %>% filter(agedays <= 731) %>%
-+   group_by(studyid, country, subjid) %>%
-+   mutate(max_year = max(brthyr + agedays/365)) %>%
-+   group_by(studyid, country) %>% 
-+   summarize(start_year = min(brthyr), median_birth_year = median(brthyr), end_birth_year=max(brthyr), max_yr=max(max_year))
-> 
-> #fill in start year and max year for studies missing birth year
-> start_year$start_year[start_year$studyid=="NIH-Birth"] <- 2008
-> start_year$start_year[start_year$studyid=="PROVIDE"] <- 2011
-> start_year$start_year[start_year$studyid=="NIH-Crypto"] <- 2014
-> start_year$start_year[start_year$studyid=="Burkina Faso Zn"] <- 2010
-> 
-> start_year$max_yr[start_year$studyid=="NIH-Birth"] <- 2014
-> start_year$max_yr[start_year$studyid=="PROVIDE"] <- 2014
-> start_year$max_yr[start_year$studyid=="NIH-Crypto"] <- 2017
-> start_year$max_yr[start_year$studyid=="Burkina Faso Zn"] <- 2012
-> 
-> saveRDS(start_year, here("/data/study_start_years.rds"))
-> 
-> 
-> proc.time()
-   user  system elapsed 
- 74.327   6.576  80.898 
+Error in readRDS(included_studies_path) : error reading from connection
+Execution halted

@@ -203,6 +203,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 > require(cowplot)
 Loading required package: cowplot
@@ -551,7 +554,7 @@ The following object is masked from ‘package:ggpubr’:
 > dim(df)
 [1] 179352      8
 > dim(cov)
-[1] 97543    68
+[1] 99630    68
 > d <- left_join(df, cov, by = c("studyid", "subjid", "country"))
 > dim(d)
 [1] 179352     73
@@ -575,16 +578,10 @@ The following object is masked from ‘package:ggpubr’:
             29518              3591 
 > table(d$country)
 
-                  BANGLADESH                       BRAZIL 
-                       10964                         4837 
-                      GAMBIA                    GUATEMALA 
-                       40115                         2545 
-                       INDIA                        NEPAL 
-                       27713                        19035 
-                    PAKISTAN                         PERU 
-                       11591                        21185 
-                SOUTH AFRICA TANZANIA, UNITED REPUBLIC OF 
-                        6151                        35216 
+  BANGLADESH       BRAZIL       GAMBIA    GUATEMALA        INDIA        NEPAL 
+       10964         4837        40115         2545        27713        19035 
+    PAKISTAN         PERU SOUTH AFRICA     TANZANIA 
+       11591        21185         6151        35216 
 > table(d$rain_quartile)
 
 Opposite max rain     Post-max rain      Pre-max rain          Max rain 
@@ -669,4 +666,4 @@ Opposite max rain     Post-max rain      Pre-max rain          Max rain
 > 
 > proc.time()
    user  system elapsed 
- 19.806   0.687  20.466 
+ 18.907   0.630  19.513 

@@ -225,6 +225,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > 
 > # reloading because some overlap with stunting
 > source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_functions.R"))
@@ -593,6 +596,10 @@ The following objects are masked from ‘package:base’:
 `summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 `summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'agecat'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country', 'agecat'. You can override using the `.groups` argument.
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
 `summarise()` has grouped output by 'studyid', 'country', 'agecat'. You can override using the `.groups` argument.
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.

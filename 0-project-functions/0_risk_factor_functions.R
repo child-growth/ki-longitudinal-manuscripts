@@ -200,6 +200,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   
   unique(RMAest$intervention_level)
   RMAest$intervention_level <- gsub("Wealth ","",RMAest$intervention_level)
+  RMAest$intervention_level <- gsub("Wealth","",RMAest$intervention_level)
   RMAest$intervention_level <- factor(RMAest$intervention_level, 
                                       levels=c("0","1", "No", "Yes",
                                                "<48 cm" , "[48-50) cm",  ">=50 cm",                                  

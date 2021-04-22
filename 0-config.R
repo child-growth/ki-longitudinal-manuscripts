@@ -133,3 +133,23 @@ source(paste0(project_functions_dir, "/0_risk_factor_functions.R"))
 # Set theme
 source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
 theme_set(theme_ki())
+
+
+#list of monthy and monthly+quarterly cohorts
+monthly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Peru89",     
+                     "CMIN Bangladesh93","CONTENT",          "EE",              
+                     "GMS-Nepal",        "Guatemala BSC",    "IRC",             
+                     "Keneba",           "MAL-ED",           "ResPak",          
+                     "TanzaniaChild2",   "TDC")
+monthly_and_quarterly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Brazil89",   
+                                   "CMIN GB94",        "CMIN Peru89",      "CMIN Bangladesh93",
+                                   "CONTENT",          "EE",               "GMS-Nepal",       
+                                   "Guatemala BSC",    "iLiNS-Zinc",       "IRC",             
+                                   "JiVitA-3",         "JiVitA-4",         "Keneba",          
+                                   "LCNI-5",           "MAL-ED",           "PROBIT",          
+                                   "ResPak",           "SAS-CompFeed",     "SAS-FoodSuppl",   
+                                   "TanzaniaChild2",   "ZVITAMBO",         "TDC")
+
+
+
+
