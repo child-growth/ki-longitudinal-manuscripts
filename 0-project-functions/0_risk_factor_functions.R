@@ -17,6 +17,52 @@ specify_longbow <- function(j, analyses_df=analyses, params=default_params){
   return(analysis_params)
 }
 
+
+get_batch_results <- function (batch_id, results_folder = "results"){
+  
+  results_folder <- paste0("data/KI/ki-manuscript-output/longbow/",results_folder)
+  
+  if (dir.exists(results_folder)) {
+    unlink(results_folder, recursive = TRUE)
+  }
+  dir.create(results_folder)
+  cat(sprintf("Downloading results...\n"))
+  job_statuses <- get_job_status(batch_id)
+  job_ids <- names(job_statuses)
+  finished_statuses <- c("success", "error")
+  viewable_job_ids <- job_ids[which(job_statuses %in% finished_statuses)]
+  pb <- progress_bar$new(format = "[:bar] :percent", total = length(viewable_job_ids), 
+                         clear = TRUE)
+  pb$tick(0)
+  for (job_id in viewable_job_ids) {
+    get_job_output(job_id, results_folder)
+    pb$tick()
+  }
+}
+
+load_batch_results <- function (results_file, results_folder = "results"){
+  
+  results_folder <- paste0("data/KI/ki-manuscript-output/longbow/",results_folder)
+  
+  all_results_folders <- dir(results_folder, full.names = TRUE, 
+                             recursive = FALSE)
+  results_files <- file.path(all_results_folders, results_file)
+  one_results_file <- results_files[[1]]
+  all_results <- lapply(results_files, function(one_results_file) {
+    if (file.exists(one_results_file)) {
+      obj_names <- load(one_results_file)
+      return(get(obj_names[[1]]))
+    }
+    else {
+      warning("Expected results file ", one_results_file, 
+              " does not exist")
+      return(NULL)
+    }
+  })
+  results <- rbindlist(all_results, fill = TRUE)
+}
+
+
 #-----------------------------------------------------------------------------------------
 # Plotting functions
 #-----------------------------------------------------------------------------------------
