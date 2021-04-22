@@ -37,7 +37,7 @@ source(paste0(here::here(), "/0-config.R"))
 #Load length velocity data
 vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
-meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocity.RDS"))
+meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocityREML.RDS"))
 
 # load who standard
 who_cm = readRDS(paste0(res_dir, "/WHO_linear_growth_velocity_standard.RDS"))
@@ -97,9 +97,7 @@ vel_n
 # mean LAZ plot - pooled
 #-------------------------------------
 meanlaz_overall = meanlaz %>% 
-  # filter(method.used == "REML") %>% 
   mutate(pooled = ifelse(is.na(method.used),0,1)) %>% 
-  # filter(region=="Overall") %>%
   mutate(agecat = factor(agecat, 
                          levels = c("0-3", "3-6", "6-9",
                                     "9-12", "12-15", "15-18",
@@ -119,7 +117,6 @@ plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall")
   ggtitle("c\n")+
   theme(plot.title = element_text(hjust=0)) +
   theme(legend.position = c(.88, .83),
-        # legend.title = element_blank(),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"),
         plot.title = element_text(hjust=0))
