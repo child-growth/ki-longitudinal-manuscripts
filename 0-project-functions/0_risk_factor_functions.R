@@ -20,7 +20,7 @@ specify_longbow <- function(j, analyses_df=analyses, params=default_params){
 
 get_batch_results <- function (batch_id, results_folder = "results"){
   
-  results_folder <- paste0("data/KI/ki-manuscript-output/longbow/",results_folder)
+  results_folder <- paste0("/data/KI/ki-manuscript-output/longbow/",results_folder)
   
   if (dir.exists(results_folder)) {
     unlink(results_folder, recursive = TRUE)
@@ -42,7 +42,7 @@ get_batch_results <- function (batch_id, results_folder = "results"){
 
 load_batch_results <- function (results_file, results_folder = "results"){
   
-  results_folder <- paste0("data/KI/ki-manuscript-output/longbow/",results_folder)
+  results_folder <- paste0("/data/KI/ki-manuscript-output/longbow/",results_folder)
   
   all_results_folders <- dir(results_folder, full.names = TRUE, 
                              recursive = FALSE)

@@ -93,9 +93,9 @@ deriveddata_dir                   = paste0(ghapdata_dir, "covariate creation int
 # figdata_dir_stunting              = paste0(here::here(),"/figures/stunting/figure-data/")
 # figdata_dir_wasting               = paste0(here::here(),"/figures/wasting/figure-data/")
 BV_dir                           = "/data/KI/ki-manuscript-output"
-fig_dir                           = "/data/KI/ki-manuscript-output/figures"
-figdata_dir_stunting              = paste0(fig_dir,"/stunting/figure-data")
-figdata_dir_wasting               = paste0(fig_dir,"/wasting/figure-data")
+fig_dir                           = "/data/KI/ki-manuscript-output/figures/"
+figdata_dir_stunting              = paste0(fig_dir,"stunting/figure-data/")
+figdata_dir_wasting               = paste0(fig_dir,"wasting/figure-data/")
 
 #################################
 # Data Cleaning Scripts
