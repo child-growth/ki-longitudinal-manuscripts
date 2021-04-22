@@ -202,6 +202,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 > 
 > load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
@@ -412,3 +415,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > #monthly mean whz
 > d <- calc.monthly.agecat(d)
 > monthly.data <- summary.whz(d, method="FE")
+`summarise()` has grouped output by 'studyid', 'country', 'subjid'. You can override using the `.groups` argument.
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+There were 25 warnings (use warnings() to see them)
+> monthly.region <- d %>% group_by(region) %>% do(summary.whz(., method="FE")$whz.res)

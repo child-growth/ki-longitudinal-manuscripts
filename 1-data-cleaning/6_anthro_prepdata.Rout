@@ -204,6 +204,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > 
 > 
 > #Function to drop correct trial arms
@@ -227,6 +230,24 @@ The following objects are masked from ‘package:base’:
 > d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 > dim(d)
 [1] 743334     76
+> unique(paste0(d$studyid,"-",d$country))
+ [1] "Burkina Faso Zn-BURKINA FASO" "CMC-V-BCS-2002-INDIA"        
+ [3] "CMIN Peru95-PERU"             "CMIN Brazil89-BRAZIL"        
+ [5] "CMIN GB94-GUINEA-BISSAU"      "CMIN Peru89-PERU"            
+ [7] "CMIN Bangladesh93-BANGLADESH" "CONTENT-PERU"                
+ [9] "EE-PAKISTAN"                  "GMS-Nepal-NEPAL"             
+[11] "Guatemala BSC-GUATEMALA"      "iLiNS-DOSE-MALAWI"           
+[13] "iLiNS-DYAD-M-MALAWI"          "iLiNS-Zinc-BURKINA FASO"     
+[15] "IRC-INDIA"                    "JiVitA-3-BANGLADESH"         
+[17] "JiVitA-4-BANGLADESH"          "Keneba-GAMBIA"               
+[19] "LCNI-5-MALAWI"                "MAL-ED-BANGLADESH"           
+[21] "MAL-ED-BRAZIL"                "MAL-ED-INDIA"                
+[23] "MAL-ED-NEPAL"                 "MAL-ED-PERU"                 
+[25] "MAL-ED-SOUTH AFRICA"          "MAL-ED-TANZANIA"             
+[27] "PROBIT-BELARUS"               "ResPak-PAKISTAN"             
+[29] "SAS-CompFeed-INDIA"           "SAS-FoodSuppl-INDIA"         
+[31] "TanzaniaChild2-TANZANIA"      "VITAMIN-A-INDIA"             
+[33] "ZVITAMBO-ZIMBABWE"            "TDC-INDIA"                   
 > length(unique(paste0(d$studyid,d$country,d$subjid)))
 [1] 96536
 > 
@@ -689,4 +710,4 @@ The following objects are masked from ‘package:base’:
 > 
 > proc.time()
    user  system elapsed 
-228.644   2.882 231.079 
+231.612   4.968 236.097 

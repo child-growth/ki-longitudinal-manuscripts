@@ -209,6 +209,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > 
 > 
 > d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
@@ -291,4 +294,4 @@ The following objects are masked from ‘package:base’:
 > 
 > proc.time()
    user  system elapsed 
- 19.389   0.688  20.054 
+ 18.573   0.558  19.109 
