@@ -3,9 +3,9 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/sex_strat_stunting_desc_data.RDS"))
-quantiles <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_sex_strat.RDS"))
-quantiles.BW <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_sex_BW_strat.RDS"))
+d <- readRDS(paste0(res_dir,"stunting/sex_strat_stunting_desc_data.RDS"))
+quantiles <- readRDS(paste0(res_dir,"stunting/quantile_data_stunting_sex_strat.RDS"))
+quantiles.BW <- readRDS(paste0(res_dir,"stunting/quantile_data_stunting_sex_BW_strat.RDS"))
 
 
 d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent stunting", "Recovery" )] <-
@@ -67,7 +67,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=here::here("/figures/stunting/laz_by_sex.png"), width=10, height=4)
+ggsave(p, file=paste0(fig_dir, "stunting/laz_by_sex.png"), width=10, height=4)
 
 
 df2 <- df %>% mutate(agecat=ifelse(agecat==0.5,0,agecat))
@@ -90,7 +90,7 @@ p <- ggplot(df2,aes(y=est,x=agecat, group=sex, color=sex)) +
 
 p
 
-ggsave(p, file=here::here("/figures/stunting/laz_by_sex_alt.png"), width=10, height=4)
+ggsave(p, file=paste0(fig_dir, "stunting/laz_by_sex_alt.png"), width=10, height=4)
 
 
 #-------------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=here::here("/figures/stunting/laz_by_sex_and_BW.png"), width=10, height=4)
+ggsave(p, file=paste0(fig_dir, "stunting/laz_by_sex_and_BW.png"), width=10, height=4)
 
 
 
@@ -162,7 +162,7 @@ p <- ggplot(df2,aes(y=est,x=agecat, group=sex, color=sex)) +
 p
 
 
-ggsave(p, file=here::here("/figures/stunting/laz_by_sex_and_BW_alt.png"), width=10, height=8)
+ggsave(p, file=paste0(fig_dir, "stunting/laz_by_sex_and_BW_alt.png"), width=10, height=8)
 
 
 
@@ -230,7 +230,7 @@ mean_laz_plot <- ggplot(df,aes(x = agecat, group = region)) +
 
 
 # save plot and underlying data
-ggsave(mean_laz_plot, file=paste0(here::here(),"/figures/stunting/fig-laz-2-mean-overall_region--allage-sex-stratified.png"), width=14, height=6)
+ggsave(mean_laz_plot, file=paste0(fig_dir,"stunting/fig-laz-2-mean-overall_region--allage-sex-stratified.png"), width=14, height=6)
 
 
 
@@ -274,8 +274,8 @@ mean_laz_plot2 <- ggplot(df2, aes(x = agecat, group = region)) +
 
 
 # save plot and underlying data
-ggsave(mean_laz_plot2, file=paste0(here::here(),
-       "/figures/stunting/fig-laz-2-mean-overall_region--allage-sex-stratified2.png"), 
+ggsave(mean_laz_plot2, file=paste0(fig_dir,
+       "stunting/fig-laz-2-mean-overall_region--allage-sex-stratified2.png"), 
        width=8, height=6)
 
 
@@ -349,7 +349,7 @@ mean_laz_plot <- ggplot(df,aes(x = agecat, group = region)) +
 
 
 # save plot and underlying data
-ggsave(mean_laz_plot, file=paste0(here::here(),"/figures/stunting/fig-laz-2-mean-overall_region--allage-sex-BW-stratified.png"), width=14, height=6)
+ggsave(mean_laz_plot, file=paste0(fig_dir,"stunting/fig-laz-2-mean-overall_region--allage-sex-BW-stratified.png"), width=14, height=6)
 
 
 
@@ -393,8 +393,8 @@ mean_laz_plot2 <- ggplot(df2, aes(x = agecat, group = region)) +
 
 
 # save plot and underlying data
-ggsave(mean_laz_plot2, file=paste0(here::here(),
-       "/figures/stunting/fig-laz-2-mean-overall_region--allage-sex-BW-stratified2.png"), 
+ggsave(mean_laz_plot2, file=paste0(fig_dir,
+       "stunting/fig-laz-2-mean-overall_region--allage-sex-BW-stratified2.png"), 
        width=8, height=6)
 
 

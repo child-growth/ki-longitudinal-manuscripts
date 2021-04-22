@@ -28,7 +28,7 @@ source(paste0(here::here(), "/0-config.R"))
 theme_set(theme_ki())
 
 #Quantile data 
-quantile = readRDS(paste0(here::here(),"/results/quantile_data_stunting.RDS"))
+quantile = readRDS(paste0(res_dir,"stunting/quantile_data_stunting.RDS"))
 
 
 #-------------------------------------------------------------------------------------------

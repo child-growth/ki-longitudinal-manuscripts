@@ -23,7 +23,7 @@ source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-e
 theme_set(theme_ki())
 
 #Quantile data (object: df_quantile)
-df_quantile <- readRDS(paste0(here::here(),"/results/quantile_data_stunting_monthly24.RDS"))
+df_quantile <- readRDS(paste0(res_dir,"stunting/quantile_data_stunting_monthly24.RDS"))
 
 #-------------------------------------------------------------------------------------------
 # Mean LAZ by month with quantiles

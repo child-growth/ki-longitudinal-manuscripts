@@ -89,13 +89,13 @@ ggsave(laz_ageplot, file = paste0(fig_dir, "stunting/fig-", laz_ageplot_name, ".
 #############################################
 # Create LAZ Density Plot
 #############################################
-kiden <- readRDS(paste0(here(), "/results/dhs/ki.density.fits.quarterly.rds"))
+kiden <- readRDS(paste0(res_dir, "dhs/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>% mutate(dsource = "ki cohorts")
 
-dhssubden = readRDS(paste0(here(),"/results/dhs/dhs.density.ki-countries.rds"))
+dhssubden = readRDS(paste0(res_dir,"dhs/dhs.density.ki-countries.rds"))
 dhssubden <- dhssubden %>% mutate(dsource = "DHS, ki countries")
 
-medians = readRDS(paste0(here(),"/results/dhs/dhs.ki.zscore.medians.quarterly.rds")) %>% filter(measure == "LAZ")
+medians = readRDS(paste0(res_dir,"dhs/dhs.ki.zscore.medians.quarterly.rds")) %>% filter(measure == "LAZ")
 
 dhsden_plot <- bind_rows(kiden, dhssubden) %>%
   mutate(
