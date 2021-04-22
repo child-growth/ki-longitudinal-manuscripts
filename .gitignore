@@ -11,6 +11,8 @@
 .httr-oauth
 *.RProfile
 *.html
+*.txt
+*.json
 *.md
 *Rmd
 *.Rout
