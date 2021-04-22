@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -27,11 +27,11 @@ Type 'q()' to quit R.
 > #-----------------------------------
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -58,7 +58,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -84,13 +84,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -105,7 +98,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -169,14 +162,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -189,9 +174,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -208,10 +193,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -223,8 +204,24 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
+> 
+> 
+> #Function to drop correct trial arms
+> drop_int_arms <- function(d){
++   if(length(which(d$studyid=="JiVitA-4" & d$tr!="Control")) > 0){
++     d=d[-which(d$studyid=="JiVitA-4" & d$tr!="Control"),]
++     d=d[-which(d$studyid=="JiVitA-3" & d$tr!="Control"),]
++   }
++   d=d[-which(d$studyid=="PROBIT" & d$tr!="Control"),]
++   d=d[-which(d$studyid=="iLiNS-Zinc" & d$tr!="Control"),]
++   d=d[-which(d$studyid=="SAS-CompFeed" & d$tr!="Control"),]
++   #d=d[-which(d$studyid=="COHORTS" & d$tr=="Other"),] #no longer included because < 1990
++   return(d)
++ }
+> 
 > 
 > #--------------------------------------------
 > # Read in master data file
@@ -232,9 +229,27 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > 
 > d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 > dim(d)
-[1] 872348     77
+[1] 743334     76
+> unique(paste0(d$studyid,"-",d$country))
+ [1] "Burkina Faso Zn-BURKINA FASO" "CMC-V-BCS-2002-INDIA"        
+ [3] "CMIN Peru95-PERU"             "CMIN Brazil89-BRAZIL"        
+ [5] "CMIN GB94-GUINEA-BISSAU"      "CMIN Peru89-PERU"            
+ [7] "CMIN Bangladesh93-BANGLADESH" "CONTENT-PERU"                
+ [9] "EE-PAKISTAN"                  "GMS-Nepal-NEPAL"             
+[11] "Guatemala BSC-GUATEMALA"      "iLiNS-DOSE-MALAWI"           
+[13] "iLiNS-DYAD-M-MALAWI"          "iLiNS-Zinc-BURKINA FASO"     
+[15] "IRC-INDIA"                    "JiVitA-3-BANGLADESH"         
+[17] "JiVitA-4-BANGLADESH"          "Keneba-GAMBIA"               
+[19] "LCNI-5-MALAWI"                "MAL-ED-BANGLADESH"           
+[21] "MAL-ED-BRAZIL"                "MAL-ED-INDIA"                
+[23] "MAL-ED-NEPAL"                 "MAL-ED-PERU"                 
+[25] "MAL-ED-SOUTH AFRICA"          "MAL-ED-TANZANIA"             
+[27] "PROBIT-BELARUS"               "ResPak-PAKISTAN"             
+[29] "SAS-CompFeed-INDIA"           "SAS-FoodSuppl-INDIA"         
+[31] "TanzaniaChild2-TANZANIA"      "VITAMIN-A-INDIA"             
+[33] "ZVITAMBO-ZIMBABWE"            "TDC-INDIA"                   
 > length(unique(paste0(d$studyid,d$country,d$subjid)))
-[1] 109680
+[1] 96536
 > 
 > 
 > #--------------------------------------------
@@ -246,116 +261,122 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > #Check for duplicate agedays
 > dup_age <- d %>% group_by(studyid, subjid, agedays) %>%
 +   summarize(N=n())
+`summarise()` has grouped output by 'studyid', 'subjid'. You can override using the `.groups` argument.
 > mean(dup_age$N)
 [1] 1
 > 
 > # count number of studies
 > length(names(table(d$studyid)))
-[1] 27
+[1] 28
 > 
 > # table of studies
 > table(d$studyid)
 
-Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT 
-          18969           16516            5457          112833            8339 
-             EE       GMS-Nepal   Guatemala BSC      iLiNS-DOSE    iLiNS-DYAD-M 
-           9043           14163            2551           19084           10408 
-     iLiNS-Zinc             IRC        JiVitA-3        JiVitA-4          Keneba 
-          10552           14842          123417           39996           43720 
-         LCNI-5          MAL-ED       NIH-Birth      NIH-Crypto          PROBIT 
-           5931           47962           11828           10542          175496 
-        PROVIDE          ResPak    SAS-CompFeed   SAS-FoodSuppl  TanzaniaChild2 
-          14807            3177            9541            2247           32329 
-      VITAMIN-A        ZVITAMBO 
-          32774           75824 
+  Burkina Faso Zn    CMC-V-BCS-2002 CMIN Bangladesh93     CMIN Brazil89 
+            18969             16516              5457               889 
+        CMIN GB94       CMIN Peru89       CMIN Peru95           CONTENT 
+             8522              2775              5038              8339 
+               EE         GMS-Nepal     Guatemala BSC        iLiNS-DOSE 
+             9043             14163              2551             19084 
+     iLiNS-DYAD-M        iLiNS-Zinc               IRC          JiVitA-3 
+            10408             10552             14842            123417 
+         JiVitA-4            Keneba            LCNI-5            MAL-ED 
+            39996             43720              5931             47962 
+           PROBIT            ResPak      SAS-CompFeed     SAS-FoodSuppl 
+           175496              3177              9541              2247 
+   TanzaniaChild2               TDC         VITAMIN-A          ZVITAMBO 
+            32329              3772             32774             75824 
 > table(d$studyid,d$country)
-                 
-                  BANGLADESH BELARUS BRAZIL BURKINA FASO GAMBIA GUATEMALA
-  Burkina Faso Zn          0       0      0        18969      0         0
-  CMC-V-BCS-2002           0       0      0            0      0         0
-  CMIN                  5457       0      0            0      0         0
-  COHORTS                  0       0      0            0      0     15738
-  CONTENT                  0       0      0            0      0         0
-  EE                       0       0      0            0      0         0
-  GMS-Nepal                0       0      0            0      0         0
-  Guatemala BSC            0       0      0            0      0      2551
-  iLiNS-DOSE               0       0      0            0      0         0
-  iLiNS-DYAD-M             0       0      0            0      0         0
-  iLiNS-Zinc               0       0      0        10552      0         0
-  IRC                      0       0      0            0      0         0
-  JiVitA-3            123417       0      0            0      0         0
-  JiVitA-4             39996       0      0            0      0         0
-  Keneba                   0       0      0            0  43720         0
-  LCNI-5                   0       0      0            0      0         0
-  MAL-ED                7076       0   6167            0      0         0
-  NIH-Birth            11828       0      0            0      0         0
-  NIH-Crypto           10542       0      0            0      0         0
-  PROBIT                   0  175496      0            0      0         0
-  PROVIDE              14807       0      0            0      0         0
-  ResPak                   0       0      0            0      0         0
-  SAS-CompFeed             0       0      0            0      0         0
-  SAS-FoodSuppl            0       0      0            0      0         0
-  TanzaniaChild2           0       0      0            0      0         0
-  VITAMIN-A                0       0      0            0      0         0
-  ZVITAMBO                 0       0      0            0      0         0
-                 
-                   INDIA MALAWI  NEPAL PAKISTAN   PERU PHILIPPINES SOUTH AFRICA
-  Burkina Faso Zn      0      0      0        0      0           0            0
-  CMC-V-BCS-2002   16516      0      0        0      0           0            0
-  CMIN                 0      0      0        0      0           0            0
-  COHORTS          58172      0      0        0      0       38923            0
-  CONTENT              0      0      0        0   8339           0            0
-  EE                   0      0      0     9043      0           0            0
-  GMS-Nepal            0      0  14163        0      0           0            0
-  Guatemala BSC        0      0      0        0      0           0            0
-  iLiNS-DOSE           0  19084      0        0      0           0            0
-  iLiNS-DYAD-M         0  10408      0        0      0           0            0
-  iLiNS-Zinc           0      0      0        0      0           0            0
-  IRC              14842      0      0        0      0           0            0
-  JiVitA-3             0      0      0        0      0           0            0
-  JiVitA-4             0      0      0        0      0           0            0
-  Keneba               0      0      0        0      0           0            0
-  LCNI-5               0   5931      0        0      0           0            0
-  MAL-ED            7432      0   6359        0   6837           0         7619
-  NIH-Birth            0      0      0        0      0           0            0
-  NIH-Crypto           0      0      0        0      0           0            0
-  PROBIT               0      0      0        0      0           0            0
-  PROVIDE              0      0      0        0      0           0            0
-  ResPak               0      0      0     3177      0           0            0
-  SAS-CompFeed      9541      0      0        0      0           0            0
-  SAS-FoodSuppl     2247      0      0        0      0           0            0
-  TanzaniaChild2       0      0      0        0      0           0            0
-  VITAMIN-A        32774      0      0        0      0           0            0
-  ZVITAMBO             0      0      0        0      0           0            0
-                 
-                  TANZANIA, UNITED REPUBLIC OF ZIMBABWE
-  Burkina Faso Zn                            0        0
-  CMC-V-BCS-2002                             0        0
-  CMIN                                       0        0
-  COHORTS                                    0        0
-  CONTENT                                    0        0
-  EE                                         0        0
-  GMS-Nepal                                  0        0
-  Guatemala BSC                              0        0
-  iLiNS-DOSE                                 0        0
-  iLiNS-DYAD-M                               0        0
-  iLiNS-Zinc                                 0        0
-  IRC                                        0        0
-  JiVitA-3                                   0        0
-  JiVitA-4                                   0        0
-  Keneba                                     0        0
-  LCNI-5                                     0        0
-  MAL-ED                                  6472        0
-  NIH-Birth                                  0        0
-  NIH-Crypto                                 0        0
-  PROBIT                                     0        0
-  PROVIDE                                    0        0
-  ResPak                                     0        0
-  SAS-CompFeed                               0        0
-  SAS-FoodSuppl                              0        0
-  TanzaniaChild2                         32329        0
-  VITAMIN-A                                  0        0
-  ZVITAMBO                                   0    75824
+                   
+                    BANGLADESH BELARUS BRAZIL BURKINA FASO GAMBIA GUATEMALA
+  Burkina Faso Zn            0       0      0        18969      0         0
+  CMC-V-BCS-2002             0       0      0            0      0         0
+  CMIN Bangladesh93       5457       0      0            0      0         0
+  CMIN Brazil89              0       0    889            0      0         0
+  CMIN GB94                  0       0      0            0      0         0
+  CMIN Peru89                0       0      0            0      0         0
+  CMIN Peru95                0       0      0            0      0         0
+  CONTENT                    0       0      0            0      0         0
+  EE                         0       0      0            0      0         0
+  GMS-Nepal                  0       0      0            0      0         0
+  Guatemala BSC              0       0      0            0      0      2551
+  iLiNS-DOSE                 0       0      0            0      0         0
+  iLiNS-DYAD-M               0       0      0            0      0         0
+  iLiNS-Zinc                 0       0      0        10552      0         0
+  IRC                        0       0      0            0      0         0
+  JiVitA-3              123417       0      0            0      0         0
+  JiVitA-4               39996       0      0            0      0         0
+  Keneba                     0       0      0            0  43720         0
+  LCNI-5                     0       0      0            0      0         0
+  MAL-ED                  7076       0   6167            0      0         0
+  PROBIT                     0  175496      0            0      0         0
+  ResPak                     0       0      0            0      0         0
+  SAS-CompFeed               0       0      0            0      0         0
+  SAS-FoodSuppl              0       0      0            0      0         0
+  TanzaniaChild2             0       0      0            0      0         0
+  TDC                        0       0      0            0      0         0
+  VITAMIN-A                  0       0      0            0      0         0
+  ZVITAMBO                   0       0      0            0      0         0
+                   
+                    GUINEA-BISSAU  INDIA MALAWI  NEPAL PAKISTAN   PERU
+  Burkina Faso Zn               0      0      0      0        0      0
+  CMC-V-BCS-2002                0  16516      0      0        0      0
+  CMIN Bangladesh93             0      0      0      0        0      0
+  CMIN Brazil89                 0      0      0      0        0      0
+  CMIN GB94                  8522      0      0      0        0      0
+  CMIN Peru89                   0      0      0      0        0   2775
+  CMIN Peru95                   0      0      0      0        0   5038
+  CONTENT                       0      0      0      0        0   8339
+  EE                            0      0      0      0     9043      0
+  GMS-Nepal                     0      0      0  14163        0      0
+  Guatemala BSC                 0      0      0      0        0      0
+  iLiNS-DOSE                    0      0  19084      0        0      0
+  iLiNS-DYAD-M                  0      0  10408      0        0      0
+  iLiNS-Zinc                    0      0      0      0        0      0
+  IRC                           0  14842      0      0        0      0
+  JiVitA-3                      0      0      0      0        0      0
+  JiVitA-4                      0      0      0      0        0      0
+  Keneba                        0      0      0      0        0      0
+  LCNI-5                        0      0   5931      0        0      0
+  MAL-ED                        0   7432      0   6359        0   6837
+  PROBIT                        0      0      0      0        0      0
+  ResPak                        0      0      0      0     3177      0
+  SAS-CompFeed                  0   9541      0      0        0      0
+  SAS-FoodSuppl                 0   2247      0      0        0      0
+  TanzaniaChild2                0      0      0      0        0      0
+  TDC                           0   3772      0      0        0      0
+  VITAMIN-A                     0  32774      0      0        0      0
+  ZVITAMBO                      0      0      0      0        0      0
+                   
+                    SOUTH AFRICA TANZANIA ZIMBABWE
+  Burkina Faso Zn              0        0        0
+  CMC-V-BCS-2002               0        0        0
+  CMIN Bangladesh93            0        0        0
+  CMIN Brazil89                0        0        0
+  CMIN GB94                    0        0        0
+  CMIN Peru89                  0        0        0
+  CMIN Peru95                  0        0        0
+  CONTENT                      0        0        0
+  EE                           0        0        0
+  GMS-Nepal                    0        0        0
+  Guatemala BSC                0        0        0
+  iLiNS-DOSE                   0        0        0
+  iLiNS-DYAD-M                 0        0        0
+  iLiNS-Zinc                   0        0        0
+  IRC                          0        0        0
+  JiVitA-3                     0        0        0
+  JiVitA-4                     0        0        0
+  Keneba                       0        0        0
+  LCNI-5                       0        0        0
+  MAL-ED                    7619     6472        0
+  PROBIT                       0        0        0
+  ResPak                       0        0        0
+  SAS-CompFeed                 0        0        0
+  SAS-FoodSuppl                0        0        0
+  TanzaniaChild2               0    32329        0
+  TDC                          0        0        0
+  VITAMIN-A                    0        0        0
+  ZVITAMBO                     0        0    75824
 > 
 > 
 > 
@@ -365,7 +386,8 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 > # anthropometry measure
 > #--------------------------------------------
 > nobs <- nrow(d)
-> nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz)))
+> nobsq_cc <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz)))
+> nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz)) %>% do(drop_int_arms(.)))
 > nobsm <- nrow(d %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(haz)))
 > stunt_mort <- d %>% filter(haz >= -6 & haz <=6, !is.na(haz)) %>%
 +   subset(., select = - c(whz, waz, muaz)) %>%
@@ -373,14 +395,27 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 +   group_by(studyid,subjid) %>%
 +   arrange(studyid,subjid,agedays) %>%
 +   mutate(measid=seq_along(subjid)) 
+> 
 > #Observations dropped
 > nobs - nrow(stunt_mort)
-[1] 54013
-> dropped <- nobsq - nrow(stunt_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167))
+[1] 47002
+> 
+> 
+> #C+C manuscript dropped
+> dropped <- nobsq_cc - nrow(stunt_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz)) %>% ungroup())
 > dropped
-[1] 1322
+[1] 1190
+> dropped/nobsq_cc * 100 #percentage dropped
+[1] 0.2147011
+> 
+> 
+> #Stunting manuscript dropped
+> dropped <- nobsq - nrow(stunt_mort %>% ungroup() %>% filter(measurefreq!="yearly" & agedays < 24*30.4167) %>% do(drop_int_arms(.)))
+> dropped
+[1] 848
 > dropped/nobsq * 100 #percentage dropped
-[1] 0.2094599
+[1] 0.2160834
+> 
 > 
 > 
 > 
@@ -393,17 +428,17 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 +   arrange(studyid,subjid,agedays) %>%
 +   mutate(measid=seq_along(subjid)) 
 > nobs - nrow(wast_mort)
-[1] 109168
+[1] 87972
 > dropped <- nobsq - nrow(wast_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(whz)))
 > dropped
-[1] 1834
+[1] 1670
 > dropped/nobsq * 100 #percentage dropped - quarterly
-[1] 0.2976978
+[1] 0.3092449
 > droppedm <- nobsm - nrow(wast_mort %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(whz)))
 > droppedm
-[1] 381
+[1] 380
 > droppedm/nobsm * 100 #percentage dropped monthly
-[1] 0.21329
+[1] 0.21142
 > 
 > 
 > nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(waz)))
@@ -414,33 +449,35 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 +   arrange(studyid,subjid,agedays) %>%
 +   mutate(measid=seq_along(subjid)) 
 > nobs - nrow(waz_mort)
-[1] 12922
+[1] 12288
 > dropped <- nobsq - nrow(waz_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(waz)))
 > dropped
-[1] 1493
+[1] 1330
 > dropped/nobsq * 100 #percentage dropped
-[1] 0.2333042
+[1] 0.2388817
 > droppedm <- nobsm - nrow(waz_mort %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(waz)))
 > droppedm
-[1] 216
+[1] 210
 > droppedm/nobsm * 100 #percentage dropped monthly
-[1] 0.1151214
+[1] 0.1129597
 > 
 > 
 > nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz), !is.na(whz)))
 > 
+> 
+> #double check calculations above
 > co_mort <- d %>% filter(haz >= -6 & haz <=6 & whz >= -5 & whz <=5) %>%
 +   arrange(studyid,subjid,agedays) %>%
 +   group_by(studyid,subjid) %>%
 +   arrange(studyid,subjid,agedays) %>%
 +   mutate(measid=seq_along(subjid)) 
 > nobs - nrow(co_mort)
-[1] 110099
+[1] 88730
 > dropped <- nobsq - nrow(co_mort %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(haz), !is.na(whz)))
 > dropped
-[1] 2653
+[1] 2367
 > dropped/nobsq * 100 #percentage dropped
-[1] 0.4306392
+[1] 0.438313
 > 
 > 
 > 
@@ -475,13 +512,14 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 > #--------------------------------------------
 > Ndf <- rbind(stunt_rf, wast_rf, waz_rf) %>% filter(agedays < 24 * 30.4167)
 > length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
-[1] 31
+[1] 30
 > length(unique(Ndf$country)) #Countries
 [1] 15
-> length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
-[1] 94019
-> length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
-[1] 645869
+> length(unique(paste0(Ndf$studyid, "_", Ndf$subjid))) #Children
+[1] 81584
+> length(unique(paste0(Ndf$studyid, "_",Ndf$subjid, "_", Ndf$agedays))) #Observations
+[1] 563875
+> 
 > 
 > #Get N's for mortality studies
 > mort_Ndf <- rbind(stunt_mort, wast_mort, waz_mort) %>% filter(measurefreq=="yearly", agedays < 24 * 30.4167)
@@ -489,10 +527,45 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 [1] 4
 > length(unique(mort_Ndf$country)) #Countries
 [1] 3
-> length(unique(paste0(mort_Ndf$studyid, mort_Ndf$subjid))) #Children
+> length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid))) #Children
 [1] 14317
-> length(unique(paste0(mort_Ndf$studyid, mort_Ndf$subjid, mort_Ndf$agedays))) #Observations
-[1] 70659
+> length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid, "_", mort_Ndf$agedays))) #Observations
+[1] 70733
+> 
+> mort_Ndf <- rbind(stunt_mort, wast_mort, waz_mort) %>% filter(agedays < 24 * 30.4167)
+> length(unique(paste0(mort_Ndf$studyid, mort_Ndf$country))) #cohorts
+[1] 34
+> length(unique(mort_Ndf$country)) #Countries
+[1] 15
+> length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid))) #Children
+[1] 95901
+> length(unique(paste0(mort_Ndf$studyid, "_", mort_Ndf$subjid, "_", mort_Ndf$agedays))) #Observations
+[1] 634608
+> 
+> mort_Ndf2 <- mort_Ndf %>% distinct(studyid, subjid, agedays)
+> length(unique(paste0(mort_Ndf2$studyid,"_", mort_Ndf2$subjid,"_", mort_Ndf2$agedays))) #Observations
+[1] 634608
+> 
+> 
+> #double check calculations above
+> cc_tab1 <- d %>% ungroup() %>% filter(agedays < 24 * 30.4167) %>%
++   filter(!is.na(whz) | !is.na(waz) | !is.na(haz)) %>% 
++   filter(abs(whz) <= 5 | abs(haz) <= 6 | (waz >= (-6) & waz <= 5)) %>% 
++   distinct(studyid, subjid, agedays) %>%
++   summarize(nobs=n(), nchild=length(unique(paste0(studyid, "_",subjid))))
+> cc_tab1
+    nobs nchild
+1 634608  95901
+> 
+> #children under 6
+> cc_tab_u6 <- d %>% ungroup() %>% filter(agedays < 6 * 30.4167) %>%
++   filter(!is.na(whz) | !is.na(waz) | !is.na(haz)) %>% 
++   filter(abs(whz) <= 5 | abs(haz) <= 6 | (waz >= (-6) & waz <= 5)) %>% 
++   distinct(studyid, subjid, agedays) %>%
++   summarize(nobs=n(), nchild=length(unique(paste0(studyid, "_",subjid))))
+> cc_tab_u6
+    nobs nchild
+1 281718  83315
 > 
 > #--------------------------------------------
 > # Subset to and save descriptive epi data
@@ -508,92 +581,74 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 +   summarize(mn_haz=mean(haz), sd=sd(haz)) %>% 
 +   mutate(ci.lb = mn_haz-1.96*sd, ci.ub = mn_haz+1.96*sd) %>%
 +   as.data.frame()
-           studyid                      country      tr     mn_haz        sd
-1  Burkina Faso Zn                 BURKINA FASO Control -1.2404142 1.1435998
-2  Burkina Faso Zn                 BURKINA FASO    Zinc -1.5068302 1.1798095
-3          COHORTS                    GUATEMALA Control -2.4832201 1.3779660
-4          COHORTS                    GUATEMALA   Other -2.1827269 1.2545758
-5    Guatemala BSC                    GUATEMALA Control -1.7351786 1.1443648
-6    Guatemala BSC                    GUATEMALA   Other -1.8691196 0.9300208
-7       iLiNS-DOSE                       MALAWI Control -1.8596683 1.1249195
-8       iLiNS-DOSE                       MALAWI     LNS -1.8258618 1.0544571
-9     iLiNS-DYAD-M                       MALAWI Control -1.4852264 1.1346081
-10    iLiNS-DYAD-M                       MALAWI     LNS -1.5375014 1.1218576
-11    iLiNS-DYAD-M                       MALAWI   Other -1.4683218 1.1972815
-12      iLiNS-Zinc                 BURKINA FASO Control -1.4535734 1.1920543
-13      iLiNS-Zinc                 BURKINA FASO     LNS -1.3520223 1.0897651
-14        JiVitA-3                   BANGLADESH Control -1.5817876 1.2015539
-15        JiVitA-3                   BANGLADESH   Other -1.4901981 1.1676853
-16        JiVitA-4                   BANGLADESH Control -1.5867407 1.0603432
-17        JiVitA-4                   BANGLADESH     LNS -1.5661076 1.0675785
-18        JiVitA-4                   BANGLADESH     MMN -1.6242746 1.0770257
-19        JiVitA-4                   BANGLADESH   Other -1.5589616 1.0547556
-20          LCNI-5                       MALAWI Control -1.8667373 1.0020116
-21          LCNI-5                       MALAWI     LNS -1.7974865 1.0498701
-22          PROBIT                      BELARUS Control  0.1600969 1.2652122
-23          PROBIT                      BELARUS   Other  0.2506907 1.2782866
-24         PROVIDE                   BANGLADESH Control -1.2845213 1.0772127
-25         PROVIDE                   BANGLADESH   Other -1.2896606 0.9812380
-26    SAS-CompFeed                        INDIA Control -1.7174966 1.1747800
-27    SAS-CompFeed                        INDIA   Other -1.6754184 1.1990573
-28   SAS-FoodSuppl                        INDIA Control -2.3592696 1.4556636
-29   SAS-FoodSuppl                        INDIA   Other -2.3203828 1.3454258
-30  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF Control -0.6449513 1.2587609
-31  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF   Other -0.6342416 1.2471887
-32  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF    Zinc -0.7158746 1.2813914
-33       VITAMIN-A                        INDIA Control -1.7293099 1.1908725
-34       VITAMIN-A                        INDIA   Other -1.7071316 1.1846222
-35        ZVITAMBO                     ZIMBABWE Control -0.9675797 1.3267398
-36        ZVITAMBO                     ZIMBABWE   Other -0.9763119 1.3482358
-       ci.lb       ci.ub
-1  -3.481870  1.00104147
-2  -3.819257  0.80559643
-3  -5.184033  0.21759322
-4  -4.641696  0.27624167
-5  -3.978133  0.50777635
-6  -3.691960 -0.04627874
-7  -4.064510  0.34517380
-8  -3.892598  0.24087418
-9  -3.709058  0.73860553
-10 -3.736342  0.66133953
-11 -3.814994  0.87834989
-12 -3.790000  0.88285308
-13 -3.487962  0.78391724
-14 -3.936833  0.77325817
-15 -3.778861  0.79846512
-16 -3.665013  0.49153207
-17 -3.658562  0.52634621
-18 -3.735245  0.48669569
-19 -3.626283  0.50835940
-20 -3.830680  0.09720554
-21 -3.855232  0.26025896
-22 -2.319719  2.63991275
-23 -2.254751  2.75613231
-24 -3.395858  0.82681567
-25 -3.212887  0.63356593
-26 -4.020065  0.58507212
-27 -4.025571  0.67473387
-28 -5.212370  0.49383115
-29 -4.957417  0.31665184
-30 -3.112123  1.82222007
-31 -3.078731  1.81024824
-32 -3.227402  1.79565251
-33 -4.063420  0.60480031
-34 -4.028991  0.61472793
-35 -3.567990  1.63283033
-36 -3.618854  1.66623029
+`summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
+           studyid      country      tr     mn_haz        sd     ci.lb
+1  Burkina Faso Zn BURKINA FASO Control -1.2404142 1.1435998 -3.481870
+2  Burkina Faso Zn BURKINA FASO    Zinc -1.5068302 1.1798095 -3.819257
+3    Guatemala BSC    GUATEMALA Control -1.7351786 1.1443648 -3.978133
+4    Guatemala BSC    GUATEMALA   Other -1.8691196 0.9300208 -3.691960
+5       iLiNS-DOSE       MALAWI Control -1.8596683 1.1249195 -4.064510
+6       iLiNS-DOSE       MALAWI     LNS -1.8258618 1.0544571 -3.892598
+7     iLiNS-DYAD-M       MALAWI Control -1.4852264 1.1346081 -3.709058
+8     iLiNS-DYAD-M       MALAWI     LNS -1.5375014 1.1218576 -3.736342
+9     iLiNS-DYAD-M       MALAWI   Other -1.4683218 1.1972815 -3.814994
+10      iLiNS-Zinc BURKINA FASO Control -1.4535734 1.1920543 -3.790000
+11      iLiNS-Zinc BURKINA FASO     LNS -1.3520223 1.0897651 -3.487962
+12        JiVitA-3   BANGLADESH Control -1.5817876 1.2015539 -3.936833
+13        JiVitA-3   BANGLADESH   Other -1.4901981 1.1676853 -3.778861
+14        JiVitA-4   BANGLADESH Control -1.5867407 1.0603432 -3.665013
+15        JiVitA-4   BANGLADESH     LNS -1.5661076 1.0675785 -3.658562
+16        JiVitA-4   BANGLADESH     MMN -1.6242746 1.0770257 -3.735245
+17        JiVitA-4   BANGLADESH   Other -1.5589616 1.0547556 -3.626283
+18          LCNI-5       MALAWI Control -1.8667373 1.0020116 -3.830680
+19          LCNI-5       MALAWI     LNS -1.7974865 1.0498701 -3.855232
+20          PROBIT      BELARUS Control  0.1600969 1.2652122 -2.319719
+21          PROBIT      BELARUS   Other  0.2506907 1.2782866 -2.254751
+22    SAS-CompFeed        INDIA Control -1.7174966 1.1747800 -4.020065
+23    SAS-CompFeed        INDIA   Other -1.6754184 1.1990573 -4.025571
+24   SAS-FoodSuppl        INDIA Control -2.3592696 1.4556636 -5.212370
+25   SAS-FoodSuppl        INDIA   Other -2.3203828 1.3454258 -4.957417
+26  TanzaniaChild2     TANZANIA Control -0.6449513 1.2587609 -3.112123
+27  TanzaniaChild2     TANZANIA   Other -0.6342416 1.2471887 -3.078731
+28  TanzaniaChild2     TANZANIA    Zinc -0.7158746 1.2813914 -3.227402
+29       VITAMIN-A        INDIA Control -1.7293099 1.1908725 -4.063420
+30       VITAMIN-A        INDIA   Other -1.7071316 1.1846222 -4.028991
+31        ZVITAMBO     ZIMBABWE Control -0.9675797 1.3267398 -3.567990
+32        ZVITAMBO     ZIMBABWE   Other -0.9763119 1.3482358 -3.618854
+         ci.ub
+1   1.00104147
+2   0.80559643
+3   0.50777635
+4  -0.04627874
+5   0.34517380
+6   0.24087418
+7   0.73860553
+8   0.66133953
+9   0.87834989
+10  0.88285308
+11  0.78391724
+12  0.77325817
+13  0.79846512
+14  0.49153207
+15  0.52634621
+16  0.48669569
+17  0.50835940
+18  0.09720554
+19  0.26025896
+20  2.63991275
+21  2.75613231
+22  0.58507212
+23  0.67473387
+24  0.49383115
+25  0.31665184
+26  1.82222007
+27  1.81024824
+28  1.79565251
+29  0.60480031
+30  0.61472793
+31  1.63283033
+32  1.66623029
 > 
-> drop_int_arms <- function(d){
-+   if(length(which(d$studyid=="JiVitA-4" & d$tr!="Control")) > 0){
-+     d=d[-which(d$studyid=="JiVitA-4" & d$tr!="Control"),]
-+     d=d[-which(d$studyid=="JiVitA-3" & d$tr!="Control"),]
-+   }
-+   d=d[-which(d$studyid=="PROBIT" & d$tr!="Control"),]
-+   d=d[-which(d$studyid=="iLiNS-Zinc" & d$tr!="Control"),]
-+   d=d[-which(d$studyid=="SAS-CompFeed" & d$tr!="Control"),]
-+   d=d[-which(d$studyid=="COHORTS" & d$tr=="Other"),]
-+   return(d)
-+ }
 > 
 > 
 > stunt <- drop_int_arms(stunt_rf) 
@@ -617,24 +672,26 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 > #--------------------------------------------
 > Ndf <- stunt %>% filter(agedays < 24 * 30.4167)
 > length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
-[1] 31
+[1] 30
 > length(unique(Ndf$country)) #Countries
 [1] 15
-> length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
-[1] 62993
-> length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
-[1] 463797
+> length(unique(paste0(Ndf$studyid,"_", Ndf$subjid))) #Children
+[1] 51350
+> length(unique(paste0(Ndf$studyid, "_",Ndf$subjid, "_",Ndf$agedays))) #Observations
+[1] 391593
+> nrow(Ndf) #Observations
+[1] 391593
 > 
 > #Monthly N's
 > Ndf <- stunt %>% filter(agedays < 24 * 30.4167, measurefreq=="monthly")
 > length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
-[1] 18
+[1] 20
 > length(unique(Ndf$country)) #Countries
 [1] 10
-> length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
-[1] 10830
-> length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
-[1] 178465
+> length(unique(paste0(Ndf$studyid, "_", Ndf$subjid))) #Children
+[1] 10724
+> nrow(Ndf) #Observations
+[1] 179892
 > 
 > 
 > #--------------------------------------------
@@ -642,15 +699,15 @@ Burkina Faso Zn  CMC-V-BCS-2002            CMIN         COHORTS         CONTENT
 > #--------------------------------------------
 > Ndf <- rbind(stunt, wast, waz) %>% filter(agedays < 24 * 30.4167, measurefreq=="monthly")
 > length(unique(paste0(Ndf$studyid, Ndf$country))) #cohorts
-[1] 18
+[1] 20
 > length(unique(Ndf$country)) #Countries
 [1] 10
-> length(unique(paste0(Ndf$studyid, Ndf$subjid))) #Children
-[1] 10854
-> length(unique(paste0(Ndf$studyid, Ndf$subjid, Ndf$agedays))) #Observations
-[1] 187215
+> length(unique(paste0(Ndf$studyid,"_", Ndf$subjid))) #Children
+[1] 10748
+> length(unique(paste0(Ndf$studyid, "_", Ndf$subjid, "_", Ndf$agedays))) #Observations
+[1] 185989
 > 
 > 
 > proc.time()
    user  system elapsed 
-162.364   4.860 167.241 
+231.612   4.968 236.097 

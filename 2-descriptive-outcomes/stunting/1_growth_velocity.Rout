@@ -204,6 +204,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > library(growthstandards)
 Registered S3 method overwritten by 'pryr':
   method      from
@@ -475,19 +478,19 @@ Female   Male
 12:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
 13:      1 <NA>     <NA>       0        <NA>      <NA>      <NA>       0      0
     hhwealth_quart    id W_gagebrth W_birthwt W_birthlen W_mage W_mhtcm W_mwtkg
- 1:       WealthQ1 22598        268      2710       48.2     21     145    37.3
- 2:       WealthQ1 22598        268      2710       48.2     21     145    37.3
- 3:       WealthQ1 22598        268      2710       48.2     21     145    37.3
- 4:       WealthQ1 22598        268      2710       48.2     21     145    37.3
- 5:       WealthQ1 22598        268      2710       48.2     21     145    37.3
- 6:       WealthQ1 22598        268      2710       48.2     21     145    37.3
- 7:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
- 8:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
- 9:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
-10:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
-11:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
-12:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
-13:       WealthQ2 17275         NA      2710       46.6     NA      NA      NA
+ 1:       WealthQ4 22598        268      2710       48.2     21     145    37.3
+ 2:       WealthQ4 22598        268      2710       48.2     21     145    37.3
+ 3:       WealthQ4 22598        268      2710       48.2     21     145    37.3
+ 4:       WealthQ4 22598        268      2710       48.2     21     145    37.3
+ 5:       WealthQ4 22598        268      2710       48.2     21     145    37.3
+ 6:       WealthQ4 22598        268      2710       48.2     21     145    37.3
+ 7:       WealthQ3 17275         NA      2710       46.6     NA      NA      NA
+ 8:       WealthQ3 17275         NA      2710       46.6     NA      NA      NA
+ 9:       WealthQ3 17275         NA      2710       46.6     NA      NA      NA
+10:       WealthQ3 17275         NA      2710       46.6     NA      NA      NA
+11:       WealthQ3 17275         NA      2710       46.6     NA      NA      NA
+12:       WealthQ3 17275         NA      2710       46.6     NA      NA      NA
+13:       WealthQ3 17275         NA      2710       46.6     NA      NA      NA
       W_mbmi W_fage W_fhtcm W_meducyrs W_feducyrs W_nrooms W_nhh W_nchldlt5
  1: 17.74078     NA      NA          7          2        2    NA          1
  2: 17.74078     NA      NA          7          2        2    NA          1
@@ -843,4 +846,4 @@ No. of subjects with both y avail (t1,t2):  5212
 > 
 > proc.time()
    user  system elapsed 
-207.191   5.547 177.753 
+191.332   4.493 173.090 

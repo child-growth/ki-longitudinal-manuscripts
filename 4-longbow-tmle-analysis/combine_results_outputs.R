@@ -10,9 +10,9 @@ Zscores <- readRDS(here("results/rf results/longbow results/results_cont.RDS"))
 dim(Zscores)
 
 bin_primary <- readRDS(here("results/rf results/longbow results/results_bin_primary.RDS"))
-table(bin_primary$intervention_variable, bin_primary$outcome_variable)
+table(bin_primary$intervention_variable, bin_primary$agecat)
 
-bin_other <- readRDS(here("results/rf results/longbow results/results_bin.rds"))
+bin_other <- readRDS(here("results/rf results/longbow results/results_bin_other.rds"))
 # bin_sub <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-19.rds"))
 # bin_sub2 <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-20.rds"))
 # bin_sub3 <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-20_part2.rds"))
@@ -69,7 +69,10 @@ d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_l
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="4"] <- "Post-max rain"
 d$baseline_level[d$intervention_variable=="rain_quartile"] <- "Opposite max rain"
 
-
+d$intervention_level <- gsub("Wealth ","",d$intervention_level)
+d$intervention_level <- gsub("Wealth","",d$intervention_level)
+d$baseline_level <- gsub("Wealth ","",d$baseline_level)
+d$baseline_level <- gsub("Wealth","",d$baseline_level)
 
 #Exclude extreme estimates from TMLE sparsity
 # dim(d)

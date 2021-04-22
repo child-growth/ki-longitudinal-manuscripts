@@ -39,6 +39,7 @@ vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
 meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocityREML.RDS"))
 
+
 # load who standard
 who_cm = readRDS(paste0(res_dir, "/WHO_linear_growth_velocity_standard.RDS"))
 
@@ -317,6 +318,24 @@ velplot_cm = vel %>% filter(ycat == "Length velocity (cm per month)") %>%
 
 
 velplot_cm_cohort_data = velplot_cm %>%  filter(country_cohort!="Pooled - All" & 
+                             country_cohort!="Pooled - Asia" & 
+                             country_cohort!="Pooled - Africa" & 
+                             country_cohort!="Pooled - Amer." & 
+                             msmt_type=="Mean")
+
+plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"), 
+                  aes(y = length_cm, x = strata)) +
+  # geom_point(data = velplot_cm_cohort_data, size = 1, alpha=0.05) +
+  geom_line(data = velplot_cm_cohort_data, aes(group = country_cohort),
+            alpha=0.12) +
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
+                linetype = msmt_type), size=1,
+            data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
+                                            msmt_type=="Mean"|msmt_type=="pct_25"|
+                                            msmt_type=="pct_50")) +
+>>>>>>> master
+
+velplot_cm_cohort_data = velplot_cm %>%  filter(country_cohort!="Pooled - All" & 
                                                   country_cohort!="Pooled - Asia" & 
                                                   country_cohort!="Pooled - Africa" & 
                                                   country_cohort!="Pooled - Amer." & 
@@ -335,7 +354,7 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
   
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                  alpha=0.5, size=1) +
-  
+
   scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
                                                                      "pct_50" = "solid",
                                                                      "pct_25" = "dashed", 

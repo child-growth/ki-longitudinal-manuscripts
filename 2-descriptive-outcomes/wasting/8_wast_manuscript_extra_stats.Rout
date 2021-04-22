@@ -201,6 +201,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 > 
 > 
@@ -691,4 +694,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
- 43.887   1.182  45.096 
+ 42.750   1.267  43.994 

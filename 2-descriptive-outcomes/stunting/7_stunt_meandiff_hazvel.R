@@ -86,7 +86,7 @@ meandiff_sex_df_LAZ = meandiff_sex_df_LAZ %>% select(studyid, everything())
 
 fit_rma_diff = function(data, age){
   fit = rma(yi = yi,  sei = sei,
-            method="FE", data = data %>% filter(agecat==age))
+            method="REML", data = data %>% filter(agecat==age))
   out = data.frame(
     agecat = age,
     est = fit$beta,

@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -25,11 +25,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -56,7 +56,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -82,13 +82,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -103,7 +96,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -167,14 +160,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -187,9 +172,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -206,10 +191,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -221,8 +202,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > 
 > 
 > 
@@ -230,36 +212,36 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 > gc()
            used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells  2036927 108.8    4176615 223.1  2523252 134.8
-Vcells 49506391 377.8   61500915 469.3 52506436 400.6
+Ncells  2336907 124.9    4555384 243.3  3231431 172.6
+Vcells 43181739 329.5   59956536 457.5 43182976 329.5
 > 
 > d <- subset(d, select= c(studyid, country, subjid, agedays, dead, agedth, causedth, haz, waz))
 > gc()
           used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2038356 108.9    4176615 223.1  2523252 134.8
-Vcells 9817926  75.0   49200732 375.4 61303829 467.8
+Ncells 2358725 126.0    4555384 243.3  3231431 172.6
+Vcells 9413362  71.9   47965229 366.0 48999089 373.9
 > 
 > 
 > dim(d)
-[1] 872348      9
+[1] 743334      9
 > d <- d %>% filter(!is.na(dead) | !is.na(agedth) | !is.na(causedth))
 > dim(d)
-[1] 872348      9
+[1] 739562      9
 > 
 > #Get maximum age recorded
 > d <- d %>% group_by(studyid, country, subjid) %>% mutate(maxage = max(agedays))
 > summary(d$maxage)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-      1     560     759    1478    2320    6955 
+      1     540     739    1084    1826    5178 
 > 
 > table(d$dead)
 
      0      1 
-319635   9561 
+304867   9522 
 > table(d$causedth)
 
                                                                                             
-                                                                                     868184 
+                                                                                     735398 
                                                                          Accident or Injury 
                                                                                          19 
                                                                 Accident or poisoning:BURNS 
@@ -524,13 +506,284 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > table(1*!is.na(d$dead),is.na(d$agedth))
    
      FALSE   TRUE
-  0     18 543134
-  1   7965 321231
+  0     18 425155
+  1   7926 306463
 > table(1*!is.na(d$dead),(d$causedth==""))
    
      FALSE   TRUE
-  0      0 543152
-  1   4164 325032
+  0      0 425173
+  1   4164 310225
+> 
+> df <- d %>% group_by(studyid, subjid) %>% slice(1)
+> table(1*!is.na(df$dead),(df$causedth==""))
+   
+    FALSE  TRUE
+  0     0 54958
+  1  1239 40179
+> table(df$causedth)
+
+                                                                                            
+                                                                                      95137 
+                                                                         Accident or Injury 
+                                                                                          4 
+                                                                Accident or poisoning:BURNS 
+                                                                                          5 
+                                                             Accident or poisoning:DROWNING 
+                                                                                          2 
+                                                          Accident or poisoning:HEAD INJURY 
+                                                                                          1 
+                                                               Accident or poisoning:INJURY 
+                                                                                          1 
+                                                                  Accident or poisoning:RTA 
+                                                                                          1 
+                                                           Accident or poisoning:SNAKE BITE 
+                                                                                          1 
+                                                                             Acute Diarrhea 
+                                                                                         31 
+                                                                            Acute Dysentery 
+                                                                                          5 
+                                                   Acute Lower Respiratory Infection (ALRI) 
+                                                                                         21 
+                                                                             ARI /Pneumonia 
+                                                                                        433 
+                                               ARI /Pneumonia/Chronic /Persistent diarrhoea 
+                                                                                          6 
+                    ARI /Pneumonia/Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                          9 
+                                                  ARI /Pneumonia/Diarrhoea /Gastroenteritis 
+                                                                                         70 
+             ARI /Pneumonia/Diarrhoea /Gastroenteritis/Accident or poisoning:MUTI POISONING 
+                                                                                          1 
+                                          ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malaria 
+                                                                                          2 
+               ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malaria/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                       ARI /Pneumonia/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                         50 
+                                       ARI /Pneumonia/Diarrhoea /Gastroenteritis/Meningitis 
+                                                                                          2 
+ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CONG HEART DIS 
+                                                                                          1 
+                                                                   ARI /Pneumonia/Dysentery 
+                                                                                          4 
+                                                        ARI /Pneumonia/Dysentery/Meningitis 
+                                                                                          2 
+                                                                     ARI /Pneumonia/Malaria 
+                                                                                          2 
+                                                  ARI /Pneumonia/Malnutrition (m, k or m-k) 
+                                                                                         94 
+                             ARI /Pneumonia/Malnutrition (m, k or m-k)/Other:CEREBRAL PALSY 
+                                                                                          1 
+                               ARI /Pneumonia/Malnutrition (m, k or m-k)/Other:CLEFT PALATE 
+                                                                                          1 
+                                                                  ARI /Pneumonia/Meningitis 
+                                                                                         14 
+                                       ARI /Pneumonia/Meningitis/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                                 ARI /Pneumonia/Meningitis/Non-specific /generalised sepsis 
+                                                                                          1 
+                                                         ARI /Pneumonia/Meningitis/Other:CP 
+                                                                                          1 
+                                            ARI /Pneumonia/Non-specific /generalised sepsis 
+                                                                                         10 
+              ARI /Pneumonia/Non-specific /generalised sepsis/Other specific infection:SKIN 
+                                                                                          1 
+    ARI /Pneumonia/Non-specific /generalised sepsis/Other specific infection:SKIN ABSCESSES 
+                                                                                          1 
+                                         ARI /Pneumonia/Other specific infection:CELLULITIS 
+                                                                                          1 
+                                        ARI /Pneumonia/Other specific infection:SEPTICAEMIA 
+                                                                                          1 
+                                               ARI /Pneumonia/Other specific infection:SK1N 
+                                                                                          1 
+                                               ARI /Pneumonia/Other specific infection:SKIN 
+                                                                                          1 
+                                     ARI /Pneumonia/Other specific infection:VARICELLA DISS 
+                                                                                          1 
+            ARI /Pneumonia/Other specific infection/Malnutrition (m, k or m-k):SKIN ABSCESS 
+                                                                                          1 
+                                                            ARI /Pneumonia/Other:ASPIRATION 
+                                                                                          1 
+                                                              ARI /Pneumonia/Other:BLEEDING 
+                                                                                          1 
+                                                                   ARI /Pneumonia/Other:CCF 
+                                                                                          3 
+                                                            ARI /Pneumonia/Other:CONG HEART 
+                                                                                          1 
+                                                                    ARI /Pneumonia/Other:CP 
+                                                                                          1 
+                                                        ARI /Pneumonia/Other:DOWNS SYNDROME 
+                                                                                          1 
+                                                        ARI /Pneumonia/Other:ENCEPHALOPATHY 
+                                                                                          1 
+                                                           ARI /Pneumonia/Other:PDA AND RVH 
+                                                                                          1 
+                                                                ARI /Pneumonia/Tuberculosis 
+                                                                                          3 
+                                     ARI /Pneumonia/Tuberculosis/Diarrhoea /Gastroenteritis 
+                                                                                          1 
+          ARI /Pneumonia/Tuberculosis/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                                                      ARI /Pneumonia/Tuberculosis/Dysentery 
+                                                                                          1 
+                                     ARI /Pneumonia/Tuberculosis/Malnutrition (m, k or m-k) 
+                                                                                          3 
+                                                                                   Censored 
+                                                                                          8 
+                                                              Chronic /Persistent diarrhoea 
+                                                                                          1 
+                                   Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                          9 
+     Chronic /Persistent diarrhoea/Other specific infection/Malnutrition (m, k or m-k):SKIN 
+                                                                                          1 
+      Chronic /Persistent diarrhoea/Other specific infection/Malnutrition (m, k or m-k):UTI 
+                                                                                          1 
+                                          Chronic /Persistent diarrhoea/Other:CONGENITAL HT 
+                                                                                          1 
+                                                                    Congenital Malformation 
+                                                                                          6 
+                                                                 Diarrhoea /Gastroenteritis 
+                                                                                         37 
+        Diarrhoea /Gastroenteritis/Chronic /Persistent diarrhoea/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                                                         Diarrhoea /Gastroenteritis/Malaria 
+                                                                                          1 
+                              Diarrhoea /Gastroenteritis/Malaria/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                                      Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                         21 
+                 Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k)/Other:TRISOMY 21 CCF 
+                                                                                          1 
+                           Diarrhoea /Gastroenteritis/Meningitis/Malnutrition (m, k or m-k) 
+                                                                                          1 
+                            Diarrhoea /Gastroenteritis/Other specific infection:CHICKEN POX 
+                                                                                          1 
+         Diarrhoea /Gastroenteritis/Other specific infection/Malnutrition (m, k or m-k):UT1 
+                                                                                          1 
+                                                Diarrhoea /Gastroenteritis/Other:FITS CAUSE 
+                                                                                          1 
+                                             Diarrhoea /Gastroenteritis/Other:HYDROCEPHALUS 
+                                                                                          1 
+                                                                                  Dysentery 
+                                                                                          5 
+                                                       Dysentery/Malnutrition (m, k or m-k) 
+                                                                                          4 
+                                                                               Malnutrition 
+                                                                                         10 
+                                                       Malnutrition (m, k or m-k)/Other:CCF 
+                                                                                          1 
+                                                                                 Meningitis 
+                                                                                         26 
+                                                                         Meningitis/Malaria 
+                                                                                          1 
+                                                      Meningitis/Malnutrition (m, k or m-k) 
+                                                                                          3 
+                              Meningitis/Non-specific /generalised sepsis/Other:KERNICTERUS 
+                                                                                          1 
+                                                                            Neonatal Sepsis 
+                                                                                          1 
+                                                           Non-specific /generalised sepsis 
+                                                                                         11 
+                                Non-specific /generalised sepsis/Malnutrition (m, k or m-k) 
+                                                                                          2 
+                    Non-specific /generalised sepsis/Other specific infection:OSTEOMYELITIS 
+                                                                                          1 
+ Non-specific /generalised sepsis/Other specific infection/Other:NEONATALSEPSIS:KERNICTERUS 
+                                                                                          1 
+                                          Non-specific /generalised sepsis/Other:CONGENITAL 
+                                                                                          1 
+                                      Non-specific /generalised sepsis/Other:DBSTRUCTED GUT 
+                                                                                          1 
+                                          Non-specific /generalised sepsis/Other:HYPOTHEMIA 
+                                                                                          1 
+                                         Non-specific /generalised sepsis/Other:HYPOTHERMIA 
+                                                                                          1 
+                                            Non-specific /generalised sepsis/Other:JAUNDICE 
+                                                                                          1 
+                                         Non-specific /generalised sepsis/Other:KERNICTERUS 
+                                                                                          1 
+                                       Non-specific /generalised sepsis/Other:POLYCYTHAEMIA 
+                                                                                          1 
+                                          Non-specific /generalised sepsis/Other:TRISOMY 18 
+                                                                                          1 
+                                                              Other specific infection:SKIN 
+                                                                                          1 
+                              Other specific infection/Accident or poisoning:CELLULITIS:RTA 
+                                                                                          1 
+                         Other specific infection/Other:VIRAL ENCEPHAL:PATHY:CEREBRAL PALSY 
+                                                                                          1 
+                                                                                  Other:CCF 
+                                                                                          1 
+                                                                            Other:CIRRHOSIS 
+                                                                                          1 
+                                                                       Other:CONG HEART DIS 
+                                                                                          1 
+                                                                            Other:HEPATITIS 
+                                                                                          1 
+                                                                       Other:HYPERLIPIDAEMI 
+                                                                                          1 
+                                                                          Other:HYPOTHERMIA 
+                                                                                          1 
+                                                                          Other:IMPERF ANUS 
+                                                                                          1 
+                                                                         Other:MECONIUM ASP 
+                                                                                          1 
+                                                                          Other:POST PDA OP 
+                                                                                          1 
+                                                                     Other:POST:ANAESTHETIC 
+                                                                                          1 
+                                                                             Other:RDS 1UGR 
+                                                                                          1 
+                                                                          Other:RESPIRATORY 
+                                                                                          1 
+                                                                                 Other:SIDS 
+                                                                                          1 
+                                                Persistent Diarrhea or Persistent Dysentery 
+                                                                                          9 
+                                                                                 Septicemia 
+                                                                                          6 
+                                                                              Severe Anemia 
+                                                                                          1 
+                                                        Sudden Infant Death Syndrome (SIDS) 
+                                                                                          2 
+                                                                               Tuberculosis 
+                                                                                          7 
+                                                    Tuberculosis/Diarrhoea /Gastroenteritis 
+                                                                                          3 
+                         Tuberculosis/Diarrhoea /Gastroenteritis/Malnutrition (m, k or m-k) 
+                                                                                          3 
+                                                    Tuberculosis/Malnutrition (m, k or m-k) 
+                                                                                          2 
+                                       Tuberculosis/Other specific infection:TBPERICARDITIS 
+                                                                                          1 
+                Tuberculosis/Other specific infection/Malnutrition (m, k or m-k):CELLULITIS 
+                                                                                          1 
+                                                                                  Uncertain 
+                                                                                        189 
+                                                                                 Uncertain: 
+                                                                                          1 
+                                                                               Uncertain:7J 
+                                                                                          1 
+                                                                   Uncertain/ARI /Pneumonia 
+                                                                                          1 
+                                        Uncertain/ARI /Pneumonia/Diarrhoea /Gastroenteritis 
+                                                                                          1 
+                                                        Uncertain/ARI /Pneumonia/Other:SIDS 
+                                                                                          1 
+                                                       Uncertain/Malnutrition (m, k or m-k) 
+                                                                                          7 
+                                                               Uncertain/Other:FITS ? CAUSE 
+                                                                                          1 
+                                                              Uncertain/Other:HYDROCEPHALUS 
+                                                                                          1 
+                                                                Uncertain/Other:HYPOTHERMIA 
+                                                                                          1 
+                                                                       Uncertain/Other:IUGR 
+                                                                                          1 
+                                                                       Uncertain/Other:S1DS 
+                                                                                          1 
+                                                                       Uncertain/Other:SIDS 
+                                                                                          8 
 > 
 > #mark dead if have a cause or age death
 > d$agedth[!is.na(d$agedth) & is.na(d$dead)]
@@ -539,69 +792,69 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > 
 > 
 > table(d$studyid, d$agedth>0)
-                 
-                  FALSE TRUE
-  Burkina Faso Zn     0   86
-  CMC-V-BCS-2002      0    0
-  CMIN                0    0
-  COHORTS             0    0
-  CONTENT             0    0
-  EE                  0    0
-  GMS-Nepal           0    9
-  Guatemala BSC       0    0
-  iLiNS-DOSE          0  264
-  iLiNS-DYAD-M        0  237
-  iLiNS-Zinc          0    0
-  IRC                 0    0
-  JiVitA-3            0 2054
-  JiVitA-4            0  225
-  Keneba              0 1057
-  LCNI-5              0    0
-  MAL-ED              0   48
-  NIH-Birth           0    0
-  NIH-Crypto          0    0
-  PROBIT              0    0
-  PROVIDE             0   39
-  ResPak              0    0
-  SAS-CompFeed        0    0
-  SAS-FoodSuppl       0    0
-  TanzaniaChild2      0   18
-  VITAMIN-A           0  466
-  ZVITAMBO            3 3477
+                   
+                    FALSE TRUE
+  Burkina Faso Zn       0   86
+  CMC-V-BCS-2002        0    0
+  CMIN Bangladesh93     0    0
+  CMIN Brazil89         0    0
+  CMIN GB94             0    0
+  CMIN Peru89           0    0
+  CMIN Peru95           0    0
+  CONTENT               0    0
+  EE                    0    0
+  GMS-Nepal             0    9
+  Guatemala BSC         0    0
+  iLiNS-DOSE            0  264
+  iLiNS-DYAD-M          0  237
+  iLiNS-Zinc            0    0
+  IRC                   0    0
+  JiVitA-3              0 2054
+  JiVitA-4              0  225
+  Keneba                0 1057
+  LCNI-5                0    0
+  MAL-ED                0   48
+  PROBIT                0    0
+  ResPak                0    0
+  SAS-CompFeed          0    0
+  SAS-FoodSuppl         0    0
+  TanzaniaChild2        0   18
+  VITAMIN-A             0  466
+  ZVITAMBO              3 3477
 > table(d$studyid, d$dead)
-                 
-                      0     1
-  Burkina Faso Zn 16476    86
-  CMC-V-BCS-2002      0     0
-  CMIN                0     0
-  COHORTS             0     0
-  CONTENT             0     0
-  EE                  0    54
-  GMS-Nepal       14134    29
-  Guatemala BSC       0     0
-  iLiNS-DOSE      17634  1450
-  iLiNS-DYAD-M    10155   253
-  iLiNS-Zinc          0     0
-  IRC                 0     0
-  JiVitA-3            0  2054
-  JiVitA-4        39771   225
-  Keneba          42663  1057
-  LCNI-5              0     0
-  MAL-ED          47909    53
-  NIH-Birth           0     0
-  NIH-Crypto          0     0
-  PROBIT              0     0
-  PROVIDE         14768    39
-  ResPak              0     0
-  SAS-CompFeed     9431   110
-  SAS-FoodSuppl    2231    16
-  TanzaniaChild2      0    18
-  VITAMIN-A       32308   466
-  ZVITAMBO        72155  3669
+                   
+                        0     1
+  Burkina Faso Zn   16476    86
+  CMC-V-BCS-2002        0     0
+  CMIN Bangladesh93     0     0
+  CMIN Brazil89         0     0
+  CMIN GB94             0     0
+  CMIN Peru89           0     0
+  CMIN Peru95           0     0
+  CONTENT               0     0
+  EE                    0    54
+  GMS-Nepal         14134    29
+  Guatemala BSC         0     0
+  iLiNS-DOSE        17634  1450
+  iLiNS-DYAD-M      10155   253
+  iLiNS-Zinc            0     0
+  IRC                   0     0
+  JiVitA-3              0  2054
+  JiVitA-4          39771   225
+  Keneba            42663  1057
+  LCNI-5                0     0
+  MAL-ED            47909    53
+  PROBIT                0     0
+  ResPak                0     0
+  SAS-CompFeed       9431   110
+  SAS-FoodSuppl      2231    16
+  TanzaniaChild2        0    18
+  VITAMIN-A         32308   466
+  ZVITAMBO          72155  3669
 > table(d$dead)
 
      0      1 
-319635   9579 
+304867   9540 
 > 
 > #save longform for kaplan-meier curves
 > saveRDS(d, file=paste0(paste0(ghapdata_dir, "stuntwast_mort.rds")))
@@ -612,367 +865,367 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 +   mutate(dead=1*(max(dead)>0 | (agedth>0) | (!is.na(causedth) & causedth!="")), agedth=max(agedth)) %>% 
 +   slice(1)
 > dim(d)
-[1] 109680     10
+[1] 96376    10
 > table(d$dead)
 
    1 
-2687 
+2682 
 > table(d$studyid, d$dead)
-                 
-                     1
-  Burkina Faso Zn   51
-  CMC-V-BCS-2002     0
-  CMIN               0
-  COHORTS            0
-  CONTENT            0
-  EE                 4
-  GMS-Nepal          8
-  Guatemala BSC      0
-  iLiNS-DOSE       129
-  iLiNS-DYAD-M      60
-  iLiNS-Zinc         0
-  IRC                0
-  JiVitA-3         979
-  JiVitA-4          50
-  Keneba           100
-  LCNI-5             0
-  MAL-ED            11
-  NIH-Birth          0
-  NIH-Crypto         0
-  PROBIT             0
-  PROVIDE            5
-  ResPak             0
-  SAS-CompFeed      52
-  SAS-FoodSuppl      6
-  TanzaniaChild2     1
-  VITAMIN-A        108
-  ZVITAMBO        1123
+                   
+                       1
+  Burkina Faso Zn     51
+  CMC-V-BCS-2002       0
+  CMIN Bangladesh93    0
+  CMIN Brazil89        0
+  CMIN GB94            0
+  CMIN Peru89          0
+  CMIN Peru95          0
+  CONTENT              0
+  EE                   4
+  GMS-Nepal            8
+  Guatemala BSC        0
+  iLiNS-DOSE         129
+  iLiNS-DYAD-M        60
+  iLiNS-Zinc           0
+  IRC                  0
+  JiVitA-3           979
+  JiVitA-4            50
+  Keneba             100
+  LCNI-5               0
+  MAL-ED              11
+  PROBIT               0
+  ResPak               0
+  SAS-CompFeed        52
+  SAS-FoodSuppl        6
+  TanzaniaChild2       1
+  VITAMIN-A          108
+  ZVITAMBO          1123
 > 
 > #look at measurements pripr to early death
 > #-many seem like incorrect age-death, with anthro measures at older ages
 > as.data.frame(d[d$agedth<8 & !is.na(d$agedth),])
-           studyid                      country subjid agedays dead agedth
-1       iLiNS-DOSE                       MALAWI    985     191    1      7
-2     iLiNS-DYAD-M                       MALAWI  30542       1    1      1
-3     iLiNS-DYAD-M                       MALAWI  31081       2    1      3
-4     iLiNS-DYAD-M                       MALAWI  33021       2    1      2
-5     iLiNS-DYAD-M                       MALAWI  33611       2    1      2
-6     iLiNS-DYAD-M                       MALAWI  34101       1    1      1
-7     iLiNS-DYAD-M                       MALAWI  34161       2    1      3
-8     iLiNS-DYAD-M                       MALAWI  34581       2    1      2
-9     iLiNS-DYAD-M                       MALAWI  34621       2    1      3
-10    iLiNS-DYAD-M                       MALAWI  40461       1    1      6
-11    iLiNS-DYAD-M                       MALAWI  51091       3    1      7
-12    iLiNS-DYAD-M                       MALAWI  81021       2    1      6
-13    iLiNS-DYAD-M                       MALAWI  81141       2    1      5
-14        JiVitA-3                   BANGLADESH  10032       1    1      6
-15        JiVitA-3                   BANGLADESH  10066       1    1      3
-16        JiVitA-3                   BANGLADESH  10099       2    1      4
-17        JiVitA-3                   BANGLADESH  10228       1    1      3
-18        JiVitA-3                   BANGLADESH  10288       1    1      5
-19        JiVitA-3                   BANGLADESH  10347       1    1      1
-20        JiVitA-3                   BANGLADESH   1053       1    1      6
-21        JiVitA-3                   BANGLADESH  10600       1    1      5
-22        JiVitA-3                   BANGLADESH  10656       1    1      2
-23        JiVitA-3                   BANGLADESH  10703       1    1      3
-24        JiVitA-3                   BANGLADESH  10894       1    1      5
-25        JiVitA-3                   BANGLADESH  10936       1    1      6
-26        JiVitA-3                   BANGLADESH  11000       1    1      3
-27        JiVitA-3                   BANGLADESH  11097       1    1      2
-28        JiVitA-3                   BANGLADESH  11130       1    1      2
-29        JiVitA-3                   BANGLADESH  11187       1    1      2
-30        JiVitA-3                   BANGLADESH  11209       1    1      5
-31        JiVitA-3                   BANGLADESH  11240       2    1      3
-32        JiVitA-3                   BANGLADESH  11305       1    1      2
-33        JiVitA-3                   BANGLADESH  11354       1    1      5
-34        JiVitA-3                   BANGLADESH  11571       1    1      2
-35        JiVitA-3                   BANGLADESH  11895       1    1      5
-36        JiVitA-3                   BANGLADESH  12376       1    1      2
-37        JiVitA-3                   BANGLADESH  12608       1    1      3
-38        JiVitA-3                   BANGLADESH  12611       1    1      4
-39        JiVitA-3                   BANGLADESH  12829       1    1      3
-40        JiVitA-3                   BANGLADESH  13020       1    1      1
-41        JiVitA-3                   BANGLADESH  13204       1    1      2
-42        JiVitA-3                   BANGLADESH  13219       1    1      6
-43        JiVitA-3                   BANGLADESH  13277       1    1      4
-44        JiVitA-3                   BANGLADESH  13382       1    1      3
-45        JiVitA-3                   BANGLADESH  13464       1    1      5
-46        JiVitA-3                   BANGLADESH  13682       4    1      7
-47        JiVitA-3                   BANGLADESH  13770       1    1      4
-48        JiVitA-3                   BANGLADESH  13772       1    1      5
-49        JiVitA-3                   BANGLADESH  13811       1    1      5
-50        JiVitA-3                   BANGLADESH  14033       2    1      5
-51        JiVitA-3                   BANGLADESH  14089       1    1      2
-52        JiVitA-3                   BANGLADESH  14116       1    1      2
-53        JiVitA-3                   BANGLADESH  14142       1    1      1
-54        JiVitA-3                   BANGLADESH  14180       1    1      2
-55        JiVitA-3                   BANGLADESH  14360       1    1      4
-56        JiVitA-3                   BANGLADESH  14481       1    1      3
-57        JiVitA-3                   BANGLADESH  14851       1    1      3
-58        JiVitA-3                   BANGLADESH  14870       1    1      3
-59        JiVitA-3                   BANGLADESH  15206       1    1      2
-60        JiVitA-3                   BANGLADESH  15368       2    1      3
-61        JiVitA-3                   BANGLADESH  15423       1    1      4
-62        JiVitA-3                   BANGLADESH  15461       1    1      3
-63        JiVitA-3                   BANGLADESH  15642       1    1      7
-64        JiVitA-3                   BANGLADESH  15678       1    1      4
-65        JiVitA-3                   BANGLADESH  15699       1    1      3
-66        JiVitA-3                   BANGLADESH  15810       1    1      3
-67        JiVitA-3                   BANGLADESH  15833       1    1      3
-68        JiVitA-3                   BANGLADESH  15872       1    1      2
-69        JiVitA-3                   BANGLADESH  16317       1    1      4
-70        JiVitA-3                   BANGLADESH  16413       1    1      5
-71        JiVitA-3                   BANGLADESH  16455       1    1      4
-72        JiVitA-3                   BANGLADESH  16520       1    1      2
-73        JiVitA-3                   BANGLADESH  16545       1    1      4
-74        JiVitA-3                   BANGLADESH  16584       1    1      2
-75        JiVitA-3                   BANGLADESH  16586       1    1      4
-76        JiVitA-3                   BANGLADESH  16822       1    1      4
-77        JiVitA-3                   BANGLADESH  16927       1    1      1
-78        JiVitA-3                   BANGLADESH  17035       3    1      6
-79        JiVitA-3                   BANGLADESH  17055       1    1      6
-80        JiVitA-3                   BANGLADESH  17125       1    1      7
-81        JiVitA-3                   BANGLADESH  17178       1    1      2
-82        JiVitA-3                   BANGLADESH  17180       1    1      3
-83        JiVitA-3                   BANGLADESH  17213       1    1      6
-84        JiVitA-3                   BANGLADESH  17269       1    1      3
-85        JiVitA-3                   BANGLADESH  17430       1    1      4
-86        JiVitA-3                   BANGLADESH  17498       1    1      5
-87        JiVitA-3                   BANGLADESH   1769       2    1      3
-88        JiVitA-3                   BANGLADESH  17700       1    1      3
-89        JiVitA-3                   BANGLADESH  17838       1    1      5
-90        JiVitA-3                   BANGLADESH  17940       1    1      2
-91        JiVitA-3                   BANGLADESH  18081       1    1      4
-92        JiVitA-3                   BANGLADESH  18200       1    1      3
-93        JiVitA-3                   BANGLADESH  18206       1    1      4
-94        JiVitA-3                   BANGLADESH  18360       2    1      3
-95        JiVitA-3                   BANGLADESH  18727       1    1      2
-96        JiVitA-3                   BANGLADESH   1890       2    1      3
-97        JiVitA-3                   BANGLADESH  19000     753    1      5
-98        JiVitA-3                   BANGLADESH  19075       1    1      7
-99        JiVitA-3                   BANGLADESH  19145       1    1      5
-100       JiVitA-3                   BANGLADESH   1916       1    1      2
-101       JiVitA-3                   BANGLADESH  19409       1    1      2
-102       JiVitA-3                   BANGLADESH  19467       1    1      3
-103       JiVitA-3                   BANGLADESH  19526       1    1      3
-104       JiVitA-3                   BANGLADESH  19553       1    1      3
-105       JiVitA-3                   BANGLADESH  19658       1    1      3
-106       JiVitA-3                   BANGLADESH  19688       1    1      2
-107       JiVitA-3                   BANGLADESH  19707       1    1      3
-108       JiVitA-3                   BANGLADESH   1985       1    1      3
-109       JiVitA-3                   BANGLADESH  20092       1    1      3
-110       JiVitA-3                   BANGLADESH  20187       1    1      3
-111       JiVitA-3                   BANGLADESH  20237       1    1      1
-112       JiVitA-3                   BANGLADESH  20246       1    1      5
-113       JiVitA-3                   BANGLADESH  20374       1    1      3
-114       JiVitA-3                   BANGLADESH  20456       1    1      3
-115       JiVitA-3                   BANGLADESH  20720       1    1      4
-116       JiVitA-3                   BANGLADESH  20806       3    1      5
-117       JiVitA-3                   BANGLADESH  20883       1    1      1
-118       JiVitA-3                   BANGLADESH  20938       1    1      4
-119       JiVitA-3                   BANGLADESH     21       1    1      2
-120       JiVitA-3                   BANGLADESH  21007       2    1      4
-121       JiVitA-3                   BANGLADESH  21293       1    1      3
-122       JiVitA-3                   BANGLADESH  21455       1    1      3
-123       JiVitA-3                   BANGLADESH  21583       1    1      3
-124       JiVitA-3                   BANGLADESH  21697       2    1      2
-125       JiVitA-3                   BANGLADESH  21709       1    1      7
-126       JiVitA-3                   BANGLADESH  21762       1    1      3
-127       JiVitA-3                   BANGLADESH  21911       1    1      3
-128       JiVitA-3                   BANGLADESH  21970       2    1      5
-129       JiVitA-3                   BANGLADESH  21994       1    1      3
-130       JiVitA-3                   BANGLADESH  22046       1    1      2
-131       JiVitA-3                   BANGLADESH   2216       1    1      1
-132       JiVitA-3                   BANGLADESH  22206       1    1      3
-133       JiVitA-3                   BANGLADESH  22223       1    1      5
-134       JiVitA-3                   BANGLADESH   2235       1    1      3
-135       JiVitA-3                   BANGLADESH  22351       1    1      6
-136       JiVitA-3                   BANGLADESH  22466       1    1      7
-137       JiVitA-3                   BANGLADESH  22726       1    1      3
-138       JiVitA-3                   BANGLADESH  22794       1    1      1
-139       JiVitA-3                   BANGLADESH  23135       1    1      4
-140       JiVitA-3                   BANGLADESH  23239       1    1      3
-141       JiVitA-3                   BANGLADESH  23435       1    1      2
-142       JiVitA-3                   BANGLADESH  23438       1    1      4
-143       JiVitA-3                   BANGLADESH   2357       1    1      2
-144       JiVitA-3                   BANGLADESH  23699       1    1      3
-145       JiVitA-3                   BANGLADESH  23861       1    1      3
-146       JiVitA-3                   BANGLADESH  23900       1    1      5
-147       JiVitA-3                   BANGLADESH  24075       1    1      4
-148       JiVitA-3                   BANGLADESH  24172       1    1      4
-149       JiVitA-3                   BANGLADESH   2424       1    1      2
-150       JiVitA-3                   BANGLADESH  24248       1    1      5
-151       JiVitA-3                   BANGLADESH   2447       1    1      5
-152       JiVitA-3                   BANGLADESH    245       1    1      3
-153       JiVitA-3                   BANGLADESH  24713       1    1      4
-154       JiVitA-3                   BANGLADESH  24821       1    1      3
-155       JiVitA-3                   BANGLADESH  24933       1    1      7
-156       JiVitA-3                   BANGLADESH   2495       4    1      7
-157       JiVitA-3                   BANGLADESH  24994       1    1      7
-158       JiVitA-3                   BANGLADESH    250       1    1      5
-159       JiVitA-3                   BANGLADESH  25041       1    1      4
-160       JiVitA-3                   BANGLADESH    251       2    1      4
-161       JiVitA-3                   BANGLADESH  25109       1    1      4
-162       JiVitA-3                   BANGLADESH  25187       1    1      3
-163       JiVitA-3                   BANGLADESH  25222       2    1      2
-164       JiVitA-3                   BANGLADESH  25405       1    1      7
-165       JiVitA-3                   BANGLADESH  25484       1    1      7
-166       JiVitA-3                   BANGLADESH  25536       1    1      7
-167       JiVitA-3                   BANGLADESH   2554       1    1      3
-168       JiVitA-3                   BANGLADESH  25820       1    1      3
-169       JiVitA-3                   BANGLADESH  25993       2    1      3
-170       JiVitA-3                   BANGLADESH  26006       1    1      2
-171       JiVitA-3                   BANGLADESH  26070       1    1      1
-172       JiVitA-3                   BANGLADESH  26167       1    1      3
-173       JiVitA-3                   BANGLADESH  26389       2    1      3
-174       JiVitA-3                   BANGLADESH  26550       1    1      1
-175       JiVitA-3                   BANGLADESH  26645       1    1      3
-176       JiVitA-3                   BANGLADESH  26658       1    1      4
-177       JiVitA-3                   BANGLADESH   2671       1    1      6
-178       JiVitA-3                   BANGLADESH  26726       1    1      5
-179       JiVitA-3                   BANGLADESH   2683       1    1      1
-180       JiVitA-3                   BANGLADESH   2685       1    1      1
-181       JiVitA-3                   BANGLADESH  26859       1    1      5
-182       JiVitA-3                   BANGLADESH  26871       1    1      6
-183       JiVitA-3                   BANGLADESH  26916       2    1      3
-184       JiVitA-3                   BANGLADESH  27055       1    1      4
-185       JiVitA-3                   BANGLADESH  27201       2    1      6
-186       JiVitA-3                   BANGLADESH  27202       1    1      3
-187       JiVitA-3                   BANGLADESH  27397       1    1      3
-188       JiVitA-3                   BANGLADESH    275       1    1      3
-189       JiVitA-3                   BANGLADESH  27579       1    1      4
-190       JiVitA-3                   BANGLADESH  27620       1    1      3
-191       JiVitA-3                   BANGLADESH  27675       1    1      3
-192       JiVitA-3                   BANGLADESH   2768       2    1      4
-193       JiVitA-3                   BANGLADESH  27769       1    1      1
-194       JiVitA-3                   BANGLADESH  27901       2    1      5
-195       JiVitA-3                   BANGLADESH  27903       1    1      3
-196       JiVitA-3                   BANGLADESH  28037       1    1      2
-197       JiVitA-3                   BANGLADESH  28199       1    1      5
-198       JiVitA-3                   BANGLADESH  28221       1    1      4
-199       JiVitA-3                   BANGLADESH  28249       1    1      3
-200       JiVitA-3                   BANGLADESH  28320       1    1      3
-201       JiVitA-3                   BANGLADESH  28354       1    1      3
-202       JiVitA-3                   BANGLADESH  28465       1    1      7
-203       JiVitA-3                   BANGLADESH  28472       1    1      3
-204       JiVitA-3                   BANGLADESH   2907       1    1      3
-205       JiVitA-3                   BANGLADESH    296       2    1      3
-206       JiVitA-3                   BANGLADESH   2965       2    1      3
-207       JiVitA-3                   BANGLADESH   3074       1    1      2
-208       JiVitA-3                   BANGLADESH   3155       1    1      5
-209       JiVitA-3                   BANGLADESH   3183       1    1      4
-210       JiVitA-3                   BANGLADESH   3226       1    1      6
-211       JiVitA-3                   BANGLADESH   3383       1    1      4
-212       JiVitA-3                   BANGLADESH   3513       1    1      2
-213       JiVitA-3                   BANGLADESH    365       1    1      2
-214       JiVitA-3                   BANGLADESH    369       1    1      7
-215       JiVitA-3                   BANGLADESH   3848       1    1      1
-216       JiVitA-3                   BANGLADESH    426       1    1      2
-217       JiVitA-3                   BANGLADESH   4284       2    1      4
-218       JiVitA-3                   BANGLADESH   4303       1    1      3
-219       JiVitA-3                   BANGLADESH   4304       1    1      3
-220       JiVitA-3                   BANGLADESH   4358       1    1      5
-221       JiVitA-3                   BANGLADESH   4524       1    1      3
-222       JiVitA-3                   BANGLADESH   4551       1    1      3
-223       JiVitA-3                   BANGLADESH   4635       1    1      4
-224       JiVitA-3                   BANGLADESH   4762       1    1      2
-225       JiVitA-3                   BANGLADESH   5003       1    1      3
-226       JiVitA-3                   BANGLADESH    506       1    1      4
-227       JiVitA-3                   BANGLADESH    512       1    1      3
-228       JiVitA-3                   BANGLADESH    537       1    1      3
-229       JiVitA-3                   BANGLADESH   5443       1    1      4
-230       JiVitA-3                   BANGLADESH   5758       1    1      3
-231       JiVitA-3                   BANGLADESH   5785       1    1      4
-232       JiVitA-3                   BANGLADESH   5792       1    1      2
-233       JiVitA-3                   BANGLADESH   5898       1    1      4
-234       JiVitA-3                   BANGLADESH     59       1    1      3
-235       JiVitA-3                   BANGLADESH   6000       1    1      2
-236       JiVitA-3                   BANGLADESH   6250       1    1      1
-237       JiVitA-3                   BANGLADESH   6352       2    1      2
-238       JiVitA-3                   BANGLADESH    643       1    1      2
-239       JiVitA-3                   BANGLADESH   6453       1    1      3
-240       JiVitA-3                   BANGLADESH   6661       1    1      6
-241       JiVitA-3                   BANGLADESH   6678       1    1      7
-242       JiVitA-3                   BANGLADESH   6721       1    1      5
-243       JiVitA-3                   BANGLADESH   6811       1    1      4
-244       JiVitA-3                   BANGLADESH    682       4    1      6
-245       JiVitA-3                   BANGLADESH   6994       1    1      2
-246       JiVitA-3                   BANGLADESH   7117       1    1      2
-247       JiVitA-3                   BANGLADESH   7161       1    1      4
-248       JiVitA-3                   BANGLADESH   7243       1    1      4
-249       JiVitA-3                   BANGLADESH   7255       2    1      5
-250       JiVitA-3                   BANGLADESH     73       1    1      7
-251       JiVitA-3                   BANGLADESH   7377       1    1      6
-252       JiVitA-3                   BANGLADESH   7471       1    1      6
-253       JiVitA-3                   BANGLADESH   7513       1    1      3
-254       JiVitA-3                   BANGLADESH   7655       1    1      2
-255       JiVitA-3                   BANGLADESH   7691       1    1      2
-256       JiVitA-3                   BANGLADESH   7748       1    1      1
-257       JiVitA-3                   BANGLADESH   8133       1    1      6
-258       JiVitA-3                   BANGLADESH   8163       1    1      3
-259       JiVitA-3                   BANGLADESH   8183       1    1      3
-260       JiVitA-3                   BANGLADESH   8250       1    1      2
-261       JiVitA-3                   BANGLADESH   8269       1    1      6
-262       JiVitA-3                   BANGLADESH   8388       1    1      2
-263       JiVitA-3                   BANGLADESH   8611       1    1      3
-264       JiVitA-3                   BANGLADESH   8667       3    1      4
-265       JiVitA-3                   BANGLADESH   8804       1    1      4
-266       JiVitA-3                   BANGLADESH   8861       3    1      7
-267       JiVitA-3                   BANGLADESH   9148       1    1      3
-268       JiVitA-3                   BANGLADESH   9182       1    1      7
-269       JiVitA-3                   BANGLADESH   9193       1    1      4
-270       JiVitA-3                   BANGLADESH   9230       2    1      3
-271       JiVitA-3                   BANGLADESH   9238       1    1      3
-272       JiVitA-3                   BANGLADESH   9393       1    1      4
-273       JiVitA-3                   BANGLADESH   9406       1    1      3
-274       JiVitA-3                   BANGLADESH   9432       1    1      6
-275       JiVitA-3                   BANGLADESH    948       1    1      4
-276       JiVitA-3                   BANGLADESH   9831       1    1      6
-277       JiVitA-3                   BANGLADESH   9930       1    1      6
-278       JiVitA-3                   BANGLADESH   9945       1    1      4
-279 TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  60212       1    1      3
-280       ZVITAMBO                     ZIMBABWE 104461       1    1      2
-281       ZVITAMBO                     ZIMBABWE 105621       1    1      6
-282       ZVITAMBO                     ZIMBABWE 110111       1    1      6
-283       ZVITAMBO                     ZIMBABWE 121051       1    1      4
-284       ZVITAMBO                     ZIMBABWE 128551       1    1      5
-285       ZVITAMBO                     ZIMBABWE 130691       1    1      3
-286       ZVITAMBO                     ZIMBABWE 138331       1    1      3
-287       ZVITAMBO                     ZIMBABWE 140141       1    1      3
-288       ZVITAMBO                     ZIMBABWE 141031       1    1      4
-289       ZVITAMBO                     ZIMBABWE 142521       1    1      2
-290       ZVITAMBO                     ZIMBABWE 146601       1    1      3
-291       ZVITAMBO                     ZIMBABWE 158671       1    1      1
-292       ZVITAMBO                     ZIMBABWE 160871       1    1      5
-293       ZVITAMBO                     ZIMBABWE 162391       1    1      4
-294       ZVITAMBO                     ZIMBABWE 163711       1    1     -1
-295       ZVITAMBO                     ZIMBABWE 164731       1    1      6
-296       ZVITAMBO                     ZIMBABWE 167771       1    1      7
-297       ZVITAMBO                     ZIMBABWE 168401       1    1      3
-298       ZVITAMBO                     ZIMBABWE 169311       1    1      4
-299       ZVITAMBO                     ZIMBABWE 170681       1    1      4
-300       ZVITAMBO                     ZIMBABWE 174711       1    1      3
-301       ZVITAMBO                     ZIMBABWE 178151       1    1     -8
-302       ZVITAMBO                     ZIMBABWE 179491       1    1      3
-303       ZVITAMBO                     ZIMBABWE 181751       1    1      5
-304       ZVITAMBO                     ZIMBABWE 182771       1    1      6
-305       ZVITAMBO                     ZIMBABWE 183101       1    1      3
-306       ZVITAMBO                     ZIMBABWE 185311       1    1      3
-307       ZVITAMBO                     ZIMBABWE 187451       1    1      3
-308       ZVITAMBO                     ZIMBABWE 188261       1    1      6
-309       ZVITAMBO                     ZIMBABWE 188561       1    1      3
-310       ZVITAMBO                     ZIMBABWE 190791       1    1      6
-311       ZVITAMBO                     ZIMBABWE 198181       1    1      4
-312       ZVITAMBO                     ZIMBABWE 198541       1    1      3
-313       ZVITAMBO                     ZIMBABWE 202451       1    1      3
-314       ZVITAMBO                     ZIMBABWE 207591       1    1      4
-315       ZVITAMBO                     ZIMBABWE 208181       1    1      3
-316       ZVITAMBO                     ZIMBABWE 216951       1    1      6
-317       ZVITAMBO                     ZIMBABWE 219411       1    1      6
-318       ZVITAMBO                     ZIMBABWE 222271       1    1      6
-319       ZVITAMBO                     ZIMBABWE 222661       1    1      3
-320       ZVITAMBO                     ZIMBABWE 224911       1    1      2
-321       ZVITAMBO                     ZIMBABWE 235601       1    1      1
+           studyid    country subjid agedays dead agedth
+1       iLiNS-DOSE     MALAWI    985     191    1      7
+2     iLiNS-DYAD-M     MALAWI  30542       1    1      1
+3     iLiNS-DYAD-M     MALAWI  31081       2    1      3
+4     iLiNS-DYAD-M     MALAWI  33021       2    1      2
+5     iLiNS-DYAD-M     MALAWI  33611       2    1      2
+6     iLiNS-DYAD-M     MALAWI  34101       1    1      1
+7     iLiNS-DYAD-M     MALAWI  34161       2    1      3
+8     iLiNS-DYAD-M     MALAWI  34581       2    1      2
+9     iLiNS-DYAD-M     MALAWI  34621       2    1      3
+10    iLiNS-DYAD-M     MALAWI  40461       1    1      6
+11    iLiNS-DYAD-M     MALAWI  51091       3    1      7
+12    iLiNS-DYAD-M     MALAWI  81021       2    1      6
+13    iLiNS-DYAD-M     MALAWI  81141       2    1      5
+14        JiVitA-3 BANGLADESH  10032       1    1      6
+15        JiVitA-3 BANGLADESH  10066       1    1      3
+16        JiVitA-3 BANGLADESH  10099       2    1      4
+17        JiVitA-3 BANGLADESH  10228       1    1      3
+18        JiVitA-3 BANGLADESH  10288       1    1      5
+19        JiVitA-3 BANGLADESH  10347       1    1      1
+20        JiVitA-3 BANGLADESH   1053       1    1      6
+21        JiVitA-3 BANGLADESH  10600       1    1      5
+22        JiVitA-3 BANGLADESH  10656       1    1      2
+23        JiVitA-3 BANGLADESH  10703       1    1      3
+24        JiVitA-3 BANGLADESH  10894       1    1      5
+25        JiVitA-3 BANGLADESH  10936       1    1      6
+26        JiVitA-3 BANGLADESH  11000       1    1      3
+27        JiVitA-3 BANGLADESH  11097       1    1      2
+28        JiVitA-3 BANGLADESH  11130       1    1      2
+29        JiVitA-3 BANGLADESH  11187       1    1      2
+30        JiVitA-3 BANGLADESH  11209       1    1      5
+31        JiVitA-3 BANGLADESH  11240       2    1      3
+32        JiVitA-3 BANGLADESH  11305       1    1      2
+33        JiVitA-3 BANGLADESH  11354       1    1      5
+34        JiVitA-3 BANGLADESH  11571       1    1      2
+35        JiVitA-3 BANGLADESH  11895       1    1      5
+36        JiVitA-3 BANGLADESH  12376       1    1      2
+37        JiVitA-3 BANGLADESH  12608       1    1      3
+38        JiVitA-3 BANGLADESH  12611       1    1      4
+39        JiVitA-3 BANGLADESH  12829       1    1      3
+40        JiVitA-3 BANGLADESH  13020       1    1      1
+41        JiVitA-3 BANGLADESH  13204       1    1      2
+42        JiVitA-3 BANGLADESH  13219       1    1      6
+43        JiVitA-3 BANGLADESH  13277       1    1      4
+44        JiVitA-3 BANGLADESH  13382       1    1      3
+45        JiVitA-3 BANGLADESH  13464       1    1      5
+46        JiVitA-3 BANGLADESH  13682       4    1      7
+47        JiVitA-3 BANGLADESH  13770       1    1      4
+48        JiVitA-3 BANGLADESH  13772       1    1      5
+49        JiVitA-3 BANGLADESH  13811       1    1      5
+50        JiVitA-3 BANGLADESH  14033       2    1      5
+51        JiVitA-3 BANGLADESH  14089       1    1      2
+52        JiVitA-3 BANGLADESH  14116       1    1      2
+53        JiVitA-3 BANGLADESH  14142       1    1      1
+54        JiVitA-3 BANGLADESH  14180       1    1      2
+55        JiVitA-3 BANGLADESH  14360       1    1      4
+56        JiVitA-3 BANGLADESH  14481       1    1      3
+57        JiVitA-3 BANGLADESH  14851       1    1      3
+58        JiVitA-3 BANGLADESH  14870       1    1      3
+59        JiVitA-3 BANGLADESH  15206       1    1      2
+60        JiVitA-3 BANGLADESH  15368       2    1      3
+61        JiVitA-3 BANGLADESH  15423       1    1      4
+62        JiVitA-3 BANGLADESH  15461       1    1      3
+63        JiVitA-3 BANGLADESH  15642       1    1      7
+64        JiVitA-3 BANGLADESH  15678       1    1      4
+65        JiVitA-3 BANGLADESH  15699       1    1      3
+66        JiVitA-3 BANGLADESH  15810       1    1      3
+67        JiVitA-3 BANGLADESH  15833       1    1      3
+68        JiVitA-3 BANGLADESH  15872       1    1      2
+69        JiVitA-3 BANGLADESH  16317       1    1      4
+70        JiVitA-3 BANGLADESH  16413       1    1      5
+71        JiVitA-3 BANGLADESH  16455       1    1      4
+72        JiVitA-3 BANGLADESH  16520       1    1      2
+73        JiVitA-3 BANGLADESH  16545       1    1      4
+74        JiVitA-3 BANGLADESH  16584       1    1      2
+75        JiVitA-3 BANGLADESH  16586       1    1      4
+76        JiVitA-3 BANGLADESH  16822       1    1      4
+77        JiVitA-3 BANGLADESH  16927       1    1      1
+78        JiVitA-3 BANGLADESH  17035       3    1      6
+79        JiVitA-3 BANGLADESH  17055       1    1      6
+80        JiVitA-3 BANGLADESH  17125       1    1      7
+81        JiVitA-3 BANGLADESH  17178       1    1      2
+82        JiVitA-3 BANGLADESH  17180       1    1      3
+83        JiVitA-3 BANGLADESH  17213       1    1      6
+84        JiVitA-3 BANGLADESH  17269       1    1      3
+85        JiVitA-3 BANGLADESH  17430       1    1      4
+86        JiVitA-3 BANGLADESH  17498       1    1      5
+87        JiVitA-3 BANGLADESH   1769       2    1      3
+88        JiVitA-3 BANGLADESH  17700       1    1      3
+89        JiVitA-3 BANGLADESH  17838       1    1      5
+90        JiVitA-3 BANGLADESH  17940       1    1      2
+91        JiVitA-3 BANGLADESH  18081       1    1      4
+92        JiVitA-3 BANGLADESH  18200       1    1      3
+93        JiVitA-3 BANGLADESH  18206       1    1      4
+94        JiVitA-3 BANGLADESH  18360       2    1      3
+95        JiVitA-3 BANGLADESH  18727       1    1      2
+96        JiVitA-3 BANGLADESH   1890       2    1      3
+97        JiVitA-3 BANGLADESH  19000     753    1      5
+98        JiVitA-3 BANGLADESH  19075       1    1      7
+99        JiVitA-3 BANGLADESH  19145       1    1      5
+100       JiVitA-3 BANGLADESH   1916       1    1      2
+101       JiVitA-3 BANGLADESH  19409       1    1      2
+102       JiVitA-3 BANGLADESH  19467       1    1      3
+103       JiVitA-3 BANGLADESH  19526       1    1      3
+104       JiVitA-3 BANGLADESH  19553       1    1      3
+105       JiVitA-3 BANGLADESH  19658       1    1      3
+106       JiVitA-3 BANGLADESH  19688       1    1      2
+107       JiVitA-3 BANGLADESH  19707       1    1      3
+108       JiVitA-3 BANGLADESH   1985       1    1      3
+109       JiVitA-3 BANGLADESH  20092       1    1      3
+110       JiVitA-3 BANGLADESH  20187       1    1      3
+111       JiVitA-3 BANGLADESH  20237       1    1      1
+112       JiVitA-3 BANGLADESH  20246       1    1      5
+113       JiVitA-3 BANGLADESH  20374       1    1      3
+114       JiVitA-3 BANGLADESH  20456       1    1      3
+115       JiVitA-3 BANGLADESH  20720       1    1      4
+116       JiVitA-3 BANGLADESH  20806       3    1      5
+117       JiVitA-3 BANGLADESH  20883       1    1      1
+118       JiVitA-3 BANGLADESH  20938       1    1      4
+119       JiVitA-3 BANGLADESH     21       1    1      2
+120       JiVitA-3 BANGLADESH  21007       2    1      4
+121       JiVitA-3 BANGLADESH  21293       1    1      3
+122       JiVitA-3 BANGLADESH  21455       1    1      3
+123       JiVitA-3 BANGLADESH  21583       1    1      3
+124       JiVitA-3 BANGLADESH  21697       2    1      2
+125       JiVitA-3 BANGLADESH  21709       1    1      7
+126       JiVitA-3 BANGLADESH  21762       1    1      3
+127       JiVitA-3 BANGLADESH  21911       1    1      3
+128       JiVitA-3 BANGLADESH  21970       2    1      5
+129       JiVitA-3 BANGLADESH  21994       1    1      3
+130       JiVitA-3 BANGLADESH  22046       1    1      2
+131       JiVitA-3 BANGLADESH   2216       1    1      1
+132       JiVitA-3 BANGLADESH  22206       1    1      3
+133       JiVitA-3 BANGLADESH  22223       1    1      5
+134       JiVitA-3 BANGLADESH   2235       1    1      3
+135       JiVitA-3 BANGLADESH  22351       1    1      6
+136       JiVitA-3 BANGLADESH  22466       1    1      7
+137       JiVitA-3 BANGLADESH  22726       1    1      3
+138       JiVitA-3 BANGLADESH  22794       1    1      1
+139       JiVitA-3 BANGLADESH  23135       1    1      4
+140       JiVitA-3 BANGLADESH  23239       1    1      3
+141       JiVitA-3 BANGLADESH  23435       1    1      2
+142       JiVitA-3 BANGLADESH  23438       1    1      4
+143       JiVitA-3 BANGLADESH   2357       1    1      2
+144       JiVitA-3 BANGLADESH  23699       1    1      3
+145       JiVitA-3 BANGLADESH  23861       1    1      3
+146       JiVitA-3 BANGLADESH  23900       1    1      5
+147       JiVitA-3 BANGLADESH  24075       1    1      4
+148       JiVitA-3 BANGLADESH  24172       1    1      4
+149       JiVitA-3 BANGLADESH   2424       1    1      2
+150       JiVitA-3 BANGLADESH  24248       1    1      5
+151       JiVitA-3 BANGLADESH   2447       1    1      5
+152       JiVitA-3 BANGLADESH    245       1    1      3
+153       JiVitA-3 BANGLADESH  24713       1    1      4
+154       JiVitA-3 BANGLADESH  24821       1    1      3
+155       JiVitA-3 BANGLADESH  24933       1    1      7
+156       JiVitA-3 BANGLADESH   2495       4    1      7
+157       JiVitA-3 BANGLADESH  24994       1    1      7
+158       JiVitA-3 BANGLADESH    250       1    1      5
+159       JiVitA-3 BANGLADESH  25041       1    1      4
+160       JiVitA-3 BANGLADESH    251       2    1      4
+161       JiVitA-3 BANGLADESH  25109       1    1      4
+162       JiVitA-3 BANGLADESH  25187       1    1      3
+163       JiVitA-3 BANGLADESH  25222       2    1      2
+164       JiVitA-3 BANGLADESH  25405       1    1      7
+165       JiVitA-3 BANGLADESH  25484       1    1      7
+166       JiVitA-3 BANGLADESH  25536       1    1      7
+167       JiVitA-3 BANGLADESH   2554       1    1      3
+168       JiVitA-3 BANGLADESH  25820       1    1      3
+169       JiVitA-3 BANGLADESH  25993       2    1      3
+170       JiVitA-3 BANGLADESH  26006       1    1      2
+171       JiVitA-3 BANGLADESH  26070       1    1      1
+172       JiVitA-3 BANGLADESH  26167       1    1      3
+173       JiVitA-3 BANGLADESH  26389       2    1      3
+174       JiVitA-3 BANGLADESH  26550       1    1      1
+175       JiVitA-3 BANGLADESH  26645       1    1      3
+176       JiVitA-3 BANGLADESH  26658       1    1      4
+177       JiVitA-3 BANGLADESH   2671       1    1      6
+178       JiVitA-3 BANGLADESH  26726       1    1      5
+179       JiVitA-3 BANGLADESH   2683       1    1      1
+180       JiVitA-3 BANGLADESH   2685       1    1      1
+181       JiVitA-3 BANGLADESH  26859       1    1      5
+182       JiVitA-3 BANGLADESH  26871       1    1      6
+183       JiVitA-3 BANGLADESH  26916       2    1      3
+184       JiVitA-3 BANGLADESH  27055       1    1      4
+185       JiVitA-3 BANGLADESH  27201       2    1      6
+186       JiVitA-3 BANGLADESH  27202       1    1      3
+187       JiVitA-3 BANGLADESH  27397       1    1      3
+188       JiVitA-3 BANGLADESH    275       1    1      3
+189       JiVitA-3 BANGLADESH  27579       1    1      4
+190       JiVitA-3 BANGLADESH  27620       1    1      3
+191       JiVitA-3 BANGLADESH  27675       1    1      3
+192       JiVitA-3 BANGLADESH   2768       2    1      4
+193       JiVitA-3 BANGLADESH  27769       1    1      1
+194       JiVitA-3 BANGLADESH  27901       2    1      5
+195       JiVitA-3 BANGLADESH  27903       1    1      3
+196       JiVitA-3 BANGLADESH  28037       1    1      2
+197       JiVitA-3 BANGLADESH  28199       1    1      5
+198       JiVitA-3 BANGLADESH  28221       1    1      4
+199       JiVitA-3 BANGLADESH  28249       1    1      3
+200       JiVitA-3 BANGLADESH  28320       1    1      3
+201       JiVitA-3 BANGLADESH  28354       1    1      3
+202       JiVitA-3 BANGLADESH  28465       1    1      7
+203       JiVitA-3 BANGLADESH  28472       1    1      3
+204       JiVitA-3 BANGLADESH   2907       1    1      3
+205       JiVitA-3 BANGLADESH    296       2    1      3
+206       JiVitA-3 BANGLADESH   2965       2    1      3
+207       JiVitA-3 BANGLADESH   3074       1    1      2
+208       JiVitA-3 BANGLADESH   3155       1    1      5
+209       JiVitA-3 BANGLADESH   3183       1    1      4
+210       JiVitA-3 BANGLADESH   3226       1    1      6
+211       JiVitA-3 BANGLADESH   3383       1    1      4
+212       JiVitA-3 BANGLADESH   3513       1    1      2
+213       JiVitA-3 BANGLADESH    365       1    1      2
+214       JiVitA-3 BANGLADESH    369       1    1      7
+215       JiVitA-3 BANGLADESH   3848       1    1      1
+216       JiVitA-3 BANGLADESH    426       1    1      2
+217       JiVitA-3 BANGLADESH   4284       2    1      4
+218       JiVitA-3 BANGLADESH   4303       1    1      3
+219       JiVitA-3 BANGLADESH   4304       1    1      3
+220       JiVitA-3 BANGLADESH   4358       1    1      5
+221       JiVitA-3 BANGLADESH   4524       1    1      3
+222       JiVitA-3 BANGLADESH   4551       1    1      3
+223       JiVitA-3 BANGLADESH   4635       1    1      4
+224       JiVitA-3 BANGLADESH   4762       1    1      2
+225       JiVitA-3 BANGLADESH   5003       1    1      3
+226       JiVitA-3 BANGLADESH    506       1    1      4
+227       JiVitA-3 BANGLADESH    512       1    1      3
+228       JiVitA-3 BANGLADESH    537       1    1      3
+229       JiVitA-3 BANGLADESH   5443       1    1      4
+230       JiVitA-3 BANGLADESH   5758       1    1      3
+231       JiVitA-3 BANGLADESH   5785       1    1      4
+232       JiVitA-3 BANGLADESH   5792       1    1      2
+233       JiVitA-3 BANGLADESH   5898       1    1      4
+234       JiVitA-3 BANGLADESH     59       1    1      3
+235       JiVitA-3 BANGLADESH   6000       1    1      2
+236       JiVitA-3 BANGLADESH   6250       1    1      1
+237       JiVitA-3 BANGLADESH   6352       2    1      2
+238       JiVitA-3 BANGLADESH    643       1    1      2
+239       JiVitA-3 BANGLADESH   6453       1    1      3
+240       JiVitA-3 BANGLADESH   6661       1    1      6
+241       JiVitA-3 BANGLADESH   6678       1    1      7
+242       JiVitA-3 BANGLADESH   6721       1    1      5
+243       JiVitA-3 BANGLADESH   6811       1    1      4
+244       JiVitA-3 BANGLADESH    682       4    1      6
+245       JiVitA-3 BANGLADESH   6994       1    1      2
+246       JiVitA-3 BANGLADESH   7117       1    1      2
+247       JiVitA-3 BANGLADESH   7161       1    1      4
+248       JiVitA-3 BANGLADESH   7243       1    1      4
+249       JiVitA-3 BANGLADESH   7255       2    1      5
+250       JiVitA-3 BANGLADESH     73       1    1      7
+251       JiVitA-3 BANGLADESH   7377       1    1      6
+252       JiVitA-3 BANGLADESH   7471       1    1      6
+253       JiVitA-3 BANGLADESH   7513       1    1      3
+254       JiVitA-3 BANGLADESH   7655       1    1      2
+255       JiVitA-3 BANGLADESH   7691       1    1      2
+256       JiVitA-3 BANGLADESH   7748       1    1      1
+257       JiVitA-3 BANGLADESH   8133       1    1      6
+258       JiVitA-3 BANGLADESH   8163       1    1      3
+259       JiVitA-3 BANGLADESH   8183       1    1      3
+260       JiVitA-3 BANGLADESH   8250       1    1      2
+261       JiVitA-3 BANGLADESH   8269       1    1      6
+262       JiVitA-3 BANGLADESH   8388       1    1      2
+263       JiVitA-3 BANGLADESH   8611       1    1      3
+264       JiVitA-3 BANGLADESH   8667       3    1      4
+265       JiVitA-3 BANGLADESH   8804       1    1      4
+266       JiVitA-3 BANGLADESH   8861       3    1      7
+267       JiVitA-3 BANGLADESH   9148       1    1      3
+268       JiVitA-3 BANGLADESH   9182       1    1      7
+269       JiVitA-3 BANGLADESH   9193       1    1      4
+270       JiVitA-3 BANGLADESH   9230       2    1      3
+271       JiVitA-3 BANGLADESH   9238       1    1      3
+272       JiVitA-3 BANGLADESH   9393       1    1      4
+273       JiVitA-3 BANGLADESH   9406       1    1      3
+274       JiVitA-3 BANGLADESH   9432       1    1      6
+275       JiVitA-3 BANGLADESH    948       1    1      4
+276       JiVitA-3 BANGLADESH   9831       1    1      6
+277       JiVitA-3 BANGLADESH   9930       1    1      6
+278       JiVitA-3 BANGLADESH   9945       1    1      4
+279 TanzaniaChild2   TANZANIA  60212       1    1      3
+280       ZVITAMBO   ZIMBABWE 104461       1    1      2
+281       ZVITAMBO   ZIMBABWE 105621       1    1      6
+282       ZVITAMBO   ZIMBABWE 110111       1    1      6
+283       ZVITAMBO   ZIMBABWE 121051       1    1      4
+284       ZVITAMBO   ZIMBABWE 128551       1    1      5
+285       ZVITAMBO   ZIMBABWE 130691       1    1      3
+286       ZVITAMBO   ZIMBABWE 138331       1    1      3
+287       ZVITAMBO   ZIMBABWE 140141       1    1      3
+288       ZVITAMBO   ZIMBABWE 141031       1    1      4
+289       ZVITAMBO   ZIMBABWE 142521       1    1      2
+290       ZVITAMBO   ZIMBABWE 146601       1    1      3
+291       ZVITAMBO   ZIMBABWE 158671       1    1      1
+292       ZVITAMBO   ZIMBABWE 160871       1    1      5
+293       ZVITAMBO   ZIMBABWE 162391       1    1      4
+294       ZVITAMBO   ZIMBABWE 163711       1    1     -1
+295       ZVITAMBO   ZIMBABWE 164731       1    1      6
+296       ZVITAMBO   ZIMBABWE 167771       1    1      7
+297       ZVITAMBO   ZIMBABWE 168401       1    1      3
+298       ZVITAMBO   ZIMBABWE 169311       1    1      4
+299       ZVITAMBO   ZIMBABWE 170681       1    1      4
+300       ZVITAMBO   ZIMBABWE 174711       1    1      3
+301       ZVITAMBO   ZIMBABWE 178151       1    1     -8
+302       ZVITAMBO   ZIMBABWE 179491       1    1      3
+303       ZVITAMBO   ZIMBABWE 181751       1    1      5
+304       ZVITAMBO   ZIMBABWE 182771       1    1      6
+305       ZVITAMBO   ZIMBABWE 183101       1    1      3
+306       ZVITAMBO   ZIMBABWE 185311       1    1      3
+307       ZVITAMBO   ZIMBABWE 187451       1    1      3
+308       ZVITAMBO   ZIMBABWE 188261       1    1      6
+309       ZVITAMBO   ZIMBABWE 188561       1    1      3
+310       ZVITAMBO   ZIMBABWE 190791       1    1      6
+311       ZVITAMBO   ZIMBABWE 198181       1    1      4
+312       ZVITAMBO   ZIMBABWE 198541       1    1      3
+313       ZVITAMBO   ZIMBABWE 202451       1    1      3
+314       ZVITAMBO   ZIMBABWE 207591       1    1      4
+315       ZVITAMBO   ZIMBABWE 208181       1    1      3
+316       ZVITAMBO   ZIMBABWE 216951       1    1      6
+317       ZVITAMBO   ZIMBABWE 219411       1    1      6
+318       ZVITAMBO   ZIMBABWE 222271       1    1      6
+319       ZVITAMBO   ZIMBABWE 222661       1    1      3
+320       ZVITAMBO   ZIMBABWE 224911       1    1      2
+321       ZVITAMBO   ZIMBABWE 235601       1    1      1
                                                                                       causedth
 1                                                                                             
 2                                                                                             
@@ -1621,26 +1874,26 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > #Drop mortality after 24 months
 > summary(d$maxage)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-      1     370     731    1107    1095    6955 
+    1.0   368.0   650.0   821.7   826.0  5178.0 
 > dim(d)
-[1] 109680     10
+[1] 96376    10
 > table(d$dead)
 
    1 
-2687 
+2682 
 > 
 > #Mark deaths not over 24 months to keep
 > d <- d %>% mutate(keep=1*(agedth <= 730 | is.na(agedth) & ((maxage <= 730 & dead==1) | dead!=1)))
 > dim(d)
-[1] 109680     11
+[1] 96376    11
 > table(d$dead)
 
    1 
-2687 
+2682 
 > table(d$keep)
 
    0    1 
- 104 2510 
+ 103 2506 
 > 
 > 
 > 
@@ -1650,11 +1903,11 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > table(d$dead)
 
    1 
-2687 
+2682 
 > table(d$dead624)
 
     1     2 
- 1128 11437 
+ 1125 10615 
 > 
 > d$subjid <- as.character(d$subjid)
 > 
@@ -1673,7 +1926,7 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > prop.table(table(mort$dead))
 
          0          1 
-0.97644967 0.02355033 
+0.97324023 0.02675977 
 > 
 > mort$cohort <- paste0(mort$studyid," ", mort$country)
 > 
@@ -1681,96 +1934,92 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > mort <- mort %>% group_by(cohort) %>% mutate(tot_dead=sum(dead, na.rm=T)) %>% filter(tot_dead>0)
 > prop.table(table(mort$dead))
 
-         0          1 
-0.96426595 0.03573405 
+        0         1 
+0.9639724 0.0360276 
 > table(mort$cohort, mort$dead)
-                                             
-                                                  0     1
-  Burkina Faso Zn BURKINA FASO                 7594    39
-  EE PAKISTAN                                   376     4
-  GMS-Nepal NEPAL                               690     8
-  iLiNS-DOSE MALAWI                            1803   129
-  iLiNS-DYAD-M MALAWI                          1181    56
-  JiVitA-3 BANGLADESH                         26512   938
-  JiVitA-4 BANGLADESH                          5399    49
-  Keneba GAMBIA                                2889    65
-  MAL-ED BANGLADESH                             262     3
-  MAL-ED INDIA                                  249     2
-  MAL-ED PERU                                   301     2
-  MAL-ED SOUTH AFRICA                           313     1
-  MAL-ED TANZANIA, UNITED REPUBLIC OF           259     3
-  PROVIDE BANGLADESH                            696     4
-  SAS-CompFeed INDIA                           1483    52
-  SAS-FoodSuppl INDIA                           412     6
-  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2399     1
-  VITAMIN-A INDIA                              3892   108
-  ZVITAMBO ZIMBABWE                           12991  1113
+                              
+                                   0     1
+  Burkina Faso Zn BURKINA FASO  7594    39
+  EE PAKISTAN                    376     4
+  GMS-Nepal NEPAL                690     8
+  iLiNS-DOSE MALAWI             1803   129
+  iLiNS-DYAD-M MALAWI           1181    56
+  JiVitA-3 BANGLADESH          26512   938
+  JiVitA-4 BANGLADESH           5399    49
+  Keneba GAMBIA                 2889    65
+  MAL-ED BANGLADESH              262     3
+  MAL-ED INDIA                   249     2
+  MAL-ED PERU                    301     2
+  MAL-ED SOUTH AFRICA            313     1
+  MAL-ED TANZANIA                259     3
+  SAS-CompFeed INDIA            1483    52
+  SAS-FoodSuppl INDIA            412     6
+  TanzaniaChild2 TANZANIA       2399     1
+  VITAMIN-A INDIA               3892   108
+  ZVITAMBO ZIMBABWE            12991  1113
 > table(mort$cohort, mort$dead624)
-                                             
-                                                  0     1
-  Burkina Faso Zn BURKINA FASO                 7592    39
-  EE PAKISTAN                                   371     4
-  GMS-Nepal NEPAL                               590     2
-  iLiNS-DOSE MALAWI                            1747   128
-  iLiNS-DYAD-M MALAWI                          1138    25
-  JiVitA-3 BANGLADESH                         20837   274
-  JiVitA-4 BANGLADESH                          5388    49
-  Keneba GAMBIA                                2739    44
-  MAL-ED BANGLADESH                             240     0
-  MAL-ED INDIA                                  235     0
-  MAL-ED PERU                                   272     1
-  MAL-ED SOUTH AFRICA                           261     0
-  MAL-ED TANZANIA, UNITED REPUBLIC OF           245     0
-  PROVIDE BANGLADESH                            615     2
-  SAS-CompFeed INDIA                           1377    12
-  SAS-FoodSuppl INDIA                           398     4
-  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2096     0
-  VITAMIN-A INDIA                              3587    33
-  ZVITAMBO ZIMBABWE                           11302   407
+                              
+                                   0     1
+  Burkina Faso Zn BURKINA FASO  7592    39
+  EE PAKISTAN                    371     4
+  GMS-Nepal NEPAL                590     2
+  iLiNS-DOSE MALAWI             1747   128
+  iLiNS-DYAD-M MALAWI           1138    25
+  JiVitA-3 BANGLADESH          20837   274
+  JiVitA-4 BANGLADESH           5388    49
+  Keneba GAMBIA                 2739    44
+  MAL-ED BANGLADESH              240     0
+  MAL-ED INDIA                   235     0
+  MAL-ED PERU                    272     1
+  MAL-ED SOUTH AFRICA            261     0
+  MAL-ED TANZANIA                245     0
+  SAS-CompFeed INDIA            1377    12
+  SAS-FoodSuppl INDIA            398     4
+  TanzaniaChild2 TANZANIA       2096     0
+  VITAMIN-A INDIA               3587    33
+  ZVITAMBO ZIMBABWE            11302   407
 > table(mort$cohort, mort$dead0plus)
-                                             
-                                                  0     1
-  Burkina Faso Zn BURKINA FASO                 7582    51
-  EE PAKISTAN                                   376     4
-  GMS-Nepal NEPAL                               690     8
-  iLiNS-DOSE MALAWI                            1803   129
-  iLiNS-DYAD-M MALAWI                          1177    60
-  JiVitA-3 BANGLADESH                         26471   979
-  JiVitA-4 BANGLADESH                          5398    50
-  Keneba GAMBIA                                2854   100
-  MAL-ED BANGLADESH                             262     3
-  MAL-ED INDIA                                  249     2
-  MAL-ED PERU                                   301     2
-  MAL-ED SOUTH AFRICA                           313     1
-  MAL-ED TANZANIA, UNITED REPUBLIC OF           259     3
-  PROVIDE BANGLADESH                            695     5
-  SAS-CompFeed INDIA                           1483    52
-  SAS-FoodSuppl INDIA                           412     6
-  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2399     1
-  VITAMIN-A INDIA                              3892   108
-  ZVITAMBO ZIMBABWE                           12981  1123
+                              
+                                   0     1
+  Burkina Faso Zn BURKINA FASO  7582    51
+  EE PAKISTAN                    376     4
+  GMS-Nepal NEPAL                690     8
+  iLiNS-DOSE MALAWI             1803   129
+  iLiNS-DYAD-M MALAWI           1177    60
+  JiVitA-3 BANGLADESH          26471   979
+  JiVitA-4 BANGLADESH           5398    50
+  Keneba GAMBIA                 2854   100
+  MAL-ED BANGLADESH              262     3
+  MAL-ED INDIA                   249     2
+  MAL-ED PERU                    301     2
+  MAL-ED SOUTH AFRICA            313     1
+  MAL-ED TANZANIA                259     3
+  SAS-CompFeed INDIA            1483    52
+  SAS-FoodSuppl INDIA            412     6
+  TanzaniaChild2 TANZANIA       2399     1
+  VITAMIN-A INDIA               3892   108
+  ZVITAMBO ZIMBABWE            12981  1123
 > table(mort$cohort, mort$dead6plus)
-                                             
-                                                  0     1
-  Burkina Faso Zn BURKINA FASO                 7580    51
-  EE PAKISTAN                                   371     4
-  GMS-Nepal NEPAL                               590     2
-  iLiNS-DOSE MALAWI                            1747   128
-  iLiNS-DYAD-M MALAWI                          1134    29
-  JiVitA-3 BANGLADESH                         20796   315
-  JiVitA-4 BANGLADESH                          5387    50
-  Keneba GAMBIA                                2704    79
-  MAL-ED BANGLADESH                             240     0
-  MAL-ED INDIA                                  235     0
-  MAL-ED PERU                                   272     1
-  MAL-ED SOUTH AFRICA                           261     0
-  MAL-ED TANZANIA, UNITED REPUBLIC OF           245     0
-  PROVIDE BANGLADESH                            614     3
-  SAS-CompFeed INDIA                           1377    12
-  SAS-FoodSuppl INDIA                           398     4
-  TanzaniaChild2 TANZANIA, UNITED REPUBLIC OF  2096     0
-  VITAMIN-A INDIA                              3587    33
-  ZVITAMBO ZIMBABWE                           11292   417
+                              
+                                   0     1
+  Burkina Faso Zn BURKINA FASO  7580    51
+  EE PAKISTAN                    371     4
+  GMS-Nepal NEPAL                590     2
+  iLiNS-DOSE MALAWI             1747   128
+  iLiNS-DYAD-M MALAWI           1134    29
+  JiVitA-3 BANGLADESH          20796   315
+  JiVitA-4 BANGLADESH           5387    50
+  Keneba GAMBIA                 2704    79
+  MAL-ED BANGLADESH              240     0
+  MAL-ED INDIA                   235     0
+  MAL-ED PERU                    272     1
+  MAL-ED SOUTH AFRICA            261     0
+  MAL-ED TANZANIA                245     0
+  SAS-CompFeed INDIA            1377    12
+  SAS-FoodSuppl INDIA            398     4
+  TanzaniaChild2 TANZANIA       2096     0
+  VITAMIN-A INDIA               3587    33
+  ZVITAMBO ZIMBABWE            11292   417
 > 
 > 
 > mort <- subset(mort, select = c(studyid, country, subjid, maxage, dead, agedth, causedth, dead624, dead0plus, dead6plus))
@@ -1778,10 +2027,15 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > saveRDS(mort, mortality_path)
 > 
 > 
-> 
-> 
-> 
-> 
+> #mortality within studies measuring anthro before 6 months and had sufficient mortality to be in the primary analysis
+> table(mort$dead[mort$studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","JiVitA-3","JiVitA-4","Keneba", "SAS-CompFeed","VITAMIN-A","ZVITAMBO")])
+
+    0     1 
+56150  2510 
+> prop.table(table(mort$dead[mort$studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","JiVitA-3","JiVitA-4","Keneba", "SAS-CompFeed","VITAMIN-A","ZVITAMBO")]))
+
+         0          1 
+0.95721105 0.04278895 
 > 
 > 
 > 
@@ -1790,4 +2044,4 @@ ARI /Pneumonia/Diarrhoea /Gastroenteritis/Other specific infection/Other:NEC:CON
 > 
 > proc.time()
    user  system elapsed 
- 27.814   0.989  28.814 
+ 43.688   1.223  44.887 

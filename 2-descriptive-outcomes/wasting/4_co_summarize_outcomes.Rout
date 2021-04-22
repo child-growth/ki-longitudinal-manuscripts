@@ -203,6 +203,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_co_functions.R"))
 > 
 > d <- readRDS(rf_co_occurrence_path)
@@ -682,4 +685,4 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > proc.time()
    user  system elapsed 
-155.034   1.219 156.228 
+155.800   1.262 157.039 

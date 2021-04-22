@@ -34,6 +34,9 @@ source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functi
 
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
+#Check that all monthly+quarterly cohorts are in the dataset
+assert_that(all(monthly_and_quarterly_cohorts %in% unique(d$studyid)))
+
 head(d)
 d <- d %>% subset(., select = -c(tr))
 
@@ -175,7 +178,8 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
     haz.cohort.vel
   )
   
-  saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity", output_file_suffix, ".RDS"))
+  saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity", 
+                                 calc_method, output_file_suffix, ".RDS"))
   
   #----------------------------------------
   # monthly mean haz
@@ -183,6 +187,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   dmon <- calc.monthly.agecat(data)
   monthly.haz.data <- summary.haz(dmon, method = calc_method)
   monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(., method = calc_method)$haz.res)
+  monthly.haz.country <-  dmon  %>% group_by(country) %>% do(summary.haz(., method = calc_method)$haz.res)
   monthly.haz.cohort <-
     monthly.haz.data$haz.cohort %>% subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
     rename(est = meanhaz,  lb = ci.lb,  ub = ci.ub)
@@ -190,6 +195,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   monthly.haz <- bind_rows(
     data.frame(cohort = "pooled", region = "Overall", monthly.haz.data$haz.res),
     data.frame(cohort = "pooled", monthly.haz.region),
+    data.frame(cohort = "pooled-country", monthly.haz.country),
     monthly.haz.cohort
   )
   
@@ -221,7 +227,8 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   # combine data
   quantiles <- bind_rows(quantile_d, quantile_d_overall,quantile_d_cohort)
   
-  saveRDS(quantiles,file = paste0(here(),"/results/quantile_data_stunting", output_file_suffix, ".RDS"))
+  saveRDS(quantiles,file = paste0(here(),"/results/quantile_data_stunting", calc_method,
+                                  output_file_suffix, ".RDS"))
   
   ######################################################################
   # Incidence proportion
@@ -252,7 +259,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   # stratify by birth
   #----------------------------------------
   ip_3.birthstrat = calc_ip(d3_birthstrat, agelst3_birthstrat, severe = FALSE)
-
+  
   #----------------------------------------
   # Incidence proportion 6 month intervals
   #----------------------------------------
@@ -263,13 +270,13 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   # 3 month interval
   #----------------------------------------
   sev.ip3 = calc_ip(d3, agelst3, severe = TRUE)
-
+  
   #----------------------------------------
   # Incidence proportion of severe stunting
   # 6 month interval
   #----------------------------------------
   sev.ip6 = calc_ip(d6, agelst6, severe = TRUE)
-
+  
   ######################################################################
   # Cumulative incidence
   ######################################################################
@@ -288,7 +295,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
     )
     return(cuminc)
   }
-    
+  
   #----------------------------------------
   # Cumulative Incidence  - 3 month intervals
   #----------------------------------------
@@ -341,7 +348,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   shiny_desc_data$agecat <- as.factor(shiny_desc_data$agecat)
   
   shiny_desc_data$region <- factor(shiny_desc_data$region, levels=c("Overall", "Africa", "Latin America", "South Asia"))
-    
+  
   return(shiny_desc_data)
 }
 

@@ -47,7 +47,8 @@ cd ~/ki-longitudinal-manuscripts/1-data-cleaning
   7_DHS-data-cleaning.R \
   8_DHS-data-quantiles.R \
   9_seasonality_prepdata.R \
-  10_rainfall_prepdata.R #\
+  10-monthly-ppt-processing.R \
+  11_rainfall_prepdata.R #\
   
   # metadata scripts/1_create_KI_wasting_consort_data.R \
   # metadata scripts/2_create_KI_stunting_consort_data.R \

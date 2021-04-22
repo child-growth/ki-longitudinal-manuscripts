@@ -9,28 +9,28 @@ A <- names(adjustment_sets)
 
 Avars <- c( "sex",   names(adjustment_sets))
 
-load(file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc.rdata")
+load(file=paste0(ghapdata_dir,"/wast_cuminc.rdata"))
 cuminc_sev <- cuminc %>% filter(agecat=="0-24 months")
-load(file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_nobirth.rdata")
+load(file=paste0(ghapdata_dir,"/wast_cuminc_nobirth.rdata"))
 cuminc_nobirth_sev <- cuminc_nobirth %>% filter(agecat=="0-24 months (no birth wast)")
-load(file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/pers_wast.rdata")
+load(file=paste0(ghapdata_dir,"/pers_wast.rdata"))
 pers_wast <- pers_wast %>% filter(agecat=="0-24 months")
 
-save(cuminc, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_primary.rdata")
-save(cuminc_nobirth, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_nobirth_primary.rdata")
-save(cuminc_sev, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/swast_cuminc_primary.rdata")
-save(cuminc_nobirth_sev, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/swast_cuminc_nobirth_primary.rdata")
-save(pers_wast, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/pers_wast_primary.rdata")
+save(cuminc, file=paste0(ghapdata_dir,"/wast_cuminc_primary.rdata"))
+save(cuminc_nobirth, file=paste0(ghapdata_dir,"/wast_cuminc_nobirth_primary.rdata"))
+save(cuminc_sev, file=paste0(ghapdata_dir,"/swast_cuminc_primary.rdata"))
+save(cuminc_nobirth_sev, file=paste0(ghapdata_dir,"/swast_cuminc_nobirth_primary.rdata"))
+save(pers_wast, file=paste0(ghapdata_dir,"/pers_wast_primary.rdata"))
 
-load(file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/st_cuminc_outcomes.rdata")
+load(file=paste0(ghapdata_dir,"/st_cuminc_outcomes.rdata"))
 cuminc_sev <- cuminc %>% filter(agecat=="0-24 months")
-load(file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/st_cuminc_outcomes_nobirth.rdata")
+load(file=paste0(ghapdata_dir,"/st_cuminc_outcomes_nobirth.rdata"))
 cuminc_nobirth_sev <- cuminc_nobirth %>% filter(agecat=="0-24 months (no birth st.)")
 
-save(cuminc, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/st_cuminc_outcomes_primary.rdata")
-save(cuminc_nobirth, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/st_cuminc_outcomes_nobirth_primary.rdata")
-save(cuminc_sev, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/sst_cuminc_outcomes_primary.rdata")
-save(cuminc_nobirth_sev, file="/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/sst_cuminc_outcomes_nobirth_primary.rdata")
+save(cuminc, file=paste0(ghapdata_dir,"/st_cuminc_outcomes_primary.rdata"))
+save(cuminc_nobirth, file=paste0(ghapdata_dir,"/st_cuminc_outcomes_nobirth_primary.rdata"))
+save(cuminc_sev, file=paste0(ghapdata_dir,"/sst_cuminc_outcomes_primary.rdata"))
+save(cuminc_nobirth_sev, file=paste0(ghapdata_dir,"/sst_cuminc_outcomes_nobirth_primary.rdata"))
 
 #---------------------------------------------
 #Adjustment specifying function

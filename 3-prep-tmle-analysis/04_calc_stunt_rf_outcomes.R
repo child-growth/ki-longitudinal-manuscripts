@@ -100,7 +100,7 @@ stunt_ci_0_24_no_birth = d6 %>% ungroup() %>%
   ungroup() %>%
   select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,Nobs,N)
 
-cuminc_nobirth <- rbind(stunt_ci_0_6_no_birth, stunt_ci_0_24_no_birth)
+cuminc_nobirth <- rbind(stunt_ci_0_6_no_birth, stunt_ci_0_24_no_birth, stunt_ci_6_24)
 
 
 table(cuminc$ever_stunted[cuminc$agecat=="0-6 months"])
