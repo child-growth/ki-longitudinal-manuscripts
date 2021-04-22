@@ -73,4 +73,4 @@ sn_fits_age_df$label = paste0(sn_fits_age_df$mean_f, "\n",
                               sn_fits_age_df$sd_f, "\n",
                               sn_fits_age_df$gamma1_f)
 
-saveRDS(sn_fits_age_df, paste0(here::here(), "/results/stunt_skewed_normal.RDS"))
+saveRDS(sn_fits_age_df, paste0(res_dir, "stunting/stunt_skewed_normal.RDS"))

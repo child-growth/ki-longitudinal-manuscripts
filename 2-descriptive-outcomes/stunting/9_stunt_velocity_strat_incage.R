@@ -224,11 +224,11 @@ poolhaz_girls_monthly = as.data.frame(do.call(rbind, poolhaz_girls_monthly))
 pooled_vel <- rbind(
   poolhaz_boys, poolhaz_girls, poollencm_boys, poollencm_girls
 )
-saveRDS(pooled_vel, file = paste0(res_dir, "stunt_velocity_incage.RDS"))
+saveRDS(pooled_vel, file = paste0(res_dir, "stunting/stunt_velocity_incage.RDS"))
 
 pooled_vel_monthly <- rbind(
   poolhaz_boys_monthly, poolhaz_girls_monthly, poollencm_boys_monthly, poollencm_girls_monthly
 )
-saveRDS(pooled_vel_monthly, file = paste0(res_dir, "stunt_velocity_incage_monthly.RDS"))
+saveRDS(pooled_vel_monthly, file = paste0(res_dir, "stunting/stunt_velocity_incage_monthly.RDS"))
 
 

@@ -406,7 +406,7 @@ stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
                                     age_list = dead_0,
                                     label = "dead")
 
-saveRDS(flow_m_mort, file=paste0(res_bluevelvet_dir, "stuntflow_mort.RDS"))
-saveRDS(stunt_pooled_corr, file=paste0(res_bluevelvet_dir, "stuntflow_pooled_mort.RDS"))
-saveRDS(stunt_pooled_corr_fe, file=paste0(res_bluevelvet_dir, "stuntflow_pooled_mort_fe.RDS"))
+saveRDS(flow_m_mort, file=paste0(res_dir, "stunting/stuntflow_mort.RDS"))
+saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stunting/stuntflow_pooled_mort.RDS"))
+saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_mort_fe.RDS"))
 
