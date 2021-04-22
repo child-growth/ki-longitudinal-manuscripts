@@ -14,7 +14,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load data
-co_pool = readRDS(paste0(res_dir, "/co_flow_pooled.RDS"))
+co_pool = readRDS(paste0(res_dir, "co_flow_pooled.RDS"))
 
 #Scale sum to 100
 co_pool <- co_pool %>% group_by(agem) %>%
@@ -113,9 +113,13 @@ bar_plot_RE_name = create_name(
 # save plot and underlying data
 ggsave(bar_plot_RE, file=paste0(here(),"/figures/wasting/fig-",bar_plot_RE_name,".png"), width=10, height=4)
 
+ggsave(bar_plot_RE, file=paste0(fig_dir,"/wasting/fig-",bar_plot_RE_name,".png"), width=10, height=4)
+ggsave(bar_plot_RE, file=paste0(BV_dir,"/figures/wasting/fig-",bar_plot_RE_name,".png"), width=10, height=4)
+
+
 saveRDS(plot_data_pooled, file=paste0(figdata_dir_wasting, "/figdata-",bar_plot_RE_name,".RDS"))
 
-saveRDS(bar_plot_RE, file=paste0(here::here(),"/figures/plot-objects/co_flow_object.rds"))
+saveRDS(bar_plot_RE, file=paste0(fig_dir,"/plot-objects/co_flow_object.rds"))
 
 
 

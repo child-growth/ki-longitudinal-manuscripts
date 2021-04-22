@@ -61,8 +61,8 @@ res_bluevelvet_dir                = "/data/KI/UCB-SuperLearner/ki-results/"
 dhs_res_dir                       = "/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs/"
 
 #data_dir                          = here::here("data")
-data_dir                           = "data/KI/ki-manuscript-output/data/"
-res_dir                           = "data/KI/ki-manuscript-output/results/"
+data_dir                           = "/data/KI/ki-manuscript-output/data/"
+res_dir                           = "/data/KI/ki-manuscript-output/results/"
 
 metadata_dir                      = "U:/results/Metadata/"
 
@@ -70,6 +70,8 @@ metadata_dir                      = "U:/results/Metadata/"
 #ghapdata_dir                      = "/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/"
 ghapdata_dir                      = "/data/KI/UCB-SuperLearner/Manuscript analysis data/"
 
+#Bluevelvet directory
+BV_dir                           = "/data/KI/ki-manuscript-output/"
 
 
 project_functions_dir             = here::here("0-project-functions")
@@ -90,9 +92,10 @@ deriveddata_dir                   = paste0(ghapdata_dir, "covariate creation int
 # fig_dir                           = paste0(here::here(),"/figures/")
 # figdata_dir_stunting              = paste0(here::here(),"/figures/stunting/figure-data/")
 # figdata_dir_wasting               = paste0(here::here(),"/figures/wasting/figure-data/")
-fig_dir                           = "data/KI/ki-manuscript-output/figures/"
-figdata_dir_stunting              = paste0(fig_dir,"stunting/figure-data/")
-figdata_dir_wasting               = paste0(fig_dir,"wasting/figure-data/")
+BV_dir                           = "/data/KI/ki-manuscript-output"
+fig_dir                           = "/data/KI/ki-manuscript-output/figures"
+figdata_dir_stunting              = paste0(fig_dir,"/stunting/figure-data")
+figdata_dir_wasting               = paste0(fig_dir,"/wasting/figure-data")
 
 #################################
 # Data Cleaning Scripts
