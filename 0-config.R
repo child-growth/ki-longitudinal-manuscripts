@@ -50,7 +50,8 @@ library(zoo)
 
 # Define directories
 # results that can be pushed to github:
-res_dir                           = here::here("results/")
+#res_dir                           = here::here("results/")
+res_dir                           = "data/KI/ki-manuscript-output/results/"
 
 
 # results that cannot be pushed to github:
@@ -59,7 +60,10 @@ res_bluevelvet_dir                = "/data/KI/UCB-SuperLearner/ki-results/"
 #dhs_res_dir                       = here::here("results", "dhs")
 dhs_res_dir                       = "/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs/"
 
-data_dir                          = here::here("data")
+#data_dir                          = here::here("data")
+data_dir                           = "data/KI/ki-manuscript-output/data/"
+res_dir                           = "data/KI/ki-manuscript-output/results/"
+
 metadata_dir                      = "U:/results/Metadata/"
 
 
@@ -83,9 +87,12 @@ deriveddata_dir                   = paste0(ghapdata_dir, "covariate creation int
 
 # note: figures must be saved in same directory 
 # as shiny app in order to publish it
-fig_dir                           = paste0(here::here(),"/figures/")
-figdata_dir_stunting              = paste0(here::here(),"/figures/stunting/figure-data/")
-figdata_dir_wasting               = paste0(here::here(),"/figures/wasting/figure-data/")
+# fig_dir                           = paste0(here::here(),"/figures/")
+# figdata_dir_stunting              = paste0(here::here(),"/figures/stunting/figure-data/")
+# figdata_dir_wasting               = paste0(here::here(),"/figures/wasting/figure-data/")
+fig_dir                           = "data/KI/ki-manuscript-output/figures/"
+figdata_dir_stunting              = paste0(fig_dir,"stunting/figure-data/")
+figdata_dir_wasting               = paste0(fig_dir,"wasting/figure-data/")
 
 #################################
 # Data Cleaning Scripts
