@@ -37,7 +37,8 @@ source(paste0(here::here(), "/0-config.R"))
 #Load length velocity data
 vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
-meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocity.RDS"))
+meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocityREML.RDS"))
+
 
 # load who standard
 who_cm = readRDS(paste0(res_dir, "/WHO_linear_growth_velocity_standard.RDS"))
@@ -97,9 +98,7 @@ vel_n
 # mean LAZ plot - pooled
 #-------------------------------------
 meanlaz_overall = meanlaz %>% 
-  # filter(method.used == "REML") %>% 
   mutate(pooled = ifelse(is.na(method.used),0,1)) %>% 
-  # filter(region=="Overall") %>%
   mutate(agecat = factor(agecat, 
                          levels = c("0-3", "3-6", "6-9",
                                     "9-12", "12-15", "15-18",
@@ -119,7 +118,6 @@ plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall")
   ggtitle("c\n")+
   theme(plot.title = element_text(hjust=0)) +
   theme(legend.position = c(.88, .83),
-        # legend.title = element_blank(),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"),
         plot.title = element_text(hjust=0))
@@ -152,7 +150,7 @@ plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) +
         axis.title.x = element_text(size=20),
         axis.title.y = element_text(size=20)) +
   facet_grid(~region)
- 
+
 ####################################################################################
 # LAZ velocity plots
 ####################################################################################
@@ -205,7 +203,7 @@ velplot_laz_strat = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
 plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=strata))+
   geom_point(aes(fill=sex, color=sex), size = 2, position = position_dodge(width=0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                  position = position_dodge(width=0.5), size=1.25) +
+                 position = position_dodge(width=0.5), size=1.25) +
   scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.55,0.3), breaks=seq(-0.5,0.3,0.1), labels=seq(-0.5,0.3,0.1)) +
   xlab("Child age, months") +  
@@ -335,7 +333,25 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
             data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
                                             msmt_type=="Mean"|msmt_type=="pct_25"|
                                             msmt_type=="pct_50")) +
+>>>>>>> master
 
+velplot_cm_cohort_data = velplot_cm %>%  filter(country_cohort!="Pooled - All" & 
+                                                  country_cohort!="Pooled - Asia" & 
+                                                  country_cohort!="Pooled - Africa" & 
+                                                  country_cohort!="Pooled - Amer." & 
+                                                  msmt_type=="Mean")
+
+plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"), 
+                  aes(y = length_cm, x = strata)) +
+  # geom_point(data = velplot_cm_cohort_data, size = 1, alpha=0.05) +
+  geom_line(data = velplot_cm_cohort_data, aes(group = country_cohort),
+            alpha=0.12) +
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
+                linetype = msmt_type), size=1,
+            data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
+                                            msmt_type=="Mean"|msmt_type=="pct_25"|
+                                            msmt_type=="pct_50")) +
+  
   geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                  alpha=0.5, size=1) +
 
@@ -343,21 +359,21 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
                                                                      "pct_50" = "solid",
                                                                      "pct_25" = "dashed", 
                                                                      "pct_15" = "dotted"
-                                                                     ),
-                        breaks = c("pct_50", "pct_25", "pct_15"),
-                        labels = c("50th percentile",
-                                   "25th percentile", 
-                                   "15th percentile"
-                                   )) +
+  ),
+  breaks = c("pct_50", "pct_25", "pct_15"),
+  labels = c("50th percentile",
+             "25th percentile", 
+             "15th percentile"
+  )) +
   
   scale_color_manual("WHO Growth\nVelocity Standards", values = c("black" = "black",
-                                "male_color" = mypalette[2],
-                                "female_color" = mypalette[1], 
-                                "male_color" = "male_color", 
-                                "female_color2" = mypalette[1], 
-                                "male_color2" = mypalette[2],
-                                "female_color2" = mypalette[1], 
-                                "male_color2" = mypalette[2])) +
+                                                                  "male_color" = mypalette[2],
+                                                                  "female_color" = mypalette[1], 
+                                                                  "male_color" = "male_color", 
+                                                                  "female_color2" = mypalette[1], 
+                                                                  "male_color2" = mypalette[2],
+                                                                  "female_color2" = mypalette[1], 
+                                                                  "male_color2" = mypalette[2])) +
   
   scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
   xlab("Child age, months") +  
@@ -533,7 +549,7 @@ saveRDS(velplot_cm_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_coh
 # add margin around plots
 combined_plot = grid.arrange(plot_cm, 
                              arrangeGrob(plot_laz, plot_mean_laz, 
-                             ncol=2, nrow = 1))
+                                         ncol=2, nrow = 1))
 
 combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
                                    nrow = 3, heights = c(10, 4, 4))
@@ -565,9 +581,9 @@ combined_plot_strat_name = create_name(
 # save overall plots together
 #-------------------------------------
 ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-", combined_plot_name,
-        ".png"), width=10, height=8)
+                                  ".png"), width=10, height=8)
 ggsave(combined_plot_strat, file=paste0(fig_dir, "stunting/fig-",combined_plot_strat_name,
-       ".png"), width=16, height=18)
+                                        ".png"), width=16, height=18)
 
 #-------------------------------------
 # save input data 
