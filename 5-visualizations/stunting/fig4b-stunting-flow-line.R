@@ -24,8 +24,8 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-plot_overall = readRDS(paste0(res_dir, "stunt-flow-data-pooled-mort.RDS"))
-plot_region = readRDS(paste0(res_dir, "stunt-flow-data-region-mort.RDS"))
+plot_overall = readRDS(paste0(res_dir, "stunt-flow-data-pooled.RDS"))
+plot_region = readRDS(paste0(res_dir, "stunt-flow-data-region.RDS"))
 
 
 #-----------------------------------------
@@ -56,14 +56,15 @@ p = ggplot(plot_overall, aes(x=agem, y = percent, group = classif))+
   scale_fill_manual("", values = pink_green) +
   scale_y_continuous(limits = c(0,34), breaks = seq(0,35,5), labels = seq(0,35,5)) +
   xlab("Child age, months") +
-  ylab("Percentage") +
+  ylab("Percentage of children (%)") +
   theme(legend.position = "bottom",
-        legend.text=element_text(size=12)) 
+        legend.text=element_text(size=12))  +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE))
 
 
 #-----------------------------------------
 # save plot and underlying data
 #-----------------------------------------
 ggsave(p, file=paste0(fig_dir, "stunting/fig-stunt-2-flow-line-overall-allage-primary.png"), 
-       width=5, height=3)
+       width=6, height=3.5)
 saveRDS(plot_overall, file=paste0(figdata_dir_stunting, "figdata-stunt-2-flow-line-overall-allage-primary.RDS"))
