@@ -49,16 +49,6 @@ library(bit64)
 library(zoo)
 
 
-# check that here goes to correct directory
-print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-print(here::here())
-# change_here <- function(new_path){
-#   new_root <- here:::.root_env
-#   
-#   new_root$f <- function(...){file.path(new_path, ...)}
-#   
-#   assignInNamespace(".root_env", new_root, ns = "here")
-# }
 
 # Define directories
 # results that can be pushed to github:
