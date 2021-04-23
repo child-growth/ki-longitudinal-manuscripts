@@ -39,7 +39,7 @@ table(d$diffcat)
 d <- d %>% rename(agecat = diffcat) %>%
   group_by(studyid, country, agecat, ycat, sex) %>%
   summarise(mean=mean(y_rate, na.rm=T), var=var(y_rate, na.rm=T), sd=sd(y_rate, na.rm=T), n=n()) %>%
-  mutate(ci.lb=mean - 1.96 * sd, ci.ub=mean + 1.96 * sd) %>% 
+  mutate(ci.lb=mean - 1.96 * sd/sqrt(n), ci.ub=mean + 1.96 * sd/sqrt(n)) %>% 
   mutate(region = case_when(
     country=="BANGLADESH" | country=="INDIA"|
       country=="NEPAL" | country=="PAKISTAN"|
