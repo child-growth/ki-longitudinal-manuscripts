@@ -18,7 +18,8 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
 head(d)
-d <- d %>% subset(., select = -c(tr))
+d <- d %>% subset(., select = -c(tr))%>% 
+  mutate(country_cohort=paste0(studyid," ", country))
 
 
 #-------------------------------------------
@@ -70,23 +71,23 @@ est_mean_diff = function(data, age){
 # within each cohort, estimate the mean difference in haz
 # by sex and age and save the mean difference and variance
 #-------------------------------------------
-cohort_list = as.list(unique(d$studyid))
+country_cohort_list = as.list(unique(d$country_cohort))
 agecat_list = unique(d$agecat)
 
 meandiff_sex_list = list()
 
-for(i in 1:length(cohort_list)){
-  print(paste0("studyid ", cohort_list[i]))
+for(i in 1:length(country_cohort_list)){
+  print(paste0("country_cohort ", country_cohort_list[i]))
   reslist = lapply(agecat_list, function(x) est_mean_diff(
-    data = d %>% filter(studyid==cohort_list[[i]]),
+    data = d %>% filter(country_cohort==country_cohort_list[[i]]),
     age = x
   ))
   meandiff_sex_list[[i]] = bind_rows(reslist) %>%
-    mutate(studyid = cohort_list[[i]])
+    mutate(country_cohort = country_cohort_list[[i]])
 }
 
 meandiff_sex_df = as.data.frame(bind_rows(meandiff_sex_list))
-meandiff_sex_df = meandiff_sex_df %>% select(studyid, everything())
+meandiff_sex_df = meandiff_sex_df %>% select(country_cohort, everything())
 
 
 #-------------------------------------------
