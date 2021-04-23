@@ -11,6 +11,13 @@ library(sn)
 
 d <- readRDS(stunting_data_path)
 
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
+
 #------------------------------
 # define age windows
 #------------------------------

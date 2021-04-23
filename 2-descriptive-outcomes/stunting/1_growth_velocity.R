@@ -10,6 +10,10 @@ library(growthstandards)
 
 d <- readRDS(paste0(ghapdata_dir,"ki-manuscript-dataset.rds"))
 
+# check included cohorts
+assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
 

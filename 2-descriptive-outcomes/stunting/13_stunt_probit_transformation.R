@@ -15,6 +15,12 @@ source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functi
 
 data <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(data$studyid), monthly_and_quarterly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
 data <- data %>% subset(., select = -c(tr))
 
 agelst3_birthstrat = list(

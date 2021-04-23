@@ -34,8 +34,9 @@ source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functi
 
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
-#Check that all monthly+quarterly cohorts are in the dataset
-assert_that(all(monthly_and_quarterly_cohorts %in% unique(d$studyid)))
+# check included cohorts
+assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
 
 head(d)
 d <- d %>% subset(., select = -c(tr))

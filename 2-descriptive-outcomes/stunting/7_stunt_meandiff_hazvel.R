@@ -18,7 +18,18 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 d <- readRDS(file=paste0(ghapdata_dir, "velocity_longfmt.rds"))
 head(d)
 
-d <- d %>% rename(agecat=diffcat)
+d <- d %>% rename(agecat=diffcat) %>% 
+  mutate(country_cohort=paste0(studyid," ", country))
+
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+# excluding iLiNS-Zinc because the measurement ages were so close to 24 months that
+# velocity was not calculated
+vel_cohorts = monthly_and_quarterly_cohorts[-which(monthly_and_quarterly_cohorts == "iLiNS-Zinc")]
+assert_that(setequal(unique(d$studyid), vel_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
 
 
 #-------------------------------------------
@@ -29,13 +40,13 @@ est_mean_diff = function(data, age){
   data_sub = data %>% filter(agecat == age)
   
   # only run if there are sufficient observations
-  # within age, sex strata and that there are at least
-  # 100 observations in that age category
-  if(length(unique(data_sub$sex))==2 & nrow(data_sub)>100){
+  # within age, sex strata 
+  if(length(unique(data_sub$sex))==2 ){
     glm_fit = glm(y_rate ~ sex, data = data_sub)
     yi = glm_fit$coefficients[2]
     sei = sqrt(diag(vcov(glm_fit)))[2]
-    out = data.frame(agecat = age, yi = yi, sei = sei)
+    N = nrow(data_sub)
+    out = data.frame(agecat = age, yi = yi, sei = sei, n=N)
     return(out)
   }
   
@@ -45,40 +56,40 @@ est_mean_diff = function(data, age){
 # within each cohort, estimate the mean difference in haz
 # by sex and age and save the mean difference and variance
 #-------------------------------------------
-cohort_list = as.list(unique(d$studyid))
+country_cohort_list = as.list(unique(d$country_cohort))
 agecat_list = unique(d$agecat)
 
 # Length velocity 
 meandiff_sex_list_lencm = list()
 
-for(i in 1:length(cohort_list)){
-  print(paste0("studyid ", cohort_list[i]))
+for(i in 1:length(country_cohort_list)){
+  print(paste0("country_cohort ", country_cohort_list[i]))
   reslist = lapply(agecat_list, function(x) est_mean_diff(
-    data = d %>% filter(studyid==cohort_list[[i]] & ycat == "lencm"),
+    data = d %>% filter(country_cohort==country_cohort_list[[i]] & ycat == "lencm"),
     age = x
   ))
   meandiff_sex_list_lencm[[i]] = bind_rows(reslist) %>%
-    mutate(studyid = cohort_list[[i]])
+    mutate(country_cohort = country_cohort_list[[i]])
 }
 
 meandiff_sex_df_lencm = as.data.frame(bind_rows(meandiff_sex_list_lencm))
-meandiff_sex_df_lencm = meandiff_sex_df_lencm %>% select(studyid, everything())
+meandiff_sex_df_lencm = meandiff_sex_df_lencm %>% dplyr::select(country_cohort, everything())
 
 # laz velocity 
 meandiff_sex_list_LAZ = list()
 
-for(i in 1:length(cohort_list)){
-  print(paste0("studyid ", cohort_list[i]))
+for(i in 1:length(country_cohort_list)){
+  print(paste0("country_cohort ", country_cohort_list[i]))
   reslist = lapply(agecat_list, function(x) est_mean_diff(
-    data = d %>% filter(studyid==cohort_list[[i]] & ycat == "haz"),
+    data = d %>% filter(country_cohort==country_cohort_list[[i]] & ycat == "haz"),
     age = x
   ))
   meandiff_sex_list_LAZ[[i]] = bind_rows(reslist) %>%
-    mutate(studyid = cohort_list[[i]])
+    mutate(country_cohort = country_cohort_list[[i]])
 }
 
 meandiff_sex_df_LAZ = as.data.frame(bind_rows(meandiff_sex_list_LAZ))
-meandiff_sex_df_LAZ = meandiff_sex_df_LAZ %>% select(studyid, everything())
+meandiff_sex_df_LAZ = meandiff_sex_df_LAZ %>% dplyr::select(country_cohort, everything())
 
 #-------------------------------------------
 # function to pool using rma

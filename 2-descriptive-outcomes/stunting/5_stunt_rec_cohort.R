@@ -21,6 +21,12 @@ d <- d %>% filter(measurefreq=="monthly")
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
 ##########################################
 # Define indicators of stunting at each time point
 ##########################################

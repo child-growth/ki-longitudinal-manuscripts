@@ -17,6 +17,7 @@ source(paste0(here::here(), "/0-config.R"))
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 mort <- readRDS(paste0(ghapdata_dir,"mortality.rds"))
 
+
 #-------------------------------------------
 # process stunting data
 #-------------------------------------------
@@ -28,6 +29,18 @@ d <- d %>% filter(measurefreq=="monthly")
 
 # drop variables we don't need
 d = d %>% select(studyid, subjid, region, country, measid, agedays, haz)
+
+# subset mortality data to included cohorts
+mort <- mort %>% filter(studyid %in% monthly_cohorts)
+
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
+assert_that(setequal(unique(mort$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
 
 ##########################################
 # Define indicators of stunting at each time point
