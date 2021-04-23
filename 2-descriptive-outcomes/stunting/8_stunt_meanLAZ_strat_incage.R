@@ -37,6 +37,12 @@ d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
 d_st <- d %>% filter(measurefreq == "monthly") %>% filter(agedays <= 30.4167*15.5)
 
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d_st$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
 #----------------------------------------
 # Create indicator for incident stunting
 # at birth, after birth to 3 months, 

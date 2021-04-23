@@ -20,7 +20,17 @@ d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 head(d)
 d <- d %>% subset(., select = -c(tr))
 
+
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
+
+#-------------------------------------------
 # using growth velocity cutoffs
+#-------------------------------------------
 d = d %>% 
   mutate(agecat=ifelse(agedays<3*30.4167,"0-3",
                        ifelse(agedays>=3*30.4167 & agedays<6*30.4167,"3-6",

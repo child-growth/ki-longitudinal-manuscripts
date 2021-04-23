@@ -21,7 +21,11 @@ d <- left_join(d, cov,by=c("studyid", "subjid"))
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
 
-
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
 
 #monthly mean haz
 d <- calc.monthly.agecat(d)

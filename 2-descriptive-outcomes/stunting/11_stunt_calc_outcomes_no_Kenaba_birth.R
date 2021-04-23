@@ -46,6 +46,12 @@ d <- d %>% filter(!(studyid=="Keneba" & agedays==1))
 #----------------------------------------
 monthly_d <- d %>% filter(measurefreq == "monthly")
 
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(monthly_d$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
 #----------------------------------------
 # subset to studies that have monthly measurement
 # up to 24 months
