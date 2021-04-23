@@ -16,6 +16,16 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 
 d <- readRDS(paste0(ghapdata_dir, "velocity_longfmt.rds"))
 
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+# excluding iLiNS-Zinc because the measurement ages were so close to 24 months that
+# velocity was not calculated
+vel_cohorts = monthly_and_quarterly_cohorts[-which(monthly_and_quarterly_cohorts == "iLiNS-Zinc")]
+assert_that(setequal(unique(d$studyid), vel_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
+setdiff(monthly_and_quarterly_cohorts, unique(d$studyid))
 
 #Summarize N's in study
 d %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summarize(N=n())
