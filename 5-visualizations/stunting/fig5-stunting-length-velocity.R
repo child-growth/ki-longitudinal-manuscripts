@@ -106,7 +106,7 @@ meanlaz_overall = meanlaz %>%
 
 plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall"), aes(y=est, x = agecat)) + 
   geom_point(data = meanlaz_overall %>% filter(pooled==0),
-             aes(col=sex), position = position_jitterdodge(),
+             aes(col=sex), position = position_jitterdodge( dodge.width = 0.5),
              size=3, alpha = 0.1) +
   geom_point(aes(col=sex), position = position_dodge(width=0.5), size=3) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
@@ -162,9 +162,9 @@ velplot_laz = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
 
 plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y=Mean,x=strata))+
   geom_point(data = velplot_laz %>% filter(country_cohort!="Pooled - All"), 
-             aes(fill=sex, color=sex), size = 2, 
-             position = position_jitterdodge(), alpha =0.1) +
-  geom_point(aes(fill=sex, color=sex), size = 2, position = position_dodge(width = 0.5)) +
+             aes(fill=sex, color=sex), size = 3, 
+             position = position_jitterdodge(dodge.width = 0.5), alpha =0.1) +
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width = 0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  position = position_dodge(width = 0.5)) +
   scale_color_manual(values=mypalette)+  
