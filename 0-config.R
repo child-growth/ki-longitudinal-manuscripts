@@ -149,7 +149,7 @@ theme_set(theme_ki())
 monthly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Peru89",     
                      "CMIN Bangladesh93","CONTENT",          "EE",              
                      "GMS-Nepal",        "Guatemala BSC",    "IRC",             
-                     "Keneba",           "MAL-ED",           "ResPak",          
+                     "Keneba",           "MAL-ED", "PROVIDE" , "ResPak",          
                      "TanzaniaChild2",   "TDC")
 monthly_and_quarterly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Brazil89",   
                                    "CMIN GB94",        "CMIN Peru89",      "CMIN Bangladesh93",
@@ -158,7 +158,8 @@ monthly_and_quarterly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN
                                    "JiVitA-3",         "JiVitA-4",         "Keneba",          
                                    "LCNI-5",           "MAL-ED",           "PROBIT",          
                                    "ResPak",           "SAS-CompFeed",     "SAS-FoodSuppl",   
-                                   "TanzaniaChild2",   "ZVITAMBO",         "TDC")
+                                   "TanzaniaChild2",   "ZVITAMBO",         "TDC", "NIH-Birth",
+                                   "NIH-Crypto", "PROVIDE"      )
 
 
 
