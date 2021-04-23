@@ -24,7 +24,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load stunting recovery cohort data
-d = readRDS(paste0(res_bluevelvet_dir, "stunt_rec_cohort.RDS"))
+d = readRDS(paste0(res_dir, "stunting/stunt_rec_cohort.RDS"))
 
 d$subjid <- as.numeric(d$subjid)
 
@@ -827,10 +827,10 @@ rec_histogram_plot_name = create_name(
 )
 
 # save plot
-ggsave(Fig_4B, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,
+ggsave(Fig_4B, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,"-pheno",
        ".png"), width=9, height=7)
 
-saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,".RDS"))
+saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,"-pheno",".RDS"))
 
 
 #-----------------------------------------
@@ -839,5 +839,5 @@ saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogra
 Fig_4B_legend <- as_ggplot(get_legend(stunt_3_meas_3_plot))
 stunt_3_meas_3_plot <- stunt_3_meas_3_plot + theme(legend.position = "none")
 
-ggsave(Fig_4B_legend, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,
+ggsave(Fig_4B_legend, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,"-pheno",
                            "-legend.png"), width=9, height=1)
