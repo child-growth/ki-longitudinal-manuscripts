@@ -37,7 +37,7 @@ source(paste0(here::here(), "/0-config.R"))
 #Load length velocity data
 vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
-meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocityREML.RDS"))
+meanlaz = readRDS(paste0(res_dir, "stunting/meanlaz_velocityREML.RDS"))
 
 
 # load who standard

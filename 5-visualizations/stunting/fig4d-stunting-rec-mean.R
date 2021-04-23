@@ -6,7 +6,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load stunting recovery cohort data
-d = readRDS(paste0(res_bluevelvet_dir, "stunt_rec_cohort.RDS"))
+d = readRDS(paste0(res_dir, "stunting/stunt_rec_cohort.RDS"))
 
 d$subjid <- as.numeric(d$subjid)
 
@@ -186,7 +186,7 @@ plot_data = plot_data %>%
   )
   )
 
-saveRDS(plot_data, file = paste0(res_dir, "stunting_rec_cohorts.RDS"))
+saveRDS(plot_data, file = paste0(res_dir, "stunting/stunting_rec_cohorts.RDS"))
 
 # --------------------------------------------
 # mean laz

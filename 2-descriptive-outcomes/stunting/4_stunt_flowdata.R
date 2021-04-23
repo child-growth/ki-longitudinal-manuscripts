@@ -344,8 +344,8 @@ stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
                                     label = "Never stunted")
 
 
-saveRDS(flow_m, file=paste0(res_bluevelvet_dir, "stuntflow.RDS"))
-saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stuntflow_pooled.RDS"))
-saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stuntflow_pooled_fe.RDS"))
+saveRDS(flow_m, file=paste0(res_dir, "stunting/stuntflow.RDS"))
+saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stunting/stuntflow_pooled.RDS"))
+saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_fe.RDS"))
 
 

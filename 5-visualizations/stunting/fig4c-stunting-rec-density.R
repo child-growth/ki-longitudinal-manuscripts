@@ -204,7 +204,7 @@ plot_data = plot_data %>%
   )
   )
 
-saveRDS(plot_data, file = paste0(res_dir, "stunting_rec_cohorts.RDS"))
+saveRDS(plot_data, file = paste0(res_dir, "stunting/stunting_rec_cohorts.RDS"))
 
 # --------------------------------------------
 # % stunted / median 
@@ -303,7 +303,7 @@ results_list = lapply(age_rec_list, function(x) summarize_dist(
 results_df = bind_rows(results_list)
 
 
-saveRDS(results_df, file = paste0(res_dir, "stunting_rec_cohort_summary.RDS"))
+saveRDS(results_df, file = paste0(res_dir, "stunting/stunting_rec_cohort_summary.RDS"))
 
 
 # --------------------------------------------

@@ -98,9 +98,9 @@ meanlaz = function(data, age){
 
 meanlaz_age_incage = lapply(age_list, function(x) meanlaz(data = d_st, age=x))
 meanlaz_age_incage = as.data.frame(do.call(rbind, meanlaz_age_incage))
-saveRDS(meanlaz_age_incage, file = paste0(res_dir, "meanlaz_age_incage.RDS"))
+saveRDS(meanlaz_age_incage, file = paste0(res_dir, "stunting/meanlaz_age_incage.RDS"))
 
 meanlaz_age_incage_monthly = lapply(age_list, function(x) meanlaz(data = d_st_monthly, age=x))
 meanlaz_age_incage_monthly = as.data.frame(do.call(rbind, meanlaz_age_incage_monthly))
-saveRDS(meanlaz_age_incage_monthly, file = paste0(res_dir, "meanlaz_age_incage_monthly.RDS"))
+saveRDS(meanlaz_age_incage_monthly, file = paste0(res_dir, "stunting/meanlaz_age_incage_monthly.RDS"))
  

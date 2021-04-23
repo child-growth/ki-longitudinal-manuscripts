@@ -114,6 +114,6 @@ pooled_diff_age_df_laz = bind_rows(pooled_diff_age_list_laz)
 #-------------------------------------------
 # save data
 #-------------------------------------------
-saveRDS(pooled_diff_age_df_lencm, file = paste0(res_dir, "lencm_vel_meandiff_sex.RDS"))
-saveRDS(pooled_diff_age_df_laz, file = paste0(res_dir, "haz_vel_meandiff_sex.RDS"))
+saveRDS(pooled_diff_age_df_lencm, file = paste0(res_dir, "stunting/lencm_vel_meandiff_sex.RDS"))
+saveRDS(pooled_diff_age_df_laz, file = paste0(res_dir, "stunting/haz_vel_meandiff_sex.RDS"))
 
