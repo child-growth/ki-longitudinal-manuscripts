@@ -12,8 +12,6 @@
 # outputs: 
 # fig-laz-2-rec_dist-overall--allage-primary.png
 # figdata-laz-2-rec_dist-overall--allage-primary.RDS
-# fig-stunting-rec-density-rev2-Fig_4B.png
-# fig-stunting-rec-density-rev2-Fig_4B_legend.png
 
 ##########################################
 
@@ -24,7 +22,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load stunting recovery cohort data
-d = readRDS(paste0(res_bluevelvet_dir, "stunt_rec_cohort.RDS"))
+d = readRDS(paste0(res_dir, "stunting/stunt_rec_cohort.RDS"))
 
 d$subjid <- as.numeric(d$subjid)
 
@@ -55,84 +53,26 @@ get_rec = function(data, age_upper){
   # this age range
   rec_data = data %>% 
     filter(prev_stunted == 1 & agecat == age_range) %>%
-    dplyr::select(studyid, country, subjid) %>%
-    mutate(age_rec = age_range) %>% 
-    distinct()
+    select(studyid, country, subjid) %>%
+    mutate(age_rec = age_range)
   
   rec_data = rec_data[!duplicated(rec_data),]
   
   rec_data_haz = full_join(rec_data, data, 
                            by = c("studyid", "country", "subjid")) %>%
+    
     filter(!is.na(age_rec)) %>%
-    dplyr::select(studyid, country, subjid, agedays, haz, age_rec)
-  
-  # add other phenotypes
-  rec_pheno = rec_data_haz %>% 
-    group_by(studyid,country,subjid) %>%
-    mutate(laghaz = lag(haz)) %>%
-    mutate(agem = agedays / 30.4167)  %>% 
-    
-    # create reverse measid
-    mutate(measid = seq_along(agem),
-           revmeasid = rev(seq_along(agem))) %>%
-    
-    mutate(stunted=ifelse(haz< -2,1,0),
-           lagstunted=lag(stunted),
-           lageverstunted = lag(cummax(stunted))) %>%
-    
-    mutate(newly_stunted = ifelse(stunted==1 & 
-                                    lageverstunted == 0 , 1, 0),
-           
-           recover =       ifelse(stunted==0 &
-                                    lagstunted==1 &
-                                    lageverstunted==1, 1, 0),
-           
-           never_stunted =       ifelse(stunted==0 &
-                                          lagstunted==0 &
-                                          lageverstunted==0, 1, 0)) %>%
-    
-    # recoding indicators at first measurement since lag is NA
-    mutate(newly_stunted = ifelse(stunted==1 & measid==1, 1, newly_stunted),
-           
-           never_stunted = ifelse(stunted==0 & measid==1, 1, never_stunted),
-           
-           recover = ifelse(stunted==0 & measid==1, 0, recover)) %>%
-    
-    # code relapse 
-    mutate(everrecover = cummax(recover),
-           evernew = cummax(newly_stunted),
-           
-           relapse =       ifelse(stunted==1 &
-                                    lageverstunted==1 &
-                                    lagstunted==0 &
-                                    everrecover==1, 1, 0),
-           
-           still_stunted = ifelse(stunted==1 & 
-                                    evernew==1 &
-                                    lagstunted==1, 1, 0),
-           
-           not_stunted =   ifelse(stunted==0 & 
-                                    lagstunted==0 &
-                                    everrecover==1, 1, 0))  %>%
-    
-    # recode still stunted at first measurement  
-    mutate(still_stunted = ifelse(measid==1, 0, still_stunted))  %>% 
-    
-    # drop extra columns
-    dplyr::select(-c(laghaz, measid, revmeasid, lagstunted, stunted,
-                     lageverstunted, everrecover, evernew))
+    select(studyid, country, subjid, agedays, haz, age_rec)
   
   # subsequent measurement ages after recovery
   age_meas = seq(age_upper, 15, 3) 
   
   rec_meas_sub_list = lapply(age_meas, function(x) 
-    subset_rec(data = rec_pheno, 
+    subset_rec(data = rec_data_haz, 
                age_months = x,
                age_range = age_range))
   
-  rec_meas_sub = bind_rows(rec_meas_sub_list) 
-  
-  
+  rec_meas_sub = bind_rows(rec_meas_sub_list)
   
 }
 
@@ -163,9 +103,6 @@ rec_data = lapply(age_range_list, function(x)
 
 # bind list elements
 plot_data = bind_rows(rec_data) 
-
-# check that never stunted children are not included
-assert_that(names(table(plot_data$never_stunted))=="0")
 
 summary = plot_data %>%
   group_by(age_rec, age_meas) %>%
@@ -204,7 +141,6 @@ plot_data = plot_data %>%
   )
   )
 
-saveRDS(plot_data, file = paste0(res_dir, "stunting/stunting_rec_cohorts.RDS"))
 
 # --------------------------------------------
 # % stunted / median 
@@ -236,7 +172,14 @@ summarize_dist = function(data, age_recov){
       summarise(nmeas=length(unique(subjid)),
                 prev=mean(stunted),
                 nxprev=sum(stunted==1))
-
+    
+    # re = fit.rma.rec.cohort(
+    #   data = prev.cohort,
+    #   ni = "nmeas",
+    #   xi = "nxprev",
+    #   measure = "PLO",
+    #   nlab = "children"
+    # )
     re = fit.rma(
       data = prev.cohort,
       ni = "nmeas",
@@ -303,7 +246,7 @@ results_list = lapply(age_rec_list, function(x) summarize_dist(
 results_df = bind_rows(results_list)
 
 
-saveRDS(results_df, file = paste0(res_dir, "stunting/stunting_rec_cohort_summary.RDS"))
+saveRDS(results_df, file = paste0(res_dir, "stunting_rec_cohort_summary.RDS"))
 
 
 # --------------------------------------------
@@ -328,492 +271,64 @@ plot_data_sub = plot_data_sub %>%
   )))
 
 plot_data_sub = plot_data_sub %>%
-  mutate(age_meas_n = gsub(" month measurement", "", age_meas))
-# mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
+  mutate(age_meas_n = gsub(" month measurement", "", age_meas)) %>%
+  mutate(age_meas_n = factor(age_meas_n, levels = c("15", "12", "9", "6", "3")))
 
-# phenotype categories
-plot_data_sub = plot_data_sub %>% mutate(pheno= case_when(
-  still_stunted==1 ~ "Still stunted",
-  newly_stunted==1 ~ "Newly stunted/relapsed",
-  relapse==1 ~ "Newly stunted/relapsed",
-  recover==1 ~ "Recovered/not stunted",
-  not_stunted==1 ~ "Recovered/not stunted",
-  never_stunted==1 ~ "Never stunted",
-  
-)) %>% 
-  mutate(pheno = factor(pheno, levels = c("Never stunted", "Recovered/not stunted",
-                                          "Newly stunted/relapsed", "Still stunted")))
 
-#-----------------------------------------
+
+# --------------------------------------------
+# prepare label for each panel of the plot
+# --------------------------------------------
+results_df = results_df %>% 
+  mutate(lab = paste0("% Stunted:\n", sprintf("%0.0f", stunting_prev*100), " ",
+                      "(95% CI ", sprintf("%0.0f", prev_lb*100), ", ",
+                      sprintf("%0.0f", prev_ub*100), ")") ) %>%
+  mutate(x = -5,
+         y = case_when(
+           age_meas == "3 month measurement" ~ 5.4,
+           age_meas == "6 month measurement" ~ 4.85,
+           age_meas == "9 month measurement" ~ 3.85,
+           age_meas == "12 month measurement" ~ 2.85,
+           age_meas == "15 month measurement" ~ 1.85
+         )) %>%
+  mutate(age_rec_f = case_when(
+    age_rec == "0-3 months" ~ "Stunting reversal\nat 3 months",
+    age_rec == "3-6 months" ~ "Stunting reversal\nat 6 months",
+    age_rec == "6-9 months" ~ "Stunting reversal\nat 9 months",
+    age_rec == "9-12 months" ~ "Stunting reversal\nat 12 months"
+  )) %>%
+  mutate(age_rec_f = factor(age_rec_f, levels = c(
+    "Stunting reversal\nat 3 months",
+    "Stunting reversal\nat 6 months",
+    "Stunting reversal\nat 9 months",
+    "Stunting reversal\nat 12 months"
+  ))) 
+
+
+# --------------------------------------------
+# stacked histogram plot
+# --------------------------------------------
 # define color palette
-#-----------------------------------------
-pink_green = rev(brewer.pal(n = 4, name = "PiYG"))[2:4]
+bluegreen = brewer.pal(n = 5, name = "YlGnBu")[2:5]
 
-################################################################################
-# Figure 4B
-################################################################################
-#### Generate Plotting Data ####
-stunt_3_meas_9 <- plot_data_sub %>% filter(age_meas == '9 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
-stunt_3_meas_6 <- plot_data_sub %>% filter(age_meas == '6 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
-stunt_3_meas_3 <- plot_data_sub %>% filter(age_meas == '3 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
-stunt_3_meas_15 <- plot_data_sub %>% filter(age_meas == '15 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
-stunt_3_meas_12 <- plot_data_sub %>% filter(age_meas == '12 month measurement' & age_rec_f == "Stunting reversal\nat 3 months")
-
-stunt_6_meas_9 <- plot_data_sub %>% filter(age_meas == '9 month measurement' & age_rec_f == "Stunting reversal\nat 6 months")
-stunt_6_meas_6 <- plot_data_sub %>% filter(age_meas == '6 month measurement' & age_rec_f == "Stunting reversal\nat 6 months")
-stunt_6_meas_15 <- plot_data_sub %>% filter(age_meas == '15 month measurement' & age_rec_f == "Stunting reversal\nat 6 months")
-stunt_6_meas_12 <- plot_data_sub %>% filter(age_meas == '12 month measurement' & age_rec_f == "Stunting reversal\nat 6 months")
-
-stunt_9_meas_9 <- plot_data_sub %>% filter(age_meas == '9 month measurement' & age_rec_f == "Stunting reversal\nat 9 months")
-stunt_9_meas_15 <- plot_data_sub %>% filter(age_meas == '15 month measurement' & age_rec_f == "Stunting reversal\nat 9 months")
-stunt_9_meas_12 <- plot_data_sub %>% filter(age_meas == '12 month measurement' & age_rec_f == "Stunting reversal\nat 9 months")
-
-stunt_12_meas_15 <- plot_data_sub %>% filter(age_meas == '15 month measurement' & age_rec_f == "Stunting reversal\nat 12 months")
-stunt_12_meas_12 <- plot_data_sub %>% filter(age_meas == '12 month measurement' & age_rec_f == "Stunting reversal\nat 12 months")
-
-################################################################################
-
-header_font_size = 14
-#-----------------------------------------
-# plot: 3m reversal, 3m measurement
-#-----------------------------------------
-stunt_3_meas_3_plot <- ggplot(stunt_3_meas_3, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
+rec_histogram_plot = ggplot(plot_data_sub, 
+                            aes(x=haz, y = age_meas_n, fill = age_rec_f)) + 
+  geom_density_ridges_gradient(stat = "binline", 
+                               binwidth=.1, 
+                               scale=0.8,
+                               size=0.01) + 
+  facet_grid(~age_rec_f) +
+  ylab("Measurement age, months")+
+  xlab("Length-for-age Z-score")+
+  scale_y_discrete(expand = expansion(mult=c(0,0.2))) +
+  scale_x_continuous(breaks = seq(-5, 3.5, 1), 
                      labels = seq(-5, 3.5, 1)) +
   geom_vline(xintercept = -2, linetype="dashed") +
   scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = c("#999999", pink_green), drop = FALSE) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,1), "cm"),
-         plot.title = element_text(size = header_font_size, face = "bold"),
-         legend.text = element_text(size=13),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey')) + 
-  geom_text(x = -5.8, y = 0, label = "3", size = 5) + 
-  coord_cartesian(clip = 'off') + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title") + 
-  ggtitle("Stunting reversal\nat 3 months")
-
-#-----------------------------------------
-# plot: 3m reversal, 6m measurement
-#-----------------------------------------
-stunt_3_meas_6_plot <- ggplot(stunt_3_meas_6, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,1), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  geom_text(x = -5.8, y = 0, label = "6", size = 5) + 
-  coord_cartesian(clip = 'off') + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 3m reversal, 9m measurement
-#-----------------------------------------
-stunt_3_meas_9_plot <- ggplot(stunt_3_meas_9, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,1), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  geom_text(x = -5.8, y = 0, label = "9", size = 5) + 
-  coord_cartesian(clip = 'off') + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 3m reversal, 12m measurement
-#-----------------------------------------
-stunt_3_meas_12_plot <- ggplot(stunt_3_meas_12, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,1), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  geom_text(x = -5.8, y = 0, label = "12", size = 5) + 
-  coord_cartesian(clip = 'off') + 
-  rremove("y.grid") + 
-  rremove("x.text") +
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 3m reversal, 15m measurement
-#-----------------------------------------
-stunt_3_meas_15_plot <- ggplot(stunt_3_meas_15, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.x = element_text(size = 13),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,1), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  geom_text(x = -5.8, y = 0, label = "15", size = 5) + 
-  coord_cartesian(clip = 'off') + 
-  rremove("y.grid") + 
-  rremove("axis.title")
-
-################################################################################
-#-----------------------------------------
-# plot: 6m reversal, 3m measurement BLANK
-#-----------------------------------------
-stunt_6_meas_3_plot <- ggplot() + 
-  ggtitle("Stunting reversal\nat 6 months") + 
-  theme_bw() + 
-  theme(plot.margin = unit(c(0,0.25,0,0.25), "cm"), 
-        panel.border = element_rect(colour = "white", fill = NA),
-        plot.title = element_text(size = header_font_size, face = "bold"))
-
-#-----------------------------------------
-# plot: 6m reversal, 6m measurement 
-#-----------------------------------------
-stunt_6_meas_6_plot <- ggplot(stunt_6_meas_6, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 6m reversal, 9m measurement 
-#-----------------------------------------
-stunt_6_meas_9_plot <- ggplot(stunt_6_meas_9, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 6m reversal, 12m measurement 
-#-----------------------------------------
-stunt_6_meas_12_plot <- ggplot(stunt_6_meas_12, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 6m reversal, 15m measurement 
-#-----------------------------------------
-stunt_6_meas_15_plot <- ggplot(stunt_6_meas_15, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.x = element_text(size = 13),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("axis.title")
-
-################################################################################
-#-----------------------------------------
-# plot: 9m reversal, 3m measurement BLANK
-#-----------------------------------------
-stunt_9_meas_3_plot <- ggplot() + 
-  ggtitle("Stunting reversal\nat 9 months") + 
-  theme_bw() + 
-  theme(plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-        panel.border = element_rect(colour = "white", fill = NA),
-        plot.title = element_text(size = header_font_size, face = "bold"),)
-
-#-----------------------------------------
-# plot: 9m reversal, 6m measurement BLANK
-#-----------------------------------------
-stunt_9_meas_6_plot <- ggplot(stunt_9_meas_9, aes(x=haz)) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  theme_bw() +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 9m reversal, 9m measurement 
-#-----------------------------------------
-stunt_9_meas_9_plot <- ggplot(stunt_9_meas_9, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 9m reversal, 12m measurement 
-#-----------------------------------------
-stunt_9_meas_12_plot <- ggplot(stunt_9_meas_12, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 9m reversal, 15m measurement 
-#-----------------------------------------
-stunt_9_meas_15_plot <- ggplot(stunt_9_meas_15, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.x = element_text(size = 13),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("axis.title")
-
-################################################################################
-#-----------------------------------------
-# plot: 12m reversal, 3m measurement BLANK
-#-----------------------------------------
-stunt_12_meas_3_plot <- ggplot() + 
-  ggtitle("Stunting reversal\nat 12 months") + 
-  theme_bw() + 
-  theme(plot.margin = unit(c(0,0.25,0,0.25), "cm"), 
-        panel.border = element_rect(colour = "white", fill = NA),
-        plot.title = element_text(size = header_font_size, face = "bold"),)
-
-#-----------------------------------------
-# plot: 12m reversal, 6m measurement BLANK
-#-----------------------------------------
-stunt_12_meas_6_plot <- ggplot(stunt_12_meas_15, aes(x=haz)) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  theme_bw() +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 12m reversal, 9m measurement BLANK
-#-----------------------------------------
-stunt_12_meas_9_plot <- ggplot(stunt_12_meas_15, aes(x=haz)) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  theme_bw() +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") + 
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 12m reversal, 12m measurement BLANK
-#-----------------------------------------
-stunt_12_meas_12_plot <- ggplot(stunt_12_meas_12, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") + 
-  rremove("x.text") +
-  rremove("axis.title")
-
-#-----------------------------------------
-# plot: 12m reversal, 15m measurement 
-#-----------------------------------------
-stunt_12_meas_15_plot <- ggplot(stunt_12_meas_15, aes(x=haz)) + 
-  geom_histogram(aes(fill = pheno),  bins = 80, show.legend = FALSE) + 
-  scale_x_continuous(limits = c(-5, 3.5), breaks = seq(-5, 3.5, 1),
-                     labels = seq(-5, 3.5, 1)) +
-  geom_vline(xintercept = -2, linetype="dashed") +
-  scale_fill_manual("Age in months when\nLAZ rose above -2",
-                    values = pink_green) +
-  theme_bw() +
-  theme( legend.position = "bottom",
-         panel.grid.major.y = element_blank(),
-         panel.grid.minor.y = element_blank(),
-         axis.text.x = element_text(size = 13),
-         axis.text.y = element_blank(),
-         axis.ticks.y = element_blank(),
-         plot.margin = unit(c(0,0.25,0,0.25), "cm"),
-         panel.border = element_rect(colour = "white", fill = NA),
-         axis.line.x.bottom = element_line(color = 'grey'))  + 
-  rremove("y.grid") +  
-  rremove("axis.title")
-
-#-----------------------------------------
-#### Combine Plots ####
-#-----------------------------------------
-Fig_4B <- ggarrange(stunt_3_meas_3_plot, stunt_6_meas_3_plot, stunt_9_meas_3_plot, stunt_12_meas_3_plot,
-                    stunt_3_meas_6_plot, stunt_6_meas_6_plot, NULL, NULL,
-                    stunt_3_meas_9_plot, stunt_6_meas_9_plot, stunt_9_meas_9_plot, NULL,
-                    stunt_3_meas_12_plot, stunt_6_meas_12_plot, stunt_9_meas_12_plot, stunt_12_meas_12_plot,
-                    stunt_3_meas_15_plot, stunt_6_meas_15_plot, stunt_9_meas_15_plot, stunt_12_meas_15_plot,
-                    nrow = 5, ncol = 4)
-Fig_4B <- annotate_figure(Fig_4B, 
-                          bottom = text_grob("Length-for-age Z-score", size = 15, vjust = 0.5),
-                          left = text_grob("Measurement age, months", size = 15, rot = 90, vjust = 1.5))
+                    values = bluegreen) +
+  theme(
+    legend.position = "bottom"
+  )
 
 # define standardized plot names
 rec_histogram_plot_name = create_name(
@@ -826,18 +341,9 @@ rec_histogram_plot_name = create_name(
   analysis = "primary"
 )
 
-# save plot
-ggsave(Fig_4B, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,
-       ".png"), width=9, height=7)
+# save plot 
+
+ggsave(rec_histogram_plot, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,
+                                       ".png"), width=8, height=5)
 
 saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,".RDS"))
-
-
-#-----------------------------------------
-#### Save legend ####
-#-----------------------------------------
-Fig_4B_legend <- as_ggplot(get_legend(stunt_3_meas_3_plot))
-stunt_3_meas_3_plot <- stunt_3_meas_3_plot + theme(legend.position = "none")
-
-ggsave(Fig_4B_legend, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,
-                           "-legend.png"), width=9, height=1)
