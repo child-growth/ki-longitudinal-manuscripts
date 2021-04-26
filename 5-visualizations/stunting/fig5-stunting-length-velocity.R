@@ -117,9 +117,7 @@ plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall")
   ylab("Mean length-for-age Z-score") +
   ggtitle("c\n")+
   theme(plot.title = element_text(hjust=0)) +
-  theme(legend.position = c(.88, .83),
-        legend.background = element_blank(),
-        legend.box.background = element_rect(colour = "black"),
+  theme(legend.position = "None",
         plot.title = element_text(hjust=0))
 
 plot_mean_laz
@@ -173,7 +171,10 @@ plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   ggtitle("b\n") +
-  theme(plot.title = element_text(hjust=0))
+  theme(plot.title = element_text(hjust=0),
+        legend.position = c(.88, 0.2),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(colour = "black"),)
 plot_laz
 
 # define standardized plot names
@@ -321,39 +322,49 @@ velplot_cm_cohort_data = velplot_cm %>%  filter(country_cohort!="Pooled - All" &
                              country_cohort!="Pooled - Asia" & 
                              country_cohort!="Pooled - Africa" & 
                              country_cohort!="Pooled - Amer." & 
-                             msmt_type=="Mean")
+                             msmt_type=="Mean") %>% 
+  mutate(msmt_type = factor(msmt_type, levels = c("pct_50", "pct_25","Mean")))
+
+# plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"), 
+#                   aes(y = length_cm, x = strata)) +
+#   geom_line(data = velplot_cm_cohort_data, aes(group = country_cohort),
+#             alpha=0.12) +
+#   geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
+#                 linetype = msmt_type), size=1,
+#             data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
+#                                             msmt_type=="Mean"|msmt_type=="pct_25"|
+#                                             msmt_type=="pct_50")) +
+# 
+# velplot_cm_cohort_data = velplot_cm %>%  filter(country_cohort!="Pooled - All" & 
+#                                                   country_cohort!="Pooled - Asia" & 
+#                                                   country_cohort!="Pooled - Africa" & 
+#                                                   country_cohort!="Pooled - Amer." & 
+#                                                   msmt_type=="Mean")
 
 plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"), 
                   aes(y = length_cm, x = strata)) +
-  # geom_point(data = velplot_cm_cohort_data, size = 1, alpha=0.05) +
-  geom_line(data = velplot_cm_cohort_data, aes(group = country_cohort),
-            alpha=0.12) +
-  geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
-                linetype = msmt_type), size=1,
-            data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
-                                            msmt_type=="Mean"|msmt_type=="pct_25"|
-                                            msmt_type=="pct_50")) +
->>>>>>> master
-
-velplot_cm_cohort_data = velplot_cm %>%  filter(country_cohort!="Pooled - All" & 
-                                                  country_cohort!="Pooled - Asia" & 
-                                                  country_cohort!="Pooled - Africa" & 
-                                                  country_cohort!="Pooled - Amer." & 
-                                                  msmt_type=="Mean")
-
-plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"), 
-                  aes(y = length_cm, x = strata)) +
-  # geom_point(data = velplot_cm_cohort_data, size = 1, alpha=0.05) +
-  geom_line(data = velplot_cm_cohort_data, aes(group = country_cohort),
-            alpha=0.12) +
-  geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
-                linetype = msmt_type), size=1,
-            data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
-                                            msmt_type=="Mean"|msmt_type=="pct_25"|
-                                            msmt_type=="pct_50")) +
   
-  geom_linerange(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
-                 alpha=0.5, size=1) +
+  # cohort-specific lines
+  geom_line(data = velplot_cm_cohort_data, aes(group = country_cohort),
+            alpha=0.07) +
+  
+  # WHO standard lines
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
+                linetype = msmt_type),
+            data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
+                                            msmt_type=="pct_25"|
+                                            msmt_type=="pct_50"),
+            size = 0.4) +
+  
+  # ki pooled lines
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol),
+            data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
+                                            msmt_type=="Mean"),
+            size = 0.8) +
+  
+  # error bars
+  geom_errorbar(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
+                 alpha=0.5, size=0.8, width=0.1) +
 
   scale_linetype_manual("WHO Growth\nVelocity Standards", values = c("Mean" = "solid", 
                                                                      "pct_50" = "solid",
@@ -365,7 +376,7 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
              "25th percentile", 
              "15th percentile"
   )) +
-  
+  # scale_size_manual("WHO Growth\nVelocity Standards", values = c(1, 0.4, 0.4), guide=F) +
   scale_color_manual("WHO Growth\nVelocity Standards", values = c("black" = "black",
                                                                   "male_color" = mypalette[2],
                                                                   "female_color" = mypalette[1], 
@@ -375,7 +386,7 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
                                                                   "female_color2" = mypalette[1], 
                                                                   "male_color2" = mypalette[2])) +
   
-  scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.25), labels=seq(0,4,0.25)) +
+  scale_y_continuous(limits=c(0.5,3.85), breaks=seq(0,4,0.5), labels=seq(0,4,0.5)) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month\n")+
   facet_wrap( ~ sex) +
@@ -386,7 +397,8 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
   labs(linetype = c("", "12", "14", "13")) +
   
   theme(legend.position = c(.915, .78),
-        # legend.title = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"),
         plot.title = element_text(hjust=0))
@@ -547,9 +559,17 @@ saveRDS(velplot_cm_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_coh
 # combined LAZ and length plots
 ############################################################################
 # add margin around plots
+# combined_plot = grid.arrange(plot_cm, 
+#                              arrangeGrob(plot_laz, plot_mean_laz, 
+#                                          ncol=2, nrow = 1),
+#                              heights = c(6,4))
+
 combined_plot = grid.arrange(plot_cm, 
                              arrangeGrob(plot_laz, plot_mean_laz, 
-                                         ncol=2, nrow = 1))
+                                         ncol=1, nrow = 2),
+                             nrow = 1,
+                             widths = c(5,2.75))
+
 
 combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
                                    nrow = 3, heights = c(10, 4, 4))
@@ -581,7 +601,7 @@ combined_plot_strat_name = create_name(
 # save overall plots together
 #-------------------------------------
 ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-", combined_plot_name,
-                                  ".png"), width=10, height=8)
+                                  ".png"), width=12, height=6)
 ggsave(combined_plot_strat, file=paste0(fig_dir, "stunting/fig-",combined_plot_strat_name,
                                         ".png"), width=16, height=18)
 
