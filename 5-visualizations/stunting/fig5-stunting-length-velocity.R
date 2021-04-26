@@ -100,20 +100,28 @@ meanlaz_overall = meanlaz %>%
                                     "18-21", "21-24")))
 
 plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall"), aes(y=est, x = agecat)) + 
+  # cohort estimates
   geom_point(data = meanlaz_overall %>% filter(pooled==0),
              aes(col=sex), position = position_jitterdodge( dodge.width = 0.5),
-             size=3, alpha = 0.1) +
-  geom_point(aes(col=sex), position = position_dodge(width=0.5), size=3) +
-  geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
-                 position = position_dodge(width=0.5)) +
+             size=1, alpha = 0.1) +
+  # pooled estimates
+  geom_point(aes(col=sex), position = position_dodge(width=0.5), size=1.5) +
+  
+  # error bar
+  geom_errorbar(aes(ymin = lb, ymax = ub, col=sex), 
+                 position = position_dodge(width=0.5),
+                width = 0.1, size = 0.5) +
+  
   scale_color_manual("Child sex", values = mypalette) + 
-  scale_y_continuous(limits = c(-2.25, -0.5)) +
+  scale_y_continuous(limits = c(-3, 0.5),
+                     breaks = seq(-3,0.5, 0.5),
+                     labels = seq(-3, 0.5, 0.5)) +
   xlab("Child age, months") + 
-  ylab("Mean length-for-age Z-score") +
+  ylab("Mean length-for-age Z-score\n   ") +
   ggtitle("c\n")+
-  theme(plot.title = element_text(hjust=0)) +
   theme(legend.position = "None",
-        plot.title = element_text(hjust=0))
+        plot.title = element_text(hjust=0),
+        panel.grid.minor = element_blank())
 
 plot_mean_laz
 
@@ -161,14 +169,14 @@ plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y
                  position = position_dodge(width = 0.5), width = 0.1, size  =0.5) +
   
   scale_color_manual(values=mypalette)+  
-  scale_y_continuous(limits=c(-0.62,0.28), breaks=seq(-0.6,0.3,0.1),
-                     labels=round(seq(-0.6,0.3,0.1),1)) +
+  # scale_y_continuous(limits=c(-0.62,0.28), breaks=seq(-0.6,0.3,0.1),
+  #                    labels=round(seq(-0.6,0.3,0.1),1)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
   ggtitle("b\n") +
   theme(plot.title = element_text(hjust=0),
-        legend.position = c(.88, 0.2),
+        legend.position = c(.85, 0.23),
         legend.background = element_blank(),
         legend.box.background = element_rect(colour = "black"),
         panel.grid.minor = element_blank())
@@ -547,7 +555,8 @@ saveRDS(velplot_cm_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_coh
 
 combined_plot = grid.arrange(plot_cm, 
                              arrangeGrob(plot_laz, plot_mean_laz, 
-                                         ncol=1, nrow = 2),
+                                         ncol=1, nrow = 2, 
+                                         heights = c(4,2)),
                              nrow = 1,
                              widths = c(5,2.75))
 
