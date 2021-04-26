@@ -29,7 +29,7 @@ head(df)
 
 
 #merge in start year of each cohort
-start_year <- readRDS(here("/data/study_start_years.rds"))
+start_year <- readRDS(paste0(BV_dir,"/data/study_start_years.rds"))
 
 df <- left_join(df, start_year, by=c("studyid", "country"))
 
@@ -40,7 +40,7 @@ head(df)
 
 df$region <- as.character(df$region)
 
-saveRDS(df, file=here("results/KI_metadata_stunting.RDS"))
+saveRDS(df, file=paste0(BV_dir,"/results/KI_metadata_stunting.RDS"))
 
 
 

@@ -8,10 +8,10 @@ source(paste0(here::here(), "/0-config.R"))
 
 
 #read csv file
-d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
+dfull <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 gc()
 
-d <- subset(d, select= c(studyid, country, subjid, agedays, dead, agedth, causedth, haz, waz))
+d <- subset(dfull, select= c(studyid, country, subjid, agedays, dead, agedth, causedth, haz, waz))
 gc()
 
 
@@ -54,9 +54,6 @@ dim(d)
 table(d$dead)
 table(d$studyid, d$dead)
 
-#look at measurements pripr to early death
-#-many seem like incorrect age-death, with anthro measures at older ages
-as.data.frame(d[d$agedth<8 & !is.na(d$agedth),])
 
 #Drop mortality after 24 months
 summary(d$maxage)
@@ -108,6 +105,8 @@ mort <- subset(mort, select = c(studyid, country, subjid, maxage, dead, agedth, 
 
 saveRDS(mort, mortality_path)
 
+#check which studies don't have mortality info
+unique(dfull$studyid)[!(unique(dfull$studyid) %in% unique(mort$studyid))]
 
 #mortality within studies measuring anthro before 6 months and had sufficient mortality to be in the primary analysis
 table(mort$dead[mort$studyid %in% c("iLiNS-DOSE", "iLiNS-DYAD-M","JiVitA-3","JiVitA-4","Keneba", "SAS-CompFeed","VITAMIN-A","ZVITAMBO")])

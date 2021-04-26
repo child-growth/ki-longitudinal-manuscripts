@@ -34,12 +34,9 @@ shorten_descriptions<-function(dd){
   dd$short_description[dd$studyid=='COHORTS' & dd$country=='GUATEMALA'] <- 'INCAP Nutr Supp RCT'
   dd$short_description[dd$studyid=='COHORTS' & dd$country=='INDIA'] <- 'New Delhi Birth Cohort'
   
-  dd$short_description[dd$studyid=='CMIN2'] <- 'CMIN'
-  dd$short_description[dd$studyid=='CMIN3'] <- 'CMIN'
-  dd$short_description[dd$studyid=='CMIN4'] <- 'CMIN'
-  dd$short_description[dd$studyid=='CMIN6'] <- 'CMIN'
-  dd$short_description[dd$studyid=='CMIN7'] <- 'CMIN'
+ 
   dd$short_description[dd$studyid=='TDC'] <- 'Transmission Dyn. Crypto'
+  dd$short_description[is.na(dd$short_description)] <- dd$studyid[is.na(dd$short_description)]
   
   return(dd)
 }

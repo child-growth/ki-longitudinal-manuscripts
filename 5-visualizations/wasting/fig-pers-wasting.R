@@ -4,7 +4,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load data
-load(paste0(here(),"/results/persistent_wasting024.Rdata"))
+load(paste0(BV_dir,"/results/persistent_wasting024.Rdata"))
 d <- perswast024 %>% filter(is.na(country))
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
@@ -63,5 +63,5 @@ p <- ggplot(d,aes(y=est,x=region)) +
 
 p
 
-ggsave(p, file=here("figures/wasting/pooled_pers024.png"), width=8, height=5)
+ggsave(p, file=paste0(BV_dir,"/figures/wasting/pooled_pers024.png"), width=8, height=5)
 

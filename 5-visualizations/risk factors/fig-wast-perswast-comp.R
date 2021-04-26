@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
 unique(d$outcome_variable)
 unique(d$agecat)
@@ -98,9 +98,9 @@ p_severecomp <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=Outcome, group=in
 
 p_severecomp
 
-ggsave(p_severecomp, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp.png"), height=8, width=10)
+ggsave(p_severecomp, file=paste0(BV_dir,"/figures/risk-factor/fig-wast-perswast-comp.png"), height=8, width=10)
 
-saveRDS(list(p_severecomp, plotdf), file = paste0(here::here(), "/results/fig-severe-outcome-comps.RDS"))
+saveRDS(list(p_severecomp, plotdf), file = paste0(BV_dir, "/results/fig-severe-outcome-comps.RDS"))
 
 
 
@@ -165,6 +165,6 @@ p_severecomp_Africa <- ggplot(plotdf[plotdf$region=="Africa",], aes(x=Outcome, g
 
 
 
-ggsave(p_severecomp_SA, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp-SA.png"), height=8, width=10)
-ggsave(p_severecomp_LA, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp-LA.png"), height=8, width=10)
-ggsave(p_severecomp_Africa, file=paste0(here::here(),"/figures/risk-factor/fig-wast-perswast-comp-Africa.png"), height=8, width=10)
+ggsave(p_severecomp_SA, file=paste0(BV_dir,"/figures/risk-factor/fig-wast-perswast-comp-SA.png"), height=8, width=10)
+ggsave(p_severecomp_LA, file=paste0(BV_dir,"/figures/risk-factor/fig-wast-perswast-comp-LA.png"), height=8, width=10)
+ggsave(p_severecomp_Africa, file=paste0(BV_dir,"/figures/risk-factor/fig-wast-perswast-comp-Africa.png"), height=8, width=10)

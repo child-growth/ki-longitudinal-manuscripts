@@ -57,15 +57,16 @@ batch_id_cont
 wait_for_batch(batch_id_cont)
 
 # download the longbow outputs
-get_batch_results(batch_id_cont, results_folder="results")
-length(dir("results"))
+get_batch_results(batch_id_cont, results_folder="vel_wlz_quart_results")
+length(dir("vel_wlz_quart_results"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results")
+results <- load_batch_results("results.rdata", results_folder = "vel_wlz_quart_results")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "vel_wlz_quart_results")
 
 # save concatenated results
 filename1 <- paste(paste('vel_wlz_quart',Sys.Date( ),sep='_'),'RDS',sep='.')
 filename2 <- paste(paste('vel_wlz_quart_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
-saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
-saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+saveRDS(results, file=paste0(res_dir,"rf results/raw longbow results/",filename1))
+saveRDS(obs_counts, file=paste0(res_dir,"rf results/raw longbow results/",filename2))
+

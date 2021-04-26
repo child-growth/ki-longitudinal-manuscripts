@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -22,11 +22,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -53,7 +53,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -79,13 +79,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -100,7 +93,7 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
@@ -164,14 +157,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -184,9 +169,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -203,10 +188,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -218,8 +199,9 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘rlang’ was built under R version 4.0.5 
 > source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 > source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 > 
@@ -227,48 +209,48 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > #Load data
 > dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
 > head(dfull)
-  agecat        studyid country
-1  Birth CMC-V-BCS-2002   INDIA
-2  Birth CMC-V-BCS-2002   INDIA
-3  Birth CMC-V-BCS-2002   INDIA
-4  Birth CMC-V-BCS-2002   INDIA
-5  Birth CMC-V-BCS-2002   INDIA
-6  Birth CMC-V-BCS-2002   INDIA
-                                            strata_label adjustment_set
-1 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
-2 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
-3 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
-4 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
-5 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
-6 agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
-  intervention_variable outcome_variable type                         parameter
-1                   sex              haz  TSM                   E[Y_{A=Female}]
-2                   sex              haz  TSM                     E[Y_{A=Male}]
-3                   sex              haz E(Y)                              E[Y]
-4                   sex              haz  ATE E[Y_{A=Female}] - E[Y_{A=Female}]
-5                   sex              haz  ATE   E[Y_{A=Male}] - E[Y_{A=Female}]
-6                   sex              haz  PAR              PAR(E[Y_{A=Female}])
-  intervention_level baseline_level   estimate   ci_lower    ci_upper
-1             Female           <NA> -0.8177174 -1.0962275 -0.53920726
-2               Male           <NA> -1.1046739 -1.4309358 -0.77841205
-3               <NA>           <NA> -0.9611957 -1.1776967 -0.74469464
-4             Female         Female  0.0000000  0.0000000  0.00000000
-5               Male         Female -0.2869565 -0.7159259  0.14201282
-6             Female           <NA> -0.1434783 -0.3599793  0.07302275
-  untransformed_estimate untransformed_se     region continuous n_cell  n prev
-1             -0.8177174        0.1420996 South Asia          1     NA NA   NA
-2             -1.1046739        0.1664632 South Asia          1     NA NA   NA
-3             -0.9611957        0.1104617 South Asia          1     NA NA   NA
-4              0.0000000        0.0000000 South Asia          1     NA NA   NA
-5             -0.2869565        0.2188659 South Asia          1     NA NA   NA
-6             -0.1434783        0.1104617 South Asia          1     NA NA   NA
-  adjusted
-1        0
-2        0
-3        0
-4        0
-5        0
-6        0
+   agecat        studyid country
+1:  Birth CMC-V-BCS-2002   INDIA
+2:  Birth CMC-V-BCS-2002   INDIA
+3:  Birth CMC-V-BCS-2002   INDIA
+4:  Birth CMC-V-BCS-2002   INDIA
+5:  Birth CMC-V-BCS-2002   INDIA
+6:  Birth CMC-V-BCS-2002   INDIA
+                                             strata_label adjustment_set
+1: agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+2: agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+3: agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+4: agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+5: agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+6: agecat: Birth, studyid: CMC-V-BCS-2002, country: INDIA     unadjusted
+   intervention_variable outcome_variable type
+1:                   sex              haz  TSM
+2:                   sex              haz  TSM
+3:                   sex              haz E(Y)
+4:                   sex              haz  ATE
+5:                   sex              haz  ATE
+6:                   sex              haz  PAR
+                           parameter intervention_level baseline_level
+1:                   E[Y_{A=Female}]             Female           <NA>
+2:                     E[Y_{A=Male}]               Male           <NA>
+3:                              E[Y]               <NA>           <NA>
+4: E[Y_{A=Female}] - E[Y_{A=Female}]             Female         Female
+5:   E[Y_{A=Male}] - E[Y_{A=Female}]               Male         Female
+6:              PAR(E[Y_{A=Female}])             Female           <NA>
+     estimate   ci_lower    ci_upper untransformed_estimate untransformed_se
+1: -0.8177174 -1.0962275 -0.53920726             -0.8177174        0.1420996
+2: -1.1046739 -1.4309358 -0.77841205             -1.1046739        0.1664632
+3: -0.9611957 -1.1776967 -0.74469464             -0.9611957        0.1104617
+4:  0.0000000  0.0000000  0.00000000              0.0000000        0.0000000
+5: -0.2869565 -0.7159259  0.14201282             -0.2869565        0.2188659
+6: -0.1434783 -0.3599793  0.07302275             -0.1434783        0.1104617
+       region continuous n_cell  n prev min_n_cell adjusted
+1: South Asia          1     NA NA   NA         NA        0
+2: South Asia          1     NA NA   NA         NA        0
+3: South Asia          1     NA NA   NA         NA        0
+4: South Asia          1     NA NA   NA         NA        0
+5: South Asia          1     NA NA   NA         NA        0
+6: South Asia          1     NA NA   NA         NA        0
 > 
 > 
 > unique(dfull$type)
@@ -282,33 +264,9 @@ New theme missing the following elements: line, rect, text, axis.title.x, axis.t
 > #Subset agecat
 > d <- droplevels(d)
 > 
-> 
-> 
-> 
+> #temp
 > RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
 +   do(poolRR(.)) %>% as.data.frame()
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-In addition: Warning message:
-In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
-  Fisher scoring algorithm may have gotten stuck at a local maximum.
-  Setting tau^2 = 0. Check the profile likelihood plot with profile().
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 Warning message:
 In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
   Fisher scoring algorithm may have gotten stuck at a local maximum.
@@ -317,23 +275,10 @@ In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
 > 
 > RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
 +   do(poolRR(.)) %>% as.data.frame()
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-In addition: Warning messages:
-1: In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
+Warning message:
+In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
   Fisher scoring algorithm may have gotten stuck at a local maximum.
   Setting tau^2 = 0. Check the profile likelihood plot with profile().
-2: In rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
-  Fisher scoring algorithm may have gotten stuck at a local maximum.
-  Setting tau^2 = 0. Check the profile likelihood plot with profile().
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
-Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  : 
-  Fisher scoring algorithm did not converge. See 'help(rma)' for possible remedies.
 > 
 > RMAest_raw <- rbind(RMAest, RMAest_region)
 > 
@@ -344,11 +289,11 @@ Error in rma(yi = untransformed_estimate, sei = untransformed_se, data = d,  :
 > 
 > 
 > #Add reference level to label
-> RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
+> RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$baseline_level)
 > 
 > #Save cleaned data
 > saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
 > 
 > proc.time()
    user  system elapsed 
- 51.612   1.893  98.889 
+ 47.215   1.069  48.304 

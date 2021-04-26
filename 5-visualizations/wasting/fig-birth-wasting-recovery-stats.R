@@ -3,7 +3,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/bw_longterm_res.rds"))
+d <- readRDS(paste0(BV_dir,"/results/bw_longterm_res.rds"))
 
 d <- d %>% filter(measure=="Persistent wasting"|
                   measure=="Wasting cumulative incidence"|
@@ -16,7 +16,6 @@ d$measure_lab[d$measure=="Persistent wasting"] <- "Persistent wasting\nfrom 6-24
 d$measure_lab[d$measure=="Wasting cumulative incidence"] <- "Wasting cumulative incidence\nfrom 6-24 month"
 d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting at 18 months" 
 d$measure_lab <- factor(d$measure_lab)
-#d$measure_lab <- relevel(d$measure_lab, ref="Wasting\nincidence\nrate")
 d$measure_lab <- relevel(d$measure_lab, ref="Wasting cumulative incidence\nfrom 6-24 month")
 
 
@@ -41,15 +40,13 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
   theme(strip.background = element_blank(), strip.placement = "outside")
 
 
-#ggsave(p, file=paste0(here::here(),"/figures/wasting/birthwast_stats_subplot.png"), width=7, height=3)
-
 
 # save plot and underlying data
-ggsave(birthstrat_stats_plot, file=paste0(here(),"/figures/wasting/fig-birth-stratified-outcomes.png"), width=8, height=5)
-ggsave(birthstrat_stats_plot, file=paste0(here(),"/figures/wasting/fig-birth-stratified-outcomes_alt.png"), width=7, height=4)
+ggsave(birthstrat_stats_plot, file=paste0(BV_dir,"/figures/wasting/fig-birth-stratified-outcomes.png"), width=8, height=5)
+ggsave(birthstrat_stats_plot, file=paste0(BV_dir,"/figures/wasting/fig-birth-stratified-outcomes_alt.png"), width=7, height=4)
 
-saveRDS(d, file=paste0(here(), "/results/figure-data/figdata-birth-stratified-outcomes.RDS"))
+saveRDS(d, file=paste0(BV_dir, "/results/figure-data/figdata-birth-stratified-outcomes.RDS"))
 
-saveRDS(birthstrat_stats_plot, file=paste0(here::here(),"/figures/plot-objects/birthstrat_stats_plot_object.rds"))
+saveRDS(birthstrat_stats_plot, file=paste0(BV_dir,"/figures/plot-objects/birthstrat_stats_plot_object.rds"))
 
 

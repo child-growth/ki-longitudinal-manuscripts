@@ -56,15 +56,15 @@ batch_id_bin
 wait_for_batch(batch_id_bin)
 
 # download the longbow outputs
-get_batch_results(batch_id_bin, results_folder="results_bin")
-length(dir("results_bin"))
+get_batch_results(batch_id_bin, results_folder="stunt_bin_wlz_quart_results")
+length(dir("stunt_bin_wlz_quart_results"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results_bin")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_bin")
+results <- load_batch_results("results.rdata", results_folder = "stunt_bin_wlz_quart_results")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "stunt_bin_wlz_quart_results")
 
 # save concatenated results
 filename1 <- paste(paste('stunt_bin_wlz_quart',Sys.Date( ),sep='_'),'RDS',sep='.')
 filename2 <- paste(paste('stunt_bin_wlz_quart_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
-saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
-saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+saveRDS(results, file=paste0(res_dir,"rf results/raw longbow results/",filename1))
+saveRDS(obs_counts, file=paste0(res_dir,"rf results/raw longbow results/",filename2))

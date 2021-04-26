@@ -23,7 +23,7 @@ default_params$script_params$count_Y <- FALSE
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
 
 #Load existing results
-results <- readRDS(here("results/rf results/longbow results/results_vel.RDS"))   
+results <- readRDS(paste0(res_dir,"rf results/longbow results/results_vel.RDS"))   
 
 
 analyses <- analyses %>% filter(Y!="haz" & Y!="whz")
@@ -75,5 +75,6 @@ obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_v
 # save concatenated results
 filename1 <- paste(paste('results_vel_sub',Sys.Date( ),sep='_'),'RDS',sep='.')
 filename2 <- paste(paste('results_vel_obs_counts_sub',Sys.Date( ),sep='_'),'RDS',sep='.')
-saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
-saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+saveRDS(results, file=paste0(res_dir,"rf results/raw longbow results/",filename1))
+saveRDS(obs_counts, file=paste0(res_dir,"rf results/raw longbow results/",filename2))
+

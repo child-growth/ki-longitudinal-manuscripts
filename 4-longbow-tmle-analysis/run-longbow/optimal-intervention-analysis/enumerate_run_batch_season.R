@@ -59,7 +59,8 @@ obs_counts <- load_batch_results("obs_counts.rdata","results_season")
 # save concatenated results
 filename1 <- paste(paste('opttx_vim_season_results',Sys.Date( ),sep='_'),'RDS',sep='.')
 filename2 <- paste(paste('opttx_vim_season_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
-saveRDS(results, file=here("results","rf results","raw longbow results",filename1))
-saveRDS(obs_counts, file=here("results","rf results","raw longbow results",filename2))
+saveRDS(results, file=paste0(res_dir,"rf results/raw longbow results/",filename1))
+saveRDS(obs_counts, file=paste0(res_dir,"rf results/raw longbow results/",filename2))
+
 
 

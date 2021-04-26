@@ -10,8 +10,8 @@ library(ggplot2)
 #library(rowr)
 
 #Load data
-vim <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_VIM_results.rds"))
-par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
+vim <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_VIM_results.rds"))
+par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
 
 head(vim)
 dim(par)
@@ -132,8 +132,8 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
 pVIMcombined
 
 
-save(pVIMcombined, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
-saveRDS(pVIMcombined, file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-combined.RDS"))
+save(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
+saveRDS(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-object-combined.RDS"))
 
-ggsave(pVIMcombined, file=here("figures/risk-factor/fig-VIM-PAR-comp-combined.png"), height=5, width=10)
+ggsave(pVIMcombined, file=paste0(BV_dir,"/figures/risk-factor/fig-VIM-PAR-comp-combined.png"), height=5, width=10)
 

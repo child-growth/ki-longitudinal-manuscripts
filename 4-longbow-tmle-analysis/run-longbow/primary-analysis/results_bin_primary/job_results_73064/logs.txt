@@ -1,173 +1,0 @@
-Command to run:
-Rscript --default-packages=methods,stats,utils runner.R script.Rmd inputs.json /tmp/09f9f522-0b53-4bb2-877c-37d9046bc637/6ecfe375-ed31-4d3b-bc0c-7a87a34961ca
-cd /tmp;tar xvzf tmpsi1o20sb.tar.gz --strip 1;cd /tmp/09f9f522-0b53-4bb2-877c-37d9046bc637;pip install requests --user;export TLAPP_TOKEN=r06YhrkTl8;export TLAPP_LOGS_URL=https://www.longbowapp.com/jobs/73064/append_log/;screen -d -m python x.py;sleep 1
-tmpsi1o20sb/09f9f522-0b53-4bb2-877c-37d9046bc637/
-tmpsi1o20sb/09f9f522-0b53-4bb2-877c-37d9046bc637/runner.R
-tmpsi1o20sb/09f9f522-0b53-4bb2-877c-37d9046bc637/provision.sh
-tmpsi1o20sb/09f9f522-0b53-4bb2-877c-37d9046bc637/wrapper.sh
-tmpsi1o20sb/09f9f522-0b53-4bb2-877c-37d9046bc637/inputs.json
-tmpsi1o20sb/09f9f522-0b53-4bb2-877c-37d9046bc637/script.Rmd
-tmpsi1o20sb/09f9f522-0b53-4bb2-877c-37d9046bc637/x.py
-tmpsi1o20sb/09f9f522-0b53-4bb2-877c-37d9046bc637/6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/
-Requirement already satisfied (use --upgrade to upgrade): requests in /usr/lib/python2.7/site-packages
-You are using pip version 18.1, however version 21.0.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-{"job": {"status": "running", "created_at": "2021-04-22T04:39:04.755", "results_url": "/jobs/73064/", "jobs": []}}Making sure longbowtools package is available for runner
-
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('devtools')) install.packages('devtools', repos = 'http://cran.rstudio.com/')
-> 
-> 
-Installing pandoc
-pandoc-2.3.1/
-pandoc-2.3.1/bin/
-pandoc-2.3.1/bin/pandoc
-pandoc-2.3.1/bin/pandoc-citeproc
-pandoc-2.3.1/share/
-pandoc-2.3.1/share/man/
-pandoc-2.3.1/share/man/man1/
-pandoc-2.3.1/share/man/man1/pandoc.1.gz
-pandoc-2.3.1/share/man/man1/pandoc-citeproc.1.gz
-Running provision script
-skipping provisioning because this is a child job
-Making sure longbowtools package is available for runner
-
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> if (!require('longbowtools')) devtools::install_github('tlverse/longbowtools')
-> 
-> 
-Starting analysis
-
-
-processing file: REPORT.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |....                                                                  |   5%
-  ordinary text without R code
-
-  |                                                                              |.......                                                               |  10%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                              |..........                                                            |  15%
-  ordinary text without R code
-
-  |                                                                              |..............                                                        |  20%
-label: params (with options) 
-List of 2
- $ warning: logi FALSE
- $ message: logi FALSE
-
-Loading required package: graphics
-vagbrthc("arm", "sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec", "W_mhtcm", "W_mwtkg", "W_mbmi", "W_fhtcm", "hdlvry", "single", "W_nrooms", "W_nhh", "W_nchldlt5", "brthmon", "W_parity", "trth2o", "cleanck", "impfloor", "impsan", "safeh20")ever_swastedidc("agecat", "studyid", "country")
-TRUETRUEFALSENULL
-  |                                                                              |..................                                                    |  25%
-  ordinary text without R code
-
-  |                                                                              |.....................                                                 |  30%
-label: preprocessing
-  |                                                                              |........................                                              |  35%
-   inline R code fragments
-
-  |                                                                              |............................                                          |  40%
-label: print_adjustment_set (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |................................                                      |  45%
-  ordinary text without R code
-
-  |                                                                              |...................................                                   |  50%
-label: print_strata_variables (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |......................................                                |  55%
-  ordinary text without R code
-
-  |                                                                              |..........................................                            |  60%
-label: data_summary
-  |                                                                              |..............................................                        |  65%
-  ordinary text without R code
-
-  |                                                                              |.................................................                     |  70%
-label: print_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |....................................................                  |  75%
-  ordinary text without R code
-
-  |                                                                              |........................................................              |  80%
-label: drop_strata (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                              |............................................................          |  85%
-  ordinary text without R code
-
-  |                                                                              |...............................................................       |  90%
-label: stratified_tmle (with options) 
-List of 1
- $ message: logi FALSE
-
-tmle for:	agecat: 0-24 months (no birth wast), studyid: CMC-V-BCS-2002, country: INDIA
-tmle for:	agecat: 0-24 months (no birth wast), studyid: IRC, country: INDIA
-tmle for:	agecat: 0-24 months (no birth wast), studyid: JiVitA-3, country: BANGLADESH
-tmle for:	agecat: 0-24 months (no birth wast), studyid: JiVitA-4, country: BANGLADESH
-tmle for:	agecat: 0-24 months (no birth wast), studyid: PROBIT, country: BELARUS
-tmle for:	agecat: 0-24 months (no birth wast), studyid: ZVITAMBO, country: ZIMBABWE
-  |                                                                              |..................................................................    |  95%
-  ordinary text without R code
-
-  |                                                                              |......................................................................| 100%
-label: save_results
-
-output file: REPORT.knit.md
-
-/usr/local/pandoc/pandoc-1.17/pandoc +RTS -K512m -RTS REPORT.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output /tmp/09f9f522-0b53-4bb2-877c-37d9046bc637/6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/REPORT.html --email-obfuscation none --self-contained --standalone --section-divs --template /home/andrew.mertens/rlibs/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/Rtmpr5KRuK/rmarkdown-str3c5548324b0e.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' 
-
-Output created: 6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/REPORT.html
-[1] "/tmp/09f9f522-0b53-4bb2-877c-37d9046bc637/6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/REPORT.html"
-Running analysis succeeded
-6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/
-6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/REPORT.Rmd
-6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/inputs.json
-6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/obs_counts.rdata
-6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/results.rdata
-6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/REPORT.html
-6ecfe375-ed31-4d3b-bc0c-7a87a34961ca/REPORT.md
-{"status": "executed"}

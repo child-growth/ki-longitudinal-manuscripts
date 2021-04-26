@@ -6,12 +6,13 @@ library(progress)
 library(longbowRiskFactors)
 
 
-d <- readRDS(here("results/rf results/raw longbow results/results_cont_obs_counts_2021-04-05.RDS"))
+d <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_obs_counts.RDS"))
 #drop EE gestational age
 d <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth)))
 
 
-d2 <- readRDS(here("results/rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2021-04-04.RDS"))
+d2 <- readRDS(paste0(res_dir,"rf results/longbow results/seasonality_rf_cont_results_obs_counts.RDS"))
+
 d2 <- d2 %>% mutate(rain_quartile=case_when(
   rain_quartile==1 ~ "Opposite max rain",
   rain_quartile==2 ~ "Pre-max rain",
@@ -78,7 +79,6 @@ N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, inte
 
 
 # save concatenated Ns
-save(N_sums, Ndf, Ns, exposure_df, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rdata")
-
+save(N_sums, Ndf, Ns, exposure_df,  file=paste0(res_dir,"continuous_rf_Ns_sub.rdata"))
 
 

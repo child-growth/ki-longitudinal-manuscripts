@@ -22,6 +22,8 @@ library(climateR)
 ki_cohort_filepath = "/data/KI/UCB-SuperLearner/Manuscript analysis data/ki_cohort_gps_data.rds"
 ki_cohorts = readRDS(ki_cohort_filepath)
 
+assert_that(all(monthly_cohorts %in% unique(ki_cohorts$studyid)))
+
 # #check locations:
 # gps_loc <- ki_cohorts %>% distinct(studyid, latitude, longitud) %>%
 #   rename(lat=latitude, long=longitud)
@@ -89,21 +91,21 @@ process_cohort_ppts = function(cohort_id, data_radius=1000){
   return(ll_ppt_values)
 }
 
-monthy_ppt_values = lapply(cohort_ids, process_cohort_ppts) %>% bind_rows()
-colnames(monthy_ppt_values) = c("long", "lat", "month", "year", "avg_ppt", "studyid")
+# monthy_ppt_values = lapply(cohort_ids, process_cohort_ppts) %>% bind_rows()
+# colnames(monthy_ppt_values) = c("long", "lat", "month", "year", "avg_ppt", "studyid")
+# 
+# monthy_ppt_values$country <- str_split_fixed(monthy_ppt_values$studyid, ": ", 2)[,2]
+# monthy_ppt_values$studyid <- str_split_fixed(monthy_ppt_values$studyid, ": ", 2)[,1]
+# 
+# saveRDS(monthy_ppt_values, "~/data/KI/UCB-SuperLearner/Manuscript analysis data/monthy_ppt_values_1k.RDS")
 
-monthy_ppt_values$country <- str_split_fixed(monthy_ppt_values$studyid, ": ", 2)[,2]
-monthy_ppt_values$studyid <- str_split_fixed(monthy_ppt_values$studyid, ": ", 2)[,1]
-
-saveRDS(monthy_ppt_values, "~/data/KI/UCB-SuperLearner/Manuscript analysis data/monthy_ppt_values_1k.RDS")
-
-#10km radius
-monthy_ppt_values_10km = lapply(cohort_ids, process_cohort_ppts, 10000) %>% bind_rows()
-colnames(monthy_ppt_values_10km) = c("long", "lat", "month", "year", "avg_ppt", "studyid")
-monthy_ppt_values_10km$country <- str_split_fixed(monthy_ppt_values_10km$studyid, ": ", 2)[,2]
-monthy_ppt_values_10km$studyid <- str_split_fixed(monthy_ppt_values_10km$studyid, ": ", 2)[,1]
-
-saveRDS(monthy_ppt_values_10km, "~/data/KI/UCB-SuperLearner/Manuscript analysis data/monthy_ppt_values_10k.RDS")
+# #10km radius
+# monthy_ppt_values_10km = lapply(cohort_ids, process_cohort_ppts, 10000) %>% bind_rows()
+# colnames(monthy_ppt_values_10km) = c("long", "lat", "month", "year", "avg_ppt", "studyid")
+# monthy_ppt_values_10km$country <- str_split_fixed(monthy_ppt_values_10km$studyid, ": ", 2)[,2]
+# monthy_ppt_values_10km$studyid <- str_split_fixed(monthy_ppt_values_10km$studyid, ": ", 2)[,1]
+# 
+# saveRDS(monthy_ppt_values_10km, "~/data/KI/UCB-SuperLearner/Manuscript analysis data/monthy_ppt_values_10k.RDS")
 
 #50km radius
 monthy_ppt_values_50km = lapply(cohort_ids, process_cohort_ppts, 50000) %>% bind_rows()
@@ -113,13 +115,3 @@ monthy_ppt_values_50km$studyid <- str_split_fixed(monthy_ppt_values_50km$studyid
 
 saveRDS(monthy_ppt_values_50km, "~/data/KI/UCB-SuperLearner/Manuscript analysis data/monthy_ppt_values_50k.RDS")
 
-# Start of GEE code, but didn't have the permisssions to install some of the dependencies on bluevelvet
-# ee_Initialize()
-# 
-# terraclimate <- ee$ImageCollection("IDAHO_EPSCOR/TERRACLIMATE") %>% 
-#   ee$ImageCollection$filterDate("2001-01-01", "2002-01-01") %>% 
-#   ee$ImageCollection$map(function(x) x$select("pr")) %>% # Select only precipitation bands
-#   ee$ImageCollection$toBands() %>% # from imagecollection to image
-#   ee$Image$rename(sprintf("%02d",1:12)) # rename the bands of an image
-# 
-# ee_nc_rain <- ee_extract(x = terraclimate, y = dat_circles)

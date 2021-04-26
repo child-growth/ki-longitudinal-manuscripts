@@ -14,6 +14,7 @@ source(paste0(here::here(), "/0-config.R"))
 #--------------------------------------------
 
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
+assert_that(all(monthly_cohorts %in% unique(d$studyid)))
 
 #--------------------------------------------
 # Subset to  just identifying, Z-score data, and time data
@@ -26,6 +27,7 @@ d <- d %>% subset(., select=c(studyid, subjid, id, country, region, agedays, sex
 
 #Fill in birth week as middle of the month from birthmonth from PROVIDE datasets
 d$brthweek[d$studyid=="PROVIDE"] <- round(as.numeric(d$brthmon[d$studyid=="PROVIDE"])  * 4.3333 ) -2 
+d$brthyr[d$studyid=="PROVIDE" & is.na(d$brthyr)] <- 2011
 
 
 table(d$studyid, is.na(d$brthweek))

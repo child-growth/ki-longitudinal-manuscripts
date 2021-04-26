@@ -28,8 +28,8 @@ textcol = "grey20"
 #-----------------------------------
 # load the risk factor presence and N's
 #-----------------------------------
-rfp <- readRDS(here('results/cov_presence.rds'))
-rfn <- readRDS(here('results/cov_N.rds'))
+rfp <- readRDS(paste0(BV_dir,'/results/cov_presence.rds'))
+rfn <- readRDS(paste0(BV_dir,'/results/cov_N.rds'))
 
 # gather rf presence by study into long format
 rfp <- rfp %>% 
@@ -308,6 +308,6 @@ rfhmgrid <- grid.arrange(nrfbar2,empty,
 
 
 # save plot 
-ggsave(filename=here("figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.png"),
+ggsave(filename=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.png"),
        plot = rfhmgrid,device='png',width=12,height=9)
 

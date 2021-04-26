@@ -3,7 +3,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
+d <- readRDS(paste0(BV_dir,"/results/desc_data_cleaned.rds"))
 
 #Subset to primary analysis
 d <- d %>% filter(analysis=="No Kenaba birth", (pooling!="country" | is.na(pooling)), is.na(country))

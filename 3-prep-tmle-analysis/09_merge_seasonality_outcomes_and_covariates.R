@@ -17,6 +17,7 @@ library(RcppRoll)
 rain <- readRDS(here("/data/cohort_rain_data.rds"))
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_rf_data.rds"))
+assert_that(all(monthly_cohorts %in% unique(d$studyid)))
 
 head(rain)
 head(d)
@@ -85,7 +86,7 @@ rain_quartile <- rain_long %>% group_by(studyid, country) %>%
   mutate(roll_sum2 = roll_sum(rain, 3, align = "right", fill = 0, na.rm=T),
          max_rain_quarter = ifelse(roll_sum1>roll_sum2, roll_sum1, roll_sum2),
          month_end_max_rain = month_number[max_rain_quarter==max(max_rain_quarter)]) %>%
-  select(studyid, country, month_end_max_rain) %>% unique(.)
+  subset(., select=c(studyid, country, month_end_max_rain)) %>% unique(.)
 head(rain_quartile, 12)
 
 
@@ -207,11 +208,11 @@ dmn_wast <- dprev_whz %>%
 
 # export
 wastprev = dmn_wast %>% 
-  select(studyid,subjid, id, country,agecat, rain_quartile, wasted, swasted)
+  subset(.,select=c(studyid,subjid, id, country,agecat, rain_quartile, wasted, swasted))
 
 # save mean Z scores at each age
 meanWHZ = dmn_wast %>% 
-  select(studyid,subjid, id, country,agecat, rain_quartile, whz)
+  subset(.,select=c(studyid,subjid, id, country,agecat, rain_quartile, whz))
 
 
 #--------------------------------------
@@ -226,16 +227,17 @@ dmn_stunt <- dprev_haz %>%
   arrange(agedays) %>%
   summarise(haz=mean(haz), month= median(as.numeric(month)), rain_quartile= mode(rain_quartile)) %>%
   mutate(stunted=ifelse(haz< -2, 1,0),sstunted=ifelse(haz< -3, 1,0)) %>% 
-  filter(agecat=="Birth" | agecat=="6 months" | agecat=="24 months")
+  filter(agecat=="Birth" | agecat=="6 months" | agecat=="24 months") %>%
+  ungroup()
 
 
 # export
 stuntprev = dmn_stunt %>% 
-  select(studyid,subjid, id, country,agecat, rain_quartile, stunted, sstunted)
+  subset(.,select=c(studyid,subjid, id, country,agecat, rain_quartile, stunted, sstunted))
 
 # save mean Z scores at each age
 meanHAZ = dmn_stunt %>% 
-  select(studyid,subjid, id, country,agecat, rain_quartile, haz)
+  subset(.,select=c(studyid,subjid, id, country,agecat, rain_quartile, haz))
 
 
 

@@ -7,6 +7,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 monthy_ppt_values <- readRDS( "~/data/KI/UCB-SuperLearner/Manuscript analysis data/monthy_ppt_values_50k.RDS")
 head(monthy_ppt_values)
+assert_that(all(monthly_cohorts %in% unique(monthy_ppt_values$studyid)))
 
 
 #Calculate seasonal index
