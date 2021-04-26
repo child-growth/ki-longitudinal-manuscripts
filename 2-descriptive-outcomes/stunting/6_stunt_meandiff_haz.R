@@ -18,9 +18,20 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
 head(d)
-d <- d %>% subset(., select = -c(tr))
+d <- d %>% subset(., select = -c(tr))%>% 
+  mutate(country_cohort=paste0(studyid," ", country))
 
+
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
+
+#-------------------------------------------
 # using growth velocity cutoffs
+#-------------------------------------------
 d = d %>% 
   mutate(agecat=ifelse(agedays<3*30.4167,"0-3",
                        ifelse(agedays>=3*30.4167 & agedays<6*30.4167,"3-6",
@@ -60,23 +71,23 @@ est_mean_diff = function(data, age){
 # within each cohort, estimate the mean difference in haz
 # by sex and age and save the mean difference and variance
 #-------------------------------------------
-cohort_list = as.list(unique(d$studyid))
+country_cohort_list = as.list(unique(d$country_cohort))
 agecat_list = unique(d$agecat)
 
 meandiff_sex_list = list()
 
-for(i in 1:length(cohort_list)){
-  print(paste0("studyid ", cohort_list[i]))
+for(i in 1:length(country_cohort_list)){
+  print(paste0("country_cohort ", country_cohort_list[i]))
   reslist = lapply(agecat_list, function(x) est_mean_diff(
-    data = d %>% filter(studyid==cohort_list[[i]]),
+    data = d %>% filter(country_cohort==country_cohort_list[[i]]),
     age = x
   ))
   meandiff_sex_list[[i]] = bind_rows(reslist) %>%
-    mutate(studyid = cohort_list[[i]])
+    mutate(country_cohort = country_cohort_list[[i]])
 }
 
 meandiff_sex_df = as.data.frame(bind_rows(meandiff_sex_list))
-meandiff_sex_df = meandiff_sex_df %>% select(studyid, everything())
+meandiff_sex_df = meandiff_sex_df %>% select(country_cohort, everything())
 
 
 #-------------------------------------------
@@ -110,4 +121,4 @@ pooled_diff_age_df = bind_rows(pooled_diff_age_list)
 #-------------------------------------------
 # save data
 #-------------------------------------------
-saveRDS(pooled_diff_age_df, file = paste0(res_dir, "haz_meandiff_sex.RDS"))
+saveRDS(pooled_diff_age_df, file = paste0(res_dir, "stunting/haz_meandiff_sex.RDS"))

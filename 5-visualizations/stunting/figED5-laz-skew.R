@@ -9,7 +9,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 library(viridis)
 
-sn <- readRDS(paste0(here::here(), "/results/stunt_skewed_normal.RDS"))
+sn <- readRDS(paste0(res_dir, "stunting/stunt_skewed_normal.RDS"))
 # gamma1 denotes the Pearson’s index of skewness
 # The direction of skewness is given by the sign.
 # The coefficient compares the sample distribution with a normal distribution. The larger the value, the larger the distribution differs from a normal distribution.

@@ -21,6 +21,12 @@ d <- d %>% filter(measurefreq=="monthly")
 
 d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
 ##########################################
 # Define indicators of stunting at each time point
 ##########################################
@@ -75,5 +81,5 @@ ds = d %>%
   mutate(prev_stunted = ifelse(is.na(minhaz_prev) & 
                                  agecat=="Birth", 0, prev_stunted ))
 
-saveRDS(ds, file=paste0(res_bluevelvet_dir, "stunt_rec_cohort.RDS"))
+saveRDS(ds, file=paste0(res_dir, "stunting/stunt_rec_cohort.RDS"))
 

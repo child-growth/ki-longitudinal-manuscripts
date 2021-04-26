@@ -37,7 +37,7 @@ source(paste0(here::here(), "/0-config.R"))
 #Load length velocity data
 vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
-meanlaz = readRDS(paste0(here(), "/results/meanlaz_velocityREML.RDS"))
+meanlaz = readRDS(paste0(res_dir, "stunting/meanlaz_velocityREML.RDS"))
 
 
 # load who standard
@@ -92,7 +92,7 @@ vel_n = vel %>%
 vel_n
 
 ####################################################################################
-# mean LAZ plots
+# Figure 5c: mean LAZ plots
 ####################################################################################
 #-------------------------------------
 # mean LAZ plot - pooled
@@ -106,7 +106,7 @@ meanlaz_overall = meanlaz %>%
 
 plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall"), aes(y=est, x = agecat)) + 
   geom_point(data = meanlaz_overall %>% filter(pooled==0),
-             aes(col=sex), position = position_jitterdodge(),
+             aes(col=sex), position = position_jitterdodge( dodge.width = 0.5),
              size=3, alpha = 0.1) +
   geom_point(aes(col=sex), position = position_dodge(width=0.5), size=3) +
   geom_linerange(aes(ymin = lb, ymax = ub, col=sex), 
@@ -152,7 +152,7 @@ plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) +
   facet_grid(~region)
 
 ####################################################################################
-# LAZ velocity plots
+# Figure 5b: LAZ velocity plots
 ####################################################################################
 #-------------------------------------
 # LAZ plot - pooled
@@ -162,9 +162,9 @@ velplot_laz = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
 
 plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y=Mean,x=strata))+
   geom_point(data = velplot_laz %>% filter(country_cohort!="Pooled - All"), 
-             aes(fill=sex, color=sex), size = 2, 
-             position = position_jitterdodge(), alpha =0.1) +
-  geom_point(aes(fill=sex, color=sex), size = 2, position = position_dodge(width = 0.5)) +
+             aes(fill=sex, color=sex), size = 3, 
+             position = position_jitterdodge(dodge.width = 0.5), alpha =0.1) +
+  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width = 0.5)) +
   geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  position = position_dodge(width = 0.5)) +
   scale_color_manual(values=mypalette)+  

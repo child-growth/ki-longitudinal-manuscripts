@@ -23,10 +23,11 @@ d <- d %>% filter(measurefreq=="monthly")
 # drop variables we don't need
 d = d %>% select(studyid, subjid, region, country, measid, agedays, haz)
 
-# # create reverse measid
-# d = d %>% 
-#   group_by(studyid, country, subjid) %>%
-#   mutate(revmeasid = rev(seq_along(agedays)))
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
 
 ##########################################
 # Define indicators of stunting at each time point
@@ -344,8 +345,8 @@ stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
                                     label = "Never stunted")
 
 
-saveRDS(flow_m, file=paste0(res_bluevelvet_dir, "stuntflow.RDS"))
-saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stuntflow_pooled.RDS"))
-saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stuntflow_pooled_fe.RDS"))
+saveRDS(flow_m, file=paste0(res_dir, "stunting/stuntflow.RDS"))
+saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stunting/stuntflow_pooled.RDS"))
+saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_fe.RDS"))
 
 

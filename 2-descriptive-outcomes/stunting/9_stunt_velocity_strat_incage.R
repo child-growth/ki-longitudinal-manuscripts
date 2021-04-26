@@ -27,9 +27,12 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_stunt_functio
 #######################################################################
 d <- readRDS(paste0(ghapdata_dir, "velocity_longfmt.rds"))
 
-#Check that all monthly cohorts are in the dataset
-assert_that(all(monthly_cohorts %in% unique(d$studyid)))
-
+# check included cohorts
+# excluding iLiNS-Zinc because the measurement ages were so close to 24 months that
+# velocity was not calculated
+vel_cohorts = monthly_and_quarterly_cohorts[-which(monthly_and_quarterly_cohorts == "iLiNS-Zinc")]
+assert_that(setequal(unique(d$studyid), vel_cohorts),
+            msg = "Check data. Included cohorts do not match.")
 
 
 #######################################################################
@@ -67,7 +70,8 @@ d <- d %>% rename(agecat = diffcat) %>%
 # at birth, after birth to 3 months, 
 # after 3 months to 6 months, never
 #----------------------------------------
-d_st_prepped = d %>% mutate(measurefreq = "monthly") %>% filter(ycat == "haz")
+d_st_prepped = d %>% filter(ycat == "haz")
+
 d_indicators = create_stunting_age_indicators(data = d_st_prepped, create_agecats = FALSE) %>% select(-c(measurefreq, haz))
 d_st = left_join(d, d_indicators, by = colnames(d_indicators %>% select(-stunt_inc_age))) %>% distinct()
 
@@ -224,11 +228,11 @@ poolhaz_girls_monthly = as.data.frame(do.call(rbind, poolhaz_girls_monthly))
 pooled_vel <- rbind(
   poolhaz_boys, poolhaz_girls, poollencm_boys, poollencm_girls
 )
-saveRDS(pooled_vel, file = paste0(res_dir, "stunt_velocity_incage.RDS"))
+saveRDS(pooled_vel, file = paste0(res_dir, "stunting/stunt_velocity_incage.RDS"))
 
 pooled_vel_monthly <- rbind(
   poolhaz_boys_monthly, poolhaz_girls_monthly, poollencm_boys_monthly, poollencm_girls_monthly
 )
-saveRDS(pooled_vel_monthly, file = paste0(res_dir, "stunt_velocity_incage_monthly.RDS"))
+saveRDS(pooled_vel_monthly, file = paste0(res_dir, "stunting/stunt_velocity_incage_monthly.RDS"))
 
 

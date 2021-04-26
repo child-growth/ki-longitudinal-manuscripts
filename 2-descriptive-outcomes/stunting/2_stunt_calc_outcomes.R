@@ -34,8 +34,9 @@ source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functi
 
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
-#Check that all monthly+quarterly cohorts are in the dataset
-assert_that(all(monthly_and_quarterly_cohorts %in% unique(d$studyid)))
+# check included cohorts
+assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
 
 head(d)
 d <- d %>% subset(., select = -c(tr))
@@ -178,7 +179,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
     haz.cohort.vel
   )
   
-  saveRDS(haz.vel, file = paste0(here(), "/results/meanlaz_velocity", 
+  saveRDS(haz.vel, file = paste0(res_dir, "stunting/meanlaz_velocity", 
                                  calc_method, output_file_suffix, ".RDS"))
   
   #----------------------------------------
@@ -227,7 +228,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   # combine data
   quantiles <- bind_rows(quantile_d, quantile_d_overall,quantile_d_cohort)
   
-  saveRDS(quantiles,file = paste0(here(),"/results/quantile_data_stunting", calc_method,
+  saveRDS(quantiles,file = paste0(res_dir,"stunting/quantile_data_stunting", calc_method,
                                   output_file_suffix, ".RDS"))
   
   ######################################################################
@@ -353,10 +354,10 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
 }
 
 stunt_outcomes = calc_outcomes(data = d, calc_method = "REML", output_file_suffix = "")
-saveRDS(stunt_outcomes, file = paste0(res_dir,"shiny_desc_data_stunting_objects.RDS"))
+saveRDS(stunt_outcomes, file = paste0(res_dir,"stunting/shiny_desc_data_stunting_objects.RDS"))
 
 stunt_outcomes_monthly = calc_outcomes(data = monthly_d, calc_method = "REML", output_file_suffix = "_monthly24")
-saveRDS(stunt_outcomes_monthly, file =  paste0(res_dir, "shiny_desc_data_stunting_objects_monthly24.RDS"))
+saveRDS(stunt_outcomes_monthly, file =  paste0(res_dir, "stunting/shiny_desc_data_stunting_objects_monthly24.RDS"))
 
 stunt_outcomes_fe = calc_outcomes(data = d, calc_method = "FE", output_file_suffix = "_fe")
-saveRDS(stunt_outcomes_fe, file = paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS"))
+saveRDS(stunt_outcomes_fe, file = paste0(res_dir,"stunting/shiny_desc_data_stunting_objects_fe.RDS"))

@@ -21,7 +21,11 @@ d <- left_join(d, cov,by=c("studyid", "subjid"))
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
 
-
+#-------------------------------------------
+# check included cohorts
+#-------------------------------------------
+assert_that(setequal(unique(d$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
 
 #monthly mean haz
 d <- calc.monthly.agecat(d)
@@ -79,12 +83,12 @@ quantile_d_BW_overall <- d %>% group_by(agecat, sex, birthwt) %>%
 
 saveRDS(list(quantile_d=quantile_d, 
              quantile_d_overall=quantile_d_overall), 
-        file = paste0(here(),"/results/quantile_data_stunting_sex_strat.RDS"))
+        file = paste0(res_dir,"stunting/quantile_data_stunting_sex_strat.RDS"))
 
 
 saveRDS(list(quantile_d=quantile_d_BW, 
              quantile_d_overall=quantile_d_BW_overall), 
-        file = paste0(here(),"/results/quantile_data_stunting_sex_BW_strat.RDS"))
+        file = paste0(res_dir,"stunting/quantile_data_stunting_sex_BW_strat.RDS"))
 
 
 
@@ -109,7 +113,7 @@ stunting_desc_data$region[stunting_desc_data$region=="Asia"] <- "South Asia"
 stunting_desc_data$region <- factor(stunting_desc_data$region, levels=c("Overall", "Africa", "Latin America", "South Asia"))
 
 
-saveRDS(stunting_desc_data, file = paste0(here(),"/results/sex_strat_stunting_desc_data.RDS"))
+saveRDS(stunting_desc_data, file = paste0(res_dir,"stunting/sex_strat_stunting_desc_data.RDS"))
 
 
 
