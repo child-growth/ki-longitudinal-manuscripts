@@ -28,9 +28,9 @@
 # with the same file name and the prefix "figdata"
 
 ##########################################
-#-----------------------------------
-# preamble
-#-----------------------------------
+
+# Preamble ----------------------------------------------------------------
+
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
@@ -43,9 +43,7 @@ meanlaz = readRDS(paste0(res_dir, "stunting/meanlaz_velocityREML.RDS"))
 # load who standard
 who_cm = readRDS(paste0(res_dir, "/WHO_linear_growth_velocity_standard.RDS"))
 
-#-------------------------------------
-# prep data
-#-------------------------------------
+# prep data ----------------------------------------------------------------
 vel$nmeas.f <- clean_nmeans(vel$N)
 vel$strata <- clean_agecat(vel$strata)
 
@@ -91,12 +89,9 @@ vel_n = vel %>%
             max_n = max(N, na.rm=TRUE))
 vel_n
 
-####################################################################################
-# Figure 5c: mean LAZ plots
-####################################################################################
-#-------------------------------------
-# mean LAZ plot - pooled
-#-------------------------------------
+# Figure 5c: mean LAZ plots ----------------------------------------------------------------
+
+## mean LAZ plot - pooled ----------------------------------
 meanlaz_overall = meanlaz %>% 
   mutate(pooled = ifelse(is.na(method.used),0,1)) %>% 
   mutate(agecat = factor(agecat, 
@@ -122,9 +117,7 @@ plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall")
 
 plot_mean_laz
 
-#-------------------------------------
-# mean LAZ plot stratified by region
-#-------------------------------------
+## mean LAZ plot stratified by region ----------------------------------
 meanlaz_strat = meanlaz %>% 
   filter(cohort == "pooled") %>%
   filter(region !="N.America & Europe") %>%
@@ -149,24 +142,27 @@ plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) +
         axis.title.y = element_text(size=20)) +
   facet_grid(~region)
 
-####################################################################################
-# Figure 5b: LAZ velocity plots
-####################################################################################
-#-------------------------------------
-# LAZ plot - pooled
-#-------------------------------------
+# Figure 5b: LAZ velocity plots ----------------------------------------------------------------
+
+## LAZ plot - pooled ----------------------------------
 velplot_laz = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
   mutate(sex = factor(sex))
 
 plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y=Mean,x=strata))+
+  
+  # cohort-specific estimates
   geom_point(data = velplot_laz %>% filter(country_cohort!="Pooled - All"), 
-             aes(fill=sex, color=sex), size = 3, 
-             position = position_jitterdodge(dodge.width = 0.5), alpha =0.1) +
-  geom_point(aes(fill=sex, color=sex), size = 3, position = position_dodge(width = 0.5)) +
-  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 position = position_dodge(width = 0.5)) +
+             aes(fill=sex, color=sex), size = 1, 
+             position = position_jitterdodge(dodge.width = 0.5), alpha =0.07) +
+  # pooled estimates
+  geom_point(aes(fill=sex, color=sex), size = 1.5, position = position_dodge(width = 0.5)) +
+  # error bars
+  geom_errorbar(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+                 position = position_dodge(width = 0.5), width = 0.1, size  =0.5) +
+  
   scale_color_manual(values=mypalette)+  
-  scale_y_continuous(limits=c(-0.257,0.1), breaks=seq(-0.25,0.1,0.05), labels=seq(-0.25,0.1,0.05)) +
+  scale_y_continuous(limits=c(-0.62,0.28), breaks=seq(-0.6,0.3,0.1),
+                     labels=round(seq(-0.6,0.3,0.1),1)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
@@ -174,7 +170,8 @@ plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y
   theme(plot.title = element_text(hjust=0),
         legend.position = c(.88, 0.2),
         legend.background = element_blank(),
-        legend.box.background = element_rect(colour = "black"),)
+        legend.box.background = element_rect(colour = "black"),
+        panel.grid.minor = element_blank())
 plot_laz
 
 # define standardized plot names
@@ -192,10 +189,8 @@ plot_laz_name = create_name(
 ggsave(plot_laz, file=paste0(fig_dir, "stunting/fig-",plot_laz_name,".png"), width=12, height=6)
 saveRDS(velplot_laz, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_name,".RDS"))
 
+## LAZ plot - stratified by region----------------------------------
 
-#-------------------------------------
-# LAZ plot - stratified by region
-#-------------------------------------
 velplot_laz_strat = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
   mutate(sex = factor(sex),
          region = ifelse(region == "Asia", "South Asia", region)) %>%
@@ -233,10 +228,8 @@ plot_laz_strat_name = create_name(
 ggsave(plot_laz_strat, file=paste0(fig_dir, "stunting/fig-",plot_laz_strat_name,".png"), width=12, height=6)
 saveRDS(velplot_laz_strat, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_strat_name,".RDS"))
 
+## LAZ plot - cohort stratified ----------------------------------
 
-#-------------------------------------
-# LAZ plot - cohort stratified
-#-------------------------------------
 velplot_laz_asia = velplot_laz_strat %>% filter(region=="South Asia")
 velplot_laz_latamer = velplot_laz_strat %>% filter(region=="Latin America")
 velplot_laz_afr = velplot_laz_strat %>% filter(region=="Africa")
@@ -303,12 +296,11 @@ saveRDS(velplot_laz_asia, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_
 saveRDS(velplot_laz_latamer, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_cohort_latamer_name,".RDS"))
 saveRDS(velplot_laz_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_cohort_afr_name,".RDS"))
 
-####################################################################################
-# length velocity plots
-####################################################################################
-#-------------------------------------
-# absolute length plot - pooled
-#-------------------------------------
+
+# Figure 5a: length velocity plots ----------------------------------------------------------------
+
+## absolute length plot - pooled ----------------------------------
+
 velplot_cm = vel %>% filter(ycat == "Length velocity (cm per month)") %>%
   dplyr::select(country_cohort, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
   mutate(sex = as.factor(sex)) %>% 
@@ -421,9 +413,8 @@ ggsave(plot_cm, file=paste0(fig_dir, "stunting/fig-",plot_cm_name,".png"),
        width=10, height=8)
 saveRDS(velplot_cm, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_name,".RDS"))
 
-#-------------------------------------
-# absolute length plot - stratified by region
-#-------------------------------------
+## absolute length plot - stratified by region ----------------------------------
+
 velplot_cm_strat = vel %>% 
   filter(ycat == "Length velocity (cm per month)") %>%
   filter(pooled==1) %>%
@@ -469,10 +460,8 @@ ggsave(plot_cm_strat, file=paste0(fig_dir, "stunting/fig-",plot_cm_strat_name,".
        width=10, height=8)
 saveRDS(velplot_cm_strat, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_strat_name,".RDS"))
 
+## absolute length plot - stratified by cohort ----------------------------------
 
-#-------------------------------------
-# absolute length plot - stratified by cohort
-#-------------------------------------
 velplot_cm_strat_cohort = vel %>% 
   filter(ycat == "Length velocity (cm per month)") %>%
   select(country_cohort, region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
@@ -554,15 +543,7 @@ saveRDS(velplot_cm_asia, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_co
 saveRDS(velplot_cm_latamer, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_cohort_latamer_name,".RDS"))
 saveRDS(velplot_cm_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_cohort_afr_name,".RDS"))
 
-
-############################################################################
-# combined LAZ and length plots
-############################################################################
-# add margin around plots
-# combined_plot = grid.arrange(plot_cm, 
-#                              arrangeGrob(plot_laz, plot_mean_laz, 
-#                                          ncol=2, nrow = 1),
-#                              heights = c(6,4))
+# combined LAZ and length plots ----------------------------------------------------------------
 
 combined_plot = grid.arrange(plot_cm, 
                              arrangeGrob(plot_laz, plot_mean_laz, 
@@ -573,10 +554,8 @@ combined_plot = grid.arrange(plot_cm,
 
 combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
                                    nrow = 3, heights = c(10, 4, 4))
+## define standardized plot names ----------------------------------
 
-#-------------------------------------
-# define standardized plot names
-#-------------------------------------
 combined_plot_name = create_name(
   outcome = "stunting",
   cutoff = 2,
@@ -597,17 +576,17 @@ combined_plot_strat_name = create_name(
   analysis = "primary"
 )
 
-#-------------------------------------
-# save overall plots together
-#-------------------------------------
+# save plots and data ----------------------------------------------------------------
+
+## save overall plots together ----------------------------------
+
 ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-", combined_plot_name,
                                   ".png"), width=12, height=6)
 ggsave(combined_plot_strat, file=paste0(fig_dir, "stunting/fig-",combined_plot_strat_name,
                                         ".png"), width=16, height=18)
 
-#-------------------------------------
-# save input data 
-#-------------------------------------
+## save input data  ----------------------------------
+
 saveRDS(
   list(
     velplot_cm = velplot_cm,
