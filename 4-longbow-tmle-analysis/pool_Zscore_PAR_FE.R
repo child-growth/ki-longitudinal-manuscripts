@@ -11,7 +11,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
 
@@ -52,4 +52,4 @@ table(is.na(RMAest_clean$intervention_variable))
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
 
 #Save cleaned data
-saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_FE.rds"))
+saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results_FE.rds"))

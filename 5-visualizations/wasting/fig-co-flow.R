@@ -111,9 +111,6 @@ bar_plot_RE_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(bar_plot_RE, file=paste0(here(),"/figures/wasting/fig-",bar_plot_RE_name,".png"), width=10, height=4)
-
-ggsave(bar_plot_RE, file=paste0(fig_dir,"/wasting/fig-",bar_plot_RE_name,".png"), width=10, height=4)
 ggsave(bar_plot_RE, file=paste0(BV_dir,"/figures/wasting/fig-",bar_plot_RE_name,".png"), width=10, height=4)
 
 

@@ -7,13 +7,14 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 require(cowplot)
 
-rain <- read.csv(here("/data/monthly_rainfall.csv"))
+rain <- read.csv(paste0(BV_dir,"/data/monthly_rainfall.csv"))
 head(rain)
 
 d <- readRDS(seasonality_data_path)
 d <- d %>% filter(measurefreq=="monthly")
 head(rain)
 head(d)
+unique(d$studyid)
 
 rain$country <- toupper(rain$country)
 rain$country[rain$country=="TANZANIA, UNITED REPUBLIC OF"]<-"TANZANIA"
@@ -174,8 +175,9 @@ for(i in 1:length(cohorts)){
 }
 
 #Save plot objects
-saveRDS(plot_list, file=paste0(here(),"/figures/plot-objects/rain_seasonality_plot_objects.rds"))
+saveRDS(plot_list, file=paste0(BV_dir,"/figures/plot-objects/rain_seasonality_plot_objects.rds"))
 
+length(plot_list)
 
 plot_grid <- plot_grid(
   plot_list[[1]], plot_list[[11]], 
@@ -190,7 +192,7 @@ plot_grid <- plot_grid(
   plot_list[[10]], plot_list[[20]], 
   labels = rep("", 20), ncol = 2, align = 'v', axis = 'l')
 
-ggsave(plot_grid, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/rain_seasonality_plot.png"), width=10, height=24)
+ggsave(plot_grid, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/rain_seasonality_plot.png"), width=10, height=24)
 
 
 

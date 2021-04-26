@@ -11,7 +11,7 @@ library(gtable)
 
 
 #Load data
-par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
+par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
 
 dim(par)
 
@@ -125,11 +125,11 @@ pPAR <- ggplot(plotdf, aes(x=RFlabel_ref)) +
 
 pPAR
 
-ggsave(pPAR, file=paste0(here::here(), "/figures/risk-factor/fig-PAR-combined.png"), height=10, width=8)
+ggsave(pPAR, file=paste0(BV_dir, "/figures/risk-factor/fig-PAR-combined.png"), height=10, width=8)
 
 
 
-saveRDS(pPAR, file=paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
+saveRDS(pPAR, file=paste0(BV_dir, "/results/rf results/rf_Zpar_plot_objects.RDS"))
 
 
 pPAR_wlz2 <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) + 
@@ -146,7 +146,7 @@ pPAR_wlz2 <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref)) +
   guides(color=FALSE, shape=FALSE)
 
 
-ggsave(pPAR_wlz2, file=paste0(here::here(), "/figures/risk-factor/fig-wlz-PAR_presentation.png"), height=6, width=8)
+ggsave(pPAR_wlz2, file=paste0(BV_dir, "/figures/risk-factor/fig-wlz-PAR_presentation.png"), height=6, width=8)
 
 
 #----------------------------------------------------------
@@ -214,7 +214,7 @@ mtab_df_wlz_tbl <- gtable_add_grob(mtab_df_wlz_tbl,
                                    t = 1, b = 1, l = 1, r = 2)
 
 #save the plots seperately 
-saveRDS(list(mtab_df_laz_tbl, mtab_df_wlz_tbl), file=paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
+saveRDS(list(mtab_df_laz_tbl, mtab_df_wlz_tbl), file=paste0(BV_dir, "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
 
 
 

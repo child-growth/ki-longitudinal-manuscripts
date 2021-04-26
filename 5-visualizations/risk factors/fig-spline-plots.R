@@ -542,7 +542,7 @@ saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot-objects
 
 #save plot data
 saveRDS(list(plotdf_wlz_mwtkg,plotdf_laz_mwtkg,plotdf_wlz_mhtcm,plotdf_laz_mhtcm,plotdf_wlz_mbmi,plotdf_laz_mbmi), 
-        file=paste0(here(),"/figures/risk-factor/figure-data/rf_spline_data.RDS"))
+        file=paste0(BV_dir,"/figures/risk-factor/figure-data/rf_spline_data.RDS"))
 
 #------------------------------------------------------------------------------------------------
 # Plot as a grid
@@ -565,13 +565,13 @@ require(cowplot)
 
 p_grid <- plot_grid(p1, p3, p2, p4, p5, p6,  labels = rep("",6), ncol = 2, align = 'v', axis = 'l')
 
-ggsave(p_grid, file=paste0(here(),"/figures/risk-factor/spline_grid.png"), width=10, height=10)
+ggsave(p_grid, file=paste0(BV_dir,"/figures/risk-factor/spline_grid.png"), width=10, height=10)
 
 
-ggsave(p1, file=paste0(here(),"/figures/risk-factor/spline_wlz_mwtkg.png"), width=10, height=5)
-ggsave(p2, file=paste0(here(),"/figures/risk-factor/spline_wlz_mhtcm.png"), width=10, height=5)
-ggsave(p3, file=paste0(here(),"/figures/risk-factor/spline_laz_mwtkg.png"), width=10, height=5)
-ggsave(p4, file=paste0(here(),"/figures/risk-factor/spline_laz_mhtcm.png"), width=10, height=5)
-ggsave(p5, file=paste0(here(),"/figures/risk-factor/spline_wlz_mbmi.png"), width=10, height=5)
-ggsave(p6, file=paste0(here(),"/figures/risk-factor/spline_laz_mbmi.png"), width=10, height=5)
+ggsave(p1, file=paste0(BV_dir,"/figures/risk-factor/spline_wlz_mwtkg.png"), width=10, height=5)
+ggsave(p2, file=paste0(BV_dir,"/figures/risk-factor/spline_wlz_mhtcm.png"), width=10, height=5)
+ggsave(p3, file=paste0(BV_dir,"/figures/risk-factor/spline_laz_mwtkg.png"), width=10, height=5)
+ggsave(p4, file=paste0(BV_dir,"/figures/risk-factor/spline_laz_mhtcm.png"), width=10, height=5)
+ggsave(p5, file=paste0(BV_dir,"/figures/risk-factor/spline_wlz_mbmi.png"), width=10, height=5)
+ggsave(p6, file=paste0(BV_dir,"/figures/risk-factor/spline_laz_mbmi.png"), width=10, height=5)
 

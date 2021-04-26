@@ -22,8 +22,9 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here(),"/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
 
-dd <- readRDS(file=here("results/KI_metadata_wasting.RDS"))
+dd <- readRDS(file=paste0(res_dir,"KI_metadata_wasting.RDS"))
 
+assert_that(all(monthly_cohorts %in%  unique(dd$studyid)))
 
 
 #-----------------------------------
@@ -354,7 +355,7 @@ awstpgrid_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(filename=here(paste0("figures/wasting/fig-",awstpgrid_name, ".pdf")),
+ggsave(filename=paste0(fig_dir,"wasting/fig-",awstpgrid_name, ".pdf"),
       plot = awstpgrid,device='pdf',width=12,height=8)
 saveRDS(list(dd = dd,
              dp = dp),

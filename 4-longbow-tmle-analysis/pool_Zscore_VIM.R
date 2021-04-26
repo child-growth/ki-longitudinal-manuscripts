@@ -137,4 +137,4 @@ table(is.na(RMAest_clean$intervention_level))
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
 
 #Save cleaned data
-saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_Zscore_VIM_results.rds"))
+saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_Zscore_VIM_results.rds"))

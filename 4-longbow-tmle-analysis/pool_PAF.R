@@ -8,7 +8,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
+d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -116,4 +116,4 @@ RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean
 
 
 # save pooled PAF's
-saveRDS(RMAest_clean, paste0(here::here(),"/results/rf results/pooled_PAF_results.rds"))
+saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds"))

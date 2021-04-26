@@ -28,6 +28,7 @@ source(paste0(here::here(), "/0-config.R"))
 #-----------------------------------
 # load the meta-data table 
 #-----------------------------------
+
 dd <- readRDS(paste0(res_dir, 'KI_metadata_stunting.RDS'))
 
 #Function source

@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
 unique(d$outcome_variable)
 d <- d %>% filter(outcome_variable %in% c("ever_stunted", "ever_wasted"),
@@ -111,9 +111,9 @@ p_ageRR <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=reorder(intervention_l
 
 print(p_ageRR)
 
-ggsave(p_ageRR, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wast.png"), height=8, width=10)
+ggsave(p_ageRR, file=paste0(BV_dir, "/figures/risk-factor/fig-age-strat-wast.png"), height=8, width=10)
 
-saveRDS(list(p_ageRR=p_ageRR, plotdf=plotdf), file = paste0(here::here(), "/results/fig-age-strat-wast-plot-objects.RDS"))
+saveRDS(list(p_ageRR=p_ageRR, plotdf=plotdf), file = paste0(BV_dir, "/results/fig-age-strat-wast-plot-objects.RDS"))
 
 
 
@@ -200,7 +200,7 @@ p_ageRR_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=reorder(interve
 
 
 #Region stratified
-ggsave(p_ageRR_Africa, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wast_Africa.png"), height=8, width=10)
-ggsave(p_ageRR_LA, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wast_LA.png"), height=8, width=10)
-ggsave(p_ageRR_SA, file=paste0(here::here(), "/figures/risk-factor/fig-age-strat-wast_SA.png"), height=8, width=10)
+ggsave(p_ageRR_Africa, file=paste0(BV_dir, "/figures/risk-factor/fig-age-strat-wast_Africa.png"), height=8, width=10)
+ggsave(p_ageRR_LA, file=paste0(BV_dir, "/figures/risk-factor/fig-age-strat-wast_LA.png"), height=8, width=10)
+ggsave(p_ageRR_SA, file=paste0(BV_dir, "/figures/risk-factor/fig-age-strat-wast_SA.png"), height=8, width=10)
 

@@ -8,16 +8,16 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load longbow results
-results <- readRDS(here("results","rf results","longbow results","seasonality_results.RDS"))
+results <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/seasonality_results.RDS"))
 
 
 
 #Load cohort Ns
-cohort_Ns <- readRDS(paste0(here(),"/results/seasonTMLE_Ns.rds")) 
+cohort_Ns <- readRDS(paste0(BV_dir,"/results/seasonTMLE_Ns.rds")) 
 cohort_Ns$country <- str_to_title(cohort_Ns$country)
 
 #Load seasonality index and prep for merge
-rain <- readRDS(here("/data/cohort_rain_data.rds"))
+rain <- readRDS(paste0(BV_dir,"/data/cohort_rain_data.rds"))
 rain <- rain %>% subset(., select = c(studyid, country, cohort_index)) %>% 
   rename(season_index = cohort_index) %>%
   arrange(season_index) %>%
@@ -113,8 +113,8 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
 
 print(p_seasonRR)
 
-saveRDS(p_seasonRR, file = here("/figures/plot-objects/season_RR_plot.rds"))
-ggsave(p_seasonRR, file=paste0(here::here(),"/figures/wasting/season_wlz_diff.png"), width=7, height=6)
+saveRDS(p_seasonRR, file = paste0(BV_dir,"/figures/plot-objects/season_RR_plot.rds"))
+ggsave(p_seasonRR, file=paste0(BV_dir,"/figures/wasting/season_wlz_diff.png"), width=7, height=6)
 
 
 

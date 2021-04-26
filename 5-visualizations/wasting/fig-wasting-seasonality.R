@@ -58,7 +58,7 @@ p1_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p1, file=paste0(here(),"/figures/wasting/fig-",p1_name,".png"), width=6, height=3)
+ggsave(p1, file=paste0(BV_dir,"/figures/wasting/fig-",p1_name,".png"), width=6, height=3)
 
 
 
@@ -100,8 +100,8 @@ p2_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p2, file=paste0(here(),"/figures/wasting/fig-",p2_name,".png"), width=6, height=3)
-ggsave(p2, file=paste0(here(),"/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
+ggsave(p2, file=paste0(BV_dir,"/figures/wasting/fig-",p2_name,".png"), width=6, height=3)
+ggsave(p2, file=paste0(BV_dir,"/figures/wasting/fig-",p2_name,"_V2.png"), width = 6, height = 5.2)
 
 
 
@@ -207,7 +207,7 @@ p3 <- ggplot() +
 
 
 # save plot and underlying data
-ggsave(p3, file=paste0(here(),"/figures/wasting/fig-birthmont-strat-seasonality-by-month.png"), width=8, height=5)
+ggsave(p3, file=paste0(BV_dir,"/figures/wasting/fig-birthmont-strat-seasonality-by-month.png"), width=8, height=5)
 
 
 
@@ -231,10 +231,10 @@ p4 <- ggplot() +
         legend.text=element_text(size=rel(1)))
 
 # save plot and underlying data
-ggsave(p4, file=paste0(here(),"/figures/wasting/fig-birthmont-strat-seasonality-by-age.png"), width=8, height=5)
+ggsave(p4, file=paste0(BV_dir,"/figures/wasting/fig-birthmont-strat-seasonality-by-age.png"), width=8, height=5)
 
 
 #Save plot-objects
-saveRDS(list(p1, p2, p3, p4), file=here("figures/plot-objects/season_plots.rds"))
+saveRDS(list(p1, p2, p3, p4), file=paste0(BV_dir,"/figures/plot-objects/season_plots.rds"))
 
 

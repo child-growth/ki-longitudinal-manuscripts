@@ -1,10 +1,10 @@
 
 rm(list=ls())
-source(paste0(here::here(), "/0-config.R"))
+source(here("/0-config.R"))
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
-quantiles <- readRDS(paste0(here::here(),"/results/quantile_data_wasting.RDS"))
+d <- readRDS(here("/results/desc_data_cleaned.rds"))
+quantiles <- readRDS(here("/results/quantile_data_wasting.RDS"))
 
 #Subset to primary analysis
 d <- d %>% mutate(pooling=ifelse(cohort=="pooled" & is.na(pooling),region,pooling)) %>%
@@ -166,7 +166,7 @@ mean_wlz_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(mean_wlz_plot, file=paste0(here::here(),"/figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=3)
+ggsave(mean_wlz_plot, file=paste0(BV_dir,"/figures/wasting/fig-",mean_wlz_plot_name,".png"), width=14, height=3)
 saveRDS(df, file=paste0(figdata_dir_wasting,"figdata-",mean_wlz_plot_name,".RDS"))
 
 
@@ -235,17 +235,17 @@ prev_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(prev_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
-ggsave(prev_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_africa", ".png"), width=10, height=5)
-ggsave(prev_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
-ggsave(prev_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
+ggsave(prev_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
+ggsave(prev_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_africa", ".png"), width=10, height=5)
+ggsave(prev_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
+ggsave(prev_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
 
 saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",prev_plot_name,".RDS"))
 
 
 prev_plot[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 
-#ggsave(prev_plot[[1]] + ggtitle("Wasting prevalence"), file=paste0(here::here(),"/figures/wasting/fig-",prev_plot_name, "_presentation.png"), width=13, height=3)
+#ggsave(prev_plot[[1]] + ggtitle("Wasting prevalence"), file=paste0(BV_dir,"/figures/wasting/fig-",prev_plot_name, "_presentation.png"), width=13, height=3)
 
 
 #-------------------------------------------------------------------------------------------
@@ -272,12 +272,12 @@ ip_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ip_plot_primary[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ip_plot_name, ".png"), width=14, height=3)
+ggsave(ip_plot_primary[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",ip_plot_name, ".png"), width=14, height=3)
 
 saveRDS(ip_plot_primary[[2]], file=paste0(figdata_dir_wasting,"figdata-",ip_plot_name,".RDS"))
 
 #Save plot-objects for figure grid
-saveRDS(list(mean_wlz_plot, prev_plot, ip_plot_primary), file=paste0(here::here(),"/figures/plot-objects/fig2_plot_objects.rds"))
+saveRDS(list(mean_wlz_plot, prev_plot, ip_plot_primary), file=paste0(BV_dir,"/figures/plot-objects/fig2_plot_objects.rds"))
 
 ip_plot_primary[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 ip_plot_primary[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
@@ -311,11 +311,11 @@ ip_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ip_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ip_plot_name, "_birthstrat.png"), width=14, height=3)
+ggsave(ip_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",ip_plot_name, "_birthstrat.png"), width=14, height=3)
 
 saveRDS(ip_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ip_plot_name,"_birthstrat.RDS"))
 
-#ggsave(ci_plot[[1]] + ggtitle("Wasting incidence"), file=paste0(here::here(),"/figures/wasting/fig-",ci_plot_name, "_birthstrat_presentation.png"), width=13, height=3)
+#ggsave(ci_plot[[1]] + ggtitle("Wasting incidence"), file=paste0(BV_dir,"/figures/wasting/fig-",ci_plot_name, "_birthstrat_presentation.png"), width=13, height=3)
 
 
 
@@ -426,48 +426,48 @@ inc_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(inc_plot_primary$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
+ggsave(inc_plot_primary$plot, file=paste0(BV_dir,"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
 
 saveRDS(inc_plot_primary$data, file=paste0(figdata_dir_wasting,"figdata-",inc_plot_name,".RDS"))
-saveRDS(inc_plot_primary, file=paste0(here::here(),"/figures/plot-objects/inc_plot_object.rds"))
+saveRDS(inc_plot_primary, file=paste0(BV_dir,"/figures/plot-objects/inc_plot_object.rds"))
 
 inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 
-
-#-------------------------------------------------------------------------------------------
-# Wasting incidence proportion
-#-------------------------------------------------------------------------------------------
-
-#duplicate of ip_plot (l. 292) - not updated
-inc_plot <- ip_plot(
-  d,
-  Disease = "Wasting",
-  Measure = "Incidence proportion",
-  Birth = "yes",
-  Severe = "no",
-  Age_range = "3 months",
-  Cohort = "pooled",
-  xlabel = "Child age, months",
-  h1 = 85,
-  h2 = 90,
-  returnData = T
-)
-inc_plot
-
-
-# define standardized plot names
-inc_plot_name = create_name(
-  outcome = "wasting",
-  cutoff = 2,
-  measure = "incidence only",
-  population = "overall and region-stratified",
-  location = "",
-  age = "All ages",
-  analysis = "primary"
-)
-
-# save plot and underlying data
-ggsave(inc_plot$plot, file=paste0(here::here(),"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
+# 
+# #-------------------------------------------------------------------------------------------
+# # Wasting incidence proportion
+# #-------------------------------------------------------------------------------------------
+# 
+# #duplicate of ip_plot (l. 292) - not updated
+# inc_plot <- ip_plot(
+#   d,
+#   Disease = "Wasting",
+#   Measure = "Incidence proportion",
+#   Birth = "yes",
+#   Severe = "no",
+#   Age_range = "3 months",
+#   Cohort = "pooled",
+#   xlabel = "Child age, months",
+#   h1 = 85,
+#   h2 = 90,
+#   returnData = T
+# )
+# inc_plot
+# 
+# 
+# # define standardized plot names
+# inc_plot_name = create_name(
+#   outcome = "wasting",
+#   cutoff = 2,
+#   measure = "incidence only",
+#   population = "overall and region-stratified",
+#   location = "",
+#   age = "All ages",
+#   analysis = "primary"
+# )
+# 
+# # save plot and underlying data
+# ggsave(inc_plot$plot, file=paste0(BV_dir,"/figures/wasting/fig-",inc_plot_name,".png"), width=14, height=4.5)
 
 
 #-------------------------------------------------------------------------------------------
@@ -598,10 +598,10 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(rec_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=4.5)
+ggsave(rec_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",rec_plot_name, ".png"), width=14, height=4.5)
 saveRDS(rec_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",rec_plot_name,".RDS"))
 
-saveRDS(rec_plot, file=paste0(here::here(),"/figures/plot-objects/rec_plot_object.rds"))
+saveRDS(rec_plot, file=paste0(BV_dir,"/figures/plot-objects/rec_plot_object.rds"))
 
 rec_plot[[2]] %>% filter(region=="Overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 
@@ -653,7 +653,7 @@ rec_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(p, file=paste0(here::here(),"/figures/wasting/fig-",rec_plot_name, ".png"), width=8, height=5)
+ggsave(p, file=paste0(BV_dir,"/figures/wasting/fig-",rec_plot_name, ".png"), width=8, height=5)
 
 saveRDS(df, file=paste0(figdata_dir_wasting,"figdata-",rec_plot_name,".RDS"))
 
@@ -724,11 +724,11 @@ perswast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(perswast_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",perswast_plot_name, ".png"), width=8, height=5)
+ggsave(perswast_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",perswast_plot_name, ".png"), width=8, height=5)
 
-ggsave(perswast_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","perswast_plot_africa", ".png"), width=10, height=5)
-ggsave(perswast_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","perswast_plot_lam", ".png"), width=10, height=5)
-ggsave(perswast_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=10, height=5)
+ggsave(perswast_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_africa", ".png"), width=10, height=5)
+ggsave(perswast_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_lam", ".png"), width=10, height=5)
+ggsave(perswast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=10, height=5)
 
 saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_plot_name,".RDS"))
 
@@ -801,14 +801,14 @@ co_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
-ggsave(co_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_plot_africa", ".png"), width=10, height=5)
-ggsave(co_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_plot_lam", ".png"), width=10, height=5)
-ggsave(co_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","co_plot_sasia", ".png"), width=10, height=5)
+ggsave(co_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
+ggsave(co_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_africa", ".png"), width=10, height=5)
+ggsave(co_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_lam", ".png"), width=10, height=5)
+ggsave(co_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_sasia", ".png"), width=10, height=5)
 
 saveRDS(co_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",co_plot_name,".RDS"))
 
-saveRDS(co_plot, file=paste0(here::here(),"/figures/plot-objects/co_plot_object.rds"))
+saveRDS(co_plot, file=paste0(BV_dir,"/figures/plot-objects/co_plot_object.rds"))
 
 
 #-------------------------------------------------------------------------------------------
@@ -873,10 +873,10 @@ underweight_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(underweight_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",underweight_plot_name, ".png"), width=14, height=3)
-ggsave(underweight_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","underweight_plot_africa", ".png"), width=10, height=5)
-ggsave(underweight_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","underweight_plot_lam", ".png"), width=10, height=5)
-ggsave(underweight_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=10, height=5)
+ggsave(underweight_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",underweight_plot_name, ".png"), width=14, height=3)
+ggsave(underweight_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_africa", ".png"), width=10, height=5)
+ggsave(underweight_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_lam", ".png"), width=10, height=5)
+ggsave(underweight_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=10, height=5)
 
 saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",underweight_plot_name,".RDS"))
 
@@ -984,7 +984,7 @@ muac_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(muac_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",muac_plot_name, ".png"), width=14, height=5)
+ggsave(muac_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",muac_plot_name, ".png"), width=14, height=5)
 
 saveRDS(muac_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",muac_plot_name,".RDS"))
 
@@ -992,7 +992,7 @@ saveRDS(muac_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",muac_plot_nam
 # Comparison of washout period for incidence rate.
 #-------------------------------------------------------------------------------------------
 
-d.ir<-readRDS(paste0(here::here(),"/results/wast_ir_sens_data.rds"))
+d.ir<-readRDS(paste0(BV_dir,"/results/wast_ir_sens_data.rds"))
 
 
 ir_sens_plot <- rec_combo_plot(d.ir,
@@ -1019,7 +1019,7 @@ ir_sens_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(ir_sens_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",ir_sens_plot_name, ".png"), width=14, height=5)
+ggsave(ir_sens_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",ir_sens_plot_name, ".png"), width=14, height=5)
 
 saveRDS(ir_sens_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ir_sens_plot_name,".RDS"))
 
@@ -1092,10 +1092,10 @@ sevwast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
-ggsave(sevwast_plot_africa$plot, file=paste0(here::here(),"/figures/wasting/fig-","sevwast_plot_africa", ".png"), width=10, height=5)
-ggsave(sevwast_plot_lam$plot, file=paste0(here::here(),"/figures/wasting/fig-","sevwast_plot_lam", ".png"), width=10, height=5)
-ggsave(sevwast_plot_sasia$plot, file=paste0(here::here(),"/figures/wasting/fig-","sevwast_plot_sasia", ".png"), width=10, height=5)
+ggsave(sevwast_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
+ggsave(sevwast_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_africa", ".png"), width=10, height=5)
+ggsave(sevwast_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_lam", ".png"), width=10, height=5)
+ggsave(sevwast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_sasia", ".png"), width=10, height=5)
 
 
 saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",sevwast_plot_name,".RDS"))
@@ -1105,7 +1105,7 @@ saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",sevwast_pl
 
 #Get N's for figure captions
 prev_plot[[2]] %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
-ci_plot_primary[[2]] %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
+#ci_plot_primary[[2]] %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
 inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 rec_plot[[2]]%>% group_by(region) %>% filter(age_range=="90 days") %>% summarize(min(nmeas), max(nmeas), sum(nmeas))
 co_plot[[2]]%>% group_by(region) %>% summarize(min(nmeas), max(nmeas))

@@ -6,25 +6,24 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores<- Zscores_unadj<- Zscores_waz<- bin<-bin_other<-bin_unadj<- mort<- lagwhz <-velocity <- velocity_wlz_quart <- season <- NULL
 
-Zscores <- readRDS(here("results/rf results/longbow results/results_cont.RDS"))
+Zscores <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 dim(Zscores)
 
-bin_primary <- readRDS(here("results/rf results/longbow results/results_bin_primary.RDS"))
+bin_primary <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_primary.RDS"))
 table(bin_primary$intervention_variable, bin_primary$agecat)
 
-bin_other <- readRDS(here("results/rf results/longbow results/results_bin_other.rds"))
-# bin_sub <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-19.rds"))
-# bin_sub2 <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-20.rds"))
-# bin_sub3 <- readRDS(here("results/rf results/longbow results/results_bin_sub_2020-05-20_part2.rds"))
+bin_other <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_other.RDS"))
+# bin_sub <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_sub_2020-05-19.RDS"))
+# bin_sub2 <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_sub_2020-05-20.RDS"))
+# bin_sub3 <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_sub_2020-05-20_part2.RDS"))
 # bin <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
 # bin <- bin %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
 #                                     "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
 #                          .keep_all=TRUE)
 # dim(bin)
-bin_other <- anti_join(bin, bin_primary, by = c("agecat", "studyid", "country", "strata_label", "intervention_variable",
-                                                "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
-#temp
-bin_other <- NULL
+# bin_other <- anti_join(bin, bin_primary, by = c("agecat", "studyid", "country", "strata_label", "intervention_variable",
+#                                                 "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
+
 
 dim(bin_primary)
 dim(bin_other) 
@@ -32,31 +31,31 @@ nrow(bin_primary) + nrow(bin_other)
 bin <- rbind(bin_primary, bin_other)
 
 
-Zscores_unadj <- readRDS(here("results/rf results/longbow results/results_cont_unadj.rds"))
+Zscores_unadj <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_unadj.RDS"))
 
-bin_unadj <- readRDS(here("results/rf results/longbow results/results_bin_unadj.rds"))
+bin_unadj <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_unadj.RDS"))
 
-velocity_wlz_quart <- readRDS(here("results/rf results/longbow results/velocity_wlz_quart.RDS"))
+velocity_wlz_quart <- readRDS(paste0(res_dir, "rf results/longbow results/velocity_wlz_quart.RDS"))
 velocity_wlz_quart$agecat <- as.character(velocity_wlz_quart$agecat)
 velocity_wlz_quart$agecat[is.na(velocity_wlz_quart$agecat)] <- "Unstratified"
 
-stunt_bin_wlz_quart <- readRDS(here("results/rf results/longbow results/stunt_bin_wlz_quart.RDS"))
+stunt_bin_wlz_quart <- readRDS(paste0(res_dir, "rf results/longbow results/stunt_bin_wlz_quart.RDS"))
 stunt_bin_wlz_quart$agecat <- as.character(stunt_bin_wlz_quart$agecat)
 stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 
 
-# results <- readRDS(here("results/rf results/longbow results/results_vel_2020-05-22.RDS"))   
-# results_2 <- readRDS(here("results/rf results/longbow results/results_vel_sub_2020-05-23.RDS"))   
-# results_3 <- readRDS(here("results/rf results/longbow results/results_vel_sub_2020-05-26.RDS"))   
+# results <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel_2020-05-22.RDS"))   
+# results_2 <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel_sub_2020-05-23.RDS"))   
+# results_3 <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel_sub_2020-05-26.RDS"))   
 # velocity <- bind_rows(results, results_2, results_3)
-velocity <- readRDS(here("results/rf results/longbow results/results_vel.RDS"))   
+velocity <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel.RDS"))   
 #NEED to add estimates that previously failed to run
   
-season <-  readRDS(here("results","rf results","longbow results","seasonality_results.RDS"))
+season <-  readRDS(paste0(res_dir, "rf results/longbow results/seasonality_results.RDS"))
 
-season_cont_rf <- readRDS(here("results","rf results","longbow results","season_cont_rf_results.RDS"))
+season_cont_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_cont_rf_results.RDS"))
 
-season_bin_rf <- readRDS(here("results","rf results","longbow results","season_bin_rf_results.RDS"))
+season_bin_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_bin_rf_results.RDS"))
 
 
 d <- bind_rows(Zscores, Zscores_unadj, bin, 
@@ -109,9 +108,9 @@ d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3",
 #----------------------------------------------------------
 # Merge in Ns
 #----------------------------------------------------------
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/stunting_rf_Ns_sub.rdata")
+load(paste0(res_dir,"stunting_rf_Ns_sub.rdata"))
 N_sums_bin <- N_sums %>% mutate(continuous = 0)
-load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/continuous_rf_Ns_sub.rdata")
+load(paste0(res_dir,"continuous_rf_Ns_sub.rdata"))
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
@@ -130,10 +129,10 @@ df <- d[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months",]
 df[is.na(df$n) & !is.na(df$estimate),]
 
 #drop estimates from rare cells
-load(here("results/stunting_rf_Ns.rdata"))
+load(paste0(res_dir, "stunting_rf_Ns.rdata"))
 rare_strat <- Ndf_Ystrat %>% group_by(studyid, country, agecat, outcome_variable, intervention_variable) %>%
               mutate(min_n_cell =  min(n_cell)) %>%
-              select(studyid, country, agecat, outcome_variable, intervention_variable, min_n_cell)
+              subset(., select=c(studyid, country, agecat, outcome_variable, intervention_variable, min_n_cell))
 
 d <- left_join(d, rare_strat, by = c("studyid", "country", "agecat", "outcome_variable", "intervention_variable")) %>% distinct(.)
 d <- d %>% filter(is.na(min_n_cell) | min_n_cell>=5)
@@ -178,8 +177,8 @@ d_adj <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | interven
 d_unadj <- d %>% filter(adjusted==0)
 
 
-saveRDS(d_adj, paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-saveRDS(d_unadj, paste0(here::here(),"/results/rf results/full_RF_unadj_results.rds"))
+saveRDS(d_adj, paste0(res_dir,"rf results/full_RF_results.RDS"))
+saveRDS(d_unadj, paste0(res_dir,"rf results/full_RF_unadj_results.RDS"))
 
 
 

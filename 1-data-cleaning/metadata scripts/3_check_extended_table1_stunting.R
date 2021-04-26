@@ -31,6 +31,6 @@ wast_tab1 <- wast %>% filter(agedays < 24 * 30.4167) %>%
   as.data.frame()
 wast_tab1
 
-saveRDS(cc_tab1, file=here("/results/cc_table1.rds"))
-saveRDS(stunt_tab1, file=here("/results/stunt_table1.rds"))
-saveRDS(wast_tab1, file=here("/results/wast_table1.rds"))
+saveRDS(cc_tab1, file=paste0(BV_dir,"/results/cc_table1.rds"))
+saveRDS(stunt_tab1, file=paste0(BV_dir,"/results/stunt_table1.rds"))
+saveRDS(wast_tab1, file=paste0(BV_dir,"/results/wast_table1.rds"))

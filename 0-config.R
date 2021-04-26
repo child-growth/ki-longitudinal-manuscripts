@@ -96,8 +96,9 @@ deriveddata_dir                   = paste0(ghapdata_dir, "covariate creation int
 # figdata_dir_wasting               = paste0(here::here(),"/figures/wasting/figure-data/")
 BV_dir                           = "/data/KI/ki-manuscript-output"
 fig_dir                           = "/data/KI/ki-manuscript-output/figures/"
-figdata_dir_stunting              = paste0(fig_dir,"stunting/figure-data")
-figdata_dir_wasting               = paste0(fig_dir,"wasting/figure-data")
+figdata_dir_stunting              = paste0(fig_dir,"stunting/figure-data/")
+figdata_dir_wasting               = paste0(fig_dir,"wasting/figure-data/")
+
 
 #################################
 # Data Cleaning Scripts
@@ -148,20 +149,23 @@ theme_set(theme_ki())
 
 
 #list of monthy and monthly+quarterly cohorts
-monthly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Peru89",
-                     "CMIN Bangladesh93","CONTENT",          "EE",
-                     "GMS-Nepal",        "Guatemala BSC",    "IRC",
-                     "Keneba",           "MAL-ED", "PROVIDE" , "ResPak",
+monthly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Peru89",     
+                     "CMIN Bangladesh93","CONTENT",          "EE",              
+                     "GMS-Nepal",        "Guatemala BSC",    "IRC",             
+                     "Keneba",           "MAL-ED", "PROVIDE" , "ResPak",          
                      "TanzaniaChild2",   "TDC")
-monthly_and_quarterly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Brazil89",
+
+
+monthly_and_quarterly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Brazil89",   
                                    "CMIN GB94",        "CMIN Peru89",      "CMIN Bangladesh93",
-                                   "CONTENT",          "EE",               "GMS-Nepal",
-                                   "Guatemala BSC",    "iLiNS-Zinc",       "IRC",
-                                   "JiVitA-3",         "JiVitA-4",         "Keneba",
-                                   "LCNI-5",           "MAL-ED",           "PROBIT",
-                                   "ResPak",           "SAS-CompFeed",     "SAS-FoodSuppl",
+                                   "CONTENT",          "EE",               "GMS-Nepal",       
+                                   "Guatemala BSC",    "iLiNS-Zinc",       "IRC",             
+                                   "JiVitA-3",         "JiVitA-4",         "Keneba",          
+                                   "LCNI-5",           "MAL-ED",           "PROBIT",          
+                                   "ResPak",           "SAS-CompFeed",     "SAS-FoodSuppl",   
                                    "TanzaniaChild2",   "ZVITAMBO",         "TDC", "NIH-Birth",
                                    "NIH-Crypto", "PROVIDE"      )
+
 
 
 
