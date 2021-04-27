@@ -9,11 +9,6 @@
 # WHO_linear_growth_velocity_standard.RDS
 
 # outputs: 
-# overall plots: 
-#   fig-stunt-2-vel-overall--allage-primary.png
-#   fig-laz-2-length_vel-overall--allage-primary.png
-#   fig-laz-2-laz_vel-overall--allage-primary.png
-
 # region-stratified plots:
 #   fig-stunt-2-vel-region--allage-primary.png
 #   fig-laz-2-length_vel-region--allage-primary.png
