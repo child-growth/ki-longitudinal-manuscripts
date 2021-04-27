@@ -39,7 +39,6 @@ vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
 meanlaz = readRDS(paste0(res_dir, "stunting/meanlaz_velocityREML.RDS"))
 
-
 # load who standard
 who_cm = readRDS(paste0(res_dir, "/WHO_linear_growth_velocity_standard.RDS"))
 
@@ -89,6 +88,9 @@ vel_n = vel %>%
             max_n = max(N, na.rm=TRUE))
 vel_n
 
+#Our transformation function
+scaleFUN <- function(x) sprintf("%0.1f", x)
+
 # Figure 5c: mean LAZ plots ----------------------------------------------------------------
 
 ## mean LAZ plot - pooled ----------------------------------
@@ -116,7 +118,7 @@ plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall")
   scale_color_manual("Child sex", values = mypalette) + 
   scale_y_continuous(limits = c(-3, 0.5),
                      breaks = seq(-3,0.5, 0.5),
-                     labels = seq(-3, 0.5, 0.5)) +
+                     labels = scaleFUN) +
   xlab("Child age, months") + 
   ylab("Mean length-for\n-age Z-score") +
   ggtitle("c\n")+
@@ -173,7 +175,7 @@ plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y
   
   scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.62,0.28), breaks=seq(-0.6,0.3,0.1),
-                     labels=round(seq(-0.6,0.3,0.1),1)) +
+                     labels = scaleFUN) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
@@ -365,7 +367,6 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
              "25th percentile", 
              "15th percentile"
   )) +
-  # scale_size_manual("WHO Growth\nVelocity Standards", values = c(1, 0.4, 0.4), guide=F) +
   scale_color_manual("WHO Growth\nVelocity Standards", values = c("black" = "black",
                                                                   "male_color" = mypalette[2],
                                                                   "female_color" = mypalette[1], 
@@ -375,7 +376,7 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
                                                                   "female_color2" = mypalette[1], 
                                                                   "male_color2" = mypalette[2])) +
   
-  scale_y_continuous(limits=c(0,4), breaks=seq(0,4,0.5), labels=seq(0,4,0.5)) +
+  scale_y_continuous(limits=c(0,4), breaks=seq(0,4,0.5), labels = scaleFUN) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month\n")+
   facet_wrap( ~ sex) +
