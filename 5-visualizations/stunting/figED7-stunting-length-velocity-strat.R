@@ -168,8 +168,8 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y = length_cm, x = strata))+
                                                                   "male_color2" = mypalette[2],
                                                                   "female_color2" = mypalette[1], 
                                                                   "male_color2" = mypalette[2])) +
-  scale_y_continuous(limits=c(0.5,3.875), breaks=seq(0.5,3.875,0.25), 
-                     labels=seq(0.5,3.875,0.25)) +
+  scale_y_continuous(limits=c(0.25,4), breaks=seq(0.4,4,0.2),
+                     labels=scaleFUN) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month")+
   facet_grid( sex~ region) +
@@ -288,14 +288,35 @@ saveRDS(velplot_cm_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_coh
 velplot_laz_strat = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
   mutate(sex = factor(sex),
          region = ifelse(region == "Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
+  filter(region!="Overall") %>% 
+  mutate(region = factor(region, levels=c( "Africa", "Latin America", "South Asia"))) %>% 
+  # drop european cohort
+  filter(country_cohort != "Probit Belarus") %>% 
+    filter(region!="Overall")
 
-plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=strata))+
-  geom_point(aes(fill=sex, color=sex), size = 2, position = position_dodge(width=0.5)) +
-  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
+# impute missing region
+velplot_laz_strat$region[velplot_laz_strat$country_cohort=="Mal-ed Tanzania"] = "Africa"
+velplot_laz_strat$region[velplot_laz_strat$country_cohort=="Tanzaniachild2 Tanzania"] = "Africa"
+
+
+plot_laz_strat <- ggplot(velplot_laz_strat, aes(y=Mean,x=strata))+
+  
+  # cohort point estimates
+  geom_point(data = velplot_laz_strat  %>% filter(pooled==0),
+             aes(fill=sex, color=sex), size = 1,             
+             position = position_jitterdodge(dodge.width = 0.5), alpha =0.18)  +
+  
+  # region pooled point estimates
+  geom_point(data = velplot_laz_strat  %>% filter(pooled==1),
+             aes(fill=sex, color=sex), size = 2, position = position_dodge(width=0.5)) +
+  
+  # region pooled CIs
+  geom_linerange(data = velplot_laz_strat  %>% filter(pooled==1),
+                 aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
                  position = position_dodge(width=0.5), size=1.25) +
+  
   scale_color_manual(values=mypalette)+  
-  scale_y_continuous(limits=c(-0.55,0.3), breaks=seq(-0.5,0.3,0.1), labels=seq(-0.5,0.3,0.1)) +
+  scale_y_continuous(limits=c(-0.45,0.3), breaks=seq(-0.4,0.3,0.1), labels=seq(-0.4,0.3,0.1)) +
   xlab("Child age, months") +  
   ylab("Difference in length-for-age\nZ-score per month")+
   geom_hline(yintercept = -0) +
@@ -306,6 +327,7 @@ plot_laz_strat <- ggplot(velplot_laz_strat %>% filter(pooled==1), aes(y=Mean,x=s
         axis.title.x = element_text(size=20),
         axis.title.y = element_text(size=20))
 
+plot_laz_strat
 
 # define standardized plot names
 plot_laz_strat_name = create_name(
