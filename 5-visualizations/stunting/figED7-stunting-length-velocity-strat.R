@@ -90,24 +90,84 @@ scaleFUN <- function(x) sprintf("%0.1f", x)
 
 ## absolute length plot - stratified by region ----------------------------------
 
-velplot_cm_strat = vel %>% 
+velplot_cm = vel %>% 
   filter(ycat == "Length velocity (cm per month)") %>%
-  filter(pooled==1) %>%
-  dplyr::select(region, Mean, `Lower.95.CI`, `Upper.95.CI`, strata, sex, pct_50, pct_25, pct_15) %>%
+  dplyr::select(country_cohort, region, pooled, Mean, `Lower.95.CI`, `Upper.95.CI`, 
+                strata, sex, pct_50, pct_25, pct_15) %>%
   mutate(sex = as.factor(sex),
          region = ifelse(region == "Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia")))
+  mutate(region = factor(region, levels=c("Overall", "Africa", "Latin America", "South Asia"))) 
 
-plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
-  # geom_point(aes(color=sex), size = 3) +
-  geom_line(aes(y=Mean, group=sex, col=sex), size = 1.1) +
-  geom_line(aes(y=pct_50, group=sex), size = 1.1) +
-  geom_line(aes(y=pct_25, group=sex), linetype="dashed", size = 1.1) +
-  geom_line(aes(y=pct_15, group=sex), linetype="dotted", size = 1.1) +
+velplot_cm_strat = velplot_cm %>% 
+  filter(pooled==1) %>% 
+  filter(region!="Overall") %>% 
+  dplyr::select(-c(country_cohort, pooled)) %>% 
+  gather(`pct_15`, `pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>%
+  mutate(msmt_type = factor(msmt_type, levels = c("pct_50", "pct_25", "Mean"))) %>% 
+  mutate(linecol = ifelse(msmt_type != "Mean", "black", 
+                          ifelse(sex == "Male", "male_color", "female_color")), 
+         sexcol = ifelse(sex == "Male", "male_color2", "female_color2"))
   
-  geom_linerange(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 size=1.1) +
-  scale_color_manual(values=mypalette)+  
+velplot_cm_cohort_data = velplot_cm %>% 
+  dplyr::select(country_cohort, region, Mean, 
+                strata, sex, pct_50, pct_25, pct_15) %>%
+  gather(`pct_15`, `pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>%
+    filter(
+      country_cohort != "Pooled - All" &
+        country_cohort != "Pooled - Asia" &
+        country_cohort != "Pooled - Africa" &
+        country_cohort != "Pooled - Amer." &
+        msmt_type == "Mean"
+    ) %>%
+  mutate(region = as.character(region)) %>% 
+  mutate(msmt_type = factor(msmt_type, levels = c("pct_50", "pct_25", "Mean"))) %>% 
+  mutate(linecol = ifelse(msmt_type != "Mean", "black", 
+                          ifelse(sex == "Male", "male_color", "female_color")), 
+         sexcol = ifelse(sex == "Male", "male_color2", "female_color2")) %>% 
+  # drop european cohort
+  filter(country_cohort != "Probit Belarus") %>% 
+  filter(region!="Overall")
+
+# impute missing region
+velplot_cm_cohort_data$region[velplot_cm_cohort_data$country_cohort=="Mal-ed Tanzania"] = "Africa"
+velplot_cm_cohort_data$region[velplot_cm_cohort_data$country_cohort=="Tanzaniachild2 Tanzania"] = "Africa"
+
+velplot_cm_cohort_data = velplot_cm_cohort_data %>% 
+  mutate(region = factor(region, levels = c("Africa", "Latin America", "South Asia")))
+
+plot_cm_strat <- ggplot(velplot_cm_strat, aes(y = length_cm, x = strata))+
+  
+  # cohort-specific lines
+  geom_line(data = velplot_cm_cohort_data %>% filter(region!="Europe"), 
+            aes(group = country_cohort),
+            alpha=0.18) +
+
+  
+  # WHO standard lines
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
+                linetype = msmt_type),
+            data = velplot_cm_strat %>%  filter(
+                                            msmt_type=="pct_25"|
+                                            msmt_type=="pct_50"),
+            size = 0.4) +
+  
+  # ki pooled lines
+  geom_line(aes(y = length_cm, group = msmt_type, color = linecol),
+            data = velplot_cm_strat %>%  filter( msmt_type=="Mean"),
+            size = 0.8) +
+
+  # confidence intervals
+  geom_errorbar(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
+                alpha=0.5, size=0.8, width=0.15) +
+
+    scale_color_manual("WHO Growth\nVelocity Standards", values = c("black" = "black",
+                                                                  "male_color" = mypalette[2],
+                                                                  "female_color" = mypalette[1], 
+                                                                  "male_color" = "male_color", 
+                                                                  "female_color2" = mypalette[1], 
+                                                                  "male_color2" = mypalette[2],
+                                                                  "female_color2" = mypalette[1], 
+                                                                  "male_color2" = mypalette[2])) +
   scale_y_continuous(limits=c(0.5,3.875), breaks=seq(0.5,3.875,0.25), 
                      labels=seq(0.5,3.875,0.25)) +
   xlab("Child age, months") +  
@@ -119,6 +179,8 @@ plot_cm_strat <- ggplot(velplot_cm_strat, aes(y=Mean,x=strata))+
         strip.text.y = element_text(size=20),
         axis.title.x = element_text(size=20),
         axis.title.y = element_text(size=20))
+
+plot_cm_strat
 
 # define standardized plot names
 plot_cm_strat_name = create_name(
