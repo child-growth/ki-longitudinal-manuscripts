@@ -31,14 +31,14 @@ clean_agecat<-function(agecat){
 
 
 #Load data
-dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.RDS"))
 
 
 unique(dfull$type)
 d <- dfull %>% filter(type=="RR", adjusted==1)
 
-#keep only morbidity and mortality analysis
-d <- d %>% filter(outcome_variable=="dead" | outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
+#keep only morbidity analysis
+d <- d %>% filter( outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
 
 table(d$outcome_variable)
 d <- droplevels(d)

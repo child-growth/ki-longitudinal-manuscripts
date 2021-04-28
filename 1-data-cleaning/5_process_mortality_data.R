@@ -14,6 +14,15 @@ gc()
 d <- subset(dfull, select= c(studyid, country, subjid, agedays, dead, agedth, causedth, haz, waz))
 gc()
 
+#Studies missing any death data
+dmiss <- d %>% group_by(studyid, country) %>% mutate(Ntot=n(), Ndeath=sum(dead, na.rm=T)) %>%
+  filter(Ndeath==0 & is.na(agedth) & causedth=="") %>%
+  mutate(Nno_death=n()) %>%
+  filter(Ntot==Nno_death)
+head(dmiss)
+unique(paste0(dmiss$studyid," ", dmiss$country))
+
+table(dmiss$studyid, dmiss$Ndeath)
 
 dim(d)
 d <- d %>% filter(!is.na(dead) | !is.na(agedth) | !is.na(causedth))
@@ -24,6 +33,8 @@ d <- d %>% group_by(studyid, country, subjid) %>% mutate(maxage = max(agedays))
 summary(d$maxage)
 
 table(d$dead)
+table(paste0(d$studyid," ", d$country),d$dead)
+
 table(d$causedth)
 
 table(1*!is.na(d$dead),is.na(d$agedth))

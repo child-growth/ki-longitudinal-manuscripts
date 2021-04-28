@@ -16,9 +16,12 @@ saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_primary_2021-04-22.RDS"))
 bin_other <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_2021-04-23.RDS"))
 
-
 saveRDS(bin_primary, paste0(res_dir, "rf results/longbow results/results_bin_primary.RDS"))
 saveRDS(bin_other, paste0(res_dir, "rf results/longbow results/results_bin_other.RDS"))
+
+mortality <- readRDS(paste0(res_dir, "rf results/raw longbow results/mortality_2021-04-28.RDS"))
+saveRDS(mortality, paste0(res_dir, "rf results/longbow results/results_mortality.RDS"))
+
 
 Zscores_unadj <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_unadj_2021-04-25.RDS"))
 saveRDS(Zscores_unadj, paste0(res_dir, "rf results/longbow results/results_cont_unadj.RDS"))
@@ -26,10 +29,10 @@ saveRDS(Zscores_unadj, paste0(res_dir, "rf results/longbow results/results_cont_
 bin_unadj <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_unadj_2021-04-23.RDS"))
 saveRDS(bin_unadj, paste0(res_dir, "rf results/longbow results/results_bin_unadj.RDS"))
 
-velocity_wlz_quart <- readRDS(paste0(res_dir, "rf results/raw longbow results/vel_wlz_quart_2021-04-22.RDS"))
+velocity_wlz_quart <- readRDS(paste0(res_dir, "rf results/raw longbow results/vel_wlz_quart_2021-04-26.RDS"))
 saveRDS(velocity_wlz_quart, paste0(res_dir, "rf results/longbow results/velocity_wlz_quart.RDS"))
 
-stunt_bin_wlz_quart <- readRDS(paste0(res_dir, "rf results/raw longbow results/stunt_bin_wlz_quart_2021-04-22.RDS"))
+stunt_bin_wlz_quart <- readRDS(paste0(res_dir, "rf results/raw longbow results/stunt_bin_wlz_quart_2021-04-26.RDS"))
 saveRDS(stunt_bin_wlz_quart, paste0(res_dir, "rf results/longbow results/stunt_bin_wlz_quart.RDS"))
 
 velocity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_vel_2021-04-24.RDS"))   

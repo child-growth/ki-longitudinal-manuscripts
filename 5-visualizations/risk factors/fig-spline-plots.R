@@ -308,11 +308,11 @@ print(p1)
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 table(d$mhtcm)
-predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
+predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
-predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
+predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="whz", Avar="mhtcm", overall=T)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
-predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="whz", Avar="mhtcm", overall=T, mean_aic = T)
+predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="whz", Avar="mhtcm", overall=T)
 plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
 plotdf_wlz_mhtcm <- rbind(plotdf1,plotdf2,plotdf3)
 
@@ -358,7 +358,7 @@ df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summari
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 
-predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="haz", Avar="mwtkg", overall=T)
+predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="haz", Avar="mwtkg", overall=T, mean_aic=T)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=58 kg")
 predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="haz", Avar="mwtkg", overall=T)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<52 kg")
@@ -408,7 +408,7 @@ predlist1 <- predlist2 <- predlist3 <- NULL
 
 predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
-predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="haz", Avar="mhtcm", overall=T)
+predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
 predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)#, forcedf=) #forced df due to fit issues
 plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
@@ -454,9 +454,9 @@ print(p4)
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 table(d$mbmi)
-predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=365)
+predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
-predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=365)
+predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
 
 plotdf_wlz_mbmi <- rbind(plotdf1,plotdf2)

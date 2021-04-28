@@ -4,7 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-df <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+df <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
 
 yticks <- c(0.25, 0.5, 0.75, 1, 1.5, 2)
@@ -58,10 +58,10 @@ plotdf1 <- df %>%
                 panel.spacing = unit(0, "lines")) #+
           #ggtitle("Age-specific relative risk of stunting onset by prior mean WLZ")
         
-ggsave(p_lagwhz, file=here("figures/risk-factor/fig-WLZ-quart-stunt-CI.png"), height=4, width=10)
+ggsave(p_lagwhz, file=paste0(BV_dir,"/figures/risk-factor/fig-WLZ-quart-stunt-CI.png"), height=4, width=10)
         
-saveRDS(p_lagwhz, file=here("figures/plot-objects/risk-factor/fig-WLZ-quart-stunt-CI.rds"))
-saveRDS(plotdf1, file=here("figures/risk-factor/figure-data/fig-WLZ-quart-stunt-CI.rds"))
+saveRDS(p_lagwhz, file=paste0(BV_dir,"/figures/plot-objects/risk-factor/fig-WLZ-quart-stunt-CI.rds"))
+saveRDS(plotdf1, file=paste0(BV_dir,"/figures/risk-factor/figure-data/fig-WLZ-quart-stunt-CI.rds"))
 
 
 

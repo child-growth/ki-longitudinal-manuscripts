@@ -4,7 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-df <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+df <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
 
 yticks <- c(0.25, 0.5, 0.75, 1, 1.5, 2)
@@ -65,8 +65,8 @@ p_earlywast <- ggplot(plotdf2, aes(x=Xvar)) +
         panel.spacing = unit(0, "lines")) #+
   #ggtitle("Risk of stunting onset\nby measure of early wasting")
 
-ggsave(p_earlywast, file=here("figures/risk-factor/fig-wasting-prior-to-stunting.png"), height=4, width=4)
+ggsave(p_earlywast, file=paste0(BV_dir,"/figures/risk-factor/fig-wasting-prior-to-stunting.png"), height=4, width=4)
 
-saveRDS(plotdf2, file=here("figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds"))
-saveRDS(p_earlywast, file=here("figures/plot-objects/risk-factor/fig-wasting-prior-to-stunting.rds"))
+saveRDS(plotdf2, file=paste0(BV_dir,"/figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds"))
+saveRDS(p_earlywast, file=paste0(BV_dir,"/figures/plot-objects/risk-factor/fig-wasting-prior-to-stunting.rds"))
 
