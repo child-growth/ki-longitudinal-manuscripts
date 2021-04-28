@@ -10,10 +10,10 @@ require(cowplot)
 # rf_Zpar_plot_objects <- readRDS(paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
 # pPAR_laz <- rf_Zpar_plot_objects[[1]]
 # pPAR_wlz <- rf_Zpar_plot_objects[[2]]
-pPAR <- readRDS(here("results/rf results/rf_Zpar_plot_objects.RDS"))
+pPAR <- readRDS(paste0(BV_dir,"/results/rf results/rf_Zpar_plot_objects.RDS"))
 
 
-rf_Zpar_margin_plot_objects <- readRDS(paste0(here::here(), "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
+rf_Zpar_margin_plot_objects <- readRDS(paste0(BV_dir, "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
 mtab_df_laz_tbl <- rf_Zpar_margin_plot_objects[[1]]
 mtab_df_wlz_tbl <- rf_Zpar_margin_plot_objects[[2]]
 
@@ -43,15 +43,15 @@ pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c
 fig2 = plot_grid(pPAR, pPar_laz_plot_table, pPar_wlz_plot_table, ncol = 3, rel_widths = c(1, 0.3, 0.3))
 
 # fig2 <- plot_grid(pPar_laz_combined, NULL, pPar_wlz_combined, ncol = 3, labels = c("a","", "b"), rel_widths = c(1, -0.05, 1))
-ggsave(fig2, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
+ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
 
 
 
 
 #Figure 3
-p_severecomp <- readRDS(here("results/fig-severe-outcome-comps.RDS"))[[1]]
-p_ageRR <- readRDS(here("results/fig-age-strat-wast-plot-objects.RDS"))[[1]]
-splines <- readRDS(here("figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
+p_severecomp <- readRDS(paste0(BV_dir,"/results/fig-severe-outcome-comps.RDS"))[[1]]
+p_ageRR <- readRDS(paste0(BV_dir,"/results/fig-age-strat-wast-plot-objects.RDS"))[[1]]
+splines <- readRDS(paste0(BV_dir,"/figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
 
 #pos = c(0.75,0.83) #For 2 panels
 #pos = c(0.45,0.83)
@@ -85,7 +85,7 @@ Twoby1plotC_t <- plot_grid(titleC, Twoby1plotC, ncol=1, rel_heights=c(0.1, 1))
 Twoby1plot <- plot_grid(Twoby1plotA_t, Twoby1plotB_t, Twoby1plotC_t, labels = "auto", ncol = 3, align = 'v', axis = 'l')
 
 fig3 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","d","e"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
-ggsave(fig3, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig3.png"), width=14, height=18)
+ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3.png"), width=14, height=18)
 
 
 

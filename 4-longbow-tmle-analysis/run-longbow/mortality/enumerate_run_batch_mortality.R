@@ -1,6 +1,6 @@
 
 rm(list=ls())
-.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
+.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/4,0/" , .libPaths() ) )
 
 source(paste0(here::here(), "/0-config.R"))
 .libPaths( "~/rlibs" )
@@ -27,7 +27,7 @@ writeLines(toJSON(enumerated_analyses),"all_mortality_analyses.json")
 # 2. run batch
 
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
-rmd_filename <- here("4-longitudinal-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
+rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
 
 
 
@@ -44,12 +44,11 @@ mort_batch_id
 wait_for_batch(mort_batch_id)
 
 # download the longbow outputs
-get_batch_results(mort_batch_id, results_folder="results")
-length(dir("results"))
+get_batch_results(mort_batch_id, results_folder="results_mort")
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "results")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results")
+results <- load_batch_results("results.rdata", results_folder = "results_mort")
+obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "results_mort")
 
 # save concatenated results
 filename1 <- paste(paste('mortality',Sys.Date( ),sep='_'),'RDS',sep='.')

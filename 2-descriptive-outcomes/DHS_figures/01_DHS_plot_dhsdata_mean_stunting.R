@@ -217,6 +217,29 @@ ghapd_country <- d %>%
 ghapd_country$country <- factor(ghapd_country$country)
 
 
+ghapd_cohort <- d %>%
+  filter(
+    measure %in% c("Mean LAZ"),
+    birth == "yes",
+    age_range == "1 month",
+    cohort!="pooled" & cohort!="pooled-country"
+  ) %>%
+  mutate(
+    measure = str_sub(measure, 6, 9),
+    measure = factor(measure, levels = c("LAZ", "WAZ", "WLZ"), labels = c("LAZ", "WAZ", "WHZ")),
+    agecat2 = as.character(agecat),
+    agems = str_trim(str_sub(agecat2, 1, 2)),
+    agem = as.integer(
+      case_when(
+        agems == "Tw" ~ "0",
+        agems == "On" ~ "1",
+        !is.na(agems) ~ agems
+      )
+    )
+  )
+
+
+
 #---------------------------------------
 # fit smooths to GHAP data
 #---------------------------------------
@@ -247,11 +270,25 @@ ghapfits_country <- foreach(rgn = unique(ghapd_country$country), .combine = rbin
   dfit
 }
 
+ghapfits_cohort <- foreach(rgn = unique(ghapd_cohort$cohort), .combine = rbind, .packages = "dplyr") %do% {
+  di <- ghapd_cohort %>% filter(cohort == rgn)
+  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+  newd <- data.frame(agem = 0:24)
+  fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
+  try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
+  dfit <- data.frame(
+    measure = "LAZ", region = di$region[1], cohort=rgn, agem = 0:24,
+    fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS
+  )
+  dfit
+}
+
 #---------------------------------------
 # Append the fits into a single data frame
 # for plotting
 #---------------------------------------
 ghapfits <- ghapfits %>% mutate(dsource = "ki cohorts")
+ghapfits_cohort  <- ghapfits_cohort %>% mutate(dsource = "ki cohorts")
 dhssubfits <- dhssubfits %>% mutate(dsource = "DHS, ki countries")
 # dhsallfits <- dhsallfits %>% mutate(dsource="DHS") # std_err based on bootstrapping GAM
 dhsallfits <- df_survey_output %>% mutate(dsource = "DHS") # std_err based on survey_avg using sampling weight
@@ -259,7 +296,7 @@ dhsallfits <- df_survey_output %>% mutate(dsource = "DHS") # std_err based on su
 ghapfits <- ghapfits %>% mutate(measure = as.character(measure))
 dhssubfits <- dhssubfits %>% mutate(measure = as.character(measure))
 
-dhsfits <- bind_rows(ghapfits, dhssubfits, dhsallfits) %>%
+dhsfits <- bind_rows(ghapfits, ghapfits_cohort, dhssubfits, dhsallfits) %>%
   mutate(dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries", "DHS")))
 
 dhsfits = dhsfits %>%
@@ -301,8 +338,14 @@ saveRDS(dhsfits_country, file = paste0(dhs_res_dir, "stunting-DHSandKI-by-countr
 #---------------------------------------
 
 
-dhs_plotd <- dhsfits %>%
-  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
+dhs_plotd <- bind_rows(dhsfits, dhsfits_country) %>%
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"),
+         !(!is.na(country) & dsource=="ki cohorts"),
+         !(!is.na(cohort) & dsource=="DHS, ki countries")) %>% 
+  droplevels()
+
+table(dhs_plotd$dsource, is.na(dhs_plotd$country))
+table(dhs_plotd$dsource, is.na(dhs_plotd$cohort))
 
 dhs_plotd$region <- replace(dhs_plotd$region,is.na(dhs_plotd$region),"Overall")
 
@@ -326,23 +369,6 @@ laz_ageplot_name <- create_name(
 
 saveRDS(dhs_plotd_laz, file = paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
 
-
-
-
-
-#---------------------------------------
-# Filter for LAZ measures with data source of ki cohorts or DHS
-#---------------------------------------
-
-
-dhs_plotd_country <- dhsfits_country %>%
-  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
-
-#dhs_plotd$region <- replace(dhs_plotd$region,is.na(dhs_plotd$region),"Overall")
-
-dhs_plotd_laz_country <- filter(dhs_plotd_country, measure == "LAZ")
-
-#dhs_plotd_laz = dhs_plotd_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
 
 #---------------------------------------

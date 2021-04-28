@@ -22,6 +22,8 @@ d2 <- d2 %>% mutate(rain_quartile=case_when(
 
 
 
+
+
  d <- bind_rows(d, d2)
 
 
@@ -64,12 +66,7 @@ Ns <- d %>% subset(., select = c(studyid, country, agecat, n_cell, n, outcome_va
 Ndf <- cbind(Ns, exposure_df)
 # 
 
-# seperate laz and wlz
- Ndf_laz <- Ndf %>% filter(outcome_variable=="haz")
- Ndf_wlz <- Ndf %>% filter(outcome_variable=="whz")
 
-
-Ndf <- rbind(Ndf_laz, Ndf_wlz)
 
 #Grab total N's by pooled analysis
 N_sums <- Ndf %>% group_by(agecat, outcome_variable, intervention_variable, intervention_level) %>%

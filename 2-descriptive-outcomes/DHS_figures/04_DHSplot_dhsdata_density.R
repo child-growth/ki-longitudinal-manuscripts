@@ -52,38 +52,38 @@ dhsz <- bind_rows(dhaz, dwaz, dwhz) %>%
 dhsz <- dhsz %>%
   mutate(wgt = weight / 1000000)
 
-#---------------------------------------
-# calculate under 6-mo prevalence
-#---------------------------------------
-mean_region=dhsz %>% filter(agem <=6) %>%
-  group_by(measure, region) %>%
-  summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100)
-
-mean_pooled=dhsz %>% filter(agem <=6) %>%
-  group_by(measure) %>%
-  summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100) %>%
-  mutate(region="Overall")
-
-mndf <- bind_rows(mean_region, mean_pooled)
-mndf$measure <- as.character(mndf$measure)
-mndf$measure[mndf$measure=="WHZ"] <- "Wasting"
-mndf$measure[mndf$measure=="LAZ"] <- "Stunting"
-mndf$measure[mndf$measure=="WAZ"] <- "Underweight"
-
-mndf$region <- factor(mndf$region, levels = c("Overall", "Africa","Latin America","South Asia"))
-
-p<-ggplot(data=mndf, aes(x=region, y=Mean,  color=region,  fill=region)) +
-  facet_wrap(~measure, nrow=1) +
-  geom_bar(stat="identity", alpha=0.5) + theme_ki() + theme(panel.grid = element_blank()) +
-  scale_fill_manual(values = tableau11, guide = FALSE, name = "") +
-  scale_color_manual(values = tableau11, guide = FALSE, name = "") +
-  scale_y_continuous(limits=c(0, 33), expand = c(0,0)) +
-  ylab("Prevalence") + xlab("Anthropometry measure") + 
-  theme(axis.text.x = element_text(angle = 20, vjust = 0.75, hjust=0.6)) +
-  geom_text(aes(label=round(Mean,1)), position=position_dodge(width=0.9), vjust=-0.25)
-p
-
-ggsave(p, file = paste0(fig_dir, "wasting/fig_dhs_prev_barplot.png"), width = 6, height = 3)
+# #---------------------------------------
+# # calculate under 6-mo prevalence
+# #---------------------------------------
+# mean_region=dhsz %>% filter(agem <=6) %>%
+#   group_by(measure, region) %>%
+#   summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100)
+# 
+# mean_pooled=dhsz %>% filter(agem <=6) %>%
+#   group_by(measure) %>%
+#   summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100) %>%
+#   mutate(region="Overall")
+# 
+# mndf <- bind_rows(mean_region, mean_pooled)
+# mndf$measure <- as.character(mndf$measure)
+# mndf$measure[mndf$measure=="WHZ"] <- "Wasting"
+# mndf$measure[mndf$measure=="LAZ"] <- "Stunting"
+# mndf$measure[mndf$measure=="WAZ"] <- "Underweight"
+# 
+# mndf$region <- factor(mndf$region, levels = c("Overall", "Africa","Latin America","South Asia"))
+# 
+# p<-ggplot(data=mndf, aes(x=region, y=Mean,  color=region,  fill=region)) +
+#   facet_wrap(~measure, nrow=1) +
+#   geom_bar(stat="identity", alpha=0.5) + theme_ki() + theme(panel.grid = element_blank()) +
+#   scale_fill_manual(values = tableau11, guide = FALSE, name = "") +
+#   scale_color_manual(values = tableau11, guide = FALSE, name = "") +
+#   scale_y_continuous(limits=c(0, 33), expand = c(0,0)) +
+#   ylab("Prevalence") + xlab("Anthropometry measure") + 
+#   theme(axis.text.x = element_text(angle = 20, vjust = 0.75, hjust=0.6)) +
+#   geom_text(aes(label=round(Mean,1)), position=position_dodge(width=0.9), vjust=-0.25)
+# p
+# 
+# ggsave(p, file = paste0(fig_dir, "wasting/fig_dhs_prev_barplot.png"), width = 6, height = 3)
 
 
 
@@ -91,23 +91,23 @@ ggsave(p, file = paste0(fig_dir, "wasting/fig_dhs_prev_barplot.png"), width = 6,
 #---------------------------------------
 # calculate under 6-mo prevalence by month
 #---------------------------------------
-mean_region=dhsz %>% filter(agem <=6) %>%
-  group_by(measure, region, agem) %>%
-  summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100)
-
-mean_pooled=dhsz %>% filter(agem <=6) %>%
-  group_by(measure, agem) %>%
-  summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100) %>%
-  mutate(region="Overall")
-
-mndf <- bind_rows(mean_region, mean_pooled)
-mndf$measure <- as.character(mndf$measure)
-mndf$measure[mndf$measure=="WHZ"] <- "Wasting"
-mndf$measure[mndf$measure=="LAZ"] <- "Stunting"
-mndf$measure[mndf$measure=="WAZ"] <- "Underweight"
-
-mndf$region <- factor(mndf$region, levels = c("Overall", "Africa","Latin America","South Asia"))
-mndf$measure <- factor(mndf$measure, levels = c("Stunting", "Wasting","Underweight"))
+# mean_region=dhsz %>% filter(agem <=6) %>%
+#   group_by(measure, region, agem) %>%
+#   summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100)
+# 
+# mean_pooled=dhsz %>% filter(agem <=6) %>%
+#   group_by(measure, agem) %>%
+#   summarize(Mean = weighted.mean(zscore < -2, wgt, na.rm=TRUE)*100) %>%
+#   mutate(region="Overall")
+# 
+# mndf <- bind_rows(mean_region, mean_pooled)
+# mndf$measure <- as.character(mndf$measure)
+# mndf$measure[mndf$measure=="WHZ"] <- "Wasting"
+# mndf$measure[mndf$measure=="LAZ"] <- "Stunting"
+# mndf$measure[mndf$measure=="WAZ"] <- "Underweight"
+# 
+# mndf$region <- factor(mndf$region, levels = c("Overall", "Africa","Latin America","South Asia"))
+# mndf$measure <- factor(mndf$measure, levels = c("Stunting", "Wasting","Underweight"))
 
 # p<-ggplot(data=mndf, aes(x=agem, y=Mean,  color=region,  fill=region)) +
 #   #facet_wrap(region~measure, nrow=4) +
@@ -120,27 +120,35 @@ mndf$measure <- factor(mndf$measure, levels = c("Stunting", "Wasting","Underweig
 #   geom_text(aes(label=round(Mean,1)), position=position_dodge(width=0.9), vjust=-0.25)
 # p
 
-p_age<-ggplot(data=mndf, aes(x=agem, y=Mean,  color=region,  fill=region)) +
-  #facet_wrap(region~measure, nrow=4) +
-  facet_grid(measure~region) +
-  geom_bar(stat="identity", alpha=0.5) + theme_ki() + theme(panel.grid = element_blank()) +
-  scale_fill_manual(values = tableau11, guide = FALSE, name = "") +
-  scale_color_manual(values = tableau11, guide = FALSE, name = "") +
-  scale_y_continuous(limits=c(0, 42), expand = c(0,0)) +
-  ylab("Prevalence") + xlab("Anthropometry measure") + 
-  geom_text(aes(label=round(Mean,1)), position=position_dodge(width=0.9), vjust=-0.25, size=3.5)
-p_age
-
-ggsave(p_age, file = paste0(fig_dir, "wasting/fig_dhs_prev_barplot_by_month.png"), width = 10, height = 5)
+# p_age<-ggplot(data=mndf, aes(x=agem, y=Mean,  color=region,  fill=region)) +
+#   #facet_wrap(region~measure, nrow=4) +
+#   facet_grid(measure~region) +
+#   geom_bar(stat="identity", alpha=0.5) + theme_ki() + theme(panel.grid = element_blank()) +
+#   scale_fill_manual(values = tableau11, guide = FALSE, name = "") +
+#   scale_color_manual(values = tableau11, guide = FALSE, name = "") +
+#   scale_y_continuous(limits=c(0, 42), expand = c(0,0)) +
+#   ylab("Prevalence") + xlab("Anthropometry measure") + 
+#   geom_text(aes(label=round(Mean,1)), position=position_dodge(width=0.9), vjust=-0.25, size=3.5)
+# p_age
+# 
+# ggsave(p_age, file = paste0(fig_dir, "wasting/fig_dhs_prev_barplot_by_month.png"), width = 10, height = 5)
 
 
 
 
 #---------------------------------------
 # estimate DHS z-score densities
-# by region and overall
+# by country, region, and overall
 #---------------------------------------
-dhsallden <- foreach(zmeas = levels(dhsz$measure), .combine = rbind, .packages = "dplyr") %:%
+dhsallden_country <- foreach(zmeas = levels(dhsz$measure), .combine = rbind, .packages = "dplyr") %:%
+  foreach(rgn = unique(dhsz$country), .combine = rbind) %dopar% {
+    di <- dhsz %>% filter(measure == zmeas & country == rgn)
+    deni<- data.frame(x=NA, y=NA)
+    try(deni <- density(di$zscore))
+    denid <- data.frame(x = deni$x, y = deni$y, measure = zmeas, country = rgn)
+    denid
+  }
+dhsallden_region <- foreach(zmeas = levels(dhsz$measure), .combine = rbind, .packages = "dplyr") %:%
   foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
     di <- dhsz %>% filter(measure == zmeas & region == rgn)
     deni <- density(di$zscore)
@@ -153,7 +161,7 @@ dhsallden_pool <- foreach(zmeas = levels(dhsz$measure), .combine = rbind, .packa
   denid <- data.frame(x = deni$x, y = deni$y, measure = zmeas, region = "Overall")
   denid
 }
-dhsallden <- bind_rows(dhsallden, dhsallden_pool) %>%
+dhsallden <- bind_rows(dhsallden_pool, dhsallden_region, dhsallden_country) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 
 #---------------------------------------
@@ -161,7 +169,15 @@ dhsallden <- bind_rows(dhsallden, dhsallden_pool) %>%
 # by region and overall
 # subset to countries that overlap KI cohorts
 #---------------------------------------
-dhssubden <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %:%
+dhssubden_country <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %:%
+  foreach(rgn = unique(dhsz$country), .combine = rbind) %dopar% {
+    di <- dhsz %>% filter(measure == zmeas & country == rgn & inghap == 1)
+    deni<- data.frame(x=NA, y=NA)
+    try(deni <- density(di$zscore))
+    denid <- data.frame(x = deni$x, y = deni$y, measure = zmeas, country = rgn)
+    denid
+  }
+dhssubden_region <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %:%
   foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
     di <- dhsz %>% filter(measure == zmeas & region == rgn & inghap == 1)
     deni <- density(di$zscore)
@@ -174,7 +190,7 @@ dhssubden_pool <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %dopar
   denid <- data.frame(x = deni$x, y = deni$y, measure = zmeas, region = "Overall")
   denid
 }
-dhssubden <- bind_rows(dhssubden, dhssubden_pool) %>%
+dhssubden <- bind_rows(dhssubden_pool, dhssubden_region, dhssubden_country) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 
 #Save densities

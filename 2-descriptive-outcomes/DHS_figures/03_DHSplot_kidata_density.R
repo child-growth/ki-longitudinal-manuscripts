@@ -192,15 +192,17 @@ waz4 <- ki.density(waz.overall, Region="Overall", Measure="waz")
 #---------------------------------------------------------
 
 #Function to estimate density by region and Z-score
-ki.density.country <- function(data, Region, Measure){
+ki.density.cohort <- function(data, Region, Measure){
+  
+  data <- data %>% mutate(cohort=paste0(studyid,"-",country))
   
   fulldat<-NULL
-  for(i in unique(data$country)){
+  for(i in unique(data$cohort)){
     dens<-NULL
-    d <- data %>% filter(country==i) %>% as.data.frame()
+    d <- data %>% filter(cohort==i) %>% as.data.frame()
     
     dens <- density(d[,Measure])
-    dat <- data.frame(x=dens$x,y=dens$y, country=i, measure=Measure)
+    dat <- data.frame(x=dens$x,y=dens$y, cohort=i, measure=Measure)
     fulldat <- bind_rows(fulldat,dat)
   }
   return(fulldat)
@@ -209,14 +211,14 @@ ki.density.country <- function(data, Region, Measure){
 
 
 set.seed(123)
-haz.country <- ki.density.country(st,  Measure="haz")
-waz.country <- ki.density.country(waz,  Measure="waz")
-whz.country <- ki.density.country(wst,  Measure="whz")
+haz.cohort <- ki.density.cohort(st,  Measure="haz")
+waz.cohort <- ki.density.cohort(waz,  Measure="waz")
+whz.cohort <- ki.density.cohort(wst,  Measure="whz")
 
 
 #Bind together results
 resdf.quarterly <- bind_rows(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4,
-                             haz.country, waz.country, whz.country)
+                             haz.cohort, waz.cohort, whz.cohort)
 
 resdf.quarterly <- resdf.quarterly %>%
   mutate(region = case_when(
@@ -277,15 +279,15 @@ waz2 <- ki.density(waz.mon, Region="PAHO", Measure="waz")
 waz3 <- ki.density(waz.mon, Region="AFRO", Measure="waz")
 waz4 <- ki.density(waz.overall.mon, Region="Overall", Measure="waz")
 
-#country-specific density estimates
+#cohort-specific density estimates
 set.seed(123)
-haz.country.mon <- ki.density.country(st.mon,  Measure="haz")
-waz.country.mon <- ki.density.country(waz.mon,  Measure="waz")
-whz.country.mon <- ki.density.country(wst.mon,  Measure="whz")
+haz.cohort.mon <- ki.density.cohort(st.mon,  Measure="haz")
+waz.cohort.mon <- ki.density.cohort(waz.mon,  Measure="waz")
+whz.cohort.mon <- ki.density.cohort(wst.mon,  Measure="whz")
 
 #bind together
 resdf.monthly <- bind_rows(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4,
-                           haz.country.mon, waz.country.mon, whz.country.mon)
+                           haz.cohort.mon, waz.cohort.mon, whz.cohort.mon)
 
 resdf.monthly <- resdf.monthly %>%
   mutate(region = case_when(

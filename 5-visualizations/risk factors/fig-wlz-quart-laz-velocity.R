@@ -7,14 +7,24 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-results <- readRDS(here("/results/rf results/full_RF_results.rds"))
+results <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.RDS"))
+Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/vel_wlz_quart_obs_counts_2021-04-26.RDS")) %>%
+  rename(intervention_level=lag_WHZ_quart)
 
 
-d <- results %>% filter(type=="ATE", intervention_variable=="lag_WHZ_quart")
+d <- results %>% filter(type=="ATE", intervention_variable=="lag_WHZ_quart") %>%
+  subset(., select = -c(n_cell, n)) %>% group_by(studyid, country) %>% mutate(N=n()) %>%
+  droplevels() %>% filter(N>=20) #make sure study has sufficient age-specific measurements
+unique(d$studyid)
+head(d)
+table(d$studyid,d$N)
+
+d <- left_join(d, Ns, by = c("studyid", "country","agecat", "outcome_variable", "intervention_level"))
+head(d)
 
 #Drop reference levels
-d <- d %>% filter(intervention_level != d$baseline_level)
-
+d <- d %>% filter(intervention_level != baseline_level) %>% filter(n_cell>5 | agecat=="Unstratified")
+summary(d$untransformed_se)
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(pool.cont(.)) %>% as.data.frame()
@@ -48,10 +58,9 @@ plen_lagwhz <- ggplot(plen_plotdf, aes(x=intervention_level)) +
         panel.spacing = unit(0, "lines")) 
 plen_lagwhz
 
-ggsave(plen_lagwhz, file=here("figures/risk-factor/fig-WLZ-quart-len-vel.png"), height=4, width=10)
-
-saveRDS(plen_lagwhz, file=here("figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds"))
-saveRDS(plen_plotdf, file=here("figures/risk-factor/figure-data/fig-WLZ-quart-len-vel.rds"))
+ggsave(plen_lagwhz, file=paste0(BV_dir,"/figures/risk-factor/fig-WLZ-quart-len-vel.png"), height=4, width=10)
+saveRDS(plen_lagwhz, file=paste0(BV_dir,"/figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds"))
+saveRDS(plen_plotdf, file=paste0(BV_dir,"/figures/risk-factor/figure-data/fig-WLZ-quart-len-vel.rds"))
 
 
 #Save region-specific estimate plots
@@ -123,7 +132,7 @@ plen_lagwhz_LA <- ggplot(plen_plotdf, aes(x=intervention_level)) +
 
 
 #Save region specific plots
-ggsave(plen_lagwhz_africa, file=here("figures/risk-factor/fig-WLZ-quart-len-vel-Africa.png"), height=4, width=10)
-ggsave(plen_lagwhz_SA, file=here("figures/risk-factor/fig-WLZ-quart-len-vel-SA.png"), height=4, width=10)
-ggsave(plen_lagwhz_LA, file=here("figures/risk-factor/fig-WLZ-quart-len-vel-LA.png"), height=4, width=10)
+ggsave(plen_lagwhz_africa, file=paste0(BV_dir,"/figures/risk-factor/fig-WLZ-quart-len-vel-Africa.png"), height=4, width=10)
+ggsave(plen_lagwhz_SA, file=paste0(BV_dir,"/figures/risk-factor/fig-WLZ-quart-len-vel-SA.png"), height=4, width=10)
+ggsave(plen_lagwhz_LA, file=paste0(BV_dir,"/figures/risk-factor/fig-WLZ-quart-len-vel-LA.png"), height=4, width=10)
 

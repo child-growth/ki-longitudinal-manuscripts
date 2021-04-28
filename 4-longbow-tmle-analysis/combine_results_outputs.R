@@ -13,23 +13,14 @@ bin_primary <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_p
 table(bin_primary$intervention_variable, bin_primary$agecat)
 
 bin_other <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_other.RDS"))
-# bin_sub <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_sub_2020-05-19.RDS"))
-# bin_sub2 <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_sub_2020-05-20.RDS"))
-# bin_sub3 <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_sub_2020-05-20_part2.RDS"))
-# bin <- bind_rows(bin_sub3,  bin_sub2,  bin_sub, bin)
-# bin <- bin %>% distinct_at(., .vars=c("agecat", "studyid", "country", "strata_label", "intervention_variable", 
-#                                     "outcome_variable","type","parameter","intervention_level",  "baseline_level"),
-#                          .keep_all=TRUE)
-# dim(bin)
-# bin_other <- anti_join(bin, bin_primary, by = c("agecat", "studyid", "country", "strata_label", "intervention_variable",
-#                                                 "outcome_variable","type","parameter","intervention_level",  "baseline_level"))
-
 
 dim(bin_primary)
 dim(bin_other) 
 nrow(bin_primary) + nrow(bin_other)
 bin <- rbind(bin_primary, bin_other)
 
+
+mort <- readRDS(paste0(res_dir, "rf results/longbow results/results_mortality.RDS"))
 
 Zscores_unadj <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_unadj.RDS"))
 
@@ -60,7 +51,7 @@ season_bin_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_bin_
 
 d <- bind_rows(Zscores, Zscores_unadj, bin, 
                bin_unadj, lagwhz, velocity, velocity_wlz_quart, stunt_bin_wlz_quart,
-               season, season_cont_rf, season_bin_rf)
+               season, season_cont_rf, season_bin_rf, mort)
 
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="2"] <- "Pre-max rain"
@@ -110,6 +101,7 @@ d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3",
 #----------------------------------------------------------
 load(paste0(res_dir,"stunting_rf_Ns_sub.rdata"))
 N_sums_bin <- N_sums %>% mutate(continuous = 0)
+
 load(paste0(res_dir,"continuous_rf_Ns_sub.rdata"))
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
 N_sums <- rbind(N_sums_bin, N_sums_cont)

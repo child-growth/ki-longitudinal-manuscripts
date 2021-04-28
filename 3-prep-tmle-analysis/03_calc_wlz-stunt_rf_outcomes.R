@@ -27,7 +27,7 @@ vel <- readRDS(file=paste0(ghapdata_dir,"velocity_longfmt_rf.rds"))
 
 vel<- mark_measure_freq(vel)
 
-vel <- vel %>% filter(measurefreq=="monthly")
+#vel <- vel %>% filter(measurefreq=="monthly")
 
 
 #Get only HAZ change from growth velocity dataset, and format names
