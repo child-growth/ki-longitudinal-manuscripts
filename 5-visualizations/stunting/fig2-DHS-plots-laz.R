@@ -38,28 +38,46 @@ green <- 3
 
 
 # Load data -----------------------------------------------------
-laz_ageplot_name <- create_name(
-  outcome = "LAZ",
-  cutoff = 2,
-  measure = "mean DHS",
-  population = "overall and region-stratified",
-  location = "",
-  age = "All ages",
-  analysis = "primary"
-)
+# laz_ageplot_name <- create_name(
+#   outcome = "LAZ",
+#   cutoff = 2,
+#   measure = "mean DHS",
+#   population = "overall and region-stratified",
+#   location = "",
+#   age = "All ages",
+#   analysis = "primary"
+# )
 laz_ageplot_name = "laz-2-mean_dhs-country--allage-primary"
 
 dhs_plotd_laz = read_rds(paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
 
 # Create LAZ Age plot -----------------------------------------------------
-laz_ageplot <- ggplot(
-  dhs_plotd_laz,
-  aes(x = agem, y = fit, color = region, fill = region, linetype = dsource)
-) +
+laz_ageplot <- ggplot(dhs_plotd_laz, aes(x = agem, y = fit, group =region)) +
+  
+  # DHS confidence interval
+  geom_ribbon(data = dhs_plotd_laz %>% filter(dsource == "DHS, ki countries" & 
+                                                is.na(country)),
+              aes(ymin = fit_lb, ymax = fit_ub, fill = region), color = NA, alpha = 0.2) +
+  
+  # DHS line
+  geom_line(data = dhs_plotd_laz %>% filter(dsource == "DHS, ki countries" & 
+                                               is.na(country)),
+            aes(col = region)) +
+  
+  # ki confidence interval
+  geom_ribbon(data = dhs_plotd_laz %>% filter(dsource == "ki cohorts" & 
+                                                is.na(country) & is.na(cohort)),
+              aes(ymin = fit_lb, ymax = fit_ub, fill = region), color = NA, alpha = 0.2) +
+  
+  # ki line
+  geom_line(data = dhs_plotd_laz %>% filter(dsource == "ki cohorts" & 
+                                              is.na(country) & is.na(cohort)),
+            aes(col = region)) +
+  
   facet_grid(~region) +
+  
   geom_abline(intercept = 0, slope = 0, color = "gray70") +
-  geom_ribbon(aes(ymin = fit_lb, ymax = fit_ub), color = NA, alpha = 0.2) +
-  geom_line(alpha = 1) +
+
   scale_x_continuous(breaks = seq(0, 24, by = 6)) +
   scale_y_continuous(breaks = seq(-3, 0, by = 0.5)) +
   scale_color_manual(values = pcols, guide = FALSE, name = "") +
@@ -73,11 +91,8 @@ laz_ageplot <- ggplot(
     legend.position = "bottom",
     strip.placement = "outside",
     strip.background = element_rect(fill = NA, color = NA),
-    # strip.text.y = element_text(angle=180),
     panel.spacing = unit(0.5, "lines"),
-    panel.grid.minor.x = element_blank()#,
-    # legend.background=element_blank(),
-    # legend.key = element_rect(fill = "white")
+    panel.grid.minor.x = element_blank()
   )
 
 laz_ageplot
