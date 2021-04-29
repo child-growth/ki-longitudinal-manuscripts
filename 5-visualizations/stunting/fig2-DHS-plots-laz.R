@@ -22,9 +22,7 @@
 
 ##########################################
 
-#---------------------------------------
-# source configuration file
-#---------------------------------------
+# source configuration file -----------------------------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
@@ -38,10 +36,8 @@ blue <- 1
 orange <- 2
 green <- 3
 
-#############################################
-# Create LAZ Age Plot
-#############################################
 
+# Load data -----------------------------------------------------
 laz_ageplot_name <- create_name(
   outcome = "LAZ",
   cutoff = 2,
@@ -51,9 +47,11 @@ laz_ageplot_name <- create_name(
   age = "All ages",
   analysis = "primary"
 )
+laz_ageplot_name = "laz-2-mean_dhs-country--allage-primary"
 
 dhs_plotd_laz = read_rds(paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
 
+# Create LAZ Age plot -----------------------------------------------------
 laz_ageplot <- ggplot(
   dhs_plotd_laz,
   aes(x = agem, y = fit, color = region, fill = region, linetype = dsource)
@@ -86,9 +84,9 @@ laz_ageplot
 
 ggsave(laz_ageplot, file = paste0(fig_dir, "stunting/fig-", laz_ageplot_name, ".png"), width = 8, height = 3)
 
-#############################################
-# Create LAZ Density Plot
-#############################################
+
+# Create LAZ Density plot -----------------------------------------------------
+
 kiden <- readRDS(paste0(res_dir, "dhs/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>% mutate(dsource = "ki cohorts")
 
@@ -139,9 +137,7 @@ laz_dplot_name <- create_name(
 saveRDS(dhsden_plot_laz, file = paste0(figdata_dir_stunting, "figdata-", laz_dplot_name, ".RDS"))
 ggsave(laz_dplot, file = paste0(fig_dir, "stunting/fig-", laz_dplot_name, ".png"), width = 8, height = 2)
 
-#############################################
-# Merge above plots into a single figure
-#############################################
+# Combine and save plots -----------------------------------------------------
 
 arrange_figures = grid.arrange(laz_dplot, 
                                laz_ageplot, 
