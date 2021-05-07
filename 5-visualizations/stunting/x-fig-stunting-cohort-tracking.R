@@ -14,57 +14,187 @@ d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds")) %>%
   filter(agemonth<=24) %>% 
   filter(!is.na(haz))
 
+d <- calc.ci.agecat(d, range = 3, birth="yes")
+
+# Monthly cohorts ----------------------------------------------------
+dmonthly <- d %>% filter(studyid %in% monthly_cohorts)
+
 # check included cohorts
-assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
+assert_that(setequal(unique(dmonthly$studyid), monthly_cohorts),
             msg = "Check data. Included cohorts do not match.")
 
-dsummary <- d %>% 
+## Create child-month dataset ----------------------------------------------------
+# In this dataset, if measid does not equal
+# age months, it means that the child did not
+# have measurements each month
+d_childmonths <- dmonthly %>% 
   dplyr::select(studyid, subjid, agemonth) %>% 
   distinct() %>% 
   group_by(studyid, subjid) %>% 
-  mutate(measid=seq_along(agemonth)) 
+  mutate(measid=seq_along(agemonth)) %>% 
+  arrange(studyid, subjid, agemonth) 
 
-# Expand to include all ages from 0-24 m ----------------------------------------------------
-full = tidyr::expand(dsummary, 
+## Expand to include all ages from 0-24 m ----------------------------------------------------
+full <- tidyr::expand(d_childmonths, 
                   nesting(studyid, subjid),agemonth=seq(0,24,1))
 
-# Identify missing observations by age for each individual ----------------------------------------------------
-mergedata = full_join(dsummary, full, by = c("studyid", "subjid", "agemonth")) %>% 
+# For studies that had truncated measurement
+# (ie not for all months 0-24) subset data
+monthly_cohort_ages <- d_childmonths %>% 
+  group_by(studyid) %>% 
+  summarise(minage = min(agemonth),
+            maxage = max(agemonth))
+
+full_monthly <- full_join(full, monthly_cohort_ages, by = "studyid") %>% 
+  filter(agemonth >= minage & agemonth <=maxage) %>% 
+  dplyr::select(-c(minage, maxage))
+
+## Identify missing observations by age for each individual ----------------------------------------------------
+mergedata_monthly = full_join(d_childmonths, full_monthly, 
+                      by = c("studyid", "subjid", "agemonth")) %>% 
   arrange(studyid, subjid, agemonth)  %>% 
-  mutate(datapresent = ifelse(!is.na(measid), 1, 0))  
-
-## NEED TO CHECK THIS IS CORRECT
-table(mergedata$datapresent)
-
-mergedata = mergedata %>% 
+  mutate(datapresent = ifelse(!is.na(measid), 1, 0)) %>% 
   group_by(studyid, agemonth) %>% 
-  summarise(percent_meas = mean(datapresent)*100) 
+  summarise(percent_meas = mean(datapresent)*100) %>% 
+  mutate(measurefreq = "Monthly")
+
+
+
+# Quarterly cohorts ----------------------------------------------------
+quarterly_cohorts <- monthly_and_quarterly_cohorts[-which(monthly_cohorts %in% monthly_and_quarterly_cohorts)]
+dquart <- d %>% filter(studyid %in% quarterly_cohorts)
+
+## Create child-quarter dataset ----------------------------------------------------
+# In this dataset, if measid does not equal
+# age months, it means that the child did not
+# have measurements each month
+d_childquarter <- dquart %>% 
+  dplyr::select(studyid, subjid, agemonth, agecat) %>% 
+  # drop kids with agedays > 24 months
+  filter(!is.na(agecat)) %>% 
+  distinct() %>% 
+  group_by(studyid, subjid) %>% 
+  mutate(measid=seq_along(agecat)) %>% 
+  arrange(studyid, subjid, agecat) %>% 
+  mutate(agecatord = case_when(
+    agecat == "0-3 months" ~ 1,
+    agecat == "3-6 months" ~ 2,
+    agecat == "6-9 months" ~ 3,
+    agecat == "9-12 months" ~ 4,
+    agecat == "12-15 months" ~ 5,
+    agecat == "15-18 months" ~ 6,
+    agecat == "18-21 months" ~ 7,
+    agecat == "21-24 months" ~ 8
+  ))
+
+## Expand to include all ages from 0-24 m ----------------------------------------------------
+full_quart_complete <- tidyr::expand(d_childquarter, 
+                      nesting(studyid, subjid),agecatord=seq(1,8,1))
+
+# For studies that had truncated measurement
+# (ie not for all months 0-24) subset data
+quart_cohort_ages <- d_childquarter  %>% 
+  group_by(studyid) %>% 
+  summarise(minage = min(agecatord),
+            maxage = max(agecatord))
+
+full_quart <- full_join(full_quart_complete, quart_cohort_ages, by = "studyid") %>% 
+  filter(agecatord >= minage & agecatord <=maxage) %>% 
+  dplyr::select(-c(minage, maxage))
+
+## Identify missing observations by age for each individual ----------------------------------------------------
+mergedata_quart = full_join(d_childquarter, full_quart, 
+                              by = c("studyid", "subjid", "agecatord" )) %>% 
+  arrange(studyid, subjid, agecatord)  %>% 
+  mutate(datapresent = ifelse(!is.na(measid), 1, 0)) %>% 
+  mutate(agecat = case_when(
+    agecatord == 1 ~ "0-3 months",
+    agecatord == 2 ~ "3-6 months",
+    agecatord == 3 ~ "6-9 months",
+    agecatord == 4 ~ "9-12 months",
+    agecatord == 5 ~ "12-15 months",
+    agecatord == 6 ~ "15-18 months",
+    agecatord == 7 ~ "18-21 months",
+    agecatord == 8 ~ "21-24 months"
+  )) %>% 
+  group_by(studyid, agecat, agecatord) %>% 
+  summarise(percent_meas = mean(datapresent)*100) %>% 
+  mutate(measurefreq = "Quarterly")
+
 
 # Prepare data for plotting ----------------------------------------------------
-plotdata = mergedata %>% 
-  mutate(studyid = factor(studyid, levels = rev(unique(d$studyid)))) %>% 
+plotdata_monthly = mergedata_monthly %>% 
   # categorize missingness
   mutate(datacat = cut(percent_meas, 
                        breaks = seq(0,100, 20),
                        labels = c("0-20", "20-40", "40-60", "60-80", "80-100"))) %>% 
   mutate(datacat = as.character(datacat))
 
-plotdata$datacat = ifelse(is.na(plotdata$datacat),
+plotdata_monthly$datacat = ifelse(is.na(plotdata_monthly$datacat),
                           "No children measured", 
-                          plotdata$datacat)
-plotdata$datacat<- factor(plotdata$datacat,
-                          levels = c("No children measured",
-                                     "0-20", "20-40", "40-60", "60-80", "80-100"))
+                          plotdata_monthly$datacat)
+
+plotdata_quart = mergedata_quart %>% 
+  # categorize missingness
+  mutate(datacat = cut(percent_meas, 
+                       breaks = seq(0,100, 20),
+                       labels = c("0-20", "20-40", "40-60", "60-80", "80-100"))) %>% 
+  mutate(datacat = as.character(datacat))
+
+plotdata_quart$datacat = ifelse(is.na(plotdata_quart$datacat),
+                                  "No children measured", 
+                                plotdata_quart$datacat)
 
 # Data frame with all ages in all studies
-allages = expand_grid(
-  studyid = unique(d$studyid),
+allages_monthly = expand_grid(
+  studyid = unique(dmonthly$studyid),
   agemonth = seq(0,24,1)
-) %>% 
-  mutate(studyid = factor(studyid, levels = rev(unique(d$studyid))))
+) %>%
+  mutate(studyid = factor(studyid, levels = rev(unique(dmonthly$studyid))))
 
-master_df <- allages  %>% 
-  full_join(plotdata, by = c("studyid", "agemonth"))
+allages_quart = expand_grid(
+  studyid = unique(dquart$studyid),
+  agecatord = seq(1,8,1)
+) %>%
+  mutate(studyid = factor(studyid, levels = rev(unique(dquart$studyid))))
+
+# Merge data with master of all ages 
+master_df_monthly <- allages_monthly  %>%
+  full_join(plotdata_monthly, by = c("studyid", "agemonth")) %>% 
+  full_join(monthly_cohort_ages, by = "studyid") %>% 
+  mutate(datacat = ifelse(agemonth < minage, "No children measured", datacat),
+         datacat = ifelse(agemonth > maxage, "No children measured", datacat)) %>% 
+  mutate(studyid = factor(studyid, levels = rev(unique(d$studyid)))) %>% 
+  mutate(datacat = factor(datacat,levels = c(
+    "No children measured","0-20", "20-40", "40-60", "60-80", "80-100"
+  )))
+  
+
+master_df_quart <- allages_quart  %>%
+  full_join(plotdata_quart, by = c("studyid", "agecatord")) %>% 
+  full_join(quart_cohort_ages, by = "studyid") %>% 
+  mutate(datacat = ifelse(agecatord < minage, "No children measured", datacat),
+         datacat = ifelse(agecatord > maxage, "No children measured", datacat)) %>% 
+  mutate(agecat = case_when(
+    agecatord == 1 ~ "0-3 months",
+    agecatord == 2 ~ "3-6 months",
+    agecatord == 3 ~ "6-9 months",
+    agecatord == 4 ~ "9-12 months",
+    agecatord == 5 ~ "12-15 months",
+    agecatord == 6 ~ "15-18 months",
+    agecatord == 7 ~ "18-21 months",
+    agecatord == 8 ~ "21-24 months"
+  )) %>% 
+  mutate(agecat = gsub(" months", "", agecat)) %>% 
+  mutate(agecat = factor(agecat, levels = c(
+    "0-3", "3-6", "6-9", "9-12", "12-15", 
+    "15-18", "18-21", "21-24"
+  ))) %>% 
+  mutate(studyid = factor(studyid, levels = rev(unique(d$studyid)))) %>% 
+  mutate(datacat = factor(datacat,levels = c(
+    "No children measured","0-20", "20-40", "40-60", "60-80", "80-100"
+  )))
+
 
 
 # Define plot features ----------------------------------------------------
@@ -77,12 +207,16 @@ blue_palette <- brewer.pal(n = length(unique(plotdata$datacat)),
                            name = "Blues")
 blue_palette[1] = "#BFBDBD"
 
-# Create plot ----------------------------------------------------
-ggplot(master_df, aes(y= studyid, x = agemonth)) +
-  # geom_tile(data = allages, fill="#CDCDCD", color = "white", size=0.25)+
-  geom_tile(aes(fill = datacat), 
-            color = "white", size=0.25) +
+
+format_plot <- function(plot){
   
+
+}  
+
+# Create monthly plot ----------------------------------------------------
+plot_monthly <- ggplot(master_df_monthly, aes(y= studyid, x = agemonth)) +
+  geom_tile(aes(fill = datacat), 
+            color = "white", size=0.25)  + 
   # color palette
   scale_fill_manual(values = blue_palette, 
                     guide=guide_legend(title="Percentage of children with LAZ measurement",
@@ -122,4 +256,52 @@ ggplot(master_df, aes(y= studyid, x = agemonth)) +
         axis.text.y=element_text(size=8,colour=textcol,hjust=1),
         #change axis ticks thickness
         axis.ticks=element_line(size=0.4)) 
-  
+
+
+# Create quarterly plot ----------------------------------------------------
+plot_quarterly <- ggplot(master_df_quart, aes(y= studyid, x = agecat)) +
+  geom_tile(aes(fill = datacat), 
+            color = "white", size=0.25) + 
+  # color palette
+  scale_fill_manual(values = blue_palette,
+                    guide=guide_legend(title="Percentage of children with LAZ measurement",
+                                       nrow=3)) +
+  xlab("Child age, months") + 
+  ylab("") + 
+
+  #set base size for all font elements
+  theme_grey(base_size=10)+
+  theme_bw() + 
+  theme(legend.position = "bottom",
+        # has to be the exact same format as for the other panel (for correct alignment)
+        legend.title=element_text(color=textcol,size=8),
+        #reduce/remove legend margin
+        legend.margin = margin(grid::unit(0.1,"cm")),
+        #change legend text properties
+        legend.text=element_text(colour=textcol,size=8),
+        #change legend key height
+        legend.key.height=grid::unit(0.2,"cm"),
+        
+        # axis.text.y = element_text(hjust=1),
+        #remove plot background
+        plot.background=element_blank(),
+        #remove plot border
+        panel.border=element_blank(),
+        # remove white lines 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        
+        #set x axis text size and colour
+        axis.text.x=element_text(size=8,colour=textcol,angle=0,vjust=0.5),
+        #set y axis text colour and adjust vertical justification
+        axis.text.y=element_text(size=8,colour=textcol,hjust=1),
+        #change axis ticks thickness
+        axis.ticks=element_line(size=0.4)) 
+
+
+# Save plots ----------------------------------------------------
+
+ggsave(plot_monthly, file=paste0(fig_dir, "stunting/fig-measurement-heatmap-monthly.png"), 
+       width=8, height=5)
+ggsave(plot_quarterly, file=paste0(fig_dir, "stunting/fig-measurement-heatmap-quarterly.png"), 
+       width=6, height=5)
