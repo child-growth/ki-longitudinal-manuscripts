@@ -226,8 +226,12 @@ pmort_data <- merge(x = p_prim_pooled, y = pmort_data, all = TRUE)
 pmort_data <- pmort_data %>%
   dplyr::filter(outcome_label != "Persistently wasted")
 
+pmort_data_cohort <- readRDS(here("results/mortality-results/full_cox_results.RDS"))
+pmort_data_cohort <- pmort_data_cohort %>% filter(pooled == 0)
+
 pmort <- ggplot(pmort_data, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
+
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   labs(y = "", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1, linetype = "dashed") +
@@ -245,7 +249,37 @@ pmort <- ggplot(pmort_data, aes(x=outcome_label)) +
   facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
   coord_flip(ylim=c(1,12))
 
+
+pmort_flurry <- ggplot(pmort_data, aes(x=outcome_label)) +
+  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
+  
+  # geom_point(aes(y=RR), color="#878787", fill="#878787", size=1.5,
+  #            position=position_jitter(width=0.2), alpha=0.25) +
+  # 
+  # geom_point(aes(y=HR), color="#878787", fill="#878787", size=1.5,
+  #            data=pmort_data_cohort,
+  #            position=position_jitter(width=0.2), alpha=0.25) +
+  
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
+  labs(y = "", x = "Exposure 0-6 months") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
+  scale_colour_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_fill_manual(values=tableau10[c(4,1,3,2,7)]) +
+  scale_size_manual(values=c(4,5)) + 
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.placement = "outside",
+        panel.spacing = unit(0, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        strip.background = element_blank(),
+        text = element_text(size=16), 
+        legend.position = "none") + 
+  facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
+  coord_flip(ylim=c(1,12))
+
+
 ggsave(pmort, file=here("/figures/risk-factor/fig-mort+morb-RR.png"), width=14, height=5.2)
+ggsave(pmort_flurry, file=here("/figures/risk-factor/fig-mort+morb-RR-flurry.png"), width=14, height=5.2)
 
 #Save plot object
 saveRDS(pmort, file=here("results/rf_mort+morb_plot_object.RDS"))
