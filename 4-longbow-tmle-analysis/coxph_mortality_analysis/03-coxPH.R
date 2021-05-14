@@ -96,6 +96,7 @@ res_noPN_sex_strat <- run_cox_meta(df=d%>% filter(agecat!="(0,30]"),
                               X_vector=X_vector, Y="dead", Wvars=Wvars, V="sex", agecat="1-24 months")
 
 #Age-strat, starting from birth
+res_age_strat <- res_age_sex_strat <- NULL
 res_age_strat <- run_cox_meta_agestrat(d=d, age_strat=levels(d$agecat), X_vector=X_vector, Y="dead", Wvars=Wvars, V=NULL)
 res_age_sex_strat <- run_cox_meta_agestrat(d=d, age_strat=levels(d$agecat), X_vector=X_vector, Y="dead", Wvars=Wvars, V="sex")
 
@@ -112,7 +113,7 @@ fullres <- bind_rows(res, res_sex_strat,
                      res_noPN, res_noPN_sex_strat,
                      res_age_strat, res_age_sex_strat)
           
-saveRDS(fullres, file=paste0(BV_dir,"results/full_cox_results.RDS"))
+saveRDS(fullres, file=paste0(BV_dir,"/results/full_cox_results.RDS"))
 #TO do:
 
 

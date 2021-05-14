@@ -16,6 +16,7 @@ d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds")) %>%
 
 d <- calc.ci.agecat(d, range = 3, birth="yes")
 
+
 # Monthly cohorts ----------------------------------------------------
 dmonthly <- d %>% filter(studyid %in% monthly_cohorts)
 
@@ -33,6 +34,8 @@ d_childmonths <- dmonthly %>%
   group_by(studyid, subjid) %>% 
   mutate(measid=seq_along(agemonth)) %>% 
   arrange(studyid, subjid, agemonth) 
+
+table(d_childmonths$agemonth==d_childmonths$measid)
 
 ## Expand to include all ages from 0-24 m ----------------------------------------------------
 full <- tidyr::expand(d_childmonths, 
@@ -58,10 +61,18 @@ mergedata_monthly = full_join(d_childmonths, full_monthly,
   summarise(percent_meas = mean(datapresent)*100) %>% 
   mutate(measurefreq = "Monthly")
 
+df = full_join(d_childmonths, full_monthly, 
+                              by = c("studyid", "subjid", "agemonth")) %>% 
+  arrange(studyid, subjid, agemonth)  %>% 
+  mutate(datapresent = ifelse(!is.na(measid), 1, 0)) %>% 
+  group_by(studyid, agemonth) %>% filter()
+
+table(df$studyid, df$datapresent)
 
 
 # Quarterly cohorts ----------------------------------------------------
-quarterly_cohorts <- monthly_and_quarterly_cohorts[-which(monthly_cohorts %in% monthly_and_quarterly_cohorts)]
+quarterly_cohorts <- monthly_and_quarterly_cohorts[!(monthly_and_quarterly_cohorts %in% monthly_cohorts)]
+
 dquart <- d %>% filter(studyid %in% quarterly_cohorts)
 
 ## Create child-quarter dataset ----------------------------------------------------
