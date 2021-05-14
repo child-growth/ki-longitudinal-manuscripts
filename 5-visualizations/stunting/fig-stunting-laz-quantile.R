@@ -37,16 +37,19 @@ theme_set(theme_ki())
 
 dall <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
+# drop burkina faso study
+d <- dall %>% filter(studyid!="iLiNS-Zinc")
+
 # add country
-d <- dall %>%  
+d <- d %>%  
   mutate(agemonths = round(agedays/30.4167,0)) %>% 
   filter(agemonths <= 24) %>% 
   mutate(country=  str_to_title(country)) %>% 
   mutate(country = factor(country, levels = c(
-    "Burkina Faso", "Gambia", "Guinea-Bissau",
+    "Gambia", "Guinea-Bissau",
     "Malawi", "South Africa", "Tanzania", "Zimbabwe",
-    "Brazil", "Guatemala", "Peru",
     "Belarus",
+    "Brazil", "Guatemala", "Peru",
     "Bangladesh", "India", "Nepal", "Pakistan"
   ))) %>%
   mutate(cohort_country = paste0(studyid, " - ", country)) 
@@ -94,7 +97,7 @@ ggplot(d_plot_df, aes(x = agemonths, y = meanlaz, group = cohort_country)) +
             # data=dsummary, 
             size=0.75) +
   
-  facet_wrap(~country, nrow = 3) +
+  facet_wrap(~country, nrow = 2) +
   scale_color_manual(values=c("#1F77B4","#FF7F0E", "#CC332E", "#2CA02C"), drop=TRUE,
                      name = 'Region') +
   scale_fill_manual(values=c("#1F77B4","#FF7F0E", "#CC332E", "#2CA02C"), drop=TRUE,
