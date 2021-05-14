@@ -135,7 +135,7 @@ quantile_d_overall <- d %>% group_by(agecat) %>%
 saveRDS(list(quantile_d=quantile_d, 
              quantile_d_country=quantile_d_country, 
              quantile_d_overall=quantile_d_overall), 
-        file = paste0(here(),"/results/quantile_data_wasting.RDS"))
+        file = paste0(BV_dir,"/results/quantile_data_wasting.RDS"))
 
 
 
@@ -539,7 +539,7 @@ wasting_desc_data$country <- stringr::str_to_title(wasting_desc_data$country)
 
         
 
-saveRDS(wasting_desc_data, file = paste0(here(),"/results/wasting_desc_data.RDS"))
+saveRDS(wasting_desc_data, file = paste0(BV_dir,"/results/wasting_desc_data.RDS"))
 
 
 
