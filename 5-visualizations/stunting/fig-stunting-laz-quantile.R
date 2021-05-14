@@ -26,7 +26,14 @@ source(paste0(here::here(), "/0-config.R"))
 theme_set(theme_ki())
 
 #Quantile data 
-quantile = readRDS(paste0(res_dir,"stunting/quantile_data_stuntingREML.RDS"))
+quantile_input = readRDS(paste0(res_dir,"stunting/quantile_data_stuntingREML.RDS"))
+
+quantile = quantile_input %>% filter(studyid %in% monthly_and_quarterly_cohorts)
+
+# check included cohorts
+assert_that(setequal(unique(quantile$studyid), monthly_and_quarterly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
 
 # Preprocess data -----------------------------------------------------
 quantile_cc <- quantile %>% filter(studyid!="pooled") %>% 
