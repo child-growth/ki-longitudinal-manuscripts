@@ -19,6 +19,8 @@ default_params <- jsonlite::fromJSON(inputs)
 
 #Load existing results
 results <- readRDS(paste0(res_dir,"rf results/longbow results/opttx_vim_results.RDS"))   
+results2 <-  readRDS(paste0(res_dir,"rf results/raw longbow results/opttx_vim_results_subset_2021-05-02.RDS"))
+results <- bind_rows(results,results2)
 unique(results$intervention_variable)
 
 # # Continious
@@ -62,16 +64,16 @@ batch_id
 wait_for_batch(batch_id)
 
 # download the longbow outputs
-get_batch_results(batch_id, results_folder="results_subset")
-length(dir("results_subset"))
+get_batch_results(batch_id, results_folder="results_subset2")
+length(dir("results_subset2"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata","results_subset")
-obs_counts <- load_batch_results("obs_counts.rdata","results_subset")
+results <- load_batch_results("results.rdata","results_subset2")
+obs_counts <- load_batch_results("obs_counts.rdata","results_subset2")
 
 # save concatenated results
-filename1 <- paste(paste('opttx_vim_results_subset',Sys.Date( ),sep='_'),'RDS',sep='.')
-filename2 <- paste(paste('opttx_vim_obs_count_subsets',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename1 <- paste(paste('opttx_vim_results_subset2',Sys.Date( ),sep='_'),'RDS',sep='.')
+filename2 <- paste(paste('opttx_vim_obs_count_subset2',Sys.Date( ),sep='_'),'RDS',sep='.')
 saveRDS(results, file=paste0(res_dir,"rf results/raw longbow results/",filename1))
 saveRDS(obs_counts, file=paste0(res_dir,"rf results/raw longbow results/",filename2))
 

@@ -54,7 +54,7 @@ mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/mediation_
 saveRDS(season_bin_rf, paste0(res_dir, "rf results/longbow results/mediation.RDS"))
 
 
-optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_2021-04-05.RDS"))   
+optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_2021-04-30.RDS"))   
 saveRDS(optx_results, paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS"))
 
 

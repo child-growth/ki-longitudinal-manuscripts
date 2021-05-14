@@ -364,15 +364,14 @@ quantdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, w
 #---------------------------------------------------------
 
 #Save medians
-
-saveRDS(medians.monthly, file = paste0(dhs_res_dir,"/results/ki.zscore.medians.monthly.rds"))
-saveRDS(medians.quarterly, file = paste0(dhs_res_dir,"/results/ki.zscore.medians.quarterly.rds"))
+saveRDS(medians.monthly, file = paste0(dhs_res_dir,"ki.zscore.medians.monthly.rds"))
+saveRDS(medians.quarterly, file = paste0(dhs_res_dir,"ki.zscore.medians.quarterly.rds"))
 
 #Save densities
-saveRDS(resdf.monthly, file = paste0(dhs_res_dir,"/results/ki.density.fits.monthly.rds"))
-saveRDS(resdf.quarterly, file = paste0(dhs_res_dir,"/results/ki.density.fits.quarterly.rds"))
+saveRDS(resdf.monthly, file = paste0(dhs_res_dir,"ki.density.fits.monthly.rds"))
+saveRDS(resdf.quarterly, file = paste0(dhs_res_dir,"ki.density.fits.quarterly.rds"))
 
 #Save quantiles
-saveRDS(quantdf.monthly, file = paste0(dhs_res_dir,"/results/ki.quantiles.monthly.rds"))
-saveRDS(quantdf.quarterly, file = paste0(dhs_res_dir,"/results/ki.quantiles.quarterly.rds"))
+saveRDS(quantdf.monthly, file = paste0(dhs_res_dir,"ki.quantiles.monthly.rds"))
+saveRDS(quantdf.quarterly, file = paste0(dhs_res_dir,"ki.quantiles.quarterly.rds"))
 

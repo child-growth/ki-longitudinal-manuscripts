@@ -45,6 +45,11 @@ df
 
 d <- d %>% filter(cohort %in% df$cohort)
 
+df <- d %>% filter(!is.na(agedth))
+table(floor(df$agedth/30.4167))
+round(prop.table(table(floor(df$agedth/30.4167)))* 100, 2)
+
+
 # table(d$causedth[d$cohort=="MAL-ED Peru"])
 # d[d$cohort=="MAL-ED Peru" & d$dead==1,]
 

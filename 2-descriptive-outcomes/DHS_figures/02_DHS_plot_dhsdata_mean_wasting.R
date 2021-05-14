@@ -49,6 +49,10 @@ dhsz$measure <- factor(dhsz$measure)
 dhsz <- dhsz %>%
   mutate(wgt = weight / 1000000)
 
+table(dhsz$inghap, dhsz$country)
+dhsz$inghap <- ifelse(dhsz$country %in% ki_countries, 1, 0)
+table(dhsz$inghap, dhsz$country)
+
 
 #---------------------------------------
 #---------------------------------------
@@ -157,33 +161,10 @@ dhssubfits <- bind_rows(dhssubfits, dhssub_pool) %>%
 # Grab GHAP KI cohort estimated mean Z-scores
 # by age, and format the data for this analysis
 #---------------------------------------
-d <- readRDS(paste0(here(),"/results/desc_data_cleaned.rds")) %>% filter(is.na(country))
-d$region <- as.character(d$region)
 
-
-ghapd <- d %>%
-  filter(
-    measure %in% c("Mean LAZ - monthly cohorts", "Mean WAZ", "Mean WLZ"),
-    birth == "yes",
-    age_range == "1 month",
-    cohort == "pooled",
-    analysis %in% c("Primary","Cohorts monthly 0-24 m")
-  ) %>%
-  mutate(
-    measure = str_sub(measure, 6, 8),
-    measure = factor(measure, levels = c("LAZ", "WAZ", "WLZ"), labels = c("LAZ", "WAZ", "WHZ")),
-    whoregion = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")),
-    agecat2 = as.character(agecat),
-    agems = str_trim(str_sub(agecat2, 1, 2)),
-    agem = as.integer(
-      case_when(
-        agems == "Tw" ~ "0",
-        agems == "On" ~ "1",
-        !is.na(agems) ~ agems
-      )
-    )
-  )
-
+ghapd <- readRDS(co_occurrence_data_path) %>% rename(LAZ=haz, WAZ=waz, WHZ=whz)
+ghapd$country <- factor(ghapd$country)
+ghapd$agem <- floor(ghapd$agedays/30.4167)
 ghapd$region<-factor(ghapd$region)
 
 #---------------------------------------
@@ -191,10 +172,13 @@ ghapd$region<-factor(ghapd$region)
 #---------------------------------------
 ghapfits <- foreach(zmeas = c("LAZ", "WAZ", "WHZ"), .combine = rbind) %:%
   foreach(rgn = levels(ghapd$region), .combine = rbind) %do% {
-    di <- ghapd %>% filter(measure == zmeas & region == rgn)
-    fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di)
+    di <- ghapd %>% filter(region == rgn) 
+    names(di)[names(di) == zmeas] <- "est"
+    
+    try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=5), data = di))
     newd <- data.frame(agem = 0:24)
-    fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
+    fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
+    try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
     dfit <- data.frame(measure = zmeas, region = rgn, agem = 0:24, fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
     dfit
   }

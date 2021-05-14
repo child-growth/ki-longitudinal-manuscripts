@@ -2,9 +2,10 @@
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+library(caret)
 
 #Set adjustment covariates
-Wvars <- c("sex", "arm", "brthmon", "vagbrth", "hdlvry", "single", "trth2o",       
+Wvars <- c("sex", "tr", "brthmon", "vagbrth", "hdlvry", "single", "trth2o",       
  "cleanck",       "impfloor",      "hfoodsec",      "hhwealth_quart","W_mage",        "W_mhtcm",       "W_mwtkg",      
   "W_mbmi",        "W_fage",        "W_fhtcm",       "W_meducyrs",    "W_feducyrs",    "W_nrooms",      "W_nhh",        
   "W_nchldlt5",    "W_parity",      "impsan",        "safeh20")     
@@ -15,9 +16,6 @@ d <- readRDS(mortality_age_path)
 d$subjid <- as.numeric(d$subjid)
 d <- d %>% arrange(studyid, subjid, agedays)
 table(d$studyid)
-
-#TEMP drop new studies
-d <- d %>% filter(!(studyid %in% c("VITALPAK-Pregnancy","iLiNS-DYAD-G","DIVIDS")))
 
 
 #Steps for each analysis:
@@ -114,7 +112,7 @@ fullres <- bind_rows(res, res_sex_strat,
                      res_noPN, res_noPN_sex_strat,
                      res_age_strat, res_age_sex_strat)
           
-saveRDS(fullres, file=here("results/full_cox_results.RDS"))
+saveRDS(fullres, file=paste0(BV_dir,"results/full_cox_results.RDS"))
 #TO do:
 
 
