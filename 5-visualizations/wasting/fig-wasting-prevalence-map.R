@@ -3,12 +3,6 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-#Load country mediods
-mediods <- read.csv(here('data/non-secure data/country_centroids/country_centroids_primary.csv'), header=T, sep = "\t")
-head(mediods)
-mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
-mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
-
 #Load cohort data and calc wasting prev by study
 d <- readRDS(paste0(ghapdata_dir, "wasting_data.rds"))
 d <- d %>% filter(measurefreq=="monthly")
@@ -24,15 +18,6 @@ df <- d %>% filter(!is.na(whz)) %>% group_by(studyid,cohort) %>%
             long=mean(longitud,na.rm=T),
             country=first(country)) 
 
-
-
-#need to merge in all coordinates
-df <- left_join(df, mediods, by="country")
-
-
-df$lat[is.na(df$lat)] <- df$LAT[is.na(df$lat)]
-df$long[is.na(df$long)] <- df$LONG[is.na(df$long)]
-
 world <- map_data('world')
 
 numcountry <- df %>% group_by(country) %>% summarize(ncountry=n())
@@ -43,8 +28,6 @@ df$studyid<- gsub("^k.*?-" , "", df$studyid)
 
 
 set.seed(14)
-# jit <- 4
-# repel <- 5 
 jit <- 2
 repel <- 3
 coords <- FFieldPtRep(coords = cbind(jitter(df$long,jit),jitter(df$lat,jit)),rep.fact = repel)
@@ -103,6 +86,6 @@ map_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(map_plot, file=paste0(here(),"/figures/wasting/fig-",map_plot_name,".png"), width=9, height=4)
+ggsave(map_plot, file=paste0(fig_dir, "/wasting/fig-",map_plot_name,".png"), width=9, height=4)
 saveRDS(d, file=paste0(figdata_dir_wasting,"figdata-",map_plot_name,".RDS"))
 
