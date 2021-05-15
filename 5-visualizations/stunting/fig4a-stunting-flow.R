@@ -22,8 +22,8 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-plot_overall = readRDS(paste0(res_dir, "stunt-flow-data-pooled.RDS"))
-plot_region = readRDS(paste0(res_dir, "stunt-flow-data-region.RDS"))
+plot_overall = readRDS(paste0(res_dir, "stunting/stunt-flow-data-pooled.RDS"))
+plot_region = readRDS(paste0(res_dir, "stunting/stunt-flow-data-region.RDS"))
 
 
 #-----------------------------------------
