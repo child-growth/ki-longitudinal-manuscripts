@@ -11,7 +11,7 @@ theme_set(theme_ki())
 
 
 #Load data
-RMAest_clean <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+RMAest_clean <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
 yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 
@@ -99,7 +99,7 @@ for(i in unique(df$region)){
         ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$intervention_variable[1],"\nRegion: ", dpool$region[1])) 
       
 
-      ggsave(p, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk-factor/RR-plots/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png"), height=8, width=10)
+      ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png"), height=8, width=10)
       
       }
     }

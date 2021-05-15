@@ -3,8 +3,8 @@ rm(list=ls())
 source(here("/0-config.R"))
 
 #Load data
-d <- readRDS(here("/results/desc_data_cleaned.rds"))
-quantiles <- readRDS(here("/results/quantile_data_wasting.RDS"))
+d <- readRDS(paste0(BV_dir,"/results/desc_data_cleaned.rds"))
+quantiles <- readRDS(paste0(BV_dir,"/results/quantile_data_wasting.RDS"))
 
 #Subset to primary analysis
 d <- d %>% mutate(pooling=ifelse(cohort=="pooled" & is.na(pooling),region,pooling)) %>%
@@ -87,7 +87,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=here::here("figures/wasting/WLZ_by_region.png"), width=10, height=4)
+ggsave(p, file=paste0(fig_dir,"wasting/WLZ_by_region.png"), width=10, height=4)
 
 
 

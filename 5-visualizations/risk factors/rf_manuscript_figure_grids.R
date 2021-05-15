@@ -93,17 +93,17 @@ ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-fact
 
 
 #Figure 4
-#p_lagwhz <- readRDS(here("figures/plot objects/risk factor/fig-WLZ-quart-stunt-CI.rds"))
-p_earlywast <- readRDS(here("figures/plot-objects/risk-factor/fig-wasting-prior-to-stunting.rds"))
-plotdf2 <- readRDS(here("figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds"))
+#p_lagwhz <- readRDS(paste0(BV_dir,"/figures/plot objects/risk factor/fig-WLZ-quart-stunt-CI.rds"))
+p_earlywast <- readRDS(paste0(BV_dir,"/figures/plot-objects/risk-factor/fig-wasting-prior-to-stunting.rds"))
+plotdf2 <- readRDS(paste0(BV_dir,"/figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds"))
 
 
-plen_lagwhz <- readRDS(here("/figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds"))
+plen_lagwhz <- readRDS(paste0(BV_dir,"/figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds"))
 
 
 #load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mortality_plot_objects.Rdata")
-pmort <- readRDS(here("results/rf_mort+morb_plot_object.RDS"))
-# p <- readRDS(here("/results/fig-mortality-timing-plot-object.RDS"))
+pmort <- readRDS(paste0(BV_dir,"/results/rf_mort+morb_plot_object.RDS"))
+# p <- readRDS(paste0(BV_dir,"//results/fig-mortality-timing-plot-object.RDS"))
 # p <- p + theme(legend.position = c(0.9, 0.35)) 
 
 
@@ -118,15 +118,15 @@ fig4a <- plot_grid(plen_lagwhz, p_earlywast, labels = "auto", ncol = 2, align = 
 # fig4 <- plot_grid(fig4a, fig4b, labels = c("",""), ncol = 1, rel_heights = c(1,2))
 
 fig4  <- plot_grid(fig4a, pmort, labels = c("","c"), ncol = 1, rel_heights = c(1,1))
-ggsave(fig4, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/fig4.png"), width=14, height=6)
+ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig4.png"), width=14, height=6)
 
 
 
 #Extended data figure 3
-load(paste0(here::here(),"/results/rf results/rf_paf_plot_objects.Rdata"))
+load(paste0(BV_dir,"/results/rf results/rf_paf_plot_objects.Rdata"))
 p3 <- pPAF_stunt + xlab("") + theme(axis.text = element_text(size=12))
 p4 <- pPAF_wast + xlab("") + theme(axis.text = element_text(size=12))
 
 ext_fig3 <- plot_grid(p3, p4, labels = "auto", ncol = 2, align = 'v', axis = 'l')
-ggsave(ext_fig3, file=paste0(here(),"/figures/manuscript-figure-composites/risk-factor/extended_data_fig3.png"), width=14, height=8)
+ggsave(ext_fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/extended_data_fig3.png"), width=14, height=8)
 

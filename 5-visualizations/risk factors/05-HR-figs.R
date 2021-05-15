@@ -3,13 +3,16 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-d <- readRDS(here("results/mortality-results/full_cox_results.RDS"))
+d <- readRDS(paste0(BV_dir,"/results/mortality-results/full_cox_results.RDS")) %>% 
+  filter(!is.na(HR))
 dim(d)
 
 head(d)
 
 d %>% distinct(studyid)
 d %>% ungroup() %>% distinct(X, Y)
+
+d[is.na(d$studyid),]
 
 d <- d %>%
   mutate(
@@ -59,7 +62,7 @@ d <- d %>%
       "Ever wasted + underweight",    
       "Ever wasted + stunted" ))))
 
-saveRDS(d, paste0(here::here(), "/results/p_prim_pooled.RDS"))
+saveRDS(d, paste0(BV_dir, "/results/p_prim_mort_pooled.RDS"))
 
 p_prim_pooled <- d %>% filter(pooled==1, !grepl("ever_",X), method=="RE", is.na(sex), is.na(region), agecat=="overall", adj==1, df=="res") %>% 
   droplevels(.) %>%
@@ -101,7 +104,8 @@ p_prim_pooled_sex <- d %>% filter(pooled==1, !grepl("ever_",X), method=="RE", !i
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=c(0.25, 0.5,1, 2, 4, 8), trans='log10', labels=scaleFUN) +
   coord_flip() +
-  xlab("") + ylab("Hazard Ratio")
+  xlab("") + ylab("Hazard Ratio") +
+  theme(legend.position = "bottom")
 
 p_prim_pooled_sex
 
@@ -119,7 +123,7 @@ p_prim_pn <- d %>% filter(pooled==1, !grepl("ever_",X), method=="RE", is.na(sex)
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=c(0.25, 0.5,1, 2, 4, 8), trans='log10', labels=scaleFUN) +
   coord_flip() +
-  xlab("") + ylab("Hazard Ratio")
+  xlab("") + ylab("Hazard Ratio- no neonatal mortality")
 
 p_prim_pn
 
@@ -149,12 +153,12 @@ p_prim_agestrat <- d %>% filter(pooled==1, !grepl("ever_",X), method=="RE", is.n
   geom_point() + 
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub )) +
   geom_hline(yintercept = 1) +
-  scale_y_continuous(breaks=c(0.25, 0.5,1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  coord_flip() +
+  scale_y_continuous(breaks=c(0.25, 0.5,1, 2, 4, 8, 16, 32), trans='log10', labels=scaleFUN) +
+  coord_flip(ylim=c(0.5, 20)) +
   xlab("") + ylab("Hazard Ratio")
 
 p_prim_agestrat
-p_ci_agestrat
+
 
 
 p_ci_agestrat <- d %>% filter(pooled==1, grepl("ever_",X), method=="RE", is.na(sex), is.na(region), agecat %in% agecats, adj==1) %>% 
@@ -165,10 +169,15 @@ p_ci_agestrat <- d %>% filter(pooled==1, grepl("ever_",X), method=="RE", is.na(s
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub )) +
   geom_hline(yintercept = 1) +
   scale_y_continuous(breaks=c(0.25, 0.5,1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  coord_flip() +
+  coord_flip(ylim=c(0.25, 10)) +
   xlab("") + ylab("Hazard Ratio")
 
 p_ci_agestrat
+
+
+plotlist <- mget(ls(pattern = "^p_"))
+
+saveRDS(plotlist, file=paste0(fig_dir,"risk-factor/mort_HR_plots.rds"))
 
 #forest plots
 

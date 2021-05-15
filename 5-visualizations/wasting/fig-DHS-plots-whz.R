@@ -34,6 +34,7 @@ pcols <- tableau11
 dhs_plotd = read_rds(paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_byage.RDS"))
 dhs_plotd$region = factor(dhs_plotd$region, levels = c("Overall", "Africa", "Latin America", "South Asia"))
 dhs_plotd$measure[dhs_plotd$measure=="WHZ"] <- "WLZ"
+dhs_plotd <- dhs_plotd %>% filter(!is.na(region))
 
 dhsp <- ggplot(data = dhs_plotd, aes(x = agem, y = fit, color = region, fill = region, linetype = dsource)) +
   facet_grid(measure ~ region) +
@@ -66,13 +67,13 @@ ggsave(dhsp, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_byage.png"), wid
 ##################################
 # Plot z-score density by region and measure
 ##################################
-kiden <- readRDS(paste0(here(), "/results/dhs/ki.density.fits.monthly.rds"))
+kiden <- readRDS(paste0(BV_dir, "/results/dhs/ki.density.fits.monthly.rds"))
 kiden <- kiden %>% mutate(dsource = "ki cohorts")
 
-dhssubden = readRDS(paste0(here(),"/results/dhs/dhs.density.ki-countries.rds"))
+dhssubden = readRDS(paste0(BV_dir,"/results/dhs/dhs.density.ki-countries.rds"))
 dhssubden <- dhssubden %>% mutate(dsource = "DHS, ki countries")
 
-medians = readRDS(paste0(here(),"/results/dhs/dhs.ki.zscore.medians.monthly.rds"))
+medians = readRDS(paste0(BV_dir,"/results/dhs/dhs.ki.zscore.medians.monthly.rds"))
 
 dhsden_plot <- bind_rows(kiden, dhssubden) %>%
   mutate(
@@ -85,6 +86,7 @@ dhsden_plot = dhsden_plot %>% mutate(region = factor(region, levels = c("Overall
 dhsden_plot$measure <- as.character(dhsden_plot$measure)
 dhsden_plot$measure[dhsden_plot$measure=="WHZ"] <- "WLZ"
 dhsden_plot$measure <- factor(dhsden_plot$measure, levels = c("LAZ", "WAZ", "WLZ"))
+dhsden_plot <- dhsden_plot %>% filter(!is.na(region))
 
 dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, color = region, linetype = dsource)) +
   facet_grid(measure ~ region) +

@@ -7,13 +7,13 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-dpool <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds")) %>% 
+dpool <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% 
   filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region!="N.America & Europe") %>%
   mutate(pooled=1)
-dFE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds")) %>% 
+dFE <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_FE_results.rds")) %>% 
   filter( intervention_variable=="sex", outcome_variable=="ever_stunted", RR.CI1 != RR.CI2, agecat=="0-24 months", region=="Pooled") %>%
         mutate(pooled=1, region="Pooled - FE")
-dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds")) %>% 
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% 
   filter(type=="RR",  intervention_variable=="sex", outcome_variable=="ever_stunted", ci_lower != ci_upper, agecat=="0-24 months") %>%
   mutate(pooled=0) %>%
   rename(RR=estimate, RR.CI1=ci_lower, RR.CI2=ci_upper)
@@ -87,7 +87,7 @@ p <-  ggplot(d, aes(x=(studyid))) +
   ggtitle("Associations between sex and stunting incidence\nfrom birth-24 months: cohort-specific and pooled results") +guides(shape=FALSE)
 
 
-ggsave(p, file=paste0(here::here(), "/figures/risk-factor/example_forest_plot_wasting.png"), height=14, width=10)
+ggsave(p, file=paste0(BV_dir, "/figures/risk-factor/example_forest_plot_wasting.png"), height=14, width=10)
 
 
 

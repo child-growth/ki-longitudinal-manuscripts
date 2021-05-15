@@ -11,7 +11,7 @@ rain <- read.csv(paste0(BV_dir,"/data/monthly_rainfall.csv"))
 head(rain)
 
 d <- readRDS(seasonality_data_path)
-d <- d %>% filter(measurefreq=="monthly")
+d <- d %>% filter(measurefreq=="monthly", abs(whz)< 5)
 head(rain)
 head(d)
 unique(d$studyid)
@@ -82,7 +82,7 @@ table(rain$cohort)
 #Rain_plot function
 rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:18)){
   rain_sub <- filter(rain, cohort == cohort_name)
-  dsub <- filter(df, cohort == cohort_name)
+  dsub <- filter(df, cohort == cohort_name, !is.na(whz))
   
   #add
   cohort_name <- paste0(cohort_name," (", round(rain_sub$season_index[1],2),")")

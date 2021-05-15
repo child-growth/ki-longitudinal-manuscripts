@@ -169,8 +169,8 @@ d_adj <- d %>% filter((adjusted==1) | ((intervention_variable=="sex"  | interven
 d_unadj <- d %>% filter(adjusted==0)
 
 
-saveRDS(d_adj, paste0(res_dir,"rf results/full_RF_results.RDS"))
-saveRDS(d_unadj, paste0(res_dir,"rf results/full_RF_unadj_results.RDS"))
+saveRDS(d_adj, paste0(res_dir,"rf results/full_RF_results.rds"))
+saveRDS(d_unadj, paste0(res_dir,"rf results/full_RF_unadj_results.rds"))
 
 
 
