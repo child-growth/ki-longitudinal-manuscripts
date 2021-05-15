@@ -18,13 +18,16 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # load data
-stunt_data = readRDS(paste0(res_bluevelvet_dir, "stuntflow.RDS"))
+stunt_data = readRDS(paste0(res_dir, "/stunting/stuntflow.RDS"))
 
 # number of studies, countries, children included
 length(names(table(stunt_data$studyid)))
 length(names(table(stunt_data$country)))
 x=stunt_data %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
 sum(x$n)
+
+stunt_data = stunt_data %>% 
+  mutate(cohort_country = paste0(studyid, " - ", country)) 
 
 #-----------------------------------------
 # format data for plot
@@ -124,6 +127,7 @@ format_plot_data = function(data, group_vars = NULL){
 
 plot_overall = format_plot_data(stunt_data)
 plot_region = format_plot_data(stunt_data, group_vars = "region")
+plot_cohort = format_plot_data(stunt_data, group_vars = "cohort_country")
 
 plot_overall = plot_overall %>%
   mutate(region = "Overall")
@@ -142,6 +146,7 @@ plot_region %>%
 
 saveRDS(plot_overall, file = paste0(res_dir, "stunt-flow-data-pooled.RDS"))
 saveRDS(plot_region, file = paste0(res_dir, "stunt-flow-data-region.RDS"))
+saveRDS(plot_cohort, file = paste0(res_dir, "stunt-flow-data-cohort.RDS"))
 
 
 
