@@ -171,6 +171,7 @@ d <- d[studyid=="ILINS-DYAD-M", studyid := "iLiNS-DYAD-M"]
 d %>% filter(!is.na(waz)|!is.na(haz)) %>% group_by(studyid, country, subjid) %>% mutate(lagage=agedays-lag(agedays)) %>% group_by(studyid) %>% summarize(mn=mean(lagage,na.rm=T), md=median(lagage,na.rm=T))
 
 
+
 monthly_vec <- c("MAL-ED",   
   "CMC-V-BCS-2002",              
   "IRC",    

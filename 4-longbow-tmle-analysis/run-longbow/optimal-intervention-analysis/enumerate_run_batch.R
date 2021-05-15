@@ -49,7 +49,7 @@ rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_OptTX.Rmd")
 inputs <- "single_analysis.json"
 
 #run test/provisioning job
-run_on_longbow(rmd_filename, inputs, provision = TRUE)
+#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_analyses.json"
@@ -60,12 +60,12 @@ batch_id
 wait_for_batch(batch_id)
 
 # download the longbow outputs
-get_batch_results(batch_id, results_folder="results")
-length(dir("results"))
+get_batch_results(batch_id, results_folder="results_optx")
+length(dir("results_optx"))
 
 # load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata","results")
-obs_counts <- load_batch_results("obs_counts.rdata","results")
+results <- load_batch_results("results.rdata","results_optx")
+obs_counts <- load_batch_results("obs_counts.rdata","results_optx")
 
 # save concatenated results
 filename1 <- paste(paste('opttx_vim_results',Sys.Date( ),sep='_'),'RDS',sep='.')

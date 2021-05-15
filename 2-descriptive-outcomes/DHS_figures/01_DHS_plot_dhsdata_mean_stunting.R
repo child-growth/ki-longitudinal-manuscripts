@@ -32,6 +32,11 @@ source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_funct
 #---------------------------------------
 dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
 
+table(dhaz$inghap, dhaz$country)
+dhaz$inghap <- ifelse(dhaz$country %in% ki_countries, 1, 0)
+table(dhaz$inghap, dhaz$country)
+
+
 # set up for parallel computing
 # configure for a laptop (use only 3 cores)
 registerDoParallel(cores = 3)
@@ -129,7 +134,7 @@ saveRDS(df_survey_country, file = paste0(dhs_res_dir, "DHS-stunting-by-country.r
 #---------------------------------------
 dhssubfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind, .packages = "dplyr") %dopar% {
   di <-  dhsz %>% filter(region == rgn & inghap == 1)
-  fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di)
+  fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr", k=5), weights = wgt, data = di)
   newd <- data.frame(agem = 0:24)
   # estimate approximate simultaneous confidence intervals
   fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000)
@@ -138,11 +143,13 @@ dhssubfits <- foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine
 }
 
 # estimate a pooled fit, over all regions
-fitsubpool <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = filter(dhsz, inghap == 1))
+fitsubpool <- mgcv::gam(zscore ~ s(agem, bs = "cr", k=5), weights = wgt, data = filter(dhsz, inghap == 1))
 newd <- data.frame(agem = 0:24)
 fitsubpoolci <- gamCI(m = fitsubpool, newdata = newd, nreps = 1000)
 dhssub_pool <- data.frame(measure = "LAZ", region = "OVERALL", agem = 0:24, fit = fitsubpoolci$fit, fit_se = fitsubpoolci$se.fit, fit_lb = fitsubpoolci$lwrS, fit_ub = fitsubpoolci$uprS)
 
+
+table(dhssubfits$region)
 dhssubfits <- bind_rows(dhssubfits, dhssub_pool) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 
@@ -151,7 +158,7 @@ dhssubfits <- bind_rows(dhssubfits, dhssub_pool) %>%
 d_country <- dhsz %>% filter(!is.na(country))
 dhssubfits_country <- foreach(ctry = unique(d_country$country), .combine = rbind, .packages = "dplyr") %dopar% {
   di <-  d_country %>% filter(country == ctry & inghap == 1)
-  try(fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), weights = wgt, data = di))
+  try(fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr", k=5), weights = wgt, data = di))
   newd <- data.frame(agem = 0:24)
   # estimate approximate simultaneous confidence intervals
   fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
@@ -164,90 +171,20 @@ dhssubfits_country <- foreach(ctry = unique(d_country$country), .combine = rbind
 # Grab GHAP KI cohort estimated mean Z-scores
 # by age, and format the data for this analysis
 #---------------------------------------
-d <- readRDS(paste0(here(),"/results/desc_data_cleaned.rds"))
-d$region <- as.character(d$region)
-d$region[d$region=="Asia"] <- "South Asia"
-
-
-
-ghapd <- d %>%
-  filter(
-    measure %in% c("Mean LAZ"),
-    birth == "yes",
-    age_range == "1 month",
-    cohort == "pooled",
-    analysis == "Primary"
-  ) %>%
-  mutate(
-    measure = str_sub(measure, 6, 9),
-    measure = factor(measure, levels = c("LAZ", "WAZ", "WLZ"), labels = c("LAZ", "WAZ", "WHZ")),
-    agecat2 = as.character(agecat),
-    agems = str_trim(str_sub(agecat2, 1, 2)),
-    agem = as.integer(
-      case_when(
-        agems == "Tw" ~ "0",
-        agems == "On" ~ "1",
-        !is.na(agems) ~ agems
-      )
-    )
-  )
-
-ghapd_country <- d %>%
-  filter(
-    measure %in% c("Mean LAZ"),
-    birth == "yes",
-    age_range == "1 month",
-    !is.na(country)#,
-    #analysis == "Primary"
-  ) %>%
-  mutate(
-    measure = str_sub(measure, 6, 9),
-    measure = factor(measure, levels = c("LAZ", "WAZ", "WLZ"), labels = c("LAZ", "WAZ", "WHZ")),
-    agecat2 = as.character(agecat),
-    agems = str_trim(str_sub(agecat2, 1, 2)),
-    agem = as.integer(
-      case_when(
-        agems == "Tw" ~ "0",
-        agems == "On" ~ "1",
-        !is.na(agems) ~ agems
-      )
-    )
-  )
-
-ghapd_country$country <- factor(ghapd_country$country)
-
-
-ghapd_cohort <- d %>%
-  filter(
-    measure %in% c("Mean LAZ"),
-    birth == "yes",
-    age_range == "1 month",
-    cohort!="pooled" & cohort!="pooled-country"
-  ) %>%
-  mutate(
-    measure = str_sub(measure, 6, 9),
-    measure = factor(measure, levels = c("LAZ", "WAZ", "WLZ"), labels = c("LAZ", "WAZ", "WHZ")),
-    agecat2 = as.character(agecat),
-    agems = str_trim(str_sub(agecat2, 1, 2)),
-    agem = as.integer(
-      case_when(
-        agems == "Tw" ~ "0",
-        agems == "On" ~ "1",
-        !is.na(agems) ~ agems
-      )
-    )
-  )
-
+d <- readRDS(stunting_data_path) 
+d$country <- factor(d$country)
+d$agem <- floor(d$agedays/30.4167)
 
 
 #---------------------------------------
 # fit smooths to GHAP data
 #---------------------------------------
-ghapfits <- foreach(rgn = unique(ghapd$region), .combine = rbind, .packages = "dplyr") %do% {
+ghapfits <- foreach(rgn = unique(d$region), .combine = rbind, .packages = "dplyr") %do% {
   
-  di <- ghapd %>% filter(region == rgn)
-  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+  di <- d %>% filter(region == rgn)
+  try(fiti <- mgcv::gam(haz ~ s(agem, bs = "cr", k=5), data = di))
   newd <- data.frame(agem = 0:24)
+  #newd <- data.frame(agedays = 1:730)
   fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
   try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
   dfit <- data.frame(
@@ -257,9 +194,9 @@ ghapfits <- foreach(rgn = unique(ghapd$region), .combine = rbind, .packages = "d
   dfit
 }
 
-ghapfits_country <- foreach(rgn = unique(ghapd_country$country), .combine = rbind, .packages = "dplyr") %do% {
-  di <- ghapd_country %>% filter(country == rgn)
-  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+ghapfits_country <- foreach(rgn = unique(d$country), .combine = rbind, .packages = "dplyr") %do% {
+  di <- d %>% filter(country == rgn)
+  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=5), data = di))
   newd <- data.frame(agem = 0:24)
   fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
   try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
@@ -270,9 +207,10 @@ ghapfits_country <- foreach(rgn = unique(ghapd_country$country), .combine = rbin
   dfit
 }
 
-ghapfits_cohort <- foreach(rgn = unique(ghapd_cohort$cohort), .combine = rbind, .packages = "dplyr") %do% {
-  di <- ghapd_cohort %>% filter(cohort == rgn)
-  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+d$cohort <- paste0(d$studyid, "-", d$country)
+ghapfits_cohort <- foreach(rgn = unique(d$cohort), .combine = rbind, .packages = "dplyr") %do% {
+  di <- d %>% filter(cohort == rgn)
+  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=5), data = di))
   newd <- data.frame(agem = 0:24)
   fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
   try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
@@ -283,6 +221,8 @@ ghapfits_cohort <- foreach(rgn = unique(ghapd_cohort$cohort), .combine = rbind, 
   dfit
 }
 
+
+
 #---------------------------------------
 # Append the fits into a single data frame
 # for plotting
@@ -290,6 +230,8 @@ ghapfits_cohort <- foreach(rgn = unique(ghapd_cohort$cohort), .combine = rbind, 
 ghapfits <- ghapfits %>% mutate(dsource = "ki cohorts")
 ghapfits_cohort  <- ghapfits_cohort %>% mutate(dsource = "ki cohorts")
 dhssubfits <- dhssubfits %>% mutate(dsource = "DHS, ki countries")
+dhssubfits$region <- replace(dhssubfits$region,is.na(dhssubfits$region),"Overall")
+
 # dhsallfits <- dhsallfits %>% mutate(dsource="DHS") # std_err based on bootstrapping GAM
 dhsallfits <- df_survey_output %>% mutate(dsource = "DHS") # std_err based on survey_avg using sampling weight
 
@@ -301,8 +243,6 @@ dhsfits <- bind_rows(ghapfits, ghapfits_cohort, dhssubfits, dhsallfits) %>%
 
 dhsfits = dhsfits %>%
   filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
-
-dhsfits$region <- replace(dhsfits$region,is.na(dhsfits$region),"Overall")
 
 dhsfits <- filter(dhsfits, measure == "LAZ")
 

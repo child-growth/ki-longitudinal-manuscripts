@@ -60,7 +60,7 @@ res_dir                           = "data/KI/ki-manuscript-output/results/"
 res_bluevelvet_dir                = "/data/KI/UCB-SuperLearner/ki-results/"
 
 #dhs_res_dir                       = here::here("results", "dhs")
-dhs_res_dir                       = "/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs/"
+dhs_res_dir                       = "/data/KI/ki-manuscript-output/results/dhs/"
 
 #data_dir                          = here::here("data")
 data_dir                           = "/data/KI/ki-manuscript-output/data/"
@@ -107,6 +107,7 @@ temp_clean_covariates_path        = paste0(ghapdata_dir, "FINAL_temp_clean_covar
 clean_covariates_path             = paste0(ghapdata_dir,"FINAL_clean_covariates.rds")
 ki_manuscript_dataset_path        = paste0(ghapdata_dir,"ki-manuscript-dataset.rds")
 mortality_path                    = paste0(ghapdata_dir,"mortality.rds")
+mortality_age_path                = paste0(ghapdata_dir,"mortality_age.rds")
 rf_stunting_data_path             = paste0(ghapdata_dir, "rf_stunting_data.rds")
 rf_wasting_data_path              = paste0(ghapdata_dir, "rf_wasting_data.rds")
 rf_underweight_path               = paste0(ghapdata_dir, "rf_underweight_data.rds")
@@ -141,6 +142,7 @@ source(paste0(project_functions_dir, "/0_descriptive_epi_stunt_functions.R"))
 source(paste0(project_functions_dir, "/0_descriptive_epi_wast_functions.R"))
 source(paste0(project_functions_dir, "/0_helper_sampling_weights.R"))
 source(paste0(project_functions_dir, "/0_risk_factor_functions.R"))
+source(paste0(project_functions_dir, "/0_mort_functions.R"))
 
 
 # Set theme
@@ -159,12 +161,26 @@ monthly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Peru89",
 monthly_and_quarterly_cohorts <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Brazil89",   
                                    "CMIN GB94",        "CMIN Peru89",      "CMIN Bangladesh93",
                                    "CONTENT",          "EE",               "GMS-Nepal",       
+                                   "Guatemala BSC",          "IRC",             
+                                   "JiVitA-3",         "JiVitA-4",         "Keneba",          
+                                   "LCNI-5",           "MAL-ED",           "PROBIT",          
+                                   "ResPak",           "SAS-CompFeed",     "SAS-FoodSuppl",   
+                                   "TanzaniaChild2",   "ZVITAMBO",         "TDC", "NIH-Birth",
+                                   "NIH-Crypto", "PROVIDE"      )
+
+monthly_and_quarterly_cohorts_cc <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "CMIN Brazil89",   
+                                   "CMIN GB94",        "CMIN Peru89",      "CMIN Bangladesh93",
+                                   "CONTENT",          "EE",               "GMS-Nepal",       
                                    "Guatemala BSC",    "iLiNS-Zinc",       "IRC",             
                                    "JiVitA-3",         "JiVitA-4",         "Keneba",          
                                    "LCNI-5",           "MAL-ED",           "PROBIT",          
                                    "ResPak",           "SAS-CompFeed",     "SAS-FoodSuppl",   
                                    "TanzaniaChild2",   "ZVITAMBO",         "TDC", "NIH-Birth",
                                    "NIH-Crypto", "PROVIDE"      )
+
+ki_countries <- c( "India",        "Peru",         "Brazil",       "Guinea-Bissau","Bangladesh",   "Pakistan",    
+                  "Nepal",        "Guatemala",    "Burkina Faso", "Gambia",       "Malawi",       "South Africa",
+                   "Tanzania",     "Belarus",      "Zimbabwe"  )
 
 
 

@@ -36,6 +36,7 @@ dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
 dwaz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
 dwhz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
 
+
 #---------------------------------------
 # combine all of the DHS data
 # into a single dataframe
@@ -44,6 +45,12 @@ dhsz <- bind_rows(dhaz, dwaz, dwhz) %>%
   mutate(
     measure = factor(measure, levels = c("HAZ", "WAZ", "WHZ"), labels = c("LAZ", "WAZ", "WHZ"))
   )
+
+dhsz$country[dhsz$dataset=="BOPR51F"] <- "Bolivia"
+
+table(dhsz$inghap, dhsz$country)
+dhsz$inghap <- ifelse(dhsz$country %in% ki_countries, 1, 0)
+table(dhsz$inghap, dhsz$country)
 
 #---------------------------------------
 # compute weights per instructions from
@@ -177,6 +184,7 @@ dhssubden_country <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %:%
     denid <- data.frame(x = deni$x, y = deni$y, measure = zmeas, country = rgn)
     denid
   }
+unique(dhssubden_country$country)
 dhssubden_region <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %:%
   foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
     di <- dhsz %>% filter(measure == zmeas & region == rgn & inghap == 1)
@@ -193,7 +201,10 @@ dhssubden_pool <- foreach(zmeas = levels(dhsz$measure), .combine = rbind) %dopar
 dhssubden <- bind_rows(dhssubden_pool, dhssubden_region, dhssubden_country) %>%
   mutate(region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America")))
 
+dhssubden <- dhssubden %>% filter(!is.na(x))
+table(dhssubden$country)
+
 #Save densities
 
-saveRDS(dhsallden, file = paste0(dhs_res_dir,"/results/dhs.density.all-countries.rds"))
-saveRDS(dhssubden, file = paste0(dhs_res_dir,"/results/dhs.density.ki-countries.rds"))
+saveRDS(dhsallden, file = paste0(dhs_res_dir,"dhs.density.all-countries.rds"))
+saveRDS(dhssubden, file = paste0(dhs_res_dir,"dhs.density.ki-countries.rds"))
