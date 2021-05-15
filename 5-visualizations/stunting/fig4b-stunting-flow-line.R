@@ -28,8 +28,7 @@ source(paste0(here::here(), "/0-config.R"))
 plot_cohort = readRDS(paste0(res_dir, "stunting/stunt-flow-data-cohort.RDS"))
 
 # pooled data
-plot_overall = readRDS(paste0(res_dir, "stunting/stunt-flow-data-pooled.RDS"))
-pooled_data = readRDS(paste0(res_dir, "stunting/stuntflow_pooled.RDS"))
+pooled_data = readRDS(paste0(res_dir, "stunting/stuntflow_pooled_reml.RDS"))
 plot_region = readRDS(paste0(res_dir, "stunting/stunt-flow-data-region.RDS"))
 
 # define color palette -----------------------------------------------------
@@ -55,6 +54,7 @@ pooled <- pooled_data %>%
 # drop rows that pooled over age not in underlying cohort data
 pooled = pooled[-which(pooled$agem<2 & pooled$classif=="Stunting relapse"),]
 pooled = pooled[-which(pooled$agem<1 & pooled$classif=="Stunting reversed"),]
+# pooled = pooled[-which(pooled$agem<1 & pooled$classif=="Newly stunted"),]
 
 plot_cohort= plot_cohort %>% mutate(agem = as.numeric(as.character(agem)),
                                     lb = NA,
@@ -110,8 +110,7 @@ p_inc = ggplot(plot_combine ,
   
   
   scale_color_manual("", values = c("#ADDE66",pink_green[c(4,5)])) +
-  scale_y_continuous(limits = c(0,45), breaks = seq(0,45,5), labels = seq(0,45,5)) +
-  scale_x_continuous(breaks = seq(0,15,3), labels = seq(0,15,3)) +
+  scale_x_continuous(limits = c(0,15), breaks = seq(0,15,3), labels = seq(0,15,3)) +
 
   xlab("Child age, months") +
   ylab("Incidence proportion (%)") +
