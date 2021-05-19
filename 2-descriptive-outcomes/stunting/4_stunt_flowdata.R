@@ -21,7 +21,7 @@ d = d %>% ungroup() %>% mutate(studyid = as.character(studyid))
 d <- d %>% filter(measurefreq=="monthly")
 
 # drop variables we don't need
-d = d %>% select(studyid, subjid, region, country, measid, agedays, haz)
+d = d %>% select(studyid, subjid, region, country, measid, agedays, haz) 
 
 #-------------------------------------------
 # check included cohorts
@@ -49,7 +49,6 @@ d <- d %>%
 d %>% group_by(agecat) %>%
   summarise(min = min(agedays)/30.4167,
             max = max(agedays)/30.4167)
-
 
 #--------------------------------------------------
 # classify stunting status each month
@@ -105,7 +104,15 @@ flow_m = d %>%
   # recode still stunted at first measurement  
   mutate(still_stunted = ifelse(measid==1, 0, still_stunted))
 
-
+# since some cohorts started measurement after birth,
+# if first measurement is stunted, do not classify 
+# as newly stunted; just replace as NA
+flow_m = flow_m %>% 
+  group_by(region,  studyid, country, subjid) %>% 
+  mutate(newly_stunted = ifelse(haz < -2 & measid==1 & 
+                                  studyid=="Guatemala BSC", NA, newly_stunted))
+  
+  
 # drop measurements with ages over 24 months
 #flow_m = flow_m %>% filter(!is.na(agecat)) 
 flow_m = flow_m %>% filter(agem < 25) 
@@ -118,15 +125,15 @@ d %>% filter(agedays<=16 * 30.4167) %>% ungroup() %>%
   summarize(Nchild=length(unique(paste0(studyid, subjid))))
 
 
-#--------------------------------------------------
-# check that indicators do not contain missing values
-#--------------------------------------------------
-assert_that(names(table(is.na(flow_m$newly_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$recover)))=="FALSE")
-assert_that(names(table(is.na(flow_m$relapse)))=="FALSE")
-assert_that(names(table(is.na(flow_m$still_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$not_stunted)))=="FALSE")
-assert_that(names(table(is.na(flow_m$never_stunted)))=="FALSE")
+# #--------------------------------------------------
+# # check that indicators do not contain missing values
+# #--------------------------------------------------
+# assert_that(names(table(is.na(flow_m$newly_stunted)))=="FALSE")
+# assert_that(names(table(is.na(flow_m$recover)))=="FALSE")
+# assert_that(names(table(is.na(flow_m$relapse)))=="FALSE")
+# assert_that(names(table(is.na(flow_m$still_stunted)))=="FALSE")
+# assert_that(names(table(is.na(flow_m$not_stunted)))=="FALSE")
+# assert_that(names(table(is.na(flow_m$never_stunted)))=="FALSE")
 
 # check for multiple categories
 flow_m = flow_m %>% mutate(sum = newly_stunted + 
@@ -165,12 +172,12 @@ stunt_agg = flow_m %>%
   group_by(studyid, country, agem) %>%
   summarise(
     nchild=length(unique(subjid)),
-    newly_stunted = sum(newly_stunted),
-    still_stunted = sum(still_stunted),
-    recover = sum(recover),
-    not_stunted = sum(not_stunted),
-    never_stunted = sum(never_stunted),
-    relapse = sum(relapse))  
+    newly_stunted = sum(newly_stunted, na.rm=T),
+    still_stunted = sum(still_stunted, na.rm=T),
+    recover = sum(recover, na.rm=T),
+    not_stunted = sum(not_stunted, na.rm=T),
+    never_stunted = sum(never_stunted, na.rm=T),
+    relapse = sum(relapse, na.rm=T))  
 
 #--------------------------------------------------
 # estimate random effects, format results
@@ -346,7 +353,7 @@ stunt_pooled_corr_fe = replace_zero(data = stunt_pooled_corr_fe,
 
 
 saveRDS(flow_m, file=paste0(res_dir, "stunting/stuntflow.RDS"))
-saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stunting/stuntflow_pooled.RDS"))
+saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stunting/stuntflow_pooled_reml.RDS"))
 saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_fe.RDS"))
 
 
