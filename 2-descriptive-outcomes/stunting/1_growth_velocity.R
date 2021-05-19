@@ -10,9 +10,9 @@ library(growthstandards)
 
 d <- readRDS(paste0(ghapdata_dir,"ki-manuscript-dataset.rds"))
 
-# check included cohorts
-assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
-            msg = "Check data. Included cohorts do not match.")
+# check included cohorts NOTE: won't match because some studies not dropped yet/arms dropped at bottom of the script
+# assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
+#             msg = "Check data. Included cohorts do not match.")
 
 #Drop yearly
 d <- d %>% filter(measurefreq!="yearly")
@@ -167,7 +167,7 @@ dd_sub$tr[is.na(dd_sub$tr)]<-""
 dim(dd_sub)
 dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-4" & dd_sub$tr!="Control"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="PROBIT" & dd_sub$tr!="Control"),]
-dd_sub=dd_sub[!(dd_sub$studyid=="iLiNS-Zinc" & dd_sub$tr!="Control"),]
+dd_sub=dd_sub[!(dd_sub$studyid=="iLiNS-Zinc"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="SAS-CompFeed" & dd_sub$tr!="Control"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="JiVitA-3" & dd_sub$tr!="Control"),]
 dd_sub=dd_sub[!(dd_sub$studyid=="COHORTS" & dd_sub$tr=="Other"),]

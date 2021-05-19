@@ -18,7 +18,7 @@ scaleFUN <- function(x) sprintf("%.1f", x)
 
 
 
-df <- readRDS(paste0(here::here(),"/results/rf results/pooled_PAF_results.rds"))
+df <- readRDS(paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds"))
 unique(df$outcome_variable)
 df$outcome_variable <- gsub("ever_stunted", "Ever stunted", df$outcome_variable)
 df$outcome_variable <- gsub("ever_wasted", "Ever wasted", df$outcome_variable)
@@ -157,15 +157,15 @@ pPAF_wast
 
 
 
-ggsave(pPAF_stunt, file=here("figures/risk-factor/fig-stunt-ci-PAF.png"), height=10, width=8)
-ggsave(pPAF_wast, file=here("figures/risk-factor/fig-wast-ci-PAF.png"), height=10, width=8)
+ggsave(pPAF_stunt, file=paste0(BV_dir,"/figures/risk-factor/fig-stunt-ci-PAF.png"), height=10, width=8)
+ggsave(pPAF_wast, file=paste0(BV_dir,"/figures/risk-factor/fig-wast-ci-PAF.png"), height=10, width=8)
 
-save(pPAF_stunt, pPAF_wast, file=here("results/rf results/rf_paf_plot_objects.Rdata"))
+save(pPAF_stunt, pPAF_wast, file=paste0(BV_dir,"/results/rf results/rf_paf_plot_objects.Rdata"))
 
 
 plot_PAF = plot_grid(pPAF_stunt, pPAF_wast, labels = c("A","B"), ncol = 2, nrow = 1)
 
-ggsave(plot_PAF, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-PAF.png"), height=14, width=14)
+ggsave(plot_PAF, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-PAF.png"), height=14, width=14)
 
 
 

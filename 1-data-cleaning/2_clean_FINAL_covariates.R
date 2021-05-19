@@ -39,6 +39,7 @@ head(lprev)
 table(lprev$anywast06)
 table(lprev$anystunt06)
 table(lprev$pers_wast)
+table(lprev$studyid, lprev$pers_wast)
 
 #Merge in new variables
 lprev <- lprev %>% subset(., select = c(studyid, country,subjid, anywast06,  pers_wast))

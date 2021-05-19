@@ -31,7 +31,7 @@ clean_agecat<-function(agecat){
 
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 head(d)
 
 d <- d %>% filter(region=="Pooled")
@@ -64,8 +64,8 @@ RR_plot <- function(d2){
     labs(y = "RR", x = "Exposure level") +
     geom_hline(yintercept = 1, linetype = "dashed") +
     scale_y_continuous(breaks=c(0.125, 0.25, 0.5, 1, 2, 4, 8, 16), trans='log10') +
-    scale_colour_manual(values=rep(c(tableau10, "black"), each=3), drop=FALSE) +
-    scale_fill_manual(values=rep(c(tableau10, "black"), each=3), drop=FALSE) +
+    scale_colour_manual(values=rep(c(tableau10, "black", "black"), each=3), drop=FALSE) +
+    scale_fill_manual(values=rep(c(tableau10, "black", "black"), each=3), drop=FALSE) +
     #scale_size_manual(values=c(4,5)) +
     scale_shape_manual(values=c(1, 16)) +
     theme(#strip.placement = "outside",
@@ -79,7 +79,7 @@ RR_plot <- function(d2){
     facet_wrap(~contrast, strip.position = "top", ncol=9) +
     ggtitle(d2$RFlabel[1])
 
-  ggsave(p, file=here(paste0("figures/risk-factor/RR-plots/fig-RR-",d2$intervention_variable[1],".png")), width=14, height=5.2)
+  ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-RR-",d2$intervention_variable[1],".png"), width=14, height=5.2)
   
   return(p)
 }
@@ -92,4 +92,4 @@ RR_plot <- function(d2){
 #Plots over all exposures
 RRplotdf <- d %>% group_by(intervention_variable) %>% do(res=RR_plot(.))
 
-saveRDS(RRplotdf, here("figures/plot-objects/risk-factor/RRplotdf.RDS"))
+saveRDS(RRplotdf, paste0(BV_dir,"/figures/plot-objects/risk-factor/RRplotdf.RDS"))

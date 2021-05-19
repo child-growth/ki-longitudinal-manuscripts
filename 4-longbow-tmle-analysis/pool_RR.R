@@ -17,6 +17,10 @@ d <- dfull %>% filter(type=="RR")
 d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")
 
 
+# unique(d$intervention_variable)
+#d <- d %>% filter(intervention_variable=="pers_wast")
+
+
 #Subset agecat
 d <- droplevels(d)
 

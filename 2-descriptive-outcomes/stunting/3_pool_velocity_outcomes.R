@@ -19,9 +19,8 @@ d <- readRDS(paste0(ghapdata_dir, "velocity_longfmt.rds"))
 #-------------------------------------------
 # check included cohorts
 #-------------------------------------------
-# excluding iLiNS-Zinc because the measurement ages were so close to 24 months that
-# velocity was not calculated
-vel_cohorts = monthly_and_quarterly_cohorts[-which(monthly_and_quarterly_cohorts == "iLiNS-Zinc")]
+
+vel_cohorts = monthly_and_quarterly_cohorts
 assert_that(setequal(unique(d$studyid), vel_cohorts),
             msg = "Check data. Included cohorts do not match.")
 

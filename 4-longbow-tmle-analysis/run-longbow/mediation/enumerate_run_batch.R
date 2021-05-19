@@ -34,11 +34,6 @@ writeLines(jsonlite::toJSON(enumerated_analyses),"all_mediation_analyses.json")
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
 
 rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
-#inputs <- "inputs_template.json"
-#inputs <- "single_bin_analysis.json"
-
-#run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
 
 # send the batch to longbow (with provisioning disabled)
 med_batch_inputs <- "all_mediation_analyses.json"

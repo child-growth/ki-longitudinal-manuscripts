@@ -11,7 +11,7 @@ source(paste0(here::here(), "/0-config.R"))
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
 #Drop wasting risk factors
-cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
+#cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
 
 #Check reference levels
 for(i in 3:ncol(cov)){

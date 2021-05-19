@@ -28,6 +28,8 @@ unique(df$region)
 unique(df$outcome_variable)
 unique(df$intervention_variable)
 
+d <- df %>% filter(intervention_variable=="pers_wast")
+
 
 
 plotdf2 <- df %>% 
@@ -64,6 +66,7 @@ p_earlywast <- ggplot(plotdf2, aes(x=Xvar)) +
         axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
         panel.spacing = unit(0, "lines")) #+
   #ggtitle("Risk of stunting onset\nby measure of early wasting")
+p_earlywast
 
 ggsave(p_earlywast, file=paste0(BV_dir,"/figures/risk-factor/fig-wasting-prior-to-stunting.png"), height=4, width=4)
 

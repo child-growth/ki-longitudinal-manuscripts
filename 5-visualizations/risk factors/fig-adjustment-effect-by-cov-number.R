@@ -6,8 +6,8 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-dfull_adj <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds"))
-dfull_unadj <- readRDS(paste0(here::here(),"/results/rf results/full_RF_unadj_results.rds"))
+dfull_adj <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
+dfull_unadj <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_unadj_results.rds"))
 dfull <- rbind(dfull_adj,dfull_unadj)
 dfull <- distinct(dfull)
 
@@ -68,5 +68,5 @@ p <-  ggplot(df, aes(x=num_cov , y=diff)) +
   #("Difference between unadjusted and adjusted\nestimates of differences in LAZ and WLZ outcomes") 
 
 
-ggsave(p, file=here("/figures/risk-factor/fig-adjusted-unadjusted-differences.png"), height=8, width=8)
+ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/fig-adjusted-unadjusted-differences.png"), height=8, width=8)
 

@@ -4,8 +4,8 @@ source(paste0(here::here(), "/0-config.R"))
 
 
 #Load data
-ate <- readRDS(paste0(BV_results,"/results/rf results/pooled_ATE_results.rds")) 
-rr <- readRDS(paste0(BV_results,"/results/rf results/pooled_RR_results.rds"))
+ate <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results.rds")) 
+rr <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
 #Match columns names
 rr <- rr %>% rename(est=RR, CI.lb=RR.CI1, CI.ub=RR.CI2)
@@ -238,7 +238,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
   
   
 # save plot 
-ggsave(hm, file=paste0(BV_results,"/figures/risk-factor/fig-sig-heatmap.png"), height=14, width=11.5)
+ggsave(hm, file=paste0(BV_dir,"/figures/risk-factor/fig-sig-heatmap.png"), height=14, width=11.5)
 
 
 #Region stratified
@@ -288,5 +288,5 @@ hm_strat <- ggplot(region_data,aes(x=xvar, y=yvar, fill=pval_cat)) +
 hm_strat
 
 # save plot 
-ggsave(hm_strat, file=paste0(BV_results, "/figures/risk-factor/fig-sig-heatmap_regionstrat.png"), height=10, width=14)
+ggsave(hm_strat, file=paste0(BV_dir, "/figures/risk-factor/fig-sig-heatmap_regionstrat.png"), height=10, width=14)
 

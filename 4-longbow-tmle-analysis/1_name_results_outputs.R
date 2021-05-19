@@ -13,7 +13,7 @@ Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 
 
-bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_primary_2021-04-22.RDS"))
+bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_primary_2021-05-15.RDS"))
 bin_other <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_2021-04-23.RDS"))
 
 saveRDS(bin_primary, paste0(res_dir, "rf results/longbow results/results_bin_primary.RDS"))
@@ -51,7 +51,7 @@ season_bin_rf <- readRDS(paste0(res_dir,  "rf results/raw longbow results/season
 saveRDS(season_bin_rf, paste0(res_dir, "rf results/longbow results/season_bin_rf_results.RDS"))
 
 mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/mediation_2021-04-23.RDS"))
-saveRDS(season_bin_rf, paste0(res_dir, "rf results/longbow results/mediation.RDS"))
+saveRDS(mediation, paste0(res_dir, "rf results/longbow results/mediation.RDS"))
 
 
 optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_2021-04-30.RDS"))   

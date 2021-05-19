@@ -10,7 +10,7 @@ library(EValue)
 
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds"))
+d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
 
 #Drop reference levels
@@ -81,7 +81,7 @@ p <- ggplot(df, aes(x=RFlabel, y=EVals_lb)) + geom_point(alpha=0.1) + #geom_smoo
   theme(
     axis.text.x = element_text(size=12, angle=90)) 
 
-ggsave(p, file=paste0("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk-factor/fig-Evalues.png"), height=10, width=8)
+ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/fig-Evalues.png"), height=10, width=8)
 
 
 

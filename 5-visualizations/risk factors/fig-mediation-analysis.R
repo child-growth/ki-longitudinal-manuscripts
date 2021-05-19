@@ -7,12 +7,12 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load mediation results
-results <- readRDS(here("results/rf results/raw longbow results/mediation_2021-04-04.RDS"))
+results <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/mediation.RDS"))
 md <- results %>% filter(type=="ATE") %>% mutate(analysis="med")
 head(md)
 
 #load primary results
-dfull <- readRDS(here("results/rf results/full_RF_results.rds"))
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
 dfull <- dfull %>% filter(type=="ATE", adjustment_set!="unadjusted") %>% mutate(analysis="prim")
@@ -107,6 +107,6 @@ p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))
   guides(color=guide_legend(ncol=1))+
   coord_flip()
 
-ggsave(p, file="C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/figures/risk-factor/fig-mediation.png", width=10, height=6)
+ggsave(p, file=paste0(fig_dir,"/risk-factor/fig-mediation.png"), width=10, height=6)
 
 

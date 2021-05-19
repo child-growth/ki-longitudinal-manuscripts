@@ -226,7 +226,6 @@ d %>% filter(tr!="", !is.na(haz)) %>% group_by(studyid, country, tr) %>%
   as.data.frame()
 
 
-
 stunt <- drop_int_arms(stunt_rf) 
 wast <- drop_int_arms(wast_rf) 
 waz <- drop_int_arms(waz_rf) 
@@ -236,6 +235,12 @@ stunt <- droplevels(stunt)
 wast <- droplevels(wast)
 waz <- droplevels(waz)
 co <- droplevels(co)
+
+#Drop i-Lins Zinc as the control arm does not have quarterly measures
+stunt <- stunt %>% filter(studyid!="iLiNS-Zinc")
+wast <- wast %>% filter(studyid!="iLiNS-Zinc")
+waz <- waz %>% filter(studyid!="iLiNS-Zinc")
+co <- co %>% filter(studyid!="iLiNS-Zinc")
 
 saveRDS(stunt, stunting_data_path)
 saveRDS(wast, wasting_data_path)
