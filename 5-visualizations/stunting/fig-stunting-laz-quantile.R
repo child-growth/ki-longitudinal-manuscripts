@@ -37,8 +37,15 @@ theme_set(theme_ki())
 
 dall <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
 
+dmonthly <- dall %>% filter(measurefreq=="monthly")
+
+# check included cohorts
+assert_that(setequal(unique(dmonthly$studyid), monthly_cohorts),
+            msg = "Check data. Included cohorts do not match.")
+
+
 # drop burkina faso study
-d <- dall %>% filter(studyid!="iLiNS-Zinc")
+d <- dmonthly %>% filter(studyid!="iLiNS-Zinc")
 
 # add country
 d <- d %>%  
