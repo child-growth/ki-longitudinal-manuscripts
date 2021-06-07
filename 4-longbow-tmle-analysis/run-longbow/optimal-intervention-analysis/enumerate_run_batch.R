@@ -29,7 +29,19 @@ load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuou
 default_params$script_params$maximize <- TRUE
 default_params$script_params$count_Y <- FALSE
 
-analyses <- analyses %>% filter(Y %in% c("haz","whz"))
+#Subset to just optx estimates
+load(paste0(ghapdata_dir,"st_meanZ_optx.Rdata"))
+Avars <-c( "gagebrth",      "birthwt",      
+           "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
+           "mbmi",          "single",        "fage",          "fhtcm",         "nrooms",        "nhh",           "nchldlt5",     
+           "hhwealth_quart", "month", "brthmon", "parity",   "meducyrs", 
+           "feducyrs", "hfoodsec",  
+           "cleanck", "impfloor",  "impsan", "safeh20",
+           "perdiar6", "perdiar24", "predexfd6", 
+           "earlybf")  
+
+analyses <- analyses %>% filter(Y %in% c("haz","whz"), A %in% Avars)
+analyses$file <- gsub("_rf","_optx",analyses$file)
 analyses <- analyses[!sapply(analyses$W,is.null),] # Drop unadjusted estimates
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)

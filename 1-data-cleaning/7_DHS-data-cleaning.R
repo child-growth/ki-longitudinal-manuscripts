@@ -10,6 +10,8 @@ source(paste0(here::here(), "/0-config.R"))
 
 df <- readRDS(here("data/dhs_data_combined.rds"))
 
+#haz <- readRDS(here::here("data", "clean-DHS-haz.rds"))
+
 #-------------------------------------------
 # Drop unnecessary variables and rename selected variables
 #-------------------------------------------

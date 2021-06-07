@@ -11,13 +11,17 @@ theme_set(theme_ki())
 
 #Figure 2
 plot_list <- readRDS(paste0(BV_dir,"/figures/plot-objects/fig2_plot_objects.rds"))
+whz_spline <- readRDS(paste0(BV_dir,"/figures/plot-objects/mean_wlz_plot_objects.rds"))
+saveRDS(mean_wlz_plot, paste0(BV_dir,"/figures/plot-objects/fig2_plot_objects.rds"))
+
 
 prev_p <- plot_list[[2]]$`plot`
 prev_p <- prev_p + theme(legend.position = "none") + coord_cartesian(ylim=c(0, 37))
-ci_plot <- plot_list[[3]]$`plot` + theme(legend.position = c(.075,.9))
-fig2 <- plot_grid(plot_list[[1]], prev_p, ci_plot, labels = "auto", ncol = 1, align = 'v', axis = 'l')
+ci_plot <- plot_list[[3]]$`plot` + theme(legend.position = c(.07,.8))
+fig2 <- plot_grid(whz_spline, prev_p, ci_plot, labels = "auto", ncol = 1, align = 'v', axis = 'l')
 
-ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig2.png"), width=14, height=14)
+#ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig2.png"), width=14, height=14)
+ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig2.png"), width=14, height=10)
 
 #N's for figure caption
 plot_list[[1]]$`data` %>% group_by(region) %>% summarize(min(N), max(N))
@@ -54,10 +58,10 @@ left_plot <- plot_grid(
 
 #Right plot
 #p_seasonRR <- p_seasonRR + coord_flip() + 
-right_plot <- plot_grid(p_seasonRR, seasonbirth_plot, labels = c("b","c"), ncol = 1, rel_heights = c(1, 1))
+right_plot <- plot_grid(p_seasonRR, seasonbirth_plot, labels = c("b","c"), ncol = 1, rel_heights = c(0.9, 1.1))
 
 
-fig3 <- plot_grid(left_plot, right_plot, labels = c("a",""), ncol = 2, align = 'h', axis = 'l', rel_heights = c(1, 1))
+fig3 <- plot_grid(left_plot, right_plot, labels = c("a",""), ncol = 2, align = 'h', axis = 'l', rel_widths = c(1.5, 1))
 
 ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig3.png"), width=14, height=14)
 

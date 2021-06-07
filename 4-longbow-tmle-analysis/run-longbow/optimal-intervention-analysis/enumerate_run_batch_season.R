@@ -1,6 +1,6 @@
 
 rm(list=ls())
-.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) )
+.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths() ) )
 
 source(paste0(here::here(), "/0-config.R"))
 .libPaths( "~/rlibs" )
@@ -19,7 +19,6 @@ default_params <- fromJSON(inputs)
 
 
 # # Continious
-#load(here("sprint_7D_longbow","Manuscript analysis","adjusted_continuous.rdata"))
 load(here("4-longbow-tmle-analysis","analysis specification","seasonality_rf_Zscore_analyses.rdata"))
 default_params$script_params$maximize <- TRUE
 default_params$script_params$count_Y <- FALSE
@@ -35,9 +34,7 @@ writeLines(toJSON(enumerated_analyses),"season_analyses.json")
 
 # 2. run batch
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
-
-
-rmd_filename <- system.file("templates/longbow_OptTX.Rmd", package="longbowOptTX")
+rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_OptTX.Rmd")
 
 
 # send the batch to longbow (with provisioning disabled)

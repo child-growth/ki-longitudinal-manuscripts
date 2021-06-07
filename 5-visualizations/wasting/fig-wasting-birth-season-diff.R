@@ -8,11 +8,16 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load longbow results
-results <- readRDS(here("results","rf results","longbow results","seasonality_birth_results.RDS"))
-
-
+results <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/seasonality_birth_results.RDS"))
+Ns <- readRDS(paste0(BV_dir,"/results/rf results/raw longbow results/seasonality_birth_results_obs_counts_2021-06-05.RDS")) %>%
+  rename(intervention_level=brthmon)
 
 d <- results %>% filter(type=="ATE")
+d <- left_join(d, Ns, by=c("studyid", "country", "intervention_level","outcome_variable"))
+table(d$n_cell)
+d <- d %>% filter(n_cell >=10, baseline_level=="1")
+
+d[d$intervention_level=="8",]
 
 #Subset to monthly cohorts by merging in N's
 #d <- left_join(cohort_Ns, d, by = c("studyid", "country"))
@@ -93,12 +98,12 @@ theme(panel.background=element_blank(),
       #plot.margin = unit(c(-1, -1.2, -1.2, -1.5), "cm"),  # Edited code
       legend.position = 'none') +
   labs(x=NULL)
+p_season_birth_diff
 
 
 
-
-saveRDS(p_season_birth_diff, file = here("figures/plot-objects/season_birth_wlz_diff_plot.rds"))
-ggsave(p_season_birth_diff, file= here("figures/wasting/season_birth_wlz_diff.png"), width=5, height=4)
+saveRDS(p_season_birth_diff, file = paste0(BV_dir,"/figures/plot-objects/season_birth_wlz_diff_plot.rds"))
+ggsave(p_season_birth_diff, file= paste0(BV_dir,"/figures/wasting/season_birth_wlz_diff.png"), width=5, height=4)
 
 
 
@@ -173,7 +178,7 @@ p_season_birth_diff_FE <- ggplot(df, aes(y=ATE,x=intervention_level)) +
 
 
 
-saveRDS(p_season_birth_diff_FE, file = here("figures/plot-objects/season_birth_wlz_diff_plot_FE.rds"))
-ggsave(p_season_birth_diff_FE, file=here("figures/wasting/season_birth_wlz_diff_FE.png"), width=5, height=4)
+saveRDS(p_season_birth_diff_FE, file = paste0(BV_dir,"/figures/plot-objects/season_birth_wlz_diff_plot_FE.rds"))
+ggsave(p_season_birth_diff_FE, file=paste0(BV_dir,"/figures/wasting/season_birth_wlz_diff_FE.png"), width=5, height=4)
 
 

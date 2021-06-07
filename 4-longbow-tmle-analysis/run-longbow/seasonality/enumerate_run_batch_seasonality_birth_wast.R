@@ -23,13 +23,14 @@ default_params$script_params$count_Y <- FALSE
 load(here("4-longbow-tmle-analysis","analysis specification","seasonality_birth_analyses.rdata"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
+load(paste0(ghapdata_dir, "seasonality_birth_rf.Rdata"))
 
 writeLines(jsonlite::toJSON(enumerated_analyses),"seasonality_birth_analyses.json")
 
 
 # 2. run batch
 configure_cluster(here("0-project-functions","cluster_credentials.json"))
-rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
+rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors_seasonality.Rmd")
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "seasonality_birth_analyses.json"

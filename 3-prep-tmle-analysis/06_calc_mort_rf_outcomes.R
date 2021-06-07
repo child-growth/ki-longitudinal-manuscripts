@@ -220,13 +220,18 @@ d6 <- calc.ci.agecat(co_mort, range = 6, birth="yes")
 
 #Mark co-occurrence
 d6$co <- ifelse(d6$whz < (-2) & d6$haz < (-2), 1, 0)
+d6$wast_uwt <- ifelse(d6$whz < (-2) & d6$waz < (-2), 1, 0)
+d6$stunt_uwt <- ifelse(d6$haz < (-2) & d6$waz < (-2), 1, 0)
 table(d6$co)
 
 #calculate any co-occurrence from 0-6
 co_ci_0_6 = d6 %>% group_by(studyid,country,subjid) %>%
   mutate(mo6_obs = 1*(agedays = min(abs(agedays - 6*30.4167)))) %>% #Mark observation closest to 6 months (so that yearly trial data isn't dropped)
   filter(agedays<=max(mo6_obs*agedays) & agedays<=6.5*30.4167) %>% #14 day window around 6 months for SAS compfeed and vit A (most obs slightly above 30.4167*6)
-  mutate(ever_co06= 1*(sum(co, na.rm=T)>0), Nobs=n()) %>% 
+  mutate(ever_co06= 1*(sum(co, na.rm=T)>0), 
+         ever_wast_uwt06= 1*(sum(wast_uwt, na.rm=T)>0), 
+         ever_stunt_uwt06= 1*(sum(stunt_uwt, na.rm=T)>0), 
+         Nobs=n()) %>% 
   slice(1) %>%
   ungroup() 
 

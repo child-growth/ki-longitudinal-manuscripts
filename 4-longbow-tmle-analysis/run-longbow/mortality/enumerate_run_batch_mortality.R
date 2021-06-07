@@ -6,7 +6,6 @@ source(paste0(here::here(), "/0-config.R"))
 .libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
-library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
 
@@ -19,8 +18,8 @@ default_params$script_params$count_Y <- TRUE
 load(here("4-longbow-tmle-analysis","analysis specification","mortality_analyses.rdata"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(toJSON(enumerated_analyses[[1]]),"single_mortality_analyses.json")
-writeLines(toJSON(enumerated_analyses),"all_mortality_analyses.json")
+writeLines(jsonlite::toJSON(enumerated_analyses[[1]]),"single_mortality_analyses.json")
+writeLines(jsonlite::toJSON(enumerated_analyses),"all_mortality_analyses.json")
 
 
 

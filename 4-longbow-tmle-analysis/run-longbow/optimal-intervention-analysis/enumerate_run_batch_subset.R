@@ -28,8 +28,19 @@ default_params$script_params$maximize <- TRUE
 default_params$script_params$count_Y <- FALSE
 
 
+
 #Subset analysis to jobs not yet run
-analyses <- analyses %>% filter(Y %in% c("whz","haz"))
+Avars <-c( "gagebrth",      "birthwt",      
+           "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
+           "mbmi",          "single",        "fage",          "fhtcm",         "nrooms",        "nhh",           "nchldlt5",     
+           "hhwealth_quart", "month", "brthmon", "parity",   "meducyrs", 
+           "feducyrs", "hfoodsec",  
+           "cleanck", "impfloor",  "impsan", "safeh20",
+           "perdiar6", "perdiar24", "predexfd6", 
+           "earlybf")  
+
+analyses <- analyses %>% filter(Y %in% c("haz","whz"), A %in% Avars)
+analyses$file <- gsub("_rf","_optx",analyses$file)
 dim(analyses)
 analyses <- analyses %>% filter((Y == "whz" & !(A %in% results$intervention_variable[results$outcome_variable=="whz"])) |
                                 (Y == "haz" & !(A %in% results$intervention_variable[results$outcome_variable=="haz"])))
@@ -38,11 +49,12 @@ table(analyses$A, analyses$Y)
 
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
-
 writeLines(jsonlite::toJSON(enumerated_analyses),"sub_analyses.json")
 
-
-
+#check data
+load(paste0(ghapdata_dir,"st_meanZ_optx.Rdata"))
+d %>% filter(!is.na(fhtcm)) %>%
+  group_by(studyid, fhtcm) %>% summarise(N=n(),mean(haz))
 
 # 2. run batch
 configure_cluster(here("0-project-functions","cluster_credentials.json"))

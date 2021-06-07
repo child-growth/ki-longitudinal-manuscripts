@@ -12,6 +12,7 @@ library(tidyverse)
 library(here)
 library(ggplot2)
 library(ggpubr)
+library(ggnewscale)
 #library(dplyr)
 library(gridExtra)
 library(reshape2)
@@ -34,7 +35,7 @@ library(stringr)
 library(mgcv)
 library(grid)
 library(lazyeval)
-library(rlang)
+#library(rlang)
 library(scales)
 library(xtable)
 
@@ -181,6 +182,9 @@ monthly_and_quarterly_cohorts_cc <- c("CMC-V-BCS-2002",   "CMIN Peru95",      "C
 ki_countries <- c( "India",        "Peru",         "Brazil",       "Guinea-Bissau","Bangladesh",   "Pakistan",    
                   "Nepal",        "Guatemala",    "Burkina Faso", "Gambia",       "Malawi",       "South Africa",
                    "Tanzania",     "Belarus",      "Zimbabwe"  )
+ki_countries_monthly <- c("India","Bangladesh","Peru","Pakistan","Nepal","Guatemala",
+                          "Gambia","South Africa", "Tanzania","Brazil"    )
+
 
 
 

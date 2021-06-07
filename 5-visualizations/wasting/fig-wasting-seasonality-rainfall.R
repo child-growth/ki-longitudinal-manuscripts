@@ -80,7 +80,7 @@ table(rain$cohort)
 
 
 #Rain_plot function
-rain_plot <- function(df, rain, cohort_name, leftlab = c(1:9), rightlab = c(10:18)){
+rain_plot <- function(df, rain, cohort_name, leftlab = c(1:10), rightlab = c(11:20)){
   rain_sub <- filter(rain, cohort == cohort_name)
   dsub <- filter(df, cohort == cohort_name, !is.na(whz))
   

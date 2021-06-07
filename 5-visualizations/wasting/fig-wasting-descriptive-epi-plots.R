@@ -1,6 +1,6 @@
 
 rm(list=ls())
-source(here("/0-config.R"))
+source(here::here("/0-config.R"))
 
 #Load data
 d <- readRDS(paste0(BV_dir,"/results/desc_data_cleaned.rds"))
@@ -10,23 +10,13 @@ quantiles <- readRDS(paste0(BV_dir,"/results/quantile_data_wasting.RDS"))
 d <- d %>% mutate(pooling=ifelse(cohort=="pooled" & is.na(pooling),region,pooling)) %>%
   filter(analysis=="Primary", (pooling!="country" | is.na(pooling)))
 
-#subset to regional and overall pooled estimates
-#d <- d %>% filter(cohort=="pooled", pooling!="country" | is.na(pooling))
-
 #convert cohort specific estimates to percents
-# d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
-#   d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
-# d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
-#   d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
-# d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] <-
-#   d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" ) & !(d$disease %in% c("co-occurrence","Underweight"))] * 100
-
-d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
-  d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
-d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
-  d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
-d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] <-
-  d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Persistent wasting", "Recovery" )] * 100
+d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] <-
+  d$est[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] * 100
+d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] <-
+  d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] * 100
+d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] <-
+  d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] * 100
 
 #d %>% filter(measure=="Prevalence", disease=="co-occurrence", cohort!="pooled")
 
@@ -69,7 +59,8 @@ df <- df %>%
   mutate(agecat = gsub(" months", "", agecat)) %>%
   mutate(agecat = gsub("s", "", agecat)) %>%
   mutate(agecat = ifelse(agecat == "One", "1", agecat)) %>%
-  mutate(agecat = as.numeric(agecat)) 
+  mutate(agecat = as.numeric(agecat)) %>% 
+  arrange(agecat) 
 
 
 p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
@@ -252,14 +243,16 @@ prev_plot[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(region, n
 # Wasting incidence proportion
 #-------------------------------------------------------------------------------------------
 
-ip_plot_primary <- ki_ip_flurry_plot(scale_estimates(d),
+ip_plot_primary <- ki_wast_ip_flurry_plot(d,
                         Disease="Wasting",
-                        Measure="Incidence proportion",
+                        Measure=c("Cumulative incidence", "Incidence proportion"),
                         Birth="yes",
                         Severe="no",
+                        dodge=0.5,
                         Age_range="3 months",
                         xlabel="Child age, months",
-                        returnData=T)
+                        returnData=T,
+                        legend.pos= c(.0605,.815))
 
 ip_plot_name = create_name(
   outcome = "wasting",
@@ -287,11 +280,10 @@ ip_plot_primary[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(m
 # Wasting incidence -birthstrat
 #-------------------------------------------------------------------------------------------
 
-# TODO: add cumulative incidence plot
-ip_plot <- ki_ip_flurry_plot(scale_estimates(d),
+ip_plot <- ki_wast_ip_flurry_plot(d,
                          Disease="Wasting",
-                         Measure="Incidence proportion",
-                         # Measure=c("Cumulative incidence", "Incidence proportion"), 
+                         #Measure="Incidence proportion",
+                          Measure=c("Cumulative incidence", "Incidence proportion"), 
                          Severe="no", 
                          Age_range="3 months", 
                          # Cohort="pooled",
@@ -911,8 +903,7 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
   
   df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
   
-  # df <- scale_estimates(df)
-  
+
   p <- ggplot(df,aes(y=est,x=agecat)) +
     
     # pooled 

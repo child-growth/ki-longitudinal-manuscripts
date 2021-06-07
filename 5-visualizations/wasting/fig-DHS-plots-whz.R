@@ -39,7 +39,6 @@ dhs_plotd <- dhs_plotd %>% filter(!is.na(region))
 dhsp <- ggplot(data = dhs_plotd, aes(x = agem, y = fit, color = region, fill = region, linetype = dsource)) +
   facet_grid(measure ~ region) +
   geom_abline(intercept = 0, slope = 0, color = "gray70") +
-  
   geom_ribbon(aes(ymin = fit_lb, ymax = fit_ub), color = NA, alpha = 0.2) +
   geom_line(alpha = 1) +
   scale_x_continuous(breaks = seq(0, 24, by = 6)) +

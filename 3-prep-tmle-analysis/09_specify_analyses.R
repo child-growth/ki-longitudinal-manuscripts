@@ -4,7 +4,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 
-load(here("results/adjustment_sets_list.Rdata"))
+load(paste0(BV_dir,"/results/adjustment_sets_list.Rdata"))
 A <- names(adjustment_sets)
 
 Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))

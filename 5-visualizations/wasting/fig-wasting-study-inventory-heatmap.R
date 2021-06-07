@@ -329,12 +329,12 @@ nagebar <- ggplot(dd, aes(y = N/1000, x = as.numeric(agecat))) +
 
 
 # add margin around plots
-wastphm2 = wastphm + theme(plot.margin = unit(c(0.5, 0.5, 0, 1), "cm"))
+wastphm2 = wastphm + theme(plot.margin = unit(c(0.5, 0.5, 0, 1), "cm")) #t = 0, r = 0, b = 0, l = 0
 # wpbar2 = wpbar + theme(plot.margin = unit(c(1.6,0.3,0.9,0.1), "cm"))
 # nbar2 = nbar + theme(plot.margin = unit(c(1.6,0.25,0.9,0.1), "cm"))
 nbar2 = nbar + theme(plot.margin = unit(c(1,0.25,0.75,0.1), "cm"))
 wpbar2 = wpbar + theme(plot.margin = unit(c(1,0.3,0.75,0.1), "cm"))
-nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.4,-0.9,4.95), "cm"))
+nagebar2 = nagebar + theme(plot.margin = unit(c(0.15,0.41,-0.9,5.13), "cm"))
 empty <- grid::textGrob("")
 
 awstpgrid <- grid.arrange(nagebar2,empty, empty,

@@ -7,30 +7,8 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-
 #Load data
-#results_full <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-05-31.RDS"))
-results_full <- readRDS(here("results/rf results/raw longbow results/opttx_vim_results_2020-03-11.RDS"))
-
-
-#Load subset run after full longbow job errored 80% of the way through
-#results_sub <-readRDS(here("results/rf results/raw longbow results/opttx_vim_results_subset_2020-06-01.RDS"))
-results_sub <-readRDS(here("results/rf results/raw longbow results/opttx_vim_results_subset_2020-03-13.RDS"))
-
-
-#load seasonal VIM
-results_season <-readRDS(here("results/rf results/raw longbow results/opttx_vim_season_results_2020-05-29.RDS"))
- 
-
-results <- rbind(results_full, results_sub, results_season)
-
-
-#load seasonal VIM
-results_diar <-readRDS(here("results/rf results/raw longbow results/opttx_vim_diar_2020-06-08.RDS"))
-
-results <- results %>% filter(intervention_variable!="perdiar24" & intervention_variable!="perdiar6")
-results <- bind_rows(results, results_diar)
-
+results <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS"))
 
 
 #drop EE gestational age
@@ -38,8 +16,7 @@ dim(results)
 results <- results %>% filter(!(studyid=="EE" & intervention_variable=="gagebrth"))
 dim(results)
 
-
-saveRDS(results, paste0(here::here(),"/results/rf results/full_VIM_results.rds"))
+saveRDS(results, paste0(BV_dir,"/results/rf results/full_VIM_results.rds"))
 
 
 

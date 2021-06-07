@@ -213,6 +213,32 @@ d <- d %>% filter(agecat!="Birth")
 d <- droplevels(d)
 save(d, file="mediation_HAZ.Rdata")
 
+#Save just 24 month outcomes for optx analysis
+table(d$agecat)
+d <- d %>% filter(agecat=="24 months") %>% droplevels()
+A<-c( "gagebrth",      "birthwt",      
+      "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
+      "mbmi",          "single",        "fage",          "fhtcm",         "nrooms",        "nhh",           "nchldlt5",     
+      "hhwealth_quart", "month", "brthmon", "parity",   "meducyrs", 
+      "feducyrs", "hfoodsec",  
+      "cleanck", "impfloor",  "impsan", "safeh20",
+      "perdiar6", "perdiar24", "predexfd6", 
+      "earlybf")  
+
+#drop spaces for optx- has trouble with special characters
+d$gagebrth <- gsub(" ","",d$gagebrth)
+d$mwtkg <- gsub(" ","",d$mwtkg)
+d$fhtcm <- gsub(" ","",d$fhtcm)
+d$mhtcm <- gsub(" ","",d$mhtcm)
+d$mage <- gsub(" ","",d$mage)
+d$nchldlt5 <- gsub("+","",d$nchldlt5)
+d$nhh <- gsub("+","",d$nhh)
+d$nhh <- gsub(" ","",d$nhh)
+d$nhh <- gsub("-","",d$nhh)
+d$parity <- gsub("+","",d$parity)
+
+save(d, Y, A,V, id,  file="st_meanZ_optx.Rdata")
+
 
 #------------------------------------
 # Create recovery dataset
@@ -470,6 +496,33 @@ save(d, Y, A,V, id,  file="wast_meanZ_rf.Rdata")
 d <- d %>% filter(agecat!="Birth")
 d <- droplevels(d)
 save(d, file="mediation_WHZ.Rdata")
+
+#Save just 24 month outcomes for optx analysis
+table(d$agecat)
+d <- d %>% filter(agecat=="24 months")
+A<-c( "gagebrth",      "birthwt",      
+      "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
+      "mbmi",          "single",        "fage",          "fhtcm",         "nrooms",        "nhh",           "nchldlt5",     
+      "hhwealth_quart", "month", "brthmon", "parity",   "meducyrs", 
+      "feducyrs", "hfoodsec",  
+      "cleanck", "impfloor",  "impsan", "safeh20",
+      "perdiar6", "perdiar24", "predexfd6", 
+      "earlybf")  
+
+#drop spaces for optx- has trouble with special characters
+d$gagebrth <- gsub(" ","",d$gagebrth)
+d$mwtkg <- gsub(" ","",d$mwtkg)
+d$fhtcm <- gsub(" ","",d$fhtcm)
+d$mhtcm <- gsub(" ","",d$mhtcm)
+d$mage <- gsub(" ","",d$mage)
+d$nchldlt5 <- gsub("+","",d$nchldlt5)
+d$nhh <- gsub("+","",d$nhh)
+d$nhh <- gsub(" ","",d$nhh)
+d$nhh <- gsub("-","",d$nhh)
+d$parity <- gsub("+","",d$parity)
+
+
+save(d, Y, A,V, id,  file="wast_meanZ_optx.Rdata")
 
 
 #------------------------------------

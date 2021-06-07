@@ -41,7 +41,7 @@ saveRDS(velocity, paste0(res_dir, "rf results/longbow results/results_vel.RDS"))
 season <-  readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_results_2021-04-22.RDS"))
 saveRDS(season, paste0(res_dir, "rf results/longbow results/seasonality_results.RDS"))
 
-season_birth <-  readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_birth_results_2021-04-22.RDS"))
+season_birth <-  readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_birth_results_2021-06-05.RDS"))
 saveRDS(season_birth, paste0(res_dir, "rf results/longbow results/seasonality_birth_results.RDS"))
 
 season_cont_rf <- readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_rf_cont_results_2021-04-22.RDS"))
@@ -54,7 +54,11 @@ mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/mediation_
 saveRDS(mediation, paste0(res_dir, "rf results/longbow results/mediation.RDS"))
 
 
-optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_2021-04-30.RDS"))   
+optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_2021-06-05.RDS"))   
+optx_results2 <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_subset_2021-06-06.RDS"))   
+optx_results_season <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_season_results_2021-06-05.RDS"))   
+optx_results <- bind_rows(optx_results, optx_results2, optx_results_season)
+
 saveRDS(optx_results, paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS"))
 
 

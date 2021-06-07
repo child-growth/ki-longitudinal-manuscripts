@@ -12,6 +12,10 @@ load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 d <- d %>% filter(measurefreq == "monthly")
 d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 
+length(unique(paste0(d$studyid,d$country)))
+
+d <- d %>% filter(studyid=="PROVIDE") %>% mutate(lagage=lag(agedays))
+summary(d$agedays-d$lagage)
 
 #Overall absolute counts
 df <- d %>% filter(agedays < 24 *30.4167) %>%

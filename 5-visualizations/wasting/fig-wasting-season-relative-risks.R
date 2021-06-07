@@ -23,10 +23,10 @@ rain <- rain %>% subset(., select = c(studyid, country, cohort_index)) %>%
   arrange(season_index) %>%
   mutate(seasonality_category = 
            case_when(
-             season_index >= 0.9 ~ "High seasonality",
-             season_index < 0.7 ~ "Low seasonality",
-             TRUE ~ "Medium seasonality"),
-         seasonality_category = factor(seasonality_category, levels=c("High seasonality", "Medium seasonality", "Low seasonality")))
+             season_index >= 0.9 ~ "High\nseasonality",
+             season_index < 0.7 ~ "Low\nseasonality",
+             TRUE ~ "Medium\nseasonality"),
+         seasonality_category = factor(seasonality_category, levels=c("High\nseasonality", "Medium\nseasonality", "Low\nseasonality")))
 table(rain$seasonality_category)
 
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
@@ -74,7 +74,7 @@ df <- rbind(RMAest, RMAest_season_index)
 #Add reference level to labe
 df$RFlabel_ref <- paste0(df$RFlabel, ", ref: ", df$baseline_level)
 
-df$seasonality_category <- factor(df$seasonality_category, levels=c("Pooled", "High seasonality", "Medium seasonality", "Low seasonality"))
+df$seasonality_category <- factor(df$seasonality_category, levels=c("Pooled", "High\nseasonality", "Medium\nseasonality", "Low\nseasonality"))
 
 df$intervention_level[df$intervention_level=="Opposite max rain"] <- "Opposite\nmax rain"
 df$intervention_level[df$intervention_level=="Pre-max rain"] <- "Pre-max\nrain"
@@ -86,13 +86,14 @@ df$intervention_level <- factor(df$intervention_level, levels=c("Post-max\nrain"
 
 #mark reference points
 df$ref <- ifelse(df$intervention_level=="Opposite\nmax rain","(ref.)",NA)
-
+df <- df %>% filter(!(!is.na(ref) & seasonality_category!="Pooled")) %>% droplevels() %>%
+            rename(`Seasonality\nCategory`=seasonality_category)
 
 p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
-  geom_errorbar(aes(color=seasonality_category, ymin=CI1, ymax=CI2), 
+  geom_errorbar(aes(color=`Seasonality\nCategory`, ymin=CI1, ymax=CI2), 
                 width = 0, 
                 position = position_dodge(0.3)) +
-  geom_point(aes(fill=seasonality_category, color=seasonality_category), 
+  geom_point(aes(fill=`Seasonality\nCategory`, color=`Seasonality\nCategory`), 
              size = 3, 
              position = position_dodge(0.3)) +
   geom_text(aes(label=ref), hjust = 1.2) +
@@ -110,7 +111,6 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   theme(legend.position="right") +
   ggtitle("") + 
   theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
-
 print(p_seasonRR)
 
 saveRDS(p_seasonRR, file = paste0(BV_dir,"/figures/plot-objects/season_RR_plot.rds"))

@@ -1,3 +1,50 @@
+
+weighted_gam_estimate <- function(df, K=NULL, cluster=T) {
+  
+  df <-df %>% mutate(dummy=1)
+  fiti <- NULL
+  if(cluster){
+    if(is.null(K)){
+      try(fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr")+ s(cluster_no,bs="re",by=dummy), data = df, weights = weight))
+    }else{
+      try(fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr")+ s(cluster_no,bs="re",by=dummy), data = df, weights = weight))
+    }
+  }else{
+    if(is.null(K)){
+      try(fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), data = df, weights = weight))
+    }else{
+      try(fiti <- mgcv::gam(zscore ~ s(agem, bs = "cr"), data = df, weights = weight))
+    }
+  }
+  pred.df <- data.frame(agem=0:24, dummy=0, weight=1, cluster_no=1)
+  pred    <- as.numeric(predict(fiti,newdata=pred.df,type="response"))
+  
+  #get the prediction matrix
+  try(Xp <- predict(fiti,newdata=pred.df,type="lpmatrix"))
+  se <- sqrt(diag( Xp%*%vcov(fiti)%*%t(Xp) ) )
+  
+  # calculate upper and lower bounds
+  lb <- pred - 1.96*se
+  ub <- pred + 1.96*se
+  
+  # tabulate indicator by region
+  df_survey <- data.frame(agem=0:24, fit=pred, fit_lb=lb, fit_ub=ub)
+  return(df_survey)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 library(survey)
 # The most conservative approach would be to center any single-PSU strata around
 # the sample grand mean rather than the stratum mean
