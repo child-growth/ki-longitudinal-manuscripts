@@ -459,6 +459,10 @@ plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) +
   ylab("Mean LAZ\n ") +
   ggtitle("c")+
   theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
+        legend.position = c(.95, 0.8),
+        legend.background = element_blank(),
+        legend.title = element_blank(),
+        legend.box.background = element_rect(colour = "black"),
         strip.text.x = element_text(size=20, face="bold"),
         axis.title.x = element_text(size=20),
         axis.title.y = element_text(size=20)) +

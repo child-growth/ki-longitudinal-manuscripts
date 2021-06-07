@@ -173,13 +173,6 @@ summarize_dist = function(data, age_recov){
                 prev=mean(stunted),
                 nxprev=sum(stunted==1))
     
-    # re = fit.rma.rec.cohort(
-    #   data = prev.cohort,
-    #   ni = "nmeas",
-    #   xi = "nxprev",
-    #   measure = "PLO",
-    #   nlab = "children"
-    # )
     re = fit.rma(
       data = prev.cohort,
       ni = "nmeas",
