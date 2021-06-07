@@ -273,7 +273,7 @@ plot_quarterly <- ggplot(master_df_quart, aes(y= cohortid, x = agecat)) +
             color = "white", size=0.25) + 
   # color palette
   scale_fill_manual(values = blue_palette,
-                    guide=guide_legend(title="% of children with LAZ measurement",
+                    guide=guide_legend(title="% of children\nwith LAZ\nmeasurement",
                                        nrow=3)) +
   xlab("Child age, months") + 
   ylab("") + 
@@ -305,7 +305,9 @@ plot_quarterly <- ggplot(master_df_quart, aes(y= cohortid, x = agecat)) +
         #set y axis text colour and adjust vertical justification
         axis.text.y=element_text(size=8,colour=textcol,hjust=1),
         #change axis ticks thickness
-        axis.ticks=element_line(size=0.4)) 
+        axis.ticks=element_line(size=0.4)) +
+  theme(legend.key.height= unit(0.5, 'cm'),
+        legend.key.width= unit(0.75, 'cm'))
 
 
 # Save plots ----------------------------------------------------
@@ -313,4 +315,4 @@ plot_quarterly <- ggplot(master_df_quart, aes(y= cohortid, x = agecat)) +
 ggsave(plot_monthly, file=paste0(fig_dir, "stunting/fig-measurement-heatmap-monthly.png"), 
        width=8.5, height=5)
 ggsave(plot_quarterly, file=paste0(fig_dir, "stunting/fig-measurement-heatmap-quarterly.png"), 
-       width=6, height=5)
+       width=4.75, height=4)
