@@ -14,7 +14,8 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-d <- readRDS(paste0(res_bluevelvet_dir, "stuntflow_mort.RDS"))
+# d <- readRDS(paste0(res_bluevelvet_dir, "stuntflow.RDS"))
+d <- readRDS(paste0(res_dir, "stunting/stuntflow.RDS"))
 
 # phenotype categories
 d = d %>% mutate(pheno= case_when(
