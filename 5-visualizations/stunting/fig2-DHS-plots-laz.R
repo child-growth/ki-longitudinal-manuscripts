@@ -27,39 +27,19 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 
+# define colors -----------------------------------------------------
 pcols <- tableau11
-# standard region colors used in other plots
-# tableau10 <- tableau_color_pal("Tableau 10")
-# pcols <- c("black", tableau10(10)[c(1, 2, 4)])
-# 
 blue <- 1
 orange <- 2
 green <- 3
 
-
-# Load data -----------------------------------------------------
-# laz_ageplot_name <- create_name(
-#   outcome = "LAZ",
-#   cutoff = 2,
-#   measure = "mean DHS",
-#   population = "overall and region-stratified",
-#   location = "",
-#   age = "All ages",
-#   analysis = "primary"
-# )
+# Load ki data -----------------------------------------------------
 laz_ageplot_name = "laz-2-mean_dhs-country--allage-primary"
-
 dhs_plotd_laz = read_rds(paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
 
-
-
-# Prep plot data -----------------------------------------------------
-
-# TO DO: the overall category includes PROBIT. Andrew is fixing it upstream. 
-
+## Prep ki data -----------------------------------------------------
 kiden <- readRDS(paste0(res_dir, "dhs/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>% mutate(dsource = "ki cohorts")
-
 kiden <- kiden %>% filter(measure=="LAZ")
 
 ## Add country to ki cohort data -----------------------------------------------------
@@ -101,24 +81,8 @@ kiden = kiden %>% mutate(country = case_when(
 ))
 
 
-monthly_and_quarterly_cohorts
-
-# dhssubden = readRDS(paste0(res_dir,"dhs/dhs.density.ki-countries.rds"))
-# dhssubden <- dhssubden %>% mutate(dsource = "DHS, ki countries")
-
+# Load DHS data -----------------------------------------------------
 dhs_country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs//results/dhs.density.ki-countries.rds")
-
-# medians = readRDS(paste0(res_dir,"dhs/dhs.ki.zscore.medians.quarterly.rds")) %>% filter(measure == "LAZ")
-
-# dhsden_plot <- bind_rows(kiden, dhssubden) %>%
-#   mutate(
-#     dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries")),
-#     region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America"))
-#   ) %>% 
-#   filter(measure == "LAZ")
-# 
-# dhsden_plot_laz = merge(x = dhsden_plot, y = medians, by = c("region", "dsource", "measure"),  all.x = TRUE)
-# dhsden_plot_laz = dhsden_plot_laz %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 
 ## Add region to DHS data -----------------------------------------------------
 dhs_country_data <- dhs_country_data %>% 
@@ -137,7 +101,6 @@ assert_that(all(is.na(kiden$country[is.na(kiden$cohort)])))
 
 
 # Prep data for LAZ Density plot (Figure 2a) -----------------------------------------------------
-
 plot_dhs = dhs_country_data %>% filter(!is.na(country)) %>% 
   mutate(datatype = "DHS",
          cohort = "DHS") %>% 
@@ -161,7 +124,6 @@ plot_data = bind_rows(plot_ki, plot_dhs) %>%
     "Brazil", "Guatemala", "Peru",
     "Bangladesh", "India", "Nepal", "Pakistan"
   )))
-
 
 plot_data$region_survey = paste0("ki " , as.character(plot_data$region))
 plot_data$region_survey[plot_data$cohort=="DHS"] = "DHS"
@@ -192,18 +154,6 @@ laz_dplot <-ggplot(data = plot_data, aes(x = x, y = y)) +
 
 laz_dplot
 
-laz_dplot_name <- create_name(
-  outcome = "LAZ",
-  cutoff = 2,
-  measure = "density DHS",
-  population = "overall and region-stratified",
-  location = "",
-  age = "All ages",
-  analysis = "primary"
-)
-
-saveRDS(dhsden_plot_laz, file = paste0(figdata_dir_stunting, "figdata-", laz_dplot_name, ".RDS"))
-ggsave(laz_dplot, file = paste0(fig_dir, "stunting/fig-", laz_dplot_name, ".png"), width = 8, height = 2)
 
 # Figure 2b: Create LAZ Age plot -----------------------------------------------------
 laz_ageplot <- ggplot(dhs_plotd_laz %>% filter(region!="Overall"), aes(x = agem, y = fit, group =region)) +
@@ -251,8 +201,6 @@ laz_ageplot <- ggplot(dhs_plotd_laz %>% filter(region!="Overall"), aes(x = agem,
   )
 
 laz_ageplot
-
-ggsave(laz_ageplot, file = paste0(fig_dir, "stunting/fig-", laz_ageplot_name, ".png"), width = 8, height = 3)
 
 
 # Combine and save plots -----------------------------------------------------
