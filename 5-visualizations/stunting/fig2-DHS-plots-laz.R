@@ -120,12 +120,13 @@ plot_ki = mark_region(plot_ki) %>%
   rename(country = country_lower)
 
 plot_data = bind_rows(plot_ki, plot_dhs) %>% 
-  filter(country!="Belarus" &country!="Kenya") %>% 
+  # drop Burkina Faso since study was not quarterly
+  filter(country!="Belarus" &country!="Kenya" & country!="Burkina Faso") %>% 
   mutate(country = factor(country, levels = c(
     "Brazil", "Guatemala", "Peru",
     "Bangladesh", "India", "Nepal", "Pakistan",
     
-    "Burkina Faso", "Gambia", "Guinea-Bissau",
+    "Gambia", "Guinea-Bissau",
     "Malawi", "South Africa", "Tanzania", "Zimbabwe"
 
   )))
@@ -135,6 +136,7 @@ plot_data$region_survey[plot_data$cohort=="DHS"] = "DHS"
 plot_data$region_survey = factor(plot_data$region_survey, 
                                  levels = c("DHS", "ki Africa",
                                             "ki Latin America", "ki South Asia"))
+
 
 # Figure 2a: Create LAZ Density plot -----------------------------------------------------
 laz_dplot <-ggplot(data = plot_data, aes(x = x, y = y)) +
