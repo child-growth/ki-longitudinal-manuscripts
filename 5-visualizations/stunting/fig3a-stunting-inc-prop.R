@@ -16,7 +16,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
+d <- readRDS(paste0(res_dir,"/desc_data_cleaned.rds"))
 
 #-----------------------------------------
 # Prepare data for plot
