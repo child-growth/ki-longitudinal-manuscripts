@@ -32,15 +32,7 @@ blue <- 1
 orange <- 2
 green <- 3
 
-# Load results with cohort specific gam by age -----------------------------------------------------
-dhs_age = read_rds(paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_byage_country.RDS"))
-dhs_age = dhs_age %>% filter(measure=="LAZ")
-
-# Load ki data -----------------------------------------------------
-laz_ageplot_name = "laz-2-mean_dhs-country--allage-primary"
-dhs_plotd_laz = read_rds(paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
-
-## Prep ki data -----------------------------------------------------
+# Load density ki plot data -----------------------------------------------------
 kiden <- readRDS(paste0(res_dir, "dhs/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>% mutate(dsource = "ki cohorts")
 kiden <- kiden %>% filter(measure=="LAZ")
@@ -84,7 +76,7 @@ kiden = kiden %>% mutate(country = case_when(
 ))
 
 
-# Load DHS data -----------------------------------------------------
+# Load density DHS data -----------------------------------------------------
 dhs_country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs//results/dhs.density.ki-countries.rds")
 
 ## Add region to DHS data -----------------------------------------------------
