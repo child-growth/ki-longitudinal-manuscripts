@@ -304,16 +304,16 @@ plot_laz_strat <- ggplot(velplot_laz_strat, aes(y=Mean,x=strata))+
   # cohort point estimates
   geom_point(data = velplot_laz_strat  %>% filter(pooled==0),
              aes(fill=sex, color=sex), size = 3,             
-             position = position_jitterdodge(dodge.width = 0.5), alpha =0.2)  +
+             position = position_jitterdodge(dodge.width = 0.75), alpha =0.2)  +
   
   # region pooled point estimates
   geom_point(data = velplot_laz_strat  %>% filter(pooled==1),
-             aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.5)) +
+             aes(fill=sex, color=sex), size = 3, position = position_dodge(width=0.75)) +
   
   # region pooled CIs
   geom_errorbar(data = velplot_laz_strat  %>% filter(pooled==1),
                  aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                 position = position_dodge(width=0.5), size=1, width = 0.15) +
+                 position = position_dodge(width=0.75), size=1, width = 0.15) +
   
   scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.45,0.3), breaks=seq(-0.4,0.3,0.1), labels=seq(-0.4,0.3,0.1)) +
@@ -325,7 +325,10 @@ plot_laz_strat <- ggplot(velplot_laz_strat, aes(y=Mean,x=strata))+
   theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
         strip.text.x = element_text(size=20, face="bold"),
         axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20))
+        axis.title.y = element_text(size=20),
+        legend.position = "bottom",
+        legend.text = element_text(size=16),
+        legend.title = element_blank())
 
 plot_laz_strat
 
@@ -413,67 +416,10 @@ saveRDS(velplot_laz_latamer, file=paste0(figdata_dir_stunting, "figdata-",plot_l
 saveRDS(velplot_laz_afr, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_cohort_afr_name,".RDS"))
 
 
-
-# Figure 5c: mean LAZ plots ----------------------------------------------------------------
-
-## mean LAZ plot stratified by region ----------------------------------
-meanlaz_strat = meanlaz %>% 
-  filter(region !="N.America & Europe") %>%
-  filter(region!="Overall") %>% 
-  mutate(agecat = factor(agecat, 
-                         levels = c("0-3", "3-6", "6-9",
-                                    "9-12", "12-15", "15-18",
-                                    "18-21", "21-24")),
-         region = ifelse(region == "Asia", "South Asia", region)) %>%
-  mutate(region = factor(region, levels=c("Africa", "Latin America", "South Asia"))) %>% 
-  # drop european cohort
-  filter(cohort != "PROBIT-BELARUS") 
-
-# impute missing region
-meanlaz_strat$region[meanlaz_strat$cohort=="MAL-ED-TANZANIA"] = "Africa"
-meanlaz_strat$region[meanlaz_strat$cohort=="TanzaniaChild2-TANZANIA"] = "Africa"
-
-
-plot_mean_laz_strat = ggplot(meanlaz_strat, aes(y=est, x = agecat)) + 
-  
-  # cohort point estimates
-  geom_point(data = meanlaz_strat  %>% filter(cohort!="pooled"),
-             aes(fill=sex, color=sex), size=3,           
-             position = position_jitterdodge(dodge.width = 0.5), alpha =0.2)  +
-  
-  # pooled region estimates
-  geom_point(data = meanlaz_strat %>% filter(cohort=="pooled"),
-             aes(col=sex), position = position_dodge(width=0.6), size=3) +
-  
-  # pooled region CIs
-  geom_errorbar(data = meanlaz_strat %>% filter(cohort=="pooled"),
-                aes(ymin = lb, ymax = ub, col=sex), 
-                 position = position_dodge(width=0.6), size = 1, width = 0.15) +
-  
-  scale_color_manual(values = mypalette) + 
-  
-  scale_y_continuous(limits = c(-3, 0.5), breaks = seq(-3, 0.5, 0.5),
-                     labels = scaleFUN) +
-  
-  xlab("Child age, months") + 
-  ylab("Mean LAZ\n ") +
-  ggtitle("c")+
-  theme(plot.title = element_text(hjust=0, size = 20, face = "bold"),
-        legend.position = c(.95, 0.8),
-        legend.background = element_blank(),
-        legend.title = element_blank(),
-        legend.box.background = element_rect(colour = "black"),
-        strip.text.x = element_text(size=20, face="bold"),
-        axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20)) +
-  facet_grid(~region)
-
-plot_mean_laz_strat
-
 # combined LAZ and length plots ----------------------------------------------------------------
 
-combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat, plot_mean_laz_strat,
-                                   nrow = 3, heights = c(10, 4, 4))
+combined_plot_strat = grid.arrange(plot_cm_strat, plot_laz_strat,
+                                   nrow = 2, heights = c(10, 5))
 
 ## define standardized plot names ----------------------------------
 
@@ -492,15 +438,14 @@ combined_plot_strat_name = create_name(
 ## save overall plots together ----------------------------------
 
 ggsave(combined_plot_strat, file=paste0(fig_dir, "stunting/fig-",combined_plot_strat_name,
-                                        ".png"), width=12, height=18)
+                                        ".png"), width=12, height=12)
 
 ## save input data  ----------------------------------
 
 saveRDS(
   list(
     velplot_cm_strat = velplot_cm_strat,
-    velplot_laz_strat = velplot_laz_strat,
-    meanlaz_strat = meanlaz_strat
+    velplot_laz_strat = velplot_laz_strat
   ),
   file = paste0(figdata_dir_stunting, "figdata-", combined_plot_strat_name, ".RDS")
 )
