@@ -77,7 +77,7 @@ kiden = kiden %>% mutate(country = case_when(
 
 
 # Load density DHS data -----------------------------------------------------
-dhs_country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs//results/dhs.density.ki-countries.rds")
+dhs_country_data <- readRDS(paste0(dhs_res_dir,"dhs.density.ki-countries.rds"))
 
 ## Add region to DHS data -----------------------------------------------------
 dhs_country_data <- dhs_country_data %>% 
