@@ -4,48 +4,23 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
-
-source(here("5-visualizations/stunting/fig-study-inventory-heatmaps-stunt.R"))
-
-#Primary pooled stunting descriptive epi plots
-source(here("5-visualizations/stunting/fig-stunting-plot-mean-laz.R"))
-source(here("5-visualizations/stunting/fig-stunting-laz-quantile.R"))
-source(here("5-visualizations/stunting/fig-stunting-plot-laz-quantile-monthly.R"))
-source(here("5-visualizations/stunting/fig-stunting-plot-prev.R"))
-source(here("5-visualizations/stunting/fig-stunting-plot-inc.R"))
-
-source(here("5-visualizations/stunting/fig-stunting-rec-density.R"))
-source(here("5-visualizations/stunting/fig-stunting-rec-prev.R"))
-
-#Velocity 
-source(here("5-visualizations/stunting/fig-stunting-length-velocity.R"))
-source(here("5-visualizations/stunting/fig-stunting-length-velocity-fe.R"))
-source(here("5-visualizations/stunting/fig-stunting-length-velocity-monthly24.R"))
-source(here("5-visualizations/stunting/fig-stunting-length-velocity-subset.R"))
-
-#Stunting flow 
-source(here("5-visualizations/stunting/fig-stunting-flow-strat-prep.R"))
-source(here("5-visualizations/stunting/fig-stunting-flow.R"))
-source(here("5-visualizations/stunting/fig-stunting-flow-fe.R"))
-source(here("5-visualizations/stunting/fig-stunting-flow-re.R"))
-
-
-#Incidence by age growth curves
-source(here("5-visualizations/stunting/fig-stunting-meanlaz-incage.R"))
-source(here("5-visualizations/stunting/fig-stunting-velocity-incage.R"))
-
-
-
-
-#extended data
-source(here("5-visualizations/stunting/fig-stunting-prevalence-map.R"))
-
-#DHS
-source(here("5-visualizations/stunting/fig-DHS-plots-laz.R"))
-source(here("5-visualizations/stunting/fig-DHS-quantile-plots.R"))
-#No probit
-source(here("5-visualizations/stunting/fig-stunting-descriptive-epi-plots_no_probit.R"))
-source(here("5-visualizations/stunting/fig-stunting-descriptive-epi-plots-fe_no_probit.R"))
+source(here("fig1-study-inventory-heatmaps-stunt.R"))
+source(here("fig2-DHS-plots-laz.R"))
+source(here("fig3a-stunting-inc-prop.R"))
+source(here("fig3b-stunting-meanlaz-incage.R"))
+source(here("fig4a-stunting-flow-strat-prep.R"))
+source(here("fig4a-stunting-flow.R"))
+source(here("fig4b-stunting-flow-line.R"))
+source(here("fig4c-stunting-rec-density.R"))
+source(here("fig4d-stunting-rec-mean.R"))
+source(here("fig5-stunting-length-velocity.R"))
+source(here("figED2-stunting-prevalence-map.R"))
+source(here("figED3-4-stunting-cohort-tracking.R"))
+source(here("figED5-stunting-laz-quantile.R"))
+source(here("figED6-laz-dist-cohort.R"))
+source(here("figED7-laz-skew.R"))
+source(here("figED8-stunting-rec-density-pheno.R"))
+source(here("figED9-stunting-length-velocity-strat.R"))
 
 
 
