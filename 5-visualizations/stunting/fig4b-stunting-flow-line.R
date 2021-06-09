@@ -68,16 +68,17 @@ plot_combine = bind_rows(pooled, plot_cohort)  %>%
                                classif!="Still stunted" &
                                classif!="Recovered" & 
                                classif!="Not stunted") %>% 
-  mutate(classif = factor(classif, levels = c("Stunting reversed",
+  mutate(classif = factor(classif, levels = c(
                                               "Newly stunted",
-                                              "Stunting relapse")))
+                                              "Stunting relapse",
+                                              "Stunting reversed")))
 
 
 # make plot  -----------------------------------------------------
 p_inc = ggplot(plot_combine , 
                aes(x=agem, y = percent))+
 
-  facet_wrap(~classif) +
+  facet_wrap(~classif, scales = "free") +
   
   # cohort-specific
   geom_line(aes(group = cohort_country, col = classif), size = 0.5, alpha = 0.5, 
@@ -95,7 +96,7 @@ p_inc = ggplot(plot_combine ,
             width = 0.3) +
 
   
-  scale_color_manual("", values = c("#ADDE66",pink_green[c(4,5)])) +
+  scale_color_manual("", values = c(pink_green[c(4,5)],"#ADDE66")) +
   scale_x_continuous(limits = c(0,15), breaks = seq(0,15,3), labels = seq(0,15,3)) +
 
   xlab("Child age, months") +
