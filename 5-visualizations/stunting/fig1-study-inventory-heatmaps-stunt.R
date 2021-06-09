@@ -95,7 +95,7 @@ dd$hazcat[dd$N<50] <- NA
 
 #Make cohort-specific summary dataset
 dp <- dd %>% group_by(studycountry) %>% slice(1) %>%
-  select(studycountry, region, overall_nmeas, overall_stuntprev)
+  dplyr::select(studycountry, region, overall_nmeas, overall_stuntprev)
 
 ##Fill missing age-cohort combinations as NA so they appear as grey
 table(is.na(dd))

@@ -802,6 +802,17 @@ stunt_12_meas_15_plot <- ggplot(stunt_12_meas_15, aes(x=haz)) +
   rremove("y.grid") +  
   rremove("axis.title")
 
+
+#-----------------------------------------
+#### Save legend ####
+#-----------------------------------------
+Fig_4B_legend <- as_ggplot(get_legend(stunt_3_meas_3_plot))
+stunt_3_meas_3_plot <- stunt_3_meas_3_plot + theme(legend.position = "none")
+
+ggsave(Fig_4B_legend, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,"-pheno",
+                                  "-legend.png"), width=9, height=1)
+
+
 #-----------------------------------------
 #### Combine Plots ####
 #-----------------------------------------
@@ -832,12 +843,3 @@ ggsave(Fig_4B, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,"-ph
 
 saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,"-pheno",".RDS"))
 
-
-#-----------------------------------------
-#### Save legend ####
-#-----------------------------------------
-Fig_4B_legend <- as_ggplot(get_legend(stunt_3_meas_3_plot))
-stunt_3_meas_3_plot <- stunt_3_meas_3_plot + theme(legend.position = "none")
-
-ggsave(Fig_4B_legend, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,"-pheno",
-                           "-legend.png"), width=9, height=1)

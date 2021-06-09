@@ -21,7 +21,7 @@ source(paste0(here::here(), "/0-config.R"))
 mediods <- read.csv(here('data/non-secure data/country_centroids/country_centroids_primary.csv'), header=T, sep = "\t")
 head(mediods)
 mediods$SHORT_NAME <- toupper(mediods$SHORT_NAME)
-mediods <- mediods %>% rename(country=SHORT_NAME) %>% select(country, LAT, LONG)
+mediods <- mediods %>% rename(country=SHORT_NAME) %>% dplyr::select(country, LAT, LONG)
 
 #Load cohort data and calc stunting prev by study
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
