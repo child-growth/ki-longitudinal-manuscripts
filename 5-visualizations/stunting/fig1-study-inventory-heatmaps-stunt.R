@@ -36,7 +36,7 @@ assert_that(setequal(unique(dd$studyid), monthly_and_quarterly_cohorts))
 
 
 #Function source
-source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
+source(paste0(project_functions_dir,"/0_descriptive_epi_shared_functions.R"))
 
 
 #-----------------------------------
