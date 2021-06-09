@@ -93,21 +93,7 @@ p_inc = ggplot(plot_combine ,
                      group = cohort_country), size=0.5,
             data = plot_combine %>% filter(cohort_country=="Pooled"),
             width = 0.3) +
-  # 
-  # # annotate outliers; newly stunted
-  # geom_text(data = plot_combine %>% 
-  #             filter(classif == "Newly stunted" & percent>25 & 
-  #                      agem==0) %>% 
-  #             mutate(plotlabel = case_when(
-  #               cohort_country == "CMIN Bangladesh93 - BANGLADESH" ~ "CMIN Bangladesh 93",
-  #               cohort_country == "EE - PAKISTAN" ~ "EE Pakistan",
-  #               cohort_country == "ResPak - PAKISTAN" ~ "ResPak Pakistan"
-  #             )),
-  #           aes(label = plotlabel, 
-  #               x = agem,
-  #               y = percent),
-  #           nudge_x = 7)+
-  
+
   
   scale_color_manual("", values = c("#ADDE66",pink_green[c(4,5)])) +
   scale_x_continuous(limits = c(0,15), breaks = seq(0,15,3), labels = seq(0,15,3)) +
