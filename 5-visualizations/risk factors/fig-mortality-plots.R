@@ -31,7 +31,7 @@ clean_agecat<-function(agecat){
 
 
 #Load data
-dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.RDS"))
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 
 
 unique(dfull$type)
@@ -193,7 +193,7 @@ pmort_data <- d2 %>%
   dplyr::filter(outcome_variable != "Relative risk of\nmortality by 24 months")
 
 # Import hazard ratios data from 05-HR-figs.R
-p_prim_pooled <- readRDS(paste0(here::here(), "/results/p_prim_pooled.RDS")) %>% 
+p_prim_pooled <- readRDS(paste0(BV_dir, "/results/p_prim_pooled.RDS")) %>% 
   filter(pooled==1, !grepl("ever_",X), method=="RE", is.na(sex), is.na(region), agecat=="overall", adj==1, df=="res") %>% 
   droplevels(.) %>%
   dplyr::filter(Xname != "Wasted (MUAC)", 
@@ -226,7 +226,7 @@ pmort_data <- merge(x = p_prim_pooled, y = pmort_data, all = TRUE)
 pmort_data <- pmort_data %>%
   dplyr::filter(outcome_label != "Persistently wasted")
 
-pmort_data_cohort <- readRDS(here("results/mortality-results/full_cox_results.RDS"))
+pmort_data_cohort <- readRDS(paste0(BV_dir,"/results/mortality-results/full_cox_results.RDS"))
 pmort_data_cohort <- pmort_data_cohort %>% filter(pooled == 0)
 
 pmort <- ggplot(pmort_data, aes(x=outcome_label)) +

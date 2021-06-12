@@ -3,7 +3,9 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load data
-d <- readRDS(paste0(BV_dir,"/results/bw_longterm_res.rds"))
+d <- readRDS(paste0(BV_dir,"/results/bw_longterm_res.rds")) %>% mutate(data="Pooled")
+d.cohort <- readRDS(paste0(BV_dir,"/results/bw_longterm_res_cohort.rds")) %>% mutate(data="Cohort")
+d <- bind_rows(d, d.cohort)
 
 d <- d %>% filter(measure=="Persistent wasting"|
                   measure=="Wasting cumulative incidence"|
@@ -18,12 +20,22 @@ d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent w
 d$measure_lab <- factor(d$measure_lab)
 d$measure_lab <- relevel(d$measure_lab, ref="Wasting cumulative incidence\nfrom 6-24 month")
 
+d.cohort <- d %>% filter(data=="Cohort") 
+d <- d %>% filter(data=="Pooled")
+
+pd <- position_dodge(0.4)
 
 birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
-  geom_errorbar(aes(color=born_wast_lab, ymin=lb, ymax=ub), width = 0) +
-  geom_point(aes(fill=born_wast_lab, color=born_wast_lab), size = 2) +
-  #geom_text(aes(x = born_wast, y = est, label = round(est)), hjust = 1.5) +
-  #scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
+  geom_errorbar(aes(color=born_wast_lab, ymin=lb, ymax=ub), width = 0.5) +
+  geom_point(aes(fill=born_wast_lab, color=born_wast_lab), size = 3) +
+  geom_point(aes(fill=born_wast_lab,group=cohort), color="#878787", size = 2, 
+             #position = position_jitter(width = 0.15),
+             position = pd,
+             alpha = 0.5, data=d.cohort) +
+  geom_line(aes(group=cohort), data=d.cohort, color="#878787", alpha = 0.25,
+            position = pd
+            #position = position_jitter(width = 0.15)
+            ) +
   xlab("")+
   ylab("") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
@@ -35,9 +47,9 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
                                    size = 12))+ #,
                                    #angle = 30, hjust = 0.5, vjust=0.5)) +
   theme(axis.title.y = element_text(size = 12)) +
-  #ggtitle("Outcomes by birth status among children 6-24 months") +
   facet_wrap(~measure_lab, nrow=1, scales="free_y", strip.position = "left") +
   theme(strip.background = element_blank(), strip.placement = "outside")
+birthstrat_stats_plot
 
 
 

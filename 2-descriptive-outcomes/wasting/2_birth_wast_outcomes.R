@@ -131,17 +131,21 @@ co <- co %>% filter(agecat!="0-6 months")
 co$agecat <- "6-24 months"
 co$agecat <- factor(co$agecat)
 
+
+#Drop studies with less than Nmin meas
+Nmin=6
+
 #mean whz
-whz.res <- d %>% group_by(born_wast) %>% do(summary.whz(., N_filter=1)$whz.res)
+whz.res <- d %>% group_by(born_wast) %>% do(summary.whz(., N_filter=Nmin)$whz.res)
 whz.res
 
 
 #prevalence
-prev.res <- d %>% group_by(born_wast) %>% do(summary.prev.whz(., N_filter=1)$prev.res)
+prev.res <- d %>% group_by(born_wast) %>% do(summary.prev.whz(., N_filter=Nmin)$prev.res)
 prev.res
 
 #CI
-ci.res <- d %>% group_by(born_wast) %>% do(summary.wast.ci(., N_filter=1, age.range=NULL)$ci.res)
+ci.res <- d %>% group_by(born_wast) %>% do(summary.wast.ci(., N_filter=Nmin, age.range=NULL)$ci.res)
 ci.res
 
 
@@ -154,7 +158,7 @@ ir.res
 
 
 #Persistant wasting
-perswast.res <- d %>% group_by(born_wast) %>% do(summary.perswast(., N_filter=1)$pers.res)
+perswast.res <- d %>% group_by(born_wast) %>% do(summary.perswast(., N_filter=Nmin)$pers.res)
 perswast.res
 
 
@@ -162,8 +166,23 @@ perswast.res
 #co-occurrent wasting and stunting
 co.res <- co %>% group_by(born_wast) %>% 
   filter(agedays > 17*30.4167 & agedays < 19*30.4167) %>% 
-  do(summary.prev.co(., N_filter=1)$prev.res)
+  do(summary.prev.co(., N_filter=Nmin)$prev.res)
 co.res
+
+
+
+#Get cohort-specific estimates
+whz.res.cohort <- d %>% group_by(born_wast) %>% do(summary.whz(., N_filter=Nmin)$whz.cohort)
+prev.res.cohort <- d %>% group_by(born_wast) %>% do(summary.prev.whz(., N_filter=Nmin)$prev.cohort)
+ci.res.cohort <- d %>% group_by(born_wast) %>% do(summary.wast.ci(., N_filter=Nmin, age.range=NULL)$ci.cohort)
+ir.res.cohort <- d %>% group_by(born_wast) %>% do(summary.ir(., Nchild_filter=1, ptime_filter=1)$ir.cohort)
+ir.res.cohort$yi <- ir.res.cohort$yi * 1000
+ir.res.cohort$ci.lb <- ir.res.cohort$ci.lb  * 1000
+ir.res.cohort$ci.ub <- ir.res.cohort$ci.ub * 1000
+perswast.res.cohort <- d %>% group_by(born_wast) %>% do(summary.perswast(., N_filter=Nmin)$pers.cohort)
+co.res.cohort <- co %>% group_by(born_wast) %>% 
+  filter(agedays > 17*30.4167 & agedays < 19*30.4167) %>% 
+  do(summary.prev.co(., N_filter=Nmin)$prev.cohort)
 
 
 res <- data.frame(
@@ -172,7 +191,24 @@ res <- data.frame(
 )
 res
 
-saveRDS(res, file = paste0(here(),"/results/bw_longterm_res.rds"))
+
+res.cohort <- bind_rows(
+  data.frame(measure= "Mean WLZ",whz.res.cohort),
+  data.frame(measure= "Wasting prevalence",prev.res.cohort),
+  data.frame(measure= "Wasting cumulative incidence",ci.res.cohort),
+  data.frame(measure= "Wasting incidence rate",ir.res.cohort),
+  data.frame(measure= "Persistent wasting",perswast.res.cohort),
+  data.frame(measure= "Co-occurrent wasting and stunting",co.res.cohort)
+) %>%
+  mutate(est=yi*100,  lb=ci.lb*100, ub=ci.ub*100, cohort=paste0(studyid,"-",country)) %>%
+  select(measure, born_wast,cohort, studyid, country, est, lb, ub, nmeas) %>%
+  group_by(cohort, measure) %>% mutate(N=n()) %>% filter(N==2)
+  
+head(res.cohort)
+as.data.frame(res.cohort[res.cohort$measure=="Persistent wasting",])
+
+saveRDS(res, file = paste0(BV_dir,"/results/bw_longterm_res.rds"))
+saveRDS(res.cohort, file = paste0(BV_dir,"/results/bw_longterm_res_cohort.rds"))
 
 
 

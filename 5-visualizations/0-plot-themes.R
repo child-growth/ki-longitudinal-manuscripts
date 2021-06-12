@@ -19,6 +19,8 @@ tableau10 <- c("#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
 tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+# colorblind friendly palette
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 theme_set(theme_ki)
 
@@ -696,13 +698,13 @@ ki_wast_ip_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range
     geom_point(aes(shape=measure, color=measure), fill = "#878787", size = 1.5, 
                data = df %>% filter(ispooled == "no"),
                position = position_jitter(width = 0.15), alpha = 0.8) +
-    scale_color_manual(values=c("grey20","grey70"), drop=TRUE, limits = levels(df$measure),
+    scale_color_manual(values=c("grey60","grey80"), drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) +
     new_scale_color() + 
     # pooled 
     geom_point(aes(shape=measure, size=measure, fill=region, color=region,
                    group=interaction(measure, region)), 
-               size = 2, stroke = 0,
+               size = 2.5, stroke = 0,
                data = df %>% filter(ispooled == "yes"),
                position = position_dodge(dodge)) +
     

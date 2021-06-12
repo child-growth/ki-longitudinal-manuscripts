@@ -114,6 +114,15 @@ save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification
 
 
 
+#Save stunting recovery analysis specification
+stunt_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
+stunt_rev <- specify_rf_analysis(A=Avars, Y="s06rec1824", file="st_inc_rec_rf.Rdata")
+
+
+stunt_rec_analyses <- rbind(stunt_rec, stunt_rev)
+save(stunt_rec_analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_stunt_rec_analyses.rdata")))
+
+
 #---------------------------------------------
 # Specify the continuous analyses
 #---------------------------------------------

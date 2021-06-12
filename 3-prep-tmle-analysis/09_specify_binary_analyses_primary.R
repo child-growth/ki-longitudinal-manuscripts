@@ -4,7 +4,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 
-load(here("results/adjustment_sets_list.Rdata"))
+load(paste0(BV_dir,"/results/adjustment_sets_list.Rdata"))
 A <- names(adjustment_sets)
 
 Avars <- c( "sex",   names(adjustment_sets))
@@ -14,7 +14,6 @@ cuminc_sev <- cuminc %>% filter(agecat=="0-24 months")
 load(file=paste0(ghapdata_dir,"/wast_cuminc_nobirth.rdata"))
 cuminc_nobirth_sev <- cuminc_nobirth %>% filter(agecat=="0-24 months (no birth wast)")
 load(file=paste0(ghapdata_dir,"/pers_wast.rdata"))
-pers_wast <- pers_wast %>% filter(agecat=="0-24 months")
 
 save(cuminc, file=paste0(ghapdata_dir,"/wast_cuminc_primary.rdata"))
 save(cuminc_nobirth, file=paste0(ghapdata_dir,"/wast_cuminc_nobirth_primary.rdata"))

@@ -234,6 +234,7 @@ co_ci_0_6 = d6 %>% group_by(studyid,country,subjid) %>%
          Nobs=n()) %>% 
   slice(1) %>%
   ungroup() 
+head(co_ci_0_6)
 
 
 # # #calculate any coing from 6-24

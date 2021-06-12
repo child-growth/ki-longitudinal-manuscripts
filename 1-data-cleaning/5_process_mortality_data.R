@@ -14,6 +14,17 @@ gc()
 d <- subset(dfull, select= c(studyid, country, subjid, agedays, dead, agedth, causedth, haz, waz))
 gc()
 
+
+#Mortality rate in monthly studies for reviewer response
+tab <- d %>% filter(studyid %in% monthly_cohorts, agedays < 730) %>%
+  group_by(studyid, country, subjid) %>%
+  mutate(max(dead, na.rm=T)) %>% slice(1) %>%
+  group_by(studyid, country) %>%
+  summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
+  as.data.frame()
+knitr::kable(tab)  
+
+
 #Studies missing any death data
 dmiss <- d %>% group_by(studyid, country) %>% mutate(Ntot=n(), Ndeath=sum(dead, na.rm=T)) %>%
   filter(Ndeath==0 & is.na(agedth) & causedth=="") %>%

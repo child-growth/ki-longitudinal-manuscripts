@@ -9,13 +9,13 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-dpool <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_results.rds")) %>% 
+dpool <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% 
   filter( RR.CI1 != RR.CI2,  region!="N.America & Europe") %>%
   mutate(pooled=1)
-dFE <- readRDS(paste0(here::here(),"/results/rf results/pooled_RR_FE_results.rds")) %>% 
+dFE <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_FE_results.rds")) %>% 
   filter( RR.CI1 != RR.CI2,  region=="Pooled") %>%
   mutate(pooled=1, region="Pooled - FE")
-dfull <- readRDS(paste0(here::here(),"/results/rf results/full_RF_results.rds")) %>% 
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% 
   filter(type=="RR", ci_lower != ci_upper) %>%
   mutate(pooled=0) %>%
   rename(RR=estimate, RR.CI1=ci_lower, RR.CI2=ci_upper)
@@ -61,7 +61,7 @@ d <- d %>%
       outcome_variable== "ever_co" ~ "Concurrent wasting and stunting",
       outcome_variable== "wast_rec90d" ~ "Wasting recovery within 90 days"
     ),
-    outcome_variable=factor("Stunting prev.",
+    outcome_variable=factor(outcome_variable, levels=c("Stunting prev.",
                             "Wasting prev.",
                             "Stunting CI",
                             "Wasting CI",
@@ -71,7 +71,7 @@ d <- d %>%
                             "Severe wasting CI",
                             "Persistent wasting",
                             "Concurrent wasting and stunting",
-                            "Wasting recovery within 90 days")
+                            "Wasting recovery within 90 days"))
   )
 
 #order by Region
@@ -144,7 +144,7 @@ length(res[[4]])
 
 res$plot[res$intervention_variable=="hhwealth_quart" & res$outcome_variable=="ever_stunted" & res$agecat=="0-6 months"]
 
-saveRDS(res, file=here("figures/risk-factor/figure-data/all_forest_plot_RR.RDS"))
+saveRDS(res, file=paste0(BV_dir,"/figures/risk-factor/figure-data/all_forest_plot_RR.RDS"))
 
 
 

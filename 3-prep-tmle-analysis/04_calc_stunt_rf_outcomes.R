@@ -64,6 +64,20 @@ stunt_ci_0_24 = d6 %>% ungroup() %>%
   mutate(N=n()) %>%
   ungroup() 
 
+#calculate stunting reversal
+stunt_rec = d6 %>% ungroup() %>%
+  filter(agecat %in% c("0-6 months", "18-24 months")) %>%
+  group_by(studyid,country,subjid, agecat) %>%
+  summarise(N=n(), stunt_inc = 1*!(min(haz) < -2)) %>% #flip so 0 is still stunted and 1 is recovered
+  ungroup()  %>%
+  filter((N>=2 & agecat=="18-24 months") |  
+           (N>=2 & agecat=="0-6 months" & stunt_inc==0)) %>% 
+  group_by(studyid,country,subjid) %>% 
+  mutate(Nagecats=n()) %>% filter(Nagecats==2) %>%
+  filter(agecat=="18-24 months") %>%
+  droplevels()
+
+
 stunt_ci_6_24 <- stunt_ci_6_24 %>% subset(., select = -c(anystunt06))
 cuminc <- bind_rows(stunt_ci_0_6, stunt_ci_6_24, stunt_ci_0_24)
 
@@ -207,8 +221,8 @@ rec.24 <- d %>%
   select(-c(maxrec))
 
 rev <- full_join(stunt.03, rec.24,by=c("studyid","country","subjid")) %>%
-  mutate(s03rec24=ifelse(stunted03==1 & rec24==1,1,0)) %>%
-  select(studyid, country,subjid, s03rec24)
+  mutate(s03rec24=ifelse(stunted03==1 & rec24==1,1,0), agecat="0-24 months") %>%
+  select(studyid, country,subjid, s03rec24, agecat)
 
 #--------------------------------------
 # Format and subset the growth velocity dataset
@@ -263,5 +277,6 @@ save(meanHAZ, file=paste0(ghapdata_dir,"st_meanZ_outcomes.RData"))
 save(cuminc, file=paste0(ghapdata_dir,"st_cuminc_outcomes.rdata"))
 save(cuminc_nobirth, file=paste0(ghapdata_dir,"st_cuminc_outcomes_nobirth.rdata"))
 save(rev, file=paste0(ghapdata_dir,"st_rec_outcomes.RData"))
+save(stunt_rec, file=paste0(ghapdata_dir,"st_inc_recovery_outcomes.RData"))
 save(vel_haz, vel_lencm, file=paste0(ghapdata_dir,"st_vel_outcomes.RData"))
 save(vel_waz, vel_wtkg, file=paste0(ghapdata_dir,"waz_vel_outcomes.RData"))

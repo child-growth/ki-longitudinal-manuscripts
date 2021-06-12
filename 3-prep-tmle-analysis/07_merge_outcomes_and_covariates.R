@@ -51,6 +51,7 @@ load("st_meanZ_outcomes.RData")
 load("st_cuminc_outcomes.rdata")
 load("st_cuminc_outcomes_nobirth.rdata")
 load("st_rec_outcomes.RData")
+load("st_inc_recovery_outcomes.RData")
 load("st_vel_outcomes.RData")
 load("waz_vel_outcomes.RData")
 
@@ -62,6 +63,7 @@ prev$subjid <- as.character(prev$subjid)
 cuminc$subjid <- as.character(cuminc$subjid)
 cuminc_nobirth$subjid <- as.character(cuminc_nobirth$subjid)
 rev$subjid <- as.character(rev$subjid)
+stunt_rec$subjid <- as.character(stunt_rec$subjid)
 vel_haz$subjid <- as.character(vel_haz$subjid)
 vel_lencm$subjid <- as.character(vel_lencm$subjid)
 vel_waz$subjid <- as.character(vel_waz$subjid)
@@ -263,6 +265,29 @@ id <- c("id")
 
 
 save(d, Y, A,V, id, file="st_rec_rf.Rdata")
+
+
+#merge in covariates
+stunt_rec <- stunt_rec %>% rename(s06rec1824=stunt_inc)
+d <- left_join(stunt_rec, cov, by=c("studyid", "subjid", "country"))
+head(d)
+
+
+#Vector of outcome names
+Y<-c("s06rec1824")
+
+#Vector of covariate names
+W<-c("")
+
+#Subgroup variable
+V <- c("agecat")
+
+#clusterid ID variable
+id <- c("id")
+
+
+save(d, Y, A,V, id, file="st_inc_rec_rf.Rdata")
+
 
 
 

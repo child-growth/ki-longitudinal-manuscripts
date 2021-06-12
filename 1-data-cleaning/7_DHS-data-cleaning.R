@@ -8,7 +8,9 @@
 
 source(paste0(here::here(), "/0-config.R"))
 
-df <- readRDS(here("data/dhs_data_combined.rds"))
+#df <- readRDS(here("data/dhs_data_combined.rds"))
+df <- readRDS(paste0(BV_dir,"/data/dhs_data_combined.rds"))
+head(df)
 
 #haz <- readRDS(here::here("data", "clean-DHS-haz.rds"))
 
@@ -124,10 +126,12 @@ d <- d %>%
   rename(agem = hc1) %>%
   distinct()
 nrow(d)
+table(d$country)
+
+temp <- d %>% filter(country=="Brazil")
 
 # Subsetting to relevant variables
 year_vars <- c("hc19")
-# age_vars <- c("hc1")
 age_vars <- c("agem")
 haz_vars <- colnames(df)[grep("hc70", colnames(df))]
 waz_vars <- colnames(df)[grep("hc71", colnames(df))]
@@ -230,8 +234,20 @@ d_whz_long = d_whz_long %>%
 # Other special responses are coded 9996
 
 
+#Merge in Brazilian data
+br <- readRDS(paste0(dhs_res_dir,"brazil_dhs.RDS"))
+br_haz <- br %>% filter(measure=="HAZ")
+br_waz <- br %>% filter(measure=="WAZ")
+br_whz <- br %>% filter(measure=="WHZ")
+
+d_haz_long <- bind_rows(d_haz_long, br_haz)
+d_waz_long <- bind_rows(d_waz_long, br_waz)
+d_whz_long <- bind_rows(d_whz_long, br_whz)
+
+table(d_haz_long$country)
+
 # save cleaned data as RDS
-saveRDS(d_haz_long, dhs_res_dir)
-saveRDS(d_waz_long, dhs_res_dir)
-saveRDS(d_whz_long, dhs_res_dir)
+saveRDS(d_haz_long, paste0(dhs_res_dir,"clean-DHS-haz.rds"))
+saveRDS(d_waz_long, paste0(dhs_res_dir,"clean-DHS-waz.rds"))
+saveRDS(d_whz_long, paste0(dhs_res_dir,"clean-DHS-whz.rds"))
 

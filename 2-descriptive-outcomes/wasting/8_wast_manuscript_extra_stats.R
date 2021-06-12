@@ -67,7 +67,7 @@ d <- dfull %>% filter(agedays < 24 * 30.4167) %>%
   mutate(wast=1*(whz < (-2)), stunt=1*(haz < (-2)), co = 1*(whz < (-2) & haz < (-2))) %>%
   group_by(studyid, country, subjid, agecat) %>% 
   arrange(studyid, country, subjid, agecat) %>% 
-  mutate(wast=max(wast), stunt=max(stunt), co=last(co), wast24=last(wast), stunt24=last(stunt)) %>%
+  mutate(wast=max(wast), stunt=max(stunt), co=max(co), wast24=max(wast), stunt24=max(stunt)) %>%
   filter(agecat %in% c("0-6 months","18-24 months")) %>%
   group_by(studyid, country, subjid) %>% 
   mutate(wast06=first(wast), stunt06=first(stunt), co24=last(co), wast24=last(wast24), stunt24=last(stunt24)) %>% 
@@ -91,7 +91,11 @@ epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100,
          outcome = "as.columns")
 
 dat=table(-d$wast06, -d$stunt24)
+epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100, 
+         #homogeneity = "breslow.day", 
+         outcome = "as.columns")
 
+dat=table(-d$stunt06, -d$wast24)
 epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100, 
          #homogeneity = "breslow.day", 
          outcome = "as.columns")
@@ -126,6 +130,16 @@ save(d, file=paste0(ghapdata_dir,"earlywast_strat_stunt_rf.Rdata"))
 
 
 
+df <- dfull %>% group_by(studyid, subjid, agecat) %>% mutate(anywast=1*(min(whz) < (-2)), anystunt=1*(min(haz) < (-2)))  %>% arrange(studyid, country, subjid,agedays)
+d <- df %>% group_by(studyid, subjid) %>% filter(agecat %in% c("0-6 months", "18-24 months")) %>% arrange(agecat, agedays) %>% 
+  filter(first(agecat)=="0-6 months", last(agecat)=="18-24 months") %>%
+  mutate(N=n(), stunt06=first(anystunt), wast24=last(anywast)) %>% slice(1) %>% arrange(studyid, country, subjid)
+
+#Save dataset for longbow analysis
+save(d, file=paste0(ghapdata_dir,"earlystunt_strat_wast_rf.Rdata"))
+
+
+
 #Save analysis specifications
 load(paste0(BV_dir,"/results/adjustment_sets_list.Rdata"))
 A <- names(adjustment_sets)
@@ -146,11 +160,12 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 }
 
 
-earlywast_strat_co <- specify_rf_analysis(A="wast06", Y=c("co24"), file="earlywast_strat_co_rf.Rdata")
+earlywast_strat_co <- specify_rf_analysis(A=c("wast06","stunt06"), Y=c("co24"), file="earlywast_strat_co_rf.Rdata")
 earlywast_strat_stunt <- specify_rf_analysis(A="wast06", Y=c("stunt24"), file="earlywast_strat_stunt_rf.Rdata")
+earlystunt_strat_wast <- specify_rf_analysis(A="stunt06", Y=c("wast24"), file="earlystunt_strat_wast_rf.Rdata")
 
 #bind together datasets
-analyses <- rbind(earlywast_strat_stunt, earlywast_strat_co)
+analyses <- rbind(earlywast_strat_stunt, earlystunt_strat_wast, earlywast_strat_co)
 
 #Save analysis specification
 save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/earlywast_strat_analyses.rdata"))

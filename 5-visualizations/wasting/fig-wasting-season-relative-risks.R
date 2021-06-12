@@ -10,6 +10,8 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 #Load longbow results
 results <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/seasonality_results.RDS"))
 
+# The palette with black:
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 
 #Load cohort Ns
@@ -23,10 +25,10 @@ rain <- rain %>% subset(., select = c(studyid, country, cohort_index)) %>%
   arrange(season_index) %>%
   mutate(seasonality_category = 
            case_when(
-             season_index >= 0.9 ~ "High\nseasonality",
-             season_index < 0.7 ~ "Low\nseasonality",
-             TRUE ~ "Medium\nseasonality"),
-         seasonality_category = factor(seasonality_category, levels=c("High\nseasonality", "Medium\nseasonality", "Low\nseasonality")))
+             season_index >= 0.9 ~ "High",
+             season_index < 0.7 ~ "Low",
+             TRUE ~ "Medium"),
+         seasonality_category = factor(seasonality_category, levels=c("High", "Medium", "Low")))
 table(rain$seasonality_category)
 
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
@@ -74,7 +76,7 @@ df <- rbind(RMAest, RMAest_season_index)
 #Add reference level to labe
 df$RFlabel_ref <- paste0(df$RFlabel, ", ref: ", df$baseline_level)
 
-df$seasonality_category <- factor(df$seasonality_category, levels=c("Pooled", "High\nseasonality", "Medium\nseasonality", "Low\nseasonality"))
+df$seasonality_category <- factor(df$seasonality_category, levels=c("Pooled", "High", "Medium", "Low"))
 
 df$intervention_level[df$intervention_level=="Opposite max rain"] <- "Opposite\nmax rain"
 df$intervention_level[df$intervention_level=="Pre-max rain"] <- "Pre-max\nrain"
@@ -97,7 +99,10 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
              size = 3, 
              position = position_dodge(0.3)) +
   geom_text(aes(label=ref), hjust = 1.2) +
-  scale_color_manual(values=tableau11[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure)) +
+  # scale_fill_manual(values=cbbPalette[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = TRUE)) +
+  # scale_color_manual(values=cbbPalette[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(values=cbbPalette, drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = TRUE)) +
+  scale_color_manual(values=cbbPalette, drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = TRUE)) +
   coord_flip() +
   xlab("3-month quarter of the year, grouped by rainfall")+
   ylab("WLZ difference") +
@@ -108,7 +113,7 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
                                size = 14 #, angle = 45, hjust = 1, vjust =1
                                )) +
   theme(axis.title.y = element_text(size = 14)) +
-  theme(legend.position="right") +
+  theme(legend.position="top") +
   ggtitle("") + 
   theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
 print(p_seasonRR)

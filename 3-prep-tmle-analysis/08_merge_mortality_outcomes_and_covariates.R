@@ -25,7 +25,7 @@ wast_ci_0_24 <- wast_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_
 wast_ci_0_6_no_birth <- wast_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_wasted06_noBW, ever_swasted06_noBW)) 
 underweight_ci_0_6 <- underweight_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_underweight06, ever_sunderweight06)) 
 underweight_ci_0_24 <- underweight_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_underweight024, ever_sunderweight024))
-co_ci_0_6 <- co_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_co06)) 
+co_ci_0_6 <- co_ci_0_6 %>% subset(., select=c(studyid,country,subjid,ever_co06, ever_wast_uwt06, ever_stunt_uwt06)) 
 co_ci_0_24 <- co_ci_0_24 %>% subset(., select=c(studyid,country,subjid,ever_co024))
 
 # stunt_ci_0_6_no_birth <- stunt_ci_0_6_no_birth %>% subset(., select=c(studyid,country,subjid,ever_stunted06_noBW, ever_sstunted06_noBW)) 
@@ -146,6 +146,8 @@ Avars <- c("ever_wasted06",
            "ever_sunderweight06",
            # "ever_underweight024",
            # "ever_sunderweight024",
+           "ever_wast_uwt06",
+           "ever_stunt_uwt06",
            "ever_co06"#,
            #"ever_co024"
            )
@@ -260,6 +262,8 @@ Avars_morbidity <- c("ever_wasted06",
                      "ever_underweight06",
                      "ever_sunderweight06",
                      "ever_co06",
+                     "ever_wast_uwt06",
+                     "ever_stunt_uwt06",
                      "pers_wasted06")
 
 d <- as.data.frame(d)
@@ -381,6 +385,8 @@ adjustment_sets_mortality <- list(
   ever_underweight024=cov,
   ever_sunderweight024=cov,
   ever_co06=cov,
+  ever_wast_uwt06=cov,
+  ever_stunt_uwt06=cov,
   ever_co024=cov)
 
 

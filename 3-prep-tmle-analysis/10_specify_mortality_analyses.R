@@ -40,6 +40,8 @@ Avars <- c("ever_wasted06",
            # "ever_swasted06_noBW",
            "ever_underweight06",
            "ever_sunderweight06",
+           "ever_wast_uwt06",
+           "ever_stunt_uwt06",
            # "ever_underweight624",
            # "ever_sunderweight624",
            "ever_co06"#,
@@ -59,6 +61,8 @@ Avars_morbidity <- c("ever_wasted06",
                      # "ever_swasted06_noBW",
                      "ever_underweight06",
                      "ever_sunderweight06",
+                     "ever_wast_uwt06",
+                     "ever_stunt_uwt06",
                      "ever_co06",
                      "pers_wasted06")
 
@@ -120,6 +124,8 @@ Avars <- c("ever_wasted06",
            "ever_sstunted06",
            "ever_underweight06",
            "ever_sunderweight06",
+           "ever_wast_uwt06",
+           "ever_stunt_uwt06",
            "ever_co06"
 )
 

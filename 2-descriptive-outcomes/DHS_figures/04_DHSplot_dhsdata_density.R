@@ -32,9 +32,9 @@ registerDoParallel(cores = 3)
 # load cleaned DHS anthro data
 # created by 7_DHS-data-cleaning.R
 #---------------------------------------
-dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
-dwaz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
-dwhz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
+dhaz <- readRDS(file = paste0(dhs_res_dir,"clean-DHS-haz.rds"))
+dwaz <- readRDS(file = paste0(dhs_res_dir,"clean-DHS-waz.rds"))
+dwhz <- readRDS(file = paste0(dhs_res_dir,"clean-DHS-whz.rds"))
 
 
 #---------------------------------------
@@ -44,7 +44,7 @@ dwhz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
 dhsz <- bind_rows(dhaz, dwaz, dwhz) %>%
   mutate(
     measure = factor(measure, levels = c("HAZ", "WAZ", "WHZ"), labels = c("LAZ", "WAZ", "WHZ"))
-  )
+  ) %>% filter(!is.na(zscore))
 
 dhsz$country[dhsz$dataset=="BOPR51F"] <- "Bolivia"
 
@@ -155,6 +155,8 @@ dhsallden_country <- foreach(zmeas = levels(dhsz$measure), .combine = rbind, .pa
     denid <- data.frame(x = deni$x, y = deni$y, measure = zmeas, country = rgn)
     denid
   }
+table(dhsallden_country$country)
+
 dhsallden_region <- foreach(zmeas = levels(dhsz$measure), .combine = rbind, .packages = "dplyr") %:%
   foreach(rgn = c("Africa", "South Asia", "Latin America"), .combine = rbind) %dopar% {
     di <- dhsz %>% filter(measure == zmeas & region == rgn)

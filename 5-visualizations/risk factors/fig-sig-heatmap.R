@@ -11,6 +11,16 @@ rr <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 rr <- rr %>% rename(est=RR, CI.lb=RR.CI1, CI.ub=RR.CI2)
 ate <- ate %>% rename(est=ATE, CI.lb=CI1, CI.ub=CI2)
 
+pers <- rr[rr$outcome_variable=="pers_wast",]
+table(pers$agecat)
+rr  <- rr %>% filter(!(outcome_variable=="pers_wast" & agecat != "0-24 months"), outcome_variable!="s03rec24") %>% droplevels()
+
+#Flip direction of RR for wasting recovery (so outcome is recovered, rather than still stunted)
+# rr$est[rr$outcome_variable=="pers_wast"] <- 1/rr$est[rr$outcome_variable=="pers_wast"]
+# rr$CI.lb[rr$outcome_variable=="pers_wast"] <- 1/rr$CI.ub[rr$outcome_variable=="pers_wast"]
+# rr$CI.ub[rr$outcome_variable=="pers_wast"] <- 1/rr$CI.lb[rr$outcome_variable=="pers_wast"]
+
+#rr[rr$outcome_variable=="pers_wast" & rr$intervention_variable=="mwtkg",]
 
 d <- bind_rows(rr, ate)
 head(d)
@@ -30,12 +40,12 @@ d <- d %>% filter(region!="N.America & Europe")
 d <- d %>% mutate(region = factor(region, levels = c("Pooled","South Asia","Africa","Latin America")))
 
 #keep overall pooled only in rare outcomes
-d <- d %>% filter(!(outcome_variable %in% c("ever_co", "wast_rec90d") & region!="Pooled"))
+d <- d %>% filter(!(outcome_variable %in% c("ever_co", "wast_rec90d","s06rec1824") & region!="Pooled"))
 
 
 #Drop secondary outcomes
 table(d$outcome_variable)
-d <- d %>% filter(outcome_variable %in% c("pers_wast","ever_stunted","stunted","ever_wasted","wasted","wast_rec90d","ever_co","haz","whz")) 
+d <- d %>% filter(outcome_variable %in% c("pers_wast","ever_stunted","stunted","ever_wasted","wasted","wast_rec90d","ever_co","haz","whz","s06rec1824")) 
 d$outcome_variable <- gsub("haz", "LAZ", d$outcome_variable)
 d$outcome_variable <- gsub("whz", "WLZ", d$outcome_variable)
 d$outcome_variable <- gsub("stunted", "Stunted", d$outcome_variable)
@@ -44,12 +54,19 @@ d$outcome_variable <- gsub("wast_rec90d", "Recovery\nfrom\nwasting", d$outcome_v
 d$outcome_variable <- gsub("ever_co", "Stunted\nand wasted", d$outcome_variable)
 d$outcome_variable <- gsub("ever_Stunted", "Ever\nstunted", d$outcome_variable)
 d$outcome_variable <- gsub("ever_Wasted", "Ever\nwasted", d$outcome_variable)
-d$outcome_variable <- gsub("pers_wast", "Persistently\nwasted", d$outcome_variable)
-d <- d %>% mutate(outcome_variable=factor(outcome_variable, levels = c("LAZ","Stunted","Ever\nstunted","WLZ","Wasted","Ever\nwasted","Persistently\nwasted","Stunted\nand wasted", "Recovery\nfrom\nwasting")))
+# d$outcome_variable <- gsub("pers_wast", "Pers\nwast", d$outcome_variable)
+# d$outcome_variable <- gsub("s06rec1824", "Stunt\nrev.", d$outcome_variable)
+d$outcome_variable <- gsub("pers_wast", "Pers\nwast", d$outcome_variable)
+d$outcome_variable <- gsub("s06rec1824", "Stunt\nrev.", d$outcome_variable)
+
+d <- d %>% mutate(outcome_variable=factor(outcome_variable, levels = c("LAZ","Stunted","Ever\nstunted","WLZ","Wasted","Ever\nwasted","Stunted\nand wasted", "Pers\nwast","Recovery\nfrom\nwasting","Stunt\nrev.")))
 table(d$outcome_variable)
 levels(d$outcome_variable)
+table(d$outcome_variable, d$agecat)
+
 
 #clean up agecats
+d$agecat[d$outcome_variable=="Stunt\nrev."] <- "0-24 months"
 d$agecat <- gsub(" \\(no birth st.\\)", "", d$agecat)
 d$agecat <- gsub(" \\(no birth wast\\)", "", d$agecat)
 unique(d$agecat)
@@ -179,7 +196,7 @@ textcol = "grey20"
 cols = rev(brewer.pal(n = 7, name = "Spectral"))
 
 levels(d$pval_cat) = c(levels(d$pval_cat), "Not estimated")
-agecat_with_ranges = c(  "Ever\nstunted", "Ever\nwasted", "Persistently\nwasted", "Stunted\nand wasted","Recovery\nfrom\nwasting")
+agecat_with_ranges = c(  "Ever\nstunted", "Ever\nwasted", "Pers\nwast", "Stunted\nand wasted","Recovery\nfrom\nwasting")
 
 #Pooled estimates only 
 
@@ -192,15 +209,13 @@ pooled_data = pooled_data %>%
                 complete(xvar, outcome_variable, fill = list(agecat = "Birth")) %>% 
                 filter((outcome_variable %in% agecat_with_ranges & agecat != "Birth") | !(outcome_variable %in% agecat_with_ranges)) %>% 
                 replace_na(list(pval_cat = "Not estimated"))
+
+rr  <- rr %>% filter(!(outcome_variable=="pers_wast" & agecat != "0-24 months"), outcome_variable!="s03rec24") %>% droplevels()
+
+pooled_data <- pooled_data %>% filter(!(outcome_variable=="Stunt\nrev." & agecat == "Birth"))
 pooled_data <- droplevels(pooled_data)
 
-# unique(pooled_data$agecat)
-# pooled_data <- pooled_data %>%
-#   mutate(agecat_num = case_when(
-#     agecat %in% c("Birth","0-24 mo") ~"1",
-#     agecat %in% c("6 mo","0-6 mo") ~"2",
-#     agecat %in% c("24 mo","6-24 mo") ~"3"
-#   ))
+table(pooled_data$outcome_variable, pooled_data$agecat)
 
 
 hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
@@ -218,7 +233,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
     legend.text=element_text(colour=textcol,size=7,face="bold"),
     legend.key.height=grid::unit(0.2,"cm"),
     legend.key.width=grid::unit(1,"cm"),
-    legend.position = "right",
+    legend.position = "bottom",
     axis.text.x=element_text(size=8,colour=textcol,angle=45,hjust=1),
     axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
     axis.ticks=element_line(size=0.4),
@@ -231,7 +246,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
     panel.background=element_rect(fill="grey80", colour="grey80"),
     panel.grid.major = element_blank(), panel.grid.minor = element_blank()
   ) + 
-  guides(fill = guide_legend("P-value strength", ncol=1)) + 
+  guides(fill = guide_legend("P-value strength", nrow=2)) + 
   labs(x="Exposure",y="Age category",title="") +
   coord_flip()
   

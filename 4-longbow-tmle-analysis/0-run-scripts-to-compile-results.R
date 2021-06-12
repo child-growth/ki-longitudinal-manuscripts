@@ -28,13 +28,6 @@ source(here("4-longbow-tmle-analysis/pool_RR_FE.R"))
 
 
 
-
-
-source(here("4-longbow-tmle-analysis/VIM_comparions.R"))
-
-
-
-
 #Secondary outcome pooling
 source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_ATE_FE.R"))
 source(here("4-longbow-tmle-analysis/secondary outcome pooling/pool_ATE_FE_unadj.R"))

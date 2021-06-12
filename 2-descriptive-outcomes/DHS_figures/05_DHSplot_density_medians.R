@@ -36,13 +36,17 @@ dhs_medians =  dhs_medians %>% mutate(
   measure = factor(measure, levels = c("haz", "waz", "whz"), labels = c("LAZ", "WAZ", "WHZ"))
 )
 
+#temp <-readRDS(paste0(dhs_res_dir,"dhs.density.ki-countries.rds")) %>% filter(!is.na(country))
+
 names(dhs_medians)[2] = "median"
 dhs_medians = select(dhs_medians, c("region", "measure", "median"))
 dhs_medians$dsource = "DHS, ki countries"
 
 # Find KI medians, combine KI and DHS medians into a single table
-ki_medians_monthly = readRDS(paste0(here("results/dhs/ki.zscore.medians.monthly.rds")))
-ki_medians_quarterly = readRDS(paste0(here("results/dhs/ki.zscore.medians.quarterly.rds")))
+ki_medians_monthly = readRDS(paste0(BV_dir,"/results/dhs/ki.zscore.medians.monthly.rds"))
+ki_medians_monthly_country = readRDS(paste0(BV_dir,"/results/dhs/ki.zscore.medians.monthly.country.rds"))
+ki_medians_quarterly = readRDS(paste0(BV_dir,"/results/dhs/ki.zscore.medians.quarterly.rds"))
+
 
 calc_medians = function(ki_medians){
   ki_medians$dsource = "ki cohorts"

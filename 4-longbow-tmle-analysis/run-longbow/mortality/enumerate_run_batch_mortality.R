@@ -12,7 +12,7 @@ library(longbowRiskFactors)
 # 1. enumerate analysis
 setwd(here("4-longbow-tmle-analysis","run-longbow","mortality"))
 inputs <- "inputs_template.json"
-default_params <- fromJSON(inputs)
+default_params <- jsonlite::fromJSON(inputs)
 default_params$script_params$count_Y <- TRUE
 
 load(here("4-longbow-tmle-analysis","analysis specification","mortality_analyses.rdata"))

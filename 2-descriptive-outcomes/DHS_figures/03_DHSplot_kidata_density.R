@@ -29,9 +29,9 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 # read in outcome data 
-st = readRDS(rf_stunting_data_path)
-wst = readRDS(rf_wasting_data_path)
-waz = readRDS(rf_underweight_path)
+st = readRDS(stunting_data_path)
+wst = readRDS(wasting_data_path)
+waz = readRDS(underweight_data_path)
 
 
 
@@ -191,7 +191,7 @@ waz4 <- ki.density(waz.overall, Region="Overall", Measure="waz")
 # Estimate densities
 #---------------------------------------------------------
 
-#Function to estimate density by region and Z-score
+#Function to estimate density by cohort and Z-score
 ki.density.cohort <- function(data, Region, Measure){
   
   data <- data %>% mutate(cohort=paste0(studyid,"-",country))
@@ -202,7 +202,7 @@ ki.density.cohort <- function(data, Region, Measure){
     d <- data %>% filter(cohort==i) %>% as.data.frame()
     
     dens <- density(d[,Measure])
-    dat <- data.frame(x=dens$x,y=dens$y, cohort=i, measure=Measure)
+    dat <- data.frame(x=dens$x,y=dens$y, country=d$country[1], cohort=i, measure=Measure)
     fulldat <- bind_rows(fulldat,dat)
   }
   return(fulldat)
@@ -216,9 +216,34 @@ waz.cohort <- ki.density.cohort(waz,  Measure="waz")
 whz.cohort <- ki.density.cohort(wst,  Measure="whz")
 
 
+#Function to estimate density by country and Z-score
+ki.density.country <- function(data, Region, Measure){
+  
+  data <- data %>% mutate(country=paste0(studyid,"-",country))
+  
+  fulldat<-NULL
+  for(i in unique(data$country)){
+    dens<-NULL
+    d <- data %>% filter(country==i) %>% as.data.frame()
+    
+    dens <- density(d[,Measure])
+    dat <- data.frame(x=dens$x,y=dens$y, country=i, measure=Measure)
+    fulldat <- bind_rows(fulldat,dat)
+  }
+  return(fulldat)
+}
+
+
+
+set.seed(123)
+haz.country <- ki.density.country(st,  Measure="haz")
+waz.country <- ki.density.country(waz,  Measure="waz")
+whz.country <- ki.density.country(wst,  Measure="whz")
+table(haz.country$country)
+
 #Bind together results
 resdf.quarterly <- bind_rows(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, waz3, waz4,
-                             haz.cohort, waz.cohort, whz.cohort)
+                             haz.country, waz.country, whz.country,haz.cohort, waz.cohort, whz.cohort)
 
 resdf.quarterly <- resdf.quarterly %>%
   mutate(region = case_when(
@@ -262,6 +287,10 @@ medians.monthly_waz <- bind_rows(medians_overall_waz, medians_strat_waz, medians
 medians.monthly <- bind_rows(medians.monthly_waz, medians.monthly_wst, medians.monthly_st) %>%
   arrange(region, measure)
 medians.monthly
+
+medians.monthly.country <- bind_rows(medians_strat.mon_waz, medians_strat.mon_wst, medians_country.mon_st) %>%
+  arrange(region, measure)
+
 
 set.seed(123)
 haz1 <- ki.density(st.mon, Region="SEARO", Measure="haz")
@@ -365,6 +394,7 @@ quantdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, w
 
 #Save medians
 saveRDS(medians.monthly, file = paste0(dhs_res_dir,"ki.zscore.medians.monthly.rds"))
+saveRDS(medians.monthly.country, file = paste0(dhs_res_dir,"ki.zscore.medians.monthly.country.rds"))
 saveRDS(medians.quarterly, file = paste0(dhs_res_dir,"ki.zscore.medians.quarterly.rds"))
 
 #Save densities

@@ -32,9 +32,10 @@ source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
 # load cleaned DHS anthro data
 # created by 7_DHS-data-cleaning.R
 #---------------------------------------
-dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
-dwhz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
-dwaz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
+dhaz <- readRDS(file = paste0(dhs_res_dir,"clean-DHS-haz.rds"))
+dwhz <- readRDS(file = paste0(dhs_res_dir,"clean-DHS-whz.rds"))
+dwaz <- readRDS(file = paste0(dhs_res_dir,"clean-DHS-waz.rds"))
+table(dhaz$country)
 
 # set up for parallel computing
 registerDoParallel(cores = 8)
@@ -54,8 +55,6 @@ table(dhsz$inghap, dhsz$country)
 
 #filter
 dhsz <- dhsz %>% filter(inghap==1)
-
-weighted_gam_estimate(dhsz%>%filter(country=="Bangladesh"))
 
 
 

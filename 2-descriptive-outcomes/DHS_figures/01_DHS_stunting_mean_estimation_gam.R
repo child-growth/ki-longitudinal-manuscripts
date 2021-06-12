@@ -30,7 +30,7 @@ source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_funct
 # load cleaned DHS anthro data
 # created by 7_DHS-data-cleaning.R
 #---------------------------------------
-dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
+dhaz <- readRDS(file = paste0(dhs_res_dir,"clean-DHS-haz.rds"))
 
 table(dhaz$inghap, dhaz$country)
 dhaz$inghap <- ifelse(dhaz$country %in% ki_countries, 1, 0)
@@ -128,6 +128,7 @@ d$agem <- floor(d$agedays/30.4167)
 #   dfit
 # }
 
+K=NULL
 ghapfits <- foreach(rgn = unique(d$region)[-4], .combine = rbind, .packages=c('tidyverse')) %dopar% {
     df <- d %>% filter(region == rgn) %>% 
       rename(zscore=haz) %>% 
@@ -180,18 +181,37 @@ ghapfits_country <- foreach(rgn = unique(d$country), .combine = rbind, .packages
 # }
 # 
 d$cohort <- paste0(d$studyid, "-", d$country)
-ghapfits_cohort <- foreach(rgn = unique(d$cohort), .combine = rbind, .packages = "dplyr") %do% {
-  di <- d %>% filter(cohort == rgn)
-  try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
-  newd <- data.frame(agem = 0:24)
-  fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
-  try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
-  dfit <- data.frame(
-    measure = "LAZ", region = di$region[1], cohort=rgn, agem = 0:24,
-    fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS
-  )
-  dfit
-}
+K=NULL
+# ghapfits_cohort <- foreach(rgn = unique(d$cohort), .combine = rbind, .packages = "dplyr") %do% {
+#   di <- d %>% filter(cohort == rgn)
+#   try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+#   newd <- data.frame(agem = 0:24)
+#   fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
+#   try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
+#   dfit <- data.frame(
+#     measure = "LAZ", region = di$region[1], cohort=rgn, agem = 0:24,
+#     fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS
+#   )
+#   dfit
+# }
+
+
+ghapfits_cohort <- foreach(rgn = unique(d$cohort), .combine = rbind) %:%
+  foreach(rgn = unique(d$cohort), .combine = rbind) %do% {
+    di <- d %>% filter(cohort == rgn) 
+    names(di)[names(di) == "haz"] <- "est"
+    
+    if(is.null(K)){
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+    }else{
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=K), data = di))
+    }
+    newd <- data.frame(agem = 0:24)
+    fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
+    try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
+    dfit <- data.frame(measure = "LAZ", studyid = di$studyid[1], country = di$country[1], cohort = rgn, agem = 0:24, fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
+    dfit
+  }
 
 
 
@@ -238,6 +258,22 @@ saveRDS(dhsfits_country, file = paste0(dhs_res_dir, "stunting-DHSandKI-by-countr
 
 
 #---------------------------------------
+# Append the fits into a single data frame
+# for plotting
+#---------------------------------------
+ghapfits_cohort <- ghapfits_cohort %>% mutate(dsource = "ki cohorts", measure = as.character(measure))
+dhssubfits <- df_survey_output %>% mutate(dsource = "DHS, ki countries", measure = as.character(measure))
+dhssubfits_country <-df_survey_country %>% mutate(dsource = "DHS, ki countries", measure = as.character(measure))
+
+dhsfits_country <- bind_rows(ghapfits_cohort, dhssubfits, dhssubfits_country) %>%
+  mutate(dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries"))) %>%
+  filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
+dhsfits_country <- filter(dhsfits_country, measure == "LAZ")
+
+saveRDS(dhsfits_country, file = paste0(dhs_res_dir, "stunting-DHSandKI-by-cohort.rds"))
+
+
+#---------------------------------------
 # Filter for LAZ measures with data source of ki cohorts or DHS
 #---------------------------------------
 
@@ -280,4 +316,5 @@ saveRDS(dhs_plotd_laz, file = paste0(figdata_dir_stunting, "figdata-", laz_agepl
 # Save data for LAZ mean by age plots
 #---------------------------------------
 
+table(dhs_plotd_laz$country)
 saveRDS(dhs_plotd_laz, file = paste0(figdata_dir_stunting, "figdata-laz-2-mean_dhs-country--allage-primary.RDS"))

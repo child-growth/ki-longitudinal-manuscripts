@@ -48,6 +48,7 @@ ghapd <- readRDS(co_occurrence_data_path) %>% rename(LAZ=haz, WAZ=waz, WHZ=whz) 
   mutate(country=factor(str_to_title(country)))
 ghapd$agem <- floor(ghapd$agedays/30.4167)
 ghapd$region<-factor(ghapd$region)
+unique(ghapd$country)
 
 ghapd %>% filter(agem==24) %>%
   group_by(country) %>%
@@ -58,14 +59,18 @@ ghapd %>% filter(agem==24) %>%
 #---------------------------------------
 
 #Set smoothness
-K=5
+K=NULL
 
 ghapfits <- foreach(zmeas = c("LAZ", "WAZ", "WHZ"), .combine = rbind) %:%
   foreach(rgn = levels(ghapd$region), .combine = rbind) %do% {
     di <- ghapd %>% filter(region == rgn) 
     names(di)[names(di) == zmeas] <- "est"
     
-    try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=K), data = di))
+    if(is.null(K)){
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+    }else{
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=K), data = di))
+    }
     newd <- data.frame(agem = 0:24)
     fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
     try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
@@ -77,13 +82,18 @@ di <- ghapd
 
 ghapfit_overall <- foreach(zmeas = c("LAZ", "WAZ", "WHZ"), .combine = rbind)  %dopar% {
     names(di)[names(di) == zmeas] <- "est"
-    try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=K), data = di))
+    if(is.null(K)){
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+    }else{
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=K), data = di))
+    }
     newd <- data.frame(agem = 0:24)
     fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
     try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
     dfit <- data.frame(measure = zmeas, region = "Overall", agem = 0:24, fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
     dfit
-  }
+}
+
 
 ghapfits <- bind_rows(ghapfit_overall,ghapfits)
 
@@ -129,7 +139,11 @@ ghapfits.country <- foreach(zmeas = c("LAZ", "WAZ", "WHZ"), .combine = rbind) %:
     di <- ghapd %>% filter(country == rgn) 
     names(di)[names(di) == zmeas] <- "est"
     
-    try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+    if(is.null(K)){
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+    }else{
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=K), data = di))
+    }
     newd <- data.frame(agem = 0:24)
     fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
     try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
@@ -154,3 +168,50 @@ dhsfits.country <- dhsfits.country %>%
 
 
 saveRDS(dhsfits.country, file = paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_byage_country.RDS"))
+
+
+
+#---------------------------------------
+# Pool by cohort
+#---------------------------------------
+
+
+ghapd <- ghapd %>% mutate(cohort=paste0(studyid,"-",country))
+ghapfits_cohort <- foreach(zmeas = c("LAZ", "WAZ", "WHZ"), .combine = rbind) %:%
+  foreach(rgn = unique(ghapd$cohort), .combine = rbind) %do% {
+    di <- ghapd %>% filter(cohort == rgn) 
+    names(di)[names(di) == zmeas] <- "est"
+    
+    if(is.null(K)){
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr"), data = di))
+    }else{
+      try(fiti <- mgcv::gam(est ~ s(agem, bs = "cr", k=K), data = di))
+    }
+    newd <- data.frame(agem = 0:24)
+    fitci<-data.frame(fit=NA, se.fit=NA, lwrS=NA, ci_l=NA, uprS=NA)
+    try(fitci <- gamCI(m = fiti, newdata = newd, nreps = 1000))
+    dfit <- data.frame(measure = zmeas, studyid = di$studyid[1], country = di$country[1], cohort = rgn, agem = 0:24, fit = fitci$fit, fit_se = fitci$se.fit, fit_lb = fitci$lwrS, fit_ub = fitci$uprS)
+    dfit
+  }
+
+
+ghapfits_cohort <- ghapfits_cohort %>% mutate(dsource = "ki cohorts")
+dhs.country <- dhs.country %>% mutate(dsource = "DHS")
+
+dhsfits.cohort <- bind_rows(ghapfits_cohort, dhs.country) %>%
+  mutate(
+    dsource = factor(dsource, levels = c("ki cohorts", "DHS"))
+  )
+
+dhsfits.cohort$measure[dhsfits.cohort$measure=="WHZ"] <- "WLZ"
+dhsfits.cohort$measure[dhsfits.cohort$measure=="HAZ"] <- "LAZ"
+
+dhsfits.cohort <- dhsfits.cohort %>%
+  filter(dsource %in% c("ki cohorts", "DHS"))
+
+
+table(dhsfits.cohort$dsource, dhsfits.cohort$country)
+
+saveRDS(dhsfits.cohort, file = paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_byage_cohort.RDS"))
+
+

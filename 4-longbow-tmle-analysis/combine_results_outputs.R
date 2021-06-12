@@ -13,6 +13,7 @@ bin_primary <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_p
 table(bin_primary$intervention_variable, bin_primary$agecat)
 
 bin_other <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_other.RDS"))
+table(bin_other$outcome_variable, bin_other$agecat)
 
 dim(bin_primary)
 dim(bin_other) 
@@ -34,6 +35,8 @@ stunt_bin_wlz_quart <- readRDS(paste0(res_dir, "rf results/longbow results/stunt
 stunt_bin_wlz_quart$agecat <- as.character(stunt_bin_wlz_quart$agecat)
 stunt_bin_wlz_quart$agecat[is.na(stunt_bin_wlz_quart$agecat)] <- "Unstratified"
 
+stunt_rec <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_stunt_rec.RDS"))
+
 
 # results <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel_2020-05-22.RDS"))   
 # results_2 <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel_sub_2020-05-23.RDS"))   
@@ -50,7 +53,7 @@ season_bin_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_bin_
 
 
 d <- bind_rows(Zscores, Zscores_unadj, bin, 
-               bin_unadj, lagwhz, velocity, velocity_wlz_quart, stunt_bin_wlz_quart,
+               bin_unadj, lagwhz, velocity, velocity_wlz_quart, stunt_bin_wlz_quart, stunt_rec,
                season, season_cont_rf, season_bin_rf, mort)
 
 d$intervention_level[d$intervention_variable=="rain_quartile" & d$intervention_level=="1"] <- "Opposite max rain"

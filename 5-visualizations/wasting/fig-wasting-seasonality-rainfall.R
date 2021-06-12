@@ -7,6 +7,8 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 require(cowplot)
 
+
+
 rain <- read.csv(paste0(BV_dir,"/data/monthly_rainfall.csv"))
 head(rain)
 
@@ -57,14 +59,30 @@ rain2$month_day = as.numeric(rain2$month) * 30.4167
 
 
 
+rain2 <- rain2 %>% mutate(cohort = paste0(studyid, ", ", country)) 
+d <- d %>% mutate(cohort = paste0(studyid, ", ", country))
+
+
+#Update cohort names
+rain2$cohort <- gsub("CMIN Peru95, Peru","CMIN Peru-95", rain2$cohort)
+rain2$cohort <- gsub("GMS-Nepal, Nepal","GMS, Nepal", rain2$cohort)
+rain2$cohort <- gsub("CMIN Bangladesh93, Bangladesh","CMIN Bangladesh-93", rain2$cohort)
+rain2$cohort <- gsub("Guatemala BSC, Guatemala","BSC, Guatemala", rain2$cohort)
+rain2$cohort <- gsub("TanzaniaChild2, Tanzania","Tanzania Child 2", rain2$cohort)
+rain2$cohort <- gsub("CMIN Peru89, Peru","CMIN Peru-89", rain2$cohort)
+d$cohort <- gsub("CMIN Peru95, Peru","CMIN Peru-95", d$cohort)
+d$cohort <- gsub("GMS-Nepal, Nepal","GMS, Nepal", d$cohort)
+d$cohort <- gsub("CMIN Bangladesh93, Bangladesh","CMIN Bangladesh-93", d$cohort)
+d$cohort <- gsub("Guatemala BSC, Guatemala","BSC, Guatemala", d$cohort)
+d$cohort <- gsub("TanzaniaChild2, Tanzania","Tanzania Child 2", d$cohort)
+d$cohort <- gsub("CMIN Peru89, Peru","CMIN Peru-89", d$cohort)
 
 
 #arrange cohorts by seasonality index and set factor levels
 rain2 <- rain2 %>% arrange(-season_index) %>% 
-  mutate(cohort = paste0(studyid, ", ", country),
-         cohort=factor(cohort, levels=unique(cohort))) 
-d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
-                  cohort=factor(cohort, levels=unique(rain2$cohort)))
+  mutate(cohort=factor(cohort, levels=unique(cohort))) 
+d <- d %>% mutate(cohort=factor(cohort, levels=unique(rain2$cohort)))
+
 
 rain2 <- droplevels(rain2)
 cohorts=levels(rain2$cohort)
@@ -80,7 +98,8 @@ table(rain$cohort)
 
 
 #Rain_plot function
-rain_plot <- function(df, rain, cohort_name, leftlab = c(1:10), rightlab = c(11:20)){
+#rain_plot <- function(df, rain, cohort_name, leftlab = c(1:10), rightlab = c(11:20)){
+rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
   rain_sub <- filter(rain, cohort == cohort_name)
   dsub <- filter(df, cohort == cohort_name, !is.na(whz))
   
@@ -118,8 +137,8 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:10), rightlab = c(11:
                                  color=NULL, fill=seasonality_category), alpha=0.3) +
     scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "Mean WLZ")) +
     ylab(NULL) + xlab(NULL) +
-    scale_fill_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
-    scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
+    scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
+    scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
     scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                      labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
     ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
@@ -134,8 +153,8 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:10), rightlab = c(11:
                                    color=NULL, fill=seasonality_category), alpha=0.3) +
       scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
       ylab("Rainfall (mm)") + xlab(NULL) +
-      scale_fill_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
-      scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
+      scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
+      scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                        labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
       ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
@@ -151,8 +170,8 @@ rain_plot <- function(df, rain, cohort_name, leftlab = c(1:10), rightlab = c(11:
                                    color=NULL, fill=seasonality_category), alpha=0.3) +
       scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
       ylab("") + xlab(NULL) +
-      scale_fill_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
-      scale_color_manual(values=tableau11[c(6,7,8)], drop=TRUE, limits = levels(rain$seasonality_category)) +
+      scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
+      scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                        labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
       ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
@@ -168,6 +187,12 @@ Ns
 Ns %>% summarize(min(nmeas), min(nchild), max(nmeas), max(nchild))
 
 
+
+        i<-1
+rain_plot(df=d, rain=rain2, cohort_name=cohorts[1])
+              
+ 
+ 
 plot_list=list()
 for(i in 1:length(cohorts)){
   print(cohorts[i])
