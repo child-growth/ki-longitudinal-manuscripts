@@ -30,9 +30,13 @@ source(paste0(here::here(), "/0-config.R"))
 #-----------------------------------
 
 dd <- readRDS(paste0(res_dir, 'KI_metadata_stunting.RDS'))
+dd <- dd %>% filter(studyid!= "iLiNS-Zinc" )
+
+assert_that(setequal(unique(dd$studyid), monthly_and_quarterly_cohorts))
+
 
 #Function source
-source(paste0(here(),"/0-project-functions/0_descriptive_epi_shared_functions.R"))
+source(paste0(project_functions_dir,"/0_descriptive_epi_shared_functions.R"))
 
 
 #-----------------------------------
@@ -91,7 +95,7 @@ dd$hazcat[dd$N<50] <- NA
 
 #Make cohort-specific summary dataset
 dp <- dd %>% group_by(studycountry) %>% slice(1) %>%
-  select(studycountry, region, overall_nmeas, overall_stuntprev)
+  dplyr::select(studycountry, region, overall_nmeas, overall_stuntprev)
 
 ##Fill missing age-cohort combinations as NA so they appear as grey
 table(is.na(dd))

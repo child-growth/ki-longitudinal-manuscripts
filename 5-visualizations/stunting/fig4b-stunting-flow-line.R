@@ -68,16 +68,17 @@ plot_combine = bind_rows(pooled, plot_cohort)  %>%
                                classif!="Still stunted" &
                                classif!="Recovered" & 
                                classif!="Not stunted") %>% 
-  mutate(classif = factor(classif, levels = c("Stunting reversed",
+  mutate(classif = factor(classif, levels = c(
                                               "Newly stunted",
-                                              "Stunting relapse")))
+                                              "Stunting relapse",
+                                              "Stunting reversed")))
 
 
 # make plot  -----------------------------------------------------
 p_inc = ggplot(plot_combine , 
                aes(x=agem, y = percent))+
 
-  facet_wrap(~classif) +
+  facet_wrap(~classif, scales = "free") +
   
   # cohort-specific
   geom_line(aes(group = cohort_country, col = classif), size = 0.5, alpha = 0.5, 
@@ -93,23 +94,9 @@ p_inc = ggplot(plot_combine ,
                      group = cohort_country), size=0.5,
             data = plot_combine %>% filter(cohort_country=="Pooled"),
             width = 0.3) +
-  # 
-  # # annotate outliers; newly stunted
-  # geom_text(data = plot_combine %>% 
-  #             filter(classif == "Newly stunted" & percent>25 & 
-  #                      agem==0) %>% 
-  #             mutate(plotlabel = case_when(
-  #               cohort_country == "CMIN Bangladesh93 - BANGLADESH" ~ "CMIN Bangladesh 93",
-  #               cohort_country == "EE - PAKISTAN" ~ "EE Pakistan",
-  #               cohort_country == "ResPak - PAKISTAN" ~ "ResPak Pakistan"
-  #             )),
-  #           aes(label = plotlabel, 
-  #               x = agem,
-  #               y = percent),
-  #           nudge_x = 7)+
+
   
-  
-  scale_color_manual("", values = c("#ADDE66",pink_green[c(4,5)])) +
+  scale_color_manual("", values = c(pink_green[c(4,5)],"#ADDE66")) +
   scale_x_continuous(limits = c(0,15), breaks = seq(0,15,3), labels = seq(0,15,3)) +
 
   xlab("Child age, months") +

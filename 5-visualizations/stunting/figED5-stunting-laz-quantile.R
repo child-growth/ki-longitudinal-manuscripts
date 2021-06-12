@@ -74,6 +74,8 @@ d_plot_df = cohort_country_df %>% tidyr::expand(agemonths= ages) %>%
 # figure -----------------------------------------------------
 plot <- ggplot(d_plot_df, aes(x = agemonths, y = meanlaz, group = cohort_country)) + 
   
+  geom_hline(yintercept = 0, size = 0.3) +
+  
   # confidence interval
   geom_ribbon(aes(ymin=fifth, ymax=ninetyfifth, fill = region), 
               alpha = 0.15) + 

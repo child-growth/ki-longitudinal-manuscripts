@@ -1,4 +1,3 @@
-
 ##########################################
 # ki longitudinal manuscripts
 # stunting analysis
@@ -33,11 +32,7 @@ blue <- 1
 orange <- 2
 green <- 3
 
-# Load ki data -----------------------------------------------------
-laz_ageplot_name = "laz-2-mean_dhs-country--allage-primary"
-dhs_plotd_laz = read_rds(paste0(figdata_dir_stunting, "figdata-", laz_ageplot_name, ".RDS"))
-
-## Prep ki data -----------------------------------------------------
+# Load density ki plot data -----------------------------------------------------
 kiden <- readRDS(paste0(res_dir, "dhs/ki.density.fits.quarterly.rds"))
 kiden <- kiden %>% mutate(dsource = "ki cohorts")
 kiden <- kiden %>% filter(measure=="LAZ")
@@ -81,8 +76,8 @@ kiden = kiden %>% mutate(country = case_when(
 ))
 
 
-# Load DHS data -----------------------------------------------------
-dhs_country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/dhs//results/dhs.density.ki-countries.rds")
+# Load density DHS data -----------------------------------------------------
+dhs_country_data <- readRDS(paste0(dhs_res_dir,"dhs.density.ki-countries.rds"))
 
 ## Add region to DHS data -----------------------------------------------------
 dhs_country_data <- dhs_country_data %>% 
@@ -117,12 +112,15 @@ plot_ki = mark_region(plot_ki) %>%
   rename(country = country_lower)
 
 plot_data = bind_rows(plot_ki, plot_dhs) %>% 
-  filter(country!="Belarus" &country!="Kenya") %>% 
+  # drop Burkina Faso since study was not quarterly
+  filter(country!="Belarus" &country!="Kenya" & country!="Burkina Faso") %>% 
   mutate(country = factor(country, levels = c(
-    "Burkina Faso", "Gambia", "Guinea-Bissau",
-    "Malawi", "South Africa", "Tanzania", "Zimbabwe",
     "Brazil", "Guatemala", "Peru",
-    "Bangladesh", "India", "Nepal", "Pakistan"
+    "Bangladesh", "India", "Nepal", "Pakistan",
+    
+    "Gambia", "Guinea-Bissau",
+    "Malawi", "South Africa", "Tanzania", "Zimbabwe"
+
   )))
 
 plot_data$region_survey = paste0("ki " , as.character(plot_data$region))
@@ -130,6 +128,7 @@ plot_data$region_survey[plot_data$cohort=="DHS"] = "DHS"
 plot_data$region_survey = factor(plot_data$region_survey, 
                                  levels = c("DHS", "ki Africa",
                                             "ki Latin America", "ki South Asia"))
+
 
 # Figure 2a: Create LAZ Density plot -----------------------------------------------------
 laz_dplot <-ggplot(data = plot_data, aes(x = x, y = y)) +
@@ -147,68 +146,93 @@ laz_dplot <-ggplot(data = plot_data, aes(x = x, y = y)) +
   labs(y="Density",x="Length-for-age z-score")+
   theme_minimal() +
   theme(
-    legend.position = "bottom",
+    legend.position = "none",
     panel.grid.minor.y = element_blank()
-  )
+  )+
+  ggtitle("a)")
 
 
 laz_dplot
 
 
+# Prep data for LAZ Density plot (Figure 2a) -----------------------------------------------------
+# note: in this data, cohort is missing for country-pooled estimates 
+# country ki estimates are pooled with RE for cohort
+dhs_plotd = read_rds(paste0(dhs_res_dir, "stunting-DHSandKI-by-cohort.rds"))
+dhs_plotd = dhs_plotd %>% filter(measure=="LAZ")
+dhs_plotd <- mark_region(dhs_plotd)
+dhs_plotd$country <- str_to_title(dhs_plotd$country)
+unique(dhs_plotd$country)
+unique(dhs_plotd$cohort)
+#drop countries without DHS data
+dhs_plotd$country <- factor(dhs_plotd$country, levels=c(
+  "Brazil","Guatemala","Peru",   "Bangladesh","India","Nepal","Pakistan",
+  "Gambia", "Guinea-Bissau", "Malawi", "South Africa", "Tanzania", "Zimbabwe"
+))
+dhs_plotd$cohort <-as.character(dhs_plotd$cohort)
+dhs_plotd$cohort <- ifelse(is.na(dhs_plotd$cohort),dhs_plotd$country,dhs_plotd$cohort)
+dhs_plotd = dhs_plotd %>% filter(region %in% c("Africa", "South Asia", "Latin America"))
+
+# drop regional estimates
+dhs_plotd = dhs_plotd %>% filter(!is.na(country))
+
+# create categorical variable for legend
+dhs_plotd = dhs_plotd %>% mutate(
+  colcat = case_when(
+    dsource == "DHS, ki countries" ~ "DHS",
+    dsource == "ki cohorts" & region == "South Asia" ~ "ki South Asia", 
+    dsource == "ki cohorts" & region == "Latin America" ~ "ki Latin America",
+    dsource == "ki cohorts" & region == "Africa" ~ "ki Africa"
+  )
+) %>%  mutate(colcat=factor(colcat, levels = c("DHS", "ki Latin America", "ki South Asia", "ki Africa")))
+
 # Figure 2b: Create LAZ Age plot -----------------------------------------------------
-laz_ageplot <- ggplot(dhs_plotd_laz %>% filter(region!="Overall"), aes(x = agem, y = fit, group =region)) +
-  
-  # DHS confidence interval
-  geom_ribbon(data = dhs_plotd_laz %>% filter(region!="Overall" & dsource == "DHS, ki countries" & 
-                                                is.na(country)),
-              aes(ymin = fit_lb, ymax = fit_ub), color = NA, alpha = 0.2) +
-  
-  # DHS line
-  geom_line(data = dhs_plotd_laz %>% filter(region!="Overall" & dsource == "DHS, ki countries" & 
-                                              is.na(country)),
-            size = 0.8) +
-  
-  # ki confidence interval
-  geom_ribbon(data = dhs_plotd_laz %>% filter(region!="Overall" & dsource == "ki cohorts" & 
-                                                is.na(country) & is.na(cohort)),
-              aes(ymin = fit_lb, ymax = fit_ub, fill = region), color = NA, alpha = 0.2) +
-  
-  # ki line
-  geom_line(data = dhs_plotd_laz %>% filter(region!="Overall" & dsource == "ki cohorts" & 
-                                              is.na(country) & is.na(cohort)),
-            aes(col = region),
-            size = 0.5) +
-  
-  facet_grid(~region) +
+blue = pcols[2]
+orange = pcols[3]
+green = pcols[4]
+
+laz_ageplot <- ggplot(data = dhs_plotd, aes(x = agem, y = fit, 
+                                     group=cohort)) +
+  facet_wrap( ~ country, nrow = 2) +
   
   geom_abline(intercept = 0, slope = 0, color = "gray70") +
-  
+
+  # DHS
+  geom_ribbon(aes(ymin = fit_lb, ymax = fit_ub, 
+                  fill = colcat), alpha=0.2, col = NA) +
+  geom_line(aes(color = colcat, size = colcat)) +
+
   scale_x_continuous(breaks = seq(0, 24, by = 6)) +
-  scale_y_continuous(breaks = seq(-3, 0, by = 0.5)) +
-  scale_color_manual(values = pcols[2:4], guide = FALSE, name = "") +
-  scale_fill_manual(values = pcols[2:4], guide = FALSE, name = "") +
-  scale_linetype_manual(values = c("solid", "dashed", "dotdash"), name = "") +
-  labs(x="Child age, months",y="Length-for-age\nz-score") +
-  guides(linetype=guide_legend(override.aes=list(fill=NA))) +
-  coord_cartesian(ylim = c(-2.25, 0)) +
+  scale_y_continuous(breaks = seq(-4, 1, by = 1)) +
+  scale_color_manual(values = c("black", orange, green, blue)) +
+  scale_fill_manual(values = c("black", orange, green, blue)) +
+  scale_size_manual(values = c(0.75, 0.5, 0.5, 0.5)) +
+  
+  labs(x = "Child age, months", y = "Length-for-age z-score") +
+  coord_cartesian(ylim = c(-3, 1.5)) +
   theme_minimal() +
   theme(
+    legend.title = element_blank(),
     legend.position = "bottom",
     strip.placement = "outside",
     strip.background = element_rect(fill = NA, color = NA),
     panel.spacing = unit(0.5, "lines"),
-    panel.grid.minor.x = element_blank()
-  )
+    panel.grid.minor.x = element_blank(),
+    strip.text.y = element_text(angle = 0)
+  )+
+  ggtitle("b)")
+
 
 laz_ageplot
 
 
 # Combine and save plots -----------------------------------------------------
 
-arrange_figures = grid.arrange(laz_ageplot, 
+arrange_figures = grid.arrange(
                                laz_dplot, 
+                               laz_ageplot,
                                nrow = 2, ncol = 1,
-                               heights = c(4, 6),
+                               heights = c(4, 4.75),
                                widths= 8)
 
 ggsave(arrange_figures, file=paste0(fig_dir, "/stunting/fig-DHS-LAZ.png"), width=8, height=6

@@ -148,7 +148,7 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
   
   scale_y_continuous(limits=c(0,4), breaks=seq(0,4,0.5), labels = scaleFUN) +
   xlab("Child age, months") +  
-  ylab("Difference in length (cm) per month\n")+
+  ylab("Difference in length (cm) per month")+
   facet_wrap( ~ sex) +
   ggtitle("a") +
   
@@ -156,7 +156,7 @@ plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"),
   
   labs(linetype = c("", "12", "14", "13")) +
   
-  theme(legend.position = c(.85, .83),
+  theme(legend.position = c(.88, .88),
         panel.grid.minor = element_blank(),
         panel.grid.major.x = element_blank(),
         legend.background = element_blank(),
@@ -193,14 +193,14 @@ plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y
   # cohort-specific estimates
   geom_point(data = velplot_laz %>% filter(country_cohort!="Pooled - All"), 
              aes(fill=sex, color=sex), size = 1, 
-             position = position_jitterdodge(dodge.width = 0.5), alpha =0.1) +
+             position = position_jitterdodge(dodge.width = 0.75), alpha =0.1) +
   # pooled estimates
   geom_point(aes(fill=sex, color=sex), 
              size = 1.5, shape = 1,
-             position = position_dodge(width = 0.5)) +
+             position = position_dodge(width = 0.75)) +
   # error bars
   geom_errorbar(aes(ymin=Lower.95.CI, ymax=Upper.95.CI, color=sex),
-                position = position_dodge(width = 0.5), width = 0.1, size  =0.5) +
+                position = position_dodge(width = 0.75), width = 0.1, size  =0.5) +
   
   scale_color_manual(values=mypalette)+  
   scale_y_continuous(limits=c(-0.62,0.28), breaks=seq(-0.6,0.3,0.1),
@@ -210,7 +210,7 @@ plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y
   geom_hline(yintercept = -0) +
   ggtitle("b\n") +
   theme(plot.title = element_text(hjust=0),
-        legend.position = c(.85, 0.18),
+        legend.position = c(.85, 0.1),
         legend.background = element_blank(),
         legend.title = element_blank(),
         legend.box.background = element_rect(colour = "black"),
@@ -233,53 +233,10 @@ ggsave(plot_laz, file=paste0(fig_dir, "stunting/fig-",plot_laz_name,".png"), wid
 saveRDS(velplot_laz, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_name,".RDS"))
 
 
-# Figure 5c: mean LAZ plots ----------------------------------------------------------------
-
-## mean LAZ plot - pooled ----------------------------------
-meanlaz_overall = meanlaz %>% 
-  mutate(pooled = ifelse(is.na(method.used),0,1)) %>% 
-  mutate(agecat = factor(agecat, 
-                         levels = c("0-3", "3-6", "6-9",
-                                    "9-12", "12-15", "15-18",
-                                    "18-21", "21-24")))
-
-plot_mean_laz = ggplot(meanlaz_overall %>% filter(pooled==1 & region=="Overall"), aes(y=est, x = agecat)) + 
-  # cohort estimates
-  geom_point(data = meanlaz_overall %>% filter(pooled==0),
-             aes(col=sex), position = position_jitterdodge( dodge.width = 0.5),
-             size=1, alpha = 0.18) +
-  # pooled estimates
-  geom_point(aes(col=sex), position = position_dodge(width=0.5), 
-             size=1.5, shape = 1) +
-  
-  # error bar
-  geom_errorbar(aes(ymin = lb, ymax = ub, col=sex), 
-                 position = position_dodge(width=0.5),
-                width = 0.1, size = 0.5) +
-  
-  scale_color_manual("Child sex", values = mypalette) + 
-  scale_y_continuous(limits = c(-3, 0.5),
-                     breaks = seq(-3,0.5, 0.5),
-                     labels = scaleFUN) +
-  xlab("Child age, months") + 
-  ylab("Mean length-for\n-age Z-score") +
-  ggtitle("c\n")+
-  theme(legend.position = "None",
-        plot.title = element_text(hjust=0),
-        panel.grid.minor = element_blank())
-
-plot_mean_laz
-
 
 
 # combined LAZ and length plots ----------------------------------------------------------------
-
-combined_plot = grid.arrange(plot_cm, 
-                             arrangeGrob(plot_laz, plot_mean_laz, 
-                                         ncol=1, nrow = 2, 
-                                         heights = c(4,2)),
-                             nrow = 1,
-                             widths = c(5,2.75))
+combined_plot = grid.arrange(plot_cm, plot_laz, ncol=2, widths =c(5,3))
 
 
 ## define standardized plot names ----------------------------------
@@ -307,8 +264,7 @@ ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-", combined_plot_name,
 saveRDS(
   list(
     velplot_cm = velplot_cm,
-    velplot_laz = velplot_laz,
-    meanlaz_overall = meanlaz_overall
+    velplot_laz = velplot_laz
   ),
   file = paste0(figdata_dir_stunting, "figdata-", combined_plot_name, ".RDS")
 )

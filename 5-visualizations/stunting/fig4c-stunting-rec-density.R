@@ -53,7 +53,7 @@ get_rec = function(data, age_upper){
   # this age range
   rec_data = data %>% 
     filter(prev_stunted == 1 & agecat == age_range) %>%
-    select(studyid, country, subjid) %>%
+    dplyr::select(studyid, country, subjid) %>%
     mutate(age_rec = age_range)
   
   rec_data = rec_data[!duplicated(rec_data),]
@@ -62,7 +62,7 @@ get_rec = function(data, age_upper){
                            by = c("studyid", "country", "subjid")) %>%
     
     filter(!is.na(age_rec)) %>%
-    select(studyid, country, subjid, agedays, haz, age_rec)
+    dplyr::select(studyid, country, subjid, agedays, haz, age_rec)
   
   # subsequent measurement ages after recovery
   age_meas = seq(age_upper, 15, 3) 
