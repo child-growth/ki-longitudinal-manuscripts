@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -22,11 +22,11 @@ Type 'q()' to quit R.
 > 
 > rm(list=ls())
 > source(paste0(here::here(), "/0-config.R"))
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
-✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-✔ tibble  2.1.3     ✔ dplyr   0.8.4
-✔ tidyr   1.0.0     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.3     ✔ dplyr   1.0.2
+✔ tidyr   1.1.1     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.5.0
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -53,7 +53,7 @@ The following objects are masked from ‘package:tidyr’:
 
     expand, pack, unpack
 
-Loading 'metafor' package (version 2.1-0). For an overview 
+Loading 'metafor' package (version 2.4-0). For an overview 
 and introduction to the package please type: help(metafor).
 
 Attaching package: ‘data.table’
@@ -79,13 +79,6 @@ The following object is masked from ‘package:purrr’:
     map
 
 
-Attaching package: ‘ggridges’
-
-The following object is masked from ‘package:ggplot2’:
-
-    scale_discrete_manual
-
-
 Attaching package: ‘assertthat’
 
 The following object is masked from ‘package:tibble’:
@@ -100,36 +93,13 @@ The following object is masked from ‘package:dplyr’:
 
     collapse
 
-This is mgcv 1.8-30. For overview type 'help("mgcv-package")'.
+This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.
 
 Attaching package: ‘lazyeval’
 
 The following objects are masked from ‘package:purrr’:
 
     is_atomic, is_formula
-
-
-Attaching package: ‘rlang’
-
-The following objects are masked from ‘package:lazyeval’:
-
-    as_name, call_modify, call_standardise, expr_label, expr_text,
-    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
-    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
-
-The following object is masked from ‘package:assertthat’:
-
-    has_name
-
-The following object is masked from ‘package:data.table’:
-
-    :=
-
-The following objects are masked from ‘package:purrr’:
-
-    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
-    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
-    splice
 
 
 Attaching package: ‘scales’
@@ -164,14 +134,6 @@ The following object is masked from ‘package:graphics’:
     dotchart
 
 Loading required package: bit
-Attaching package bit
-package:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)
-creators: bit bitwhich
-coercion: as.logical as.integer as.bit as.bitwhich which
-operator: ! & | xor != ==
-querying: print length any all min max range sum summary
-bit access: length<- [ [<- [[ [[<-
-for more help type ?bit
 
 Attaching package: ‘bit’
 
@@ -184,9 +146,9 @@ The following object is masked from ‘package:base’:
     xor
 
 Attaching package bit64
-package:bit64 (c) 2011-2012 Jens Oehlschlaegel
-creators: integer64 seq :
-coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bin
+package:bit64 (c) 2011-2017 Jens Oehlschlaegel
+creators: integer64 runif64 seq :
+coercion: as.integer64 as.vector as.logical as.integer as.double as.character as.bitstring
 logical operator: ! & | xor != == < <= >= >
 arithmetic operator: + - * / %/% %% ^
 math: sign abs sqrt log log2 log10
@@ -203,10 +165,6 @@ for more help type ?bit64
 
 Attaching package: ‘bit64’
 
-The following object is masked from ‘package:bit’:
-
-    still.identical
-
 The following objects are masked from ‘package:base’:
 
     :, %in%, is.double, match, order, rank
@@ -218,17 +176,132 @@ The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
-Warning message:
-New theme missing the following elements: line, rect, text, axis.title.x, axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x, axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.length, axis.ticks.length.x, axis.ticks.length.x.top, axis.ticks.length.x.bottom, axis.ticks.length.y, axis.ticks.length.y.left, axis.ticks.length.y.right, axis.line, axis.line.x, axis.line.y, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.height, legend.key.width, legend.text, legend.text.align, legend.title, legend.title.align, legend.position, legend.direction, legend.justification, legend.box, legend.box.margin, legend.box.background, legend.box.spacing, panel.background, panel.border, panel.spacing, panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.minor, panel.ontop, plot.background, plot.title, plot.subtitle, plot.caption, plot.tag, plot.tag.position, plot.margin, strip.backgr [... truncated] 
+Warning messages:
+1: package ‘tidyverse’ was built under R version 4.0.5 
+2: package ‘ggnewscale’ was built under R version 4.0.5 
 > source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 > source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 > 
 > #Plot themes
-> source("5-visualizations/0-plot-themes.R")
-Error in file(filename, "r", encoding = encoding) : 
-  cannot open the connection
-Calls: source -> file
-In addition: Warning message:
-In file(filename, "r", encoding = encoding) :
-  cannot open file '5-visualizations/0-plot-themes.R': No such file or directory
-Execution halted
+> source(paste0(here::here(), "/5-visualizations/0-plot-themes.R"))
+> theme_set(theme_ki())
+> 
+> 
+> 
+> #Load data
+> RMAest_clean <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
+> 
+> yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+> 
+> #hbgdki pallet
+> tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
++                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
+> scaleFUN <- function(x) sprintf("%.1f", x)
+> 
+> 
+> 
+> df <- RMAest_clean
+> df <- droplevels(df)
+> unique(df$outcome_variable)
+ [1] "s06rec1824"    "sstunted"      "stunted"       "ever_stunted" 
+ [5] "ever_co"       "ever_swasted"  "ever_wasted"   "pers_wast"    
+ [9] "s03rec24"      "wast_rec90d"   "swasted"       "wasted"       
+[13] "dead0plus"     "dead624"       "dead6plus"     "ever_sstunted"
+> df$outcome_variable <- gsub("ever_stunted", "Ever stunted", df$outcome_variable)
+> df$outcome_variable <- gsub("ever_wasted", "Ever wasted", df$outcome_variable)
+> df$outcome_variable <- gsub("pers_wast", "Persistenly wasted", df$outcome_variable)
+> df$outcome_variable <- gsub("stunted", "Stunted", df$outcome_variable)
+> df$outcome_variable <- gsub("wasted", "Wasted", df$outcome_variable)
+> df$outcome_variable <- gsub("sstunted", "Severely stunted", df$outcome_variable)
+> df$outcome_variable <- gsub("swasted", "Severely wasted", df$outcome_variable)
+> df$outcome_variable <- gsub("s03rec24", "Stunting recovery", df$outcome_variable)
+> df$outcome_variable <- gsub("wast_rec90d", "Wasting recovery", df$outcome_variable)
+> 
+> 
+> i <- unique(df$region)[1]
+> j <- unique(df$outcome_variable)[1]
+> k <- unique(df$intervention_variable)[1]
+> #l <- unique(df$intervention_variable)[1]
+> 
+> dpool <- df %>% 
++   filter(region==i,
++          outcome_variable==j,
++          intervention_variable == k) %>%
++   filter(!is.na(intervention_variable))
+> 
+> p <-  ggplot(dpool, aes(x=intervention_level)) + 
++   geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
++   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
++                  alpha=0.5, size = 1) +
++   facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
++   labs(x = "Exposure level", y = "Relative risk") +
++   geom_hline(yintercept = 1) +
++   geom_text(aes(x=1.2, y=(max(dpool$RR.CI2))-.1, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
++   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
++   scale_fill_manual(values=rep(tableau10,4)) +
++   scale_colour_manual(values=rep(tableau10,4)) +
++   theme(strip.background = element_blank(),
++         legend.position="none",
++         axis.text.y = element_text(size=12),
++         strip.text.x = element_text(size=10),
++         axis.text.x = element_text(size=10, angle = 20, hjust = 1),
++         panel.spacing = unit(0, "lines")) +
++   ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$intervention_variable[1],"\nRegion: ", dpool$region[1])) 
+> print(p)
+Warning message:
+Use of `dpool$RR.CI2` is discouraged. Use `RR.CI2` instead. 
+> 
+> 
+> for(i in unique(df$region)){
++   for(j in unique(df$outcome_variable)){
++     for(k in unique(df$intervention_variable)){
++ 
++       dpool <- df %>%
++         filter(region==i,
++                outcome_variable==j,
++                intervention_variable == k) 
++       
++       if(nrow(dpool)>1){
++       
++       p <-  ggplot(dpool, aes(x=intervention_level)) + 
++         geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
++         geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
++                        alpha=0.5, size = 1) +
++         facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
++         labs(x = "Exposure level", y = "Relative risk") +
++         geom_hline(yintercept = 1) +
++         geom_text(aes(x=1.2, y=(max(dpool$RR.CI2))-.1, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
++         scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
++         scale_fill_manual(values=rep(tableau10,4)) +
++         scale_colour_manual(values=rep(tableau10,4)) +
++         theme(strip.background = element_blank(),
++               legend.position="none",
++               axis.text.y = element_text(size=12),
++               strip.text.x = element_text(size=10),
++               axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
++               panel.spacing = unit(0, "lines")) +
++         ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$intervention_variable[1],"\nRegion: ", dpool$region[1])) 
++       
++ 
++       ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png"), height=8, width=10)
++       
++       }
++     }
++   }
++ }
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> proc.time()
+    user   system  elapsed 
+1662.318    8.232 1670.595 

@@ -21,7 +21,7 @@ source(paste0(here::here(), "/0-config.R"))
 # Load in HBGD Data from Andrew                                                         #
 #                                                                                       #
 #########################################################################################
-consort_ki <- readRDS(here("data/HBGDki_CONSORT_inclusion_Ns.rds"))
+consort_ki <- readRDS(paste0(BV_dir,"/data/HBGDki_CONSORT_inclusion_Ns.rds"))
 consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID))
 
 consort_ki <- consort_ki %>% select("Short_ID", "country", "nchild", "nobs", "Study_ID", "Short_Description", 
@@ -57,58 +57,58 @@ consort_ki <- consort_ki %>%
                                     included_monthly = case_when(measurefreq == "monthly" ~ 1, TRUE ~ 0)) %>% 
   
                              # drop measurefreq column because no longer needed
-                             select(-measurefreq) %>% 
+                             select(-measurefreq)# %>% 
   
-                             # recode inclusion_indicator to be stacked
-                             mutate(included_anthropometry = case_when(
-                                        included_longitudinal == 1 &
-                                        included_anthropometry == 1 ~ 1, 
-                                        TRUE ~ 0),
-                                    included_low_income = case_when(
-                                        included_longitudinal == 1 &
-                                        included_anthropometry == 1 &
-                                        included_low_income == 1 ~ 1, 
-                                        TRUE ~ 0),
-                                    included_ill = case_when(
-                                        included_longitudinal == 1 &
-                                        included_anthropometry == 1 &
-                                        included_low_income == 1 &
-                                        included_ill == 1 ~ 1, 
-                                        TRUE ~ 0),
-                                    included_small = case_when(
-                                        included_longitudinal == 1 &
-                                        included_anthropometry == 1 &
-                                        included_low_income == 1 &
-                                        included_ill == 1 &
-                                        included_small == 1 ~ 1, 
-                                        TRUE ~ 0),
-                                    included_age = case_when(
-                                        included_longitudinal == 1 &
-                                        included_anthropometry == 1 &
-                                        included_low_income == 1 &
-                                        included_ill == 1 &
-                                        included_small == 1 &
-                                        included_age == 1 ~ 1, 
-                                        TRUE ~ 0),
-                                    included_quarterly = case_when(
-                                        included_longitudinal == 1 &
-                                        included_anthropometry == 1 &
-                                        included_low_income == 1 &
-                                        included_ill == 1 &
-                                        included_small == 1 &
-                                        included_age == 1 & 
-                                        included_quarterly == 1 ~ 1,
-                                        TRUE ~ 0),
-                                    included_monthly = case_when(
-                                        included_longitudinal == 1 &
-                                        included_anthropometry == 1 &
-                                        included_low_income == 1 &
-                                        included_ill == 1 &
-                                        included_small == 1 &
-                                        included_age == 1 &
-                                        included_quarterly == 1 &
-                                        included_monthly == 1 ~ 1,
-                                        TRUE ~ 0))
+                             # # recode inclusion_indicator to be stacked
+                             # mutate(included_anthropometry = case_when(
+                             #            included_longitudinal == 1 &
+                             #            included_anthropometry == 1 ~ 1, 
+                             #            TRUE ~ 0),
+                             #        included_low_income = case_when(
+                             #            included_longitudinal == 1 &
+                             #            included_anthropometry == 1 &
+                             #            included_low_income == 1 ~ 1, 
+                             #            TRUE ~ 0),
+                             #        included_ill = case_when(
+                             #            included_longitudinal == 1 &
+                             #            included_anthropometry == 1 &
+                             #            included_low_income == 1 &
+                             #            included_ill == 1 ~ 1, 
+                             #            TRUE ~ 0),
+                             #        included_small = case_when(
+                             #            included_longitudinal == 1 &
+                             #            included_anthropometry == 1 &
+                             #            included_low_income == 1 &
+                             #            included_ill == 1 &
+                             #            included_small == 1 ~ 1, 
+                             #            TRUE ~ 0),
+                             #        included_age = case_when(
+                             #            included_longitudinal == 1 &
+                             #            included_anthropometry == 1 &
+                             #            included_low_income == 1 &
+                             #            included_ill == 1 &
+                             #            included_small == 1 &
+                             #            included_age == 1 ~ 1, 
+                             #            TRUE ~ 0),
+                             #        included_quarterly = case_when(
+                             #            included_longitudinal == 1 &
+                             #            included_anthropometry == 1 &
+                             #            included_low_income == 1 &
+                             #            included_ill == 1 &
+                             #            included_small == 1 &
+                             #            included_age == 1 & 
+                             #            included_quarterly == 1 ~ 1,
+                             #            TRUE ~ 0),
+                             #        included_monthly = case_when(
+                             #            included_longitudinal == 1 &
+                             #            included_anthropometry == 1 &
+                             #            included_low_income == 1 &
+                             #            included_ill == 1 &
+                             #            included_small == 1 &
+                             #            included_age == 1 &
+                             #            included_quarterly == 1 &
+                             #            included_monthly == 1 ~ 1,
+                             #            TRUE ~ 0))
   
 # clean country labels and separate into regions
 consort_ki <- mark_region(consort_ki)
@@ -405,8 +405,8 @@ grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
                         heights = c(120, 1200))
 
 # save plot and underlying data
-ggsave(filename=here("/figures/shared/fig-consort.pdf"),
+ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.pdf"),
        plot = grid,device='pdf',width=9,height=20,limitsize = FALSE)
-ggsave(filename=here("/figures/shared/fig-consort.png"),
+ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.png"),
        plot = grid,device='png',width=9,height=20,limitsize = FALSE)
 

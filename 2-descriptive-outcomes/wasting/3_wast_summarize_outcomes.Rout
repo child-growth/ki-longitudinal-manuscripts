@@ -105,29 +105,6 @@ The following objects are masked from ‘package:purrr’:
     is_atomic, is_formula
 
 
-Attaching package: ‘rlang’
-
-The following objects are masked from ‘package:lazyeval’:
-
-    as_name, call_modify, call_standardise, expr_label, expr_text,
-    f_env, f_env<-, f_label, f_lhs, f_lhs<-, f_rhs, f_rhs<-, f_text,
-    is_atomic, is_call, is_formula, is_lang, is_pairlist, missing_arg
-
-The following object is masked from ‘package:assertthat’:
-
-    has_name
-
-The following object is masked from ‘package:data.table’:
-
-    :=
-
-The following objects are masked from ‘package:purrr’:
-
-    %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
-    flatten_lgl, flatten_raw, invoke, list_along, modify, prepend,
-    splice
-
-
 Attaching package: ‘scales’
 
 The following object is masked from ‘package:viridis’:
@@ -204,7 +181,7 @@ The following objects are masked from ‘package:base’:
 
 Warning messages:
 1: package ‘tidyverse’ was built under R version 4.0.5 
-2: package ‘rlang’ was built under R version 4.0.5 
+2: package ‘ggnewscale’ was built under R version 4.0.5 
 > source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 > 
 > load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
@@ -213,6 +190,8 @@ Warning messages:
 > d <- d %>% filter(measurefreq == "monthly")
 > d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 > 
+> length(unique(paste0(d$studyid,d$country)))
+[1] 21
 > 
 > #Overall absolute counts
 > df <- d %>% filter(agedays < 24 *30.4167) %>%
@@ -221,19 +200,19 @@ Warning messages:
 > table(df$wast)
 
      0      1 
-163817  15540 
+172420  16139 
 > prop.table(table(df$wast))
 
          0          1 
-0.91335716 0.08664284 
+0.91440875 0.08559125 
 > table(df$sevwast)
 
      0      1 
-176054   3303 
+185168   3391 
 > prop.table(table(df$sevwast))
 
          0          1 
-0.98158421 0.01841579 
+0.98201624 0.01798376 
 > 
 > 
 > #Number wasted by 3 months
@@ -241,11 +220,11 @@ Warning messages:
 > table(df2$anywast)
 
    0    1 
-7886 1791 
+8425 1952 
 > prop.table(table(df2$anywast))
 
-       0        1 
-0.814922 0.185078 
+        0         1 
+0.8118917 0.1881083 
 > 
 > 
 > #Wasting recovery
@@ -254,11 +233,11 @@ Warning messages:
 > table(df2$rec)
 
     0     1 
- 7187 79553 
+ 7670 83879 
 > prop.table(table(df2$rec))
 
          0          1 
-0.08285681 0.91714319 
+0.08378027 0.91621973 
 > 
 > 
 > #Severe wasting recovery
@@ -267,11 +246,11 @@ Warning messages:
 > table(df2$rec)
 
     0     1 
- 5718 27917 
+ 6045 28440 
 > prop.table(table(df2$rec))
 
         0         1 
-0.1700015 0.8299985 
+0.1752936 0.8247064 
 > 
 > 
 > 
@@ -457,14 +436,14 @@ There were 50 or more warnings (use warnings() to see the first 50)
 # A tibble: 1 x 2
   `min(N)` `max(N)`
      <int>    <int>
-1     4165    10074
+1     4165    10886
 > d %>% filter(!is.na(agecat)) %>% group_by(agecat, region) %>% summarize(N=n()) %>% group_by(region) %>% summarise(min(N), max(N))
 `summarise()` has grouped output by 'agecat'. You can override using the `.groups` argument.
 # A tibble: 3 x 3
   region        `min(N)` `max(N)`
   <fct>            <int>    <int>
 1 Africa            1067     5428
-2 South Asia        2224     3204
+2 South Asia        2382     4286
 3 Latin America      569     1718
 > 
 > monthly.data <- summary.whz(d)
@@ -536,7 +515,7 @@ Adding missing grouping variables: `country`
 > saveRDS(list(quantile_d=quantile_d, 
 +              quantile_d_country=quantile_d_country, 
 +              quantile_d_overall=quantile_d_overall), 
-+         file = paste0(here(),"/results/quantile_data_wasting.RDS"))
++         file = paste0(BV_dir,"/results/quantile_data_wasting.RDS"))
 > 
 > 
 > 
@@ -559,28 +538,28 @@ Adding missing grouping variables: `country`
 > #Cumulative inc 3 month intervals
 > d3 <- calc.ci.agecat(d, range = 3)
 > length(unique(paste0(d3$studyid, d3$subjid)))
-[1] 10738
+[1] 11438
 > 
 > #Calculate the raw  proportion of ever-wasted children who became wasted at each age
 > d3_raw <- d3 %>% group_by(studyid, subjid) %>% filter(!is.na(agecat)) %>%
 +   mutate(minwhz=min(whz)) %>% filter(minwhz < -2) %>% arrange(agedays) %>% mutate(sum_inc=cumsum(wast_inc))
 > length(unique(paste0(d3_raw$studyid, d3_raw$subjid)))
-[1] 3839
+[1] 4085
 > d3_raw_first_inc <- d3_raw %>% filter(sum_inc==1) %>% slice(1)
 > dim(d3_raw_first_inc)
-[1] 3839   52
+[1] 4085   52
 > table(d3_raw_first_inc$agecat)
 
   0-3 months   3-6 months   6-9 months  9-12 months 12-15 months 15-18 months 
-        1791          526          425          409          272          189 
+        1952          546          425          430          286          198 
 18-21 months 21-24 months 
-         128           99 
+         143          105 
 > prop.table(table(d3_raw_first_inc$agecat)) * 100
 
   0-3 months   3-6 months   6-9 months  9-12 months 12-15 months 15-18 months 
-   46.652774    13.701485    11.070591    10.653816     7.085178     4.923157 
+   47.784578    13.365973    10.403917    10.526316     7.001224     4.847001 
 18-21 months 21-24 months 
-    3.334202     2.578797 
+    3.500612     2.570379 
 > 
 > #RE pooled estimates
 > ci.data3 <- summary.wast.ci(d3, age.range=3)
@@ -977,14 +956,14 @@ There were 50 or more warnings (use warnings() to see the first 50)
 # A tibble: 5 x 4
   agecat       inc.case     ptar cruderate
   <fct>           <dbl>    <dbl>     <dbl>
-1 0-6 months       2427 1258466   0.00193 
-2 6-12 months      1326 1438328   0.000922
-3 12-18 months      987 1223366.  0.000807
-4 18-24 months      710 1081632.  0.000656
-5 <NA>              548 1702955   0.000322
+1 0-6 months       2612 1342368   0.00195 
+2 6-12 months      1358 1516576.  0.000895
+3 12-18 months     1034 1298092   0.000797
+4 18-24 months      754 1178154   0.000640
+5 <NA>              656 2160684.  0.000304
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 78 x 7
-# Groups:   studyid, country [20]
+# A tibble: 82 x 7
+# Groups:   studyid, country [21]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-6 months   39740    201    368      1
@@ -997,7 +976,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
  8 CMIN Bangladesh93 BANGLADESH 18-24 months 37222.    39    247      1
  9 CMIN Peru89       PERU       0-6 months   29156.     4    209      1
 10 CMIN Peru89       PERU       6-12 months  32658      2    195      1
-# … with 68 more rows
+# … with 72 more rows
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -1034,16 +1013,16 @@ Warning messages:
 15 TanzaniaChild2 TANZANIA     12-18 months 212946.   139   1455      1
 16 TanzaniaChild2 TANZANIA     18-24 months  48451     24    960      1
 # A tibble: 5 x 4
-  agecat       inc.case    ptar cruderate
-  <fct>           <dbl>   <dbl>     <dbl>
-1 0-6 months       1264 376310.  0.00336 
-2 6-12 months       553 465527   0.00119 
-3 12-18 months      480 423556.  0.00113 
-4 18-24 months      353 406512.  0.000868
-5 <NA>              358 886815   0.000404
+  agecat       inc.case     ptar cruderate
+  <fct>           <dbl>    <dbl>     <dbl>
+1 0-6 months       1449  460212.  0.00315 
+2 6-12 months       585  543774.  0.00108 
+3 12-18 months      527  498282   0.00106 
+4 18-24 months      397  503035   0.000789
+5 <NA>              466 1344544.  0.000347
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 39 x 7
-# Groups:   studyid, country [10]
+# A tibble: 43 x 7
+# Groups:   studyid, country [11]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-6 months   39740    201    368      1
@@ -1056,7 +1035,7 @@ Warning messages:
  8 CMIN Bangladesh93 BANGLADESH 18-24 months 37222.    39    247      1
  9 EE                PAKISTAN   0-6 months   47991    127    380      1
 10 EE                PAKISTAN   6-12 months  55494.    62    374      1
-# … with 29 more rows
+# … with 33 more rows
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -1141,24 +1120,28 @@ There were 12 warnings (use warnings() to see them)
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
-1 0-6 months        115  67338.  0.00171 
-2 6-12 months        74  81162.  0.000912
-3 12-18 months       68  73070.  0.000931
-4 18-24 months       57  71698.  0.000795
-5 <NA>               36 199616.  0.000180
+1 0-6 months        300 151240.  0.00198 
+2 6-12 months       106 159409   0.000665
+3 12-18 months      115 147796   0.000778
+4 18-24 months      101 168220   0.000600
+5 <NA>              144 657346   0.000219
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 8 x 7
-# Groups:   studyid, country [2]
-  studyid           country    agecat         ptar ncase nchild nstudy
-  <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
-1 CMIN Bangladesh93 BANGLADESH 0-6 months   35058.    52    272      1
-2 CMIN Bangladesh93 BANGLADESH 6-12 months  40490.    56    252      1
-3 CMIN Bangladesh93 BANGLADESH 12-18 months 36807     43    250      1
-4 CMIN Bangladesh93 BANGLADESH 18-24 months 37222.    39    247      1
-5 MAL-ED            BANGLADESH 0-6 months   32279     63    263      1
-6 MAL-ED            BANGLADESH 6-12 months  40672     18    240      1
-7 MAL-ED            BANGLADESH 12-18 months 36262.    25    231      1
-8 MAL-ED            BANGLADESH 18-24 months 34475     18    219      1
+# A tibble: 12 x 7
+# Groups:   studyid, country [3]
+   studyid           country    agecat         ptar ncase nchild nstudy
+   <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
+ 1 CMIN Bangladesh93 BANGLADESH 0-6 months   35058.    52    272      1
+ 2 CMIN Bangladesh93 BANGLADESH 6-12 months  40490.    56    252      1
+ 3 CMIN Bangladesh93 BANGLADESH 12-18 months 36807     43    250      1
+ 4 CMIN Bangladesh93 BANGLADESH 18-24 months 37222.    39    247      1
+ 5 MAL-ED            BANGLADESH 0-6 months   32279     63    263      1
+ 6 MAL-ED            BANGLADESH 6-12 months  40672     18    240      1
+ 7 MAL-ED            BANGLADESH 12-18 months 36262.    25    231      1
+ 8 MAL-ED            BANGLADESH 18-24 months 34475     18    219      1
+ 9 PROVIDE           BANGLADESH 0-6 months   83902    185    700      1
+10 PROVIDE           BANGLADESH 6-12 months  78248.    32    611      1
+11 PROVIDE           BANGLADESH 12-18 months 74726.    47    605      1
+12 PROVIDE           BANGLADESH 18-24 months 96522.    44    583      1
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -1291,7 +1274,7 @@ There were 12 warnings (use warnings() to see them)
 16 MAL-ED      PERU    18-24 months 36948      7    219      1
 There were 39 warnings (use warnings() to see them)
 > ir.cohort <-
-+   ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
++   ir.data$ir.cohort %>% subset(., select = c(studyid, country, cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
 +   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 > 
 > ir <- bind_rows(
@@ -1306,14 +1289,14 @@ There were 39 warnings (use warnings() to see them)
 # A tibble: 5 x 4
   agecat       inc.case     ptar cruderate
   <fct>           <dbl>    <dbl>     <dbl>
-1 0-6 months       1184 1248174.  0.000949
-2 6-12 months      1305 1435473   0.000909
-3 12-18 months      966 1218562.  0.000793
-4 18-24 months      700 1078332   0.000649
-5 <NA>              541 1700310.  0.000318
+1 0-6 months       1221 1331632   0.000917
+2 6-12 months      1337 1513720.  0.000883
+3 12-18 months     1013 1293288   0.000783
+4 18-24 months      744 1174854.  0.000633
+5 <NA>              649 2158040   0.000301
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 78 x 7
-# Groups:   studyid, country [20]
+# A tibble: 82 x 7
+# Groups:   studyid, country [21]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-6 months   38288.   110    368      1
@@ -1326,7 +1309,7 @@ There were 39 warnings (use warnings() to see them)
  8 CMIN Bangladesh93 BANGLADESH 18-24 months 37222.    39    247      1
  9 CMIN Peru89       PERU       0-6 months   29120      1    209      1
 10 CMIN Peru89       PERU       6-12 months  32658      2    195      1
-# … with 68 more rows
+# … with 72 more rows
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -1363,16 +1346,16 @@ Warning messages:
 15 TanzaniaChild2 TANZANIA     12-18 months 212946.   139   1455      1
 16 TanzaniaChild2 TANZANIA     18-24 months  48451     24    960      1
 # A tibble: 5 x 4
-  agecat       inc.case    ptar cruderate
-  <fct>           <dbl>   <dbl>     <dbl>
-1 0-6 months        648 371527   0.00174 
-2 6-12 months       553 465527   0.00119 
-3 12-18 months      480 423556.  0.00113 
-4 18-24 months      353 406512.  0.000868
-5 <NA>              358 886815   0.000404
+  agecat       inc.case     ptar cruderate
+  <fct>           <dbl>    <dbl>     <dbl>
+1 0-6 months        685  454984.  0.00151 
+2 6-12 months       585  543774.  0.00108 
+3 12-18 months      527  498282   0.00106 
+4 18-24 months      397  503035   0.000789
+5 <NA>              466 1344544.  0.000347
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 39 x 7
-# Groups:   studyid, country [10]
+# A tibble: 43 x 7
+# Groups:   studyid, country [11]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-6 months   38288.   110    368      1
@@ -1385,7 +1368,7 @@ Warning messages:
  8 CMIN Bangladesh93 BANGLADESH 18-24 months 37222.    39    247      1
  9 EE                PAKISTAN   0-6 months   47767     83    380      1
 10 EE                PAKISTAN   6-12 months  55494.    62    374      1
-# … with 29 more rows
+# … with 33 more rows
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -1468,26 +1451,30 @@ There were 12 warnings (use warnings() to see them)
 7 TanzaniaChild2 TANZANIA 12-18 months 212946.   139   1455      1
 8 TanzaniaChild2 TANZANIA 18-24 months  48451     24    960      1
 # A tibble: 5 x 4
-  agecat       inc.case    ptar cruderate
-  <fct>           <dbl>   <dbl>     <dbl>
-1 0-6 months         51  66908.  0.000762
-2 6-12 months        74  81162.  0.000912
-3 12-18 months       68  73070.  0.000931
-4 18-24 months       57  71698.  0.000795
-5 <NA>               36 199616.  0.000180
+  agecat       inc.case   ptar cruderate
+  <fct>           <dbl>  <dbl>     <dbl>
+1 0-6 months         88 150365  0.000585
+2 6-12 months       106 159409  0.000665
+3 12-18 months      115 147796  0.000778
+4 18-24 months      101 168220  0.000600
+5 <NA>              144 657346  0.000219
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 8 x 7
-# Groups:   studyid, country [2]
-  studyid           country    agecat         ptar ncase nchild nstudy
-  <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
-1 CMIN Bangladesh93 BANGLADESH 0-6 months   34766     32    272      1
-2 CMIN Bangladesh93 BANGLADESH 6-12 months  40490.    56    252      1
-3 CMIN Bangladesh93 BANGLADESH 12-18 months 36807     43    250      1
-4 CMIN Bangladesh93 BANGLADESH 18-24 months 37222.    39    247      1
-5 MAL-ED            BANGLADESH 0-6 months   32142.    19    263      1
-6 MAL-ED            BANGLADESH 6-12 months  40672     18    240      1
-7 MAL-ED            BANGLADESH 12-18 months 36262.    25    231      1
-8 MAL-ED            BANGLADESH 18-24 months 34475     18    219      1
+# A tibble: 12 x 7
+# Groups:   studyid, country [3]
+   studyid           country    agecat         ptar ncase nchild nstudy
+   <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
+ 1 CMIN Bangladesh93 BANGLADESH 0-6 months   34766     32    272      1
+ 2 CMIN Bangladesh93 BANGLADESH 6-12 months  40490.    56    252      1
+ 3 CMIN Bangladesh93 BANGLADESH 12-18 months 36807     43    250      1
+ 4 CMIN Bangladesh93 BANGLADESH 18-24 months 37222.    39    247      1
+ 5 MAL-ED            BANGLADESH 0-6 months   32142.    19    263      1
+ 6 MAL-ED            BANGLADESH 6-12 months  40672     18    240      1
+ 7 MAL-ED            BANGLADESH 12-18 months 36262.    25    231      1
+ 8 MAL-ED            BANGLADESH 18-24 months 34475     18    219      1
+ 9 PROVIDE           BANGLADESH 0-6 months   83458.    37    700      1
+10 PROVIDE           BANGLADESH 6-12 months  78248.    32    611      1
+11 PROVIDE           BANGLADESH 12-18 months 74726.    47    605      1
+12 PROVIDE           BANGLADESH 18-24 months 96522.    44    583      1
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -1620,7 +1607,7 @@ There were 12 warnings (use warnings() to see them)
 16 MAL-ED      PERU    18-24 months 36948      7    219      1
 There were 39 warnings (use warnings() to see them)
 > ir.cohort.nobirth <-
-+   ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
++   ir.data$ir.cohort %>% subset(., select = c(studyid, country,cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
 +   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 > 
 > ir_noBW <- bind_rows(
@@ -1633,16 +1620,16 @@ There were 39 warnings (use warnings() to see them)
 > #Incidence rate - severe wasting
 > sev.ir.data <- summary.ir(d, sev.wasting = T)
 # A tibble: 5 x 4
-  agecat       inc.case    ptar cruderate
-  <fct>           <dbl>   <dbl>     <dbl>
-1 0-6 months        771 1383246 0.000557 
-2 6-12 months       349 1559382 0.000224 
-3 12-18 months      270 1351406 0.000200 
-4 18-24 months      158 1177634 0.000134 
-5 <NA>               93 1786355 0.0000521
+  agecat       inc.case     ptar cruderate
+  <fct>           <dbl>    <dbl>     <dbl>
+1 0-6 months        800 1478955  0.000541 
+2 6-12 months       352 1640306  0.000215 
+3 12-18 months      275 1432140  0.000192 
+4 18-24 months      163 1277448  0.000128 
+5 <NA>              101 2261964. 0.0000447
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 78 x 7
-# Groups:   studyid, country [20]
+# A tibble: 82 x 7
+# Groups:   studyid, country [21]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-6 months   51274.    67    368      1
@@ -1655,7 +1642,7 @@ There were 39 warnings (use warnings() to see them)
  8 CMIN Bangladesh93 BANGLADESH 18-24 months 43509     13    247      1
  9 CMIN Peru89       PERU       0-6 months   29380.     2    209      1
 10 CMIN Peru89       PERU       6-12 months  32812.     0    195      1
-# … with 68 more rows
+# … with 72 more rows
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -1692,16 +1679,16 @@ Warning messages:
 15 TanzaniaChild2 TANZANIA     12-18 months 228496     28   1455      1
 16 TanzaniaChild2 TANZANIA     18-24 months  51524.     9    960      1
 # A tibble: 5 x 4
-  agecat       inc.case    ptar cruderate
-  <fct>           <dbl>   <dbl>     <dbl>
-1 0-6 months        438 444430. 0.000986 
-2 6-12 months       135 527500. 0.000256 
-3 12-18 months      131 499720  0.000262 
-4 18-24 months       68 467603  0.000145 
-5 <NA>               37 953438. 0.0000388
+  agecat       inc.case     ptar cruderate
+  <fct>           <dbl>    <dbl>     <dbl>
+1 0-6 months        467  540138. 0.000865 
+2 6-12 months       138  608424. 0.000227 
+3 12-18 months      136  580454  0.000234 
+4 18-24 months       73  567417  0.000129 
+5 <NA>               45 1429046  0.0000315
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 39 x 7
-# Groups:   studyid, country [10]
+# A tibble: 43 x 7
+# Groups:   studyid, country [11]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-6 months   51274.    67    368      1
@@ -1714,7 +1701,7 @@ Warning messages:
  8 CMIN Bangladesh93 BANGLADESH 18-24 months 43509     13    247      1
  9 EE                PAKISTAN   0-6 months   54408     36    380      1
 10 EE                PAKISTAN   6-12 months  64780     18    374      1
-# … with 29 more rows
+# … with 33 more rows
 # A tibble: 5 x 4
   agecat       inc.case    ptar  cruderate
   <fct>           <dbl>   <dbl>      <dbl>
@@ -1797,26 +1784,30 @@ There were 12 warnings (use warnings() to see them)
 7 TanzaniaChild2 TANZANIA 12-18 months 228496     28   1455      1
 8 TanzaniaChild2 TANZANIA 18-24 months  51524.     9    960      1
 # A tibble: 5 x 4
-  agecat       inc.case    ptar  cruderate
-  <fct>           <dbl>   <dbl>      <dbl>
-1 0-6 months         31  72820. 0.000426  
-2 6-12 months        15  87634. 0.000171  
-3 12-18 months        7  82265  0.0000851 
-4 18-24 months       13  82099  0.000158  
-5 <NA>                2 208555  0.00000959
+  agecat       inc.case    ptar cruderate
+  <fct>           <dbl>   <dbl>     <dbl>
+1 0-6 months         60 168528. 0.000356 
+2 6-12 months        18 168558. 0.000107 
+3 12-18 months       12 162999  0.0000736
+4 18-24 months       18 181913  0.0000989
+5 <NA>               10 684164. 0.0000146
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 8 x 7
-# Groups:   studyid, country [2]
-  studyid           country    agecat         ptar ncase nchild nstudy
-  <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
-1 CMIN Bangladesh93 BANGLADESH 0-6 months   37178.    14    272      1
-2 CMIN Bangladesh93 BANGLADESH 6-12 months  45040.    12    252      1
-3 CMIN Bangladesh93 BANGLADESH 12-18 months 42838.     5    250      1
-4 CMIN Bangladesh93 BANGLADESH 18-24 months 43509     13    247      1
-5 MAL-ED            BANGLADESH 0-6 months   35642     17    263      1
-6 MAL-ED            BANGLADESH 6-12 months  42594      3    240      1
-7 MAL-ED            BANGLADESH 12-18 months 39426.     2    231      1
-8 MAL-ED            BANGLADESH 18-24 months 38590      0    219      1
+# A tibble: 12 x 7
+# Groups:   studyid, country [3]
+   studyid           country    agecat         ptar ncase nchild nstudy
+   <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
+ 1 CMIN Bangladesh93 BANGLADESH 0-6 months   37178.    14    272      1
+ 2 CMIN Bangladesh93 BANGLADESH 6-12 months  45040.    12    252      1
+ 3 CMIN Bangladesh93 BANGLADESH 12-18 months 42838.     5    250      1
+ 4 CMIN Bangladesh93 BANGLADESH 18-24 months 43509     13    247      1
+ 5 MAL-ED            BANGLADESH 0-6 months   35642     17    263      1
+ 6 MAL-ED            BANGLADESH 6-12 months  42594      3    240      1
+ 7 MAL-ED            BANGLADESH 12-18 months 39426.     2    231      1
+ 8 MAL-ED            BANGLADESH 18-24 months 38590      0    219      1
+ 9 PROVIDE           BANGLADESH 0-6 months   95709     29    700      1
+10 PROVIDE           BANGLADESH 6-12 months  80924      3    611      1
+11 PROVIDE           BANGLADESH 12-18 months 80734      5    605      1
+12 PROVIDE           BANGLADESH 18-24 months 99814      5    583      1
 # A tibble: 5 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -1949,7 +1940,7 @@ There were 12 warnings (use warnings() to see them)
 16 MAL-ED      PERU    18-24 months 38098.     1    219      1
 There were 39 warnings (use warnings() to see them)
 > sev.ir.cohort <-
-+   sev.ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
++   sev.ir.data$ir.cohort %>% subset(., select = c(studyid, country,cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
 +   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 > 
 > sev.ir <- bind_rows(
@@ -1979,18 +1970,18 @@ There were 39 warnings (use warnings() to see them)
 # A tibble: 9 x 4
   agecat       inc.case     ptar cruderate
   <fct>           <dbl>    <dbl>     <dbl>
-1 0-3 months       1795  482700.  0.00372 
-2 3-6 months        632  775766.  0.000815
-3 6-9 months        643  754730.  0.000852
-4 9-12 months       683  683598.  0.000999
-5 12-15 months      536  607016.  0.000883
-6 15-18 months      451  616350   0.000732
-7 18-21 months      381  563482.  0.000676
-8 21-24 months      329  518150   0.000635
-9 <NA>              548 1702955   0.000322
+1 0-3 months       1956  519566.  0.00376 
+2 3-6 months        656  822802.  0.000797
+3 6-9 months        643  755798   0.000851
+4 9-12 months       715  760778.  0.000940
+5 12-15 months      560  656970.  0.000852
+6 15-18 months      474  641122.  0.000739
+7 18-21 months      407  613238.  0.000664
+8 21-24 months      347  564916.  0.000614
+9 <NA>              656 2160684.  0.000304
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 155 x 7
-# Groups:   studyid, country [20]
+# A tibble: 163 x 7
+# Groups:   studyid, country [21]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-3 months   17142.   155    362      1
@@ -2003,7 +1994,7 @@ There were 39 warnings (use warnings() to see them)
  8 CMC-V-BCS-2002    INDIA      21-24 months 31252     10    371      1
  9 CMIN Bangladesh93 BANGLADESH 0-3 months   13480.    28    264      1
 10 CMIN Bangladesh93 BANGLADESH 3-6 months   21579     24    259      1
-# … with 145 more rows
+# … with 153 more rows
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -2043,20 +2034,20 @@ Warning messages:
 10 MAL-ED  SOUTH AFRICA 3-6 months    22070      7    271      1
 # … with 22 more rows
 # A tibble: 9 x 4
-  agecat       inc.case    ptar cruderate
-  <fct>           <dbl>   <dbl>     <dbl>
-1 0-3 months        983 150804.  0.00652 
-2 3-6 months        281 225507   0.00125 
-3 6-9 months        235 227649   0.00103 
-4 9-12 months       318 237878   0.00134 
-5 12-15 months      268 216066.  0.00124 
-6 15-18 months      212 207490   0.00102 
-7 18-21 months      189 201454.  0.000938
-8 21-24 months      164 205059   0.000800
-9 <NA>              358 886815   0.000404
+  agecat       inc.case     ptar cruderate
+  <fct>           <dbl>    <dbl>     <dbl>
+1 0-3 months       1144  187668.  0.00610 
+2 3-6 months        305  272544   0.00112 
+3 6-9 months        235  228718.  0.00103 
+4 9-12 months       350  315057   0.00111 
+5 12-15 months      292  266020.  0.00110 
+6 15-18 months      235  232262.  0.00101 
+7 18-21 months      215  251210.  0.000856
+8 21-24 months      182  251824.  0.000723
+9 <NA>              466 1344544.  0.000347
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 78 x 7
-# Groups:   studyid, country [10]
+# A tibble: 86 x 7
+# Groups:   studyid, country [11]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-3 months   17142.   155    362      1
@@ -2069,7 +2060,7 @@ Warning messages:
  8 CMC-V-BCS-2002    INDIA      21-24 months 31252     10    371      1
  9 CMIN Bangladesh93 BANGLADESH 0-3 months   13480.    28    264      1
 10 CMIN Bangladesh93 BANGLADESH 3-6 months   21579     24    259      1
-# … with 68 more rows
+# … with 76 more rows
 # A tibble: 9 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -2186,18 +2177,18 @@ There were 24 warnings (use warnings() to see them)
 # A tibble: 9 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
-1 0-3 months         81  25986   0.00312 
-2 3-6 months         34  41352.  0.000822
-3 6-9 months         31  40330.  0.000769
-4 9-12 months        43  40832   0.00105 
-5 12-15 months       32  37366.  0.000856
-6 15-18 months       36  35704   0.00101 
-7 18-21 months       33  35594   0.000927
-8 21-24 months       24  36104.  0.000665
-9 <NA>               36 199616.  0.000180
+1 0-3 months        242  62851   0.00385 
+2 3-6 months         58  88388.  0.000656
+3 6-9 months         31  41398   0.000749
+4 9-12 months        75 118011   0.000636
+5 12-15 months       56  87320.  0.000641
+6 15-18 months       59  60476.  0.000976
+7 18-21 months       59  85351   0.000691
+8 21-24 months       42  82869   0.000507
+9 <NA>              144 657346   0.000219
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 16 x 7
-# Groups:   studyid, country [2]
+# A tibble: 24 x 7
+# Groups:   studyid, country [3]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMIN Bangladesh93 BANGLADESH 0-3 months   13480.    28    264      1
@@ -2210,12 +2201,7 @@ There were 24 warnings (use warnings() to see them)
  8 CMIN Bangladesh93 BANGLADESH 21-24 months 18771     18    243      1
  9 MAL-ED            BANGLADESH 0-3 months   12506.    53    263      1
 10 MAL-ED            BANGLADESH 3-6 months   19772.    10    246      1
-11 MAL-ED            BANGLADESH 6-9 months   19886.     6    239      1
-12 MAL-ED            BANGLADESH 9-12 months  20786.    12    234      1
-13 MAL-ED            BANGLADESH 12-15 months 19228.    13    231      1
-14 MAL-ED            BANGLADESH 15-18 months 17034     12    224      1
-15 MAL-ED            BANGLADESH 18-21 months 17142.    12    219      1
-16 MAL-ED            BANGLADESH 21-24 months 17332.     6    214      1
+# … with 14 more rows
 # A tibble: 9 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -2381,7 +2367,7 @@ There were 24 warnings (use warnings() to see them)
 # … with 22 more rows
 There were 50 or more warnings (use warnings() to see the first 50)
 > ir.cohort <-
-+   ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
++   ir.data$ir.cohort %>% subset(., select = c(studyid, country,cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
 +   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 > 
 > ir3 <- bind_rows(
@@ -2397,18 +2383,18 @@ There were 50 or more warnings (use warnings() to see the first 50)
 # A tibble: 9 x 4
   agecat       inc.case     ptar cruderate
   <fct>           <dbl>    <dbl>     <dbl>
-1 0-3 months        571  473650   0.00121 
-2 3-6 months        613  774524.  0.000791
-3 6-9 months        630  753176.  0.000836
-4 9-12 months       675  682298.  0.000989
-5 12-15 months      526  604960.  0.000869
-6 15-18 months      440  613602   0.000717
-7 18-21 months      379  562908.  0.000673
-8 21-24 months      321  515424.  0.000623
-9 <NA>              541 1700310.  0.000318
+1 0-3 months        584  510070.  0.00114 
+2 3-6 months        637  821562.  0.000775
+3 6-9 months        630  754244   0.000835
+4 9-12 months       707  759476.  0.000931
+5 12-15 months      550  654914.  0.000840
+6 15-18 months      463  638374.  0.000725
+7 18-21 months      405  612666.  0.000661
+8 21-24 months      339  562189   0.000603
+9 <NA>              649 2158040   0.000301
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 155 x 7
-# Groups:   studyid, country [20]
+# A tibble: 163 x 7
+# Groups:   studyid, country [21]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-3 months   15792.    66    362      1
@@ -2421,7 +2407,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
  8 CMC-V-BCS-2002    INDIA      21-24 months 31252     10    371      1
  9 CMIN Bangladesh93 BANGLADESH 0-3 months   13237      9    264      1
 10 CMIN Bangladesh93 BANGLADESH 3-6 months   21529     23    259      1
-# … with 145 more rows
+# … with 153 more rows
 Warning messages:
 1: Extra argument ('method') disregarded. 
 2: Extra argument ('method') disregarded. 
@@ -2461,20 +2447,20 @@ Warning messages:
 10 MAL-ED  SOUTH AFRICA 3-6 months    22070      7    271      1
 # … with 22 more rows
 # A tibble: 9 x 4
-  agecat       inc.case    ptar cruderate
-  <fct>           <dbl>   <dbl>     <dbl>
-1 0-3 months        372 146273   0.00254 
-2 3-6 months        276 225254   0.00123 
-3 6-9 months        235 227649   0.00103 
-4 9-12 months       318 237878   0.00134 
-5 12-15 months      268 216066.  0.00124 
-6 15-18 months      212 207490   0.00102 
-7 18-21 months      189 201454.  0.000938
-8 21-24 months      164 205059   0.000800
-9 <NA>              358 886815   0.000404
+  agecat       inc.case     ptar cruderate
+  <fct>           <dbl>    <dbl>     <dbl>
+1 0-3 months        385  182694.  0.00211 
+2 3-6 months        300  272291   0.00110 
+3 6-9 months        235  228718.  0.00103 
+4 9-12 months       350  315057   0.00111 
+5 12-15 months      292  266020.  0.00110 
+6 15-18 months      235  232262.  0.00101 
+7 18-21 months      215  251210.  0.000856
+8 21-24 months      182  251824.  0.000723
+9 <NA>              466 1344544.  0.000347
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 78 x 7
-# Groups:   studyid, country [10]
+# A tibble: 86 x 7
+# Groups:   studyid, country [11]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMC-V-BCS-2002    INDIA      0-3 months   15792.    66    362      1
@@ -2487,7 +2473,7 @@ Warning messages:
  8 CMC-V-BCS-2002    INDIA      21-24 months 31252     10    371      1
  9 CMIN Bangladesh93 BANGLADESH 0-3 months   13237      9    264      1
 10 CMIN Bangladesh93 BANGLADESH 3-6 months   21529     23    259      1
-# … with 68 more rows
+# … with 76 more rows
 # A tibble: 9 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -2604,18 +2590,18 @@ There were 24 warnings (use warnings() to see them)
 # A tibble: 9 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
-1 0-3 months         18  25606   0.000703
-2 3-6 months         33  41302.  0.000799
-3 6-9 months         31  40330.  0.000769
-4 9-12 months        43  40832   0.00105 
-5 12-15 months       32  37366.  0.000856
-6 15-18 months       36  35704   0.00101 
-7 18-21 months       33  35594   0.000927
-8 21-24 months       24  36104.  0.000665
-9 <NA>               36 199616.  0.000180
+1 0-3 months         31  62026.  0.000500
+2 3-6 months         57  88338.  0.000645
+3 6-9 months         31  41398   0.000749
+4 9-12 months        75 118011   0.000636
+5 12-15 months       56  87320.  0.000641
+6 15-18 months       59  60476.  0.000976
+7 18-21 months       59  85351   0.000691
+8 21-24 months       42  82869   0.000507
+9 <NA>              144 657346   0.000219
 `summarise()` has grouped output by 'studyid', 'country'. You can override using the `.groups` argument.
-# A tibble: 16 x 7
-# Groups:   studyid, country [2]
+# A tibble: 24 x 7
+# Groups:   studyid, country [3]
    studyid           country    agecat         ptar ncase nchild nstudy
    <chr>             <chr>      <fct>         <dbl> <dbl>  <int>  <int>
  1 CMIN Bangladesh93 BANGLADESH 0-3 months   13237      9    264      1
@@ -2628,12 +2614,7 @@ There were 24 warnings (use warnings() to see them)
  8 CMIN Bangladesh93 BANGLADESH 21-24 months 18771     18    243      1
  9 MAL-ED            BANGLADESH 0-3 months   12369      9    263      1
 10 MAL-ED            BANGLADESH 3-6 months   19772.    10    246      1
-11 MAL-ED            BANGLADESH 6-9 months   19886.     6    239      1
-12 MAL-ED            BANGLADESH 9-12 months  20786.    12    234      1
-13 MAL-ED            BANGLADESH 12-15 months 19228.    13    231      1
-14 MAL-ED            BANGLADESH 15-18 months 17034     12    224      1
-15 MAL-ED            BANGLADESH 18-21 months 17142.    12    219      1
-16 MAL-ED            BANGLADESH 21-24 months 17332.     6    214      1
+# … with 14 more rows
 # A tibble: 9 x 4
   agecat       inc.case    ptar cruderate
   <fct>           <dbl>   <dbl>     <dbl>
@@ -2799,7 +2780,7 @@ There were 24 warnings (use warnings() to see them)
 # … with 22 more rows
 There were 50 or more warnings (use warnings() to see the first 50)
 > ir.cohort.nobirth <-
-+   ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
++   ir.data$ir.cohort %>% subset(., select = c(studyid, country,cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
 +   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 > 
 > ir_noBW3 <- bind_rows(
@@ -2817,7 +2798,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 [1] 42
 > #Quantile CI's'
 > sort(df$wasting_duration)[qbinom(c(.025,.975), length(df$wasting_duration), 0.5)]
-[1] 38.5 43.5
+[1] 39 44
 > 
 > #Recovery within 30, 60, 90 days
 > #Overall
@@ -2839,20 +2820,20 @@ Extra argument ('method') disregarded.
 Warning message:
 Extra argument ('method') disregarded. 
 > overall.rec.data30$ci.res
-  nstudies nmeas      est        se      lb       ub               nmeas.f
-1       20  3842 38.27122 0.1135339 33.1684 43.64639 N=3,842  measurements
-      nstudy.f method.used      agecat ptest.f
-1 N=20 studies        REML 0-24 months      38
-> overall.rec.data60$ci.res
-  nstudies nmeas      est        se      lb       ub               nmeas.f
-1       20  3842 65.22902 0.1246014 59.5055 70.54402 N=3,842  measurements
-      nstudy.f method.used      agecat ptest.f
-1 N=20 studies        REML 0-24 months      65
-> overall.rec.data90$ci.res
   nstudies nmeas      est        se       lb       ub               nmeas.f
-1       20  3842 71.49201 0.1282125 66.10787 76.32711 N=3,842  measurements
+1       21  4089 38.99329 0.1109082 33.96231 44.26993 N=4,089  measurements
       nstudy.f method.used      agecat ptest.f
-1 N=20 studies        REML 0-24 months      71
+1 N=21 studies        REML 0-24 months      39
+> overall.rec.data60$ci.res
+  nstudies nmeas      est        se       lb       ub               nmeas.f
+1       21  4089 64.65287 0.1155837 59.32148 69.64309 N=4,089  measurements
+      nstudy.f method.used      agecat ptest.f
+1 N=21 studies        REML 0-24 months      65
+> overall.rec.data90$ci.res
+  nstudies nmeas     est        se       lb       ub               nmeas.f
+1       21  4089 71.0999 0.1178945 66.13167 75.60813 N=4,089  measurements
+      nstudy.f method.used      agecat ptest.f
+1 N=21 studies        REML 0-24 months      71
 > 
 > #Age-strat
 > d <- calc.ci.agecat(d, range = 6)
@@ -3100,7 +3081,7 @@ There were 14 warnings (use warnings() to see them)
 +   data.frame(cohort = "pooled", perswast.region),
 +   perswast.cohort
 + )
-> save(perswast024, file = paste0(here(),"/results/persistent_wasting024.Rdata"))
+> save(perswast024, file = paste0(BV_dir,"/results/persistent_wasting024.Rdata"))
 > 
 > 
 > 
@@ -3171,11 +3152,11 @@ There were 14 warnings (use warnings() to see them)
 > table(wasting_desc_data$pooling)
 
    country no pooling    overall   regional 
-      1598       2736        146        501 
+      1598       2866        146        501 
 > table(is.na(wasting_desc_data$pooling))
 
 FALSE 
- 4981 
+ 5111 
 > 
 > 
 > #clean country names
@@ -3185,11 +3166,11 @@ FALSE
 > 
 >         
 > 
-> saveRDS(wasting_desc_data, file = paste0(here(),"/results/wasting_desc_data.RDS"))
+> saveRDS(wasting_desc_data, file = paste0(BV_dir,"/results/wasting_desc_data.RDS"))
 > 
 > 
 > 
 > 
 > proc.time()
    user  system elapsed 
-455.547   3.558 459.091 
+437.846   2.811 440.627 

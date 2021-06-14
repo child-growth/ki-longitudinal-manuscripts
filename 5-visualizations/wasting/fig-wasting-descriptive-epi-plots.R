@@ -327,13 +327,25 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
       measure == Measure &
       birth %in% Birth &
       severe == Severe &
-      age_range %in% Age_range &
-      cohort == Cohort &
-      !is.na(region) & !is.na(agecat)
+      age_range %in% Age_range #&
+      #cohort == Cohort &
+     # !is.na(region) & !is.na(agecat)
   )
   df <- df %>% filter(birth=="yes" | agecat=="0-3 months")
   df <- droplevels(df)
-
+  
+  # #Get cohort specific estimates
+  # df_cohort <- d %>% filter(
+  #   disease == Disease &
+  #     measure == Measure &
+  #     birth %in% Birth &
+  #     severe == Severe &
+  #     age_range %in% Age_range &
+  #     cohort != Cohort &
+  #     !is.na(region) & !is.na(agecat)
+  # )
+  # df_cohort <- df_cohort %>% filter(birth=="yes" | agecat=="0-3 months")
+  # df_cohort <- droplevels(df_cohort)
   
   #Keep N studies and children from only one study
   df$nmeas.f[df$age_range!="30 days"] <- NA
@@ -353,11 +365,17 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
+  df_cohort <- df %>% filter(cohort!="pooled")
+  df_cohort <- mark_region(df_cohort)
+  df <- df %>% filter(cohort=="pooled")
+  
   p <- ggplot(df,aes(y=est,x=agecat)) +
     facet_wrap(~region, nrow=1) +
     geom_errorbar(aes(color=region, 
                       group=interaction(birth, region), ymin=lb, ymax=ub), 
                   width = 0, position = position_dodge(0.5)) +
+    geom_point(aes(shape=birth, fill=region, group=interaction(birth, region)
+    ), color="#878787", size = 2, position = position_jitterdodge(jitter.width = 2, dodge.width=0.5), alpha = 0.25, data=df_cohort) +
     geom_point(aes(shape=birth, fill=region, color=region, group=interaction(birth, region)
     ), size = 2, position = position_dodge(0.5)) +
     scale_color_manual(values=tableau11, guide = FALSE) +
@@ -376,6 +394,7 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                                       size = 15)) +
     theme(axis.title.y = element_text(size = 15)) +
     ggtitle("") + guides(color = FALSE) 
+  p
   
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
@@ -402,9 +421,9 @@ inc_plot_primary <- inc_combo_plot(d,
                    Cohort="pooled",
                    xlabel="Child age, months",
                    ylabel='Episodes per 1000\nperson-days at risk',
-                   yrange=c(0,7.5),
+                   yrange=c(0,10),
                    legend.pos = c(.92,.8))
-
+inc_plot_primary
 
 # define standardized plot names
 inc_plot_name = create_name(

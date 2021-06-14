@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-results <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.RDS"))
+results <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/vel_wlz_quart_obs_counts_2021-04-26.RDS")) %>%
   rename(intervention_level=lag_WHZ_quart)
 

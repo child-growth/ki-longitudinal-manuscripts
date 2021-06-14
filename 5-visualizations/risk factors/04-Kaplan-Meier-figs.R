@@ -84,4 +84,4 @@ p9 <- surv_plot(df=d, Avar="ever_wast_uwt", legend_labs = c("Never wasted and un
 # p7 <- surv_plot(df=d, Avar="ever_sunderweight06",  legend_labs= c("Not Severely underwight <6mo", "Severely underwight <6mo"))
 # p8 <- surv_plot(df=d, Avar="ever_co06",  legend_labs= c("Not wasted and stunted <6mo", "Wasted and stunted <6mo"))
 
-saveRDS(list(p1, p2, p3, p4, p5, p6, p7, p8), file=paste0(here::here(),"/figures/plot-objects/kaplan_meier_objects.RDS"))
+saveRDS(list(p1, p2, p3, p4, p5, p6, p7, p8), file=paste0(BV_dir,"/figures/plot-objects/kaplan_meier_objects.RDS"))

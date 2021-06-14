@@ -11,7 +11,7 @@ d <- d %>% subset(., select=-c(tr))
 
 
 #merge WLZ outcomes with covariates
-cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+cov<-readRDS(clean_covariates_path)
 
 
 cov <- cov %>% subset(., select=-c( region, month, W_gagebrth,    W_birthwt,     W_birthlen,   
@@ -538,7 +538,7 @@ print(p6)
 
 
 #Save plot objects
-saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(here(),"/figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
+saveRDS(list(p1, p2, p3, p4, p5, p6),  file=paste0(BV_dir,"/figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
 
 #save plot data
 saveRDS(list(plotdf_wlz_mwtkg,plotdf_laz_mwtkg,plotdf_wlz_mhtcm,plotdf_laz_mhtcm,plotdf_wlz_mbmi,plotdf_laz_mbmi), 

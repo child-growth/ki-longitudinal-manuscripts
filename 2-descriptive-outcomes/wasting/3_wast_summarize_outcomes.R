@@ -14,9 +14,6 @@ d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 
 length(unique(paste0(d$studyid,d$country)))
 
-d <- d %>% filter(studyid=="PROVIDE") %>% mutate(lagage=lag(agedays))
-summary(d$agedays-d$lagage)
-
 #Overall absolute counts
 df <- d %>% filter(agedays < 24 *30.4167) %>%
             mutate(wast = 1*(whz < -2),
@@ -300,7 +297,7 @@ ir.data <- summary.ir(d)
 ir.region <- d %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.country <- d %>% group_by(region, country) %>% do(summary.ir(.)$ir.res) 
 ir.cohort <-
-  ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  ir.data$ir.cohort %>% subset(., select = c(studyid, country, cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 
 ir <- bind_rows(
@@ -315,7 +312,7 @@ ir.data.nobirth <- summary.ir(d_noBW)
 ir.region.nobirth <- d_noBW %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.country.nobirth <- d_noBW %>% group_by(region, country) %>% do(summary.ir(.)$ir.res) 
 ir.cohort.nobirth <-
-  ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  ir.data$ir.cohort %>% subset(., select = c(studyid, country,cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 
 ir_noBW <- bind_rows(
@@ -330,7 +327,7 @@ sev.ir.data <- summary.ir(d, sev.wasting = T)
 sev.ir.region <- d %>% group_by(region) %>% do(summary.ir(., sev.wasting = T)$ir.res)
 sev.ir.country <- d %>% group_by(region, country) %>% do(summary.ir(., sev.wasting = T)$ir.res) 
 sev.ir.cohort <-
-  sev.ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  sev.ir.data$ir.cohort %>% subset(., select = c(studyid, country,cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 
 sev.ir <- bind_rows(
@@ -360,7 +357,7 @@ ir.data <- summary.ir(d3)
 ir.region <- d3 %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.country <- d3 %>% group_by(region, country) %>% do(summary.ir(.)$ir.res) 
 ir.cohort <-
-  ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  ir.data$ir.cohort %>% subset(., select = c(studyid, country,cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 
 ir3 <- bind_rows(
@@ -376,7 +373,7 @@ ir.data.nobirth <- summary.ir(d_noBW)
 ir.region.nobirth <- d_noBW %>% group_by(region) %>% do(summary.ir(.)$ir.res)
 ir.country.nobirth <- d_noBW %>% group_by(region, country) %>% do(summary.ir(.)$ir.res) 
 ir.cohort.nobirth <-
-  ir.data$ir.cohort %>% subset(., select = c(cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  ir.data$ir.cohort %>% subset(., select = c(studyid, country,cohort, agecat,  yi,  ci.lb,  ci.ub)) %>%
   rename(est = yi,  lb = ci.lb,  ub = ci.ub)
 
 ir_noBW3 <- bind_rows(
@@ -476,7 +473,7 @@ perswast024 <- bind_rows(
   data.frame(cohort = "pooled", perswast.region),
   perswast.cohort
 )
-save(perswast024, file = paste0(here(),"/results/persistent_wasting024.Rdata"))
+save(perswast024, file = paste0(BV_dir,"/results/persistent_wasting024.Rdata"))
 
 
 

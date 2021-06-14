@@ -107,6 +107,10 @@ N_sums_bin <- N_sums %>% mutate(continuous = 0)
 
 load(paste0(res_dir,"continuous_rf_Ns_sub.rdata"))
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
+N_sums_cont$intervention_level <- gsub("Wealth","",N_sums_cont$intervention_level)
+N_sums_cont[N_sums_cont$intervention_variable=="hhwealth_quart",]
+d[d$intervention_variable=="hhwealth_quart",]
+
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
 

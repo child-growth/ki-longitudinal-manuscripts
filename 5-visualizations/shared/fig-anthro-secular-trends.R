@@ -44,29 +44,36 @@ d <- d[!is.na(brthyr)]
 
 
 #Drop yearly studies
+
+
 monthly_vec <- c("MAL-ED",   
                  "CMC-V-BCS-2002",              
-                 "IRC",               
+                 "IRC",    
+                 "TDC",
                  "EE",           
                  "ResPak",  
                  "PROVIDE",  
                  "TanzaniaChild2",           
                  "Keneba",  
                  "Guatemala BSC",       
-                 "GMS-Nepal",             
+                 "GMS-Nepal",    
+                 "CMIN Peru89",                 
+                 "CMIN Peru95",                 
+                 "CMIN Bangladesh93",                 
                  "CONTENT")
 
 quarterly_vec <- c("iLiNS-Zinc",  
                    "JiVitA-3",          
                    "JiVitA-4", 
                    "LCNI-5",          
+                   "CMIN Brazil89",                 
+                   "CMIN GB94",                 
                    "NIH-Birth",
                    "NIH-Crypto",   
                    "PROBIT",         
                    "SAS-CompFeed",   
                    "SAS-FoodSuppl",   
                    "ZVITAMBO",   
-                   "CMIN",                 
                    "COHORTS")
 
 yearly_vec <- c("WASH-Bangladesh",       
@@ -80,8 +87,8 @@ yearly_vec <- c("WASH-Bangladesh",
                 "Vitamin-B12",
                 "Serrinha-VitA",   
                 "EU",        
-                "ZnMort"
-)
+                "ZnMort")
+
 
 
 d <- d[, measurefreq := c("monthly", "quarterly", "yearly")[1* (studyid %in% monthly_vec) +
@@ -143,7 +150,7 @@ p <- ggplot(d, aes(x=brthyr, y=haz, color=Region, group=Region)) +
   guides(color = guide_legend(override.aes = list(alpha=1)))
 
 
-ggsave(p, file = here::here("/figures/shared/laz_secular_trend.png"), width=8, height=4)
+ggsave(p, file = paste0(BV_dir,"/figures/shared/laz_secular_trend.png"), width=8, height=4)
 
 
 
@@ -211,8 +218,8 @@ pWhz <- ggplot(d, aes(x=brthyr, y=whz, color=Region, group=Region)) + geom_point
   guides(color = guide_legend(override.aes = list(alpha=1)))
 
 
-ggsave(pHaz, file = here::here("/figures/shared/laz_secular_trend_monthly.png"), width=8, height=4)
-ggsave(pWaz, file = here::here("/figures/shared/waz_secular_trend_monthly.png"), width=8, height=4)
-ggsave(pWhz, file = here::here("/figures/shared/wlz_secular_trend_monthly.png"), width=8, height=4)
+ggsave(pHaz, file = paste0(BV_dir,"/figures/shared/laz_secular_trend_monthly.png"), width=8, height=4)
+ggsave(pWaz, file = paste0(BV_dir,"/figures/shared/waz_secular_trend_monthly.png"), width=8, height=4)
+ggsave(pWhz, file = paste0(BV_dir,"/figures/shared/wlz_secular_trend_monthly.png"), width=8, height=4)
 
 

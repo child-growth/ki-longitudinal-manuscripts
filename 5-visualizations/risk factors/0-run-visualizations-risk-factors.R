@@ -19,7 +19,7 @@ source(here("5-visualizations/risk factors/fig-wlz-quart-stunting.R"))
 
 
 source(here("5-visualizations/risk factors/fig-mortality-plots.R"))
-source(here("5-visualizations/risk factors/fig-mortality-timing.R"))
+#source(here("5-visualizations/risk factors/fig-mortality-timing.R"))
 
 
 #Combine plots
@@ -41,7 +41,7 @@ source(here("5-visualizations/risk factors/fig-mediation-analysis.R"))
 source(here("5-visualizations/risk factors/fig-EValues.R"))
 
 source(here("5-visualizations/risk factors/fig-RR-plots.R"))
-ource(here("5-visualizations/risk factors/fig-pooled-RR-plots.R"))
+source(here("5-visualizations/risk factors/fig-pooled-RR-plots.R"))
 #Supplimental figures
 # source(here("5-visualizations/risk factors/fig-kaplan-meier-curves.R"))
 # 

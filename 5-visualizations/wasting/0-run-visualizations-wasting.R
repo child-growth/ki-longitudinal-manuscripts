@@ -29,10 +29,7 @@ source(here("5-visualizations/wasting/manuscript_figure_grids.R"))
 
 #Extended figures
 source(here("5-visualizations/wasting/fig-DHS-plots-whz.R"))
-source(here("5-visualizations/wasting/fig-DHS-quantile-plots-wasting.R"))
-
-source(here("5-visualizations/wasting/fig-wasting-classification-example.R"))
-
+#source(here("5-visualizations/wasting/fig-wasting-classification-example.R"))
 source(here("5-visualizations/wasting/fig-wasting-prevalence-map.R"))
 
 
