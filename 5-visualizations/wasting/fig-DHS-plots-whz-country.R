@@ -127,50 +127,72 @@ ggsave(dhsp, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_byage_cohort.png
 # Plot z-score density by country and measure
 ##################################
 kiden <- readRDS(paste0(dhs_res_dir, "ki.density.fits.monthly.rds"))
+kiden <- mark_region(kiden)
 kiden <- kiden %>% mutate(dsource = "ki cohorts", country = str_to_title(country)) %>% filter(!is.na(country))
 
 dhssubden = readRDS(paste0(dhs_res_dir,"dhs.density.ki-countries.rds"))
-dhssubden <- dhssubden %>% mutate(dsource = "DHS, ki countries") %>% filter(!is.na(country))
+dhssubden <- dhssubden %>% mutate(dsource = "DHS, ki countries", region="DHS") %>% filter(!is.na(country))
 
-#medians = readRDS(paste0(dhs_res_dir,"dhs.ki.zscore.medians.monthly.country.rds"))  %>% mutate(country = str_to_title(country)) %>% filter(!is.na(country))
+medians = readRDS(paste0(dhs_res_dir,"dhs.ki.zscore.medians.monthly.rds"))  %>% mutate(country = str_to_title(country)) %>% filter(!is.na(country)) 
+#medians <- mark_region(medians)
+
 
 dhsden_plot <- bind_rows(kiden, dhssubden) %>%
   mutate(
     dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries")),
-    region = factor(region, levels = c("Overall", "Africa", "South Asia", "Latin America"))
+    region = factor(region, levels = c("DHS", "Africa", "South Asia", "Latin America"))
   )
+
+dhsden_plot = merge(x = dhsden_plot, y = medians, by = c("country", "dsource", "measure"),  all.x = TRUE)
 head(dhsden_plot)
 
-#dhsden_plot = merge(x = dhsden_plot, y = medians, by = c("country", "dsource", "measure"),  all.x = TRUE)
-dhsden_plot = dhsden_plot %>% mutate(region = factor(region, levels = c("Overall", "Africa", "Latin America", "South Asia")))
 dhsden_plot$measure <- as.character(dhsden_plot$measure)
 dhsden_plot$measure[dhsden_plot$measure=="WHZ"] <- "WLZ"
 dhsden_plot$measure <- factor(dhsden_plot$measure, levels = c("LAZ", "WAZ", "WLZ"))
 dhsden_plot <- dhsden_plot %>% filter(!is.na(country))
 dhsden_plot$cohort[dhsden_plot$dsource=="DHS, ki countries"] <- "DHS"
 
-dhsden_plot <- dhsden_plot %>% filter(country=="India")
-dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, group=cohort, linetype = dsource)) +
-  facet_grid(measure ~ country) +
-  geom_line() +
-  #geom_point(aes(x = as.double(median), y = 0, shape = dsource)) +
+dhsden_plot <- dhsden_plot %>% filter(!(country %in% c("Burkina Faso","Zimbabwe","Malawi")))  %>% filter(!is.na(country)) %>% droplevels()
+
+dhsden_plot$country <- factor(dhsden_plot$country, levels=c(
+  "Gambia","South Africa", "Tanzania","Brazil"  , "Guatemala", "Peru", "Bangladesh", "India","Pakistan", "Nepal"
+)) 
+dhsden_plot <- dhsden_plot %>% filter(!is.na(country))
+
+dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, group=cohort,
+                                        color = region, fill = region, 
+                                        linetype = dsource)) +
+  facet_grid( country~measure ) +
+  geom_line(alpha=0.75) +
+  geom_point(aes(x = as.double(median), y = 0.1, color = region, shape = dsource), position=ggstance::position_dodgev(height=0.1)) +
   scale_color_manual(values = pcols, guide = FALSE) +
   scale_fill_manual(values = pcols, guide = FALSE) +
-  scale_linetype_manual(values = c("solid", "dashed", "dotdash"), name="Data source:") +
-  scale_shape_manual(values=c(19, 1), name="Data source:")+
+  scale_linetype_manual(values = c("dashed", "solid"), name="Data source:") +
+  scale_shape_manual(values=c(1,16), name="Data source:")+
   scale_x_continuous(breaks = seq(-6, 6, by = 2)) +
-  coord_cartesian(xlim = c(-6, 6), ylim = c(0, 0.4)) +
+  scale_y_continuous(breaks = seq(0, 0.4, by = .2)) +
+  coord_cartesian(xlim = c(-5, 5), ylim = c(0, 0.5)) +
   labs(y = "Density", x = "Z-score") +
   theme_minimal() +
   theme(
     legend.position = "bottom",
     panel.grid.minor.y = element_blank(),
-    strip.text.y = element_text(angle = 0)
+     strip.text.y = element_text(angle = 0)#,
+    # axis.text.x=element_blank(),
+    # axis.ticks.x=element_blank()
   )
 
-#dplot
+
 
 # output a file to png
+ggsave(dplot, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_density.png"), width = 6, height = 7)
 saveRDS(dhsden_plot, file = paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_density.RDS"))
-ggsave(dplot, file = paste0(fig_dir, "wasting/fig_dhs_ki_zscores_density.png"), width = 6, height = 5)
+
+
+diff= dhsden_plot %>% distinct(country, dsource, measure, median, .keep_all = T) %>% group_by(region , country, dsource, measure) %>% summarize(median=mean(median)) %>% 
+  group_by(country, measure) %>% arrange(country, measure,dsource) %>%
+  summarize(region=first(region), diff=round(first(median)-last(median),2)) %>% arrange(measure, diff) %>% as.data.frame()
+diff #negative is higher DHS
+
+
 

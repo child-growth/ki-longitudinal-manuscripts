@@ -29,6 +29,7 @@ drop_int_arms <- function(d){
 d <- readRDS(paste0(ghapdata_dir, "ki-manuscript-dataset.rds"))
 dim(d)
 
+
 unique(d$studyid)
 unique(d$studyid[d$measurefreq!="yearly"])
 unique(d$studyid[d$measurefreq=="monthly"])

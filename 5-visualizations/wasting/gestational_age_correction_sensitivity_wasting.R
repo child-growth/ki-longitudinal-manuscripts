@@ -19,6 +19,7 @@ d <- d %>% filter(studyid!="EE")
 
 #Clean country and cohort names and drop cohorts without gestational age
 d$country_f <- tolower(d$country)
+d$region[d$country_f=="tanzania, united republic of"] <- "Africa"
 d$country_f[d$country_f=="tanzania, united republic of"] <- "tanzania"
 d$studyid_f <- gsub("^k.*?-" , "", d$studyid)
 d$country_f <- str_to_title(d$country_f)
@@ -59,7 +60,7 @@ ggsave(phist , file=paste0(BV_dir, "/figures/wasting/fig-GA-by-cohort-histogram.
 
 
 #Drop gestational ages under 24 weeks or over 300 days (no intergrowth standards) 
-d <- d %>% filter(W_gagebrth > 24 *7 & W_gagebrth <= 300) 
+d <- d %>% filter(W_gagebrth > 24 *7 & W_gagebrth <= 300) %>% droplevels()
 
 
 stunt <- d %>% filter(haz >= -6 & haz <=6,
@@ -224,7 +225,7 @@ df$cohort[df$cohort=="pooled"] <- paste0("Pooled - ", df$region[df$cohort=="pool
 
 #clean up cohort names
 unique(df$cohort)
-df$cohort <- gsub("TanzaniaChild2-TANZANIA, UNITED REPUBLIC OF", "Tanzania Child 2", df$cohort)
+df$cohort <- gsub("TanzaniaChild2-TANZANIA", "Tanzania Child 2", df$cohort)
 df$cohort <- gsub("INDIA", "India", df$cohort)
 df$cohort <- gsub("PAKISTAN", "Pakistan", df$cohort)
 df$cohort <- gsub("GAMBIA", "Gambia", df$cohort)
@@ -243,7 +244,7 @@ df$cohort_lab <- factor(df$cohort_lab, levels = rev(unique(df$cohort_lab)))
 df$Region <- df$region
                                               
 
-p <- ggplot(df,aes(y=est,x=cohort_lab)) +
+p <- ggplot(df, aes(y=est,x=cohort_lab)) +
   geom_errorbar(aes(color=Region, ymin=lb, ymax=ub, group=GA_correction), width = 0, position = position_dodge(0.4)) +
   geom_point(aes(fill=Region, color=Region, shape=GA_correction, group=GA_correction), size = 2, position = position_dodge(0.4)) +
   scale_fill_manual(values=tableau11) +

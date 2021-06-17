@@ -8,9 +8,9 @@ source(paste0(here::here(), "/0-config.R"))
 # load cleaned DHS anthro data
 # created by 7_DHS-data-cleaning.R
 #---------------------------------------
-dhaz <- readRDS(file = (here::here("data", "clean-DHS-haz.rds")))
-dwaz <- readRDS(file = (here::here("data", "clean-DHS-waz.rds")))
-dwhz <- readRDS(file = (here::here("data", "clean-DHS-whz.rds")))
+dhaz <- readRDS(file = paste0(dhs_res_dir, "clean-DHS-haz.rds"))
+dwaz <- readRDS(file = paste0(dhs_res_dir, "clean-DHS-waz.rds"))
+dwhz <- readRDS(file = paste0(dhs_res_dir, "clean-DHS-whz.rds"))
 
 #---------------------------------------
 # combine all of the DHS data
@@ -132,7 +132,7 @@ table(dhsz$region)
 
 #Function to estimate density by region and Z-score
 dhs.quantiles <- function(data, Region, Measure){
-  d <- data %>% filter(region==Region, measure==Measure) %>% as.data.frame()
+  d <- data %>% filter(region==Region, measure==Measure) %>% filter(!is.na(zscore)) %>% as.data.frame()
   
   dquant <- quantile(d$zscore, probs = seq(0, 1, 0.01), na.rm = FALSE, names = TRUE, type = 7)
   
@@ -170,4 +170,45 @@ quantdf.dhs<- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, waz2, 
 saveRDS(quantdf.dhs, dhs_quantiles_path)
 
 
+
+
+
+#Function to estimate density by country and Z-score
+dhsz <- bind_rows(dhaz, dwaz, dwhz) %>%
+  mutate(
+    measure = factor(measure, levels = c("HAZ", "WAZ", "WHZ"), labels = c("LAZ", "WAZ", "WHZ"))
+  )
+
+
+
+dhs.quantiles.country <- function(d){
+  d <- d %>% filter(!is.na(zscore)) 
+  dquant <- quantile(d$zscore, probs = seq(0, 1, 0.01), na.rm = FALSE, names = TRUE, type = 7)
+  
+  dat <- data.frame(quantile=as.numeric(gsub("%","",names(dquant))),zscore=as.numeric(dquant), country=d$country[1], measure=d$measure[1])
+  return(dat)
+}
+
+dhsz$measure <- as.character(dhsz$measure)
+dhsz$measure[dhsz$measure=="LAZ"] <- "haz"
+dhsz$measure[dhsz$measure=="WHZ"] <- "whz"
+dhsz$measure[dhsz$measure=="WAZ"] <- "waz"
+d <- dhsz %>% filter(measure=="haz", zscore > (-6) & zscore < 6)
+haz.country <- d %>% group_by(country) %>%
+        do(dhs.quantiles.country(.))
+haz.country
+
+d <- dhsz %>% filter(measure=="whz", zscore > (-5) & zscore < 5)
+whz.country <- d %>% group_by(country) %>%
+  do(dhs.quantiles.country(.))
+
+d <- dhsz %>% filter(measure=="waz", zscore > (-6) & zscore < 5)
+waz.country <- d %>% group_by(country) %>%
+  do(dhs.quantiles.country(.))
+
+quantdf.dhs.country<- rbind(haz.country, whz.country, waz.country)
+
+
+#Save quantiles
+saveRDS(quantdf.dhs.country, paste0(BV_dir, "/results/dhs/dhs_quantiles_country.rds"))
 

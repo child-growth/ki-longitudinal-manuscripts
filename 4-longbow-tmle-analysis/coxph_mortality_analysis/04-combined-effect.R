@@ -36,16 +36,47 @@ table(df$studyid, df$imp_agedth)
 d <- d %>% filter(imp_agedth==0,
                   !(studyid %in% c("GMS-Nepal","SAS-CompFeed","SAS-FoodSuppl")))
 
+d <- d %>% mutate(cohort=paste0(studyid,"-",country))
+d$agedays <- ifelse(d$dead==1, d$agedth, d$agedays)
+d$event <- with(d, Surv(agedays, dead == 1))
+
+format_HR <- function(fit){
+  fit <- summary(fit)
+  res <- as.data.frame(fit$conf.int[,c(1,3,4)])
+  res$p <- coef(fit)[3,6]
+  colnames(res) <- c("HR", "ci.lb", "ci.ub","Pval")
+  res$est <- as.data.frame(fit$coefficients)$coef
+  res$se <- as.data.frame(fit$coefficients)$`se(coef)`
+  res$Y <- rownames(res)
+  rownames(res) <- NULL
+  return(res)
+}
 
 
+fullres=NULL
+for(i in unique(d$cohort)){
+  fit1 <- coxph(event ~ haz + whz + waz,  data =  d, cluster=subjid, id=subjid)
+  fit1 <- format_HR(fit1)
+  
+  fit2 <- coxph(event ~ stunt+wast+underwt,  data =  d, cluster=subjid, id=subjid)
+  fit2 <- format_HR(fit2)
+  
+  fit3 <- coxph(event ~ ever_stunt+ever_wast+ever_uwt,  data =  d, cluster=subjid, id=subjid)
+  fit3 <- format_HR(fit3)
+  
+  res <- bind_rows(fit1, fit2, fit3)
+  res$cohort <- i
+  fullres <- bind_rows(fullres, res)
+}
+fullres
 
-X_vector <- c("stunt", "wast","wast_muac","underwt",          
-              "sstunt",          "swast","swast_muac",            "sunderwt",         "stunt_uwt",       
-              "wast_uwt",         "co",              
-              "ever_stunt",       "ever_wast", "ever_wast_muac",        "ever_uwt",         "ever_sstunt",     
-              "ever_swast", "ever_swast_muac","ever_suwt",        "ever_stunt_uwt",   "ever_wast_uwt",    "ever_co")
+fullres$sparseN <- 1
+pooled <- fullres %>% group_by(Y) %>%
+  do(poolHR(.)) %>% mutate(pooled=1, method="RE")
+
+pooled <- pooled %>% mutate(HR=round(HR,2), ci.lb=round(ci.lb,2), ci.ub=round(ci.ub,2))
+
+knitr::kable(pooled[,c(1,4,5,6)])
 
 
-
-#All ages < 730 days
-res <- run_cox_meta(df=d, X_vector=X_vector, Y=X_vector, Wvars=Wvars, V=NULL)
+fullres

@@ -12,6 +12,8 @@ load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 co <- readRDS(paste0(ghapdata_dir, "rf_co_occurrence_data.rds"))
 
 
+
+
 age_cutoff = 7
 
 
@@ -26,6 +28,39 @@ d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
        mutate(born_wast = 1 * (first(whz) < (-2))) 
 table(d$born_wast)
 d %>% group_by(born_wast) %>% summarize(length(unique(paste0(studyid, subjid))))
+
+#How many of those who had birthweight measured and who did NOT have wasting at birth also had incident wasting in the first 60 days? 
+df <- d %>% filter(agedays < 2* 30.4167, born_wast==0) %>% group_by(studyid, subjid) %>% mutate(Nmeas=n())
+table(df$Nmeas)
+df <- df %>% filter(Nmeas>2, agedays > 7)  %>% group_by(studyid, country) %>% mutate(N=n(), wast=1*(whz < -2))
+summary(df$whz)
+prop.table(table(df$whz < -2)) * 100
+df2 <- df %>% group_by(studyid, country, subjid) %>% summarise(wast_inc=1*(min(whz)< -2), N=n())
+prop.table(table(df2$wast_inc)) * 100
+
+#prevalence
+dprev <- df %>% group_by(studyid, country) %>% summarise(N=n(), wast=sum(wast), agecat="0-2 months")
+prev.res= fit.rma(data=dprev,ni="N", xi="wast",age="0-2 months",measure="PLO",nlab="children", method="REML")
+prev.res$est=as.numeric(prev.res$est)
+prev.res$lb=as.numeric(prev.res$lb)
+prev.res$ub=as.numeric(prev.res$ub)
+prev.res = prev.res %>%
+  mutate(est=est*100,lb=lb*100,ub=ub*100)
+prev.res
+
+#CI
+# estimate random effects, format results
+dCI <- df2 %>% group_by(studyid, country) %>% summarise(N=n(), ncases=sum(wast_inc), agecat="0-2 months")
+ci.res=fit.rma(data=dCI,ni="N", xi="ncases",age="0-2 months",measure="PLO",nlab=" measurements", method="REML")
+ci.res$est=as.numeric(ci.res$est)
+ci.res$lb=as.numeric(ci.res$lb)
+ci.res$ub=as.numeric(ci.res$ub)
+ci.res = ci.res %>%
+  mutate(est=est*100,lb=lb*100,ub=ub*100)
+ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
+ci.res
+
+
 
 
 #Subset to co-occurrence to monthly

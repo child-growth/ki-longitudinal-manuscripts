@@ -179,7 +179,7 @@ table(plotdf$month)
 
 #Monsoon is assumed to be May-October 
 plotdf$monsoon <- factor(ifelse(plotdf$month > 5 & plotdf$month < 10, "Monsoon", "Not monsoon"))
-
+plotdf$birthcat <- factor(plotdf$birthcat, levels=c("Born Jan-Mar",  "Born Apr-June", "Born Jul-Sept", "Born Oct-Dec" ))
 
 
 shade="grey80"

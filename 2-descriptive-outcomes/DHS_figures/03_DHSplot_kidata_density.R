@@ -288,8 +288,8 @@ medians.monthly <- bind_rows(medians.monthly_waz, medians.monthly_wst, medians.m
   arrange(region, measure)
 medians.monthly
 
-medians.monthly.country <- bind_rows(medians_strat.mon_waz, medians_strat.mon_wst, medians_country.mon_st) %>%
-  arrange(region, measure)
+medians.monthly.country <- bind_rows(medians_country.mon_waz, medians_country.mon_wst, medians_country.mon_st) %>%
+  arrange(country, measure)
 
 
 set.seed(123)

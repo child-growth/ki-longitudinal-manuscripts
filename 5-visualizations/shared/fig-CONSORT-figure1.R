@@ -297,6 +297,13 @@ sidebar
 consort_ki_bar <- consort_ki_long[consort_ki_long$indicator == 1, ]
 
 # add extra x factors to widen plot to include all annotation text
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra1")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra2")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra3")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra4")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra5")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra6")
+consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra7")
 consort_ki_bar$inclusion_metric <- factor(consort_ki_bar$inclusion_metric,
                                            levels = c('included_longitudinal',
                                                       'included_anthropometry',
@@ -313,14 +320,13 @@ consort_ki_bar$inclusion_metric <- factor(consort_ki_bar$inclusion_metric,
                                                       'extra5',
                                                       'extra6',
                                                       'extra7'))
-consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra1")
-consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra2")
-consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra3")
-consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra4")
-consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra5")
-consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra6")
-consort_ki_bar <- add_row(consort_ki_bar, subject_count = 1, inclusion_metric = "extra7")
 
+
+pos_x <- 2.2
+pos_y <- 36
+pos_gap <- 3.9
+lab_size <- 2.7
+x_gap <- 1.1
 bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)) + 
   geom_bar(stat = 'identity', aes(fill = region)) +
   theme_grey(base_size = 10) +
@@ -333,32 +339,32 @@ bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)
   scale_fill_manual(values=c("#1F77B4", "#2CA02C", "#FF7F0E", "#D62728", "black")) +
   
   # Add top inclusion category labels, dynamically count n per study
-  annotate(geom = "text", x = 3.2, y = 38, 
-           label = paste0("Longitudinal cohorts (n=", sum(consort_ki_bar$inclusion_metric=="included_longitudinal"),")"), size = 2.7) +
-  annotate(geom = "text", x = 4.9, y = 34, 
-           label = paste0("Includes anthropometry data (n=", sum(consort_ki_bar$inclusion_metric=="included_anthropometry"),")"), size = 2.7) +
-  annotate(geom = "text", x = 7.1, y = 30, 
-           label = paste0("Located in low- or middle income countries (n=", sum(consort_ki_bar$inclusion_metric=="included_low_income"),")"), size = 2.7) +
-  annotate(geom = "text", x = 8.3, y = 26, 
-           label = paste0("Enrollment not restricted to acutely ill children (n=", sum(consort_ki_bar$inclusion_metric=="included_ill"),")"), size = 2.7) +
-  annotate(geom = "text", x = 8.2, y = 22, 
-           label = paste0("Enrolled more than 200 children (n=", sum(consort_ki_bar$inclusion_metric=="included_small"),")"), size = 2.7) +
-  annotate(geom = "text", x = 9.6, y = 18, 
-           label = paste0("Enrolled children between ages 0-2 (n=", sum(consort_ki_bar$inclusion_metric=="included_age"),")"), size = 2.7) +
-  annotate(geom = "text", x = 10.2, y = 14, 
-           label = paste0("Quarterly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_quarterly"),")"), size = 2.7) +
-  annotate(geom = "text", x = 11.2, y = 10, 
-           label = paste0("Monthly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_monthly"),")"), size = 2.7) +
+  annotate(geom = "text", x = 2.2, y = pos_y, 
+           label = paste0("Longitudinal cohorts (n=", sum(consort_ki_bar$inclusion_metric=="included_longitudinal"),")"), size =  lab_size) +
+  annotate(geom = "text", x = 3.6, y = pos_y-pos_gap, 
+           label = paste0("Includes anthropometry data (n=", sum(consort_ki_bar$inclusion_metric=="included_anthropometry"),")"), size =  lab_size) +
+  annotate(geom = "text", x = 5.2, y = pos_y-pos_gap*2, 
+           label = paste0("Located in low- or middle income countries (n=", sum(consort_ki_bar$inclusion_metric=="included_low_income"),")"), size =  lab_size) +
+  annotate(geom = "text", x = 6.4, y = pos_y-pos_gap*3, 
+           label = paste0("Enrollment not restricted to acutely ill children (n=", sum(consort_ki_bar$inclusion_metric=="included_ill"),")"), size =  lab_size) +
+  annotate(geom = "text", x = 6.7, y = pos_y-pos_gap*4, 
+           label = paste0("Enrolled more than 200 children (n=", sum(consort_ki_bar$inclusion_metric=="included_small"),")"), size =  lab_size) +
+  annotate(geom = "text", x = 7.9, y = pos_y-pos_gap*5, 
+           label = paste0("Enrolled children between ages 0-2 (n=", sum(consort_ki_bar$inclusion_metric=="included_age"),")"), size =  lab_size) +
+  annotate(geom = "text", x = 8.8, y = pos_y-pos_gap*6, 
+           label = paste0("Quarterly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_quarterly"),")"), size =  lab_size) +
+  annotate(geom = "text", x = 9.7, y = pos_y-pos_gap*7, 
+           label = paste0("Monthly growth measurements (n=", sum(consort_ki_bar$inclusion_metric=="included_monthly"),")"), size =  lab_size) +
   
   # Add vertical lines under labels
-  geom_segment(aes(x = 1, y = 20, xend = 1, yend = 35), color = "gray") +
-  geom_segment(aes(x = 2, y = 20, xend = 2, yend = 31), color = "gray") +
-  geom_segment(aes(x = 3, y = 19, xend = 3, yend = 27), color = "gray") +
-  geom_segment(aes(x = 4, y = 16, xend = 4, yend = 24), color = "gray") +
+  geom_segment(aes(x = 1, y = 20, xend = 1, yend = 34), color = "gray") +
+  geom_segment(aes(x = 2, y = 20, xend = 2, yend = 30), color = "gray") +
+  geom_segment(aes(x = 3, y = 19, xend = 3, yend = 26), color = "gray") +
+  geom_segment(aes(x = 4, y = 16, xend = 4, yend = 22), color = "gray") +
   geom_segment(aes(x = 5, y = 16, xend = 5, yend = 19), color = "gray") +
-  geom_segment(aes(x = 6, y = 11, xend = 6, yend = 16), color = "gray") +
-  geom_segment(aes(x = 7, y = 8, xend = 7, yend = 12), color = "gray") +
-  geom_segment(aes(x = 8, y = 2, xend = 8, yend = 8), color = "gray") +
+  geom_segment(aes(x = 6, y = 11, xend = 6, yend = 15), color = "gray") +
+  geom_segment(aes(x = 7, y = 8, xend = 7, yend = 11), color = "gray") +
+  geom_segment(aes(x = 8, y = 2, xend = 8, yend = 7), color = "gray") +
                     
   theme(
     # legend options
@@ -387,7 +393,7 @@ bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank()
   )
-bar
+
 
 #####################################################################################
 # PLOTTING FIGURE                                                                   #
@@ -398,15 +404,17 @@ bar
 # add margin around plots
 hm = hm + theme(plot.margin = unit(c(0, 0.25, 0.7, 0.25), "cm"))
 sidebar = sidebar + theme(plot.margin = unit(c(0, 0.3, .25, 0.1), "cm"))
-bar = bar + theme(plot.margin = unit(c(1, 1.9, -.65, 9.02), "cm"))
+#bar = bar + theme(plot.margin = unit(c(1, 6.3, -.65, 4.07), "cm"))
+bar = bar + theme(plot.margin = unit(c(1, -2.43, -.65, 4.085), "cm"))
 
 grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
                         nrow = 2, ncol = 1,
                         heights = c(120, 1200))
 
 # save plot and underlying data
-ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.pdf"),
-       plot = grid,device='pdf',width=9,height=20,limitsize = FALSE)
 ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.png"),
        plot = grid,device='png',width=9,height=20,limitsize = FALSE)
+ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.pdf"),
+       plot = grid,device='pdf',width=9,height=20,limitsize = FALSE)
+
 

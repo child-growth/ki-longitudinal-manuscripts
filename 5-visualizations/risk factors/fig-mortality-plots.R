@@ -85,6 +85,21 @@ dHR <- dHR %>%
       "Ever wasted + underweight",    
       "Ever wasted + stunted" ))))
 
+d_ciHR <- dHR  %>% 
+  droplevels(.) %>%
+  dplyr::filter(Xname != "Wasted (MUAC)", 
+                # Xname != "Wasted + underweight",
+                # Xname != "Stunted + underweight", 
+                Xname != "Severely wasted (MUAC)") %>%
+  filter(grepl("ever_",X), method=="RE", 
+         is.na(sex), is.na(region), agecat=="overall", adj==1) %>%
+  mutate(HR = round(HR, 2), 
+         ci.lb = round(ci.lb, 2), 
+         ci.ub = round(ci.ub,2)) %>%
+  ungroup() %>%
+  arrange(HR) %>% select( Xname, HR, ci.lb, ci.ub )
+knitr::kable(d_ciHR)
+
 dHR <- dHR  %>% 
   droplevels(.) %>%
   dplyr::filter(Xname != "Wasted (MUAC)", 

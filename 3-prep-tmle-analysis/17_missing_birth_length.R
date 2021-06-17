@@ -7,12 +7,14 @@ d <- dfull %>%
   group_by(studyid, country, subjid) %>%
   filter(agedays < 731) %>% 
   mutate(dead=max(dead)) %>%
-  filter(agedays < 8) %>% 
+  filter(agedays < 8, !is.na(wtkg)) %>% 
   arrange(agedays) %>% 
   slice(1)
 
 dim(d)
 table(d$lencm < 45)
+prop.table(table(d$lencm < 45))*100
+
 prop.table(table(d$lencm < 45))*100
 
 table(d$lencm < 45, is.na(d$whz))
@@ -31,8 +33,8 @@ epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100,
 df2 <- dfull %>% 
   group_by(studyid, country, subjid) %>%
   arrange(agedays) %>% 
-  filter(agedays < 6*30.467, first(lencm) < 45, !is.na(whz)) %>% 
-  mutate(minwhz= min(whz), anywast=1*(minwhz < -2), maxage=max(agedays), N=n()) %>%
+  filter(agedays < 6*30.467, first(lencm) < 45) %>% 
+  mutate(first_waz = first(waz,na.rm=T), first_waz=ifelse(lencm < 45, first_waz, NA), minwhz= min(whz, na.rm=T), anywast=1*(minwhz < -2), maxage=max(agedays), N=n()) %>%
   filter(maxage > 7) %>%
   slice(1)
 
@@ -42,5 +44,8 @@ table(df2$anywast)
 prop.table(table(df2$anywast))*100
 
 
+summary(df2$first_waz)
+prop.table(table(df2$first_waz < -2))*100
+prop.table(table(df2$first_waz < -3))*100
 
 

@@ -443,7 +443,7 @@ saveRDS(inc_plot_primary$data, file=paste0(figdata_dir_wasting,"figdata-",inc_pl
 saveRDS(inc_plot_primary, file=paste0(BV_dir,"/figures/plot-objects/inc_plot_object.rds"))
 
 inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
-
+inc_plot_primary$data %>% arrange(region, agecat)
 # 
 # #-------------------------------------------------------------------------------------------
 # # Wasting incidence proportion

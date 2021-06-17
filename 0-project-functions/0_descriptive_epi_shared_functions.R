@@ -913,6 +913,7 @@ cohort.format <- function(df, lab, y, est = "NA") {
       country == "MALAWI" |
       country == "SOUTH AFRICA" |
       country == "TANZANIA, UNITED REPUBLIC OF" |
+      country == "TANZANIA" |
       country == "ZIMBABWE" |
       country == "GAMBIA" ~ "Africa",
     country == "BELARUS" ~ "Europe",
