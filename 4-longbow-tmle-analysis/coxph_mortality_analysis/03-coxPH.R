@@ -17,7 +17,7 @@ d <- readRDS(mortality_age_path)
 d$subjid <- as.numeric(d$subjid)
 d <- d %>% arrange(studyid, subjid, agedays)
 table(d$studyid)
-
+length(unique(d$studyid))
 
 #Steps for each analysis:
 #1) drop imputed agedth if needed
@@ -35,8 +35,9 @@ table(df$studyid, df$imp_agedth)
 
 d <- d %>% filter(imp_agedth==0,
                   !(studyid %in% c("GMS-Nepal","SAS-CompFeed","SAS-FoodSuppl")))
+length(unique(d$studyid))
 
-
+table(d$dead)
 
 #Covariates adjustment set
 #Wvars <- c("agedays", "", "")

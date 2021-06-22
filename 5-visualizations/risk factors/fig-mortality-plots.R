@@ -146,8 +146,8 @@ dHR <- dHR[ , !(names(dHR) %in% dropped)]
 
 table(dHR$pooled)
 pmort_data_cohort <- dHR %>% filter(pooled==0)
-p_prim_pooled  <- dHR %>% filter(pooled==1)
-
+p_prim_pooled  <- dHR %>% filter(pooled==1) %>% arrange(RR)
+p_prim_pooled
 
 
 

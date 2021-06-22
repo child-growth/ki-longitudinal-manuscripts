@@ -2,6 +2,8 @@
 
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
+library(caret)
+library(lmtest)
 
 #Set adjustment covariates
 Wvars <- c("sex", "arm", "brthmon", "vagbrth", "hdlvry", "single", "trth2o",       
@@ -16,18 +18,13 @@ d$subjid <- as.numeric(d$subjid)
 d <- d %>% arrange(studyid, subjid, agedays)
 table(d$studyid)
 
-#TEMP drop new studies
-d <- d %>% filter(!(studyid %in% c("VITALPAK-Pregnancy","iLiNS-DYAD-G","DIVIDS")))
-
-
 #Steps for each analysis:
 #1) drop imputed agedth if needed
 #2) drop observations other than the age category of interest
 #3) Create survival outcome
 summary(d$agedays)
 table(d$agecat)
-d <- d %>% filter(agedays <= 60*30.4167)
-#d <- d %>% filter(studyid=="ZVITAMBO")
+d <- d %>% filter(agedays <= 6*30.4167)
 d <- droplevels(d)
 
 #Drop imputed age of death and studies with only imputed age of death
@@ -114,4 +111,4 @@ fullres <- bind_rows(res, res_sex_strat,
                      res_noPN, res_noPN_sex_strat,
                      res_age_strat, res_age_sex_strat)
           
-saveRDS(fullres, file=here("results/full_cox_results_u6.RDS"))
+saveRDS(fullres, file=paste0(BV_dir,"/results/full_cox_results_u6.RDS"))

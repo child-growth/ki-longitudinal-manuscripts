@@ -966,5 +966,82 @@ adjustment_sets <- list(
             "brthmon","W_parity",
             "trth2o","cleanck","impfloor","impsan","safeh20")
 )
-save(adjustment_sets, file=here("/results/adjustment_sets_list.Rdata"))
+save(adjustment_sets, file=paste0(BV_dir,"/results/adjustment_sets_list.Rdata"))
+
+
+
+
+
+
+
+#save
+
+
+
+covariates = c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+                  "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+                  "vagbrth","hdlvry","predexfd6",  "earlybf",
+                  "W_gagebrth","W_birthwt","W_birthlen",
+                  "single", "enstunt","enwast",
+                  "W_nrooms","W_nhh","W_nchldlt5",
+                  "month","brthmon","W_parity",
+                  "trth2o","cleanck","impfloor","impsan","safeh20")
+
+
+adjustment_sets_all_cov <- list( 
+    gagebrth=covariates,
+    birthwt=covariates,
+    birthlen=covariates,
+    enstunt=covariates,
+    enwast=covariates,
+    vagbrth=covariates,
+    hdlvry=covariates,
+    mage=covariates,
+    fage=covariates,
+    mhtcm=covariates,
+    mwtkg=covariates,
+    mbmi=covariates,
+    single=covariates,
+    fhtcm=covariates,
+    nrooms=covariates,
+    nhh=covariates,
+    nchldlt5=covariates,
+    hhwealth_quart=covariates,
+    parity=covariates,
+    meducyrs=covariates,
+    feducyrs=covariates,
+    hfoodsec=covariates,
+    anywast06=covariates,
+    pers_wast=covariates,
+    trth2o=covariates,
+    cleanck=covariates,
+    impfloor=covariates,
+    impsan=covariates,
+    safeh20=covariates,
+    perdiar6=covariates,
+    perdiar24=covariates, 
+    predfeed3=covariates,
+    predfeed6=covariates,
+    predfeed36=covariates,
+    exclfeed3=covariates,
+    exclfeed6=covariates, 
+    exclfeed36=covariates,
+    predexfd6=covariates,
+    earlybf=covariates)
+
+save(adjustment_sets_all_cov, file=paste0(BV_dir,"/results/adjustment_sets_list_all_cov.Rdata"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
