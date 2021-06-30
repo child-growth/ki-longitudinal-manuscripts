@@ -57,13 +57,17 @@ stunt_rec <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin
 saveRDS(stunt_rec, paste0(res_dir, "rf results/longbow results/results_bin_stunt_rec.RDS"))
 
 
-optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_2021-06-05.RDS"))   
-optx_results2 <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_subset_2021-06-06.RDS"))   
+optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_2021-06-29.RDS"))   
+optx_results2 <- NULL
+  # optx_results2 <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_subset_2021-06-06.RDS"))   
 optx_results_season <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_season_results_2021-06-05.RDS"))   
 optx_results <- bind_rows(optx_results, optx_results2, optx_results_season)
 
 saveRDS(optx_results, paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS"))
 
+
+Zscores_full_cov <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_full_cov_2021-06-29.RDS"))
+saveRDS(Zscores_full_cov, paste0(res_dir, "rf results/longbow results/results_full_cov.RDS"))
 
 
 #Save N's

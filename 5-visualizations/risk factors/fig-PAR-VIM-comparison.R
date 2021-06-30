@@ -21,11 +21,12 @@ par <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont.RDS")) %
   mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
 
 
-# vim2 <- vim %>% rename(VIM=PAR, V.CI1=CI1, V.CI2=CI2) %>% 
-#   subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, Nstudies, RFlabel)) 
-# par2 <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, Nstudies, RFlabel))  
-
 d <- left_join(par, vim, by = c("agecat","studyid","country","intervention_variable","outcome_variable","type")) %>% filter(!is.na(estimate.y))
+
+#Check
+par1 <- par %>% filter(intervention_variable=="perdiar24")
+df <- d %>% filter(intervention_variable=="perdiar24")
+
 
 #Keep only primary breastfeeding exposure and trth20
 d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36", "trth2o")) )
@@ -46,6 +47,10 @@ d <- d %>% filter(!(intervention_variable %in% postnatal & agecat %in% c("Birth"
 d <- d %>% filter(!(intervention_variable %in% full2years & agecat!="24 months"))
 d <- d %>% filter(!(intervention_variable %in% wastingvars & outcome_variable %in% wasting_outcomevars))
 dim(d)
+
+d <- d %>% mutate(diff=estimate.x - estimate.y)
+summary(d$diff)
+ggplot(d, aes(x=diff)) + geom_density()
 
 pool.Zpar <- function(d){
   nstudies <- d %>% summarize(N=n())
@@ -185,13 +190,30 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
   scale_alpha_manual(values=c(0.5, 1))+
   scale_size_manual(values=c(4, 4, 4))+
   scale_shape_manual(values=c(19,9,13))+
-  coord_fixed(xlim = c(-0.2,0.8), ylim = c(-0.7,1)) +
+  coord_fixed(xlim = c(-0.1,0.45), ylim = c(-0.1,0.4)) +
   labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\n optimal intervention") +
   geom_abline(slope=1,intercept=0) +
   geom_vline(xintercept = 0, linetype="dashed") +
   geom_hline(yintercept = 0, linetype="dashed") +
   geom_point() +
-  geom_label_repel(aes(label=RFlabel), size=2, hjust=-0.1, vjust=0) +
+  geom_label_repel(aes(label=RFlabel), size=2.5, color="grey30",
+                   label.size = 0.25, hjust=-0.1, vjust=0,
+                    force = 35, max.iter = 2000, #nudge_x = 0.02, #nudge_y = .01,
+                    box.padding = 0.1,  segment.alpha = 0.5,
+                   label.padding = 0.1,
+                   #label.size = NA,
+                   na.rm=TRUE,
+                   #position=position_jitter(.25),
+                   fill = alpha(c("white"),0.75)) +
+
+  # geom_label(aes(label=RFlabel), size=2.5, color="grey30",
+  #                  # label.size = 0.25, hjust=-0.1, vjust=0,
+  #                  # box.padding = 0.1,  segment.alpha = 0.5,
+  #                  # label.padding = 0.1,
+  #            position=position_jitter(0.25),
+  #              # na.rm=TRUE,
+  #              #     fill = alpha(c("white"),0.75)
+  #            ) +
   scale_x_continuous(breaks=(-5:5) * .2) +
   scale_y_continuous(breaks=(-5:5) * .2) +
   theme(strip.background = element_blank(),
