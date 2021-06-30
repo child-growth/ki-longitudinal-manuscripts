@@ -198,7 +198,7 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
   geom_point() +
   geom_label_repel(aes(label=RFlabel), size=2.5, color="grey30",
                    label.size = 0.25, hjust=-0.1, vjust=0,
-                    force = 35, max.iter = 2000, #nudge_x = 0.02, #nudge_y = .01,
+                    force = 26, max.iter = 2000, #nudge_x = 0.02, #nudge_y = .01,
                     box.padding = 0.1,  segment.alpha = 0.5,
                    label.padding = 0.1,
                    #label.size = NA,
@@ -223,7 +223,7 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
   guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE) +
   facet_wrap(~outcome_variable)
 
-pVIMcombined
+
 
 
 save(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
