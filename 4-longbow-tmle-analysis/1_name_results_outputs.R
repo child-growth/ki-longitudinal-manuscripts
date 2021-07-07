@@ -66,7 +66,7 @@ optx_results <- bind_rows(optx_results, optx_results2, optx_results_season)
 saveRDS(optx_results, paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS"))
 
 
-Zscores_full_cov <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_full_cov_2021-06-29.RDS"))
+Zscores_full_cov <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_full_cov_2021-06-30.RDS"))
 saveRDS(Zscores_full_cov, paste0(res_dir, "rf results/longbow results/results_full_cov.RDS"))
 
 

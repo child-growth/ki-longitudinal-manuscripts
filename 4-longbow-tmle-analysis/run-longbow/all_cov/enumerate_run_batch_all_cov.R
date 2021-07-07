@@ -24,7 +24,7 @@ default_params$script_params$count_Y <- FALSE
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
 #Drop growth velocity
 dim(analyses)
-analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
+analyses <- analyses %>% filter(Y=="haz" | Y=="whz", A=="fhtcm")
 dim(analyses)
 
 
@@ -33,7 +33,7 @@ load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf.Rdata")
 head(d)
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
 head(d)
-
+table(d$studyid, !is.na(d$fhtcm))
 #replace covariates
 load(paste0(BV_dir,"/results/adjustment_sets_list_all_cov.Rdata"))
 for(i in 1:nrow(analyses)){

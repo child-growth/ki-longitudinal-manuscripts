@@ -42,7 +42,12 @@ rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rm
 inputs <- "single_cont_analysis.json"
 
 #run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
+run_on_longbow(rmd_filename, inputs, provision = TRUE)
+
+# #try a local job
+# run_locally(rmd_filename, inputs, output_directory="/home/andrew.mertens/ki-longitudinal-manuscripts/temp")
+# results <- load_batch_results("results.rdata", results_folder = "/home/andrew.mertens/ki-longitudinal-manuscripts/temp")
+
 
 # send the batch to longbow (with provisioning disabled)
 batch_inputs <- "all_cont_analyses.json"

@@ -11,7 +11,7 @@ require(cowplot)
 
 
 #Load data
-par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
+par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
 
 dim(par)
 
@@ -33,9 +33,11 @@ par$RFlabel[par$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)
 par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 unique(par$outcome_variable)
-par <- par %>% filter(outcome_variable %in% c("y_rate_haz", "y_rate_whz"))
+par <- par %>% filter(outcome_variable %in% c("y_rate_haz", "y_rate_whz", "y_rate_len","y_rate_wtkg"))
 par$outcome_variable <- gsub("y_rate_haz", "LAZ velocity", par$outcome_variable)
 par$outcome_variable <- gsub("y_rate_whz", "WLZ velocity", par$outcome_variable)
+par$outcome_variable <- gsub("y_rate_len", "length velocity", par$outcome_variable)
+par$outcome_variable <- gsub("y_rate_wtkg", "weight velocity", par$outcome_variable)
 
 par <- par %>% subset(., select = c(outcome_variable, agecat, region, intervention_variable, intervention_level, PAR, CI1, CI2, RFlabel, RFlabel_ref, n_cell, n)) %>% 
   filter(!is.na(PAR)) %>% mutate(measure="PAR")  %>%
@@ -43,14 +45,17 @@ par <- par %>% subset(., select = c(outcome_variable, agecat, region, interventi
 
 par_agestrat <- par %>% filter(agecat %in% c(
   "0-3 months", "3-6 months" , "6-9 months","9-12 months", 
-  "12-15 months", "15-18 months", "18-21 months", "21-24 months"  ), region=="Pooled", outcome_variable %in% c("LAZ velocity", "WLZ velocity"), !is.na(PAR))  
+  "12-15 months", "15-18 months", "18-21 months", "21-24 months"  ), region=="Pooled", outcome_variable %in% c("LAZ velocity", "WLZ velocity", "length velocity", "weight velocity"), !is.na(PAR))  
 
-
+table(par_agestrat$outcome_variable)
 
 
 #######################
 # Age stratified plots
 #######################
+
+outcome="length velocity"
+age="0-3 months"
 
 plot_age = function(outcome, age){
   data <- par_agestrat %>% filter(outcome_variable == outcome, agecat == age) %>% arrange(-PAR) 
@@ -67,7 +72,7 @@ plot_age = function(outcome, age){
     geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
     coord_flip(ylim=c(lb, ub)) +
     scale_colour_manual(values=c("#7F7F7F")) +
-    labs(x = "", y = paste0("Attributable difference in ", outcome)) +
+    labs(x = "", y = paste0("Attributable difference in\n", outcome)) +
     geom_hline(yintercept = 0) +
     ggtitle(paste0(age, ", Pooled")) + 
     theme(strip.background = element_blank(),
@@ -102,6 +107,120 @@ plot_laz_age = grid.arrange(plot_laz_3,
                             plot_laz_18, 
                             plot_laz_21, 
                             plot_laz_24, ncol = 2, nrow = 4,
-                            top = textGrob("Attributable difference - LAZ, stratified by age",gp=gpar(fontsize=26,font=2)))
+                            top = textGrob("Attributable difference - LAZ velocity, stratified by age",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_laz_age, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-vel-PAR.png"), height=36, width=15)
+ggsave(plot_laz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-vel-PAR.png"), height=36, width=15)
+
+
+
+
+
+
+### Plot WLZ, stratified by age
+plot_wlz_3 = plot_age("WLZ velocity", "0-3 months")
+plot_wlz_6 = plot_age("WLZ velocity", "3-6 months")
+plot_wlz_9 = plot_age("WLZ velocity", "6-9 months")
+plot_wlz_12 = plot_age("WLZ velocity", "9-12 months")
+plot_wlz_15 = plot_age("WLZ velocity", "12-15 months")
+plot_wlz_18 = plot_age("WLZ velocity", "15-18 months")
+plot_wlz_21 = plot_age("WLZ velocity", "18-21 months")
+plot_wlz_24 = plot_age("WLZ velocity", "21-24 months")
+
+
+
+
+plot_wlz_age = grid.arrange(plot_wlz_3, 
+                            plot_wlz_6, 
+                            plot_wlz_9, 
+                            plot_wlz_12,
+                            plot_wlz_15, 
+                            plot_wlz_18, 
+                            plot_wlz_21, 
+                            plot_wlz_24, ncol = 2, nrow = 4,
+                            top = textGrob("Attributable difference - WLZ velocity, stratified by age",gp=gpar(fontsize=26,font=2)))
+
+ggsave(plot_wlz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-vel-PAR.png"), height=36, width=15)
+
+
+
+### Plot length, stratified by age
+plot_wlz_3 = plot_age("WLZ velocity", "0-3 months")
+plot_wlz_6 = plot_age("WLZ velocity", "3-6 months")
+plot_wlz_9 = plot_age("WLZ velocity", "6-9 months")
+plot_wlz_12 = plot_age("WLZ velocity", "9-12 months")
+plot_wlz_15 = plot_age("WLZ velocity", "12-15 months")
+plot_wlz_18 = plot_age("WLZ velocity", "15-18 months")
+plot_wlz_21 = plot_age("WLZ velocity", "18-21 months")
+plot_wlz_24 = plot_age("WLZ velocity", "21-24 months")
+
+
+
+
+plot_wlz_age = grid.arrange(plot_wlz_3, 
+                            plot_wlz_6, 
+                            plot_wlz_9, 
+                            plot_wlz_12,
+                            plot_wlz_15, 
+                            plot_wlz_18, 
+                            plot_wlz_21, 
+                            plot_wlz_24, ncol = 2, nrow = 4,
+                            top = textGrob("Attributable difference - WLZ, stratified by age",gp=gpar(fontsize=26,font=2)))
+
+ggsave(plot_wlz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-vel-PAR.png"), height=36, width=15)
+
+
+
+### Plot length, stratified by age
+plot_length_3 = plot_age("length velocity", "0-3 months")
+plot_length_6 = plot_age("length velocity", "3-6 months")
+plot_length_9 = plot_age("length velocity", "6-9 months")
+plot_length_12 = plot_age("length velocity", "9-12 months")
+plot_length_15 = plot_age("length velocity", "12-15 months")
+plot_length_18 = plot_age("length velocity", "15-18 months")
+plot_length_21 = plot_age("length velocity", "18-21 months")
+plot_length_24 = plot_age("length velocity", "21-24 months")
+
+
+
+
+plot_length_age = grid.arrange(plot_length_3, 
+                            plot_length_6, 
+                            plot_length_9, 
+                            plot_length_12,
+                            plot_length_15, 
+                            plot_length_18, 
+                            plot_length_21, 
+                            plot_length_24, ncol = 2, nrow = 4,
+                            top = textGrob("Attributable difference - length velocity, stratified by age",gp=gpar(fontsize=26,font=2)))
+
+ggsave(plot_length_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-length-vel-PAR.png"), height=36, width=15)
+
+
+
+### Plot weight, stratified by age
+plot_weight_3 = plot_age("weight velocity", "0-3 months")
+plot_weight_6 = plot_age("weight velocity", "3-6 months")
+plot_weight_9 = plot_age("weight velocity", "6-9 months")
+plot_weight_12 = plot_age("weight velocity", "9-12 months")
+plot_weight_15 = plot_age("weight velocity", "12-15 months")
+plot_weight_18 = plot_age("weight velocity", "15-18 months")
+plot_weight_21 = plot_age("weight velocity", "18-21 months")
+plot_weight_24 = plot_age("weight velocity", "21-24 months")
+
+
+
+
+plot_weight_age = grid.arrange(plot_weight_3, 
+                            plot_weight_6, 
+                            plot_weight_9, 
+                            plot_weight_12,
+                            plot_weight_15, 
+                            plot_weight_18, 
+                            plot_weight_21, 
+                            plot_weight_24, ncol = 2, nrow = 4,
+                            top = textGrob("Attributable difference - weight velocity, stratified by age",gp=gpar(fontsize=26,font=2)))
+
+ggsave(plot_weight_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-weight-vel-PAR.png"), height=36, width=15)
+
+
+

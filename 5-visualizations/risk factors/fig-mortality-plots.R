@@ -31,7 +31,13 @@ clean_agecat<-function(agecat){
 
 
 #Load data
-dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
+  filter(!(outcome_variable %in% c("ever_stunted","s06rec1824","sstunted","stunted",
+          "ever_co","ever_swasted","ever_wasted","pers_wast","s03rec24","swasted","wast_rec90d","wasted","ever_sstunted")))
+
+
+ 
+
 dHR <- readRDS(paste0(BV_dir,"/results/mortality-results/full_cox_results.RDS")) %>% filter(!is.na(HR))
 
 #----------------------------------------
@@ -119,9 +125,8 @@ dHR$Xname <- recode(dHR$Xname,
 
 unique(dHR$X)
 dHR$severe <- 0
-dHR$severe <- 1*grepl("sstunt",dHR$X)
-dHR$severe <- 1*grepl("swast",dHR$X)
-dHR$severe <- 1*grepl("sunderwt",dHR$X)
+dHR$severe <- 1*(grepl("sstunt",dHR$X)|grepl("swast",dHR$X)|grepl("sunderwt",dHR$X))
+
 dHR$Measure <- recode(dHR$X, 
                     "stunt"="stunted", 
                     "wast" ="wasted", 
@@ -155,13 +160,7 @@ p_prim_pooled
 # Clean morbidity data
 #----------------------------------------
 unique(dfull$type)
-d <- dfull %>% filter(type=="RR", adjusted==1)
-
-#keep only morbidity analysis
-d <- d %>% filter( outcome_variable=="co_occurence" | outcome_variable=="pers_wasted624")
-
-table(d$outcome_variable)
-d <- droplevels(d)
+d <- dfull %>% filter(type=="RR", adjusted==1) %>% droplevels(.)
 
 #drop reference levels
 d <- d %>% filter( ci_lower !=  ci_upper)
@@ -211,10 +210,9 @@ RMAest <- bind_rows(data.frame(RMAest, analysis="Random Effects"),
                     data.frame(RMAest_region, analysis="Region")) %>%
   mutate(analysis = factor(analysis, levels=c("Random Effects", "Fixed Effects","Region")))
 
-
-
 #Save cleaned data
 saveRDS(RMAest, paste0(BV_dir,"/results/rf results/pooled_mortality_RR_results.rds"))
+
 
 d <- d %>% 
   mutate(cohort = paste0(studyid,"-",country)) %>%
@@ -230,15 +228,9 @@ RMAest$cohort <- "pooled"
 d <- bind_rows(RMAest, d)
 d <- droplevels(d)
 
-table(d$outcome_variable)
-d$outcome_variable <- factor(d$outcome_variable, levels=c("dead", "pers_wasted624", "co_occurence"))
-levels(d$outcome_variable) <- c("Relative risk of\nmortality by 24 months",
-                                "Relative risk of\npersistent wasting from 6-24mo",  
-                                "Relative risk of concurrent\nwasting and stunting at 18mo"
-                                )
-table(d$outcome_variable)
-table(d$intervention_variable)
-
+#--------------------------------------------------------------
+# Clean labels
+#--------------------------------------------------------------
 
 d$RFlabel <- NA
 d$RFlabel[d$intervention_variable=="ever_wasted06"] <- "Wasted under 6mo" 
@@ -286,6 +278,22 @@ table(d$Measure)
 d$severe <- factor(ifelse(grepl("evere",d$RFlabel),"Yes","No"))
 table(d$severe)
 
+unique(d$outcome_variable)
+d$outcome_variable <- factor(d$outcome_variable, levels=c("pers_wasted624", "co_occurence",
+                           "dead","dead0plus","dead624","dead6plus"))
+levels(d$outcome_variable) <- c(#"Relative risk of\nmortality by 24 months",
+  "Relative risk of\npersistent wasting from 6-24mo",  
+  "Relative risk of concurrent\nwasting and stunting at 18mo",
+  "Relative risk of\nmortality by 24 months",
+  "Relative risk of\nmortality (any age)",
+  "Relative risk of\nmortality between 6 and 24 months",
+  "Relative risk of\nmortality after 6 months"
+)
+table(d$outcome_variable)
+table(d$intervention_variable)
+
+
+
 d$agerange <- factor(ifelse(grepl("24",d$RFlabel),"6-24 months","0-6 months"))
 table(d$agerange)
 
@@ -310,47 +318,59 @@ d$intervention_variable <- factor(d$intervention_variable, levels=unique(d$inter
 
 table(d$type, d$Measure)
 d = d %>% mutate(Measure=tolower(Measure),
-  type = gsub("No", "Moderately", type),
-  type = gsub("Yes", "Severely", type),
-  type = gsub(" 0-6 months", "", type))
-  
+                 type = gsub("No", "Moderately", type),
+                 type = gsub("Yes", "Severely", type),
+                 type = gsub(" 0-6 months", "", type))
+
 d = d %>% mutate(outcome_label = paste(type, " ", Measure, sep = ""),
-                   outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
-                   outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
-                   outcome_label = gsub("Moderately wasted and underweight", "Wasted and underweight", outcome_label),
-                   outcome_label = gsub("Moderately stunted and underweight", "Stunted and underweight", outcome_label),
-                   outcome_label = factor(outcome_label, levels=unique(outcome_label)))
+                 outcome_label = gsub("Moderately persistently wasted", "Persistently wasted", outcome_label), 
+                 outcome_label = gsub("Moderately wasted and stunted", "Wasted and stunted", outcome_label),
+                 outcome_label = gsub("Moderately wasted and underweight", "Wasted and underweight", outcome_label),
+                 outcome_label = gsub("Moderately stunted and underweight", "Stunted and underweight", outcome_label),
+                 outcome_label = factor(outcome_label, levels=unique(outcome_label)))
 
 d$severe<-factor(ifelse(grepl("evere",d$RFlabel),1,0),levels=c("0","1"))
 
-  
 
-d2 <- d %>% filter(analysis=="Random Effects"|is.na(analysis)) %>% arrange(outcome_variable, RR) %>%
+#--------------------------------------------------------------
+# Seperate datasets
+#--------------------------------------------------------------
+
+# #separate mort TMLE RR
+table(d$outcome_variable)
+ dmortRR <- d %>% filter( outcome_variable %in% c("Relative risk of\nmortality by 24 months",
+                                                  "Relative risk of\nmortality (any age)",
+                                       "Relative risk of\nmortality between 6 and 24 months",
+                                       "Relative risk of\nmortality after 6 months")) %>%
+   droplevels()
+ table(dmortRR$outcome_variable)
+ 
+# #keep only morbidity analysis
+pmort_data <- d %>% filter( outcome_variable=="Relative risk of\npersistent wasting from 6-24mo" | outcome_variable=="Relative risk of concurrent\nwasting and stunting at 18mo") %>% 
+  filter(analysis=="Random Effects"|is.na(analysis)) %>% arrange(outcome_variable, RR) %>%
   mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label))) 
 
-# Drop 'RR of mortality by 24 months' from d2
-pmort_data <- d2 %>%
-  dplyr::filter(outcome_variable != "Relative risk of\nmortality by 24 months")
-
-
 # Merge HR data into pmort_data
+table(pmort_data$outcome_variable)
+
 p_data <- merge(x = p_prim_pooled, y = pmort_data, all = TRUE) 
 table(p_data$outcome_variable)
 table(p_data$cohort)
 
-
 p_data$outcome_variable <- factor(p_data$outcome_variable, levels = c("Hazard ratios of\nmortality before 24 months", "Relative risk of concurrent\nwasting and stunting at 18mo", "Relative risk of\npersistent wasting from 6-24mo"))
 p_data$Measure <- factor(p_data$Measure, levels = c("stunted","wasted","underweight", "wasted and stunted", "stunted and underweight", "wasted and underweight"))  
+p_data$severe <- factor(p_data$severe, levels = c("0","1"))
 
 
 # Drop persistent wasting from all 3 plot facets (will be moved to supplementary material)
 pers_wast_data <- p_data %>%
-  dplyr::filter(outcome_label == "Persistently wasted") %>% droplevels()
+  dplyr::filter(RFlabel == "Persistently wasted under 6mo") %>% droplevels()
 p_data <- p_data %>%
-  dplyr::filter(outcome_label != "Persistently wasted") %>% droplevels()
+  dplyr::filter(RFlabel != "Persistently wasted under 6mo" | is.na(RFlabel)) %>% droplevels()
 
 p_data_pooled <- p_data[p_data$pooled==1,]
 p_data_cohort <- p_data[p_data$pooled==0,]
+table(p_data_pooled$outcome_variable)
 
 p_data_pooled <- p_data_pooled %>% arrange(pooled, outcome_variable, RR) %>%
   mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label)))
@@ -383,10 +403,10 @@ pmort_flurry <- ggplot(p_data_pooled, aes(x=outcome_label)) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
   geom_point(aes(y=RR), color="#878787", fill="#878787", size=1.5,
              data=p_data_cohort,
-             position=position_jitter(width=0.2), alpha=0.25) +
+             position=position_jitter(width=0.2), alpha=0.5) +
   geom_point(aes(y=RR), color="#878787", fill="#878787", size=1.5,
              data=pmort_data_cohort,
-             position=position_jitter(width=0.2), alpha=0.25) +
+             position=position_jitter(width=0.2), alpha=0.5) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   labs(y = "", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1, linetype = "dashed") +
@@ -416,9 +436,14 @@ saveRDS(list(pmort,pmort_flurry), file=paste0(BV_dir,"/results/rf_mort+morb_plot
 
 
 
-#Save single plot
-dsub <- d2[d2$outcome_variable=="Relative risk of\nmortality by 24 months",] %>% arrange(RR) %>%
-  mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label))) 
+#Save single plot of mortality TMLE RR's
+dsub <- dmortRR %>% arrange(RR) %>% 
+  filter(pooled==1, analysis=="Random Effects", 
+         Measure!="persistently wasted",
+         outcome_variable=="Relative risk of\nmortality by 24 months") %>%
+  mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label))) %>%
+  droplevels()
+
 p1 <- ggplot(dsub, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
@@ -437,55 +462,10 @@ p1 <- ggplot(dsub, aes(x=outcome_label)) +
         legend.position = "none") + 
   ggtitle(dsub$outcome_variable[1]) + 
   coord_flip(ylim=c(1,9))
+p1
 
 ggsave(p1, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-RR.png"), width=5.2, height=5.2)
 
-
-
-
-dsub <- d2[d2$outcome_variable=="Relative risk of\npersistent wasting from 6-24mo",] %>% arrange(RR) %>% mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label)))
-p2 <- ggplot(dsub, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  labs(y = "", x = "Exposure 0-6 months") +
-  geom_hline(yintercept = 1, linetype = "dashed") +
-  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=cbbPalette[-1]) +
-  scale_fill_manual(values=cbbPalette[-1]) +
-  scale_size_manual(values=c(4,5)) +
-  scale_shape_manual(values=c(16,21)) +
-  theme(strip.placement = "outside",
-        panel.spacing = unit(0, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        strip.background = element_blank(),
-        text = element_text(size=16), 
-        legend.position = "none") + 
-  ggtitle(dsub$outcome_variable[1]) + 
-  coord_flip(ylim=c(1,9))
-
-ggsave(p2, file=paste0(BV_dir,"/figures/risk-factor/fig-pers-wast-RR.png"), width=5.2, height=5.2)
-
-dsub <- d2[d2$outcome_variable=="Relative risk of concurrent\nwasting and stunting at 18mo",] %>% arrange(RR) %>% mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label)))
-p3 <- ggplot(dsub, aes(x=outcome_label)) +
-  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  labs(y = "", x = "Exposure 0-6 months") +
-  geom_hline(yintercept = 1, linetype = "dashed") +
-  scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=cbbPalette[-1]) +
-  scale_fill_manual(values=cbbPalette[-1]) +
-  scale_size_manual(values=c(4,5)) +
-  scale_shape_manual(values=c(16,21)) +
-  theme(strip.placement = "outside",
-        panel.spacing = unit(0, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        strip.background = element_blank(),
-        text = element_text(size=16), 
-        legend.position = "none") + 
-  ggtitle(dsub$outcome_variable[1]) + 
-  coord_flip(ylim=c(1,9))
-
-ggsave(p3, file=paste0(BV_dir,"/figures/risk-factor/fig-co-RR.png"), width=5.2, height=5.2)
 
 
 
@@ -497,7 +477,18 @@ ggsave(p3, file=paste0(BV_dir,"/figures/risk-factor/fig-co-RR.png"), width=5.2, 
 
 
 #Fixed effects
-d3 <- d %>% filter(analysis=="Fixed Effects")
+d3 <- d %>% 
+  filter(pooled==1, analysis=="Fixed Effects", 
+         Measure!="persistently wasted",
+         outcome_variable %in% c("Relative risk of\nmortality by 24 months",
+                                 "Relative risk of\npersistent wasting from 6-24mo",
+                                 "Relative risk of concurrent\nwasting and stunting at 18mo")) %>%
+  mutate(outcome_variable=factor(outcome_variable, levels=c("Relative risk of\nmortality by 24 months",
+                                                      "Relative risk of\npersistent wasting from 6-24mo",
+                                                      "Relative risk of concurrent\nwasting and stunting at 18mo"))) %>%
+  arrange(outcome_variable, RR) %>% 
+  mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label))) %>%
+  droplevels()
 
 pmort <- ggplot(d3, aes(x=outcome_label)) +
   geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
@@ -517,18 +508,25 @@ pmort <- ggplot(d3, aes(x=outcome_label)) +
         text = element_text(size=16), 
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
-  #coord_cartesian(ylim=c(1,9)) + 
   coord_flip(ylim=c(1,9))
-#expand=c(0,0)) 
 
 
 ggsave(pmort, file=paste0(BV_dir,"/figures/risk-factor/fig-mort+morb-RR_FE.png"), width=14, height=5.2)
 
 
 
-
-d4 <- d %>% filter(analysis=="Region", region!="N.America & Europe")
-d4 <- droplevels(d4)
+d4 <- d %>% 
+  filter(pooled==1, analysis=="Region", region!="N.America & Europe", 
+         Measure!="persistently wasted",
+         outcome_variable %in% c("Relative risk of\nmortality by 24 months",
+                                 "Relative risk of\npersistent wasting from 6-24mo",
+                                 "Relative risk of concurrent\nwasting and stunting at 18mo")) %>%
+  mutate(outcome_variable=factor(outcome_variable, levels=c("Relative risk of\nmortality by 24 months",
+                                                            "Relative risk of\npersistent wasting from 6-24mo",
+                                                            "Relative risk of concurrent\nwasting and stunting at 18mo"))) %>%
+  arrange(outcome_variable, RR) %>% 
+  mutate(outcome_label=factor(outcome_label, levels=unique(outcome_label))) %>%
+  droplevels()
 
 pregion <- ggplot(d4, aes(x=outcome_label, group=region)) +
   geom_point(aes(y=RR, color=Measure, shape=region), size=3, stroke = 1.5, position = position_dodge(0.4)) +

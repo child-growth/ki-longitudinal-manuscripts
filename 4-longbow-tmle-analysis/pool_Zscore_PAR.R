@@ -18,6 +18,9 @@ head(dfull)
 unique(dfull$type)
 d <- dfull %>% filter(type=="PAR")
 
+temp <- d  %>% filter(outcome_variable =="haz" , intervention_variable =="fhtcm", agecat=="24 months")
+table(temp$studyid)
+
 #Subset to continious outcomes
 unique(d$outcome_variable)
 d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|

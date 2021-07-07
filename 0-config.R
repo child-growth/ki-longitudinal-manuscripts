@@ -28,7 +28,7 @@ library(RColorBrewer)
 library(gridExtra)
 library(assertthat)
 # library(haven)
-library(tidyselect)
+#library(tidyselect)
 # options(repos = c(CRAN = "http://cran.rstudio.com/",
 #                   deltarho = "http://packages.deltarho.org"))
 library(stringr)
