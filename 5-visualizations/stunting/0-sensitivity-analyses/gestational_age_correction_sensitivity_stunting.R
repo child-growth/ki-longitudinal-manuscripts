@@ -46,7 +46,7 @@ d_preterm
 
 phist <- ggplot(d, aes(x=W_gagebrth)) + geom_histogram() + facet_wrap(~cohort, scales="free_y") +
   geom_vline(xintercept = c(168, 300)) + xlab("Gestational age in days at birth")
-ggsave(phist , file=paste0(here::here(), "/figures/stunting/fig-GA-by-cohort-histogram.png"), height=10, width=14)
+ggsave(phist , file=paste0(BV_dir, "/figures/stunting/fig-GA-by-cohort-histogram.png"), height=10, width=14)
 
 
 #---------------------------------------------------------
@@ -84,7 +84,7 @@ p1 <- ggplot(stunt, aes(x=diff)) + geom_density() + facet_wrap(~cohort, scales="
   geom_vline(xintercept = 0) + ggtitle("Difference between GA corrected and uncorrected LAZ")
 
 
-ggsave(p1 , file=paste0(here::here(), "/figures/stunting/fig-GA-correction-density-LAZ-quarterly.png"), height=10, width=14)
+ggsave(p1 , file=paste0(BV_dir, "/figures/stunting/fig-GA-correction-density-LAZ-quarterly.png"), height=10, width=14)
 
 
 #---------------------------------------------------------
@@ -221,8 +221,8 @@ df$Region <- df$region
                 
                 
                 #Save plot and plot data
-                ggsave(p, file=paste0(here::here(), "/figures/stunting/fig-GA-correction-sensitivity.png"), height=7, width=8)
+                ggsave(p, file=paste0(BV_dir, "/figures/stunting/fig-GA-correction-sensitivity.png"), height=7, width=8)
                 
-                saveRDS(df, file=paste0(here::here(), "/figures/stunting/figure-data/fig-GA-correction-sensitivity.RDS"))
+                saveRDS(df, file=paste0(BV_dir, "/figures/stunting/figure-data/fig-GA-correction-sensitivity.RDS"))
                 
                 

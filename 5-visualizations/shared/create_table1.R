@@ -6,9 +6,9 @@ source(paste0(here::here(), "/0-config.R"))
 
 tab1_shell <- read.csv(here("data/HBGDki-tab1-shell.csv"))
 
-cc_tab1_Ns <- readRDS(here("/results/cc_table1.rds"))
-stunt_tab1_Ns <- readRDS(here("/results/stunt_table1.rds"))
-wast_tab1_Ns <- readRDS(here("/results/wast_table1.rds"))
+cc_tab1_Ns <- readRDS(paste0(BV_dir,"/results/cc_table1.rds"))
+stunt_tab1_Ns <- readRDS(paste0(BV_dir,"/results/stunt_table1.rds"))
+wast_tab1_Ns <- readRDS(paste0(BV_dir,"/results/wast_table1.rds"))
 
 head(tab1_shell)
 head(stunt_tab1_Ns)
@@ -47,9 +47,9 @@ colnames(stunt_tab1) <- colnames_vec
 colnames(cc_tab1) <- colnames_vec
 
 #Save as csv files
-write_csv(wast_tab1, path = here("results/wasting_table1.csv"))
-write_csv(stunt_tab1, path = here("results/stunting_table1.csv"))
-write_csv(cc_tab1, path = here("results/c&c_table1.csv"))
+write_csv(wast_tab1, path = paste0(BV_dir,"/results/wasting_table1.csv"))
+write_csv(stunt_tab1, path = paste0(BV_dir,"/results/stunting_table1.csv"))
+write_csv(cc_tab1, path = paste0(BV_dir,"/results/c&c_table1.csv"))
 
 
 #*Children enrolled is for children with measurements under 2 years of age. Total measurements are number of measurements of anthropometry on children under 2 years of age.
