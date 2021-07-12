@@ -108,6 +108,14 @@ structural_equations = list(
 dag = generate_dag(structural_equations, intervention = "x", outcome = "y")
 dag
 
+### Plot parents of exposure
+ggdag_parents(dag, "x", 
+              use_labels = "label",
+              text = FALSE) + 
+  theme_dag_blank() 
+
+
+
 structural_equations = list(
   unidirectional = list(
     "W_mwtkg" = c("arm",
@@ -205,12 +213,15 @@ dag
 
 
 ### Plot parents of exposure
-ggdag_parents(dag, "W_mwtkg", 
+p <- ggdag_parents(dag, "W_mwtkg", 
               use_labels = "label",
               text = FALSE) + 
   theme_dag_blank() 
 
-
+ggsave(p, file=paste0(here::here(),"/figures/dags/mwtkg.png"), height=10, width =10)
+try(file.copy(from=paste0(here::here(),"/figures/dags/mwtkg.png"),
+          to=paste0(BV_dir,"/figures/dags/mwtkg.png"),
+          overwrite = T))
 
 # ### Plot minimally sufficient adjustment set
 # ggdag_adjustment_set(dag, 
@@ -219,6 +230,43 @@ ggdag_parents(dag, "W_mwtkg",
 #                      type = "minimal", # could also be "all" or "canonical"
 #                      effect = "total") + # could also be "direct" 
 #   theme_dag_blank() 
+
+#------------------------------------------------------------
+# Example collider bias for reviewer response
+#------------------------------------------------------------
+
+
+
+structural_equations = list(
+  unidirectional = list(
+    "x" = c("z2"),
+    "y" = c("x", "z1", "z2"),
+    "y" = c("x", "z1", "z2"),
+    "z2" = c("z1")
+  ),
+  bidirectional = list(
+    "x" = c("z1")
+  ), 
+  labels = c("x" = "Sanitation Intervention",
+             "y" = "Child Length", 
+             "z1" = "Household Income",
+             "col" = "Birthweight",
+             "z2" = "Latrine Access")
+)
+
+dag = generate_dag(structural_equations, intervention = "x", outcome = "y")
+dag
+
+### Plot parents of exposure
+p_collide <- ggdag_parents(dag, "x", 
+              use_labels = "label",
+              text = FALSE) + 
+  theme_dag_blank() 
+ggsave(p_collide, 
+       file=paste0(here::here(),"/figures/dags/collider_example.png"), 
+       height=10, width =10)
+
+
 
 
 #------------------------------------------------------------
