@@ -21,67 +21,90 @@ haz <- d %>% filter(agecat=="24 months", !is.na(haz))
 load(paste0(ghapdata_dir, "wast_meanZ_rf.Rdata"))
 whz <- d %>% filter(agecat=="24 months", !is.na(whz))
 
-
-
-
-# save_haz<- haz
-# save_whz<- whz
- # haz<- save_haz
- # whz<- save_whz
-
-#data summary
-
-
-# summary(subset(haz, select = c("studyid", "subjid", "country", "haz",  covars)))
-
-
-
-
-
-
+length(unique(paste0(haz$studyid,haz$country)))
 
 #Pick prediction variables and subset to studies that measure all variables
+#old
+# covars <- c("parity", "W_birthlen", "W_birthwt","W_meducyrs",
+#             "W_nrooms", "W_mhtcm", "sex")
 
-covars <- c("parity", "W_birthlen", "W_birthwt","W_meducyrs",
-            "W_nrooms", "W_mhtcm", "sex")
 
+# haz <- haz %>% group_by(studyid, country) %>% 
+#   mutate(N=n(),
+#          miss_parity = 1*(sum(is.na(parity))==N),
+#          miss_birthlen = 1*(sum(is.na(birthlen))==N),
+#          miss_meducyrs = 1*(sum(is.na(meducyrs))==N),
+#          miss_nrooms = 1*(sum(is.na(nrooms))==N),
+#          # miss_mwtkg = 1*(sum(is.na(mwtkg))==N),
+#          miss_W_mhtcm = 1*(sum(is.na(W_mhtcm))==N),
+#          miss_W_birthwt = 1*(sum(is.na(W_birthwt))==N),
+#          miss_sex = 1*(sum(is.na(sex))==N),
+#          
+#       
+#          sum_miss= miss_parity + miss_birthlen + miss_meducyrs + miss_nrooms
+#           + miss_W_mhtcm  + miss_W_birthwt+miss_sex 
+#          )
+# 
+# whz <- whz %>% group_by(studyid, country) %>% 
+#   mutate(N=n(),
+#          miss_parity = 1*(sum(is.na(parity))==N),
+#          miss_birthlen = 1*(sum(is.na(birthlen))==N),
+#          miss_meducyrs = 1*(sum(is.na(meducyrs))==N),
+#          miss_nrooms = 1*(sum(is.na(nrooms))==N),
+#          # miss_mwtkg = 1*(sum(is.na(mwtkg))==N),
+#          miss_W_mhtcm = 1*(sum(is.na(W_mhtcm))==N),
+#          miss_W_birthwt = 1*(sum(is.na(W_birthwt))==N),
+#          miss_sex = 1*(sum(is.na(sex))==N),
+#          
+#          
+#          sum_miss= miss_parity + miss_birthlen + miss_meducyrs + miss_nrooms
+#          + miss_W_mhtcm  + miss_W_birthwt+miss_sex 
+#   )
+
+#new
+covars <- c("vagbrth","cleanck", "W_birthlen", "W_birthwt","W_meducyrs",
+             "W_mwtkg", "sex")
 
 
 haz <- haz %>% group_by(studyid, country) %>% 
   mutate(N=n(),
-         miss_parity = 1*(sum(is.na(parity))==N),
-         miss_birthlen = 1*(sum(is.na(birthlen))==N),
-         miss_meducyrs = 1*(sum(is.na(meducyrs))==N),
-         miss_nrooms = 1*(sum(is.na(nrooms))==N),
-         # miss_mwtkg = 1*(sum(is.na(mwtkg))==N),
-         miss_W_mhtcm = 1*(sum(is.na(W_mhtcm))==N),
+         miss_vagbrth = 1*(sum(is.na(vagbrth))==N),
+         miss_cleanck = 1*(sum(is.na(cleanck))==N),
+         miss_W_birthlen = 1*(sum(is.na(W_birthlen))==N),
+         miss_W_meducyrs = 1*(sum(is.na(W_meducyrs))==N),
+         miss_W_mwtkg = 1*(sum(is.na(W_mwtkg))==N),
          miss_W_birthwt = 1*(sum(is.na(W_birthwt))==N),
          miss_sex = 1*(sum(is.na(sex))==N),
-         
-         
-         sum_miss= miss_parity + miss_birthlen + miss_meducyrs + miss_nrooms
-          + miss_W_mhtcm  + miss_W_birthwt+miss_sex 
-         )
-
+         sum_miss= miss_vagbrth + miss_cleanck + miss_W_birthlen + miss_W_meducyrs
+         + miss_W_mwtkg  + miss_W_birthwt+miss_sex)
 whz <- whz %>% group_by(studyid, country) %>% 
   mutate(N=n(),
-         miss_parity = 1*(sum(is.na(parity))==N),
-         miss_birthlen = 1*(sum(is.na(birthlen))==N),
-         miss_meducyrs = 1*(sum(is.na(meducyrs))==N),
-         miss_nrooms = 1*(sum(is.na(nrooms))==N),
-         # miss_mwtkg = 1*(sum(is.na(mwtkg))==N),
-         miss_W_mhtcm = 1*(sum(is.na(W_mhtcm))==N),
+         miss_vagbrth = 1*(sum(is.na(vagbrth))==N),
+         miss_cleanck = 1*(sum(is.na(cleanck))==N),
+         miss_W_birthlen = 1*(sum(is.na(W_birthlen))==N),
+         miss_W_meducyrs = 1*(sum(is.na(W_meducyrs))==N),
+         miss_W_mwtkg = 1*(sum(is.na(W_mwtkg))==N),
          miss_W_birthwt = 1*(sum(is.na(W_birthwt))==N),
          miss_sex = 1*(sum(is.na(sex))==N),
-         
-         
-         sum_miss= miss_parity + miss_birthlen + miss_meducyrs + miss_nrooms
-         + miss_W_mhtcm  + miss_W_birthwt+miss_sex 
-  )
+         sum_miss= miss_vagbrth + miss_cleanck + miss_W_birthlen + miss_W_meducyrs
+         + miss_W_mwtkg  + miss_W_birthwt+miss_sex)
+
+table(haz$studyid, haz$sum_miss)
+
+# haz <- haz %>% filter(sum_miss<5) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars))
+# whz <- whz %>% filter(sum_miss<5) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars))
+# 
+# #N's for manuscript
+# haz %>% ungroup() %>%
+#   summarize(Nstudies=length(unique(paste0(studyid, country))),
+#             Nchildren=length(unique(paste0(studyid, subjid))))
+# whz %>% ungroup() %>%
+#   summarize(Nstudies=length(unique(paste0(studyid, country))),
+#             Nchildren=length(unique(paste0(studyid, subjid))))
 
 
-haz <- haz %>% filter(sum_miss<2) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars))
-whz <- whz %>% filter(sum_miss<2) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars))
+haz <- haz %>% filter(sum_miss<3) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars))
+whz <- whz %>% filter(sum_miss<3) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars))
 
 #N's for manuscript
 haz %>% ungroup() %>%
@@ -92,77 +115,6 @@ whz %>% ungroup() %>%
             Nchildren=length(unique(paste0(studyid, subjid))))
 
 
-# haz_split <- split(haz,list(haz$studyid,haz$country),drop = T)
-# 
-# 
- # haz1 <- haz_split [[1]]
-
-
-
-
-
-# #Add NA's to factors
-# haz$parity <- addNA(haz$parity)
-# whz$parity <- addNA(whz$parity)
-
-# #Impute median by cohort and add missingness indicator to continious
-# haz <- haz %>% group_by(studyid, country) %>%
-#   mutate(
-#     birthlen_miss=ifelse(is.na(W_birthlen),1,0),
-#     meducyrs_miss=ifelse(is.na(W_meducyrs),1,0),
-#     nrooms_miss=ifelse(is.na(W_nrooms),1,0),
-#     mwtkg_miss=ifelse(is.na(W_mwtkg),1,0),
-#     W_birthlen=ifelse(is.na(W_birthlen),median(W_birthlen, na.rm=T),W_birthlen),
-#     W_meducyrs=ifelse(is.na(W_meducyrs),median(W_meducyrs, na.rm=T),W_meducyrs),
-#     W_nrooms=ifelse(is.na(W_nrooms),median(W_nrooms, na.rm=T),W_nrooms),
-#     W_mwtkg=ifelse(is.na(W_mwtkg),median(W_mwtkg, na.rm=T),W_mwtkg)) %>% ungroup() %>%
-#   mutate(
-#     W_birthlen=ifelse(is.na(W_birthlen),median(W_birthlen, na.rm=T),W_birthlen),
-#     W_meducyrs=ifelse(is.na(W_meducyrs),median(W_meducyrs, na.rm=T),W_meducyrs),
-#     W_nrooms=ifelse(is.na(W_nrooms),median(W_nrooms, na.rm=T),W_nrooms),
-#     W_mwtkg=ifelse(is.na(W_mwtkg),median(W_mwtkg, na.rm=T),W_mwtkg)    
-#   )
-# 
-# whz <- whz %>% group_by(studyid, country) %>%
-#   mutate(
-#     birthlen_miss=ifelse(is.na(W_birthlen),1,0),
-#     meducyrs_miss=ifelse(is.na(W_meducyrs),1,0),
-#     nrooms_miss=ifelse(is.na(W_nrooms),1,0),
-#     mwtkg_miss=ifelse(is.na(W_mwtkg),1,0),
-#     W_birthlen=ifelse(is.na(W_birthlen),median(W_birthlen, na.rm=T),W_birthlen),
-#     W_meducyrs=ifelse(is.na(W_meducyrs),median(W_meducyrs, na.rm=T),W_meducyrs),
-#     W_nrooms=ifelse(is.na(W_nrooms),median(W_nrooms, na.rm=T),W_nrooms),
-#     W_mwtkg=ifelse(is.na(W_mwtkg),median(W_mwtkg, na.rm=T),W_mwtkg)) %>% ungroup() %>%
-#   mutate(
-#     W_birthlen=ifelse(is.na(W_birthlen),median(W_birthlen, na.rm=T),W_birthlen),
-#     W_meducyrs=ifelse(is.na(W_meducyrs),median(W_meducyrs, na.rm=T),W_meducyrs),
-#     W_nrooms=ifelse(is.na(W_nrooms),median(W_nrooms, na.rm=T),W_nrooms),
-#     W_mwtkg=ifelse(is.na(W_mwtkg),median(W_mwtkg, na.rm=T),W_mwtkg)    
-#   )
-# 
-# 
-# #Add missing indicators to covariates
-# covars <- c("parity", "W_birthlen", "W_meducyrs", "W_nrooms", "W_mwtkg", "birthlen_miss", "meducyrs_miss", "nrooms_miss", "mwtkg_miss")
-
-
-#Set up SL components
-# lrnr_glm <- make_learner(Lrnr_glm)
-# lrnr_mean <- make_learner(Lrnr_mean)
-# lrnr_glmnet <- make_learner(Lrnr_glmnet)
-# lrnr_ranger100 <- make_learner(Lrnr_ranger, num.trees = 100)
-# lrnr_hal_simple <- make_learner(Lrnr_hal9001, degrees = 1, n_folds = 2)
-# lrnr_gam <- Lrnr_pkg_SuperLearner$new("SL.gam")
-# lrnr_bayesglm <- Lrnr_pkg_SuperLearner$new("SL.bayesglm")
-
-
-
-
-# stack <- make_learner(
-#   Stack,
-#   lrnr_glm, lrnr_mean, lrnr_ranger100, lrnr_glmnet,
-#   lrnr_gam, lrnr_bayesglm
-# )
-
 
 stack <- make_learner_stack("Lrnr_mean",
                    "Lrnr_glm_fast",
@@ -170,19 +122,13 @@ stack <- make_learner_stack("Lrnr_mean",
                    "Lrnr_gam",
                    list("Lrnr_xgboost", nthread=1))
 screen_cor <- Lrnr_pkg_SuperLearner_screener$new("screen.corP")
-
 cor_pipeline <- make_learner(Pipeline, screen_cor, stack)
-
 fancy_stack <- make_learner(Stack, cor_pipeline, stack)
-
-
 metalearner <- make_learner(Lrnr_nnls)
-
 
 sl <- make_learner(Lrnr_sl,
                    learners = fancy_stack,
-                   metalearner = metalearner
-)
+                   metalearner = metalearner)
 
 
 
@@ -207,9 +153,9 @@ SL_R2 <- function(dat, outcome, covars){
   
   #Drop near-zero variance predictors
   nzv_cols <- nearZeroVar(X)
+  if(length(nzv_cols) > 0){ 
   dropped_covars <-  colnames(X)[nzv_cols]
   cat("Dropping for low variance: ", dropped_covars)
-  if(length(nzv_cols) > 0){ 
     X <- X[,-nzv_cols]
   }
   covars <- colnames(X)
@@ -286,16 +232,11 @@ SL_R2 <- function(dat, outcome, covars){
   
   
   ##6. add more results to pool R2
-  
   ic_mse_full <- (yhat_full-y)^2 - mse_full
   ic_mse_null <- (yhat_null-y)^2 - mse_null
   
   se_mse_full <- sqrt(var(ic_mse_full)/n)
   se_mse_null <- sqrt(var(ic_mse_null)/n)
-  
-  
-  
-  
   
   return(data.frame(r2_lm =R2_lm, r2=R2, r2.ci1=R2.ci1, r2.ci2=R2.ci2, mse=psi, mse.ci1=CI_low, mse.ci2=CI_up,
                     mse_full=mse_full, se_mse_full=se_mse_full, mse_null= mse_null, se_mse_null=se_mse_null, r2_se=se))
@@ -325,21 +266,14 @@ for(i in 1:nrow(res_whz_list)){
 filename_whz <- paste(paste('R2_results_whz',Sys.Date( ),sep='_'),'RDS',sep='.')
 filename_haz <- paste(paste('R2_results_haz',Sys.Date( ),sep='_'),'RDS',sep='.')
 
-saveRDS(res_whz, file=here::here("results",filename_whz))
-saveRDS(res_haz, file=here::here("results",filename_haz))
-
-# save(res_haz, res_whz, file=here("results/R2_results.rdata"))
-
-# save(res_haz, res_whz, file="U:/repos/R2_results_08092019.rdata")
-
-
+saveRDS(res_whz, file=paste0(BV_dir,"/results/",filename_whz))
+saveRDS(res_haz, file=paste0(BV_dir,"/results/",filename_haz))
 
 
 
 #-------------------------
 #Pool R2
 #-------------------------
-
 
 
 
@@ -455,4 +389,4 @@ pooled_r2_results <- data.frame(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_C
 
 filename <- paste(paste('pooled_R2_results',Sys.Date( ),sep='_'),'RDS',sep='.')
 
-saveRDS(pooled_r2_results, file=here::here("results",filename))
+saveRDS(pooled_r2_results, file=paste0(BV_dir,"/results/",filename))

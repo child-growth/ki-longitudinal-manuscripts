@@ -26,10 +26,21 @@ dim(analyses)
 analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
 dim(analyses)
 
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf.Rdata")
+d <- d %>% filter(agecat=="24 months") %>% droplevels()
+save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf_prim.Rdata")
+
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
+d <- d %>% filter(agecat=="24 months")
+save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_prim.Rdata")
+
+analyses$file <- gsub("rf.Rdata","rf_prim.Rdata",analyses$file)
+
 #specify analyses
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-run_ki_tmle(enumerated_analyses, results_folder="results_cont", overwrite = F)
+
+run_ki_tmle(enumerated_analyses, results_folder="results_cont_primary", overwrite = F)
 
 #temp
 #enumerated_analyses_sub <- enumerated_analyses[[54]]

@@ -44,15 +44,19 @@ dim(rfp)
 dim(rfn)
 d <- merge(rfp, rfn, by = c("studyid", "country", "risk_factor"))
 dim(d)
+table(d$studyid)
+
 
 #Drop EE gestational age
 dim(d)
 d <- d %>% filter(!(studyid=="EE" & risk_factor=="gagebrth"))
 dim(d)
 
+
 #Mark measure frequency
 d <- mark_measure_freq(d)
 d <- d %>% filter(measurefreq!="yearly")
+unique(d$studyid)
 
 #fix PROVIDE location
 d$country[d$study_id=="PROVIDE"] <- "BANGLADESH"
@@ -187,6 +191,7 @@ dd <- dd %>%
   dplyr::arrange(maxN, .by_group = TRUE) 
 dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
 dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
+table(dd$studycountry)
 
 #aggregate N's for sidebar
 dhist_c <- dd %>% group_by(region, studycountry) %>% summarize(N=max(N, na.rm=T))%>% mutate(studycountry=factor(studycountry, levels=unique(dd$studycountry))) %>% arrange(studycountry)

@@ -47,116 +47,59 @@ shorten_descriptions<-function(dd){
 # measurements
 #-----------------------------------
 mark_measure_freq <- function(dd){
+  
+  monthly_vec <- c("MAL-ED",   
+                   "CMC-V-BCS-2002",              
+                   "IRC",    
+                   "TDC",
+                   "EE",           
+                   "ResPak",  
+                   "PROVIDE",  
+                   "TanzaniaChild2",           
+                   "Keneba",  
+                   "Guatemala BSC",       
+                   "GMS-Nepal",    
+                   "CMIN Peru89",                 
+                   "CMIN Peru95",                 
+                   "CMIN Bangladesh93",                 
+                   "CONTENT")
+  
+  quarterly_vec <- c("iLiNS-Zinc",  
+                     "JiVitA-3",          
+                     "JiVitA-4", 
+                     "LCNI-5",          
+                     "CMIN Brazil89",                 
+                     "CMIN GB94",                 
+                     "NIH-Birth",
+                     "NIH-Crypto",   
+                     "PROBIT",         
+                     "SAS-CompFeed",   
+                     "SAS-FoodSuppl",   
+                     "ZVITAMBO",   
+                     "COHORTS")
+  
+  yearly_vec <- c("WASH-Bangladesh",       
+                  "WASH-Kenya",  
+                  "iLiNS-DOSE",     
+                  "iLiNS-DYAD-M", 
+                  "iLiNS-DYAD-G",
+                  "AgaKhanUniv",           
+                  "Burkina Faso Zn",    
+                  "VITAMIN-A",  
+                  "Vitamin-B12",
+                  "Serrinha-VitA",   
+                  "EU",        
+                  "ZnMort")
+  
   dd$measurefreq <- NA
+  dd$measurefreq[dd$studyid %in% monthly_vec] <- "monthly"
+  dd$measurefreq[dd$studyid %in% quarterly_vec] <- "quarterly"
   
-  dd$measurefreq[dd$studyid %in% c(
-    "MAL-ED",   
-    "CMC-V-BCS-2002",              
-    "IRC",               
-    "EE",           
-    "ResPak",  
-    "PROVIDE",  
-    "TanzaniaChild2",           
-    "Keneba",  
-    "Guatemala BSC",       
-    "GMS-Nepal",             
-    "CONTENT"
-  )] <- "monthly"
+  dd$measurefreq[dd$studyid %in% yearly_vec] <- "yearly"
   
-  dd$measurefreq[dd$studyid %in% c(
-    "iLiNS-Zinc",  
-    "JiVitA-3",          
-    "JiVitA-4", 
-    "LCNI-5",          
-    "NIH-Birth",
-    "NIH-Crypto",   
-    "PROBIT",         
-    "SAS-CompFeed",   
-    "SAS-FoodSuppl",   
-    "ZVITAMBO",   
-    "CMIN",                 
-    "COHORTS"
-  )] <- "quarterly"
-  
-  dd$measurefreq[dd$studyid %in% c(
-    "WASH-Bangladesh",       
-    "WASH-Kenya",  
-    "iLiNS-DOSE",     
-    "iLiNS-DYAD-M", 
-    "iLiNS-DYAD-G",
-    "AgaKhanUniv",           
-    "Burkina Faso Zn",    
-    "VITAMIN-A",  
-    "Vitamin-B12",
-    "Serrinha-VitA",   
-    "EU",        
-    "ZnMort"
-  )] <- "yearly"
-  
-  
-  #Mark COHORTS and CMIN cohorts with different measurement frequency than quarterly
-  dd$measurefreq[dd$studyid=="CMIN" & dd$country=="BANGLADESH"] <- "monthly"
-  dd$measurefreq[dd$studyid=="CMIN" & dd$country=="PERU"] <- "monthly"
-  
-  
-  
-  #mark measure frequency of ID's with grant identifiers stripped:
-  dd$measurefreq[dd$studyid %in% c(
-    "MAL-ED", "MAL-ED",
-    "CMC-V-BCS-2002",              
-    "IRC",               
-    "EE",           
-    "ResPak",  
-    "PROVIDE", 
-    "TanzaniaChild2",           
-    "Keneba",  
-    "Guatemala BSC",       
-    "GMS-Nepal",             
-    "CONTENT"
-  )] <- "monthly"
-  
-  dd$measurefreq[dd$study_id=="MAL-ED"] <- "monthly"
-  dd$measurefreq[dd$study_id=="PROVIDE"] <- "monthly"
-  
-  dd$measurefreq[dd$studyid %in% c(
-    "iLiNS-Zinc",  
-    "JiVitA-3",          
-    "JiVitA-4", 
-    "LCNI-5",          
-    "NIH-Birth",
-    "NIH-Crypto",   
-    "PROBIT",         
-    "SAS-CompFeed",   
-    "SAS-FoodSuppl",   
-    "ZVITAMBO",   
-    "CMIN",                 
-    "COHORTS"
-  )] <- "quarterly"
-  
-  dd$measurefreq[dd$studyid %in% c(
-    "WASH-Bangladesh",       
-    "WASH-Kenya",  
-    "iLiNS-DOSE",     
-    "iLiNS-DYAD-M", 
-    "iLiNS-DYAD-G",
-    "AgaKhanUniv",           
-    "Burkina Faso Zn",    
-    "VITAMIN-A",  
-    "Vitamin-B12",
-    "Serrinha-VitA",   
-    "EU",        
-    "ZnMort"
-  )] <- "yearly"
-  
-  
-  #Mark COHORTS and CMIN cohorts with different measurement frequency than quarterly
-  dd$measurefreq[dd$studyid=="CMIN" & dd$country=="BANGLADESH"] <- "monthly"
-  dd$measurefreq[dd$studyid=="CMIN" & dd$country=="PERU"] <- "monthly"
   dd<- dd[!(dd$studyid=="COHORTS" & dd$country=="BRAZIL"),] #Drop because yearly but not an RCT
   dd<- dd[!(dd$studyid=="COHORTS" & dd$country=="SOUTH AFRICA"),] #Drop because yearly but not an RCT
   
-  
-
   
   dd$cohort <- paste0(dd$study_id," ", dd$countrycohort)
 
