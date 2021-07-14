@@ -1,6 +1,3 @@
-
-
-
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
@@ -19,7 +16,6 @@ vim <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS
 par <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont.RDS")) %>% 
   filter(type=="PAR", agecat=="24 months",!is.na(estimate),outcome_variable=="haz"|outcome_variable=="whz")%>%
   mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
-
 
 d <- left_join(par, vim, by = c("agecat","studyid","country","intervention_variable","outcome_variable","type")) %>% filter(!is.na(estimate.y))
 
@@ -154,6 +150,8 @@ dwhz$outlier
 # dhaz$y <- -dhaz$VIM + 0.1
 #dhaz$y[dhaz$outlier == "# of children <5 in HH\nSafe water source\nSingle parent" & !is.na(dhaz$outlier)] <- dhaz$y[dhaz$outlier == "# of children <5 in HH\nSafe water source\nSingle parent"& !is.na(dhaz$outlier)] +0.1
 
+#creating vector for capitalized titles
+capitalized = c(whz = 'WHZ', haz = 'HAZ')
 
 #creating outlier_color factor variable for dhaz
 for (i in 1:length(dhaz$outlier)) {
@@ -182,7 +180,6 @@ dwhz$outlier_color = fdata1
 #Main color
 main_color <- "#287D8EFF"
 
-
 #make plots
 set.seed(12346)
 pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
@@ -196,24 +193,15 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
   geom_vline(xintercept = 0, linetype="dashed") +
   geom_hline(yintercept = 0, linetype="dashed") +
   geom_point() +
-  geom_label_repel(aes(label=RFlabel), size=2.5, color="grey30",
+  geom_label_repel(aes(label=RFlabel), size=2, color="grey30",
                    label.size = 0.25, hjust=-0.1, vjust=0,
-                    force = 26, max.iter = 2000, #nudge_x = 0.02, #nudge_y = .01,
-                    box.padding = 0.1,  segment.alpha = 0.5,
+                    force = 17.5, max.iter = 2000, nudge_y = .04, nudge_x = 0.09, 
+                    box.padding = 0.4,  segment.alpha = 0.5, segment.size = 0.3,
                    label.padding = 0.1,
-                   #label.size = NA,
+                   point.padding = 0.30,
                    na.rm=TRUE,
-                   #position=position_jitter(.25),
-                   fill = alpha(c("white"),0.75)) +
+                   fill = alpha(c("white"),0.85)) +
 
-  # geom_label(aes(label=RFlabel), size=2.5, color="grey30",
-  #                  # label.size = 0.25, hjust=-0.1, vjust=0,
-  #                  # box.padding = 0.1,  segment.alpha = 0.5,
-  #                  # label.padding = 0.1,
-  #            position=position_jitter(0.25),
-  #              # na.rm=TRUE,
-  #              #     fill = alpha(c("white"),0.75)
-  #            ) +
   scale_x_continuous(breaks=(-5:5) * .2) +
   scale_y_continuous(breaks=(-5:5) * .2) +
   theme(strip.background = element_blank(),
@@ -221,13 +209,13 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
         axis.text = element_text(size=8),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE) +
-  facet_wrap(~outcome_variable)
-
-
+  facet_grid(outcome_variable~., labeller = labeller(outcome_variable = capitalized))
 
 
 save(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
 saveRDS(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-object-combined.RDS"))
 
-ggsave(pVIMcombined, file=paste0(BV_dir,"/figures/risk-factor/fig-VIM-PAR-comp-combined.png"), height=5, width=10)
+
+#printplot
+print(pVIMcombined)
 

@@ -294,10 +294,8 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000, fill=region)
 
 # add margin around plots
 hm2 = hm + theme(plot.margin = unit(c(0,0,0,0), "cm")) #top, right, bottom, left
-#sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,2.955,-2.75), "cm"))
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.25,1.5,-2), "cm"))
-#nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 3.5, 0, 6.655), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 2.7, 0, 5.75), "cm"))
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.4,1.5,-0.8), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 1.51, 0, 4.7), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2,empty, 
