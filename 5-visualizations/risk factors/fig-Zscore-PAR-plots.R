@@ -36,9 +36,15 @@ par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 
 par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
-  #mutate(RFlabel_ref = expression(bold(RFlabel)~' shifted to '~bold(intervention_level)))
-  #mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
   mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
+
+#Get top 10 variables for each
+par %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:10) %>% select(outcome_variable, intervention_variable, PAR)
+par %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:10) %>% select(intervention_variable)
+
+
+
+
 
 #Bold the intervention variable
 # https://stackoverflow.com/questions/37758050/ggplot-displaying-expression-in-x-axis

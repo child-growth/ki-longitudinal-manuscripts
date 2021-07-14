@@ -1,0 +1,42 @@
+study,country,Country,studyid,StudyYears,Design,meas_ages,ref,stunting,wasting,rf
+South Asia,,,,,,,,1,1,1
+Biomarkers for EE,PAKISTAN,Pakistan,ki1000109-EE,2013-2015,Prospective cohort,"Birth, 1, 2, ..., 18",Iqbal et al 2018 Nature Scientific Reports,1,1,1
+Resp. Pathogens,PAKISTAN,Pakistan,ki1000109-ResPak,2011 - 2014,Prospective cohort,"Birth, 1, 2, ..., 17",Ali_et_al-2016-Journal_of_Medical_Virology,1,1,1
+Growth Monitoring Study,NEPAL,Nepal,ki1113344-GMS-Nepal,2012 - Ongoing,Prospective cohort,"Birth, 1, 2, …, 24",Not yet published,1,1,1
+MAL-ED,NEPAL,Nepal,ki0047075b-MAL-ED,2010 - 2014,Prospective cohort,"Birth, 1, 2, …, 24",Shrestha et al 2014 Clin Infect Dis NPL,1,1,1
+"CMC Birth Cohort, Vellore",INDIA,India,ki1000108-CMC-V-BCS-2002,2002 - 2006,Prospective cohort,"Birth, 0.5, 1, 1.5, ..., 24",Gladstone et al. 2011 NEJM,1,1,1
+MAL-ED,INDIA,India,ki0047075b-MAL-ED,2010 - 2012,Prospective cohort,"Birth, 1, 2, ..., 24",John et al 2014 Clin Infect Dis IND,1,1,1
+Vellore Crypto Study,INDIA,India,ki1000108-IRC,2008 - 2011,Prospective cohort,"Birth, 1, 2, ..., 24",Kattula et al. 2014 BMJ Open,1,1,1
+CMIN,BANGLADESH,Bangladesh,ki1114097-CMIN,1993 - 1996,Prospective Cohort,"Birth, 3, 6, ..., 24 ",Pathela et al 2006 Acta Paediatrica,1,1,1
+MAL-ED,BANGLADESH,Bangladesh,ki0047075b-MAL-ED,2010 -2014,Prospective cohort,"Birth, 1, 2, ..., 24",Ahmed et al 2014 Clin Infect Dis,1,1,1
+PROVIDE RCT,BANGLADESH,Bangladesh,ki1017093b-PROVIDE,2011 -2014,Individual RCT,"Birth, 6, 10, 12, 14. 17, 18, 24, 39, 40, 52, 53 (weeks)",Kirkpatrick et al 2015 Am J Trop Med Hyg,1,1,1
+Food Suppl RCT,INDIA,India,ki1000304b-SAS-FoodSuppl,1995 - 1996,Individual RCT,"Baseline, 6, 9, 12 ",Bhandari et al 2001 J Nutri,1,0,1
+Optimal Infant Feeding,INDIA,India,ki1000304b-SAS-CompFeed,1999 - 2001,Cluster RCT,"Birth, 3, 6, ..., 18",Bhandari et al 2004 J Nutri,1,0,1
+New Delhi Birth Cohort,INDIA,India,ki1135781-COHORTS,1969 - 2002,Prospective cohort,"Birth, 3, 6, 9, 12, 18, 24 ",Bhargava et al 2009 NEJM,1,0,1
+NIH Birth Cohort,BANGLADESH,Bangladesh,ki1017093-NIH-Birth,2008 - 2009,Prospective Cohort,"Birth, 3, 6, ..., 12",Korpe et al. 2016 PLOS NTD,1,0,1
+JiVitA-4 Trial,BANGLADESH,Bangladesh,kiGH5241-JiVitA-4,2012 - 2014,Cluster RCT,"6, 9, 12, 14, 18",Christian et al 2015 IJE,1,0,1
+JiVitA-3 Trial,BANGLADESH,Bangladesh,kiGH5241-JiVitA-3,2008 - 2012,Cluster RCT,"Birth, 1, 3, 6, 12, 24",West et al JAMA 2014,1,0,1
+NIH Cryptosporidium Study,BANGLADESH,Bangladesh,ki1017093c-NIH-Crypto,2014 - 2017,Prospective cohort,"Birth, 3, 6, ..., 24",Steiner et al 2018 Clin Infect Dis,1,0,1
+The Cebu Longitudinal Health and Nutrition Survey,PHILIPPINES,Philippines,ki1135781-COHORTS,1983 - 2005,Prospective cohort,"Birth, 2, 4, ..., 24",Adair 2007 Am J Hum Biol,1,0,1
+Africa,,,,,,,,1,1,1
+MAL-ED,"TANZANIA, UNITED REPUBLIC OF",Tanzania,ki0047075b-MAL-ED,2009 - 2014,Prospective cohort,"Birth, 1, 2, ..., 24",Mduma et al 2014 Clin Infect Dis TZN,1,1,1
+Tanzania Child 2,"TANZANIA, UNITED REPUBLIC OF",Tanzania,ki1066203-TanzaniaChild2,2007 - 2011,Individual RCT,"1, 2, ..., 20 ",Locks et al Am J Clin Nutr 2016,1,1,1
+MAL-ED,SOUTH AFRICA,South Africa,ki0047075b-MAL-ED,2009 - 2014,Prospective cohort,"Birth, 1, 2, ..., 24",Bessong et al 2014 Clin Infect Dis SA,1,1,1
+MRC Keneba,GAMBIA,Gambia,ki1101329-Keneba,1987 - 1997,Cohort,"Birth, 1, 2, ..., 24","Schoenbuchner et al. 2019, AJCN",1,1,1
+ZVITAMBO Trial,ZIMBABWE,Zimbabwe,ki1126311-ZVITAMBO,1997 - 2001,Individual RCT,"Birth, 6 wks, 3, 6, 9, 12",Malaba et al 2005 Am J Clin Nutr,1,0,1
+Lungwena Child Nutrition RCT,MALAWI,Malawi,ki1148112-LCNI-5,2011 - 2014,Individual RCT,"Birth, 1-6 wk, 6, 12 18","Mangani et al. 2015, Mat Child Nutr ",1,0,1
+iLiNS-Zinc Study,BURKINA FASO,Burkina Faso,ki1112895-iLiNS-Zinc,2010 - 2012,Cluster RCT,"9, 12, 15, 18",Hess et al 2015 PlosOne,1,0,1
+Latin America,,,,,,,,1,1,1
+MAL-ED,PERU,Peru,ki0047075b-MAL-ED,2009 - 2014,Prospective cohort,"Birth, 1, 2, ..., 24",Yori et al 2014 Clin Infect Dis PER,1,1,1
+CONTENT,PERU,Peru,ki1114097-CONTENT,2007 - 2011,Prospective cohort,"Birth, 1, 2, ..., 24",Jaganath et al 2014 Helicobacter,1,1,1
+Bovine Serum RCT,GUATEMALA,Guatemala,ki1112895-Guatemala BSC,1997 - 1998,Individual RCT,"Baseline, 1, 2, ...,8","Begin et al. 2008, EJCN",1,1,1
+MAL-ED,BRAZIL,Brazil,ki0047075b-MAL-ED,2010 - 2014,Prospective cohort,"Birth, 1, 2, ..., 24",Lima et al 2014 Clin Infect Dis,1,1,1
+INCAP Nutrition Supplementation Trial Longitudinal Study ,GUATEMALA,Guatemala,ki1135781-COHORTS,1969 - 1977 ,Cluster RCT,"Birth, 3, 6, ..., 24",Habicht et al 1995 J Nutr,1,0,1
+Europe,,,,,,,,1,0,1
+PROBIT Study,BELARUS,Belarus,ki1119695-PROBIT,1996 - 1997,Cluster RCT,"1, 2, 3, 6, 9, 12 ",Kramer et al 2001 JAMA,1,0,1
+Mortality analysis only,,,,,,,,0,0,1
+Burkina Faso Zinc trial,BURKINA FASO,Burkina Faso,ki1112895-Burkina Faso Zn,2010-2011,Cluster RCT,"6, 10, 14, 17, 22",Becquey et al 2016 J Nutr,0,0,1
+Vitamin A Trial,INDIA,India,ki1000304-VITAMIN-A,1995-1996,Cluster RCT,"1, 3, 6, 9, 12 ",WHO CHD Vitamin A Group 1998 Lancet,0,0,1
+iLiNS-DOSE,MALAWI,Malawi,ki1148112-iLiNS-DOSE,2009-2011,Individual RCT,"6, 9, 12, 18",Maleta et al. 2015 J Nutr,0,0,1
+iLiNS-DYAD-M,MALAWI,Malawi,ki1148112-iLiNS-DYA,2011-2015,Individual RCT,"1, 6, 12, 18",Ashorn et al 2015 J. Nutr,0,0,1
+*Children enrolled is for children with measurements under 2 years of age. Total measurements are number of measurements of anthropometry on children under 2 years of age.,,,,,,,,1,1,1

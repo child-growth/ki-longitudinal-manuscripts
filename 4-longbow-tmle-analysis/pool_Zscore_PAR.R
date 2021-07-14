@@ -18,8 +18,10 @@ head(dfull)
 unique(dfull$type)
 d <- dfull %>% filter(type=="PAR")
 
-temp <- d  %>% filter(outcome_variable =="haz" , intervention_variable =="fhtcm", agecat=="24 months")
+temp <- d  %>% filter(outcome_variable =="whz" , intervention_variable =="fage", agecat=="24 months") %>% droplevels()
 table(temp$studyid)
+RMAest <- temp %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
+  do(pool.Zpar(.)) %>% as.data.frame()
 
 #Subset to continious outcomes
 unique(d$outcome_variable)

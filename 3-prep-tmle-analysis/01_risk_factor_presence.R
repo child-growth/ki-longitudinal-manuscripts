@@ -45,8 +45,8 @@ cov_N <- cov %>% dplyr::select(exposures) %>%
   group_by(studyid, country) %>%
   summarise_all(., funs(sum_not_na))
 
-saveRDS(cov_presence, file = paste0(here(),"/results/cov_presence.rds"))
-saveRDS(cov_N, file = paste0(here(),"/results/cov_N.rds"))
+saveRDS(cov_presence, file = paste0(BV_dir,"/results/cov_presence.rds"))
+saveRDS(cov_N, file = paste0(BV_dir,"/results/cov_N.rds"))
 
 
 
