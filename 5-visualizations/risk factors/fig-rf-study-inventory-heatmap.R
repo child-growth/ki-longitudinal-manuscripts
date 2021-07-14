@@ -304,7 +304,6 @@ rfhmgrid <- grid.arrange(nrfbar2,empty,
                         widths=c(100,20))
 
 
-
 # save plot 
 ggsave(filename=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.png"),
        plot = rfhmgrid,device='png',width=12,height=9)
