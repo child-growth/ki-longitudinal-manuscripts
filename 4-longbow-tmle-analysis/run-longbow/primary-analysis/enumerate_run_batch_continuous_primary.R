@@ -39,9 +39,10 @@ analyses$file <- gsub("rf.Rdata","rf_prim.Rdata",analyses$file)
 #specify analyses
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
+#temp
+enumerated_analyses_sub <- enumerated_analyses[[54]]
+run_ki_tmle(list(enumerated_analyses_sub), results_folder="results_fage", overwrite = F)
 
 run_ki_tmle(enumerated_analyses, results_folder="results_cont_primary", overwrite = F)
 
-#temp
-#enumerated_analyses_sub <- enumerated_analyses[[54]]
-#run_ki_tmle(list(enumerated_analyses_sub), results_folder="results_fage", overwrite = F)
+
