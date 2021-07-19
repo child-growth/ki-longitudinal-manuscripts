@@ -20,7 +20,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-epi-functions.R"))
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
+d <- readRDS(paste0(res_dir,"/desc_data_cleaned.rds"))
 d <- d %>% filter(!is.na(agecat))
 d <- droplevels(d)
 
@@ -41,15 +41,15 @@ scale_estimates <- function(d) {
 }
 
 # subset to primary analysis
-d_primary <- d %>% filter(analysis == "Primary")
+d_primary <- d %>% filter(analysis == "Primary") %>% filter(cohort!="PROBIT-BELARUS")
 d_primary = scale_estimates(d_primary)
 
 # subset to primary analysis, monthly measurements from 0 to 24 months
-d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m") 
+d_monthly <- d %>% filter(analysis == "Cohorts monthly 0-24 m") %>% filter(cohort!="PROBIT-BELARUS")
 d_monthly <- scale_estimates(d_monthly)
 
 # subset to fixed effects analysis
-d_fe <- d %>% filter(analysis == "Fixed effects")
+d_fe <- d %>% filter(analysis == "Fixed effects") %>% filter(cohort!="PROBIT-BELARUS")
 d_fe <- scale_estimates(d_fe)
 
 #-------------------------------------------------------------------------------------------
@@ -74,7 +74,6 @@ inc_n_primary = d_primary %>%
             max_n = max(nmeas, na.rm=TRUE))
 
 # define transformations globally if name_inc_plots is not working
-# transformations <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vREmg4PurW2AKddhf1Mtj9dAyaeCeYPUpHurNUe3r0gVVeeLrkS3aU-4XlYhZ96iWsBpr-R9sDT8Alp/pub?gid=0&single=true&output=csv")
 ip_plot_name_primary = name_inc_plots(cut=2, pop=pop_list$o, loc="", ana=analysis_list$p)
 
 # save plot and underlying data
