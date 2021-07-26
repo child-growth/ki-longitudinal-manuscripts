@@ -31,7 +31,7 @@ d <- d %>% filter(agecat=="24 months") %>% droplevels()
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf_prim.Rdata")
 
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
-d <- d %>% filter(agecat=="24 months")
+d <- d %>% filter(agecat=="24 months")  %>% droplevels()
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_prim.Rdata")
 
 analyses$file <- gsub("rf.Rdata","rf_prim.Rdata",analyses$file)

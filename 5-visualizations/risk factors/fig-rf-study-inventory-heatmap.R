@@ -52,6 +52,7 @@ dim(d)
 d <- d %>% filter(!(studyid=="EE" & risk_factor=="gagebrth"))
 dim(d)
 
+unique(d$studyid[d$risk_factor=="perdiar24" & d$presence==1])
 
 #Mark measure frequency
 d <- mark_measure_freq(d)

@@ -42,8 +42,11 @@ stunt_rec <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_stu
 # results_2 <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel_sub_2020-05-23.RDS"))   
 # results_3 <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel_sub_2020-05-26.RDS"))   
 # velocity <- bind_rows(results, results_2, results_3)
-velocity <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel.RDS"))   
-#NEED to add estimates that previously failed to run
+velocity1 <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel.RDS"))   
+velocity2 <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel_sub.RDS")) 
+velocity <- bind_rows(velocity2, velocity1) %>% 
+  distinct(agecat,studyid, country,strata_label,intervention_variable, outcome_variable, type, parameter, intervention_level, baseline_level, .keep_all = T)
+
   
 season <-  readRDS(paste0(res_dir, "rf results/longbow results/seasonality_results.RDS"))
 

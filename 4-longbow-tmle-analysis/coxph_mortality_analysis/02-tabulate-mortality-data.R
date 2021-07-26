@@ -12,6 +12,7 @@ d <- d %>% filter(!(studyid %in% c("iLiNS-DYAD-G","VITALPAK-Pregnancy", "DIVIDS"
 table(d$studyid)
 d %>% group_by(studyid) %>% distinct(subjid) %>% summarize(N=n())
 
+table(d$studyid, d$causedth=="")
 
 #Included studies
 tab1 <- d %>% distinct(studyid, manuscript_cohort)
