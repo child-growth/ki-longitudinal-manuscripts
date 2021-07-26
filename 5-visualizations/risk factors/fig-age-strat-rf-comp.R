@@ -81,6 +81,8 @@ outcomes <- c(
   `Ever stunted` = "",
   `Ever wasted` = "")
 
+min(plotdf$RR.CI1[plotdf$region=="Pooled"])
+max(plotdf$RR.CI2[plotdf$region=="Pooled"])
 
 p_ageRR <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
   geom_point(aes(y=RR, color=Outcome), size = 3, position = pd) +
@@ -91,7 +93,7 @@ p_ageRR <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=reorder(intervention_l
   geom_hline(yintercept = 1) +
   geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, 
-                     limits = c(0.688,2.0), 
+                     limits = c(0.638,2.43), 
                      expand=c(0.05,0)) +
   coord_cartesian(ylim = c(0.8,2)) +
   scale_colour_manual(values=tableau10[c(2,3)]) +  

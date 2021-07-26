@@ -6,12 +6,11 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-
-
+Zscores_prim <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_2021-07-13.RDS"))
+saveRDS(Zscores_prim, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
 
 Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
-
 
 bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_primary_2021-06-11.RDS"))
 bin_other <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_2021-04-23.RDS"))
@@ -37,6 +36,9 @@ saveRDS(stunt_bin_wlz_quart, paste0(res_dir, "rf results/longbow results/stunt_b
 
 velocity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_vel_2021-04-24.RDS"))   
 saveRDS(velocity, paste0(res_dir, "rf results/longbow results/results_vel.RDS"))
+
+velocity_sub <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-07-25.RDS"))   
+saveRDS(velocity_sub, paste0(res_dir, "rf results/longbow results/results_vel_sub.RDS"))
 
 season <-  readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_results_2021-04-22.RDS"))
 saveRDS(season, paste0(res_dir, "rf results/longbow results/seasonality_results.RDS"))

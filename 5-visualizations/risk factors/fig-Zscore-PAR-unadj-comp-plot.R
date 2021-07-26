@@ -4,82 +4,21 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
-source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
+library(gtable)
 
 
 
-
-
-#Load pooled tmle results 
-tmlePAR <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
-head(tmlePAR)
-
-
-#Load glm results
-dglm <- readRDS(here("results","rf results","raw longbow results","results_cont_glm_2020-05-24.RDS"))
+#Load data
+par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(Analysis="Adjusted")
+par_unadj <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results_unadj.rds"))  %>% mutate(Analysis="Unadjusted")
 
 
 
-#Subset to outcomes of interest
-tmlePAR <- tmlePAR %>% filter(outcome_variable %in% c("haz","whz")) 
-dglm <- dglm %>% filter(outcome_variable %in% c("haz","whz"), type=="PAR", intervention_variable!="trth2o") 
+par <- bind_rows(par, par_unadj)
+
+par <- par %>% filter(intervention_variable %in% unique(RMAest_clean$intervention_variable))
 
 
-
-
-
-
-RMAest <- dglm %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
-  do(pool.Zpar(.)) %>% as.data.frame()
-RMAest$region <- "Pooled"
-RMAest <- RMAest %>% filter(!is.na(PAR))
-RMAest_clean <- RMA_clean(RMAest, outcome="continuous")
-RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
-
-
-
-dim(RMAest_clean)
-res <- left_join(RMAest_clean, tmlePAR, by=c("outcome_variable","intervention_variable","intervention_level","agecat","region"))
-dim(res)
-
-res <- res %>% filter(agecat=="24 months")
-
-res$Ydiff <- res$PAR.x - res$PAR.y
-summary(res$PAR.y)
-summary(res$Ydiff)
-
-ggplot(res, aes(x=intervention_variable, y=Ydiff)) + 
-  coord_flip() + 
-  geom_point() +
-  facet_grid(agecat~outcome_variable) +
-  geom_hline(yintercept = 0) +
-  ylab("Difference in Attributable Z-score difference")
-
-
-
-
-#Compare confidence intervals
-RMAest_clean$Analysis <- "GLM"
-tmlePAR$Analysis <- "TMLE"
-par <- bind_rows(RMAest_clean, tmlePAR)
-
-par <- par %>% filter(intervention_variable %in% unique(tmlePAR$intervention_variable), intervention_variable %in% unique(RMAest_clean$intervention_variable))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-dim(par)
 
 unique(par$intervention_level)
 unique(par$intervention_variable)
@@ -105,12 +44,6 @@ par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
   #mutate(RFlabel_ref = gsub(", ref: "," shifted to ",RFlabel_ref))
   mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
 
-#Bold the intervention variable
-# https://stackoverflow.com/questions/37758050/ggplot-displaying-expression-in-x-axis
-# 
-#  as.expression(bold(par$RFlabel[1])~' shifted to '~bold(par$intervention_level[1]))
-#  as.expression(bquote(bold(par$RFlabel[1])))
-#  parse(text= paste("bold(par$RFlabel[", 1:7, "])", sep="") ) 
 
 
 unique(par$RFlabel_ref)
@@ -161,20 +94,6 @@ rflevels = unique(plotdf_laz$RFlabel_ref)
 plotdf_laz$RFlabel_ref=factor(plotdf_laz$RFlabel_ref, levels=rflevels)
 
 
-pPAR_laz <-  ggplot(plotdf_laz, aes(x=RFlabel_ref, shape=Analysis, group=Analysis)) + 
-  geom_point(aes(y=-PAR), color="grey30", size = 4, position = position_dodge(0.4)) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30", position = position_dodge(0.4)) +
-  coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(#x = "Exposure, and to which level of exposure the cohorts are shifted",
-    x = "Exposure",
-    y = "Attributable difference in LAZ") +
-  geom_hline(yintercept = 0) +
-  theme(strip.background = element_blank(),
-        legend.position=c(0.6,0.2),
-        axis.text.y = element_text(size=, hjust = 1),
-        axis.text.x = element_text(size=12)) +
-  guides(color=FALSE)
-
 
 
 
@@ -188,24 +107,31 @@ rflevels = unique(plotdf_wlz$RFlabel_ref)
 plotdf_wlz$RFlabel_ref=factor(plotdf_wlz$RFlabel_ref, levels = rflevels)
 
 
-pPAR_wlz <-  ggplot(plotdf_wlz, aes(x=RFlabel_ref, shape=Analysis, group=Analysis)) + 
+
+plotdf <- rbind(
+  data.frame(plotdf_laz, outcome="Attributable difference in LAZ\nin children age 24 months"),
+  data.frame(plotdf_wlz, outcome="Attributable difference in WLZ\nin children age 24 months")
+)
+plotdf <- plotdf %>%
+  arrange(outcome, Analysis, PAR)
+
+
+
+pPAR <- ggplot(plotdf, aes(x=RFlabel_ref, shape=Analysis, group=Analysis)) + 
   geom_point(aes(y=-PAR), color="grey30", size = 4, position = position_dodge(0.4)) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30", position = position_dodge(0.4)) +
-  coord_flip(ylim=c(-0.2, 0.55)) +
-  labs(x = "Exposure", y = "Attributable difference in WLZ") +
+  facet_wrap(~outcome) +
+  coord_flip(ylim=c(-.1, 0.55)) +
+  labs(x = "Exposure", y = "Population Attributable difference") +
   geom_hline(yintercept = 0) +
   theme(strip.background = element_blank(),
-        legend.position=c(0.6,0.2),
+        legend.position=c(0.3,0.2),
         axis.text.y = element_text(size=, hjust = 1),
         axis.text.x = element_text(size=12)) +
-  guides(color=FALSE)
+  guides(color=FALSE,
+         shape =  guide_legend(reverse = TRUE))
+pPAR
+
+ggsave(pPAR, file=paste0(BV_dir, "/figures/risk-factor/fig-PAR-unadj-comp.png"), height=10, width=16)
 
 
-
-
-
-library(cowplot)
-
-p <- grid.arrange(pPAR_laz, pPAR_wlz, ncol=2)
-
-ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/fig-PAR-GLM-sensitivity.png"),  height=10, width=16)

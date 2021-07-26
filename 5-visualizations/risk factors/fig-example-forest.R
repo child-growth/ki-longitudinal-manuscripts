@@ -26,7 +26,10 @@ d <- bind_rows(dpool, dFE, dfull)
 d$agecat <- "0-24 months cumulative incidence)"
 d$pooled <- factor(d$pooled, levels=c("1","0"))
 
+d$studyid <- as.character(d$studyid)
 d$studyid[is.na(d$studyid)] <- paste0("Pooled - ",d$region[is.na(d$studyid)])
+
+d[is.na(d$studyid),]
 
 #Strip grant identifier and add country
 d$studyid <- gsub("^k.*?-" , "", d$studyid)

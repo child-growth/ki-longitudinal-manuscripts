@@ -96,7 +96,9 @@ ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/f
 
 #Figure 4
 rec_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/rec_plot_object.rds"))
-inc_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/inc_plot_object.rds"))
+inc_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/inc_plot_object_inset.rds"))
+ep_hist <- readRDS(paste0(BV_dir,"/figures/plot-objects/wast_episode_hist.rds"))
+
 
 rec_violin_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/rec_violin_plot_object.rds"))
 birthstrat_stats_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/birthstrat_stats_plot_object.rds"))
@@ -110,7 +112,7 @@ names(colors) = c("Not wasted", "Wasted", "Severe wasted", "Born wasted", "Born 
 fig4_a <- plot_grid(ind_traj, rec_violin_plot, labels = c("a","c"), ncol = 2, align = 'v', axis = 'l')
 fig4_c <- plot_grid(birthstrat_curve, birthstrat_stats_plot, labels = c("e","f"), ncol = 2, align = 'v', axis = 'l')
 
-fig4 <- plot_grid(fig4_a, inc_plot[[1]], rec_plot[[1]], fig4_c, labels = c("","b","d",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
+fig4 <- plot_grid(fig4_a, inc_plot, rec_plot[[1]], fig4_c, labels = c("","b","d",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
 ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig4.png"), width=14, height=14)
 
 

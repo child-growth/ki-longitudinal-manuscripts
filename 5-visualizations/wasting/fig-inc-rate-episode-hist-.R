@@ -74,50 +74,54 @@ summary(df$num_wast)
 #mean duration of wasting
 p<-ggplot(df, aes(x=num_wast, group=region, color=region, fill=region)) + 
   geom_histogram(aes(y=..density..), binwidth = 1) + 
-  scale_y_continuous(breaks = c(0,.2,.4,.6,.8,1), labels=c("0%","20%","40%","60%","80%","100%")) +
+  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
   scale_color_manual(values=rep("grey30",3)) +
   scale_fill_manual(values=tableau10) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("Proportion") + xlab("Number of wasting episodes") +
+  ylab("") + xlab("Number of episodes") +
   facet_wrap(~region)
 
 df$mean_sd <- paste0(round(mean(df$num_wast),2)," (",round(sd(df$num_wast),2),")")
 p_overall <- ggplot(df, aes(x=num_wast), color="grey30", fill="grey30") + 
   geom_histogram(aes(y=..density..), binwidth = 1) + 
-  geom_text(aes(x=4, y=.8, label=mean_sd)) +
-  scale_y_continuous(breaks = c(0,.2,.4,.6,.8,1), labels=c("0%","20%","40%","60%","80%","100%")) +
+  geom_text(aes(x=2, y=.8, label=mean_sd)) +
+  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("Proportion") + xlab("Number of\nwasting episodes") 
+  ylab("") + xlab("Number of episodes") +
+  theme(axis.title=element_text(size=10)) 
 
 df_Africa <- df %>% filter(region=="Africa") 
 df_Africa$mean_sd <- paste0(round(mean(df_Africa$num_wast),2)," (",round(sd(df_Africa$num_wast),2),")")
 df_Africa$mean_sd[-1] <- NA
 p_Africa <- ggplot(df_Africa, aes(x=num_wast)) + 
   geom_histogram(aes(y=..density..), binwidth = 1,  color="grey30", fill=tableau10[1]) + 
-  geom_text(aes(x=4, y=.8, label=mean_sd)) +
-  scale_y_continuous(breaks = c(0,.2,.4,.6,.8,1), labels=c("0%","20%","40%","60%","80%","100%")) +
+  geom_text(aes(x=2, y=.8, label=mean_sd)) +
+  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("") + xlab("Number of\nwasting episodes") 
+  ylab("") + xlab("Number of episodes") +
+  theme(axis.title=element_text(size=10)) 
 
 df_LatinAmerica <- df %>% filter(region=="Latin America") 
 df_LatinAmerica$mean_sd <- paste0(round(mean(df_LatinAmerica$num_wast),2)," (",round(sd(df_LatinAmerica$num_wast),2),")")
 df_LatinAmerica$mean_sd[-1] <- NA
 p_LatinAmerica <- ggplot(df_LatinAmerica, aes(x=num_wast)) + 
   geom_histogram(aes(y=..density..), binwidth = 1,  color="grey30", fill=tableau10[2]) + 
-  geom_text(aes(x=4, y=.8, label=mean_sd)) +
-  scale_y_continuous(breaks = c(0,.2,.4,.6,.8,1), labels=c("0%","20%","40%","60%","80%","100%")) +
+  geom_text(aes(x=2, y=.8, label=mean_sd)) +
+  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("") + xlab("Number of\nwasting episodes") 
+  ylab("") + xlab("Number of episodes") +
+  theme(axis.title=element_text(size=10)) 
 
 df_SouthAsia <- df %>% filter(region=="South Asia")
 df_SouthAsia$mean_sd <- paste0(round(mean(df_SouthAsia$num_wast),2)," (",round(sd(df_SouthAsia$num_wast),2),")")
 df_SouthAsia$mean_sd[-1] <- NA
 p_SouthAsia <- ggplot(df_SouthAsia, aes(x=num_wast)) + 
   geom_histogram(aes(y=..density..), binwidth = 1,  color="grey30", fill=tableau10[3]) + 
-  geom_text(aes(x=4, y=.8, label=mean_sd)) +
-  scale_y_continuous(breaks = c(0,.2,.4,.6,.8,1), labels=c("0%","20%","40%","60%","80%","100%")) +
+  geom_text(aes(x=2, y=.8, label=mean_sd)) +
+  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("") + xlab("Number of\nwasting episodes") 
+  ylab("") + xlab("Number of episodes") +
+  theme(axis.title=element_text(size=10))
 
 
 ggsave(p, file=paste0(BV_dir,"/figures/wasting/wast_episode_hist.png"), width=4.5, height=2.5)
@@ -138,17 +142,28 @@ annotation_custom2 <- function (grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax
                                           ymin = ymin, ymax = ymax))
 }
 
-full_plot <-  inc_plot +
-  annotation_custom2(ggplotGrob(p_overall), data=data.frame(region="Overall", agecat="0-3 months", est=0),
-                     xmin=5, xmax=10, ymin=5, ymax=10) +
-  annotation_custom2(ggplotGrob(p_SouthAsia), data=data.frame(region="South Asia", agecat="0-3 months", est=0),
-                     xmin=5, xmax=10, ymin=5, ymax=10) +
-  annotation_custom2(ggplotGrob(p_Africa), data=data.frame(region="Africa", agecat="12-15 months", est=0),
-                     xmin=5, xmax=10, ymin=5, ymax=10) +
-  annotation_custom2(ggplotGrob(p_Africa), data=data.frame(region="Latin America", agecat="12-15 months", est=0),
-                     xmin=5, xmax=10, ymin=5, ymax=10) 
+inc_plot2 <- inc_plot + theme(legend.pos = c(0.1,-.225),
+                              legend.key.size = unit(0.1, "cm"),
+                              legend.key = element_rect(fill = "transparent", colour = "transparent"))
+
+inc_plot2
+
+# inc_plot2 <- inc_plot + theme(legend.position = "bottom")
+# inc_plot2
+
+full_plot <-  inc_plot2 +
+  annotation_custom2(ggplotGrob(p_overall), data=data.frame(region="Overall", agecat="0-3", est=0),
+                     xmin=3, xmax=8.8, ymin=3, ymax=10.8) +
+  annotation_custom2(ggplotGrob(p_SouthAsia), data=data.frame(region="South Asia", agecat="0-3", est=0),
+                     xmin=3, xmax=8.8, ymin=3, ymax=10.8) +
+  annotation_custom2(ggplotGrob(p_Africa), data=data.frame(region="Africa", agecat="12-15", est=0),
+                     xmin=3, xmax=8.8, ymin=3, ymax=10.8) +
+  annotation_custom2(ggplotGrob(p_LatinAmerica), data=data.frame(region="Latin America", agecat="12-15", est=0),
+                     xmin=3, xmax=8.8, ymin=3, ymax=10.8) 
 full_plot
  
+saveRDS(full_plot, paste0(BV_dir,"/figures/plot-objects/inc_plot_object_inset.rds"))
+
 
 # #Add histogram insets
 # #https://www.blopig.com/blog/2019/08/combining-inset-plots-with-facets-using-ggplot2/

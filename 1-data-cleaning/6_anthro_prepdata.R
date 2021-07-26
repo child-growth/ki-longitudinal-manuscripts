@@ -59,6 +59,28 @@ table(d$studyid,d$country)
 
 
 
+#C+C manuscript children dropped for outlier exclusions
+df <- d %>% filter(!is.na(haz)|!is.na(whz)|!is.na(waz))
+nchild_cc <- nrow(df %>% filter(measurefreq!="yearly" & agedays < 24*30.4167) %>% distinct(studyid, subjid))
+no_outliers_df <- df %>% filter(haz >= -6 & haz <=6, 
+                               whz >= -5 & whz <=5,
+                               waz >= -6 & waz <=5) %>%
+                        mutate(id=paste0(studyid, "_",subjid))
+outliers_df <- df %>% filter( !(haz >= -6 & haz <=6 &
+                               whz >= -5 & whz <=5 &
+                               waz >= -6 & waz <=5)) %>%
+                        mutate(id=paste0(studyid, "_",subjid))
+outliers_df <- outliers_df[!(outliers_df$id %in% no_outliers_df$id),]
+nrow(outliers_df %>% distinct(id))
+outliers_df<- outliers_df %>% group_by(id) %>% summarise(N=n()) 
+prop.table(table(outliers_df$N))
+outliers_df %>%  ungroup() %>% summarise(mean(N), median(N))
+
+
+dropped <- nchild_cc - nrow(no_outliers_df %>% filter(measurefreq!="yearly" & agedays < 24*30.4167) %>% distinct(studyid, subjid))
+dropped
+dropped/nchild_cc * 100
+
 #--------------------------------------------
 # order data, create measurement id, and 
 # drop unrealistic measures depending on 

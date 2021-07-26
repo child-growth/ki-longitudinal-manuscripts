@@ -143,32 +143,6 @@ ggsave(plot_wlz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/
 
 
 
-### Plot length, stratified by age
-plot_wlz_3 = plot_age("WLZ velocity", "0-3 months")
-plot_wlz_6 = plot_age("WLZ velocity", "3-6 months")
-plot_wlz_9 = plot_age("WLZ velocity", "6-9 months")
-plot_wlz_12 = plot_age("WLZ velocity", "9-12 months")
-plot_wlz_15 = plot_age("WLZ velocity", "12-15 months")
-plot_wlz_18 = plot_age("WLZ velocity", "15-18 months")
-plot_wlz_21 = plot_age("WLZ velocity", "18-21 months")
-plot_wlz_24 = plot_age("WLZ velocity", "21-24 months")
-
-
-
-
-plot_wlz_age = grid.arrange(plot_wlz_3, 
-                            plot_wlz_6, 
-                            plot_wlz_9, 
-                            plot_wlz_12,
-                            plot_wlz_15, 
-                            plot_wlz_18, 
-                            plot_wlz_21, 
-                            plot_wlz_24, ncol = 2, nrow = 4,
-                            top = textGrob("Attributable difference - WLZ, stratified by age",gp=gpar(fontsize=26,font=2)))
-
-ggsave(plot_wlz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-vel-PAR.png"), height=36, width=15)
-
-
 
 ### Plot length, stratified by age
 plot_length_3 = plot_age("length velocity", "0-3 months")
