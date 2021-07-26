@@ -110,6 +110,65 @@ p_inc = ggplot(plot_combine ,
 
 p_inc
 
+make_inc_plot = function(data, ymin, ymax, ybreaks, color, xlab_include, ylab_include){
+ plot =  ggplot(data , 
+         aes(x=agem, y = percent))+
+    
+   facet_wrap(~classif) +
+   
+   # cohort-specific
+    geom_line(aes(group = cohort_country, col = classif), size = 0.5, alpha = 0.5, 
+              data = data %>% filter(cohort_country!="Pooled")) +
+    
+    # pooled
+    geom_line(aes( group = cohort_country), size=1,
+              data = data %>% filter(cohort_country=="Pooled")) +
+    
+    # pooled bounds
+    geom_errorbar(aes(ymin = lb, 
+                      ymax = ub,
+                      group = cohort_country), size=0.5,
+                  data = data %>% filter(cohort_country=="Pooled"),
+                  width = 0.3) +
+    
+    
+    scale_color_manual("", values = color) +
+    scale_x_continuous(limits = c(0,15), breaks = seq(0,15,3), labels = seq(0,15,3)) +
+    scale_y_continuous(limits = c(ymin, ymax), 
+                       breaks = seq(ymin,ymax,ybreaks), 
+                       labels = seq(ymin,ymax,ybreaks)) +
+   
+    xlab("Child age, months") +
+    ylab("Incidence proportion (%)") +
+    theme(legend.position = "none",
+          panel.grid.minor = element_blank(),
+          panel.grid.major.x = element_blank(),
+          axis.title.x = element_text(size=14),
+          axis.title.y = element_text(size=14))  +
+    guides(color = guide_legend(nrow = 1, byrow = TRUE)) 
+ 
+ if(!xlab_include) plot = plot + xlab("")
+ if(!ylab_include) plot = plot + theme(axis.title.y = element_blank())
+  
+  return(plot)
+  
+}
+
+p_inc_newly = make_inc_plot(data = plot_combine %>% filter(classif=="Newly stunted"), 
+              ymin = 0, ymax = 45, ybreaks = 10, color = "#FFB7DC", 
+              xlab_include=F, ylab_include=T)
+
+p_inc_relapse = make_inc_plot(data = plot_combine %>% filter(classif=="Stunting relapse"), 
+              ymin = 0, ymax = 11, ybreaks = 2, color = "#EA67AE", 
+              xlab_include=T, ylab_include=F)
+
+p_inc_rev = make_inc_plot(data = plot_combine %>% filter(classif=="Stunting reversed"), 
+              ymin = 0, ymax = 11, ybreaks = 2, color = "#ADDE66", 
+              xlab_include=F, ylab_include=F)
+
+p_inc = grid.arrange(p_inc_newly, p_inc_relapse, p_inc_rev,
+                     ncol = 3)
+  
 
 # save plot and underlying data -----------------------------------------------------
 ggsave(p_inc, file=paste0(fig_dir, "stunting/fig-stunt-2-flow-line-overall-allage-primary.png"), 
