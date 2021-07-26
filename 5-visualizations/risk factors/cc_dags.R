@@ -318,10 +318,11 @@ dag
 
 
 ### Plot parents of exposure
-ggdag_parents(dag, "W_mwtkg", 
+p<- ggdag_parents(dag, "W_mwtkg", 
               use_labels = "label",
               text = FALSE) + 
   theme_dag_blank() 
+ggsave(p, file=paste0(here::here(),"/figures/dags/cc-example-dag.png"), height=10, width =10)
 
 
 
