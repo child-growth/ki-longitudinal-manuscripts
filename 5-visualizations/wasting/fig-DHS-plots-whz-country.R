@@ -33,8 +33,9 @@ pcols <- tableau11
 ##################################
 dhs_plotd = read_rds(paste0(figdata_dir_wasting, "figdata-fig_dhs_ki_zscores_byage_country.RDS"))
 unique(dhs_plotd$country)
+dhs_plotd$country[dhs_plotd$country=="Gambia"] <- "The Gambia"
 dhs_plotd$country <- factor(dhs_plotd$country, levels=c(
-  "Gambia", "South Africa", "Tanzania",  "Brazil", "Guatemala", "Peru", "Bangladesh", "India","Pakistan", "Nepal"
+  "The Gambia", "South Africa", "Tanzania",  "Brazil", "Guatemala", "Peru", "Bangladesh", "India","Pakistan", "Nepal"
 ))
 #drop countries without DHS data
 dhs_plotd <- dhs_plotd %>% filter(!(country %in% c("OVERALL")))
@@ -83,8 +84,9 @@ unique(dhs_plotd$cohort)
 table(dhs_plotd$dsource, dhs_plotd$region)
 #drop countries without DHS data
 dhs_plotd <- dhs_plotd %>% filter(!(country %in% c("OVERALL")))
+dhs_plotd$country[dhs_plotd$country=="Gambia"] <- "The Gambia"
 dhs_plotd$country <- factor(dhs_plotd$country, levels=c(
-  "Gambia","South Africa", "Tanzania","Brazil"  , "Guatemala", "Peru", "Bangladesh", "India","Pakistan", "Nepal"
+  "The Gambia","South Africa", "Tanzania","Brazil"  , "Guatemala", "Peru", "Bangladesh", "India","Pakistan", "Nepal"
 ))
 dhs_plotd$cohort <-as.character(dhs_plotd$cohort)
 dhs_plotd$cohort <- ifelse(is.na(dhs_plotd$cohort),dhs_plotd$country,dhs_plotd$cohort)
@@ -154,8 +156,9 @@ dhsden_plot$cohort[dhsden_plot$dsource=="DHS, ki countries"] <- "DHS"
 
 dhsden_plot <- dhsden_plot %>% filter(!(country %in% c("Burkina Faso","Zimbabwe","Malawi")))  %>% filter(!is.na(country)) %>% droplevels()
 
+dhsden_plot$country[dhsden_plot$country=="Gambia"] <- "The Gambia"
 dhsden_plot$country <- factor(dhsden_plot$country, levels=c(
-  "Gambia","South Africa", "Tanzania","Brazil"  , "Guatemala", "Peru", "Bangladesh", "India","Pakistan", "Nepal"
+  "The Gambia","South Africa", "Tanzania","Brazil"  , "Guatemala", "Peru", "Bangladesh", "India","Pakistan", "Nepal"
 )) 
 dhsden_plot <- dhsden_plot %>% filter(!is.na(country))
 

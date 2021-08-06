@@ -6,17 +6,20 @@ source(paste0(here::here(), "/0-config.R"))
 .libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
-#library(jsonlite)
 library(progress)
 library(longbowRiskFactors)
 
 # 1. enumerate analysis
-
-setwd(here("4-longbow-tmle-analysis","run-longbow","early wast"))
+setwd(here("4-longbow-tmle-analysis","run-longbow","mortality"))
 inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
+default_params$script_params$count_Y <- TRUE
 
-load(here("4-longbow-tmle-analysis","analysis specification","earlywast_strat_analyses.rdata"))
+load(here("4-longbow-tmle-analysis","analysis specification","mortality_analyses.rdata"))
+
+
+#specify analyses
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-run_ki_tmle(enumerated_analyses, results_folder="results_early_wast", overwrite = T)
+#run TMLE
+run_ki_tmle(enumerated_analyses, results_folder="mort", overwrite = F)

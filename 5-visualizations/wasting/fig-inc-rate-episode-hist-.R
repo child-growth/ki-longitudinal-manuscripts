@@ -73,54 +73,58 @@ summary(df$num_wast)
 
 #mean duration of wasting
 p<-ggplot(df, aes(x=num_wast, group=region, color=region, fill=region)) + 
-  geom_histogram(aes(y=..density..), binwidth = 1) + 
-  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
+  geom_histogram(aes(y=..density..), binwidth = 0.5) + 
+  scale_y_continuous(breaks = c(.2,.4,.6,.8), labels=c("20%","40%","60%","80%")) +
   scale_color_manual(values=rep("grey30",3)) +
   scale_fill_manual(values=tableau10) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("") + xlab("Number of episodes") +
+  ylab("") + xlab("N episodes") +
   facet_wrap(~region)
 
-df$mean_sd <- paste0(round(mean(df$num_wast),2)," (",round(sd(df$num_wast),2),")")
+df$mean_sd <- paste0(sprintf("%.2f",mean(df$num_wast))," (",sprintf("%.2f",sd(df$num_wast)),")")
 p_overall <- ggplot(df, aes(x=num_wast), color="grey30", fill="grey30") + 
   geom_histogram(aes(y=..density..), binwidth = 1) + 
   geom_text(aes(x=2, y=.8, label=mean_sd)) +
-  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
+  scale_y_continuous(breaks = c(.2,.4,.6,.8), labels=c("20%","40%","60%","80%")) +
+  scale_x_continuous(breaks = 0:4, limits = c(-.5,4.5)) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("") + xlab("Number of episodes") +
+  ylab("") + xlab("N episodes") +
   theme(axis.title=element_text(size=10)) 
 
 df_Africa <- df %>% filter(region=="Africa") 
-df_Africa$mean_sd <- paste0(round(mean(df_Africa$num_wast),2)," (",round(sd(df_Africa$num_wast),2),")")
+df_Africa$mean_sd <- paste0(sprintf("%.2f",mean(df_Africa$num_wast))," (",sprintf("%.2f",sd(df_Africa$num_wast)),")")
 df_Africa$mean_sd[-1] <- NA
 p_Africa <- ggplot(df_Africa, aes(x=num_wast)) + 
   geom_histogram(aes(y=..density..), binwidth = 1,  color="grey30", fill=tableau10[1]) + 
   geom_text(aes(x=2, y=.8, label=mean_sd)) +
-  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
+  scale_y_continuous(breaks = c(.2,.4,.6,.8), labels=c("20%","40%","60%","80%")) +
+  scale_x_continuous(breaks = 0:4, limits = c(-.5,4.5)) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("") + xlab("Number of episodes") +
+  ylab("") + xlab("N episodes") +
   theme(axis.title=element_text(size=10)) 
 
 df_LatinAmerica <- df %>% filter(region=="Latin America") 
-df_LatinAmerica$mean_sd <- paste0(round(mean(df_LatinAmerica$num_wast),2)," (",round(sd(df_LatinAmerica$num_wast),2),")")
+df_LatinAmerica$mean_sd <- paste0(sprintf("%.2f",mean(df_LatinAmerica$num_wast))," (",sprintf("%.2f",sd(df_LatinAmerica$num_wast)),")")
 df_LatinAmerica$mean_sd[-1] <- NA
 p_LatinAmerica <- ggplot(df_LatinAmerica, aes(x=num_wast)) + 
   geom_histogram(aes(y=..density..), binwidth = 1,  color="grey30", fill=tableau10[2]) + 
   geom_text(aes(x=2, y=.8, label=mean_sd)) +
-  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
+  scale_y_continuous(breaks = c(.2,.4,.6,.8), labels=c("20%","40%","60%","80%")) +
+  scale_x_continuous(breaks = 0:4, limits = c(-.5,4.5)) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("") + xlab("Number of episodes") +
+  ylab("") + xlab("N episodes") +
   theme(axis.title=element_text(size=10)) 
 
 df_SouthAsia <- df %>% filter(region=="South Asia")
-df_SouthAsia$mean_sd <- paste0(round(mean(df_SouthAsia$num_wast),2)," (",round(sd(df_SouthAsia$num_wast),2),")")
+df_SouthAsia$mean_sd <- paste0(sprintf("%.2f",mean(df_SouthAsia$num_wast))," (",sprintf("%.2f",sd(df_SouthAsia$num_wast)),")")
 df_SouthAsia$mean_sd[-1] <- NA
 p_SouthAsia <- ggplot(df_SouthAsia, aes(x=num_wast)) + 
   geom_histogram(aes(y=..density..), binwidth = 1,  color="grey30", fill=tableau10[3]) + 
   geom_text(aes(x=2, y=.8, label=mean_sd)) +
-  scale_y_continuous(breaks = c(.25,.5,.75), labels=c("25%","50%","75%")) +
+  scale_y_continuous(breaks = c(.2,.4,.6,.8), labels=c("20%","40%","60%","80%")) +
+  scale_x_continuous(breaks = 0:4, limits = c(-.5,4.5)) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
-  ylab("") + xlab("Number of episodes") +
+  ylab("") + xlab("N episodes") +
   theme(axis.title=element_text(size=10))
 
 

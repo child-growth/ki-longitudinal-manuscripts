@@ -38,7 +38,7 @@ st_prev <- specify_rf_analysis(A=Avars, Y=c("stunted","sstunted"), file="st_prev
 #st_rec <- specify_rf_analysis(A=Avars, Y="s03rec24", file="st_rec_rf.Rdata")
 
 st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                      "mbmi",          "single",        "fage",          "fhtcm",       
+                                      "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
@@ -58,7 +58,7 @@ st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
 prev <- specify_rf_analysis(A=Avars, Y=c("wasted","swasted"), file="wast_prev_rf.Rdata")
 
 cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                   "mbmi",          "single",        "fage",          "fhtcm",       
+                                   "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
                                    "nrooms",      "nchldlt5",    "nhh",              
                                    "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                    "feducyrs", "hfoodsec"),
@@ -105,12 +105,12 @@ analyses <- rbind(st_prev, st_cuminc, st_cuminc_nobirth, prev, rec, cuminc, cumi
 
 
 #Save analysis specification
-save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata")))
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses.rdata"))
 
 
 #Make unadjusted analysis set
 analyses$W <- NULL
-save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/unadjusted_binary_analyses.rdata")))
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/unadjusted_binary_analyses.rdata"))
 
 
 
@@ -120,7 +120,7 @@ stunt_rev <- specify_rf_analysis(A=Avars, Y="s06rec1824", file="st_inc_rec_rf.Rd
 
 
 stunt_rec_analyses <- rbind(stunt_rec, stunt_rev)
-save(stunt_rec_analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_stunt_rec_analyses.rdata")))
+save(stunt_rec_analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_stunt_rec_analyses.rdata"))
 
 
 #---------------------------------------------
@@ -161,21 +161,21 @@ analyses <- rbind(vel_haz, vel_lencm, vel_waz, vel_wtkg, haz, whz)
 
 
 #Save analysis specification
-save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata")))
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous.rdata"))
 
 
 #Make unadjusted analysis set
 analyses$W <- NULL
-save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/unadjusted_continuous.rdata")))
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/unadjusted_continuous.rdata"))
 
 
 
 
 #lagged WLZ analysis -continious
 analyses <- rbind(WHZ_quart_lenvel, WHZ_quart_vel)
-save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_continuous_lagwhz.rdata")))
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_continuous_lagwhz.rdata"))
 
 #lagged WLZ analysis -binary
 analyses <- rbind(WHZ_quart_prev, WHZ_quart_cuminc)
-save(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_binary_lagwhz.rdata")))
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_lagwhz.rdata"))
 

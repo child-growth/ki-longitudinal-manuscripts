@@ -222,6 +222,9 @@ d6 <- calc.ci.agecat(co_mort, range = 6, birth="yes")
 d6$co <- ifelse(d6$whz < (-2) & d6$haz < (-2), 1, 0)
 d6$wast_uwt <- ifelse(d6$whz < (-2) & d6$waz < (-2), 1, 0)
 d6$stunt_uwt <- ifelse(d6$haz < (-2) & d6$waz < (-2), 1, 0)
+d6$sev_co <- ifelse(d6$whz < (-3) & d6$haz < (-3), 1, 0)
+d6$swast_suwt <- ifelse(d6$whz < (-3) & d6$waz < (-3), 1, 0)
+d6$sstunt_suwt <- ifelse(d6$haz < (-3) & d6$waz < (-3), 1, 0)
 table(d6$co)
 
 #calculate any co-occurrence from 0-6
@@ -231,6 +234,9 @@ co_ci_0_6 = d6 %>% group_by(studyid,country,subjid) %>%
   mutate(ever_co06= 1*(sum(co, na.rm=T)>0), 
          ever_wast_uwt06= 1*(sum(wast_uwt, na.rm=T)>0), 
          ever_stunt_uwt06= 1*(sum(stunt_uwt, na.rm=T)>0), 
+         ever_sev_co06= 1*(sum(co, na.rm=T)>0), 
+         ever_swast_suwt06= 1*(sum(swast_suwt, na.rm=T)>0), 
+         ever_sstunt_suwt06= 1*(sum(sstunt_suwt, na.rm=T)>0), 
          Nobs=n()) %>% 
   slice(1) %>%
   ungroup() 

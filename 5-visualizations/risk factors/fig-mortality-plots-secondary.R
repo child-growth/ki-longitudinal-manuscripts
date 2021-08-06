@@ -400,18 +400,18 @@ pmort
 
 
 pmort_flurry <- ggplot(p_data_pooled, aes(x=outcome_label)) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Measure)) +
-  geom_point(aes(y=RR), color="#878787", fill="#878787", size=1.5,
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), color="#287D8EFF") +
+  geom_point(aes(y=RR), color="#878787", fill="#878787", size=2, stroke=0,
              data=p_data_cohort,
              position=position_jitter(width=0.2), alpha=0.5) +
-  geom_point(aes(y=RR), color="#878787", fill="#878787", size=1.5,
+  geom_point(aes(y=RR), color="#878787", fill="#878787", size=2, stroke=0,
              data=pmort_data_cohort,
              position=position_jitter(width=0.2), alpha=0.5) +
-  geom_point(aes(y=RR, color=Measure, shape=severe), size=3, stroke = 1.5) +
+  geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
   labs(y = "", x = "Exposure 0-6 months") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(1, 2, 4, 8), trans='log10', labels=scaleFUN) +
-  scale_colour_manual(values=cbbPalette[-1]) +
+  #scale_colour_manual(values=cbbPalette[-1]) +
   scale_size_manual(values=c(4,5)) + 
   scale_shape_manual(values=c(16,21)) +
   theme(strip.placement = "outside",

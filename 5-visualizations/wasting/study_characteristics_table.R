@@ -1,7 +1,7 @@
 
 
 rm(list=ls())
-source(here::here("/0-config.R"))
+source(paste0(here::here(),"/0-config.R"))
 #remotes::install_github("benjaminrich/table1") #install dev version for missing package
 library(table1)
 

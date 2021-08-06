@@ -50,4 +50,4 @@ for(i in 1:nrow(analyses)){
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
-run_ki_tmle(enumerated_analyses, results_folder="results_full_cov", overwrite = F)
+run_ki_tmle(enumerated_analyses, results_folder="results_full_cov", overwrite = T, skip_failed=F)

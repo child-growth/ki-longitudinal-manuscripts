@@ -20,4 +20,7 @@ default_params <- jsonlite::fromJSON(inputs)
 analyses <- readRDS(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_analyses_primary.rds"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-run_ki_tmle(enumerated_analyses, results_folder="results_bin_primary", overwrite = F)
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/pers_wast_rf_primary.rdata")
+table(d$agecat, d$sex)
+
+run_ki_tmle(enumerated_analyses, results_folder="results_bin_primary", overwrite = T, skip_failed=F)

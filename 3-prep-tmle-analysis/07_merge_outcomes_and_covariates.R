@@ -84,7 +84,7 @@ d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(
                by=c("studyid", "subjid", "country"))
 
 head(d)
-
+table(d$agecat, d$sex)
 
 #Vector of outcome names
 Y<-c("ever_stunted")
@@ -123,6 +123,7 @@ cuminc_nobirth <- bind_rows(cuminc_nobirth, cuminc[cuminc$agecat=="6-24 months",
 d <- left_join(cuminc_nobirth, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
                by=c("studyid", "subjid", "country"))
 head(d)
+table(d$agecat, d$sex)
 
 
 
@@ -238,6 +239,7 @@ d$mage <- gsub("[^A-Za-z0-9]","",d$mage)
 d$mwtkg <- gsub("[^A-Za-z0-9]","",d$mwtkg)
 d$mhtcm <- gsub("[^A-Za-z0-9]","",d$mhtcm)
 d$fhtcm <- gsub("[^A-Za-z0-9]","",d$fhtcm)
+d$fhtcm_rf <- gsub("[^A-Za-z0-9]","",d$fhtcm_rf)
 d$fage <- gsub("[^A-Za-z0-9]","",d$fage)
 d$mhtcm <- gsub(" ","",d$mhtcm)
 d$mage <- gsub(" ","",d$mage)
@@ -373,7 +375,7 @@ save(d, Y, A,V, id, file="st_len_vel_rf.Rdata")
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 #Drop wasting risk factors
-cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
+#cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
 
 
 #load outcomes
@@ -763,14 +765,14 @@ bf_covariates = c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwe
 adjustment_sets <- list( 
   
   gagebrth=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-             #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+             "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
              "brthmon","W_parity",
              "trth2o","cleanck","impfloor","impsan","safeh20"),         
   
   birthwt=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-            #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
             "vagbrth","hdlvry",
             "single",
             "W_nrooms","W_nhh","W_nchldlt5",
@@ -778,7 +780,7 @@ adjustment_sets <- list(
             "trth2o","cleanck","impfloor","impsan","safeh20"),   
   
   birthlen=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-             #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+             "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
              "vagbrth","hdlvry",
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
@@ -786,7 +788,7 @@ adjustment_sets <- list(
              "trth2o","cleanck","impfloor","impsan","safeh20"),   
   
   enstunt=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-            #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
             "vagbrth","hdlvry",
             "single",
             "W_nrooms","W_nhh","W_nchldlt5",
@@ -794,7 +796,7 @@ adjustment_sets <- list(
             "trth2o","cleanck","impfloor","impsan","safeh20"),     
   
   enwast=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-           #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+           "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
            "vagbrth","hdlvry",
            "single",
            "W_nrooms","W_nhh","W_nchldlt5",
@@ -827,7 +829,7 @@ adjustment_sets <- list(
          "single",
          "W_nrooms","W_nhh","W_nchldlt5",
          "brthmon",
-         "trth2o","cleanck","impfloor","impsan","safeh20"),     
+         "trth2o","cleanck","impfloor","impsan","safeh20"), 
   
   mhtcm=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
           "W_fhtcm",
@@ -858,7 +860,12 @@ adjustment_sets <- list(
           "W_mhtcm","W_mwtkg","W_bmi",
           "single",
           "W_nrooms",
-          "trth2o","cleanck","impfloor","impsan","safeh20"),     
+          "trth2o","cleanck","impfloor","impsan","safeh20"), 
+  fhtcm_rf=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+          "W_mhtcm","W_mwtkg","W_bmi",
+          "single",
+          "W_nrooms",
+          "trth2o","cleanck","impfloor","impsan","safeh20"), 
   
   nrooms=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
@@ -915,7 +922,7 @@ adjustment_sets <- list(
              "trth2o","cleanck","impfloor","impsan","safeh20"),
   
   anywast06=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-              #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
               "vagbrth","hdlvry",
               "single",
               "W_nrooms","W_nhh","W_nchldlt5",
@@ -923,7 +930,7 @@ adjustment_sets <- list(
               "trth2o","cleanck","impfloor","impsan","safeh20"),
   
   pers_wast=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-              #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
               "vagbrth","hdlvry",
               "single",
               "W_nrooms","W_nhh","W_nchldlt5",
@@ -1001,8 +1008,6 @@ adjustment_sets <- list(
             "trth2o","cleanck","impfloor","impsan","safeh20")
 )
 save(adjustment_sets, file=paste0(BV_dir,"/results/adjustment_sets_list.Rdata"))
-
-
 
 
 

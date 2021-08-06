@@ -39,8 +39,11 @@ plotdf1 <- df %>%
         plotdf1$agecat <- factor(plotdf1$agecat, levels = c("3-6 months", "6-9 months", "9-12 months", "12-15 months", "15-18 months", "18-21 months", "21-24 months","Unstratified"))
         plotdf1 <- droplevels(plotdf1)
         
+        levels(plotdf1$agecat)[length(levels(plotdf1$agecat))] <- "Pooled, all ages"
+        
         p_lagwhz <- ggplot(plotdf1, aes(x=intervention_level)) + 
-          geom_point(aes(y=RR, fill=intervention_level, fill=pooled, color=pooled, shape=pooled), size = 3) +
+          geom_point(aes(y=RR, fill=intervention_level, fill=pooled, color=pooled#, shape=pooled
+                         ), size = 3) +
           geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=pooled),
                          alpha=0.5, size = 1) +
           facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +

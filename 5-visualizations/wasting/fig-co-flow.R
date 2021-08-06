@@ -92,8 +92,8 @@ bar_plot_RE = ggplot(plot_data_pooled) +
   geom_bar(aes(x = agem, y = est*100, fill = classif), colour="black", stat="identity", width=0.5) +
   scale_fill_manual("", values = pink_green) +
   theme(legend.position = "bottom") +
-  xlab("Child age, months") + ylab("Percentage of children") +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 5))
+  xlab("Child age, months") + ylab("Percentage of children (%)") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 bar_plot_RE
 
 

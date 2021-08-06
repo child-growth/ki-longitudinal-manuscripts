@@ -611,10 +611,11 @@ d$mage <- quantile_rf(d, d$W_mage, Acuts=c(0,20,30,max(d$W_mage, na.rm=T)))
 d$mhtcm <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,151,155,max(d$W_mhtcm, na.rm=T)), units="cm")
 d$mwtkg <- quantile_rf(d, d$W_mwtkg, Acuts=c(0,52,58,max(d$W_mwtkg, na.rm=T)), units="kg")
 d$mbmi <- quantile_rf(d, d$W_mbmi, Acuts=c(0,18.5,max(d$W_mbmi, na.rm=T)), labs=c("Underweight", "Normal weight"))
-d$fage <- quantile_rf(d, d$W_fage, Acuts=c(0,32,38,max(d$W_fage, na.rm=T)))
+#d$fage <- quantile_rf(d, d$W_fage, Acuts=c(0,32,38,max(d$W_fage, na.rm=T)))
 d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,167,max(d$W_fhtcm, na.rm=T)), units="cm")
 
-
+#d$fhtcm_rf <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,165,175,max(d$W_fhtcm, na.rm=T)), units="cm")
+d$fage <- quantile_rf(d, d$W_fage, Acuts=c(0,30,35,max(d$W_fage, na.rm=T)))
 
 
 #Make education categorizing function that handles the irregular distribution across studies.
@@ -824,7 +825,8 @@ d$mage <- relevel(d$mage, ref="[20-30)")
 
 #father age
 #oldest = baseline
-d$fage <- relevel(d$fage, ref=">=38")
+#d$fage <- relevel(d$fage, ref=">=38")
+d$fage <- relevel(d$fage, ref=">=35")
 
 #father height
 d$fhtcm <- relevel(d$fhtcm, ref=">=167 cm")

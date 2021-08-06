@@ -70,12 +70,14 @@ rain2$cohort <- gsub("CMIN Bangladesh93, Bangladesh","CMIN Bangladesh-93", rain2
 rain2$cohort <- gsub("Guatemala BSC, Guatemala","BSC, Guatemala", rain2$cohort)
 rain2$cohort <- gsub("TanzaniaChild2, Tanzania","Tanzania Child 2", rain2$cohort)
 rain2$cohort <- gsub("CMIN Peru89, Peru","CMIN Peru-89", rain2$cohort)
+rain2$cohort <- gsub("Keneba, Gambia","Keneba, The Gambia", rain2$cohort)
 d$cohort <- gsub("CMIN Peru95, Peru","CMIN Peru-95", d$cohort)
 d$cohort <- gsub("GMS-Nepal, Nepal","GMS, Nepal", d$cohort)
 d$cohort <- gsub("CMIN Bangladesh93, Bangladesh","CMIN Bangladesh-93", d$cohort)
 d$cohort <- gsub("Guatemala BSC, Guatemala","BSC, Guatemala", d$cohort)
 d$cohort <- gsub("TanzaniaChild2, Tanzania","Tanzania Child 2", d$cohort)
 d$cohort <- gsub("CMIN Peru89, Peru","CMIN Peru-89", d$cohort)
+d$cohort <- gsub("Keneba, Gambia","Keneba, The Gambia", d$cohort)
 
 
 #arrange cohorts by seasonality index and set factor levels
@@ -127,6 +129,13 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
   summary((dfit$fit-shift))
   summary((dfit$fit-shift)*conversion_factor)
   
+  #scaleFUN <- function(x) sprintf("%.1f", x)
+  is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
+  scaleFUN <- function(x) sprintf(ifelse(is.wholenumber(x),"%i", "%.1f"), round(x,0))
+  
+  yrange = NULL
+  # if(i==5){yrange==c(-1/2, -0.2)}
+
   if(i %in% leftlab){
   p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
     geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=seasonality_category), size=2) +
@@ -135,7 +144,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
                                  ymin=(fit_lb-shift)*conversion_factor,  
                                  ymax=(fit_ub-shift)*conversion_factor, 
                                  color=NULL, fill=seasonality_category), alpha=0.3) +
-    scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "Mean WLZ")) +
+    scale_y_continuous(limits = yrange, labels = scaleFUN, digits, position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "Mean WLZ")) +
     ylab(NULL) + xlab(NULL) +
     scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
     scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
@@ -151,7 +160,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
                                    ymin=(fit_lb-shift)*conversion_factor,  
                                    ymax=(fit_ub-shift)*conversion_factor, 
                                    color=NULL, fill=seasonality_category), alpha=0.3) +
-      scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
+      scale_y_continuous(limits = yrange, labels = scaleFUN, position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
       ylab("Rainfall (mm)") + xlab(NULL) +
       scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
@@ -168,7 +177,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
                                    ymin=(fit_lb-shift)*conversion_factor,  
                                    ymax=(fit_ub-shift)*conversion_factor, 
                                    color=NULL, fill=seasonality_category), alpha=0.3) +
-      scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
+      scale_y_continuous(limits = yrange, labels = scaleFUN, position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
       ylab("") + xlab(NULL) +
       scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
@@ -188,8 +197,7 @@ Ns %>% summarize(min(nmeas), min(nchild), max(nmeas), max(nchild))
 
 
 
-        i<-1
-rain_plot(df=d, rain=rain2, cohort_name=cohorts[1])
+rain_plot(df=d, rain=rain2, cohort_name=cohorts[5])
               
  
  

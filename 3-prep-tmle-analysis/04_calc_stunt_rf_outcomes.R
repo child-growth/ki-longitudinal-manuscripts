@@ -80,7 +80,7 @@ stunt_rec = d6 %>% ungroup() %>%
 
 stunt_ci_6_24 <- stunt_ci_6_24 %>% subset(., select = -c(anystunt06))
 cuminc <- bind_rows(stunt_ci_0_6, stunt_ci_6_24, stunt_ci_0_24)
-
+cuminc <- cuminc  %>% subset(., select = -c(sex))
 
 
 #--------------------------------------
@@ -123,7 +123,8 @@ table(cuminc_nobirth$ever_stunted[cuminc_nobirth$agecat=="0-6 months (no birth s
 table(cuminc$ever_stunted[cuminc$agecat=="0-24 months"])
 table(cuminc_nobirth$ever_stunted[cuminc_nobirth$agecat=="0-24 months (no birth st.)"])
 
-
+head(cuminc)
+head(cuminc_nobirth)
 
 
 #--------------------------------------
@@ -271,6 +272,7 @@ vel_wtkg <- vel %>% filter(ycat=="wtkg") %>% subset(., select=c(studyid, country
 # save datasets
 #--------------------------------------
 
+table(cuminc$agecat, cuminc$sex)
 
 save(prev, file=paste0(ghapdata_dir,"st_prev_outcomes.RData"))
 save(meanHAZ, file=paste0(ghapdata_dir,"st_meanZ_outcomes.RData"))

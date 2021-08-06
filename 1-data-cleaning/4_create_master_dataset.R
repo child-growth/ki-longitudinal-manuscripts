@@ -40,13 +40,17 @@ cov <- cov %>% subset(., select = c(studyid, subjid,  country,
                                     nrooms, nhh, nchldlt5, earlybf, hfoodsec,  
                                     anywast06, pers_wast, enstunt, enwast, hhwealth_quart, 
                                     id, W_gagebrth, W_birthwt, W_birthlen, W_mage, W_mhtcm, 
-                                    W_mwtkg, W_mbmi, W_fage, W_fhtcm, W_meducyrs, W_feducyrs, 
+                                    W_mwtkg, W_mbmi, W_fage, W_fhtcm,  W_meducyrs, W_feducyrs, 
                                     W_nrooms, W_nhh, W_nchldlt5, W_parity, impsan, safeh20, 
                                     perdiar6, perdiar24, W_perdiar6, W_perdiar24, 
                                     predexfd6))
 
 
+
 Zscores$subjid <- as.character(Zscores$subjid)
+
+table(Zscores$country)
+table(cov$country)
 
 dim(Zscores)
 dim(cov)
@@ -96,5 +100,5 @@ start_year$max_yr[start_year$studyid=="PROVIDE"] <- 2014
 start_year$max_yr[start_year$studyid=="NIH-Crypto"] <- 2017
 start_year$max_yr[start_year$studyid=="Burkina Faso Zn"] <- 2012
 
-saveRDS(start_year, here("/data/study_start_years.rds"))
+saveRDS(start_year, paste0(here::here(),"/data/study_start_years.rds"))
 

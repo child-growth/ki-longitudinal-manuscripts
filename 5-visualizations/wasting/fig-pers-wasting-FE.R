@@ -4,8 +4,8 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #Load data
-load(paste0(here(),"/results/persistent_wasting024_FE.Rdata"))
-d <- perswast024 %>% filter(is.na(country))
+load(paste0(BV_dir,"/results/persistent_wasting024_FE.Rdata"))
+d <- perswast024 %>% filter(is.na(country), region!="Other")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 d$nstudy.f <- gsub("N=","",d$nstudy.f)
@@ -13,7 +13,6 @@ d$nmeas.f <- gsub("N=","",d$nmeas.f)
 d$nstudy.f <- gsub(" studies","",d$nstudy.f)
 d$nmeas.f <- gsub(" children","",d$nmeas.f)
 
-d$region[d$region=="Asia"] <- "South Asia"
 d$region <- factor(d$region , levels=c("Overall","Africa","Latin America","South Asia"))
 
 # scale cohort-specific estimates
@@ -64,4 +63,4 @@ p <- ggplot(d,aes(y=est,x=region)) +
 
 p
 
-ggsave(p, file=here("/figures/wasting/pooled_pers024_FE.png"), width=8, height=5)
+ggsave(p, file=paste0(BV_dir,"/figures/wasting/pooled_pers024_FE.png"), width=8, height=5)

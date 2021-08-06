@@ -6,11 +6,16 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores_prim <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_2021-07-13.RDS"))
+Zscores_prim <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_2021-08-06.RDS"))
 saveRDS(Zscores_prim, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
 
 Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
+
+
+Zscores_waz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_waz_2021-07-28.RDS"))
+saveRDS(Zscores_waz, paste0(res_dir, "rf results/longbow results/results_waz.RDS"))
+
 
 bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_primary_2021-06-11.RDS"))
 bin_other <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_2021-04-23.RDS"))
@@ -21,6 +26,8 @@ saveRDS(bin_other, paste0(res_dir, "rf results/longbow results/results_bin_other
 mortality <- readRDS(paste0(res_dir, "rf results/raw longbow results/mortality_2021-06-10.RDS"))
 saveRDS(mortality, paste0(res_dir, "rf results/longbow results/results_mortality.RDS"))
 
+morbidity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_morbidity_2021-08-03.RDS"))
+saveRDS(morbidity, paste0(res_dir, "rf results/longbow results/results_morbidity.RDS"))
 
 Zscores_unadj <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_unadj_2021-04-25.RDS"))
 saveRDS(Zscores_unadj, paste0(res_dir, "rf results/longbow results/results_cont_unadj.RDS"))
@@ -34,7 +41,7 @@ saveRDS(velocity_wlz_quart, paste0(res_dir, "rf results/longbow results/velocity
 stunt_bin_wlz_quart <- readRDS(paste0(res_dir, "rf results/raw longbow results/stunt_bin_wlz_quart_2021-04-26.RDS"))
 saveRDS(stunt_bin_wlz_quart, paste0(res_dir, "rf results/longbow results/stunt_bin_wlz_quart.RDS"))
 
-velocity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_vel_2021-04-24.RDS"))   
+velocity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-07-30.RDS"))   
 saveRDS(velocity, paste0(res_dir, "rf results/longbow results/results_vel.RDS"))
 
 velocity_sub <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-07-25.RDS"))   
@@ -71,17 +78,49 @@ saveRDS(optx_results, paste0(res_dir, "rf results/longbow results/opttx_vim_resu
 Zscores_full_cov <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_full_cov_2021-06-30.RDS"))
 saveRDS(Zscores_full_cov, paste0(res_dir, "rf results/longbow results/results_full_cov.RDS"))
 
+#Temp/Extra
+fhtcm_prim <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_fhtcm_2021-08-02.RDS"))
+saveRDS(fhtcm_prim, paste0(res_dir, "rf results/longbow results/results_fhtcm_prim.RDS"))
+
+fage_prim <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_primary_fage_2021-08-02.RDS"))
+saveRDS(fage_prim, paste0(res_dir, "rf results/longbow results/results_fage_prim.RDS"))
+
+birthvars <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_primary_birthwt_2021-08-04.RDS"))
+saveRDS(birthvars, paste0(res_dir, "rf results/longbow results/results_birthvars_rerun.RDS"))
+
+enwast_wlz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_enwast_wlz_2021-08-05.RDS"))
+saveRDS(enwast_wlz, paste0(res_dir, "rf results/longbow results/results_results_cont_enwast_wlz.RDS"))
+
+
+
+
 
 #Save N's
 Zscores_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_obs_counts_2021-04-22.RDS"))
+Zscores_prim_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_obs_counts_2021-08-06.RDS"))
 bin_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_primary_obs_counts_2021-04-22.RDS"))
 bin_other_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_obs_counts_2021-04-23.RDS"))
 season_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2021-04-22.RDS"))
 season_cont_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2021-04-22.RDS"))
 
 saveRDS(Zscores_Ns, paste0(res_dir, "rf results/longbow results/results_cont_obs_counts.RDS"))
+saveRDS(Zscores_prim_Ns, paste0(res_dir, "rf results/longbow results/results_cont_prim_obs_counts.RDS"))
 saveRDS(bin_Ns, paste0(res_dir, "rf results/longbow results/results_bin_primary_obs_counts.RDS"))
 saveRDS(bin_other_N, paste0(res_dir, "rf results/longbow results/results_bin_other_obs_counts.RDS"))
 saveRDS(season_N, paste0(res_dir, "rf results/longbow results/seasonality_rf_bin_results_obs_counts.RDS"))
 saveRDS(season_cont_N, paste0(res_dir, "rf results/longbow results/seasonality_rf_cont_results_obs_counts.RDS"))
+
+#Temp/Extra
+fhtcm_prim_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_fhtcm_obs_counts_2021-08-01.RDS"))
+saveRDS(fhtcm_prim_Ns, paste0(res_dir, "rf results/longbow results/results_cont_primary_fhtcm_obs_counts.RDS"))
+fage_prim_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_primary_fage_obs_counts_2021-08-02.RDS"))
+saveRDS(fage_prim_Ns, paste0(res_dir, "rf results/longbow results/results_cont_primary_fage_obs_counts.RDS"))
+
+enwast_wlz_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_primary_fage_obs_counts_2021-08-02.RDS"))
+saveRDS(enwast_wlz_Ns, paste0(res_dir, "rf results/longbow results/results_cont_primary_fage_obs_counts.RDS"))
+
+
+enwast_wlz_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_enwast_wlz_obs_counts_2021-08-05.RDS"))
+saveRDS(enwast_wlz_Ns, paste0(res_dir, "rf results/longbow results/results_results_cont_enwast_wlz_obs_counts.RDS"))
+
 

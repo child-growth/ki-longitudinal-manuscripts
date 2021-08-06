@@ -112,6 +112,10 @@ dropped <- nobsq - nrow(stunt_mort %>% ungroup() %>% filter(measurefreq!="yearly
 dropped
 dropped/nobsq * 100 #percentage dropped
 
+#Wasting manuscript dropped
+droppedm <- nobsm - nrow(stunt_mort %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(haz)))
+droppedm
+droppedm/nobsm * 100 #percentage dropped monthly
 
 
 

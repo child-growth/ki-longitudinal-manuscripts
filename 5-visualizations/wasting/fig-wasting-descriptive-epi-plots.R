@@ -1,6 +1,6 @@
 
 rm(list=ls())
-source(here::here("/0-config.R"))
+source(paste0(here::here(), "/0-config.R"))
 
 #Load data
 d <- readRDS(paste0(BV_dir,"/results/desc_data_cleaned.rds"))
@@ -173,7 +173,7 @@ prev_plot <- ki_desc_flurry_plot(d,
                      Severe="no", 
                      Age_range="3 months", 
                      xlabel="Child age, months",
-                     ylabel='Point prevalence (95% CI)',
+                     ylabel='Point prevalence (%)',
                      yrange=c(0,24),
                      returnData=T)
 
@@ -184,7 +184,7 @@ prev_plot_africa <- ki_desc_plot(d,
                           Severe="no", 
                           Age_range="3 months", 
                           xlabel="Child age, months",
-                          ylabel='Point prevalence (95% CI)',
+                          ylabel='Point prevalence (%)',
                           yrange=c(0,30),
                           Region="Africa",
                           returnData=T
@@ -197,7 +197,7 @@ prev_plot_lam <- ki_desc_plot(d,
                                  Severe="no", 
                                  Age_range="3 months", 
                                  xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
+                                 ylabel='Point prevalence (%)',
                                  yrange=c(0,30),
                                  returnData=T,
                                  Region="Latin America")
@@ -209,7 +209,7 @@ prev_plot_sasia <- ki_desc_plot(d,
                                  Severe="no", 
                                  Age_range="3 months", 
                                  xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
+                                 ylabel='Point prevalence (%)',
                                  yrange=c(0,30),
                                  returnData=T,
                                  Region="South Asia")
@@ -541,9 +541,11 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
                data = df %>% filter(ispooled == "yes")) +
     
     # cohort-stratified
-    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
+    geom_point(aes(shape=age_range, group=interaction(age_range, region)),
+               color = "#878787", fill = "#878787", size = 1.5, 
                data = df %>% filter(ispooled == "no"),
-               position = position_jitter(width = 0.15), alpha = 0.25) +
+               position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.5),
+               alpha = 0.25) +
     
     scale_color_manual(values=tableau11,
                        guide = FALSE) +
@@ -559,9 +561,9 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     theme(axis.text.x = element_text(margin = 
                                        margin(t = 0, r = 0, b = 0, l = 0),
                                      size = 10)) +
-    theme(axis.title.x = element_text(margin = 
-                                        margin(t = 25, r = 0, b = 0, l = 0),
-                                      size = 15)) +
+    # theme(axis.title.x = element_text(margin = 
+    #                                     margin(t = 25, r = 0, b = 0, l = 0),
+    #                                   size = 15)) +
     theme(axis.title.y = element_text(size = 15)) +
     
     ggtitle("") +
@@ -593,7 +595,7 @@ rec_plot <- rec_combo_plot(d,
                    Age_range=c("30 days","60 days","90 days"), 
                    # Cohort="pooled",
                    xlabel="Child age, months",
-                   ylabel='Percent recovered\n(95% CI)',
+                   ylabel='Percent recovered',
                    yrange=c(0,100),
                    legend.pos = c(.1,.88))
 
@@ -757,7 +759,7 @@ co_plot <- ki_desc_flurry_plot(d,
                    Severe="no", 
                    Age_range="3 months", 
                    xlabel="Child age, months",
-                   ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
+                   ylabel='Point prevalence of concurrent\nwasting and stunting (%)',
                    yrange=c(0,11),
                    returnData=T)
 
@@ -769,7 +771,7 @@ co_plot_africa <- ki_desc_plot(d,
                         Age_range="3 months", 
                         Cohort="pooled",
                         xlabel="Child age, months",
-                        ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
+                        ylabel='Point prevalence of concurrent\nwasting and stunting (%)',
                         yrange=c(0,20),
                         returnData=T,
                         Region="Africa")
@@ -782,7 +784,7 @@ co_plot_lam <- ki_desc_plot(d,
                                Age_range="3 months", 
                                Cohort="pooled",
                                xlabel="Child age, months",
-                               ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
+                               ylabel='Point prevalence of concurrent\nwasting and stunting (%)',
                                yrange=c(0,20),
                                returnData=T,
                                Region="Latin America")
@@ -795,7 +797,7 @@ co_plot_sasia <- ki_desc_plot(d,
                                Age_range="3 months", 
                                Cohort="pooled",
                                xlabel="Child age, months",
-                               ylabel='Point prevalence of concurrent\nwasting and stunting (95% CI)',
+                               ylabel='Point prevalence of concurrent\nwasting and stunting (%)',
                                yrange=c(0,20),
                                returnData=T,
                                Region="South Asia")
@@ -832,7 +834,7 @@ underweight_plot <- ki_desc_flurry_plot(d,
                                  Severe="no", 
                                  Age_range="3 months", 
                                  xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
+                                 ylabel='Point prevalence (%)',
                                  returnData = T,
                                  yrange=c(0,45))
 
@@ -844,7 +846,7 @@ underweight_plot_africa <- ki_desc_plot(d,
                                  Age_range="3 months", 
                                  Cohort="pooled",
                                  xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
+                                 ylabel='Point prevalence (%)',
                                  yrange=c(0,60),
                                  Region="Africa")
 
@@ -856,7 +858,7 @@ underweight_plot_lam <- ki_desc_plot(d,
                                  Age_range="3 months", 
                                  Cohort="pooled",
                                  xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
+                                 ylabel='Point prevalence (%)',
                                  yrange=c(0,60),
                                  Region="Latin America")
 
@@ -868,7 +870,7 @@ underweight_plot_sasia <- ki_desc_plot(d,
                                      Age_range="3 months", 
                                      Cohort="pooled",
                                      xlabel="Child age, months",
-                                     ylabel='Point prevalence (95% CI)',
+                                     ylabel='Point prevalence (%)',
                                      yrange=c(0,60),
                                      Region="South Asia")
 
@@ -898,7 +900,7 @@ saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",underw
 ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range, 
          # Cohort="pooled",
          xlabel="Age category",
-         ylabel="Proportion (95% CI)",
+         ylabel="Proportion (%)",
          yrange=NULL,
          dodge=0,
          legend.pos = c(.1,.92)){
@@ -1045,7 +1047,7 @@ sevwast_plot <- ki_desc_flurry_plot(d,
                    Severe="yes", 
                    Age_range="3 months", 
                    xlabel="Child age, months",
-                   ylabel='Point prevalence (95% CI)',
+                   ylabel='Point prevalence (%)',
                    yrange=c(0,13),
                    returnData=T)
 
@@ -1057,7 +1059,7 @@ sevwast_plot_africa <- ki_desc_plot(d,
                                     Age_range="3 months", 
                                     Cohort="pooled",
                                     xlabel="Child age, months",
-                                    ylabel='Point prevalence (95% CI)',
+                                    ylabel='Point prevalence (%)',
                                     yrange=c(0,20),
                                     Region="Africa",
                                     returnData=T
@@ -1071,7 +1073,7 @@ sevwast_plot_lam <- ki_desc_plot(d,
                                  Age_range="3 months", 
                                  Cohort="pooled",
                                  xlabel="Child age, months",
-                                 ylabel='Point prevalence (95% CI)',
+                                 ylabel='Point prevalence (%)',
                                  yrange=c(0,20),
                                  returnData=T,
                                  Region="Latin America")
@@ -1084,7 +1086,7 @@ sevwast_plot_sasia <- ki_desc_plot(d,
                                    Age_range="3 months", 
                                    Cohort="pooled",
                                    xlabel="Child age, months",
-                                   ylabel='Point prevalence (95% CI)',
+                                   ylabel='Point prevalence (%)',
                                    yrange=c(0,20),
                                    returnData=T,
                                    Region="South Asia")

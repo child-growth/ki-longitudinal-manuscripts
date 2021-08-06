@@ -31,6 +31,8 @@ textcol = "grey20"
 rfp <- readRDS(paste0(BV_dir,'/results/cov_presence.rds'))
 rfn <- readRDS(paste0(BV_dir,'/results/cov_N.rds'))
 
+unique(rfp$studyid)
+
 # gather rf presence by study into long format
 rfp <- rfp %>% 
   gather(risk_factor,presence,-studyid, -country) 

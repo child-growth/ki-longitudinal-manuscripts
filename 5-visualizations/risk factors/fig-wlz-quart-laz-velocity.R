@@ -41,12 +41,16 @@ plen_plotdf$agecat <- factor(plen_plotdf$agecat, levels = c("3-6 months", "6-9 m
 plen_plotdf$pooled <- factor(ifelse(plen_plotdf$agecat=="Unstratified","Yes","No"), levels=c("No","Yes"))
 
 
+#Pooled, all ages for "Unstratified"
+levels(plen_plotdf$agecat)[length(levels(plen_plotdf$agecat))] <- "Pooled, all ages"
+
 plen_lagwhz <- ggplot(plen_plotdf, aes(x=intervention_level)) + 
-  geom_point(aes(y=ATE, fill=pooled, color=pooled, shape=pooled), size = 3) +
+  geom_point(aes(y=ATE, fill=pooled, color=pooled#, shape=pooled
+                 ), size = 3) +
   geom_linerange(aes(ymin=CI1, ymax=CI2, color=pooled),
                  alpha=0.5, size = 1) +
   facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
-  labs(x = "Quartile of mean WLZ in the prior 3 months\nReference: quartile 1", y = "Difference in linear\ngrowth velocity (cm)") +
+  labs(x = "Quartile of mean WLZ in the prior 3 months\nReference: quartile 1", y = "Difference in linear growth\nvelocity (cm per 3-months)") +
   geom_hline(yintercept = 0) +
   scale_fill_manual(values=tableau11[c(9,1)]) +
   scale_colour_manual(values=tableau11[c(9,1)]) +
@@ -72,7 +76,8 @@ plen_plotdf$agecat <- factor(plen_plotdf$agecat, levels = c("3-6 months", "6-9 m
 plen_plotdf$pooled <- factor(ifelse(plen_plotdf$agecat=="Unstratified","Yes","No"), levels=c("No","Yes"))
 
 plen_lagwhz_africa <- ggplot(plen_plotdf, aes(x=intervention_level)) + 
-  geom_point(aes(y=ATE, fill=pooled, color=pooled, shape=pooled), size = 3) +
+  geom_point(aes(y=ATE, fill=pooled, color=pooled#, shape=pooled
+                 ), size = 3) +
   geom_linerange(aes(ymin=CI1, ymax=CI2, color=pooled),
                  alpha=0.5, size = 1) +
   facet_wrap(~agecat, scales="free_x", nrow=1) +   
@@ -93,7 +98,8 @@ plen_plotdf$agecat <- factor(plen_plotdf$agecat, levels = c("3-6 months", "6-9 m
 plen_plotdf$pooled <- factor(ifelse(plen_plotdf$agecat=="Unstratified","Yes","No"), levels=c("No","Yes"))
 
 plen_lagwhz_SA <- ggplot(plen_plotdf, aes(x=intervention_level)) + 
-  geom_point(aes(y=ATE, fill=pooled, color=pooled, shape=pooled), size = 3) +
+  geom_point(aes(y=ATE, fill=pooled, color=pooled#, shape=pooled
+                 ), size = 3) +
   geom_linerange(aes(ymin=CI1, ymax=CI2, color=pooled),
                  alpha=0.5, size = 1) +
   facet_wrap(~agecat, scales="free_x", nrow=1) +   
@@ -114,7 +120,8 @@ plen_plotdf$agecat <- factor(plen_plotdf$agecat, levels = c("3-6 months", "6-9 m
 plen_plotdf$pooled <- factor(ifelse(plen_plotdf$agecat=="Unstratified","Yes","No"), levels=c("No","Yes"))
 
 plen_lagwhz_LA <- ggplot(plen_plotdf, aes(x=intervention_level)) + 
-  geom_point(aes(y=ATE, fill=pooled, color=pooled, shape=pooled), size = 3) +
+  geom_point(aes(y=ATE, fill=pooled, color=pooled#, shape=pooled
+                 ), size = 3) +
   geom_linerange(aes(ymin=CI1, ymax=CI2, color=pooled),
                  alpha=0.5, size = 1) +
   facet_wrap(~agecat, scales="free_x", nrow=1) +   

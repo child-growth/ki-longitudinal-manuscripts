@@ -25,11 +25,14 @@ d <- dfull %>%
   filter(!is.na(intervention_variable)) %>%
   filter(intervention_level != baseline_level) 
 
-cohortRR <- d %>% select(studyid,country,intervention_variable,estimate, ci_lower,ci_upper)
+cohortRR <- d %>% select(studyid,country,intervention_variable, agecat,  intervention_level, baseline_level, outcome_variable, estimate, ci_lower,ci_upper) %>%
+  rename(RR=estimate,  RR.CI1=ci_lower, RR.CI2=ci_upper) %>% mutate(pooled=0)
 
 
 df <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
-  do(poolRR(.)) %>% as.data.frame()
+  do(poolRR(.)) %>% mutate(pooled=1) %>% as.data.frame()
+
+df <- bind_rows(df, cohortRR)
 
 
 yticks <- c(0.25, 0.5, 0.75, 1, 1.5, 2)
@@ -73,8 +76,7 @@ plotdf2$Xvar <- factor(plotdf2$Xvar, levels = c("Enrolled\nwasted","Any wasting\
 plotdf2 <- plotdf2 %>% arrange(Xvar)
 plotdf2 <- droplevels(plotdf2)
 
-yticks <- c(1, 1.1, 1.2, 1.3, 1.4, 1.5, 2)
-p_earlywast <- ggplot(plotdf2, aes(x=Xvar)) + 
+p_earlywast_old <- ggplot(plotdf2%>% filter(pooled==1), aes(x=Xvar)) + 
   geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
                  alpha=0.5, size = 1) +
@@ -82,6 +84,29 @@ p_earlywast <- ggplot(plotdf2, aes(x=Xvar)) +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=c(1, 2, 3), y=((plotdf2$RR.CI2))+.02, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
+  scale_fill_manual(values=rep(tableau10[1],4)) +
+  scale_colour_manual(values=rep(tableau10[1],4)) +
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        axis.text.y = element_text(size=12),
+        strip.text.x = element_text(size=10),
+        axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
+        panel.spacing = unit(0, "lines")) #+
+#ggtitle("Risk of stunting onset\nby measure of early wasting")
+p_earlywast_old
+
+set.seed(12234)
+yticks <- c(0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8)
+p_earlywast <- ggplot(plotdf2 %>% filter(pooled==1), aes(x=Xvar)) + 
+  geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), color="#878787", fill="#878787", size=2.5, stroke=0, alpha=0.5,
+             position=position_jitter(width=0.1), data=plotdf2 %>% filter(pooled==0)) +
+  geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3, color="#287D8EFF") +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
+                 color="#287D8EFF", alpha=0.5, size = 1) +
+  labs(x = "Wasting exposure", y = "Cumulative incidence\nratio: stunting 6-24 mo.") +
+  geom_hline(yintercept = 1) +
+  #geom_text(aes(x=c(1, 2, 3), y=((plotdf2$RR.CI2))+.02, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits =c(0.51, 1.95), expand = c(0,0)) +
   scale_fill_manual(values=rep(tableau10[1],4)) +
   scale_colour_manual(values=rep(tableau10[1],4)) +
   theme(strip.background = element_blank(),
