@@ -70,16 +70,21 @@ table(d$month)
 #Calculate stunting and wasting at enrollment and keep one observation per child
 #Also check if children without a recorded birthweight or birthlength have WAZ or HAZ in the first year of life
 #--------------------------------------------------------
-d <- d %>% group_by(studyid, subjid) %>% 
+d <- d %>% group_by(studyid, country, subjid) %>% 
   arrange(studyid, subjid, agedays) %>% 
-  mutate(enstunt= as.numeric(haz < -2),
-         enwast= as.numeric(whz < -2),
+  mutate(enstunt= as.numeric(ifelse(length(first(haz[complete.cases(haz)]))==0,NA,first(haz[complete.cases(haz)])) < -2),
+         enwast= as.numeric(ifelse(length(first(whz[complete.cases(whz)]))==0,NA,first(whz[complete.cases(whz)])) < -2),
          birthLAZ= haz,
          birthWAZ= waz) %>%
   #keep one observation per child
   slice(1) 
 
 table(is.na(d$birthwt), d$agedays > 7)
+
+#df <- d %>% filter(studyid=="MAL-ED")
+# df <- d %>% filter(studyid == "Burkina Faso Zn", country == "BURKINA FASO", subjid == 117101)
+# ifelse(length(first(df$haz[complete.cases(df$haz)]))==0,NA,first(df$haz[complete.cases(df$haz)]))
+
 
 #keep where anthro is measured on first 7 days, but birth anthro is not recorded
 d$birthLAZ[d$agedays>7] <- NA 
@@ -90,8 +95,8 @@ d$birthmeas_age[d$agedays <= 7] <- d$agedays[d$agedays <= 7]
 #Drop anthropometry measures (seperate long-form dataset used to calculate anthropometry outcomes)
 d <- d %>% subset(., select=-c(agedays, haz, waz, whz)) 
 
-table(d$studyid, d$enwast)
-table(d$studyid, d$enstunt)
+table(paste0(d$studyid,"-",d$country), d$enwast)
+table(paste0(d$studyid,"-",d$country), d$enstunt)
 
 
 

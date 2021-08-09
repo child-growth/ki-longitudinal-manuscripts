@@ -9,6 +9,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 #load covariates
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
+table(cov$studyid, cov$enstunt)
 
 #Check reference levels
 for(i in 3:ncol(cov)){

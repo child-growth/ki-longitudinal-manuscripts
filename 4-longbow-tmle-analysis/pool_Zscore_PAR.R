@@ -18,6 +18,7 @@ head(dfull)
  unique(dfull$type)
  d <- dfull %>% filter(type=="PAR")
  table(d$intervention_variable, d$outcome_variable)
+ table(d$country)
  
 # temp <- d  %>% filter(outcome_variable =="whz"| outcome_variable =="haz",
 #                       intervention_variable =="birthlen_rf"|intervention_variable =="birthwt_rf"|intervention_variable =="gagebrth_rf"|

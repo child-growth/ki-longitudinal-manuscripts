@@ -26,23 +26,17 @@ dim(analyses)
 analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
 dim(analyses)
 
-load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf.Rdata")
-d <- d %>% filter(agecat=="24 months") %>% droplevels()
-save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf_prim.Rdata")
-
-load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
-d <- d %>% filter(agecat=="24 months")  %>% droplevels()
-table(d$country, is.na(d$sex))
-table(d$studyid, d$country)
-save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_prim.Rdata")
-
 
 #specify analyses
-analyses$file <- gsub("rf.Rdata","rf_prim.Rdata",analyses$file)
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
+run_ki_tmle(enumerated_analyses, results_folder="results_cont_tz", overwrite = F, skip_failed=F,
+            rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors_tanzania.Rmd"))
 
+analyses_unadj <- analyses
+analyses_unadj$W <- NULL
 
-run_ki_tmle(enumerated_analyses, results_folder="results_cont_primary", overwrite = F, skip_failed = F)
+enumerated_analyses_unadj <- lapply(seq_len(nrow(analyses_unadj)), specify_longbow)
 
-
+run_ki_tmle(enumerated_analyses_unadj, results_folder="results_cont_unadj_tz", overwrite = F, skip_failed=F,
+            rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors_tanzania.Rmd"))

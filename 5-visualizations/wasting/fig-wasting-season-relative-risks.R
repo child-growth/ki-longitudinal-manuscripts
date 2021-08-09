@@ -28,7 +28,7 @@ rain <- rain %>% subset(., select = c(studyid, country, cohort_index)) %>%
              season_index >= 0.9 ~ "High",
              season_index < 0.7 ~ "Low",
              TRUE ~ "Medium"),
-         seasonality_category = factor(seasonality_category, levels=c("High", "Medium", "Low")))
+         seasonality_category = factor(seasonality_category, levels=c("Low", "Medium", "High")))
 table(rain$seasonality_category)
 
 rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
@@ -78,16 +78,22 @@ df$RFlabel_ref <- paste0(df$RFlabel, ", ref: ", df$baseline_level)
 
 df$seasonality_category <- factor(df$seasonality_category, levels=c("Pooled", "High", "Medium", "Low"))
 
-df$intervention_level[df$intervention_level=="Opposite max rain"] <- "Opposite\nmax rain"
-df$intervention_level[df$intervention_level=="Pre-max rain"] <- "Pre-max\nrain"
-df$intervention_level[df$intervention_level=="Max rain"] <- "Max\nrain"
-df$intervention_level[df$intervention_level=="Post-max rain"] <- "Post-max\nrain"
+# df$intervention_level[df$intervention_level=="Opposite max rain"] <- "Opposite\nmax rain"
+# df$intervention_level[df$intervention_level=="Pre-max rain"] <- "Pre-max\nrain"
+# df$intervention_level[df$intervention_level=="Max rain"] <- "Max\nrain"
+# df$intervention_level[df$intervention_level=="Post-max rain"] <- "Post-max\nrain"
+# df$intervention_level <- factor(df$intervention_level, levels=c("Post-max\nrain", "Max\nrain", "Pre-max\nrain", "Opposite\nmax rain"))
 
-#df$intervention_level <- factor(df$intervention_level, levels=c("Opposite max rain",  "Pre-max rain", "Max rain", "Post-max rain"))
-df$intervention_level <- factor(df$intervention_level, levels=c("Post-max\nrain", "Max\nrain", "Pre-max\nrain", "Opposite\nmax rain"))
+df$intervention_level[df$intervention_level=="Opposite max rain"] <- "Dry season (ref)"
+df$intervention_level[df$intervention_level=="Pre-max rain"] <- "Pre-peak rainy season"
+df$intervention_level[df$intervention_level=="Max rain"] <- "Peak rainy season"
+df$intervention_level[df$intervention_level=="Post-max rain"] <- "Post-peak rainy season"
+df$intervention_level <- factor(df$intervention_level, 
+                                levels=c("Dry season (ref)", "Pre-peak rainy season", "Peak rainy season", "Post-peak rainy season"))
+
 
 #mark reference points
-df$ref <- ifelse(df$intervention_level=="Opposite\nmax rain","(ref.)",NA)
+df$ref <- ifelse(df$intervention_level=="Dry season (ref)","(ref.)",NA)
 df <- df %>% filter(!(!is.na(ref) & seasonality_category!="Pooled")) %>% droplevels() %>%
             rename(`Seasonality\nCategory`=seasonality_category)
 
@@ -98,13 +104,15 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   geom_point(aes(fill=`Seasonality\nCategory`, color=`Seasonality\nCategory`), 
              size = 3, 
              position = position_dodge(0.3)) +
-  geom_text(aes(label=ref), hjust = 1.2) +
+  geom_text(aes(label=ref), hjust = 1.2, vjust=-1) +
+  geom_hline(yintercept=0) +
   # scale_fill_manual(values=cbbPalette[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = TRUE)) +
   # scale_color_manual(values=cbbPalette[c(1,6,7,8)], drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = TRUE)) +
-  scale_fill_manual(values=cbbPalette, drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = TRUE)) +
-  scale_color_manual(values=cbbPalette, drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = TRUE)) +
-  coord_flip() +
-  xlab("3-month quarter of the year, grouped by rainfall")+
+  scale_fill_manual(values=cbbPalette, drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = F)) +
+  scale_color_manual(values=cbbPalette, drop=TRUE, limits = levels(df$measure), guide = guide_legend(reverse = F)) +
+  #coord_flip() +
+  #xlab("3-month quarter of the year, grouped by rainfall")+
+  xlab(NULL)+
   ylab("WLZ difference") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 5))  +
   theme(
@@ -113,7 +121,7 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
                                size = 14 #, angle = 45, hjust = 1, vjust =1
                                )) +
   theme(axis.title.y = element_text(size = 14)) +
-  theme(legend.position="top") +
+  theme(legend.position="right") +
   ggtitle("") + 
   theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
 print(p_seasonRR)

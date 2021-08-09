@@ -102,8 +102,7 @@ epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100,
 
 #Save dataset for longbow analysis
 save(d, file=paste0(ghapdata_dir,"earlywast_strat_co_rf.Rdata"))
-
-
+table(d$country)
 
 
 

@@ -189,6 +189,10 @@ mean(pers_wast_0_6$mean_age_gap)
 mean(pers_wast_6_24$mean_age_gap)
 mean(pers_wast_0_24$mean_age_gap)
 
+summary(pers_wast_0_6$mean_age_gap)
+summary(pers_wast_6_24$mean_age_gap)
+summary(pers_wast_0_24$mean_age_gap)
+
 summary(pers_wast_0_6$perc_wasting)
 summary(pers_wast_6_24$perc_wasting)
 summary(pers_wast_0_24$perc_wasting)
