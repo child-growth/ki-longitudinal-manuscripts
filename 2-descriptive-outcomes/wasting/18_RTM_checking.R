@@ -6,12 +6,71 @@ rm(list = ls())
 
 source(paste0(here::here(), "/0-config.R"))
 
-dfull <- readRDS(wasting_data_path)
-dfull <- calc.monthly.agecat(dfull)
+#dfull <- readRDS(wasting_data_path)
+dfull <- readRDS("C:/Users/andre/Downloads/wasting_data.rds")
+
+
+dfull <- calc.monthly.agecat(dfull) %>% filter(!is.na(agecat))
+dfull <- dfull %>% group_by(studyid, country, measurefreq, subjid, agecat) %>%
+  summarise(whz=mean(whz, na.rm=T)) %>% ungroup()
 
 table(dfull$studyid)
-df <- dfull %>% filter(measurefreq == "monthly", studyid=="MAL-ED", country=="BANGLADESH", !is.na(whz))
+#df <- dfull %>% filter(measurefreq == "monthly", studyid=="MAL-ED", country=="BANGLADESH", !is.na(whz))
 #df <- dfull %>% filter(measurefreq == "monthly", studyid=="TanzaniaChild2", !is.na(whz))
+df <- dfull %>% filter(!is.na(whz))
+
+levels(df$agecat)
+
+
+#Get correlations between monthly measures
+whz_corr <- function(subjid, whz1, whz2, agecat, mean_whz_monthly, sd_whz_monthly, var_whz_monthly, N){
+  rho= cor(whz1, whz2, use="pairwise.complete.obs")
+  return(data.frame(subjid, rho, whz1, whz2, agecat, mean_whz_monthly, sd_whz_monthly, var_whz_monthly, N))
+}
+
+df2 <- df %>% group_by(studyid, country, measurefreq) %>% arrange(studyid, country, measurefreq, subjid, agecat) %>%
+  mutate(lag_whz=lag(whz)) %>% 
+  group_by(studyid, country, measurefreq, agecat) %>% 
+  mutate(N=n(), mean_whz_monthly=mean(whz), sd_whz_monthly=sd(whz), var_whz_monthly=var(whz)) %>% 
+  do(whz_corr(.$subjid, .$lag_whz,.$whz, .$agecat, .$mean_whz_monthly, .$sd_whz_monthly, .$var_whz_monthly, .$N)) %>%
+  mutate(age_group=case_when(
+    agecat %in% c("Two weeks","One month","2 months", "3 months", "4 months", "5 months", "6 months") ~ "0-6 months",
+    agecat %in% c("7 months", "8 months", "9 months", "10 months","11 months","12 months") ~ "6-12 months",
+    agecat %in% c("13 months","14 months","15 months","16 months","17 months","18 months") ~ "12-18 months",
+    agecat %in% c("19 months","20 months","21 months","22 months","23 months","24 months") ~ "18-24 months"
+  ))  %>% group_by(studyid, country, measurefreq, age_group) %>% 
+  mutate(mean_rho=mean(rho, na.rm=T)) %>% 
+  group_by(studyid, country, measurefreq, age_group) %>% 
+  arrange(studyid, country, measurefreq, age_group, agecat) %>% 
+  mutate(first_N=first(N),
+         last_N=last(N),
+         popmean_pre=first(mean_whz_monthly),
+         popsd_pre=first(sd_whz_monthly),
+         popvar_pre=first(var_whz_monthly),
+         between_sub_var = mean_rho * popvar_pre,
+         within_sub_var = popvar_pre - between_sub_var,
+         coef=within_sub_var/sqrt(within_sub_var+between_sub_var),
+         z=(popmean_pre+2)/popsd_pre,
+         C=dnorm(z)/(1-pnorm(z)),
+         E_pre = popmean_pre-C*popsd_pre,
+         E_post = popmean_pre -(C* popsd_pre * mean_rho),
+         RTM=E_post-E_pre) %>%
+  filter(first_N>50 & last_N>50) %>%
+  group_by(age_group) %>% mutate(median_RTM=median(RTM, na.rm=T)) %>%
+  ungroup() %>% arrange(studyid, country, measurefreq, subjid, agecat) 
+  
+head(df2)
+table(df2$studyid, df2$first_N)
+
+df3 <- df2 %>% distinct(studyid, country, age_group, RTM)
+df4 <- df2 %>% distinct(studyid, country, age_group,median_RTM)
+
+p <- ggplot(df3, aes(x=age_group, y=RTM)) + geom_point(position=position_jitter(0.1),alpha=0.5) +
+  geom_point(aes(x=age_group, y=median_RTM), data=df4, shape=95, size=12, color=cbbPalette[2]) +
+  xlab("Age group") + ylab("Regression to the mean effect")
+p
+
+ggsave(p, file=paste0(here(),"/figures/wasting/RTM_figure.png"), width=6, height=3)
 
 
 

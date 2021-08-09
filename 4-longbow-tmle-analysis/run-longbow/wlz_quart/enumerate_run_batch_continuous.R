@@ -1,10 +1,10 @@
 
 
 rm(list=ls())
-.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths() ) )
+#.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths() ) )
 
 source(paste0(here::here(), "/0-config.R"))
-.libPaths( "~/rlibs" )
+#.libPaths( "~/rlibs" )
 library(data.table)
 library(longbowtools)
 #library(jsonlite)
@@ -32,6 +32,9 @@ analyses_unstrat$strata[[2]] <- c("studyid", "country")
 analyses <- rbind(analyses, analyses_unstrat)
 
 #Change analyses to list form
+ghapdata_dir <-"C:/Users/andre/Downloads/"
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
+
+BV_dir <- res_dir <- paste0(here(),"/results")
 run_ki_tmle(enumerated_analyses, results_folder="vel_wlz_quart", overwrite = T)
