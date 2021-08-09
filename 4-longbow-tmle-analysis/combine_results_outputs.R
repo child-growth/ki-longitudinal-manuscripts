@@ -15,6 +15,7 @@ Zscores_waz <- readRDS(paste0(res_dir, "rf results/longbow results/results_waz.R
 
 
 bin_primary <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_primary.RDS"))
+table(bin_primary$country)
 table(bin_primary$intervention_variable, bin_primary$agecat)
 
 bin_other <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_other.RDS"))

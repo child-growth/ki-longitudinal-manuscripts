@@ -27,20 +27,40 @@ d <- d %>% rename(Sex=sex,
                   `Number of children <5yrs`=nchldlt5,
                   `Food security level`=hfoodsec)
 
+d %>% group_by()
 
-table1(~ .| cohort, data=d, 
+
+res<-table1(~ .| cohort, data=d, 
        # transpose=TRUE,
        # overall=F, 
        # droplevels=T,
        render.missing=NULL,
        render.categorical="FREQ (PCTnoNA%)")
+df <- as.data.frame(res)
+
+for(i in 1:ncol(df)){
+  df[,i] <- gsub("NA \\(NA\\)","",df[,i])
+  df[,i] <- gsub("NA \\[NA, NA\\]","",df[,i])
+  df[is.na(df[,i]),i] <- ""
+}
+df <- df[!grepl("Median",df[,1]),]
 
 
-table1(~ .| cohort, data=d, 
+dim(df)
+
+#saveRDS(df, file=paste0(BV_dir,"/results/enrol_tab_wast.RDS"))
+saveRDS(df, file=paste0(here(),"/data/enrol_tab_wast.RDS"))
+
+knitr::kable(df, format="pipe")
+knitr::kable(df, format="html")
+
+
+res<-table1(~ .| cohort, data=d,
        transpose=TRUE,
        droplevels=T,
        # render.missing=NULL, #note these arguements don't work with transposing
        # render.categorical="FREQ (PCTnoNA%)"
        )
+df <- as.data.frame(res)
 
 #Open in new window, select all, then ctrl+Alt+V to paste special in Word

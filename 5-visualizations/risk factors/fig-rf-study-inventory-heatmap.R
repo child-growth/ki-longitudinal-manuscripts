@@ -32,6 +32,7 @@ rfp <- readRDS(paste0(BV_dir,'/results/cov_presence.rds'))
 rfn <- readRDS(paste0(BV_dir,'/results/cov_N.rds'))
 
 unique(rfp$studyid)
+table(rfp$studyid, rfp$country)
 
 # gather rf presence by study into long format
 rfp <- rfp %>% 

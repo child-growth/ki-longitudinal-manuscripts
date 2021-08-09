@@ -272,7 +272,6 @@ vel_wtkg <- vel %>% filter(ycat=="wtkg") %>% subset(., select=c(studyid, country
 # save datasets
 #--------------------------------------
 
-table(cuminc$agecat, cuminc$sex)
 
 save(prev, file=paste0(ghapdata_dir,"st_prev_outcomes.RData"))
 save(meanHAZ, file=paste0(ghapdata_dir,"st_meanZ_outcomes.RData"))

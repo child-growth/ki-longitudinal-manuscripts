@@ -33,7 +33,7 @@ clean_agecat<-function(agecat){
 #Load data
 dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
   filter(outcome_variable %in% c("co_occurence","pers_wasted624"), intervention_variable!="pers_wasted06") 
-
+table(dfull$country)
 
 dHR <- readRDS(paste0(BV_dir,"/results/cox_results_no_overlap.RDS")) %>% filter(!is.na(HR))
 

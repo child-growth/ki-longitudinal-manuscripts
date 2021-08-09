@@ -8,9 +8,8 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 results <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
-Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/vel_wlz_quart_obs_counts_2021-04-26.RDS")) %>%
+Ns <- readRDS(paste0(res_dir, "rf results/longbow results/velocity_wlz_quart_obs_counts.RDS")) %>%
   rename(intervention_level=lag_WHZ_quart)
-
 
 d <- results %>% filter(type=="ATE", intervention_variable=="lag_WHZ_quart") %>%
   subset(., select = -c(n_cell, n)) %>% group_by(studyid, country) %>% mutate(N=n()) %>%

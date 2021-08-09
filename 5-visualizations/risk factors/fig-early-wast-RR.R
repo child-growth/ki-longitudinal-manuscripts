@@ -5,8 +5,10 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-dfull <- readRDS("/data/KI/ki-manuscript-output/results/rf results/raw longbow results/results_earlywast_2021-06-05.RDS") %>% filter(type=="RR")
-Ns <- readRDS("/data/KI/ki-manuscript-output/results/rf results/raw longbow results/results_earlywast_obs_counts_2021-06-05.RDS") %>% 
+# dfull <- readRDS("/data/KI/ki-manuscript-output/results/rf results/raw longbow results/results_earlywast_2021-06-05.RDS") %>% filter(type=="RR")
+# Ns <- readRDS("/data/KI/ki-manuscript-output/results/rf results/raw longbow results/results_earlywast_obs_counts_2021-06-05.RDS") %>% 
+dfull <- readRDS("/data/KI/ki-manuscript-output/results/rf results/raw longbow results/results_results_early_wast_ccFig4_2021-08-08.RDS") %>% filter(type=="RR")
+Ns <- readRDS("/data/KI/ki-manuscript-output/results/rf results/raw longbow results/results_results_early_wast_ccFig4_obs_counts_2021-08-08.RDS") %>% 
   filter(agecat=="6-24 months",
          outcome_variable=="ever_stunted") %>%
   mutate(intervention_variable=case_when(!is.na(enwast)~"enwast",
@@ -97,6 +99,8 @@ p_earlywast_old
 
 set.seed(12234)
 yticks <- c(0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8)
+min(plotdf2$RR.CI1)
+max(plotdf2$RR.CI2)
 p_earlywast <- ggplot(plotdf2 %>% filter(pooled==1), aes(x=Xvar)) + 
   geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), color="#878787", fill="#878787", size=2.5, stroke=0, alpha=0.5,
              position=position_jitter(width=0.1), data=plotdf2 %>% filter(pooled==0)) +
@@ -106,7 +110,7 @@ p_earlywast <- ggplot(plotdf2 %>% filter(pooled==1), aes(x=Xvar)) +
   labs(x = "Wasting exposure", y = "Cumulative incidence\nratio: stunting 6-24 mo.") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=c(1, 2, 3), y=((plotdf2$RR.CI2))+.02, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits =c(0.51, 1.95), expand = c(0,0)) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits =c(0.5, 1.75), expand = c(0,0)) +
   scale_fill_manual(values=rep(tableau10[1],4)) +
   scale_colour_manual(values=rep(tableau10[1],4)) +
   theme(strip.background = element_blank(),

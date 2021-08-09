@@ -17,14 +17,6 @@ unique(par$outcome_variable)
 
 par <- par %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
 
-# #temp 
-# par <- par %>% filter(intervention_variable!="fage") %>%
-#   mutate(intervention_variable = fct_recode(intervention_variable, "fage" = "fage_rf"))
-# 
-# par[par$intervention_variable=="fage",] 
-
-dim(par)
-
 unique(par$intervention_level)
 unique(par$intervention_variable)
 par$intervention_level <- as.character(par$intervention_level)
@@ -136,8 +128,35 @@ plotdf <- dpool %>%
     est_lab=paste0(n,"   ",est_lab)
     ) #,
     #est_lab=ifelse(sig==1, est_lab, "")
+
+est_lab_format="N (% shifted)   PIE (95% CI)"
+
+plotdf <- bind_rows(
+  data.frame(
+    outcome_variable="LAZ",             
+    RFlabel_ref="",               
+    RFgroup="At-birth child characteristics",
+    est_lab_title=est_lab_format,
+    title=1
+  ),
+  data.frame(
+    outcome_variable="WLZ",             
+    RFlabel_ref="",               
+    RFgroup="At-birth child characteristics",
+    est_lab_title=est_lab_format,
+    title=1
+  ),
+  data.frame(
+    outcome_variable="waz",             
+    RFlabel_ref="",               
+    RFgroup="At-birth child characteristics",
+    est_lab_title=est_lab_format,
+    title=1
+  ),
+  plotdf %>% mutate(title=0)
+)
     
-plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, -PAR) 
+plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, title, -PAR) 
 rflevels = unique(plotdf$RFlabel_ref)
 plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
 
@@ -252,6 +271,7 @@ pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref
   geom_point(aes(y=-PAR),  size = 4) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
   geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=3.25) +
+  geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=3.5, fontface = "bold") +
   #geom_text(label="N (% shifted) PIE (95% CI)", y=-0.15, x=4, color="grey20", size=3.25,  face="bold") +
   #geom_text(aes(label=n), y=.6, color="grey20", size=3.25) +
   coord_flip(ylim=c(-0.3, 0.48)) +
@@ -276,7 +296,6 @@ pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref
   ggforce::facet_col(facets = vars(RFgroup), 
                    scales = "free_y", 
                    space = "free") 
-
 pPAR_laz
 
 
@@ -286,6 +305,7 @@ pPAR_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel_ref
   geom_point(aes(y=-PAR),  size = 4) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
   geom_text(aes(label=est_lab), y=-0.125, color="grey20", size=3.25) +
+  geom_text(aes(label=est_lab_title), y=-0.125, color="black", size=3.5, fontface = "bold") +
   coord_flip(ylim=c(-0.185,0.27)) +
   labs(x = NULL,
        y = "") +
@@ -316,7 +336,7 @@ pPAR_wlz
 
 #fig2 = plot_grid(pPAR_laz, pPAR_wlz, mtab_df_tbl, ncol = 3, rel_widths = c(1.5, 1, 0.6))
 fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(1.5, 1))
-
+fig2
 #To do:
 #Fix x-axis label position with this:
 #https://stackoverflow.com/questions/33114380/centered-x-axis-label-for-muliplot-using-cowplot-package
@@ -334,6 +354,7 @@ pPAR_waz <- ggplot(plotdf_waz, aes(x=RFlabel_ref, group=RFgroup, color=RFgroup))
   geom_point(aes(y=-PAR),  size = 4) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
   geom_text(aes(label=est_lab), y=-0.125, color="grey20", size=3.25) +
+  geom_text(aes(label=est_lab_title), y=-0.125, color="black", size=3.5, fontface = "bold") +
   coord_flip(ylim=c(-0.185,0.552)) +
   labs(x = NULL,
        y = "") +

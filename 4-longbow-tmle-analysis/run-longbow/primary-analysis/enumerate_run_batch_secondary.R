@@ -25,6 +25,9 @@ dim(analyses_prim)
 analyses <- anti_join(analyses, analyses_prim, by = c("A","Y","id","strata", "W"))
 dim(analyses)
 
+table(analyses_prim$A, analyses_prim$Y)
+table(analyses$A, analyses$Y)
+
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 run_ki_tmle(enumerated_analyses, results_folder="results_bin_secondary", overwrite = T, skip_failed=F)

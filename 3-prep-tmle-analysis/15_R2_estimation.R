@@ -2,7 +2,7 @@
 
 
 rm(list=ls())
-try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) ))
+try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths() ) ))
 #library("tlverse")
 
 source(paste0(here::here(), "/0-config.R"))
@@ -63,7 +63,7 @@ length(unique(paste0(haz$studyid,haz$country)))
 
 #new
 covars_haz <- c("vagbrth","cleanck", "W_birthlen", "W_birthwt","W_meducyrs", "hhwealth_quart",
-                "W_mwtkg","W_mhtcm", "W_meducyrs", "W_feducyrs", "parity", "sex")
+                "W_mwtkg","W_mhtcm", "W_feducyrs", "parity", "sex")
 covars_whz <- c("vagbrth","cleanck", "W_birthlen", "W_birthwt","W_meducyrs","W_fage", "nhh", "W_nrooms",
                 "W_mwtkg", "W_mhtcm", "sex")
 
@@ -147,8 +147,8 @@ table(whz$sum_miss)
 #             Nchildren=length(unique(paste0(studyid, subjid))))
 
 
-haz <- haz %>% filter(sum_miss<=5) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars))
-whz <- whz %>% filter(sum_miss<=5) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars))
+haz <- haz %>% filter(sum_miss<=5) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars_haz))
+whz <- whz %>% filter(sum_miss<=5) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars_whz))
 
 #N's for manuscript
 haz %>% ungroup() %>%
@@ -289,8 +289,8 @@ SL_R2 <- function(dat, outcome, covars){
 
 
 #Apply function to all cohorts that measure the covariates of interest
-res_haz_list <- haz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="haz", covars=covars)))
-res_whz_list <- whz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="whz", covars=covars)))
+res_haz_list <- haz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="haz", covars=covars_haz)))
+res_whz_list <- whz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="whz", covars=covars_whz)))
 
 res_haz<-NULL
 for(i in 1:nrow(res_haz_list)){

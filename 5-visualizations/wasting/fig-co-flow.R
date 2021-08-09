@@ -20,6 +20,13 @@ co_pool = readRDS(paste0(res_dir, "co_flow_pooled.RDS"))
 co_pool <- co_pool %>% group_by(agem) %>%
   mutate(sum=sum(est), est=est/sum, sum2=sum(est)) %>% ungroup()
 
+#get summary measures:
+unique(co_pool$label)
+co_pool %>% filter(label %in% 
+                     c("Wasted+Underweight",      
+                       "Stunted+Underweight",      
+                       "Wasted+Stunted+Underweight")) %>%
+  group_by(agem) %>% summarise(sum(est)*100) %>% as.data.frame()
 
 #-----------------------------------------
 # define hybrid color palette

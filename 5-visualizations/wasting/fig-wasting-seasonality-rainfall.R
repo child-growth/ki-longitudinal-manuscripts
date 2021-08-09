@@ -170,7 +170,8 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
   }
   
   if(!(i %in% leftlab | i %in% rightlab)){
-    p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
+    p <- ggplot(rain_sub, aes(x=month, y=rain)) + 
+      geom_bar(stat='identity', width=0.5, alpha=0.5) +
       geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=seasonality_category), size=2) +
       geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
                                    y=(fit-shift)*conversion_factor, 

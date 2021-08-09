@@ -14,6 +14,8 @@ Wvars <- c("sex", "tr", "brthmon", "vagbrth", "hdlvry", "single", "trth2o",
 
 #load data
 d <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/mortality_age_no_overlap.rds")
+table(d$studyid, d$country)
+
 d$sex <-factor(d$sex)
 d$single <-as.numeric(d$single)
 d$impsan  <-as.numeric(d$impsan )

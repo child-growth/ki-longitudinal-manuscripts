@@ -3,6 +3,7 @@
 rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 
+
 plotdf <- readRDS(paste0(ghapdata_dir, "birthwast_strat_whz_plot_data.rds"))
 plotdf$cohort = "pooled"
 plotdf_strat <- readRDS(paste0(ghapdata_dir, "birthwast_and_cohort_strat_whz_plot_data.rds"))
