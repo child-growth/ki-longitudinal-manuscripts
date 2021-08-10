@@ -369,17 +369,15 @@ perswast_plot <- ki_desc_flurry_plot(d,
                    Severe="no", 
                    Age_range="6 months", 
                    xlabel="Child age, months",
+                   #scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)), 
                    ylabel = 'Proportion (%)',
                    yrange=c(0,20),
                    returnData=T)
 
 # save plot and underlying data
-ggsave(perswast_plot$plot, file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-pers-wast-no-Kenaba-BW.png"), width=10, height=5)
+ggsave(perswast_plot$plot, file=paste0(BV_dir,"/figures/wasting/no-kenaba-BW/fig-pers-wast-no-Kenaba-BW.png"), width=20, height=5)
 
 saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-pers-wast-no-Kenaba-BW.RDS"))
-
-
-
 
 
 #-------------------------------------------------------------------------------------------
@@ -396,7 +394,6 @@ co_plot <- ki_desc_plot(d,
                    ylabel='Point prevalence of co-occurrent\nwasting and stunting (95% CI)',
                    yrange=c(0,11),
                    returnData=T)
-
 
 
 
@@ -447,7 +444,7 @@ sevwast_plot <- ki_desc_plot(d,
 
 
 # save plot and underlying data
-ggsave(sevwast_plot[[1]], file=paste0(here::here(),"/figures/wasting/no-kenaba-BW/fig-sev-wast-no-Kenaba-BW.png"), width=14, height=3)
+ggsave(sevwast_plot[[1]], file=paste0(BV_dir,"/figures/wasting/no-kenaba-BW/fig-sev-wast-no-Kenaba-BW.png"), width=14, height=3)
 
 saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-sev-wast-no-Kenaba-BW.RDS"))
 
