@@ -228,8 +228,8 @@ prev_plot_name = create_name(
 # save plot and underlying data
 ggsave(prev_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
 ggsave(prev_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_africa", ".png"), width=10, height=5)
-ggsave(prev_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
-ggsave(prev_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
+ggsave(prev_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_lam", ".png"), width=15, height=5)
+ggsave(prev_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=18, height=10)
 
 saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",prev_plot_name,".RDS"))
 
@@ -739,9 +739,9 @@ perswast_plot_name = create_name(
 # save plot and underlying data
 ggsave(perswast_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",perswast_plot_name, ".png"), width=8, height=5)
 
-ggsave(perswast_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_africa", ".png"), width=10, height=5)
+ggsave(perswast_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_africa", ".png"), width=7, height=5)
 ggsave(perswast_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_lam", ".png"), width=10, height=5)
-ggsave(perswast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=10, height=5)
+ggsave(perswast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=15, height=8)
 
 saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_plot_name,".RDS"))
 
@@ -800,7 +800,7 @@ co_plot_sasia <- ki_desc_plot(d,
                                ylabel='Point prevalence of concurrent\nwasting and stunting (%)',
                                yrange=c(0,20),
                                returnData=T,
-                               Region="South Asia")
+                               Region= "South Asia")
 
 # define standardized plot names
 co_plot_name = create_name(
@@ -814,10 +814,10 @@ co_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
-ggsave(co_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_africa", ".png"), width=10, height=5)
-ggsave(co_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_lam", ".png"), width=10, height=5)
-ggsave(co_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_sasia", ".png"), width=10, height=5)
+ggsave(co_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",co_plot_name, ".png"), width=15, height=5)
+ggsave(co_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_africa", ".png"), width=15, height=5)
+ggsave(co_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_lam", ".png"), width=15, height=5)
+ggsave(co_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_sasia", ".png"), width=20, height=8)
 
 saveRDS(co_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",co_plot_name,".RDS"))
 
@@ -889,7 +889,7 @@ underweight_plot_name = create_name(
 ggsave(underweight_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",underweight_plot_name, ".png"), width=14, height=3)
 ggsave(underweight_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_africa", ".png"), width=10, height=5)
 ggsave(underweight_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_lam", ".png"), width=10, height=5)
-ggsave(underweight_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=10, height=5)
+ggsave(underweight_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=20, height=8)
 
 saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",underweight_plot_name,".RDS"))
 
@@ -1106,13 +1106,11 @@ sevwast_plot_name = create_name(
 # save plot and underlying data
 ggsave(sevwast_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
 ggsave(sevwast_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_africa", ".png"), width=10, height=5)
-ggsave(sevwast_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_lam", ".png"), width=10, height=5)
-ggsave(sevwast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_sasia", ".png"), width=10, height=5)
+ggsave(sevwast_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_lam", ".png"), width=15, height=5)
+ggsave(sevwast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_sasia", ".png"), width=18, height=8)
 
 
 saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",sevwast_plot_name,".RDS"))
-
-
 
 
 #Get N's for figure captions
