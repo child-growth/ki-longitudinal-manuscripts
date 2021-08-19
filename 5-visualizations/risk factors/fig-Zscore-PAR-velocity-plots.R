@@ -33,9 +33,9 @@ par$RFlabel[par$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)
 par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 unique(par$outcome_variable)
-par <- par %>% filter(outcome_variable %in% c("y_rate_haz", "y_rate_whz", "y_rate_len","y_rate_wtkg"))
+par <- par %>% filter(outcome_variable %in% c("y_rate_haz", "y_rate_waz", "y_rate_len","y_rate_wtkg"))
 par$outcome_variable <- gsub("y_rate_haz", "LAZ velocity", par$outcome_variable)
-par$outcome_variable <- gsub("y_rate_whz", "WLZ velocity", par$outcome_variable)
+par$outcome_variable <- gsub("y_rate_waz", "WAZ velocity", par$outcome_variable)
 par$outcome_variable <- gsub("y_rate_len", "length velocity", par$outcome_variable)
 par$outcome_variable <- gsub("y_rate_wtkg", "weight velocity", par$outcome_variable)
 
@@ -45,7 +45,8 @@ par <- par %>% subset(., select = c(outcome_variable, agecat, region, interventi
 
 par_agestrat <- par %>% filter(agecat %in% c(
   "0-3 months", "3-6 months" , "6-9 months","9-12 months", 
-  "12-15 months", "15-18 months", "18-21 months", "21-24 months"  ), region=="Pooled", outcome_variable %in% c("LAZ velocity", "WLZ velocity", "length velocity", "weight velocity"), !is.na(PAR))  
+  "12-15 months", "15-18 months", "18-21 months", "21-24 months"  ), region=="Pooled", 
+  outcome_variable %in% c("LAZ velocity", "WAZ velocity", "length velocity", "weight velocity"), !is.na(PAR))  
 
 table(par_agestrat$outcome_variable)
 
@@ -54,8 +55,10 @@ table(par_agestrat$outcome_variable)
 # Age stratified plots
 #######################
 
-outcome="length velocity"
+outcome="WAZ velocity"
 age="0-3 months"
+#data <- par_agestrat %>% filter(outcome_variable == outcome) %>% arrange(-PAR) 
+
 
 plot_age = function(outcome, age){
   data <- par_agestrat %>% filter(outcome_variable == outcome, agecat == age) %>% arrange(-PAR) 
@@ -116,30 +119,30 @@ ggsave(plot_laz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/
 
 
 
-### Plot WLZ, stratified by age
-plot_wlz_3 = plot_age("WLZ velocity", "0-3 months")
-plot_wlz_6 = plot_age("WLZ velocity", "3-6 months")
-plot_wlz_9 = plot_age("WLZ velocity", "6-9 months")
-plot_wlz_12 = plot_age("WLZ velocity", "9-12 months")
-plot_wlz_15 = plot_age("WLZ velocity", "12-15 months")
-plot_wlz_18 = plot_age("WLZ velocity", "15-18 months")
-plot_wlz_21 = plot_age("WLZ velocity", "18-21 months")
-plot_wlz_24 = plot_age("WLZ velocity", "21-24 months")
+### Plot WAZ, stratified by age
+plot_waz_3 = plot_age("WAZ velocity", "0-3 months")
+plot_waz_6 = plot_age("WAZ velocity", "3-6 months")
+plot_waz_9 = plot_age("WAZ velocity", "6-9 months")
+plot_waz_12 = plot_age("WAZ velocity", "9-12 months")
+plot_waz_15 = plot_age("WAZ velocity", "12-15 months")
+plot_waz_18 = plot_age("WAZ velocity", "15-18 months")
+plot_waz_21 = plot_age("WAZ velocity", "18-21 months")
+plot_waz_24 = plot_age("WAZ velocity", "21-24 months")
 
 
 
 
-plot_wlz_age = grid.arrange(plot_wlz_3, 
-                            plot_wlz_6, 
-                            plot_wlz_9, 
-                            plot_wlz_12,
-                            plot_wlz_15, 
-                            plot_wlz_18, 
-                            plot_wlz_21, 
-                            plot_wlz_24, ncol = 2, nrow = 4,
+plot_waz_age = grid.arrange(plot_waz_3, 
+                            plot_waz_6, 
+                            plot_waz_9, 
+                            plot_waz_12,
+                            plot_waz_15, 
+                            plot_waz_18, 
+                            plot_waz_21, 
+                            plot_waz_24, ncol = 2, nrow = 4,
                             top = textGrob("Attributable difference - WLZ velocity, stratified by age",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_wlz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-vel-PAR.png"), height=36, width=15)
+ggsave(plot_waz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-vel-PAR.png"), height=36, width=15)
 
 
 

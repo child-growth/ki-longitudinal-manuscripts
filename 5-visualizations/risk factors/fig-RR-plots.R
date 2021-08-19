@@ -27,6 +27,7 @@ df <- droplevels(df)
 unique(df$outcome_variable)
 df$outcome_variable <- gsub("ever_stunted", "Ever stunted", df$outcome_variable)
 df$outcome_variable <- gsub("ever_wasted", "Ever wasted", df$outcome_variable)
+df$outcome_variable <- gsub("ever_co", "Ever wasted and stunted", df$outcome_variable)
 df$outcome_variable <- gsub("pers_wast", "Persistenly wasted", df$outcome_variable)
 df$outcome_variable <- gsub("stunted", "Stunted", df$outcome_variable)
 df$outcome_variable <- gsub("wasted", "Wasted", df$outcome_variable)
@@ -36,37 +37,45 @@ df$outcome_variable <- gsub("s03rec24", "Stunting recovery", df$outcome_variable
 df$outcome_variable <- gsub("wast_rec90d", "Wasting recovery", df$outcome_variable)
 
 
-i <- unique(df$region)[1]
-j <- unique(df$outcome_variable)[1]
-k <- unique(df$intervention_variable)[1]
-#l <- unique(df$intervention_variable)[1]
+#subset to a smaller number of plots
+length(unique(df$region)) * length(unique(df$outcome_variable)) * length(unique(df$intervention_variable))
+df <- df %>% filter(outcome_variable %in% c("Ever Stunted", "Ever Wasted", "Ever wasted and stunted"))
+ length(unique(df$outcome_variable)) * length(unique(df$intervention_variable))
 
-dpool <- df %>% 
-  filter(region==i,
-         outcome_variable==j,
-         intervention_variable == k) %>%
-  filter(!is.na(intervention_variable))
+# i <- unique(df$region)[1]
+# j <- unique(df$outcome_variable)[1]
+# k <- unique(df$intervention_variable)[1]
+# #l <- unique(df$intervention_variable)[1]
+# 
+# dpool <- df %>% 
+#   filter(region==i,
+#          outcome_variable==j,
+#          intervention_variable == k) %>%
+#   filter(!is.na(intervention_variable))
+# 
+# p <-  ggplot(dpool, aes(x=intervention_level)) + 
+#   geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
+#   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
+#                  alpha=0.5, size = 1) +
+#   facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
+#   labs(x = "Exposure level", y = "Relative risk") +
+#   geom_hline(yintercept = 1) +
+#   geom_text(aes(x=1.2, y=(max(dpool$RR.CI2))-.1, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
+#   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
+#   scale_fill_manual(values=rep(tableau10,4)) +
+#   scale_colour_manual(values=rep(tableau10,4)) +
+#   theme(strip.background = element_blank(),
+#         legend.position="none",
+#         axis.text.y = element_text(size=12),
+#         strip.text.x = element_text(size=10),
+#         axis.text.x = element_text(size=10, angle = 20, hjust = 1),
+#         panel.spacing = unit(0, "lines")) +
+#   ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$intervention_variable[1],"\nRegion: ", dpool$region[1])) 
+# print(p)
 
-p <-  ggplot(dpool, aes(x=intervention_level)) + 
-  geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
-                 alpha=0.5, size = 1) +
-  facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
-  labs(x = "Exposure level", y = "Relative risk") +
-  geom_hline(yintercept = 1) +
-  geom_text(aes(x=1.2, y=(max(dpool$RR.CI2))-.1, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-  scale_fill_manual(values=rep(tableau10,4)) +
-  scale_colour_manual(values=rep(tableau10,4)) +
-  theme(strip.background = element_blank(),
-        legend.position="none",
-        axis.text.y = element_text(size=12),
-        strip.text.x = element_text(size=10),
-        axis.text.x = element_text(size=10, angle = 20, hjust = 1),
-        panel.spacing = unit(0, "lines")) +
-  ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$intervention_variable[1],"\nRegion: ", dpool$region[1])) 
-print(p)
-
+#Delete existing plots
+ do.call(file.remove, list(list.files(paste0(BV_dir,"/figures/risk-factor/RR-plots/"), full.names = TRUE)))
+ 
 
 for(i in unique(df$region)){
   for(j in unique(df$outcome_variable)){

@@ -1,9 +1,4 @@
 
-#-----------------------------------
-# Stunting analysis
-# Objective 1a
-# Import data, subset to relevant variables
-#-----------------------------------
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 

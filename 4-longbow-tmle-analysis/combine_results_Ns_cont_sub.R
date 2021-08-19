@@ -9,7 +9,7 @@ library(longbowRiskFactors)
 d <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_obs_counts.RDS"))
 #drop EE gestational age
 # <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth))) %>% subset(., select = -c(fage))
-
+table(d$fage)
 
 d2 <- readRDS(paste0(res_dir,"rf results/longbow results/seasonality_rf_cont_results_obs_counts.RDS"))
 

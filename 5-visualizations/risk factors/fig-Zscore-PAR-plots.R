@@ -5,6 +5,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 library(gtable)
+library(gtable)
 
 
 
@@ -14,6 +15,7 @@ library(gtable)
 par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
 unique(par$intervention_variable)
 unique(par$outcome_variable)
+
 
 par <- par %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
 
@@ -118,8 +120,6 @@ plotdf <- dpool %>%
                         RFtype %in% c("Parent background","Parent anthro" ) ~ "Parental Characteristics",
                         RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal child characteristics",
                         RFtype==RFtype ~ "At-birth child characteristics"),
-    RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
-                                             "Parental Characteristics", "Household & Environmental Characteristics"))),
     sig=ifelse((CI1<0 & CI2<0) | (CI1>0 & CI2>0), 1, 0),
     est_lab=paste0(sprintf("%0.2f", -PAR)," (",sprintf("%0.2f", -CI2),", ",sprintf("%0.2f", -CI1),")"),
                    perc_ref= round((1-ref_prev)*100),
@@ -130,6 +130,8 @@ plotdf <- dpool %>%
     #est_lab=ifelse(sig==1, est_lab, "")
 
 est_lab_format="N (% shifted)   PIE (95% CI)"
+
+
 
 plotdf <- bind_rows(
   data.frame(
@@ -156,6 +158,10 @@ plotdf <- bind_rows(
   plotdf %>% mutate(title=0)
 )
     
+
+plotdf <- plotdf %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
+                                                                  "Parental Characteristics", "Household & Environmental Characteristics"))))
+
 plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, title, -PAR) 
 rflevels = unique(plotdf$RFlabel_ref)
 plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
@@ -172,7 +178,7 @@ plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
 #        y = "Attributable differences") +
 #   geom_hline(yintercept = 0) +
 #   #scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4)) +
-#   scale_color_manual(values = cbbPalette[c(2,3,4,6)], guide = guide_legend(reverse = TRUE) ) +
+#   scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
 #   theme(strip.background = element_blank(),
 #         #legend.position=c(0.9,0.2),
 #         strip.text = element_text(hjust = 0, size=14,  face="bold"),
@@ -276,11 +282,11 @@ pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref
   #geom_text(aes(label=n), y=.6, color="grey20", size=3.25) +
   coord_flip(ylim=c(-0.3, 0.48)) +
   labs(x = NULL,
-       y = "Population intervention effect, difference in z-score") +
+       y = "Population intervention effect, difference in Z-score") +
   geom_hline(yintercept = 0) +
-  scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5)) +
+  scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5), labels=c("","","0","0.1","0.2","0.3","0.4","0.5")) +
   #scale_x_discrete(expand = expansion(add  = c(.5, 1.5))) +
-  scale_color_manual(values = cbbPalette[c(2,3,4,6)], guide = guide_legend(reverse = TRUE) ) +
+  scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
   theme(strip.background = element_blank(),
         strip.placement = "top",
         strip.text = element_text(hjust = 0, size=12,  face="bold"),
@@ -288,6 +294,7 @@ pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref
         axis.text.x = element_text(size=12),
         axis.title.x = element_text(hjust = 1),
         plot.title = element_text(hjust = 0),
+        axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   guides(shape=FALSE) + 
   ggtitle("Length-for-age Z-score") +
@@ -304,14 +311,15 @@ pPAR_laz
 pPAR_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
   geom_point(aes(y=-PAR),  size = 4) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
-  geom_text(aes(label=est_lab), y=-0.125, color="grey20", size=3.25) +
-  geom_text(aes(label=est_lab_title), y=-0.125, color="black", size=3.5, fontface = "bold") +
-  coord_flip(ylim=c(-0.185,0.27)) +
+  geom_text(aes(label=est_lab), y=-0.16, color="grey20", size=3.25) +
+  geom_text(aes(label=est_lab_title), y=-0.16, color="black", size=3.5, fontface = "bold") +
+  #coord_flip(ylim=c(-0.185,0.3)) +
+  coord_flip(ylim=c(-0.25,0.3)) +
   labs(x = NULL,
        y = "") +
   geom_hline(yintercept = 0) +
-  scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4)) +
-  scale_color_manual(values = cbbPalette[c(2,3,4,6)], guide = guide_legend(reverse = TRUE) ) +
+  scale_y_continuous(breaks = c(-0.3,-0.2,-0.1,0,0.1,0.2,0.3,0.4), labels=c("","","","0","0.1","0.2","0.3","0.4")) +
+  scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
   theme(strip.background = element_blank(),
         strip.placement = "top",
         strip.text = element_text(hjust = 0, size=12,  face="bold", color="white"),
@@ -319,6 +327,7 @@ pPAR_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel_ref
         axis.text.y = element_blank(),
         axis.text.x = element_text(size=12),
         plot.title = element_text(hjust = 0),
+        axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   guides(shape=FALSE) + 
   ggtitle("Weight-for-length Z-score") +
@@ -335,14 +344,17 @@ pPAR_wlz
 #pPar_f = grid.arrange(blank,pPAR,  nrow = 2, heights = c(0.6,12))
 
 #fig2 = plot_grid(pPAR_laz, pPAR_wlz, mtab_df_tbl, ncol = 3, rel_widths = c(1.5, 1, 0.6))
-fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(1.5, 1))
-fig2
+#fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(1.5, 1))
+fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(2, 1))
+
 #To do:
 #Fix x-axis label position with this:
 #https://stackoverflow.com/questions/33114380/centered-x-axis-label-for-muliplot-using-cowplot-package
 
-ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
 #/data/KI/ki-manuscript-output/figures/manuscript-figure-composites/risk-factor/
+ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
+ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt.png"), width=11, height=8)
+ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt.png"), width=183, height=183/2, units = c("mm"))
 
 
 plotdf_waz <- plotdf %>% filter(outcome_variable=="waz") %>% droplevels()
@@ -360,7 +372,7 @@ pPAR_waz <- ggplot(plotdf_waz, aes(x=RFlabel_ref, group=RFgroup, color=RFgroup))
        y = "") +
   geom_hline(yintercept = 0) +
   scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4)) +
-  scale_color_manual(values = cbbPalette[c(2,3,4,6)], guide = guide_legend(reverse = TRUE) ) +
+  scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
   theme(strip.background = element_blank(),
         strip.placement = "top",
         strip.text = element_text(hjust = 0, size=12,  face="bold", color="white"),

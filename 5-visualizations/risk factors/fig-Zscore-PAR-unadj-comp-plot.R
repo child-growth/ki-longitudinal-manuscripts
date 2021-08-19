@@ -16,8 +16,7 @@ par_unadj <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_result
 
 par <- bind_rows(par, par_unadj)
 
-par <- par %>% filter(intervention_variable %in% unique(RMAest_clean$intervention_variable))
-
+par <- par %>% filter(!(intervention_variable %in% c("anywast06","pers_wast","enstunt","enwast","trth2o")))
 
 
 unique(par$intervention_level)

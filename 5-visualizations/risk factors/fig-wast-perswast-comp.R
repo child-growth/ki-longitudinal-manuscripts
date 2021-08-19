@@ -116,7 +116,7 @@ data = plotdf %>% filter(pooled==0)
 min(data$RR)
 max(data$RR)
 
-plotdf <- plotdf %>% filter(!is.na(Outcome), !is.na(RFlabel_ref), !is.na(intervention_var)) %>% droplevels()
+plotdf <- plotdf %>% filter(!is.na(Outcome), !is.na(RFlabel_ref), !is.na(intervention_variable)) %>% droplevels()
 
 set.seed(12234)
 p_severecomp <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), 

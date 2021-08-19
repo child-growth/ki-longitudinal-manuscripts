@@ -23,6 +23,8 @@ load(here("4-longbow-tmle-analysis","analysis specification","adjusted_binary_an
 dim(analyses)
 dim(analyses_prim)
 analyses <- anti_join(analyses, analyses_prim, by = c("A","Y","id","strata", "W"))
+analyses <- analyses %>% filter(A!="fage_rf",A!="fhtcm_rf", Y!="swasted", Y!="sstunted")
+analyses <- analyses %>% filter(A!="pers_wast",A!="anywast06", A!="enstunt", A!="enwast")
 dim(analyses)
 
 table(analyses_prim$A, analyses_prim$Y)
@@ -30,4 +32,4 @@ table(analyses$A, analyses$Y)
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-run_ki_tmle(enumerated_analyses, results_folder="results_bin_secondary", overwrite = T, skip_failed=F)
+run_ki_tmle(enumerated_analyses, results_folder="results_bin_secondary", overwrite = F, skip_failed=F)

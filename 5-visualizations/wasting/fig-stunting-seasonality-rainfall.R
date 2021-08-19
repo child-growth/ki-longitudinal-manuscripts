@@ -153,3 +153,4 @@ for(i in 1:length(cohorts)){
 #Save plot-objects
 saveRDS(plot_list, file=paste0(BV_dir,"/figures/plot-objects/stunting_rain_seasonality_plot_objects.rds"))
 
+

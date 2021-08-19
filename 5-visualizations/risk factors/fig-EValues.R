@@ -12,6 +12,8 @@ library(EValue)
 #Load data
 d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
+d <- d %>% filter(!(intervention_variable %in% c("anywast06","pers_wast","enstunt","enwast","trth2o")))
+
 
 #Drop reference levels
 d <- d %>% filter(!(logRR.psi==1 & logSE==0 & RR==1)) %>% rename(estimate = RR, ci_lower = RR.CI1, ci_upper = RR.CI2) %>%

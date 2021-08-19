@@ -137,14 +137,14 @@ table(cohorts_fits$cohort)
 
 
 #limits = yrange, 
-rainmax = max(rain3$rain)
-# shift<-min(cohorts_fits$fit)
-# Zpeak<-ifelse(min(cohorts_fits$fit)<0, abs(min(cohorts_fits$fit)), max(cohorts_fits$fit-shift))
+rainmax = max(rain3$rain) +200
+# shift_var<-min(cohorts_fits$fit)
+# Zpeak<-ifelse(min(cohorts_fits$fit)<0, abs(min(cohorts_fits$fit)), max(cohorts_fits$fit-shift_var))
 # conv_shift<-ifelse(min(cohorts_fits$fit)<0, max(cohorts_fits$fit), 0)
 # conversion_factor <- rainmax/(Zpeak+conv_shift)
 
-shift<-min(dfit$fit_lb)
-Zpeak<-ifelse(min(dfit$fit_lb)<0, abs(min(dfit$fit_lb)), max(dfit$fit_ub-shift))
+shift_var<-min(dfit$fit_lb)
+Zpeak<-ifelse(min(dfit$fit_lb)<0, abs(min(dfit$fit_lb)), max(dfit$fit_ub-shift_var))
 conv_shift<-ifelse(min(dfit$fit_lb)<0, max(dfit$fit_ub), 0)
 conversion_factor <- rainmax/(Zpeak+conv_shift)
 
@@ -160,15 +160,15 @@ yrange=NULL
 #To do: estimate cohorts the same way as overall (get loop from other plots)
 #Weighted rainfall averages based on child N's.
 
-p2 <- ggplot(data=dfit, aes(x=(birthday/365)*12+0.5, y=(fit-shift)*conversion_factor), color="grey20",  fill="grey20") +
+p2 <- ggplot(data=dfit, aes(x=(birthday/365)*12+0.5, y=(fit-shift_var)*conversion_factor), color="grey20",  fill="grey20") +
   geom_bar(aes(x=month, y=rain), stat='identity', width=0.5, alpha=0.5, data=rain3) +
-  # geom_line(aes(x=(birthday/365)*12+0.5, y=(fit-shift)*conversion_factor, group=cohort, color=cohort), 
+  # geom_line(aes(x=(birthday/365)*12+0.5, y=(fit-shift_var)*conversion_factor, group=cohort, color=cohort), 
   #           se=F,  alpha=0.5, size=1, 
   #           #color="grey20", 
   #           data=cohorts_fits) +
-  #geom_smooth(aes(x=(birthday/365)*12+0.5, y=(whz-shift)*conversion_factor, group=cohort), se=F,  alpha=0.3, color="grey50", data=dcohort) +
+  #geom_smooth(aes(x=(birthday/365)*12+0.5, y=(whz-shift_var)*conversion_factor, group=cohort), se=F,  alpha=0.3, color="grey50", data=dcohort) +
   geom_line(size=2) +
-  geom_ribbon(aes(ymin=(fit_lb-shift)*conversion_factor, ymax=(fit_ub-shift)*conversion_factor), alpha=0.3, color=NA) +
+  geom_ribbon(aes(ymin=(fit_lb-shift_var)*conversion_factor, ymax=(fit_ub-shift_var)*conversion_factor), alpha=0.3, color=NA) +
   ylab("Rainfall (mm)") + xlab("Birth month") +
   #scale_y_continuous(breaks = c(-16:0)/10) +
   scale_y_continuous(#limits = yrange, 
@@ -176,7 +176,7 @@ p2 <- ggplot(data=dfit, aes(x=(birthday/365)*12+0.5, y=(fit-shift)*conversion_fa
                      #digits, 
                      position = "right",
                      expand = expand_scale(mult = c(0,0.1)), 
-                     sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "Mean WLZ")) #+
+                     sec.axis = sec_axis(~(./(conversion_factor)+shift_var), name = "Birth WLZ")) #+
   # scale_x_continuous(limits=c(1,364), expand = c(0, 0),
   #                    breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
 p2
@@ -310,7 +310,7 @@ p4 <- ggplot() +
   scale_shape_manual(values=c(0,1,2), na.translate = F) +
   scale_color_manual(values=tableau10[c(5,7,9,10)], na.translate = F) + 
   scale_fill_manual(values=tableau10[c(5,7,9,10)], na.translate = F) + 
-  ylab("Mean WLZ") + xlab("Child age in months") +
+  ylab("Birth WLZ") + xlab("Child age in months") +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:24*30.41, labels = 0:24) +
@@ -328,5 +328,6 @@ ggsave(p4, file=paste0(BV_dir,"/figures/wasting/fig-birthmont-strat-seasonality-
 
 #Save plot-objects
 saveRDS(list(p1, p2, p3, p4), file=paste0(BV_dir,"/figures/plot-objects/season_plots.rds"))
+save(rainmax,Zpeak,conv_shift, conversion_factor, shift_var, file=paste0(BV_dir,"/figures/plot-objects/stunting_rain_seasonality_plot_parameters.Rdata"))
 
 

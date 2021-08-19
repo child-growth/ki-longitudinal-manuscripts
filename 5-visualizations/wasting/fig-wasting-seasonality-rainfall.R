@@ -41,7 +41,7 @@ rain <- rain %>%
 table(rain$seasonality_category)
 
 #Transform rain dataset
-rain <- rain %>% subset(., select = c("studyid", "country", "seasonality_category", "season_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
+rain <- rain %>% subset(., select = c("studyid", "region", "country", "seasonality_category", "season_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
                                       "Jun_pre", "Jul_pre", "Aug_pre", "Sep_pre", "Oct_pre", "Nov_pre", "Dec_pre"))
 
 rain$country <- str_to_title(rain$country)
@@ -81,13 +81,14 @@ d$cohort <- gsub("Keneba, Gambia","Keneba, The Gambia", d$cohort)
 
 
 #arrange cohorts by seasonality index and set factor levels
-rain2 <- rain2 %>% arrange(-season_index) %>% 
+rain2 <- rain2 %>% arrange(region, country, -season_index) %>% 
   mutate(cohort=factor(cohort, levels=unique(cohort))) 
 d <- d %>% mutate(cohort=factor(cohort, levels=unique(rain2$cohort)))
 
 
 rain2 <- droplevels(rain2)
 cohorts=levels(rain2$cohort)
+cohorts
 
 df <- d
 rain <- rain2
@@ -200,7 +201,7 @@ Ns %>% summarize(min(nmeas), min(nchild), max(nmeas), max(nchild))
 
 rain_plot(df=d, rain=rain2, cohort_name=cohorts[5])
               
- 
+cohorts 
  
 plot_list=list()
 for(i in 1:length(cohorts)){

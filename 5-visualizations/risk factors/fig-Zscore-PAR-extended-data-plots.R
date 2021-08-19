@@ -7,6 +7,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 library(gtable)
+library(cowplot)
 
 
 
@@ -82,8 +83,6 @@ plotdf <- dpool %>%
                         RFtype %in% c("Parent background","Parent anthro" ) ~ "Parental Characteristics",
                         RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal child characteristics",
                         RFtype==RFtype ~ "At-birth child characteristics"),
-    RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
-                                          "Parental Characteristics", "Household & Environmental Characteristics"))),
     sig=ifelse((CI1<0 & CI2<0) | (CI1>0 & CI2>0), 1, 0),
     est_lab=paste0(sprintf("%0.2f", -PAR)," (",sprintf("%0.2f", -CI2),", ",sprintf("%0.2f", -CI1),")"),
     perc_ref= round((1-ref_prev)*100),
@@ -117,6 +116,11 @@ plotdf <- bind_rows(
   #data.frame(agecat="24 months", region="South Asia", outcome_variable="waz", RFlabel_ref="", RFgroup="At-birth child characteristics", est_lab_title=est_lab_format, title=1)
   plotdf %>% mutate(title=0)
 )
+
+
+
+plotdf <- plotdf %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
+                                                                  "Parental Characteristics", "Household & Environmental Characteristics"))))
 
 plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, agecat, region, title, -PAR) 
 rflevels = unique(plotdf$RFlabel_ref)
@@ -154,8 +158,8 @@ plot_ext_par <- function(d, outcome, agecat, region, text_pos=NULL, range=NULL, 
     labs(x = NULL,
          y = xaxis_lab) +
     geom_hline(yintercept = 0) +
-    #scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5)) +
-    scale_color_manual(values = cbbPalette[c(2,3,4,6)], guide = guide_legend(reverse = TRUE) ) +
+    scale_y_continuous(breaks =scales::pretty_breaks(n=6)) +
+    scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
     theme(strip.background = element_blank(),
           strip.placement = "top",
           strip.text = element_text(hjust = 0, size=12,  face="bold"),
@@ -170,21 +174,21 @@ plot_ext_par <- function(d, outcome, agecat, region, text_pos=NULL, range=NULL, 
   return(p)
 }
 
-plot_laz_birth <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="Birth", region="Pooled")
-plot_laz_6 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="6 months", region="Pooled")
-plot_laz_24 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Pooled", xaxis=T)
+plot_laz_birth <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="Birth", region="Pooled", text_pos=-0.65, range=c(-0.7, 0.4))
+plot_laz_6 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="6 months", region="Pooled", text_pos=-0.25, range=c(-0.3, 0.8))
+plot_laz_24 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Pooled", text_pos=-0.45, range=c(-0.5, 0.6), xaxis=T)
 
-plot_wlz_birth <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="Birth", region="Pooled")
-plot_wlz_6 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="6 months", region="Pooled")
-plot_wlz_24 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Pooled", xaxis=T)
+plot_wlz_birth <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="Birth", region="Pooled", text_pos=-0.85, range=c(-0.9, 0.2))
+plot_wlz_6 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="6 months", region="Pooled", text_pos=-0.65, range=c(-0.7, 0.4))
+plot_wlz_24 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Pooled", text_pos=-0.65, range=c(-0.7, 0.4), xaxis=T)
 
-plot_laz_africa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Africa")
-plot_laz_la <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Latin America")
-plot_laz_sa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="South Asia", xaxis=T)
+plot_laz_africa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Africa", text_pos=-1, range=c(-1.1, 1))
+plot_laz_la <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Latin America", text_pos=-1, range=c(-1.1, 1))
+plot_laz_sa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="South Asia", text_pos=-1, range=c(-1.1, 1), xaxis=T)
 
-plot_wlz_africa <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Africa")
-plot_wlz_la <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Latin America")
-plot_wlz_sa <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="South Asia", xaxis=T)
+plot_wlz_africa <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Africa", text_pos=-0.5, range=c(-0.6, 0.8))
+plot_wlz_la <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Latin America", text_pos=-0.5, range=c(-0.6, 0.8))
+plot_wlz_sa <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="South Asia", text_pos=-0.5, range=c(-0.6, 0.8), xaxis=T)
 
 
 plot_laz_region = grid.arrange(plot_laz_africa, plot_laz_la, plot_laz_sa, ncol = 1, nrow = 3,
@@ -198,11 +202,11 @@ ggsave(plot_wlz_region, file=paste0(BV_dir, "/figures/manuscript-figure-composit
 
 
 plot_laz_age = grid.arrange(plot_laz_birth, plot_laz_6, plot_laz_24, ncol = 1, nrow = 3,
-                            top = textGrob("Attributable difference - LAZ, stratified by age",gp=gpar(fontsize=26,font=2)))
+                            top = textGrob("Population intervention effect - LAZ, stratified by age",gp=gpar(fontsize=26,font=2)))
 
 
 plot_wlz_age = grid.arrange(plot_wlz_birth, plot_wlz_6, plot_wlz_24, ncol = 1, nrow = 3,
-                            top = textGrob("Attributable difference - WLZ, stratified by age",gp=gpar(fontsize=26,font=2)))
+                            top = textGrob("Population intervention effect - WLZ, stratified by age",gp=gpar(fontsize=26,font=2)))
 
 ggsave(plot_laz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-age.png"), height=18, width=12)
 ggsave(plot_wlz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-age.png"), height=18, width=12)

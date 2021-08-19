@@ -53,8 +53,11 @@ load("st_cuminc_outcomes.rdata")
 load("st_cuminc_outcomes_nobirth.rdata")
 load("st_rec_outcomes.RData")
 load("st_inc_recovery_outcomes.RData")
-load("st_vel_outcomes.RData")
-load("waz_vel_outcomes.RData")
+
+load(paste0(ghapdata_dir,"haz_vel_outcomes.RData"))
+load(paste0(ghapdata_dir,"len_vel_outcomes.RData"))
+load(paste0(ghapdata_dir,"waz_vel_outcomes.RData"))
+load(paste0(ghapdata_dir,"weight_vel_outcomes.RData"))
 
 
 
@@ -321,24 +324,12 @@ save(d, Y, A,V, id, file="st_inc_rec_rf.Rdata")
 #merge in covariates
 d <- left_join(vel_haz, cov, by=c("studyid", "subjid", "country"))
 head(d)
-
-
-#Vector of outcome names
 Y<-c("y_rate_haz")
-
-
-#Vector of covariate names
 W<-c("")
-
-#Subgroup variable
 V <- c("agecat")
-
-#clusterid ID variable
 id <- c("id")
 
-#Change outcome name to differentiate from lencm velocity outcome
 d <- d %>% rename(y_rate_haz=y_rate)
-
 save(d, Y, A,V, id, file="st_haz_vel_rf.Rdata")
 
 
@@ -346,26 +337,32 @@ save(d, Y, A,V, id, file="st_haz_vel_rf.Rdata")
 
 #merge in covariates
 d <- left_join(vel_lencm, cov, by=c("studyid", "subjid", "country"))
-head(d)
-
-
-#Vector of outcome names
 Y<-c("y_rate_len")
+d <- d %>% rename(y_rate_len=y_rate)
+save(d, Y, A,V, id, file="st_len_vel_rf.Rdata")
 
 
-#Vector of covariate names
+#WHZ
+
+#merge in covariates
+d <- left_join(vel_waz, cov, by=c("studyid", "subjid", "country"))
+head(d)
+Y<-c("y_rate_waz")
 W<-c("")
-
-#Subgroup variable
 V <- c("agecat")
-
-#clusterid ID variable
 id <- c("id")
 
-d <- d %>% rename(y_rate_len=y_rate)
+d <- d %>% rename(y_rate_waz=y_rate)
+save(d, Y, A,V, id, file="waz_vel_rf.Rdata")
 
 
-save(d, Y, A,V, id, file="st_len_vel_rf.Rdata")
+# Weight
+
+#merge in covariates
+d <- left_join(vel_wtkg, cov, by=c("studyid", "subjid", "country"))
+Y<-c("y_rate_wtkg")
+d <- d %>% rename(y_rate_wtkg=y_rate)
+save(d, Y, A,V, id, file="y_rate_wtkg_vel_rf.Rdata")
 
 
 

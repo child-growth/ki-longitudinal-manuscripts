@@ -16,13 +16,23 @@ gc()
 
 
 #Mortality rate in monthly studies for reviewer response
-tab <- d %>% filter(studyid %in% monthly_cohorts, agedays < 730) %>%
+tab <- d %>% filter( agedays < 730) %>%
   group_by(studyid, country, subjid) %>%
   mutate(max(dead, na.rm=T)) %>% slice(1) %>%
   group_by(studyid, country) %>%
   summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
   as.data.frame()
 knitr::kable(tab)  
+
+#under 1
+tab1 <- d %>% filter( agedays < 365) %>%
+  group_by(studyid, country, subjid) %>%
+  mutate(max(dead, na.rm=T)) %>% slice(1) %>%
+  group_by(studyid, country) %>%
+  summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
+  as.data.frame()
+tab1<-tab1 %>% filter(nummort>10)
+knitr::kable(tab1)  
 
 
 #Studies missing any death data

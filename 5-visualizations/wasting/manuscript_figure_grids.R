@@ -28,15 +28,23 @@ plot_list[[2]]$`data` %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 plot_list[[3]]$`data` %>% group_by(region) %>% summarize(min(nmeas, na.rm=T), max(nmeas, na.rm=T))
 
 
+
+
+
+
 #Figure 3 
+is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
+  abs(x - round(x)) < tol
+}
 p_seasonRR <- readRDS(paste0(BV_dir,"/figures/plot-objects/season_RR_plot.rds"))
 
 seasonbirth_plot_list <- readRDS(paste0(BV_dir,"/figures/plot-objects/season_plots.rds"))
 seasonbirth_diff <- readRDS(paste0(BV_dir,"/figures/plot-objects/season_birth_wlz_diff_plot_FE.rds"))
+load(paste0(BV_dir,"/figures/plot-objects/stunting_rain_seasonality_plot_parameters.Rdata"))
 
 #Add birth diff inset plot
-#seasonbirth_plot <- seasonbirth_plot_list[[2]] +ylab("Birth WLZ")+ inset(ggplotGrob(seasonbirth_diff), xmin = 80, xmax = 300, ymin = -0.6, ymax = 0) 
-seasonbirth_plot <- seasonbirth_plot_list[[2]] +ylab("Birth WLZ")+ inset(ggplotGrob(seasonbirth_diff), xmin = 80, xmax = 300, ymin = -0.6, ymax = 0) 
+#seasonbirth_plot <- seasonbirth_plot_list[[2]] +ylab("Birth WLZ") + inset(ggplotGrob(seasonbirth_diff), xmin = 80, xmax = 300, ymin = -0.6, ymax = 0) 
+seasonbirth_plot <- seasonbirth_plot_list[[2]]  + inset(ggplotGrob(seasonbirth_diff), xmin = 3, xmax = 10.5, ymin = 200, ymax = 420) 
 ggsave(seasonbirth_plot, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig3_inset.png"), width=7, height=5)
 
 
@@ -87,7 +95,7 @@ right_lab <- ggdraw() +
     hjust = 0)
 top_plot_lab <- plot_grid(left_lab, top_plot, right_lab, labels = c("","",""), ncol = 4, align = 'hv', axis = 'b', rel_widths = c(0.01, 1, 0.01), greedy=F) 
 
-bottom_plot <- plot_grid(p_seasonRR, seasonbirth_plot_list[[2]], labels = c("b","c"), ncol = 2, rel_widths = c(1, 1))
+bottom_plot <- plot_grid(p_seasonRR, seasonbirth_plot, labels = c("b","c"), ncol = 2, rel_widths = c(1, 1))
 fig3 <- plot_grid(top_plot_lab, bottom_plot, labels = c("a",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1.3, 1))
 
 ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig3.png"), width=14, height=14)

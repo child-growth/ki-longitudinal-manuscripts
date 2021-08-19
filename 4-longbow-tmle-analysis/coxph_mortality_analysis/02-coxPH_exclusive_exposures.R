@@ -15,6 +15,8 @@ Wvars <- c("sex", "tr", "brthmon", "vagbrth", "hdlvry", "single", "trth2o",
 #load data
 d <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/mortality_age_no_overlap.rds")
 table(d$studyid, d$country)
+table(d$studyid, d$country, d$dead)
+
 
 d$sex <-factor(d$sex)
 d$single <-as.numeric(d$single)
@@ -48,6 +50,11 @@ length(unique(d$studyid))
 table(d$agecat)
 d <- d %>% filter(agedays <= 730)
 
+df <- d %>% group_by(studyid, subjid) %>% 
+  filter(agedays==max(agedays)) %>%
+  ungroup()
+prop.table(table(paste0(df$studyid,"-",df$country), df$dead),1) * 100
+table(paste0(df$studyid,"-",df$country), df$dead)
 
 d <- droplevels(d)
 
@@ -69,6 +76,13 @@ table(d$studyid, d$dead)
 d <- d %>% group_by(studyid, subjid) %>% filter(agedays==max(agedays))
 table(d$studyid, d$dead)
 
+
+
+#get the N's for the studies with enough mortality to estimate
+df <- d %>% filter(studyid %in% c("Burkina Faso Zn", "iLiNS-DOSE", "iLiNS-DYAD-M", "JiVitA-3", "JiVitA-4", "Keneba","VITAMIN-A","ZVITAMBO"    ))
+table(df$dead)
+df %>% ungroup() %>% summarize(n())
+df %>% summarize(n())
 
 
 X_vector <- c("stunt", "wast","underwt",          

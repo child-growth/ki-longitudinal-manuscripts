@@ -133,7 +133,7 @@ kiden <- mark_region(kiden)
 kiden <- kiden %>% mutate(dsource = "ki cohorts", country = str_to_title(country)) %>% filter(!is.na(country))
 
 dhssubden = readRDS(paste0(dhs_res_dir,"dhs.density.ki-countries.rds"))
-dhssubden <- dhssubden %>% mutate(dsource = "DHS, ki countries", region="DHS") %>% filter(!is.na(country))
+dhssubden <- dhssubden %>% mutate(dsource = "DHS", region="DHS") %>% filter(!is.na(country))
 
 medians = readRDS(paste0(dhs_res_dir,"dhs.ki.zscore.medians.monthly.rds"))  %>% mutate(country = str_to_title(country)) %>% filter(!is.na(country)) 
 #medians <- mark_region(medians)
@@ -141,7 +141,7 @@ medians = readRDS(paste0(dhs_res_dir,"dhs.ki.zscore.medians.monthly.rds"))  %>% 
 
 dhsden_plot <- bind_rows(kiden, dhssubden) %>%
   mutate(
-    dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries")),
+    dsource = factor(dsource, levels = c("ki cohorts", "DHS")),
     region = factor(region, levels = c("DHS", "Africa", "South Asia", "Latin America"))
   )
 
@@ -164,13 +164,14 @@ dhsden_plot <- dhsden_plot %>% filter(!is.na(country))
 
 dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, group=cohort,
                                         color = region, fill = region, 
-                                        linetype = dsource)) +
+                                        alpha = dsource)) +
   facet_grid( country~measure ) +
-  geom_line(alpha=0.75) +
+  geom_line() +
   geom_point(aes(x = as.double(median), y = 0.1, color = region, shape = dsource), position=ggstance::position_dodgev(height=0.1)) +
   scale_color_manual(values = pcols, guide = FALSE) +
   scale_fill_manual(values = pcols, guide = FALSE) +
-  scale_linetype_manual(values = c("dashed", "solid"), name="Data source:") +
+  #scale_linetype_manual(values = c("dashed", "solid"), name="Data source:") +
+  scale_alpha_manual(values=c(0.5,1), guide = FALSE)+
   scale_shape_manual(values=c(1,16), name="Data source:")+
   scale_x_continuous(breaks = seq(-6, 6, by = 2)) +
   scale_y_continuous(breaks = seq(0, 0.4, by = .2)) +
@@ -184,7 +185,7 @@ dplot <- ggplot(data = dhsden_plot, aes(x = x, y = y, group=cohort,
     # axis.text.x=element_blank(),
     # axis.ticks.x=element_blank()
   )
-
+dplot
 
 
 # output a file to png
