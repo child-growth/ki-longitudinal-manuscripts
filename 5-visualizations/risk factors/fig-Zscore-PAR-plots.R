@@ -282,7 +282,7 @@ pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref
   #geom_text(aes(label=n), y=.6, color="grey20", size=3.25) +
   coord_flip(ylim=c(-0.3, 0.48)) +
   labs(x = NULL,
-       y = "Population intervention effect, difference in Z-score") +
+       y = "Adjusted population intervention effect, difference in Z-score") +
   geom_hline(yintercept = 0) +
   scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5), labels=c("","","0","0.1","0.2","0.3","0.4","0.5")) +
   #scale_x_discrete(expand = expansion(add  = c(.5, 1.5))) +

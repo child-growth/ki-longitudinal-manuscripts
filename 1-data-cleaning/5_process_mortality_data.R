@@ -15,24 +15,46 @@ d <- subset(dfull, select= c(studyid, country, subjid, agedays, dead, agedth, ca
 gc()
 
 
-#Mortality rate in monthly studies for reviewer response
-tab <- d %>% filter( agedays < 730) %>%
+#Mortality rate under 2 for reviewer response
+#Note: need to mark as not dead any deaths occuring after agedays 730
+tab2 <- d %>% 
   group_by(studyid, country, subjid) %>%
-  mutate(max(dead, na.rm=T)) %>% slice(1) %>%
+  mutate(dead=pmax(dead, na.rm=T),
+         dead=ifelse(!is.na(agedth) & agedth>730 | max(agedays)>730,0,dead)) %>% 
+  filter( agedays < 730) %>%
+  slice(1) %>%
   group_by(studyid, country) %>%
-  summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
+  summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), 
+            notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
   as.data.frame()
-knitr::kable(tab)  
+tab2<-tab2 %>% filter(nummort>10)
+knitr::kable(tab2)  
 
 #under 1
-tab1 <- d %>% filter( agedays < 365) %>%
+#Note: need to mark as not dead any deaths occuring after agedays 365
+tab1 <- d %>% 
   group_by(studyid, country, subjid) %>%
-  mutate(max(dead, na.rm=T)) %>% slice(1) %>%
+  mutate(dead=pmax(dead, na.rm=T),
+         dead=ifelse(!is.na(agedth) & agedth>365 | max(agedays)>365,0,dead)) %>%
+  filter(agedays < 365) %>% slice(1) %>%
   group_by(studyid, country) %>%
-  summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
+  summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), 
+            notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
   as.data.frame()
 tab1<-tab1 %>% filter(nummort>10)
 knitr::kable(tab1)  
+
+# df <- d %>% filter(studyid=="Burkina Faso Zn")
+# temp<-df %>% 
+#   group_by(studyid, country, subjid) %>%
+#   mutate(dead=pmax(dead, na.rm=T),
+#          dead=ifelse(!is.na(agedth) & agedth>730 | max(agedays)>730,0,dead)) %>% 
+#   filter( agedays < 730) %>%
+#   slice(1) %>%
+#   group_by(studyid, country) %>%
+#   summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), 
+#             notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
+#   as.data.frame()
 
 
 #Studies missing any death data

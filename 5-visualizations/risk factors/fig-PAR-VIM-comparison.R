@@ -188,7 +188,7 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
   scale_size_manual(values=c(4, 4, 4))+
   scale_shape_manual(values=c(19,9,13))+
   coord_fixed(xlim = c(-0.1,0.45), ylim = c(-0.1,0.4)) +
-  labs(x = "Attributable difference\nfixed reference", y = "Attributable difference\n optimal intervention") +
+  labs(x = "Population intervention effect,\nfixed reference", y = "Population intervention effect,\n optimal intervention") +
   geom_abline(slope=1,intercept=0) +
   geom_vline(xintercept = 0, linetype="dashed") +
   geom_hline(yintercept = 0, linetype="dashed") +
@@ -211,6 +211,7 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
   guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE) +
   facet_grid(outcome_variable~., labeller = labeller(outcome_variable = capitalized))
 
+ggsave(pVIMcombined, file=paste0(BV_dir,"/figures/risk-factor/optx_comp.png"), width=7, height=10)
 
 save(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
 saveRDS(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-object-combined.RDS"))

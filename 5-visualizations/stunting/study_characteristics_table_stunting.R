@@ -27,8 +27,8 @@ d <- d %>% rename(Sex=sex,
                   `Number of children <5yrs`=nchldlt5,
                   `Food security level`=hfoodsec)
 
-d %>% group_by()
 
+length(unique(d$cohort))
 
 res<-table1(~ .| cohort, data=d, 
        # transpose=TRUE,

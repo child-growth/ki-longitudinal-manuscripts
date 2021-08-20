@@ -14,7 +14,7 @@ library(RcppRoll)
 
 
 #rain <- read.csv(here("/data/monthly_rainfall.csv"))
-rain <- readRDS(here("/data/cohort_rain_data.rds"))
+rain <- readRDS(paste0(BV_dir,"/data/cohort_rain_data.rds"))
 
 d <- readRDS(paste0(ghapdata_dir,"/seasonality_rf_data.rds"))
 assert_that(all(monthly_cohorts %in% unique(d$studyid)))
@@ -246,6 +246,12 @@ save(meanWHZ, file = paste0(ghapdata_dir, "seasonality_rf_whz.Rdata"))
 save(meanHAZ, file = paste0(ghapdata_dir, "seasonality_rf_haz.Rdata"))
 save(wastprev, file = paste0(ghapdata_dir, "seasonality_rf_wast.Rdata"))
 save(stuntprev, file = paste0(ghapdata_dir, "seasonality_rf_stunt.Rdata"))
+
+temp <- stuntprev %>% filter(!is.na(rain_quartile)) %>%
+  group_by(studyid, subjid) %>% slice(1) 
+table(!is.na(temp$rain_quartile))
+table(temp$rain_quartile)
+round(prop.table(table(temp$rain_quartile))*100,1)
 
 #Specify analyses
 specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country","agecat"), id="id", adj_sets=adjustment_sets){

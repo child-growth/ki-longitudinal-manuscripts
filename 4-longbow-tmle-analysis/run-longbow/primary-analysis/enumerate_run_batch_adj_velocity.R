@@ -22,7 +22,8 @@ default_params$script_params$count_Y <- FALSE
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
 
 #Subset to growth velocity
-analyses <- analyses %>% filter(Y!="haz" & Y!="whz")
+unique(analyses$A)
+analyses <- analyses %>% filter(Y!="haz" & Y!="whz", !(A %in% c("predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36","enstunt", "enwast", "anywast06", "pers_wast")))
 table(analyses$Y)
 analyses <- analyses %>% 
   mutate(Y=factor(Y, levels=c("y_rate_waz","y_rate_haz","y_rate_len","y_rate_wtkg"))) %>% 

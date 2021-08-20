@@ -6,51 +6,6 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 require(ggmap)
 require(cowplot)
 
-#Figure 2
-# rf_Zpar_plot_objects <- readRDS(paste0(here::here(), "/results/rf results/rf_Zpar_plot_objects.RDS"))
-# pPAR_laz <- rf_Zpar_plot_objects[[1]]
-# pPAR_wlz <- rf_Zpar_plot_objects[[2]]
-# pPAR <- readRDS(paste0(BV_dir,"/results/rf results/rf_Zpar_plot_objects.RDS"))
-# 
-# 
-# rf_Zpar_margin_plot_objects <- readRDS(paste0(BV_dir, "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
-# # mtab_df_laz_tbl <- rf_Zpar_margin_plot_objects[[1]]
-# # mtab_df_wlz_tbl <- rf_Zpar_margin_plot_objects[[2]]
-# 
-# # p1 <- pPAR_laz + xlab("") #+ theme(axis.text = element_text(size=12))
-# # p2 <- pPAR_wlz + xlab("") #+ theme(axis.text = element_text(size=12))
-# 
-# blank <- grid.rect(gp=gpar(col="white"))
-# 
-# # #VIM Plots below
-# # pVIMhaz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-LAZ.RDS"))
-# # pVIMwhz <- readRDS(file=paste0(here::here(), "/results/rf results/fig-VIM-PAR-comp-object-WLZ.RDS"))
-# 
-# #embedded plots 
-# #https://www.r-bloggers.com/plots-within-plots-with-ggplot2-and-ggmap/
-# # p1embed <- p1 + inset(ggplotGrob(pVIMhaz), xmin = 0, xmax = 10, ymin = 0.12, ymax = 0.58) 
-# # p2embed <- p2 + inset(ggplotGrob(pVIMwhz), xmin = 0, xmax = 10, ymin = 0.12, ymax = 0.58)
-# 
-# # # pPar_laz_plot = grid.arrange(blank, p1embed, nrow = 2, heights = c(1.3, 20))
-# # pPar_laz_plot_table = grid.arrange(mtab_df_laz_tbl, blank, nrow = 2, heights = c(12, 0.55))
-# # # pPar_laz_combined = plot_grid(pPar_laz_plot, NULL, pPar_laz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
-# # # 
-# # # 
-# # # pPar_wlz_plot = grid.arrange(blank, p2embed, nrow = 2, heights = c(1.3, 20))
-# # pPar_wlz_plot_table = grid.arrange(mtab_df_wlz_tbl, blank, nrow = 2, heights = c(12, 0.5))
-# # # pPar_wlz_combined = plot_grid(pPar_wlz_plot, NULL, pPar_wlz_plot_table, ncol = 3, rel_widths = c(1, -0.05, 0.3))
-# 
-# pPar_plot_table = grid.arrange(rf_Zpar_margin_plot_objects, blank, nrow = 2, heights = c(12, 0.4))
-# pPar_f = grid.arrange(blank,pPAR,  nrow = 2, heights = c(0.6,12))
-# 
-# #fig2 = plot_grid(pPAR, pPar_plot_table, ncol = 2, rel_widths = c(1, 0.3))
-# #fig2 = plot_grid(pPAR, rf_Zpar_margin_plot_objects, ncol = 2, rel_widths = c(1, 0.3))
-# fig2 = plot_grid(pPar_f, pPar_plot_table, ncol = 2, rel_widths = c(1, 0.25))
-# 
-# # fig2 <- plot_grid(pPar_laz_combined, NULL, pPar_wlz_combined, ncol = 3, labels = c("a","", "b"), rel_widths = c(1, -0.05, 1))
-# ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
-
-
 
 
 #Figure 3
@@ -60,15 +15,15 @@ splines <- readRDS(paste0(BV_dir,"/figures/plot-objects/risk-factor/rf_spline_ob
 
 #pos = c(0.75,0.83) #For 2 panels
 #pos = c(0.45,0.83)
-pos = c(0.3,0.15)
+pos2 = pos = c(0.3,0.16)
 #pos = c(0,0.2)
 
-p1 <- splines[[1]] + ggtitle("") +  theme(legend.position ="none" ) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
-p2 <- splines[[2]]  + ggtitle("") + theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
-p3 <- splines[[3]]  + ggtitle("") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
-p4 <- splines[[4]]  + ggtitle("") +  theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
-p5 <- splines[[6]]  + ggtitle("") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, -0.4, 0.2), labels = round(seq(-2.4, -0.4, 0.2),1)) 
-p6 <- splines[[5]]  + ggtitle("") +  theme(legend.position = "none")+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank()) +scale_y_continuous(limits=c(-1.4, 0.4), breaks = seq(-1.4, 0.4, 0.2), labels = round(seq(-1.4, 0.4, 0.2),1)) 
+p1 <- splines[[1]] + ggtitle("") +  theme(legend.position =pos2, legend.spacing.y = unit(0.5, 'mm'),  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank()) 
+p2 <- splines[[2]]  + ggtitle("") + theme(legend.position = pos2, legend.spacing.y = unit(0.5, 'mm'),  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank()) 
+p3 <- splines[[3]]  + ggtitle("") + theme(legend.position = pos, legend.spacing.y = unit(0.5, 'mm'),  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nweight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
+p4 <- splines[[4]]  + ggtitle("") +  theme(legend.position = pos, legend.spacing.y = unit(0.5, 'mm'),  legend.title=element_text(size=8), legend.text=element_text(size=6)) +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
+p5 <- splines[[6]]  + ggtitle("") + theme(legend.position = pos, legend.spacing.y = unit(0.5, 'mm'),  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, -0.4, 0.2), labels = round(seq(-2.4, -0.4, 0.2),1)) 
+p6 <- splines[[5]]  + ggtitle("") +  theme(legend.position = pos2, legend.spacing.y = unit(0.5, 'mm'),  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank(), legend.background = element_blank()) +scale_y_continuous(limits=c(-1.4, 0.4), breaks = seq(-1.4, 0.4, 0.2), labels = round(seq(-1.4, 0.4, 0.2),1)) 
 
 
 

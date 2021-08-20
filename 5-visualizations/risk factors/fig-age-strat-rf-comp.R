@@ -142,7 +142,7 @@ p_ageRR <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), aes(x=interven
   geom_point(aes(y=RR), color="#878787", fill="#878787", size=2, stroke=0, alpha=0.5,
              position=position_jitter(width=0.2), data = plotdf %>% filter(pooled==0)) +
   geom_point(size = 3) +
-  labs(x = "Exposure level", y = "Adjusted CIR") +
+  labs(x = "Exposure level", y = "Adjusted cumulative incidence ratio") +
   #geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, 
                      #limits = c(0.638,2.43), 
@@ -153,14 +153,14 @@ p_ageRR <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), aes(x=interven
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=8, hjust = 1),
-        strip.text.x = element_text(size=8, face = "bold"),
-        strip.text.y = element_text(size=8, angle = 180, face = "bold"),
+        strip.text.x = element_text(size=10, face = "bold"),
+        strip.text.y = element_text(size=10, angle = 180, face = "bold"),
         strip.placement = "outside",
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
         title = element_text(margin=margin(0,0,-10,0))) +
-  coord_flip(ylim = c(0.75,2.5))
+  coord_flip(ylim = c(0.5,2.5))
 
 print(p_ageRR)
 
