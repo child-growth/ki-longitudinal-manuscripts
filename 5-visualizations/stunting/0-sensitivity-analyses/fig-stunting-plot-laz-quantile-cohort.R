@@ -117,7 +117,7 @@ make_plot = function(plot_region){
   # save plot -----------------------------------------------------
   ggsave(plot, 
          file=paste0(fig_dir, "stunting/fig-",plot_name,".png"), 
-         width=10, height=4)
+         width=20, height=8)
   
   # save data -----------------------------------------------------
   saveRDS(
