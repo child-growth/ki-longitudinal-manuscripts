@@ -3,7 +3,7 @@
 # stunting analysis
 #
 # plots of linear growth velocity
-# both overall and cohort-specific within region
+# in each cohort
 
 # inputs: pool_vel.RData, 
 # WHO_linear_growth_velocity_standard.RDS
@@ -26,15 +26,22 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Load length velocity data
 vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
-vel_monthly <- readRDS(paste0(res_dir, "/stunting/pool_vel_month24.RDS"))
-vel_fe <- readRDS(paste0(res_dir,"stunting/pool_vel_fe.RDS"))
+vel <- vel %>% filter(stratacol!="pooled")
+vel <- vel %>% filter(stratacol!="Pooled - All")
+vel <- vel %>% filter(stratacol!="Pooled - Asia")
+vel <- vel %>% filter(stratacol!="Pooled - Africa")
+vel <- vel %>% filter(stratacol!="Pooled - Amer.")
+
 
 # load who standard
 who_cm = readRDS(paste0(res_dir, "/WHO_linear_growth_velocity_standard.RDS"))
 
 
 # Wrapper function ----------------------------------------------------------------
-make_vel_plot <- function(data, plotname){
+make_vel_plot <- function(data, region_name, plotname){
+  
+  # subset to region
+  data = data %>% filter(region==region_name)
   
   ## prep data ----------------------------------------------------------------
   data$nmeas.f <- clean_nmeans(data$N)
@@ -106,25 +113,19 @@ make_vel_plot <- function(data, plotname){
     mutate(msmt_type = factor(msmt_type, levels = c("pct_50", "pct_25","Mean")))
   
   
-  plot_cm <- ggplot(velplot_cm %>%  filter(country_cohort=="Pooled - All"), 
+  plot_cm <- ggplot(velplot_cm, 
                     aes(y = length_cm, x = strata)) +
-    
-    # cohort-specific lines
-    geom_line(data = velplot_cm_cohort_data, aes(group = country_cohort),
-              alpha=0.07) +
     
     # WHO standard lines
     geom_line(aes(y = length_cm, group = msmt_type, color = linecol,
                   linetype = msmt_type),
-              data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
-                                              msmt_type=="pct_25"|
+              data = velplot_cm %>%  filter(msmt_type=="pct_25"|
                                               msmt_type=="pct_50"),
               size = 0.4) +
     
-    # ki pooled lines
+    # ki lines
     geom_line(aes(y = length_cm, group = msmt_type, color = linecol),
-              data = velplot_cm %>%  filter(country_cohort=="Pooled - All" &
-                                              msmt_type=="Mean"),
+              data = velplot_cm %>%  filter(msmt_type=="Mean"),
               size = 0.8) +
     
     # error bars
@@ -153,38 +154,19 @@ make_vel_plot <- function(data, plotname){
     scale_y_continuous(limits=c(0,4), breaks=seq(0,4,0.5), labels = scaleFUN) +
     xlab("Child age, months") +  
     ylab("Difference in length (cm) per month")+
-    facet_wrap( ~ sex) +
-    ggtitle("a") +
-    
+    facet_wrap(~country_cohort + sex) +
+
     guides(color=FALSE) +
     
     labs(linetype = c("", "12", "14", "13")) +
     
-    theme(legend.position = c(.88, .88),
-          panel.grid.minor = element_blank(),
+    theme(panel.grid.minor = element_blank(),
           panel.grid.major.x = element_blank(),
-          legend.background = element_blank(),
-          legend.box.background = element_rect(colour = "black"),
+          legend.position = "none",
           plot.title = element_text(hjust=0))
   
   plot_cm
-  
-  # define standardized plot names
-  plot_cm_name = create_name(
-    outcome = "LAZ",
-    cutoff = 2,
-    measure = "length velocity",
-    population = "overall",
-    location = "",
-    age = "All ages",
-    analysis = plotname
-  )
-  
-  # save plot and underlying data
-  ggsave(plot_cm, file=paste0(fig_dir, "stunting/fig-",plot_cm_name,".png"),
-         width=10, height=8)
-  saveRDS(velplot_cm, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_name,".RDS"))
-  
+
   
   ## Figure 5b: LAZ velocity plots ----------------------------------------------------------------
   
@@ -192,13 +174,11 @@ make_vel_plot <- function(data, plotname){
   velplot_laz = data %>% filter(ycat == "LAZ change (Z-score per month)") %>%
     mutate(sex = factor(sex))
   
-  plot_laz <- ggplot(velplot_laz %>% filter(country_cohort=="Pooled - All"), aes(y=Mean,x=strata))+
+  plot_laz <- ggplot(velplot_laz, aes(y=Mean,x=strata))+
+    
+    facet_wrap(~country_cohort + sex) +
     
     # cohort-specific estimates
-    geom_point(data = velplot_laz %>% filter(country_cohort!="Pooled - All"), 
-               aes(fill=sex, color=sex), size = 1, 
-               position = position_jitterdodge(dodge.width = 0.75), alpha =0.1) +
-    # pooled estimates
     geom_point(aes(fill=sex, color=sex), 
                size = 1.5, shape = 1,
                position = position_dodge(width = 0.75)) +
@@ -212,109 +192,97 @@ make_vel_plot <- function(data, plotname){
     xlab("Child age, months") +  
     ylab("Difference in length-for-age\nZ-score per month")+
     geom_hline(yintercept = -0) +
-    ggtitle("b\n") +
     theme(plot.title = element_text(hjust=0),
-          legend.position = c(.85, 0.1),
-          legend.background = element_blank(),
-          legend.title = element_blank(),
-          legend.box.background = element_rect(colour = "black"),
+          legend.position = "none",
           panel.grid.minor = element_blank())
   plot_laz
   
-  # define standardized plot names
-  plot_laz_name = create_name(
-    outcome = "LAZ",
-    cutoff = 2,
-    measure = "LAZ velocity",
-    population = "overall",
-    location = "",
-    age = "All ages",
-    analysis = plotname
-  )
+  return(list(plot_cm = plot_cm, plot_laz=plot_laz))
   
-  # save plot and underlying data
-  ggsave(plot_laz, file=paste0(fig_dir, "stunting/fig-",plot_laz_name,".png"), width=12, height=6)
-  saveRDS(velplot_laz, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_name,".RDS"))
-  
-  ## combined LAZ and length plots ----------------------------------------------------------------
-  combined_plot = grid.arrange(plot_cm, plot_laz, ncol=2, widths =c(5,3))
-  
-  ## save input data  ----------------------------------
-  plot_name = create_name(
-    outcome = "stunting",
-    cutoff = 2,
-    measure = "growth velocity",
-    population = "overall",
-    location = "",
-    age = "All ages",
-    analysis = plotname
-  )
-  
-  saveRDS(
-    list(
-      velplot_cm = velplot_cm,
-      velplot_laz = velplot_laz
-    ),
-    file = paste0(figdata_dir_stunting, "figdata-", plot_name, ".RDS")
-  )
-  
-  saveRDS(
-    list(
-      velplot_cm = velplot_cm,
-      velplot_laz = velplot_laz
-    ),
-    file = paste0(figdata_dir_stunting, "figdata-", plot_name, ".RDS")
-  )
-  
-  return(combined_plot)
 }
 
 # make plots ----------------------------------
 
-primary_plot <- make_vel_plot(data = vel, plotname = "primary")
-month24_plot <- make_vel_plot(data = vel_monthly, plotname = "monthly cohorts measured each month from 0 to 24")
-fe_plot <- make_vel_plot(data = vel_fe, plotname = "fixed effects")
+plot_latamer <- make_vel_plot(data = vel, plotname = "primary", region_name = "Latin America")
+plot_asia <- make_vel_plot(data = vel, plotname = "primary", region_name = "Asia")
+plot_africa <- make_vel_plot(data = vel, plotname = "primary", region_name = "Africa")
+
 
 # define standardized plot names ----------------------------------
 
-combined_plot_name = create_name(
+latamer_cm_plot_name = create_name(
   outcome = "stunting",
   cutoff = 2,
   measure = "growth velocity",
-  population = "overall",
-  location = "",
+  population = "cohort-stratified",
+  location = "Latin America",
   age = "All ages",
   analysis = "primary"
 )
 
-month24_plot_name = create_name(
+africa_cm_plot_name = create_name(
   outcome = "stunting",
   cutoff = 2,
   measure = "growth velocity",
-  population = "overall",
-  location = "",
+  population = "cohort-stratified",
+  location = "Africa",
   age = "All ages",
-  analysis = "monthly cohorts measured each month from 0 to 24"
+  analysis = "primary"
 )
 
-fe_plot_name = create_name(
+asia_cm_plot_name = create_name(
   outcome = "stunting",
   cutoff = 2,
   measure = "growth velocity",
-  population = "overall",
-  location = "",
+  population = "cohort-stratified",
+  location = "South Asia",
   age = "All ages",
-  analysis = "fixed effects"
+  analysis = "primary"
 )
 
+latamer_laz_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "cohort-stratified",
+  location = "Latin America",
+  age = "All ages",
+  analysis = "primary"
+)
+
+africa_laz_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "cohort-stratified",
+  location = "Africa",
+  age = "All ages",
+  analysis = "primary"
+)
+
+asia_laz_plot_name = create_name(
+  outcome = "stunting",
+  cutoff = 2,
+  measure = "laz velocity",
+  population = "cohort-stratified",
+  location = "South Asia",
+  age = "All ages",
+  analysis = "primary"
+)
 
 # save plots and data ----------------------------------------------------------------
 
 ## save overall plots together ----------------------------------
-
-ggsave(primary_plot, file=paste0(fig_dir, "stunting/fig-", combined_plot_name,
+ggsave(plot_latamer$plot_cm, file=paste0(fig_dir, "stunting/fig-", latamer_cm_plot_name,
                                   ".png"), width=12, height=6)
-ggsave(month24_plot, file=paste0(fig_dir, "stunting/fig-", month24_plot_name,
-                                  ".png"), width=12, height=6)
-ggsave(fe_plot, file=paste0(fig_dir, "stunting/fig-", fe_plot_name,
+ggsave(plot_asia$plot_cm, file=paste0(fig_dir, "stunting/fig-", asia_cm_plot_name,
+                                  ".png"), width=16, height=12)
+ggsave(plot_africa$plot_cm, file=paste0(fig_dir, "stunting/fig-", africa_cm_plot_name,
                                  ".png"), width=12, height=6)
+
+ggsave(plot_latamer$plot_laz, file=paste0(fig_dir, "stunting/fig-", latamer_laz_plot_name,
+                                         ".png"), width=12, height=6)
+ggsave(plot_asia$plot_laz, file=paste0(fig_dir, "stunting/fig-", asia_laz_plot_name,
+                                      ".png"), width=14, height=12)
+ggsave(plot_africa$plot_laz, file=paste0(fig_dir, "stunting/fig-", africa_laz_plot_name,
+                                        ".png"), width=12, height=6)

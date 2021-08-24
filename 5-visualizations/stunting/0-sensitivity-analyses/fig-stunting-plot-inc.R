@@ -23,6 +23,7 @@ source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-e
 d <- readRDS(paste0(res_dir,"/desc_data_cleaned.rds"))
 d <- d %>% filter(!is.na(agecat))
 d <- droplevels(d)
+d <- d %>% filter(cohort!="iLiNS-Zinc-BURKINA FASO")
 
 
 d$nmeas.f <- clean_nmeans(d$nmeas)

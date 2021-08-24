@@ -241,6 +241,11 @@ results_df = bind_rows(results_list)
 
 saveRDS(results_df, file = paste0(res_dir, "stunting_rec_cohort_summary.RDS"))
 
+# Manuscript: "Most children who experienced stunting reversal continued to 
+# experience linear growth deficits, and over 20% were stunted again at later 
+# measurements (Fig 4)"
+
+mean(results_df$stunting_prev)
 
 # --------------------------------------------
 # further prepare data for the plot
