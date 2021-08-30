@@ -56,16 +56,6 @@ par %>% filter(outcome_variable!="waz", CI2<0) %>% group_by(outcome_variable) %>
 
 par %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:11) %>% select(intervention_variable) %>% as.data.frame()
 
-
-
-
-#Bold the intervention variable
-# https://stackoverflow.com/questions/37758050/ggplot-displaying-expression-in-x-axis
-# 
-#  as.expression(bold(par$RFlabel[1])~' shifted to '~bold(par$intervention_level[1]))
-#  as.expression(bquote(bold(par$RFlabel[1])))
-#  parse(text= paste("bold(par$RFlabel[", 1:7, "])", sep="") ) 
- 
  
 unique(par$RFlabel_ref)
 
@@ -87,9 +77,6 @@ color_vec = c("#7F7F7F", "#E377C2")
 
 main_color <- "#287D8EFF"
 
-#Viridis colors
-#287D8EFF
-#29AF7FFF
 
 #----------------------------------------------------------
 # Clean up plot dataframe
@@ -168,111 +155,6 @@ plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
 
 
 
-# pPAR <- ggplot(plotdf, aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
-#   geom_point(aes(y=-PAR),  size = 4) +
-#   geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
-#   geom_text(aes(label=est_lab), y=-0.15, color="grey20", size=3.25) +
-#   #coord_flip(ylim=c(-0.2, 0.55)) +
-#   coord_flip() +
-#   labs(x = "Exposure",
-#        y = "Attributable differences") +
-#   geom_hline(yintercept = 0) +
-#   #scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4)) +
-#   scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
-#   theme(strip.background = element_blank(),
-#         #legend.position=c(0.9,0.2),
-#         strip.text = element_text(hjust = 0, size=14,  face="bold"),
-#         #strip.text.x.left = element_text(angle = 0, vjust = 1),
-#         axis.text.y = element_text(size=10, hjust = 1),
-#         axis.text.x = element_text(size=12),
-#         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-#   guides(shape=FALSE) + 
-#   facet_wrap(~outcome_variable)
-# 
-# pPAR
-# 
-# 
-# 
-# # ggplot(plotdf, aes(y=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
-# #   geom_text(aes(label=est_lab), x=-0.15, color="grey20", size=3.25) +
-# #   geom_point(aes(x=-PAR),  size = 4) +
-# #   geom_linerange(aes(xmin=-CI1, xmax=-CI2)) +
-# #   facet_grid(RFgroup ~ outcome_variable, scales = "free", space = "fixed", switch="y") +
-# #   scale_x_continuous( expand = c( 0.05 , 0.05 ) ) +
-# #   labs(y = "Exposure",
-# #        x = "Population Impact Effect") +
-# #   geom_vline(xintercept = 0) +
-# #   #scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4)) +
-# #   scale_color_manual(values = cbbPalette[c(6,5,3,4,2)], guide = guide_legend(reverse = TRUE) ) +
-# #   theme(strip.background = element_blank(),
-# #         #legend.position=c(0.9,0.2),
-# #         strip.placement = "outside",
-# #         strip.text = element_text(hjust = 0, size=14,  face="bold"),
-# #         #strip.text.x.left = element_text(angle = 0, vjust = 1),
-# #         axis.text.y = element_text(size=10, hjust = 1),
-# #         axis.text.x = element_text(size=12),
-# #         #plot.margin = unit(c(0, 0, 0, 0), "cm")
-# #         ) +
-# #   guides(shape=FALSE) 
-# 
-# 
-# 
-# ggsave(pPAR, file=paste0(BV_dir, "/figures/risk-factor/fig-PAR-combined.png"), height=10, width=8)
-# saveRDS(pPAR, file=paste0(BV_dir, "/results/rf results/rf_Zpar_plot_objects.RDS"))
-# 
-
-
-
-# #----------------------------------------------------------
-# # Plot margin tables
-# #----------------------------------------------------------
-# 
-# #Create side table
-# mtab_df <- plotdf %>% arrange(outcome_variable, PAR) %>%
-#   mutate(intervention_variable = as.character(intervention_variable))
-# 
-# mtab_df <- mtab_df %>% ungroup %>%
-#   mutate(
-#     intervention_variable = factor(intervention_variable, levels=unique(intervention_variable)),
-#     perc_ref= round((1-ref_prev)*100),
-#     n = format(n ,big.mark=",", trim=TRUE),
-#     n= paste0(n, " (",perc_ref,"%)")) %>%
-#   subset(., select = c(outcome_variable, intervention_variable, n)) 
-# 
-# #make wide-format
-# mtab_df <- mtab_df %>% 
-#   spread(outcome_variable, n) %>%
-#   arrange(intervention_variable)
-# mtab_df[is.na(mtab_df)] <- ""
-# mtab_df <- mtab_df %>% 
-#   subset(., select = -c(intervention_variable )) 
-# 
-# 
-# #Use tableGrob to create a plot with the appearrence of a table
-# mtab_df_tbl <- tableGrob(mtab_df,
-#                              row = NULL,
-#                              cols = c("LAZ N\n(% shifted)", "WLZ N\n(% shifted)"),
-#                              theme = ttheme_minimal(base_size = 9,
-#                                                     plot.margin = unit(c(0, 0, 0, 0), "cm"),
-#                                                     padding = unit(c(0, 0), "mm")))
-# 
-# mtab_df_tbl$heights <- unit(c(0.055, rep(0.0275, nrow(mtab_df_tbl) - 1)), "npc")
-# mtab_df_tbl$widths <- unit(c(0.25,0.35), "npc")
-# mtab_df_tbl <- gtable_add_grob(mtab_df_tbl,
-#                                    grobs = segmentsGrob( # line across the bottom
-#                                      x0 = unit(0,"npc"),
-#                                      y0 = unit(0,"npc"),
-#                                      x1 = unit(1,"npc"),
-#                                      y1 = unit(0,"npc"),
-#                                      gp = gpar(lwd = 2.0)),
-#                                    t = 1, b = 1, l = 1, r = 2)
-# 
-# 
-# 
-# #save the plots seperately 
-# saveRDS(mtab_df_tbl, file=paste0(BV_dir, "/results/rf results/rf_Zpar_margin_plot_objects.RDS"))
-
-
 pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
   geom_point(aes(y=-PAR),  size = 4) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
@@ -339,12 +221,7 @@ pPAR_wlz
 
 
 
-# blank <- grid.rect(gp=gpar(col="white"))
-# pPar_plot_table = grid.arrange(mtab_df_tbl, blank, nrow = 2, heights = c(12, 0.1))
-#pPar_f = grid.arrange(blank,pPAR,  nrow = 2, heights = c(0.6,12))
 
-#fig2 = plot_grid(pPAR_laz, pPAR_wlz, mtab_df_tbl, ncol = 3, rel_widths = c(1.5, 1, 0.6))
-#fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(1.5, 1))
 fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(2, 1))
 
 #To do:

@@ -56,6 +56,8 @@ d %>% filter(intervention_level == baseline_level) %>% group_by(seasonality_cate
   summarize(totN=sum(N), minN=min(N), maxN=max(N),
             tot_nchild=sum(nchild), min_nchild=min(nchild), max_nchild=max(nchild))
 
+cats<-d %>% distinct(studyid, country, seasonality_category)
+table(cats$seasonality_category)
 #d <- d %>% filter(studyid!="PROVIDE")
 
 

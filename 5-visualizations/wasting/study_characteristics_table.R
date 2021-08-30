@@ -9,12 +9,30 @@ library(table1)
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
 d <- cov %>% filter(studyid %in% monthly_cohorts)
-colnames(d)
 d <- d %>% 
   mutate(country=str_to_title(country),
-         cohort=paste0(studyid,", ",country)) %>%
+         cohort=paste0(studyid,", ",country)) 
+
+length(unique(d$cohort))
+df <- d %>% filter(!is.na(birthwt)) %>% droplevels()
+length(unique(df$cohort))
+
+#look at crosstabs on birthweight and gestational age
+df <- d %>%
+  select(cohort, birthwt, gagebrth) %>% 
+  filter(!is.na(birthwt) | !is.na(gagebrth)) %>%
+  droplevels()
+table(df$cohort, df$birthwt)
+prop.table(table(df$birthwt)) * 100
+
+table(df$cohort, df$gagebrth)
+prop.table(table(df$cohort, df$gagebrth),1) * 100
+
+d <- d %>%
   select(cohort, sex, W_birthwt, W_mage, W_mwtkg, W_meducyrs,  nrooms, nchldlt5, impsan, hfoodsec)
 head(d)
+
+
 
 colnames(d)
 d <- d %>% rename(Sex=sex,

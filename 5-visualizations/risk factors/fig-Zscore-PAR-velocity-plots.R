@@ -50,6 +50,39 @@ par_agestrat <- par %>% filter(agecat %in% c(
 
 table(par_agestrat$outcome_variable)
 
+#######################
+# Reviewer response plot
+#######################
+
+df <- par %>% filter(intervention_variable %in% c("mbmi", "mhtcm","mwtkg"), region=="Pooled")
+
+rflevels = unique(df$RFlabel_ref)
+df$RFlabel_ref=factor(df$RFlabel_ref, levels=rflevels)
+unique(df$agecat)
+df$agecat=factor(df$agecat, levels=rev(c("0-3 months","3-6 months","6-9 months",
+                                          "9-12 months","12-15 months", "15-18 months",
+                                          "18-21 months", "21-24 months")))
+
+plot <-  ggplot(df, aes(x=agecat)) + 
+  geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +
+  geom_errorbar(aes(ymin=-CI1, ymax=-CI2, color=measure),  alpha=0.8) +
+  scale_colour_manual(values=c("#7F7F7F")) +
+  geom_hline(yintercept = 0) +
+  coord_flip() +
+  facet_wrap(RFlabel_ref~outcome_variable, scales="free") +
+  theme(strip.background = element_blank(),
+        legend.position="right",
+        axis.text.y = element_text(hjust = 1),
+        strip.text.x = element_text(size=12),
+        axis.text.x = element_text(size=12), 
+        plot.margin = unit(c(15, 5, 5, 5), "pt")) +
+  guides(color=FALSE, shape=FALSE)
+plot
+
+res <-df %>% filter(CI1<0 & CI2<0|CI1>0 & CI2>0) %>% mutate(PAR=round(PAR*-1,3),CI1=round(CI1*-1,3),CI2=round(CI2*-1,3)) %>%
+  subset(., select=c(outcome_variable,agecat, intervention_variable, PAR, CI1, CI2)) %>%
+  arrange(intervention_variable,outcome_variable,rev(agecat))
+
 
 #######################
 # Age stratified plots
@@ -140,7 +173,7 @@ plot_waz_age = grid.arrange(plot_waz_3,
                             plot_waz_18, 
                             plot_waz_21, 
                             plot_waz_24, ncol = 2, nrow = 4,
-                            top = textGrob("Attributable difference - WLZ velocity, stratified by age",gp=gpar(fontsize=26,font=2)))
+                            top = textGrob("Attributable difference - WAZ velocity, stratified by age",gp=gpar(fontsize=26,font=2)))
 
 ggsave(plot_waz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-vel-PAR.png"), height=36, width=15)
 

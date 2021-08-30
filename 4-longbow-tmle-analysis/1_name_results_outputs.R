@@ -51,17 +51,17 @@ saveRDS(velocity_wlz_quart, paste0(res_dir, "rf results/longbow results/velocity
 stunt_bin_wlz_quart <- readRDS(paste0(res_dir, "rf results/raw longbow results/stunt_bin_wlz_quart_2021-04-26.RDS"))
 saveRDS(stunt_bin_wlz_quart, paste0(res_dir, "rf results/longbow results/stunt_bin_wlz_quart.RDS"))
 
-velocity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-08-19.RDS"))   
+velocity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-08-21.RDS"))   
 velocity2 <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_glm_2021-08-11.RDS"))   
 velocity2 <- velocity2[!(paste0(velocity2$intervention_variable,"-", velocity2$outcome_variable) %in% unique(paste0(velocity$intervention_variable,"-", velocity$outcome_variable))), ]
 velocity <- bind_rows(velocity, velocity2)
 
 saveRDS(velocity, paste0(res_dir, "rf results/longbow results/results_vel.RDS"))
 
-velocity_sub <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-07-25.RDS"))   
-saveRDS(velocity_sub, paste0(res_dir, "rf results/longbow results/results_vel_sub.RDS"))
+# velocity_sub <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-07-25.RDS"))   
+# saveRDS(velocity_sub, paste0(res_dir, "rf results/longbow results/results_vel_sub.RDS"))
 
-season <-  readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_results_2021-04-22.RDS"))
+season <-  readRDS(paste0(res_dir,  "rf results/raw longbow results/results_seasonality_results_2021-08-26.RDS"))
 saveRDS(season, paste0(res_dir, "rf results/longbow results/seasonality_results.RDS"))
 
 season_birth <-  readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_birth_results_2021-06-05.RDS"))
@@ -76,11 +76,11 @@ saveRDS(season_bin_rf, paste0(res_dir, "rf results/longbow results/season_bin_rf
 mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/results_mediation_2021-08-06.RDS"))
 saveRDS(mediation, paste0(res_dir, "rf results/longbow results/mediation.RDS"))
 
-stunt_rec <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_stunt_rec_2021-06-11.RDS"))
+stunt_rec <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_stunt_rec_2021-08-22.RDS"))
 saveRDS(stunt_rec, paste0(res_dir, "rf results/longbow results/results_bin_stunt_rec.RDS"))
 
 
-optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_2021-06-29.RDS"))   
+optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_opttx_vim_2021-08-21.RDS"))   
 optx_results2 <- NULL
   # optx_results2 <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_results_subset_2021-06-06.RDS"))   
 optx_results_season <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_season_results_2021-06-05.RDS"))   

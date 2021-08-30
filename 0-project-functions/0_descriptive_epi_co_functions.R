@@ -234,6 +234,59 @@ summary.waz <- function(d, method="REML"){
 
 
 
+summary.co.ci <- function(d, severe = F, method="REML", N_filter=50){
+  cutoff <- ifelse(severe,-3,-2)
+  
+ 
+      # identify ever wasted children
+      evs = d %>%
+        filter(!is.na(agecat) & !is.na(haz) & !is.na(whz)) %>%
+        # create indicator for whether the child was ever co
+        # by age category
+        mutate(co = 1*(whz < cutoff & haz < cutoff)) %>%
+        group_by(studyid,country,agecat,subjid) %>%
+        summarise(ever_co=max(co)) %>% ungroup() %>%
+        mutate(agecat=factor(agecat))
+    
+  
+  # count incident cases per study by age
+  # exclude time points if number of measurements per age
+  # in a study is <50
+  cuminc.data= evs%>%
+    group_by(studyid,country,agecat) %>%
+    summarise(
+      nchild=length(unique(subjid)),
+      nstudy=length(unique(studyid)),
+      ncases=sum(ever_co),
+      N=sum(length(ever_co))) %>%
+    filter(N>=N_filter)
+  
+  cuminc.data <- droplevels(cuminc.data)
+  
+  # cohort specific results
+  ci.cohort=lapply(levels(cuminc.data$agecat),function(x)
+    fit.escalc(data=cuminc.data,ni="N", xi="ncases",age=x,meas="PLO"))
+  ci.cohort=as.data.frame(rbindlist(ci.cohort, use.names=TRUE, fill=T))
+  ci.cohort=cohort.format(ci.cohort,y=ci.cohort$yi,
+                          lab=  levels(cuminc.data$agecat))
+  ci.cohort = mark_region(ci.cohort)
+  
+  # estimate random effects, format results
+  ci.res=lapply(levels(cuminc.data$agecat),function(x)
+    fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements", method=method))
+  ci.res=as.data.frame(rbindlist(ci.res, use.names=TRUE, fill=T))
+  ci.res$est=as.numeric(ci.res$est)
+  ci.res$lb=as.numeric(ci.res$lb)
+  ci.res$ub=as.numeric(ci.res$ub)
+  ci.res = ci.res %>%
+    mutate(est=est*100,lb=lb*100,ub=ub*100)
+  ci.res$agecat=factor(levels(cuminc.data$agecat))
+  ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
+  
+  return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
+}
+
+
 
 
 

@@ -21,32 +21,7 @@ default_params$script_params$count_Y <- FALSE
 load(here("4-longbow-tmle-analysis","analysis specification","seasonality_analyses.rdata"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/seasonality_rf.Rdata")
+table(d$studyid)
 
-writeLines(jsonlite::toJSON(enumerated_analyses),"seasonality_analyses.json")
-
-
-# 2. run batch
-configure_cluster(here("0-project-functions","cluster_credentials.json"))
-rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")
-
-# send the batch to longbow (with provisioning disabled)
-batch_inputs <- "seasonality_analyses.json"
-batch_id_cont <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
-batch_id_cont
-
-# wait for the batch to finish and track progress
-wait_for_batch(batch_id_cont)
-
-# download the longbow outputs
-get_batch_results(batch_id_cont, results_folder="seasonality_results")
-length(dir("seasonality_results"))
-
-# load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata", results_folder = "seasonality_results")
-obs_counts <- load_batch_results("obs_counts.rdata", results_folder = "seasonality_results")
-
-# save concatenated results
-filename1 <- paste(paste('seasonality_results',Sys.Date( ),sep='_'),'RDS',sep='.')
-filename2 <- paste(paste('seasonality_results_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
-saveRDS(results, file=paste0(res_dir,"rf results/raw longbow results/",filename1))
-saveRDS(obs_counts, file=paste0(res_dir,"rf results/raw longbow results/",filename2))
+run_ki_tmle(enumerated_analyses, results_folder="seasonality_results", overwrite = F)

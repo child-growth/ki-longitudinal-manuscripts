@@ -288,8 +288,15 @@ medians.monthly <- bind_rows(medians.monthly_waz, medians.monthly_wst, medians.m
   arrange(region, measure)
 medians.monthly
 
+medians_cohort.mon_st <- st.mon %>% group_by(studyid, country) %>% do(kimedian(., measure="haz")) %>% as.data.frame()
+medians_cohort.mon_wst <- wst.mon %>% group_by(studyid, country) %>% do(kimedian(., measure="whz")) %>% as.data.frame()
+medians_cohort.mon_waz <- waz.mon %>% group_by(studyid, country) %>% do(kimedian(., measure="waz")) %>% as.data.frame()
+
+
 medians.monthly.country <- bind_rows(medians_country.mon_waz, medians_country.mon_wst, medians_country.mon_st) %>%
   arrange(country, measure)
+medians.monthly.cohort <- bind_rows(medians_cohort.mon_waz, medians_cohort.mon_wst, medians_cohort.mon_st) %>%
+  arrange(country, studyid, measure)
 
 
 set.seed(123)
@@ -395,6 +402,7 @@ quantdf.monthly <- rbind(haz1, haz2, haz3, haz4, whz1, whz2, whz3, whz4, waz1, w
 #Save medians
 saveRDS(medians.monthly, file = paste0(dhs_res_dir,"ki.zscore.medians.monthly.rds"))
 saveRDS(medians.monthly.country, file = paste0(dhs_res_dir,"ki.zscore.medians.monthly.country.rds"))
+saveRDS(medians.monthly.cohort, file = paste0(dhs_res_dir,"ki.zscore.medians.monthly.cohort.rds"))
 saveRDS(medians.quarterly, file = paste0(dhs_res_dir,"ki.zscore.medians.quarterly.rds"))
 
 #Save densities

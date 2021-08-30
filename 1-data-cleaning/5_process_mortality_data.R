@@ -27,6 +27,9 @@ tab2 <- d %>%
   summarise(mort_rate=round(sum(dead, na.rm=T)/n() * 100,2), nummort=sum(dead,  na.rm=T), 
             notNAmort=sum(!is.na(dead),  na.rm=T), country_rate=NA) %>%
   as.data.frame()
+tab2 <- tab2 %>% filter(nummort!=0)
+knitr::kable(tab2[,-c(5:6)])  
+
 tab2<-tab2 %>% filter(nummort>10)
 knitr::kable(tab2)  
 

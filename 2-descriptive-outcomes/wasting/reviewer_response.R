@@ -14,4 +14,4 @@ ptb <- cov %>% filter(!is.na(gagebrth))
 lbw <- cov %>% filter(!is.na(birthwt))
 
 prop.table(table(ptb$studyid,ptb$gagebrth))
-prop.table(table(lbw$studyid,ptb$gagebrth))
+prop.table(table(lbw$studyid,lbw$birthwt))

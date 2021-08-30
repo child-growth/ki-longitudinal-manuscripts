@@ -225,7 +225,8 @@ plot_grid <- plot_grid(
   plot_list[[8]], plot_list[[18]], 
   plot_list[[9]], plot_list[[19]], 
   plot_list[[10]], plot_list[[20]], 
-  labels = rep("", 20), ncol = 2, align = 'v', axis = 'l')
+  plot_list[[21]], 
+  labels = rep("", 21), ncol = 2, align = 'v', axis = 'l')
 
 ggsave(plot_grid, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/rain_seasonality_plot.png"), width=10, height=24)
 
