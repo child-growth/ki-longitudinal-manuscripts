@@ -434,3 +434,7 @@ pooled_r2_results <- data.frame(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_C
 filename <- paste(paste('pooled_R2_results',Sys.Date( ),sep='_'),'RDS',sep='.')
 
 saveRDS(pooled_r2_results, file=paste0(BV_dir,"/results/",filename))
+
+
+res <- readRDS(paste0(BV_dir,"/results/pooled_R2_results_2021-08-06.RDS"))
+res

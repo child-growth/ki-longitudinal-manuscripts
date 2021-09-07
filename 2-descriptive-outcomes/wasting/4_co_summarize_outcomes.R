@@ -34,6 +34,32 @@ prop.table(table(df$co))
 table(df$sevco)
 prop.table(table(df$sevco))
 
+#get the pooled CI
+cuminc.data= df%>%
+  group_by(studyid,country) %>%
+  summarise(
+    nchild=length(unique(subjid)),
+    nstudy=length(unique(studyid)),
+    ncases=sum(co),
+    N=sum(length(co))) %>%
+  filter(N>=50)
+cuminc.data$agecat <- "0-24 months"
+co.ci.res=fit.rma(data=cuminc.data,ni="N", xi="ncases",age="0-24 months",measure="PLO",nlab=" measurements", method="REML")
+co.ci.res
+
+#get the pooled CI
+sevcuminc.data= df%>%
+  group_by(studyid,country) %>%
+  summarise(
+    nchild=length(unique(subjid)),
+    nstudy=length(unique(studyid)),
+    ncases=sum(sevco),
+    N=sum(length(sevco))) %>%
+  filter(N>=50)
+sevcuminc.data$agecat <- "0-24 months"
+sev.co.ci.res=fit.rma(data=sevcuminc.data,ni="N", xi="ncases",age="0-24 months",measure="PLO",nlab=" measurements", method="REML")
+sev.co.ci.res
+
 
 #Prevalence
 d <- calc.prev.agecat(d)
@@ -52,7 +78,26 @@ prev <- bind_rows(
   prev.cohort
 )
 
+#cumulative incidence
+d <- calc.ci.agecat(d)
+ci.data <- summary.co.ci(d)
+ci.region <- d %>% group_by(region) %>% do(summary.co.ci(.)$ci.res)
+ci.country <- d %>% group_by(country) %>% do(summary.co.ci(.)$ci.res) %>% mutate(region=country)
+
+ci.cohort <-
+  ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
+
+ci <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ci.data$ci.res),
+  data.frame(cohort = "pooled", ci.country),
+  data.frame(cohort = "pooled", ci.region),
+  ci.cohort
+)
+
+
 #Severe wasting and stunting prevalence
+d <- calc.prev.agecat(d)
 sev.prev.data <- summary.prev.co(d, severe = T)
 sev.prev.region <-
   d %>% group_by(region) %>% do(summary.prev.co(., severe = T)$prev.res)
@@ -87,6 +132,7 @@ underweight.prev <- bind_rows(
   data.frame(cohort = "pooled", prev.country),
   prev.cohort
 )
+
 
 
 
@@ -162,6 +208,7 @@ m.whz.prev <- bind_rows(
 
 co_desc_data <- bind_rows(
   data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
+  data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="no", measure= "Incidence proportion", ci),
   data.frame(disease = "co-occurrence", age_range="3 months",   birth="yes", severe="yes", measure= "Prevalence", sev.prev),
   data.frame(disease = "Underweight", age_range="3 months",   birth="yes", severe="no", measure= "Mean WAZ",  waz),
   data.frame(disease = "Underweight", age_range="1 month",   birth="yes", severe="no", measure= "Mean WAZ",  monthly.waz),
@@ -195,7 +242,7 @@ co_desc_data <- co_desc_data %>%
   ))
 
 
-saveRDS(co_desc_data, file = paste0(here(),"/results/co_desc_data.rds"))
+saveRDS(co_desc_data, file = paste0(BV_dir,"/results/co_desc_data.rds"))
 
 
 

@@ -6,6 +6,8 @@ source(paste0(here::here(), "/0-config.R"))
 d <- readRDS(paste0(BV_dir,"/results/desc_data_cleaned.rds"))
 quantiles <- readRDS(paste0(BV_dir,"/results/quantile_data_wasting.RDS"))
 
+d %>% filter(disease=="co-occurrence", measure==c("Incidence proportion"), is.na(pooling))
+
 #Subset to primary analysis
 d <- d %>% mutate(pooling=ifelse(cohort=="pooled" & is.na(pooling),region,pooling)) %>%
   filter(analysis=="Primary", (pooling!="country" | is.na(pooling)))
@@ -177,6 +179,9 @@ prev_plot <- ki_desc_flurry_plot(d,
                      yrange=c(0,24),
                      returnData=T)
 
+temp<-prev_plot[[2]] %>% filter(region=="South Asia",agecat=="Birth")
+temp<-prev_plot[[2]] %>% filter(region=="Overall",agecat=="24")
+
 prev_plot_africa <- ki_desc_plot(d,
                           Disease="Wasting",
                           Measure="Prevalence", 
@@ -228,8 +233,8 @@ prev_plot_name = create_name(
 # save plot and underlying data
 ggsave(prev_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",prev_plot_name, ".png"), width=14, height=3)
 ggsave(prev_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_africa", ".png"), width=10, height=5)
-ggsave(prev_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_lam", ".png"), width=10, height=5)
-ggsave(prev_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=10, height=5)
+ggsave(prev_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_lam", ".png"), width=15, height=5)
+ggsave(prev_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","prev_plot_sasia", ".png"), width=18, height=10)
 
 saveRDS(prev_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",prev_plot_name,".RDS"))
 
@@ -273,7 +278,7 @@ saveRDS(ip_plot_primary[[2]], file=paste0(figdata_dir_wasting,"figdata-",ip_plot
 saveRDS(list(mean_wlz_plot, prev_plot, ip_plot_primary), file=paste0(BV_dir,"/figures/plot-objects/fig2_plot_objects.rds"))
 
 ip_plot_primary[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
-ip_plot_primary[[2]] %>% filter(region=="South Asia") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
+ip_plot_primary[[2]] %>% filter(region=="South Asia",pooling=="regional") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 
 
 #-------------------------------------------------------------------------------------------
@@ -435,6 +440,8 @@ inc_plot_name = create_name(
   age = "All ages",
   analysis = "primary"
 )
+
+
 
 # save plot and underlying data
 ggsave(inc_plot_primary$plot, file=paste0(BV_dir,"/figures/wasting/fig-",inc_plot_name, ".png"), width=14, height=3)
@@ -616,7 +623,7 @@ saveRDS(rec_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",rec_plot_name,
 
 saveRDS(rec_plot, file=paste0(BV_dir,"/figures/plot-objects/rec_plot_object.rds"))
 
-rec_plot[[2]] %>% filter(region=="Overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
+rec_plot[[2]] %>% filter(region=="Overall") %>% subset(., select = c(age_range,measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 
 
 #Plot just the overall facet for presentation slide
@@ -739,9 +746,9 @@ perswast_plot_name = create_name(
 # save plot and underlying data
 ggsave(perswast_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",perswast_plot_name, ".png"), width=8, height=5)
 
-ggsave(perswast_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_africa", ".png"), width=10, height=5)
+ggsave(perswast_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_africa", ".png"), width=7, height=5)
 ggsave(perswast_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_lam", ".png"), width=10, height=5)
-ggsave(perswast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=10, height=5)
+ggsave(perswast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","perswast_plot_sasia", ".png"), width=15, height=8)
 
 saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_plot_name,".RDS"))
 
@@ -762,6 +769,8 @@ co_plot <- ki_desc_flurry_plot(d,
                    ylabel='Point prevalence of concurrent\nwasting and stunting (%)',
                    yrange=c(0,11),
                    returnData=T)
+co_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
+
 
 co_plot_africa <- ki_desc_plot(d,
                         Disease="co-occurrence",
@@ -800,7 +809,7 @@ co_plot_sasia <- ki_desc_plot(d,
                                ylabel='Point prevalence of concurrent\nwasting and stunting (%)',
                                yrange=c(0,20),
                                returnData=T,
-                               Region="South Asia")
+                               Region= "South Asia")
 
 # define standardized plot names
 co_plot_name = create_name(
@@ -814,14 +823,39 @@ co_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(co_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",co_plot_name, ".png"), width=14, height=3)
-ggsave(co_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_africa", ".png"), width=10, height=5)
-ggsave(co_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_lam", ".png"), width=10, height=5)
-ggsave(co_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_sasia", ".png"), width=10, height=5)
+ggsave(co_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",co_plot_name, ".png"), width=15, height=5)
+ggsave(co_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_africa", ".png"), width=15, height=5)
+ggsave(co_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_lam", ".png"), width=15, height=5)
+ggsave(co_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_sasia", ".png"), width=20, height=8)
 
 saveRDS(co_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",co_plot_name,".RDS"))
 
 saveRDS(co_plot, file=paste0(BV_dir,"/figures/plot-objects/co_plot_object.rds"))
+
+
+
+#-------------------------------------------------------------------------------------------
+# Co-occurrence CI
+#-------------------------------------------------------------------------------------------
+
+
+ip_plot_co <- ki_wast_ip_flurry_plot(d,
+                                          Disease="co-occurrence",
+                                          Measure=c("Incidence proportion"),
+                                          Birth="yes",
+                                          Severe="no",
+                                          dodge=0.5,
+                                          Age_range="3 months",
+                                          xlabel="Child age, months",
+                                          returnData=T,
+                                          legend.pos= "none")
+
+
+# save plot and underlying data
+ggsave(ip_plot_co[[1]], file=paste0(BV_dir,"/figures/wasting/fig-co-occurrence-ci.png"), width=14, height=3)
+saveRDS(ip_plot_co[[2]], file=paste0(figdata_dir_wasting,"figdata-co-occurrence-ci.RDS"))
+
+
 
 
 #-------------------------------------------------------------------------------------------
@@ -889,7 +923,7 @@ underweight_plot_name = create_name(
 ggsave(underweight_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",underweight_plot_name, ".png"), width=14, height=3)
 ggsave(underweight_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_africa", ".png"), width=10, height=5)
 ggsave(underweight_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_lam", ".png"), width=10, height=5)
-ggsave(underweight_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=10, height=5)
+ggsave(underweight_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","underweight_plot_sasia", ".png"), width=20, height=8)
 
 saveRDS(underweight_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",underweight_plot_name,".RDS"))
 
@@ -1106,18 +1140,16 @@ sevwast_plot_name = create_name(
 # save plot and underlying data
 ggsave(sevwast_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",sevwast_plot_name, ".png"), width=14, height=3)
 ggsave(sevwast_plot_africa$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_africa", ".png"), width=10, height=5)
-ggsave(sevwast_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_lam", ".png"), width=10, height=5)
-ggsave(sevwast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_sasia", ".png"), width=10, height=5)
+ggsave(sevwast_plot_lam$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_lam", ".png"), width=15, height=5)
+ggsave(sevwast_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","sevwast_plot_sasia", ".png"), width=18, height=8)
 
 
 saveRDS(sevwast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",sevwast_plot_name,".RDS"))
 
 
-
-
 #Get N's for figure captions
-prev_plot[[2]] %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
+prev_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
 #ci_plot_primary[[2]] %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
-inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
-rec_plot[[2]]%>% group_by(region) %>% filter(age_range=="90 days") %>% summarize(min(nmeas), max(nmeas), sum(nmeas))
-co_plot[[2]]%>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
+inc_plot_primary$data %>% filter(cohort=="pooled") %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
+rec_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% filter(age_range=="90 days") %>% summarize(min(nmeas), max(nmeas), sum(nmeas))
+co_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))

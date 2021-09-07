@@ -22,7 +22,9 @@ source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-e
 
 
 #Load data
-d <- readRDS(paste0(here::here(),"/results/desc_data_cleaned.rds"))
+d <- readRDS(paste0(res_dir,"/desc_data_cleaned.rds"))
+
+d <- d %>% filter(cohort!="iLiNS-Zinc-BURKINA FASO")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 
@@ -141,7 +143,7 @@ prev_plot_sasia_name = name_prev_plots(cut=2, pop=pop_list$c, loc="South Asia", 
 # save plot and underlying data
 ggsave(prev_plot_africa$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_africa_name, ".png"), width=10, height=5)
 ggsave(prev_plot_lam$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_latam_name, ".png"), width=10, height=5)
-ggsave(prev_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sasia_name, ".png"), width=15, height=7)
+ggsave(prev_plot_sasia$plot, file=paste0(fig_dir, "stunting/fig-",prev_plot_sasia_name, ".png"), width=17, height=7)
 
 saveRDS(prev_plot_africa$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_africa_name,".RDS"))
 saveRDS(prev_plot_lam$data, file=paste0(figdata_dir_stunting, "figdata-",prev_plot_latam_name,".RDS"))

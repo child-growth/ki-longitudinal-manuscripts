@@ -16,7 +16,7 @@ d$born_wast_lab <- ifelse(d$born_wast==1, "Born\nwasted", "Not born\nwasted")
 d$measure_lab <- as.character(d$measure)
 d$measure_lab[d$measure=="Persistent wasting"] <- "Persistent wasting\nfrom 6-24 months"
 d$measure_lab[d$measure=="Wasting cumulative incidence"] <- "Wasting cumulative incidence\nfrom 6-24 month"
-d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting at 18 months" 
+d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Concurrent wasting\nand stunting at 18 months" 
 d$measure_lab <- factor(d$measure_lab)
 d$measure_lab <- relevel(d$measure_lab, ref="Wasting cumulative incidence\nfrom 6-24 month")
 

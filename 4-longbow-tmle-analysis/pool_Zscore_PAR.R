@@ -18,8 +18,7 @@ head(dfull)
  unique(dfull$type)
  d <- dfull %>% filter(type=="PAR")
  table(d$intervention_variable, d$outcome_variable)
- table(d$country)
- 
+
 # temp <- d  %>% filter(outcome_variable =="whz"| outcome_variable =="haz",
 #                       intervention_variable =="birthlen_rf"|intervention_variable =="birthwt_rf"|intervention_variable =="gagebrth_rf"|
 #                       intervention_variable =="birthlen"|intervention_variable =="birthwt"|intervention_variable =="gagebrth", agecat=="24 months") %>% droplevels()
@@ -36,7 +35,8 @@ head(dfull)
 
 #Subset to continious outcomes
 unique(d$outcome_variable)
-d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
+d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_waz"|
+                    outcome_variable=="y_rate_len"|
                     outcome_variable=="y_rate_wtkg"|outcome_variable=="haz"|
                     outcome_variable=="whz"|outcome_variable=="waz")
 

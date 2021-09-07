@@ -78,24 +78,24 @@ plotdf2$Xvar <- factor(plotdf2$Xvar, levels = c("Enrolled\nwasted","Any wasting\
 plotdf2 <- plotdf2 %>% arrange(Xvar)
 plotdf2 <- droplevels(plotdf2)
 
-p_earlywast_old <- ggplot(plotdf2%>% filter(pooled==1), aes(x=Xvar)) + 
-  geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
-                 alpha=0.5, size = 1) +
-  labs(x = "Wasting exposure", y = "Cumulative incidence\nratio: stunting 6-24 mo.") +
-  geom_hline(yintercept = 1) +
-  #geom_text(aes(x=c(1, 2, 3), y=((plotdf2$RR.CI2))+.02, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
-  scale_fill_manual(values=rep(tableau10[1],4)) +
-  scale_colour_manual(values=rep(tableau10[1],4)) +
-  theme(strip.background = element_blank(),
-        legend.position="none",
-        axis.text.y = element_text(size=12),
-        strip.text.x = element_text(size=10),
-        axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
-        panel.spacing = unit(0, "lines")) #+
-#ggtitle("Risk of stunting onset\nby measure of early wasting")
-p_earlywast_old
+# p_earlywast_old <- ggplot(plotdf2%>% filter(pooled==1), aes(x=Xvar)) + 
+#   geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
+#   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
+#                  alpha=0.5, size = 1) +
+#   labs(x = "Wasting exposure", y = "Cumulative incidence\nratio: stunting 6-24 mo.") +
+#   geom_hline(yintercept = 1) +
+#   #geom_text(aes(x=c(1, 2, 3), y=((plotdf2$RR.CI2))+.02, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
+#   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
+#   scale_fill_manual(values=rep(tableau10[1],4)) +
+#   scale_colour_manual(values=rep(tableau10[1],4)) +
+#   theme(strip.background = element_blank(),
+#         legend.position="none",
+#         axis.text.y = element_text(size=12),
+#         strip.text.x = element_text(size=10),
+#         axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
+#         panel.spacing = unit(0, "lines")) #+
+# #ggtitle("Risk of stunting onset\nby measure of early wasting")
+# p_earlywast_old
 
 set.seed(12234)
 yticks <- c(0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8)
@@ -116,7 +116,7 @@ p_earlywast <- ggplot(plotdf2 %>% filter(pooled==1), aes(x=Xvar)) +
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=12),
-        strip.text.x = element_text(size=10),
+        strip.text.x = element_text(size=14),
         axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
         panel.spacing = unit(0, "lines")) #+
   #ggtitle("Risk of stunting onset\nby measure of early wasting")

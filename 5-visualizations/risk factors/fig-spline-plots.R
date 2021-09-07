@@ -35,7 +35,7 @@ d %>% ungroup() %>%  filter(!is.na(mbmi)) %>% summarize(N=n(), Nchild=length(uni
 #Adapted from: 
 #http://www.ag-myresearch.com/2012_gasparrini_statmed.html
 
-spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps", mean_aic=F){
+spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps", mean_aic=F, forcedf=NULL){
   
   # LOAD THE PACKAGES (mvmeta PACKAGE IS ASSUMED TO BE INSTALLED)
   require(mvmeta)
@@ -93,7 +93,8 @@ spline_meta <- function(d, Y="haz", Avar, overall=F, cen=365, type="ps", mean_ai
   }
     
   bestdf <- bestdf$df
-    bestdf
+    
+    if(!is.null(forcedf)){bestdf<-forcedf}
   
   for(i in 1:m){
     
@@ -280,14 +281,16 @@ plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( 
   
 
 Avarwt="Maternal weight"
+orange_color_gradient = c("#FF7F0E", "#ffb26e", "#f5caab")
+blue_color_gradient = c("#1F77B4", "#85cdff", "#b8e7ff")
 
 purple_color_gradient = c("#7644ff", "#b3adff", "#e4dbff")
   
 p1 <- ggplot() +
   geom_line(data=plotdf_wlz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_wlz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
-  scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
+  scale_color_manual(values=orange_color_gradient, name = paste0( Avarwt)) +
+  scale_fill_manual(values=orange_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
@@ -308,7 +311,7 @@ print(p1)
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 table(d$mhtcm)
-predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T)
+predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T, forcedf=5)
 plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
 predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="whz", Avar="mhtcm", overall=T)
 plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
@@ -334,8 +337,8 @@ light_blue_color_gradient = c("#0fb3bf", "#83ced3", "#c5e0e2")
 p2 <- ggplot() + 
   geom_line(data=plotdf_wlz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_wlz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
-  scale_fill_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
+  scale_color_manual(values=orange_color_gradient, name = paste0( Avar)) +
+  scale_fill_manual(values=orange_color_gradient, name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
@@ -383,8 +386,8 @@ Avarwt="Maternal weight"
 p3 <- ggplot() + 
   geom_line(data=plotdf_laz_mwtkg, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_laz_mwtkg, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
-  scale_fill_manual(values=purple_color_gradient, name = paste0( Avarwt)) +
+  scale_color_manual(values=blue_color_gradient, name = paste0( Avarwt)) +
+  scale_fill_manual(values=blue_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
@@ -430,8 +433,8 @@ Avar="Maternal height"
 p4 <- ggplot() + 
   geom_line(data=plotdf_laz_mhtcm, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_laz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values =light_blue_color_gradient, name = paste0( Avar)) +
-  scale_fill_manual(values = light_blue_color_gradient, name = paste0( Avar)) +
+  scale_color_manual(values =blue_color_gradient, name = paste0( Avar)) +
+  scale_fill_manual(values = blue_color_gradient, name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
@@ -477,8 +480,8 @@ brown_color_gradient = c(tableau10[6], "#c99a6b")
 
 p5 <- ggplot() + 
   geom_line(data=plotdf_wlz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
-  scale_color_manual(values=brown_color_gradient, name = paste0( Avar)) +
-  scale_fill_manual(values=brown_color_gradient, name = paste0( Avar)) +
+  scale_color_manual(values=orange_color_gradient, name = paste0( Avar), labels = c(">=18.5", "<18.5")) +
+  scale_fill_manual(values=orange_color_gradient, name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) + 
@@ -523,8 +526,8 @@ Avarwt="Maternal BMI"
 
 p6 <- ggplot() +
   geom_line(data=plotdf_laz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
-  scale_color_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
-  scale_fill_manual(values=brown_color_gradient, name = paste0( Avarwt)) +
+  scale_color_manual(values=blue_color_gradient, name = paste0( Avarwt), labels = c(">=18.5", "<18.5")) +
+  scale_fill_manual(values=blue_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.2, -0.4, 0.2), labels = seq(-2.2, -0.4, 0.2)) + 
@@ -554,7 +557,7 @@ p1 <- p1 + ggtitle("Spline curves of WLZ, stratified by\ncategories of maternal 
 p2 <- p2  + ggtitle("Stratified by\ncategories of maternal height") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6))+ scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4)))
 p3 <- p3  + ggtitle("Spline curves of LAZ, stratified by\ncategories of maternal weight") + theme(legend.position = "none") + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + theme(legend.key = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
 p4 <- p4  + ggtitle("Stratified by\ncategories of maternal height") +  theme(legend.position = "none") +guides(color = guide_legend("Maternal\nheight", nrow=3)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
-p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_color_manual(values=c(tableau10[6], "#c99a6b"), labels = c(">=18.5", "<18.5")) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) 
+p5 <- p5  + ggtitle("Stratified by\ncategories of maternal BMI") + theme(legend.position = pos,  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Maternal\nBMI", nrow=2)) + scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank()) + scale_y_continuous(limits=c(-1.2, 0.4), breaks = seq(-1.2, 0.4, 0.2), labels = round(seq(-1.2, 0.4, 0.2),1)) 
 p6 <- p6  + ggtitle("Stratified by\ncategories of maternal BMI") +  theme(legend.position = "none")+ scale_x_continuous(limits=c(0,730), expand = c(0, 0), breaks = 0:6*30.41*4, labels = c(0, seq(4, 24, 4))) + theme(legend.key = element_blank())  +scale_y_continuous(limits=c(-2.4, -0.4), breaks = seq(-2.4, 0.4, 0.2), labels = round(seq(-2.4, 0.4, 0.2),1)) 
 
 

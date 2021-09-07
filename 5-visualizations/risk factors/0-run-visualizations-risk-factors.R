@@ -18,7 +18,7 @@ source(here("5-visualizations/risk factors/fig-wlz-quart-laz-velocity.R"))
 source(here("5-visualizations/risk factors/fig-wlz-quart-stunting.R"))
 
 
-source(here("5-visualizations/risk factors/fig-mortality-plots.R"))
+source(here("5-visualizations/risk factors/fig-mortality-plot_prim.R"))
 #source(here("5-visualizations/risk factors/fig-mortality-timing.R"))
 
 

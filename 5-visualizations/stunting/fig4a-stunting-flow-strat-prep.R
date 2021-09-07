@@ -27,7 +27,21 @@ x=stunt_data %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
 sum(x$n)
 
 stunt_data = stunt_data %>% 
-  mutate(cohort_country = paste0(studyid, " - ", country)) 
+  mutate(cohort_country = paste0(studyid, " - ", country))
+  
+
+#get percent of recovered children who ever relapse
+head(stunt_data)
+mean(stunt_data$evernew)
+mean(stunt_data$everrecover)
+mean(stunt_data$evernew[stunt_data$everrecover==1])
+temp<-stunt_data  %>% filter(everrecover==1)  %>%
+  group_by(studyid, subjid) %>% summarise(relapse=max(relapse))
+mean(temp$relapse) * 100
+head(temp)
+
+
+#%>% group_by(agem) %>% summarise(mean(relapse,na.rm=T)*100)
 
 #-----------------------------------------
 # format data for plot

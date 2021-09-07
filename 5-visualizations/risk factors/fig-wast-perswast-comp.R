@@ -116,22 +116,27 @@ data = plotdf %>% filter(pooled==0)
 min(data$RR)
 max(data$RR)
 
-plotdf <- plotdf %>% filter(!is.na(Outcome), !is.na(RFlabel_ref), !is.na(intervention_var)) %>% droplevels()
+plotdf <- plotdf %>% filter(!is.na(Outcome), !is.na(RFlabel_ref), !is.na(intervention_variable)) %>% droplevels()
 
 set.seed(12234)
 p_severecomp <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), 
-                       aes(x=Outcome, group=intervention_level)) + 
+                       aes(x=Outcome, group=intervention_level, fill=Outcome, color=Outcome)) + 
   geom_point(aes(y=RR), color="#878787", fill="#878787", size=2.5, stroke=0, alpha=0.5,
              position=position_jitter(width=0.2), data = plotdf %>% filter(pooled==0)) +
-  geom_point(aes(y=RR), color="#287D8EFF", size=3) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color="#287D8EFF"),
+  geom_point(aes(y=RR), 
+             #color="#287D8EFF",
+             size=3) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2
+                     #, color="#287D8EFF"
+                     ),
                  alpha=0.5, size = 1) +
   facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
   labs(x = "Cumulative from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, expand = c(0,0)) +
-  scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
+  scale_colour_manual(values=tableau10[c(2,2,3,3,3,3)]) +
+  scale_fill_manual(values=tableau10[c(2,2,3,3,3,3)]) +
   scale_shape_manual(values=c(16,21)) +
   theme(strip.background = element_blank(),
         legend.position="none",

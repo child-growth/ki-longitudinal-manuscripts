@@ -25,8 +25,32 @@ unique(co_pool$label)
 co_pool %>% filter(label %in% 
                      c("Wasted+Underweight",      
                        "Stunted+Underweight",      
-                       "Wasted+Stunted+Underweight")) %>%
+                       "Wasted+Stunted")) %>%
   group_by(agem) %>% summarise(sum(est)*100) %>% as.data.frame()
+
+co_pool %>% filter( !(label %in% c("Healthy","Recovered"))) %>% 
+  group_by(agem) %>%
+  mutate(sum=sum(est), est=est/sum) %>% 
+  group_by(agem, label) %>% summarise(mean(est)*100) %>% as.data.frame()
+
+co_pool %>% filter( !(label %in% c("Healthy","Recovered"))) %>% 
+  group_by(agem) %>%
+  mutate(sum=sum(est), est=est/sum) %>% 
+  filter(label %in% 
+           c("Wasted+Underweight",      
+             "Stunted+Underweight",      
+             "Wasted+Stunted")) %>%
+  group_by(agem) %>% summarise(sum(est)*100) %>% as.data.frame()
+
+co_pool %>% filter( !(label %in% c("Healthy","Recovered")),
+                    label %in% 
+                      c("Wasted+Underweight",      
+                        "Stunted+Underweight",      
+                        "Wasted+Stunted")) %>%
+  group_by(label) %>% summarise(mean(est)*100) %>% as.data.frame()
+
+
+
 
 #-----------------------------------------
 # define hybrid color palette

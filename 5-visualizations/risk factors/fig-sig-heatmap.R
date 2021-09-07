@@ -6,6 +6,18 @@ source(paste0(here::here(), "/0-config.R"))
 #Load data
 ate <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results.rds")) 
 rr <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
+par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
+
+#Get PAR vs ATE diff for reviewer comments
+ate %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
+par %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
+
+ate %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+par %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+
+ate %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
+par %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
+
 
 #Match columns names
 rr <- rr %>% rename(est=RR, CI.lb=RR.CI1, CI.ub=RR.CI2)
@@ -25,17 +37,22 @@ rr  <- rr %>% filter(!(outcome_variable=="pers_wast" & agecat != "0-24 months"),
 d <- bind_rows(rr, ate)
 head(d)
 
+#temp fix fage
+unique(d$intervention_level)
+unique(d$baseline_level)
+d$baseline_level[d$baseline_level==">38 years"] <- ">35 years"
+
 
 #Drop reference levels
 dim(d)
 d <- d %>% filter(intervention_level != baseline_level)
 dim(d)
 
-#drop month and birthmonth
+#drop month and birthmonth and CGF exposures
 unique(d$intervention_variable)
-d <- d %>% filter(!(intervention_variable %in% c("brthmon", "month")))
+d <- d %>% filter(!(intervention_variable %in% c("brthmon", "month","anywast06","enstunt","enwast","pers_wast")))
 
-#Drop probit-spemofic Europe estimates
+#Drop probit-specific Europe estimates
 d <- d %>% filter(region!="N.America & Europe")
 d <- d %>% mutate(region = factor(region, levels = c("Pooled","South Asia","Africa","Latin America")))
 
@@ -249,7 +266,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
   guides(fill = guide_legend("P-value strength", nrow=2)) + 
   labs(x="Exposure",y="Age category",title="") +
   coord_flip()
-  
+hm  
   
   
 # save plot 

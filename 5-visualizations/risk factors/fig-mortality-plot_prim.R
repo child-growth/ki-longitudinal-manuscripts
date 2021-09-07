@@ -36,6 +36,9 @@ dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
 table(dfull$country)
 
 dHR <- readRDS(paste0(BV_dir,"/results/cox_results_no_overlap.RDS")) %>% filter(!is.na(HR))
+table(dHR$studyid)
+unique(dHR$studyid)
+
 
 #----------------------------------------
 # Clean mortality data
@@ -89,6 +92,8 @@ names(dHR)[names(dHR) == 'ci.ub'] <- 'RR.CI2'
 
 dHR <- dHR %>%
   add_column(outcome_variable = 'Relative hazard of\nmortality before 24 months')
+unique(dHR$studyid)
+
 
 dropped <- c("studyid", "region", "est", "se", "N", "sparseN",  "Nstudies", "method", "X", "Y", "adj", "agecat", "df", "sex", "logHR.psi", "logSE", "HR.CI1", "HR.CI2")
 dHR <- dHR[ , !(names(dHR) %in% dropped)]
@@ -98,6 +103,7 @@ pmort_data_cohort <- dHR %>% filter(pooled==0)
 p_prim_pooled  <- dHR %>% filter(pooled==1) %>% arrange(RR)
 p_prim_pooled
 
+p_prim_pooled %>% select(Measure, RR, RR.CI1, RR.CI2)
 
 
 #----------------------------------------

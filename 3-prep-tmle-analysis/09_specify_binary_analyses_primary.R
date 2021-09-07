@@ -23,6 +23,8 @@ save(pers_wast, file=paste0(ghapdata_dir,"/pers_wast_primary.rdata"))
 
 load(file=paste0(ghapdata_dir,"/st_cuminc_outcomes.rdata"))
 cuminc_sev <- cuminc %>% filter(agecat=="0-24 months")
+table(cuminc_sev$ever_sstunted)
+
 load(file=paste0(ghapdata_dir,"/st_cuminc_outcomes_nobirth.rdata"))
 cuminc_nobirth_sev <- cuminc_nobirth %>% filter(agecat=="0-24 months (no birth st.)")
 

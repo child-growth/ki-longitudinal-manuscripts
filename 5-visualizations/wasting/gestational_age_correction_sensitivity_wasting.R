@@ -44,6 +44,8 @@ d_preterm$cohort[d_preterm$cohort=="TanzaniaChild2-Tanzania"] <- "Tanzania Child
 d_preterm
 
 
+summary(d$W_gagebrth)
+
 #---------------------------------------------------------
 # Histograms of GA by cohort
 #---------------------------------------------------------
@@ -60,7 +62,9 @@ ggsave(phist , file=paste0(BV_dir, "/figures/wasting/fig-GA-by-cohort-histogram.
 
 
 #Drop gestational ages under 24 weeks or over 300 days (no intergrowth standards) 
+nrow(d)
 d <- d %>% filter(W_gagebrth > 24 *7 & W_gagebrth <= 300) %>% droplevels()
+nrow(d)
 
 
 stunt <- d %>% filter(haz >= -6 & haz <=6,
@@ -93,6 +97,8 @@ uwt$waz_GA <- igb_value2zscore(uwt$W_gagebrth, uwt$wtkg, var = "wtkg", sex = uwt
 
 stunt$diff <- stunt$haz_GA - stunt$haz
 uwt$diff <- uwt$waz_GA - uwt$waz
+summary(stunt$diff)
+summary(uwt$diff)
 
 #Histograms of Z-score differences
 p1 <- ggplot(stunt, aes(x=diff)) + geom_density() + facet_wrap(~cohort, scales="free_y")  +
@@ -127,7 +133,7 @@ prev.cohort <-
 
 underweight_prev_raw <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
-  data.frame(cohort = "pooled", prev.region),
+  #data.frame(cohort = "pooled", prev.region),
   prev.cohort
 )
 
@@ -143,7 +149,7 @@ prev.cohort <-
 
 stunt_prev_raw <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
-  data.frame(cohort = "pooled", prev.region),
+  #data.frame(cohort = "pooled", prev.region),
   prev.cohort
 )
 
@@ -165,7 +171,7 @@ prev.cohort <-
 
 underweight_prev_GA <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
-  data.frame(cohort = "pooled", prev.region),
+  #data.frame(cohort = "pooled", prev.region), drop regional pooling because few studies
   prev.cohort
 )
 
@@ -181,15 +187,26 @@ prev.cohort <-
 
 stunt_prev_GA <- bind_rows(
   data.frame(cohort = "pooled", region = "Overall", prev.data$prev.res),
-  data.frame(cohort = "pooled", prev.region),
+  #data.frame(cohort = "pooled", prev.region), drop regional pooling because few studies
   prev.cohort
 )
 
 
 
-
 #---------------------------------------------------------
-#Make plotting data.frame
+# Overall change
+#---------------------------------------------------------
+stunt_prev_GA$est[stunt_prev_GA$cohort=="pooled" & stunt_prev_GA$region=="Overall"]
+stunt_prev_raw$est[stunt_prev_raw$cohort=="pooled" & stunt_prev_raw$region=="Overall"]
+underweight_prev_GA$est[underweight_prev_GA$cohort=="pooled" & underweight_prev_GA$region=="Overall"]
+underweight_prev_raw$est[underweight_prev_raw$cohort=="pooled" & underweight_prev_raw$region=="Overall"]
+
+stunt_prev_GA$est[stunt_prev_GA$cohort=="pooled" & stunt_prev_GA$region=="Overall"]-stunt_prev_raw$est[stunt_prev_raw$cohort=="pooled" & stunt_prev_raw$region=="Overall"]
+underweight_prev_GA$est[underweight_prev_GA$cohort=="pooled" & underweight_prev_GA$region=="Overall"]-underweight_prev_raw$est[underweight_prev_raw$cohort=="pooled" & underweight_prev_raw$region=="Overall"]
+
+
+#----------------------------------------------------------
+# Make plotting data.frame
 #---------------------------------------------------------
 
 df <- rbind(
@@ -251,7 +268,7 @@ p <- ggplot(df, aes(y=est,x=cohort_lab)) +
   scale_color_manual(values=tableau11) +
   xlab("Cohort")+
   ylab("Prevalence at birth") +
-  scale_shape_manual(values = c(4, 21)) +
+  scale_shape_manual(values = c(4, 21), guide = guide_legend(reverse = TRUE)) +
   scale_x_discrete(expand = expand_scale(add = 1)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
   coord_flip() +

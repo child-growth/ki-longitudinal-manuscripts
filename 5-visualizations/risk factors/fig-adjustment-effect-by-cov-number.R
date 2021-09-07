@@ -11,6 +11,10 @@ dfull_unadj <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_unadj_results.
 dfull <- rbind(dfull_adj,dfull_unadj)
 dfull <- distinct(dfull)
 
+dfull_adj <- dfull_adj %>% filter(!(intervention_variable %in% c("anywast06","pers_wast","enstunt","enwast","trth2o")))
+dfull_unadj <- dfull_unadj %>% filter(!(intervention_variable %in% c("anywast06","pers_wast","enstunt","enwast","trth2o")))
+
+
 head(dfull)
 
 #Mark region

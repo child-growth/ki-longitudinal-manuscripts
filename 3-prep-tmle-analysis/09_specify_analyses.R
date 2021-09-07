@@ -132,8 +132,8 @@ Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
 
 vel_haz <- specify_rf_analysis(A=Avars, Y="y_rate_haz", file="st_haz_vel_rf.Rdata")
 vel_lencm <- specify_rf_analysis(A=Avars, Y="y_rate_len", file="st_len_vel_rf.Rdata")
-vel_waz <- specify_rf_analysis(A=Avars, Y="y_rate_waz", file="wast_waz_vel_rf.Rdata")
-vel_wtkg <- specify_rf_analysis(A=Avars, Y="y_rate_wtkg", file="wast_wtkg_vel_rf.Rdata")
+vel_waz <- specify_rf_analysis(A=Avars, Y="y_rate_waz", file="wy_rate_waz_vel_rfRdata")
+vel_wtkg <- specify_rf_analysis(A=Avars, Y="y_rate_wtkg", file="y_rate_wtkg_vel_rf.Rdata")
 haz <- specify_rf_analysis(A=Avars, Y="haz", file="st_meanZ_rf.Rdata")
 whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 

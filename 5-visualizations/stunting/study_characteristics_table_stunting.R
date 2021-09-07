@@ -8,31 +8,13 @@ library(table1)
 #load covariates
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 
-d <- cov %>% filter(studyid %in% monthly_cohorts)
+d <- cov %>% filter(studyid %in% monthly_and_quarterly_cohorts)
+colnames(d)
 d <- d %>% 
   mutate(country=str_to_title(country),
-         cohort=paste0(studyid,", ",country)) 
-
-length(unique(d$cohort))
-df <- d %>% filter(!is.na(birthwt)) %>% droplevels()
-length(unique(df$cohort))
-
-#look at crosstabs on birthweight and gestational age
-df <- d %>%
-  select(cohort, birthwt, gagebrth) %>% 
-  filter(!is.na(birthwt) | !is.na(gagebrth)) %>%
-  droplevels()
-table(df$cohort, df$birthwt)
-prop.table(table(df$birthwt)) * 100
-
-table(df$cohort, df$gagebrth)
-prop.table(table(df$cohort, df$gagebrth),1) * 100
-
-d <- d %>%
+         cohort=paste0(studyid,", ",country)) %>%
   select(cohort, sex, W_birthwt, W_mage, W_mwtkg, W_meducyrs,  nrooms, nchldlt5, impsan, hfoodsec)
 head(d)
-
-
 
 colnames(d)
 d <- d %>% rename(Sex=sex,
@@ -45,8 +27,8 @@ d <- d %>% rename(Sex=sex,
                   `Number of children <5yrs`=nchldlt5,
                   `Food security level`=hfoodsec)
 
-d %>% group_by()
 
+length(unique(d$cohort))
 
 res<-table1(~ .| cohort, data=d, 
        # transpose=TRUE,
@@ -67,18 +49,18 @@ df <- df[!grepl("Median",df[,1]),]
 dim(df)
 
 #saveRDS(df, file=paste0(BV_dir,"/results/enrol_tab_wast.RDS"))
-saveRDS(df, file=paste0(here(),"/data/enrol_tab_wast.RDS"))
+saveRDS(df, file=paste0(here(),"/data/enrol_tab_stunt.RDS"))
 
-knitr::kable(df, format="pipe")
-knitr::kable(df, format="html")
+res<-knitr::kable(df, format="pipe")
+#res <- knitr::kable(df, format="html")
+write.table(res, file=paste0(here(),"/data/enrol_tab_stunt.txt"))
 
-
-res<-table1(~ .| cohort, data=d,
-       transpose=TRUE,
-       droplevels=T,
-       # render.missing=NULL, #note these arguements don't work with transposing
-       # render.categorical="FREQ (PCTnoNA%)"
-       )
-df <- as.data.frame(res)
+# res<-table1(~ .| cohort, data=d,
+#        transpose=TRUE,
+#        droplevels=T,
+#        # render.missing=NULL, #note these arguements don't work with transposing
+#        # render.categorical="FREQ (PCTnoNA%)"
+#        )
+# df <- as.data.frame(res)
 
 #Open in new window, select all, then ctrl+Alt+V to paste special in Word

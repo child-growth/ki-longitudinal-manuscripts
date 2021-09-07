@@ -8,6 +8,9 @@
 kiPath <- c("/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths())
 .libPaths(kiPath)
 
+#suppress grouping messages
+options(dplyr.summarise.inform=F) 
+
 library(tidyverse)
 library(here)
 library(ggplot2)
@@ -77,14 +80,14 @@ ghapdata_dir                      = "/data/KI/UCB-SuperLearner/Manuscript analys
 BV_dir                           = "/data/KI/ki-manuscript-output/"
 
 
-project_functions_dir             = here::here("0-project-functions")
-data_cleaning_dir                 = here::here("1-data-cleaning")
-descriptive_outcomes_dir          = here::here("2-descriptive-outcomes")
-prep_tmle_analysis_dir            = here::here("3-prep-tmle-analysis")
-longbow_tmle_analysis_dir         = here::here("4-longbow-tmle-analysis")
-visualizations_dir                = here::here("5-visualizations")
-shiny_app_dir                     = here::here("6-shiny-app")
-cc_shiny_app_dir                  = here::here("7-cc-shiny-app")
+project_functions_dir             = paste0(here::here(),"/0-project-functions")
+data_cleaning_dir                 = paste0(here::here(),"/1-data-cleaning")
+descriptive_outcomes_dir          = paste0(here::here(),"/2-descriptive-outcomes")
+prep_tmle_analysis_dir            = paste0(here::here(),"/3-prep-tmle-analysis")
+longbow_tmle_analysis_dir         = paste0(here::here(),"/4-longbow-tmle-analysis")
+visualizations_dir                = paste0(here::here(),"/5-visualizations")
+shiny_app_dir                     = paste0(here::here(),"/6-shiny-app")
+cc_shiny_app_dir                  = paste0(here::here(),"/7-cc-shiny-app")
 
 #Set cohort data file path
 cohortdata_dir                    = paste0(ghapdata_dir, "cleaned individual study datasets/")

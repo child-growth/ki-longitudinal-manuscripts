@@ -46,44 +46,9 @@ analyses <- analyses[!sapply(analyses$W,is.null),] # Drop unadjusted estimates
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-writeLines(jsonlite::toJSON(enumerated_analyses[[17]]),"single_analysis.json")
-writeLines(jsonlite::toJSON(enumerated_analyses),"all_analyses.json")
 
 
-
-
-# 2. run batch
-
-configure_cluster(here("0-project-functions","cluster_credentials.json"))
-
-rmd_filename <- here("4-longbow-tmle-analysis/run-longbow/longbow_OptTX.Rmd")
-
-inputs <- "single_analysis.json"
-
-#run test/provisioning job
-#run_on_longbow(rmd_filename, inputs, provision = TRUE)
-
-# send the batch to longbow (with provisioning disabled)
-batch_inputs <- "all_analyses.json"
-batch_id <- run_on_longbow(rmd_filename, batch_inputs, provision = FALSE)
-batch_id
-
-# wait for the batch to finish and track progress
-wait_for_batch(batch_id)
-
-# download the longbow outputs
-get_batch_results(batch_id, results_folder="results_optx")
-length(dir("results_optx"))
-
-# load and concatenate the rdata from the jobs
-results <- load_batch_results("results.rdata","results_optx")
-obs_counts <- load_batch_results("obs_counts.rdata","results_optx")
-
-# save concatenated results
-filename1 <- paste(paste('opttx_vim_results',Sys.Date( ),sep='_'),'RDS',sep='.')
-filename2 <- paste(paste('opttx_vim_obs_counts',Sys.Date( ),sep='_'),'RDS',sep='.')
-saveRDS(results, file=paste0(res_dir,"rf results/raw longbow results/",filename1))
-saveRDS(obs_counts, file=paste0(res_dir,"rf results/raw longbow results/",filename2))
-
+run_ki_tmle(enumerated_analyses, results_folder="opttx_vim", overwrite = F, skip_failed=F,
+            rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_OptTX.Rmd"))
 
 
