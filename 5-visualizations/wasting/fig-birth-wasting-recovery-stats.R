@@ -16,7 +16,7 @@ d$born_wast_lab <- ifelse(d$born_wast==1, "Born\nwasted", "Not born\nwasted")
 d$measure_lab <- as.character(d$measure)
 d$measure_lab[d$measure=="Persistent wasting"] <- "Persistent wasting\nfrom 6-24 months"
 d$measure_lab[d$measure=="Wasting cumulative incidence"] <- "Wasting cumulative incidence\nfrom 6-24 month"
-d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Co-occurrent wasting\nand stunting at 18 months" 
+d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Concurrent wasting\nand stunting at 18 months" 
 d$measure_lab <- factor(d$measure_lab)
 d$measure_lab <- relevel(d$measure_lab, ref="Wasting cumulative incidence\nfrom 6-24 month")
 
@@ -32,15 +32,15 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
              #position = position_jitter(width = 0.15),
              position = pd,
              alpha = 0.5, data=d.cohort) +
-  geom_line(aes(group=cohort), data=d.cohort, color="#878787", alpha = 0.25,
-            position = pd
-            #position = position_jitter(width = 0.15)
-            ) +
+  # geom_line(aes(group=cohort), data=d.cohort, color="#878787", alpha = 0.25,
+  #           position = pd
+  #           #position = position_jitter(width = 0.15)
+  #           ) +
   xlab("")+
   ylab("") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-  scale_color_manual(values=tableau10[c(5:6)]) + 
-  scale_fill_manual(values=tableau10[c(5:6)]) + 
+  scale_color_manual(values=cbbPalette[-1]) + 
+  scale_fill_manual(values=cbbPalette[-1]) + 
   theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
   theme(axis.text.x = element_text(margin =  
                                      margin(t = 0, r = 0, b = 0, l = 0),

@@ -1,6 +1,6 @@
 library(dplyr)
 
-rf_table = read.csv(here("results/rf_table.csv"))
+rf_table = read.csv(paste0(BV_dir,"/results/rf_table.csv"))
 
 N_total = rf_table %>% filter(Level == "Total") %>% select(Variable, N)
 
@@ -77,4 +77,4 @@ full_names = list("sex" = "Sex",
 
 clean_rf = clean_rf %>% mutate(Variable = as.character(full_names[as.character(Variable)]))
      
-write.csv(clean_rf, file = here("results/rf_table_clean.csv"))
+write.csv(clean_rf, file = paste0(BV_dir,"/results/rf_table_clean.csv"))

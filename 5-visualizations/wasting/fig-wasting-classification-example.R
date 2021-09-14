@@ -21,7 +21,10 @@ d <- d %>% filter(agedays < 24 * 30.4167)
 ind_traj_plot <- function(d, Xmax=731){
   
   #set up colors
-  colors <-  c("green", "orange", "red", "grey80", "grey40")
+  #colors <-  c("green", "orange", "red", "grey80", "grey40")
+  colors <- c("#510000", "#AC112D", "#EC6D47", "#F2A058", "#F7D269", "#839772", "#325D8A")
+  colors <- colors[c(6,5,2,7,7)]
+  #colors <- colors[c(4,1,3,3,3)]
   names(colors) = c("Not wasted", "Wasted", "Severe wasted", "Born wasted", "Born severe wasted")
   
   tj <- d %>% arrange(agedays) %>% subset(., select=c(agedays, whz, wasting_episode, sevwasting_episode, wast_inc, sevwast_inc, wast_rec, sevwast_rec, period_length, wasting_duration))
@@ -58,21 +61,14 @@ ind_traj_plot <- function(d, Xmax=731){
     scale_fill_manual(values = colors) +   
     geom_rect(aes(xmin = w1, xmax = w2 , ymin = -5, ymax =5, fill = `Wasting status`, color = NULL), alpha=0.5) +
     geom_line(lwd=2) +
-    #guides(fill=T) + 
     xlab("Child age in months") + theme(strip.background = element_blank()) +
     geom_hline(yintercept= -2, color="grey20", linetype=2) +
     geom_hline(yintercept= -3, color="grey20", linetype=2) +
-    #geom_text(aes(x=agedays, label=period_length), color="white") +
-    #geom_text_repel(aes(x=agedays, label=period_length), color="white") +  
-    #geom_text(aes(x=300,y=1.2,label=wastinc))+#geom_text(aes(x=300,y=1,label=sevwastinc))+ 
-    #geom_text(aes(x=300,y=1,label=wastrec))+#geom_text(aes(x=300,y=0.6,label=sevwastrec))+ 
-    #geom_text(aes(x=300,y=0.4,label=dur))+ 
     coord_cartesian(xlim=c(1,Xmax), ylim=yrange, expand = c(0,0)) +
     ylab("Weight-for-length Z-score")  +
     scale_x_continuous(limits=c(1,Xmax), expand = c(0, 0),
                        breaks = 1:24*30.41 - 15.2, labels = as.character(1:24)) +
     theme(legend.position = "right") + guides(fill=guide_legend(title="Wasting status"))
-    #+ aes(alpha=alpha, group=factor(subjid)) + guides(alpha=FALSE)
   print(p)
   }
   
@@ -91,9 +87,9 @@ i<-100
 p <- ind_traj_plot(df[df$subjid==unique(df$subjid)[i],], Xmax=702)
 print(p)
 
-saveRDS(p, file=paste0(here::here(),"/figures/plot-objects/ind_traj_plot_object.rds"))
+saveRDS(p, file=paste0(BV_dir,"/figures/plot-objects/ind_traj_plot_object.rds"))
 
-ggsave(p, file=paste0(here(),"/figures/wasting/individual_traj.png"),width=8,height=5)    
+ggsave(p, file=paste0(BV_dir,"/figures/wasting/individual_traj.png"),width=8,height=5)    
 
 
 

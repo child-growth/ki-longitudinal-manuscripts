@@ -51,7 +51,7 @@ rain <- monthy_ppt_values %>%
     cohort_index =  1/ann  * sum(abs_rain))
 summary(rain$cohort_index)
 
- saveRDS(rain, file = here("data/cohort_rain_data.rds"))
+ saveRDS(rain, file = paste0(BV_dir,"/data/cohort_rain_data.rds"))
  
  
  cohort_rain <- monthy_ppt_values %>% group_by(studyid, country, long, lat, month) %>%
@@ -74,4 +74,4 @@ summary(rain$cohort_index)
  cohort_index <- rain %>% ungroup() %>% subset(., select=c(studyid, country, long, lat, cohort_index)) %>% distinct(.)
  cohort_rain <- left_join(cohort_rain, cohort_index, by = c("studyid", "country", "long", "lat"))
 
- write.csv(cohort_rain, file = here("data/monthly_rainfall.csv"))
+ write.csv(cohort_rain, file = paste0(BV_dir,"/data/monthly_rainfall.csv"))

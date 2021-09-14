@@ -20,6 +20,37 @@ co_pool = readRDS(paste0(res_dir, "co_flow_pooled.RDS"))
 co_pool <- co_pool %>% group_by(agem) %>%
   mutate(sum=sum(est), est=est/sum, sum2=sum(est)) %>% ungroup()
 
+#get summary measures:
+unique(co_pool$label)
+co_pool %>% filter(label %in% 
+                     c("Wasted+Underweight",      
+                       "Stunted+Underweight",      
+                       "Wasted+Stunted")) %>%
+  group_by(agem) %>% summarise(sum(est)*100) %>% as.data.frame()
+
+co_pool %>% filter( !(label %in% c("Healthy","Recovered"))) %>% 
+  group_by(agem) %>%
+  mutate(sum=sum(est), est=est/sum) %>% 
+  group_by(agem, label) %>% summarise(mean(est)*100) %>% as.data.frame()
+
+co_pool %>% filter( !(label %in% c("Healthy","Recovered"))) %>% 
+  group_by(agem) %>%
+  mutate(sum=sum(est), est=est/sum) %>% 
+  filter(label %in% 
+           c("Wasted+Underweight",      
+             "Stunted+Underweight",      
+             "Wasted+Stunted")) %>%
+  group_by(agem) %>% summarise(sum(est)*100) %>% as.data.frame()
+
+co_pool %>% filter( !(label %in% c("Healthy","Recovered")),
+                    label %in% 
+                      c("Wasted+Underweight",      
+                        "Stunted+Underweight",      
+                        "Wasted+Stunted")) %>%
+  group_by(label) %>% summarise(mean(est)*100) %>% as.data.frame()
+
+
+
 
 #-----------------------------------------
 # define hybrid color palette
@@ -92,8 +123,8 @@ bar_plot_RE = ggplot(plot_data_pooled) +
   geom_bar(aes(x = agem, y = est*100, fill = classif), colour="black", stat="identity", width=0.5) +
   scale_fill_manual("", values = pink_green) +
   theme(legend.position = "bottom") +
-  xlab("Child age, months") + ylab("Percentage of children") +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 5))
+  xlab("Child age, months") + ylab("Percentage of children (%)") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 bar_plot_RE
 
 

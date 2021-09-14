@@ -13,6 +13,13 @@ ki_coxph <- function(d, Xvar, Yvar="dead", W=NULL){
   d$X <- d[[Xvar]]
   d$Y <- d[[Yvar]]
   
+  
+  # W=c("sex","tr")
+  # W <- c("sex", "tr", "brthmon", "vagbrth", "hdlvry", "single", "trth2o",       
+  #            "cleanck",       "impfloor",      "hfoodsec",      "hhwealth_quart","W_mage",        "W_mhtcm",       "W_mwtkg",      
+  #            "W_mbmi",        "W_fage",        "W_fhtcm",       "W_meducyrs",    "W_feducyrs",    "W_nrooms",      "W_nhh",        
+  #            "W_nchldlt5",    "W_parity",      "impsan",        "safeh20")     
+  
   Wdf=NULL
   if(!is.null(W)){
     #cat("\n-----------------------------------------\nPre-screening the adjustment covariates:\n-----------------------------------------\n")
@@ -28,33 +35,45 @@ ki_coxph <- function(d, Xvar, Yvar="dead", W=NULL){
     suppressWarnings(try(Wscreen <- 
                            cox_prescreen(d = d, 
                                          Ws = colnames(Wdf), 
-                                         pval = 0.2, print = F)))
+                                         pval = 0.2, print = T)))
     
     
     #select n/10 covariates 
     if(!is.null(Wscreen)){
-      nY <- floor(min(table(d$Y, d$X))/10)
-      if(length(Wscreen)>nY){
+      nY <- floor(min(table(d$Y, d$X))/10) -1
+      if(length(Wscreen)>nY & nY>0){
         Wscreen<-Wscreen[1:nY]
+      }else{
+        Wscreen<-NULL
       }
     }
     
-    #Drop sparse factor levels
-    if(!is.null(Wscreen)){
-      Wdf <- d %>% subset(., select =c(Wscreen))
-      Wdf <- droplevels(Wdf)
-      options(na.action='na.pass')
-      Wdf <- as.data.frame(model.matrix(~., Wdf)[,-1]) 
-      #drop levels with near zero variance
-      if(length(nearZeroVar(Wdf))>0){
-        Wdf<-Wdf[,-nearZeroVar(Wdf)]
+    # #Drop sparse factor levels
+    # if(!is.null(Wscreen)){
+    #   Wdf <- d %>% subset(., select =c(Wscreen))
+    #   Wdf <- droplevels(Wdf)
+    #   options(na.action='na.pass')
+    #   Wdf <- as.data.frame(model.matrix(~., Wdf)[,-1]) 
+    #   #drop levels with near zero variance
+    #   if(length(nearZeroVar(Wdf))>0){
+    #     Wdf<-Wdf[,-nearZeroVar(Wdf)]
+    #   }
+    #   if(ncol(Wdf)==1){
+    #     colnames(Wdf) <- "W"
+    #   }
+    #   
+    # }else{
+    #   Wdf=NULL
+    # }
+    
+    Wdf <- NULL
+    Wdf <- try(d %>% subset(., select =c(Wscreen)))
+    if(ncol(Wdf)==0){Wdf <- NULL}
+    
+    if(!is.null(Wdf)){
+      if(sum(is.na(Wdf))>0){
+        Wdf <- imputeMissings::impute(Wdf, method = "median/mode")
       }
-      if(ncol(Wdf)==1){
-        colnames(Wdf) <- "W"
-      }
-      
-    }else{
-      Wdf=NULL
     }
     
     d <- bind_cols(d %>% subset(., select =c("Y","X","subjid","agedth","agedays")), Wdf)
@@ -64,8 +83,9 @@ ki_coxph <- function(d, Xvar, Yvar="dead", W=NULL){
   
   
   d$agedays <- ifelse(d$Y==1, d$agedth, d$agedays)
-  
-  d$event <- with(d, Surv(agedays, Y == 1))
+  d$agewk <- ceiling(d$agedays/7)
+    
+  d$event <- with(d, Surv(agewk, Y == 1))
   
   #model formula
   f <- ifelse(is.null(Wdf),
@@ -80,7 +100,13 @@ ki_coxph <- function(d, Xvar, Yvar="dead", W=NULL){
   res$se <- as.data.frame(fit$coefficients)$`se(coef)`[1]
   
   res$N <- nrow(d)
-  res$sparseN <- min(table(d$X, d$Y))
+  
+  if(length(unique(d$X))>1){
+    res$sparseN <- min(table(d$X, d$Y))
+  }else{
+    res$sparseN <- 0
+  }
+  res$W <- paste(colnames(Wdf), collapse = ", ") 
   #res$agecat <- d$agecat[1]
   
   return(res)
@@ -91,7 +117,7 @@ ki_coxph <- function(d, Xvar, Yvar="dead", W=NULL){
 # Wrapper function for cox PH meta-analysis
 #---------------------------------------------------------
 
-cox_meta <- function(d=d, Xvar, Yvar="dead", W=NULL, V=c("studyid","region"), N_events=5){
+cox_meta <- function(d=d, Xvar, Yvar="dead", W=NULL, V=c("studyid","region"), N_events=2){
   
   #Subset to last obs if using CI
   if(grepl("ever_",Xvar)){
@@ -115,7 +141,8 @@ cox_meta <- function(d=d, Xvar, Yvar="dead", W=NULL, V=c("studyid","region"), N_
     mutate(pooled=0)
   
   #Drop estimates from sparse data
-  res1 <- res %>% filter(sparseN >= 5) %>% ungroup()
+  #res1 <- res %>% filter(sparseN >= 5) %>% ungroup()
+  res1 <- res %>% filter(sparseN >= N_events, !is.na(se)) %>% ungroup()
   #res1 <- mark_region(res1)
   
   if(sum(!(V %in% c("studyid","region")))==0){
@@ -149,7 +176,7 @@ cox_meta <- function(d=d, Xvar, Yvar="dead", W=NULL, V=c("studyid","region"), N_
 }
 
 
-run_cox_meta <- function(df=d, X_vector, Y="dead", Wvars, V=NULL, agecat=NULL){
+run_cox_meta <- function(df=d, X_vector, Y="dead", Wvars, V=NULL, agecat=NULL, no_exp_overlap=F){
   
   if(is.null(V)){
     Vvars <- c("studyid","region")
@@ -157,24 +184,42 @@ run_cox_meta <- function(df=d, X_vector, Y="dead", Wvars, V=NULL, agecat=NULL){
     Vvars <- c("studyid","region",V)
   }
   
-  
-  
   full_res_unadj <- NULL
-  for(i in X_vector){
-    if(sum(is.na(df[[i]]))!=nrow(df)){
-      res <- cox_meta(d=df, Xvar=i, Yvar=Y, V=Vvars)
-      full_res_unadj <- bind_rows(full_res_unadj, res)
-    }
-  }
-  full_res_unadj$adj <- 0
-  
   full_res <- NULL
+  d<-df
+  
   for(i in X_vector){
-    if(sum(is.na(df[[i]]))!=nrow(df)){
+    if(no_exp_overlap){
+      # drop <- X_vector[X_vector!=i]
+      # for(j in drop){
+      #   d<-d[d[j]==0,]
+      # }
+      d <- df 
+      d$X <- d[[i]]
+      # dim(d)
+      # table(d$studyid, d$dead)
+      d <- d %>% filter(X==1|ref==1)
+      # d2 <- d %>% filter(X==1|ref==1)
+      # dim(d2)
+      # table(d2$studyid, d2$dead)
+      # d3 <- d2 %>% filter(studyid=="ZVITAMBO")
+      # prop.table(table(d3$X, d3$dead), 1)
+      # summary(df$agedth[d3$X==0])
+      # summary(df$agedth[d3$X==1])
+    }
+    
+    if(sum(is.na(d[[i]]))!=nrow(d)){
+      res_unadj <- cox_meta(d=d, Xvar=i, Yvar=Y, W=c("sex","tr"), V=Vvars)
+      full_res_unadj <- bind_rows(full_res_unadj, res_unadj)
+    }
+  
+    if(sum(is.na(d[[i]]))!=nrow(d)){
       res <- cox_meta(d=df, Xvar=i, Yvar=Y, W=Wvars, V=Vvars)
       full_res <- bind_rows(full_res, res) 
     }
   }
+  
+  full_res_unadj$adj <- 0
   full_res$adj <- 1
   
   full_res<- bind_rows(full_res, full_res_unadj)
@@ -220,16 +265,20 @@ cox_prescreen<-function (d, Ws, pval = 0.2, print = TRUE){
     stop("P-value threshold not set between 0 and 1.")
   }
   Ws <- d %>% ungroup() %>% select(all_of(Ws))
-  dat <- data.frame(Ws, Y=d$Y, agedays=d$agedays, subjid=d$subjid)
+  dat <- data.frame(Ws, Y=d$Y, agedays=d$agedays, agedth=d$agedth, subjid=d$subjid)
   
   nW <- ncol(Ws)
   LRp <- matrix(rep(NA, nW), nrow = nW, ncol = 1)
   rownames(LRp) <- names(Ws)
   colnames(LRp) <- "P-value"
   
-  dat$event <- with(dat, Surv(agedays, Y == 1))
+  dat$agedays <- ifelse(dat$Y==1, dat$agedth, dat$agedays)
+  dat$agewk <- ceiling(dat$agedays/7)
+  
+  dat$event <- with(dat, Surv(agewk, Y == 1))
   
   for (i in 1:nW) {
+    #print(colnames(dat[i]))
     dat$W <- dat[, i]
     df <- data.frame(event=dat$event, W=dat$W)
     df <- df[complete.cases(df), ]
@@ -237,8 +286,9 @@ cox_prescreen<-function (d, Ws, pval = 0.2, print = TRUE){
     
     # fit1 <- coxph(event ~ W, data = dat, cluster=subjid, id=subjid)
     # fit0 <- coxph(event ~ 1, data = dat, cluster=subjid, id=subjid)
-    fit1 <- coxph(event ~ W, data = df)
-    fit0 <- coxph(event ~ 1, data = df)
+    set.seed(12345)
+    fit0 <- fit1 <- coxph(event ~ 1, data = df)
+    try(fit1 <- coxph(event ~ W, data = df))
     
     LRp[i] <- lrtest(fit1, fit0)[2, 5]
   }

@@ -23,6 +23,8 @@ save(pers_wast, file=paste0(ghapdata_dir,"/pers_wast_primary.rdata"))
 
 load(file=paste0(ghapdata_dir,"/st_cuminc_outcomes.rdata"))
 cuminc_sev <- cuminc %>% filter(agecat=="0-24 months")
+table(cuminc_sev$ever_sstunted)
+
 load(file=paste0(ghapdata_dir,"/st_cuminc_outcomes_nobirth.rdata"))
 cuminc_nobirth_sev <- cuminc_nobirth %>% filter(agecat=="0-24 months (no birth st.)")
 
@@ -57,7 +59,7 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 
 
 st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                      "mbmi",          "single",        "fage",          "fhtcm",       
+                                      "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
@@ -73,7 +75,7 @@ st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                               "predexfd6", "earlybf", "month"),
                                          Y=c("ever_stunted"), file="st_cuminc_nobirth_rf_primary.rdata")
 sst_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                      "mbmi",          "single",        "fage",          "fhtcm",       
+                                      "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
@@ -92,7 +94,7 @@ sst_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
 
 
 cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                   "mbmi",          "single",        "fage",          "fhtcm",       
+                                   "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
                                    "nrooms",      "nchldlt5",    "nhh",              
                                    "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                    "feducyrs", "hfoodsec"),
@@ -109,7 +111,7 @@ cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                       Y=c("ever_wasted"), file="wast_cuminc_nobirth_rf_primary.rdata")
 
 swast_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                   "mbmi",          "single",        "fage",          "fhtcm",       
+                                   "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
                                    "nrooms",      "nchldlt5",    "nhh",              
                                    "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                    "feducyrs", "hfoodsec"),
@@ -135,7 +137,7 @@ analyses <- rbind(st_cuminc, st_cuminc_nobirth, sst_cuminc, sst_cuminc_nobirth, 
 
 
 #Save analysis specification
-saveRDS(analyses, file=paste0(here("/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses_primary.rds")))
+saveRDS(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/adjusted_binary_analyses_primary.rds"))
 
 
 

@@ -11,6 +11,17 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 
 
+
+
+temp <- d %>% filter(intervention_variable=="fage" & outcome_variable=="ever_stunted")
+dim(temp)
+table(temp$intervention_level)
+table(temp$baseline_level)
+
+
+
+
+
 #Drop duplicated (unadjusted sex and month variables)
 dim(d)
 d <- distinct(d)
@@ -22,8 +33,11 @@ d <- droplevels(d)
 prev <- d %>% filter(type=="E(Y)")
 dpaf <- d %>% filter(type=="PAF")
 d <- d %>% filter(type=="PAR")
+# table(prev$intervention_level[prev$intervention_variable=="fage"])
+# table(d$intervention_level[d$intervention_variable=="fage"])
 
-
+df <- prev %>% filter(intervention_variable=="fage")
+head(df)
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.par(.)) %>% as.data.frame()
@@ -35,8 +49,9 @@ RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervent
 RMAest_raw <- rbind(RMAest, RMAest_region)
 
 
+d[d$intervention_variable=="fage",]
 
-
+RMAest[RMAest$intervention_variable=="fage",]
 
 
 
@@ -53,6 +68,7 @@ Prev_est_raw <- rbind(Prev_est, Prev_est_region)
 Prev_est_raw <- Prev_est_raw %>% subset(., select = - c(CI1, CI2, Nstudies, baseline_level, intervention_level))
 
 
+Prev_est[Prev_est$intervention_variable=="fage",]
 
 
 
@@ -60,6 +76,8 @@ Prev_est_raw <- Prev_est_raw %>% subset(., select = - c(CI1, CI2, Nstudies, base
 dim(RMAest_raw)
 df <- left_join(RMAest_raw, Prev_est_raw, by = c("outcome_variable","intervention_variable", "agecat","region"))
 dim(df)
+
+
 
 
 #temp
@@ -75,6 +93,9 @@ summary(df2$prev)
 summary(df2$PAF)
 summary(df2$PAF.CI1)
 summary(df2$PAF.CI2)
+
+temp<-df2[df2$intervention_variable=="fage",]
+
 
 #------------------------------------------
 # Check that pooled estimate is reasonable:
@@ -108,8 +129,11 @@ RMAest <- df2
 
 
 #Clean up dataframe for plotting
+RMAest[RMAest$intervention_variable=="fage",]
+
 RMAest_clean <- RMA_clean(RMAest)
 
+temp<-RMAest_clean[RMAest_clean$intervention_variable=="fage"&!is.na(RMAest_clean$intervention_variable),]
 
 #Add reference level to label
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)

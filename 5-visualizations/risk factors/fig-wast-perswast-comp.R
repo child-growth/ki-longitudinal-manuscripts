@@ -6,12 +6,21 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load data
-d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
+d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(pooled=1)
+
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% filter(type=="RR") %>% select(studyid,country,intervention_variable, agecat,  intervention_level, baseline_level, outcome_variable, estimate, ci_lower,ci_upper) %>%
+  rename(RR=estimate,  RR.CI1=ci_lower, RR.CI2=ci_upper) %>% mutate(pooled=0)
+dfull <- RMA_clean(dfull)
+
+
+d <- bind_rows(d, dfull)
+head(d)
+tail(d)
 
 unique(d$outcome_variable)
 unique(d$agecat)
 d <- d %>% filter(outcome_variable %in% c("ever_wasted", "ever_swasted", "pers_wast", "ever_stunted","ever_sstunted"),
-                  agecat %in% c("0-24 months" ,  "0-24 months (no birth st.)" , "0-24 months (no birth wast)") | intervention_variable=="predexfd6" & agecat=="6-24 months")
+                  agecat %in% c("0-24 months", "0-24 months (no birth st.)", "0-24 months (no birth wast)") | intervention_variable=="predexfd6" & agecat=="6-24 months")
 
 
 unique(d$intervention_variable)
@@ -21,7 +30,7 @@ unique(d$intervention_variable)
 d <- droplevels(d)
 
 
-yticks <- c(1, 1.5, 2, 3, 4)
+yticks <- c(0.8, 1, 1.5, 2, 3, 4)
 
 #hbgdki pallet
 tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
@@ -43,7 +52,7 @@ unique(df$outcome_variable)
 unique(df$intervention_variable)
 
 plotdf <- df %>% 
-  filter(region!="N.America & Europe",
+  filter(region!="N.America & Europe" | is.na(region),
          intervention_variable %in% c("sex", "hhwealth_quart",  "meducyrs", "mwtkg" )) %>%
          #outcome_variable %in% c("Ever stunted", "Ever wasted"),
          #agecat %in% c("0-24 months", "6-24 months")) %>%
@@ -77,16 +86,57 @@ plotdf$RFlabel_ref[plotdf$RFlabel=="Mother's education"] <- "Mother's education:
 plotdf$RFlabel_ref[plotdf$RFlabel=="HH wealth"] <- "HH wealth:\nQ1 vs Q4 (ref.)"
 
 
-p_severecomp <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=Outcome, group=intervention_level)) + 
-  geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+# p_severecomp_old <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=Outcome, group=intervention_level)) + 
+#   geom_point(aes(y=RR), color="#287D8EFF", size=3) +
+#   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color="#287D8EFF"),
+#                  alpha=0.5, size = 1) +
+#   facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
+#   labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
+#   geom_hline(yintercept = 1) +
+#   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
+#   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, expand = c(0,0)) +
+#   scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
+#   scale_shape_manual(values=c(16,21)) +
+#   theme(strip.background = element_blank(),
+#         legend.position="none",
+#         axis.text.y = element_text(size=12),
+#         strip.text.x = element_text(size=10),
+#         axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
+#         panel.spacing = unit(0, "lines")) +
+#   coord_flip(ylim = c(0.8, 3.5))
+# 
+# p_severecomp_old
+
+
+data_pooled = plotdf %>% filter(pooled==1)
+min(data_pooled$RR.CI1)
+max(data_pooled$RR.CI2)
+
+data = plotdf %>% filter(pooled==0)
+min(data$RR)
+max(data$RR)
+
+plotdf <- plotdf %>% filter(!is.na(Outcome), !is.na(RFlabel_ref), !is.na(intervention_variable)) %>% droplevels()
+
+set.seed(12234)
+p_severecomp <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), 
+                       aes(x=Outcome, group=intervention_level, fill=Outcome, color=Outcome)) + 
+  geom_point(aes(y=RR), color="#878787", fill="#878787", size=2.5, stroke=0, alpha=0.5,
+             position=position_jitter(width=0.2), data = plotdf %>% filter(pooled==0)) +
+  geom_point(aes(y=RR), 
+             #color="#287D8EFF",
+             size=3) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2
+                     #, color="#287D8EFF"
+                     ),
                  alpha=0.5, size = 1) +
   facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
-  labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
+  labs(x = "Cumulative from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
-  scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, expand = c(0,0)) +
+  scale_colour_manual(values=tableau10[c(2,2,3,3,3,3)]) +
+  scale_fill_manual(values=tableau10[c(2,2,3,3,3,3)]) +
   scale_shape_manual(values=c(16,21)) +
   theme(strip.background = element_blank(),
         legend.position="none",
@@ -94,8 +144,7 @@ p_severecomp <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=Outcome, group=in
         strip.text.x = element_text(size=10),
         axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
         panel.spacing = unit(0, "lines")) +
-  coord_flip()
-
+  coord_flip(ylim = c(0.65, 3.5))
 p_severecomp
 
 ggsave(p_severecomp, file=paste0(BV_dir,"/figures/risk-factor/fig-wast-perswast-comp.png"), height=8, width=10)
@@ -107,14 +156,14 @@ saveRDS(list(p_severecomp, plotdf), file = paste0(BV_dir, "/results/fig-severe-o
 
 #Region specific
 p_severecomp_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=Outcome, group=intervention_level)) + 
-  geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+  geom_point(aes(y=RR), color="#287D8EFF", size=3) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color="#287D8EFF"),
                  alpha=0.5, size = 1) +
   facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
   labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN,  expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
   scale_shape_manual(values=c(16,21)) +
   theme(strip.background = element_blank(),
@@ -123,17 +172,17 @@ p_severecomp_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=Outcome, g
         strip.text.x = element_text(size=10),
         axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
         panel.spacing = unit(0, "lines")) +
-  coord_flip()
+  coord_flip(ylim = c(0.8, 3.5))
 
 p_severecomp_LA <- ggplot(plotdf[plotdf$region=="Latin America",], aes(x=Outcome, group=intervention_level)) + 
-  geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+  geom_point(aes(y=RR), color="#287D8EFF", size=3) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color="#287D8EFF"),
                  alpha=0.5, size = 1) +
   facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
   labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
   scale_shape_manual(values=c(16,21)) +
   theme(strip.background = element_blank(),
@@ -142,17 +191,17 @@ p_severecomp_LA <- ggplot(plotdf[plotdf$region=="Latin America",], aes(x=Outcome
         strip.text.x = element_text(size=10),
         axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
         panel.spacing = unit(0, "lines")) +
-  coord_flip()
+  coord_flip(ylim = c(0.8, 3.5))
 
 p_severecomp_Africa <- ggplot(plotdf[plotdf$region=="Africa",], aes(x=Outcome, group=intervention_level)) + 
-  geom_point(aes(y=RR, color=Outcome, shape=severe), size = 3) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+  geom_point(aes(y=RR), color="#287D8EFF", size=3) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color="#287D8EFF"),
                  alpha=0.5, size = 1) +
   facet_wrap(~RFlabel_ref, scales="free_x", nrow = 1) +   #,  labeller = label_wrap) +
   labs(x = "Cumulative incidence of growth failure\noutcome from birth to 24 months", y = "Adjusted cumulative incidence ratio\ncomparing highest to lowest risk strata") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=1, y=(max(plotdf$RR.CI2))-.1, label=paste0("N studies: ",max_Nstudies," (Wasting: ",min_Nstudies,")")), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits = c(0.8, 3.5), expand = c(0,0)) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,2,3,3,5)]) +
   scale_shape_manual(values=c(16,21)) +
   theme(strip.background = element_blank(),
@@ -161,7 +210,7 @@ p_severecomp_Africa <- ggplot(plotdf[plotdf$region=="Africa",], aes(x=Outcome, g
         strip.text.x = element_text(size=10),
         axis.text.x = element_text(size=10, vjust = 1, hjust = 0.5),
         panel.spacing = unit(0, "lines")) +
-  coord_flip()
+  coord_flip(ylim = c(0.8, 3.5))
 
 
 

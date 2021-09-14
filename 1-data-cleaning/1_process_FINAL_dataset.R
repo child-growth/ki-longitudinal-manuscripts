@@ -98,6 +98,10 @@ d$studyid[d$studyid=="CMIN7"] <- "CMIN Bangladesh93"
 d$country[d$studyid=="Respak"] <- "PAKISTAN" 
 d$country[d$studyid=="CONTENT"] <- "PERU" 
 
+#Rename tanzania
+d$country[d$country=="TANZANIA, UNITED REPUBLIC OF"]<-"TANZANIA"
+table(d$country)
+
 
 #Drop studies with the median birth before 1990
 table(d$studyid, is.na(d$brthyr))

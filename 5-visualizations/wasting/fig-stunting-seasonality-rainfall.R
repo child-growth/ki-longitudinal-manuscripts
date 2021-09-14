@@ -21,6 +21,7 @@ rain <- mark_region(rain)
 rain$region <- factor(rain$region, levels = c("South Asia","Africa","Latin America"))
 rain$country <- tolower(rain$country)
 d$country <- tolower(d$country)
+rain <- rain[,-1]
 colnames(rain)[1] <- "studyid"
 rain$studyid <- as.character(rain$studyid)
 d$country[d$country=="tanzania, united republic of"] <- "tanzania"
@@ -54,7 +55,7 @@ rain2$studyid[rain2$studyid == "PROVIDE "] <-  "PROVIDE"
 
 
 #arrange cohorts by seasonality index and set factor levels
-rain2 <- rain2 %>% arrange(region, -cohort_index) %>% 
+rain2 <- rain2 %>% arrange(region, country, -cohort_index) %>% 
   mutate(cohort = paste0(studyid, ", ", country),
          cohort=factor(cohort, levels=unique(cohort))) 
 d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
@@ -63,6 +64,7 @@ d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
 rain2 <- droplevels(rain2)
 cohorts=levels(rain2$cohort)
 cohorts
+head(d)
 
 df <- d
 rain <- rain2
@@ -137,7 +139,7 @@ rain_plot <- function(df, rain, cohort_name){
 
 
 #Get N's for caption
-Ns <- d %>% group_by(cohort) %>% summarize(nmeas=n(), nchild=length(unique(subjid)))
+Ns <- d %>% group_by(studyid, country) %>% summarize(nmeas=n(), nchild=length(unique(subjid)))
 Ns
 Ns %>% summarize(min(nmeas), min(nchild), max(nmeas), max(nchild))
 
@@ -149,28 +151,6 @@ for(i in 1:length(cohorts)){
 }
 
 #Save plot-objects
-saveRDS(plot_list, file=paste0(here(),"/figures/plot-objects/stunting_rain_seasonality_plot_objects.rds"))
+saveRDS(plot_list, file=paste0(BV_dir,"/figures/plot-objects/stunting_rain_seasonality_plot_objects.rds"))
 
-
-
-# plot_grid <- plot_grid(
-#   plot_list[[1]], plot_list[[2]], plot_list[[3]],
-#   plot_list[[4]], plot_list[[5]], plot_list[[6]],
-#   plot_list[[7]], plot_list[[8]], plot_list[[9]],
-#   plot_list[[10]], plot_list[[11]], plot_list[[12]],
-#   plot_list[[13]], plot_list[[14]], plot_list[[15]],
-#   plot_list[[16]], plot_list[[17]], plot_list[[18]],
-#                       labels = rep("", 18), ncol = 3, align = 'v', axis = 'l')
-# ggsave(plot_grid, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/rain_seasonality_plot.png"), width=14, height=20)
-
-plot_grid <- plot_grid(
-  plot_list[[1]], plot_list[[10]], plot_list[[2]],
-  plot_list[[11]], plot_list[[3]], plot_list[[12]],
-  plot_list[[4]], plot_list[[13]], plot_list[[5]],
-  plot_list[[14]], plot_list[[6]], plot_list[[15]],
-  plot_list[[7]], plot_list[[16]], plot_list[[8]],
-  plot_list[[17]], plot_list[[9]], plot_list[[18]],
-  labels = rep("", 18), ncol = 2, align = 'v', axis = 'l')
-
-ggsave(plot_grid, file=paste0(here(),"/figures/manuscript-figure-composites/wasting/stunting_rain_seasonality_plot.png"), width=10, height=24)
 

@@ -208,4 +208,4 @@ library(cowplot)
 
 p <- grid.arrange(pPAR_laz, pPAR_wlz, ncol=2)
 
-ggsave(p, file=here("/figures/risk-factor/fig-PAR-GLM-sensitivity.png"),  height=10, width=16)
+ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/fig-PAR-GLM-sensitivity.png"),  height=10, width=16)

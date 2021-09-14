@@ -14,8 +14,8 @@ source(here("4-longbow-tmle-analysis/combine_results_outputs.R"))
 
 #Results meta-analysis pooling
 source(here("4-longbow-tmle-analysis/pool_Zscore_PAR.R"))
-source(here("4-longbow-tmle-analysis/pool_ATE.R"))
 source(here("4-longbow-tmle-analysis/pool_RR.R"))
+source(here("4-longbow-tmle-analysis/pool_ATE.R"))
 
 source(here("4-longbow-tmle-analysis/pool_PAF.R"))
 

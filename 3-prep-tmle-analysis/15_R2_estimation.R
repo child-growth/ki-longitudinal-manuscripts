@@ -2,7 +2,7 @@
 
 
 rm(list=ls())
-try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/3.6/" , .libPaths() ) ))
+try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths() ) ))
 #library("tlverse")
 
 source(paste0(here::here(), "/0-config.R"))
@@ -62,8 +62,35 @@ length(unique(paste0(haz$studyid,haz$country)))
 #   )
 
 #new
-covars <- c("vagbrth","cleanck", "W_birthlen", "W_birthwt","W_meducyrs",
-             "W_mwtkg", "sex")
+covars_haz <- c("vagbrth","cleanck", "W_birthlen", "W_birthwt","W_meducyrs", "hhwealth_quart",
+                "W_mwtkg","W_mhtcm", "W_feducyrs", "parity", "sex")
+covars_whz <- c("vagbrth","cleanck", "W_birthlen", "W_birthwt","W_meducyrs","W_fage", "nhh", "W_nrooms",
+                "W_mwtkg", "W_mhtcm", "sex")
+
+
+
+# haz <- haz %>% group_by(studyid, country) %>% 
+#   mutate(N=n(),
+#          miss_vagbrth = 1*(sum(is.na(vagbrth))==N),
+#          miss_cleanck = 1*(sum(is.na(cleanck))==N),
+#          miss_W_birthlen = 1*(sum(is.na(W_birthlen))==N),
+#          miss_W_meducyrs = 1*(sum(is.na(W_meducyrs))==N),
+#          miss_W_mwtkg = 1*(sum(is.na(W_mwtkg))==N),
+#          miss_W_birthwt = 1*(sum(is.na(W_birthwt))==N),
+#          miss_sex = 1*(sum(is.na(sex))==N),
+#          sum_miss= miss_vagbrth + miss_cleanck + miss_W_birthlen + miss_W_meducyrs
+#          + miss_W_mwtkg  + miss_W_birthwt+miss_sex)
+# whz <- whz %>% group_by(studyid, country) %>% 
+#   mutate(N=n(),
+#          miss_vagbrth = 1*(sum(is.na(vagbrth))==N),
+#          miss_cleanck = 1*(sum(is.na(cleanck))==N),
+#          miss_W_birthlen = 1*(sum(is.na(W_birthlen))==N),
+#          miss_W_meducyrs = 1*(sum(is.na(W_meducyrs))==N),
+#          miss_W_mwtkg = 1*(sum(is.na(W_mwtkg))==N),
+#          miss_W_birthwt = 1*(sum(is.na(W_birthwt))==N),
+#          miss_sex = 1*(sum(is.na(sex))==N),
+#          sum_miss= miss_vagbrth + miss_cleanck + miss_W_birthlen + miss_W_meducyrs
+#          + miss_W_mwtkg  + miss_W_birthwt+miss_sex)
 
 
 haz <- haz %>% group_by(studyid, country) %>% 
@@ -72,11 +99,18 @@ haz <- haz %>% group_by(studyid, country) %>%
          miss_cleanck = 1*(sum(is.na(cleanck))==N),
          miss_W_birthlen = 1*(sum(is.na(W_birthlen))==N),
          miss_W_meducyrs = 1*(sum(is.na(W_meducyrs))==N),
+         miss_W_feducyrs = 1*(sum(is.na(W_meducyrs))==N),
          miss_W_mwtkg = 1*(sum(is.na(W_mwtkg))==N),
+         miss_W_mhtcm = 1*(sum(is.na(W_mhtcm))==N),
          miss_W_birthwt = 1*(sum(is.na(W_birthwt))==N),
+         miss_hhwealth_quart = 1*(sum(is.na(hhwealth_quart))==N),
+         miss_parity = 1*(sum(is.na(parity))==N),
          miss_sex = 1*(sum(is.na(sex))==N),
-         sum_miss= miss_vagbrth + miss_cleanck + miss_W_birthlen + miss_W_meducyrs
-         + miss_W_mwtkg  + miss_W_birthwt+miss_sex)
+         sum_miss= miss_vagbrth + miss_cleanck + miss_W_birthlen + miss_W_meducyrs + miss_W_feducyrs + miss_W_mhtcm +
+         miss_W_mwtkg  + miss_W_birthwt+miss_sex+miss_hhwealth_quart + miss_parity)
+
+
+
 whz <- whz %>% group_by(studyid, country) %>% 
   mutate(N=n(),
          miss_vagbrth = 1*(sum(is.na(vagbrth))==N),
@@ -84,12 +118,22 @@ whz <- whz %>% group_by(studyid, country) %>%
          miss_W_birthlen = 1*(sum(is.na(W_birthlen))==N),
          miss_W_meducyrs = 1*(sum(is.na(W_meducyrs))==N),
          miss_W_mwtkg = 1*(sum(is.na(W_mwtkg))==N),
+         miss_W_mhtcm = 1*(sum(is.na(W_mhtcm))==N),
+         miss_W_fage = 1*(sum(is.na(W_fage))==N),
          miss_W_birthwt = 1*(sum(is.na(W_birthwt))==N),
+         miss_W_nrooms = 1*(sum(is.na(W_nrooms))==N),
+         miss_nhh = 1*(sum(is.na(nhh))==N),
          miss_sex = 1*(sum(is.na(sex))==N),
-         sum_miss= miss_vagbrth + miss_cleanck + miss_W_birthlen + miss_W_meducyrs
-         + miss_W_mwtkg  + miss_W_birthwt+miss_sex)
+         sum_miss= miss_vagbrth + miss_cleanck + miss_W_birthlen + miss_W_meducyrs + miss_W_nrooms +
+         miss_W_mwtkg + miss_W_mhtcm + miss_W_birthwt+miss_sex + miss_W_fage + miss_nhh)
 
 table(haz$studyid, haz$sum_miss)
+table(whz$studyid, whz$sum_miss)
+
+
+table(haz$sum_miss)
+table(whz$sum_miss)
+
 
 # haz <- haz %>% filter(sum_miss<5) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars))
 # whz <- whz %>% filter(sum_miss<5) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars))
@@ -103,8 +147,8 @@ table(haz$studyid, haz$sum_miss)
 #             Nchildren=length(unique(paste0(studyid, subjid))))
 
 
-haz <- haz %>% filter(sum_miss<3) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars))
-whz <- whz %>% filter(sum_miss<3) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars))
+haz <- haz %>% filter(sum_miss<=5) %>% subset(., select = c("studyid", "subjid", "country", "haz",  covars_haz))
+whz <- whz %>% filter(sum_miss<=5) %>% subset(., select = c("studyid", "subjid", "country", "whz",  covars_whz))
 
 #N's for manuscript
 haz %>% ungroup() %>%
@@ -245,8 +289,8 @@ SL_R2 <- function(dat, outcome, covars){
 
 
 #Apply function to all cohorts that measure the covariates of interest
-res_haz_list <- haz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="haz", covars=covars)))
-res_whz_list <- whz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="whz", covars=covars)))
+res_haz_list <- haz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="haz", covars=covars_haz)))
+res_whz_list <- whz %>% group_by(studyid, country) %>% do(res=try(SL_R2(dat=.,  outcome="whz", covars=covars_whz)))
 
 res_haz<-NULL
 for(i in 1:nrow(res_haz_list)){
@@ -390,3 +434,7 @@ pooled_r2_results <- data.frame(pooled_r2_haz$est,pooled_r2_CIl_haz, pooled_r2_C
 filename <- paste(paste('pooled_R2_results',Sys.Date( ),sep='_'),'RDS',sep='.')
 
 saveRDS(pooled_r2_results, file=paste0(BV_dir,"/results/",filename))
+
+
+res <- readRDS(paste0(BV_dir,"/results/pooled_R2_results_2021-08-06.RDS"))
+res

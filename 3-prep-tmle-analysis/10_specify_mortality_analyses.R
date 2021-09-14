@@ -31,21 +31,12 @@ Avars <- c("ever_wasted06",
            "pers_wasted06",
            "ever_stunted06",
            "ever_sstunted06",
-           # "ever_wasted624",
-           # "ever_swasted624",
-           # "pers_wasted624",
-           # "ever_stunted624",
-           # "ever_sstunted624",
-           # "ever_wasted06_noBW",
-           # "ever_swasted06_noBW",
-           "ever_underweight06",
-           "ever_sunderweight06",
            "ever_wast_uwt06",
            "ever_stunt_uwt06",
-           # "ever_underweight624",
-           # "ever_sunderweight624",
-           "ever_co06"#,
-           #"ever_co624"
+           "ever_co06",
+           "ever_swast_suwt06",
+           "ever_sstunt_suwt06",
+           "ever_sev_co06"
            )
 
 mortality <- specify_rf_analysis(A=Avars, Y=c("dead", "dead624", "dead0plus", "dead6plus"), 
@@ -57,22 +48,23 @@ Avars_morbidity <- c("ever_wasted06",
                      "pers_wasted06",
                      "ever_stunted06",
                      "ever_sstunted06",
-                     # "ever_wasted06_noBW",
-                     # "ever_swasted06_noBW",
-                     "ever_underweight06",
-                     "ever_sunderweight06",
                      "ever_wast_uwt06",
                      "ever_stunt_uwt06",
                      "ever_co06",
-                     "pers_wasted06")
-
+                     "ever_swast_suwt06",
+                     "ever_sstunt_suwt06",
+                     "ever_underweight06",
+                     "ever_sunderweight06",
+                     "ever_sev_co06"
+)
 morbidity <- specify_rf_analysis(A=Avars_morbidity,
                                  Y=c("co_occurence", "pers_wasted624"),
                                  V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality,
                                  file="stuntwast_morbidity.Rdata")
 
 
-
+analyses <- morbidity
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/morbidity_analyses.rdata"))
 
 
 
@@ -94,19 +86,18 @@ save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specificati
 #Specify mortality sensitivity analysis
 
 #Specify the mortality analyses
-Avars <- c(
-           "ever_wasted024",
-           "ever_swasted024",
-           "pers_wasted024",
-           "ever_stunted024",
-           "ever_sstunted024",
-           "ever_wasted06_noBW",
-           "ever_swasted06_noBW",
-           "ever_underweight024",
-           "ever_sunderweight024",
-           "ever_co024"
+Avars <- c("ever_wasted06",
+           "ever_swasted06",
+           "pers_wasted06",
+           "ever_stunted06",
+           "ever_sstunted06",
+           "ever_wast_uwt06",
+           "ever_stunt_uwt06",
+           "ever_co06",
+           "ever_swast_suwt06",
+           "ever_sstunt_suwt06",
+           "ever_sev_co06"
 )
-
 analyses <- specify_rf_analysis(A=Avars, Y=c("dead", "dead624", "dead0plus", "dead6plus"), 
                                  V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality, 
                                  file="stuntwast_mortality_024.Rdata")
@@ -117,18 +108,6 @@ save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specificati
 
 
 #Specify the mortality analyses
-Avars <- c("ever_wasted06",
-           "ever_swasted06",
-           "pers_wasted06",
-           "ever_stunted06",
-           "ever_sstunted06",
-           "ever_underweight06",
-           "ever_sunderweight06",
-           "ever_wast_uwt06",
-           "ever_stunt_uwt06",
-           "ever_co06"
-)
-
 analyses <- specify_rf_analysis(A=Avars, Y=c("dead"), 
                                 V= c("studyid","country"), id="id", adj_sets=adjustment_sets_mortality, 
                                 file="stuntwast_mortality_sens.Rdata")

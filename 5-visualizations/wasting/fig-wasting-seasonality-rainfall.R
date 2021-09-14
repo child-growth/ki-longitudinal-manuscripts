@@ -41,7 +41,7 @@ rain <- rain %>%
 table(rain$seasonality_category)
 
 #Transform rain dataset
-rain <- rain %>% subset(., select = c("studyid", "country", "seasonality_category", "season_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
+rain <- rain %>% subset(., select = c("studyid", "region", "country", "seasonality_category", "season_index", "Jan_pre", "Feb_pre", "Mar_pre", "Apr_pre", "May_pre",
                                       "Jun_pre", "Jul_pre", "Aug_pre", "Sep_pre", "Oct_pre", "Nov_pre", "Dec_pre"))
 
 rain$country <- str_to_title(rain$country)
@@ -70,22 +70,25 @@ rain2$cohort <- gsub("CMIN Bangladesh93, Bangladesh","CMIN Bangladesh-93", rain2
 rain2$cohort <- gsub("Guatemala BSC, Guatemala","BSC, Guatemala", rain2$cohort)
 rain2$cohort <- gsub("TanzaniaChild2, Tanzania","Tanzania Child 2", rain2$cohort)
 rain2$cohort <- gsub("CMIN Peru89, Peru","CMIN Peru-89", rain2$cohort)
+rain2$cohort <- gsub("Keneba, Gambia","Keneba, The Gambia", rain2$cohort)
 d$cohort <- gsub("CMIN Peru95, Peru","CMIN Peru-95", d$cohort)
 d$cohort <- gsub("GMS-Nepal, Nepal","GMS, Nepal", d$cohort)
 d$cohort <- gsub("CMIN Bangladesh93, Bangladesh","CMIN Bangladesh-93", d$cohort)
 d$cohort <- gsub("Guatemala BSC, Guatemala","BSC, Guatemala", d$cohort)
 d$cohort <- gsub("TanzaniaChild2, Tanzania","Tanzania Child 2", d$cohort)
 d$cohort <- gsub("CMIN Peru89, Peru","CMIN Peru-89", d$cohort)
+d$cohort <- gsub("Keneba, Gambia","Keneba, The Gambia", d$cohort)
 
 
 #arrange cohorts by seasonality index and set factor levels
-rain2 <- rain2 %>% arrange(-season_index) %>% 
+rain2 <- rain2 %>% arrange(region, country, -season_index) %>% 
   mutate(cohort=factor(cohort, levels=unique(cohort))) 
 d <- d %>% mutate(cohort=factor(cohort, levels=unique(rain2$cohort)))
 
 
 rain2 <- droplevels(rain2)
 cohorts=levels(rain2$cohort)
+cohorts
 
 df <- d
 rain <- rain2
@@ -127,6 +130,13 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
   summary((dfit$fit-shift))
   summary((dfit$fit-shift)*conversion_factor)
   
+  #scaleFUN <- function(x) sprintf("%.1f", x)
+  is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
+  scaleFUN <- function(x) sprintf(ifelse(is.wholenumber(x),"%i", "%.1f"), round(x,0))
+  
+  yrange = NULL
+  # if(i==5){yrange==c(-1/2, -0.2)}
+
   if(i %in% leftlab){
   p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
     geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=seasonality_category), size=2) +
@@ -135,7 +145,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
                                  ymin=(fit_lb-shift)*conversion_factor,  
                                  ymax=(fit_ub-shift)*conversion_factor, 
                                  color=NULL, fill=seasonality_category), alpha=0.3) +
-    scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "Mean WLZ")) +
+    scale_y_continuous(limits = yrange, labels = scaleFUN, digits, position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "Mean WLZ")) +
     ylab(NULL) + xlab(NULL) +
     scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
     scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
@@ -151,7 +161,7 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
                                    ymin=(fit_lb-shift)*conversion_factor,  
                                    ymax=(fit_ub-shift)*conversion_factor, 
                                    color=NULL, fill=seasonality_category), alpha=0.3) +
-      scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
+      scale_y_continuous(limits = yrange, labels = scaleFUN, position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
       ylab("Rainfall (mm)") + xlab(NULL) +
       scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
@@ -161,14 +171,15 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
   }
   
   if(!(i %in% leftlab | i %in% rightlab)){
-    p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
+    p <- ggplot(rain_sub, aes(x=month, y=rain)) + 
+      geom_bar(stat='identity', width=0.5, alpha=0.5) +
       geom_line(data = dfit, aes(x=(jday/365)*12+0.5, y=(fit-shift)*conversion_factor, color=seasonality_category), size=2) +
       geom_ribbon(data = dfit, aes(x=(jday/365)*12+0.5,  
                                    y=(fit-shift)*conversion_factor, 
                                    ymin=(fit_lb-shift)*conversion_factor,  
                                    ymax=(fit_ub-shift)*conversion_factor, 
                                    color=NULL, fill=seasonality_category), alpha=0.3) +
-      scale_y_continuous(position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
+      scale_y_continuous(limits = yrange, labels = scaleFUN, position = "right", expand = expand_scale(mult = c(0,0.1)), sec.axis = sec_axis(~(./(conversion_factor)+shift), name = "")) +
       ylab("") + xlab(NULL) +
       scale_fill_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
@@ -188,10 +199,9 @@ Ns %>% summarize(min(nmeas), min(nchild), max(nmeas), max(nchild))
 
 
 
-        i<-1
-rain_plot(df=d, rain=rain2, cohort_name=cohorts[1])
+rain_plot(df=d, rain=rain2, cohort_name=cohorts[5])
               
- 
+cohorts 
  
 plot_list=list()
 for(i in 1:length(cohorts)){
@@ -215,7 +225,8 @@ plot_grid <- plot_grid(
   plot_list[[8]], plot_list[[18]], 
   plot_list[[9]], plot_list[[19]], 
   plot_list[[10]], plot_list[[20]], 
-  labels = rep("", 20), ncol = 2, align = 'v', axis = 'l')
+  plot_list[[21]], 
+  labels = rep("", 21), ncol = 2, align = 'v', axis = 'l')
 
 ggsave(plot_grid, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/rain_seasonality_plot.png"), width=10, height=24)
 

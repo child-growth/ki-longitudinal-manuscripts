@@ -175,7 +175,7 @@ save(d, file=paste0(ghapdata_dir,"uwt_meanZ_rf.Rdata"))
 # Specify analysis
 #---------------------------------------------
 
-load(here("results/adjustment_sets_list.Rdata"))
+load(paste0(BV_dir,"/results/adjustment_sets_list.Rdata"))
 A <- names(adjustment_sets)
 
 Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
@@ -208,7 +208,7 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 uwt_prev <- specify_rf_analysis(A=Avars, Y=c("underwt","sunderwt"), file="uwt_prev_rf.Rdata")
 
 uwt_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                      "mbmi",          "single",        "fage",          "fhtcm",       
+                                      "mbmi",          "single",        "fage", "fage_rf",          "fhtcm",       
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),

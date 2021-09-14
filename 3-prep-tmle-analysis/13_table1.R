@@ -10,7 +10,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
 #load covariates
-cov<-readRDS("/home/andrew.mertens/data/KI/UCB-SuperLearner/Manuscript analysis data/FINAL_clean_covariates.rds")
+cov<-readRDS(clean_covariates_path)
 
 
 
@@ -96,9 +96,9 @@ for(i in 1:length(exposures)){
   names(rf_table1_list)[i] <- exposures[i]
 }
 
-saveRDS(rf_table1_list, file=here("/results/rf_table1.RDS"))
+saveRDS(rf_table1_list, file=paste0(BV_dir,"/results/rf_table1.RDS"))
 
 
 tab <- bind_rows(rf_table1_list, .id="Variable")
 colnames(tab) <- c("Variable","Level", "N", "Proportion")
-write.csv(tab, file =here("/results/rf_table.csv"))
+write.csv(tab, file =paste0(BV_dir,"/results/rf_table.csv"))

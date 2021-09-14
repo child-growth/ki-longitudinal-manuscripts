@@ -55,6 +55,7 @@ DHS <- dhs_children_individuals %>%
 
 #subset to most recent year for each country
 DHS <- DHS %>% group_by(DHScode) %>% mutate(maxyear=max(year)) %>% filter(year==maxyear)
+DHS %>% distinct(DHScode, year)
 
 # make new new region variable 
 DHS$region <- rep(NA, nrow(DHS))

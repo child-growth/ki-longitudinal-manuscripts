@@ -21,12 +21,16 @@ default_params$script_params$count_Y <- FALSE
 #load analyses
 load(here("4-longbow-tmle-analysis","analysis specification","adjusted_waz.rdata"))
 
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/uwt_meanZ_rf.Rdata")
+head(d)
+table(d$fage)
 
 #specify analyses
+unique(analyses$A)
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
 
 #run TMLE
-run_ki_tmle(enumerated_analyses, results_folder="waz", overwrite = F)
+run_ki_tmle(enumerated_analyses, results_folder="waz", overwrite = F, skip_failed=F)
 

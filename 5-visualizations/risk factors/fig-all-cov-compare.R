@@ -81,7 +81,7 @@ p2 <- ggplot(res, aes(x=se_diff)) + geom_density(fill=tableau10[8], alpha=0.5) +
 
 #Compare confidence intervals
 RMAest_clean$Analysis <- "All covariates"
-fullPAR$Analysis <- "Potential confounders"
+fullPAR$Analysis <- "DAG-selected\nconfounders"
 par <- bind_rows(RMAest_clean, fullPAR)
 
 par <- par %>% filter(intervention_variable %in% unique(RMAest_clean$intervention_variable))
@@ -217,7 +217,7 @@ pPAR <- ggplot(plotdf, aes(x=RFlabel_ref, shape=Analysis, group=Analysis)) +
   geom_point(aes(y=-PAR), color="grey30", size = 4, position = position_dodge(0.4)) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30", position = position_dodge(0.4)) +
   facet_wrap(~outcome) +
-  coord_flip(ylim=c(-0.4, 0.45)) +
+  coord_flip(ylim=c(-1, 1)) +
   labs(x = "Exposure", y = "Population Attributable difference") +
   geom_hline(yintercept = 0) +
   theme(strip.background = element_blank(),

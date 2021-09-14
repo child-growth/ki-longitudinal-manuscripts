@@ -22,17 +22,42 @@ source(paste0(here::here(), "/0-config.R"))
 #                                                                                       #
 #########################################################################################
 consort_ki <- readRDS(paste0(BV_dir,"/data/HBGDki_CONSORT_inclusion_Ns.rds"))
-consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID))
+temp <- read.csv(paste0(BV_dir,"/data/HBGDki_CONSORT_inclusion.csv")) %>% filter(included_longitudinal==1) %>%
+  rename(country=Country, Short_ID_full=Short_ID,Short_ID=Short_ID.1) %>%
+  distinct(Short_ID, included,included_anthropometry,
+           included_longitudinal, included_low_income, 
+           included_age, 
+           included_ill, included_qc, 
+           included_measurement_freq, included_1990)
+gems <- consort_ki %>% filter(Short_ID=="gems"|Short_ID=="gmsa") %>%
+  subset(., select = -c(included_small)) %>% 
+  mutate(included_1990=1) %>%
+  rename(subject_count=nchild)
+  
+consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID), !(Short_ID %in% c("mmam","gems","gmsa"))) %>%
+  subset(., select = -c(
+    included,included_anthropometry,
+    included_longitudinal, included_low_income, 
+    included_small, included_age, 
+    included_ill, included_qc, 
+    included_measurement_freq
+  )) %>%
+  rename(subject_count=nchild)
 
-consort_ki <- consort_ki %>% select("Short_ID", "country", "nchild", "nobs", "Study_ID", "Short_Description", 
+
+
+consort_ki <- left_join(consort_ki, temp, by=c("Short_ID"))
+consort_ki <- bind_rows(consort_ki, gems)
+
+sum(consort_ki$subject_count)
+sum(consort_ki$nobs)
+
+consort_ki <- consort_ki %>% select("Short_ID", "country", "subject_count", "nobs", "Study_ID", "Short_Description", 
                                     "included_longitudinal", "included_anthropometry", "included_low_income", 
-                                    "included_ill", "included_small", "included_age", 
-                                    "measurefreq") 
+                                    "included_ill", "included_1990", "included_age", 
+                                    "measurefreq") %>%
+                                    rename(studyid=Study_ID)
 
-#Fix included small in CMIN non-bangladesh cohorts
-consort_ki <- consort_ki %>% mutate(included_small=ifelse(Study_ID=="CMIN" & country != "BANGLADESH", 0, included_small)) %>%
-  rename(short_id = Short_ID, subject_count = nchild, studyid = Study_ID,
-         short_desc = Short_Description)
 
 
 
@@ -50,66 +75,14 @@ consort_ki <- consort_ki %>%
                              mutate(included_anthropometry = ifelse(is.na(included_anthropometry), 0, included_anthropometry),
                                     included_longitudinal = ifelse(is.na(included_longitudinal), 0, included_longitudinal),
                                     included_low_income = ifelse(is.na(included_low_income), 0, included_low_income),
-                                    included_small = ifelse(is.na(included_small), 0, included_small),
+                                    included_1990 = ifelse(is.na(included_1990), 0, included_1990),
                                     included_age = ifelse(is.na(included_age), 0, included_age),
                                     included_ill = ifelse(is.na(included_ill), 0, included_ill),
                                     included_quarterly = case_when(measurefreq == "quarterly" | measurefreq == "monthly" ~ 1, TRUE ~ 0),
                                     included_monthly = case_when(measurefreq == "monthly" ~ 1, TRUE ~ 0)) %>% 
   
                              # drop measurefreq column because no longer needed
-                             select(-measurefreq)# %>% 
-  
-                             # # recode inclusion_indicator to be stacked
-                             # mutate(included_anthropometry = case_when(
-                             #            included_longitudinal == 1 &
-                             #            included_anthropometry == 1 ~ 1, 
-                             #            TRUE ~ 0),
-                             #        included_low_income = case_when(
-                             #            included_longitudinal == 1 &
-                             #            included_anthropometry == 1 &
-                             #            included_low_income == 1 ~ 1, 
-                             #            TRUE ~ 0),
-                             #        included_ill = case_when(
-                             #            included_longitudinal == 1 &
-                             #            included_anthropometry == 1 &
-                             #            included_low_income == 1 &
-                             #            included_ill == 1 ~ 1, 
-                             #            TRUE ~ 0),
-                             #        included_small = case_when(
-                             #            included_longitudinal == 1 &
-                             #            included_anthropometry == 1 &
-                             #            included_low_income == 1 &
-                             #            included_ill == 1 &
-                             #            included_small == 1 ~ 1, 
-                             #            TRUE ~ 0),
-                             #        included_age = case_when(
-                             #            included_longitudinal == 1 &
-                             #            included_anthropometry == 1 &
-                             #            included_low_income == 1 &
-                             #            included_ill == 1 &
-                             #            included_small == 1 &
-                             #            included_age == 1 ~ 1, 
-                             #            TRUE ~ 0),
-                             #        included_quarterly = case_when(
-                             #            included_longitudinal == 1 &
-                             #            included_anthropometry == 1 &
-                             #            included_low_income == 1 &
-                             #            included_ill == 1 &
-                             #            included_small == 1 &
-                             #            included_age == 1 & 
-                             #            included_quarterly == 1 ~ 1,
-                             #            TRUE ~ 0),
-                             #        included_monthly = case_when(
-                             #            included_longitudinal == 1 &
-                             #            included_anthropometry == 1 &
-                             #            included_low_income == 1 &
-                             #            included_ill == 1 &
-                             #            included_small == 1 &
-                             #            included_age == 1 &
-                             #            included_quarterly == 1 &
-                             #            included_monthly == 1 ~ 1,
-                             #            TRUE ~ 0))
-  
+                             select(-measurefreq)
 # clean country labels and separate into regions
 consort_ki <- mark_region(consort_ki)
 # for the heatmap, change South Asia to Asia, N.America to North America
@@ -130,7 +103,7 @@ consort_ki <- consort_ki %>% mutate(inclusionTally =
                                     included_anthropometry +
                                     included_low_income +
                                     included_ill +
-                                    included_small +
+                                    included_1990 +
                                     included_age +
                                     included_quarterly + 
                                     included_monthly)  
@@ -141,7 +114,7 @@ consort_ki_long <- consort_ki %>% gather('inclusion_metric', 'indicator',
                                          included_anthropometry,
                                          included_low_income,
                                          included_ill,
-                                         included_small,
+                                         included_1990,
                                          included_age,
                                          included_quarterly,
                                          included_monthly)
@@ -152,7 +125,7 @@ consort_ki_long$inclusion_metric <- factor(consort_ki_long$inclusion_metric,
                                                  'included_anthropometry',
                                                  'included_low_income',
                                                  'included_ill',
-                                                 'included_small',
+                                                 'included_1990',
                                                  'included_age',
                                                  'included_quarterly',
                                                  'included_monthly'))
@@ -309,7 +282,7 @@ consort_ki_bar$inclusion_metric <- factor(consort_ki_bar$inclusion_metric,
                                                       'included_anthropometry',
                                                       'included_low_income',
                                                       'included_ill',
-                                                      'included_small',
+                                                      'included_1990',
                                                       'included_age',
                                                       'included_quarterly',
                                                       'included_monthly',
@@ -347,8 +320,8 @@ bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)
            label = paste0("Located in low- or middle income countries (n=", sum(consort_ki_bar$inclusion_metric=="included_low_income"),")"), size =  lab_size) +
   annotate(geom = "text", x = 6.4, y = pos_y-pos_gap*3, 
            label = paste0("Enrollment not restricted to acutely ill children (n=", sum(consort_ki_bar$inclusion_metric=="included_ill"),")"), size =  lab_size) +
-  annotate(geom = "text", x = 6.7, y = pos_y-pos_gap*4, 
-           label = paste0("Enrolled more than 200 children (n=", sum(consort_ki_bar$inclusion_metric=="included_small"),")"), size =  lab_size) +
+  annotate(geom = "text", x = 6.47, y = pos_y-pos_gap*4, 
+           label = paste0("Children born after 1990 (n=", sum(consort_ki_bar$inclusion_metric=="included_1990"),")"), size =  lab_size) +
   annotate(geom = "text", x = 7.9, y = pos_y-pos_gap*5, 
            label = paste0("Enrolled children between ages 0-2 (n=", sum(consort_ki_bar$inclusion_metric=="included_age"),")"), size =  lab_size) +
   annotate(geom = "text", x = 8.8, y = pos_y-pos_gap*6, 

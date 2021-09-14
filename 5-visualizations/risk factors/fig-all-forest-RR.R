@@ -94,6 +94,8 @@ d <- droplevels(d)
 #Test data set
 #df <- d %>% filter(intervention_variable=="birthlen",outcome_variable %in% c("ever_stunted"), agecat %in% c("0-24 months", "24 months"))
 
+#Delete existing plots
+
 
 forest_plot <- function(df){
 

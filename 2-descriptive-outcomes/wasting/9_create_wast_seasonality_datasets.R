@@ -9,7 +9,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 require(cowplot)
 library(RcppRoll)
 
-rain <- readRDS(here("/data/cohort_rain_data.rds"))
+rain <- readRDS(paste0(BV_dir,"/data/cohort_rain_data.rds"))
 head(rain)
 
 d <- readRDS(seasonality_data_path)
@@ -25,11 +25,6 @@ d <- d %>% mutate(child=1) %>% rename(lat=latitude, long=longitud)
 
 head(rain)
 head(d)
-
-# rain %>% group_by(studyid) %>% summarise(first(lat), first(long)) %>% as.data.frame()
-# d %>% group_by(studyid) %>% summarise(first(lat), first(long)) %>% as.data.frame()
-
-
 
 
 #3-month Rolling sum of rainfall
@@ -54,96 +49,6 @@ head(rain_quartile, 12)
 
 
 
-# head(d)
-# head(rain)
-# dim(d)
-# dim(rain)
-# df <- left_join(d, rain, by = c("studyid", "month", "year","lat","long"))
-# dim(df)
-# table(1*is.na(df$rain), is.na(df$child))
-# #Notes: check which children aren't merging
-# 
-# 
-# df$studyid <- gsub("^k.*?-" , "", df$studyid)
-# df$country <- str_to_title(df$country)
-# 
-# df <- df %>% mutate(cohort = paste0(studyid, ", ", country),
-#                   cohort=factor(cohort, levels=unique(d$cohort)))
-# df <- droplevels(df)
-# cohorts=levels(df$cohort)
-
-
-# #Check the non-merges in the rain dataset and update
-# df_missing <- d %>% filter(is.na(rain))
-# head(df_missing)
-# table(df_missing$studyid)
-# table(df_missing$year)
-# table(df_missing$year, df_missing$month)
-
-# # rain$country <- toupper(rain$country)
-# # rain$country[rain$country=="TANZANIA "]<-"TANZANIA"
-# rain <- mark_region(rain)
-# rain$region <- factor(rain$region, levels = c("South Asia","Africa","Latin America"))
-# rain$country <- tolower(rain$country)
-# d$country <- tolower(d$country)
-# colnames(rain)[1] <- "studyid"
-# d$country[d$country=="tanzania, united republic of"] <- "tanzania"
-# 
-# #remove grant identifiers from studyid
-# d$studyid <- gsub("^k.*?-" , "", d$studyid)
-# rain$studyid <- gsub("^k.*?-" , "", rain$studyid)
-# 
-# 
-# #Transform rain dataset
-# rain <- rain %>% subset(., select = c("studyid", "country", "region", "cohort_index", "Jan", "Feb", "Mar", "Apr", "May",
-#                                       "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
-# 
-# rain$country <- str_to_title(rain$country)
-# d$country <- str_to_title(d$country)
-# 
-# # gather meanWHZ by month data into long format
-# rain_long <- rain %>%
-#   gather(month,rain, -studyid, -country, -cohort_index, -region) 
-# rain_long$month = gsub("_pre","",rain_long$month)
-# rain_long$month = factor(rain_long$month, levels=c("Jan", "Feb", "Mar", "Apr", "May","Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
-# head(rain_long)
-# 
-# rain_long$month_day = as.numeric(rain_long$month) * 30.4167
-
-# #arrange cohorts by seasonality index and set factor levels
-# rain_long <- rain_long %>% arrange(region, -cohort_index) %>% 
-#   mutate(cohort = paste0(studyid, ", ", country),
-#          cohort=factor(cohort, levels=unique(cohort))) 
-# d <- d %>% mutate(cohort = paste0(studyid, ", ", country),
-#                   cohort=factor(cohort, levels=unique(rain_long$cohort)))
-# 
-# rain_long <- droplevels(rain_long)
-# d <- droplevels(d)
-# cohorts=levels(d$cohort)
-
-
-
-# Quartile cohorts month by levels of rainfall
-
-#3-month Rolling sum of rainfall
-
-#Set a second ordering of month so all 3-month rain sums can be calculated (i.e grouping "Nov", "Dec","Jan" and "Dec","Jan", "Feb")
-# rain_long$month2 = factor(rain_long$month, levels=c("Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec","Jan", "Feb", "Mar", "Apr", "May"))
-# 
-# rain_quartile <- rain_long %>% group_by(studyid, country) %>%
-#   mutate(month_number = as.numeric(month),
-#          month_number2 = as.numeric(month2)) %>%
-#   arrange(studyid, country, month_number) %>%
-#   mutate(roll_sum1 = roll_sum(rain, 3, align = "right", fill = 0, na.rm=T)) %>%
-#   arrange(studyid, country, month_number2) %>%
-#   mutate(roll_sum2 = roll_sum(rain, 3, align = "right", fill = 0, na.rm=T),
-#          max_rain_quarter = ifelse(roll_sum1>roll_sum2, roll_sum1, roll_sum2),
-#          month_end_max_rain = month_number[max_rain_quarter==max(max_rain_quarter)]) %>%
-#   select(studyid, country, cohort_index, month_end_max_rain) %>% unique(.)
-# head(rain_quartile, 12)
-
-
-#df <- left_join(d, rain_quartile, by = c("studyid","country"))
 dim(d)
 dim(rain_quartile)
 #d <- d %>% mutate(long=round(long, 1),   lat=round(lat, 1))
@@ -304,15 +209,15 @@ cohort_Ns <- d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length
 #all
 d %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
 #high
-d %>% filter(cohort_index>=0.8) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+d %>% filter(cohort_index>=0.9) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
 #med
-d %>% filter(cohort_index<0.8 & cohort_index>=0.5) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+d %>% filter(cohort_index<0.9 & cohort_index>=0.7) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
 #low
-d %>% filter(cohort_index<0.5) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
+d %>% filter(cohort_index<0.7) %>% group_by(studyid, country) %>% summarize(N=n(), nchild=length(unique(subjid))) %>% ungroup %>% summarize(min(N), max(N))
 
 
 #Save cohort Ns
-saveRDS(cohort_Ns, file=paste0(here(),"/results/seasonTMLE_Ns.rds")) 
+saveRDS(cohort_Ns, file=paste0(BV_dir,"/results/seasonTMLE_Ns.rds")) 
 
 
 

@@ -149,7 +149,8 @@ pers_wast_0_6 <- d6 %>%
   group_by(studyid,country,subjid) %>%
   arrange(studyid,country,subjid, agedays) %>% 
   mutate(N=n()) %>% filter(N>=4) %>%
-  mutate(perc_wasting=mean(whz < (-2))) %>% slice(1) %>%
+  mutate(perc_wasting=mean(whz < (-2)), mean_age_gap=mean(agedays-lag(agedays),na.rm=T)) %>% 
+  slice(1) %>%
   mutate(pers_wast = 1*(perc_wasting >= 0.5)) %>%
   mutate(agecat="0-6 months") %>% ungroup() 
 
@@ -161,7 +162,8 @@ pers_wast_0_24 <- d6 %>%
   group_by(studyid,country,subjid) %>%
   arrange(studyid,country,subjid, agedays) %>% 
   mutate(N=n()) %>% filter(N>=4) %>%
-  mutate(perc_wasting=mean(whz < (-2))) %>% slice(1) %>%
+  mutate(perc_wasting=mean(whz < (-2)), mean_age_gap=mean(agedays-lag(agedays),na.rm=T)) %>%
+  slice(1) %>%
   mutate(pers_wast = 1*(perc_wasting >= 0.5)) %>%
   mutate(agecat="0-24 months") %>% ungroup() 
 
@@ -170,7 +172,8 @@ pers_wast_6_24 <- d6 %>%
   group_by(studyid,country,subjid) %>%
   arrange(studyid,country,subjid, agedays) %>% 
   mutate(N=n()) %>% filter(N>=4) %>%
-  mutate(perc_wasting=mean(whz < (-2))) %>% slice(1) %>%
+  mutate(perc_wasting=mean(whz < (-2)), mean_age_gap=mean(agedays-lag(agedays),na.rm=T)) %>%
+  slice(1) %>%
   mutate(pers_wast = 1*(perc_wasting >= 0.5)) %>%
   mutate(agecat="6-24 months") %>% ungroup() 
 
@@ -181,6 +184,14 @@ table(pers_wast_0_24$pers_wast)
 mean(pers_wast_0_6$pers_wast)
 mean(pers_wast_6_24$pers_wast)
 mean(pers_wast_0_24$pers_wast)
+
+mean(pers_wast_0_6$mean_age_gap)
+mean(pers_wast_6_24$mean_age_gap)
+mean(pers_wast_0_24$mean_age_gap)
+
+summary(pers_wast_0_6$mean_age_gap)
+summary(pers_wast_6_24$mean_age_gap)
+summary(pers_wast_0_24$mean_age_gap)
 
 summary(pers_wast_0_6$perc_wasting)
 summary(pers_wast_6_24$perc_wasting)

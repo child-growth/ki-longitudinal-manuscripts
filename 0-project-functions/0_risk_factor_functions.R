@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------------------------
 
 
-run_ki_tmle <- function(enumerated_analyses, results_folder, overwrite=TRUE,
+run_ki_tmle <- function(enumerated_analyses, results_folder, overwrite=TRUE, skip_failed=F,
                         rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors.Rmd")){
   
   Sys.getenv("RSTUDIO_PANDOC")
@@ -22,8 +22,10 @@ run_ki_tmle <- function(enumerated_analyses, results_folder, overwrite=TRUE,
     enumerated_analyses[[i]]$output_directory <- output_directory
     cat(i,"; ", enumerated_analyses[[i]]$nodes$A,"; ", enumerated_analyses[[i]]$nodes$Y,"; res exists: ",file.exists(paste0(output_directory,"/results.rdata")),"\n")
     
+    
     if(overwrite==TRUE | !file.exists(paste0(output_directory,"/results.rdata"))){
     time_run <- "fail"
+      if(skip_failed==F| !file.exists(paste0(output_directory,"/obs_counts.rdata"))){
     try(time_run<-system.time(rmarkdown::render(rmd_filename,
                                                 params = (enumerated_analyses[[i]]),
                                                 output_file = file.path( output_directory, "/REPORT.html"),
@@ -32,7 +34,9 @@ run_ki_tmle <- function(enumerated_analyses, results_folder, overwrite=TRUE,
                                                 output_format = rmarkdown::html_document(self_contained = TRUE,
                                                                                          keep_md = F),
                                                 knit_root_dir = output_directory)))
+    
     cat("\nruntime: ",time_run,"\n")
+      }
     }
   }
   
@@ -321,6 +325,7 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                "< 2500 g",">= 2500 g", 
                                                "2","3","4","5","6","7","8","9",  "10" , "11","12" ,
                                                "<32" , "[32-38)", ">=38",
+                                               "<30" , "[30-35)", ">=35",
                                                "<20","[20-30)","<25","[25-30)",">=30",
                                                "Low", "Medium", "High",                    
                                                "<162 cm", "[162-167) cm" , ">=167 cm",
@@ -347,7 +352,7 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                   "predfeed3","predfeed36","predfeed6",
                                                   "exclfeed3","exclfeed36","exclfeed6",
                                                   "perdiar6","perdiar24",
-                                                  "mage","fage","mhtcm","fhtcm",
+                                                  "mage","fage","fage_rf","mhtcm","fhtcm",
                                                   "mwtkg","mbmi","single",
                                                   "meducyrs","feducyrs",
                                                   "parity",
@@ -379,6 +384,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFlabel[RMAest$intervention_variable=="nchldlt5"] <-   "# of children <5 in HH"
   RMAest$RFlabel[RMAest$intervention_variable=="hhwealth_quart"] <-  "HH wealth" 
   RMAest$RFlabel[RMAest$intervention_variable=="fage"] <- "Father's age" 
+  RMAest$RFlabel[RMAest$intervention_variable=="fage_rf"] <- "Father's age" 
   RMAest$RFlabel[RMAest$intervention_variable=="fhtcm"] <- "Father's height" 
   RMAest$RFlabel[RMAest$intervention_variable=="birthwt"] <- "Birthweight (kg)" 
   RMAest$RFlabel[RMAest$intervention_variable=="birthlen"] <- "Birth length (cm)" 
@@ -415,7 +421,8 @@ RMA_clean <- function(RMAest, outcome="binary",
   
   RMAest$RFtype <- NA
   RMAest$RFtype[RMAest$intervention_variable=="sex"] <-  "Birth characteristics"
-  RMAest$RFtype[RMAest$intervention_variable=="enwast"] <-  "Wasting" 
+  RMAest$RFtype[RMAest$intervention_variable=="enwast"] <-  "Postnatal child health" 
+  RMAest$RFtype[RMAest$intervention_variable=="enstunt"] <-  "Postnatal child health" 
   RMAest$RFtype[RMAest$intervention_variable=="gagebrth"] <-  "Birth characteristics"
   RMAest$RFtype[RMAest$intervention_variable=="predexfd6"] <-  "Breastfeeding"
   RMAest$RFtype[RMAest$intervention_variable=="mage"] <- "Parent background" 
@@ -427,6 +434,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFtype[RMAest$intervention_variable=="nchldlt5"] <-   "Household"
   RMAest$RFtype[RMAest$intervention_variable=="hhwealth_quart"] <-  "SES" 
   RMAest$RFtype[RMAest$intervention_variable=="fage"] <- "Parent background" 
+  RMAest$RFtype[RMAest$intervention_variable=="fage_rf"] <- "Parent background" 
   RMAest$RFtype[RMAest$intervention_variable=="fhtcm"] <- "Parent anthro" 
   RMAest$RFtype[RMAest$intervention_variable=="birthwt"] <- "Birth characteristics"
   RMAest$RFtype[RMAest$intervention_variable=="birthlen"] <- "Birth characteristics"

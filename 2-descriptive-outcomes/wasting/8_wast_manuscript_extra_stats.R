@@ -40,6 +40,14 @@ table(df2$num_inc)
 prop.table(table(df2$num_inc))
 
 
+#Percent of all wasted kids in the first 3 months
+df <- d %>% filter(agedays < 24 * 30.4167) %>% 
+  filter(whz < -2) %>%
+  group_by(studyid, country, subjid) %>% 
+  arrange(studyid, country, subjid, agedays) %>% 
+  slice(1)
+prop.table(table(df$agedays < (3 * 30.4167))) * 100
+
 
 
 
@@ -102,8 +110,7 @@ epi.2by2(dat, method = "cross.sectional", conf.level = 0.95, units = 100,
 
 #Save dataset for longbow analysis
 save(d, file=paste0(ghapdata_dir,"earlywast_strat_co_rf.Rdata"))
-
-
+table(d$country)
 
 
 

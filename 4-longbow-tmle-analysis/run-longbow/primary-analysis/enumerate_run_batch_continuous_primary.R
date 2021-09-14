@@ -31,18 +31,18 @@ d <- d %>% filter(agecat=="24 months") %>% droplevels()
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf_prim.Rdata")
 
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
-d <- d %>% filter(agecat=="24 months")
+d <- d %>% filter(agecat=="24 months")  %>% droplevels()
+table(d$country, is.na(d$sex))
+table(d$studyid, d$country)
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_prim.Rdata")
 
-analyses$file <- gsub("rf.Rdata","rf_prim.Rdata",analyses$file)
 
 #specify analyses
+analyses$file <- gsub("rf.Rdata","rf_prim.Rdata",analyses$file)
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
-#temp
-enumerated_analyses_sub <- enumerated_analyses[[54]]
-run_ki_tmle(list(enumerated_analyses_sub), results_folder="results_fage", overwrite = F)
 
-run_ki_tmle(enumerated_analyses, results_folder="results_cont_primary", overwrite = F)
+
+run_ki_tmle(enumerated_analyses, results_folder="results_cont_primary", overwrite = F, skip_failed = F)
 
 

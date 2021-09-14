@@ -52,7 +52,7 @@ stunt_ci_6_24 = d6 %>% ungroup() %>%
   mutate(agecat="6-24 months", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), ever_sstunted=ifelse(minhaz< (-3),1,0), Nobs=n()) %>% slice(1) %>%
   mutate(N=n()) %>%
   ungroup() %>%
-  select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,Nobs, N, anystunt06)
+  select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,ever_sstunted,Nobs, N)
 
 
 #calculate any stunting from 0-24
@@ -80,7 +80,7 @@ stunt_rec = d6 %>% ungroup() %>%
 
 stunt_ci_6_24 <- stunt_ci_6_24 %>% subset(., select = -c(anystunt06))
 cuminc <- bind_rows(stunt_ci_0_6, stunt_ci_6_24, stunt_ci_0_24)
-
+cuminc <- cuminc  %>% subset(., select = -c(sex))
 
 
 #--------------------------------------
@@ -100,7 +100,7 @@ stunt_ci_0_6_no_birth = d6 %>% ungroup() %>%
   mutate(agecat="0-6 months (no birth st.)", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), ever_sstunted=ifelse(minhaz< (-3),1,0), Nobs=n()) %>% slice(1) %>%
   mutate(N=n()) %>%
   ungroup() %>%
-  select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,Nobs,N)
+  select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,ever_sstunted,Nobs,N)
 
 stunt_ci_0_24_no_birth = d6 %>% ungroup() %>% 
   filter(!is.na(agecat)) %>%
@@ -112,9 +112,9 @@ stunt_ci_0_24_no_birth = d6 %>% ungroup() %>%
   mutate(agecat="0-24 months (no birth st.)", minhaz=min(haz), ever_stunted=ifelse(minhaz< -2,1,0), ever_sstunted=ifelse(minhaz< (-3),1,0), Nobs=n()) %>% slice(1) %>%
   mutate(N=n()) %>%
   ungroup() %>%
-  select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,Nobs,N)
+  select(studyid,subjid, country,tr,agedays,haz, measurefreq, measid, agecat,minhaz, ever_stunted,ever_sstunted,Nobs,N)
 
-cuminc_nobirth <- rbind(stunt_ci_0_6_no_birth, stunt_ci_0_24_no_birth, stunt_ci_6_24)
+cuminc_nobirth <- bind_rows(stunt_ci_0_6_no_birth, stunt_ci_0_24_no_birth, stunt_ci_6_24)
 
 
 table(cuminc$ever_stunted[cuminc$agecat=="0-6 months"])
@@ -123,7 +123,8 @@ table(cuminc_nobirth$ever_stunted[cuminc_nobirth$agecat=="0-6 months (no birth s
 table(cuminc$ever_stunted[cuminc$agecat=="0-24 months"])
 table(cuminc_nobirth$ever_stunted[cuminc_nobirth$agecat=="0-24 months (no birth st.)"])
 
-
+head(cuminc)
+head(cuminc_nobirth)
 
 
 #--------------------------------------
@@ -278,5 +279,8 @@ save(cuminc, file=paste0(ghapdata_dir,"st_cuminc_outcomes.rdata"))
 save(cuminc_nobirth, file=paste0(ghapdata_dir,"st_cuminc_outcomes_nobirth.rdata"))
 save(rev, file=paste0(ghapdata_dir,"st_rec_outcomes.RData"))
 save(stunt_rec, file=paste0(ghapdata_dir,"st_inc_recovery_outcomes.RData"))
-save(vel_haz, vel_lencm, file=paste0(ghapdata_dir,"st_vel_outcomes.RData"))
-save(vel_waz, vel_wtkg, file=paste0(ghapdata_dir,"waz_vel_outcomes.RData"))
+save(vel_haz, file=paste0(ghapdata_dir,"haz_vel_outcomes.RData"))
+save(vel_waz, file=paste0(ghapdata_dir,"waz_vel_outcomes.RData"))
+save(vel_lencm, file=paste0(ghapdata_dir,"len_vel_outcomes.RData"))
+save(vel_wtkg, file=paste0(ghapdata_dir,"weight_vel_outcomes.RData"))
+

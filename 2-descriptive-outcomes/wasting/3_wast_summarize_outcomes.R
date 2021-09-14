@@ -13,15 +13,16 @@ d <- d %>% filter(measurefreq == "monthly")
 d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 
 length(unique(paste0(d$studyid,d$country)))
+d %>% ungroup() %>% distinct(region, studyid, country) %>% group_by(region) %>% summarise(N=n())
 
 #Overall absolute counts
 df <- d %>% filter(agedays < 24 *30.4167) %>%
             mutate(wast = 1*(whz < -2),
                    sevwast = 1*(whz < -3))
 table(df$wast)
-prop.table(table(df$wast))
+prop.table(table(df$wast))*100
 table(df$sevwast)
-prop.table(table(df$sevwast))
+prop.table(table(df$sevwast))*100
 
 
 #Number wasted by 3 months
@@ -184,6 +185,28 @@ ci_3 <- bind_rows(
   ci.cohort3
 ) 
 
+#0-24 cumulative inc
+df<- d3 %>% mutate(agecat="0-24 months")
+evs = df %>%
+  filter(agedays < 731) %>%
+  group_by(studyid,country,subjid) %>%
+  arrange(studyid,subjid) %>%
+  mutate(minwhz=min(whz, na.rm=T)) %>%
+  mutate(ever_wasted=ifelse(minwhz< -2,1,0),
+         agecat=factor(agecat))
+cuminc.data= evs%>%
+  group_by(studyid,country,agecat) %>%
+  summarise(
+    nchild=length(unique(subjid)),
+    nstudy=length(unique(studyid)),
+    ncases=sum(ever_wasted),
+    N=sum(length(ever_wasted))) %>%
+  filter(N>=50)
+ci.data024 <-  lapply(levels(cuminc.data$agecat),function(x)
+  fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements", method="REML"))
+
+
+
 #Cumulative inc 3 month - birth as seperate category
 d3_nobirth <- calc.ci.agecat(d, range = 3, birth="no")
 
@@ -200,6 +223,9 @@ ci_3_nobirth <- bind_rows(
   data.frame(cohort = "pooled", ci.region3_nobirth),
   ci.cohort3
 ) 
+
+ci.data3$ci.res
+ci.data3_nobirth$ci.res
 
 
 #Incidence proportions 3 month intervals

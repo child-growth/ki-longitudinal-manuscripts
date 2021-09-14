@@ -27,16 +27,21 @@ d <- d %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>%
        filter(age_enrol <= age_cutoff) %>%
        mutate(born_wast = 1 * (first(whz) < (-2))) 
 table(d$born_wast)
-d %>% group_by(born_wast) %>% summarize(length(unique(paste0(studyid, subjid))))
+length(unique(paste0(d$studyid,"-",d$country)))
+d %>% group_by(born_wast) %>% summarize(length(unique(paste0(studyid, subjid))), n())
 
 #How many of those who had birthweight measured and who did NOT have wasting at birth also had incident wasting in the first 60 days? 
 df <- d %>% filter(agedays < 2* 30.4167, born_wast==0) %>% group_by(studyid, subjid) %>% mutate(Nmeas=n())
 table(df$Nmeas)
+df %>% ungroup() %>% summarize(length(unique(paste0(studyid, subjid))), n())
+
 df <- df %>% filter(Nmeas>2, agedays > 7)  %>% group_by(studyid, country) %>% mutate(N=n(), wast=1*(whz < -2))
 summary(df$whz)
 prop.table(table(df$whz < -2)) * 100
 df2 <- df %>% group_by(studyid, country, subjid) %>% summarise(wast_inc=1*(min(whz)< -2), N=n())
 prop.table(table(df2$wast_inc)) * 100
+
+
 
 #prevalence
 dprev <- df %>% group_by(studyid, country) %>% summarise(N=n(), wast=sum(wast), agecat="0-2 months")

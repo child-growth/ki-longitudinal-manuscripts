@@ -12,6 +12,8 @@ dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 
 d <- dfull %>% filter(type=="ATE", agecat!="All")
 
+d %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", estimate    != 0)
+
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)
 

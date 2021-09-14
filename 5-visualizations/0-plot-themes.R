@@ -18,6 +18,8 @@ tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
 # colorblind friendly palette
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+nyt_pal <- c("#510000", "#AC112D", "#EC6D47", "#F2A058", "#F7D269", "#839772", "#325D8A")
+
 
 theme_set(theme_ki)
 

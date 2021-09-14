@@ -31,6 +31,14 @@ textcol = "grey20"
 rfp <- readRDS(paste0(BV_dir,'/results/cov_presence.rds'))
 rfn <- readRDS(paste0(BV_dir,'/results/cov_N.rds'))
 
+unique(rfp$studyid)
+table(rfp$studyid, rfp$country)
+
+#Drop exposures not used in the primary fig2
+colnames(rfp)
+rfp <- rfp %>% subset(., select = -c(anywast06,pers_wast,enstunt,enwast,trth2o ))
+rfn <- rfn %>% subset(., select = -c(anywast06,pers_wast,enstunt,enwast,trth2o ))
+
 # gather rf presence by study into long format
 rfp <- rfp %>% 
   gather(risk_factor,presence,-studyid, -country) 
@@ -52,6 +60,7 @@ dim(d)
 d <- d %>% filter(!(studyid=="EE" & risk_factor=="gagebrth"))
 dim(d)
 
+unique(d$studyid[d$risk_factor=="perdiar24" & d$presence==1])
 
 #Mark measure frequency
 d <- mark_measure_freq(d)
@@ -211,9 +220,9 @@ hm <- ggplot(dd,aes(x=RFlabel,y=studycountry, fill=factor(presence))) +
   facet_grid(region~., scales = "free_y", space="free") +
   geom_tile(colour="white",size=0.25) +
   scale_y_discrete(expand=c(0,0))+
-  theme_grey(base_size=10)+
+  theme_grey(base_size=10) +
   theme(
-    aspect.ratio = 1,
+    #aspect.ratio = 1,
     legend.title=element_text(color=textcol,size=8),
     legend.margin = margin(grid::unit(0.1,"cm")),
     legend.text=element_text(colour=textcol,size=7,face="bold"),
@@ -245,6 +254,7 @@ nrfbar <- ggplot(dhist_a, aes(y = N/1000, x = risk_factor, fill=risk_factor)) +
   scale_fill_manual(values=rep('gray70',50),na.value="grey90") +
   theme(
     # make background white
+    legend.position = "none",
     panel.background = element_blank(),
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     plot.title=element_text(colour=textcol,hjust=0.04,size=12,face="bold"),
@@ -298,9 +308,11 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000, fill=region)
 
 
 # add margin around plots
-hm2 = hm + theme(plot.margin = unit(c(-2.7,1,0,0), "cm")) #top, right, bottom, left
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.4,2.1,-0.8), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 1.51, 0, 2.6), "cm"))
+
+hm2 = hm + theme(plot.margin = unit(c(0,0,0,0), "cm")) #top, right, bottom, left
+hm2 = hm + theme(plot.margin = unit(c(0,0.9,0,0.9), "cm")) #top, right, bottom, left
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.4,1.5,-0.8), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 1.51, 0, 4.7), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2, empty,  

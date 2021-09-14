@@ -11,8 +11,8 @@ require(cowplot)
 
 
 #Load data
-par <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results.rds"))
-par_waz <- readRDS(paste0(here::here(),"/results/rf results/pooled_Zscore_PAR_results_waz.rds"))
+par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
+par_waz <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results_waz.rds"))
 par <- bind_rows(par, par_waz)
 
 dim(par)
@@ -86,96 +86,96 @@ plot_region = function(par_regionstrat, outcome, age="24 months", Yrange=NULL){
 }
 
 ### Plot LAZ, stratified by age in SA
-plot_laz_sa_birth = plot_region(par_regionstrat_SA, "LAZ", "Birth",  Yrange=c(-0.75, 1))
-plot_laz_sa_6 = plot_region(par_regionstrat_SA, "LAZ", "6 months",  Yrange=c(-0.75, 1))
-plot_laz_sa_24 = plot_region(par_regionstrat_SA, "LAZ", "24 months",  Yrange=c(-0.75, 1))
+plot_laz_sa_birth = plot_region(par_regionstrat_SA, "LAZ", "Birth",  Yrange=c(-1, 1))
+plot_laz_sa_6 = plot_region(par_regionstrat_SA, "LAZ", "6 months",  Yrange=c(-1, 1))
+plot_laz_sa_24 = plot_region(par_regionstrat_SA, "LAZ", "24 months",  Yrange=c(-1, 1))
 
 plot_laz_SA = grid.arrange(plot_laz_sa_birth, plot_laz_sa_6, plot_laz_sa_24, ncol = 2, nrow = 2,
                                top = textGrob("Attributable difference in LAZ in South Asian cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_laz_SA, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-SA.png"), height=18, width=15)
+ggsave(plot_laz_SA, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-SA.png"), height=18, width=15)
 
 ### Plot WLZ, stratified by age in SA
-plot_wlz_sa_birth = plot_region(par_regionstrat_SA, "WLZ", "Birth",  Yrange=c(-0.5, 0.5))
-plot_wlz_sa_6 = plot_region(par_regionstrat_SA, "WLZ", "6 months",  Yrange=c(-0.5, 0.5))
-plot_wlz_sa_24 = plot_region(par_regionstrat_SA, "WLZ", "24 months",  Yrange=c(-0.5, 0.5))
+plot_wlz_sa_birth = plot_region(par_regionstrat_SA, "WLZ", "Birth",  Yrange=c(-0.75, 0.75))
+plot_wlz_sa_6 = plot_region(par_regionstrat_SA, "WLZ", "6 months",  Yrange=c(-0.75, 0.75))
+plot_wlz_sa_24 = plot_region(par_regionstrat_SA, "WLZ", "24 months",  Yrange=c(-0.75, 0.75))
 
 plot_wlz_SA = grid.arrange(plot_wlz_sa_birth, plot_wlz_sa_6, plot_wlz_sa_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in WLZ in South Asian cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_wlz_SA, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-SA.png"), height=18, width=15)
+ggsave(plot_wlz_SA, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-SA.png"), height=18, width=15)
 
 ### Plot WAZ, stratified by age in SA
-plot_waz_sa_birth = plot_region(par_regionstrat_SA, "WAZ", "Birth",  Yrange=c(-0.5, 0.5))
-plot_waz_sa_6 = plot_region(par_regionstrat_SA, "WAZ", "6 months",  Yrange=c(-0.5, 0.5))
-plot_waz_sa_24 = plot_region(par_regionstrat_SA, "WAZ", "24 months",  Yrange=c(-0.5, 0.5))
+plot_waz_sa_birth = plot_region(par_regionstrat_SA, "WAZ", "Birth",  Yrange=c(-1, 1))
+plot_waz_sa_6 = plot_region(par_regionstrat_SA, "WAZ", "6 months",  Yrange=c(-1, 1))
+plot_waz_sa_24 = plot_region(par_regionstrat_SA, "WAZ", "24 months",  Yrange=c(-1, 1))
 
 plot_waz_SA = grid.arrange(plot_waz_sa_birth, plot_waz_sa_6, plot_waz_sa_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in WAZ in South Asian cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_waz_SA, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-PAR-strat-SA.png"), height=18, width=15)
+ggsave(plot_waz_SA, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-PAR-strat-SA.png"), height=18, width=15)
 
 
 
 ### Plot LAZ, stratified by age in LA
-plot_laz_la_birth = plot_region(par_regionstrat_LA, "LAZ", "Birth",  Yrange=c(-0.75, 1))
-plot_laz_la_6 = plot_region(par_regionstrat_LA, "LAZ", "6 months",  Yrange=c(-0.75, 1))
-plot_laz_la_24 = plot_region(par_regionstrat_LA, "LAZ", "24 months",  Yrange=c(-0.75, 1))
+plot_laz_la_birth = plot_region(par_regionstrat_LA, "LAZ", "Birth",  Yrange=c(-1, 1))
+plot_laz_la_6 = plot_region(par_regionstrat_LA, "LAZ", "6 months",  Yrange=c(-1, 1))
+plot_laz_la_24 = plot_region(par_regionstrat_LA, "LAZ", "24 months",  Yrange=c(-1, 1))
 
 plot_laz_LA = grid.arrange(plot_laz_la_birth, plot_laz_la_6, plot_laz_la_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in LAZ in Latin American cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_laz_LA, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-LA.png"), height=18, width=15)
+ggsave(plot_laz_LA, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-LA.png"), height=18, width=15)
 
 ### Plot WLZ, stratified by age in LA
-plot_wlz_la_birth = plot_region(par_regionstrat_LA, "WLZ", "Birth",  Yrange=c(-0.5, 0.5))
-plot_wlz_la_6 = plot_region(par_regionstrat_LA, "WLZ", "6 months",  Yrange=c(-0.5, 0.5))
-plot_wlz_la_24 = plot_region(par_regionstrat_LA, "WLZ", "24 months",  Yrange=c(-0.5, 0.5))
+plot_wlz_la_birth = plot_region(par_regionstrat_LA, "WLZ", "Birth",  Yrange=c(-0.75, 0.75))
+plot_wlz_la_6 = plot_region(par_regionstrat_LA, "WLZ", "6 months",  Yrange=c(-0.75, 0.75))
+plot_wlz_la_24 = plot_region(par_regionstrat_LA, "WLZ", "24 months",  Yrange=c(-0.75, 0.75))
 
 plot_wlz_LA = grid.arrange(plot_wlz_la_birth, plot_wlz_la_6, plot_wlz_la_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in WLZ in Latin American cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_wlz_LA, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-LA.png"), height=18, width=15)
+ggsave(plot_wlz_LA, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-LA.png"), height=18, width=15)
 
 ### Plot WAZ, stratified by age in SA
-plot_waz_la_birth = plot_region(par_regionstrat_LA, "WAZ", "Birth",  Yrange=c(-0.5, 0.5))
-plot_waz_la_6 = plot_region(par_regionstrat_LA, "WAZ", "6 months",  Yrange=c(-0.5, 0.5))
-plot_waz_la_24 = plot_region(par_regionstrat_LA, "WAZ", "24 months",  Yrange=c(-0.5, 0.5))
+plot_waz_la_birth = plot_region(par_regionstrat_LA, "WAZ", "Birth",  Yrange=c(-1, 1))
+plot_waz_la_6 = plot_region(par_regionstrat_LA, "WAZ", "6 months",  Yrange=c(-1, 1))
+plot_waz_la_24 = plot_region(par_regionstrat_LA, "WAZ", "24 months",  Yrange=c(-1, 1))
 
 plot_waz_LA = grid.arrange(plot_waz_la_birth, plot_waz_la_6, plot_waz_la_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in WAZ in Latin American cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_waz_LA, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-PAR-strat-LA.png"), height=18, width=15)
+ggsave(plot_waz_LA, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-PAR-strat-LA.png"), height=18, width=15)
 
 
 
 ### Plot LAZ, stratified by age in Africa
-plot_laz_af_birth = plot_region(par_regionstrat_Africa, "LAZ", "Birth",  Yrange=c(-0.75, 1))
-plot_laz_af_6 = plot_region(par_regionstrat_Africa, "LAZ", "6 months",  Yrange=c(-0.75, 1))
-plot_laz_af_24 = plot_region(par_regionstrat_Africa, "LAZ", "24 months",  Yrange=c(-0.75, 1))
+plot_laz_af_birth = plot_region(par_regionstrat_Africa, "LAZ", "Birth",  Yrange=c(-1, 1))
+plot_laz_af_6 = plot_region(par_regionstrat_Africa, "LAZ", "6 months",  Yrange=c(-1, 1))
+plot_laz_af_24 = plot_region(par_regionstrat_Africa, "LAZ", "24 months",  Yrange=c(-1, 1))
 
 plot_laz_Africa = grid.arrange(plot_laz_af_birth, plot_laz_af_6, plot_laz_af_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in LAZ in African cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_laz_Africa, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-Africa.png"), height=18, width=15)
+ggsave(plot_laz_Africa, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-Africa.png"), height=18, width=15)
 
 ### Plot WLZ, stratified by age in Africa
-plot_wlz_af_birth = plot_region(par_regionstrat_Africa, "WLZ", "Birth",  Yrange=c(-0.5, 0.5))
-plot_wlz_af_6 = plot_region(par_regionstrat_Africa, "WLZ", "6 months",  Yrange=c(-0.5, 0.5))
-plot_wlz_af_24 = plot_region(par_regionstrat_Africa, "WLZ", "24 months",  Yrange=c(-0.5, 0.5))
+plot_wlz_af_birth = plot_region(par_regionstrat_Africa, "WLZ", "Birth",  Yrange=c(-0.75, 0.75))
+plot_wlz_af_6 = plot_region(par_regionstrat_Africa, "WLZ", "6 months",  Yrange=c(-0.75, 0.75))
+plot_wlz_af_24 = plot_region(par_regionstrat_Africa, "WLZ", "24 months",  Yrange=c(-0.75, 0.75))
 
 plot_wlz_Africa = grid.arrange(plot_wlz_af_birth, plot_wlz_af_6, plot_wlz_af_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in WLZ in African cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_wlz_Africa, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-Africa.png"), height=18, width=15)
+ggsave(plot_wlz_Africa, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-Africa.png"), height=18, width=15)
 
 
 ### Plot WAZ, stratified by age in Africa
-plot_waz_af_birth = plot_region(par_regionstrat_Africa, "WAZ", "Birth",  Yrange=c(-0.5, 0.5))
-plot_waz_af_6 = plot_region(par_regionstrat_Africa, "WAZ", "6 months",  Yrange=c(-0.5, 0.5))
-plot_waz_af_24 = plot_region(par_regionstrat_Africa, "WAZ", "24 months",  Yrange=c(-0.5, 0.5))
+plot_waz_af_birth = plot_region(par_regionstrat_Africa, "WAZ", "Birth",  Yrange=c(-1, 1))
+plot_waz_af_6 = plot_region(par_regionstrat_Africa, "WAZ", "6 months",  Yrange=c(-1, 1))
+plot_waz_af_24 = plot_region(par_regionstrat_Africa, "WAZ", "24 months",  Yrange=c(-1, 1))
 
 plot_waz_Africa = grid.arrange(plot_waz_af_birth, plot_waz_af_6, plot_waz_af_24, ncol = 2, nrow = 2,
                            top = textGrob("Attributable difference in WAZ in Latin American cohorts",gp=gpar(fontsize=26,font=2)))
 
-ggsave(plot_waz_Africa, file=paste0(here::here(), "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-PAR-strat-Africa.png"), height=18, width=15)
+ggsave(plot_waz_Africa, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-waz-PAR-strat-Africa.png"), height=18, width=15)

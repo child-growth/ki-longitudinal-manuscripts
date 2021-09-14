@@ -9,6 +9,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 #load covariates
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
+table(cov$studyid, cov$enstunt)
 
 #Check reference levels
 for(i in 3:ncol(cov)){
@@ -52,8 +53,11 @@ load("st_cuminc_outcomes.rdata")
 load("st_cuminc_outcomes_nobirth.rdata")
 load("st_rec_outcomes.RData")
 load("st_inc_recovery_outcomes.RData")
-load("st_vel_outcomes.RData")
-load("waz_vel_outcomes.RData")
+
+load(paste0(ghapdata_dir,"haz_vel_outcomes.RData"))
+load(paste0(ghapdata_dir,"len_vel_outcomes.RData"))
+load(paste0(ghapdata_dir,"waz_vel_outcomes.RData"))
+load(paste0(ghapdata_dir,"weight_vel_outcomes.RData"))
 
 
 
@@ -84,7 +88,7 @@ d <- left_join(cuminc, cov[, c("studyid", "subjid", "country", setdiff(colnames(
                by=c("studyid", "subjid", "country"))
 
 head(d)
-
+table(d$agecat, d$sex)
 
 #Vector of outcome names
 Y<-c("ever_stunted")
@@ -123,6 +127,7 @@ cuminc_nobirth <- bind_rows(cuminc_nobirth, cuminc[cuminc$agecat=="6-24 months",
 d <- left_join(cuminc_nobirth, cov[, c("studyid", "subjid", "country", setdiff(colnames(cov),colnames(cuminc_nobirth)))], 
                by=c("studyid", "subjid", "country"))
 head(d)
+table(d$agecat, d$sex)
 
 
 
@@ -238,6 +243,7 @@ d$mage <- gsub("[^A-Za-z0-9]","",d$mage)
 d$mwtkg <- gsub("[^A-Za-z0-9]","",d$mwtkg)
 d$mhtcm <- gsub("[^A-Za-z0-9]","",d$mhtcm)
 d$fhtcm <- gsub("[^A-Za-z0-9]","",d$fhtcm)
+d$fhtcm_rf <- gsub("[^A-Za-z0-9]","",d$fhtcm_rf)
 d$fage <- gsub("[^A-Za-z0-9]","",d$fage)
 d$mhtcm <- gsub(" ","",d$mhtcm)
 d$mage <- gsub(" ","",d$mage)
@@ -318,24 +324,12 @@ save(d, Y, A,V, id, file="st_inc_rec_rf.Rdata")
 #merge in covariates
 d <- left_join(vel_haz, cov, by=c("studyid", "subjid", "country"))
 head(d)
-
-
-#Vector of outcome names
 Y<-c("y_rate_haz")
-
-
-#Vector of covariate names
 W<-c("")
-
-#Subgroup variable
 V <- c("agecat")
-
-#clusterid ID variable
 id <- c("id")
 
-#Change outcome name to differentiate from lencm velocity outcome
 d <- d %>% rename(y_rate_haz=y_rate)
-
 save(d, Y, A,V, id, file="st_haz_vel_rf.Rdata")
 
 
@@ -343,26 +337,32 @@ save(d, Y, A,V, id, file="st_haz_vel_rf.Rdata")
 
 #merge in covariates
 d <- left_join(vel_lencm, cov, by=c("studyid", "subjid", "country"))
-head(d)
-
-
-#Vector of outcome names
 Y<-c("y_rate_len")
+d <- d %>% rename(y_rate_len=y_rate)
+save(d, Y, A,V, id, file="st_len_vel_rf.Rdata")
 
 
-#Vector of covariate names
+#WHZ
+
+#merge in covariates
+d <- left_join(vel_waz, cov, by=c("studyid", "subjid", "country"))
+head(d)
+Y<-c("y_rate_waz")
 W<-c("")
-
-#Subgroup variable
 V <- c("agecat")
-
-#clusterid ID variable
 id <- c("id")
 
-d <- d %>% rename(y_rate_len=y_rate)
+d <- d %>% rename(y_rate_waz=y_rate)
+save(d, Y, A,V, id, file="waz_vel_rf.Rdata")
 
 
-save(d, Y, A,V, id, file="st_len_vel_rf.Rdata")
+# Weight
+
+#merge in covariates
+d <- left_join(vel_wtkg, cov, by=c("studyid", "subjid", "country"))
+Y<-c("y_rate_wtkg")
+d <- d %>% rename(y_rate_wtkg=y_rate)
+save(d, Y, A,V, id, file="y_rate_wtkg_vel_rf.Rdata")
 
 
 
@@ -373,7 +373,7 @@ save(d, Y, A,V, id, file="st_len_vel_rf.Rdata")
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 #Drop wasting risk factors
-cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
+#cov <- cov %>% subset(., select=-c(pers_wast, enwast, anywast06))
 
 
 #load outcomes
@@ -763,14 +763,14 @@ bf_covariates = c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwe
 adjustment_sets <- list( 
   
   gagebrth=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-             #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+             "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
              "brthmon","W_parity",
              "trth2o","cleanck","impfloor","impsan","safeh20"),         
   
   birthwt=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-            #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
             "vagbrth","hdlvry",
             "single",
             "W_nrooms","W_nhh","W_nchldlt5",
@@ -778,7 +778,7 @@ adjustment_sets <- list(
             "trth2o","cleanck","impfloor","impsan","safeh20"),   
   
   birthlen=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-             #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+             "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
              "vagbrth","hdlvry",
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
@@ -786,7 +786,7 @@ adjustment_sets <- list(
              "trth2o","cleanck","impfloor","impsan","safeh20"),   
   
   enstunt=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-            #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
             "vagbrth","hdlvry",
             "single",
             "W_nrooms","W_nhh","W_nchldlt5",
@@ -794,7 +794,7 @@ adjustment_sets <- list(
             "trth2o","cleanck","impfloor","impsan","safeh20"),     
   
   enwast=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-           #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+           "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
            "vagbrth","hdlvry",
            "single",
            "W_nrooms","W_nhh","W_nchldlt5",
@@ -827,7 +827,7 @@ adjustment_sets <- list(
          "single",
          "W_nrooms","W_nhh","W_nchldlt5",
          "brthmon",
-         "trth2o","cleanck","impfloor","impsan","safeh20"),     
+         "trth2o","cleanck","impfloor","impsan","safeh20"), 
   
   mhtcm=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
           "W_fhtcm",
@@ -858,7 +858,12 @@ adjustment_sets <- list(
           "W_mhtcm","W_mwtkg","W_bmi",
           "single",
           "W_nrooms",
-          "trth2o","cleanck","impfloor","impsan","safeh20"),     
+          "trth2o","cleanck","impfloor","impsan","safeh20"), 
+  fhtcm_rf=c("arm", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+          "W_mhtcm","W_mwtkg","W_bmi",
+          "single",
+          "W_nrooms",
+          "trth2o","cleanck","impfloor","impsan","safeh20"), 
   
   nrooms=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
@@ -915,7 +920,7 @@ adjustment_sets <- list(
              "trth2o","cleanck","impfloor","impsan","safeh20"),
   
   anywast06=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-              #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
               "vagbrth","hdlvry",
               "single",
               "W_nrooms","W_nhh","W_nchldlt5",
@@ -923,7 +928,7 @@ adjustment_sets <- list(
               "trth2o","cleanck","impfloor","impsan","safeh20"),
   
   pers_wast=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-              #"W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
               "vagbrth","hdlvry",
               "single",
               "W_nrooms","W_nhh","W_nchldlt5",
@@ -1001,8 +1006,6 @@ adjustment_sets <- list(
             "trth2o","cleanck","impfloor","impsan","safeh20")
 )
 save(adjustment_sets, file=paste0(BV_dir,"/results/adjustment_sets_list.Rdata"))
-
-
 
 
 

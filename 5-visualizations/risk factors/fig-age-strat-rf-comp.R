@@ -6,7 +6,16 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
+d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))  %>% mutate(pooled=1)
+
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% filter(type=="RR", intervention_level!=baseline_level ) %>% select(studyid,country,intervention_variable, agecat,  intervention_level, baseline_level, outcome_variable, estimate, ci_lower,ci_upper) %>%
+  rename(RR=estimate,  RR.CI1=ci_lower, RR.CI2=ci_upper) %>% mutate(pooled=0)
+dfull <- RMA_clean(dfull)
+
+d <- bind_rows(d, dfull)
+head(d)
+tail(d)
+
 
 unique(d$outcome_variable)
 d <- d %>% filter(outcome_variable %in% c("ever_stunted", "ever_wasted"),
@@ -19,7 +28,7 @@ unique(d$intervention_variable)
 d <- droplevels(d)
 
 
-yticks <- c(0.25, 0.5, 0.75, 1, 1.5, 2)
+yticks <- c(0.25, 0.5, 0.8, 1, 1.2, 1.5, 2, 3)
 
 #hbgdki pallet
 tableau10 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
@@ -43,7 +52,7 @@ unique(df$outcome_variable)
 unique(df$intervention_variable)
 
 plotdf <- df %>% 
-  filter(region!="N.America & Europe",
+  filter(region!="N.America & Europe"|is.na(region),
          intervention_variable %in% c("gagebrth", "hfoodsec", "hhwealth_quart", "meducyrs", "mhtcm", "parity" ),
          outcome_variable %in% c("Ever stunted", "Ever wasted"),
          agecat %in% c("0-6 months", "6-24 months")) %>%
@@ -70,10 +79,7 @@ plotdf$Outcome <- plotdf$outcome_variable
 
 plotdf <- droplevels(plotdf)
 
-plotdf$intervention_level <- factor(plotdf$intervention_level, levels = c(
-  "1","2",  "3+",  "High", "Medium", "Low", 
-  "Full or\nlate term", "Early term", "Preterm", "Food\nSecure", "Mildly Food\nInsecure", "Food\nInsecure", 
-  "Q4", "Q3", "Q2", "Q1", ">=155 cm", "[151-155) cm", "<151 cm"))
+
 
 pd <- position_dodge(0.4)
 
@@ -81,33 +87,80 @@ outcomes <- c(
   `Ever stunted` = "",
   `Ever wasted` = "")
 
+min(plotdf$RR.CI1[plotdf$region=="Pooled"])
+max(plotdf$RR.CI2[plotdf$region=="Pooled"])
 
-p_ageRR <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
-  geom_point(aes(y=RR, color=Outcome), size = 3, position = pd) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
-                 alpha=0.5, size = 1, position = pd) +
+# p_ageRR_old <- ggplot(plotdf[plotdf$region=="Pooled",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
+#   geom_point(aes(y=RR, color=Outcome), size = 3, position = pd) +
+#   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+#                  alpha=0.5, size = 1, position = pd) +
+#   facet_grid(RFlabel~ Outcome + agecat, scales="free", labeller = labeller(Outcome = outcomes), switch = "y")+
+#   labs(x = "Exposure level", y = "Adjusted CIR") +
+#   geom_hline(yintercept = 1) +
+#   geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
+#   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, 
+#                      limits = c(0.638,2.43), 
+#                      expand=c(0.05,0)) +
+#   coord_cartesian(ylim = c(0.8,2)) +
+#   scale_colour_manual(values=tableau10[c(2,3)]) +  
+#   ggtitle("Stunting incidence                                                                Wasting incidence")+
+#   theme(strip.background = element_blank(),
+#         legend.position="none",
+#         axis.text.y = element_text(size=8, hjust = 1),
+#         strip.text.x = element_text(size=8, face = "bold"),
+#         strip.text.y = element_text(size=8, angle = 180, face = "bold"),
+#         strip.placement = "outside",
+#         axis.text.x = element_text(size=10, vjust = 0.5),
+#         panel.spacing = unit(0, "lines"),
+#         legend.box.background = element_rect(colour = "black"), 
+#         title = element_text(margin=margin(0,0,-10,0))) +
+#   coord_flip()
+
+tail(plotdf)
+
+plotdf$intervention_level <- factor(plotdf$intervention_level, levels = rev(c(
+  "1","2",  "3+",  "High", "Medium", "Low", 
+  "Full or\nlate term", "Early term", "Preterm", "Food\nSecure", "Mildly Food\nInsecure", "Food\nInsecure", 
+  "Q4", "Q3", "Q2", "Q1", ">=155 cm", "[151-155) cm", "<151 cm")))
+# levels(plotdf$intervention_level)
+# plotdf2 <- plotdf %>% filter(region=="Pooled", pooled==1)
+# levels(plotdf2$intervention_level)
+
+plotdf <- plotdf %>% #filter(!is.na(Outcome), !is.na(RFlabel_ref), !is.na(intervention_level)) %>% 
+  arrange(pooled, intervention_level) %>% droplevels()
+
+data = plotdf %>% filter(pooled==0)
+min(data$RR)
+max(data$RR)
+
+set.seed(12234)
+p_ageRR <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), aes(x=intervention_level, y=RR, color=Outcome)) + 
   facet_grid(RFlabel~ Outcome + agecat, scales="free", labeller = labeller(Outcome = outcomes), switch = "y")+
-  labs(x = "Exposure level", y = "Adjusted CIR") +
   geom_hline(yintercept = 1) +
-  geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+                 alpha=0.5, size = 1) +
+  geom_point(aes(y=RR), color="#878787", fill="#878787", size=2, stroke=0, alpha=0.5,
+             position=position_jitter(width=0.2), data = plotdf %>% filter(pooled==0)) +
+  geom_point(size = 3) +
+  labs(x = "Exposure level", y = "Adjusted cumulative incidence ratio") +
+  #geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
   scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, 
-                     limits = c(0.688,2.0), 
+                     #limits = c(0.638,2.43), 
                      expand=c(0.05,0)) +
-  coord_cartesian(ylim = c(0.8,2)) +
+  #coord_cartesian() +
   scale_colour_manual(values=tableau10[c(2,3)]) +  
   ggtitle("Stunting incidence                                                                Wasting incidence")+
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=8, hjust = 1),
-        strip.text.x = element_text(size=8, face = "bold"),
-        strip.text.y = element_text(size=8, angle = 180, face = "bold"),
+        strip.text.x = element_text(size=10, face = "bold"),
+        strip.text.y = element_text(size=10, angle = 180, face = "bold"),
         strip.placement = "outside",
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
-        title = element_text(margin=margin(0,0,-10,0))) +
-  coord_flip()
-  
+        title = element_text(margin=margin(0,0,0,0))) +
+  coord_flip(ylim = c(0.5,2.5))
 
 print(p_ageRR)
 
@@ -142,7 +195,7 @@ p_ageRR_Africa <- ggplot(plotdf[plotdf$region=="Africa",], aes(x=reorder(interve
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
-        title = element_text(margin=margin(0,0,-10,0))) +
+        title = element_text(margin=margin(0,0,0,0))) +
   coord_flip()
 
 p_ageRR_LA <- ggplot(plotdf[plotdf$region=="Latin America",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
@@ -168,7 +221,7 @@ p_ageRR_LA <- ggplot(plotdf[plotdf$region=="Latin America",], aes(x=reorder(inte
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
-        title = element_text(margin=margin(0,0,-10,0))) +
+        title = element_text(margin=margin(0,0,0,0))) +
   coord_flip()
 
 p_ageRR_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
@@ -194,7 +247,7 @@ p_ageRR_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=reorder(interve
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
-        title = element_text(margin=margin(0,0,-10,0))) +
+        title = element_text(margin=margin(0,0,0,0))) +
   coord_flip()
 
 

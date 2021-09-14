@@ -203,18 +203,21 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   #----------------------------------------
   # Get monthly HAZ quantiles
   #----------------------------------------
-  quantile_d_cohort <- dmon %>% group_by(agecat, region, country, studyid) %>%
+  dmon <-  dmon %>% mutate(cohort = paste0(studyid, "-", country))
+  
+  quantile_d_cohort <- dmon %>% group_by(agecat, region, country, cohort) %>%
     mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
            fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
            ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
-    select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
+    select(studyid, cohort, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc)
   
   quantile_d <- dmon %>% group_by(agecat,  country, region) %>%
     mutate(fifth_perc = quantile(haz, probs = c(0.05))[[1]],
            fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
            ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
-    mutate(studyid = "pooled") %>%
-    select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
+    mutate(studyid = "pooled", 
+           cohort = "pooled") %>%
+    select(studyid, cohort, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
   
   quantile_d_overall <- dmon %>% 
     group_by(agecat) %>%
@@ -222,8 +225,9 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
               fiftieth_perc = quantile(haz, probs = c(0.5))[[1]],
               ninetyfifth_perc = quantile(haz, probs = c(0.95))[[1]]) %>%
     mutate(region = "Overall") %>%
-    mutate(studyid = "pooled") %>%
-    select(studyid, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
+    mutate(studyid = "pooled", 
+           cohort = "pooled") %>%
+    select(studyid, cohort, agecat, region, fifth_perc, fiftieth_perc, ninetyfifth_perc) 
   
   # combine data
   quantiles <- bind_rows(quantile_d, quantile_d_overall,quantile_d_cohort)

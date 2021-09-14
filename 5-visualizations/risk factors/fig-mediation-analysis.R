@@ -42,11 +42,16 @@ table(d$num_birth_vars, d$analysis)
 df <- d %>% filter(num_birth_vars>3 | analysis=="prim")
 med_studies <- unique(df$studyid[df$analysis=="med"])
 
-d <- d %>% filter(studyid %in% med_studies)
+d_nonmed <- d %>% filter(studyid %in% med_studies)
+
+#Get N children
+load(paste0(ghapdata_dir,"/mediation_HAZ.Rdata"))
+d <- d %>% filter(studyid %in% med_studies) %>% filter(agecat=="24 months")
+nrow(d)
 
 
 #Drop reference levels
-d <- d %>% filter(ci_lower !=  ci_upper)
+d <- d_nonmed %>% filter(ci_lower !=  ci_upper)
 
 #Compare cohort-specific estimates
 plotdf <- d %>% filter(agecat=="6 months") %>% select(strata_label, intervention_variable, outcome_variable, intervention_level, analysis, estimate) %>% spread(analysis, estimate)
@@ -90,7 +95,7 @@ p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))
              switch = "y")+
   labs(x = "Exposure level", y = "Adjusted Z-score difference") +
   geom_hline(yintercept = 0) +
-  scale_y_continuous(limits = c(-.75, 0.25), breaks=c(-0.6, -0.4, -0.2, 0, 0.2), labels=scaleFUN, expand = c(0,0)) +
+  scale_y_continuous(limits = c(-.75, 0.26), breaks=c(-0.6, -0.4, -0.2, 0, 0.2), labels=scaleFUN, expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,3)]) +  
   ggtitle("LAZ                                                       WLZ")+
   theme(strip.background = element_blank(),

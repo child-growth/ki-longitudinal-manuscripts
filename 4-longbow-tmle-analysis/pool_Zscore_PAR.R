@@ -15,20 +15,30 @@ dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
 
-unique(dfull$type)
-d <- dfull %>% filter(type=="PAR")
+ unique(dfull$type)
+ d <- dfull %>% filter(type=="PAR")
+ table(d$intervention_variable, d$outcome_variable)
 
-temp <- d  %>% filter(outcome_variable =="whz" , intervention_variable =="fage", agecat=="24 months") %>% droplevels()
-table(temp$studyid)
-RMAest <- temp %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
-  do(pool.Zpar(.)) %>% as.data.frame()
+# temp <- d  %>% filter(outcome_variable =="whz"| outcome_variable =="haz",
+#                       intervention_variable =="birthlen_rf"|intervention_variable =="birthwt_rf"|intervention_variable =="gagebrth_rf"|
+#                       intervention_variable =="birthlen"|intervention_variable =="birthwt"|intervention_variable =="gagebrth", agecat=="24 months") %>% droplevels()
+# table(temp$studyid)
+# RMAest_temp <- temp %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
+#   do(pool.Zpar(.)) %>% as.data.frame()
+# RMAest_temp
+# 
+# birthwt_prim <- readRDS(paste0(res_dir, "rf results/longbow results/results_birthwt_prim.RDS")) %>% filter(type=="PAR")
+# RMAest_temp2 <- birthwt_prim %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
+#   do(pool.Zpar(.)) %>% as.data.frame()
+# RMAest_temp2
+
 
 #Subset to continious outcomes
 unique(d$outcome_variable)
-d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_len"|
+d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_waz"|
+                    outcome_variable=="y_rate_len"|
                     outcome_variable=="y_rate_wtkg"|outcome_variable=="haz"|
-                    outcome_variable=="whz")
-d %>% filter(type=="PAR",agecat=="24 months",outcome_variable=="haz", intervention_variable=="perdiar24")
+                    outcome_variable=="whz"|outcome_variable=="waz")
 
 d <- droplevels(d)
 

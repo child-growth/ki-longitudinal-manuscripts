@@ -40,7 +40,7 @@ dhs_medians =  dhs_medians %>% mutate(
 
 names(dhs_medians)[2] = "median"
 dhs_medians = select(dhs_medians, c("country", "measure", "median"))
-dhs_medians$dsource = "DHS, ki countries"
+dhs_medians$dsource = "DHS"
 
 # Find KI medians, combine KI and DHS medians into a single table
 ki_medians_monthly = readRDS(paste0(BV_dir,"/results/dhs/ki.zscore.medians.monthly.rds"))
