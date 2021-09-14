@@ -1,6 +1,3 @@
-
-
-
 theme_ki <- function() {
   theme_bw() %+replace%
     theme(
@@ -29,13 +26,13 @@ theme_set(theme_ki)
 # Plot functions
 #-------------------------------------------------------------------------------------------
 ki_desc_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-                         xlabel="Age category",
-                         ylabel="",
-                         Region=NULL,
-                         h2=3,
-                         strip.text.size=18,
-                         yrange=NULL,
-                         returnData=F) {
+                                xlabel="Age category",
+                                ylabel="",
+                                Region=NULL,
+                                h2=3,
+                                strip.text.size=18,
+                                yrange=NULL,
+                                returnData=F) {
   
   df <- d %>% filter(
     disease == Disease &
@@ -105,7 +102,7 @@ ki_desc_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     xlab(xlabel)+
     ylab(ylabel) +
-
+    
     # add space to the left and right of points on x axis
     # to accommodate point estimate labels
     scale_x_discrete(expand = expand_scale(add = 1)) +
@@ -168,21 +165,21 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   } else {
     df <- df %>% filter(cohort == Cohort)
   }
-
+  
   # remove N= from labels
   df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub('N=', '', nstudy.f))
-
+  
   # remove text from labels
   df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
     mutate(nstudy.f = gsub(' studies', '', nstudy.f))
-
+  
   # Remove 'months' from x axis labels
   df <- df %>% arrange(agecat)
   df$agecat <- as.character(df$agecat)
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
-
+  
   if (min(df$lb) < 0) {
     print("Warning: some lower bounds < 0")
   }
@@ -194,21 +191,21 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure)) +
     xlab(xlabel)+
     ylab(ylabel) +
-
+    
     # add space to the left and right of points on x axis
     # to accommodate point estimate labels
     scale_x_discrete(expand = expand_scale(add = 1)) +
-
+    
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
-
+    
     theme(
       axis.text.x = element_text(margin =
-                                       margin(t = 0, r = 0, b = 0, l = 0),
-                                     size = 14)) +
+                                   margin(t = 0, r = 0, b = 0, l = 0),
+                                 size = 14)) +
     theme(axis.title.y = element_text(size = 14)) +
-
+    
     ggtitle("")
-
+  
   if(!is.null(Region)) {
     p <- p + facet_wrap(~cohort) +
       theme(strip.text = element_text(size=strip.text.size, margin = margin(t = 0)))
@@ -216,13 +213,13 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     p <- p + facet_grid(~region) +
       theme(strip.text = element_text(size=14, margin = margin(t = 0))) 
   }
-
+  
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
   }
-
-
-
+  
+  
+  
   if(returnData){
     return(list(plot=p,data=df))
   }else{
@@ -233,14 +230,14 @@ ki_desc_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 # fixed effects descriptive epi plot, 
 # which has different aesthetics
 ki_desc_plot_fe <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-                         Cohort="pooled",
-                         xlabel="Age category",
-                         ylabel="",
-                         Region=NULL,
-                         h1=0,
-                         h2=3,
-                         yrange=NULL,
-                         returnData=F) {
+                            Cohort="pooled",
+                            xlabel="Age category",
+                            ylabel="",
+                            Region=NULL,
+                            h1=0,
+                            h2=3,
+                            yrange=NULL,
+                            returnData=F) {
   
   df <- d %>% filter(
     disease == Disease &
@@ -610,10 +607,10 @@ ki_ip_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     guides(color = FALSE) +
     
-  
-  if(!is.null(yrange)){
-    p <- p + coord_cartesian(ylim=yrange)
-  }
+    
+    if(!is.null(yrange)){
+      p <- p + coord_cartesian(ylim=yrange)
+    }
   
   if(returnData){
     return(list(plot=p,data=df))
@@ -627,14 +624,14 @@ ki_ip_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
 
 
 ki_wast_ip_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
-                              xlabel="Age category",
-                              ylabel="Proportion (95% CI)",
-                              h1=0,
-                              h2=3,
-                              yrange=NULL,
-                              dodge=0,
-                              returnData=F,
-                              legend.pos = c(.92,.8)){
+                                   xlabel="Age category",
+                                   ylabel="Proportion (95% CI)",
+                                   h1=0,
+                                   h2=3,
+                                   yrange=NULL,
+                                   dodge=0,
+                                   returnData=F,
+                                   legend.pos = c(.92,.8)){
   
   df <- d %>% filter(
     disease == Disease &

@@ -220,8 +220,8 @@ hm <- ggplot(dd,aes(x=RFlabel,y=studycountry, fill=factor(presence))) +
     legend.key.height=grid::unit(0.2,"cm"),
     legend.key.width=grid::unit(1,"cm"),
     legend.position = "none",
-    axis.text.x=element_text(size=8,colour=textcol,angle=45,hjust=1),
-    axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
+    axis.text.x=element_text(size=6,colour=textcol,angle=45,hjust=1),
+    axis.text.y=element_text(size=6,vjust = 0.2,colour=textcol),
     axis.ticks=element_line(size=0.4),
     plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
     strip.text.x = element_text(size=10),
@@ -252,7 +252,7 @@ nrfbar <- ggplot(dhist_a, aes(y = N/1000, x = risk_factor, fill=risk_factor)) +
     axis.text.x=element_blank(),
     axis.ticks.x=element_blank(),
     panel.border = element_blank(),
-    axis.title.y = element_text(size=10)
+    axis.title.y = element_text(size=11)
   ) +
   scale_y_continuous(expand=c(0,0), limits=c(0,100),
                      breaks=seq(0,100,by=20),labels=seq(0,100,by=20))+
@@ -286,30 +286,29 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000, fill=region)
     axis.ticks.y = element_blank(),
     strip.text.x = element_blank(),
     strip.text.y = element_blank(),
-    axis.title.x = element_text(size=10),
-    plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
+    axis.title.x = element_text(size=11),
+    plot.title=element_text(colour=textcol,hjust=0,size=10,face="bold"),
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank()) +
   labs(x = "",y="Sample size (1000s)",title="c") +
   scale_y_continuous(expand=c(0,0),limits=c(0,30),
                      breaks=seq(0,30,by=5),labels=seq(0,30,by=5)) +
-  geom_hline(yintercept = seq(0,30,by=5),color='white',size=0.3)
+  geom_hline(yintercept = seq(0,30,by=5),color='white',size=0.5)
 
 
 
 # add margin around plots
-hm2 = hm + theme(plot.margin = unit(c(0,0,0,0), "cm")) #top, right, bottom, left
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.4,1.5,-0.8), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 1.51, 0, 4.7), "cm"))
+hm2 = hm + theme(plot.margin = unit(c(-2.7,1,0,0), "cm")) #top, right, bottom, left
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0,0.4,2.1,-0.8), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(0, 1.51, 0, 2.6), "cm"))
 empty <- grid::textGrob("") 
 
-rfhmgrid <- grid.arrange(nrfbar2,empty, 
-                          hm2, sidebar_c2, nrow = 2, ncol = 2,
+rfhmgrid <- grid.arrange(nrfbar2, empty,  
+                        hm2, sidebar_c2, nrow = 2, ncol = 2,
                         heights = c(25,100),
                         widths=c(100,20))
 
-
 # save plot 
 ggsave(filename=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig-rf-heatmap.png"),
-       plot = rfhmgrid,device='png',width=12,height=9)
+       plot = rfhmgrid,device='png',width=18.3,height=19.6, units = 'cm')
 
