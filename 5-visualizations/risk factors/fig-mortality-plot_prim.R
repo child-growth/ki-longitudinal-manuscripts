@@ -296,7 +296,7 @@ p_flurry <- ggplot(p_data_pooled, aes(x=cgf_cat)) +
         strip.background = element_blank(),
         text = element_text(size=16), 
         legend.position = "none") + 
-  facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
+  facet_wrap(~outcome_variabl, ncol=3, strip.position = "bottom") +
   coord_flip(ylim=c(0.4,16))
 p_flurry
 

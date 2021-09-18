@@ -84,5 +84,5 @@ p3 <- pPAF_stunt + xlab("") + theme(axis.text = element_text(size=12))
 p4 <- pPAF_wast + xlab("") + theme(axis.text = element_text(size=12))
 
 ext_fig3 <- plot_grid(p3, p4, labels = "auto", ncol = 2, align = 'v', axis = 'l')
-ggsave(ext_fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/extended_data_fig3.png"), width=14, height=8)
+ggsave(ext_fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/extended_data_fig3.png"), width=18.3, height=8)
 
