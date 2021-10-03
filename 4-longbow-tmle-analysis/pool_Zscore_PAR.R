@@ -8,11 +8,12 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 
-
-
 #Load data
 dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 head(dfull)
+
+dfull %>% filter(outcome_variable=="haz", intervention_variable=="mwtkg", agecat=="24 months", type=="PAR")
+dfull %>% filter(outcome_variable=="whz", intervention_variable=="mwtkg", agecat=="24 months", type=="PAR")
 
 
  unique(dfull$type)

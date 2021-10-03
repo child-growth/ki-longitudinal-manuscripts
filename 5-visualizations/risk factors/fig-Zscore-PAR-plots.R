@@ -196,7 +196,7 @@ pPAR_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel_ref
   geom_text(aes(label=est_lab), y=-0.16, color="grey20", size=3.25) +
   geom_text(aes(label=est_lab_title), y=-0.16, color="black", size=3.5, fontface = "bold") +
   #coord_flip(ylim=c(-0.185,0.3)) +
-  coord_flip(ylim=c(-0.25,0.3)) +
+  coord_flip(ylim=c(-0.25,0.25)) +
   labs(x = NULL,
        y = "") +
   geom_hline(yintercept = 0) +

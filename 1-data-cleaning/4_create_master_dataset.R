@@ -30,6 +30,8 @@ table(Zscores$region)
 
 #load covariate dataset (one row per child)
 cov <- readRDS(clean_covariates_path)
+table(cov$mwtkg)
+table(cov$mbmi)
 
 dput(colnames(cov))
 
@@ -44,8 +46,6 @@ cov <- cov %>% subset(., select = c(studyid, subjid,  country,
                                     W_nrooms, W_nhh, W_nchldlt5, W_parity, impsan, safeh20, 
                                     perdiar6, perdiar24, W_perdiar6, W_perdiar24, 
                                     predexfd6))
-
-
 
 Zscores$subjid <- as.character(Zscores$subjid)
 

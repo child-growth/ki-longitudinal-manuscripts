@@ -260,13 +260,20 @@ return(res)
 # WLZ- maternal weight
 #------------------------------------------------------------------------------------------------
 
-predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
-plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=58 kg")
-predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
-plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<52 kg")
-predlist3 <- spline_meta(d[d$mwtkg=="[52-58) kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
-plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[52-58) kg")
-plotdf_wlz_mwtkg <- rbind(plotdf1,plotdf2,plotdf3)
+# predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
+# plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=58 kg")
+# predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
+# plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<52 kg")
+# predlist3 <- spline_meta(d[d$mwtkg=="[52-58) kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
+# plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[52-58) kg")
+# plotdf_wlz_mwtkg <- rbind(plotdf1,plotdf2,plotdf3)
+table(d$mwtkg)
+predlist1 <- spline_meta(d[d$mwtkg==">=45 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=45 kg")
+predlist2 <- spline_meta(d[d$mwtkg=="<45 kg",], Y="whz", Avar="mwtkg", overall=T, cen=365,  mean_aic=T)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<45 kg")
+plotdf_wlz_mwtkg <- rbind(plotdf1,plotdf2)
+
 
 offsetZ_wlz_mwtkg <- offset_fun(d, Y="whz", Avar="mwtkg", cen=365)
 
@@ -277,7 +284,8 @@ plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>%
          ci.lb= ci.lb + offset,
          ci.ub= ci.ub + offset)
 
-plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
+#plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
+plotdf_wlz_mwtkg <- plotdf_wlz_mwtkg %>% mutate(level = factor(level, levels=c( ">=45 kg", "<45 kg")))
   
 
 Avarwt="Maternal weight"
@@ -311,13 +319,17 @@ print(p1)
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 table(d$mhtcm)
-predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T, forcedf=5)
-plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
-predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="whz", Avar="mhtcm", overall=T)
-plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
-predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="whz", Avar="mhtcm", overall=T)
-plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
-plotdf_wlz_mhtcm <- rbind(plotdf1,plotdf2,plotdf3)
+# predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="whz", Avar="mhtcm", overall=T, forcedf=5)
+# plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
+# predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="whz", Avar="mhtcm", overall=T)
+# plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
+# predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="whz", Avar="mhtcm", overall=T)
+# plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
+predlist1 <- spline_meta(d[d$mhtcm==">=150 cm",], Y="whz", Avar="mhtcm", overall=T, forcedf=5)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=150 cm")
+predlist2 <- spline_meta(d[d$mhtcm=="<150 cm",], Y="whz", Avar="mhtcm", overall=T)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<150 cm")
+plotdf_wlz_mhtcm <- rbind(plotdf1,plotdf2)
 
 offsetZ_wlz_mhtcm <- offset_fun(d, Y="whz", Avar="mhtcm")
 
@@ -328,7 +340,8 @@ plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>%
          ci.lb= ci.lb + offset,
          ci.ub= ci.ub + offset)
 
-plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>% mutate(level = factor(level, levels=c( ">=155 cm", "[151-155) cm", "<151 cm")))
+#plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>% mutate(level = factor(level, levels=c( ">=155 cm", "[151-155) cm", "<151 cm")))
+plotdf_wlz_mhtcm <- plotdf_wlz_mhtcm %>% mutate(level = factor(level, levels=c( ">=150 cm",  "<150 cm")))
 
 Avar="Maternal height"
 
@@ -361,13 +374,19 @@ df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summari
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 
-predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="haz", Avar="mwtkg", overall=T, mean_aic=T)
-plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=58 kg")
-predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="haz", Avar="mwtkg", overall=T)
-plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<52 kg")
-predlist3 <- spline_meta(d[d$mwtkg=="[52-58) kg",], Y="haz", Avar="mwtkg", overall=T)
-plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[52-58) kg")
-plotdf_laz_mwtkg <- rbind(plotdf1,plotdf2,plotdf3)
+# predlist1 <- spline_meta(d[d$mwtkg==">=58 kg",], Y="haz", Avar="mwtkg", overall=T, mean_aic=T)
+# plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=58 kg")
+# predlist2 <- spline_meta(d[d$mwtkg=="<52 kg",], Y="haz", Avar="mwtkg", overall=T)
+# plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<52 kg")
+# predlist3 <- spline_meta(d[d$mwtkg=="[52-58) kg",], Y="haz", Avar="mwtkg", overall=T)
+# plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[52-58) kg")
+# plotdf_laz_mwtkg <- rbind(plotdf1,plotdf2,plotdf3)
+table(d$mwtkg)
+predlist1 <- spline_meta(d[d$mwtkg==">=45 kg",], Y="haz", Avar="mwtkg", overall=T, cen=365, mean_aic = T)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=45 kg")
+predlist2 <- spline_meta(d[d$mwtkg=="<45 kg",], Y="haz", Avar="mwtkg", overall=T, cen=365, mean_aic = T)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<45 kg")
+plotdf_laz_mwtkg <- rbind(plotdf1,plotdf2)
 
 offsetZ_laz_mwtkg <- offset_fun(d, Y="haz", Avar="mwtkg")
 
@@ -378,7 +397,8 @@ plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>%
          ci.lb= ci.lb + offset,
          ci.ub= ci.ub + offset)
 
-plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
+#plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c( ">=58 kg", "[52-58) kg", "<52 kg")))
+plotdf_laz_mwtkg <- plotdf_laz_mwtkg %>% mutate(level = factor(level, levels=c( ">=45 kg",  "<45 kg")))
 
 
 Avarwt="Maternal weight"
@@ -409,13 +429,19 @@ df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summari
 
 predlist1 <- predlist2 <- predlist3 <- NULL
 
-predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)
-plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
-predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)
-plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
-predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)#, forcedf=) #forced df due to fit issues
-plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
-plotdf_laz_mhtcm <- rbind(plotdf1,plotdf2,plotdf3)
+# predlist1 <- spline_meta(d[d$mhtcm==">=155 cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)
+# plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=155 cm")
+# predlist2 <- spline_meta(d[d$mhtcm=="<151 cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)
+# plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<151 cm")
+# predlist3 <- spline_meta(d[d$mhtcm=="[151-155) cm",], Y="haz", Avar="mhtcm", overall=T, mean_aic=T)#, forcedf=) #forced df due to fit issues
+# plotdf3 <- create_plotdf(predlist3, overall=T, stratlevel="[151-155) cm")
+# plotdf_laz_mhtcm <- rbind(plotdf1,plotdf2,plotdf3)
+
+predlist1 <- spline_meta(d[d$mhtcm==">=150 cm",], Y="haz", Avar="mhtcm", overall=T, forcedf=5)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=150 cm")
+predlist2 <- spline_meta(d[d$mhtcm=="<150 cm",], Y="haz", Avar="mhtcm", overall=T)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<150 cm")
+plotdf_laz_mhtcm <- rbind(plotdf1,plotdf2)
 
 offsetZ_laz_mhtcm <- offset_fun(d, Y="haz", Avar="mhtcm")
 
@@ -426,7 +452,7 @@ plotdf_laz_mhtcm <- plotdf_laz_mhtcm %>%
          ci.lb= ci.lb + offset,
          ci.ub= ci.ub + offset)
 
-plotdf_laz_mhtcm <- plotdf_laz_mhtcm %>% mutate(level = factor(level, levels=c( ">=155 cm", "[151-155) cm", "<151 cm")))
+plotdf_laz_mhtcm <- plotdf_laz_mhtcm %>% mutate(level = factor(level, levels=c( ">=150 cm", "<150 cm")))
 
 Avar="Maternal height"
 
@@ -457,10 +483,14 @@ print(p4)
 predlist1 <- predlist2 <- predlist3 <- NULL
 
 table(d$mbmi)
-predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
-plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
-predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
-plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
+# predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="whz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
+# plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
+# predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="whz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
+# plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
+predlist1 <- spline_meta(d[d$mbmi=="<20 kg/m²",], Y="whz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="<20 kg/m²")
+predlist2 <- spline_meta(d[d$mbmi==">=20 kg/m²",], Y="whz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel=">=20 kg/m²")
 
 plotdf_wlz_mbmi <- rbind(plotdf1,plotdf2)
 
@@ -473,14 +503,16 @@ plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>%
          ci.lb= ci.lb + offset,
          ci.ub= ci.ub + offset)
 
-plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
+plotdf_wlz_mbmi <- plotdf_wlz_mbmi %>% mutate(level = factor(level, levels=c( ">=20 kg/m²", "<20 kg/m²")))
 
 Avar="Maternal BMI"
 brown_color_gradient = c(tableau10[6], "#c99a6b")
 
 p5 <- ggplot() + 
   geom_line(data=plotdf_wlz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
-  scale_color_manual(values=orange_color_gradient, name = paste0( Avar), labels = c(">=18.5", "<18.5")) +
+  scale_color_manual(values=orange_color_gradient, name = paste0( Avar), 
+                     #labels = c(">=18.5", "<18.5")) +
+                     labels = c(">=20 kg/m²", "<20 kg/m²")) +
   scale_fill_manual(values=orange_color_gradient, name = paste0( Avar)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +
@@ -502,10 +534,10 @@ df %>% group_by(studyid, country, subjid) %>% slice(1) %>% ungroup() %>% summari
 
 #Normal weight   Underweight 
 
-predlist1 <- spline_meta(d[d$mbmi=="Normal weight",], Y="haz", Avar="mbmi", overall=T, cen=365)
-plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel="Normal weight")
-predlist2 <- spline_meta(d[d$mbmi=="Underweight",], Y="haz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
-plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="Underweight")
+predlist1 <- spline_meta(d[d$mbmi==">=20 kg/m²",], Y="haz", Avar="mbmi", overall=T, cen=365)
+plotdf1 <- create_plotdf(predlist1, overall=T, stratlevel=">=20 kg/m²")
+predlist2 <- spline_meta(d[d$mbmi=="<20 kg/m²",], Y="haz", Avar="mbmi", overall=T, cen=365, mean_aic=T)
+plotdf2 <- create_plotdf(predlist2, overall=T, stratlevel="<20 kg/m²")
 
 plotdf_laz_mbmi <- rbind(plotdf1,plotdf2)
 
@@ -518,7 +550,7 @@ plotdf_laz_mbmi <- plotdf_laz_mbmi %>%
          ci.lb= ci.lb + offset,
          ci.ub= ci.ub + offset)
 
-plotdf_laz_mbmi <- plotdf_laz_mbmi %>% mutate(level = factor(level, levels=c( "Normal weight", "Underweight")))
+plotdf_laz_mbmi <- plotdf_laz_mbmi %>% mutate(level = factor(level, levels=c( ">=20 kg/m²", "<20 kg/m²")))
 
 
 Avarwt="Maternal BMI"
@@ -526,7 +558,7 @@ Avarwt="Maternal BMI"
 
 p6 <- ggplot() +
   geom_line(data=plotdf_laz_mbmi, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
-  scale_color_manual(values=blue_color_gradient, name = paste0( Avarwt), labels = c(">=18.5", "<18.5")) +
+  scale_color_manual(values=blue_color_gradient, name = paste0( Avarwt), labels = c(">=20 kg/m²", "<20 kg/m²")) +
   scale_fill_manual(values=blue_color_gradient, name = paste0( Avarwt)) +
   scale_x_continuous(limits=c(1,730), expand = c(0, 0),
                      breaks = 0:12*30.41*2, labels = 0:12*2) +

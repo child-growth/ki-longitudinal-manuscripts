@@ -6,8 +6,11 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores_prim <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_2021-08-06.RDS"))
+Zscores_prim <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_2021-09-24.RDS"))
 saveRDS(Zscores_prim, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
+
+Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_mwtkg_2021-10-02.RDS"))
+saveRDS(Zscores_mwtkg, paste0(res_dir, "rf results/longbow results/results_cont_mwtkg.RDS"))
 
 Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
@@ -17,7 +20,7 @@ Zscores_waz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_w
 saveRDS(Zscores_waz, paste0(res_dir, "rf results/longbow results/results_waz.RDS"))
 
 
-bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_2021-08-18.RDS")) #%>% filter(intervention_variable!="fage")
+bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_2021-10-02.RDS")) #%>% filter(intervention_variable!="fage")
 # bin_primary_tz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_tz_2021-08-08.RDS"))
 # fage_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_primary_fage_2021-08-09.RDS"))
 # bin_primary <- bind_rows(bin_primary,bin_primary_tz, fage_primary)
@@ -73,7 +76,7 @@ saveRDS(season_cont_rf, paste0(res_dir, "rf results/longbow results/season_cont_
 season_bin_rf <- readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_rf_bin_results_2021-04-22.RDS"))
 saveRDS(season_bin_rf, paste0(res_dir, "rf results/longbow results/season_bin_rf_results.RDS"))
 
-mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/results_mediation_2021-08-06.RDS"))
+mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/results_mediation_2021-10-02.RDS"))
 saveRDS(mediation, paste0(res_dir, "rf results/longbow results/mediation.RDS"))
 
 stunt_rec <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_stunt_rec_2021-08-22.RDS"))
@@ -111,13 +114,12 @@ saveRDS(enwast_wlz, paste0(res_dir, "rf results/longbow results/results_results_
 
 #Save N's
 Zscores_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_obs_counts_2021-04-22.RDS"))
-Zscores_prim_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_obs_counts_2021-08-06.RDS"))
-bin_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_obs_counts_2021-08-18.RDS"))
-# bin_Ns_tz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_tz_obs_counts_2021-08-08.RDS"))
-# bin_Ns$pers_wast <- factor(bin_Ns$pers_wast)
-# bin_Ns <- bind_rows(bin_Ns, bin_Ns_tz)
+Zscores_prim_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_obs_counts_2021-09-24.RDS"))
+Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_mwtkg_obs_counts_2021-09-27.RDS"))
+saveRDS(Zscores_mwtkg, paste0(res_dir, "rf results/longbow results/results_cont_mwtkg_obs_counts.RDS"))
 
-#bin_other_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_obs_counts_2021-04-23.RDS"))
+
+bin_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_obs_counts_2021-09-23.RDS"))
 bin_other_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_secondary_obs_counts_2021-08-18.RDS"))
 season_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/seasonality_rf_bin_results_obs_counts_2021-04-22.RDS"))
 season_cont_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/seasonality_rf_cont_results_obs_counts_2021-04-22.RDS"))

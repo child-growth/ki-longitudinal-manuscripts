@@ -8,8 +8,9 @@ Zscores<- Zscores_unadj<- Zscores_waz<- bin<-bin_other<-bin_unadj<- mort<- lagwh
 fage <- NULL
 
 Zscores <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
-dim(Zscores)
-table(Zscores$intervention_variable, Zscores$outcome_variable)
+Zscores <- Zscores %>% filter(intervention_variable!="mwtkg")
+Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_mwtkg.RDS"))
+Zscores <- bind_rows(Zscores, Zscores_mwtkg)
 
 Zscores_waz <- readRDS(paste0(res_dir, "rf results/longbow results/results_waz.RDS"))
 
