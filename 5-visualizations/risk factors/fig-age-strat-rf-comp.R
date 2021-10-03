@@ -159,7 +159,7 @@ p_ageRR <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), aes(x=interven
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
-        title = element_text(margin=margin(0,0,-10,0))) +
+        title = element_text(margin=margin(0,0,0,0))) +
   coord_flip(ylim = c(0.5,2.5))
 
 print(p_ageRR)
@@ -195,7 +195,7 @@ p_ageRR_Africa <- ggplot(plotdf[plotdf$region=="Africa",], aes(x=reorder(interve
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
-        title = element_text(margin=margin(0,0,-10,0))) +
+        title = element_text(margin=margin(0,0,0,0))) +
   coord_flip()
 
 p_ageRR_LA <- ggplot(plotdf[plotdf$region=="Latin America",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
@@ -221,7 +221,7 @@ p_ageRR_LA <- ggplot(plotdf[plotdf$region=="Latin America",], aes(x=reorder(inte
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
-        title = element_text(margin=margin(0,0,-10,0))) +
+        title = element_text(margin=margin(0,0,0,0))) +
   coord_flip()
 
 p_ageRR_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=reorder(intervention_level, desc(intervention_level)))) + 
@@ -247,7 +247,7 @@ p_ageRR_SA <- ggplot(plotdf[plotdf$region=="South Asia",], aes(x=reorder(interve
         axis.text.x = element_text(size=10, vjust = 0.5),
         panel.spacing = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
-        title = element_text(margin=margin(0,0,-10,0))) +
+        title = element_text(margin=margin(0,0,0,0))) +
   coord_flip()
 
 

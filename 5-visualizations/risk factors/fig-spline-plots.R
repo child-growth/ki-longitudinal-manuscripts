@@ -305,7 +305,7 @@ p1 <- ggplot() +
   xlab("Child age in months") + ylab("Mean WLZ") +
   #coord_cartesian(ylim=c(-2,1)) +
   ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avarwt)) +
-  theme(legend.position = c(0.8,0.9))
+  theme(legend.position = c(0.8,0.9)
 
 print(p1)
 
