@@ -13,7 +13,7 @@ library(ggplot2)
 vim <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS")) %>% 
   filter(type=="PAR", agecat=="24 months",!is.na(estimate)) %>%
   mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
-par <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont.RDS")) %>% 
+par <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS")) %>% 
   filter(type=="PAR", agecat=="24 months",!is.na(estimate),outcome_variable=="haz"|outcome_variable=="whz")%>%
   mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
 
@@ -211,12 +211,15 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
   guides(color=FALSE, shape=FALSE, size=FALSE, alpha=FALSE) +
   facet_grid(outcome_variable~., labeller = labeller(outcome_variable = capitalized))
 
+
+#print plot
+print(pVIMcombined)
+
+
+
 ggsave(pVIMcombined, file=paste0(BV_dir,"/figures/risk-factor/optx_comp.png"), width=7, height=10)
 
 save(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
 saveRDS(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-object-combined.RDS"))
 
-
-#printplot
-print(pVIMcombined)
 

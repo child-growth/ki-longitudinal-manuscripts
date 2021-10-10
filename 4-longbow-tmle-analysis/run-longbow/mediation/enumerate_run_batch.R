@@ -23,4 +23,5 @@ analyses
 analyses <- analyses %>% filter(A %in% c("fhtcm","mhtcm","mwtkg","mbmi"))
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
+paste0(BV_dir,"/tmle/","mediation","/")
 run_ki_tmle(enumerated_analyses, results_folder="mediation", overwrite = T)

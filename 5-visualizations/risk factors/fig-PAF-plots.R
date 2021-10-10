@@ -125,6 +125,12 @@ dpool <- dpool %>%
     #est_lab=paste0(n,"   ",est_lab)
   ) 
 
+#get effect of strongest RF
+dres <- dpool %>% filter(outcome_variable!="waz",
+                        intervention_variable %in% c("birthlen","meduyrs",
+                                                     "mbmi", "mhtcm")) %>%
+  arrange(outcome_variable, PAF)
+
 #----------------------------------------------------------
 # Plot LAZ PAF
 #----------------------------------------------------------

@@ -21,6 +21,6 @@ source(paste0(here(),"/3-prep-tmle-analysis/10_specify_mortality_analyses.R"))
 source(paste0(here(),"/3-prep-tmle-analysis/11_specify_mediation_analyses.R"))
 source(paste0(here(),"/3-prep-tmle-analysis/12_specify_one-step_analyses.R"))
 source(paste0(here(),"/3-prep-tmle-analysis/13_table1.R"))
-source(paste0(here(),"/3-prep-tmle-analysis/14_calc_mort_pooled_logistic_regressions.R"))
+#source(paste0(here(),"/3-prep-tmle-analysis/14_calc_mort_pooled_logistic_regressions.R"))
 source(paste0(here(),"/3-prep-tmle-analysis/15_R2_estimation.R"))
 

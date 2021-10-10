@@ -370,9 +370,15 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   df$agecat <- gsub(" months", "", df$agecat)
   df$agecat <- factor(df$agecat, levels=unique(df$agecat))
   
+  #convert from per 1000 person-days to episodes per year
+  df$est <- (df$est / 1000) * 365
+  df$lb <- (df$lb / 1000) * 365
+  df$ub <- (df$ub / 1000) * 365
+  
   df_cohort <- df %>% filter(cohort!="pooled")
   df_cohort <- mark_region(df_cohort)
   df <- df %>% filter(cohort=="pooled")
+  
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
     facet_wrap(~region, nrow=1) +
@@ -425,8 +431,8 @@ inc_plot_primary <- inc_combo_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Child age, months",
-                   ylabel='Episodes per 1000\nperson-days at risk',
-                   yrange=c(0,10),
+                   ylabel='Episodes per person-year at risk',
+                   yrange=c(0,5),
                    legend.pos = c(.92,.8))
 inc_plot_primary
 
@@ -770,7 +776,7 @@ co_plot <- ki_desc_flurry_plot(d,
                    yrange=c(0,11),
                    returnData=T)
 co_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
-
+co_plot[[2]] %>% filter(cohort=="pooled", region=="Overall")
 
 co_plot_africa <- ki_desc_plot(d,
                         Disease="co-occurrence",

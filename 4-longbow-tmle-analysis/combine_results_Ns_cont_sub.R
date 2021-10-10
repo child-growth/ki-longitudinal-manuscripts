@@ -7,7 +7,12 @@ library(longbowRiskFactors)
 
 
 d <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_obs_counts.RDS"))
-#drop EE gestational age
+d_mwtkg <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_mwtkg_obs_counts.RDS"))
+head(d)
+d <- d %>% filter(is.na(mwtkg)&is.na(mhtcm)&is.na(mbmi)&is.na(fhtcm))
+d <- bind_rows(d, d_mwtkg)
+
+#replace mwtkg
 # <- d %>% filter(!(studyid=="EE" & !is.na(gagebrth))) %>% subset(., select = -c(fage))
 table(d$fage)
 

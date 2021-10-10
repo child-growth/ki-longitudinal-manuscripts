@@ -613,13 +613,30 @@ d$birthlen <- quantile_rf(d, d$W_birthlen, Acuts=c(0,48, 50, max(d$W_birthlen, n
 d$W_mage[d$studyid=="Burkina Faso Zn" & d$W_mage==20] <- 18
 d$mage <- quantile_rf(d, d$W_mage, Acuts=c(0,20,30,max(d$W_mage, na.rm=T)))
 
-d$mhtcm <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,151,155,max(d$W_mhtcm, na.rm=T)), units="cm")
-d$mwtkg <- quantile_rf(d, d$W_mwtkg, Acuts=c(0,52,58,max(d$W_mwtkg, na.rm=T)), units="kg")
-d$mbmi <- quantile_rf(d, d$W_mbmi, Acuts=c(0,18.5,max(d$W_mbmi, na.rm=T)), labs=c("Underweight", "Normal weight"))
-#d$fage <- quantile_rf(d, d$W_fage, Acuts=c(0,32,38,max(d$W_fage, na.rm=T)))
-d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,167,max(d$W_fhtcm, na.rm=T)), units="cm")
+# d$mhtcm <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,151,155,max(d$W_mhtcm, na.rm=T)), units="cm")
+# d$mbmi <- quantile_rf(d, d$W_mbmi, Acuts=c(0,18.5,max(d$W_mbmi, na.rm=T)), labs=c("Underweight", "Normal weight"))
+d$mhtcm <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,150,max(d$W_mhtcm, na.rm=T)), units="cm")
+d$mbmi <- quantile_rf(d, d$W_mbmi, Acuts=c(0,20,max(d$W_mbmi, na.rm=T)), units="kg/m²")
 
-#d$fhtcm_rf <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,165,175,max(d$W_fhtcm, na.rm=T)), units="cm")
+d$mwtkg <- quantile_rf(d, d$W_mwtkg, Acuts=c(0,45,max(d$W_mwtkg, na.rm=T)), units="kg")
+
+#Make 3-level categories for figures 3a and 3b
+d$mhtcm3 <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,150, 155,max(d$W_mhtcm, na.rm=T)), units="cm")
+d$mbmi3 <- quantile_rf(d, d$W_mbmi, Acuts=c(0,20, 24, max(d$W_mbmi, na.rm=T)), units="kg/m²")
+
+# d$mhtcm2 <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,145,max(d$W_mhtcm, na.rm=T)), units="cm")
+# d$mwtkg2 <- quantile_rf(d, d$W_mwtkg, Acuts=c(0,45,max(d$W_mwtkg, na.rm=T)), units="kg")
+# d$mbmi2 <- quantile_rf(d, d$W_mbmi, Acuts=c(0,18.5,24,max(d$W_mbmi, na.rm=T)), labs=c("Underweight", "Normal weight", "Overweight"))
+# 
+# round(prop.table(table(d$mhtcm))*100,2)
+# round(prop.table(table(d$mhtcm2))*100,2)
+# round(prop.table(table(d$mbmi2))*100,2)
+# round(prop.table(table(d$mwtkg2))*100,2)
+# 
+
+#d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,167,max(d$W_fhtcm, na.rm=T)), units="cm")
+d$fhtcm <- quantile_rf(d, d$W_fhtcm, Acuts=c(0,162,max(d$W_fhtcm, na.rm=T)), units="cm") #Change to just use stunted fathers as the cutoff
+
 d$fage <- quantile_rf(d, d$W_fage, Acuts=c(0,30,35,max(d$W_fage, na.rm=T)))
 
 
@@ -799,13 +816,14 @@ d$nchldlt5 <- relevel(d$nchldlt5, ref="1")
 
 d$gagebrth <- relevel(d$gagebrth, ref="Full or late term")
 
-#maternal BMI (is this measured when pregnant or not? if pregnant, then we may need to change these categories)
+#maternal BMI 
 #<18.5 = underweight
 #>=18.5 and <25 = normal weight (baseline)
 #>=25 and <30 = overweight
 #>=30 = obese
 
-d$mbmi <- relevel(d$mbmi, ref="Normal weight")
+#d$mbmi <- relevel(d$mbmi, ref="Normal weight")
+d$mbmi <- relevel(d$mbmi, ref=">=20 kg/m²")
 
 #maternal height (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3095774/)
 #less than 145 cm
@@ -814,10 +832,12 @@ d$mbmi <- relevel(d$mbmi, ref="Normal weight")
 #155-159.9 cm
 #160.0 cm or greater. (baseline)
 
-d$mhtcm <- relevel(d$mhtcm, ref=">=155 cm")
+#d$mhtcm <- relevel(d$mhtcm, ref=">=155 cm")
+d$mhtcm <- relevel(d$mhtcm, ref=">=150 cm")
 
-#maternal weight?
-d$mwtkg <- relevel(d$mwtkg, ref=">=58 kg")
+#maternal weight
+#d$mwtkg <- relevel(d$mwtkg, ref=">=58 kg")
+d$mwtkg <- relevel(d$mwtkg, ref=">=45 kg")
 
 #mother's/father's education
 #lowest education level = baseline
@@ -834,7 +854,8 @@ d$mage <- relevel(d$mage, ref="[20-30)")
 d$fage <- relevel(d$fage, ref=">=35")
 
 #father height
-d$fhtcm <- relevel(d$fhtcm, ref=">=167 cm")
+#d$fhtcm <- relevel(d$fhtcm, ref=">=167 cm")
+d$fhtcm <- relevel(d$fhtcm, ref=">=162 cm")
 
 #parental education
 d$meducyrs <- relevel(d$meducyrs, ref="High")

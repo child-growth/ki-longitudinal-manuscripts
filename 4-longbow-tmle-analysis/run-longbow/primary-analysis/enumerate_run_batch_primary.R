@@ -29,5 +29,8 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 enumerated_analyses[[1]]  
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/sst_cuminc_nobirth_rf_primary.rdata")
 table(d$birthlen , d$ever_sstunted)
+table(d$mwtkg , d$ever_sstunted)
+table(d$mbmi , d$ever_sstunted)
 
+paste0(BV_dir,"/tmle/","results_bin_primary","/")
 run_ki_tmle(enumerated_analyses, results_folder="results_bin_primary", overwrite = F, skip_failed=T)

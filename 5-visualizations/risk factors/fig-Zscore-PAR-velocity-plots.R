@@ -49,12 +49,14 @@ par_agestrat <- par %>% filter(agecat %in% c(
   outcome_variable %in% c("LAZ velocity", "WAZ velocity", "length velocity", "weight velocity"), !is.na(PAR))  
 
 table(par_agestrat$outcome_variable)
+table(par_agestrat$intervention_variable)
 
 #######################
 # Reviewer response plot
 #######################
 
-df <- par %>% filter(intervention_variable %in% c("mbmi", "mhtcm","mwtkg"), region=="Pooled")
+df <- par %>% filter(intervention_variable %in% c("mbmi", "mhtcm","mwtkg"), region=="Pooled") 
+    
 
 rflevels = unique(df$RFlabel_ref)
 df$RFlabel_ref=factor(df$RFlabel_ref, levels=rflevels)
@@ -62,6 +64,8 @@ unique(df$agecat)
 df$agecat=factor(df$agecat, levels=rev(c("0-3 months","3-6 months","6-9 months",
                                           "9-12 months","12-15 months", "15-18 months",
                                           "18-21 months", "21-24 months")))
+df <- df %>% arrange(outcome_variable, intervention_variable, agecat)
+
 
 plot <-  ggplot(df, aes(x=agecat)) + 
   geom_point(aes(y=-PAR,  color=measure, shape = measure), size = 4) +

@@ -12,6 +12,8 @@ dhaz <- readRDS(file = paste0(dhs_res_dir, "clean-DHS-haz.rds"))
 dwaz <- readRDS(file = paste0(dhs_res_dir, "clean-DHS-waz.rds"))
 dwhz <- readRDS(file = paste0(dhs_res_dir, "clean-DHS-whz.rds"))
 
+prop.table(table(dhaz$agem<6))
+
 #---------------------------------------
 # combine all of the DHS data
 # into a single dataframe
