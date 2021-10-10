@@ -13,7 +13,8 @@ dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 head(dfull)
 
 dfull %>% filter(outcome_variable=="haz", intervention_variable=="mwtkg", agecat=="24 months", type=="PAR")
-dfull %>% filter(outcome_variable=="whz", intervention_variable=="mwtkg", agecat=="24 months", type=="PAR")
+dfull %>% filter(outcome_variable=="whz", intervention_variable=="mbmi", agecat=="24 months", type=="PAR")
+dfull %>% filter(outcome_variable=="whz", intervention_variable=="fhtcm", agecat=="24 months", type=="PAR")
 
 
  unique(dfull$type)
@@ -43,7 +44,7 @@ d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_waz"|
 
 d <- droplevels(d)
 
-
+df <- d %>% filter(intervention_variable=="cleanck", outcome_variable=="haz", agecat=="24 months")
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.Zpar(.)) %>% as.data.frame()

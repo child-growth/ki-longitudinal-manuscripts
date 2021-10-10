@@ -9,7 +9,7 @@ library(longbowRiskFactors)
 d <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_obs_counts.RDS"))
 d_mwtkg <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_mwtkg_obs_counts.RDS"))
 head(d)
-d <- d %>% filter(is.na(mwtkg))
+d <- d %>% filter(is.na(mwtkg)&is.na(mhtcm)&is.na(mbmi)&is.na(fhtcm))
 d <- bind_rows(d, d_mwtkg)
 
 #replace mwtkg

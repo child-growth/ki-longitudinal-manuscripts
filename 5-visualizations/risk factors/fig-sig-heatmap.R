@@ -19,6 +19,9 @@ ate %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", regi
 par %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
 
 
+#stunting recovery results for Jade:
+temp <-rr %>% filter(outcome_variable == "s06rec1824", RR.CI1!=RR.CI2, region=="Pooled") %>% arrange(RR)
+
 #Match columns names
 rr <- rr %>% rename(est=RR, CI.lb=RR.CI1, CI.ub=RR.CI2)
 ate <- ate %>% rename(est=ATE, CI.lb=CI1, CI.ub=CI2)

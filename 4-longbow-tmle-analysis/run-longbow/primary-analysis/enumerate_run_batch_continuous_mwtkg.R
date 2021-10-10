@@ -28,15 +28,19 @@ dim(analyses)
 
 #check data
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
-table(d$mwtkg)
-table(d$mbmi)
+levels(d$mwtkg)
+levels(d$mbmi)
+levels(d$mhtcm)
+levels(d$fhtcm)
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf.Rdata")
-table(d$mwtkg)
-table(d$fhtcm)
-
+levels(d$mwtkg)
+levels(d$mbmi)
+levels(d$mhtcm)
+levels(d$fhtcm)
 
 #specify analyses
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
+paste0(BV_dir,"/tmle/","results_cont_mwtkg","/")
 run_ki_tmle(enumerated_analyses, results_folder="results_cont_mwtkg", overwrite = F, skip_failed = F)
 

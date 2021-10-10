@@ -622,7 +622,7 @@ d$mwtkg <- quantile_rf(d, d$W_mwtkg, Acuts=c(0,45,max(d$W_mwtkg, na.rm=T)), unit
 
 #Make 3-level categories for figures 3a and 3b
 d$mhtcm3 <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,150, 155,max(d$W_mhtcm, na.rm=T)), units="cm")
-d$mbmi3 <- quantile_rf(d, d$W_mbmi, Acuts=c(0,20, 25, max(d$W_mbmi, na.rm=T)), units="kg/m²")
+d$mbmi3 <- quantile_rf(d, d$W_mbmi, Acuts=c(0,20, 24, max(d$W_mbmi, na.rm=T)), units="kg/m²")
 
 # d$mhtcm2 <- quantile_rf(d, d$W_mhtcm, Acuts=c(0,145,max(d$W_mhtcm, na.rm=T)), units="cm")
 # d$mwtkg2 <- quantile_rf(d, d$W_mwtkg, Acuts=c(0,45,max(d$W_mwtkg, na.rm=T)), units="kg")
@@ -823,7 +823,7 @@ d$gagebrth <- relevel(d$gagebrth, ref="Full or late term")
 #>=30 = obese
 
 #d$mbmi <- relevel(d$mbmi, ref="Normal weight")
-d$mbmi <- relevel(d$mbmi, ref="Normal weight")
+d$mbmi <- relevel(d$mbmi, ref=">=20 kg/m²")
 
 #maternal height (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3095774/)
 #less than 145 cm
@@ -854,7 +854,8 @@ d$mage <- relevel(d$mage, ref="[20-30)")
 d$fage <- relevel(d$fage, ref=">=35")
 
 #father height
-d$fhtcm <- relevel(d$fhtcm, ref=">=167 cm")
+#d$fhtcm <- relevel(d$fhtcm, ref=">=167 cm")
+d$fhtcm <- relevel(d$fhtcm, ref=">=162 cm")
 
 #parental education
 d$meducyrs <- relevel(d$meducyrs, ref="High")

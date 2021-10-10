@@ -8,9 +8,13 @@ Zscores<- Zscores_unadj<- Zscores_waz<- bin<-bin_other<-bin_unadj<- mort<- lagwh
 fage <- NULL
 
 Zscores <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
-Zscores <- Zscores %>% filter(intervention_variable!="mwtkg")
+Zscores <- Zscores %>% filter(intervention_variable!="mwtkg", intervention_variable!="mhtcm", intervention_variable!="fhtcm",intervention_variable!="mbmi" )
 Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_mwtkg.RDS"))
+table(Zscores_mwtkg$intervention_level)
 Zscores <- bind_rows(Zscores, Zscores_mwtkg)
+
+#save for optx plots
+saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
 
 Zscores_waz <- readRDS(paste0(res_dir, "rf results/longbow results/results_waz.RDS"))
 

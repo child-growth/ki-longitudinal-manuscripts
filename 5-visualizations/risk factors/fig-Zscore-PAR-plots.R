@@ -5,7 +5,7 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 library(gtable)
-library(gtable)
+library(cowplot)
 
 
 
@@ -154,6 +154,13 @@ rflevels = unique(plotdf$RFlabel_ref)
 plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
 
 
+#get abstract Z-scores
+df <- plotdf %>% filter(outcome_variable!="waz",
+                        intervention_variable %in% c("gagebrth","sex","birthwt","vagbrth","birthlen",
+                                                     "mbmi","mwtkg", "mhtcm")) %>%
+     arrange(outcome_variable, PAR)
+             
+
 
 pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
   geom_point(aes(y=-PAR),  size = 4) +
@@ -229,7 +236,13 @@ fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(2, 1))
 #https://stackoverflow.com/questions/33114380/centered-x-axis-label-for-muliplot-using-cowplot-package
 
 #/data/KI/ki-manuscript-output/figures/manuscript-figure-composites/risk-factor/
-ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=18.6, height=18.3, units = 'cm')
+
+#Nature form
+#ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=18.6, height=18.3, units = 'cm')
+
+ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
+
+
 ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt.png"), width=11, height=8)
 ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt.png"), width=183, height=183/2, units = c("mm"))
 

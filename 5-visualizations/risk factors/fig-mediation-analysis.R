@@ -86,10 +86,10 @@ outcomes <- c(
 pd <- position_dodge(0.4)
 
 #get percent change with including birth characteristics
-plotdf %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
+perc_change = plotdf %>% group_by(intervention_variable, intervention_level, outcome_variable) %>%
   summarise(med=first(ATE), prim=last(ATE)) %>%
   mutate(perc_change=(med-prim)/prim * 100) %>% ungroup %>%
-  mutate(md=median(perc_change), mn=mean(perc_change))
+  mutate(md=median(perc_change), mn=mean(perc_change)) 
 
 
 p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))) + 
@@ -101,7 +101,7 @@ p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))
              switch = "y")+
   labs(x = "Exposure level", y = "Adjusted Z-score difference") +
   geom_hline(yintercept = 0, linetype="dashed") +
-  scale_y_continuous(limits = c(-.75, 0.3), breaks=c(-0.6, -0.4, -0.2, 0, 0.2), labels=scaleFUN, expand = c(0,0)) +
+  scale_y_continuous(limits = c(-.78, 0.22), breaks=c(-0.8,-0.6, -0.4, -0.2, 0, 0.2), labels=scaleFUN, expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,3)]) +  
   ggtitle("LAZ                                                       WLZ")+
   theme(strip.background = element_blank(),
@@ -119,5 +119,5 @@ p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))
   coord_flip()
 
 ggsave(p, file=paste0(fig_dir,"/risk-factor/fig-mediation.png"), width=10, height=6)
-
+p
 

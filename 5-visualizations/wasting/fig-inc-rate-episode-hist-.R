@@ -50,9 +50,22 @@ load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 d <- d %>% filter(measurefreq == "monthly") %>% filter(agedays < 730)
 head(d)
 
+fivenum(d$wast_inc, na.rm = T)
+
 #mean number of wasting episodes per child
 df <- d %>% group_by(studyid, region, country, subjid) %>% 
   summarize(num_wast=sum(wast_inc), first_meas=min(agedays), last_meas=max(agedays), num_meas=n()) 
+
+fivenum(df$num_wast, na.rm = T)
+IQR(df$num_wast, na.rm = T)
+
+#mean number of wasting episodes per child who experiences wasting
+df2 <- d %>% group_by(studyid, region, country, subjid) %>% filter(sum(wast_inc)>0) %>%
+  summarize(num_wast=sum(wast_inc), first_meas=min(agedays), last_meas=max(agedays), num_meas=n()) 
+
+fivenum(df2$num_wast, na.rm = T)
+IQR(df2$num_wast, na.rm = T)
+summary(df2$num_wast)
 
 head(df)
 df <- df  %>% group_by(studyid, country) %>% 
@@ -157,13 +170,13 @@ inc_plot2
 
 full_plot <-  inc_plot2 +
   annotation_custom2(ggplotGrob(p_overall), data=data.frame(region="Overall", agecat="0-3", est=0),
-                     xmin=3, xmax=8.8, ymin=3, ymax=10.8) +
+                     xmin=3, xmax=8.8, ymin=3/2, ymax=10.8/2) +
   annotation_custom2(ggplotGrob(p_SouthAsia), data=data.frame(region="South Asia", agecat="0-3", est=0),
-                     xmin=3, xmax=8.8, ymin=3, ymax=10.8) +
+                     xmin=3, xmax=8.8, ymin=3/2, ymax=10.8/2) +
   annotation_custom2(ggplotGrob(p_Africa), data=data.frame(region="Africa", agecat="12-15", est=0),
-                     xmin=3, xmax=8.8, ymin=3, ymax=10.8) +
+                     xmin=3, xmax=8.8, ymin=3/2, ymax=10.8/2) +
   annotation_custom2(ggplotGrob(p_LatinAmerica), data=data.frame(region="Latin America", agecat="12-15", est=0),
-                     xmin=3, xmax=8.8, ymin=3, ymax=10.8) 
+                     xmin=3, xmax=8.8, ymin=3/2, ymax=10.8/2) 
 full_plot
  
 saveRDS(full_plot, paste0(BV_dir,"/figures/plot-objects/inc_plot_object_inset.rds"))
