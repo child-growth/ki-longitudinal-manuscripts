@@ -45,7 +45,6 @@ main_color <- "#287D8EFF"
 # Clean up plot dataframe
 #----------------------------------------------------------
 
-table(df$outcome_variable)
 df$outcome_variable <- gsub("haz", "LAZ", df$outcome_variable)
 df$outcome_variable <- gsub("whz", "WLZ", df$outcome_variable)
 
@@ -65,7 +64,7 @@ dpool <- df %>% ungroup() %>%
 plotdf <- dpool %>%
   mutate(
     RFgroup = case_when(RFtype %in% c("Household","SES","WASH", "Time") ~ "Household & Environmental Characteristics",
-                        RFtype %in% c("Parent background","Parent anthro" ) ~ "Parental Characteristics",
+                        RFtype %in% c("Parent background","Parent anthro") ~ "Parental Characteristics",
                         RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal Child Characteristics",
                         RFtype==RFtype ~ "At-birth child characteristics"),
     sig=ifelse((ci_lower<0 & ci_upper<0) | (ci_lower>0 & ci_upper>0), 1, 0),
@@ -75,9 +74,10 @@ plotdf <- dpool %>%
     # n= paste0(n, " (",perc_ref,"%)"),
     # est_lab=paste0(n,"   ",est_lab)
   ) #,
-#est_lab=ifelse(sig==1, est_lab, "") already commented
 
-# est_lab_format="N (% shifted)   PIE (95% CI)"
+# est_lab=ifelse(sig==1, est_lab, "") # already commented
+
+# est_lab_format="N (% shifted)   VIM (95% CI)"
 est_lab_format="VIM (95% CI)"
 
 # adds a blank line to row to print column headers
@@ -87,7 +87,7 @@ plotdf <- bind_rows(
     RFlabel="",
     # RFlabel_ref="",
     RFgroup="At-birth child characteristics",
-    # est_lab_title=est_lab_format,
+    est_lab_title=est_lab_format,
     title=1
   ),
   data.frame(
@@ -95,14 +95,14 @@ plotdf <- bind_rows(
     # RFlabel_ref="",
     RFlabel="",
     RFgroup="At-birth child characteristics",
-    # est_lab_title=est_lab_format,
+    est_lab_title=est_lab_format,
     title=1
   ),
   plotdf %>% mutate(title=0)
 )
 
 
-plotdf <- plotdf %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
+plotdf <- plotdf %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal Child Characteristics",  
                                                                   "Parental Characteristics", "Household & Environmental Characteristics"))))
 
 plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, title, -estimate)
@@ -117,9 +117,10 @@ plotdf$RFlabel=factor(plotdf$RFlabel, levels=rflevels)
 pVIM_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel, group=RFgroup, color=RFgroup)) + 
   geom_point(aes(y=-estimate),  size = 1.5) +
   geom_linerange(aes(ymin=-ci_lower, ymax=-ci_upper)) +
-  # geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=1.25) +
-  # geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
-  # geom_text(label="N (% shifted) PIE (95% CI)", y=-0.15, x=4, color="grey20", size=3.25,  face="bold") +
+  geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=1.25) +
+  geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
+  # geom_text(label="VIM (95% CI)", y=-0.15, x=4, color="grey20", size=3.25,  face="bold") +
+  # geom_text(label="N (% shifted) PIE (95% CI)"
   # geom_text(aes(label=n), y=.6, color="grey20", size=3.25) +
   coord_flip(ylim=c(-0.3, 0.48)) +
   labs(x = NULL,
