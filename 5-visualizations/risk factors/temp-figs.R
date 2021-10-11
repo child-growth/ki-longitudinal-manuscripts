@@ -6,23 +6,15 @@ library(gtable)
 
 
 #Load data
-# par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
-
 vim <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS")) %>% 
   filter(type=="PAR", agecat=="24 months",!is.na(estimate)) %>%
   mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
+
 vim <- RMA_clean(vim, outcome="continuous")
-
-unique(vim$intervention_variable)
-unique(vim$outcome_variable)
-unique(vim$intervention_level)
-
-# unique(par$intervention_level)
-# unique(par$intervention_variable)
 
 vim$RFlabel[vim$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
-# vim <- vim %>% mutate(RFlabel_ref = paste0(RFlabel, " shifted to ", intervention_level))
+# vim <- vim %>% mutate(RFlabel_ref = paste0(RFlabel, " shifted to ", intervention_level)) #intervention_level is NA
 
 
 df <- vim %>% subset(., select = c(outcome_variable, intervention_variable, estimate, ci_lower, ci_upper, RFlabel, RFtype)) %>%
@@ -31,6 +23,7 @@ df <- vim %>% subset(., select = c(outcome_variable, intervention_variable, esti
 
 # df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref,  RFtype, n_cell, n)) %>% 
 #   filter(!is.na(PAR)) %>% mutate(measure="PAR")
+
 # df[df$intervention_variable=="hhwealth_quart",]
 # df[is.na(df$n),]
 
@@ -67,13 +60,14 @@ dpool <- df %>% ungroup() %>%
 #----------------------------------------------------------
 # Plot PAR - combined LAZ and WLZ
 #----------------------------------------------------------
-# unique(dpool$RFtype)
+
+
 plotdf <- dpool %>%
   mutate(
-    # RFgroup = case_when(RFtype %in% c("Household","SES","WASH", "Time") ~ "Household & Environmental Characteristics",
-    #                     RFtype %in% c("Parent background","Parent anthro" ) ~ "Parental Characteristics",
-    #                     RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal child characteristics",
-    #                     RFtype==RFtype ~ "At-birth child characteristics"),
+    RFgroup = case_when(RFtype %in% c("Household","SES","WASH", "Time") ~ "Household & Environmental Characteristics",
+                        RFtype %in% c("Parent background","Parent anthro" ) ~ "Parental Characteristics",
+                        RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal Child Characteristics",
+                        RFtype==RFtype ~ "At-birth child characteristics"),
     sig=ifelse((ci_lower<0 & ci_upper<0) | (ci_lower>0 & ci_upper>0), 1, 0),
     est_lab=paste0(sprintf("%0.2f", -estimate)," (",sprintf("%0.2f", -ci_upper),", ",sprintf("%0.2f", -ci_lower),")"),
     # perc_ref= round((1-ref_prev)*100),
@@ -87,45 +81,46 @@ plotdf <- dpool %>%
 est_lab_format="VIM (95% CI)"
 
 # adds a blank line to row to print column headers
-# plotdf <- bind_rows(
-#   data.frame(
-#     outcome_variable="LAZ",             
-#     RFlabel_ref="",               
-#     RFgroup="At-birth child characteristics",
-#     est_lab_title=est_lab_format,
-#     title=1
-#   ),
-#   data.frame(
-#     outcome_variable="WLZ",             
-#     RFlabel_ref="",               
-#     RFgroup="At-birth child characteristics",
-#     est_lab_title=est_lab_format,
-#     title=1
-#   ),
-#   data.frame(
-#     outcome_variable="waz",             
-#     RFlabel_ref="",               
-#     RFgroup="At-birth child characteristics",
-#     est_lab_title=est_lab_format,
-#     title=1
-#   ),
-#   plotdf %>% mutate(title=0)
-# )
+plotdf <- bind_rows(
+  data.frame(
+    outcome_variable="LAZ",
+    RFlabel="",
+    # RFlabel_ref="",
+    RFgroup="At-birth child characteristics",
+    # est_lab_title=est_lab_format,
+    title=1
+  ),
+  data.frame(
+    outcome_variable="WLZ",
+    # RFlabel_ref="",
+    RFlabel="",
+    RFgroup="At-birth child characteristics",
+    # est_lab_title=est_lab_format,
+    title=1
+  ),
+  plotdf %>% mutate(title=0)
+)
 
 
-# plotdf <- plotdf %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
-                                                                  # "Parental Characteristics", "Household & Environmental Characteristics"))))
+plotdf <- plotdf %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
+                                                                  "Parental Characteristics", "Household & Environmental Characteristics"))))
 
-# plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, title, -PAR) 
+plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, title, -estimate)
 plotdf <- plotdf %>% arrange(outcome_variable, -estimate) 
-rflevels = unique(plotdf$RFlabel_ref)
+rflevels = unique(plotdf$RFlabel) # rflevels = unique(plotdf$RFlabel_ref)
+
+plotdf$RFlabel=factor(plotdf$RFlabel, levels=rflevels)
 # plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
 
-pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ")) + 
-  geom_point(aes(y=-estimate),  size = 4) +
+
+
+pVIM_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel, group=RFgroup, color=RFgroup)) + 
+  geom_point(aes(y=-estimate),  size = 1.5) +
   geom_linerange(aes(ymin=-ci_lower, ymax=-ci_upper)) +
-  geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=3.25) +
-  # geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=3.5, fontface = "bold") +
+  # geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=1.25) +
+  # geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
+  # geom_text(label="N (% shifted) PIE (95% CI)", y=-0.15, x=4, color="grey20", size=3.25,  face="bold") +
+  # geom_text(aes(label=n), y=.6, color="grey20", size=3.25) +
   coord_flip(ylim=c(-0.3, 0.48)) +
   labs(x = NULL,
        y = "Adjusted population intervention effect, difference in Z-score") +
@@ -135,62 +130,33 @@ pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ")) +
   scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
   theme(strip.background = element_blank(),
         strip.placement = "top",
-        strip.text = element_text(hjust = 0, size=12,  face="bold"),
-        axis.text.y = element_text(size=10, hjust = 1),
-        axis.text.x = element_text(size=12),
-        axis.title.x = element_text(hjust = 1),
-        plot.title = element_text(hjust = 0),
+        strip.text = element_text(hjust = 0, size=6, face="bold"),
+        axis.text.y = element_text(size=4, hjust = 1),
+        axis.text.x = element_text(size=8),
+        axis.title.x = element_text(hjust = 1, size=6),
+        plot.title = element_text(hjust = 0,size=9),
         axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   guides(shape=FALSE) + 
-  ggtitle("Length-for-age Z-score")
-  # ggforce::facet_col(facets = vars(RFgroup), 
-  #                    scales = "free_y", 
-  #                    space = "free") 
-pPAR_laz
+  ggtitle("Length-for-age Z-score") +
+  #facet_grid(RFgroup~.,  scales="free_y", space="free_y")
+  #facet_wrap(~RFgroup,  scales="free_y", ncol=1)
+  ggforce::facet_col(facets = vars(RFgroup), 
+                     scales = "free_y", 
+                     space = "free") 
+pVIM_laz
 
-# pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
-#   geom_point(aes(y=-PAR),  size = 4) +
-#   geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
-#   geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=3.25) +
-#   geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=3.5, fontface = "bold") +
-#   #geom_text(label="N (% shifted) PIE (95% CI)", y=-0.15, x=4, color="grey20", size=3.25,  face="bold") +
-#   #geom_text(aes(label=n), y=.6, color="grey20", size=3.25) +
-#   coord_flip(ylim=c(-0.3, 0.48)) +
-#   labs(x = NULL,
-#        y = "Adjusted population intervention effect, difference in Z-score") +
-#   geom_hline(yintercept = 0) +
-#   scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5), labels=c("","","0","0.1","0.2","0.3","0.4","0.5")) +
-#   #scale_x_discrete(expand = expansion(add  = c(.5, 1.5))) +
-#   scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
-#   theme(strip.background = element_blank(),
-#         strip.placement = "top",
-#         strip.text = element_text(hjust = 0, size=12,  face="bold"),
-#         axis.text.y = element_text(size=10, hjust = 1),
-#         axis.text.x = element_text(size=12),
-#         axis.title.x = element_text(hjust = 1),
-#         plot.title = element_text(hjust = 0),
-#         axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
-#         plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-#   guides(shape=FALSE) + 
-#   ggtitle("Length-for-age Z-score") +
-#   #facet_grid(RFgroup~.,  scales="free_y", space="free_y")
-#   #facet_wrap(~RFgroup,  scales="free_y", ncol=1)
-#   ggforce::facet_col(facets = vars(RFgroup), 
-#                      scales = "free_y", 
-#                      space = "free") 
-# pPAR_laz
 
 
 #need to add blank spaces or add early wasting
 
-pPAR_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
-  geom_point(aes(y=-PAR),  size = 4) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
-  geom_text(aes(label=est_lab), y=-0.16, color="grey20", size=3.25) +
-  geom_text(aes(label=est_lab_title), y=-0.16, color="black", size=3.5, fontface = "bold") +
-  #coord_flip(ylim=c(-0.185,0.3)) +
-  coord_flip(ylim=c(-0.25,0.3)) +
+
+pVIM_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel, group=RFgroup, color=RFgroup)) + 
+  geom_point(aes(y=-estimate),  size = 1.5) +
+  geom_linerange(aes(ymin=-ci_lower, ymax=-ci_upper)) +
+  # geom_text(aes(label=est_lab), y=-0.16, color="grey20", size=1.25) +
+  # geom_text(aes(label=est_lab_title), y=-0.16, color="black", size=1.5, fontface = "bold") +
+  coord_flip(ylim=c(-0.25,0.25)) +
   labs(x = NULL,
        y = "") +
   geom_hline(yintercept = 0) +
@@ -198,20 +164,20 @@ pPAR_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel_ref
   scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
   theme(strip.background = element_blank(),
         strip.placement = "top",
-        strip.text = element_text(hjust = 0, size=12,  face="bold", color="white"),
+        strip.text = element_text(hjust = 0, size=8,  face="bold", color="white"),
         axis.ticks.y = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(size=12),
-        plot.title = element_text(hjust = 0),
+        axis.text.x = element_text(size=8),
+        plot.title = element_text(hjust = 0, size=9),
         axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
-        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+        plot.margin = unit(c(-0.07, 0, -0.2, 0), "cm")) +
   guides(shape=FALSE) + 
   ggtitle("Weight-for-length Z-score") +
   #facet_grid(RFgroup~.,  scales="free_y")
   ggforce::facet_col(facets = vars(RFgroup), 
                      scales = "free_y", 
                      space = "free") 
-pPAR_wlz
+pVIM_wlz
 
 
 
