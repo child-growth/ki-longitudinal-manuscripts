@@ -193,12 +193,12 @@ pVIMcombined <- ggplot(df, aes(x=-PAR, y=-VIM, color=main_color)) +
   geom_vline(xintercept = 0, linetype="dashed") +
   geom_hline(yintercept = 0, linetype="dashed") +
   geom_point() +
-  geom_label_repel(aes(label=RFlabel), size=2, color="grey30",
+  geom_label_repel(aes(label=RFlabel), size=2, color="grey32",
                    label.size = 0.25, hjust=-0.1, vjust=0,
-                    force = 17.5, max.iter = 2000, nudge_y = .04, nudge_x = 0.09, 
-                    box.padding = 0.4,  segment.alpha = 0.5, segment.size = 0.3,
+                    force = 26.5, max.iter = 2000, nudge_y = .085, nudge_x = 0.17, 
+                    box.padding = 0.82,  segment.alpha = 0.5, segment.size = 0.3,
                    label.padding = 0.1,
-                   point.padding = 0.30,
+                   point.padding = 0.35,
                    na.rm=TRUE,
                    fill = alpha(c("white"),0.85)) +
 

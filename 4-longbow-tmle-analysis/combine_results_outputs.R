@@ -9,9 +9,10 @@ fage <- NULL
 
 Zscores <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 Zscores <- Zscores %>% filter(intervention_variable!="mwtkg", intervention_variable!="mhtcm", intervention_variable!="fhtcm",intervention_variable!="mbmi" )
+season_cont_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_cont_rf_results.RDS"))
 Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_mwtkg.RDS"))
 table(Zscores_mwtkg$intervention_level)
-Zscores <- bind_rows(Zscores, Zscores_mwtkg)
+Zscores <- bind_rows(Zscores, Zscores_mwtkg, season_cont_rf)
 
 #save for optx plots
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
@@ -65,8 +66,6 @@ velocity <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel.RDS"
   
 season <-  readRDS(paste0(res_dir, "rf results/longbow results/seasonality_results.RDS"))
 
-season_cont_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_cont_rf_results.RDS"))
-
 season_bin_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_bin_rf_results.RDS"))
 
 fage <- readRDS(paste0(res_dir, "rf results/longbow results/results_fage_prim.RDS"))
@@ -85,7 +84,7 @@ Zscores <- bind_rows(Zscores, birthvars, enwast_wlz)
 
 d <- bind_rows(Zscores,   Zscores_unadj, Zscores_waz, bin, 
                bin_unadj, lagwhz, velocity, velocity_wlz_quart, stunt_bin_wlz_quart, stunt_rec,
-               season, season_cont_rf, season_bin_rf, morb, mort)
+               season, season_bin_rf, morb, mort)
 unique(d$outcome_variable)
 
 
