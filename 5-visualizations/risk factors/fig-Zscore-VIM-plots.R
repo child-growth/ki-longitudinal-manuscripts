@@ -7,8 +7,8 @@ library(gtable)
 
 #Load data
 vim <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS")) %>% 
-  filter(type=="PAR", agecat=="24 months",!is.na(estimate)) %>%
-  mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
+  filter(type=="PAR", agecat=="24 months",!is.na(estimate)) #%>%
+  # mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
 
 vim <- RMA_clean(vim, outcome="continuous")
 
@@ -19,13 +19,6 @@ vim$RFlabel[vim$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 df <- vim %>% subset(., select = c(outcome_variable, intervention_variable, estimate, ci_lower, ci_upper, RFlabel, RFtype)) %>%
   filter(!is.na(estimate)) %>% mutate(measure="estimate")
-
-
-# df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref,  RFtype, n_cell, n)) %>% 
-#   filter(!is.na(PAR)) %>% mutate(measure="PAR")
-
-# df[df$intervention_variable=="hhwealth_quart",]
-# df[is.na(df$n),]
 
 
 #----------------------------------------------------------
@@ -74,8 +67,6 @@ plotdf <- dpool %>%
     # n= paste0(n, " (",perc_ref,"%)"),
     # est_lab=paste0(n,"   ",est_lab)
   ) #,
-
-# est_lab=ifelse(sig==1, est_lab, "") # already commented
 
 # est_lab_format="N (% shifted)   VIM (95% CI)"
 est_lab_format="VIM (95% CI)"
@@ -183,7 +174,7 @@ pVIM_wlz
 
 
 
-fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(2, 1))
+fig2 = plot_grid(pVIM_laz, pVIM_wlz, ncol = 2, rel_widths = c(2, 1))
 
 #To do:
 #Fix x-axis label position with this:
