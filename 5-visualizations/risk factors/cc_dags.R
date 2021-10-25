@@ -4,8 +4,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 library(dagitty)
 library(ggdag)
-library(ggplot2)
-library(dplyr)
+
 
 generate_dag = function(structural_equation_list, intervention, outcome){
   all_var = names(structural_equation_list$labels)
