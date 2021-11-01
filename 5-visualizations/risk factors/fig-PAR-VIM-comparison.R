@@ -11,11 +11,11 @@ library(ggplot2)
 # par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
 
 vim <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS")) %>% 
-  filter(type=="PAR", agecat=="24 months",!is.na(estimate)) %>%
-  mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
+  filter(type=="PAR", agecat=="24 months",!is.na(estimate))# %>%
+  #mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
 par <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS")) %>% 
-  filter(type=="PAR", agecat=="24 months",!is.na(estimate),outcome_variable=="haz"|outcome_variable=="whz")%>%
-  mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
+  filter(type=="PAR", agecat=="24 months",!is.na(estimate),outcome_variable=="haz"|outcome_variable=="whz") #%>%
+  #mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
 
 d <- left_join(par, vim, by = c("agecat","studyid","country","intervention_variable","outcome_variable","type")) %>% filter(!is.na(estimate.y))
 
