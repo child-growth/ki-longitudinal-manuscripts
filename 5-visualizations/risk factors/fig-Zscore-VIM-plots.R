@@ -2,23 +2,46 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 library(gtable)
-library(gtable)
 
 
-#Load data
+# Load and process data
 vim <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS")) %>% 
   filter(type=="PAR", agecat=="24 months",!is.na(estimate)) #%>%
   # mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
 
-vim <- RMA_clean(vim, outcome="continuous")
+pool.Zpar <- function(d){
+  nstudies <- d %>% summarize(N=n())
+  
+  fit<-NULL
+  try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="REML", measure="GEN"))
+  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="ML", measure="GEN"))}
+  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
+  if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
+  
+  if(is.null(fit)){
+    est<-data.frame(VIM=NA, CI1=NA,  CI2=NA)
+  }else{
+    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
+    colnames(est)<-c("VIM","CI1","CI2")    
+  }
+  est$Nstudies <- nstudies$N
+  rownames(est) <- NULL
+  return(est)
+}
 
-vim$RFlabel[vim$RFlabel=="Gestational age at birth"] <- "Gestational age"
+RMAest <- vim %>%
+  group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
+  do(pool.Zpar(.)) %>% as.data.frame()
 
-# vim <- vim %>% mutate(RFlabel_ref = paste0(RFlabel, " shifted to ", intervention_level)) #intervention_level is NA
+df <- RMA_clean(RMAest, outcome="continuous")
 
+df$RFlabel[df$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
-df <- vim %>% subset(., select = c(outcome_variable, intervention_variable, estimate, ci_lower, ci_upper, RFlabel, RFtype)) %>%
-  filter(!is.na(estimate)) %>% mutate(measure="estimate")
+  
+df <- df %>% subset(., select = c(outcome_variable, intervention_variable, VIM, 
+                                      CI1, CI2, RFlabel, RFtype, Nstudies)) %>%
+  filter(!is.na(VIM)) %>% mutate(measure="VIM")
+
 
 
 #----------------------------------------------------------
@@ -60,16 +83,16 @@ plotdf <- dpool %>%
                         RFtype %in% c("Parent background","Parent anthro") ~ "Parental Characteristics",
                         RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal Child Characteristics",
                         RFtype==RFtype ~ "At-birth child characteristics"),
-    sig=ifelse((ci_lower<0 & ci_upper<0) | (ci_lower>0 & ci_upper>0), 1, 0),
-    est_lab=paste0(sprintf("%0.2f", -estimate)," (",sprintf("%0.2f", -ci_upper),", ",sprintf("%0.2f", -ci_lower),")"),
+    sig=ifelse((CI1<0 & CI2<0) | (CI1>0 & CI2>0), 1, 0),
+    est_lab=paste0(sprintf("%0.2f", -VIM)," (",sprintf("%0.2f", -CI2),", ",sprintf("%0.2f", -CI1),")"),
     # perc_ref= round((1-ref_prev)*100),
-    # n = format(n ,big.mark=",", trim=TRUE),
+    Nstudies = format(Nstudies,big.mark=",", trim=TRUE),
     # n= paste0(n, " (",perc_ref,"%)"),
     # est_lab=paste0(n,"   ",est_lab)
   ) #,
 
 # est_lab_format="N (% shifted)   VIM (95% CI)"
-est_lab_format="VIM (95% CI)"
+est_lab_format="N   VIM (95% CI)"
 
 # adds a blank line to row to print column headers
 plotdf <- bind_rows(
@@ -96,8 +119,8 @@ plotdf <- bind_rows(
 plotdf <- plotdf %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal Child Characteristics",  
                                                                   "Parental Characteristics", "Household & Environmental Characteristics"))))
 
-plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, title, -estimate)
-plotdf <- plotdf %>% arrange(outcome_variable, -estimate) 
+plotdf <- plotdf %>% arrange(outcome_variable, RFgroup, title, -VIM)
+plotdf <- plotdf %>% arrange(outcome_variable, -VIM) 
 rflevels = unique(plotdf$RFlabel) # rflevels = unique(plotdf$RFlabel_ref)
 
 plotdf$RFlabel=factor(plotdf$RFlabel, levels=rflevels)
@@ -106,13 +129,13 @@ plotdf$RFlabel=factor(plotdf$RFlabel, levels=rflevels)
 
 
 pVIM_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel, group=RFgroup, color=RFgroup)) + 
-  geom_point(aes(y=-estimate),  size = 1.5) +
-  geom_linerange(aes(ymin=-ci_lower, ymax=-ci_upper)) +
+  geom_point(aes(y=-VIM),  size = 1.5) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
   geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=1.25) +
   geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
   # geom_text(label="VIM (95% CI)", y=-0.15, x=4, color="grey20", size=3.25,  face="bold") +
   # geom_text(label="N (% shifted) PIE (95% CI)"
-  # geom_text(aes(label=n), y=.6, color="grey20", size=3.25) +
+  geom_text(aes(label=Nstudies), y=.6, color="grey20", size=3.25) +
   coord_flip(ylim=c(-0.3, 0.48)) +
   labs(x = NULL,
        y = "Adjusted population intervention effect, difference in Z-score") +
@@ -144,8 +167,8 @@ pVIM_laz
 
 
 pVIM_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel, group=RFgroup, color=RFgroup)) + 
-  geom_point(aes(y=-estimate),  size = 1.5) +
-  geom_linerange(aes(ymin=-ci_lower, ymax=-ci_upper)) +
+  geom_point(aes(y=-VIM),  size = 1.5) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
   # geom_text(aes(label=est_lab), y=-0.16, color="grey20", size=1.25) +
   # geom_text(aes(label=est_lab_title), y=-0.16, color="black", size=1.5, fontface = "bold") +
   coord_flip(ylim=c(-0.25,0.25)) +
