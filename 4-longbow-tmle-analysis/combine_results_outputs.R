@@ -18,6 +18,7 @@ Zscores <- bind_rows(Zscores, Zscores_mwtkg, season_cont_rf)
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
 
 Zscores_waz <- readRDS(paste0(res_dir, "rf results/longbow results/results_waz.RDS"))
+Zscores_cont18mo <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont18mo.RDS"))
 
 
 bin_primary <- readRDS(paste0(res_dir, "rf results/longbow results/results_bin_primary.RDS"))
@@ -82,7 +83,7 @@ Zscores <- bind_rows(Zscores, birthvars, enwast_wlz)
 
 
 
-d <- bind_rows(Zscores,   Zscores_unadj, Zscores_waz, bin, 
+d <- bind_rows(Zscores,   Zscores_unadj, Zscores_cont18mo, Zscores_waz, bin, 
                bin_unadj, lagwhz, velocity, velocity_wlz_quart, stunt_bin_wlz_quart, stunt_rec,
                season, season_bin_rf, morb, mort)
 unique(d$outcome_variable)

@@ -40,7 +40,7 @@ par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 
 
-par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
+par <- par %>% filter( agecat=="18 months", region=="Pooled", !is.na(PAR)) %>%
   mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
 
 #Get top 10 variables for each
@@ -56,7 +56,7 @@ par %>% filter(outcome_variable!="waz", CI2<0) %>% group_by(outcome_variable) %>
 
 par %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:11) %>% select(intervention_variable) %>% as.data.frame()
 
- 
+
 unique(par$RFlabel_ref)
 
 df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref,  RFtype, n_cell, n)) %>% 
@@ -108,13 +108,13 @@ plotdf <- dpool %>%
                         RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal child characteristics",
                         RFtype==RFtype ~ "At-birth child characteristics"),
     sig=ifelse((CI1<0 & CI2<0) | (CI1>0 & CI2>0), 1, 0),
-    est_lab=paste0(sprintf("%0.2f", -PAR)," (",sprintf("%0.2f", -CI2),", ",sprintf("%0.2f", -CI1),")"),
-                   perc_ref= round((1-ref_prev)*100),
-                   n = format(n ,big.mark=",", trim=TRUE),
-                   n= paste0(n, " (",perc_ref,"%)"),
-    est_lab=paste0(n,"   ",est_lab)
-    ) #,
-    #est_lab=ifelse(sig==1, est_lab, "")
+    est_lab=paste0(sprintf("%0.2f", -PAR)," (",sprintf("%0.2f", -CI2),", ",sprintf("%0.2f", -CI1),")")#,
+    # perc_ref= round((1-ref_prev)*100),
+    # n = format(n ,big.mark=",", trim=TRUE),
+    # n= paste0(n, " (",perc_ref,"%)"),
+    # est_lab=paste0(n,"   ",est_lab)
+  ) #,
+#est_lab=ifelse(sig==1, est_lab, "")
 
 est_lab_format="N (% shifted)   PIE (95% CI)"
 
@@ -144,7 +144,7 @@ plotdf <- bind_rows(
   ),
   plotdf %>% mutate(title=0)
 )
-    
+
 
 plotdf <- plotdf %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
                                                                   "Parental Characteristics", "Household & Environmental Characteristics"))))
@@ -158,8 +158,8 @@ plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
 df <- plotdf %>% filter(outcome_variable!="waz",
                         intervention_variable %in% c("gagebrth","sex","birthwt","vagbrth","birthlen",
                                                      "mbmi","mwtkg", "mhtcm")) %>%
-     arrange(outcome_variable, PAR)
-             
+  arrange(outcome_variable, PAR)
+
 
 
 pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
@@ -169,7 +169,7 @@ pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref
   geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
   #geom_text(label="N (% shifted) PIE (95% CI)", y=-0.15, x=4, color="grey20", size=3.25,  face="bold") +
   #geom_text(aes(label=n), y=.6, color="grey20", size=3.25) +
-  coord_flip(ylim=c(-0.3, 0.48)) +
+  coord_flip(ylim=c(-0.3, 0.55)) +
   labs(x = NULL,
        y = "Adjusted population intervention effect, difference in Z-score") +
   geom_hline(yintercept = 0) +
@@ -190,8 +190,8 @@ pPAR_laz <- ggplot(plotdf %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref
   #facet_grid(RFgroup~.,  scales="free_y", space="free_y")
   #facet_wrap(~RFgroup,  scales="free_y", ncol=1)
   ggforce::facet_col(facets = vars(RFgroup), 
-                   scales = "free_y", 
-                   space = "free") 
+                     scales = "free_y", 
+                     space = "free") 
 pPAR_laz
 
 
@@ -203,7 +203,7 @@ pPAR_wlz <- ggplot(plotdf %>% filter(outcome_variable=="WLZ"), aes(x=RFlabel_ref
   geom_text(aes(label=est_lab), y=-0.16, color="grey20", size=1.25) +
   geom_text(aes(label=est_lab_title), y=-0.16, color="black", size=1.5, fontface = "bold") +
   #coord_flip(ylim=c(-0.185,0.3)) +
-  coord_flip(ylim=c(-0.25,0.25)) +
+  coord_flip(ylim=c(-0.25,0.35)) +
   labs(x = NULL,
        y = "") +
   geom_hline(yintercept = 0) +
@@ -229,7 +229,7 @@ pPAR_wlz
 
 
 
-fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(2, 1))
+pPAR_18mo = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(2, 1))
 
 #To do:
 #Fix x-axis label position with this:
@@ -239,44 +239,4 @@ fig2 = plot_grid(pPAR_laz, pPAR_wlz, ncol = 2, rel_widths = c(2, 1))
 
 #Nature form
 #ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=18.6, height=18.3, units = 'cm')
-
-ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=16, height=8)
-
-
-ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=18.3, height=10, units = 'cm')
-ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt.png"), width=11, height=8)
-ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt2.png"), width=183, height=183/2, units = c("mm"))
-
-
-
-
-
-plotdf_waz <- plotdf %>% filter(outcome_variable=="waz") %>% droplevels()
-plotdf_waz <- plotdf_waz %>% arrange(outcome_variable, RFgroup, -PAR) 
-rflevels = unique(plotdf_waz$RFlabel_ref)
-plotdf_waz$RFlabel_ref=factor(plotdf_waz$RFlabel_ref, levels=rflevels)2
-
-pPAR_waz <- ggplot(plotdf_waz, aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
-  geom_point(aes(y=-PAR),  size = 4) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
-  geom_text(aes(label=est_lab), y=-0.125, color="grey20", size=3.25) +
-  geom_text(aes(label=est_lab_title), y=-0.125, color="black", size=3.5, fontface = "bold") +
-  coord_flip(ylim=c(-0.185,0.552)) +
-  labs(x = NULL,
-       y = "") +
-  geom_hline(yintercept = 0) +
-  scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4)) +
-  scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
-  theme(strip.background = element_blank(),
-        strip.placement = "top",
-        strip.text = element_text(hjust = 0, size=12,  face="bold", color="white"),
-        axis.text.x = element_text(size=12),
-        plot.title = element_text(hjust = 0),
-        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-  guides(shape=FALSE) + 
-  ggtitle("Weight-for-age Z-score") +
-  ggforce::facet_col(facets = vars(RFgroup), 
-                     scales = "free_y", 
-                     space = "free") 
-pPAR_waz
-ggsave(pPAR_waz, file=paste0(BV_dir, "/figures/risk-factor/fig-PAR-waz.png"), height=10, width=8)
+ggsave(pPAR_18mo, file=paste0(BV_dir, "/figures/risk-factor/fig-PAR-18mo.png"), height=6, width=8)

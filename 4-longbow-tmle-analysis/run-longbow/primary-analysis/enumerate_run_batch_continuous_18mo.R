@@ -1,0 +1,61 @@
+
+rm(list=ls())
+try(.libPaths( c( "/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths() ) ))
+
+source(paste0(here::here(), "/0-config.R"))
+try(.libPaths( "~/rlibs" ))
+library(data.table)
+library(longbowtools)
+library(progress)
+library(longbowRiskFactors)
+
+
+# 1. enumerate analysis
+setwd(here("4-longbow-tmle-analysis","run-longbow","primary-analysis"))
+inputs <- "inputs_template.json"
+default_params <- jsonlite::fromJSON(inputs)
+
+#Set to continious
+default_params$script_params$count_Y <- FALSE
+
+#load analyses
+load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
+
+#Drop growth velocity
+dim(analyses)
+analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
+dim(analyses)
+
+#load analyses
+load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuous.rdata"))
+
+#Drop growth velocity
+dim(analyses)
+analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
+dim(analyses)
+
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf.Rdata")
+table(d$agecat)
+d <- d %>% filter(agecat=="18 months") %>% droplevels()
+save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf_18mo.Rdata")
+
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
+table(d$agecat)
+d <- d %>% filter(agecat=="18 months")  %>% droplevels()
+save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_18mo.Rdata")
+
+
+#specify analyses
+analyses$file <- gsub("rf.Rdata","rf_18mo.Rdata",analyses$file)
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
+
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_18mo.Rdata")
+head(d)
+d %>% group_by(sex) %>% summarize(mean(haz, na.rm=T))
+
+#specify analyses
+enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
+#enumerated_analyses <- enumerated_analyses[[1]]
+
+paste0(BV_dir,"/tmle/","results_cont_18mo","/")
+run_ki_tmle(enumerated_analyses, results_folder="results_cont_18mo", overwrite = F, skip_failed = F)
