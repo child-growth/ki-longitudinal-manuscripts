@@ -23,6 +23,7 @@ Zscores <- Zscores %>%
                        waz, haz, whz, muaz, lencm, wtkg, htcm,  tr, arm,  month, brthweek, brthyr,  dead, agedth, 
                        latitude, longitud, causedth))
 
+
 #mark regions 
 Zscores <- mark_region(Zscores)
 table(Zscores$region)
@@ -76,6 +77,14 @@ table(d$month)
 #Rename tanzania
 d$country[d$country=="TANZANIA, UNITED REPUBLIC OF"]<-"TANZANIA"
 table(d$country)
+
+#make cohort-id variable
+d$cohortid <- paste0(d$studyid,"-",d$country)
+table(d$cohortid)
+
+#make exclusion variable
+d$exclude_desc <- ifelse(d$agedays > 25 * 30.4167, 1, 0)
+table(d$exclude_desc)
 
 # Save dataset
 saveRDS(d, ki_manuscript_dataset_path)

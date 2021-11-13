@@ -431,7 +431,7 @@ inc_plot_primary <- inc_combo_plot(d,
                    Age_range="3 months", 
                    Cohort="pooled",
                    xlabel="Child age, months",
-                   ylabel='Episodes per person-year at risk',
+                   ylabel='Episodes per\nperson-year at risk',
                    yrange=c(0,5),
                    legend.pos = c(.92,.8))
 inc_plot_primary

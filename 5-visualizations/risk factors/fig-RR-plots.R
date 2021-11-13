@@ -74,7 +74,11 @@ df <- df %>% filter(outcome_variable %in% c("Ever Stunted", "Ever Wasted", "Ever
 # print(p)
 
 #Delete existing plots
- do.call(file.remove, list(list.files(paste0(BV_dir,"/figures/risk-factor/RR-plots/"), full.names = TRUE)))
+#do.call(file.remove, list(list.files(paste0(BV_dir,"/figures/risk-factor/RR-plots/"), full.names = TRUE)))
+ 
+ i=unique(df$region)[1]
+ j=unique(df$outcome_variable)[1]
+ k=unique(df$intervention_variable)[1]
  
 
 for(i in unique(df$region)){
@@ -108,7 +112,9 @@ for(i in unique(df$region)){
         ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$intervention_variable[1],"\nRegion: ", dpool$region[1])) 
       
 
-      ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png"), height=8, width=10)
+      file_name <- paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png")
+      file_name <- gsub(" ","",file_name)
+      ggsave(p, file=file_name, height=8, width=10)
       
       }
     }
@@ -116,7 +122,7 @@ for(i in unique(df$region)){
 }
 
 
-
+# /home/andrew.mertens/causes/figures/risk-factor/RR-plots/
 
 
 

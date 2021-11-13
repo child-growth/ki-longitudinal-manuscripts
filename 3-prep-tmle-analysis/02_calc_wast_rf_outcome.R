@@ -57,7 +57,7 @@ prev = dmn %>%
 
 # save mean Z scores at each age
 meanWHZ = dmn %>% 
-  filter(agecat=="Birth" | agecat=="6 months" | agecat=="24 months") %>%
+  filter(agecat=="Birth" | agecat=="6 months" | agecat=="18 months" | agecat=="24 months") %>%
   select(studyid,subjid,country,agecat,
          whz)
 

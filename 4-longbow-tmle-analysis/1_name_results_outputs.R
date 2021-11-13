@@ -16,6 +16,10 @@ saveRDS(Zscores_mwtkg, paste0(res_dir, "rf results/longbow results/results_cont_
 Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 
+Zscores18mo <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_18mo_2021-10-31.RDS"))
+saveRDS(Zscores18mo, paste0(res_dir, "rf results/longbow results/results_cont18mo.RDS"))
+
+
 
 Zscores_waz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_waz_2021-07-28.RDS"))
 saveRDS(Zscores_waz, paste0(res_dir, "rf results/longbow results/results_waz.RDS"))
@@ -55,7 +59,7 @@ saveRDS(velocity_wlz_quart, paste0(res_dir, "rf results/longbow results/velocity
 stunt_bin_wlz_quart <- readRDS(paste0(res_dir, "rf results/raw longbow results/stunt_bin_wlz_quart_2021-04-26.RDS"))
 saveRDS(stunt_bin_wlz_quart, paste0(res_dir, "rf results/longbow results/stunt_bin_wlz_quart.RDS"))
 
-velocity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-08-21.RDS"))   
+velocity <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-10-22.RDS"))   
 velocity2 <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_glm_2021-08-11.RDS"))   
 velocity2 <- velocity2[!(paste0(velocity2$intervention_variable,"-", velocity2$outcome_variable) %in% unique(paste0(velocity$intervention_variable,"-", velocity$outcome_variable))), ]
 velocity <- velocity %>% filter(!(intervention_variable %in% c("mwtkg","mhtcm","fhtcm","mbmi")))
