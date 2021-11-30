@@ -96,7 +96,7 @@ for(i in unique(df$region)){
         geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
         geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
                        alpha=0.5, size = 1) +
-        facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
+        facet_wrap(~agecat, scales="free_x", nrow = 5) +   #,  labeller = label_wrap) +
         labs(x = "Exposure level", y = "Relative risk") +
         geom_hline(yintercept = 1) +
         geom_text(aes(x=1.2, y=(max(dpool$RR.CI2))-.1, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
@@ -114,7 +114,7 @@ for(i in unique(df$region)){
 
       file_name <- paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png")
       file_name <- gsub(" ","",file_name)
-      ggsave(p, file=file_name, height=8, width=10)
+      ggsave(p, file=file_name, height=15, width=19)
       
       }
     }
