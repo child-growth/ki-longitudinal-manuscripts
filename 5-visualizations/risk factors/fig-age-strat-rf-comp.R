@@ -118,10 +118,12 @@ max(plotdf$RR.CI2[plotdf$region=="Pooled"])
 
 tail(plotdf)
 
+table(plotdf$intervention_level)
+
 plotdf$intervention_level <- factor(plotdf$intervention_level, levels = rev(c(
   "1","2",  "3+",  "High", "Medium", "Low", 
   "Full or\nlate term", "Early term", "Preterm", "Food\nSecure", "Mildly Food\nInsecure", "Food\nInsecure", 
-  "Q4", "Q3", "Q2", "Q1", ">=155 cm", "[151-155) cm", "<151 cm")))
+  "Q4", "Q3", "Q2", "Q1", ">=150 cm", "<150 cm")))
 # levels(plotdf$intervention_level)
 # plotdf2 <- plotdf %>% filter(region=="Pooled", pooled==1)
 # levels(plotdf2$intervention_level)
@@ -168,6 +170,36 @@ ggsave(p_ageRR, file=paste0(BV_dir, "/figures/risk-factor/fig-age-strat-wast.png
 
 saveRDS(list(p_ageRR=p_ageRR, plotdf=plotdf), file = paste0(BV_dir, "/results/fig-age-strat-wast-plot-objects.RDS"))
 
+
+#Save without cohort-specific for presentation:
+p_ageRR2 <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), aes(x=intervention_level, y=RR, color=Outcome)) + 
+  facet_grid(RFlabel~ Outcome + agecat, scales="free", labeller = labeller(Outcome = outcomes), switch = "y")+
+  geom_hline(yintercept = 1) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
+                 alpha=0.5, size = 1) +
+  geom_point(size = 3) +
+  labs(x = "Exposure level", y = "Adjusted cumulative incidence ratio") +
+  #geom_text(aes(x=.7, y = 2.1, label=paste0("N studies: ",max_Nstudies)), size=2.5,  hjust=1) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, 
+                     #limits = c(0.638,2.43), 
+                     expand=c(0.05,0)) +
+  #coord_cartesian() +
+  scale_colour_manual(values=tableau10[c(2,3)]) +  
+  ggtitle("Stunting incidence                                                                Wasting incidence")+
+  theme(strip.background = element_blank(),
+        legend.position="none",
+        axis.text.y = element_text(size=8, hjust = 1),
+        strip.text.x = element_text(size=10, face = "bold"),
+        strip.text.y = element_text(size=10, angle = 180, face = "bold"),
+        strip.placement = "outside",
+        axis.text.x = element_text(size=10, vjust = 0.5),
+        panel.spacing = unit(0, "lines"),
+        legend.box.background = element_rect(colour = "black"), 
+        title = element_text(margin=margin(0,0,0,0))) +
+  coord_flip(ylim = c(0.75,2))
+
+print(p_ageRR2)
+ggsave(p_ageRR2, file=paste0(BV_dir, "/figures/risk-factor/fig-age-strat-wast-pres.png"), height=8, width=10)
 
 
 

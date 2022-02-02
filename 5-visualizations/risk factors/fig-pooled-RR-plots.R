@@ -36,14 +36,26 @@ head(d)
 
 d <- d %>% filter(region=="Pooled")
 
-d <- d %>% filter(!(outcome_variable %in% c("dead0plus","dead624","dead6plus"))) %>%
+unique(d$outcome_variable)
+unique(d$agecat)
+unique(d$intervention_variable)
+
+d[is.na(d$agecat),]
+
+
+
+d <- d %>% filter(!(outcome_variable %in% c("dead0plus","dead624","dead6plus","s03rec24")),
+                  intervention_variable!="lag_WHZ_quart") %>%
   mutate(outcome_variable=factor(outcome_variable, 
-                                 levels= c("stunted","wasted","sstunted","swasted","ever_wasted","ever_stunted","ever_sstunted","ever_swasted","ever_co","pers_wast","wast_rec90d"),
-                                 labels=c("Stunt Prev.","Wast Prev.","Sev. Stunt Prev.","Sev. Wast Prev.","Wast CI","Stunt CI","Sev. Stunt CI","Sev. Wast CI","Wast+Stunt","Pers. Wast","Wast Recovery")))
-d <- d %>% filter(!(agecat %in% c("15-18 months", "21-24 months","3-6 months",  "6-9 months",  "9-12 months",  "12-15 months"  ))) %>%
-  mutate(agecat=factor(agecat, levels=c("Birth",   "6 months",  "24 months",  "0-24 months",   "0-6 months",     "6-24 months")))
+                                 levels= c("stunted","wasted","sstunted","swasted","ever_wasted","ever_stunted","ever_sstunted","ever_swasted","ever_co","pers_wast","wast_rec90d", "s06rec1824"),
+                                 labels=c("Stunt Prev.","Wast Prev.","Sev. Stunt Prev.","Sev. Wast Prev.","Wast CI","Stunt CI","Sev. Stunt CI","Sev. Wast CI","Wast+Stunt","Pers. Wast","Wast Recovery" ,"Stunt Reversal")))
+d <- d %>% filter(!(agecat %in% c("15-18 months", "21-24 months","3-6 months",  "6-9 months",  "9-12 months",  "12-15 months"  )), !is.na(agecat)) %>%
+  mutate(agecat=factor(agecat, levels=c("Birth",   "6 months",  "24 months",  "0-24 months",   "0-6 months",     "6-24 months", "18-24 months")))
          
 d <- droplevels(d)
+
+table(is.na(d$outcome_variable))
+table(is.na(d$agecat))
 
 d <- d %>% arrange(outcome_variable, agecat) %>%
   mutate(contrast = paste0(outcome_variable,"\nAge: ",agecat),
@@ -76,7 +88,7 @@ RR_plot <- function(d2){
           strip.text.x = element_text(size = 8),
           text = element_text(size=8), 
           legend.position = "none") + 
-    facet_wrap(~contrast, strip.position = "top", ncol=9) +
+    facet_wrap(~contrast, strip.position = "top", ncol=6) +
     ggtitle(d2$RFlabel[1])
 
   ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-RR-",d2$intervention_variable[1],".png"), width=14, height=5.2)
@@ -84,6 +96,10 @@ RR_plot <- function(d2){
   return(p)
 }
 
+
+unique(d$intervention_variable)
+d2 <- d %>% filter(intervention_variable=="mwtkg")
+RR_plot(d2)
 
 # To do:
 # #gridlines in back of plots
