@@ -5,7 +5,9 @@ source(paste0(here::here(), "/0-config.R"))
 #Primary outcomes
 wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS")) %>% mutate(analysis = "Primary")
 stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS")) %>% mutate(analysis = "Primary")
-co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.rds")) %>% mutate(analysis = "Primary", pooling=ifelse(!is.na(country) & pooling!="no pooling", "country",NA))
+co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.rds")) %>% mutate(analysis = "Primary", pooling=ifelse(!is.na(country) & pooling!="no pooling", "country",NA)) %>%
+  filter(disease!="Underweight")
+uwt = readRDS(paste0(res_dir,"underweight_desc_data.RDS")) %>% mutate(analysis = "Underweight")
 
 
 #Fixed effects
@@ -32,7 +34,7 @@ stunt_noKenaba_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe
 
 
 
-d <- bind_rows(stunt, wast, co_desc_data, 
+d <- bind_rows(stunt, wast, co_desc_data,  uwt,
                stunt_fe, wast_fe, co_fe,
                stunt_monthly24, 
                stunt_noProbit, stunt_noProbit_fe, 

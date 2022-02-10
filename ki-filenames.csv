@@ -1,6 +1,8 @@
 variable.type,variable,description
 outcome,stunt,stunting
 outcome,wast,wasting
+outcome,underweight,Underweight
+outcome,underweight,underweight
 outcome,laz,laz
 outcome,laz,LAZ
 outcome,wlz,wlz
