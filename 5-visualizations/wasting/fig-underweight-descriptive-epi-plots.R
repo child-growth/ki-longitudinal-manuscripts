@@ -41,6 +41,13 @@ scale_estimates <- function(d) {
   )
   return(d)
 }
+
+
+#Save all data for table
+saveRDS(d, file=paste0(figdata_dir_underweight,"all-figdata.RDS"))
+
+
+
 #-------------------------------------------------------------------------------------------
 # Mean WLZ by month 
 #-------------------------------------------------------------------------------------------
@@ -73,14 +80,14 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   stat_smooth(aes(fill=region, color=region), se=F, span = 1) +
   geom_hline(yintercept = 0, colour = "black") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10),
-                     limits = c(-1, 0.5)) +
+                     limits = c(-1.75, 0.2)) +
   scale_x_continuous(limits = c(0,24), breaks = seq(0,24,2), labels = seq(0,24,2)) +
   scale_fill_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                     name = 'Region') +
   scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
                      name = 'Region') +
   xlab("Child age, months")+
-  ylab("Weight-for-length Z-score") +
+  ylab("Weight-for-age Z-score") +
   ggtitle("") +
   theme(legend.position="right")
 
@@ -123,7 +130,6 @@ df <- df %>%
 # NEED TO ADD LEGEND
 
 mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
-  
   geom_smooth(aes(y = WLZ, color = region, group = interval, linetype = interval), se = F, span = 1) +
   facet_wrap(~region, nrow=1) +
   geom_hline(yintercept = 0, colour = "black") +
@@ -139,12 +145,11 @@ mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
                                    "fifth_perc"),
                         labels = c("Mean", "95th percentile", "5th percentile")) +
   xlab("Child age, months") +
-  ylab("Weight-for-length Z-score") +
+  ylab("Weight-for-age Z-score") +
   ggtitle("") +
   theme(strip.text = element_text(margin=margin(t=5))) +
   guides(linetype = guide_legend(override.aes = list(col = 'black'), 
-                                 keywidth = 3, keyheight = 1),
-         colour = FALSE) +
+                                 keywidth = 3, keyheight = 1), colour = FALSE) +
   theme(legend.position = "bottom",
         legend.title = element_blank(),
         legend.background = element_blank(),
@@ -180,7 +185,7 @@ prev_plot <- ki_desc_flurry_plot(d,
                                  Age_range="3 months", 
                                  xlabel="Child age, months",
                                  ylabel='Point prevalence (%)',
-                                 yrange=c(0,50),
+                                 #yrange=c(0,50),
                                  returnData=T)
 
 
@@ -192,7 +197,7 @@ prev_plot_africa <- ki_desc_plot(d,
                                  Age_range="3 months", 
                                  xlabel="Child age, months",
                                  ylabel='Point prevalence (%)',
-                                 yrange=c(0,30),
+                                 #yrange=c(0,30),
                                  Region="Africa",
                                  returnData=T
 )
@@ -205,7 +210,7 @@ prev_plot_lam <- ki_desc_plot(d,
                               Age_range="3 months", 
                               xlabel="Child age, months",
                               ylabel='Point prevalence (%)',
-                              yrange=c(0,30),
+                              #yrange=c(0,30),
                               returnData=T,
                               Region="Latin America")
 
@@ -217,7 +222,7 @@ prev_plot_sasia <- ki_desc_plot(d,
                                 Age_range="3 months", 
                                 xlabel="Child age, months",
                                 ylabel='Point prevalence (%)',
-                                yrange=c(0,30),
+                                #yrange=c(0,30),
                                 returnData=T,
                                 Region="South Asia")
 
@@ -459,42 +464,6 @@ saveRDS(inc_plot_primary, file=paste0(BV_dir,"/figures/plot-objects/inc_plot_obj
 
 inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 inc_plot_primary$data %>% arrange(region, agecat)
-# 
-# #-------------------------------------------------------------------------------------------
-# # underweight incidence proportion
-# #-------------------------------------------------------------------------------------------
-# 
-# #duplicate of ip_plot (l. 292) - not updated
-# inc_plot <- ip_plot(
-#   d,
-#   Disease = "Underweight",
-#   Measure = "Incidence proportion",
-#   Birth = "yes",
-#   Severe = "no",
-#   Age_range = "3 months",
-#   Cohort = "pooled",
-#   xlabel = "Child age, months",
-#   h1 = 85,
-#   h2 = 90,
-#   returnData = T
-# )
-# inc_plot
-# 
-# 
-# # define standardized plot names
-# inc_plot_name = create_name(
-#   outcome = "Underweight",
-#   cutoff = 2,
-#   measure = "incidence only",
-#   population = "overall and region-stratified",
-#   location = "",
-#   age = "All ages",
-#   analysis = "primary"
-# )
-# 
-# # save plot and underlying data
-# ggsave(inc_plot$plot, file=paste0(BV_dir,"/figures/underweight/fig-",inc_plot_name,".png"), width=14, height=4.5)
-
 
 #-------------------------------------------------------------------------------------------
 # underweight recovery
@@ -697,7 +666,7 @@ perswast_plot <- ki_desc_flurry_plot(d,
                                      Age_range="6 months", 
                                      xlabel="Child age, months",
                                      ylabel = 'Proportion (%)',
-                                     yrange=c(0,20),
+                                     #yrange=c(0,20),
                                      returnData=T)
 
 perswast_plot_africa <- ki_desc_plot(d,
@@ -709,7 +678,7 @@ perswast_plot_africa <- ki_desc_plot(d,
                                      Cohort="pooled",
                                      xlabel="Child age, months",
                                      ylabel = 'Proportion (%)',
-                                     yrange=c(0,27),
+                                     #yrange=c(0,27),
                                      returnData=T,
                                      Region="Africa")
 
@@ -722,7 +691,7 @@ perswast_plot_lam <- ki_desc_plot(d,
                                   Cohort="pooled",
                                   xlabel="Child age, months",
                                   ylabel = 'Proportion (%)',
-                                  yrange=c(0,27),
+                                  #yrange=c(0,27),
                                   returnData=T,
                                   Region="Latin America")
 
@@ -735,7 +704,7 @@ perswast_plot_sasia <- ki_desc_plot(d,
                                     Cohort="pooled",
                                     xlabel="Child age, months",
                                     ylabel = 'Proportion (%)',
-                                    yrange=c(0,27),
+                                    #yrange=c(0,27),
                                     returnData=T,
                                     Region="South Asia")
 
@@ -752,7 +721,7 @@ perswast_plot_name = create_name(
 )
 
 # save plot and underlying data
-ggsave(perswast_plot[[1]], file=paste0(BV_dir,"/figures/underweight/fig-",perswast_plot_name, ".png"), width=8, height=5)
+ggsave(perswast_plot[[1]], file=paste0(BV_dir,"/figures/underweight/fig-persunderweight.png"), width=8, height=5)
 
 ggsave(perswast_plot_africa$plot, file=paste0(BV_dir,"/figures/underweight/fig-","perswast_plot_africa", ".png"), width=7, height=5)
 ggsave(perswast_plot_lam$plot, file=paste0(BV_dir,"/figures/underweight/fig-","perswast_plot_lam", ".png"), width=10, height=5)
@@ -774,7 +743,7 @@ sevwast_plot <- ki_desc_flurry_plot(d,
                                     Age_range="3 months", 
                                     xlabel="Child age, months",
                                     ylabel='Point prevalence (%)',
-                                    yrange=c(0,13),
+                                    #yrange=c(0,13),
                                     returnData=T)
 
 sevwast_plot_africa <- ki_desc_plot(d,
@@ -786,7 +755,7 @@ sevwast_plot_africa <- ki_desc_plot(d,
                                     Cohort="pooled",
                                     xlabel="Child age, months",
                                     ylabel='Point prevalence (%)',
-                                    yrange=c(0,20),
+                                    #yrange=c(0,20),
                                     Region="Africa",
                                     returnData=T
 )
@@ -800,7 +769,7 @@ sevwast_plot_lam <- ki_desc_plot(d,
                                  Cohort="pooled",
                                  xlabel="Child age, months",
                                  ylabel='Point prevalence (%)',
-                                 yrange=c(0,20),
+                                 #yrange=c(0,20),
                                  returnData=T,
                                  Region="Latin America")
 
@@ -813,7 +782,7 @@ sevwast_plot_sasia <- ki_desc_plot(d,
                                    Cohort="pooled",
                                    xlabel="Child age, months",
                                    ylabel='Point prevalence (%)',
-                                   yrange=c(0,20),
+                                   #yrange=c(0,20),
                                    returnData=T,
                                    Region="South Asia")
 

@@ -151,7 +151,7 @@ ki_desc_strat_plot <- function(d, Disease, Measure,
     scale_x_discrete(expand = expand_scale(add = 1)) +
     
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
-    
+    theme_ki() +
     theme(
       axis.text.x = element_text(margin =
                                    margin(t = 0, r = 0, b = 0, l = 0),
@@ -217,7 +217,8 @@ plot_gagebrth <- ggplot(df %>% filter(V=="gagebrth"),
   xlab("Child age, months")+
   ylab("Weight-for-age Z-score") +
   ggtitle("") +
-  theme(legend.position="right")
+  theme_ki() +
+  theme(legend.position="bottom")
 
 plot_gagebrth
 
@@ -236,7 +237,8 @@ plot_birthwt <- ggplot(df %>% filter(V=="birthwt"),
   xlab("Child age, months")+
   ylab("Weight-for-age Z-score") +
   ggtitle("") +
-  theme(legend.position="right")
+  theme_ki() +
+  theme(legend.position="bottom")
 
 plot_birthwt
 
@@ -265,7 +267,8 @@ plot_birthwt.gagebrth <- ggplot(df %>% filter(V=="birthwt and gagebrth"),
   xlab("Child age, months")+
   ylab("Weight-for-age Z-score") +
   ggtitle("") +
-  theme(legend.position="right")
+  theme_ki() +
+  theme(legend.position="bottom")
 
 plot_birthwt.gagebrth
 
@@ -314,7 +317,8 @@ plot_gagebrth_wlz <- ggplot(df %>% filter(V=="gagebrth"),
   xlab("Child age, months")+
   ylab("Weight-for-length Z-score") +
   ggtitle("") +
-  theme(legend.position="right")
+  theme_ki() +
+  theme(legend.position="bottom")
 
 plot_gagebrth_wlz
 
@@ -333,7 +337,8 @@ plot_birthwt_wlz <- ggplot(df %>% filter(V=="birthwt"),
   xlab("Child age, months")+
   ylab("Weight-for-length Z-score") +
   ggtitle("") +
-  theme(legend.position="right")
+  theme_ki() +
+  theme(legend.position="bottom")
 
 plot_birthwt_wlz
 
@@ -362,7 +367,8 @@ plot_birthwt.gagebrth_wlz <- ggplot(df %>% filter(V=="birthwt and gagebrth"),
   xlab("Child age, months")+
   ylab("Weight-for-length Z-score") +
   ggtitle("") +
-  theme(legend.position="right")
+  theme_ki() +
+  theme(legend.position="bottom")
 
 plot_birthwt.gagebrth_wlz
 
@@ -457,7 +463,7 @@ prev_plot_birthweight_gagebrth_asia$plot
 # Prevalence - wasting
 #-------------------------------------------------------------------------------------------
 
-prev_plot_birthweight <- ki_desc_strat_plot(d,
+prev_plot_birthweight_wast <- ki_desc_strat_plot(d,
                                             Disease="wasting",
                                             Measure="Prevalence",
                                             Vvar="birthwt",
@@ -469,11 +475,11 @@ prev_plot_birthweight <- ki_desc_strat_plot(d,
                                             yrange=c(0,75),
                                             returnData=T)
 
-prev_plot_birthweight$plot
+prev_plot_birthweight_wast$plot
 
 d$gagebrth <- factor(d$gagebrth, levels = c("Full or late term","Early term","Preterm"))
 
-prev_plot_gagebrth <- ki_desc_strat_plot(d,
+prev_plot_gagebrth_wast <- ki_desc_strat_plot(d,
                                          Disease="wasting",
                                          Measure="Prevalence",
                                          Vvar="gagebrth",
@@ -485,9 +491,9 @@ prev_plot_gagebrth <- ki_desc_strat_plot(d,
                                          yrange=c(0,75),
                                          returnData=T)
 
-prev_plot_gagebrth$plot
+prev_plot_gagebrth_wast$plot
 
-prev_plot_birthweight_gagebrth_overall <- ki_desc_strat_plot(d %>% filter(region=="Overall") %>% droplevels(),
+prev_plot_birthweight_gagebrth_overall_wast <- ki_desc_strat_plot(d %>% filter(region=="Overall") %>% droplevels(),
                                                              Disease="wasting",
                                                              Measure="Prevalence",
                                                              Vvar="birthwt and gagebrth",
@@ -500,9 +506,9 @@ prev_plot_birthweight_gagebrth_overall <- ki_desc_strat_plot(d %>% filter(region
                                                              ylabel='Point prevalence - wasting (%)',
                                                              returnData=T)
 
-prev_plot_birthweight_gagebrth_overall$plot
+prev_plot_birthweight_gagebrth_overall_wast$plot
 
-prev_plot_birthweight_gagebrth_africa <- ki_desc_strat_plot(d %>% filter(region=="Africa") %>% droplevels(),
+prev_plot_birthweight_gagebrth_africa_wast <- ki_desc_strat_plot(d %>% filter(region=="Africa") %>% droplevels(),
                                                             Disease="wasting",
                                                             Measure="Prevalence",
                                                             Vvar="birthwt and gagebrth",
@@ -515,9 +521,9 @@ prev_plot_birthweight_gagebrth_africa <- ki_desc_strat_plot(d %>% filter(region=
                                                             ylabel='Point prevalence - wasting (%)',
                                                             returnData=T)
 
-prev_plot_birthweight_gagebrth_africa$plot
+prev_plot_birthweight_gagebrth_africa_wast$plot
 
-prev_plot_birthweight_gagebrth_asia <- ki_desc_strat_plot(d %>% filter(region=="South Asia") %>% droplevels(),
+prev_plot_birthweight_gagebrth_asia_wast <- ki_desc_strat_plot(d %>% filter(region=="South Asia") %>% droplevels(),
                                                           Disease="wasting",
                                                           Measure="Prevalence",
                                                           Vvar="birthwt and gagebrth",
@@ -530,7 +536,172 @@ prev_plot_birthweight_gagebrth_asia <- ki_desc_strat_plot(d %>% filter(region=="
                                                           ylabel='Point prevalence - wasting (%)',
                                                           returnData=T)
 
-prev_plot_birthweight_gagebrth_asia$plot
+prev_plot_birthweight_gagebrth_asia_wast$plot
+
+
+
+#-------------------------------------------------------------------------------------------
+# Cumulative incidence - underweight
+#-------------------------------------------------------------------------------------------
+
+ci_plot_birthweight <- ki_desc_strat_plot(d,
+                                          Disease="underweight",
+                                          Measure="Cumulative incidence",
+                                          Vvar="birthwt",
+                                          Birth="yes",
+                                          Severe="no",
+                                          Age_range="3 months",
+                                          xlabel="Child age, months",
+                                          ylabel='Cumulative incidence- underweight (%)',
+                                          yrange=c(0,100),
+                                          returnData=T)
+
+ci_plot_birthweight$plot
+
+
+ci_plot_gagebrth <- ki_desc_strat_plot(d,
+                                       Disease="underweight",
+                                       Measure="Cumulative incidence",
+                                       Vvar="gagebrth",
+                                       Birth="yes",
+                                       Severe="no",
+                                       Age_range="3 months",
+                                       xlabel="Child age, months",
+                                       ylabel='Cumulative incidence- underweight (%)',
+                                       yrange=c(0,75),
+                                       returnData=T)
+
+ci_plot_gagebrth$plot
+
+ci_plot_birthweight_gagebrth_overall <- ki_desc_strat_plot(d %>% filter(region=="Overall") %>% droplevels(),
+                                                           Disease="underweight",
+                                                           Measure="Cumulative incidence",
+                                                           Vvar="birthwt and gagebrth",
+                                                           Vvar1="birthwt",
+                                                           Vvar2="gagebrth",
+                                                           Birth="yes",
+                                                           Severe="no",
+                                                           Age_range="3 months",
+                                                           xlabel="Child age, months",
+                                                           ylabel='Cumulative incidence- underweight (%)',
+                                                           #yrange=c(0,75),
+                                                           returnData=T)
+
+ci_plot_birthweight_gagebrth_overall$plot
+
+ci_plot_birthweight_gagebrth_africa <- ki_desc_strat_plot(d %>% filter(region=="Africa") %>% droplevels(),
+                                                          Disease="underweight",
+                                                          Measure="Cumulative incidence",
+                                                          Vvar="birthwt and gagebrth",
+                                                          Vvar1="birthwt",
+                                                          Vvar2="gagebrth",
+                                                          Birth="yes",
+                                                          Severe="no",
+                                                          Age_range="3 months",
+                                                          xlabel="Child age, months",
+                                                          ylabel='Cumulative incidence- underweight (%)',
+                                                          #yrange=c(0,75),
+                                                          returnData=T)
+
+ci_plot_birthweight_gagebrth_africa$plot
+
+ci_plot_birthweight_gagebrth_asia <- ki_desc_strat_plot(d %>% filter(region=="South Asia") %>% droplevels(),
+                                                        Disease="underweight",
+                                                        Measure="Cumulative incidence",
+                                                        Vvar="birthwt and gagebrth",
+                                                        Vvar1="birthwt",
+                                                        Vvar2="gagebrth",
+                                                        Birth="yes",
+                                                        Severe="no",
+                                                        Age_range="3 months",
+                                                        xlabel="Child age, months",
+                                                        ylabel='Cumulative incidence- underweight (%)',
+                                                        #yrange=c(0,75),
+                                                        returnData=T)
+
+ci_plot_birthweight_gagebrth_asia$plot
+
+
+
+#-------------------------------------------------------------------------------------------
+# Cumulative incidence - wasting
+#-------------------------------------------------------------------------------------------
+
+ci_plot_birthweight_wast <- ki_desc_strat_plot(d,
+                                               Disease="wasting",
+                                               Measure="Cumulative incidence",
+                                               Vvar="birthwt",
+                                               Birth="yes",
+                                               Severe="no",
+                                               Age_range="3 months",
+                                               xlabel="Child age, months",
+                                               ylabel='Cumulative incidence- wasting (%)',
+                                               yrange=c(0,75),
+                                               returnData=T)
+
+ci_plot_birthweight_wast$plot
+
+d$gagebrth <- factor(d$gagebrth, levels = c("Full or late term","Early term","Preterm"))
+
+ci_plot_gagebrth_wast <- ki_desc_strat_plot(d,
+                                            Disease="wasting",
+                                            Measure="Cumulative incidence",
+                                            Vvar="gagebrth",
+                                            Birth="yes",
+                                            Severe="no",
+                                            Age_range="3 months",
+                                            xlabel="Child age, months",
+                                            ylabel='Cumulative incidence- wasting (%)',
+                                            yrange=c(0,75),
+                                            returnData=T)
+
+ci_plot_gagebrth_wast$plot
+
+ci_plot_birthweight_gagebrth_overall_wast <- ki_desc_strat_plot(d %>% filter(region=="Overall") %>% droplevels(),
+                                                                Disease="wasting",
+                                                                Measure="Cumulative incidence",
+                                                                Vvar="birthwt and gagebrth",
+                                                                Vvar1="birthwt",
+                                                                Vvar2="gagebrth",
+                                                                Birth="yes",
+                                                                Severe="no",
+                                                                Age_range="3 months",
+                                                                xlabel="Child age, months",
+                                                                ylabel='Cumulative incidence- wasting (%)',
+                                                                returnData=T)
+
+ci_plot_birthweight_gagebrth_overall_wast$plot
+
+ci_plot_birthweight_gagebrth_africa_wast <- ki_desc_strat_plot(d %>% filter(region=="Africa") %>% droplevels(),
+                                                               Disease="wasting",
+                                                               Measure="Cumulative incidence",
+                                                               Vvar="birthwt and gagebrth",
+                                                               Vvar1="birthwt",
+                                                               Vvar2="gagebrth",
+                                                               Birth="yes",
+                                                               Severe="no",
+                                                               Age_range="3 months",
+                                                               xlabel="Child age, months",
+                                                               ylabel='Cumulative incidence- wasting (%)',
+                                                               returnData=T)
+
+ci_plot_birthweight_gagebrth_africa_wast$plot
+
+ci_plot_birthweight_gagebrth_asia_wast <- ki_desc_strat_plot(d %>% filter(region=="South Asia") %>% droplevels(),
+                                                             Disease="wasting",
+                                                             Measure="Cumulative incidence",
+                                                             Vvar="birthwt and gagebrth",
+                                                             Vvar1="birthwt",
+                                                             Vvar2="gagebrth",
+                                                             Birth="yes",
+                                                             Severe="no",
+                                                             Age_range="3 months",
+                                                             xlabel="Child age, months",
+                                                             ylabel='Cumulative incidence- wasting (%)',
+                                                             returnData=T)
+
+ci_plot_birthweight_gagebrth_asia_wast$plot
+
 
 
 

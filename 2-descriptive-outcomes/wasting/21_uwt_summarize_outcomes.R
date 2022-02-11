@@ -143,7 +143,15 @@ saveRDS(list(quantile_d=quantile_d,
 
 
 
+#Cumulative inc 6 month intervals
+d6 <- calc.ci.agecat(d, range = 6)
 
+#RE pooled estimates
+ci.data6 <- summary.wast.ci(d6, age.range=6)
+ci.region6 <- d6 %>% group_by(region) %>% do(summary.wast.ci(., age.range=6)$ci.res)
+
+ci.data6$ci.res
+ci.region6
 
 #Cumulative inc 3 month intervals
 d3 <- calc.ci.agecat(d, range = 3)

@@ -273,12 +273,59 @@ pres.res <- bind_rows(
 )
 
 
+#Cumulative incidence
+d3 <- calc.ci.agecat(d, range = 3)
+ci.data <- summary.wast.ci(d3, age.range=3)
+
+ci.birthwt <- d3 %>% filter(!is.na(birthwt)) %>% 
+  group_by(birthwt) %>% do(summary.wast.ci(., age.range = 3, N_filter=5)$ci.res)
+ci.birthwt.region <- d3 %>% filter(!is.na(birthwt)) %>% droplevels() %>%
+  group_by(birthwt, region) %>% do(summary.wast.ci(., age.range = 3, N_filter=5)$ci.res)
+ci.cohort <-
+  ci.data$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub) %>% mutate(V="overall")
+
+ci.res.birthwt <- bind_rows(
+    data.frame(V="birthwt", cohort = "pooled", region = "Overall", ci.birthwt),
+    data.frame(V="birthwt", cohort = "pooled", ci.birthwt.region),
+    ci.cohort
+  )  
+
+
+ci.gagebrth <- d3 %>% filter(!is.na(gagebrth)) %>% 
+  group_by(gagebrth) %>% do(summary.wast.ci(., age.range = 3, N_filter=5)$ci.res)
+ci.gagebrth.region <- d3 %>% filter(!is.na(gagebrth)) %>% droplevels() %>%
+  group_by(gagebrth, region) %>% do(summary.wast.ci(., age.range = 3, N_filter=5)$ci.res)
+
+ci.res.gagebrth <- bind_rows(
+  data.frame(V="gagebrth",cohort = "pooled", region = "Overall", ci.gagebrth),
+  data.frame(V="gagebrth",cohort = "pooled", ci.gagebrth.region)
+)  
+
+
+ci.birthwt.gagebrth <- d3 %>% filter(!is.na(birthwt),!is.na(gagebrth)) %>% 
+  group_by(birthwt,gagebrth) %>% do(summary.wast.ci(., age.range = 3, N_filter=5)$ci.res)
+ci.birthwt.gagebrth.region <- d3 %>% filter(!is.na(birthwt),!is.na(gagebrth)) %>% droplevels() %>%
+  group_by(birthwt,gagebrth, region) %>% do(summary.wast.ci(., age.range = 3, N_filter=5)$ci.res)
+
+ci.res.birthwt.gagebrth <- bind_rows(
+  data.frame(V="birthwt and gagebrth",cohort = "pooled", region = "Overall", ci.birthwt.gagebrth),
+  data.frame(V="birthwt and gagebrth",cohort = "pooled", ci.birthwt.gagebrth.region)
+)  
+
+ci.res <- bind_rows(
+  ci.res.birthwt,
+  ci.res.gagebrth,
+  ci.res.birthwt.gagebrth
+)
+
 
 
 
 underweight_desc_data <- bind_rows(
   data.frame(disease = "underweight", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence",  pres.res),
-  data.frame(disease = "underweight", age_range="1 month",   birth="yes", severe="no", measure= "Mean WLZ",  monthly.whz)
+  data.frame(disease = "underweight", age_range="1 month",   birth="yes", severe="no", measure= "Mean WLZ",  monthly.whz),
+  data.frame(disease = "underweight", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence",  ci.res)
 )
 underweight_desc_data <- droplevels(underweight_desc_data)
 
