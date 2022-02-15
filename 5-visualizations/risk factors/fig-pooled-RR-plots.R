@@ -14,7 +14,11 @@ tableau11 <- c("Black","#1F77B4","#FF7F0E","#2CA02C","#D62728",
                "#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF")
 Ylab <- "Relative Risk"
 scaleFUN <- function(x) sprintf("%.0f", x)
-
+base_breaks <- function(n = 10){
+  function(x) {
+    axisTicks(log10(range(x, na.rm = TRUE)), log = TRUE, n = n)
+  }
+}
 
 clean_nmeans<-function(nmeas){
   nmeas <- round(nmeas/1000)
@@ -75,7 +79,7 @@ RR_plot <- function(d2){
     geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=contrast)) +
     labs(y = "RR", x = "Exposure level") +
     geom_hline(yintercept = 1, linetype = "dashed") +
-    scale_y_continuous(breaks=pretty_breaks(n = 6), trans='log10') +
+    scale_y_continuous(trans = 'log10', breaks=base_breaks()) +
     scale_colour_manual(values=rep(c(tableau10, "black", "black"), each=3), drop=FALSE) +
     scale_fill_manual(values=rep(c(tableau10, "black", "black"), each=3), drop=FALSE) +
     #scale_size_manual(values=c(4,5)) +
@@ -88,14 +92,13 @@ RR_plot <- function(d2){
           strip.text.x = element_text(size = 8),
           text = element_text(size=8), 
           legend.position = "none") + 
-    facet_wrap(~contrast, strip.position = "top", ncol=10) +
+    facet_wrap(~contrast, strip.position = "top", ncol=6) +
     ggtitle(d2$RFlabel[1])
 
-  ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-RR-",d2$intervention_variable[1],".png"), width=14, height=5.2)
+  ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-RR-",d2$intervention_variable[1],".png"), width=14, height=10.2)
   
   return(p)
 }
-
 
 unique(d$intervention_variable)
 d2 <- d %>% filter(intervention_variable=="mwtkg")
@@ -107,5 +110,5 @@ RR_plot(d2)
 
 #Plots over all exposures
 RRplotdf <- d %>% group_by(intervention_variable) %>% do(res=RR_plot(.))
-
 saveRDS(RRplotdf, paste0(BV_dir,"/figures/plot-objects/risk-factor/RRplotdf.RDS"))
+
