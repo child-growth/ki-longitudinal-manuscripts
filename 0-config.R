@@ -102,6 +102,7 @@ BV_dir                           = "/data/KI/ki-manuscript-output"
 fig_dir                           = "/data/KI/ki-manuscript-output/figures/"
 figdata_dir_stunting              = paste0(fig_dir,"stunting/figure-data/")
 figdata_dir_wasting               = paste0(fig_dir,"wasting/figure-data/")
+figdata_dir_underweight               = paste0(fig_dir,"underweight/figure-data/")
 
 
 #################################

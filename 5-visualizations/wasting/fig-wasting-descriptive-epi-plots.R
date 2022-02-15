@@ -221,7 +221,7 @@ prev_plot_sasia <- ki_desc_plot(d,
 
 # define standardized plot names
 prev_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "prevalence",
   population = "overall and region-stratified",
@@ -260,7 +260,7 @@ ip_plot_primary <- ki_wast_ip_flurry_plot(d,
                         legend.pos= c(.0605,.815))
 
 ip_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "incidence",
   population = "overall and region-stratified",
@@ -298,7 +298,7 @@ ip_plot <- ki_wast_ip_flurry_plot(d,
                          returnData=T)
 
 ip_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "incidence",
   population = "overall and region-stratified",
@@ -438,7 +438,7 @@ inc_plot_primary
 
 # define standardized plot names
 inc_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "incidence rate",
   population = "overall and region-stratified",
@@ -481,7 +481,7 @@ inc_plot_primary$data %>% arrange(region, agecat)
 # 
 # # define standardized plot names
 # inc_plot_name = create_name(
-#   outcome = "wasting",
+#   outcome = "underweight",
 #   cutoff = 2,
 #   measure = "incidence only",
 #   population = "overall and region-stratified",
@@ -614,7 +614,7 @@ rec_plot <- rec_combo_plot(d,
 
 # define standardized plot names
 rec_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "recovery",
   population = "overall and region-stratified",
@@ -669,7 +669,7 @@ p <- ggplot(df,aes(y=est,x=agecat)) +
 
 # define standardized plot names
 rec_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "recovery",
   population = "overall",
@@ -740,7 +740,7 @@ perswast_plot_sasia <- ki_desc_plot(d,
 
 # define standardized plot names
 perswast_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "persistent wasting",
   population = "overall and region-stratified",
@@ -819,7 +819,7 @@ co_plot_sasia <- ki_desc_plot(d,
 
 # define standardized plot names
 co_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "co-occurrence of wasting and stunting",
   population = "overall and region-stratified",
@@ -916,7 +916,7 @@ underweight_plot_sasia <- ki_desc_plot(d,
 
 # define standardized plot names
 underweight_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "underweight",
   population = "overall and region-stratified",
@@ -1026,7 +1026,7 @@ muac_plot <- ki_combo_plot2(d,
 
 # define standardized plot names
 muac_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "MUAC-based wasting",
   population = "overall and region-stratified",
@@ -1061,7 +1061,7 @@ ir_sens_plot <- rec_combo_plot(d.ir,
 
 # define standardized plot names
 ir_sens_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 2,
   measure = "incidence rate",
   population = "overall and region-stratified",
@@ -1134,7 +1134,7 @@ sevwast_plot_sasia <- ki_desc_plot(d,
 
 # define standardized plot names
 sevwast_plot_name = create_name(
-  outcome = "wasting",
+  outcome = "underweight",
   cutoff = 3,
   measure = "prevalence",
   population = "overall and region-stratified",
