@@ -75,7 +75,7 @@ RR_plot <- function(d2){
     geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=contrast)) +
     labs(y = "RR", x = "Exposure level") +
     geom_hline(yintercept = 1, linetype = "dashed") +
-    scale_y_continuous(breaks=c(0.125, 0.25, 0.5, 1, 2, 4, 8, 16), trans='log10') +
+    scale_y_continuous(breaks=pretty_breaks(n = 6), trans='log10') +
     scale_colour_manual(values=rep(c(tableau10, "black", "black"), each=3), drop=FALSE) +
     scale_fill_manual(values=rep(c(tableau10, "black", "black"), each=3), drop=FALSE) +
     #scale_size_manual(values=c(4,5)) +
@@ -88,7 +88,7 @@ RR_plot <- function(d2){
           strip.text.x = element_text(size = 8),
           text = element_text(size=8), 
           legend.position = "none") + 
-    facet_wrap(~contrast, strip.position = "top", ncol=6) +
+    facet_wrap(~contrast, strip.position = "top", ncol=10) +
     ggtitle(d2$RFlabel[1])
 
   ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-RR-",d2$intervention_variable[1],".png"), width=14, height=5.2)
