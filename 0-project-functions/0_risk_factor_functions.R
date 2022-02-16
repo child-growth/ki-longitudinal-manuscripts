@@ -311,9 +311,9 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$baseline_level[RMAest$baseline_level=="1" & RMAest$intervention_variable %in% binvars] <- "Yes"
   
   #Att birthweight grams
-  RMAest$intervention_level[RMAest$intervention_level=="Low birth weight"] <- "< 2500 g"
+  RMAest$intervention_level[RMAest$intervention_level=="Low birthweight"] <- "< 2500 g"
   RMAest$intervention_level[RMAest$intervention_level=="Normal or high birthweight"] <- ">= 2500 g"
-  RMAest$baseline_level[RMAest$baseline_level=="Low birth weight"] <- "< 2500 g"
+  RMAest$baseline_level[RMAest$baseline_level=="Low birthweight"] <- "< 2500 g"
   RMAest$baseline_level[RMAest$baseline_level=="Normal or high birthweight"] <- ">= 2500 g"
   
   unique(RMAest$intervention_level)
@@ -327,7 +327,7 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                "<32" , "[32-38)", ">=38",
                                                "<30" , "[30-35)", ">=35",
                                                "<20","[20-30)","<25","[25-30)",">=30",
-                                               "Low", "Medium", "High",                    
+                                               "Low", "Medium", "High",      
                                                #"<162 cm", "[162-167) cm" , ">=167 cm",
                                                "<162 cm",  ">=162 cm",
                                                "Preterm", "Early term", "Full or late term",           

@@ -38,13 +38,11 @@ clean_agecat<-function(agecat){
 d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 head(d)
 
+d$intervention_level[d$intervention_variable=="birthwt" & is.na(d$intervention_level)] <- "< 2500 g"
+
+
 d <- d %>% filter(region=="Pooled")
 
-unique(d$outcome_variable)
-unique(d$agecat)
-unique(d$intervention_variable)
-
-d[is.na(d$agecat),]
 
 
 
@@ -58,6 +56,7 @@ d <- d %>% filter(!(agecat %in% c("15-18 months", "21-24 months","3-6 months",  
          
 d <- droplevels(d)
 
+table(is.na(d$intervention_level ))
 table(is.na(d$outcome_variable))
 table(is.na(d$agecat))
 
@@ -101,7 +100,7 @@ RR_plot <- function(d2){
 }
 
 unique(d$intervention_variable)
-d2 <- d %>% filter(intervention_variable=="mwtkg")
+d2 <- d %>% filter(intervention_variable=="birthwt")
 RR_plot(d2)
 
 # To do:
