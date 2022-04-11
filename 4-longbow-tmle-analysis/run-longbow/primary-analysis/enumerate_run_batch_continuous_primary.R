@@ -36,7 +36,7 @@ table(d$country, is.na(d$sex))
 table(d$studyid, d$country)
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_prim.Rdata")
 
-
+analyses$strata
 #specify analyses
 analyses$file <- gsub("rf.Rdata","rf_prim.Rdata",analyses$file)
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)

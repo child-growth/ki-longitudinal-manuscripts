@@ -53,6 +53,28 @@ birthstrat_stats_plot
 
 
 
+
+birthstrat_stats_plotno_cohort <- ggplot(d,aes(y=est,x=born_wast_lab)) +
+  geom_errorbar(aes(color=born_wast_lab, ymin=lb, ymax=ub), width = 0.5) +
+  geom_point(aes(fill=born_wast_lab, color=born_wast_lab), size = 3) +
+  xlab("")+
+  ggtitle("Outcome by birth status among children 6-24 months") +
+  ylab("") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  scale_color_manual(values=cbbPalette[-1]) + 
+  scale_fill_manual(values=cbbPalette[-1]) + 
+  theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
+  theme(axis.text.x = element_text(margin =  
+                                     margin(t = 0, r = 0, b = 0, l = 0),
+                                   size = 12))+ #,
+  #angle = 30, hjust = 0.5, vjust=0.5)) +
+  theme(axis.title.y = element_text(size = 12)) +
+  facet_wrap(~measure_lab, nrow=1, scales="free_y", strip.position = "left") +
+  theme(strip.background = element_blank(), strip.placement = "outside")
+birthstrat_stats_plotno_cohort
+
+
+
 # save plot and underlying data
 ggsave(birthstrat_stats_plot, file=paste0(BV_dir,"/figures/wasting/fig-birth-stratified-outcomes.png"), width=8, height=5)
 ggsave(birthstrat_stats_plot, file=paste0(BV_dir,"/figures/wasting/fig-birth-stratified-outcomes_alt.png"), width=7, height=4)

@@ -96,6 +96,17 @@ rec_violin_plot = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) +
 rec_violin_plot
 
 
+rec_violin_plot_no_cohort = ggplot(df,aes(x=agecat, y=recZ, fill = agecat)) + 
+  geom_violin(alpha=0.2, draw_quantiles = c(0.25, 0.5, 0.75)) + 
+  geom_text(aes(y=firstMedianRecZ+0.1,  label=(round(firstMedianRecZ,2))), hjust=.5) +
+  ylab("Mean Weight-for-length Z-score\nwithin 3 months of recovery")+
+  xlab("Age at wasting episode onset")+
+  geom_hline(yintercept = -2, linetype="dashed") +
+  scale_fill_manual(values=rep("grey30", 4)) +
+  coord_cartesian(ylim=c(-3,2))
+rec_violin_plot_no_cohort
+
+
 # define standardized plot names
 rec_violin_name = create_name(
   outcome = "wasting",

@@ -127,3 +127,6 @@ ggsave(primary_plot, filename = paste0(fig_dir, "stunting/fig-stunt-2-inc-overal
        width=12, height=4)
 ggsave(monthly_plot, filename = paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region_cohort--allage-month24.png"),
        width=12, height=4)
+
+
+

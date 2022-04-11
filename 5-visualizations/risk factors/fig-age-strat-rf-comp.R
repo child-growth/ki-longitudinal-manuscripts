@@ -172,7 +172,7 @@ saveRDS(list(p_ageRR=p_ageRR, plotdf=plotdf), file = paste0(BV_dir, "/results/fi
 
 
 #Save without cohort-specific for presentation:
-p_ageRR2 <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), aes(x=intervention_level, y=RR, color=Outcome)) + 
+p_ageRR2 <- ggplot(plotdf %>% filter(region=="Pooled", RFlabel!="Mother's\nheight", pooled==1), aes(x=intervention_level, y=RR, color=Outcome)) + 
   facet_grid(RFlabel~ Outcome + agecat, scales="free", labeller = labeller(Outcome = outcomes), switch = "y")+
   geom_hline(yintercept = 1) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=Outcome),
@@ -185,7 +185,7 @@ p_ageRR2 <- ggplot(plotdf %>% filter(region=="Pooled", pooled==1), aes(x=interve
                      expand=c(0.05,0)) +
   #coord_cartesian() +
   scale_colour_manual(values=tableau10[c(2,3)]) +  
-  ggtitle("Stunting incidence                                                                Wasting incidence")+
+  ggtitle("Stunting incidence                   Wasting incidence")+
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=8, hjust = 1),

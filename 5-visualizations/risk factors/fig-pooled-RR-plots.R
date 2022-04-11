@@ -78,7 +78,7 @@ RR_plot <- function(d2){
     geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=contrast)) +
     labs(y = "RR", x = "Exposure level") +
     geom_hline(yintercept = 1, linetype = "dashed") +
-    scale_y_continuous(trans = 'log10', breaks=base_breaks()) +
+    scale_y_continuous(trans = 'log10', breaks=base_breaks(n = 5)) +
     scale_colour_manual(values=rep(c(tableau10, "black", "black"), each=3), drop=FALSE) +
     scale_fill_manual(values=rep(c(tableau10, "black", "black"), each=3), drop=FALSE) +
     #scale_size_manual(values=c(4,5)) +
@@ -87,20 +87,21 @@ RR_plot <- function(d2){
           panel.spacing = unit(0, "lines"),
           #plot.title = element_text(hjust = 0.5),
           strip.background = element_blank(),
-          axis.text.x = element_text(size = 6),
+          axis.text.x = element_text(size = 8),
+          axis.text.y = element_text(size = 6),
           strip.text.x = element_text(size = 8),
           text = element_text(size=8), 
           legend.position = "none") + 
     facet_wrap(~contrast, strip.position = "top", ncol=6) +
     ggtitle(d2$RFlabel[1])
 
-  ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-RR-",d2$intervention_variable[1],".png"), width=14, height=10.2)
+  ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/RR-plots/fig-RR-",d2$intervention_variable[1],".png"), width=7, height=5.1)
   
   return(p)
 }
 
 unique(d$intervention_variable)
-d2 <- d %>% filter(intervention_variable=="birthwt")
+d2 <- d %>% filter(intervention_variable=="sex")
 RR_plot(d2)
 
 # To do:
@@ -110,4 +111,6 @@ RR_plot(d2)
 #Plots over all exposures
 RRplotdf <- d %>% group_by(intervention_variable) %>% do(res=RR_plot(.))
 saveRDS(RRplotdf, paste0(BV_dir,"/figures/plot-objects/risk-factor/RRplotdf.RDS"))
+
+
 

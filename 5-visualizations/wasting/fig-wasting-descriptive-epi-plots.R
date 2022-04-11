@@ -179,6 +179,17 @@ prev_plot <- ki_desc_flurry_plot(d,
                      yrange=c(0,24),
                      returnData=T)
 
+prev_plot_no_cohort <- ki_desc_plot(d,
+                                 Disease="Wasting",
+                                 Measure="Prevalence", 
+                                 Birth="yes", 
+                                 Severe="no", 
+                                 Age_range="3 months", 
+                                 xlabel="Child age, months",
+                                 ylabel='Point prevalence (%)',
+                                 yrange=c(0,24),
+                                 returnData=T)
+
 temp<-prev_plot[[2]] %>% filter(region=="South Asia",agecat=="Birth")
 temp<-prev_plot[[2]] %>% filter(region=="Overall",agecat=="24")
 
@@ -269,6 +280,20 @@ ip_plot_name = create_name(
   analysis = "primary"
 )
 
+ip_plot_no_cohort <- ki_wast_ip_flurry_plot(d %>% filter(pooling!="no pooling"),
+                                            Disease="Wasting",
+                                            #Measure="Incidence proportion",
+                                            Measure=c("Cumulative incidence", "Incidence proportion"), 
+                                            Severe="no", 
+                                            Age_range="3 months", 
+                                            # Cohort="pooled",
+                                            Birth = "yes",
+                                            xlabel="Child age, months",
+                                            legend.pos = c(.07,.8),
+                                            returnData=F)
+
+ip_plot_no_cohort + ggtitle("Wasting incidence")
+
 # save plot and underlying data
 ggsave(ip_plot_primary[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",ip_plot_name, ".png"), width=14, height=3)
 
@@ -296,6 +321,8 @@ ip_plot <- ki_wast_ip_flurry_plot(d,
                          Birth = "strat",
                          # yrange=c(0,60),
                          returnData=T)
+
+
 
 ip_plot_name = create_name(
   outcome = "underweight",

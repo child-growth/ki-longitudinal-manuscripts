@@ -357,3 +357,75 @@ pmorb_flurry
 
 #Save plot object
 saveRDS(list(pmort_flurry,pmorb_flurry), file=paste0(BV_dir,"/results/rf_mort+morb-no-overlap_plots-seperated_objects.RDS"))
+
+
+
+
+
+#Without cohort-specific estimates
+unique(p_data_pooled$outcome_variable)
+
+pmort <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative hazard of\nmortality before 24 months") %>%
+                  arrange(RR) %>% mutate(cgf_cat=factor(cgf_cat, levels=unique(cgf_cat))),
+                       aes(x=cgf_cat)) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), color="#287D8EFF") +
+  geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
+  labs(y = "", x = "CGF Exposure prior\nto death or censoring") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
+  scale_size_manual(values=c(4,5)) + 
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.placement = "outside",
+        panel.spacing = unit(0, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        strip.background = element_blank(),
+        text = element_text(size=16), 
+        legend.position = "none") + 
+  facet_wrap(~outcome_variable, ncol=1, strip.position = "bottom") +
+  coord_flip(ylim=c(0.4,16))
+pmort
+
+p_co <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative risk of concurrent\nwasting and stunting at 18mo") %>%
+                 arrange(RR) %>% mutate(cgf_cat=factor(cgf_cat, levels=unique(cgf_cat))),
+                       aes(x=cgf_cat)) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), color="#287D8EFF") +
+  geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
+  labs(y = "", x = "CGF Exposure: cumulative\nincidence under 6 mo.") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
+  #scale_colour_manual(values=cbbPalette[-1]) +
+  scale_size_manual(values=c(4,5)) + 
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.placement = "outside",
+        panel.spacing = unit(0, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        strip.background = element_blank(),
+        text = element_text(size=16), 
+        #axis.text.y = element_blank(),
+        legend.position = "none") + 
+  facet_wrap(~outcome_variable, ncol=2, strip.position = "bottom") +
+  coord_flip(ylim=c(0.9,10))
+p_co
+
+
+p_pers <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative risk of\npersistent wasting from 6-24mo") %>%
+                   arrange(RR) %>% mutate(cgf_cat=factor(cgf_cat, levels=unique(cgf_cat))),
+               aes(x=cgf_cat)) +
+  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), color="#287D8EFF") +
+  geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
+  labs(y = "", x = "CGF Exposure: cumulative\nincidence under 6 mo.") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
+  #scale_colour_manual(values=cbbPalette[-1]) +
+  scale_size_manual(values=c(4,5)) + 
+  scale_shape_manual(values=c(16,21)) +
+  theme(strip.placement = "outside",
+        panel.spacing = unit(0, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        strip.background = element_blank(),
+        text = element_text(size=16), 
+        #axis.text.y = element_blank(),
+        legend.position = "none") + 
+  facet_wrap(~outcome_variable, ncol=2, strip.position = "bottom") +
+  coord_flip(ylim=c(0.9,10))
+p_pers
