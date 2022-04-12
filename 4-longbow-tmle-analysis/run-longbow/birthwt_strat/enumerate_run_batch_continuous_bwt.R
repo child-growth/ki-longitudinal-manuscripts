@@ -24,7 +24,7 @@ load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuou
 #Drop growth velocity
 dim(analyses)
 analyses <- analyses %>% filter(Y=="haz" | Y=="whz", !(A %in% c("perdiar24","predfeed3","predfeed6","predfeed36","exclfeed3",
-                                                                 "exclfeed6","exclfeed36", "anywast06","pers_wast","fhtcm","brthmon","month","gagebrth","birthwt","birthlen","enstunt","enwast")))
+                                                                 "exclfeed6","exclfeed36", "anywast06","pers_wast","brthmon","month","gagebrth","birthwt","birthlen","enstunt","enwast")))
 dim(analyses)
 
 analyses$strata
@@ -56,5 +56,6 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
 run_ki_tmle(enumerated_analyses, results_folder="results_cont_bwt_strat", overwrite = F, skip_failed = F)
+
 
 
