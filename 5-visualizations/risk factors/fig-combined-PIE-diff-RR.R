@@ -33,6 +33,17 @@ df <- bind_rows(
 
 saveRDS(df, file=paste0(here::here(),"/data/temp_plotdf.RDS"))
 
+#offline
+df <- readRDS(paste0(here::here(),"/data/temp_plotdf.RDS"))
+head(df)
+
+table(df$parameter)
+table(df$outcome_variable)
+
+df <- df %>% filter(region=="Pooled", outcome_variable=="haz"| outcome_variable=="whz")
+table(df$parameter)
+
+
 
 par <- par %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
 
