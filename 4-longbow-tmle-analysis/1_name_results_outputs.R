@@ -6,8 +6,10 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-# Zscores_prim <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_2021-09-24.RDS"))
-# saveRDS(Zscores_prim, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
+Zscores_bwt_strat <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_2022-04-12.RDS"))
+head(Zscores_bwt_strat)
+saveRDS(Zscores_bwt_strat, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat.RDS"))
+
 
 Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_mwtkg_2021-10-03.RDS"))
 table(Zscores_mwtkg$intervention_variable, Zscores_mwtkg$intervention_level)
