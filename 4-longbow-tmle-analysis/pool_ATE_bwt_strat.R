@@ -65,11 +65,11 @@ plotdf <- RMAest_clean %>% filter(agecat=="24 months") %>% mutate(RF_lev = paste
 
 
 p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=birthwt)) + 
-  geom_point(aes(y=ATE, color=birthwt, fill=birthwt), position=position_dodge(width=0.5), size = 3) +
-  geom_linerange(aes(ymin=CI1, ymax=CI2, color=birthwt), position=position_dodge(width=0.5), alpha=0.5, size = 1) +
+  geom_point(aes(y=ATE, color=birthwt, fill=birthwt), position=position_dodge(width=0.8), size = 3) +
+  geom_linerange(aes(ymin=CI1, ymax=CI2, color=birthwt), position=position_dodge(width=0.8), alpha=0.5, size = 1) +
   labs(x = "Exposure", y = "ATE") +
   geom_hline(yintercept = 0) +
-  coord_flip(ylim =c(-0.5, 0.5)) +
+  coord_flip(ylim =c(-1.2, 1.2)) +
   facet_grid(~outcome_variable) +
   scale_fill_manual(values=tableau10[1:2]) +
   scale_colour_manual(values=tableau10[1:2]) +
@@ -78,7 +78,9 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=birthwt)) +
         axis.text.y = element_text(size=12),
         strip.text.x = element_text(size=14),
         axis.text.x = element_text(size=10), 
-        panel.spacing = unit(0, "lines")) 
+        panel.spacing = unit((0), "lines")) 
 p_bw_strat
+
+ggsave(p_bw_strat, filename = "bwstrat.png",height = 15, width = 5, limitsize = FALSE)
 
 
