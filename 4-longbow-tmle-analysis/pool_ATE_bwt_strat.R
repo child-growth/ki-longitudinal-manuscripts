@@ -81,6 +81,6 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=birthwt)) +
         panel.spacing = unit((0), "lines")) 
 p_bw_strat
 
-ggsave(p_bw_strat, filename = "bwstrat.png",height = 15, width = 5, limitsize = FALSE)
+ggsave(p_bw_strat, filename = "bwstrat.png",height = 8, width = 5)
 
 
