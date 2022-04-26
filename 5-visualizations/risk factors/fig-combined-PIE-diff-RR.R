@@ -3,8 +3,6 @@
 # mean differences -> estimate, ci_lower, ci_upper; unsure how to merge
 # CIR -> RR, RR.CI1, RR.CI2; merge using RFlabel, RFtype, or RFlabel_ref?
 
-# only include moderate stunting/wasting (remove sstunted/sswasted)
-
 #Nature update- combine PIE, mean diff, and RR in one plot
 
 rm(list=ls())
@@ -57,13 +55,12 @@ CIR$RFlabel[CIR$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% day
 CIR$RFlabel[CIR$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
 CIR$RFlabel[CIR$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
+# Only include moderate stunting and wasting
+CIR <- CIR %>% filter(outcome_variable == "ever_stunted" | outcome_variable == "ever_wasted")
+table(CIR$outcome_variable)
+
 CIR <- CIR %>% filter(agecat=="6-24 months", region=="Pooled", !is.na(RR)) %>%
   mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
-
-dim(CIR)
-
-CIR_no_NA <- CIR %>% filter(!is.na(PAR))
-dim(CIR_no_NA)
 
 #Get top 10 variables for each
 CIR %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:10) %>% select(outcome_variable, intervention_variable, RR)
@@ -82,9 +79,113 @@ CIR %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arran
 unique(CIR$RFlabel_ref)
 
 df_CIR <- CIR %>% subset(., select = c(outcome_variable, intervention_variable, RR, RR.CI1, RR.CI2, RFlabel, RFlabel_ref,  RFtype)) %>% 
-  filter(!is.na(RR)) %>% mutate(measure="CIR")
+  filter(!is.na(RR)) %>% mutate(parameter="CIR")
+
 df_CIR[df_CIR$intervention_variable=="hhwealth_quart",]
 df_CIR[is.na(df_CIR$n),]
+# -------------------------------------------------------------------------------------------------------------------------------------
+#df_CIR$outcome_variable <- gsub("y_rate_haz", "HAZ velocity", df_CIR$outcome_variable)
+#df_CIR$outcome_variable <- gsub("y_rate_len", "Length velocity", df_CIR$outcome_variable)
+#df_CIR$outcome_variable <- gsub("y_rate_wtkg", "Weight velocity", df_CIR$outcome_variable)
+df_CIR$outcome_variable <- gsub("ever_stunted", "LAZ", df_CIR$outcome_variable)
+df_CIR$outcome_variable <- gsub("ever_wasted", "WLZ", df_CIR$outcome_variable)
+
+
+dpool_CIR <- df_CIR %>% ungroup() %>%
+  filter(outcome_variable %in% c("LAZ", "WLZ"), #, "waz" ),
+         !is.na(intervention_variable)) %>%
+  #mutate(ref_prev=n_cell/n) %>%
+  group_by(intervention_variable, 
+           outcome_variable) 
+
+unique(dpool_CIR$RFtype)
+plotdf_CIR <- dpool_CIR %>%
+  mutate(
+    RFgroup = case_when(#RFtype %in% c("Household","SES","WASH", "Time") ~ "Household & Environmental Characteristics",
+                        #"Time" is missing
+                        RFtype %in% c("Household","SES","WASH") ~ "Household & Environmental Characteristics",
+                        RFtype %in% c("Parent background","Parent anthro" ) ~ "Parental Characteristics",
+                        RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal child characteristics",
+                        RFtype==RFtype ~ "At-birth child characteristics"),
+    sig=ifelse((RR.CI1<0 & RR.CI2<0) | (RR.CI1>0 & RR.CI2>0), 1, 0),
+    est_lab=paste0(sprintf("%0.2f", -RR)," (",sprintf("%0.2f", -RR.CI2),", ",sprintf("%0.2f", -RR.CI1),")"),
+    #perc_ref= round((1-ref_prev)*100),
+    #n = format(n ,big.mark=",", trim=TRUE),
+    #n= paste0(n, " (",perc_ref,"%)"),
+    #est_lab=paste0(n,"   ",est_lab)
+  ) #,
+#est_lab=ifelse(sig==1, est_lab, "")
+
+est_lab_format="N (% shifted)   PIE (95% CI)"
+
+plotdf_CIR <- bind_rows(
+  data.frame(
+    outcome_variable="LAZ",             
+    RFlabel_ref="",               
+    RFgroup="At-birth child characteristics",
+    est_lab_title=est_lab_format,
+    title=1
+  ),
+  data.frame(
+    outcome_variable="WLZ",             
+    RFlabel_ref="",               
+    RFgroup="At-birth child characteristics",
+    est_lab_title=est_lab_format,
+    title=1
+  ),
+  # no "waz" present in outcome_variable
+  # data.frame(
+  #   outcome_variable="waz",             
+  #   RFlabel_ref="",               
+  #   RFgroup="At-birth child characteristics",
+  #   est_lab_title=est_lab_format,
+  #   title=1
+  # ),
+  plotdf_CIR %>% mutate(title=0)
+)
+
+
+plotdf_CIR <- plotdf_CIR %>% mutate(RFgroup = factor(RFgroup, levels = (c("At-birth child characteristics", "Postnatal child characteristics",  
+                                                                  "Parental Characteristics", "Household & Environmental Characteristics"))))
+
+plotdf_CIR <- plotdf_CIR %>% arrange(outcome_variable, RFgroup, title, -RR) 
+rflevels = unique(plotdf_CIR$RFlabel_ref)
+plotdf_CIR$RFlabel_ref=factor(plotdf_CIR$RFlabel_ref, levels=rflevels)
+
+
+#get abstract Z-scores
+df_CIR <- plotdf_CIR %>% filter(outcome_variable!="waz",
+                        intervention_variable %in% c("gagebrth","sex","birthwt","vagbrth","birthlen",
+                                                     "mbmi","mwtkg", "mhtcm")) %>%
+  arrange(outcome_variable, RR)
+
+pCIR_laz <- ggplot(df_CIR %>% filter(outcome_variable=="LAZ"), aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
+  geom_point(aes(y=-RR),  size = 1.5) +
+  geom_linerange(aes(ymin=-RR.CI1, ymax=-RR.CI2)) +
+  geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=1.25) +
+  geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
+  coord_flip(ylim=c(-0.3, 0.48)) +
+  labs(x = NULL,
+       y = "Adjusted population intervention effect, difference in Z-score") +
+  geom_hline(yintercept = 0) +
+  scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5), labels=c("","","0","0.1","0.2","0.3","0.4","0.5")) +
+  scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
+  theme(strip.background = element_blank(),
+        strip.placement = "top",
+        strip.text = element_text(hjust = 0, size=6, face="bold"),
+        axis.text.y = element_text(size=4, hjust = 1),
+        axis.text.x = element_text(size=8),
+        axis.title.x = element_text(hjust = 1, size=6),
+        plot.title = element_text(hjust = 0,size=9),
+        axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
+        plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  guides(shape=FALSE) + 
+  ggtitle("Length-for-age Z-score") +
+  ggforce::facet_col(facets = vars(RFgroup), 
+                     scales = "free_y", 
+                     space = "free") 
+pCIR_laz
+
 #####
 
 df <- bind_rows(
