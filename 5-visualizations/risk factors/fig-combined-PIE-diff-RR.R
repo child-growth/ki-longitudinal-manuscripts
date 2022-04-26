@@ -57,7 +57,7 @@ CIR$RFlabel[CIR$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% day
 CIR$RFlabel[CIR$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
 CIR$RFlabel[CIR$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
-CIR <- CIR %>% filter(agecat=="24 months", region=="Pooled", !is.na(RR)) %>%
+CIR <- CIR %>% filter(agecat=="6-24 months", region=="Pooled", !is.na(RR)) %>%
   mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
 
 dim(CIR)
