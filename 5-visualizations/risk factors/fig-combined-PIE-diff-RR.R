@@ -3,6 +3,8 @@
 # mean differences -> estimate, ci_lower, ci_upper; unsure how to merge
 # CIR -> RR, RR.CI1, RR.CI2; merge using RFlabel, RFtype, or RFlabel_ref?
 
+# only include moderate stunting/wasting (remove sstunted/sswasted)
+
 #Nature update- combine PIE, mean diff, and RR in one plot
 
 rm(list=ls())
@@ -55,8 +57,13 @@ CIR$RFlabel[CIR$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% day
 CIR$RFlabel[CIR$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
 CIR$RFlabel[CIR$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
-CIR <- CIR %>% filter( agecat=="24 months", region=="Pooled", !is.na(RR)) %>%
+CIR <- CIR %>% filter(agecat=="24 months", region=="Pooled", !is.na(RR)) %>%
   mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
+
+dim(CIR)
+
+CIR_no_NA <- CIR %>% filter(!is.na(PAR))
+dim(CIR_no_NA)
 
 #Get top 10 variables for each
 CIR %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:10) %>% select(outcome_variable, intervention_variable, RR)
