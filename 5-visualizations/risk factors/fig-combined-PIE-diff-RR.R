@@ -1,4 +1,7 @@
-
+#TO DO
+# change back to original bluevelvet filepaths
+# mean differences -> estimate, ci_lower, ci_upper; unsure how to merge
+# CIR -> RR, RR.CI1, RR.CI2; merge using RFlabel, RFtype, or RFlabel_ref?
 
 #Nature update- combine PIE, mean diff, and RR in one plot
 
@@ -8,22 +11,74 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 library(gtable)
 library(cowplot)
 
-
-
-
-
 #Load data
 # PIE
 par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
+# par <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_Zscore_PAR_results.rds")
 unique(par$intervention_variable)
 unique(par$outcome_variable)
 
 # CIR
 RMAest_clean <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
+# RMAest_clean <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_RR_results.rds")
 
 #Mean differences
 dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
+# dfull <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/full_RF_results.rds")
 d <- dfull %>% filter(type=="ATE", agecat!="All")
+
+##### Cleaning CIR dataset
+par <- par %>% mutate(parameter="PAR")
+CIR <- RMAest_clean %>% mutate(parameter="CIR")
+# df_no_d <- merge(par, RMAest_clean, by ="RFlabel") #, all.x = TRUE)
+# df <- df_no_d %>% filter(!(intervention_variable.x %in% c("anywast06","enstunt","enwast","pers_wast"))) %>% 
+#   filter(!(intervention_variable.y %in% c("anywast06","enstunt","enwast","pers_wast")))
+# dim(df)
+
+CIR <- CIR %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
+unique(CIR$intervention_level)
+unique(CIR$intervention_variable)
+CIR$intervention_level <- as.character(CIR$intervention_level)
+CIR$intervention_level[CIR$intervention_level=="Full or late term"] <- "Full/late term"
+CIR$intervention_level[CIR$intervention_level=="[0%, 2%]"] <- "[0%,2%]"
+CIR$intervention_level[CIR$intervention_level=="No" & !(CIR$intervention_variable %in% c("enwast","enstunt"))] <- "None"
+CIR$intervention_level[CIR$intervention_variable %in% c("enwast","enstunt")] <- "No"
+CIR$intervention_level[CIR$intervention_level=="Yes"] <- "All"
+CIR$intervention_level[CIR$intervention_level=="Normal weight"] <- ">=18.5 BMI"
+CIR$intervention_level[CIR$intervention_level=="1" & CIR$intervention_variable %in% c("brthmon","month")] <- "Jan."
+CIR$intervention_level[CIR$intervention_level=="0" & CIR$intervention_variable %in% c("single")] <- "CIRtnered"
+CIR$intervention_level[CIR$intervention_level=="1" & CIR$intervention_variable %in% c("CIRity")] <- "Firstborn"
+CIR$intervention_level[CIR$intervention_level=="None" & CIR$intervention_variable %in% c("vagbrth")] <- "C-section"
+CIR$intervention_level[CIR$intervention_level=="None" & CIR$intervention_variable %in% c("hdlvry")] <- "No"
+
+CIR$RFlabel[CIR$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
+CIR$RFlabel[CIR$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
+CIR$RFlabel[CIR$RFlabel=="Gestational age at birth"] <- "Gestational age"
+
+CIR <- CIR %>% filter( agecat=="24 months", region=="Pooled", !is.na(RR)) %>%
+  mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
+
+#Get top 10 variables for each
+CIR %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:10) %>% select(outcome_variable, intervention_variable, RR)
+
+CIR %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:5) %>% select(outcome_variable, intervention_variable, RR)
+CIR %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:5) %>% select(intervention_variable)
+
+#top 5 sig
+CIR %>% filter(outcome_variable!="waz", RR.CI2<0) %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:5) %>% select(outcome_variable, intervention_variable, RR.CI2, RR)
+CIR %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:7) %>% select(intervention_variable)
+CIR %>% filter(outcome_variable!="waz", RR.CI2<0) %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:7) %>% select(intervention_variable)
+
+CIR %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(RR) %>% slice(1:11) %>% select(intervention_variable) %>% as.data.frame()
+
+
+unique(CIR$RFlabel_ref)
+
+df_CIR <- CIR %>% subset(., select = c(outcome_variable, intervention_variable, RR, RR.CI1, RR.CI2, RFlabel, RFlabel_ref,  RFtype)) %>% 
+  filter(!is.na(RR)) %>% mutate(measure="CIR")
+df_CIR[df_CIR$intervention_variable=="hhwealth_quart",]
+df_CIR[is.na(df_CIR$n),]
+#####
 
 df <- bind_rows(
   par %>% mutate(parameter="PAR"),
