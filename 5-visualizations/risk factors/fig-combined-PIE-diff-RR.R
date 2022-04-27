@@ -13,29 +13,22 @@ library(cowplot)
 
 #Load data
 # PIE
-par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
+par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="PAR")
 # par <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_Zscore_PAR_results.rds")
-unique(par$intervention_variable)
-unique(par$outcome_variable)
+unique(par_raw$intervention_variable)
+unique(par_raw$outcome_variable)
 
 # CIR
-RMAest_clean <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
+CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="CIR")
 # RMAest_clean <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_RR_results.rds")
 
 #Mean differences
-dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
+ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))  %>% filter(type=="ATE", agecat!="All")
 # dfull <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/full_RF_results.rds")
-d <- dfull %>% filter(type=="ATE", agecat!="All")
 
 ##### Cleaning CIR dataset
-par <- par %>% mutate(parameter="PAR")
-CIR <- RMAest_clean %>% mutate(parameter="CIR")
-# df_no_d <- merge(par, RMAest_clean, by ="RFlabel") #, all.x = TRUE)
-# df <- df_no_d %>% filter(!(intervention_variable.x %in% c("anywast06","enstunt","enwast","pers_wast"))) %>% 
-#   filter(!(intervention_variable.y %in% c("anywast06","enstunt","enwast","pers_wast")))
-# dim(df)
 
-CIR <- CIR %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
+CIR <- CIR_raw %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
 unique(CIR$intervention_level)
 unique(CIR$intervention_variable)
 CIR$intervention_level <- as.character(CIR$intervention_level)
@@ -200,6 +193,17 @@ saveRDS(df, file=paste0(here::here(),"/data/temp_plotdf.RDS"))
 df <- readRDS(paste0(here::here(),"/data/temp_plotdf.RDS"))
 head(df)
 
+
+
+
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#Need to subset ATE!
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
 table(df$parameter)
 table(df$outcome_variable)
 
@@ -208,52 +212,40 @@ table(df$parameter)
 
 
 
-par <- par %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
+df <- df %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
 
-unique(par$intervention_level)
-unique(par$intervention_variable)
-par$intervention_level <- as.character(par$intervention_level)
-par$intervention_level[par$intervention_level=="Full or late term"] <- "Full/late term"
-par$intervention_level[par$intervention_level=="[0%, 2%]"] <- "[0%,2%]"
-par$intervention_level[par$intervention_level=="No" & !(par$intervention_variable %in% c("enwast","enstunt"))] <- "None"
-par$intervention_level[par$intervention_variable %in% c("enwast","enstunt")] <- "No"
-par$intervention_level[par$intervention_level=="Yes"] <- "All"
-par$intervention_level[par$intervention_level=="Normal weight"] <- ">=18.5 BMI"
-par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("brthmon","month")] <- "Jan."
-par$intervention_level[par$intervention_level=="0" & par$intervention_variable %in% c("single")] <- "Partnered"
-par$intervention_level[par$intervention_level=="1" & par$intervention_variable %in% c("parity")] <- "Firstborn"
-par$intervention_level[par$intervention_level=="None" & par$intervention_variable %in% c("vagbrth")] <- "C-section"
-par$intervention_level[par$intervention_level=="None" & par$intervention_variable %in% c("hdlvry")] <- "No"
+unique(df$intervention_level)
+unique(df$intervention_variable)
+df$intervention_level <- as.character(df$intervention_level)
+df$intervention_level[df$intervention_level=="Full or late term"] <- "Full/late term"
+df$intervention_level[df$intervention_level=="[0%, 2%]"] <- "[0%,2%]"
+df$intervention_level[df$intervention_level=="No" & !(df$intervention_variable %in% c("enwast","enstunt"))] <- "None"
+df$intervention_level[df$intervention_variable %in% c("enwast","enstunt")] <- "No"
+df$intervention_level[df$intervention_level=="Yes"] <- "All"
+df$intervention_level[df$intervention_level=="Normal weight"] <- ">=18.5 BMI"
+df$intervention_level[df$intervention_level=="1" & df$intervention_variable %in% c("brthmon","month")] <- "Jan."
+df$intervention_level[df$intervention_level=="0" & df$intervention_variable %in% c("single")] <- "dftnered"
+df$intervention_level[df$intervention_level=="1" & df$intervention_variable %in% c("dfity")] <- "Firstborn"
+df$intervention_level[df$intervention_level=="None" & df$intervention_variable %in% c("vagbrth")] <- "C-section"
+df$intervention_level[df$intervention_level=="None" & df$intervention_variable %in% c("hdlvry")] <- "No"
 
-par$RFlabel[par$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
-par$RFlabel[par$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
-par$RFlabel[par$RFlabel=="Gestational age at birth"] <- "Gestational age"
+df$RFlabel[df$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
+df$RFlabel[df$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
+df$RFlabel[df$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 
 
-par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
+df <- df %>% filter( agecat=="24 months", region=="Pooled", !is.na(df)) %>%
   mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
 
-#Get top 10 variables for each
-par %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:10) %>% select(outcome_variable, intervention_variable, PAR)
-
-par %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:5) %>% select(outcome_variable, intervention_variable, PAR)
-par %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:5) %>% select(intervention_variable)
-
-#top 5 sig
-par %>% filter(outcome_variable!="waz", CI2<0) %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:5) %>% select(outcome_variable, intervention_variable, CI2, PAR)
-par %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:7) %>% select(intervention_variable)
-par %>% filter(outcome_variable!="waz", CI2<0) %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:7) %>% select(intervention_variable)
-
-par %>% filter(outcome_variable!="waz") %>% group_by(outcome_variable) %>% arrange(PAR) %>% slice(1:11) %>% select(intervention_variable) %>% as.data.frame()
 
  
-unique(par$RFlabel_ref)
-
-df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref,  RFtype, n_cell, n)) %>% 
-  filter(!is.na(PAR)) %>% mutate(measure="PAR")
-df[df$intervention_variable=="hhwealth_quart",]
-df[is.na(df$n),]
+# unique(df$RFlabel_ref)
+# 
+# df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref,  RFtype, n_cell, n)) %>% 
+#   filter(!is.na(PAR)) %>% mutate(measure="PAR")
+# df[df$intervention_variable=="hhwealth_quart",]
+# df[is.na(df$n),]
 
 
 #----------------------------------------------------------
