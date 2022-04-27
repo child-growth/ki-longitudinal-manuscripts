@@ -76,7 +76,7 @@ df_CIR <- CIR %>% subset(., select = c(outcome_variable, intervention_variable, 
 
 df_CIR[df_CIR$intervention_variable=="hhwealth_quart",]
 df_CIR[is.na(df_CIR$n),]
-# -------------------------------------------------------------------------------------------------------------------------------------
+
 #df_CIR$outcome_variable <- gsub("y_rate_haz", "HAZ velocity", df_CIR$outcome_variable)
 #df_CIR$outcome_variable <- gsub("y_rate_len", "Length velocity", df_CIR$outcome_variable)
 #df_CIR$outcome_variable <- gsub("y_rate_wtkg", "Weight velocity", df_CIR$outcome_variable)
