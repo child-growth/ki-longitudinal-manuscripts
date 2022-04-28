@@ -18,11 +18,22 @@ scaleFUN <- function(x) sprintf("%.1f", x)
 
 
 
+# PR
+PR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="PR")  %>% filter(agecat=="24 months", outcome_variable == "stunted" | outcome_variable == "wasted", region=="Pooled")
+
+
+#Subset to last age examined
+df <- df %>% filter(agecat=="6-24 months" | agecat=="24 months", region=="Pooled") %>%
+  mutate(RFlabel_ref = paste0(RFlabel," (ref. ", baseline_level,")"))
+unique(df$RFlabel_ref)
+
 df <- readRDS(paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds"))
 df <- df %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")),
                     outcome_variable %in% c("ever_stunted","ever_wasted"))
 #df <- RMA_clean(df)
 head(df)
+
+
 
 
 
