@@ -352,7 +352,7 @@ main_color <- "#287D8EFF"
           axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
           plot.margin = unit(c(0, 0, 0, 0), "cm")) +
     guides(shape="none") + 
-    ggtitle("Stunting cumulative incidence") +
+    ggtitle("Wasting cumulative incidence") +
     ggforce::facet_col(facets = vars(RFgroup), scales = "free_y", space = "free") 
   
   
@@ -398,11 +398,11 @@ main_color <- "#287D8EFF"
     geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
     geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=1.25) +
     geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
-    coord_flip(ylim=c(-0.3, 0.48)) +
+    coord_flip(ylim=c(-0.25,0.25)) +
     labs(x = NULL,
          y = "Adjusted population intervention effect, difference in Z-score") +
     geom_hline(yintercept = 0) +
-    scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5), labels=c("","","0","0.1","0.2","0.3","0.4","0.5")) +
+    scale_y_continuous(breaks = c(-0.3,-0.2,-0.1,0,0.1,0.2), labels=c("","","","0","0.1","0.2")) +
     scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
     theme(strip.background = element_blank(),
           strip.placement = "top",
@@ -433,10 +433,12 @@ main_color <- "#287D8EFF"
 # fig2_laz
 # ggsave(fig2_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_laz.png"), width=18.3, height=10, units = 'cm')
   
-fig2 = plot_grid(pPAR_laz, pATE_LAZ, pCIR_stunt,
-                 pPAR_wlz, pATE_WLZ, pCIR_wast,
-                 ncol = 3, rel_widths = c(2, 1, 1), rel_height = c())
-fig2
+fig2_laz = plot_grid(pPAR_laz, pATE_LAZ, pCIR_stunt, ncol = 3, rel_widths = c(2, 1, 1))
+fig2_wlz = plot_grid(pPAR_wlz, pATE_WLZ, pCIR_wast, ncol = 3, rel_widths = c(2, 1, 1))
+  
+
+fig2 <- plot_grid(fig2_laz,  fig2_wlz, labels = "auto", ncol = 1, align = 'v', axis = 'l')
+
 
 ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=18.3, height=18.3, units = 'cm')
 
