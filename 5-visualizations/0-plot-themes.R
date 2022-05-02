@@ -24,9 +24,20 @@ nyt_pal <- c("#510000", "#AC112D", "#EC6D47", "#F2A058", "#F7D269", "#839772", "
 theme_set(theme_ki)
 
 
+
+
+
 #-------------------------------------------------------------------------------------------
 # Plot functions
 #-------------------------------------------------------------------------------------------
+
+base_breaks <- function(n = 10){
+  function(x) {
+    axisTicks(log10(range(x, na.rm = TRUE)), log = TRUE, n = n)
+  }
+}
+
+
 ki_desc_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                                 xlabel="Age category",
                                 ylabel="",

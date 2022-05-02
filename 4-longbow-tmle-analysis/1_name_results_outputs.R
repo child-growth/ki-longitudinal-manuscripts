@@ -6,7 +6,7 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores_bwt_strat <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_2022-04-12.RDS"))
+Zscores_bwt_strat <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_2022-04-17.RDS"))
 head(Zscores_bwt_strat)
 saveRDS(Zscores_bwt_strat, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat.RDS"))
 

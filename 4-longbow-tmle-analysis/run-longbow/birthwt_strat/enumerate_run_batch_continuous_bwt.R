@@ -41,11 +41,13 @@ for(i in 1:nrow(analyses)){
 
 
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf.Rdata")
-d <- d %>% filter(!is.na(birthwt)) %>% filter(agecat=="24 months") %>% droplevels()
+d <- d %>% filter(!is.na(birthwt)) %>% droplevels()
+table(d$agecat)
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf_bwt_strat.Rdata")
 
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
-d <- d %>% filter(!is.na(birthwt)) %>% filter(agecat=="24 months") %>% droplevels()
+d <- d %>% filter(!is.na(birthwt))  %>% droplevels()
+table(d$agecat)
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_bwt_strat.Rdata")
 
 analyses$strata
