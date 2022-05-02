@@ -81,7 +81,7 @@ df <- df %>% filter(agecat=="6-24 months" | agecat=="24 months", region=="Pooled
 unique(df$RFlabel_ref)
 
 #Drop reference levels/other comparisons
-df <- df %>% subset(., select = c(parameter, outcome_variable, intervention_variable, intervention_level, est, CI1, CI2, RFlabel, RFlabel_ref,  RFtype)) %>% 
+df <- df %>% subset(., select = c(parameter, outcome_variable, intervention_variable, intervention_level, est, CI1, CI2, RFlabel, RFlabel_ref,  RFtype, n_cell, n)) %>% 
   filter(!is.na(est)) %>% 
   filter(CI1 !=CI2) 
 df <- df %>% filter(!(intervention_variable=="nrooms" & baseline_level=="1"))
@@ -109,7 +109,12 @@ df <- df %>%
       RFtype %in% c("Parent background","Parent anthro" ) ~ "Parental Characteristics",
       RFtype %in% c("Postnatal child health", "Breastfeeding") ~ "Postnatal child characteristics",
       RFtype==RFtype ~ "At-birth child characteristics"),
-    est_lab=paste0(sprintf("%0.2f", est)," (",sprintf("%0.2f", CI1),", ",sprintf("%0.2f", -CI2),")"))
+    est_lab=paste0(sprintf("%0.2f", -est)," (",sprintf("%0.2f", -CI2),", ",sprintf("%0.2f", -CI1),")"),
+    ref_prev=n_cell/n,
+    perc_ref= round((1-ref_prev)*100),
+    n = format(n ,big.mark=",", trim=TRUE),
+    n= paste0(n, " (",perc_ref,"%)"),
+    est_lab=paste0(n,"   ",est_lab))
 
 head(df)
 
@@ -240,7 +245,7 @@ main_color <- "#287D8EFF"
     geom_linerange(aes(ymin=CI1, ymax=CI2)) +
     coord_flip() +
     labs(x = NULL,
-         y = NULL) +
+         y = "Adjusted cumulative incidence ratio") +
     geom_hline(yintercept = 1) +
     scale_y_continuous(trans="log10", breaks=base_breaks(n = 6)) +
     scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
@@ -270,7 +275,7 @@ main_color <- "#287D8EFF"
     geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
     coord_flip( ) +
     labs(x = NULL,
-         y = NULL) +
+         y = "Adjusted mean decrease") +
     geom_hline(yintercept = 0) +
     scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
     theme(strip.background = element_blank(),
@@ -303,7 +308,7 @@ main_color <- "#287D8EFF"
     geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
     coord_flip(ylim=c(-0.3, 0.48)) +
     labs(x = NULL,
-         y = NULL) +
+         y = "Adjusted population intervention effect, difference in Z-score") +
     geom_hline(yintercept = 0) +
     scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5), labels=c("","","0","0.1","0.2","0.3","0.4","0.5")) +
     scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
@@ -327,6 +332,17 @@ main_color <- "#287D8EFF"
 # WLZ
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+  #Sort and set Y-axis order by WLZ
+  
+  df <- df %>%
+    mutate(
+      parameter = factor(parameter, levels=c("PAR","ATE","CIR")),
+      outcome_variable = factor(outcome_variable, levels=c("whz","ever_wasted","haz","ever_stunted" ))) %>% 
+    arrange(title, parameter, outcome_variable, RFgroup,  -est) 
+  rflevels = unique(df$RFlabel_ref)
+  df$RFlabel_ref=factor(df$RFlabel_ref, levels=rflevels)
+  rflevels
+  
   #----------------------------------------------------------------------------------
   # Plot CIR's
   #----------------------------------------------------------------------------------
@@ -335,7 +351,7 @@ main_color <- "#287D8EFF"
   pCIR_wast <- ggplot(df_WLZ_CIR, aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
     geom_point(aes(y=est),  size = 1.5) +
     geom_linerange(aes(ymin=CI1, ymax=CI2)) +
-    coord_flip() +
+    coord_flip(ylim=c(0.8,1.8)) +
     labs(x = NULL,
          y = "Adjusted cumulative incidence ratio") +
     geom_hline(yintercept = 1) +
