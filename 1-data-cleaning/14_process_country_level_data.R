@@ -13,43 +13,50 @@ he_raw <- read.csv(here("data/country metrics/health_expenditure.csv")) %>% rena
 pov_raw <- read.csv(here("data/country metrics/perc_pov.csv")) %>% rename(country=`ï..Country.Name`)
 
 ki_countries <- read.csv(here("data/country metrics/KI country-years.csv")) %>% rename(country=Country, year=Year) %>% select(country, year)
-
-
+#remove space in countries for merge
+ki_countries <- ki_countries %>% mutate(country = gsub(" ","", country))
 
 head(gdp_raw)
 gdp <- gdp_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "gdp", values_drop_na = TRUE) %>%
   select(country, year, gdp) %>%
-  mutate(year=as.numeric(gsub("X","",year)), gdp=as.numeric(gdp), country=gsub(" ","",country))
+  mutate(year=as.numeric(gsub("X","",year)), gdp=as.numeric(gdp), 
+         country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
 gdp
 
 
 head(gdi_raw)
 gdi <- gdi_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "gdi", values_drop_na = TRUE) %>%
   select(country, year, gdi) %>%
-  mutate(year=as.numeric(gsub("X","",year)), gdi=as.numeric(gdi), country=gsub(" ","",country))
+  mutate(year=as.numeric(gsub("X","",year)), gdi=as.numeric(gdi),
+         country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
 gdi
 
 
 head(gii_raw)
 gii <- gii_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "gii", values_drop_na = TRUE) %>%
   select(country, year, gii) %>%
-  mutate(year=as.numeric(gsub("X","",year)), gii=as.numeric(gii), country=gsub(" ","",country))
+  mutate(year=as.numeric(gsub("X","",year)), gii=as.numeric(gii), 
+         country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
 gii
 
 chi <- chi_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "chi", values_drop_na = TRUE) %>%
-  select(country, year, chi) %>% mutate(year=as.numeric(gsub("X","",year)), chi=as.numeric(chi), country=gsub(" ","",country))
+  select(country, year, chi) %>% mutate(year=as.numeric(gsub("X","",year)), chi=as.numeric(chi),
+                                        country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
 gini <- gini_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "gini", values_drop_na = TRUE) %>%
-  select(country, year, gini) %>% mutate(year=as.numeric(gsub("X","",year)), gini=as.numeric(gini), country=gsub(" ","",country))
+  select(country, year, gini) %>% mutate(year=as.numeric(gsub("X","",year)), gini=as.numeric(gini), 
+                                         country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
 he <- he_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "he", values_drop_na = TRUE) %>%
-  select(country, year, he) %>% mutate(year=as.numeric(gsub("X","",year)), he=as.numeric(he), country=gsub(" ","",country))
+  select(country, year, he) %>% mutate(year=as.numeric(gsub("X","",year)), he=as.numeric(he), 
+                                       country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
 pov <- pov_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "pov", values_drop_na = TRUE) %>%
-  select(country, year, pov) %>% mutate(year=as.numeric(gsub("X","",year)), pov=as.numeric(pov), country=gsub(" ","",country))
+  select(country, year, pov) %>% mutate(year=as.numeric(gsub("X","",year)), pov=as.numeric(pov), 
+                                        country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
 
 
 
 #Get rows for all years
 years <- data.frame(year=1987:2020)
-years <-expand_grid(years, data.frame(country=unique(gii$country)))
+years <-expand_grid(years, data.frame(country=unique(gdp$country)))
 
 gdp <- left_join(years, gdp, by=c("country","year")) %>% filter(!is.na(country), country!="")
 gdi <- left_join(years, gdi, by=c("country","year")) %>% filter(!is.na(country), country!="") 
@@ -97,7 +104,24 @@ d <- left_join(d, pov, by=c("country","year"))
 
 head(d)
 
+#Change country format for merge
+d <- d %>% rename(brthyr = year) %>% mutate(country=str_to_upper(country), 
+                                            country=gsub("GUINEABISSAU","GUINEA-BISSAU",country),
+                                            country=gsub("BURKINAFASO","BURKINA FASO",country),
+                                            country=gsub("SOUTHAFRICA","SOUTH AFRICA",country))
+
+
+unique(d$country)
+
+
+
+
+#save
 saveRDS(d, file=here("data/country metrics/combined_country_metrics.RDS"))
 
-#get indicator distributions by country.
-#maybe get after merging kids in because based on their birthyear.
+table(d$country, is.na(d$gdp))
+unique(d$country)
+unique(gdp$country)
+unique(gdp_raw$country)
+unique(gdi$country)
+unique(ki_countries$country)
