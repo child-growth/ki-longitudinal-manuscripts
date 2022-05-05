@@ -177,6 +177,17 @@ df <- readRDS(paste0(here::here(),"/data/temp_plotdf2.RDS"))
 head(df)
 
 
+#Sort and set Y-axis order
+#-need to sort by max PAR
+df <- df %>% group_by(intervention_variable, outcome_variable) %>%
+  mutate(par=ifelse(parameter=="PAR",1,0), max_est= max(-est *par)) %>% 
+  ungroup() %>% 
+  arrange(title, outcome_variable,  RFgroup,  max_est,  parameter,  -est) 
+rflevels = unique(df$RFlabel_ref)
+df$RFlabel_ref=factor(df$RFlabel_ref, levels=rflevels)
+rflevels
+
+
 #----------------------------------------------------------
 # Plot parameters
 #----------------------------------------------------------
@@ -196,19 +207,20 @@ main_color <- "#287D8EFF"
   df_LAZ <- df %>% filter(outcome_variable=="haz")
   
   
-  p_laz <- ggplot(df_LAZ, aes(x=RFlabel_ref, group=RFgroup, color=parameter)) + 
+  p_laz <- ggplot(df_LAZ, aes(x=RFlabel_ref, group=RFgroup, shape=parameter, color=parameter)) + 
     geom_point(aes(y=-est),  size = 1.5) +
     geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
     geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=1.25) +
     geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
     coord_flip(
-      #ylim=c(-0.3, 0.48)
+     ylim=c(-0.3, 0.8)
       ) +
     labs(x = NULL,
          y = "Adjusted population intervention effect, difference in Z-score") +
     geom_hline(yintercept = 0) +
-    scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5), labels=c("","","0","0.1","0.2","0.3","0.4","0.5")) +
-    scale_color_manual(values = cbbPalette[c(6,3,2,4)], guide = guide_legend(reverse = TRUE) ) +
+    scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5, 0.6, 0.7, 0.8), labels=c("","","0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8")) +
+    scale_color_manual(values = c("grey60","black"), guide = guide_legend(reverse = TRUE) ) +
+    scale_shape_manual(values = c(17,16), guide = guide_legend(reverse = TRUE) ) +
     theme(strip.background = element_blank(),
           strip.placement = "top",
           strip.text = element_text(hjust = 0, size=6, face="bold"),
@@ -224,6 +236,48 @@ main_color <- "#287D8EFF"
                        scales = "free_y", 
                        space = "free") 
   p_laz
+  
+  
+  
+  #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  # WLZ
+  #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  
+  df_WLZ <- df %>% filter(outcome_variable=="whz")
+  
+  
+  p_wlz <- ggplot(df_WLZ, aes(x=RFlabel_ref, group=RFgroup, shape=parameter, color=parameter)) + 
+    geom_point(aes(y=-est),  size = 1.5) +
+    geom_linerange(aes(ymin=-CI1, ymax=-CI2)) +
+    geom_text(aes(label=est_lab), y=-0.27, color="grey20", size=1.25) +
+    geom_text(aes(label=est_lab_title), y=-0.27, color="black", size=1.5,fontface = "bold") +
+    coord_flip(
+      ylim=c(-0.3, 0.5)
+    ) +
+    labs(x = NULL,
+         y = "Adjusted population intervention effect, difference in Z-score") +
+    geom_hline(yintercept = 0) +
+    scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5, 0.6, 0.7, 0.8), labels=c("","","0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8")) +
+    scale_color_manual(values = c("grey60","black"), guide = guide_legend(reverse = TRUE) ) +
+    scale_shape_manual(values = c(17,16), guide = guide_legend(reverse = TRUE) ) +
+    theme(strip.background = element_blank(),
+          strip.placement = "top",
+          strip.text = element_text(hjust = 0, size=6, face="bold"),
+          axis.text.y = element_text(size=4, hjust = 1),
+          axis.text.x = element_text(size=8),
+          axis.title.x = element_text(hjust = 1, size=6),
+          plot.title = element_text(hjust = 0,size=9),
+          axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
+          plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+    guides(shape="none") + 
+    ggtitle("WLZ population intervention effect") +
+    ggforce::facet_col(facets = vars(RFgroup), 
+                       scales = "free_y", 
+                       space = "free") 
+  p_wlz
+  
+  
+  
 
 
 #----------------------------------------------------------------------------------
