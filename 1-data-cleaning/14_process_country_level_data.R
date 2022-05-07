@@ -17,7 +17,8 @@ pov_raw <- read.csv(here("data/country metrics/perc_pov.csv")) %>% rename(countr
 #ki_countries <- ki_countries %>% mutate(country = gsub(" ","", country))
 
 ki_countries <- readRDS(here("data/study_birth_years.rds"))
-ki_countries <- ki_countries %>% ungroup() %>% distinct(country, brthyr) %>% rename(year=brthyr) %>% mutate(country = gsub(" ","", str_to_title(country)))
+ki_countries <- ki_countries %>% ungroup() %>% distinct(country, brthyr) %>% rename(year=brthyr) %>% mutate(country = gsub(" ","", str_to_title(country)), country = gsub("-","", country))
+unique(ki_countries$country)
 
 head(gdp_raw)
 gdp <- gdp_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "gdp", values_drop_na = TRUE) %>%
