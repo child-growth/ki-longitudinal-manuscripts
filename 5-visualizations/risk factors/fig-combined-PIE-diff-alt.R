@@ -13,6 +13,9 @@ library(gtable)
 library(cowplot)
 
 
+#To do:
+
+
 
 #----------------------------------------------------------------------------------
 # Load data
@@ -154,11 +157,15 @@ df <- df %>%
 
 head(df)
 
-XXXX FIX ordering! HERE:
--update label of the PAR levels and give different color
--add legend
--for the PAR variable, intervention level equals baseline level, but need to replace with "PAR" or maybe the percent shifted
--need to add ATE prevalences.
+# XXXX FIX ordering! HERE:
+# -update label of the PAR levels and give different color
+# -add legend
+# -for the PAR variable, intervention level equals baseline level, but need to replace with "PAR" or maybe the percent shifted
+# -need to add ATE prevalences.
+
+#Make PAR darker
+# group by variable
+#geom text the contrasts/PIE
 
 #Sort and set Y-axis order
 df <- df %>% arrange(title, parameter, outcome_variable, RFgroup,  -est) 
@@ -244,6 +251,14 @@ main_color <- "#287D8EFF"
   #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   
   df_WLZ <- df %>% filter(outcome_variable=="whz")
+  
+  df_WLZ <- df_WLZ %>% group_by(intervention_variable, outcome_variable) %>%
+    mutate(par=ifelse(parameter=="PAR",1,0), max_est= max(-est *par)) %>% 
+    ungroup() %>% 
+    arrange(title, outcome_variable,  RFgroup,  max_est,  parameter,  -est) 
+  rflevels = unique(df_WLZ$RFlabel_ref)
+  df_WLZ$RFlabel_ref=factor(df_WLZ$RFlabel_ref, levels=rflevels)
+  
   
   
   p_wlz <- ggplot(df_WLZ, aes(x=RFlabel_ref, group=RFgroup, shape=parameter, color=parameter)) + 

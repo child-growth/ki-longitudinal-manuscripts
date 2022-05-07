@@ -12,9 +12,12 @@ gini_raw <- read.csv(here("data/country metrics/gini.csv")) %>% rename(country=`
 he_raw <- read.csv(here("data/country metrics/health_expenditure.csv")) %>% rename(country=`ï..Country.Name`)
 pov_raw <- read.csv(here("data/country metrics/perc_pov.csv")) %>% rename(country=`ï..Country.Name`)
 
-ki_countries <- read.csv(here("data/country metrics/KI country-years.csv")) %>% rename(country=Country, year=Year) %>% select(country, year)
+#ki_countries <- read.csv(here("data/country metrics/KI country-years.csv")) %>% rename(country=Country, year=Year) %>% select(country, year)
 #remove space in countries for merge
-ki_countries <- ki_countries %>% mutate(country = gsub(" ","", country))
+#ki_countries <- ki_countries %>% mutate(country = gsub(" ","", country))
+
+ki_countries <- readRDS(here("data/study_birth_years.rds"))
+ki_countries <- ki_countries %>% ungroup() %>% distinct(country, brthyr) %>% rename(year=brthyr) %>% mutate(country = gsub(" ","", str_to_title(country)))
 
 head(gdp_raw)
 gdp <- gdp_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "gdp", values_drop_na = TRUE) %>%
@@ -93,6 +96,10 @@ he<-he %>% group_by(country) %>% mutate(he = approxExtrap(which(!is.na(he)), he[
 pov<-pov %>% group_by(country) %>% mutate(pov = approxExtrap(which(!is.na(pov)), pov[!is.na(pov)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
 
 #merge indicators together
+unique(ki_countries$country)
+unique(gdp$country)
+
+
 d <- left_join(ki_countries, gdp, by=c("country","year"))
 d <- left_join(d, gdi, by=c("country","year"))
 d <- left_join(d, gii, by=c("country","year"))
@@ -118,10 +125,12 @@ unique(d$country)
 
 #save
 saveRDS(d, file=here("data/country metrics/combined_country_metrics.RDS"))
+write.csv(d, file=here("data/country metrics/combined_country_metrics.csv"))
 
-table(d$country, is.na(d$gdp))
+
 unique(d$country)
 unique(gdp$country)
 unique(gdp_raw$country)
 unique(gdi$country)
-unique(ki_countries$country)
+
+table(d$country, is.na(d$gdp))
