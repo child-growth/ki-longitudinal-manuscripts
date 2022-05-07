@@ -33,7 +33,9 @@ save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf_p
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
 d <- d %>% filter(agecat=="24 months")  %>% droplevels()
 table(d$country, is.na(d$sex))
-table(d$studyid, d$country)
+
+table(d$studyid, d$single)
+
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_prim.Rdata")
 
 analyses$strata

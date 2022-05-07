@@ -18,18 +18,6 @@ unique(dfull$type)
 d <- dfull %>% filter(type=="PAR")
 table(d$intervention_variable, d$outcome_variable)
 
-# temp <- d  %>% filter(outcome_variable =="whz"| outcome_variable =="haz",
-#                       intervention_variable =="birthlen_rf"|intervention_variable =="birthwt_rf"|intervention_variable =="gagebrth_rf"|
-#                       intervention_variable =="birthlen"|intervention_variable =="birthwt"|intervention_variable =="gagebrth", agecat=="24 months") %>% droplevels()
-# table(temp$studyid)
-# RMAest_temp <- temp %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
-#   do(pool.Zpar(.)) %>% as.data.frame()
-# RMAest_temp
-# 
-# birthwt_prim <- readRDS(paste0(res_dir, "rf results/longbow results/results_birthwt_prim.RDS")) %>% filter(type=="PAR")
-# RMAest_temp2 <- birthwt_prim %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
-#   do(pool.Zpar(.)) %>% as.data.frame()
-# RMAest_temp2
 
 
 #Subset to continious outcomes
@@ -38,6 +26,11 @@ d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_waz"|
                     outcome_variable=="y_rate_len"|
                     outcome_variable=="y_rate_wtkg"|outcome_variable=="haz"|
                     outcome_variable=="whz"|outcome_variable=="waz")
+
+#drop sparse variables (at least 10 obs per variable)
+dim(d)
+d <- d %>% filter(adjustment_set!="")
+dim(d)
 
 d <- droplevels(d)
 

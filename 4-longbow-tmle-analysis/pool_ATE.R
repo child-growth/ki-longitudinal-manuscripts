@@ -14,13 +14,22 @@ d <- dfull %>% filter(type=="ATE", agecat!="All")
 
 d %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", estimate    != 0)
 
+
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)
 
+#temp
+#d<-d[d$intervention_variable=="single",] %>% filter(outcome_variable == "haz", agecat=="24 months" )
+
+#drop sparse variables (at least 10 obs per variable)
+dim(d)
+d <- d %>% filter(adjustment_set!="")
+dim(d)
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(pool.cont(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
+RMAest
 
 RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(pool.cont(.)) %>% as.data.frame()
