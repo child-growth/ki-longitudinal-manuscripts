@@ -81,12 +81,14 @@ dhs_country_data <- readRDS(paste0(dhs_res_dir,"dhs.density.ki-countries.rds"))
 
 ## Add region to DHS data -----------------------------------------------------
 dhs_country_data <- dhs_country_data %>% 
+  mutate(country = ifelse(is.na(country) & !is.na(region), "ki pooled", country)) %>% 
   filter(measure=="LAZ") %>% 
   mutate(country2 = toupper(country)) %>% 
   rename(country_lower = country, 
-         country = country2)
+         country = country2) %>% 
+  mutate(region = as.character(region))
 
-dhs_country_data <- mark_region(dhs_country_data) %>% 
+dhs_country_data <- mark_region2(dhs_country_data) %>% 
   filter(region!="Other")  
 
 dhs_country_data <- dhs_country_data %>% 
@@ -96,20 +98,28 @@ assert_that(all(is.na(kiden$country[is.na(kiden$cohort)])))
 
 
 # Prep data for LAZ Density plot (Figure 2a) -----------------------------------------------------
-plot_dhs = dhs_country_data %>% filter(!is.na(country)) %>% 
+plot_dhs = dhs_country_data %>% 
+  mutate(country = ifelse(is.na(country), "ki pooled", country)) %>% 
+  filter(!is.na(country)) %>% 
   mutate(datatype = "DHS",
          cohort = "DHS") %>% 
-  dplyr::select(-country_lower) 
+  dplyr::select(-country_lower) %>% 
+  mutate(cohort = ifelse(country=="ki pooled", region, cohort))
 
-plot_ki =  kiden %>% filter(dsource == "ki cohorts" & !is.na(country)) %>%
+plot_ki =  kiden %>% 
+  mutate(country = ifelse(is.na(country) & !is.na(region), "ki pooled", country)) %>% 
+  filter(dsource == "ki cohorts" & !is.na(country)) %>%
   mutate(datatype = "ki") %>% 
   mutate(country_cap = toupper(country)) %>% 
   rename(country_lower = country,
-         country = country_cap) 
+         country = country_cap) %>% 
+  mutate(region = as.character(region))
 
-plot_ki = mark_region(plot_ki) %>% 
+plot_ki = mark_region2(plot_ki) %>% 
   dplyr::select(x, y, measure, region, country_lower, datatype, cohort)  %>% 
-  rename(country = country_lower)
+  rename(country = country_lower) %>% 
+  mutate(region = as.character(region)) %>% 
+  mutate(cohort = ifelse(country=="ki pooled", region, cohort))
 
 plot_data = bind_rows(plot_ki, plot_dhs) %>% 
   # drop Burkina Faso since study was not quarterly
@@ -117,28 +127,32 @@ plot_data = bind_rows(plot_ki, plot_dhs) %>%
   mutate(country = factor(country, levels = c(
     "Brazil", "Guatemala", "Peru",
     "Bangladesh", "India", "Nepal", "Pakistan",
-    
     "Gambia", "Guinea-Bissau",
-    "Malawi", "South Africa", "Tanzania", "Zimbabwe"
+    "Malawi", "South Africa", "Tanzania", "Zimbabwe", "ki pooled"
 
   )))
 
 plot_data$region_survey = paste0("ki " , as.character(plot_data$region))
-plot_data$region_survey[plot_data$cohort=="DHS"] = "DHS"
+plot_data$region_survey[plot_data$cohort=="DHS" & plot_data$country!="ki pooled"] = "DHS"
 plot_data$region_survey = factor(plot_data$region_survey, 
                                  levels = c("DHS", "ki Africa",
-                                            "ki Latin America", "ki South Asia"))
+                                            "ki Latin America", "ki South Asia")) 
 
+# exclude region-pooled DHS from plot
+plot_data$region_survey[plot_data$datatype=="DHS" & plot_data$region_survey!="DHS"]=NA
+
+plot_data=plot_data %>% filter(!is.na(region_survey))
 
 # Figure 2a: Create LAZ Density plot -----------------------------------------------------
 laz_dplot <-ggplot(data = plot_data, aes(x = x, y = y)) +
 
-  geom_line(aes(col = region_survey,  group = cohort, size = region_survey),
+  geom_line(aes(col = region_survey,  group = cohort, size = datatype),
             alpha = 0.8) +
   
   facet_wrap(~country, nrow=2) +
   
-  scale_size_manual("", values = c(0.8, 0.5, 0.5, 0.5)) +
+  scale_size_manual("", values = c(0.8, 0.5)) +
+  # scale_size_manual("", values = c(0.8, 0.5, 0.5, 0.5, 0.8)) +
   scale_color_manual("", values = c("black",pcols[2], pcols[3], pcols[4])) +
   
   scale_x_continuous(breaks = seq(-6, 6, by = 2)) +
@@ -159,18 +173,27 @@ laz_dplot
 # note: in this data, cohort is missing for country-pooled estimates 
 # country ki estimates are pooled with RE for cohort
 dhs_plotd = read_rds(paste0(dhs_res_dir, "stunting-DHSandKI-by-cohort.rds"))
-dhs_plotd = dhs_plotd %>% filter(measure=="LAZ")
-dhs_plotd <- mark_region(dhs_plotd)
+dhs_plotd = dhs_plotd %>% filter(measure=="LAZ") %>% 
+  mutate(country = ifelse(is.na(country) & !is.na(region), "ki pooled", 
+                          country)) 
+  
+dhs_plotd <- mark_region2(dhs_plotd)
 dhs_plotd$country <- str_to_title(dhs_plotd$country)
 unique(dhs_plotd$country)
 unique(dhs_plotd$cohort)
+dhs_plotd$country <- ifelse(dhs_plotd$country=="Ki Pooled", "ki pooled", 
+                            dhs_plotd$country)
+
 #drop countries without DHS data
 dhs_plotd$country <- factor(dhs_plotd$country, levels=c(
   "Brazil","Guatemala","Peru",   "Bangladesh","India","Nepal","Pakistan",
-  "Gambia", "Guinea-Bissau", "Malawi", "South Africa", "Tanzania", "Zimbabwe"
+  "Gambia", "Guinea-Bissau", "Malawi", "South Africa", "Tanzania", "Zimbabwe",
+  "ki pooled"
 ))
 dhs_plotd$cohort <-as.character(dhs_plotd$cohort)
-dhs_plotd$cohort <- ifelse(is.na(dhs_plotd$cohort),dhs_plotd$country,dhs_plotd$cohort)
+dhs_plotd$country <-as.character(dhs_plotd$country)
+# dhs_plotd$cohort <- ifelse(is.na(dhs_plotd$cohort),
+#                            dhs_plotd$country,dhs_plotd$cohort)
 dhs_plotd = dhs_plotd %>% filter(region %in% c("Africa", "South Asia", "Latin America"))
 
 # drop regional estimates
@@ -182,23 +205,44 @@ dhs_plotd = dhs_plotd %>% mutate(
     dsource == "DHS, ki countries" ~ "DHS",
     dsource == "ki cohorts" & region == "South Asia" ~ "ki South Asia", 
     dsource == "ki cohorts" & region == "Latin America" ~ "ki Latin America",
-    dsource == "ki cohorts" & region == "Africa" ~ "ki Africa"
+    dsource == "ki cohorts" & region == "Africa" ~ "ki Africa",
+    country == "ki pooled" & region == "South Asia" ~ "ki South Asia",
+    country == "ki pooled" & region == "Latin America" ~ "ki Latin America",
+    country == "ki pooled" & region == "Africa" ~ "ki Africa"
   )
-) %>%  mutate(colcat=factor(colcat, levels = c("DHS", "ki Latin America", "ki South Asia", "ki Africa")))
+) %>%  mutate(colcat=factor(colcat, levels = c("DHS", "ki Latin America", 
+                                               "ki South Asia", "ki Africa"))) %>% 
+  mutate(cohort = ifelse(country=="ki pooled" & region == "South Asia", "South Asia",cohort)) %>% 
+  mutate(cohort = ifelse(country=="ki pooled" & region == "Africa", "Africa", cohort)) %>% 
+  mutate(cohort = ifelse(country=="ki pooled" & region == "Latin America", "Latin America", cohort))
+
+# drop DHS pooled by region
+drops = which(dhs_plotd$dsource=="DHS, ki countries" & 
+                dhs_plotd$country=="ki pooled")
+dhs_plotd = dhs_plotd[-drops,]
+
+dhs_plotd = dhs_plotd %>%   mutate(country = factor(country, levels = c(
+  "Brazil", "Guatemala", "Peru",
+  "Bangladesh", "India", "Nepal", "Pakistan",
+  "Gambia", "Guinea-Bissau",
+  "Malawi", "South Africa", "Tanzania", "Zimbabwe", "ki pooled"
+  
+)))
+
 
 # Figure 2b: Create LAZ Age plot -----------------------------------------------------
 blue = pcols[2]
 orange = pcols[3]
 green = pcols[4]
 
-laz_ageplot <- ggplot(data = dhs_plotd, aes(x = agem, y = fit, 
+laz_ageplot <- ggplot(data = dhs_plotd, 
+                      aes(x = agem, y = fit, 
                                      group=cohort)) +
   facet_wrap( ~ country, nrow = 2) +
   
   geom_abline(intercept = 0, slope = 0, color = "gray70") +
 
-  # DHS
-  geom_ribbon(aes(ymin = fit_lb, ymax = fit_ub, 
+  geom_ribbon(aes(ymin = fit_lb, ymax = fit_ub,
                   fill = colcat), alpha=0.2, col = NA) +
   geom_line(aes(color = colcat, size = colcat)) +
 
