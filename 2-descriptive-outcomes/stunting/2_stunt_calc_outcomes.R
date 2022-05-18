@@ -357,6 +357,10 @@ calc_outcomes = function(data, calc_method, output_file_suffix){
   return(shiny_desc_data)
 }
 
+data = d
+calc_method = "REML"
+output_file_suffix = ""
+
 stunt_outcomes = calc_outcomes(data = d, calc_method = "REML", output_file_suffix = "")
 saveRDS(stunt_outcomes, file = paste0(res_dir,"stunting/shiny_desc_data_stunting_objects.RDS"))
 
