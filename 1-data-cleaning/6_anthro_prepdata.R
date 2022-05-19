@@ -38,7 +38,10 @@ length(unique(paste0(d$studyid,d$country,d$subjid)))
 # Subset to  just identifying and anthro data
 #--------------------------------------------
 
-d <- d %>% subset(., select=c(studyid, subjid, country, region, measurefreq, tr, sex, agedays, haz, whz, waz, muaz, latitude, longitud))
+    
+
+d <- d %>% subset(., select=c(studyid, subjid, country, region, brthyr, gdp,gdi,gii,chi,gini,he,pov, 
+                              measurefreq, tr, sex, agedays, haz, whz, waz, muaz, latitude, longitud))
 
 #Check for duplicate agedays
 dup_age <- d %>% group_by(studyid, subjid, agedays) %>%

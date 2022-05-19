@@ -7,6 +7,10 @@ source(paste0(here::here(), "/0-config.R"))
 #load longform anthropometry and mortality data
 Zscores <- readRDS(included_studies_path)
 
+#load country metrics
+country_metrics <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds")
+unique(country_metrics$country)
+
 
 # Check how many at-birth measurements have
 # length < 45cm and therefore no Z-scores
@@ -27,6 +31,28 @@ Zscores <- Zscores %>%
 #mark regions 
 Zscores <- mark_region(Zscores)
 table(Zscores$region)
+
+#fill in missing birthyr
+table(Zscores$studyid, is.na(Zscores$brthyr))
+Zscores$brthyr[Zscores$studyid=="NIH-Birth"] <- 2008
+Zscores$brthyr[Zscores$studyid=="NIH-Crypto"] <- 2014
+Zscores$brthyr[Zscores$studyid=="PROBIT"] <- 1996
+Zscores$brthyr[Zscores$studyid=="PROVIDE"] <- 2011
+Zscores <- Zscores %>% group_by(studyid, country) %>% mutate(brthyr=ifelse(is.na(brthyr),floor(mean(brthyr, na.rm=T)),brthyr))
+table(Zscores$studyid, is.na(Zscores$brthyr))
+unique(Zscores$brthyr)
+
+
+unique(Zscores$country)
+
+unique(country_metrics$country)
+
+
+#merge country metrics
+Zscores <- left_join(Zscores, country_metrics, by = c("country","brthyr"))
+
+colnames(Zscores)
+
 
 
 #load covariate dataset (one row per child)
@@ -86,6 +112,8 @@ table(d$cohortid)
 d$exclude_desc <- ifelse(d$agedays > 25 * 30.4167, 1, 0)
 table(d$exclude_desc)
 
+
+
 # Save dataset
 saveRDS(d, ki_manuscript_dataset_path)
 write.csv(d, "/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-manuscript-dataset.csv")
@@ -110,4 +138,27 @@ start_year$max_yr[start_year$studyid=="NIH-Crypto"] <- 2017
 start_year$max_yr[start_year$studyid=="Burkina Faso Zn"] <- 2012
 
 saveRDS(start_year, paste0(here::here(),"/data/study_start_years.rds"))
+
+
+#save birth years
+table(is.na(d$brthyr))
+table(d$brthyr, d$country)
+brthyrs <- d %>% group_by(studyid, country) %>% distinct(brthyr)
+saveRDS(brthyrs, paste0(here::here(),"/data/study_birth_years.rds"))
+
+
+#creat dataset of unique children and country metrics
+colnames(d)
+
+head(d)
+
+df <- d %>%  group_by(studyid, country, subjid) %>% slice(1) %>% 
+             select(studyid, subjid, country, brthyr, region, gdp,gdi,gii,chi,gini,he,pov)
+head(df)
+
+#classify study decade
+df <- left_join(df, start_year, by = c("studyid", "country"))
+table(is.na(df$gdp))
+temp <- df[is.na(df$gdp),]
+saveRDS(df, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds")
 

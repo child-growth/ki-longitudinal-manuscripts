@@ -53,14 +53,14 @@ summary.prev.haz <- function(d, severe.stunted=F, method="REML"){
   # cohort specific results
   prev.cohort=lapply((levels(prev.data$agecat)),function(x) 
     fit.escalc(data=prev.data,ni="nmeas", xi="nxprev",age=x,meas="PLO"))
-  prev.cohort=as.data.frame(rbindlist(prev.cohort))
+  prev.cohort=as.data.frame(rbindlist(prev.cohort, fill=TRUE))
   prev.cohort=cohort.format(prev.cohort,y=prev.cohort$yi,
                             lab=  levels(prev.data$agecat))
   
   # estimate random effects, format results
   prev.res=lapply((levels(prev.data$agecat)), function(x)
     fit.rma(data=prev.data, ni="nmeas", xi="nxprev",age=x ,measure="PLO",nlab="children", method=method))
-  prev.res=as.data.frame(rbindlist(prev.res))
+  prev.res=as.data.frame(rbindlist(prev.res,fill=TRUE))
   prev.res$est=as.numeric(prev.res$est)
   prev.res$lb=as.numeric(prev.res$lb)
   prev.res$ub=as.numeric(prev.res$ub)
@@ -189,7 +189,7 @@ summary.ci <- function(d,  severe.stunted=F, birthstrat=F,
   # estimate random effects, format results
   ci.res=lapply((agelist),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements", method=method))
-  ci.res=as.data.frame(rbindlist(ci.res))
+  ci.res=as.data.frame(rbindlist(ci.res, fill=TRUE))
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
@@ -245,7 +245,7 @@ summary.haz <- function(d, method="REML", nmeas_threshold = 50){
   # cohort specific results
   haz.cohort=lapply(as.list(levels(haz.data$agecat)),function(x) 
     fit.escalc(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", measure="GEN",age=x))
-  haz.cohort=as.data.frame(rbindlist(haz.cohort))
+  haz.cohort=as.data.frame(rbindlist(haz.cohort, fill=TRUE))
   haz.cohort=cohort.format(haz.cohort,y=haz.cohort$yi,
                            lab=  levels(haz.data$agecat), est="mean")
   
@@ -253,7 +253,7 @@ summary.haz <- function(d, method="REML", nmeas_threshold = 50){
   # estimate random effects, format results
   haz.res=lapply(as.list(levels(haz.data$agecat)),function(x) 
     fit.rma(data=haz.data, ni="nmeas", yi="meanhaz", vi="varhaz", nlab="children",age=x, measure = "GEN", method=method))
-  haz.res=as.data.frame(rbindlist(haz.res))
+  haz.res=as.data.frame(rbindlist(haz.res, fill=TRUE))
   haz.res$agecat=factor(levels(haz.data$agecat))
   haz.res$ptest.f=sprintf("%0.2f",haz.res$est)
   
@@ -433,7 +433,7 @@ summary.stunt.incprop <- function(d, severe.stunted=F, agelist=list("0-3 months"
   # estimate random effects, format results
   ci.res=lapply((agelist),function(x)
     fit.rma(data=cuminc.data,ni="N", xi="ncases",age=x,measure="PLO",nlab=" measurements",method=method))
-  ci.res=as.data.frame(rbindlist(ci.res))
+  ci.res=as.data.frame(rbindlist(ci.res, fill=TRUE))
   ci.res = ci.res %>%
     mutate(est=est*100, lb=lb*100, ub=ub*100)
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)

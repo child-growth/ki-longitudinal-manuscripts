@@ -24,9 +24,20 @@ nyt_pal <- c("#510000", "#AC112D", "#EC6D47", "#F2A058", "#F7D269", "#839772", "
 theme_set(theme_ki)
 
 
+
+
+
 #-------------------------------------------------------------------------------------------
 # Plot functions
 #-------------------------------------------------------------------------------------------
+
+base_breaks <- function(n = 10){
+  function(x) {
+    axisTicks(log10(range(x, na.rm = TRUE)), log = TRUE, n = n)
+  }
+}
+
+
 ki_desc_flurry_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, 
                                 xlabel="Age category",
                                 ylabel="",
@@ -956,3 +967,156 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
   }
 }
+
+
+
+ki_ip_flurry_subgroup_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, subgroup,title,
+                                       xlabel="Age category",
+                                       ylabel="Incidence proportion (95% CI)",
+                                       h1=0,
+                                       h2=3,
+                                       yrange=NULL,
+                                       dodge=0,
+                                       returnData=F){
+  
+  groupvar <- sym(subgroup)
+  
+  df <- d %>% filter(
+    disease == Disease &
+      measure %in% Measure &
+      birth == Birth &
+      severe == Severe &
+      age_range == Age_range &
+      !is.na(agecat)
+  ) %>% filter(!is.na(!!sym(groupvar))) 
+  
+  df <- droplevels(df)
+  
+  # remove N= from labels
+  df <- df %>% mutate(nmeas.f = gsub('N=', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub('N=', '', nstudy.f))
+  
+  # remove text from labels
+  df <- df %>% mutate(nmeas.f = gsub(' children', '', nmeas.f)) %>%
+    mutate(nstudy.f = gsub(' studies', '', nstudy.f))
+  
+  # Remove 'months' from x axis labels  
+  df <- df %>% arrange(agecat)
+  df$agecat <- as.character(df$agecat)
+  df$agecat <- gsub(" months", "", df$agecat)
+  df$agecat <- factor(df$agecat, levels=unique(df$agecat))
+  
+  df <- df %>% mutate(ispooled = as.factor(ifelse(cohort=="pooled", "yes", "no")))
+  
+  # fix factor levels if birth strat
+  if (Birth == "strat") {
+    df <- df %>%
+      mutate(agecat = as.character(agecat)) %>%
+      mutate(agecat = ifelse(agecat=="8 days-3", "0-3", agecat)) %>%
+      mutate(agecat = factor(agecat, levels = c(
+        "Birth",
+        "0-3", 
+        "3-6",
+        "6-9",
+        "9-12",
+        "12-15",
+        "15-18",
+        "18-21",
+        "21-24"
+      )))
+  }
+  
+  # remove N= labels for incidence proportion
+  df <- df %>% mutate(nmeas.f = ifelse(measure == 'Incidence proportion', '', nmeas.f)) %>%
+    mutate(nstudy.f = ifelse(measure == 'Incidence proportion', '', nstudy.f))
+  
+  
+  if (min(df$lb) < 0) {
+    print("Warning: some lower bounds < 0")
+  }
+  
+  
+  
+  p <- ggplot(df,aes(y=est,x=agecat)) +
+    
+    # pooled 
+    geom_point(aes(shape=measure, size=measure, fill=!!sym(groupvar), color=!!sym(groupvar)), 
+               size = 2, stroke = 0,
+               data = df %>% filter(ispooled == "yes"),
+               position = position_dodge(dodge)) +
+    
+    geom_errorbar(aes(color=!!sym(groupvar), group=interaction(measure, !!sym(groupvar)),
+                      ymin=lb, ymax=ub), width = 0,
+                  data = df %>% filter(ispooled == "yes"),
+                  position = position_dodge(dodge)) +
+    
+    geom_text(data=df[df$measure =='Incidence proportion',] %>% 
+                filter(ispooled == "yes"), 
+              aes(x = agecat, y = est, label = round(est)),
+              hjust = 1.5, 
+              position = position_dodge(width = dodge),
+              vjust = 0.5) + 
+    
+    geom_text(data=df[df$measure =='Incidence proportion - monthly cohorts',] %>%
+                filter(ispooled == "yes"), 
+              aes(x = agecat, y = est, label = round(est)),
+              hjust = 1.5, 
+              position = position_dodge(width = dodge),
+              vjust = 0.5) + 
+    
+    # cohort-stratified 
+    
+    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
+               data = df %>% filter(ispooled == "no"),
+               position = position_jitter(width = 0.15), alpha = 0.25) +
+    
+    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) +
+    scale_size_manual(values = c(2, 1.5), guide = FALSE) +
+    scale_shape_manual(values = c(16, 17),
+                       name = 'Measure')+
+    scale_fill_manual(values=tableau11, guide = FALSE) +
+    
+    xlab(xlabel)+
+    ylab(ylabel) +
+    
+    # add space to the left and right of points on x axis
+    # to accommodate point estimate labels
+    scale_x_discrete(expand = expand_scale(add = 1)) +
+    
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    # theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
+    # 
+    # theme(axis.text.x = element_text(margin = 
+    #                                    margin(t = 0, r = 0, b = 0, l = 0),
+    #                                  size = 9)) +
+    # theme(axis.title.x = element_text(margin = 
+    #                                     margin(t = 5, r = 0, b = 0, l = 0),
+    #                                   size = 14)) +
+    # theme(axis.title.y = element_text(size = 14)) +
+    
+    theme(
+      axis.text.x = element_text(size = 14, angle = 45, vjust=0.5),
+      axis.title.x = element_text(size = 14),
+      axis.title.y = element_text(size = 14),
+      strip.text.x = element_text(size = 16, margin = margin(t = 0))) +
+
+    ggtitle(title) +
+    facet_grid(as.formula(paste0(".~", groupvar))) +
+    
+    guides(color = FALSE) +
+
+
+    
+    
+    if(!is.null(yrange)){
+      p <- p + coord_cartesian(ylim=yrange)
+    }
+  
+  if(returnData){
+    return(list(plot=p,data=df))
+  }else{
+    return(p)
+  }
+}
+

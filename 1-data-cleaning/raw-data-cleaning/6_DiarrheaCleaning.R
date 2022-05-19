@@ -240,6 +240,7 @@ summary(diar_6mo$perdiar6)
 summary(diar$perdiar24)
 
 
+table(diar$studyid, diar$perdiar6 < 0.02)
 table(diar$studyid, diar$perdiar6 < 0.05)
 table(diar$studyid, diar$perdiar24< 0.05)
 
