@@ -23,7 +23,7 @@ unique(ki_countries$country)
 
 #add missing rows
 
-miss_years=data.frame(country=c(rep("GUINEA-BISSAU",4),rep("TANZANIA",5)), year=c(1994,1995,  1996,  1997,  2007,  2008,  2009,  2010,  2011))
+miss_years=data.frame(country=c(rep("GuineaBissau",4),rep("Tanzania",5)), year=c(1994,1995,  1996,  1997,  2007,  2008,  2009,  2010,  2011))
 ki_countries = bind_rows(ki_countries, miss_years) %>% distinct()
 
 
