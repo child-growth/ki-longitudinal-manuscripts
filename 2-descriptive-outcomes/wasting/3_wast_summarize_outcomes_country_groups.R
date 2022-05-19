@@ -26,6 +26,7 @@ dim(d)
 #Prevalence
 d <- calc.prev.agecat(d)
 prev.data <- summary.prev.whz(d)
+prev.decade <- d %>% group_by(decade) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(country.cat="decade") %>% rename(cat.level=decade)
 prev.gdp <- d %>% group_by(gdp_cat) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(country.cat="gdp") %>% rename(cat.level=gdp_cat)
 prev.gdi <- d %>% group_by(gdi_cat) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(country.cat="gdi") %>% rename(cat.level=gdi_cat)
 prev.gii <- d %>% group_by(gii_cat) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(country.cat="gii") %>% rename(cat.level=gii_cat)
@@ -41,6 +42,7 @@ prev.pov <- d %>% group_by(pov_cat) %>% do(summary.prev.whz(.)$prev.res) %>% mut
 
 prev <- bind_rows(
   data.frame(cohort = "pooled", cat.level = "Overall", prev.data$prev.res),
+  data.frame(cohort = "pooled", prev.decade),
   data.frame(cohort = "pooled", prev.gdp),
   data.frame(cohort = "pooled", prev.gdi),
   data.frame(cohort = "pooled", prev.gii),
@@ -54,31 +56,21 @@ prev <- prev %>% mutate(region="NA")
 
 prev$agecat <- factor(prev$agecat, levels=unique(prev$agecat))
 
-p <- ggplot(prev,aes(y=est,x=agecat)) +
-  geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
-  geom_point(aes(fill=region, color=region), size = 2) +
-  coord_cartesian(ylim=c(0,25)) +
-  theme(
-    axis.text.x = element_text(margin =
-                                 margin(t = 0, r = 0, b = 0, l = 0),
-                               size = 14)) +
-  theme(axis.title.y = element_text(size = 14)) +
-  ggtitle("") + facet_wrap(country.cat~cat.level) 
+# p <- ggplot(prev,aes(y=est,x=agecat)) +
+#   geom_errorbar(aes(color=region, ymin=lb, ymax=ub), width = 0) +
+#   geom_point(aes(fill=region, color=region), size = 2) +
+#   coord_cartesian(ylim=c(0,25)) +
+#   theme(
+#     axis.text.x = element_text(margin =
+#                                  margin(t = 0, r = 0, b = 0, l = 0),
+#                                size = 14)) +
+#   theme(axis.title.y = element_text(size = 14)) +
+#   ggtitle("") + facet_wrap(country.cat~cat.level) 
+# 
+# p
 
-p
 
 
-
-prev_plot_no_cohort <- ki_desc_plot(d,
-                                    Disease="Wasting",
-                                    Measure="Prevalence", 
-                                    Birth="yes", 
-                                    Severe="no", 
-                                    Age_range="3 months", 
-                                    xlabel="Child age, months",
-                                    ylabel='Point prevalence (%)',
-                                    yrange=c(0,24),
-                                    returnData=T)
 
 
 # #Severe wasting prevalence
@@ -125,6 +117,7 @@ d3 <- calc.ci.agecat(d, range = 3)
 
 #Cumulative inc
 ci.data <- summary.wast.ci(d3, age.range=3)
+ci.decade <- d3 %>% group_by(decade) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="decade") %>% rename(cat.level=decade)
 ci.gdp <- d3 %>% group_by(gdp_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="gdp") %>% rename(cat.level=gdp_cat)
 ci.gdi <- d3 %>% group_by(gdi_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="gdi") %>% rename(cat.level=gdi_cat)
 ci.gii <- d3 %>% group_by(gii_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="gii") %>% rename(cat.level=gii_cat)
@@ -135,6 +128,7 @@ ci.pov <- d3 %>% group_by(pov_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res
 
 ci <- bind_rows(
   data.frame(cohort = "pooled", cat.level = "Overall", ci.data$ci.res),
+  data.frame(cohort = "pooled", ci.decade),
   data.frame(cohort = "pooled", ci.gdp),
   data.frame(cohort = "pooled", ci.gdi),
   data.frame(cohort = "pooled", ci.gii),

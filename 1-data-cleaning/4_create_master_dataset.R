@@ -9,7 +9,7 @@ Zscores <- readRDS(included_studies_path)
 
 #load country metrics
 country_metrics <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds")
-
+unique(country_metrics$country)
 
 
 # Check how many at-birth measurements have
@@ -141,6 +141,8 @@ saveRDS(start_year, paste0(here::here(),"/data/study_start_years.rds"))
 
 
 #save birth years
+table(is.na(d$brthyr))
+table(d$brthyr, d$country)
 brthyrs <- d %>% group_by(studyid, country) %>% distinct(brthyr)
 saveRDS(brthyrs, paste0(here::here(),"/data/study_birth_years.rds"))
 
