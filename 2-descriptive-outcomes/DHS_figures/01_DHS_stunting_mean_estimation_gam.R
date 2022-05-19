@@ -262,16 +262,19 @@ saveRDS(dhsfits_country, file = paste0(dhs_res_dir, "stunting-DHSandKI-by-countr
 # for plotting
 #---------------------------------------
 ghapfits_cohort <- ghapfits_cohort %>% mutate(dsource = "ki cohorts", measure = as.character(measure))
+ghapfits_cohort <- mark_region(ghapfits_cohort)
+
 dhssubfits <- df_survey_output %>% mutate(dsource = "DHS, ki countries", measure = as.character(measure))
 dhssubfits_country <-df_survey_country %>% mutate(dsource = "DHS, ki countries", measure = as.character(measure))
 
-dhsfits_country <- bind_rows(ghapfits_cohort, dhssubfits, dhssubfits_country) %>%
+
+dhsfits_country <- bind_rows(ghapfits, ghapfits_cohort, dhssubfits, dhssubfits_country) %>%
   mutate(dsource = factor(dsource, levels = c("ki cohorts", "DHS, ki countries"))) %>%
   filter(dsource %in% c("ki cohorts", "DHS, ki countries"))
 dhsfits_country <- filter(dhsfits_country, measure == "LAZ")
 
 saveRDS(dhsfits_country, file = paste0(dhs_res_dir, "stunting-DHSandKI-by-cohort.rds"))
-
+table(dhsfits_country$region, is.na(dhsfits_country$cohort))
 
 #---------------------------------------
 # Filter for LAZ measures with data source of ki cohorts or DHS

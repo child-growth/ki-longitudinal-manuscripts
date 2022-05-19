@@ -455,3 +455,49 @@ mark_region <- function(df){
   return(df)
 }
 
+# this version is used for stunting figures 
+# that show LAZ density and LAZ by age
+# pooled by ki cohort 
+mark_region2<-function(df){
+  
+  df$country <- as.character(df$country)
+  df <- df %>% mutate(country = toupper(country),
+                      region = case_when(
+                        country=="BANGLADESH" | country=="INDIA"|
+                          country=="NEPAL" | country=="PAKISTAN"|
+                          country=="PHILIPPINES"| country=="CHINA"|
+                          country=="THAILAND"|country=="SINGAPORE"|
+                          country=='OMAN'~ "South Asia",
+                        country=="KENYA"|
+                          country=="GHANA"|
+                          country=="BURKINA FASO"|
+                          country=="GUINEA-BISSAU"|
+                          country=="MALAWI"|
+                          country=="MALI"|
+                          country=="MOZAMBIQUE"|
+                          country=="SOUTH AFRICA"|
+                          country=="TANZANIA, UNITED REPUBLIC OF"|
+                          country=="TANZANIA"|
+                          country=="ZIMBABWE"|
+                          country=="GAMBIA"|
+                          country=="CONGO, THE DEMOCRATIC REPUBLIC OF" ~ "Africa",
+                        country=="BRAZIL" | country=="GUATEMALA" |
+                          country=="PERU"|country=='ECUADOR' | country=="MEXICO" |
+                          country=="BELIZE" ~ "Latin America",
+                        country=="UNITED STATES" | country=="UNITED KINGDOM" | country=="ITALY"|
+                          country== "NETHERLANDS"|
+                          country=="BELARUS" ~ "N.America & Europe",
+                        country=="KI POOLED" ~ region,
+                        TRUE ~ "Other"
+                      ))
+  
+  
+  df$region <- factor(df$region, 
+                      levels = c("Africa",
+                                 "South Asia",
+                                 "Latin America",
+                                 "N.America & Europe",
+                                 "Other"))
+  
+  return(df)
+}
