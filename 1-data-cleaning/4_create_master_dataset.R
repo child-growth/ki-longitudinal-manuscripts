@@ -8,8 +8,9 @@ source(paste0(here::here(), "/0-config.R"))
 Zscores <- readRDS(included_studies_path)
 
 #load country metrics
-country_metrics <- readRDS(file=here("data/country metrics/combined_country_metrics.RDS"))
-country_metrics <- country_metrics %>% rename(brthyr = year) %>% mutate(country=str_to_upper(country))
+country_metrics <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds")
+
+
 
 # Check how many at-birth measurements have
 # length < 45cm and therefore no Z-scores
@@ -42,11 +43,15 @@ table(Zscores$studyid, is.na(Zscores$brthyr))
 unique(Zscores$brthyr)
 
 
+unique(Zscores$country)
+
+unique(country_metrics$country)
+
 
 #merge country metrics
 Zscores <- left_join(Zscores, country_metrics, by = c("country","brthyr"))
 
-
+colnames(Zscores)
 
 
 

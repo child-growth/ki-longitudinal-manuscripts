@@ -40,7 +40,7 @@ length(unique(paste0(d$studyid,d$country,d$subjid)))
 
     
 
-d <- d %>% subset(., select=c(studyid, subjid, country, region, gdp,gdi,gii,chi,gini,he,pov, 
+d <- d %>% subset(., select=c(studyid, subjid, country, region, brthyr, gdp,gdi,gii,chi,gini,he,pov, 
                               measurefreq, tr, sex, agedays, haz, whz, waz, muaz, latitude, longitud))
 
 #Check for duplicate agedays
