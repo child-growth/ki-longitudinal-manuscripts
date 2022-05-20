@@ -257,7 +257,7 @@ main_color <- "#287D8EFF"
                        space = "free")
 
 
-ggsave(p_wlz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3_alt_wlz.png"), width=9, height=18.3, units = 'cm')
+ggsave(p_wlz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3_alt_wlz.png"), width=12, height=20, units = 'cm')
   
 
 
