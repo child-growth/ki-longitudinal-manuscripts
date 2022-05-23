@@ -29,6 +29,7 @@ d = d %>% select(studyid, subjid, region, country, measid, agedays, haz)
 assert_that(setequal(unique(d$studyid), monthly_cohorts),
             msg = "Check data. Included cohorts do not match.")
 
+
 ##########################################
 # Define indicators of stunting at each time point
 ##########################################
@@ -507,7 +508,7 @@ saveRDS(flow_m, file=paste0(res_dir, "stunting/stuntflow.RDS"))
 saveRDS(stunt_pooled_corr, file=paste0(res_dir, "stunting/stuntflow_pooled_reml.RDS"))
 saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_fe.RDS"))
 saveRDS(stunt_pooled_region_corr, file=paste0(res_dir, "stunting/stuntflow_pooled_region_reml.RDS"))
-saveRDS(stunt_pooled_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_region_fe.RDS"))
+saveRDS(stunt_pooled_region_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_region_fe.RDS"))
 
 
 
