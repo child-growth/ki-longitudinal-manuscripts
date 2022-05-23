@@ -23,8 +23,9 @@ gdp_data <- readRDS(paste0(res_dir,"stunting/stunt_gdp_pool.RDS")) %>%
   )))
 
 gdi_data <- readRDS(paste0(res_dir, "stunting/stunt_gdi_pool.RDS")) %>% 
+  mutate(country_cat = ifelse(country_cat=="High/Medium", "Medium/High", country_cat)) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
-    "Overall", "Very-low", "Low", "Medium"
+    "Overall", "Very low", "Low", "Medium/High"
   )))
   
 gii_data <- readRDS(paste0(res_dir, "stunting/stunt_gii_pool.RDS")) %>% 
