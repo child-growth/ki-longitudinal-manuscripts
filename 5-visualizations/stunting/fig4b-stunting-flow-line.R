@@ -2,10 +2,9 @@
 # ki longitudinal manuscripts
 # stunting analysis
 
-# figure: stacked bar chart showing 
+# figure: line plot showing 
 # proportion of children who were newly stunted, 
-# still stunted, relapsed, recovered, never stunted
-
+# relapsed, recovered
 # includes category for mortality
 # stratified by region and cohort
 
