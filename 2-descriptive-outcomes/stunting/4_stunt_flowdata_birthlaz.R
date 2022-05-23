@@ -212,37 +212,37 @@ stunt_agg = flow_m %>%
 # pool by birth LAZ
 # estimate random effects, format results
 #--------------------------------------------------
-pooled_newly_birthlaz = run_rma_agem(data = stunt_agg, 
+pooled_newly_birthlaz = run_rma_agem_birthlaz(data = stunt_agg, 
                                           n_name = "nchild", 
                                           x_name = "newly_stunted", 
                                           label = "Newly stunted",
                                           method = "REML")
 
-pooled_still_birthlaz = run_rma_agem(data = stunt_agg, 
+pooled_still_birthlaz = run_rma_agem_birthlaz(data = stunt_agg, 
                             n_name = "nchild", 
                             x_name = "still_stunted", 
                             label = "Still stunted",
                             method = "REML")
 
-pooled_not_birthlaz = run_rma_agem(data = stunt_agg, 
+pooled_not_birthlaz = run_rma_agem_birthlaz(data = stunt_agg, 
                           n_name = "nchild", 
                           x_name = "not_stunted", 
                           label = "Not stunted",
                           method = "REML")
 
-pooled_rec_birthlaz = run_rma_agem(data = stunt_agg, 
+pooled_rec_birthlaz = run_rma_agem_birthlaz(data = stunt_agg, 
                           n_name = "nchild", 
                           x_name = "recover",
                           label = "Recovered",
                           method = "REML")
 
-pooled_relapse_birthlaz = run_rma_agem(data = stunt_agg, 
+pooled_relapse_birthlaz = run_rma_agem_birthlaz(data = stunt_agg, 
                               n_name = "nchild", 
                               x_name = "relapse",
                               label = "Stunting relapse",
                               method = "REML")
 
-pooled_never_birthlaz = run_rma_agem(data = stunt_agg, 
+pooled_never_birthlaz = run_rma_agem_birthlaz(data = stunt_agg, 
                             n_name = "nchild", 
                             x_name = "never_stunted",
                             label = "Never stunted",
@@ -261,37 +261,37 @@ stunt_pooled_birthlaz = bind_rows(pooled_newly_birthlaz,
 # pool by birth LAZ
 # estimate fixed effects, format results
 #--------------------------------------------------
-pooled_newly_birthlaz_fe = run_rma_agem(data = stunt_agg, 
+pooled_newly_birthlaz_fe = run_rma_agem_birthlaz(data = stunt_agg, 
                                           n_name = "nchild", 
                                           x_name = "newly_stunted", 
                                           label = "Newly stunted",
                                           method = "FE")
 
-pooled_still_birthlaz_fe = run_rma_agem(data = stunt_agg, 
+pooled_still_birthlaz_fe = run_rma_agem_birthlaz(data = stunt_agg, 
                                           n_name = "nchild", 
                                           x_name = "still_stunted", 
                                           label = "Still stunted",
                                           method = "FE")
 
-pooled_not_birthlaz_fe = run_rma_agem(data = stunt_agg, 
+pooled_not_birthlaz_fe = run_rma_agem_birthlaz(data = stunt_agg, 
                                         n_name = "nchild", 
                                         x_name = "not_stunted", 
                                         label = "Not stunted",
                                         method = "FE")
 
-pooled_rec_birthlaz_fe = run_rma_agem(data = stunt_agg, 
+pooled_rec_birthlaz_fe = run_rma_agem_birthlaz(data = stunt_agg, 
                                         n_name = "nchild", 
                                         x_name = "recover",
                                         label = "Recovered",
                                         method = "FE")
 
-pooled_relapse_birthlaz_fe = run_rma_agem(data = stunt_agg, 
+pooled_relapse_birthlaz_fe = run_rma_agem_birthlaz(data = stunt_agg, 
                                             n_name = "nchild", 
                                             x_name = "relapse",
                                             label = "Stunting relapse",
                                             method = "FE")
 
-pooled_never_birthlaz_fe = run_rma_agem(data = stunt_agg, 
+pooled_never_birthlaz_fe = run_rma_agem_birthlaz(data = stunt_agg, 
                                           n_name = "nchild", 
                                           x_name = "never_stunted",
                                           label = "Never stunted",
