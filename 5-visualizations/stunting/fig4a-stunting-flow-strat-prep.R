@@ -22,9 +22,17 @@ stunt_data = readRDS(paste0(res_dir, "stunting/stuntflow.RDS"))
 stunt_data_birthlaz = readRDS(paste0(res_dir, "stunting/stuntflow_birthlaz.RDS"))
 
 # number of studies, countries, children included
-length(names(table(stunt_data$studyid)))
+stunt_data<- stunt_data %>% mutate(cohort_country = paste0(studyid, "-", country))
+length(names(table(stunt_data$cohort_country)))
 length(names(table(stunt_data$country)))
 x=stunt_data %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
+sum(x$n)
+
+# number of studies, countries, children included - strat by birth LAZ
+stunt_data_birthlaz <- stunt_data_birthlaz %>% mutate(cohort_country = paste0(studyid, "-", country))
+length(names(table(stunt_data_birthlaz$cohort_country)))
+length(names(table(stunt_data_birthlaz$country)))
+x=stunt_data_birthlaz %>% group_by(studyid) %>% summarise(n = length(unique(subjid)))
 sum(x$n)
 
 stunt_data = stunt_data %>% 
