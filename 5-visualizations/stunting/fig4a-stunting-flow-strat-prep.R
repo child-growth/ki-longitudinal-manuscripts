@@ -19,6 +19,7 @@ source(paste0(here::here(), "/0-config.R"))
 
 # load data
 stunt_data = readRDS(paste0(res_dir, "stunting/stuntflow.RDS"))
+stunt_data_birthlaz = readRDS(paste0(res_dir, "stunting/stuntflow_birthlaz.RDS"))
 
 # number of studies, countries, children included
 length(names(table(stunt_data$studyid)))
@@ -28,7 +29,9 @@ sum(x$n)
 
 stunt_data = stunt_data %>% 
   mutate(cohort_country = paste0(studyid, " - ", country))
-  
+stunt_data_birthlaz = stunt_data_birthlaz %>% 
+  mutate(cohort_country = paste0(studyid, " - ", country))
+
 
 #get percent of recovered children who ever relapse
 head(stunt_data)
@@ -145,6 +148,8 @@ format_plot_data = function(data, group_vars = NULL){
 plot_overall = format_plot_data(stunt_data)
 plot_region = format_plot_data(stunt_data, group_vars = "region")
 plot_cohort = format_plot_data(stunt_data, group_vars = "cohort_country")
+plot_cohort_birthlaz = format_plot_data(stunt_data_birthlaz, 
+                                        group_vars = c("cohort_country", "birth_laz"))
 
 plot_overall = plot_overall %>%
   mutate(region = "Overall")
@@ -164,6 +169,7 @@ plot_region %>%
 saveRDS(plot_overall, file = paste0(res_dir, "stunting/stunt-flow-data-pooled.RDS"))
 saveRDS(plot_region, file = paste0(res_dir, "stunting/stunt-flow-data-region.RDS"))
 saveRDS(plot_cohort, file = paste0(res_dir, "stunting/stunt-flow-data-cohort.RDS"))
+saveRDS(plot_cohort_birthlaz, file = paste0(res_dir, "stunting/stunt-flow-data-cohort-birthlaz.RDS"))
 
 
 
