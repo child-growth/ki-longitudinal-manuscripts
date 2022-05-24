@@ -32,7 +32,7 @@ assert_that(setequal(unique(d$studyid), monthly_cohorts),
 #-------------------------------------------
 # laz category at birth
 #-------------------------------------------
-laz_birth <- d %>% filter(agedays<30.45) %>% 
+laz_birth <- d %>% filter(agedays<30.4167) %>% 
   dplyr::select(studyid, subjid, agedays, haz) %>% 
   arrange(studyid, subjid, agedays) %>% 
   group_by(studyid, subjid) %>% 
@@ -46,10 +46,8 @@ laz_birth = laz_birth[-drops,]
   
 laz_birth = laz_birth %>% 
   mutate(birth_laz = case_when(
-    haz < -3 ~ "LAZ under -3",
-    haz >= -3 & haz < -2 ~ "LAZ -3 to -2",
-    haz >= -2 & haz < -1 ~ "LAZ -2 to -1",
-    haz >= -1 & haz < 0 ~ "LAZ -1 to 0",
+    haz < -2 ~ "LAZ under -2",
+    haz >= -2 & haz < 0 ~ "LAZ -2 to 0",
     haz >= 0 ~ "LAZ 0 or more"
 )) %>% dplyr::select(studyid, subjid, birth_laz)
 
@@ -386,6 +384,7 @@ stunt_pooled_birthlaz_corr_fe = replace_zero(data = stunt_pooled_birthlaz_corr_f
                                     label = "Never stunted")
 
 
+saveRDS(flow_m, file=paste0(res_dir, "stunting/stuntflow_birthlaz.RDS"))
 saveRDS(stunt_pooled_birthlaz_corr, file=paste0(res_dir, "stunting/stuntflow_pooled_birthlaz_reml.RDS"))
 saveRDS(stunt_pooled_birthlaz_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_birthlaz_fe.RDS"))
 
