@@ -254,6 +254,11 @@ stunt_pooled_birthlaz = bind_rows(pooled_newly_birthlaz,
                          pooled_never_birthlaz
 )
 
+table(stunt_pooled_birthlaz$label,
+      stunt_pooled_birthlaz$method.used)
+
+table(stunt_pooled_birthlaz$birth_laz,
+      stunt_pooled_birthlaz$method.used)
 
 #--------------------------------------------------
 # pool by birth LAZ
