@@ -201,5 +201,20 @@ table(df$pov_cat)
 round(prop.table(table(df$pov_cat))*100,2)
 table(df$region, df$pov_cat)
 
+
+summary(df$mort)
+quantile(df$mort, na.rm=T)
+quantile(df$mort, na.rm=T, probs = seq(0, 1, 0.3333333333333333333))
+
+
+df$mort_cat <- cut(df$mort, breaks=c(-9999999,  14.300000,  21.550000, 9999999), 
+                  labels = c("Low", "Medium","High"), 
+                  include.lowest = T, right=T)
+table(df$mort_cat)
+round(prop.table(table(df$mort_cat))*100,2)
+table(df$region, df$mort_cat)
+
+
+
 saveRDS(df, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds")
 

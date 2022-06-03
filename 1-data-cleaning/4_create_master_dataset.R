@@ -10,7 +10,7 @@ Zscores <- readRDS(included_studies_path)
 #load country metrics
 country_metrics <- readRDS(file=here("data/country metrics/combined_country_metrics.RDS"))
 unique(country_metrics$country)
-
+summary(country_metrics$mort)
 
 
 
@@ -155,13 +155,12 @@ colnames(d)
 head(d)
 
 df <- d %>%  group_by(studyid, country, subjid) %>% slice(1) %>% 
-             select(studyid, subjid, country, brthyr, region, gdp,gdi,gii,chi,gini,he,pov)
+             select(studyid, subjid, country, brthyr, region, gdp,gdi,gii,chi,gini,he,pov, mort)
 head(df)
 
 #classify study decade
 df <- left_join(df, start_year, by = c("studyid", "country"))
-table(is.na(df$gdp))
-temp <- df[is.na(df$gdp),]
-dim(temp)
+table(is.na(df$mort))
+
 saveRDS(df, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds")
 
