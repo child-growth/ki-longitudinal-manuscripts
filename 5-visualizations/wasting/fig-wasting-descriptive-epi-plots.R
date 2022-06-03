@@ -342,6 +342,25 @@ saveRDS(ip_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ip_plot_name,"_
 #ggsave(ci_plot[[1]] + ggtitle("Wasting incidence"), file=paste0(BV_dir,"/figures/wasting/fig-",ci_plot_name, "_birthstrat_presentation.png"), width=13, height=3)
 
 
+#-------------------------------------------------------------------------------------------
+# Severe wasting incidence
+#-------------------------------------------------------------------------------------------
+
+sev_ip_plot_primary <- ki_wast_ip_flurry_plot(d,
+                                          Disease="Wasting",
+                                          Measure=c("Cumulative incidence", "Incidence proportion"),
+                                          Birth="yes",
+                                          Severe="yes",
+                                          dodge=0.5,
+                                          Age_range="6 months",
+                                          xlabel="Child age, months",
+                                          returnData=T,
+                                          legend.pos= "none"
+                                          #legend.pos= c(.0605,.815)
+                                          )
+
+
+sev_ip_plot_no_cohort + ggtitle("Severe wasting incidence")
 
 #-------------------------------------------------------------------------------------------
 # Wasting incidence rate

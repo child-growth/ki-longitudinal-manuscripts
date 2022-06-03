@@ -164,6 +164,8 @@ df$gini_cat <- cut(df$gini, breaks=c(-9999999,  32.32, 38.90, 9999999),
 table(df$gini_cat)
 round(prop.table(table(df$gini_cat))*100,2)
 table(df$region, df$gini_cat)
+table(df$country, df$gini_cat)
+table(df$studyid, df$gini_cat)
 
 
 df$gini_cat <- cut(df$gini, breaks=c(-9999999,  32.32, 38.90, 9999999), 
