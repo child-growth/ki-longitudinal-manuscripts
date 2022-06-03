@@ -106,7 +106,7 @@ bar_plot_noRE_region_name = create_name(
 # save plot and underlying data
 #-----------------------------------------
 ggsave(bar_plot_noRE, file=paste0(fig_dir, "stunting/fig-",
-           bar_plot_noRE_name,".png"), width=6, height=4)
+           bar_plot_noRE_name,".png"), width=8, height=4)
 ggsave(bar_plot_noRE_region, file=paste0(fig_dir, "stunting/fig-",
             bar_plot_noRE_region_name,".png"), width=15, height=4)
 

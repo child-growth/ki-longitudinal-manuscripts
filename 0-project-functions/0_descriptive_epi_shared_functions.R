@@ -724,7 +724,7 @@ run_rma_agem_birthlaz <- function(data, n_name, x_name, label, method) {
   res$agem <- factor(levels(data$agem), levels = levels(data$agem))
   res$ptest.f <- sprintf("%0.0f", res$est)
   res$label <- label
-  
+
   res <- res %>% dplyr::select(birth_laz, label, agem, nstudies, nmeas, everything())
   
   return(res)
