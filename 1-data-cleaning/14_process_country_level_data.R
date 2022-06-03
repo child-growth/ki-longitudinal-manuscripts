@@ -12,6 +12,9 @@ gini_raw <- read.csv(here("data/country metrics/gini.csv")) %>% rename(country=`
 he_raw <- read.csv(here("data/country metrics/health_expenditure.csv")) %>% rename(country=`ï..Country.Name`)
 pov_raw <- read.csv(here("data/country metrics/perc_pov.csv")) %>% rename(country=`ï..Country.Name`)
 
+mort_raw <- read.csv(here("data/country metrics/perc_pov.csv")) %>% rename(country=`ï..Country.Name`)
+
+
 #ki_countries <- read.csv(here("data/country metrics/KI country-years.csv")) %>% rename(country=Country, year=Year) %>% select(country, year)
 #remove space in countries for merge
 #ki_countries <- ki_countries %>% mutate(country = gsub(" ","", country))
@@ -62,6 +65,10 @@ he <- he_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values
 pov <- pov_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "pov", values_drop_na = TRUE) %>%
   select(country, year, pov) %>% mutate(year=as.numeric(gsub("X","",year)), pov=as.numeric(pov), 
                                         country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
+mort <- mort_raw %>% pivot_longer(cols = starts_with("X"), names_to = "year", values_to = "mort", values_drop_na = TRUE) %>%
+  select(country, year, mort) %>% mutate(year=as.numeric(gsub("X","",year)), mort=as.numeric(mort), 
+                                        country=gsub(" ","",country), country=gsub("-","",country), country=gsub("Tanzania(UnitedRepublicof)","Tanzania",country), country=gsub("Gambia,The","Gambia",country))
+
 
 
 
@@ -76,18 +83,24 @@ chi <- left_join(years, chi, by=c("country","year")) %>% filter(!is.na(country),
 gini <- left_join(years, gini, by=c("country","year")) %>% filter(!is.na(country), country!="")
 he <- left_join(years, he, by=c("country","year")) %>% filter(!is.na(country), country!="")
 pov <- left_join(years, pov, by=c("country","year")) %>% filter(!is.na(country), country!="")
+mort <- left_join(years, mort, by=c("country","year")) %>% filter(!is.na(country), country!="")
 
 
 #drop countries with less than 2 NA
-gdp <- gdp %>% group_by(country) %>% mutate(non_NA =sum(!is.na(gdp))) %>% filter(non_NA>2) %>% subset(., select = -c(non_NA))
-gdi <- gdi %>% group_by(country) %>% mutate(non_NA =sum(!is.na(gdi))) %>% filter(non_NA>2) %>% subset(., select = -c(non_NA))
-gii <- gii %>% group_by(country) %>% mutate(non_NA =sum(!is.na(gii))) %>% filter(non_NA>2) %>% subset(., select = -c(non_NA))
-chi <- chi %>% group_by(country) %>% mutate(non_NA =sum(!is.na(chi))) %>% filter(non_NA>2) %>% subset(., select = -c(non_NA))
-gini <- gini %>% group_by(country) %>% mutate(non_NA =sum(!is.na(gini))) %>% filter(non_NA>2) %>% subset(., select = -c(non_NA))
-he <- he %>% group_by(country) %>% mutate(non_NA =sum(!is.na(he))) %>% filter(non_NA>2) %>% subset(., select = -c(non_NA))
-pov <- pov %>% group_by(country) %>% mutate(non_NA =sum(!is.na(pov))) %>% filter(non_NA>2) %>% subset(., select = -c(non_NA))
+Nobs =2
+
+gdp <- gdp %>% group_by(country) %>% mutate(non_NA =sum(!is.na(gdp))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
+gdi <- gdi %>% group_by(country) %>% mutate(non_NA =sum(!is.na(gdi))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
+gii <- gii %>% group_by(country) %>% mutate(non_NA =sum(!is.na(gii))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
+chi <- chi %>% group_by(country) %>% mutate(non_NA =sum(!is.na(chi))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
+gini <- gini %>% group_by(country) %>% mutate(non_NA =sum(!is.na(gini))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
+he <- he %>% group_by(country) %>% mutate(non_NA =sum(!is.na(he))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
+pov <- pov %>% group_by(country) %>% mutate(non_NA =sum(!is.na(pov))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
+mort <- mort %>% group_by(country) %>% mutate(non_NA =sum(!is.na(mort))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
 
   
+
+
 #linearly interpolate 
 gdp<-gdp %>% group_by(country) %>%
   mutate(gdp = approxExtrap(which(!is.na(gdp)), gdp[!is.na(gdp)],xout = 1:n(), rule=2)$y) %>%
@@ -102,6 +115,7 @@ chi<-chi %>% group_by(country) %>% mutate(chi = approxExtrap(which(!is.na(chi)),
 gini<-gini %>% group_by(country) %>% mutate(gini = approxExtrap(which(!is.na(gini)), gini[!is.na(gini)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
 he<-he %>% group_by(country) %>% mutate(he = approxExtrap(which(!is.na(he)), he[!is.na(he)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
 pov<-pov %>% group_by(country) %>% mutate(pov = approxExtrap(which(!is.na(pov)), pov[!is.na(pov)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
+mort<-mort %>% group_by(country) %>% mutate(mort = approxExtrap(which(!is.na(mort)), mort[!is.na(mort)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
 
 #merge indicators together
 unique(ki_countries$country)
@@ -115,9 +129,8 @@ d <- left_join(d, chi, by=c("country","year"))
 d <- left_join(d, gini, by=c("country","year"))
 d <- left_join(d, he, by=c("country","year"))
 d <- left_join(d, pov, by=c("country","year"))
+d <- left_join(d, mort, by=c("country","year"))
 
-
-head(d)
 
 #Change country format for merge
 d <- d %>% rename(brthyr = year) %>% mutate(country=str_to_upper(country), 
@@ -134,11 +147,3 @@ unique(d$country)
 #save
 saveRDS(d, file=here("data/country metrics/combined_country_metrics.RDS"))
 write.csv(d, file=here("data/country metrics/combined_country_metrics.csv"))
-
-
-unique(d$country)
-unique(gdp$country)
-unique(gdp_raw$country)
-unique(gdi$country)
-
-table(d$country, is.na(d$gdp))
