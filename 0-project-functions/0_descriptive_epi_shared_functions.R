@@ -595,6 +595,143 @@ run_rma_agem <- function(data, n_name, x_name, label, method) {
 
 
 ##############################################
+# run_rma_agem_region
+##############################################
+
+
+# run fit.rma wrapper across a list of ages for age in months
+# Input:
+# data: 
+# n_name:
+# label:
+# method:
+
+# Returns:
+# est:
+# lb:
+# ub:
+# agecat:
+# ptest.f:
+# label:
+
+run_rma_agem_region <- function(data, n_name, x_name, label, method) {
+  
+  # create age list
+  agelist <- as.list(levels(data$agem))
+  
+  # create region datasets 
+  data <- mark_region(data)
+  
+  pool_by_age <- function(data, age){
+    res_list <- fit.rma(
+      data = data %>% filter(agem == age),
+      ni = n_name, xi = x_name, measure = "PLO", nlab = "children",
+      method = method
+    )  
+    return(res_list %>% mutate(agem=age))
+  }
+  
+  # apply fit.rma across age list
+  res.list.sasia <- lapply(agelist, function(x)
+    pool_by_age(data = data %>% filter(region=="South Asia"), age = x)
+  ) %>% bind_rows() %>% 
+    mutate(region="South Asia")
+  
+  res.list.latamer <- lapply(agelist, function(x)
+    pool_by_age(data = data %>% filter(region=="Latin America"), age = x)
+  ) %>% bind_rows() %>% 
+    mutate(region="Latin America")
+  
+  res.list.africa <- lapply(agelist, function(x)
+    pool_by_age(data = data %>% filter(region=="Africa"), age = x)
+  ) %>% bind_rows() %>% 
+    mutate(region="Africa")
+  
+  # combine output
+  res <- bind_rows(res.list.sasia, res.list.latamer, res.list.africa) %>% 
+    as.data.frame()
+  
+  # tidy up output
+  res[, 3] <- as.numeric(res[, 3])
+  res[, 5] <- as.numeric(res[, 5])
+  res[, 6] <- as.numeric(res[, 6])
+  res <- res %>% mutate(est = est * 100, lb = lb * 100, ub = ub * 100)
+  res$agem <- factor(levels(data$agem), levels = levels(data$agem))
+  res$ptest.f <- sprintf("%0.0f", res$est)
+  res$label <- label
+  
+  res <- res %>% dplyr::select(region, label, agem, nstudies, nmeas, everything())
+  
+  return(res)
+}
+
+
+
+##############################################
+# run_rma_agem_birthlaz
+##############################################
+
+
+# run fit.rma wrapper across a list of ages for age in months
+# Input:
+# data: 
+# n_name:
+# label:
+# method:
+
+# Returns:
+# est:
+# lb:
+# ub:
+# agecat:
+# ptest.f:
+# label:
+
+run_rma_agem_birthlaz <- function(data, n_name, x_name, label, method) {
+  
+  # create age list
+  agelist <- as.list(levels(data$agem))
+  
+  pool_by_age <- function(data, age){
+    res_list <- fit.rma(
+      data = data %>% filter(agem == age),
+      ni = n_name, xi = x_name, measure = "PLO", nlab = "children",
+      method = method
+    )  
+    return(res_list %>% mutate(agem=age))
+  }
+  
+  # apply fit.rma across age list and birth laz categories
+  birth_cats = unique(data$birth_laz[!is.na(data$birth_laz)])
+  
+  res_all = list()
+  for(i in 1:length(birth_cats)){
+    res_all[[i]] <- lapply(agelist, function(x)
+      pool_by_age(data = data %>% filter(birth_laz==birth_cats[[i]]), 
+                  age = x)
+    ) %>% bind_rows() %>% 
+      mutate(birth_laz=birth_cats[[i]])
+  }
+  
+  # combine output
+  res = bind_rows(res_all) %>% as.data.frame()
+  
+  # tidy up output
+  res[, 3] <- as.numeric(res[, 3])
+  res[, 5] <- as.numeric(res[, 5])
+  res[, 6] <- as.numeric(res[, 6])
+  res <- res %>% mutate(est = est * 100, lb = lb * 100, ub = ub * 100)
+  res$agem <- factor(levels(data$agem), levels = levels(data$agem))
+  res$ptest.f <- sprintf("%0.0f", res$est)
+  res$label <- label
+
+  res <- res %>% dplyr::select(birth_laz, label, agem, nstudies, nmeas, everything())
+  
+  return(res)
+}
+
+
+##############################################
 # run_rma_agem
 ##############################################
 

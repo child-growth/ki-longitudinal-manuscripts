@@ -92,6 +92,13 @@ plotdf$RFlabel[plotdf$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (%
 plotdf$RFlabel[plotdf$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 
+#p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=birthwt)) + 
+#  geom_point(aes(y=ATE, color=birthwt, fill=birthwt), position=position_dodge(width=0.8), size = 3) +
+#  geom_linerange(aes(ymin=CI1, ymax=CI2, color=birthwt), position=position_dodge(width=0.8), alpha=0.5, size = 1) +
+#  labs(x = "Exposure", y = "ATE") +
+#  geom_hline(yintercept = 0) +
+#  coord_flip(ylim =c(-1.2, 1.2)) +
+
 plotdf$Nstudies <- as.character(plotdf$Nstudies)
 plotdf$Nstudies[plotdf$birthwt=="Low birthweight"] <- ""
 plotdf$Nstudies[plotdf$outcome=="WLZ"] <- ""
@@ -113,8 +120,10 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=`Birth weight`)) +
         axis.text.y = element_text(size=8, hjust=0),
         strip.text.x = element_text(size=14),
         axis.text.x = element_text(size=10), 
-        panel.spacing = unit(0, "lines")) 
+        panel.spacing = unit((0), "lines")) 
 p_bw_strat
+
+ggsave(p_bw_strat, filename = "bwstrat.png",height = 8, width = 10)
 
 
 ggsave(p_bw_strat, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png"), width=30, height=18.3, units = 'cm')
