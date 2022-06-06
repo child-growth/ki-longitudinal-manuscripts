@@ -11,6 +11,53 @@ rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-epi-functions.R"))
 
+# Load data for cohort-specific points
+dinput <- readRDS(paste0(res_dir,"/desc_data_cleaned.rds")) 
+
+data_cohort <- dinput %>% filter(disease=="Stunting" & 
+                                cohort!="pooled-country" & 
+                                cohort!="pooled" &
+                                severe=="no" & 
+                                measure=="Incidence proportion" & 
+                                analysis=="Primary" & 
+                                age_range=="3 months" & 
+                                birth=="strat") %>% 
+  dplyr::select(-studyid)
+
+country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds") %>% 
+  ungroup()  %>% 
+  mutate(cohort = paste0(studyid, "-", country)) %>% 
+  dplyr::select(c(cohort, decade, gii_cat, chi_cat, gdp_cat, gdi_cat, 
+                  gini_cat, he_cat, pov_cat, mort_cat)) %>% 
+  distinct()  
+
+d_cohort <- left_join(data_cohort, country_data, 
+                        by = c("cohort")) %>% 
+  droplevels() %>% 
+  mutate(est=est*100) 
+
+# Remove 'months' from x axis labels  
+d_cohort <- d_cohort %>% arrange(agecat)
+d_cohort$agecat <- as.character(d_cohort$agecat)
+d_cohort$agecat <- gsub(" months", "", d_cohort$agecat)
+d_cohort$agecat <- factor(d_cohort$agecat, levels=unique(d_cohort$agecat))
+
+# recode age categories
+d_cohort <- d_cohort %>% 
+  mutate(agecat = as.character(agecat)) %>%
+  mutate(agecat = ifelse(agecat=="8 days-3", "0-3", agecat)) %>%
+  mutate(agecat = factor(agecat, levels = c(
+    "Birth",
+    "0-3", 
+    "3-6",
+    "6-9",
+    "9-12",
+    "12-15",
+    "15-18",
+    "18-21",
+    "21-24"
+  )))
+
 # Load data --------------------------------
 decade_data <- readRDS(paste0(res_dir,"stunting/stunt_decade_pool.RDS")) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
@@ -53,6 +100,14 @@ pov_data <- readRDS(paste0(res_dir, "stunting/stunt_pov_pool.RDS")) %>%
     "Overall", "Low", "Medium", "High"
   )))
 
+birthlaz_data <- readRDS(paste0(res_dir,"stunting/stunt_birth_laz_pool.RDS")) %>% 
+  mutate(country_cat = factor(country_cat, levels = c(
+    "Overall", "[-6,-2]", "(-2,-1]", 
+    "(-1,0]", "0,6"
+  )))
+
+mort_data <- readRDS(paste0(res_dir,"stunting/stunt_mort_strat_pool.RDS"))  
+  
 
 # Pre-process data --------------------------------
 # scale cohort-specific estimates 
@@ -89,12 +144,16 @@ chi = preprocess(chi_data)
 gini = preprocess(gini_data)
 he = preprocess(he_data)
 pov = preprocess(pov_data)
+birthlaz = preprocess(birthlaz_data)
 
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - pooled by decade
 #-------------------------------------------------------------------------------------------
 
-ip_plot_primary_decade <- plot_ip_subgroup(d = decade, birth="strat", sev="no", 
+ip_plot_primary_decade <- plot_ip_subgroup(d = decade, 
+                                           d_cohort = d_cohort, 
+                                           subgroup_name="decade",
+                                           birth="strat", sev="no", 
                                   subgroup="country_cat", returnData=T,
                                   title = "Incidence pooled by decade")
 
@@ -114,7 +173,10 @@ saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_stunting, "figdata-
 # Stunting incidence proportion - pooled by GDP 
 #-------------------------------------------------------------------------------------------
 
-ip_plot_primary_gdp <- plot_ip_subgroup(d = gdp, birth="strat", sev="no", 
+ip_plot_primary_gdp <- plot_ip_subgroup(d = gdp, 
+                                        d_cohort = d_cohort, 
+                                        subgroup_name="gdp_cat",
+                                        birth="strat", sev="no", 
                                            subgroup="country_cat", returnData=T,
                                         title = "Incidence pooled by GDP")
 
@@ -135,7 +197,10 @@ saveRDS(ip_plot_primary_gdp$data, file=paste0(figdata_dir_stunting, "figdata-",i
 # Stunting incidence proportion - pooled by Gender Development Index 
 #-------------------------------------------------------------------------------------------
 
-ip_plot_primary_gdi <- plot_ip_subgroup(d = gdi, birth="strat", sev="no", 
+ip_plot_primary_gdi <- plot_ip_subgroup(d = gdi, 
+                                        d_cohort = d_cohort, 
+                                        subgroup_name="gdi_cat",
+                                        birth="strat", sev="no", 
                                         subgroup="country_cat", returnData=T,
                                         title = "Incidence pooled by Gender Development Index")
 
@@ -155,7 +220,10 @@ saveRDS(ip_plot_primary_gdi$data, file=paste0(figdata_dir_stunting, "figdata-",i
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - pooled by Gender Inequality Index 
 #-------------------------------------------------------------------------------------------
-ip_plot_primary_gii <- plot_ip_subgroup(d = gii, birth="strat", sev="no", 
+ip_plot_primary_gii <- plot_ip_subgroup(d = gii, 
+                                        d_cohort = d_cohort, 
+                                        subgroup_name="gii_cat",
+                                        birth="strat", sev="no", 
                                         subgroup="country_cat", returnData=T,
                                         title = "Incidence pooled by Gender Inequality Index")
 
@@ -175,7 +243,10 @@ saveRDS(ip_plot_primary_gii$data, file=paste0(figdata_dir_stunting, "figdata-",i
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - pooled by Coefficient of Human Inequality
 #-------------------------------------------------------------------------------------------
-ip_plot_primary_chi <- plot_ip_subgroup(d = chi, birth="strat", sev="no", 
+ip_plot_primary_chi <- plot_ip_subgroup(d = chi, 
+                                        d_cohort = d_cohort, 
+                                        subgroup_name="chi_cat",
+                                        birth="strat", sev="no", 
                                         subgroup="country_cat", returnData=T,
                                         title = "Incidence pooled by Coefficient of Human Inequality")
 
@@ -195,7 +266,10 @@ saveRDS(ip_plot_primary_chi$data, file=paste0(figdata_dir_stunting, "figdata-",i
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - pooled by Gini coefficient
 #-------------------------------------------------------------------------------------------
-ip_plot_primary_gini <- plot_ip_subgroup(d = gini, birth="strat", sev="no", 
+ip_plot_primary_gini <- plot_ip_subgroup(d = gini, 
+                                         d_cohort = d_cohort, 
+                                         subgroup_name="gini_cat",
+                                         birth="strat", sev="no", 
                                          subgroup="country_cat", returnData=T,
                                          title = "Incidence pooled by Gini Coefficient")
 
@@ -214,7 +288,10 @@ saveRDS(ip_plot_primary_gini$data, file=paste0(figdata_dir_stunting, "figdata-",
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - pooled by health expenditure
 #-------------------------------------------------------------------------------------------
-ip_plot_primary_he <- plot_ip_subgroup(d = he, birth="strat", sev="no", 
+ip_plot_primary_he <- plot_ip_subgroup(d = he, 
+                                       d_cohort = d_cohort, 
+                                       subgroup_name="he_cat",
+                                       birth="strat", sev="no", 
                                        subgroup="country_cat", returnData=T,
                                        title = "Incidence pooled by Health Expenditure\nas a % of GDP")
 
@@ -233,7 +310,10 @@ saveRDS(ip_plot_primary_he$data, file=paste0(figdata_dir_stunting, "figdata-",ip
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - percent living below poverty line
 #-------------------------------------------------------------------------------------------
-ip_plot_primary_pov <- plot_ip_subgroup(d = pov, birth="strat", sev="no", 
+ip_plot_primary_pov <- plot_ip_subgroup(d = pov, 
+                                        d_cohort = d_cohort, 
+                                        subgroup_name="pov_cat",
+                                        birth="strat", sev="no", 
                                         subgroup="country_cat", returnData=T,
                                         title = "Incidence pooled by % of country living\nbelow povertyline")
 
@@ -248,4 +328,53 @@ ip_plot_name_pov = "stunt-2-inc-overall_pov--allage-primary"
 # save plot and underlying data
 ggsave(ip_plot_primary_pov$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_pov,".png"), width=16, povight=4)
 saveRDS(ip_plot_primary_pov$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_pov,".RDS"))
+
+
+
+#-------------------------------------------------------------------------------------------
+# Stunting incidence proportion - pooled by birth LAZ
+#-------------------------------------------------------------------------------------------
+ip_plot_primary_birthlaz <- plot_ip_subgroup(d = birthlaz, 
+                                             # d_cohort = d_cohort,  # NOT WORKING!
+                                             # subgroup_name="decade",
+                                             birth="strat", sev="no", 
+                                           subgroup="country_cat", returnData=T,
+                                           title = "Incidence pooled by birth LAZ")
+
+ip_plot_primary_birthlaz$plot
+
+# get N's for figure caption
+inc_n_decade = get_N_subgroup(d = decade, subgroup = "country_cat")
+
+# define transformations globally if name_inc_plots is not working
+ip_plot_name_decade = "stunt-2-inc-overall_decade--allage-primary"
+
+# save plot and underlying data
+ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_decade,".png"), width=16, height=4)
+saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_decade,".RDS"))
+
+
+
+#-------------------------------------------------------------------------------------------
+# Stunting incidence proportion - pooled by birth LAZ
+#-------------------------------------------------------------------------------------------
+ip_plot_primary_birthlaz <- plot_ip_subgroup(d = birthlaz, 
+                                             # d_cohort = d_cohort,  # NOT WORKING!
+                                             # subgroup_name="decade",
+                                             birth="strat", sev="no", 
+                                             subgroup="country_cat", returnData=T,
+                                             title = "Incidence pooled by birth LAZ")
+
+ip_plot_primary_birthlaz$plot
+
+# get N's for figure caption
+inc_n_decade = get_N_subgroup(d = decade, subgroup = "country_cat")
+
+# define transformations globally if name_inc_plots is not working
+ip_plot_name_decade = "stunt-2-inc-overall_decade--allage-primary"
+
+# save plot and underlying data
+ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_decade,".png"), width=16, height=4)
+saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_decade,".RDS"))
+
 
