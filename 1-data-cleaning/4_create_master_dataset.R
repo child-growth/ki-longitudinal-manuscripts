@@ -155,7 +155,10 @@ colnames(d)
 head(d)
 
 df <- d %>%  group_by(studyid, country, subjid) %>% slice(1) %>% 
-             select(studyid, subjid, country, brthyr, region, gdp,gdi,gii,chi,gini,he,pov, mort)
+             select(studyid, subjid, country, brthyr, region, gdp,gdi,gii,
+                    chi,gini,he,pov, mort,
+                    imputed_gdp,imputed_gdi,imputed_gii,
+                    imputed_chi,imputed_gini,imputed_he,imputed_pov, imputed_mort)
 head(df)
 
 #classify study decade
