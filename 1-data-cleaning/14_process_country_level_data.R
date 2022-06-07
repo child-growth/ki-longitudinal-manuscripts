@@ -4,16 +4,15 @@ library(tidyverse)
 library(here)
 library(Hmisc)
 
-gdp_raw <- read.csv(here("data/country metrics/gpd per capita.csv")) %>% rename(country=`ï..Country.Name`)
+gdp_raw <- read.csv(here("data/country metrics/gpd per capita.csv")) %>% rename(country=`Country.Name`)
 gdi_raw <- read.csv(here("data/country metrics/Gender Development Index (GDI).csv")) %>% rename(country=Country)
 gii_raw <- read.csv(here("data/country metrics/Gender Inequality Index (GII).csv")) %>% rename(country=Country)
 chi_raw <- read.csv(here("data/country metrics/Coefficient of human inequality.csv")) %>% rename(country=Country)
-gini_raw <- read.csv(here("data/country metrics/gini.csv")) %>% rename(country=`ï..Country.Name`)
-he_raw <- read.csv(here("data/country metrics/health_expenditure.csv")) %>% rename(country=`ï..Country.Name`)
-pov_raw <- read.csv(here("data/country metrics/perc_pov.csv")) %>% rename(country=`ï..Country.Name`)
+gini_raw <- read.csv(here("data/country metrics/gini.csv")) %>% rename(country=`Country.Name`)
+he_raw <- read.csv(here("data/country metrics/health_expenditure.csv")) %>% rename(country=`Country.Name`)
+pov_raw <- read.csv(here("data/country metrics/perc_pov.csv")) %>% rename(country=`Country.Name`)
 
-mort_raw <- read.csv(here("data/country metrics/perc_pov.csv")) %>% rename(country=`ï..Country.Name`)
-
+mort_raw <- read.csv(here("data/country metrics/mort.csv")) %>% rename(country=`Country.Name`)
 
 #ki_countries <- read.csv(here("data/country metrics/KI country-years.csv")) %>% rename(country=Country, year=Year) %>% select(country, year)
 #remove space in countries for merge
@@ -98,7 +97,15 @@ he <- he %>% group_by(country) %>% mutate(non_NA =sum(!is.na(he))) %>% filter(no
 pov <- pov %>% group_by(country) %>% mutate(non_NA =sum(!is.na(pov))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
 mort <- mort %>% group_by(country) %>% mutate(non_NA =sum(!is.na(mort))) %>% filter(non_NA>Nobs) %>% subset(., select = -c(non_NA))
 
-  
+# indicator for raw data
+gdp <- gdp %>% mutate(imputed_gdp = ifelse(is.na(gdp), "yes", "no"))
+gdi <- gdi %>% mutate(imputed_gdi = ifelse(is.na(gdi), "yes", "no"))
+gii <- gii %>% mutate(imputed_gii = ifelse(is.na(gii), "yes", "no"))
+chi <- chi %>% mutate(imputed_chi = ifelse(is.na(chi), "yes", "no"))
+gini <- gini %>% mutate(imputed_gini = ifelse(is.na(gini), "yes", "no"))
+he <- he %>% mutate(imputed_he = ifelse(is.na(he), "yes", "no"))
+pov <- pov %>% mutate(imputed_pov = ifelse(is.na(pov), "yes", "no"))
+mort <- mort %>% mutate(imputed_mort = ifelse(is.na(mort), "yes", "no"))
 
 
 #linearly interpolate 
