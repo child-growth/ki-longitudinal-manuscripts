@@ -207,9 +207,9 @@ quantile(df$mort, na.rm=T)
 quantile(df$mort, na.rm=T, probs = seq(0, 1, 0.3333333333333333333))
 
 
-df$mort_cat <- cut(df$mort, breaks=c(-9999999,  14.300000,  21.550000, 9999999), 
-                  labels = c("Low", "Medium","High"), 
-                  include.lowest = T, right=T)
+df$mort_cat <- cut(df$mort, breaks=c(-9999999,  50,  95, 9999999), 
+                  labels = c("<50 per 100,000", "50-95 per 100,000",">95 per 100,000"), 
+                  include.lowest = T, right=F)
 table(df$mort_cat)
 round(prop.table(table(df$mort_cat))*100,2)
 table(df$region, df$mort_cat)

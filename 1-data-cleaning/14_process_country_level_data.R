@@ -149,7 +149,7 @@ d <- d %>% rename(brthyr = year) %>% mutate(country=str_to_upper(country),
 unique(d$country)
 
 
-
+d$mort
 
 #save
 saveRDS(d, file=here("data/country metrics/combined_country_metrics.RDS"))

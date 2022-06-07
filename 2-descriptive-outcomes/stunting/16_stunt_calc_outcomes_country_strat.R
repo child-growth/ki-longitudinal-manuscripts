@@ -70,7 +70,9 @@ d$he_cat <- cut(d$he, breaks=c(-9999999,  2.761184,  5.081593, 9999999),
 d$pov_cat <- cut(d$pov, breaks=c(-9999999,  14.300000,  21.550000, 9999999), 
                   labels = c("Low", "Medium","High"), 
                   include.lowest = T, right=T)
-
+d$mort_cat <- cut(d$mort, breaks=c(-9999999,  50,  95, 9999999), 
+                   labels = c("<50 per 100,000", "50-95 per 100,000",">95 per 100,000"), 
+                   include.lowest = T, right=F)
 
 
 
@@ -346,9 +348,15 @@ calc_outcomes = function(data, calc_method, output_file_suffix, pooling_variable
   return(shiny_desc_data)
 }
 
-data = d
-calc_method = "REML"
-output_file_suffix = ""
+# data = d
+# calc_method = "REML"
+# output_file_suffix = ""
+# 
+# stunt_mort_res <- readRDS(file = paste0(res_dir,"stunting/stunt_mort_pool.RDS"))
+
+
+stunt_mort_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="mort_cat", output_file_suffix = "")
+saveRDS(stunt_mort_res, file = paste0(res_dir,"stunting/stunt_mort_pool.RDS"))
 
 stunt_decade_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="decade", output_file_suffix = "")
 saveRDS(stunt_decade_res, file = paste0(res_dir,"stunting/stunt_decade_pool.RDS"))
