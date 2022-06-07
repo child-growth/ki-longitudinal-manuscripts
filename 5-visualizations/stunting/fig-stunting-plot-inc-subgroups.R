@@ -29,7 +29,34 @@ country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-c
   mutate(cohort = paste0(studyid, "-", country)) %>% 
   dplyr::select(c(cohort, decade, gii_cat, chi_cat, gdp_cat, gdi_cat, 
                   gini_cat, he_cat, pov_cat, mort_cat)) %>% 
-  distinct()  
+  distinct()  %>% 
+  mutate(gdi_cat = case_when(
+    gdi_cat == "Overall" ~ "Overall",
+    gdi_cat == "Very low" ~ "69-84%",
+    gdi_cat == "Low" ~ "84-90%",
+    gdi_cat == "High/Medium" ~ "90-100%"
+  ))  %>% 
+  mutate(gdi_cat = factor(gdi_cat, levels = c(
+    "Overall", "69-84%", "84-90%", "90-100%"
+  )))  %>% 
+  mutate(he_cat = case_when(
+    he_cat == "Overall" ~ "Overall",
+    he_cat == "Low" ~ "1-3%",
+    he_cat == "Medium" ~ "3-5%",
+    he_cat == "High" ~ "5-42%"
+  )) %>% 
+  mutate(he_cat = factor(he_cat, levels = c(
+    "Overall", "1-3%", "3-5%", "5-42%"
+  )))%>% 
+  mutate(pov_cat = case_when(
+    pov_cat == "Overall" ~ "Overall",
+    pov_cat == "Low" ~ "0-14%",
+    pov_cat == "Medium" ~ "14-22%",
+    pov_cat == "High" ~ "22-100%"
+  )) %>% 
+  mutate(pov_cat = factor(pov_cat, levels = c(
+    "Overall", "0-14%", "14-22%", "22-100%"
+  )))
 
 d_cohort <- left_join(data_cohort, country_data, 
                         by = c("cohort")) %>% 
@@ -70,15 +97,21 @@ gdp_data <- readRDS(paste0(res_dir,"stunting/stunt_gdp_pool.RDS")) %>%
   )))
 
 gdi_data <- readRDS(paste0(res_dir, "stunting/stunt_gdi_pool.RDS")) %>% 
-  mutate(country_cat = ifelse(country_cat=="High/Medium", "Medium/High", country_cat)) %>% 
+  mutate(country_cat = case_when(
+    country_cat == "Overall" ~ "Overall",
+    country_cat == "Very low" ~ "69-84%",
+    country_cat == "Low" ~ "84-90%",
+    country_cat == "High/Medium" ~ "90-100%"
+  ))  %>% 
   mutate(country_cat = factor(country_cat, levels = c(
-    "Overall", "Very low", "Low", "Medium/High"
-  )))
+    "Overall", "69-84%", "84-90%", "90-100%"
+  ))) 
   
 gii_data <- readRDS(paste0(res_dir, "stunting/stunt_gii_pool.RDS")) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
     "Overall", "Low", "Medium", "High"
   )))
+
 
 chi_data <- readRDS(paste0(res_dir, "stunting/stunt_chi_pool.RDS")) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
@@ -91,13 +124,25 @@ gini_data <- readRDS(paste0(res_dir, "stunting/stunt_gini_pool.RDS")) %>%
   )))
 
 he_data <- readRDS(paste0(res_dir, "stunting/stunt_he_pool.RDS")) %>% 
+  mutate(country_cat = case_when(
+    country_cat == "Overall" ~ "Overall",
+    country_cat == "Low" ~ "1-3%",
+    country_cat == "Medium" ~ "3-5%",
+    country_cat == "High" ~ "5-42%"
+  )) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
-    "Overall", "Low", "Medium", "High"
+    "Overall", "1-3%", "3-5%", "5-42%"
   )))
 
 pov_data <- readRDS(paste0(res_dir, "stunting/stunt_pov_pool.RDS")) %>% 
+  mutate(country_cat = case_when(
+    country_cat == "Overall" ~ "Overall",
+    country_cat == "Low" ~ "0-14%",
+    country_cat == "Medium" ~ "14-22%",
+    country_cat == "High" ~ "22-100%"
+  )) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
-    "Overall", "Low", "Medium", "High"
+    "Overall", "0-14%", "14-22%", "22-100%"
   )))
 
 birthlaz_data <- readRDS(paste0(res_dir,"stunting/stunt_birth_laz_pool.RDS")) %>% 
@@ -106,8 +151,11 @@ birthlaz_data <- readRDS(paste0(res_dir,"stunting/stunt_birth_laz_pool.RDS")) %>
     "(-1,0]", "0,6"
   )))
 
-mort_data <- readRDS(paste0(res_dir,"stunting/stunt_mort_strat_pool.RDS"))  
-  
+mort_data <- readRDS(paste0(res_dir,"stunting/stunt_mort_pool.RDS"))  %>% 
+  mutate(country_cat = factor(country_cat, levels = c(
+    "Overall", "<50 per 100,000", "50-95 per 100,000",
+    ">95 per 100,000"
+  )))
 
 # Pre-process data --------------------------------
 # scale cohort-specific estimates 
@@ -145,6 +193,7 @@ gini = preprocess(gini_data)
 he = preprocess(he_data)
 pov = preprocess(pov_data)
 birthlaz = preprocess(birthlaz_data)
+mort = preprocess(mort_data)
 
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - pooled by decade
@@ -354,27 +403,27 @@ ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot
 saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_decade,".RDS"))
 
 
-
 #-------------------------------------------------------------------------------------------
-# Stunting incidence proportion - pooled by birth LAZ
+# Stunting incidence proportion - pooled by country mortality level 
 #-------------------------------------------------------------------------------------------
-ip_plot_primary_birthlaz <- plot_ip_subgroup(d = birthlaz, 
-                                             # d_cohort = d_cohort,  # NOT WORKING!
-                                             # subgroup_name="decade",
+ip_plot_primary_mort <- plot_ip_subgroup(d = mort, 
+                                             d_cohort = d_cohort,
+                                             subgroup_name="mort_cat",
                                              birth="strat", sev="no", 
                                              subgroup="country_cat", returnData=T,
-                                             title = "Incidence pooled by birth LAZ")
+                                             title = "Incidence pooled by country\nunder 5 mortality rate")
 
-ip_plot_primary_birthlaz$plot
+ip_plot_primary_mort$plot
 
 # get N's for figure caption
-inc_n_decade = get_N_subgroup(d = decade, subgroup = "country_cat")
+inc_n_mort = get_N_subgroup(d = mort, subgroup = "country_cat")
 
 # define transformations globally if name_inc_plots is not working
-ip_plot_name_decade = "stunt-2-inc-overall_decade--allage-primary"
+ip_plot_name_mort = "stunt-2-inc-overall_mort--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_decade,".png"), width=16, height=4)
-saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_decade,".RDS"))
+ggsave(ip_plot_primary_mort$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_mort,".png"), width=16, height=4)
+saveRDS(ip_plot_primary_mort$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_mort,".RDS"))
+
 
 
