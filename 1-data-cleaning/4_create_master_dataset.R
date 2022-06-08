@@ -126,7 +126,10 @@ start_year <- d %>% filter(agedays <= 731) %>%
   group_by(studyid, country, subjid) %>%
   mutate(max_year = max(brthyr + agedays/365)) %>%
   group_by(studyid, country) %>% 
-  summarize(start_year = min(brthyr), median_birth_year = median(brthyr), end_birth_year=max(brthyr), max_yr=max(max_year))
+  summarise(start_year = min(brthyr), 
+            median_birth_year = median(brthyr), 
+            end_birth_year=max(brthyr), 
+            max_yr=max(max_year))
 
 #fill in start year and max year for studies missing birth year
 start_year$start_year[start_year$studyid=="NIH-Birth"] <- 2008
