@@ -39,6 +39,15 @@ country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-c
   mutate(gdi_cat = factor(gdi_cat, levels = c(
     "Overall", "69-84%", "84-90%", "90-100%"
   )))  %>% 
+  mutate(gii_cat = case_when(
+    gii_cat == "Overall" ~ "Overall",
+    gii_cat == "Low" ~ "0.43-0.59",
+    gii_cat == "Medium" ~ "0.59-0.61",
+    gii_cat == "High" ~ "0.61-0.76"
+  ))  %>% 
+  mutate(gii_cat = factor(gii_cat, levels = c(
+    "Overall", "0.43-0.59", "0.59-0.61", "0.61-0.76"
+  ))) %>% 
   mutate(he_cat = case_when(
     he_cat == "Overall" ~ "Overall",
     he_cat == "Low" ~ "1-3%",
@@ -108,8 +117,14 @@ gdi_data <- readRDS(paste0(res_dir, "stunting/stunt_gdi_pool.RDS")) %>%
   ))) 
   
 gii_data <- readRDS(paste0(res_dir, "stunting/stunt_gii_pool.RDS")) %>% 
+  mutate(country_cat = case_when(
+    country_cat == "Overall" ~ "Overall",
+    country_cat == "Low" ~ "0.43-0.59",
+    country_cat == "Medium" ~ "0.59-0.61",
+    country_cat == "High" ~ "0.61-0.76"
+  ))  %>% 
   mutate(country_cat = factor(country_cat, levels = c(
-    "Overall", "Low", "Medium", "High"
+    "Overall", "0.43-0.59", "0.59-0.61", "0.61-0.76"
   )))
 
 
