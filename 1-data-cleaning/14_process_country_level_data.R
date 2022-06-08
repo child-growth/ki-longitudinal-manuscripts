@@ -151,6 +151,59 @@ unique(d$country)
 
 d$mort
 
+# drop imputed values more than 5 years from last measurement
+# combine input data
+input_data <- bind_rows(gdp, gii, gdi, chi, gini, pov, mort)
+meas_yr <- input_data %>% dplyr::select(c(country, year, imputed_gdp, imputed_gii, imputed_gdi,
+                                 imputed_chi, imputed_gini, imputed_pov,
+                                 imputed_mort)) %>% 
+  pivot_longer(cols = c(imputed_gdp, imputed_gii, imputed_gdi,
+                        imputed_chi, imputed_gini, imputed_pov,
+                        imputed_mort), names_to = "variable", values_to = "imputed") %>% 
+  filter(imputed=="no") %>% 
+  dplyr::select(country, year, variable) %>% 
+  mutate(country = toupper(country)) %>% 
+  mutate(country = ifelse(country=="BURKINAFASO", "BURKINA FASO", country)) %>% 
+  mutate(country = ifelse(country=="SOUTHAFRICA", "SOUTH AFRICA", country)) 
+
+get_nearest_yr <- function(country_name, year_num, variable_name){
+  yrs = meas_yr %>% dplyr::filter(country==country_name  & variable==variable_name) %>% 
+    arrange(year) %>%  pull(year) %>% unique()
+  
+  if(country_name=="GUINEA-BISSAU"|country_name=="TANZANIA"){
+    return(1000)
+  }else{
+    return(min(abs(year_num- yrs)))
+  }
+}
+
+d$nearest_gdp = NA
+d$nearest_gdi = NA
+d$nearest_gii = NA
+d$nearest_chi = NA
+d$nearest_he = NA
+d$nearest_gini = NA
+d$nearest_pov = NA
+for(i in 1:nrow(d)){
+  d$nearest_gdp[i] = get_nearest_yr(country_name=d$country[i], year_num=d$brthyr[i], variable_name = "imputed_gdp")
+  d$nearest_gdi[i] = get_nearest_yr(country_name=d$country[i], year_num=d$brthyr[i], variable_name = "imputed_gdi")
+  d$nearest_gii[i] = get_nearest_yr(country_name=d$country[i], year_num=d$brthyr[i], variable_name = "imputed_gii")
+  d$nearest_chi[i] = get_nearest_yr(country_name=d$country[i], year_num=d$brthyr[i], variable_name = "imputed_chi")
+  d$nearest_he[i] = get_nearest_yr(country_name=d$country[i], year_num=d$brthyr[i], variable_name = "imputed_he")
+  d$nearest_gini[i] = get_nearest_yr(country_name=d$country[i], year_num=d$brthyr[i], variable_name = "imputed_gini")
+  d$nearest_pov[i] = get_nearest_yr(country_name=d$country[i], year_num=d$brthyr[i], variable_name = "imputed_pov")
+}
+
+d <- d %>% mutate(
+  gdp = ifelse(nearest_gdp > 5, NA, gdp),
+  gdi = ifelse(nearest_gdi > 5, NA, gdi),
+  gii = ifelse(nearest_gii > 5, NA, gii),
+  chi = ifelse(nearest_chi > 5, NA, chi),
+  he = ifelse(nearest_he > 5, NA, he),
+  gini = ifelse(nearest_gini > 5, NA, gini),
+  pov = ifelse(nearest_pov > 5, NA, pov)
+)
+
 #save
 saveRDS(d, file=here("data/country metrics/combined_country_metrics.RDS"))
 write.csv(d, file=here("data/country metrics/combined_country_metrics.csv"))
