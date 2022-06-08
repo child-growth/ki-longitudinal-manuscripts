@@ -110,19 +110,19 @@ mort <- mort %>% mutate(imputed_mort = ifelse(is.na(mort), "yes", "no"))
 
 #linearly interpolate 
 gdp<-gdp %>% group_by(country) %>%
-  mutate(gdp = approxExtrap(which(!is.na(gdp)), gdp[!is.na(gdp)],xout = 1:n(), rule=2)$y) %>%
+  mutate(gdp = approxExtrap(which(!is.na(gdp)), gdp[!is.na(gdp)],xout = 1:n(), rule=3)$y) %>%
   as.data.frame() %>% arrange(country, year)
 gdi<-gdi %>% group_by(country) %>%
-  mutate(gdi = approxExtrap(which(!is.na(gdi)), gdi[!is.na(gdi)],xout = 1:n(), rule=2)$y) %>%
+  mutate(gdi = approxExtrap(which(!is.na(gdi)), gdi[!is.na(gdi)],xout = 1:n(), rule=3)$y) %>%
   as.data.frame() %>% arrange(country, year)
 gii<-gii %>% group_by(country) %>%
-  mutate(gii = approxExtrap(which(!is.na(gii)), gii[!is.na(gii)],xout = 1:n(), rule=2)$y) %>%
+  mutate(gii = approxExtrap(which(!is.na(gii)), gii[!is.na(gii)],xout = 1:n(), rule=3)$y) %>%
   as.data.frame() %>% arrange(country, year)
-chi<-chi %>% group_by(country) %>% mutate(chi = approxExtrap(which(!is.na(chi)), chi[!is.na(chi)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
-gini<-gini %>% group_by(country) %>% mutate(gini = approxExtrap(which(!is.na(gini)), gini[!is.na(gini)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
-he<-he %>% group_by(country) %>% mutate(he = approxExtrap(which(!is.na(he)), he[!is.na(he)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
-pov<-pov %>% group_by(country) %>% mutate(pov = approxExtrap(which(!is.na(pov)), pov[!is.na(pov)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
-mort<-mort %>% group_by(country) %>% mutate(mort = approxExtrap(which(!is.na(mort)), mort[!is.na(mort)],xout = 1:n(), rule=2)$y) %>% as.data.frame() %>% arrange(country, year)
+chi<-chi %>% group_by(country) %>% mutate(chi = approxExtrap(which(!is.na(chi)), chi[!is.na(chi)],xout = 1:n(), rule=3)$y) %>% as.data.frame() %>% arrange(country, year)
+gini<-gini %>% group_by(country) %>% mutate(gini = approxExtrap(which(!is.na(gini)), gini[!is.na(gini)],xout = 1:n(), rule=3)$y) %>% as.data.frame() %>% arrange(country, year)
+he<-he %>% group_by(country) %>% mutate(he = approxExtrap(which(!is.na(he)), he[!is.na(he)],xout = 1:n(), rule=3)$y) %>% as.data.frame() %>% arrange(country, year)
+pov<-pov %>% group_by(country) %>% mutate(pov = approxExtrap(which(!is.na(pov)), pov[!is.na(pov)],xout = 1:n(), rule=3)$y) %>% as.data.frame() %>% arrange(country, year)
+mort<-mort %>% group_by(country) %>% mutate(mort = approxExtrap(which(!is.na(mort)), mort[!is.na(mort)],xout = 1:n(), rule=3)$y) %>% as.data.frame() %>% arrange(country, year)
 
 #merge indicators together
 unique(ki_countries$country)
