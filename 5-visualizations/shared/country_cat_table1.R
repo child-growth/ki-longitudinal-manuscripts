@@ -3,10 +3,20 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 library(table1)
-df <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds")
+
+dfull <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds")
+colnames(dfull)
 
 
-tab2 <- table1(~. |gdi_cat , format_number = TRUE, data=df)
+df <- dfull %>% subset(., select = c(studyid,          subjid,           country,         
+                                     brthyr,           region,           decade,           gdp_cat,         
+                                     gdi_cat,          gii_cat,          chi_cat,         
+                                     gini_cat,         he_cat,           pov_cat,         
+                                     mort_cat
+)) %>% distinct()
+saveRDS(df, paste0(here::here(),"/data/country_category_balance_tab.rds"))
+
+tab2 <- table1(~. |region , format_number = TRUE, data=df)
 tab2 <- as.data.frame(read_html(tab2) %>% html_table(fill=TRUE))
 #Drop overall column
 tab2 <- tab2[,!grepl("Overall",colnames(tab2))]

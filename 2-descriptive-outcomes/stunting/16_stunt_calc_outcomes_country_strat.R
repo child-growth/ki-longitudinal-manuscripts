@@ -55,19 +55,19 @@ d$gdp_cat <- cut(d$gdp, breaks=c(-9999999,1026,9999999), labels = c("Low income"
 d$gdi_cat <- cut(100*abs(d$gdi-1), breaks=c(-9999999, 10, 16,9999999), 
                   labels = c("High/Medium","Low", "Very low"), 
                   include.lowest = T, right=T)
-d$gii_cat <- cut(d$gii, breaks=c(-9999999,  0.591, 0.6140, 9999999),
+d$gii_cat <- cut(d$gii, breaks=c(-9999999,  0.596, 0.6140, 9999999),
                   labels = c("High", "Medium","Low"),
                   include.lowest = T, right=T)
-d$chi_cat <- cut(d$chi, breaks=c(-9999999,  28.3, 35.7, 9999999), 
+d$chi_cat <- cut(d$chi, breaks=c(-9999999,  28.3, 29.32225  , 9999999), 
                   labels = c("High", "Medium","Low"), 
                   include.lowest = T, right=T)
-d$gini_cat <- cut(d$gini, breaks=c(-9999999,  32.32, 38.90, 9999999), 
+d$gini_cat <- cut(d$gini, breaks=c(-9999999,  32.32, 32.54, 9999999), 
                    labels = c("Low", "Medium","High"), 
                    include.lowest = T, right=T)
-d$he_cat <- cut(d$he, breaks=c(-9999999,  2.761184,  5.081593, 9999999), 
+d$he_cat <- cut(d$he, breaks=c(-9999999, 2.748235,  5.239585, 9999999), 
                  labels = c("Low","Medium","High"), 
                  include.lowest = T, right=T)
-d$pov_cat <- cut(d$pov, breaks=c(-9999999,  14.300000,  21.550000, 9999999), 
+d$pov_cat <- cut(d$pov, breaks=c(-9999999,  18.38333,  27.65000, 9999999), 
                   labels = c("Low", "Medium","High"), 
                   include.lowest = T, right=T)
 d$mort_cat <- cut(d$mort, breaks=c(-9999999,  50,  95, 9999999), 
