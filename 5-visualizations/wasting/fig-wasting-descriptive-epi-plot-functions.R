@@ -115,7 +115,7 @@ plot_ip <- function(d, meas="Incidence proportion", birth, sev, ...) {
                     ...)
 }
 
-plot_ip_subgroup <- function(d, meas="Incidence_proportion", birth, sev, subgroup, title, ...) {
+plot_ip_subgroup <- function(d, meas="Incidence_proportion", birth, sev, subgroup, title, reverse_colors,...) {
   
   ki_ip_flurry_subgroup_plot(d,
                              Disease="Wasting",
@@ -126,6 +126,7 @@ plot_ip_subgroup <- function(d, meas="Incidence_proportion", birth, sev, subgrou
                              xlabel="Child age, months",
                              h1=90,
                              h2=90,
+                             reverse_colors=F,
                              subgroup=subgroup,
                              title =title,
                              ...)
