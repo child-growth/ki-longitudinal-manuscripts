@@ -11,7 +11,8 @@ Zscores <- readRDS(included_studies_path)
 country_metrics <- readRDS(file=here("data/country metrics/combined_country_metrics.RDS"))
 unique(country_metrics$country)
 summary(country_metrics$mort)
-
+country_metrics <- country_metrics %>% 
+  select(-starts_with("Intercept"),-starts_with("_imp"), -starts_with("imputed_"),-starts_with("min_year"),-starts_with("max_year"))
 
 
 # Check how many at-birth measurements have
@@ -158,6 +159,14 @@ colnames(d)
 head(d)
 
 df <- d %>%  group_by(studyid, country, subjid) %>% slice(1) %>% 
+             rename(imputed_gdp=gdp_imp,
+                    imputed_gdi=gdi_imp,
+                    imputed_gii=gii_imp,
+                    imputed_chi=chi_imp,
+                    imputed_gini=gini_imp,
+                    imputed_he=he_imp,
+                    imputed_pov=pov_imp,
+                    imputed_mort=mort_imp) %>%
              select(studyid, subjid, country, brthyr, region, gdp,gdi,gii,
                     chi,gini,he,pov, mort,
                     imputed_gdp,imputed_gdi,imputed_gii,
