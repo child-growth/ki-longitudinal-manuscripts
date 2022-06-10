@@ -83,7 +83,7 @@ meanlaz = function(data, age){
   dmon = calc.monthly.agecat(d = data %>% filter(stunt_inc_age == age))
   dmon <- droplevels(dmon)
   
-  monthly.haz.data   <-  summary.haz(d = dmon)
+  monthly.haz.data   <-  summary.haz(d = dmon, nmeas_threshold = 5)
   monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(., nmeas_threshold = 5)$haz.res)
   monthly.haz.cohort <-  monthly.haz.data$haz.cohort %>% 
     subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%
