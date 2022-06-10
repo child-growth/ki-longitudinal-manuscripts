@@ -59,12 +59,12 @@ country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-c
   )))%>% 
   mutate(pov_cat = case_when(
     pov_cat == "Overall" ~ "Overall",
-    pov_cat == "Low" ~ "0-14%",
-    pov_cat == "Medium" ~ "14-22%",
-    pov_cat == "High" ~ "22-100%"
+    pov_cat == "Low" ~ "0-18%",
+    pov_cat == "Medium" ~ "18-28%",
+    pov_cat == "High" ~ "28-100%"
   )) %>% 
   mutate(pov_cat = factor(pov_cat, levels = c(
-    "Overall", "0-14%", "14-22%", "22-100%"
+    "Overall", "0-18%", "18-28%", "28-100%"
   )))
 
 d_cohort <- left_join(data_cohort, country_data, 
@@ -152,12 +152,12 @@ he_data <- readRDS(paste0(res_dir, "stunting/stunt_he_pool.RDS")) %>%
 pov_data <- readRDS(paste0(res_dir, "stunting/stunt_pov_pool.RDS")) %>% 
   mutate(country_cat = case_when(
     country_cat == "Overall" ~ "Overall",
-    country_cat == "Low" ~ "0-14%",
-    country_cat == "Medium" ~ "14-22%",
-    country_cat == "High" ~ "22-100%"
+    country_cat == "Low" ~ "0-18%",
+    country_cat == "Medium" ~ "18-28%",
+    country_cat == "High" ~ "28-100%"
   )) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
-    "Overall", "0-14%", "14-22%", "22-100%"
+    "Overall", "0-18%", "18-28%", "28-100%"
   )))
 
 birthlaz_data <- readRDS(paste0(res_dir,"stunting/stunt_birth_laz_pool.RDS")) %>% 
