@@ -71,7 +71,6 @@ length(unique(d_st$childid[d_st$region %in% c("South Asia",
 ###################################
 # Generate plot 3b - flow plot
 ###################################
-cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 plot_mean_laz = function(data, includeCI){
   data = data %>% mutate(agemonths = ifelse(agemonths == 0.5, 0, agemonths)) %>% 
@@ -89,6 +88,9 @@ plot_mean_laz = function(data, includeCI){
   mean_laz_plot <- ggplot(data %>% filter(region!="Overall" & region!="Other" & cohort=="pooled"),
                           aes(y=est,x=agemonths, group=region, color=region)) +
     geom_hline(yintercept = -2, colour = "black") +
+    geom_line(data = data %>% filter(region!="Overall" & region!="Other" & cohort!="pooled"), 
+              aes(fill=region, color=region, group = cohort), se=F, span = 0.5, alpha=0.2, 
+              size=0.3) +
     geom_line(aes(fill=region, color=region), se=F, span = 0.5) +
     scale_y_continuous(limits = c(min(data$lb) - 0.1, max(data$ub) + 0.1),
                        expand = c(0, 0)) + 
@@ -121,7 +123,9 @@ plot_mean_laz = function(data, includeCI){
 mean_laz_line_plot = plot_mean_laz(data = plotdf, includeCI=T)
 mean_laz_line_plot_noCI = plot_mean_laz(data = plotdf, includeCI=F)
 
-ggsave(mean_laz_line_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"), 
+ggsave(mean_laz_line_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_withCI.png"), 
+       width=8, height=4)
+ggsave(mean_laz_line_plot_noCI, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"), 
        width=8, height=4)
 
 #####################################
@@ -130,5 +134,7 @@ ggsave(mean_laz_line_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage
 mean_laz_line_plot_monthly = plot_mean_laz(data = plotdf_monthly, includeCI=T)
 mean_laz_line_plot_monthly_noCI = plot_mean_laz(data = plotdf_monthly, includeCI=F)
 
-ggsave(mean_laz_line_plot_monthly, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_monthly.png"), 
+ggsave(mean_laz_line_plot_monthly, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_monthly_withCI.png"), 
+       width=8, height=4)
+ggsave(mean_laz_line_plot_monthly_noCI, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_monthly.png"), 
        width=8, height=4)
