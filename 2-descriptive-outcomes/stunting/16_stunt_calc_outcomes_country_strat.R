@@ -48,6 +48,7 @@ table(is.na(d$gdi))
 table(d$studyid[is.na(d$gdi)])
 table(d$country[is.na(d$gdi)])
 table(d$brthyr[is.na(d$gdi)])
+summary(d$he)
 
 
 d$decade <- cut(d$brthyr, breaks=c(-9999999, 2000, 2010 ,9999999), labels = c("90s", "2000s","2010s"), include.lowest = T, right=T)
