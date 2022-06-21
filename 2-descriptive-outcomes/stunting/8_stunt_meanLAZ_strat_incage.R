@@ -65,7 +65,7 @@ d_st_monthly <- d_st %>% filter(studyid %in% study24)
 d_st_monthly %>% group_by(studyid, subjid) %>% slice(1) %>% 
   filter(!is.na(stunt_inc_age)) %>%
   ungroup() %>% mutate(tot_N=n()) %>%
-  group_by(stunt_inc_age) %>% summarize(N=n(), tot_N=tot_N[1]) %>%
+  group_by(stunt_inc_age) %>% summarise(N=n(), tot_N=tot_N[1]) %>%
   mutate(prop=N/tot_N*100)
 
 #######################################################################
@@ -75,13 +75,15 @@ d_st_monthly %>% group_by(studyid, subjid) %>% slice(1) %>%
 #----------------------------------------
 # monthly mean haz within incident age categories
 #----------------------------------------
-age_list = list("Never", "Birth", "0-3 months", "3-6 months", "6-9 months","9-12 months", "12-15 months")
+age_list = list("Never", "Birth", "0-6 months", "6-15 months")
+
+# TO DO : fix age categories within the function or original data, not working for 0-6, 6-15
 
 meanlaz = function(data, age){ 
   dmon = calc.monthly.agecat(d = data %>% filter(stunt_inc_age == age))
   dmon <- droplevels(dmon)
   
-  monthly.haz.data   <-  summary.haz(d = dmon)
+  monthly.haz.data   <-  summary.haz(d = dmon, nmeas_threshold = 5)
   monthly.haz.region <-  dmon  %>% group_by(region) %>% do(summary.haz(., nmeas_threshold = 5)$haz.res)
   monthly.haz.cohort <-  monthly.haz.data$haz.cohort %>% 
     subset(., select = c(cohort, region, agecat, nmeas,  meanhaz,  ci.lb,  ci.ub)) %>%

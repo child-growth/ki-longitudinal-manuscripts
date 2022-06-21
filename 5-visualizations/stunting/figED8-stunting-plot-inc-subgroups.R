@@ -59,12 +59,12 @@ country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-c
   )))%>% 
   mutate(pov_cat = case_when(
     pov_cat == "Overall" ~ "Overall",
-    pov_cat == "Low" ~ "0-14%",
-    pov_cat == "Medium" ~ "14-22%",
-    pov_cat == "High" ~ "22-100%"
+    pov_cat == "Low" ~ "0-18%",
+    pov_cat == "Medium" ~ "18-28%",
+    pov_cat == "High" ~ "28-100%"
   )) %>% 
   mutate(pov_cat = factor(pov_cat, levels = c(
-    "Overall", "0-14%", "14-22%", "22-100%"
+    "Overall", "0-18%", "18-28%", "28-100%"
   )))
 
 d_cohort <- left_join(data_cohort, country_data, 
@@ -152,12 +152,12 @@ he_data <- readRDS(paste0(res_dir, "stunting/stunt_he_pool.RDS")) %>%
 pov_data <- readRDS(paste0(res_dir, "stunting/stunt_pov_pool.RDS")) %>% 
   mutate(country_cat = case_when(
     country_cat == "Overall" ~ "Overall",
-    country_cat == "Low" ~ "0-14%",
-    country_cat == "Medium" ~ "14-22%",
-    country_cat == "High" ~ "22-100%"
+    country_cat == "Low" ~ "0-18%",
+    country_cat == "Medium" ~ "18-28%",
+    country_cat == "High" ~ "28-100%"
   )) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
-    "Overall", "0-14%", "14-22%", "22-100%"
+    "Overall", "0-18%", "18-28%", "28-100%"
   )))
 
 birthlaz_data <- readRDS(paste0(res_dir,"stunting/stunt_birth_laz_pool.RDS")) %>% 
@@ -230,7 +230,7 @@ inc_n_decade = get_N_subgroup(d = decade, subgroup = "country_cat")
 ip_plot_name_decade = "stunt-2-inc-overall_decade--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_decade,".png"), width=16, height=4)
+ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_decade,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_decade,".RDS"))
 
 #-------------------------------------------------------------------------------------------
@@ -253,7 +253,7 @@ inc_n_gdp = get_N_subgroup(d = gdp, subgroup = "country_cat")
 ip_plot_name_gdp = "stunt-2-inc-overall_gdp--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_gdp$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_gdp,".png"), width=16, height=4)
+ggsave(ip_plot_primary_gdp$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_gdp,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_gdp$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_gdp,".RDS"))
 
 
@@ -277,7 +277,7 @@ inc_n_gdi = get_N_subgroup(d = gdi, subgroup = "country_cat")
 ip_plot_name_gdi = "stunt-2-inc-overall_gdi--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_gdi$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_gdi,".png"), width=16, height=4)
+ggsave(ip_plot_primary_gdi$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_gdi,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_gdi$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_gdi,".RDS"))
 
 
@@ -300,7 +300,7 @@ inc_n_gii = get_N_subgroup(d = gii, subgroup = "country_cat")
 ip_plot_name_gii = "stunt-2-inc-overall_gii--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_gii$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_gii,".png"), width=16, height=4)
+ggsave(ip_plot_primary_gii$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_gii,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_gii$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_gii,".RDS"))
 
 
@@ -323,7 +323,7 @@ inc_n_chi = get_N_subgroup(d = chi, subgroup = "country_cat")
 ip_plot_name_chi = "stunt-2-inc-overall_chi--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_chi$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_chi,".png"), width=16, height=4)
+ggsave(ip_plot_primary_chi$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_chi,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_chi$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_chi,".RDS"))
 
 
@@ -346,7 +346,7 @@ inc_n_gini = get_N_subgroup(d = gini, subgroup = "country_cat")
 ip_plot_name_gini = "stunt-2-inc-overall_gini--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_gini$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_gini,".png"), width=16, height=4)
+ggsave(ip_plot_primary_gini$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_gini,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_gini$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_gini,".RDS"))
 
 #-------------------------------------------------------------------------------------------
@@ -357,6 +357,7 @@ ip_plot_primary_he <- plot_ip_subgroup(d = he,
                                        subgroup_name="he_cat",
                                        birth="strat", sev="no", 
                                        subgroup="country_cat", returnData=T,
+                                       reverse_color = T,
                                        title = "Incidence pooled by Health Expenditure\nas a % of GDP")
 
 ip_plot_primary_he$plot
@@ -368,7 +369,7 @@ inc_n_he = get_N_subgroup(d = he, subgroup = "country_cat")
 ip_plot_name_he = "stunt-2-inc-overall_he--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_he$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_he,".png"), width=16, height=4)
+ggsave(ip_plot_primary_he$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_he,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_he$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_he,".RDS"))
 
 #-------------------------------------------------------------------------------------------
@@ -390,7 +391,7 @@ inc_n_pov = get_N_subgroup(d = pov, subgroup = "country_cat")
 ip_plot_name_pov = "stunt-2-inc-overall_pov--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_pov$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_pov,".png"), width=16, povight=4)
+ggsave(ip_plot_primary_pov$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_pov,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_pov$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_pov,".RDS"))
 
 
@@ -414,7 +415,7 @@ inc_n_decade = get_N_subgroup(d = decade, subgroup = "country_cat")
 ip_plot_name_decade = "stunt-2-inc-overall_decade--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_decade,".png"), width=16, height=4)
+ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_decade,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_decade,".RDS"))
 
 
@@ -437,7 +438,7 @@ inc_n_mort = get_N_subgroup(d = mort, subgroup = "country_cat")
 ip_plot_name_mort = "stunt-2-inc-overall_mort--allage-primary"
 
 # save plot and underlying data
-ggsave(ip_plot_primary_mort$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_mort,".png"), width=16, height=4)
+ggsave(ip_plot_primary_mort$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_name_mort,".png"), width=10, height=4)
 saveRDS(ip_plot_primary_mort$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_mort,".RDS"))
 
 

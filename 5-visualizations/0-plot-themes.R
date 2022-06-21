@@ -977,6 +977,7 @@ ki_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease, Meas
                                        h2=3,
                                        yrange=NULL,
                                        dodge=0,
+                                       reverse_colors = F,
                                        returnData=F){
   
   groupvar <- sym(subgroup)
@@ -1076,8 +1077,6 @@ ki_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease, Meas
               position = position_dodge(width = dodge),
               vjust = 0.5) + 
 
-    scale_color_manual(values=sub_palette, drop=TRUE, limits = levels(df$measure),
-                       guide = FALSE) +
     scale_size_manual(values = c(2, 1.5), guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
                        name = 'Measure')+
@@ -1120,6 +1119,16 @@ ki_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease, Meas
     if(!is.null(yrange)){
       p <- p + coord_cartesian(ylim=yrange)
     }
+  
+  
+  if(!reverse_colors){
+    p <- p + scale_color_manual(values=sub_palette, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) 
+  }else{
+    p <- p +  scale_color_manual(values=c("black","#FB4C05", "#F6A106","#0998F5"), drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) 
+  }
+  
   
   if(returnData){
     return(list(plot=p,data=df))
