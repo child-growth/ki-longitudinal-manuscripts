@@ -89,9 +89,9 @@ plot_mean_laz = function(data, includeCI){
                           aes(y=est,x=agemonths, group=region, color=region)) +
     geom_hline(yintercept = -2, colour = "black") +
     geom_line(data = data %>% filter(region!="Overall" & region!="Other" & cohort!="pooled"), 
-              aes(fill=region, color=region, group = cohort), se=F, span = 0.5, alpha=0.2, 
+              aes(fill=region, color=region, group = cohort), se=F, span = 0.5, alpha=0.4, 
               size=0.3) +
-    geom_line(aes(fill=region, color=region), se=F, span = 0.5) +
+    geom_line(aes(fill=region, color=region), se=F, span = 0.75, size=0.7) +
     scale_y_continuous(limits = c(min(data$lb) - 0.1, max(data$ub) + 0.1),
                        expand = c(0, 0)) + 
     scale_x_continuous(limits = c(0,15), breaks = seq(0,15,3), labels = seq(0,15,3)) + 
@@ -100,7 +100,9 @@ plot_mean_laz = function(data, includeCI){
     scale_fill_manual(values=tableau11[c(2:4)], drop=TRUE) +
     scale_color_manual(values=tableau11[c(2:4)], drop=TRUE) +
     ggtitle("") +
-    theme(panel.grid.minor = element_blank())
+    theme(panel.grid.minor = element_blank(),
+          panel.grid.major = element_line(size = 0.25)
+    )
   
   if(includeCI){
     mean_laz_plot <- mean_laz_plot+ facet_grid(region~stunt_inc_age) + 
@@ -124,9 +126,9 @@ mean_laz_line_plot = plot_mean_laz(data = plotdf, includeCI=T)
 mean_laz_line_plot_noCI = plot_mean_laz(data = plotdf, includeCI=F)
 
 ggsave(mean_laz_line_plot, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_withCI.png"), 
-       width=8, height=4)
+       width=9, height=5)
 ggsave(mean_laz_line_plot_noCI, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage.png"), 
-       width=8, height=4)
+       width=10, height=5)
 
 #####################################
 # Create figure for monthly cohorts
