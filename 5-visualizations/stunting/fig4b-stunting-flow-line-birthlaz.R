@@ -107,6 +107,18 @@ pooled <- birthlaz_data %>%
   filter(agem<=15) %>% 
   mutate(classif = ifelse(classif == "Recovered", "Stunting reversed", classif))
 
+# percentage of children with reversal per month
+# by birth LAZ category 
+pooled %>% filter(agem>6) %>% 
+  filter(birth_laz=="LAZ under -2") %>% 
+  filter(classif=="Stunting reversed") %>% 
+  dplyr::select(agem, percent)
+
+pooled %>% filter(agem>6) %>% 
+  filter(birth_laz=="LAZ -2 to 0") %>% 
+  filter(classif=="Stunting reversed") %>% 
+  dplyr::select(agem, percent)
+
 # drop rows that pooled over age not in underlying cohort data
 pooled = pooled[-which(pooled$agem<2 & pooled$classif=="Stunting relapse"),]
 pooled = pooled[-which(pooled$agem<1 & pooled$classif=="Stunting reversed"),]
