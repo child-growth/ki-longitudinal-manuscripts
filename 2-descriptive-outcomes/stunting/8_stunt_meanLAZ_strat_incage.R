@@ -51,6 +51,11 @@ assert_that(setequal(unique(d_st$studyid), monthly_cohorts),
 
 d_st = create_stunting_age_indicators(data = d_st)
 
+# mean LAZ at birth within each age of stunting 
+d_st %>% group_by(stunt_inc_age) %>% 
+  filter(agedays < 30.4167) %>% 
+  summarise(mean_laz_birth = mean(haz))
+
 #----------------------------------------
 # subset to studies that have monthly measurement
 # up to 24 months
