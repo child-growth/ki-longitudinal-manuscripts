@@ -355,10 +355,11 @@ saveRDS(ip_plot_primary_gini$data, file=paste0(figdata_dir_stunting, "figdata-",
 ip_plot_primary_he <- plot_ip_subgroup(d = he, 
                                        d_cohort = d_cohort, 
                                        subgroup_name="he_cat",
+                                       subgroup_colors = c("#01C18C","#018D66","#025941"),
                                        birth="strat", sev="no", 
                                        subgroup="country_cat", returnData=T,
                                        reverse_color = T,
-                                       title = "Incidence pooled by Health Expenditure\nas a % of GDP")
+                                       title = "a) National health expenditures (% of gross domestic product)")
 
 ip_plot_primary_he$plot
 
@@ -378,9 +379,10 @@ saveRDS(ip_plot_primary_he$data, file=paste0(figdata_dir_stunting, "figdata-",ip
 ip_plot_primary_pov <- plot_ip_subgroup(d = pov, 
                                         d_cohort = d_cohort, 
                                         subgroup_name="pov_cat",
+                                        subgroup_colors = c("#0458F9","#0441B6","#03338F"),
                                         birth="strat", sev="no", 
                                         subgroup="country_cat", returnData=T,
-                                        title = "Incidence pooled by % of country living\nbelow povertyline")
+                                        title = "b) National percentage of individuals living on less than $1.90 per day")
 
 ip_plot_primary_pov$plot
 
@@ -425,9 +427,10 @@ saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_stunting, "figdata-
 ip_plot_primary_mort <- plot_ip_subgroup(d = mort, 
                                              d_cohort = d_cohort,
                                              subgroup_name="mort_cat",
-                                             birth="strat", sev="no", 
+                                         subgroup_colors = c("#F87602","#CA6002","#9D4B02"),
+                                         birth="strat", sev="no", 
                                              subgroup="country_cat", returnData=T,
-                                             title = "Incidence pooled by country\nunder 5 mortality rate")
+                                             title = "c) National under-5 mortality rate")
 
 ip_plot_primary_mort$plot
 

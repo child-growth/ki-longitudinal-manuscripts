@@ -971,6 +971,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 
 ki_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease, Measure, Birth, Severe, Age_range, subgroup,title,
+                                       # subgroup_colors = c("#0998F5", "#F6A106", "#FB4C05"), 
+                                       subgroup_colors,
                                        xlabel="Age category",
                                        ylabel="Incidence proportion (95% CI)",
                                        h1=0,
@@ -1041,7 +1043,8 @@ ki_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease, Meas
     rename(country_cat = !!sym(subgroup_name)) %>%
     filter(!is.na(country_cat))
   
-  sub_palette <- c("black","#0998F5", "#F6A106", "#FB4C05")
+  # sub_palette <- c("black","#0998F5", "#F6A106", "#FB4C05")
+  sub_palette <- c("black", subgroup_colors)
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
     
@@ -1100,15 +1103,16 @@ ki_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease, Meas
     #                                   size = 14)) +
     # theme(axis.title.y = element_text(size = 14)) +
     
+    ggtitle(title) +
     theme(
-      axis.text.x = element_text(size = 14, angle = 45, vjust=0.5),
+      axis.text.x = element_text(size = 12, angle = 45, vjust=0.5),
       axis.title.x = element_text(size = 14),
       axis.title.y = element_text(size = 14),
       strip.text.x = element_text(size = 16, margin = margin(t = 0)),
       panel.grid.major.x = element_blank(), 
-      panel.grid.minor = element_blank()) +
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(hjust = 0, margin=margin(0,0,10,0))) +
 
-    ggtitle(title) +
     facet_grid(as.formula(paste0(".~", groupvar))) +
     
     guides(color = FALSE) +
@@ -1125,7 +1129,7 @@ ki_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease, Meas
     p <- p + scale_color_manual(values=sub_palette, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) 
   }else{
-    p <- p +  scale_color_manual(values=c("black","#FB4C05", "#F6A106","#0998F5"), drop=TRUE, limits = levels(df$measure),
+    p <- p +  scale_color_manual(values=sub_palette, drop=TRUE, limits = levels(df$measure),
                        guide = FALSE) 
   }
   
