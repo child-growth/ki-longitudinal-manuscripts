@@ -23,6 +23,12 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
+# overall panel (not strat by birth laz)
+plot_overall = readRDS(paste0(res_dir, "stunting/stuntflow_pooled_reml.RDS")) %>%
+  mutate(birth_laz = "Overall") %>% 
+  rename(tot = nmeas,
+         percent = est)
+
 # cohort data
 plot_cohort = readRDS(paste0(res_dir, "stunting/stunt-flow-data-cohort-birthlaz.RDS")) %>% 
   filter(!is.na(birth_laz))
@@ -86,6 +92,31 @@ birthlaz_data = readRDS(paste0(res_dir, "stunting/stuntflow_pooled_birthlaz_reml
 x=plot_cohort %>% select(cohort_country, birth_laz) %>% distinct()
 table(x$birth_laz)
 
+# get summary of model types 
+models_strat <- birthlaz_data %>% 
+  mutate(agem = as.numeric(as.character(agem))) %>% 
+  filter(agem<=15) %>% 
+  filter(label %in% c("Newly stunted", "Stunting relapse", "Recovered"))
+
+drops <- which(models_strat$birth_laz=="LAZ under -2" & models_strat$label=="Newly stunted")
+models_strat <- models_strat[-drops,]
+
+drops <- which(models_strat$agem==0 & models_strat$label!="Newly stunted")
+models_strat <- models_strat[-drops,]
+
+table(models_strat$method.used)
+
+models_overall <- plot_overall %>%
+  mutate(agem = as.numeric(as.character(agem))) %>% 
+  filter(agem<=15) %>% 
+  filter(label %in% c("Newly stunted", "Stunting relapse", "Recovered"))
+
+drops <- which(models_overall$agem==0 & models_overall$label!="Newly stunted")
+models_overall <- models_overall[-drops,]
+
+table(models_overall$method.used)
+
+nrow(models_strat) + nrow(models_overall)
 
 # define color palette -----------------------------------------------------
 pink_green = rev(brewer.pal(n = 7, name = "PiYG"))
@@ -159,10 +190,10 @@ plot_combine$percent[recodes] <- NA
 plot_combine$lb[recodes] <- NA
 plot_combine$ub[recodes] <- NA
 
-# read in overall plot
-main_line_data <- readRDS(paste0(figdata_dir_stunting, "figdata-stunt-2-flow-line-overall-allage-primary.RDS"))
-main_line_data <- main_line_data %>% mutate(birth_laz = "Overall")
-plot_combine <- bind_rows(plot_combine, main_line_data) %>% 
+# combine with overall plot ----------------------
+# main_line_data <- readRDS(paste0(figdata_dir_stunting, "figdata-stunt-2-flow-line-overall-allage-primary.RDS"))
+# main_line_data <- main_line_data %>% mutate(birth_laz = "Overall")
+plot_combine <- bind_rows(plot_combine, plot_overall) %>% 
   mutate(birth_laz = factor(birth_laz, levels = c(
     "Overall", "Birth LAZ under -2", 
     "Birth LAZ -2 to 0", "Birth LAZ 0 or more"
