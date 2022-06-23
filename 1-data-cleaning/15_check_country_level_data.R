@@ -119,7 +119,7 @@ quantile(df$gii, na.rm=T, probs = seq(0, 1, 0.3333333333333333333))
 # round(prop.table(table(df$gii_cat))*100,2)
 # 
 
-df$gii_cat <- cut(df$gii, breaks=c(-9999999,  0.591, 0.6140, 9999999),
+df$gii_cat <- cut(df$gii, breaks=c(-9999999,  0.596, 0.6140, 9999999),
 labels = c("High", "Medium","Low"),
 # df$gii_cat <- cut(df$gii, breaks=c(-9999999,  0.4, 9999999), 
 #                   labels = c("Low", "High"), 
@@ -134,7 +134,7 @@ quantile(df$chi, na.rm=T)
 quantile(df$chi, na.rm=T, probs = seq(0, 1, 0.3333333333333333333))
 
 
-df$chi_cat <- cut(df$chi, breaks=c(-9999999,  28.3, 35.7, 9999999), 
+df$chi_cat <- cut(df$chi, breaks=c(-9999999,  28.3, 29.32225  , 9999999), 
                   labels = c("High", "Medium","Low"), 
                   include.lowest = T, right=T)
 table(df$chi_cat)
@@ -158,20 +158,15 @@ quantile(df$gini, na.rm=T, probs = seq(0, 1, 0.3333333333333333333))
 # table(df$region, df$gini_cat)
 
 
-df$gini_cat <- cut(df$gini, breaks=c(-9999999,  32.32, 38.90, 9999999), 
+df$gini_cat <- cut(df$gini, breaks=c(-9999999,  32.32, 32.54, 9999999), 
                    labels = c("Low", "Medium","High"), 
                    include.lowest = T, right=T)
 table(df$gini_cat)
 round(prop.table(table(df$gini_cat))*100,2)
 table(df$region, df$gini_cat)
+table(df$country, df$gini_cat)
+table(df$studyid, df$gini_cat)
 
-
-df$gini_cat <- cut(df$gini, breaks=c(-9999999,  32.32, 38.90, 9999999), 
-                  labels = c("Low", "Medium","High"), 
-                  include.lowest = T, right=T)
-table(df$gini_cat)
-round(prop.table(table(df$gini_cat))*100,2)
-table(df$region, df$gini_cat)
 
 
 summary(df$he)
@@ -179,7 +174,7 @@ quantile(df$he, na.rm=T)
 quantile(df$he, na.rm=T, probs = seq(0, 1, 0.3333333333333333333))
 
 
-df$he_cat <- cut(df$he, breaks=c(-9999999,  2.761184,  5.081593, 9999999), 
+df$he_cat <- cut(df$he, breaks=c(-9999999,  2.748235,  5.239585, 9999999), 
                    labels = c("Low","Medium","High"), 
                    include.lowest = T, right=T)
 table(df$he_cat)
@@ -192,12 +187,27 @@ quantile(df$pov, na.rm=T)
 quantile(df$pov, na.rm=T, probs = seq(0, 1, 0.3333333333333333333))
 
 
-df$pov_cat <- cut(df$pov, breaks=c(-9999999,  14.300000,  21.550000, 9999999), 
+df$pov_cat <- cut(df$pov, breaks=c(-9999999,  18.38333,  27.65000, 9999999), 
                  labels = c("Low", "Medium","High"), 
                  include.lowest = T, right=T)
 table(df$pov_cat)
 round(prop.table(table(df$pov_cat))*100,2)
 table(df$region, df$pov_cat)
+
+
+summary(df$mort)
+quantile(df$mort, na.rm=T)
+quantile(df$mort, na.rm=T, probs = seq(0, 1, 0.3333333333333333333))
+
+
+df$mort_cat <- cut(df$mort, breaks=c(-9999999,  50,  95, 9999999), 
+                  labels = c("<50 per 100,000", "50-95 per 100,000",">95 per 100,000"), 
+                  include.lowest = T, right=F)
+table(df$mort_cat)
+round(prop.table(table(df$mort_cat))*100,2)
+table(df$region, df$mort_cat)
+
+
 
 saveRDS(df, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds")
 

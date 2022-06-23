@@ -1,6 +1,6 @@
 ##########################################
 # ki longitudinal manuscripts
-# stunting analysis
+# wasting analysis
 #
 # functions for descriptive epi plots
 
@@ -12,7 +12,7 @@
 
 filter_df <- function(df, meas, agerange="1 month") {
   new <- df %>% filter(
-    disease == "Stunting" &
+    disease == "Wasting" &
       measure == meas &
       birth == "yes" &
       severe == "no" &
@@ -68,11 +68,11 @@ pop_list = list(c="cohort-stratified", o="overall and region-stratified")
 analysis_list = list(p="primary", m="monthly cohorts measured each month from 0 to 24", f="fixed effects")
 
 #-------------------------------------------------------------------------------------------
-# Stunting prevalence (monthly from 0 to 24 months)
+# Wasting prevalence (monthly from 0 to 24 months)
 #-------------------------------------------------------------------------------------------
 plot_prev <- function(d, meas="Prevalence", sev, ...) {
   ki_desc_plot(d,
-               Disease="Stunting",
+               Disease="Wasting",
                Measure=meas, 
                Birth="yes", 
                Severe=sev, 
@@ -88,7 +88,7 @@ plot_prev <- function(d, meas="Prevalence", sev, ...) {
 # define standardized plot names
 name_prev_plots <- function(cut=2, pop, loc="", ana) {
   create_name(
-    outcome = "stunting",
+    outcome = "wasting",
     cutoff = cut,
     measure = "prevalence",
     population = pop,
@@ -99,12 +99,12 @@ name_prev_plots <- function(cut=2, pop, loc="", ana) {
 }
 
 #-------------------------------------------------------------------------------------------
-# Stunting cumulative incidence + incidence proportion (primary)
+# Wasting cumulative incidence + incidence proportion (primary)
 #-------------------------------------------------------------------------------------------
 
 plot_ip <- function(d, meas="Incidence proportion", birth, sev, ...) {
   ki_ip_flurry_plot(d,
-                    Disease="Stunting",
+                    Disease="Wasting",
                     Measure=meas,
                     Birth=birth,
                     Severe=sev,
@@ -115,26 +115,22 @@ plot_ip <- function(d, meas="Incidence proportion", birth, sev, ...) {
                     ...)
 }
 
-# d is data frame with subgroup pooled estimates only
-# d_cohort is data frame with cohort-specific estimates only
-plot_ip_subgroup <- function(d, d_cohort, subgroup_name, subgroup_colors,meas="Incidence_proportion", birth, sev, subgroup, title, ...) {
+plot_ip_subgroup <- function(d, meas="Incidence_proportion", birth, sev, subgroup, title, reverse_colors,...) {
   
-    ki_ip_flurry_subgroup_plot(d,
-                               d_cohort,
-                               subgroup_name,
-                               subgroup_colors,
-                      Disease="Stunting",
-                      Measure=meas, 
-                      Birth=birth, 
-                      Severe=sev, 
-                      Age_range="3 months", 
-                      xlabel="Child age, months",
-                      h1=90,
-                      h2=90,
-                      subgroup=subgroup,
-                      title =title,
-                      ...)
-
+  ki_ip_flurry_subgroup_plot(d,
+                             Disease="Wasting",
+                             Measure=meas, 
+                             Birth=birth, 
+                             Severe=sev, 
+                             Age_range="3 months", 
+                             xlabel="Child age, months",
+                             h1=90,
+                             h2=90,
+                             reverse_colors=F,
+                             subgroup=subgroup,
+                             title =title,
+                             ...)
+  
 }
 
 
@@ -142,7 +138,7 @@ plot_ip_subgroup <- function(d, d_cohort, subgroup_name, subgroup_colors,meas="I
 # define standardized plot names
 name_inc_plots <- function(cut=2, pop, loc="", ana) {
   create_name(
-    outcome = "stunting",
+    outcome = "wasting",
     cutoff = cut,
     measure = "incidence",
     population = pop,
@@ -153,12 +149,12 @@ name_inc_plots <- function(cut=2, pop, loc="", ana) {
 }
 
 #-------------------------------------------------------------------------------------------
-# Stunting incidence - 3 months - stratified by cohort (primary)
+# Wasting incidence - 3 months - stratified by cohort (primary)
 #-------------------------------------------------------------------------------------------
 plot_ip_by_reg <- function(reg) {
   ip_plot(
     d_primary,
-    Disease = "Stunting",
+    Disease = "Wasting",
     Measure = "Incidence proportion",
     Birth = "strat",
     Severe = "no",
@@ -177,7 +173,7 @@ plot_ip_by_reg <- function(reg) {
 # get N's for subgroup analysis plots
 get_N_subgroup <- function(d, subgroup){
   d %>%
-    filter(disease == "Stunting" &
+    filter(disease == "Wasting" &
              measure== "Incidence_proportion" &
              age_range == "3 months" &
              birth == "strat" &

@@ -41,42 +41,19 @@ assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),
 head(d)
 d <- d %>% subset(., select = -c(tr))
 
-colnames(d)
+
+#Get birth size:
+d <- d %>% group_by(studyid, subjid) %>% arrange(agedays) %>% 
+  mutate(birth_laz =first(haz), first_age=first(agedays), birth_laz=ifelse(first_age>31, NA, birth_laz)) %>%
+  filter(!is.na(birth_laz))
 
 
-table(is.na(d$gdi))
-table(d$studyid[is.na(d$gdi)])
-table(d$country[is.na(d$gdi)])
-table(d$brthyr[is.na(d$gdi)])
-summary(d$he)
-
-
-d$decade <- cut(d$brthyr, breaks=c(-9999999, 2000, 2010 ,9999999), labels = c("90s", "2000s","2010s"), include.lowest = T, right=T)
-d$gdp_cat <- cut(d$gdp, breaks=c(-9999999,1026,9999999), labels = c("Low income", "Middle income"), include.lowest = T, right=T)
-d$gdi_cat <- cut(100*abs(d$gdi-1), breaks=c(-9999999, 10, 16,9999999), 
-                  labels = c("High/Medium","Low", "Very low"), 
-                  include.lowest = T, right=T)
-d$gii_cat <- cut(d$gii, breaks=c(-9999999,  0.596, 0.6140, 9999999),
-                  labels = c("High", "Medium","Low"),
-                  include.lowest = T, right=T)
-d$chi_cat <- cut(d$chi, breaks=c(-9999999,  28.3, 29.32225  , 9999999), 
-                  labels = c("High", "Medium","Low"), 
-                  include.lowest = T, right=T)
-d$gini_cat <- cut(d$gini, breaks=c(-9999999,  32.32, 32.54, 9999999), 
-                   labels = c("Low", "Medium","High"), 
-                   include.lowest = T, right=T)
-d$he_cat <- cut(d$he, breaks=c(-9999999, 2.748235,  5.239585, 9999999), 
-                 labels = c("Low","Medium","High"), 
-                 include.lowest = T, right=T)
-d$pov_cat <- cut(d$pov, breaks=c(-9999999,  18.38333,  27.65000, 9999999), 
-                  labels = c("Low", "Medium","High"), 
-                  include.lowest = T, right=T)
-d$mort_cat <- cut(d$mort, breaks=c(-9999999,  50,  95, 9999999), 
-                   labels = c("<50 per 100,000", "50-95 per 100,000",">95 per 100,000"), 
-                   include.lowest = T, right=F)
-
-
-
+table(is.na(d$birth_laz))
+table(d$studyid)
+summary(d$birth_laz)
+d$birth_laz_cat <- cut(d$birth_laz, breaks=c(-6, -2, -1, 0 ,6), include.lowest = T, right=T)
+table(d$birth_laz_cat)
+prop.table(table(d$birth_laz_cat))*100
 
 
 #Set age categories
@@ -117,9 +94,7 @@ agelst6_birthstrat = list(
   "12-18 months", 
   "18-24 months"
 )
-pooling_variable="gdp_cat"
-data=d
-calc_method="REML"
+
 
 calc_outcomes = function(data, calc_method, output_file_suffix, pooling_variable){
   
@@ -340,7 +315,7 @@ calc_outcomes = function(data, calc_method, output_file_suffix, pooling_variable
     #data.frame(disease = "Stunting", age_range="6 months",   birth="yes", severe="yes", measure= "Incidence_proportion",  sev.ip6)
   )
   
-  assert_that(names(table(shiny_desc_data$method.used)) == calc_method)
+  #assert_that(names(table(shiny_desc_data$method.used)) == calc_method)
   
   shiny_desc_data <- shiny_desc_data %>% subset(., select = -c(se, nmeas.f,  ptest.f))
   
@@ -349,40 +324,12 @@ calc_outcomes = function(data, calc_method, output_file_suffix, pooling_variable
   return(shiny_desc_data)
 }
 
-# data = d
-# calc_method = "REML"
-# output_file_suffix = ""
-# 
-# stunt_mort_res <- readRDS(file = paste0(res_dir,"stunting/stunt_mort_pool.RDS"))
+data = d
+calc_method = "REML"
+output_file_suffix = ""
+pooling_variable="birth_laz_cat"
+res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="birth_laz_cat", output_file_suffix = "")
 
+table(res$agecat)
 
-stunt_mort_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="mort_cat", output_file_suffix = "")
-saveRDS(stunt_mort_res, file = paste0(res_dir,"stunting/stunt_mort_pool.RDS"))
-
-stunt_decade_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="decade", output_file_suffix = "")
-saveRDS(stunt_decade_res, file = paste0(res_dir,"stunting/stunt_decade_pool.RDS"))
-
-stunt_gdp_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="gdp_cat", output_file_suffix = "")
-saveRDS(stunt_gdp_res, file = paste0(res_dir,"stunting/stunt_gdp_pool.RDS"))
-
-stunt_gdi_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="gdi_cat", output_file_suffix = "")
-saveRDS(stunt_gdi_res, file = paste0(res_dir,"stunting/stunt_gdi_pool.RDS"))
-
-stunt_gii_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="gii_cat", output_file_suffix = "")
-saveRDS(stunt_gii_res, file = paste0(res_dir,"stunting/stunt_gii_pool.RDS"))
-
-stunt_chi_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="chi_cat", output_file_suffix = "")
-saveRDS(stunt_chi_res, file = paste0(res_dir,"stunting/stunt_chi_pool.RDS"))
-
-stunt_gini_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="gini_cat", output_file_suffix = "")
-saveRDS(stunt_gini_res, file = paste0(res_dir,"stunting/stunt_gini_pool.RDS"))
-
-stunt_he_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="he_cat", output_file_suffix = "")
-saveRDS(stunt_he_res, file = paste0(res_dir,"stunting/stunt_he_pool.RDS"))
-
-stunt_pov_res = calc_outcomes(data = d, calc_method = "REML", pooling_variable="pov_cat", output_file_suffix = "")
-saveRDS(stunt_pov_res, file = paste0(res_dir,"stunting/stunt_pov_pool.RDS"))
-
-
-
-
+saveRDS(res, file = paste0(res_dir,"stunting/stunt_birth_laz_pool.RDS"))

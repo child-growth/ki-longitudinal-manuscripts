@@ -970,13 +970,16 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 
 
-ki_ip_flurry_subgroup_plot <- function(d, Disease, Measure, Birth, Severe, Age_range, subgroup,title,
+ki_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease, Measure, Birth, Severe, Age_range, subgroup,title,
+                                       # subgroup_colors = c("#0998F5", "#F6A106", "#FB4C05"), 
+                                       subgroup_colors,
                                        xlabel="Age category",
                                        ylabel="Incidence proportion (95% CI)",
                                        h1=0,
                                        h2=3,
                                        yrange=NULL,
                                        dodge=0,
+                                       reverse_colors = F,
                                        returnData=F){
   
   groupvar <- sym(subgroup)
@@ -1035,9 +1038,22 @@ ki_ip_flurry_subgroup_plot <- function(d, Disease, Measure, Birth, Severe, Age_r
     print("Warning: some lower bounds < 0")
   }
   
+  # format cohort data
+  d_cohort_plot <- d_cohort %>%
+    rename(country_cat = !!sym(subgroup_name)) %>%
+    filter(!is.na(country_cat))
   
+  # sub_palette <- c("black","#0998F5", "#F6A106", "#FB4C05")
+  sub_palette <- c("black", subgroup_colors)
   
   p <- ggplot(df,aes(y=est,x=agecat)) +
+    
+    # cohort-stratified 
+    
+    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
+               data = d_cohort_plot,
+               aes(x = agecat, y= est),
+               position = position_jitter(width = 0.15), alpha = 0.2) +
     
     # pooled 
     geom_point(aes(shape=measure, size=measure, fill=!!sym(groupvar), color=!!sym(groupvar)), 
@@ -1063,19 +1079,11 @@ ki_ip_flurry_subgroup_plot <- function(d, Disease, Measure, Birth, Severe, Age_r
               hjust = 1.5, 
               position = position_dodge(width = dodge),
               vjust = 0.5) + 
-    
-    # cohort-stratified 
-    
-    geom_point(color = "#878787", fill = "#878787", size = 1.5, 
-               data = df %>% filter(ispooled == "no"),
-               position = position_jitter(width = 0.15), alpha = 0.25) +
-    
-    scale_color_manual(values=tableau11, drop=TRUE, limits = levels(df$measure),
-                       guide = FALSE) +
+
     scale_size_manual(values = c(2, 1.5), guide = FALSE) +
     scale_shape_manual(values = c(16, 17),
                        name = 'Measure')+
-    scale_fill_manual(values=tableau11, guide = FALSE) +
+    scale_fill_manual(values=sub_palette, guide = FALSE) +
     
     xlab(xlabel)+
     ylab(ylabel) +
@@ -1095,13 +1103,16 @@ ki_ip_flurry_subgroup_plot <- function(d, Disease, Measure, Birth, Severe, Age_r
     #                                   size = 14)) +
     # theme(axis.title.y = element_text(size = 14)) +
     
+    ggtitle(title) +
     theme(
-      axis.text.x = element_text(size = 14, angle = 45, vjust=0.5),
+      axis.text.x = element_text(size = 12, angle = 45, vjust=0.5),
       axis.title.x = element_text(size = 14),
       axis.title.y = element_text(size = 14),
-      strip.text.x = element_text(size = 16, margin = margin(t = 0))) +
+      strip.text.x = element_text(size = 16, margin = margin(t = 0)),
+      panel.grid.major.x = element_blank(), 
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(hjust = 0, margin=margin(0,0,10,0))) +
 
-    ggtitle(title) +
     facet_grid(as.formula(paste0(".~", groupvar))) +
     
     guides(color = FALSE) +
@@ -1112,6 +1123,16 @@ ki_ip_flurry_subgroup_plot <- function(d, Disease, Measure, Birth, Severe, Age_r
     if(!is.null(yrange)){
       p <- p + coord_cartesian(ylim=yrange)
     }
+  
+  
+  if(!reverse_colors){
+    p <- p + scale_color_manual(values=sub_palette, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) 
+  }else{
+    p <- p +  scale_color_manual(values=sub_palette, drop=TRUE, limits = levels(df$measure),
+                       guide = FALSE) 
+  }
+  
   
   if(returnData){
     return(list(plot=p,data=df))

@@ -8,8 +8,11 @@ source(paste0(here::here(), "/0-config.R"))
 Zscores <- readRDS(included_studies_path)
 
 #load country metrics
-country_metrics <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds")
+country_metrics <- readRDS(file=here("data/country metrics/combined_country_metrics.RDS"))
 unique(country_metrics$country)
+summary(country_metrics$mort)
+country_metrics <- country_metrics %>% 
+  select(-starts_with("Intercept"),-starts_with("_imp"), -starts_with("imputed_"),-starts_with("min_year"),-starts_with("max_year"))
 
 
 # Check how many at-birth measurements have
@@ -124,7 +127,10 @@ start_year <- d %>% filter(agedays <= 731) %>%
   group_by(studyid, country, subjid) %>%
   mutate(max_year = max(brthyr + agedays/365)) %>%
   group_by(studyid, country) %>% 
-  summarize(start_year = min(brthyr), median_birth_year = median(brthyr), end_birth_year=max(brthyr), max_yr=max(max_year))
+  summarise(start_year = min(brthyr), 
+            median_birth_year = median(brthyr), 
+            end_birth_year=max(brthyr), 
+            max_yr=max(max_year))
 
 #fill in start year and max year for studies missing birth year
 start_year$start_year[start_year$studyid=="NIH-Birth"] <- 2008
@@ -153,12 +159,23 @@ colnames(d)
 head(d)
 
 df <- d %>%  group_by(studyid, country, subjid) %>% slice(1) %>% 
-             select(studyid, subjid, country, brthyr, region, gdp,gdi,gii,chi,gini,he,pov)
+             rename(imputed_gdp=gdp_imp,
+                    imputed_gdi=gdi_imp,
+                    imputed_gii=gii_imp,
+                    imputed_chi=chi_imp,
+                    imputed_gini=gini_imp,
+                    imputed_he=he_imp,
+                    imputed_pov=pov_imp,
+                    imputed_mort=mort_imp) %>%
+             select(studyid, subjid, country, brthyr, region, gdp,gdi,gii,
+                    chi,gini,he,pov, mort,
+                    imputed_gdp,imputed_gdi,imputed_gii,
+                    imputed_chi,imputed_gini,imputed_he,imputed_pov, imputed_mort)
 head(df)
 
 #classify study decade
 df <- left_join(df, start_year, by = c("studyid", "country"))
-table(is.na(df$gdp))
-temp <- df[is.na(df$gdp),]
+table(is.na(df$mort))
+
 saveRDS(df, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds")
 
