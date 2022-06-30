@@ -16,7 +16,12 @@ d <- d %>% filter(measurefreq == "monthly")
 #merge in country metrics
 birthyears <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds") %>% select(studyid, country, brthyr, subjid) %>% distinct()
 country <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds")
+
+country <- country %>% subset(., select=c(country, brthyr, decade:mort_cat)) %>% distinct()
+
+dim(d)
 d <- left_join(d, birthyears, by = c("studyid", "country",  "subjid"))
+dim(d)
 
 
 dim(d)
@@ -68,7 +73,7 @@ prev.pov <- d %>% group_by(pov_cat) %>% do(summary.prev.whz(.)$prev.res) %>% mut
 
 prev.birth.wlz <- d %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
 prev.birthwt <- d %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
-prev.dead <- d %>% filter(!is.na(dead)) %>% droplevels() %>% group_by(dead) %>% do(res=summary.prev.whz(.)$prev.res) %>% mutate(country.cat="dead") %>% rename(cat.level=dead)
+prev.dead <- d %>% filter(!is.na(mort_cat)) %>% droplevels() %>% group_by(mort_cat) %>% do(res=summary.prev.whz(.)$prev.res) %>% mutate(country.cat="mort_cat") %>% rename(cat.level=mort_cat)
 
 
 # prev.cohort <-
@@ -166,7 +171,7 @@ ci.pov <- d3 %>% group_by(pov_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res
 
 ci.birth.wlz <- d3 %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
 ci.birthwt <- d3 %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
-ci.prev.dead <- d3 %>% filter(!is.na(prev.dead)) %>% group_by(dead) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="prev.dead") %>% rename(cat.level=prev.dead)
+ci.dead <- d3 %>% filter(!is.na(mort_cat)) %>% group_by(mort_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="mort_cat") %>% rename(cat.level=mort_cat)
 
 dead
 
@@ -181,7 +186,7 @@ ci <- bind_rows(
   data.frame(cohort = "pooled", ci.he),
   data.frame(cohort = "pooled", ci.birth.wlz),
   data.frame(cohort = "pooled", ci.birthwt),
-  data.frame(cohort = "pooled", ci.prev.dead),
+  data.frame(cohort = "pooled", ci.dead),
   data.frame(cohort = "pooled", ci.pov))
 
 ci <- ci %>% mutate(region="NA")
@@ -221,9 +226,9 @@ ip.he <- d3 %>% group_by(he_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(co
 ip.pov <- d3 %>% group_by(pov_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="pov") %>% rename(cat.level=pov_cat)
 
 
-ip.birth.wlz <- d3 %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.incprop(., age.range=3)$ci.res) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
-ip.birthwt <- d3 %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.incprop(., age.range=3)$ci.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
-ip.dead <- d3 %>% filter(!is.na(dead)) %>% group_by(dead) %>% do(summary.incprop(., age.range=3)$ci.res) %>% mutate(country.cat="dead") %>% rename(cat.level=dead)
+ip.birth.wlz <- d3 %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
+ip.birthwt <- d3 %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
+ip.dead <- d3 %>% filter(!is.na(mort_cat)) %>% group_by(mort_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="mort_cat") %>% rename(cat.level=mort_cat)
 
 
 
@@ -376,14 +381,8 @@ ir <- ir %>% mutate(region="NA")
 #   perswast.cohort
 # )
 # save(perswast024, file = paste0(BV_dir,"/results/persistent_wasting024.Rdata"))
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+
+
 wasting_desc_data <- bind_rows(
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci),

@@ -95,6 +95,11 @@ d_cohort <- d_cohort %>%
   )))
 
 # Load data --------------------------------
+
+country_cat_df <- readRDS(paste0(BV_dir,"/results/wasting_desc_data_country.RDS"))
+table(country_cat_df$country.cat)
+table(country_cat_df$cat.level)
+
 decade_data <- readRDS(paste0(BV_dir,"/results/wasting_desc_data_country.RDS")) %>% 
   mutate(country_cat = factor(country_cat, levels = c(
     "Overall", "90s", "2000s", "2010s"

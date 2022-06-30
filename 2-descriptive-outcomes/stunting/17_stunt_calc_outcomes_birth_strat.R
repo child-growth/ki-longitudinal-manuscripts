@@ -55,6 +55,10 @@ d$birth_laz_cat <- cut(d$birth_laz, breaks=c(-6, -2, -1, 0 ,6), include.lowest =
 table(d$birth_laz_cat)
 prop.table(table(d$birth_laz_cat))*100
 
+#percent ever stunted with birth LAZ <0
+df <- d %>% filter(agedays < 730) %>% group_by(studyid, subjid, birth_laz_cat) %>% summarize(min_laz=min(haz,na.rm=T)) %>%
+  filter(min_laz < (-2))
+prop.table(table(df$birth_laz_cat))
 
 #Set age categories
 agelst3 = list(
