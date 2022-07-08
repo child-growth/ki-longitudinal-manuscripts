@@ -78,7 +78,7 @@ pov = df %>% filter(country.cat=="pov"|is.na(country.cat))
 # table(is.na(d$lb))
 # table(is.na(d$ub))
 
-ip_plot_primary_decade <- plot_ip_subgroup(d = decade, birth="strat", sev="no", 
+ip_plot_primary_decade <- plot_ip_subgroup(d = decade, d_cohort=d_cohort, birth="strat", sev="no", 
                                            subgroup="cat.level", returnData=T,
                                            title = "Wasting Incidence pooled by decade")
 

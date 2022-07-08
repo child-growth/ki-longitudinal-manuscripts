@@ -28,6 +28,7 @@ prop.table(table(lbw$studyid,lbw$birthwt))
 
 load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
+
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
 d_noBW2 <- d_noBW %>% filter(measurefreq == "monthly")
@@ -35,6 +36,23 @@ head(d_noBW)
 #d_noBW$whz[d_noBW$firstmeasure & d_noBW$agedays < 30.4167 & d_noBW$whz < (-2)] <- NA
 d_noBW$whz[d_noBW$firstmeasure & d_noBW$agedays <= 14 & d_noBW$whz < (-2)] <- NA
 d_noBW <- d_noBW %>% filter(!is.na(whz))
+
+#Examine duration
+d$duration
+d <- calc.ci.agecat(d, range=6)
+df <- df %>% filter(!is.na(duration), !is.na(agecat))
+summary(df$agecat)
+
+dur_violin_plot_no_cohort = ggplot(df,aes(x=agecat, y=duration, fill = agecat)) + 
+  geom_violin(alpha=0.2, draw_quantiles = c(0.25, 0.5, 0.75)) + 
+  ylab("Duration of wasting episode in days")+
+  xlab("Age at wasting episode onset")+
+  scale_fill_manual(values=rep("grey30", 4)) +
+  coord_cartesian(ylim=c(0,1000))
+dur_violin_plot_no_cohort
+
+
+
 
 d_noBW2 <- d_noBW2 %>% group_by(studyid, subjid) %>% mutate(born_wast=max(1*(wasting_episode=="Born Wasted"))) %>% ungroup() %>% filter(born_wast==0)
 
