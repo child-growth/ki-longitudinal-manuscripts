@@ -28,6 +28,9 @@ unique(df$studyid)
 table(df$gdi_cat)
 table(df$gii_cat)
 
+unique(df$region)
+df$region <- recode_factor(df$region, `N.America & Europe` = "Europe")
+df$region <- factor(df$region, levels = c( "Africa", "South Asia", "Latin America", "Europe" ))
 stuntdf <- df %>% filter(studyid %in% monthly_and_quarterly_cohorts) %>% subset(., select = c(studyid, subjid, region, decade, gdp_cat,         
                                                                                               gdi_cat, gii_cat, chi_cat,         
                                                                                               gini_cat, he_cat, pov_cat,         
@@ -44,7 +47,7 @@ stuntdf <- df %>% filter(studyid %in% monthly_and_quarterly_cohorts) %>% subset(
          `Gender inequality index`=gii_cat, 
          `Coefficient of human inequality`=chi_cat,         
          `GINI coefficient`=gini_cat, 
-         `Health expenditure per capita`=he_cat, 
+         `Total expenditure on health (% of GDP)`=he_cat, 
          `% living 0n below $1.90 per day`=pov_cat,         
          `Child mortality rate under 5`=mort_cat)
 
