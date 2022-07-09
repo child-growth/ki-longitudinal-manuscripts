@@ -359,8 +359,30 @@ sev_ip_plot_primary <- ki_wast_ip_flurry_plot(d,
                                           #legend.pos= c(.0605,.815)
                                           )
 
+#data for Kay
+tab <- sev_ip_plot_primary$data
+table(tab$agecat)
+tab$agecat <- as.character(tab$agecat)
+tab$agecat[tab$agecat=="6-12"] <- "0-12"
+tab$agecat[tab$agecat=="12-18"] <- "0-18"
+tab$agecat[tab$agecat=="18-24"] <- "0-24"
+tab <- tab %>% filter(cohort=="pooled") %>% select(region,nstudies, nmeas,est,lb,ub, agecat) %>%
+               rename(`number of studies`=nstudies, 
+                      `number of observations`=nmeas,
+                      `Cumulative incidence from birth`=est,
+                      `95% CI lower`=lb,
+                      `95% CI upper`=ub, 
+                      `Age range`=agecat)
+head(tab)
+knitr::kable(tab)
 
-sev_ip_plot_no_cohort + ggtitle("Severe wasting incidence")
+sev_ip_plot_primary + ggtitle("Severe wasting incidence")
+
+ggsave(sev_ip_plot_primary[[1]], file=paste0(BV_dir,"/figures/wasting/fig-severe-wast-CI.png"), width=14, height=5)
+
+saveRDS(sev_ip_plot_primary[[2]], file=paste0(figdata_dir_wasting,"figdata-severe-wast-CI.RDS"))
+
+
 
 #-------------------------------------------------------------------------------------------
 # Wasting incidence rate

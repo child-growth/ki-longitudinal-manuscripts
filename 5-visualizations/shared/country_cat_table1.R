@@ -14,8 +14,7 @@ df <- dfull %>% subset(., select = c(studyid,          subjid,           country
                                      brthyr,           region,           decade,           gdp_cat,         
                                      gdi_cat,          gii_cat,          chi_cat,         
                                      gini_cat,         he_cat,           pov_cat,         
-                                     mort_cat
-)) %>% distinct()
+                                     mort_cat)) %>% distinct()
 saveRDS(df, paste0(here::here(),"/data/country_category_balance_tab.rds"))
 
 #NOTE! Need to check that its subset to HAZ observations first

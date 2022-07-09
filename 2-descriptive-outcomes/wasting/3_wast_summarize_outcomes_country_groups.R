@@ -16,7 +16,12 @@ d <- d %>% filter(measurefreq == "monthly")
 #merge in country metrics
 birthyears <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds") %>% select(studyid, country, brthyr, subjid) %>% distinct()
 country <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds")
+
+country <- country %>% subset(., select=c(country, brthyr, decade:mort_cat)) %>% distinct()
+
+dim(d)
 d <- left_join(d, birthyears, by = c("studyid", "country",  "subjid"))
+dim(d)
 
 
 dim(d)
@@ -68,7 +73,7 @@ prev.pov <- d %>% group_by(pov_cat) %>% do(summary.prev.whz(.)$prev.res) %>% mut
 
 prev.birth.wlz <- d %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
 prev.birthwt <- d %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.prev.whz(.)$prev.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
-prev.dead <- d %>% filter(!is.na(dead)) %>% droplevels() %>% group_by(dead) %>% do(res=summary.prev.whz(.)$prev.res) %>% mutate(country.cat="dead") %>% rename(cat.level=dead)
+prev.dead <- d %>% filter(!is.na(mort_cat)) %>% droplevels() %>% group_by(mort_cat) %>% do(res=summary.prev.whz(.)$prev.res) %>% mutate(country.cat="mort_cat") %>% rename(cat.level=mort_cat)
 
 
 # prev.cohort <-
@@ -150,7 +155,7 @@ prev$agecat <- factor(prev$agecat, levels=unique(prev$agecat))
 
 
 #Cumulative inc 3 month intervals
-d3 <- calc.ci.agecat(d, range = 3)
+d3 <- calc.ci.agecat(d, range = 3, birth = "no")
 
 
 #Cumulative inc
@@ -166,7 +171,7 @@ ci.pov <- d3 %>% group_by(pov_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res
 
 ci.birth.wlz <- d3 %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
 ci.birthwt <- d3 %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
-ci.prev.dead <- d3 %>% filter(!is.na(prev.dead)) %>% group_by(dead) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="prev.dead") %>% rename(cat.level=prev.dead)
+ci.dead <- d3 %>% filter(!is.na(mort_cat)) %>% group_by(mort_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="mort_cat") %>% rename(cat.level=mort_cat)
 
 dead
 
@@ -181,7 +186,7 @@ ci <- bind_rows(
   data.frame(cohort = "pooled", ci.he),
   data.frame(cohort = "pooled", ci.birth.wlz),
   data.frame(cohort = "pooled", ci.birthwt),
-  data.frame(cohort = "pooled", ci.prev.dead),
+  data.frame(cohort = "pooled", ci.dead),
   data.frame(cohort = "pooled", ci.pov))
 
 ci <- ci %>% mutate(region="NA")
@@ -211,6 +216,7 @@ ci <- ci %>% mutate(region="NA")
 
 #Incidence proportions 3 month intervals
 ip.data <- summary.incprop(d3)
+
 ip.decade <- d3 %>% group_by(decade) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="decade") %>% rename(cat.level=decade)
 ip.gdp <- d3 %>% group_by(gdp_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="gdp") %>% rename(cat.level=gdp_cat)
 ip.gdi <- d3 %>% group_by(gdi_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="gdi") %>% rename(cat.level=gdi_cat)
@@ -219,11 +225,9 @@ ip.chi <- d3 %>% group_by(chi_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(
 ip.gini <- d3 %>% group_by(gini_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="gini") %>% rename(cat.level=gini_cat)
 ip.he <- d3 %>% group_by(he_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="ghe") %>% rename(cat.level=he_cat)
 ip.pov <- d3 %>% group_by(pov_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="pov") %>% rename(cat.level=pov_cat)
-
-
-ip.birth.wlz <- d3 %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.incprop(., age.range=3)$ci.res) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
-ip.birthwt <- d3 %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.incprop(., age.range=3)$ci.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
-ip.dead <- d3 %>% filter(!is.na(dead)) %>% group_by(dead) %>% do(summary.incprop(., age.range=3)$ci.res) %>% mutate(country.cat="dead") %>% rename(cat.level=dead)
+ip.birth.wlz <- d3 %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
+ip.birthwt <- d3 %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
+ip.dead <- d3 %>% filter(!is.na(mort_cat)) %>% group_by(mort_cat) %>% do(summary.incprop(.)$ci.res) %>% mutate(country.cat="mort_cat") %>% rename(cat.level=mort_cat)
 
 
 
@@ -242,6 +246,37 @@ ip <- bind_rows(
   data.frame(cohort = "pooled", ip.pov))
 
 ip <- ip %>% mutate(region="NA")
+
+
+#Get cohort-specific incidence proportion
+ip.decade.cohort <- d3 %>% group_by(decade) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="decade") %>% rename(cat.level=decade)
+ip.gdp.cohort <- d3 %>% group_by(gdp_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="gdp") %>% rename(cat.level=gdp_cat)
+ip.gdi.cohort <- d3 %>% group_by(gdi_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="gdi") %>% rename(cat.level=gdi_cat)
+ip.gii.cohort <- d3 %>% group_by(gii_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="gii") %>% rename(cat.level=gii_cat)
+ip.chi.cohort <- d3 %>% group_by(chi_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="chi") %>% rename(cat.level=chi_cat)
+ip.gini.cohort <- d3 %>% group_by(gini_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="gini") %>% rename(cat.level=gini_cat)
+ip.he.cohort <- d3 %>% group_by(he_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="ghe") %>% rename(cat.level=he_cat)
+ip.pov.cohort <- d3 %>% group_by(pov_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="pov") %>% rename(cat.level=pov_cat)
+ip.birth.wlz.cohort <- d3 %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="birth_wlz_cat") %>% rename(cat.level=birth_wlz_cat)
+ip.birthwt.cohort <- d3 %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
+ip.dead.cohort <- d3 %>% filter(!is.na(mort_cat)) %>% group_by(mort_cat) %>% do(summary.incprop(.)$ci.cohort) %>% mutate(country.cat="mort_cat") %>% rename(cat.level=mort_cat)
+
+
+ip.cohort <- bind_rows(
+  data.frame(cohort = "pooled", cat.level = "Overall", ip.data$ci.cohort),
+  data.frame(cohort = "pooled", ip.decade.cohort),
+  data.frame(cohort = "pooled", ip.gdp.cohort),
+  data.frame(cohort = "pooled", ip.gdi.cohort),
+  data.frame(cohort = "pooled", ip.gii.cohort),
+  data.frame(cohort = "pooled", ip.chi.cohort),
+  data.frame(cohort = "pooled", ip.gini.cohort),
+  data.frame(cohort = "pooled", ip.he.cohort),
+  data.frame(cohort = "pooled", ip.birth.wlz.cohort),
+  data.frame(cohort = "pooled", ip.birthwt.cohort),
+  data.frame(cohort = "pooled", ip.dead.cohort),
+  data.frame(cohort = "pooled", ip.pov.cohort))
+
+ip.cohort <- ip.cohort %>% mutate(region="NA")
 
 
 #Incidence rate - 3 month intervals
@@ -376,19 +411,13 @@ ir <- ir %>% mutate(region="NA")
 #   perswast.cohort
 # )
 # save(perswast024, file = paste0(BV_dir,"/results/persistent_wasting024.Rdata"))
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+
+
 wasting_desc_data <- bind_rows(
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Prevalence", prev),
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci),
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ip),
-  data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence rate", ir)#,
+  data.frame(disease = "Wasting", age_range="3 months",   birth="strat", severe="no", measure= "Prevalence", prev),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="strat", severe="no", measure= "Cumulative incidence", ci),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="strat", severe="no", measure= "Incidence_proportion", ip),
+  data.frame(disease = "Wasting", age_range="3 months",   birth="strat", severe="no", measure= "Incidence rate", ir)#,
   # data.frame(disease = "Wasting", age_range="6 months",   birth="yes", severe="no", measure= "Persistent wasting", perswast),
   # data.frame(disease = "Wasting", age_range="30 days",   birth="yes", severe="no", measure= "Recovery", rec30),
   # data.frame(disease = "Wasting", age_range="60 days",   birth="yes", severe="no", measure= "Recovery", rec60),
@@ -424,10 +453,13 @@ table(is.na(wasting_desc_data$pooling))
 wasting_desc_data$country[wasting_desc_data$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
 wasting_desc_data$country <- stringr::str_to_title(wasting_desc_data$country)
 
+ip.cohort$country[ip.cohort$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
+ip.cohort$country <- stringr::str_to_title(ip.cohort$country)
 
 
 
 saveRDS(wasting_desc_data, file = paste0(BV_dir,"/results/wasting_desc_data_country.RDS"))
+saveRDS(ip.cohort, file = paste0(BV_dir,"/results/wasting_desc_data_cohort_ip_country_stats.RDS"))
 
 
 

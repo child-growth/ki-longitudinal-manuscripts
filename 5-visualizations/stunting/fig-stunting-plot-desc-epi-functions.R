@@ -117,11 +117,12 @@ plot_ip <- function(d, meas="Incidence proportion", birth, sev, ...) {
 
 # d is data frame with subgroup pooled estimates only
 # d_cohort is data frame with cohort-specific estimates only
-plot_ip_subgroup <- function(d, d_cohort, subgroup_name, meas="Incidence_proportion", birth, sev, subgroup, title, ...) {
+plot_ip_subgroup <- function(d, d_cohort, subgroup_name, subgroup_colors,meas="Incidence_proportion", birth, sev, subgroup, title, ...) {
   
     ki_ip_flurry_subgroup_plot(d,
                                d_cohort,
                                subgroup_name,
+                               subgroup_colors,
                       Disease="Stunting",
                       Measure=meas, 
                       Birth=birth, 
