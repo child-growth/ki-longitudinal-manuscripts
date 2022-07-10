@@ -12,73 +12,11 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-epi-functions.R"))
 
 # Load data for cohort-specific points
-#dinput <- readRDS(paste0(res_dir,"/desc_data_cleaned.rds")) 
-
-# data_cohort <- dinput %>% filter(disease=="Wasting" & 
-#                                    cohort!="pooled-country" & 
-#                                    cohort!="pooled" &
-#                                    severe=="no" & 
-#                                    measure=="Incidence proportion" & 
-#                                    analysis=="Primary" & 
-#                                    age_range=="3 months" & 
-#                                    birth=="yes") %>% 
-#   dplyr::select(-studyid)
-
 try(data_cohort <- readRDS(paste0(BV_dir,"/results/wasting_desc_data_cohort_ip_country_stats.RDS")))
 try(data_cohort <- readRDS("C:/Users/andre/Downloads/wasting_desc_data_cohort_ip_country_stats.RDS"))
 data_cohort$country.cat[is.na(data_cohort$country.cat)] <- "Overall"
 
 
-
-
-
-# country_data <- readRDS("/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds") %>% 
-#   ungroup()  %>% 
-#   mutate(cohort = paste0(studyid, "-", country)) %>% 
-#   dplyr::select(c(cohort, decade, gii_cat, chi_cat, gdp_cat, gdi_cat, 
-#                   gini_cat, he_cat, pov_cat, mort_cat)) %>% 
-#   distinct()  %>% 
-#   mutate(gdi_cat = case_when(
-#     gdi_cat == "Overall" ~ "Overall",
-#     gdi_cat == "Very low" ~ "69-84%",
-#     gdi_cat == "Low" ~ "84-90%",
-#     gdi_cat == "High/Medium" ~ "90-100%"
-#   ))  %>% 
-#   mutate(gdi_cat = factor(gdi_cat, levels = c(
-#     "Overall", "69-84%", "84-90%", "90-100%"
-#   )))  %>% 
-#   mutate(gii_cat = case_when(
-#     gii_cat == "Overall" ~ "Overall",
-#     gii_cat == "Low" ~ "0.43-0.59",
-#     gii_cat == "Medium" ~ "0.59-0.61",
-#     gii_cat == "High" ~ "0.61-0.76"
-#   ))  %>% 
-#   mutate(gii_cat = factor(gii_cat, levels = c(
-#     "Overall", "0.43-0.59", "0.59-0.61", "0.61-0.76"
-#   ))) %>% 
-#   mutate(he_cat = case_when(
-#     he_cat == "Overall" ~ "Overall",
-#     he_cat == "Low" ~ "1-3%",
-#     he_cat == "Medium" ~ "3-5%",
-#     he_cat == "High" ~ "5-42%"
-#   )) %>% 
-#   mutate(he_cat = factor(he_cat, levels = c(
-#     "Overall", "1-3%", "3-5%", "5-42%"
-#   )))%>% 
-#   mutate(pov_cat = case_when(
-#     pov_cat == "Overall" ~ "Overall",
-#     pov_cat == "Low" ~ "0-18%",
-#     pov_cat == "Medium" ~ "18-28%",
-#     pov_cat == "High" ~ "28-100%"
-#   )) %>% 
-#   mutate(pov_cat = factor(pov_cat, levels = c(
-#     "Overall", "0-18%", "18-28%", "28-100%"
-#   )))
-# 
-# d_cohort <- left_join(data_cohort, country_data, 
-#                       by = c("cohort")) %>% 
-#   droplevels() %>% 
-#   mutate(est=est*100) 
 
 d_cohort <- data_cohort %>% rename(est=yi,
                                    lb=ci.lb,
@@ -157,7 +95,7 @@ gini_data <- d_country_pool %>% filter(country.cat=="gini"|cat.level=="Overall")
     "Overall", "Low", "Medium", "High"
   )))
 
-he_data <- d_country_pool %>% filter(country.cat=="he"|cat.level=="Overall") %>%
+he_data <- d_country_pool %>% filter(country.cat=="ghe"|cat.level=="Overall") %>%
   mutate(cat.level = case_when(
     cat.level == "Overall" ~ "Overall",
     cat.level == "Low" ~ "1-3%",
@@ -573,7 +511,7 @@ saveRDS(ip_plot_primary_gini$data, file=paste0(figdata_dir_wasting, "figdata-",i
 #-------------------------------------------------------------------------------------------
 ip_plot_primary_he <- ki_wast_ip_flurry_subgroup_plot(d = he, 
                                        d_cohort = d_cohort, 
-                                       subgroup_name="he_cat",
+                                       subgroup_name="ghe_cat",
                                        subgroup_colors = c("#01C18C","#018D66","#025941"),
                                        Birth="strat", Severe="no", 
                                        subgroup="cat.level", returnData=T,
