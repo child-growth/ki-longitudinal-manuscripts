@@ -14,7 +14,10 @@ source(paste0(here::here(), "/5-visualizations/wasting/fig-wasting-descriptive-e
 
 # Load data --------------------------------
 
-df <- readRDS(paste0(BV_dir,"/results/wasting_desc_data_country.RDS"))
+try(df <- readRDS(paste0(BV_dir,"/results/wasting_desc_data_country.RDS")))
+try(df <- readRDS("C:/Users/andre/Downloads/wasting_desc_data_country.RDS"))
+
+"C:/Users/andre/Downloads/wasting_desc_data_cohort_ip_country_stats.RDS"
 
 table(df$country.cat)
 table(df$cat.level)
