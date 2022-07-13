@@ -117,17 +117,22 @@ pov_data <- d_country_pool %>% filter(country.cat=="pov"|cat.level=="Overall") %
     "Overall", "0-18%", "18-28%", "28-100%"
   )))
 
-birthlaz_data <- d_country_pool %>% filter(country.cat=="birth_wlz_cat"|cat.level=="Overall") %>%
+birthwlz_data <- d_country_pool %>% filter(country.cat=="birth_wlz_cat"|cat.level=="Overall") %>%
   mutate(cat.level = factor(cat.level, levels = c(
-    "Overall", "[-6,-2]", "(-2,-1]", 
-    "(-1,0]", "0,6"
-  )))
+    "Overall", "[-5,-2]", "(-2,-1]", 
+    "(-1,0]", "0,5"
+  ))) %>% droplevels()
 
 mort_data <- d_country_pool  %>% filter(country.cat=="mort_cat"|cat.level=="Overall") %>%
   mutate(cat.level = factor(cat.level, levels = c(
     "Overall", "<50 per 100,000", "50-95 per 100,000",
     ">95 per 100,000"
   )))
+
+
+
+
+
 
 # Pre-process data --------------------------------
 # scale cohort-specific estimates 
@@ -163,33 +168,135 @@ chi = preprocess(chi_data)
 gini = preprocess(gini_data)
 he = preprocess(he_data)
 pov = preprocess(pov_data)
-birthlaz = preprocess(birthlaz_data)
+birthwlz = preprocess(birthwlz_data)
 mort = preprocess(mort_data)
+
+
+#-------------------------------------------------------------------------------------------
+# clean cohort data
+#-------------------------------------------------------------------------------------------
+
+decade_cohort_data <- d_cohort %>% filter(country.cat=="decade"|cat.level=="Overall") %>%
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "90s", "2000s", "2010s"
+  ))) %>% filter(!is.na(cat.level))
+
+gdp_cohort_data <- d_cohort %>% filter(country.cat=="gdp"|cat.level=="Overall") %>%
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "Low income", "Middle income"
+  ))) %>% filter(!is.na(cat.level))
+
+gdi_cohort_data <- d_cohort %>% filter(country.cat=="gdi"|cat.level=="Overall") %>%
+  mutate(cat.level = case_when(
+    cat.level == "Overall" ~ "Overall",
+    cat.level == "Very low" ~ "69-84%",
+    cat.level == "Low" ~ "84-90%",
+    cat.level == "High/Medium" ~ "90-100%"
+  ))  %>% 
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "69-84%", "84-90%", "90-100%"
+  )))  %>% filter(!is.na(cat.level))
+
+gii_cohort_data <- d_cohort %>% filter(country.cat=="gii"|cat.level=="Overall") %>%
+  mutate(cat.level = case_when(
+    cat.level == "Overall" ~ "Overall",
+    cat.level == "Low" ~ "0.43-0.59",
+    cat.level == "Medium" ~ "0.59-0.61",
+    cat.level == "High" ~ "0.61-0.76"
+  ))  %>% 
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "0.43-0.59", "0.59-0.61", "0.61-0.76"
+  ))) %>% filter(!is.na(cat.level))
+
+
+chi_cohort_data <- d_cohort %>% filter(country.cat=="chi"|cat.level=="Overall") %>%
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "Low", "Medium", "High"
+  ))) %>% filter(!is.na(cat.level))
+
+gini_cohort_data <- d_cohort %>% filter(country.cat=="gini"|cat.level=="Overall") %>%
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "Low", "Medium", "High"
+  ))) %>% filter(!is.na(cat.level))
+
+he_cohort_data <- d_cohort %>% filter(country.cat=="ghe"|cat.level=="Overall") %>%
+  mutate(cat.level = case_when(
+    cat.level == "Overall" ~ "Overall",
+    cat.level == "Low" ~ "1-3%",
+    cat.level == "Medium" ~ "3-5%",
+    cat.level == "High" ~ "5-42%"
+  )) %>% 
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "1-3%", "3-5%", "5-42%"
+  ))) %>% filter(!is.na(cat.level))
+
+pov_cohort_data <- d_cohort %>% filter(country.cat=="pov"|cat.level=="Overall") %>%
+  mutate(cat.level = case_when(
+    cat.level == "Overall" ~ "Overall",
+    cat.level == "Low" ~ "0-18%",
+    cat.level == "Medium" ~ "18-28%",
+    cat.level == "High" ~ "28-100%"
+  )) %>% 
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "0-18%", "18-28%", "28-100%"
+  ))) %>% filter(!is.na(cat.level))
+
+birthwlz_cohort_data <- d_cohort %>% filter(country.cat=="birth_wlz_cat"|cat.level=="Overall") %>%
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "[-5,-2]", "(-2,-1]", 
+    "(-1,0]", "0,5"
+  ))) %>% filter(!is.na(cat.level)) %>% droplevels()
+
+mort_cohort_data <- d_cohort  %>% filter(country.cat=="mort_cat"|cat.level=="Overall") %>%
+  mutate(cat.level = factor(cat.level, levels = c(
+    "Overall", "<50 per 100,000", "50-95 per 100,000",
+    ">95 per 100,000"
+  ))) %>% filter(!is.na(cat.level))
 
 #-------------------------------------------------------------------------------------------
 # plot function
 #-------------------------------------------------------------------------------------------
 
-
-subgroup_colors= c("#01C18C","#018D66","#025941")
-
+# 
+# subgroup_colors= c("#01C18C","#018D66","#025941")
+# 
          ylabel="Incidence proportion (95% CI)"
          yrange=NULL
          dodge=0
          reverse_colors = F
-         
-         d = he
-         d_cohort = d_cohort
-         subgroup_name="he_cat"
-         subgroup_colors = c("#01C18C","#018D66","#025941")
+         Disease="Wasting"
+         Measure="Incidence_proportion"
          Birth="strat"
          Severe="no"
-         subgroup="cat.level"
-         returnData=T
-         reverse_color = T
-         title = "a) National health expenditures (% of gross domestic product)"
-         
+         Age_range="3 months"
+#          
+#          d = he
+#          d_cohort = d_cohort
+#          subgroup_name="he_cat"
+#          subgroup_colors = c("#01C18C","#018D66","#025941")
+#          Birth="strat"
+#          Severe="no"
+#          subgroup="cat.level"
+#          returnData=T
+#          reverse_color = T
+#          title = "a) National health expenditures (% of gross domestic product)"
 
+d = pov
+subgroup_name="pov_cat"
+subgroup_colors = c("#0458F9","#0441B6","#03338F")
+Birth="strat"
+Severe="no"
+subgroup="cat.level"
+returnData=T
+title = "b) National percentage of individuals living on less than $1.90 per day"
+reverse_color = T 
+xlabel="Age category"
+h1=0
+h2=3
+yrange=NULL
+dodge=0
+reverse_colors = F
+returnData=F
          
 ki_wast_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease="Wasting", Measure="Incidence_proportion",  Birth="strat", Severe="no",
                    subgroup_colors = c("#0998F5", "#F6A106", "#FB4C05"),
@@ -265,7 +372,7 @@ ki_wast_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease=
   
   # format cohort data
   d_cohort_plot <- d_cohort %>%
-    filter(cat.level=="Overall"|country.cat==subgroup_name) %>%
+    filter(cat.level=="Overall"|country.cat==subgroup_name|country.cat==gsub("_cat","",subgroup_name)) %>%
     select(cohort,est,lb,ub,agecat,cat.level) %>%
     distinct()
   d_cohort_plot$cat.level <- factor(d_cohort_plot$cat.level, levels=levels(df$cat.level))
@@ -321,15 +428,7 @@ ki_wast_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease=
     scale_x_discrete(expand = expand_scale(add = 1)) +
     
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    # theme(strip.text = element_text(size=18, margin = margin(t = 0))) +
-    # 
-    # theme(axis.text.x = element_text(margin = 
-    #                                    margin(t = 0, r = 0, b = 0, l = 0),
-    #                                  size = 9)) +
-    # theme(axis.title.x = element_text(margin = 
-    #                                     margin(t = 5, r = 0, b = 0, l = 0),
-    #                                   size = 14)) +
-    # theme(axis.title.y = element_text(size = 14)) +
+
     
     ggtitle(title) +
     theme(
@@ -357,7 +456,23 @@ ki_wast_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease=
     return(p)
   }
 }
-  
+
+
+get_N_subgroup <- function(d, subgroup){
+  d %>%
+    filter(disease == "Wasting" &
+             measure== "Incidence_proportion" &
+             age_range == "3 months" &
+             birth == "strat" &
+             cohort == "pooled" &
+             severe == "no") %>%
+    group_by(!!sym(subgroup)) %>%
+    summarise(min_study = min(nstudies, na.rm=TRUE),
+              max_study = max(nstudies, na.rm=TRUE),
+              min_n = min(nmeas, na.rm=TRUE),
+              max_n = max(nmeas, na.rm=TRUE))  
+}
+
 
 
 #-------------------------------------------------------------------------------------------
@@ -365,7 +480,7 @@ ki_wast_ip_flurry_subgroup_plot <- function(d, d_cohort, subgroup_name, Disease=
 #-------------------------------------------------------------------------------------------
 
 ip_plot_primary_decade <- ki_wast_ip_flurry_subgroup_plot(d = decade, 
-                                           d_cohort = d_cohort , 
+                                           d_cohort = decade_cohort_data , 
                                            Disease="Wasting",
                                            Measure="Incidence_proportion",
                                            subgroup_colors= c("#01C18C","#018D66","#025941"),
@@ -381,10 +496,10 @@ ip_plot_primary_decade <- ki_wast_ip_flurry_subgroup_plot(d = decade,
 ip_plot_primary_decade$plot
 
 # get N's for figure caption
-inc_n_decade = get_N_subgroup(d = decade, subgroup = "country_cat")
+inc_n_decade = get_N_subgroup(d = decade, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
-ip_plot_name_decade = "stunt-2-inc-overall_decade--allage-primary"
+ip_plot_name_decade = "wast-2-inc-overall_decade--allage-primary"
 
 # save plot and underlying data
 ggsave(ip_plot_primary_decade$plot, file=paste0(fig_dir, "wasting/fig-",ip_plot_name_decade,".png"), width=10, height=4)
@@ -395,7 +510,7 @@ saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_wasting, "figdata-"
 #-------------------------------------------------------------------------------------------
 
 ip_plot_primary_gdp <- ki_wast_ip_flurry_subgroup_plot(d = gdp, 
-                                        d_cohort = d_cohort, 
+                                        d_cohort = gdp_cohort_data, 
                                         subgroup_name="gdp_cat",
                                         Birth="strat", Severe="no", 
                                         subgroup="cat.level", returnData=T,
@@ -404,7 +519,7 @@ ip_plot_primary_gdp <- ki_wast_ip_flurry_subgroup_plot(d = gdp,
 ip_plot_primary_gdp$plot
 
 # get N's for figure caption
-inc_n_gdp = get_N_subgroup(d = gdp, subgroup = "country_cat")
+inc_n_gdp = get_N_subgroup(d = gdp, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_gdp = "wast-2-inc-overall_gdp--allage-primary"
@@ -419,7 +534,7 @@ saveRDS(ip_plot_primary_gdp$data, file=paste0(figdata_dir_wasting, "figdata-",ip
 #-------------------------------------------------------------------------------------------
 
 ip_plot_primary_gdi <- ki_wast_ip_flurry_subgroup_plot(d = gdi, 
-                                        d_cohort = d_cohort, 
+                                        d_cohort = gdi_cohort_data, 
                                         subgroup_name="gdi_cat",
                                         Birth="strat", Severe="no", 
                                         subgroup="cat.level", returnData=T,
@@ -428,7 +543,7 @@ ip_plot_primary_gdi <- ki_wast_ip_flurry_subgroup_plot(d = gdi,
 ip_plot_primary_gdi$plot
 
 # get N's for figure caption
-inc_n_gdi = get_N_subgroup(d = gdi, subgroup = "country_cat")
+inc_n_gdi = get_N_subgroup(d = gdi, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_gdi = "wast-2-inc-overall_gdi--allage-primary"
@@ -442,7 +557,7 @@ saveRDS(ip_plot_primary_gdi$data, file=paste0(figdata_dir_wasting, "figdata-",ip
 # Wasting incidence proportion - pooled by Gender Inequality Index 
 #-------------------------------------------------------------------------------------------
 ip_plot_primary_gii <- ki_wast_ip_flurry_subgroup_plot(d = gii, 
-                                        d_cohort = d_cohort, 
+                                        d_cohort = gii_cohort_data, 
                                         subgroup_name="gii_cat",
                                         Birth="strat", Severe="no", 
                                         subgroup="cat.level", returnData=T,
@@ -451,7 +566,7 @@ ip_plot_primary_gii <- ki_wast_ip_flurry_subgroup_plot(d = gii,
 ip_plot_primary_gii$plot
 
 # get N's for figure caption
-inc_n_gii = get_N_subgroup(d = gii, subgroup = "country_cat")
+inc_n_gii = get_N_subgroup(d = gii, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_gii = "wast-2-inc-overall_gii--allage-primary"
@@ -465,7 +580,7 @@ saveRDS(ip_plot_primary_gii$data, file=paste0(figdata_dir_wasting, "figdata-",ip
 # Wasting incidence proportion - pooled by Coefficient of Human Inequality
 #-------------------------------------------------------------------------------------------
 ip_plot_primary_chi <- ki_wast_ip_flurry_subgroup_plot(d = chi, 
-                                        d_cohort = d_cohort, 
+                                        d_cohort = chi_cohort_data, 
                                         subgroup_name="chi_cat",
                                         Birth="strat", Severe="no", 
                                         subgroup="cat.level", returnData=T,
@@ -474,7 +589,7 @@ ip_plot_primary_chi <- ki_wast_ip_flurry_subgroup_plot(d = chi,
 ip_plot_primary_chi$plot
 
 # get N's for figure caption
-inc_n_chi = get_N_subgroup(d = chi, subgroup = "country_cat")
+inc_n_chi = get_N_subgroup(d = chi, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_chi = "wast-2-inc-overall_chi--allage-primary"
@@ -485,10 +600,10 @@ saveRDS(ip_plot_primary_chi$data, file=paste0(figdata_dir_wasting, "figdata-",ip
 
 
 #-------------------------------------------------------------------------------------------
-# Stunting incidence proportion - pooled by Gini coefficient
+# wasting incidence proportion - pooled by Gini coefficient
 #-------------------------------------------------------------------------------------------
 ip_plot_primary_gini <- ki_wast_ip_flurry_subgroup_plot(d = gini, 
-                                         d_cohort = d_cohort, 
+                                         d_cohort = gini_cohort_data, 
                                          subgroup_name="gini_cat",
                                          Birth="strat", Severe="no", 
                                          subgroup="cat.level", returnData=T,
@@ -497,7 +612,7 @@ ip_plot_primary_gini <- ki_wast_ip_flurry_subgroup_plot(d = gini,
 ip_plot_primary_gini$plot
 
 # get N's for figure caption
-inc_n_gini = get_N_subgroup(d = gini, subgroup = "country_cat")
+inc_n_gini = get_N_subgroup(d = gini, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_gini = "wast-2-inc-overall_gini--allage-primary"
@@ -507,10 +622,10 @@ ggsave(ip_plot_primary_gini$plot, file=paste0(fig_dir, "wasting/fig-",ip_plot_na
 saveRDS(ip_plot_primary_gini$data, file=paste0(figdata_dir_wasting, "figdata-",ip_plot_name_gini,".RDS"))
 
 #-------------------------------------------------------------------------------------------
-# Stunting incidence proportion - pooled by health expenditure
+# wasting incidence proportion - pooled by health expenditure
 #-------------------------------------------------------------------------------------------
 ip_plot_primary_he <- ki_wast_ip_flurry_subgroup_plot(d = he, 
-                                       d_cohort = d_cohort, 
+                                       d_cohort = he_cohort_data, 
                                        subgroup_name="ghe_cat",
                                        subgroup_colors = c("#01C18C","#018D66","#025941"),
                                        Birth="strat", Severe="no", 
@@ -521,7 +636,8 @@ ip_plot_primary_he <- ki_wast_ip_flurry_subgroup_plot(d = he,
 ip_plot_primary_he$plot
 
 # get N's for figure caption
-inc_n_he = get_N_subgroup(d = he, subgroup = "country_cat")
+inc_n_he = get_N_subgroup(d = he, subgroup = "cat.level")
+inc_n_he
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_he = "wast-2-inc-overall_he--allage-primary"
@@ -534,7 +650,7 @@ saveRDS(ip_plot_primary_he$data, file=paste0(figdata_dir_wasting, "figdata-",ip_
 # Wasting incidence proportion - percent living below poverty line
 #-------------------------------------------------------------------------------------------
 ip_plot_primary_pov <- ki_wast_ip_flurry_subgroup_plot(d = pov, 
-                                        d_cohort = d_cohort, 
+                                        d_cohort = pov_cohort_data, 
                                         subgroup_name="pov_cat",
                                         subgroup_colors = c("#0458F9","#0441B6","#03338F"),
                                         Birth="strat", Severe="no", 
@@ -544,7 +660,7 @@ ip_plot_primary_pov <- ki_wast_ip_flurry_subgroup_plot(d = pov,
 ip_plot_primary_pov$plot
 
 # get N's for figure caption
-inc_n_pov = get_N_subgroup(d = pov, subgroup = "country_cat")
+inc_n_pov = get_N_subgroup(d = pov, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_pov = "wast-2-inc-overall_pov--allage-primary"
@@ -556,19 +672,19 @@ saveRDS(ip_plot_primary_pov$data, file=paste0(figdata_dir_wasting, "figdata-",ip
 
 
 #-------------------------------------------------------------------------------------------
-# Wasting incidence proportion - pooled by birth LAZ
+# Wasting incidence proportion - pooled by birth WLZ
 #-------------------------------------------------------------------------------------------
-ip_plot_primary_birthlaz <- ki_wast_ip_flurry_subgroup_plot(d = birthlaz, 
-                                              d_cohort = d_cohort,  # NOT WORKING!
-                                             # subgroup_name="decade",
+ip_plot_primary_birthwlz <- ki_wast_ip_flurry_subgroup_plot(d = birthwlz %>% filter(agecat!="Birth") %>% droplevels(), 
+                                              d_cohort = birthwlz_cohort_data %>% filter(agecat!="Birth") %>% droplevels(),  
+                                              subgroup_name="Birth_wlz_cat",
                                              Birth="strat", Severe="no", 
                                              subgroup="cat.level", returnData=T,
-                                             title = "Incidence pooled by birth LAZ")
+                                             title = "d) Incidence pooled by birth WLZ")
 
-ip_plot_primary_birthlaz$plot
+ip_plot_primary_birthwlz$plot
 
 # get N's for figure caption
-inc_n_decade = get_N_subgroup(d = decade, subgroup = "country_cat")
+inc_n_decade = get_N_subgroup(d = decade, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_decade = "wast-2-inc-overall_decade--allage-primary"
@@ -582,7 +698,7 @@ saveRDS(ip_plot_primary_decade$data, file=paste0(figdata_dir_wasting, "figdata-"
 # Wasting incidence proportion - pooled by country mortality level 
 #-------------------------------------------------------------------------------------------
 ip_plot_primary_mort <- ki_wast_ip_flurry_subgroup_plot(d = mort, 
-                                         d_cohort = d_cohort,
+                                         d_cohort = mort_cohort_data,
                                          subgroup_name="mort_cat",
                                          subgroup_colors = c("#F87602","#CA6002","#9D4B02"),
                                          Birth="strat", Severe="no", 
@@ -592,7 +708,7 @@ ip_plot_primary_mort <- ki_wast_ip_flurry_subgroup_plot(d = mort,
 ip_plot_primary_mort$plot
 
 # get N's for figure caption
-inc_n_mort = get_N_subgroup(d = mort, subgroup = "country_cat")
+inc_n_mort = get_N_subgroup(d = mort, subgroup = "cat.level")
 
 # define transformations globally if name_inc_plots is not working
 ip_plot_name_mort = "wast-2-inc-overall_mort--allage-primary"

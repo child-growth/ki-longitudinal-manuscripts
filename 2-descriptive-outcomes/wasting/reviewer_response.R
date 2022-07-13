@@ -31,44 +31,188 @@ load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly")
-d_noBW2 <- d_noBW %>% filter(measurefreq == "monthly")
+d_noBW <- d_noBW %>% filter(measurefreq == "monthly") %>% group_by(studyid, subjid) %>% arrange(studyid,subjid,agedays)
 head(d_noBW)
-#d_noBW$whz[d_noBW$firstmeasure & d_noBW$agedays < 30.4167 & d_noBW$whz < (-2)] <- NA
-d_noBW$whz[d_noBW$firstmeasure & d_noBW$agedays <= 14 & d_noBW$whz < (-2)] <- NA
-d_noBW <- d_noBW %>% filter(!is.na(whz))
 
-#Examine duration
-d$duration
-d <- calc.ci.agecat(d, range=6)
-df <- df %>% filter(!is.na(duration), !is.na(agecat))
-summary(df$agecat)
+#Drop Kenaba, which had difference at birth and followup anthro teams
+d <-d %>% filter(studyid!="Keneba")
+d_noBW <-d_noBW %>% filter(studyid!="Keneba")
 
-dur_violin_plot_no_cohort = ggplot(df,aes(x=agecat, y=duration, fill = agecat)) + 
-  geom_violin(alpha=0.2, draw_quantiles = c(0.25, 0.5, 0.75)) + 
-  ylab("Duration of wasting episode in days")+
-  xlab("Age at wasting episode onset")+
-  scale_fill_manual(values=rep("grey30", 4)) +
-  coord_cartesian(ylim=c(0,1000))
-dur_violin_plot_no_cohort
+#subset to those measured at birth
+dim(d_noBW)
+d_noBW <- d_noBW %>% group_by(studyid, subjid) %>% filter(agedays <730) %>% mutate(N=n(), N_u3=sum(agedays < 30.4167*3)) %>%
+  filter(first(agedays) <= 14 & N>=18, N_u3>2)
+dim(d_noBW)
+
+#calc longitudinal prevalence (NEED TO add long prop meta-analysus function)
+d_noBW$agecat <- "0-24 months"
+longprop_BW <-d_noBW %>% group_by(studyid, subjid) %>% filter(first(whz) < -2)
+longprop_noBW <-d_noBW %>% group_by(studyid, subjid) %>% filter(first(whz) >= -2)
+mean(longprop_BW$whz)
+mean(longprop_noBW$whz)
+mean(longprop_BW$whz < -2)
+mean(longprop_noBW$whz < -2)
+# longprop_BW <- summary.prev.whz(as.data.frame(temp))
+# longprop_BW$ci.res
+# 
+# longprop_noBW <- summary.prev.whz(d_noBW %>% group_by(studyid, subjid) %>% filter(first(whz) >= -2))
+# longprop_noBW$ci.res
 
 
 
+# table(d_noBW$N_u3)
+# temp<-d_noBW[d_noBW2$N_u3==12,]
+# temp$studyid
 
-d_noBW2 <- d_noBW2 %>% group_by(studyid, subjid) %>% mutate(born_wast=max(1*(wasting_episode=="Born Wasted"))) %>% ungroup() %>% filter(born_wast==0)
+first_meas <- d_noBW %>% group_by(studyid, subjid) %>% arrange(studyid,subjid,agedays) %>% slice(1)
+prop.table(table(first_meas$whz < (-2))) * 100
+
+# dim(d_noBW)
+# d_noBW <- d_noBW %>% group_by(studyid, subjid) %>% mutate(N=n()) %>%
+#   filter(first(agedays) <= 14 & N>=18, agedays <730)
+# dim(d_noBW)
+
+d <- d %>% group_by(studyid, subjid) %>% mutate(N=n()) %>%
+  filter(first(agedays) <= 14 & N>=18, agedays <730)
+
+#Drop birth wasting measurements
+d_noBW2 <- d_noBW
+d_noBW2$wast_inc[d_noBW2$firstmeasure & d_noBW2$agedays <= 14 & d_noBW2$whz < (-2)] <- NA
+d_noBW2$whz[d_noBW2$firstmeasure & d_noBW2$agedays <= 14 & d_noBW2$whz < (-2)] <- NA
+d_noBW2 <- d_noBW2 %>% filter(!is.na(whz))
+
+#Drop birth wasting episodes
+d_noBW3 <- d_noBW
+d_noBW3$wast_inc[d_noBW3$wasting_episode=="Born Wasted"] <-d_noBW3$wast_inc[d_noBW3$wasting_episode=="Born Wasted"] <- NA
+d_noBW3$whz[d_noBW3$wasting_episode=="Born Wasted"] <-d_noBW3$whz[d_noBW3$wasting_episode=="Born Wasted"] <- NA
+d_noBW3 <- d_noBW3 %>% filter(!is.na(whz))
+
+
+#Drop children born wasted
+d_noBW4 <- d_noBW %>% group_by(studyid, subjid) %>% mutate(born_wast=max(1*(wasting_episode=="Born Wasted"))) %>% ungroup() %>% filter(born_wast==0)
+
+# temp <- d_noBW %>% group_by(studyid, subjid) %>% slice(1)
+# table(temp$wasting_episode, temp$whz< (-2))
 
 table(d_noBW$wasting_episode)
-table(d_noBW2$wasting_episode)
+table(d_noBW3$wasting_episode)
 
 d <- calc.ci.agecat(d, range = 3)
 d_noBW <- calc.ci.agecat(d_noBW, range = 3)
 d_noBW2 <- calc.ci.agecat(d_noBW2, range = 3)
+d_noBW3 <- calc.ci.agecat(d_noBW3, range = 3)
+d_noBW4 <- calc.ci.agecat(d_noBW4, range = 3)
 
-ci.data <- summary.wast.ci(d, age.range=3)
-ci.data.nobirth <- summary.wast.ci(d_noBW, age.range=3)
-ci.data.nobirth2 <- summary.wast.ci(d_noBW2, age.range=3)
-ci.data$ci.res
+#ci.data <- summary.wast.ci(d, age.range=3)
+ci.data.nobirth <- summary.wast.ci(d_noBW, age.range=3, N_filter=1)
+ci.data.nobirth2 <- summary.wast.ci(d_noBW2, age.range=3, N_filter=1)
+ci.data.nobirth3 <- summary.wast.ci(d_noBW3, age.range=3, N_filter=1)
+ci.data.nobirth4 <- summary.wast.ci(d_noBW4, age.range=3, N_filter=1)
+#ci.data$ci.res[1:3,]
+#Children with birth measures
 ci.data.nobirth$ci.res
+#Excluding wasted birth measures
 ci.data.nobirth2$ci.res
+#Excluding wasted birth episodes
+ci.data.nobirth3$ci.res
+#Excluding children born wasted
+ci.data.nobirth4$ci.res
+
+
+ip.data.nobirth <- summary.incprop(d, N_filter=1)
+ip.data.nobirth2 <- summary.incprop(d_noBW2, N_filter=1)
+ip.data.nobirth3 <- summary.incprop(d_noBW3, N_filter=1)
+ip.data.nobirth4 <- summary.incprop(d_noBW4, N_filter=1)
+
+#Children with birth measures
+ip.data.nobirth$ci.res
+#Excluding wasted birth measures
+ip.data.nobirth2$ci.res 
+#Excluding wasted birth episodes
+ip.data.nobirth3$ci.res
+#Excluding children born wasted
+ip.data.nobirth4$ci.res
+
+
+ip.data.nobirth$ci.cohort[1:13,]
+ip.data.nobirth2$ci.cohort[1:12,]
+
+ci.data.nobirth_FE <- summary.wast.ci(d_noBW, age.range=3, method="FE", N_filter=1)
+ci.data.nobirth2_FE <- summary.wast.ci(d_noBW2, age.range=3, method="FE", N_filter=1)
+ci.data.nobirth3_FE <- summary.wast.ci(d_noBW3, age.range=3, method="FE", N_filter=1)
+ci.data.nobirth4_FE <- summary.wast.ci(d_noBW4, age.range=3, method="FE", N_filter=1)
+#ci.data$ci.res[1:3,]
+#Children with birth measures
+ci.data.nobirth_FE$ci.res
+#Excluding wasted birth measures
+ci.data.nobirth2_FE$ci.res
+#Excluding wasted birth episodes
+ci.data.nobirth3_FE$ci.res
+#Excluding children born wasted
+ci.data.nobirth4_FE$ci.res
+
+
+d_noBW$agecat <- d_noBW2$agecat <- d_noBW3$agecat <- d_noBW4$agecat <- "0-24 months"
+ci.data.nobirth_2 <- summary.wast.ci(d_noBW, age.range=3)
+ci.data.nobirth2_2 <- summary.wast.ci(d_noBW2, age.range=3)
+ci.data.nobirth3_2 <- summary.wast.ci(d_noBW3, age.range=3)
+ci.data.nobirth4_2 <- summary.wast.ci(d_noBW4, age.range=3)
+#Children with birth measures
+ci.data.nobirth_2$ci.res
+#Excluding wasted birth measures
+ci.data.nobirth2_2$ci.res
+#Excluding wasted birth episodes
+ci.data.nobirth3_2$ci.res
+#Excluding children born wasted
+ci.data.nobirth4_2$ci.res
+
+
+#Look at children born wasted
+length(unique(paste0(d_noBW$studyid,d_noBW$subjid)))
+df_born_wast <- d_noBW %>% group_by(studyid, subjid) %>% filter(first(wasting_episode)=="Born Wasted")
+length(unique(paste0(df_born_wast$studyid,df_born_wast$subjid)))
+df_born_wast$whz[df_born_wast$wasting_episode=="Born Wasted"] <- NA
+df_born_wast <- df_born_wast %>% filter(!is.na(whz))
+df_born_wast <- calc.ci.agecat(df_born_wast, range = 3)
+res_born_wast <- summary.wast.ci(df_born_wast, age.range=3)
+res_born_wast$ci.res
+
+df_born_wast_summary <- df_born_wast %>% group_by(studyid, subjid) %>% summarize(max_whz=max(whz, na.rm=T), min_whz=min(whz, na.rm=T))
+prop.table(table(df_born_wast_summary$min_whz < -2)) * 100
+prop.table(table(df_born_wast_summary$max_whz >= -2)) * 100
+
+df_born_wast2 <- d_noBW %>% group_by(studyid, subjid) %>% filter(first(whz) < -2)
+length(unique(paste0(df_born_wast2$studyid,df_born_wast2$subjid)))
+df_born_wast2$whz[df_born_wast2$agedays <= 14 ] <- NA
+df_born_wast2 <- df_born_wast2 %>% filter(!is.na(whz))
+df_born_wast2 <- calc.ci.agecat(df_born_wast2, range = 3)
+res_born_wast2 <- summary.wast.ci(df_born_wast2, age.range=3)
+res_born_wast2$ci.res
+
+df_born_wast2$agecat <- "0-24 months"
+res_born_wast2 <- summary.wast.ci(df_born_wast2, age.range=3)
+res_born_wast2$ci.res
+
+df_born_wast2_summary <- df_born_wast2 %>% group_by(studyid, subjid) %>% summarize(max_whz=max(whz, na.rm=T), min_whz=min(whz, na.rm=T))
+prop.table(table(df_born_wast2_summary$min_whz < -2)) * 100
+prop.table(table(df_born_wast2_summary$max_whz >= -2)) * 100
+
+
+#Birth length of those not born wasted who became wasted
+df_not_born_wast <- d_noBW %>% filter(agedays < 6*30.4167) %>% group_by(studyid, subjid) %>% filter(first(wasting_episode)!="Born Wasted", min(whz) < -2) %>% slice(1)
+summary(df_not_born_wast$whz)
+
+#those who didn't become wasted
+df_not_born_wast <- d_noBW %>% filter(agedays < 6*30.4167) %>% group_by(studyid, subjid) %>% filter(first(wasting_episode)!="Born Wasted", min(whz) >= -2) %>% slice(1)
+summary(df_not_born_wast$whz)
+
+# #Calc incidence rate
+# ir.data <- summary.ir(d)
+# ir.data.nobirth <- summary.ir(d_noBW)
+# ir.data.nobirth2 <- summary.ir(d_noBW2)
+# ir.data$ir.res$est[1] *1000/365
+# ir.data.nobirth$ir.res$est[1] *1000/365
+# ir.data.nobirth2$ir.res$est[1] *1000/365
 
 
 #Exact answer to the response to reviewer

@@ -19,3 +19,11 @@ table(d$method.used)
 prop.table(table(d$method.used))
 
 df <- d %>% filter(method.used!="REML")
+
+
+wast <- dfull %>% filter(disease=="Wasting",analysis=="Primary", pooling!="country")
+table(wast$method.used)
+table(wast$analysis, wast$method.used)
+
+temp <- wast %>% filter(method.used!="REML")
+temp

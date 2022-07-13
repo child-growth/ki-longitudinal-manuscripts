@@ -11,6 +11,11 @@ kiPath <- c("/data/KI/R/x86_64-pc-linux-gnu-library/4.0/" , .libPaths())
 #suppress grouping messages
 options(dplyr.summarise.inform=F) 
 
+try(unloadNamespace("scales"))
+try(unloadNamespace("lifecycle"))
+try(unloadNamespace("rlang"))
+
+library(rlang)
 library(tidyverse)
 library(here)
 library(ggplot2)

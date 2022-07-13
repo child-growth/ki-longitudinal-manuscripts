@@ -20,6 +20,14 @@ d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence
 d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] <-
   d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] * 100
 
+#reviewer response
+temp <- d %>% filter(measure=="Incidence rate", pooling=="overall", agecat=="0-3 months")
+#convert from per 1000 person-days to episodes per year
+temp$est <- (temp$est / 1000) * 365
+temp$lb <- (temp$lb / 1000) * 365
+temp$ub <- (temp$ub / 1000) * 365
+temp
+
 #d %>% filter(measure=="Prevalence", disease=="co-occurrence", cohort!="pooled")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)

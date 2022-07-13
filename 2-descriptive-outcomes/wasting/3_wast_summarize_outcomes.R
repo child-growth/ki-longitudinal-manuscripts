@@ -45,6 +45,24 @@ table(df2$rec)
 prop.table(table(df2$rec))
 
 
+#Duration
+df <- d %>% group_by(studyid, subjid, episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration)) %>% filter(agedays < 30.6417 * 24)
+calc_dur_ci <- function(df){
+  dur <- median(df$wasting_duration, na.rm=T)
+  #Quantile CI's'
+  ci <- sort(df$wasting_duration)[qbinom(c(.025,.975), length(df$wasting_duration), 0.5)]
+  return(data.frame(dur=dur, ci.lb=ci[1], ci.ub=ci[2]))
+}
+calc_dur_ci(df)
+
+#duration by age 
+d6 <- calc.ci.agecat(d, range=6, birth="no")
+df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration)) %>% filter(agedays < 30.6417 * 24)
+df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
+
+
+
+
 
 #Prevalence
 d <- calc.prev.agecat(d)
@@ -425,11 +443,7 @@ ir_noBW3 <- bind_rows(
 
 
 
-#Duration
-df <- d %>% group_by(studyid, subjid, episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration)) %>% filter(agedays < 30.6417 * 24)
-median(df$wasting_duration, na.rm=T)
-#Quantile CI's'
-sort(df$wasting_duration)[qbinom(c(.025,.975), length(df$wasting_duration), 0.5)]
+
 
 #Recovery within 30, 60, 90 days
 #Overall

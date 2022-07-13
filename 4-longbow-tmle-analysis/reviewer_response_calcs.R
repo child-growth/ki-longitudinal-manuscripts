@@ -39,9 +39,6 @@ ate %>% filter(intervention_variable=="mbmi", outcome_variable=="haz", region=="
 par %>% filter(intervention_variable=="mbmi", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
 
 
-impfloor              whz       0       1
-9                 impsan
-cleanck              
 
 
 #get percent breastfeeding
