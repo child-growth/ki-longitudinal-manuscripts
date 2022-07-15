@@ -15,6 +15,14 @@ d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 length(unique(paste0(d$studyid,d$country)))
 d %>% ungroup() %>% distinct(region, studyid, country) %>% group_by(region) %>% summarise(N=n())
 
+#percent of children born wasted who have another episode
+temp <- d_noBW %>% group_by(studyid, country, subjid) %>% 
+                   filter(first(wasting_episode)=="Born Wasted" & first(agedays)<30) %>%
+                   filter(wasting_episode!="Born Wasted", agedays < 24 *30.4167) %>%
+                   mutate(agecat="all")
+res <- summary.wast.ci(temp, age.range=3, method="REML")
+res$ci.res
+
 #Overall absolute counts
 df <- d %>% filter(agedays < 24 *30.4167) %>%
             mutate(wast = 1*(whz < -2),

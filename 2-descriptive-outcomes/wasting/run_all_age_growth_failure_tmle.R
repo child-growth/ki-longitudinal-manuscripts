@@ -17,7 +17,7 @@ inputs <- "inputs_template.json"
 default_params <- jsonlite::fromJSON(inputs)
 
 load(here("4-longbow-tmle-analysis","analysis specification","all_ages_wast_analyses.rdata"))
-analyses<-analyses %>% filter(!grepl("co_",A),A!="agecat")
+analyses<-analyses %>% filter(!grepl("co_",A),A!="agecat",Y!="agecat")
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 

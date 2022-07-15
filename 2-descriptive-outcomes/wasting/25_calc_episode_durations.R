@@ -20,8 +20,12 @@ calc_dur_ci <- function(df){
 calc_dur_ci(df)
 
 #duration by age 
-d6 <- calc.ci.agecat(d, range=6, birth="no")
+d6 <- calc.ci.agecat(df, range=6, birth="no")
 df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration)) %>% filter(agedays < 30.6417 * 24)
+df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
+
+df2$agecat <- as.character(df2$agecat)
+df2$agecat[df2$agecat!="Birth" & df2$agecat!="8 days-6 months"] <- "6-24 months"
 df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
 
 

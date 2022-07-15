@@ -28,6 +28,10 @@ temp$lb <- (temp$lb / 1000) * 365
 temp$ub <- (temp$ub / 1000) * 365
 temp
 
+temp <- d %>% filter(measure=="Cumulative incidence", pooling=="overall", agecat=="0-3 months")
+#convert from per 1000 person-days to episodes per year
+temp
+
 #d %>% filter(measure=="Prevalence", disease=="co-occurrence", cohort!="pooled")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)

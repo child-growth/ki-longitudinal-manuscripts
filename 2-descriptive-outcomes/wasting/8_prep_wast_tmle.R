@@ -94,20 +94,22 @@ table(dfull$agecat)
 
 d <- dfull %>% filter(agedays < 24 * 30.4167) %>% 
   group_by(studyid, country, subjid) %>% 
-  mutate(wast=1*(whz < (-2)), stunt=1*(haz < (-2)), co = 1*(whz < (-2) & haz < (-2))) %>%
+  mutate(wast=1*(whz < (-2)), stunt=1*(haz < (-2)), uwt=1*(waz < (-2)), co = 1*(whz < (-2) & haz < (-2))) %>%
   group_by(studyid, country, subjid, agecat) %>% 
   arrange(studyid, country, subjid, agecat) %>% 
-  mutate(wast=max(wast,na.rm=T), stunt=max(stunt,na.rm=T), co=max(co,na.rm=T)) %>%
+  mutate(wast=max(wast,na.rm=T), stunt=max(stunt,na.rm=T), uwt=max(uwt,na.rm=T), co=max(co,na.rm=T)) %>%
   slice(1) 
-
+table(d$stunt)
+table(d$wast)
+table(d$uwt)
 
 df_wide <- pivot_wider(data = d, 
             id_cols = c(studyid,subjid, country,id ), 
             names_from = "agecat", 
-            values_from = c("wast", "stunt", "co"))
+            values_from = c("wast", "stunt", "uwt","co"))
 df_wide$agecat <- "Not applicable"
 save(df_wide, file=paste0(ghapdata_dir,"all_age_growth_failure_rf.Rdata"))
-all_rf_ages <- colnames(df_wide)[5:ncol(df_wide)]
+all_rf_ages <- colnames(df_wide)[5:(ncol(df_wide)-1)]
 
 #Proportion of co-occurrent wasting and stunting among children wasted under 6 months
 dfull <- calc.ci.agecat(dfull, range = 6)

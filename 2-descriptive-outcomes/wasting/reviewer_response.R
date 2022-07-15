@@ -44,6 +44,11 @@ d_noBW <- d_noBW %>% group_by(studyid, subjid) %>% filter(agedays <730) %>% muta
   filter(first(agedays) <= 14 & N>=18, N_u3>2)
 dim(d_noBW)
 
+#percent who are born wasted who never are wasted again
+temp <- d_noBW %>% group_by(studyid, subjid) %>% arrange(studyid, subjid, agedays) %>% filter(first(whz) < (-2)) %>% filter(agedays!=min(agedays))
+temp %>% group_by(studyid, subjid) %>% summarize(wast=min(whz,na.rm=T) < (-2))  %>% ungroup %>% summarize(mean(wast))
+
+
 #calc longitudinal prevalence (NEED TO add long prop meta-analysus function)
 d_noBW$agecat <- "0-24 months"
 longprop_BW <-d_noBW %>% group_by(studyid, subjid) %>% filter(first(whz) < -2)

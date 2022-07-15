@@ -176,6 +176,14 @@ table(d$rain_quartile)
 table(is.na(d$id))
 table(is.na(d$whz))
 
+
+
+#duration by age 
+d6 <- calc.ci.agecat(d, range=6, birth="no")
+df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration)) %>% filter(agedays < 30.6417 * 24)
+df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
+
+
 #Specify analysis
 specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("studyid","country"), id="id", adj_sets=adjustment_sets){
   
