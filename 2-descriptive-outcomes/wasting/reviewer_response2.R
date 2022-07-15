@@ -6,6 +6,7 @@ source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_function
 load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
 #Subset to monthly
+<<<<<<< HEAD
 d <- d %>% filter(measurefreq == "monthly") %>% do(calc.ci.agecat(., range=3, birth="yes"))
 d_noBW <- d_noBW %>% filter(measurefreq == "monthly") %>% do(calc.ci.agecat(., range=3, birth="yes"))
 
@@ -17,3 +18,11 @@ ci.data3$ci.res
 ci.data3_noBW$ci.res
 
 table(d_noBW$born_wast_inc)
+=======
+d <- d %>% filter(measurefreq == "monthly") %>% do(calc.ci.agecat(., range=6, birth="yes"))
+d_noBW <- d_noBW %>% filter(measurefreq == "monthly") %>% do(calc.ci.agecat(., range=6, birth="yes"))
+
+
+ci.data3 <- summary.wast.ci(d, age.range=3)
+ci.data3_noBW <- summary.wast.ci(d_noBW, age.range=3)
+>>>>>>> e16af77438d915bb67266d7e17c50d2f780dcd2a
