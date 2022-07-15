@@ -1,0 +1,325 @@
+"","A","Y","A_t","Y_t","RR","RR.CI1","RR.CI2","Nstudies"
+"1","Stunting","Stunting","12-15 months","15-18 months",5.6,4.6,6.9,16
+"2","Stunting","Stunting","12-15 months","18-21 months",4.3,3.5,5.3,13
+"3","Stunting","Stunting","12-15 months","21-24 months",3.3,2.7,4.1,12
+"4","Stunting","Underweight","12-15 months","15-18 months",3.8,3.1,4.7,13
+"5","Stunting","Underweight","12-15 months","18-21 months",3.9,3.3,4.6,14
+"6","Stunting","Underweight","12-15 months","21-24 months",3.6,3,4.3,12
+"7","Stunting","Wasting","12-15 months","15-18 months",1.8,1.4,2.2,13
+"8","Stunting","Wasting","12-15 months","18-21 months",1.9,1.6,2.3,11
+"9","Stunting","Wasting","12-15 months","21-24 months",1.9,1.6,2.3,9
+"10","Stunting","Stunting","15-18 months","18-21 months",8,5.8,11.1,14
+"11","Stunting","Stunting","15-18 months","21-24 months",4.5,3.4,6,12
+"12","Stunting","Underweight","15-18 months","18-21 months",4.4,3.8,5.1,13
+"13","Stunting","Underweight","15-18 months","21-24 months",4.5,3.8,5.3,12
+"14","Stunting","Wasting","15-18 months","18-21 months",2.1,1.8,2.5,11
+"15","Stunting","Wasting","15-18 months","21-24 months",2.1,1.7,2.6,9
+"16","Stunting","Stunting","15 days-3 months","12-15 months",2.5,2.1,2.9,16
+"17","Stunting","Stunting","15 days-3 months","15-18 months",2.1,1.8,2.5,16
+"18","Stunting","Stunting","15 days-3 months","18-21 months",1.9,1.6,2.2,14
+"19","Stunting","Stunting","15 days-3 months","21-24 months",1.8,1.5,2.1,13
+"20","Stunting","Stunting","15 days-3 months","3-6 months",5.3,4.4,6.3,16
+"21","Stunting","Stunting","15 days-3 months","6-9 months",3.4,3,4,17
+"22","Stunting","Stunting","15 days-3 months","9-12 months",3.1,2.6,3.7,16
+"23","Stunting","Underweight","15 days-3 months","12-15 months",2.2,1.9,2.6,16
+"24","Stunting","Underweight","15 days-3 months","15-18 months",2.1,1.8,2.5,15
+"25","Stunting","Underweight","15 days-3 months","18-21 months",2,1.8,2.3,14
+"26","Stunting","Underweight","15 days-3 months","21-24 months",2,1.8,2.2,13
+"27","Stunting","Underweight","15 days-3 months","3-6 months",3.4,2.8,4.1,13
+"28","Stunting","Underweight","15 days-3 months","6-9 months",2.3,2.1,2.5,13
+"29","Stunting","Underweight","15 days-3 months","9-12 months",2.3,2,2.7,14
+"30","Stunting","Wasting","15 days-3 months","12-15 months",1.5,1.3,1.7,12
+"31","Stunting","Wasting","15 days-3 months","15-18 months",1.6,1.4,2,12
+"32","Stunting","Wasting","15 days-3 months","18-21 months",1.8,1.5,2.1,11
+"33","Stunting","Wasting","15 days-3 months","21-24 months",1.8,1.5,2,9
+"34","Stunting","Wasting","15 days-3 months","3-6 months",1.2,1,1.4,11
+"35","Stunting","Wasting","15 days-3 months","6-9 months",1.2,1,1.4,9
+"36","Stunting","Wasting","15 days-3 months","9-12 months",1.4,1.1,1.7,11
+"37","Stunting","Stunting","18-21 months","21-24 months",6.2,4.6,8.5,11
+"38","Stunting","Underweight","18-21 months","21-24 months",4.3,3.6,5.1,11
+"39","Stunting","Wasting","18-21 months","21-24 months",2,1.6,2.5,9
+"40","Stunting","Stunting","3-6 months","12-15 months",3,2.5,3.6,14
+"41","Stunting","Stunting","3-6 months","15-18 months",2.6,2.1,3.2,14
+"42","Stunting","Stunting","3-6 months","18-21 months",2.3,1.9,2.8,10
+"43","Stunting","Stunting","3-6 months","21-24 months",2,1.7,2.4,9
+"44","Stunting","Stunting","3-6 months","6-9 months",5.9,4.9,7.1,17
+"45","Stunting","Stunting","3-6 months","9-12 months",3.8,3.1,4.6,17
+"46","Stunting","Underweight","3-6 months","12-15 months",2.7,2.3,3.3,17
+"47","Stunting","Underweight","3-6 months","15-18 months",2.6,2.2,3.1,15
+"48","Stunting","Underweight","3-6 months","18-21 months",2.5,2.2,3,15
+"49","Stunting","Underweight","3-6 months","21-24 months",2.3,2,2.6,13
+"50","Stunting","Underweight","3-6 months","6-9 months",3.4,2.9,4,15
+"51","Stunting","Underweight","3-6 months","9-12 months",2.8,2.4,3.3,16
+"52","Stunting","Wasting","3-6 months","12-15 months",1.5,1.3,1.9,13
+"53","Stunting","Wasting","3-6 months","15-18 months",1.7,1.5,1.9,12
+"54","Stunting","Wasting","3-6 months","18-21 months",1.9,1.7,2.2,11
+"55","Stunting","Wasting","3-6 months","21-24 months",1.9,1.6,2.2,10
+"56","Stunting","Wasting","3-6 months","6-9 months",1.4,1.1,1.8,12
+"57","Stunting","Wasting","3-6 months","9-12 months",1.5,1.2,1.9,13
+"58","Stunting","Stunting","6-9 months","12-15 months",3.7,3,4.6,12
+"59","Stunting","Stunting","6-9 months","15-18 months",2.8,2.2,3.6,12
+"60","Stunting","Stunting","6-9 months","18-21 months",2.7,2.2,3.4,10
+"61","Stunting","Stunting","6-9 months","21-24 months",2.3,1.9,2.8,8
+"62","Stunting","Stunting","6-9 months","9-12 months",5.8,4.6,7.2,13
+"63","Stunting","Underweight","6-9 months","12-15 months",3,2.5,3.6,14
+"64","Stunting","Underweight","6-9 months","15-18 months",2.9,2.5,3.2,13
+"65","Stunting","Underweight","6-9 months","18-21 months",2.8,2.5,3.2,13
+"66","Stunting","Underweight","6-9 months","21-24 months",2.6,2.3,2.9,11
+"67","Stunting","Underweight","6-9 months","9-12 months",3.6,2.9,4.5,15
+"68","Stunting","Wasting","6-9 months","12-15 months",1.8,1.4,2.3,13
+"69","Stunting","Wasting","6-9 months","15-18 months",1.8,1.6,2,12
+"70","Stunting","Wasting","6-9 months","18-21 months",2.2,1.8,2.6,11
+"71","Stunting","Wasting","6-9 months","21-24 months",2.2,1.8,2.7,9
+"72","Stunting","Wasting","6-9 months","9-12 months",1.5,1.1,1.9,13
+"73","Stunting","Stunting","9-12 months","12-15 months",6.1,5,7.4,15
+"74","Stunting","Stunting","9-12 months","15-18 months",3.9,3.1,4.8,15
+"75","Stunting","Stunting","9-12 months","18-21 months",3.5,2.8,4.4,11
+"76","Stunting","Stunting","9-12 months","21-24 months",2.9,2.4,3.6,10
+"77","Stunting","Underweight","9-12 months","12-15 months",3.9,3,5.1,14
+"78","Stunting","Underweight","9-12 months","15-18 months",3.6,3,4.4,14
+"79","Stunting","Underweight","9-12 months","18-21 months",3.5,3,4.2,15
+"80","Stunting","Underweight","9-12 months","21-24 months",3.2,2.7,3.8,14
+"81","Stunting","Wasting","9-12 months","12-15 months",1.8,1.4,2.4,14
+"82","Stunting","Wasting","9-12 months","15-18 months",1.9,1.6,2.2,13
+"83","Stunting","Wasting","9-12 months","18-21 months",2,1.8,2.3,12
+"84","Stunting","Wasting","9-12 months","21-24 months",1.9,1.6,2.2,10
+"85","Stunting","Stunting","Birth","12-15 months",1.7,1.4,1.9,10
+"86","Stunting","Stunting","Birth","15-18 months",1.6,1.4,1.9,11
+"87","Stunting","Stunting","Birth","15 days-3 months",3.9,2.9,5.3,13
+"88","Stunting","Stunting","Birth","18-21 months",1.6,1.4,1.9,9
+"89","Stunting","Stunting","Birth","21-24 months",1.6,1.4,1.8,9
+"90","Stunting","Stunting","Birth","3-6 months",2.8,2.2,3.6,10
+"91","Stunting","Stunting","Birth","6-9 months",2.1,1.8,2.5,12
+"92","Stunting","Stunting","Birth","9-12 months",2,1.6,2.3,11
+"93","Stunting","Underweight","Birth","12-15 months",1.8,1.5,2.2,11
+"94","Stunting","Underweight","Birth","15-18 months",1.8,1.5,2.3,11
+"95","Stunting","Underweight","Birth","15 days-3 months",3.8,2.6,5.5,11
+"96","Stunting","Underweight","Birth","18-21 months",1.7,1.4,2.1,11
+"97","Stunting","Underweight","Birth","21-24 months",1.6,1.3,2,11
+"98","Stunting","Underweight","Birth","3-6 months",2.5,1.8,3.4,12
+"99","Stunting","Underweight","Birth","6-9 months",2,1.5,2.6,10
+"100","Stunting","Underweight","Birth","9-12 months",1.9,1.5,2.3,11
+"101","Stunting","Wasting","Birth","12-15 months",1.5,1.1,2,7
+"102","Stunting","Wasting","Birth","15-18 months",2,1.2,3.2,7
+"103","Stunting","Wasting","Birth","15 days-3 months",0.9,0.6,1.5,5
+"104","Stunting","Wasting","Birth","18-21 months",1.4,1,2,6
+"105","Stunting","Wasting","Birth","21-24 months",1.6,1,2.3,6
+"106","Stunting","Wasting","Birth","3-6 months",1.5,1,2.3,5
+"107","Stunting","Wasting","Birth","6-9 months",1.1,0.8,1.5,3
+"108","Stunting","Wasting","Birth","9-12 months",1.4,1,1.8,6
+"109","Underweight","Stunting","12-15 months","15-18 months",2.7,2.3,3.3,14
+"110","Underweight","Stunting","12-15 months","18-21 months",2.6,2.1,3.2,12
+"111","Underweight","Stunting","12-15 months","21-24 months",2.3,1.9,2.8,9
+"112","Underweight","Underweight","12-15 months","15-18 months",8.3,6.6,10.6,15
+"113","Underweight","Underweight","12-15 months","18-21 months",7.2,5.4,9.5,14
+"114","Underweight","Underweight","12-15 months","21-24 months",5.5,4.4,6.8,12
+"115","Underweight","Wasting","12-15 months","15-18 months",7.1,5.5,9.2,11
+"116","Underweight","Wasting","12-15 months","18-21 months",7,5,9.7,9
+"117","Underweight","Wasting","12-15 months","21-24 months",6,4.2,8.6,8
+"118","Underweight","Stunting","15-18 months","18-21 months",2.6,2.1,3.3,12
+"119","Underweight","Stunting","15-18 months","21-24 months",2.3,2,2.8,11
+"120","Underweight","Underweight","15-18 months","18-21 months",9.5,7.1,12.6,13
+"121","Underweight","Underweight","15-18 months","21-24 months",6.5,5.4,7.8,13
+"122","Underweight","Wasting","15-18 months","18-21 months",8.5,5.7,12.9,7
+"123","Underweight","Wasting","15-18 months","21-24 months",5.5,3.9,8,6
+"124","Underweight","Stunting","15 days-3 months","12-15 months",2.1,1.8,2.3,15
+"125","Underweight","Stunting","15 days-3 months","15-18 months",1.8,1.6,2.1,15
+"126","Underweight","Stunting","15 days-3 months","18-21 months",1.6,1.4,1.9,14
+"127","Underweight","Stunting","15 days-3 months","21-24 months",1.6,1.4,1.8,13
+"128","Underweight","Stunting","15 days-3 months","3-6 months",3.4,2.9,4,16
+"129","Underweight","Stunting","15 days-3 months","6-9 months",2.8,2.4,3.2,14
+"130","Underweight","Stunting","15 days-3 months","9-12 months",2.4,2.1,2.8,15
+"131","Underweight","Underweight","15 days-3 months","12-15 months",2.7,2.4,3.2,16
+"132","Underweight","Underweight","15 days-3 months","15-18 months",2.5,2.2,2.9,16
+"133","Underweight","Underweight","15 days-3 months","18-21 months",2.4,2,2.8,15
+"134","Underweight","Underweight","15 days-3 months","21-24 months",2.2,1.9,2.5,14
+"135","Underweight","Underweight","15 days-3 months","3-6 months",6.9,5.7,8.3,16
+"136","Underweight","Underweight","15 days-3 months","6-9 months",3.8,3.5,4.1,15
+"137","Underweight","Underweight","15 days-3 months","9-12 months",3.2,2.8,3.7,16
+"138","Underweight","Wasting","15 days-3 months","12-15 months",2.7,2.1,3.4,13
+"139","Underweight","Wasting","15 days-3 months","15-18 months",2.9,2.4,3.6,14
+"140","Underweight","Wasting","15 days-3 months","18-21 months",3,2.3,3.9,12
+"141","Underweight","Wasting","15 days-3 months","21-24 months",2.9,2.2,3.8,10
+"142","Underweight","Wasting","15 days-3 months","3-6 months",3.7,3,4.7,12
+"143","Underweight","Wasting","15 days-3 months","6-9 months",2.8,2.4,3.3,11
+"144","Underweight","Wasting","15 days-3 months","9-12 months",2.9,2.3,3.5,12
+"145","Underweight","Stunting","18-21 months","21-24 months",2.5,2.1,3,10
+"146","Underweight","Underweight","18-21 months","21-24 months",9.1,7.1,11.7,13
+"147","Underweight","Wasting","18-21 months","21-24 months",6.6,4.2,10.4,5
+"148","Underweight","Stunting","3-6 months","12-15 months",2.2,1.9,2.6,13
+"149","Underweight","Stunting","3-6 months","15-18 months",2.1,1.8,2.4,12
+"150","Underweight","Stunting","3-6 months","18-21 months",1.8,1.6,2.2,11
+"151","Underweight","Stunting","3-6 months","21-24 months",1.7,1.5,1.9,10
+"152","Underweight","Stunting","3-6 months","6-9 months",3.3,2.8,3.8,14
+"153","Underweight","Stunting","3-6 months","9-12 months",2.6,2.3,3,14
+"154","Underweight","Underweight","3-6 months","12-15 months",4.2,3.4,5.1,15
+"155","Underweight","Underweight","3-6 months","15-18 months",3.7,3.1,4.5,14
+"156","Underweight","Underweight","3-6 months","18-21 months",3.3,2.7,4.1,13
+"157","Underweight","Underweight","3-6 months","21-24 months",2.9,2.5,3.5,12
+"158","Underweight","Underweight","3-6 months","6-9 months",8.4,6.9,10.2,15
+"159","Underweight","Underweight","3-6 months","9-12 months",5.2,4.3,6.2,15
+"160","Underweight","Wasting","3-6 months","12-15 months",4.7,3.4,6.6,14
+"161","Underweight","Wasting","3-6 months","15-18 months",4.4,3.3,5.9,13
+"162","Underweight","Wasting","3-6 months","18-21 months",4.8,3.7,6.2,12
+"163","Underweight","Wasting","3-6 months","21-24 months",4.1,3.2,5.4,10
+"164","Underweight","Wasting","3-6 months","6-9 months",5.1,3.9,6.6,10
+"165","Underweight","Wasting","3-6 months","9-12 months",5.1,3.8,7,15
+"166","Underweight","Stunting","6-9 months","12-15 months",2.5,2.2,2.9,11
+"167","Underweight","Stunting","6-9 months","15-18 months",2.2,1.9,2.6,12
+"168","Underweight","Stunting","6-9 months","18-21 months",2.1,1.7,2.6,8
+"169","Underweight","Stunting","6-9 months","21-24 months",1.8,1.6,2.1,8
+"170","Underweight","Stunting","6-9 months","9-12 months",2.9,2.5,3.3,13
+"171","Underweight","Underweight","6-9 months","12-15 months",5.3,4.4,6.5,13
+"172","Underweight","Underweight","6-9 months","15-18 months",4.5,3.6,5.6,11
+"173","Underweight","Underweight","6-9 months","18-21 months",4,3.1,5.2,11
+"174","Underweight","Underweight","6-9 months","21-24 months",3.4,2.8,4.1,10
+"175","Underweight","Underweight","6-9 months","9-12 months",8.1,6.6,9.8,13
+"176","Underweight","Wasting","6-9 months","12-15 months",6.2,4.4,8.8,13
+"177","Underweight","Wasting","6-9 months","15-18 months",5.4,4.2,6.8,13
+"178","Underweight","Wasting","6-9 months","18-21 months",6.1,4.7,7.9,11
+"179","Underweight","Wasting","6-9 months","21-24 months",5.6,4,7.8,9
+"180","Underweight","Wasting","6-9 months","9-12 months",6.2,4.5,8.6,11
+"181","Underweight","Stunting","9-12 months","12-15 months",3,2.4,3.6,14
+"182","Underweight","Stunting","9-12 months","15-18 months",2.6,2.2,3.2,14
+"183","Underweight","Stunting","9-12 months","18-21 months",2.4,2,2.9,12
+"184","Underweight","Stunting","9-12 months","21-24 months",2,1.7,2.4,9
+"185","Underweight","Underweight","9-12 months","12-15 months",9.3,7.3,12,14
+"186","Underweight","Underweight","9-12 months","15-18 months",5.9,4.7,7.5,13
+"187","Underweight","Underweight","9-12 months","18-21 months",5.2,3.9,6.8,12
+"188","Underweight","Underweight","9-12 months","21-24 months",4.2,3.5,5.1,11
+"189","Underweight","Wasting","9-12 months","12-15 months",7.2,5,10.3,11
+"190","Underweight","Wasting","9-12 months","15-18 months",6.5,4.7,8.9,13
+"191","Underweight","Wasting","9-12 months","18-21 months",5.9,4.5,7.8,10
+"192","Underweight","Wasting","9-12 months","21-24 months",5.3,3.6,7.8,7
+"193","Underweight","Stunting","Birth","12-15 months",1.8,1.5,2.2,7
+"194","Underweight","Stunting","Birth","15-18 months",1.6,1.3,1.9,9
+"195","Underweight","Stunting","Birth","15 days-3 months",4.3,3.6,5.3,8
+"196","Underweight","Stunting","Birth","18-21 months",1.5,1.3,1.8,8
+"197","Underweight","Stunting","Birth","21-24 months",1.4,1.3,1.6,8
+"198","Underweight","Stunting","Birth","3-6 months",2.6,2.1,3.1,10
+"199","Underweight","Stunting","Birth","6-9 months",2.1,1.8,2.5,9
+"200","Underweight","Stunting","Birth","9-12 months",2.1,1.7,2.4,9
+"201","Underweight","Underweight","Birth","12-15 months",1.9,1.5,2.5,10
+"202","Underweight","Underweight","Birth","15-18 months",1.8,1.5,2.3,10
+"203","Underweight","Underweight","Birth","15 days-3 months",4.7,3.3,6.7,8
+"204","Underweight","Underweight","Birth","18-21 months",1.9,1.5,2.3,10
+"205","Underweight","Underweight","Birth","21-24 months",1.8,1.4,2.3,10
+"206","Underweight","Underweight","Birth","3-6 months",2.7,2.2,3.5,10
+"207","Underweight","Underweight","Birth","6-9 months",2.3,1.8,2.8,9
+"208","Underweight","Underweight","Birth","9-12 months",2,1.6,2.5,10
+"209","Underweight","Wasting","Birth","12-15 months",1.8,1.4,2.2,7
+"210","Underweight","Wasting","Birth","15-18 months",1.7,1.3,2.1,7
+"211","Underweight","Wasting","Birth","15 days-3 months",1.8,1.3,2.4,7
+"212","Underweight","Wasting","Birth","18-21 months",1.7,1.4,2,7
+"213","Underweight","Wasting","Birth","21-24 months",1.8,1.4,2.2,7
+"214","Underweight","Wasting","Birth","3-6 months",1.8,1.4,2.4,7
+"215","Underweight","Wasting","Birth","6-9 months",1.6,1.2,2,5
+"216","Underweight","Wasting","Birth","9-12 months",1.8,1.5,2.3,7
+"217","Wasting","Stunting","12-15 months","15-18 months",1.5,1.3,1.8,12
+"218","Wasting","Stunting","12-15 months","18-21 months",1.6,1.4,1.8,11
+"219","Wasting","Stunting","12-15 months","21-24 months",1.4,1.2,1.6,7
+"220","Wasting","Underweight","12-15 months","15-18 months",3.7,3,4.6,9
+"221","Wasting","Underweight","12-15 months","18-21 months",3.5,2.8,4.4,9
+"222","Wasting","Underweight","12-15 months","21-24 months",2.9,2.5,3.4,8
+"223","Wasting","Wasting","12-15 months","15-18 months",9,6.9,11.8,13
+"224","Wasting","Wasting","12-15 months","18-21 months",6.9,5.4,8.9,12
+"225","Wasting","Wasting","12-15 months","21-24 months",6.3,4.9,8,10
+"226","Wasting","Stunting","15-18 months","18-21 months",1.5,1.3,1.8,11
+"227","Wasting","Stunting","15-18 months","21-24 months",1.5,1.3,1.6,10
+"228","Wasting","Underweight","15-18 months","18-21 months",3.7,2.9,4.8,8
+"229","Wasting","Underweight","15-18 months","21-24 months",2.9,2.5,3.5,8
+"230","Wasting","Wasting","15-18 months","18-21 months",10.1,7.6,13.2,12
+"231","Wasting","Wasting","15-18 months","21-24 months",7,5,9.9,10
+"232","Wasting","Stunting","15 days-3 months","12-15 months",1,0.9,1.1,12
+"233","Wasting","Stunting","15 days-3 months","15-18 months",1,0.9,1.2,12
+"234","Wasting","Stunting","15 days-3 months","18-21 months",1,0.9,1.1,12
+"235","Wasting","Stunting","15 days-3 months","21-24 months",0.9,0.8,1.1,12
+"236","Wasting","Stunting","15 days-3 months","3-6 months",1,0.8,1.2,11
+"237","Wasting","Stunting","15 days-3 months","6-9 months",1,0.9,1.1,10
+"238","Wasting","Stunting","15 days-3 months","9-12 months",1,0.8,1.1,11
+"239","Wasting","Underweight","15 days-3 months","12-15 months",1.5,1.3,1.6,13
+"240","Wasting","Underweight","15 days-3 months","15-18 months",1.4,1.2,1.6,14
+"241","Wasting","Underweight","15 days-3 months","18-21 months",1.4,1.2,1.7,13
+"242","Wasting","Underweight","15 days-3 months","21-24 months",1.4,1.2,1.6,12
+"243","Wasting","Underweight","15 days-3 months","3-6 months",2.3,1.8,2.8,13
+"244","Wasting","Underweight","15 days-3 months","6-9 months",1.8,1.5,2.1,11
+"245","Wasting","Underweight","15 days-3 months","9-12 months",1.6,1.4,1.8,13
+"246","Wasting","Wasting","15 days-3 months","12-15 months",2.1,1.9,2.4,13
+"247","Wasting","Wasting","15 days-3 months","15-18 months",1.9,1.6,2.3,11
+"248","Wasting","Wasting","15 days-3 months","18-21 months",1.9,1.5,2.5,11
+"249","Wasting","Wasting","15 days-3 months","21-24 months",2.1,1.7,2.7,10
+"250","Wasting","Wasting","15 days-3 months","3-6 months",4.7,3.6,6.1,13
+"251","Wasting","Wasting","15 days-3 months","6-9 months",2.8,2.5,3.3,10
+"252","Wasting","Wasting","15 days-3 months","9-12 months",2.4,2.1,2.7,12
+"253","Wasting","Stunting","18-21 months","21-24 months",1.5,1.3,1.7,10
+"254","Wasting","Underweight","18-21 months","21-24 months",2.9,2.4,3.5,6
+"255","Wasting","Wasting","18-21 months","21-24 months",10.8,7.4,15.6,9
+"256","Wasting","Stunting","3-6 months","12-15 months",1.1,0.9,1.3,12
+"257","Wasting","Stunting","3-6 months","15-18 months",1.2,1.1,1.3,11
+"258","Wasting","Stunting","3-6 months","18-21 months",1.1,1,1.3,10
+"259","Wasting","Stunting","3-6 months","21-24 months",1.1,1.1,1.2,9
+"260","Wasting","Stunting","3-6 months","6-9 months",1.2,1,1.4,11
+"261","Wasting","Stunting","3-6 months","9-12 months",1.1,1,1.4,12
+"262","Wasting","Underweight","3-6 months","12-15 months",2.1,1.9,2.5,11
+"263","Wasting","Underweight","3-6 months","15-18 months",2,1.7,2.3,11
+"264","Wasting","Underweight","3-6 months","18-21 months",1.9,1.6,2.2,10
+"265","Wasting","Underweight","3-6 months","21-24 months",1.7,1.5,2,9
+"266","Wasting","Underweight","3-6 months","6-9 months",2.9,2.3,3.5,11
+"267","Wasting","Underweight","3-6 months","9-12 months",2.5,2.1,2.9,12
+"268","Wasting","Wasting","3-6 months","12-15 months",3.5,2.9,4.3,12
+"269","Wasting","Wasting","3-6 months","15-18 months",3.3,2.7,4,12
+"270","Wasting","Wasting","3-6 months","18-21 months",3.2,2.5,4,11
+"271","Wasting","Wasting","3-6 months","21-24 months",3,2.4,3.6,10
+"272","Wasting","Wasting","3-6 months","6-9 months",6.6,5.4,8,11
+"273","Wasting","Wasting","3-6 months","9-12 months",4.7,3.6,6,13
+"274","Wasting","Stunting","6-9 months","12-15 months",1.3,1.2,1.5,11
+"275","Wasting","Stunting","6-9 months","15-18 months",1.3,1.2,1.5,11
+"276","Wasting","Stunting","6-9 months","18-21 months",1.3,1.1,1.5,8
+"277","Wasting","Stunting","6-9 months","21-24 months",1.2,1.1,1.4,7
+"278","Wasting","Stunting","6-9 months","9-12 months",1.3,1.1,1.6,11
+"279","Wasting","Underweight","6-9 months","12-15 months",2.8,2.2,3.4,9
+"280","Wasting","Underweight","6-9 months","15-18 months",2.4,2,2.9,9
+"281","Wasting","Underweight","6-9 months","18-21 months",2.3,1.9,2.8,9
+"282","Wasting","Underweight","6-9 months","21-24 months",2,1.7,2.3,7
+"283","Wasting","Underweight","6-9 months","9-12 months",3.5,2.6,4.6,7
+"284","Wasting","Wasting","6-9 months","12-15 months",4.7,3.7,6.1,11
+"285","Wasting","Wasting","6-9 months","15-18 months",4.3,3.4,5.5,9
+"286","Wasting","Wasting","6-9 months","18-21 months",4.2,3.3,5.5,9
+"287","Wasting","Wasting","6-9 months","21-24 months",4.2,3.2,5.4,9
+"288","Wasting","Wasting","6-9 months","9-12 months",6.5,5.2,8,11
+"289","Wasting","Stunting","9-12 months","12-15 months",1.4,1.2,1.7,13
+"290","Wasting","Stunting","9-12 months","15-18 months",1.4,1.3,1.6,14
+"291","Wasting","Stunting","9-12 months","18-21 months",1.4,1.2,1.6,12
+"292","Wasting","Stunting","9-12 months","21-24 months",1.3,1.2,1.5,10
+"293","Wasting","Underweight","9-12 months","12-15 months",3.7,2.9,4.6,13
+"294","Wasting","Underweight","9-12 months","15-18 months",3.1,2.4,4,12
+"295","Wasting","Underweight","9-12 months","18-21 months",2.9,2.3,3.7,12
+"296","Wasting","Underweight","9-12 months","21-24 months",2.9,2.2,3.8,10
+"297","Wasting","Wasting","9-12 months","12-15 months",8.1,6.2,10.5,14
+"298","Wasting","Wasting","9-12 months","15-18 months",5.8,4.6,7.4,14
+"299","Wasting","Wasting","9-12 months","18-21 months",5.6,4.4,7,12
+"300","Wasting","Wasting","9-12 months","21-24 months",5.4,4,7.3,10
+"301","Wasting","Stunting","Birth","12-15 months",1.1,1,1.2,9
+"302","Wasting","Stunting","Birth","15-18 months",1.1,1,1.2,9
+"303","Wasting","Stunting","Birth","15 days-3 months",1.2,1.1,1.4,9
+"304","Wasting","Stunting","Birth","18-21 months",1.1,1,1.3,8
+"305","Wasting","Stunting","Birth","21-24 months",1,0.9,1.1,9
+"306","Wasting","Stunting","Birth","3-6 months",1.2,1,1.3,9
+"307","Wasting","Stunting","Birth","6-9 months",1.2,1.1,1.4,8
+"308","Wasting","Stunting","Birth","9-12 months",1.1,1,1.2,8
+"309","Wasting","Underweight","Birth","12-15 months",1.4,1.2,1.5,9
+"310","Wasting","Underweight","Birth","15-18 months",1.3,1.1,1.5,7
+"311","Wasting","Underweight","Birth","15 days-3 months",2.1,1.7,2.5,8
+"312","Wasting","Underweight","Birth","18-21 months",1.3,1.1,1.4,9
+"313","Wasting","Underweight","Birth","21-24 months",1.3,1.1,1.5,7
+"314","Wasting","Underweight","Birth","3-6 months",1.6,1.4,1.9,9
+"315","Wasting","Underweight","Birth","6-9 months",1.4,1.2,1.6,8
+"316","Wasting","Underweight","Birth","9-12 months",1.4,1.2,1.5,8
+"317","Wasting","Wasting","Birth","12-15 months",1.5,1.3,1.8,8
+"318","Wasting","Wasting","Birth","15-18 months",1.5,1.2,1.8,7
+"319","Wasting","Wasting","Birth","15 days-3 months",2.1,1.4,3.2,7
+"320","Wasting","Wasting","Birth","18-21 months",1.5,1.2,1.7,8
+"321","Wasting","Wasting","Birth","21-24 months",1.5,1.2,1.7,7
+"322","Wasting","Wasting","Birth","3-6 months",1.9,1.5,2.3,10
+"323","Wasting","Wasting","Birth","6-9 months",1.5,1.3,1.8,6
+"324","Wasting","Wasting","Birth","9-12 months",1.6,1.3,1.9,8
