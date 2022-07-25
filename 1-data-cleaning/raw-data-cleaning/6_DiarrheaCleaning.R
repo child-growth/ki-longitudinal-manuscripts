@@ -10,8 +10,21 @@ library(haven)
 
 
 #read csv file
-d<-fread("H:/GHAP/QuantSci/HBGD/Rally-007/Manoj/Main/adam/FINAL.csv", header = T)
-         
+d<-fread(paste0(ghapdata_dir,"FINAL.csv"), header = T,
+         drop = c( "AGEIMPFL",  #"WTKG", "REGION",   
+                   #"HTCM",    "LENCM", 
+                   "BAZ", "HCAZ",      
+                   "REGCTRY", "REGCTYP", #"CITYTOWN",
+                   "HHID",    
+                   "FEEDING", "DURBRST", #"BRTHYR", 
+                   "ENSTUNT", "FWTKG", "FBMI",
+                   "BRFEED", "SUMEP",   "SUMDIAR", "SUMDAYS",
+                   "PCTDIAR", "IMPSAN",  "SOAP",    "SAFEH2O", "H2OTIME",
+                   "CHICKEN", "COW",     "CATTLE",  "INCTOT", 
+                   "INCTOTU", "BFEDFL",  "EXBFEDFL","WEANFL",  "ANMLKFL", "PWMLKFL",
+                   "FORMLKFL","BOTTLEFL","H20FEDFL","OTHFEDFL","SLDFEDFL","NBFYES",   "CMFDINT",  "LSSTLFL",
+                   "NUMLS",   "BLDSTLFL","LSSTFL_R","NUMLS_R", "BLDSTL_R"
+                   ))
 
 gc()
 
@@ -19,7 +32,6 @@ colnames(d) <- tolower(colnames(d))
 colnames(d)
 
 #Drop un-needed columns
-#d <- d %>% subset(., select=c(studyid, country, subjid, agedays, visitnum, diarfl,diarfl_r, dur_r))
 d <- d %>% subset(., select=c(studyid, subjid, agedays, diarfl,diarfl_r, dur_r))
 
 #Drop studies Vishak added to data product that don't meet inclusion criteria
@@ -176,6 +188,7 @@ table(dfull$studyid, dfull$diarfl)
 table(tzc2$diarfl)
 
 diar_df<-dfull[,1:4]
+save(diar_df, file=paste0(ghapdata_dir,"covariate creation intermediate datasets/derived covariate datasets/rawdiar_df_long.Rdata"))
 
 
 res <-diar_df %>% 

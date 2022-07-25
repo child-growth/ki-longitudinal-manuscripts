@@ -20,14 +20,24 @@ d <- d %>% mutate(
 summary(d$waz)
 
 #SD
-df<- d %>% group_by(studyid, country, region, subjid) %>% 
+df<- d %>% group_by(studyid, country, region, subjid) %>% filter(agedays<730) %>%
   summarize(SDwhz=sd(whz),SDhaz=sd(haz),SDwaz=sd(waz)) %>% ungroup() 
+df %>%summarize(mean(SDwhz, na.rm=T), mean(SDhaz, na.rm=T), mean(SDwaz, na.rm=T))
+
+
+#age specific SD
+df.age <- calc.ci.agecat(d, range=6)
+df.age <- df.age %>% filter(agedays<730) 
+df.age$agecat<-as.character(df.age$agecat)
+df.age$agecat[df.age$agecat!="0-6 months"] <- "6-24 months"
+df.age<- df.age %>% group_by(studyid, country, region, subjid, agecat) %>% 
+  summarize(SDwhz=sd(whz),SDhaz=sd(haz),SDwaz=sd(waz)) %>% ungroup() 
+df.age %>% group_by(agecat) %>%summarize(mean(SDwhz, na.rm=T), mean(SDhaz, na.rm=T), mean(SDwaz, na.rm=T))
+#Note earlier is higher variability, and the difference is biggest for WLZ.
 
 ggplot(df, aes(x=SDwhz, group=region, fill=region, color=region)) +geom_density(alpha=0.5) +theme(legend.position = "right") #+ facet_wrap(~region)
 ggplot(df, aes(x=SDwhz, group=country, fill=country, color=country)) +geom_density(alpha=0.5) +theme(legend.position = "right") + facet_wrap(~region)
 
-df %>%
-  summarize(mean(SDwhz, na.rm=T), mean(SDhaz, na.rm=T), mean(SDwaz, na.rm=T))
 
 df2 <- d %>% group_by(studyid, country, region, subjid) %>% 
   mutate(change=whz-lag(whz)) %>% 
