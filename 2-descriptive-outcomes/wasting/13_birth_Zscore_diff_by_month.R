@@ -23,17 +23,6 @@ d %>%
 d$cohort <- paste0(d$studyid, " ", d$country)
 length(unique(d$cohort))
 
-# d$month <- floor(d$jday/30.417) + 1
-# table(d$month)
-
-
-
-# #calc WLZ by month
-# d <- calc.prev.agecat(d)
-# whz.data <- summary.whz(d)
-# 
-# res <- d %>% group_by(brthmon) %>% do(summary.whz(.)$whz.res)
-
 
 
 # take mean of multiple measurements within age window

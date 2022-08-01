@@ -2,6 +2,7 @@
 
 rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
+library(rcompanion)
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
 load(paste0(ghapdata_dir, "Wasting_inc_sens_data.RData"))
 
@@ -28,6 +29,25 @@ df2$agecat <- as.character(df2$agecat)
 df2$agecat[df2$agecat!="Birth" & df2$agecat!="8 days-6 months"] <- "6-24 months"
 df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
 
+#Check calculation methods
+groupwiseMedian(duration ~ agecat,
+                data       = df2,
+                conf       = 0.95,
+                R          = 5000,
+                percentile = TRUE,
+                bca        = FALSE,
+                digits     = 3)
+
+#check metamedian
+library(metamedian)
+
+dur_summary <- df2 %>% group_by(studyid, country, agecat) %>%
+  filter(!is.na(agecat)) %>% summarize(N=n(), dur=median(duration, na.rm=T))
+
+
+## Meta-analysis of the difference of medians
+pool.med(yi=dur_summary$dur[dur_summary$agecat=="Birth"], wi=dur_summary$N[dur_summary$agecat=="Birth"])
+pool.med(yi=dur_summary$dur[dur_summary$agecat=="6-24 months"], wi=dur_summary$N[dur_summary$agecat=="6-24 months"])
 
 #Number of measurements per episode
 df_Nmeas <- d %>% filter(wasting_episode=="Wasted") %>% group_by(studyid, subjid, episode_id) %>% summarize(N=n(), agedays=mean(agedays, na.rm=T)) %>% filter(agedays <=730)

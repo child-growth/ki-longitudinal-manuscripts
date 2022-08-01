@@ -427,7 +427,7 @@ summary.whz <- function(d, N_filter=50, method="REML"){
 
 
 
-summary.incprop <- function(d, recovery=F, severe.wasted=F, method="REML"){
+summary.incprop <- function(d, recovery=F, severe.wasted=F, method="REML", N_filter=50){
 
   if(recovery==T){
     d$wast_inc <- d$wast_rec
@@ -452,7 +452,7 @@ summary.incprop <- function(d, recovery=F, severe.wasted=F, method="REML"){
       nstudy=length(unique(studyid)),
       ncases=sum(ever_wasted),
       N=sum(length(ever_wasted))) %>%
-    filter(N>=50) %>% ungroup() %>%
+    filter(N>=N_filter) %>% ungroup() %>%
     mutate(agecat=factor(agecat))
 
   cuminc.data <- droplevels(cuminc.data)
@@ -655,5 +655,4 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filt
 
   return(list(ir.data=inc.data, ir.res=ir.res, ir.cohort=inc.cohort))
 }
-
 
