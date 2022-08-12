@@ -42,6 +42,15 @@ df2 <- df %>% group_by(studyid, country, subjid) %>% summarise(wast_inc=1*(min(w
 prop.table(table(df2$wast_inc)) * 100
 
 
+#Get the proportion not wasted by next measurement
+
+df_bornwast_rec <- d %>% filter(born_wast==1) %>% group_by(studyid, country, subjid) %>% arrange(studyid, subjid, agedays) %>% 
+  filter(agedays!=first(agedays)) %>% filter(agedays==first(agedays)) 
+prop.table(table(df_bornwast_rec$whz < -2))*100
+
+dprev_bornwast_rec <- df_bornwast_rec %>% group_by(studyid, country) %>% summarise(N=n(), not_wast=sum(whz > -2), agecat="1 month")
+prev.res_bornwast_rec= fit.rma(data=dprev_bornwast_rec,ni="N", xi="not_wast",age="1 month",measure="PLO",nlab="children", method="REML")
+prev.res_bornwast_rec
 
 #prevalence
 dprev <- df %>% group_by(studyid, country) %>% summarise(N=n(), wast=sum(wast), agecat="0-2 months")

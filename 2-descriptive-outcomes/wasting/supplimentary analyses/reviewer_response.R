@@ -96,8 +96,6 @@ d_noBW3 <- d_noBW3 %>% filter(!is.na(whz))
 #Drop children born wasted
 d_noBW4 <- d_noBW %>% group_by(studyid, subjid) %>% mutate(born_wast=max(1*(wasting_episode=="Born Wasted"))) %>% ungroup() %>% filter(born_wast==0)
 
-# temp <- d_noBW %>% group_by(studyid, subjid) %>% slice(1)
-# table(temp$wasting_episode, temp$whz< (-2))
 
 table(d_noBW$wasting_episode)
 table(d_noBW3$wasting_episode)

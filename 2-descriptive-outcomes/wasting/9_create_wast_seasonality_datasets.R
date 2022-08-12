@@ -114,6 +114,18 @@ df <- df %>% mutate(
 
 table(!is.na(df$month), df$rain_quartile)
 
+#look at rainfall by 3-month group
+rain_season_df <- df %>% select(country, month, rain_quartile)
+rain_season_df <- left_join(rain, rain_season_df, by = c("country", "month"))
+rain_season_df <- rain_season_df %>% distinct(country, month, rain, rain_quartile, cohort_index)
+rain_season_df %>% 
+  # mutate(cohort_index =case_when(cohort_index <0.7 ~"low",
+  #                                cohort_index >= 0.7 & cohort_index < 0.9 ~ "medium",
+  #                                cohort_index >=0.9 ~"high")) %>%
+  mutate(cohort_index =case_when(cohort_index <0.9 ~"low/medium",
+                                 cohort_index >=0.9 ~"high")) %>%
+  group_by(cohort_index, rain_quartile) %>% 
+  summarise(mean(rain))
 
 #Drop observations without a month variable
 df <- df %>% filter(rain_quartile!="")
