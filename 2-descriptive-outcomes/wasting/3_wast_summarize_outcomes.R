@@ -271,7 +271,24 @@ ip_3 <- bind_rows(
   ip.cohort3
 )
 
-#Incidence proportions 3 month intervals - no birth
+#Incidence proportions 3 month intervals - no birth included in the 0-3 month period
+ip.data3_birthstrat <- summary.incprop(d3_birthstrat)
+ip.region3_birthstrat <- d3_birthstrat %>% group_by(region) %>% do(summary.incprop(.)$ci.res)
+ip.country3_birthstrat <- d3_birthstrat %>% group_by(region, country) %>% do(summary.incprop(.)$ci.res) 
+ip.cohort3_birthstrat <-
+  ip.data3_birthstrat$ci.cohort %>% subset(., select = c(cohort, region, agecat,  yi,  ci.lb,  ci.ub)) %>%
+  rename(est = yi,  lb = ci.lb,  ub = ci.ub)
+
+ip_3_birthstrat <- bind_rows(
+  data.frame(cohort = "pooled", region = "Overall", ip.data3_birthstrat$ci.res),
+  data.frame(cohort = "pooled", ip.country3_birthstrat),
+  data.frame(cohort = "pooled", ip.region3_birthstrat),
+  ip.cohort3_birthstrat
+)
+
+
+#Incidence proportions 3 month intervals - no birth episodes
+d3_nobirth <- calc.ci.agecat(d_noBW, range = 3)
 ip.data3_nobirth <- summary.incprop(d3_nobirth)
 ip.region3_nobirth <- d3_nobirth %>% group_by(region) %>% do(summary.incprop(.)$ci.res)
 ip.country3_nobirth <- d3_nobirth %>% group_by(region, country) %>% do(summary.incprop(.)$ci.res) 
@@ -286,6 +303,9 @@ ip_3_nobirth <- bind_rows(
   ip.cohort3_nobirth
 )
 
+ip.data3$ci.res
+ip.data3_nobirth$ci.res
+ip.data3_birthstrat$ci.res
 
 #Cumulative inc, no birth
 d_noBW <- calc.ci.agecat(d_noBW, range = 6)

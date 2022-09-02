@@ -41,6 +41,9 @@ df2$agecat <- as.character(df2$agecat)
 df2$agecat[df2$agecat!="Birth" & df2$agecat!="8 days-6 months"] <- "6-24 months"
 df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
 
+#Mean WLZ of episodes by age
+d6 %>% group_by(agecat) %>% filter(whz < (-2)) %>% summarise(mean(whz))
+
 # #Check calculation methods
 # groupwiseMedian(wasting_duration ~ agecat,
 #                 data       = df2,

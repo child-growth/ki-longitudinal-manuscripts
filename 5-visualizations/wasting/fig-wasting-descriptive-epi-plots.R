@@ -32,6 +32,9 @@ temp <- d %>% filter(measure=="Cumulative incidence", pooling=="overall", agecat
 #convert from per 1000 person-days to episodes per year
 temp
 
+temp <- d %>% filter(measure=="Cumulative incidence"|measure=="Persistent wasting", cohort=="pooled", birth=="yes", severe=="no",region=="South Asia", disease!="Stunting")
+temp
+
 #d %>% filter(measure=="Prevalence", disease=="co-occurrence", cohort!="pooled")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)

@@ -33,12 +33,16 @@ unique(d$studyid[d$measurefreq=="monthly"])
 unique(paste0(d$studyid,"-",d$country))
 length(unique(paste0(d$studyid,d$country,d$subjid)))
 
+#Get percent of incalculable WLZ with length <25
+df <- d %>% filter(lencm < 45, agedays <= 31)
+table(df$agedays)
+nrow(df)/nrow(d) * 100
+df <- df %>% filter(waz >= -6 & waz <=5)
+summary(df$waz)
 
 #--------------------------------------------
 # Subset to  just identifying and anthro data
 #--------------------------------------------
-
-    
 
 d <- d %>% subset(., select=c(studyid, subjid, country, region, brthyr, gdp,gdi,gii,chi,gini,he,pov, mort,
                               measurefreq, tr, sex, agedays, haz, whz, waz, muaz, latitude, longitud))
@@ -54,6 +58,7 @@ length(names(table(d$studyid)))
 # table of studies
 table(d$studyid)
 table(d$studyid,d$country)
+
 
 
 
@@ -104,7 +109,6 @@ dropped <- nobsq_cc - nrow(stunt_mort %>% filter(measurefreq!="yearly" & agedays
 dropped
 dropped/nobsq_cc * 100 #percentage dropped
 
-
 #Stunting manuscript dropped
 dropped <- nobsq - nrow(stunt_mort %>% ungroup() %>% filter(measurefreq!="yearly" & agedays < 24*30.4167) %>% do(drop_int_arms(.)))
 dropped
@@ -114,7 +118,6 @@ dropped/nobsq * 100 #percentage dropped
 droppedm <- nobsm - nrow(stunt_mort %>% filter(measurefreq=="monthly" & agedays < 24*30.4167, !is.na(haz)))
 droppedm
 droppedm/nobsm * 100 #percentage dropped monthly
-
 
 
 nobsq <- nrow(d %>% filter(measurefreq!="yearly" & agedays < 24*30.4167, !is.na(whz)))

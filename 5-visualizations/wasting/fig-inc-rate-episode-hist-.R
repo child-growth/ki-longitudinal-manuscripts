@@ -80,9 +80,11 @@ wast_IQR=df %>% group_by(region) %>% do(res=IQR(.$num_wast))
 wast_IQR$res
 
 #median and IQR 
+table(df$num_wast)
 IQR(df$num_wast)
 fivenum(df$num_wast)
 summary(df$num_wast)
+table(df$num_wast)
 
 #mean duration of wasting
 p<-ggplot(df, aes(x=num_wast, group=region, color=region, fill=region)) + 
