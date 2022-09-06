@@ -86,7 +86,7 @@ plotdf$Y_t <- factor(plotdf$Y_t, levels=c("Birth","0-3", "3-6","6-9" ,"9-12","12
 plotdf$A_t <- gsub("15 days","0",plotdf$A_t)
 plotdf$A_t <- factor(plotdf$A_t, levels=c("Birth","0-3 months", "3-6 months","6-9 months" ,"9-12 months",
                                           "12-15 months","15-18 months","18-21 months", "21-24 months"))
-p <- ggplot(plotdf, aes(y=RR,x=Y_t, group=Y, fill=Y, color=Y)) +
+p <- ggplot(plotdf, aes(y=RR,x=Y_t,  fill=Y, color=Y)) +
   facet_grid(A~A_t) +
   geom_point(size = 2, stroke = 0,
              position = position_dodge(0.5)) +
@@ -116,6 +116,8 @@ p <- ggplot(plotdf, aes(y=RR,x=Y_t, group=Y, fill=Y, color=Y)) +
 p
 
 ggsave(p, file=paste0(here::here(), "/figures/wasting/fig-tmle-RR.png"), width=8, height=9)
+ggsave(p, file=paste0(BV_dir,"/figures/wasting/fig-tmle-RR.png"), width=8, height=9)
+
 head(plotdf)
 df <- plotdf %>% select(A,Y,A_t, Y_t, RR,RR.CI1,   RR.CI2, Nstudies ) %>%
   mutate(RR=round(RR,1), RR.CI1=round(RR.CI1,1), RR.CI2=round(RR.CI2,1))
@@ -168,34 +170,56 @@ p3
 
 
 #First 3 columns
-plotdf3 <- plotdf %>% filter(A_t %in% c("Birth","0-3 months", "3-6 months")) %>% droplevels()
-p3 <- ggplot(plotdf3, aes(y=RR,x=Y_t, group=Y, fill=Y, color=Y)) +
-  facet_grid(A~A_t) +
+#plotdf3 <- plotdf %>% filter(A_t %in% c("Birth","0-3 months", "3-6 months")) %>% droplevels()
+
+unique(plotdf$Y_t)
+unique(plotdf$A_t)
+plotdf3 <- plotdf %>% filter(A!="Underweight", Y!="Underweight",
+                             A_t=="Birth" & Y_t=="0-3" |
+                               A_t=="0-3 months" & Y_t=="3-6" |
+                               A_t=="3-6 months" & Y_t=="6-9" |
+                               A_t=="6-9 months" & Y_t=="9-12" |
+                               A_t=="9-12 months" & Y_t=="12-15" |
+                               A_t=="12-15 months" & Y_t=="15-18" |
+                               A_t=="15-18 months" & Y_t=="18-21" |
+                               A_t=="18-21 months" & Y_t=="21-24" ) %>% droplevels()
+
+plotdf3$A_t <- as.character(plotdf3$A_t)
+plotdf3$A_t <- gsub(" months","",plotdf3$A_t)
+plotdf3$A_t <- factor(plotdf3$A_t, levels=c("Birth","0-3", "3-6","6-9" ,"9-12","12-15","15-18","18-21", "21-24"))
+
+plotdf3 <- plotdf3 %>% mutate(
+  case_when(A=="Wasting"~"Initial growth faltering:\nWasting",
+            A=="Stunting"~"Initial growth faltering:\nStunting")
+)
+p3 <- ggplot(plotdf3, aes(y=RR,x=A_t, group=Y, fill=Y, color=Y)) +
+  facet_grid(~A) +
   geom_point(size = 2, stroke = 0,
-             position = position_dodge(0.5)) +
-  geom_line(position = position_dodge(0.5)) +
+             position = position_dodge(0.1)) +
+  geom_line(position = position_dodge(0.1)) +
   geom_errorbar(aes(ymin=RR.CI1, ymax=RR.CI2), alpha=0.5, width = 0,
-                position = position_dodge(0.5)) +
+                position = position_dodge(0.1)) +
   scale_y_continuous(#breaks = scales::pretty_breaks(n = 10),
-    sec.axis = sec_axis(~ . , name = "Initial type of growth faltering", breaks = NULL, labels = NULL),
+    #sec.axis = sec_axis(~ . , name = "Initial type of growth faltering", breaks = NULL, labels = NULL),
     breaks = c(1,2,4,8,16, 32), 
     trans = "log10") +
   geom_hline(yintercept = 1) +
-  scale_color_manual(values=tableau10, drop=TRUE) +
+  scale_color_manual(values=tableau10[c(9,10)], drop=TRUE) +
   coord_cartesian(ylim = c(0.9,12)) +
-  labs(color= "Growth faltering type", fill= "Growth faltering type")+
-  xlab("Child age in months at second time period")+
-  ylab("Relative risk of growth faltering at followup time period") +
-  ggtitle("Age at initial growth faltering") +
+  labs(color= "Growth faltering at\nnext time period", fill= "Growth faltering at\nnext time period")+
+  xlab("Child age in months at time of initial growth failure")+
+  ylab("Relative risk of growth faltering at next time period") +
+  #ggtitle("Type of initial growth faltering") +
   theme(legend.position = "bottom",
-        axis.text.x = element_text(size = 8, angle = 90, vjust=0),
+        axis.text.x = element_text(size = 8, angle = 90, vjust=0.5, hjust=0.5),
         axis.title.x = element_text(size = 10),
         axis.title.y = element_text(size = 10),
+        legend.title = element_text(size = 8),
         strip.text.x = element_text(size = 8, margin = margin(t = 0)),
         strip.text.y = element_text(size = 8, margin = margin(t = 0)),
         panel.grid.major.x = element_blank(), 
         panel.grid.minor = element_blank(),
         plot.title = element_text(size = 10, hjust = 0.5, margin=margin(0,0,10,0))) 
-p3
 
-ggsave(p3, file=paste0(here::here(), "/figures/wasting/fig-tmle-RR_v3.png"), width=8, height=9)
+
+ggsave(p3, file=paste0(here::here(), "/figures/wasting/fig-tmle-RR_v3.png"), width=5, height=5)

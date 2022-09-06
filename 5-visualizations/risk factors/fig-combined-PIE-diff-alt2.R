@@ -40,7 +40,7 @@ ATE_raw <- ATE_raw %>% rename(est=ATE)
 
 df_full <- bind_rows(par_raw, ATE_raw)
 
-
+saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 
 
 #----------------------------------------------------------------------------------
@@ -57,7 +57,8 @@ df$intervention_level[df$intervention_level=="No" & !(df$intervention_variable %
 df$intervention_level[df$intervention_variable %in% c("enwast","enstunt")] <- "No"
 df$intervention_level[df$intervention_level=="Normal weight"] <- ">=18.5 BMI"
 df$intervention_level[df$intervention_level=="1" & df$intervention_variable %in% c("brthmon","month")] <- "Jan."
-df$intervention_level[df$intervention_level=="0" & df$intervention_variable %in% c("single")] <- "Partnered"
+df$baseline_level[df$baseline_level=="0" & df$intervention_variable %in% c("single")] <- "Partnered"
+df$intervention_level[df$intervention_level=="1" & df$intervention_variable %in% c("single")] <- "Unpartnered"
 df$intervention_level[df$intervention_level=="1" & df$intervention_variable %in% c("dfity")] <- "Firstborn"
 df$intervention_level[df$intervention_level=="None" & df$intervention_variable %in% c("vagbrth")] <- "C-section"
 df$intervention_level[df$intervention_level=="None" & df$intervention_variable %in% c("hdlvry")] <- "No"
@@ -75,7 +76,7 @@ df <- df %>% filter(outcome_variable == "haz" | outcome_variable == "whz", ageca
 
 #Pooled estimates
 df <- df %>% filter(region=="Pooled") %>%
-  mutate(RFlabel_ref = paste0(RFlabel," (ref.: ", baseline_level,")"))
+  mutate(RFlabel_ref = paste0(RFlabel,"\n(ref.: ", baseline_level,")"))
 unique(df$RFlabel_ref)
 
 #Drop reference levels/other comparisons
@@ -84,9 +85,12 @@ df <- df %>% subset(., select = c(parameter, outcome_variable, intervention_vari
   filter(CI1 !=CI2) 
 #df <- df %>% filter(!(intervention_variable=="nrooms" & baseline_level=="1"))
 
+temp<-df[df$intervention_variable=="cleanck",]
+
 
 #drop risk factors with rare estimates
-df <- df %>% filter(Nstudies >= 5)
+table(df$intervention_variable, df$Nstudies)
+df <- df %>% group_by(intervention_variable) %>% filter(min(Nstudies) >= 4) %>% droplevels()
 
 
 
@@ -94,7 +98,8 @@ df <- df %>% filter(Nstudies >= 5)
 # Order plot
 #----------------------------------------------------------
 
-est_lab_format="N (% shifted)   PIE (95% CI)"
+#est_lab_format="N (% shifted)   PIE (95% CI)"
+est_lab_format="N (% shifted)"
 
 
 df <- df %>%
@@ -109,7 +114,7 @@ df <- df %>%
     perc_ref= round((1-ref_prev)*100),
     n = format(n ,big.mark=",", trim=TRUE),
     n= paste0(n, " (",perc_ref,"%)"),
-    est_lab=paste0(n,"   ",est_lab))
+    est_lab=paste0(n,"\n",est_lab))
 
 head(df)
 
@@ -122,22 +127,16 @@ df <- df %>%
 
 #drop intervention level for PIE
 df$intervention_level[df$parameter=="Population Intervention Effect"] <- ""
+df[df$intervention_variable=="single",]
 
-#Sort and set Y-axis order
-df <- df %>% arrange(title, parameter, outcome_variable, RFgroup,  -est) 
-rflevels = unique(df$RFlabel_ref)
-df$RFlabel_ref=factor(df$RFlabel_ref, levels=rflevels)
-rflevels
-
-#Make sure same number of estimates per parameter
-table(df$parameter)
-table(df$parameter, df$RFlabel_ref)
 
 saveRDS(df, file=paste0(here::here(),"/data/temp_plotdf2.RDS"))
 
 #offline
 df <- readRDS(paste0(here::here(),"/data/temp_plotdf2.RDS"))
 head(df)
+
+df$intervention_level[df$intervention_variable=="birthwt" & df$parameter=="Mean Difference" ] <- "< 2500g" 
 
 
 #Sort and set Y-axis order
@@ -178,38 +177,47 @@ main_color <- "#287D8EFF"
   
   cbbPalette[c(6,3,2,4)]
   
+  offset <- 0
+  cutoff <- (-0.1)
+  df_LAZ$lab_pos <- ifelse( -df_LAZ$CI2 < cutoff, -df_LAZ$CI1 + offset, -df_LAZ$CI2 - offset)
+  df_LAZ$lab_just <- ifelse( -df_LAZ$CI2 < cutoff, 0, 1)
+  df_LAZ_pie_lab <- df_LAZ %>% filter(parameter=="Population Intervention Effect") 
+  df_LAZ_pie_lab$n[df_LAZ_pie_lab$intervention_variable=="birthlen"] <- paste0(est_lab_format,"\n",df_LAZ_pie_lab$n[df_LAZ_pie_lab$intervention_variable=="birthwt"])
+  
   p_laz <- ggplot(df_LAZ, aes(x=RFlabel_ref, group=RFlabel_ref, shape=parameter, color=parameter)) + 
     geom_point(aes(y=-est),  size = 1.5, position = position_dodge2(dodge_width)) +
     geom_linerange(aes(ymin=-CI1, ymax=-CI2), position = position_dodge2(dodge_width)) +
-    geom_text(aes(y= -CI2, label=intervention_level), position = position_dodge2(dodge_width), size=1.25, color="grey20") +
-    # geom_text(aes(label=est_lab), y=-0.21, color="grey20", size=1.25) +
-    # geom_text(aes(label=est_lab_title), y=-0.21, color="black", size=1.5,fontface = "bold") +
+    geom_text(aes(y= -0.225, label=n), position = position_dodge2(dodge_width), hjust=1, size=1.65, color="grey20", data=df_LAZ_pie_lab) +
+    geom_text(aes(y= lab_pos, label=intervention_level, hjust=lab_just), position = position_dodge2(dodge_width), size=1.65, color="grey20") +
     coord_flip(
-     ylim=c(-0.3, 0.8)
+     ylim=c(-0.4, 0.8)
       ) +
     labs(x = NULL,
          y = "Adjusted difference in length-for-age Z-scores") +
-    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = 0, alpha=0.5) +
     #scale_y_continuous(breaks = c(-0.2,-0.1,0,0.1,0.2,0.3,0.4, 0.5, 0.6, 0.7, 0.8), labels=c("","","0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8")) +
     guides(color=guide_legend(title="Estimate type:"), shape=guide_legend(title="Estimate type:")) + 
     scale_color_manual(values = cbbPalette[c(3,2)], guide = guide_legend(reverse = TRUE) ) +
     scale_shape_manual(values = c(17,16), guide = guide_legend(reverse = TRUE) ) +
+    guides(fill=guide_legend(nrow=2,byrow=TRUE)) +
     theme(strip.background = element_blank(),
           legend.position = "bottom",
           strip.placement = "top",
           strip.text = element_text(hjust = 0, size=6, face="bold"),
           axis.text.y = element_text(size=6, hjust = 1),
-          axis.text.x = element_text(size=8),
+          axis.text.x = element_text(size=6),
+          legend.text = element_text(size=6),
+          legend.title = element_text(size=6),
           axis.title.x = element_text(size=6),
           axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
           plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-    #guides(shape="none") + 
     ggforce::facet_col(facets = vars(RFgroup), 
                        scales = "free_y", 
                        space = "free") 
   p_laz
   
-  ggsave(p_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt_laz.png"), width=9, height=18.3, units = 'cm')
+  #ggsave(p_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt_laz.png"), width=9, height=18.3, units = 'cm')
+  ggsave(p_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt_laz.png"), width=4, height=8)
   
   
   #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -225,15 +233,23 @@ main_color <- "#287D8EFF"
   rflevels = unique(df_WLZ$RFlabel_ref)
   df_WLZ$RFlabel_ref=factor(df_WLZ$RFlabel_ref, levels=rflevels)
 
-  temp<-df_WLZ[df_WLZ$intervention_variable=="single",]
+
+  offset <- 0
+  cutoff <- (-0.1)
+  df_WLZ$lab_pos <- ifelse( -df_WLZ$CI2 < cutoff, -df_WLZ$CI1 + offset, -df_WLZ$CI2 - offset)
+  df_WLZ$lab_just <- ifelse( -df_WLZ$CI2 < cutoff, 0, 1)
+  df_WLZ_pie_lab <- df_WLZ %>% filter(parameter=="Population Intervention Effect") 
+  df_WLZ_pie_lab$n[df_WLZ_pie_lab$intervention_variable=="birthlen"] <- paste0(est_lab_format,"\n",df_LAZ_pie_lab$n[df_LAZ_pie_lab$intervention_variable=="birthwt"])
+  
 
 
   p_wlz <- ggplot(df_WLZ, aes(x=RFlabel_ref, group=RFlabel_ref, shape=parameter, color=parameter)) +
     geom_point(aes(y=-est),  size = 1.5, position = position_dodge2(dodge_width)) +
     geom_linerange(aes(ymin=-CI1, ymax=-CI2), position = position_dodge2(dodge_width)) +
-    geom_text(aes(y= -CI2, label=intervention_level), position = position_dodge2(dodge_width), size=1.25, color="grey20") +
+    geom_text(aes(y= -0.25, label=n), position = position_dodge2(dodge_width), hjust=1, size=1.65, color="grey20", data=df_LAZ_pie_lab) +
+    geom_text(aes(y= lab_pos, label=intervention_level, hjust=lab_just), position = position_dodge2(dodge_width), size=1.65, color="grey20") +
     coord_flip(
-      ylim=c(-0.3, 0.5)
+      ylim=c(-0.4, 0.5)
     ) +
     labs(x = NULL,
          y = "Adjusted difference in weight-for-length Z-scores") +
@@ -241,24 +257,25 @@ main_color <- "#287D8EFF"
     scale_color_manual(values = cbbPalette[c(3,2)], guide = guide_legend(reverse = TRUE) ) +
     scale_shape_manual(values = c(17,16), guide = guide_legend(reverse = TRUE) ) +
     guides(color=guide_legend(title="Estimate type:"), shape=guide_legend(title="Estimate type:")) + 
+    guides(fill=guide_legend(nrow=2,byrow=TRUE)) +
     theme(strip.background = element_blank(),
           legend.position = "bottom",
-          legend.title = element_text(size=8),
-          legend.text = element_text(size=6),
           strip.placement = "top",
           strip.text = element_text(hjust = 0, size=6, face="bold"),
           axis.text.y = element_text(size=6, hjust = 1),
-          axis.text.x = element_text(size=8),
+          axis.text.x = element_text(size=6),
+          legend.text = element_text(size=6),
+          legend.title = element_text(size=6),
           axis.title.x = element_text(size=6),
           axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
           plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-    ggforce::facet_col(facets = vars(RFgroup),
-                       scales = "free_y",
-                       space = "free")
+    ggforce::facet_col(facets = vars(RFgroup), 
+                       scales = "free_y", 
+                       space = "free") 
 
+#ggsave(p_wlz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3_alt_wlz.png"), width=12, height=20, units = 'cm')
+ggsave(p_wlz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3_alt_wlz.png"), width=4, height=8)
 
-ggsave(p_wlz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3_alt_wlz.png"), width=12, height=20, units = 'cm')
-  
 
 
 #----------------------------------------------------------------------------------
