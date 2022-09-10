@@ -45,14 +45,6 @@ names(dHR_full)[names(dHR_full) == 'ci.lb'] <- 'RR.CI1'
 names(dHR_full)[names(dHR_full) == 'ci.ub'] <- 'RR.CI2'
 
 
-write.csv(dHR_full, paste0(here(),"/data/full_mortality_results.csv"))
-
-# dropped <- c("studyid", "est", "se", "N", "sparseN",  "Nstudies", "Y", "adj", "df", "sex", "logHR.psi", "logSE", "HR.CI1", "HR.CI2")
-# dHR_full <- dHR_full[ , !(names(dHR_full) %in% dropped)]
-
-
-
-
 
 
 
@@ -88,7 +80,7 @@ dHR <- dHR  %>%
   dplyr::filter(cgf_cat != "Wasted (MUAC)", 
                 cgf_cat != "Sev. wasted (MUAC)") %>%
   filter(!grepl("ever_",X), method=="RE"|is.na(method), 
-         !is.na(region), agecat=="overall", adj==0)
+         !is.na(sex), is.na(region), agecat=="overall", adj==0)
 
 
 
@@ -136,11 +128,11 @@ p_flurry <- ggplot(p_data_pooled, aes(x=cgf_cat)) +
         strip.background = element_blank(),
         text = element_text(size=16), 
         legend.position = "bottom") + 
-  facet_wrap(~region, ncol=3, strip.position = "bottom") +
+  facet_wrap(~sex, ncol=3, strip.position = "bottom") +
   coord_flip(ylim=c(0.2,16))
 p_flurry
 
-ggsave(p_flurry, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-region_strat-flurry.png"), width=5.2, height=5.2)
+ggsave(p_flurry, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-sex_strat-flurry.png"), width=5.2, height=5.2)
 
 
 
@@ -148,7 +140,7 @@ ggsave(p_flurry, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-region_strat-
 unique(p_data_pooled$outcome_variable)
 
 pmort <- ggplot(p_data_pooled %>% arrange(RR) %>% mutate(cgf_cat=factor(cgf_cat, levels=unique(cgf_cat))),
-                       aes(x=cgf_cat, group=region, color=region)) +
+                       aes(x=cgf_cat, group=sex, color=sex)) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), position=position_dodge(0.5)) +
   geom_point(aes(y=RR), size=3, stroke = 1, position=position_dodge(0.5)) +
   scale_color_manual(values = tableau10[1:2]) +
@@ -166,7 +158,7 @@ pmort <- ggplot(p_data_pooled %>% arrange(RR) %>% mutate(cgf_cat=factor(cgf_cat,
   coord_flip(ylim=c(0.4,16))
 pmort
 
-ggsave(pmort, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-region_strat.png"), width=5.2, height=5.2)
+ggsave(pmort, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-sex_strat.png"), width=5.2, height=5.2)
 
 
 
@@ -177,7 +169,7 @@ ggsave(pmort, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-region_strat.png
 dHR <- dHR_full  %>% 
   droplevels(.) %>%
   filter(method=="RE"|is.na(method), analysis=="Overlap", 
-         !is.na(region), is.na(sex), agecat=="overall", adj==0)
+         !is.na(sex), is.na(region), agecat=="overall", adj==0)
 
 table(dHR$studyid)
 
@@ -237,7 +229,7 @@ levels(p_data_pooled$cgf_cat)
 #         strip.background = element_blank(),
 #         text = element_text(size=16), 
 #         legend.position = "none") + 
-#   facet_wrap(~region, ncol=3, strip.position = "bottom") +
+#   facet_wrap(~sex, ncol=3, strip.position = "bottom") +
 #   coord_flip(ylim=c(0.2,16))
 # p_flurry
 
@@ -245,7 +237,7 @@ levels(p_data_pooled$cgf_cat)
 #Without cohort-specific estimates
 
 pmort <- ggplot(p_data_pooled %>% arrange(RR) %>% mutate(cgf_cat=factor(cgf_cat, levels=unique(cgf_cat))),
-                aes(x=cgf_cat, group=region, color=region)) +
+                aes(x=cgf_cat, group=sex, color=sex)) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), position=position_dodge(0.5)) +
   geom_point(aes(y=RR), size=3, stroke = 1, position=position_dodge(0.5)) +
   scale_color_manual(values = tableau10[1:2]) +
@@ -263,6 +255,6 @@ pmort <- ggplot(p_data_pooled %>% arrange(RR) %>% mutate(cgf_cat=factor(cgf_cat,
   coord_flip(ylim=c(0.4,16))
 pmort
 
-ggsave(pmort, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-overlap-region_strat.png"), width=5.2, height=5.2)
+ggsave(pmort, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-overlap-sex_strat.png"), width=5.2, height=5.2)
 
 

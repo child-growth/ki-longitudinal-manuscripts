@@ -41,7 +41,8 @@ ATE_raw <- ATE_raw %>% rename(est=ATE)
 df_full <- bind_rows(par_raw, ATE_raw)
 
 saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
-
+df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
+head(df_full)
 
 #----------------------------------------------------------------------------------
 ##### Cleaning  dataset
