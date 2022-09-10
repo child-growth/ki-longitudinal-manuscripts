@@ -102,6 +102,11 @@ res_age_strat <- res_age_sex_strat <- NULL
 res_age_strat <- run_cox_meta_agestrat(d=d, age_strat=levels(d$agecat), X_vector=X_vector, Y="dead", Wvars=Wvars, V=NULL)
 res_age_sex_strat <- run_cox_meta_agestrat(d=d, age_strat=levels(d$agecat), X_vector=X_vector, Y="dead", Wvars=Wvars, V="sex")
 
+#region strat
+res_region <- NULL
+res_region <- run_cox_meta(df=d, X_vector=X_vector, Y="dead", Wvars=Wvars, V="region", agecat=NULL, no_exp_overlap=T)
+
+
 
 res$df <- "res"
 res_sex_strat$df <- "res_sex_strat" 

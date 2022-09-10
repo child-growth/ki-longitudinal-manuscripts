@@ -106,8 +106,14 @@ set.seed(12345)
 res_mod <- res_sev <- NULL
 res_mod <- run_cox_meta(df=d, X_vector=X_vector, Y="dead", Wvars=Wvars, V=NULL, agecat=NULL, no_exp_overlap=T)
 res_sev <- run_cox_meta(df=d, X_vector=X_vector_sev, Y="dead", Wvars=Wvars, V=NULL, agecat=NULL, no_exp_overlap=T)
-    
-res <- bind_rows(res_mod, res_sev)
+
+
+#sex stratified
+res_mod_sex_strat <- run_cox_meta(df=d, X_vector=X_vector, Y="dead", Wvars=Wvars, V="sex", agecat=NULL, no_exp_overlap=T)
+res_sev_sex_strat <- run_cox_meta(df=d, X_vector=X_vector_sev, Y="dead", Wvars=Wvars, V="sex", agecat=NULL, no_exp_overlap=T)
+
+
+res <- bind_rows(res_mod, res_sev, res_mod_sex_strat, res_sev_sex_strat)
  
 res_adj <-res %>% filter(studyid=="pooled", is.na(region), method=="RE", adj==1)
 res_adj
@@ -121,17 +127,3 @@ res_unadj_FE
 
 saveRDS(res, file=paste0(BV_dir,"/results/cox_results_no_overlap.RDS"))
 
-
-# temp <-res %>% filter(studyid!="pooled",   adj==0, sparseN>0)
-# table(temp$studyid)
-# 
-# temp <-res %>% filter(X=="swast",   adj==0)
-# 
-# 
-# temp <- temp %>% arrange(X, HR)
-# 
-# 
-# temp <- d %>% filter(studyid=="JiVitA-4")
-# table(temp$wast, temp$dead)
-# table(temp$stunt, temp$dead)
-# table(temp$co, temp$dead)

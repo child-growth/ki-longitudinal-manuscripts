@@ -40,6 +40,7 @@ table(dHR$studyid)
 unique(dHR$studyid)
 
 
+
 #----------------------------------------
 # Clean mortality data
 #----------------------------------------
@@ -330,6 +331,9 @@ pmort_flurry <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative haza
   facet_wrap(~outcome_variable, ncol=1, strip.position = "bottom") +
   coord_flip(ylim=c(0.4,16))
 pmort_flurry
+
+ggsave(pmort_flurry, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-RR-flurry-no-overlap.png"), width=6, height=5.2)
+
 
 pmorb_flurry <- ggplot(p_data_pooled %>% filter(outcome_variable!="Relative hazard of\nmortality before 24 months"),
                        aes(x=cgf_cat)) +
