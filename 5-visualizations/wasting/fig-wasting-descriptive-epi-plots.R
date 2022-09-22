@@ -159,7 +159,7 @@ mean_wlz_plot <- ggplot(df,aes(x = agecat, group = region)) +
   theme(legend.position = "bottom",
         legend.title = element_blank(),
         legend.background = element_blank(),
-        legend.box.background = element_rect(colour = "black"))
+        legend.box.background = element_rect(colour = "grey40"))
 
 
 # define standardized plot names
@@ -497,7 +497,7 @@ inc_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   p <- p +  theme(legend.position = legend.pos,
                   legend.title = element_blank(),
                   legend.background = element_blank(),
-                  legend.box.background = element_rect(colour = "black"))
+                  legend.box.background = element_rect(colour = "grey40"))
   return(list(plot=p,data=df))
 }
 
@@ -540,7 +540,7 @@ saveRDS(inc_plot_primary, file=paste0(BV_dir,"/figures/plot-objects/inc_plot_obj
 
 inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 inc_plot_primary$data %>% arrange(region, agecat)
-# 
+
 # #-------------------------------------------------------------------------------------------
 # # Wasting incidence proportion
 # #-------------------------------------------------------------------------------------------
@@ -676,7 +676,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
   p <- p +  theme(legend.position = legend.pos,
                   legend.title = element_blank(),
                   legend.background = element_blank(),
-                  legend.box.background = element_rect(colour = "black"))
+                  legend.box.background = element_rect(colour = "grey40"))
   
   return(list(plot=p,data=df))
 }
@@ -748,7 +748,7 @@ p <- ggplot(df,aes(y=est,x=agecat)) +
   theme(legend.position = c(.5,.1),
                 legend.title = element_blank(),
                 legend.background = element_blank(),
-                legend.box.background = element_rect(colour = "black"))
+                legend.box.background = element_rect(colour = "grey40"))
 
 # define standardized plot names
 rec_plot_name = create_name(
@@ -1087,7 +1087,7 @@ ki_combo_plot2 <- function(d, Disease, Measure, Birth, Severe, Age_range,
     theme(legend.position = legend.pos,
           legend.title = element_blank(),
           legend.background = element_blank(),
-          legend.box.background = element_rect(colour = "black"))
+          legend.box.background = element_rect(colour = "grey40"))
   
   if(!is.null(yrange)){
     p <- p + coord_cartesian(ylim=yrange)
@@ -1242,3 +1242,8 @@ prev_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% summarise(m
 inc_plot_primary$data %>% filter(cohort=="pooled") %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 rec_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% filter(age_range=="90 days") %>% summarize(min(nmeas), max(nmeas), sum(nmeas))
 co_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
+
+
+
+inc_plot_primary$data %>% filter(cohort=="pooled", region=="Overall", agecat=="0-3") %>% mutate(est)
+ip_plot$data %>% filter(measure=="Cumulative incidence", cohort=="pooled", region=="Overall", agecat=="0-3"| agecat=="3-6") %>% mutate(est)

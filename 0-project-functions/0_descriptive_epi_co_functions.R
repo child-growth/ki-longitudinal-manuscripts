@@ -52,7 +52,7 @@ summary.prev.co <- function(d, severe=F, N_filter=50, method="REML"){
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
   
   
-  return(list(prev.data=prev.data, prev.res=prev.res,  prev.cohort=prev.cohort))
+  return(list(d=dmn, prev.data=prev.data, prev.res=prev.res,  prev.cohort=prev.cohort))
 }
 
 

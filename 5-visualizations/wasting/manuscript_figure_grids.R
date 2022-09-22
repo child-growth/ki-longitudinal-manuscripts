@@ -29,10 +29,32 @@ plot_list[[3]]$`data` %>% filter(cohort=="pooled") %>% group_by(region) %>% summ
 
 
 
+#Figure 3
+rec_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/rec_plot_object.rds"))
+inc_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/inc_plot_object_inset.rds"))
+ep_hist <- readRDS(paste0(BV_dir,"/figures/plot-objects/wast_episode_hist.rds"))
+
+
+rec_violin_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/rec_violin_plot_object.rds"))
+birthstrat_stats_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/birthstrat_stats_plot_object.rds"))
+birthstrat_curve <- readRDS(paste0(BV_dir,"/figures/plot-objects/birthwast_strat_growth_curve_object.rds"))
+ind_traj <- readRDS(paste0(BV_dir,"/figures/plot-objects/ind_traj_plot_object.rds"))
+
+colors <-  c("green", "orange", "red", "grey80", "grey40")
+names(colors) = c("Not wasted", "Wasted", "Severe wasted", "Born wasted", "Born severe wasted")
+
+
+fig3_a <- plot_grid(ind_traj, rec_violin_plot, labels = c("a","d"), ncol = 2, align = 'v', axis = 'l')
+fig3_c <- plot_grid(birthstrat_curve, birthstrat_stats_plot, labels = c("e","f"), ncol = 2, align = 'v', axis = 'l')
+
+fig3 <- plot_grid(fig3_a, inc_plot, rec_plot[[1]], fig3_c, labels = c("","b","c",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
+ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig3.png"), width=14, height=14)
 
 
 
-#Figure 3 
+
+
+#Figure 4
 is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
   abs(x - round(x)) < tol
 }
@@ -45,21 +67,11 @@ load(paste0(BV_dir,"/figures/plot-objects/stunting_rain_seasonality_plot_paramet
 #Add birth diff inset plot
 #seasonbirth_plot <- seasonbirth_plot_list[[2]] +ylab("Birth WLZ") + inset(ggplotGrob(seasonbirth_diff), xmin = 80, xmax = 300, ymin = -0.6, ymax = 0) 
 seasonbirth_plot <- seasonbirth_plot_list[[2]]  + inset(ggplotGrob(seasonbirth_diff), xmin = 2.5, xmax = 11, ymin = 300, ymax = 540) 
-ggsave(seasonbirth_plot, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig3_inset.png"), width=7, height=5)
+ggsave(seasonbirth_plot, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig4_inset.png"), width=7, height=5)
 
 
 plot_list <- readRDS(paste0(BV_dir,"/figures/plot-objects/rain_seasonality_plot_objects.rds"))
 
-#To do: make plots have 1 decimal y-axis labels
-# Use cowplot to add left and right y-axis labels
-#https://wilkelab.org/cowplot/articles/plot_grid.html
-# top_plot <- plot_grid(
-#   plot_list[[1]], plot_list[[6]], plot_list[[11]], plot_list[[16]], 
-#   plot_list[[2]], plot_list[[7]], plot_list[[12]], plot_list[[17]], 
-#   plot_list[[3]], plot_list[[8]], plot_list[[13]], plot_list[[18]], 
-#   plot_list[[4]], plot_list[[9]], plot_list[[14]], plot_list[[19]], 
-#   plot_list[[5]], plot_list[[10]], plot_list[[15]], plot_list[[20]], 
-#   labels = rep("", 20), ncol = 4, align = 'v', axis = 'l')
 
 top_plot <- plot_grid(
   plot_list[[1]], plot_list[[7]], plot_list[[12]], plot_list[[17]], 
@@ -88,33 +100,10 @@ right_lab <- ggdraw() +
 top_plot_lab <- plot_grid(left_lab, top_plot, right_lab, labels = c("","",""), ncol = 4, align = 'hv', axis = 'b', rel_widths = c(0.01, 1, 0.01), greedy=F) 
 
 bottom_plot <- plot_grid(p_seasonRR, seasonbirth_plot, labels = c("b","c"), ncol = 2, rel_widths = c(1, 1))
-fig3 <- plot_grid(top_plot_lab, NULL, bottom_plot, labels = c("a",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1.5, -0.01, 1))
+fig4 <- plot_grid(top_plot_lab, NULL, bottom_plot, labels = c("a",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1.5, -0.01, 1))
 
-ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig3.png"), width=14, height=14)
-#/data/KI/ki-manuscript-output/figures/manuscript-figure-composites/wasting/
-
-
-
-#Figure 4
-rec_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/rec_plot_object.rds"))
-inc_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/inc_plot_object_inset.rds"))
-ep_hist <- readRDS(paste0(BV_dir,"/figures/plot-objects/wast_episode_hist.rds"))
-
-
-rec_violin_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/rec_violin_plot_object.rds"))
-birthstrat_stats_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/birthstrat_stats_plot_object.rds"))
-birthstrat_curve <- readRDS(paste0(BV_dir,"/figures/plot-objects/birthwast_strat_growth_curve_object.rds"))
-ind_traj <- readRDS(paste0(BV_dir,"/figures/plot-objects/ind_traj_plot_object.rds"))
-
-colors <-  c("green", "orange", "red", "grey80", "grey40")
-names(colors) = c("Not wasted", "Wasted", "Severe wasted", "Born wasted", "Born severe wasted")
-
-
-fig4_a <- plot_grid(ind_traj, rec_violin_plot, labels = c("a","c"), ncol = 2, align = 'v', axis = 'l')
-fig4_c <- plot_grid(birthstrat_curve, birthstrat_stats_plot, labels = c("e","f"), ncol = 2, align = 'v', axis = 'l')
-
-fig4 <- plot_grid(fig4_a, inc_plot, rec_plot[[1]], fig4_c, labels = c("","b","d",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
 ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig4.png"), width=14, height=14)
+#/data/KI/ki-manuscript-output/figures/manuscript-figure-composites/wasting/
 
 
 #Figure 5

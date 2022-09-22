@@ -247,7 +247,7 @@ summary.prev.whz <- function(d, severe.wasted=F, method="REML", N_filter=50){
   prev.res$agecat=factor(levels(prev.data$agecat))
   prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
 
-  return(list(prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort))
+  return(list(d=dmn, prev.data=prev.data, prev.res=prev.res, prev.cohort=prev.cohort))
 }
 
 
@@ -374,7 +374,7 @@ summary.wast.ci <- function(d, severe.wasted = F, age.range, method="REML", N_fi
   ci.res$agecat=factor(levels(cuminc.data$agecat))
   ci.res$ptest.f=sprintf("%0.0f",ci.res$est)
 
-  return(list(cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
+  return(list(d=evs, cuminc.data=cuminc.data, ci.res=ci.res, ci.cohort=ci.cohort))
 }
 
 
@@ -420,7 +420,7 @@ summary.whz <- function(d, N_filter=50, method="REML"){
   whz.res$ptest.f=sprintf("%0.0f",whz.res$est)
 
 
-  return(list(whz.data=whz.data, whz.res=whz.res, whz.cohort=whz.cohort))
+  return(list(d=dmn, whz.data=whz.data, whz.res=whz.res, whz.cohort=whz.cohort))
 }
 
 
@@ -587,7 +587,7 @@ summary.perswast <- function(d, N_filter=50, method="REML"){
   pers.res$ptest.f=sprintf("%0.0f",pers.res$est)
 
 
-  return(list(pers.data=pers.data, pers.res=pers.res, pers.cohort=pers.cohort))
+  return(list(d=pers, pers.data=pers.data, pers.res=pers.res, pers.cohort=pers.cohort))
 
 }
 
@@ -653,6 +653,6 @@ summary.ir <- function(d, recovery=F, sev.wasting=F, Nchild_filter=5, ptime_filt
                      " person-days")
   ir.res$ptest.f=sprintf("%0.02f",ir.res$est*1000)
 
-  return(list(ir.data=inc.data, ir.res=ir.res, ir.cohort=inc.cohort))
+  return(list(d=d, ir.data=inc.data, ir.res=ir.res, ir.cohort=inc.cohort))
 }
 

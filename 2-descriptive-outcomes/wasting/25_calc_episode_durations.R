@@ -55,9 +55,9 @@ d6 %>% group_by(agecat) %>% filter(whz < (-2)) %>% summarise(mean(whz))
 # 
 
 #pooled median
-dur_summary <- df2 %>% group_by(studyid, country) %>% summarize(N=n(), dur=median(wasting_duration, na.rm=T))
-dur_summary_agecat <- df2 %>% group_by(studyid, country, agecat) %>%
-  filter(!is.na(agecat)) %>% summarize(N=n(), dur=median(wasting_duration, na.rm=T))
+# dur_summary <- df2 %>% group_by(studyid, country) %>% summarize(N=n(), dur=median(wasting_duration, na.rm=T))
+# dur_summary_agecat <- df2 %>% group_by(studyid, country, agecat) %>%
+#   filter(!is.na(agecat)) %>% summarize(N=n(), dur=median(wasting_duration, na.rm=T))
 
 
 ## Meta-analysis of the difference of medians
@@ -68,13 +68,125 @@ pool.medians <- function(d){
   return(res)
 }
 
+
+#----------------------------------------------
+# Pooled duration: birth included in 0-6 months
+#----------------------------------------------
+
+d6 <- calc.ci.agecat(d, range=6)
+df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1)  %>% filter(wasting_episode=="Wasted",agedays < 30.4167  * 24)
+dur_summary2 <- df2 %>% group_by(studyid, country) %>% summarize(N=n(), dur=median(wasting_duration, na.rm=T))
+dur_summary_agecat2 <- df2 %>% group_by(studyid, country, agecat) %>%
+  filter(!is.na(agecat)) %>% summarize(N=n(), dur=median(wasting_duration, na.rm=T))
+
+
+
+
 dur_summary %>% filter(N>5) %>% ungroup() %>% do(pool.medians(.))
 dur_summary_agecat %>% filter(N>5) %>% group_by(agecat) %>% do(pool.medians(.))
+dur_summary_agecat <- mark_region(dur_summary_agecat)
+dur_summary_agecat %>% filter(N>5) %>% group_by(agecat, region) %>% do(pool.medians(.))
+
+Nchildren <- 10
+dur_summary2 %>% filter(N>Nchildren) %>% ungroup() %>% do(pool.medians(.))
+overall_duration <- dur_summary_agecat2 %>% filter(N>Nchildren) %>% group_by(agecat) %>% do(pool.medians(.))
+dur_summary_agecat2 <- mark_region(dur_summary_agecat2)
+region_duration <- dur_summary_agecat2 %>% filter(N>Nchildren) %>% group_by(agecat, region) %>% do(pool.medians(.))
+dur_summary_agecat2$south_asia <- ifelse(dur_summary_agecat2$region=="South Asia", 1, 0)
+dur_summary_agecat2 %>% filter(N>Nchildren) %>% filter(agecat!="Birth") %>% group_by(south_asia) %>% do(pool.medians(.))
+
+overall_duration$region <- "Overall"
+plot_df <- bind_rows(overall_duration, region_duration)
+plot_df$region <- factor(plot_df$region, levels=c("Overall","Africa","Latin America","South Asia")) #%>% filter(region!="Latin America")
+dur_summary_agecat2_cohort <- dur_summary_agecat2 %>% rename(duration=dur) %>% filter(N > Nchildren)
+
+p <- ggplot(plot_df, aes(y=duration,x=agecat)) +
+  facet_wrap(~region, nrow=1) +
+  geom_errorbar(aes(color=region, 
+                    group=region, ymin=lb, ymax=ub), 
+                width = 0, position = position_dodge(0.5)) +
+  geom_point(aes(fill=region, group=region), color="#878787", size = 2, position = position_jitterdodge(jitter.width = 2, dodge.width=0.5), alpha = 0.25, data=dur_summary_agecat2_cohort) +
+  geom_point(aes(fill=region, color=region, group=region), size = 2, position = position_dodge(0.5)) +
+  scale_color_manual(values=tableau11, guide = FALSE) +
+  scale_fill_manual(values=tableau11, guide = FALSE) +
+  xlab("Age in months") + ylab("Median episode duration (days)") +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  theme(strip.text = element_text(size=20, margin = margin(t = 5))) +
+  theme(axis.text.x = element_text(margin = 
+                                     margin(t = 0, r = 0, b = 0, l = 0),
+                                   size = 10)) +
+  theme(axis.title.x = element_text(margin = 
+                                      margin(t = 25, r = 0, b = 0, l = 0),
+                                    size = 15)) +
+  theme(axis.title.y = element_text(size = 15)) +
+  ggtitle("") + guides(color = FALSE) 
+p
+
+
+#----------------------------------------------
+# Seperate birth category
+#----------------------------------------------
+
+d6 <- calc.ci.agecat(d, range=6, birth = "no")
+df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1)  %>% filter(wasting_episode=="Wasted",agedays < 30.4167  * 24)
+dur_summary2 <- df2 %>% group_by(studyid, country) %>% summarize(N=n(), dur=median(wasting_duration, na.rm=T))
+dur_summary_agecat2 <- df2 %>% group_by(studyid, country, agecat) %>%
+  filter(!is.na(agecat)) %>% summarize(N=n(), dur=median(wasting_duration, na.rm=T))
 
 
 
 
+dur_summary %>% filter(N>5) %>% ungroup() %>% do(pool.medians(.))
+dur_summary_agecat %>% filter(N>5) %>% group_by(agecat) %>% do(pool.medians(.))
+dur_summary_agecat <- mark_region(dur_summary_agecat)
+dur_summary_agecat %>% filter(N>5) %>% group_by(agecat, region) %>% do(pool.medians(.))
 
+Nchildren <- 10
+dur_summary2 %>% filter(N>Nchildren) %>% ungroup() %>% do(pool.medians(.))
+overall_duration <- dur_summary_agecat2 %>% filter(N>Nchildren) %>% group_by(agecat) %>% do(pool.medians(.))
+dur_summary_agecat2 <- mark_region(dur_summary_agecat2)
+region_duration <- dur_summary_agecat2 %>% filter(N>Nchildren) %>% group_by(agecat, region) %>% do(pool.medians(.))
+dur_summary_agecat2$south_asia <- ifelse(dur_summary_agecat2$region=="South Asia", 1, 0)
+dur_summary_agecat2 %>% filter(N>Nchildren) %>% filter(agecat!="Birth") %>% group_by(south_asia) %>% do(pool.medians(.))
+
+overall_duration$region <- "Overall"
+plot_df <- bind_rows(overall_duration, region_duration)
+plot_df$region <- factor(plot_df$region, levels=c("Overall","Africa","Latin America","South Asia")) #%>% filter(region!="Latin America")
+dur_summary_agecat2_cohort <- dur_summary_agecat2 %>% rename(duration=dur) %>% filter(N > Nchildren)
+
+levels(plot_df$agecat)[levels(plot_df$agecat)=="8 days-6 months"] <- "0-6 months"
+levels(dur_summary_agecat2_cohort$agecat)[levels(dur_summary_agecat2_cohort$agecat)=="8 days-6 months"] <- "0-6 months"
+levels(plot_df$agecat) <- gsub(" months","",levels(plot_df$agecat))
+levels(dur_summary_agecat2_cohort$agecat) <- gsub(" months","",levels(dur_summary_agecat2_cohort$agecat))
+
+p2 <- ggplot(plot_df, aes(y=duration,x=agecat)) +
+  facet_wrap(~region, nrow=1) +
+  geom_errorbar(aes(color=region, 
+                    group=region, ymin=lb, ymax=ub), 
+                width = 0, position = position_dodge(0.5)) +
+  geom_point(aes(fill=region, group=region), color="#878787", size = 2, position = position_jitterdodge(jitter.width = 2, dodge.width=0.5), alpha = 0.25, data=dur_summary_agecat2_cohort) +
+  geom_point(aes(fill=region, color=region, group=region), size = 2, position = position_dodge(0.5)) +
+  scale_color_manual(values=tableau11, guide = FALSE) +
+  scale_fill_manual(values=tableau11, guide = FALSE) +
+  xlab("Age in months") + ylab("Median episode\nduration (days)") +
+  coord_cartesian(ylim=c(0, 210)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  theme(strip.text = element_text(size=20, margin = margin(t = 5))) +
+  theme(axis.text.x = element_text(margin = margin(t = 0, r = 0, b = 0, l = 0), size = 10)) +
+  theme(axis.title.x = element_text(margin =  margin(t = 25, r = 0, b = 0, l = 0), size = 15)) +
+  theme(axis.title.y = element_text(size = 15)) +
+  ggtitle("") + guides(color = FALSE) 
+
+ggsave(p2, file=paste0(BV_dir,"/figures/wasting/fig-duration.png"), width=10, height=4)
+
+
+dur_summary_agecat2_cohort %>% filter(N>Nchildren) %>% droplevels() %>% group_by(agecat, region) %>% 
+  summarize(N=sum(N), Ncohorts=length(unique(paste0(studyid,country)))) %>% group_by(region) %>% 
+  summarize(min(N), max(N), min(Ncohorts), max(Ncohorts))
+
+dur_summary_agecat2_cohort %>% filter(N>Nchildren) %>% droplevels() %>% group_by(agecat) %>% 
+  summarize(N=sum(N), Ncohorts=length(unique(paste0(studyid,country)))) %>% ungroup() %>% 
+  summarize(min(N), max(N), min(Ncohorts), max(Ncohorts))
 
 #Number of measurements per episode
 df_Nmeas <- d %>% filter(wasting_episode=="Wasted") %>% group_by(studyid, country, subjid, episode_id) %>% summarize(N=n(), agedays=mean(agedays, na.rm=T)) %>% filter(agedays <=730)

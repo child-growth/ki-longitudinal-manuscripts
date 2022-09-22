@@ -5,6 +5,9 @@ source(paste0(here::here(), "/0-config.R"))
 #Load data
 d <- readRDS(paste0(BV_dir,"/results/bw_longterm_res.rds")) %>% mutate(data="Pooled")
 d.cohort <- readRDS(paste0(BV_dir,"/results/bw_longterm_res_cohort.rds")) %>% mutate(data="Cohort")
+RR.estimates <- readRDS(paste0(BV_dir,"/results/birthstrat_RR_estimates.rds")) 
+
+
 d <- bind_rows(d, d.cohort)
 
 d <- d %>% filter(measure=="Persistent wasting"|
@@ -20,8 +23,17 @@ d$measure_lab[d$measure=="Co-occurrent wasting and stunting"] <- "Concurrent was
 d$measure_lab <- factor(d$measure_lab)
 d$measure_lab <- relevel(d$measure_lab, ref="Wasting cumulative incidence\nfrom 6-24 month")
 
+RR.estimates$measure_lab <- NA 
+RR.estimates$measure_lab[RR.estimates$outcome_variable=="co"] <- "Concurrent wasting\nand stunting at 18 months"
+RR.estimates$measure_lab[RR.estimates$outcome_variable=="ever_wasted"] <- "Wasting cumulative incidence\nfrom 6-24 month"
+RR.estimates$measure_lab[RR.estimates$outcome_variable=="pers_wast"] <- "Persistent wasting\nfrom 6-24 months"
+RR.estimates <- RR.estimates %>% filter(!is.na(measure_lab)) %>% mutate(xpos=1.5, ypos=c(0,9,0))
+
+
 d.cohort <- d %>% filter(data=="Cohort") 
 d <- d %>% filter(data=="Pooled")
+
+d <- left_join(d, RR.estimates, by=c("measure_lab"))
 
 pd <- position_dodge(0.4)
 
@@ -29,13 +41,9 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
   geom_errorbar(aes(color=born_wast_lab, ymin=lb, ymax=ub), width = 0.5) +
   geom_point(aes(fill=born_wast_lab, color=born_wast_lab), size = 3) +
   geom_point(aes(fill=born_wast_lab,group=cohort), color="#878787", size = 2, 
-             #position = position_jitter(width = 0.15),
              position = pd,
              alpha = 0.5, data=d.cohort) +
-  # geom_line(aes(group=cohort), data=d.cohort, color="#878787", alpha = 0.25,
-  #           position = pd
-  #           #position = position_jitter(width = 0.15)
-  #           ) +
+  geom_text(aes(label=estimate, y=ypos, x=xpos), color="grey30", size=3.5) +
   xlab("")+
   ylab("") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +

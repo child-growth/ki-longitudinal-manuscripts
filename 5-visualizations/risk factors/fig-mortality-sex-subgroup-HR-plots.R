@@ -32,8 +32,8 @@ clean_agecat<-function(agecat){
 
 dHR1 <- try(readRDS(paste0(BV_dir,"/results/cox_results_no_overlap.RDS")) %>% filter(!is.na(HR)) %>% mutate(analysis="No overlap"))
 dHR2 <-  try(readRDS(paste0(BV_dir,"/results/full_cox_results.RDS")) %>% filter(!is.na(HR)) %>% mutate(analysis="Overlap"))
-dHR1 <- try(readRDS(paste0("C:/Users/andre/Downloads//cox_results_no_overlap.RDS")) %>% filter(!is.na(HR)) %>% mutate(analysis="No overlap"))
-dHR2 <-  try(readRDS(paste0("C:/Users/andre/Downloads//full_cox_results.RDS")) %>% filter(!is.na(HR)) %>% mutate(analysis="Overlap"))
+# dHR1 <- try(readRDS(paste0("C:/Users/andre/Downloads//cox_results_no_overlap.RDS")) %>% filter(!is.na(HR)) %>% mutate(analysis="No overlap"))
+# dHR2 <-  try(readRDS(paste0("C:/Users/andre/Downloads//full_cox_results.RDS")) %>% filter(!is.na(HR)) %>% mutate(analysis="Overlap"))
 dHR_full <- bind_rows(dHR1, dHR2)
 
 
@@ -85,13 +85,13 @@ dHR <- dHR  %>%
 
 
 table(dHR$pooled)
-p_data_cohort <- dHR %>% filter(pooled==0, analysis=="No overlap")
+table(dHR$analysis)
+#p_data_cohort <- dHR %>% filter(pooled==0, analysis=="No overlap")
 p_prim_pooled  <- dHR %>% filter(pooled==1, analysis=="No overlap") %>% arrange(RR)
 p_prim_pooled
 
-p_prim_pooled %>% select(Measure, RR, RR.CI1, RR.CI2)
 
-p_prim_pooled$Measure <- factor(p_prim_pooled$Measure, levels = c("stunted","wasted","underweight", "wasted and stunted", "stunted and underweight", "wasted and underweight"))  
+#p_prim_pooled$Measure <- factor(p_prim_pooled$Measure, levels = c("stunted","wasted","underweight", "wasted and stunted", "stunted and underweight", "wasted and underweight"))  
 p_prim_pooled$severe <- factor(p_prim_pooled$severe, levels = c("0","1"))
 
 
@@ -101,38 +101,37 @@ p_data_cohort <- p_prim_pooled %>% filter(pooled==0, analysis=="No overlap")
 
 
 table(p_data_pooled$cgf_cat)
-p_data_pooled <- p_data_pooled %>% arrange(pooled, outcome_variable, RR) %>%
+p_data_pooled <- p_data_pooled %>% arrange(pooled, RR) %>%
   mutate(cgf_cat=factor(cgf_cat, levels=unique(cgf_cat)))
 levels(p_data_pooled$cgf_cat)
-unique(p_data_pooled$Measure)
 
 
-p_flurry <- ggplot(p_data_pooled, aes(x=cgf_cat)) +
-  geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), color="#287D8EFF") +
-  geom_point(aes(y=RR), color="#878787", fill="#878787", size=2, stroke=0,
-             data=p_data_cohort,
-             position=position_jitter(width=0.2), alpha=0.5) +
-  geom_point(aes(y=RR), color="#878787", fill="#878787", size=2, stroke=0,
-             data=pmort_data_cohort,
-             position=position_jitter(width=0.2), alpha=0.5) +
-  geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
-  labs(y = "", x = "CGF Exposure") +
-  geom_hline(yintercept = 1, linetype = "dashed") +
-  scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
-  #scale_colour_manual(values=cbbPalette[-1]) +
-  scale_size_manual(values=c(4,5)) + 
-  scale_shape_manual(values=c(16,21)) +
-  theme(strip.placement = "outside",
-        panel.spacing = unit(0, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        strip.background = element_blank(),
-        text = element_text(size=16), 
-        legend.position = "bottom") + 
-  facet_wrap(~sex, ncol=3, strip.position = "bottom") +
-  coord_flip(ylim=c(0.2,16))
-p_flurry
-
-ggsave(p_flurry, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-sex_strat-flurry.png"), width=5.2, height=5.2)
+# p_flurry <- ggplot(p_data_pooled, aes(x=cgf_cat)) +
+#   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), color="#287D8EFF") +
+#   geom_point(aes(y=RR), color="#878787", fill="#878787", size=2, stroke=0,
+#              data=p_data_cohort,
+#              position=position_jitter(width=0.2), alpha=0.5) +
+#   geom_point(aes(y=RR), color="#878787", fill="#878787", size=2, stroke=0,
+#              data=pmort_data_cohort,
+#              position=position_jitter(width=0.2), alpha=0.5) +
+#   geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
+#   labs(y = "", x = "CGF Exposure") +
+#   geom_hline(yintercept = 1, linetype = "dashed") +
+#   scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
+#   #scale_colour_manual(values=cbbPalette[-1]) +
+#   scale_size_manual(values=c(4,5)) + 
+#   scale_shape_manual(values=c(16,21)) +
+#   theme(strip.placement = "outside",
+#         panel.spacing = unit(0, "lines"),
+#         plot.title = element_text(hjust = 0.5),
+#         strip.background = element_blank(),
+#         text = element_text(size=16), 
+#         legend.position = "bottom") + 
+#   facet_wrap(~sex, ncol=3, strip.position = "bottom") +
+#   coord_flip(ylim=c(0.2,16))
+# p_flurry
+# 
+# ggsave(p_flurry, file=paste0(BV_dir,"/figures/risk-factor/fig-mort-sex_strat-flurry.png"), width=5.2, height=5.2)
 
 
 

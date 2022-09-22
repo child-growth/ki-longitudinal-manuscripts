@@ -219,10 +219,9 @@ co.res <- co %>% group_by(born_wast) %>%
 co.res
 
 
-
 #Get cohort-specific estimates
 whz.res.cohort <- d %>% group_by(born_wast) %>% do(summary.whz(., N_filter=Nmin)$whz.cohort)
-prev.res.cohort <- d %>% group_by(born_wast) %>% do(summary.prev.whz(., N_filter=Nmin)$prev.cohort)
+prev.res.cohort <- d %>% group_by(born_wast) %>% do(summary.prev.whz(., N_filter=Nmin)$prev.cohort) 
 ci.res.cohort <- d %>% group_by(born_wast) %>% do(summary.wast.ci(., N_filter=Nmin, age.range=NULL)$ci.cohort)
 ir.res.cohort <- d %>% group_by(born_wast) %>% do(summary.ir(., Nchild_filter=1, ptime_filter=1)$ir.cohort)
 ir.res.cohort$yi <- ir.res.cohort$yi * 1000
@@ -261,4 +260,67 @@ saveRDS(res.cohort, file = paste0(BV_dir,"/results/bw_longterm_res_cohort.rds"))
 
 
 
+#-------------------------------------------------------------------------------------------------
+#Get data for tmle analysis
+#-------------------------------------------------------------------------------------------------
 
+whz.res <-d %>% group_by(born_wast) %>% do(summary.whz(., N_filter=Nmin)$d) %>% add_column(parameter="whz")
+prev.res.data <- d %>% group_by(born_wast) %>% do(summary.prev.whz(., N_filter=Nmin)$d) %>% add_column(parameter="prev")
+ci.res.data <- d %>% group_by(born_wast) %>% do(summary.wast.ci(., N_filter=Nmin, age.range=NULL)$d) %>% add_column(parameter="ci")
+ir.res.data <- d %>% group_by(born_wast) %>% do(summary.ir(., Nchild_filter=1, ptime_filter=1)$d) %>% add_column(parameter="ir")
+perswast.res.data <- d %>% group_by(born_wast) %>% do(summary.perswast(., N_filter=Nmin)$d) %>% add_column(parameter="perswast")
+co.res.data <- co %>% group_by(born_wast) %>% 
+  filter(agedays > 17*30.4167 & agedays < 19*30.4167) %>% 
+  do(summary.prev.co(., N_filter=Nmin)$d) %>% add_column(parameter="co")
+
+d <- whz.res %>% mutate(id=subjid)
+save(d, file=paste0(ghapdata_dir,"birth_strat_whz_rf.Rdata"))
+d <- prev.res.data %>% mutate(id=subjid)
+save(d, file=paste0(ghapdata_dir,"birth_strat_prev_rf.Rdata"))
+d <- ci.res.data %>% mutate(id=subjid)
+save(d, file=paste0(ghapdata_dir,"birth_strat_ci_rf.Rdata"))
+d <- ir.res.data %>% mutate(id=subjid)
+save(d, file=paste0(ghapdata_dir,"birth_strat_ir_rf.Rdata"))
+d <- perswast.res.data %>% mutate(id=subjid)
+save(d, file=paste0(ghapdata_dir,"birth_strat_perswast_rf.Rdata"))
+d <- co.res.data %>% mutate(co=1*(wasted==1&stunted==1), id=subjid)
+save(d, file=paste0(ghapdata_dir,"birth_strat_co_rf.Rdata"))
+
+
+
+
+#Save analysis specifications
+load(paste0(BV_dir,"/results/adjustment_sets_list.Rdata"))
+A <- names(adjustment_sets)
+Avars <- c( "sex",  "brthmon", "month", names(adjustment_sets))
+
+specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","country"), id="id", adj_sets=adjustment_sets){
+  
+  analyses <- expand.grid(A=A,Y=Y, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
+  analyses$id <- id
+  analyses$strata <- list(V)
+  if(is.null(W)){analyses$W <- adj_sets[analyses$A]}else{
+    analyses$W <- list(W)
+  }
+  names(analyses$W) <- NULL
+  analyses$file <- file
+  
+  return(analyses)
+}
+
+
+birthwas_strat_whz <- specify_rf_analysis(A="born_wast", Y=c("whz"), file="birth_strat_whz_rf.Rdata")
+birthwas_strat_wast <- specify_rf_analysis(A="born_wast", Y=c("wasted"), file="birth_strat_prev_rf.Rdata")
+birthwas_strat_ever_wast <- specify_rf_analysis(A="born_wast", Y=c("ever_wasted"), file="birth_strat_ci_rf.Rdata")
+#birthwas_strat_whz <- specify_rf_analysis(A="born_wast", Y=c("wast24"), file="birth_strat_ir_rf.Rdata")
+birthwas_strat_perswast <- specify_rf_analysis(A="born_wast", Y=c("pers_wast"), file="birth_strat_perswast_rf.Rdata")
+birthwas_strat_co <- specify_rf_analysis(A="born_wast", Y=c("co"), file="birth_strat_co_rf.Rdata")
+
+
+
+
+#bind together datasets
+analyses <- rbind(birthwas_strat_whz, birthwas_strat_wast, birthwas_strat_ever_wast, birthwas_strat_perswast, birthwas_strat_co)
+
+#Save analysis specification
+save(analyses, file=paste0(here(),"/4-longbow-tmle-analysis/analysis specification/birthwast_strat_analyses.rdata"))

@@ -98,23 +98,23 @@ gini_data <- d_country_pool %>% filter(country.cat=="gini"|cat.level=="Overall")
 he_data <- d_country_pool %>% filter(country.cat=="ghe"|cat.level=="Overall") %>%
   mutate(cat.level = case_when(
     cat.level == "Overall" ~ "Overall",
-    cat.level == "Low" ~ "1-3%",
-    cat.level == "Medium" ~ "3-5%",
-    cat.level == "High" ~ "5-42%"
+    cat.level == "Low" ~ "0-4.4%",
+    cat.level == "Medium" ~ "4.5-5.5%",
+    cat.level == "High" ~ ">5.5%"
   )) %>% 
   mutate(cat.level = factor(cat.level, levels = c(
-    "Overall", "1-3%", "3-5%", "5-42%"
+    "Overall", "0-4.4%", "4.5-5.5%", ">5.5%"
   )))
 
 pov_data <- d_country_pool %>% filter(country.cat=="pov"|cat.level=="Overall") %>%
   mutate(cat.level = case_when(
     cat.level == "Overall" ~ "Overall",
     cat.level == "Low" ~ "0-18%",
-    cat.level == "Medium" ~ "18-28%",
-    cat.level == "High" ~ "28-100%"
+    cat.level == "Medium" ~ "18-51%",
+    cat.level == "High" ~ "51-100%"
   )) %>% 
   mutate(cat.level = factor(cat.level, levels = c(
-    "Overall", "0-18%", "18-28%", "28-100%"
+    "Overall", "0-18%", "18-51%", "51-100%"
   )))
 
 birthwlz_data <- d_country_pool %>% filter(country.cat=="birth_wlz_cat"|cat.level=="Overall") %>%
@@ -125,14 +125,18 @@ birthwlz_data <- d_country_pool %>% filter(country.cat=="birth_wlz_cat"|cat.leve
 
 mort_data <- d_country_pool  %>% filter(country.cat=="mort_cat"|cat.level=="Overall") %>%
   mutate(cat.level = factor(cat.level, levels = c(
-    "Overall", "<50 per 100,000", "50-95 per 100,000",
-    ">95 per 100,000"
+    "Overall", "<50 per 100,000", "50-80 per 100,000",
+    ">80 per 100,000"
   )))
 
 
+mort_data %>% filter(cat.level == ">80 per 100,000", agecat=="Birth"|agecat=="8 days-3 months")
 
+# 16.78440  9.924765 26.96581
+# 14.62971  7.129461 27.66947
 
-
+he_data %>% filter(cat.level == "0-4.4%", agecat=="Birth")
+#18.3144040 13.50364037 24.3564285
 
 # Pre-process data --------------------------------
 # scale cohort-specific estimates 
@@ -222,23 +226,23 @@ gini_cohort_data <- d_cohort %>% filter(country.cat=="gini"|cat.level=="Overall"
 he_cohort_data <- d_cohort %>% filter(country.cat=="ghe"|cat.level=="Overall") %>%
   mutate(cat.level = case_when(
     cat.level == "Overall" ~ "Overall",
-    cat.level == "Low" ~ "1-3%",
-    cat.level == "Medium" ~ "3-5%",
-    cat.level == "High" ~ "5-42%"
+    cat.level == "Low" ~ "0-4.4%",
+    cat.level == "Medium" ~ "4.5-5.5%",
+    cat.level == "High" ~ ">5.5%"
   )) %>% 
   mutate(cat.level = factor(cat.level, levels = c(
-    "Overall", "1-3%", "3-5%", "5-42%"
+    "Overall", "0-4.4%", "4.5-5.5%", ">5.5%"
   ))) %>% filter(!is.na(cat.level))
 
 pov_cohort_data <- d_cohort %>% filter(country.cat=="pov"|cat.level=="Overall") %>%
   mutate(cat.level = case_when(
     cat.level == "Overall" ~ "Overall",
     cat.level == "Low" ~ "0-18%",
-    cat.level == "Medium" ~ "18-28%",
-    cat.level == "High" ~ "28-100%"
+    cat.level == "Medium" ~ "18-51%",
+    cat.level == "High" ~ "51-100%"
   )) %>% 
   mutate(cat.level = factor(cat.level, levels = c(
-    "Overall", "0-18%", "18-28%", "28-100%"
+    "Overall", "0-18%", "18-51%", "51-100%"
   ))) %>% filter(!is.na(cat.level))
 
 birthwlz_cohort_data <- d_cohort %>% filter(country.cat=="birth_wlz_cat"|cat.level=="Overall") %>%
@@ -249,9 +253,11 @@ birthwlz_cohort_data <- d_cohort %>% filter(country.cat=="birth_wlz_cat"|cat.lev
 
 mort_cohort_data <- d_cohort  %>% filter(country.cat=="mort_cat"|cat.level=="Overall") %>%
   mutate(cat.level = factor(cat.level, levels = c(
-    "Overall", "<50 per 100,000", "50-95 per 100,000",
-    ">95 per 100,000"
+    "Overall", "<50 per 100,000", "50-80 per 100,000",
+    ">80 per 100,000"
   ))) %>% filter(!is.na(cat.level))
+
+
 
 #-------------------------------------------------------------------------------------------
 # plot function
@@ -706,6 +712,7 @@ ip_plot_primary_mort <- ki_wast_ip_flurry_subgroup_plot(d = mort,
                                          title = "c) National under-5 mortality rate")
 
 ip_plot_primary_mort$plot
+ip_plot_primary_mort$data
 
 # get N's for figure caption
 inc_n_mort = get_N_subgroup(d = mort, subgroup = "cat.level")
@@ -718,4 +725,7 @@ ggsave(ip_plot_primary_mort$plot, file=paste0(fig_dir, "wasting/fig-",ip_plot_na
 saveRDS(ip_plot_primary_mort$data, file=paste0(figdata_dir_wasting, "figdata-",ip_plot_name_mort,".RDS"))
 
 
+inc_n_he
+inc_n_pov
+inc_n_mort
 

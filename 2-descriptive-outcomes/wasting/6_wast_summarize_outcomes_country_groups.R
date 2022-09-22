@@ -15,7 +15,7 @@ d <- d %>% filter(measurefreq == "monthly")
 
 #merge in country metrics
 birthyears <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metrics.rds") %>% select(studyid, country, brthyr, subjid) %>% distinct()
-country <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories.rds")
+country <- readRDS(file="/data/KI/UCB-SuperLearner/Manuscript analysis data/ki-country-metric-categories_wasting.rds")
 
 country <- country %>% subset(., select=c(country, brthyr, decade:mort_cat)) %>% distinct()
 
@@ -173,7 +173,8 @@ ci.birth.wlz <- d3 %>% filter(!is.na(birth_wlz_cat)) %>% group_by(birth_wlz_cat)
 ci.birthwt <- d3 %>% filter(!is.na(birthwt)) %>% group_by(birthwt) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="birthwt") %>% rename(cat.level=birthwt)
 ci.dead <- d3 %>% filter(!is.na(mort_cat)) %>% group_by(mort_cat) %>% do(summary.wast.ci(., age.range=3)$ci.res) %>% mutate(country.cat="mort_cat") %>% rename(cat.level=mort_cat)
 
-dead
+summary.wast.ci(d3[d3$mort_cat==">80 per 100,000",], age.range=3)$ci.res
+
 
 ci <- bind_rows(
   data.frame(cohort = "pooled", cat.level = "Overall", ci.data$ci.res),

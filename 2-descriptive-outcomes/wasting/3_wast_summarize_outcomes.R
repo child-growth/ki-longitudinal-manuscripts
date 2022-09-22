@@ -69,7 +69,12 @@ df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1) %>% filt
 df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
 
 
-
+d6 <- calc.ci.agecat(d, range=6)
+d6$agecat <- ifelse(d6$agecat=="0-6 months","0-6 months","6-24 months")
+table(d6$agecat)
+df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration), !is.na(agecat)) %>% filter(agedays < 30.6417 * 24)
+df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
+df2 %>% group_by(agecat, region) %>% do(calc_dur_ci(.))
 
 
 #Prevalence
@@ -250,8 +255,7 @@ ci_3_birthstrat <- bind_rows(
   ci.cohort3
 ) 
 
-ci.data3$ci.res
-ci.data3_nobirth$ci.res
+
 
 
 
@@ -308,8 +312,12 @@ ip.data3_nobirth$ci.res
 ip.data3_birthstrat$ci.res
 
 #Cumulative inc, no birth
-d_noBW <- calc.ci.agecat(d_noBW, range = 6)
-ci.data.nobirth <- summary.wast.ci(d_noBW, age.range=6)
+d_noBW_ci <- d_noBW
+#set birth wasting WLZ above 2
+d_noBW_ci$whz[d_noBW_ci$wasting_episode=="Born Wasted"] <- -1.9
+
+d_noBW_ci <- calc.ci.agecat(d_noBW_ci, range = 6)
+ci.data.nobirth <- summary.wast.ci(d_noBW_ci, age.range=6)
 ci.region.nobirth <- d %>% group_by(region) %>% do(summary.wast.ci(., age.range=6)$ci.res)
 ci.country.nobirth <- d %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=6)$ci.res) 
 ci.cohort.nobirth <-
@@ -324,19 +332,15 @@ ci_nobw <- bind_rows(
 )
 
 
-table(d3$wast_inc)
-table(d3_noBW$wast_inc)
-table(d3$wasting_episode)
-table(d3_noBW$wasting_episode)
-head(d3)
 
-d_noBW$whz[d_noBW$wasting_episode=="Born Wasted"] <- NA
-summary(d3$whz)
-summary(d_noBW$whz)
+
 
 #Cumulative inc 3 month intervals
-d3_noBW <- calc.ci.agecat(d_noBW)
-ci.data.nobirth3 <- summary.wast.ci(d3_noBW[!is.na(d3_noBW$whz),], age.range=3)
+  d_noBW_ci <- calc.ci.agecat(d_noBW_ci)
+#ci.data.nobirth3 <- summary.wast.ci(d_noBW[!is.na(d_noBW$whz),], age.range=3)
+#d_noBW_ci$whz[d_noBW_ci$wasting_episode=="Born Wasted"] <- -1.9
+  
+ci.data.nobirth3 <- summary.wast.ci(d_noBW_ci[d_noBW_ci$wasting_episode!="Born Wasted",], age.range=3)
 ci.region.nobirth3 <- d3 %>% group_by(region) %>% do(summary.wast.ci(., age.range=3)$ci.res)
 ci.country.nobirth3 <- d3 %>% group_by(region, country) %>% do(summary.wast.ci(., age.range=3)$ci.res) 
 ci.cohort.nobirth3 <-
@@ -354,8 +358,8 @@ ci_nobw3 <- bind_rows(
   ci.cohort.nobirth3
 )
 
-ci.data.nobirth3$ci.res
 ci.data3$ci.res
+ci.data.nobirth3$ci.res
 
 #Cumulative inc of severe wasting
 d <- calc.ci.agecat(d, range = 6)

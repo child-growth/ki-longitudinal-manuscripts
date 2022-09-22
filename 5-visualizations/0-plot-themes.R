@@ -7,6 +7,7 @@ theme_ki <- function() {
       strip.text = element_text(size=14),
       axis.title = element_text(size=12),
       axis.text.y = element_text(size=10),
+      legend.box.background = element_rect(colour = "grey40"),
       axis.text.x = element_text(size=10, angle = 0, hjust = 0.5, vjust=.1)
     )
 }

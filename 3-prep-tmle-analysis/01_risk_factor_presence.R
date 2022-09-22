@@ -20,6 +20,7 @@ season <- stuntprev %>% group_by(studyid, subjid) %>% summarize(rain_quartile = 
 cov<-left_join(cov, season, by = c("studyid","subjid"))
 table(is.na(cov$rain_quartile))
 
+perc_miss <- function(x){sum(is.na(x))/length(x) * 100}
 sum_not_na <- function(x){sum(!is.na(x))}
 ifelse_present <- function(x){ifelse(x>0, 1, 0)}
 
@@ -39,6 +40,11 @@ cov_presence <- cov %>% dplyr::select(exposures) %>%
   group_by(studyid, country) %>%
   mutate_all(ifelse_present)
 
+#Calculate missingness by study
+cov_missingness <- cov %>% dplyr::select(exposures) %>%
+  group_by(studyid, country) %>%
+  summarise_all(., funs(perc_miss))
+cov_missingness
 
 #Calculate N's by study
 cov_N <- cov %>% dplyr::select(exposures) %>%
@@ -46,6 +52,7 @@ cov_N <- cov %>% dplyr::select(exposures) %>%
   summarise_all(., funs(sum_not_na))
 
 saveRDS(cov_presence, file = paste0(BV_dir,"/results/cov_presence.rds"))
+saveRDS(cov_missingness, file = paste0(BV_dir,"/results/cov_missingness.rds"))
 saveRDS(cov_N, file = paste0(BV_dir,"/results/cov_N.rds"))
 
 

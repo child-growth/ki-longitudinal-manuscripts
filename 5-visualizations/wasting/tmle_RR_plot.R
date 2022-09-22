@@ -189,11 +189,12 @@ plotdf3$A_t <- gsub(" months","",plotdf3$A_t)
 plotdf3$A_t <- factor(plotdf3$A_t, levels=c("Birth","0-3", "3-6","6-9" ,"9-12","12-15","15-18","18-21", "21-24"))
 
 plotdf3 <- plotdf3 %>% mutate(
-  case_when(A=="Wasting"~"Initial growth faltering:\nWasting",
-            A=="Stunting"~"Initial growth faltering:\nStunting")
+  A_facet=case_when(A=="Wasting"~"Wasting exposure",
+            A=="Stunting"~"Stunting exposure")
 )
+
 p3 <- ggplot(plotdf3, aes(y=RR,x=A_t, group=Y, fill=Y, color=Y)) +
-  facet_grid(~A) +
+  facet_grid(~A_facet) +
   geom_point(size = 2, stroke = 0,
              position = position_dodge(0.1)) +
   geom_line(position = position_dodge(0.1)) +
@@ -206,9 +207,9 @@ p3 <- ggplot(plotdf3, aes(y=RR,x=A_t, group=Y, fill=Y, color=Y)) +
   geom_hline(yintercept = 1) +
   scale_color_manual(values=tableau10[c(9,10)], drop=TRUE) +
   coord_cartesian(ylim = c(0.9,12)) +
-  labs(color= "Growth faltering at\nnext time period", fill= "Growth faltering at\nnext time period")+
-  xlab("Child age in months at time of initial growth failure")+
-  ylab("Relative risk of growth faltering at next time period") +
+  labs(color= "Growth faltering\nat next period", fill= "Growth faltering\nat next period")+
+  xlab("Child age at growth faltering exposure (months)")+
+  ylab("Relative risk of growth faltering in the next 3-month period") +
   #ggtitle("Type of initial growth faltering") +
   theme(legend.position = "bottom",
         axis.text.x = element_text(size = 8, angle = 90, vjust=0.5, hjust=0.5),
@@ -223,3 +224,8 @@ p3 <- ggplot(plotdf3, aes(y=RR,x=A_t, group=Y, fill=Y, color=Y)) +
 
 
 ggsave(p3, file=paste0(here::here(), "/figures/wasting/fig-tmle-RR_v3.png"), width=5, height=5)
+
+
+
+
+
