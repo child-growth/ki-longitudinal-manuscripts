@@ -39,13 +39,12 @@ main_color <- "#287D8EFF"
 
 # PIE
 par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
-# par <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_Zscore_PIE_results.rds")
-unique(par_raw$intervention_variable)
-unique(par_raw$outcome_variable)
+#flip direction of measurement so it's Ya-Y
+par_raw <- par_raw %>% mutate(PAR=-PAR, CI1_temp=-CI2, CI2=-CI1, CI1=CI1_temp) %>% subset(., select = -c(CI1_temp))
+
 
 #Mean differences
 ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
-# dfull <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/full_RF_results.rds")
 
 
 #rename point estimates and CI's for combining
