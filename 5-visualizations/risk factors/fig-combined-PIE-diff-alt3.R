@@ -58,11 +58,13 @@ main_color <- "#287D8EFF"
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 head(df_full)
 
+df_full %>% filter(intervention_variable=="birthwt", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
 #----------------------------------------------------------------------------------
 
-df <- df_full %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
+df <- df_full %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast","month","birthmonth")))
 unique(df$intervention_level)
 unique(df$intervention_variable)
 df$intervention_level <- as.character(df$intervention_level)
