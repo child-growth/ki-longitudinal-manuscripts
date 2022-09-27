@@ -37,24 +37,24 @@ main_color <- "#287D8EFF"
 # Load data
 #----------------------------------------------------------------------------------
 
-# PIE
-par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
-# par <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_Zscore_PIE_results.rds")
-unique(par_raw$intervention_variable)
-unique(par_raw$outcome_variable)
-
-#Mean differences
-ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
-# dfull <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/full_RF_results.rds")
-
-
-#rename point estimates and CI's for combining
-par_raw <- par_raw %>% rename(est=PAR)
-ATE_raw <- ATE_raw %>% rename(est=ATE)
-
-df_full <- bind_rows(par_raw, ATE_raw)
-
-saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
+# # PIE
+# par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
+# # par <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_Zscore_PIE_results.rds")
+# unique(par_raw$intervention_variable)
+# unique(par_raw$outcome_variable)
+# 
+# #Mean differences
+# ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
+# # dfull <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/full_RF_results.rds")
+# 
+# 
+# #rename point estimates and CI's for combining
+# par_raw <- par_raw %>% rename(est=PAR)
+# ATE_raw <- ATE_raw %>% rename(est=ATE)
+# 
+# df_full <- bind_rows(par_raw, ATE_raw)
+# 
+# saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 head(df_full)
 
@@ -300,7 +300,8 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), outcome_var="haz", yl
                        space = "free" , strip.position = 'left') +
     scale_x_discrete(labels=variable_labels) +
     scale_y_continuous(breaks = c(-0.1,0,0.1,0.2,0.3,0.4, 0.5, 0.6, 0.7, 0.8), 
-                       labels=c("0.1","0","-0.1","-0.2","-0.3","-0.4","-0.5","-0.6","-0.7","-0.8")) +
+                       #labels=c("0.1","0","-0.1","-0.2","-0.3","-0.4","-0.5","-0.6","-0.7","-0.8")
+                       ) +
     guides(color=guide_legend(title="Estimate type:"), shape=guide_legend(title="Estimate type:"), fill=guide_legend(title="Estimate type:")) + 
     scale_color_manual(values = c("#287D8EFF", grey_color), guide = guide_legend(reverse = T) ) +
     scale_fill_manual(values = c("#287D8EFF", grey_color), guide = guide_legend(reverse = T) ) +
@@ -336,6 +337,8 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), outcome_var="haz", yl
 
 unique(df$RFgroup)
 p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",])
+p1
+
 p2 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",])
 p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",])
 p4 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], legend=T, xaxis=T)
