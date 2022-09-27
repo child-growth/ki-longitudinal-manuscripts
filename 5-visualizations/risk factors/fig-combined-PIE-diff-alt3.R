@@ -299,7 +299,8 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), outcome_var="haz", yl
                        space = "free" , strip.position = 'left') +
     scale_x_discrete(labels=variable_labels) +
     scale_y_continuous(breaks = c(-0.1,0,0.1,0.2,0.3,0.4, 0.5, 0.6, 0.7, 0.8), 
-                       labels=c("0.1","0","-0.1","-0.2","-0.3","-0.4","-0.5","-0.6","-0.7","-0.8")) +
+                       #labels=c("0.1","0","-0.1","-0.2","-0.3","-0.4","-0.5","-0.6","-0.7","-0.8")
+                       ) +
     guides(color=guide_legend(title="Estimate type:"), shape=guide_legend(title="Estimate type:"), fill=guide_legend(title="Estimate type:")) + 
     scale_color_manual(values = c("#287D8EFF", grey_color), guide = guide_legend(reverse = T) ) +
     scale_fill_manual(values = c("#287D8EFF", grey_color), guide = guide_legend(reverse = T) ) +
