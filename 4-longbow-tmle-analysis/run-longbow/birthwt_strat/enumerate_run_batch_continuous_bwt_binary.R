@@ -121,7 +121,7 @@ for(i in 1:nrow(analyses2)){
   analyses2$strata[[i]] <- c("agecat",  "studyid", "country")
 }
 enumerated_analyses2 <- lapply(seq_len(nrow(analyses2)), analyses_df=analyses2, specify_longbow)
-run_ki_tmle(enumerated_analyses2, results_folder="results_cont_full_bin", overwrite = F, skip_failed = F)
+run_ki_tmle(enumerated_analyses2, results_folder="results_cont_full_bin", overwrite = T, skip_failed = F)
 
 
 #Exclude events without a certain number of strata

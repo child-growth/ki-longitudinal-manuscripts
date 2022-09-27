@@ -34,6 +34,11 @@ load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf.Rdata")
 d <- d %>% filter(agecat=="24 months")  %>% droplevels()
 table(d$country, is.na(d$sex))
 table(d$studyid, d$country)
+
+table(d$studyid, is.na(d$gagebrth))
+
+head(d)
+
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_prim.Rdata")
 
 analyses$strata
@@ -59,9 +64,9 @@ specify_longbow_cc <- function(j, analyses_df=analyses, params=default_params){
 
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow_cc)
+enumerated_analyses <- enumerated_analyses[15:16]
 
 
-
-run_ki_tmle(enumerated_analyses, results_folder="results_cont_CC", overwrite = F, skip_failed = F, rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors_CC.Rmd"))
+run_ki_tmle(enumerated_analyses, results_folder="results_cont_CC", overwrite = T, skip_failed = F, rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors_CC.Rmd"))
 
 

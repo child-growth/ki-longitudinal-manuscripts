@@ -12,11 +12,28 @@ dfull <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/results_cont
 d <- dfull %>% filter(type=="ATE", agecat=="24 months")
 
 #Get full data results (binary variable)
-saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_ATE_results.rds"))
+d_unstrat <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/results_cont_full_bin.RDS")) %>% 
+  filter(type=="ATE", agecat=="24 months") %>%
+  mutate(birthwt="Unstratified")
 
+df <- d_unstrat %>% filter(outcome_variable=="haz", intervention_variable=="parity") %>% droplevels() %>% arrange(studyid, birthwt)
+
+
+d <- bind_rows(d, d_unstrat)
+table(d$birthwt)
 
 #get number of children:
 Ns <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin_N.RDS"))
+load(paste0(res_dir,"continuous_rf_Ns_birthwt_strat.rdata"))
+head(Ndf)
+table(Ndf$n_cell < 50)
+table(Ndf$birthwt)
+head(d)
+
+d <- left_join(d, Ndf, by=c("studyid", "country","agecat", "outcome_variable","birthwt", "intervention_variable", "intervention_level"))
+table(d$n_cell < 50)
+
+
 
 #to do: 
 #transform N's
@@ -49,18 +66,35 @@ dim(d)
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)
 
+#drop rare levels
+
+#laz birth order
+df <- d %>% filter(outcome_variable=="haz", intervention_variable=="parity")%>% droplevels()
+table(df$studyid, df$birthwt)
+
+d <- d %>% filter(n_cell > 50)
+
+df <- d %>% filter(outcome_variable=="haz", intervention_variable=="parity")%>% droplevels()
+table(df$studyid, df$birthwt)
+
 #Count number of BW levels and only keep when estimates for both levels by study
 d <- d %>% group_by(studyid, country, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
-  mutate(Nlevels=n()) %>% filter(Nlevels==2) %>% 
+  mutate(Nlevels=n()) %>% filter(Nlevels==3) %>% 
   group_by(birthwt,intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   mutate(Nstudies=n()) %>% filter(Nstudies>2)
 table(d$Nlevels)
 table(d$Nstudies)
 
 
+df <- d %>% filter(outcome_variable=="haz", intervention_variable=="parity") %>% droplevels() %>% arrange(studyid, birthwt) %>% select(studyid, estimate, ci_lower, ci_upper)
+table(df$studyid, df$birthwt)
+
 RMAest <- d %>% group_by(Nstudies, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, birthwt) %>%
-  do(pool.cont(.)) %>% as.data.frame()
+  do(pool.cont(., method="REML")) %>% as.data.frame()
 RMAest$region <- "Pooled"
+
+df2 <- RMAest %>% filter(outcome_variable=="haz", intervention_variable=="parity") %>% droplevels()
+
 
 table(RMAest$Nstudies)
 
@@ -73,6 +107,7 @@ RMAest_raw <- RMAest
 
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest_raw)
+table(RMAest_clean$birthwt)
 
 
 #Add reference level to label
@@ -102,18 +137,12 @@ plotdf$RFlabel[plotdf$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (%
 plotdf$RFlabel[plotdf$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 
-#p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=birthwt)) + 
-#  geom_point(aes(y=ATE, color=birthwt, fill=birthwt), position=position_dodge(width=0.8), size = 3) +
-#  geom_linerange(aes(ymin=CI1, ymax=CI2, color=birthwt), position=position_dodge(width=0.8), alpha=0.5, size = 1) +
-#  labs(x = "Exposure", y = "ATE") +
-#  geom_hline(yintercept = 0) +
-#  coord_flip(ylim =c(-1.2, 1.2)) +
-
 plotdf$Nstudies <- as.character(plotdf$Nstudies)
 plotdf$Nstudies[plotdf$birthwt=="Low birthweight"] <- ""
 plotdf$Nstudies[plotdf$outcome=="WLZ"] <- ""
-plotdf$`Birth weight` <- plotdf$birthwt
 
+plotdf$birthwt <- factor(plotdf$birthwt, levels=(rev(c("Unstratified","Normal or high birthweight","Low birthweight"))))
+plotdf$`Birth weight` <- plotdf$birthwt
 
 p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=`Birth weight`)) + 
   geom_point(aes(y=ATE, color=`Birth weight`, fill=`Birth weight`), position=position_dodge(width=0.5), size = 3) +
@@ -121,10 +150,10 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=`Birth weight`)) +
   geom_text(aes(label=Nstudies, y=-1)) +
   labs(x = "Exposure", y = "ATE") +
   geom_hline(yintercept = 0) +
-  coord_flip(ylim =c(-1, 1)) +
+  coord_flip(ylim =c(-0.75, 0.5)) +
   facet_grid(~outcome_variable) +
-  scale_fill_manual(values=tableau10[1:2]) +
-  scale_colour_manual(values=tableau10[1:2]) +
+  scale_fill_manual(values=tableau11[3:1]) +
+  scale_colour_manual(values=tableau11[3:1]) +
   theme(strip.background = element_blank(),
         legend.position="bottom",
         axis.text.y = element_text(size=8, hjust=0),
@@ -133,9 +162,9 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=`Birth weight`)) +
         panel.spacing = unit((0), "lines")) 
 p_bw_strat
 
-ggsave(p_bw_strat, filename = "bwstrat.png",height = 8, width = 10)
-
-
-ggsave(p_bw_strat, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png"), width=30, height=18.3, units = 'cm')
-
-paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png")
+# ggsave(p_bw_strat, filename = "bwstrat.png",height = 8, width = 10)
+# 
+# 
+# ggsave(p_bw_strat, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png"), width=30, height=18.3, units = 'cm')
+# 
+# paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png")

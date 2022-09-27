@@ -33,30 +33,28 @@ color_vec = c("#7F7F7F", "#E377C2")
 main_color <- "#287D8EFF"
 
 
-# #----------------------------------------------------------------------------------
-# # Load data
-# #----------------------------------------------------------------------------------
-# 
-# # PIE
-# par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
-# # par <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_Zscore_PIE_results.rds")
-# unique(par_raw$intervention_variable)
-# unique(par_raw$outcome_variable)
-# 
-# #Mean differences
-# ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
-# # dfull <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/full_RF_results.rds")
-# 
-# 
-# 
-# 
-# #rename point estimates and CI's for combining
-# par_raw <- par_raw %>% rename(est=PAR)
-# ATE_raw <- ATE_raw %>% rename(est=ATE)
-# 
-# df_full <- bind_rows(par_raw, ATE_raw)
-# 
-# saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
+#----------------------------------------------------------------------------------
+# Load data
+#----------------------------------------------------------------------------------
+
+# PIE
+par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
+# par <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/pooled_Zscore_PIE_results.rds")
+unique(par_raw$intervention_variable)
+unique(par_raw$outcome_variable)
+
+#Mean differences
+ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
+# dfull <- readRDS("C:/Users/anmol/OneDrive/Documents/GitHub/ki-longitudinal-manuscripts/results_old/rf results/full_RF_results.rds")
+
+
+#rename point estimates and CI's for combining
+par_raw <- par_raw %>% rename(est=PAR)
+ATE_raw <- ATE_raw %>% rename(est=ATE)
+
+df_full <- bind_rows(par_raw, ATE_raw)
+
+saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 head(df_full)
 
@@ -175,7 +173,8 @@ df <- df %>%
 
 #Sort and set Y-axis order
 df <- df %>% group_by(intervention_variable, outcome_variable) %>%
-  mutate(par=ifelse(parameter=="Population Intervention Effect",1,0), max_est= max(-est *par), intervention_level_f2=paste0(intervention_level_f, " ", intervention_variable)) %>% 
+  mutate(par=ifelse(parameter=="Population Intervention Effect",1,0), max_est= max(-est *par), 
+         intervention_level_f2=paste0(intervention_level_f, " ", intervention_variable)) %>% 
   ungroup() %>% 
   arrange(outcome_variable,  -par,   RFgroup, max_est,  intervention_variable,  reflabel,  -est) 
 
