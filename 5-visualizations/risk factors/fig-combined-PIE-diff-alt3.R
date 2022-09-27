@@ -287,8 +287,8 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), outcome_var="haz", yl
   
   p <- ggplot(plotdf, aes(x=intervention_level_f2, #alpha=parameter,
                           shape=parameter, color=parameter,  fill=parameter)) + 
-    geom_point(aes(y=-est),  size = 1.5, position = position_dodge2(dodge_width)) +
-    geom_linerange(aes(ymin=-CI1, ymax=-CI2), position = position_dodge2(dodge_width)) +
+    geom_point(aes(y=est),  size = 1.5, position = position_dodge2(dodge_width)) +
+    geom_linerange(aes(ymin=CI1, ymax=CI2), position = position_dodge2(dodge_width)) +
     geom_hline(yintercept = 0, size=0.25) +
     geom_text(aes(y= est, label=reflabel, hjust=-.5), size=1.65, color=grey_color) +
     coord_flip(ylim=ylimits) +

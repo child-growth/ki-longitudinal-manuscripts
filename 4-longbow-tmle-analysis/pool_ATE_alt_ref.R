@@ -49,7 +49,7 @@ RMAest_raw <- rbind(RMAest, RMAest_region)
 RMAest_clean <- RMA_clean(RMAest_raw)
 
 
-#Add reference level to labe
+#Add reference level to label
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$baseline_level)
 
 saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds"))
