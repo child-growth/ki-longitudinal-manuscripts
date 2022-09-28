@@ -9,10 +9,17 @@ fage <- NULL
 
 Zscores <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 Zscores <- Zscores %>% filter(intervention_variable!="mwtkg", intervention_variable!="mhtcm", intervention_variable!="fhtcm",intervention_variable!="mbmi" )
-season_cont_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_cont_rf_results.RDS"))
+season_cont_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_cont_rf_results.RDS")) %>% filter(outcome_variable=="whz")
+#get alt paf reference for haz
+season_cont_rf_haz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_seasonality_rf_cont_alt_ref_2022-09-28.RDS"))
+season_cont_rf_haz <- season_cont_rf_haz %>% filter(outcome_variable=="haz")
+
+season_cont_rf %>% filter(type=="PAR")
+season_cont_rf_haz %>% filter(type=="PAR")
+
 Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_mwtkg.RDS"))
 table(Zscores_mwtkg$intervention_level)
-Zscores <- bind_rows(Zscores, Zscores_mwtkg, season_cont_rf)
+Zscores <- bind_rows(Zscores, Zscores_mwtkg, season_cont_rf, season_cont_rf_haz)
 
 #save for optx plots
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
@@ -66,6 +73,7 @@ velocity <- readRDS(paste0(res_dir, "rf results/longbow results/results_vel.RDS"
 
   
 season <-  readRDS(paste0(res_dir, "rf results/longbow results/seasonality_results.RDS"))
+
 
 season_bin_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_bin_rf_results.RDS"))
 

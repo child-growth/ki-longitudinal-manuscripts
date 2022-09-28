@@ -52,6 +52,8 @@ RMAest_raw <- RMAest_raw %>% filter(!is.na(PAR))
 
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest_raw, outcome="continuous")
+
+RMAest_clean[is.na(RMAest_clean$intervention_level),]
 table(is.na(RMAest_clean$intervention_level))
 table(is.na(RMAest_clean$intervention_variable))
 

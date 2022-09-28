@@ -63,7 +63,8 @@ saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 head(df_full)
 
-df_full %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+#df_full %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+df_full %>% filter(intervention_variable=="rain_quartile", region=="Pooled", agecat=="24 months")
 
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
