@@ -41,24 +41,28 @@ main_color <- "#287D8EFF"
 # Load data
 #----------------------------------------------------------------------------------
 
-# # PIE
-# par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
-# #flip direction of measurement so it's Ya-Y
-# par_raw <- par_raw %>% mutate(PAR=-PAR, CI1_temp=-CI2, CI2=-CI1, CI1=CI1_temp) %>% subset(., select = -c(CI1_temp))
-# 
-# 
-# #Mean differences
-# ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
-# 
-# 
-# #rename point estimates and CI's for combining
-# par_raw <- par_raw %>% rename(est=PAR)
-# ATE_raw <- ATE_raw %>% rename(est=ATE)
-# 
-# df_full <- bind_rows(par_raw, ATE_raw)
-# 
-# saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
+# PIE
+par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
+#flip direction of measurement so it's Ya-Y
+par_raw <- par_raw %>% mutate(PAR=-PAR, CI1_temp=-CI2, CI2=-CI1, CI1=CI1_temp) %>% subset(., select = -c(CI1_temp))
 
+
+#Mean differences
+ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
+
+#season
+ATE_raw_season <- readRDS(paste0(BV_dir,"/results/rf results/ra/results_seasonality_rf_cont_alt_ref_2022-09-27.RDS")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
+saveRDS(season_cont_rf_alt_ref, paste0(res_dir, "rf results/longbow results/season_cont_rf_results_alt_ref.RDS"))
+
+seasonality_rf_cont_alt_ref
+
+#rename point estimates and CI's for combining
+par_raw <- par_raw %>% rename(est=PAR)
+ATE_raw <- ATE_raw %>% rename(est=ATE)
+
+df_full <- bind_rows(par_raw, ATE_raw)
+
+saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 head(df_full)
 
