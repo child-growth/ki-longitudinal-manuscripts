@@ -8,10 +8,8 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-09-27.RDS"))
-saveRDS(Zscores_alt_ref, paste0(res_dir, "rf results/longbow results/results_cont_primary_alt_ref.RDS"))
-
-
-dfull <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/results_cont_primary_alt_ref.RDS"))
+Zscores_alt_ref_season <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
+dfull <- bind_rows(Zscores_alt_ref, Zscores_alt_ref_season)
 
 d <- dfull %>% filter(type=="ATE", agecat!="All")
 
