@@ -62,7 +62,7 @@ main_color <- "#287D8EFF"
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 head(df_full)
 
-df_full %>% filter(intervention_variable=="birthwt", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+df_full %>% filter(intervention_variable=="rain_quartile", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
 
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
@@ -196,78 +196,70 @@ cat(paste(paste0("\"",df$intervention_level_f2,"\"=\"",df$intervention_level_f,"
 
 
 variable_labels = c(
-  "75% shifted to Opposite max rain rain_quartile" = "75% shifted to Opposite max rain", "56% shifted to No hdlvry" =
-    "56% shifted to No", "49% shifted to Full/late term gagebrth" = "49% shifted to Full/late term", "51% shifted to Female sex" =
-    "51% shifted to Female", "24% shifted to ≥ 2500 g birthwt" = "24% shifted to ≥ 2500 g", "66% shifted to 1 parity" =
-    "66% shifted to 1", "91% shifted to C-section vagbrth" = "91% shifted to C-section", "67% shifted to ≥50 birthlen" =
-    "67% shifted to ≥50", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
-    "75% shifted to Yes", "38% shifted to 1 nchldlt5" = "38% shifted to 1", "50% shifted to Food Secure hfoodsec" =
-    "50% shifted to Food Secure", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
-    "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "51% shifted to Yes cleanck" =
+  "51% shifted to Female sex" = "51% shifted to Female", "67% shifted to ≥50 birthlen" =
+    "67% shifted to ≥50", "24% shifted to ≥ 2500 g birthwt" = "24% shifted to ≥ 2500 g", "49% shifted to Full/late term gagebrth" =
+    "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "91% shifted to C-section vagbrth" =
+    "91% shifted to C-section", "66% shifted to 1 parity" = "66% shifted to 1", "75% shifted to Opposite max rain rain_quartile" =
+    "75% shifted to Opposite max rain", "38% shifted to 1 nchldlt5" = "38% shifted to 1", "81% shifted to 3 or less nhh" =
+    "81% shifted to 3 or less", "91% shifted to 4+ nrooms" = "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" =
+    "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" = "50% shifted to Food Secure", "31% shifted to Yes impsan" =
+    "31% shifted to Yes", "75% shifted to Yes impfloor" = "75% shifted to Yes", "51% shifted to Yes cleanck" =
     "51% shifted to Yes", "42% shifted to [20-30) mage" = "42% shifted to [20-30)", "82% shifted to ≥35 fage" =
-    "82% shifted to ≥35", "40% shifted to ≥20 mbmi" = "40% shifted to ≥20", "35% shifted to ≥45 mwtkg" =
-    "35% shifted to ≥45", "68% shifted to High meducyrs" = "68% shifted to High", "77% shifted to High feducyrs" =
-    "77% shifted to High", "30% shifted to ≥150 mhtcm" = "30% shifted to ≥150", "70% shifted to Yes earlybf" =
-    "70% shifted to Yes", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to [0%,2%] perdiar24" =
-    "48% shifted to [0%,2%]", "Opposite max rain rain_quartile" = "Opposite max rain", "Post-max rain rain_quartile" =
-    "Post-max rain", "Pre-max rain rain_quartile" = "Pre-max rain", "Max rain rain_quartile" =
-    "Max rain", "No hdlvry" = "No", "Yes hdlvry" = "Yes", "Full or late term gagebrth" =
-    "Full or late term", "Early term gagebrth" = "Early term", "Preterm gagebrth" =
-    "Preterm", "Female sex" = "Female", "Male sex" = "Male", "≥ 2500 g birthwt" =
-    "≥ 2500 g", "<2500g birthwt" = "<2500g", "1 parity" = "1", "2 parity" =
-    "2", "3+ parity" = "3+", "No vagbrth" = "No", "Yes vagbrth" = "Yes", "≥50 birthlen" =
-    "≥50", "[48-50) birthlen" = "[48-50)", "<48 birthlen" = "<48", "Yes impsan" =
-    "Yes", "None impsan" = "None", "Yes impfloor" = "Yes", "None impfloor" =
-    "None", "1 nchldlt5" = "1", "2+ nchldlt5" = "2+", "Food Secure hfoodsec" =
-    "Food Secure", "Mildly Food Insecure hfoodsec" = "Mildly Food Insecure", "Food Insecure hfoodsec" =
-    "Food Insecure", "3 or less nhh" = "3 or less", "6-7 nhh" = "6-7", "4-5 nhh" =
-    "4-5", "8+ nhh" = "8+", "4+ nrooms" = "4+", "3 nrooms" = "3", "2 nrooms" =
-    "2", "1 nrooms" = "1", "Q4 hhwealth_quart" = "Q4", "Q3 hhwealth_quart" =
-    "Q3", "Q2 hhwealth_quart" = "Q2", "Q1 hhwealth_quart" = "Q1", "Yes cleanck" =
-    "Yes", "No cleanck" = "No", "[20-30) mage" = "[20-30)", "≥30 mage" = "≥30", "<20 mage" =
-    "<20", "≥35 fage" = "≥35", "[30-35) fage" = "[30-35)", "<30 fage" = "<30", "≥20 mbmi" =
-    "≥20", "<20 mbmi" = "<20", "≥45 mwtkg" = "≥45", "<45 mwtkg" = "<45", "High meducyrs" =
-    "High", "Medium meducyrs" = "Medium", "Low meducyrs" = "Low", "High feducyrs" =
-    "High", "Medium feducyrs" = "Medium", "Low feducyrs" = "Low", "≥150 mhtcm" =
-    "≥150", "<150 mhtcm" = "<150", "Yes earlybf" = "Yes", "No earlybf" = "No", "Yes predexfd6" =
-    "Yes", "None predexfd6" = "None", "[0%, 2%] perdiar24" = "[0%, 2%]", ">2% perdiar24" =
-    ">2%", "67% shifted to 1 parity" = "67% shifted to 1", "49% shifted to Full/late term gagebrth" =
-    "49% shifted to Full/late term", "51% shifted to Female sex" = "51% shifted to Female", "56% shifted to No hdlvry" =
-    "56% shifted to No", "75% shifted to Opposite max rain rain_quartile" =
-    "75% shifted to Opposite max rain", "25% shifted to ≥ 2500 g birthwt" =
-    "25% shifted to ≥ 2500 g", "91% shifted to C-section vagbrth" = "91% shifted to C-section", "67% shifted to ≥50 birthlen" =
-    "67% shifted to ≥50", "31% shifted to Yes impsan" = "31% shifted to Yes", "50% shifted to Food Secure hfoodsec" =
-    "50% shifted to Food Secure", "75% shifted to Yes impfloor" = "75% shifted to Yes", "38% shifted to 1 nchldlt5" =
-    "38% shifted to 1", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "81% shifted to 3 or less nhh" =
-    "81% shifted to 3 or less", "91% shifted to 4+ nrooms" = "91% shifted to 4+", "51% shifted to Yes cleanck" =
-    "51% shifted to Yes", "43% shifted to [20-30) mage" = "43% shifted to [20-30)", "76% shifted to High feducyrs" =
-    "76% shifted to High", "32% shifted to ≥150 mhtcm" = "32% shifted to ≥150", "38% shifted to ≥45 mwtkg" =
-    "38% shifted to ≥45", "41% shifted to ≥20 mbmi" = "41% shifted to ≥20", "69% shifted to High meducyrs" =
-    "69% shifted to High", "82% shifted to ≥35 fage" = "82% shifted to ≥35", "72% shifted to Yes earlybf" =
-    "72% shifted to Yes", "48% shifted to [0%,2%] perdiar24" = "48% shifted to [0%,2%]", "37% shifted to Yes predexfd6" =
-    "37% shifted to Yes", "1 parity" = "1", "2 parity" = "2", "3+ parity" =
-    "3+", "Full or late term gagebrth" = "Full or late term", "Early term gagebrth" =
-    "Early term", "Preterm gagebrth" = "Preterm", "Female sex" = "Female", "Male sex" =
-    "Male", "No hdlvry" = "No", "Yes hdlvry" = "Yes", "Opposite max rain rain_quartile" =
-    "Opposite max rain", "Pre-max rain rain_quartile" = "Pre-max rain", "Max rain rain_quartile" =
-    "Max rain", "Post-max rain rain_quartile" = "Post-max rain", "≥ 2500 g birthwt" =
-    "≥ 2500 g", "<2500g birthwt" = "<2500g", "No vagbrth" = "No", "Yes vagbrth" =
-    "Yes", "≥50 birthlen" = "≥50", "[48-50) birthlen" = "[48-50)", "<48 birthlen" =
-    "<48", "Yes impsan" = "Yes", "None impsan" = "None", "Food Secure hfoodsec" =
-    "Food Secure", "Mildly Food Insecure hfoodsec" = "Mildly Food Insecure", "Food Insecure hfoodsec" =
-    "Food Insecure", "Yes impfloor" = "Yes", "None impfloor" = "None", "1 nchldlt5" =
-    "1", "2+ nchldlt5" = "2+", "Q4 hhwealth_quart" = "Q4", "Q3 hhwealth_quart" =
-    "Q3", "Q2 hhwealth_quart" = "Q2", "Q1 hhwealth_quart" = "Q1", "3 or less nhh" =
-    "3 or less", "6-7 nhh" = "6-7", "4-5 nhh" = "4-5", "8+ nhh" = "8+", "4+ nrooms" =
-    "4+", "3 nrooms" = "3", "2 nrooms" = "2", "1 nrooms" = "1", "Yes cleanck" =
-    "Yes", "No cleanck" = "No", "[20-30) mage" = "[20-30)", "<20 mage" = "<20", "≥30 mage" =
-    "≥30", "High feducyrs" = "High", "Medium feducyrs" = "Medium", "Low feducyrs" =
-    "Low", "≥150 mhtcm" = "≥150", "<150 mhtcm" = "<150", "≥45 mwtkg" = "≥45", "<45 mwtkg" =
-    "<45", "≥20 mbmi" = "≥20", "<20 mbmi" = "<20", "High meducyrs" = "High", "Medium meducyrs" =
-    "Medium", "Low meducyrs" = "Low", "≥35 fage" = "≥35", "<30 fage" = "<30", "[30-35) fage" =
-    "[30-35)", "Yes earlybf" = "Yes", "No earlybf" = "No", "[0%, 2%] perdiar24" =
-    "[0%, 2%]", ">2% perdiar24" = ">2%", "Yes predexfd6" = "Yes", "None predexfd6" =
-    "None"
+    "82% shifted to ≥35", "30% shifted to ≥150 mhtcm" = "30% shifted to ≥150", "35% shifted to ≥45 mwtkg" =
+    "35% shifted to ≥45", "40% shifted to ≥20 mbmi" = "40% shifted to ≥20", "68% shifted to High meducyrs" =
+    "68% shifted to High", "77% shifted to High feducyrs" = "77% shifted to High", "37% shifted to Yes predexfd6" =
+    "37% shifted to Yes", "48% shifted to [0%,2%] perdiar24" = "48% shifted to [0%,2%]", "70% shifted to Yes earlybf" =
+    "70% shifted to Yes", "Male sex" = "Male", "Female sex" = "Female", "<48 birthlen" =
+    "<48", "≥50 birthlen" = "≥50", "[48-50) birthlen" = "[48-50)", "< 2500 g birthwt" =
+    "< 2500 g", "<2500g birthwt" = "<2500g", "Preterm gagebrth" = "Preterm", "Full/late term gagebrth" =
+    "Full/late term", "Early term gagebrth" = "Early term", "Yes hdlvry" = "Yes", "No hdlvry" =
+    "No", "Yes vagbrth" = "Yes", "C-section vagbrth" = "C-section", "3+ parity" =
+    "3+", "2 parity" = "2", "1 parity" = "1", "2+ nchldlt5" = "2+", "1 nchldlt5" =
+    "1", "8+ nhh" = "8+", "6-7 nhh" = "6-7", "3 or less nhh" = "3 or less", "4-5 nhh" =
+    "4-5", "1 nrooms" = "1", "4+ nrooms" = "4+", "3 nrooms" = "3", "2 nrooms" =
+    "2", "WealthQ1 hhwealth_quart" = "WealthQ1", "Q4 hhwealth_quart" = "Q4", "Q3 hhwealth_quart" =
+    "Q3", "Q2 hhwealth_quart" = "Q2", "Food Insecure hfoodsec" = "Food Insecure", "Food Secure hfoodsec" =
+    "Food Secure", "Mildly Food Insecure hfoodsec" = "Mildly Food Insecure", "No impsan" =
+    "No", "Yes impsan" = "Yes", "No impfloor" = "No", "Yes impfloor" = "Yes", "No cleanck" =
+    "No", "Yes cleanck" = "Yes", "<20 mage" = "<20", "[20-30) mage" = "[20-30)", "≥30 mage" =
+    "≥30", "<30 fage" = "<30", "≥35 fage" = "≥35", "[30-35) fage" = "[30-35)", "<150 mhtcm" =
+    "<150", "≥150 mhtcm" = "≥150", "<45 mwtkg" = "<45", "≥45 mwtkg" = "≥45", "<20 mbmi" =
+    "<20", "≥20 mbmi" = "≥20", "Low meducyrs" = "Low", "High meducyrs" = "High", "Medium meducyrs" =
+    "Medium", "Low feducyrs" = "Low", "High feducyrs" = "High", "Medium feducyrs" =
+    "Medium", ">2% perdiar24" = ">2%", "[0%,2%] perdiar24" = "[0%,2%]", "No earlybf" =
+    "No", "Yes earlybf" = "Yes", "75% shifted to Opposite max rain rain_quartile" =
+    "75% shifted to Opposite max rain", "51% shifted to Female sex" = "51% shifted to Female", "67% shifted to ≥50 birthlen" =
+    "67% shifted to ≥50", "25% shifted to ≥ 2500 g birthwt" = "25% shifted to ≥ 2500 g", "49% shifted to Full/late term gagebrth" =
+    "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "91% shifted to C-section vagbrth" =
+    "91% shifted to C-section", "67% shifted to 1 parity" = "67% shifted to 1", "38% shifted to 1 nchldlt5" =
+    "38% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
+    "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
+    "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
+    "75% shifted to Yes", "51% shifted to Yes cleanck" = "51% shifted to Yes", "43% shifted to [20-30) mage" =
+    "43% shifted to [20-30)", "82% shifted to ≥35 fage" = "82% shifted to ≥35", "32% shifted to ≥150 mhtcm" =
+    "32% shifted to ≥150", "38% shifted to ≥45 mwtkg" = "38% shifted to ≥45", "41% shifted to ≥20 mbmi" =
+    "41% shifted to ≥20", "69% shifted to High meducyrs" = "69% shifted to High", "76% shifted to High feducyrs" =
+    "76% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to [0%,2%] perdiar24" =
+    "48% shifted to [0%,2%]", "72% shifted to Yes earlybf" = "72% shifted to Yes", "Male sex" =
+    "Male", "Female sex" = "Female", "<48 birthlen" = "<48", "≥50 birthlen" =
+    "≥50", "[48-50) birthlen" = "[48-50)", "< 2500 g birthwt" = "< 2500 g", "<2500g birthwt" =
+    "<2500g", "Preterm gagebrth" = "Preterm", "Full/late term gagebrth" = "Full/late term", "Early term gagebrth" =
+    "Early term", "Yes hdlvry" = "Yes", "No hdlvry" = "No", "Yes vagbrth" =
+    "Yes", "C-section vagbrth" = "C-section", "3+ parity" = "3+", "2 parity" =
+    "2", "1 parity" = "1", "2+ nchldlt5" = "2+", "1 nchldlt5" = "1", "8+ nhh" =
+    "8+", "3 or less nhh" = "3 or less", "6-7 nhh" = "6-7", "4-5 nhh" = "4-5", "1 nrooms" =
+    "1", "3 nrooms" = "3", "4+ nrooms" = "4+", "2 nrooms" = "2", "WealthQ1 hhwealth_quart" =
+    "WealthQ1", "Q3 hhwealth_quart" = "Q3", "Q4 hhwealth_quart" = "Q4", "Q2 hhwealth_quart" =
+    "Q2", "Food Insecure hfoodsec" = "Food Insecure", "Food Secure hfoodsec" =
+    "Food Secure", "Mildly Food Insecure hfoodsec" = "Mildly Food Insecure", "No impsan" =
+    "No", "Yes impsan" = "Yes", "No impfloor" = "No", "Yes impfloor" = "Yes", "No cleanck" =
+    "No", "Yes cleanck" = "Yes", "<20 mage" = "<20", "≥30 mage" = "≥30", "[20-30) mage" =
+    "[20-30)", "<30 fage" = "<30", "≥35 fage" = "≥35", "[30-35) fage" = "[30-35)", "<150 mhtcm" =
+    "<150", "≥150 mhtcm" = "≥150", "<45 mwtkg" = "<45", "≥45 mwtkg" = "≥45", "<20 mbmi" =
+    "<20", "≥20 mbmi" = "≥20", "Low meducyrs" = "Low", "High meducyrs" = "High", "Medium meducyrs" =
+    "Medium", "Low feducyrs" = "Low", "High feducyrs" = "High", "Medium feducyrs" =
+    "Medium", ">2% perdiar24" = ">2%", "[0%,2%] perdiar24" = "[0%,2%]", "No earlybf" =
+    "No", "Yes earlybf" = "Yes"
 )
 
 #----------------------------------------------------------
