@@ -93,6 +93,8 @@ saveRDS(velocity, paste0(res_dir, "rf results/longbow results/results_vel.RDS"))
 # velocity_sub <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_vel_2021-07-25.RDS"))   
 # saveRDS(velocity_sub, paste0(res_dir, "rf results/longbow results/results_vel_sub.RDS"))
 
+
+
 season <-  readRDS(paste0(res_dir,  "rf results/raw longbow results/results_seasonality_results_2021-08-26.RDS"))
 saveRDS(season, paste0(res_dir, "rf results/longbow results/seasonality_results.RDS"))
 
@@ -101,6 +103,9 @@ saveRDS(season_birth, paste0(res_dir, "rf results/longbow results/seasonality_bi
 
 season_cont_rf <- readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_rf_cont_results_2021-04-22.RDS"))
 saveRDS(season_cont_rf, paste0(res_dir, "rf results/longbow results/season_cont_rf_results.RDS"))
+
+season_cont_rf_alt_ref <- readRDS(paste0(res_dir,  "rf results/raw longbow results/results_seasonality_rf_cont_alt_ref_2022-09-27.RDS"))
+saveRDS(season_cont_rf_alt_ref, paste0(res_dir, "rf results/longbow results/season_cont_rf_results_alt_ref.RDS"))
 
 season_bin_rf <- readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_rf_bin_results_2021-04-22.RDS"))
 saveRDS(season_bin_rf, paste0(res_dir, "rf results/longbow results/season_bin_rf_results.RDS"))

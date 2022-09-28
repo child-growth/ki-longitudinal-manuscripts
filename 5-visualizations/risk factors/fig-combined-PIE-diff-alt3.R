@@ -47,6 +47,7 @@ par_raw <- par_raw %>% mutate(PAR=-PAR, CI1_temp=-CI2, CI2=-CI1, CI1=CI1_temp) %
 ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
 
 
+
 #rename point estimates and CI's for combining
 par_raw <- par_raw %>% rename(est=PAR)
 ATE_raw <- ATE_raw %>% rename(est=ATE)
