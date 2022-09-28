@@ -31,7 +31,7 @@ d <- meanWHZ %>% filter(agecat=="24 months") %>%
                                  rain_quartile==2 ~  "Pre-max rain",
                                  rain_quartile==3 ~  "Max rain",
                                  rain_quartile==4 ~  "Post-max rain"),
-         rain_quartile=factor(rain_quartile, levels=c("Opposite max rain",  "Pre-max rain",  "Max rain", "Post-max rain"))) %>%
+         rain_quartile=factor(rain_quartile, levels=c( "Max rain", "Post-max rain","Opposite max rain",  "Pre-max rain"))) %>%
   droplevels()
 levels(d$rain_quartile)
 table(d$rain_quartile)
