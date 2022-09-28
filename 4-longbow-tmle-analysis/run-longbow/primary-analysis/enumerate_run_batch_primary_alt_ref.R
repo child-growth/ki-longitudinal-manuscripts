@@ -45,7 +45,7 @@ d$gagebrth <- factor(d$gagebrth, levels=c("Preterm", "Early term", "Full or late
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_cuminc_rf_primary_alt_ref.rdata")
 
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_cuminc_nobirth_rf_primary.rdata")
-d <- d %>% filter(agecat=="0-24 months")
+d <- d %>% filter(agecat=="0-24 months (no birth st.)")
 d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
@@ -75,7 +75,7 @@ d$gagebrth <- factor(d$gagebrth, levels=c("Preterm", "Early term", "Full or late
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_rf_primary_alt_ref.rdata")
 
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_nobirth_rf_primary.rdata")
-d <- d %>% filter(agecat=="0-24 months")
+d <- d %>% filter(agecat=="0-24 months (no birth wast)")
 d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
