@@ -7,8 +7,8 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-09-27.RDS"))
-Zscores_alt_ref_season <- readRDS(paste0(BV_dir,"/results/rf results/raw longbow results/results_seasonality_rf_cont_alt_ref_2022-09-27.RDS")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
+Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-09-28.RDS"))
+Zscores_alt_ref_season <- readRDS(paste0(BV_dir,"/results/rf results/raw longbow results/results_seasonality_rf_cont_alt_ref_2022-09-28.RDS")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
 dfull <- bind_rows(Zscores_alt_ref, Zscores_alt_ref_season)
 
 unique(dfull$intervention_variable)

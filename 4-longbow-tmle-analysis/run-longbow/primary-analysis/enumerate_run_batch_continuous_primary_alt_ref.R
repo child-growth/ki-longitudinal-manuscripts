@@ -79,7 +79,7 @@ save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_pri
 
 
 analyses <- analyses %>% filter(!(A %in% c("brthmon","month",  "enstunt",       "enwast","predfeed3",     "predfeed6",     "predfeed36",    "exclfeed3","exclfeed6",     "exclfeed36","fhtcm_rf",  "anywast06",     "pers_wast",   
-                                           "predfeed3",     "predfeed6",     "predfeed36",    "exclfeed3",     "exclfeed6",     "exclfeed36",    "predexfd6" )))
+                                           "predfeed3",     "predfeed6",     "predfeed36",    "exclfeed3",     "exclfeed6",     "exclfeed36" )))
 
 #specify analyses
 analyses$file <- gsub("rf.Rdata","rf_prim_alt_ref.Rdata",analyses$file)

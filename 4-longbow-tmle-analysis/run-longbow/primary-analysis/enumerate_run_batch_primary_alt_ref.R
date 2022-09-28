@@ -72,7 +72,7 @@ d$meducyrs <- factor(d$meducyrs, levels=c("Low", "Medium" ,"High" ))
 d$feducyrs <- factor(d$feducyrs, levels=c("Low", "Medium" ,"High" ))
 d$birthlen <- factor(d$birthlen, levels=c("<48 cm", "[48-50) cm", ">=50 cm"))
 d$gagebrth <- factor(d$gagebrth, levels=c("Preterm", "Early term", "Full or late term")) 
-save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_rf_primary_alt_ref.Rdata")
+save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_rf_primary_alt_ref.rdata")
 
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_cuminc_nobirth_rf_primary.rdata")
 d <- d %>% filter(agecat=="0-24 months")

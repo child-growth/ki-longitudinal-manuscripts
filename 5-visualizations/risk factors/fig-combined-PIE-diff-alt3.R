@@ -50,11 +50,7 @@ par_raw <- par_raw %>% mutate(PAR=-PAR, CI1_temp=-CI2, CI2=-CI1, CI1=CI1_temp) %
 #Mean differences
 ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
 
-#season
-ATE_raw_season <- readRDS(paste0(BV_dir,"/results/rf results/ra/results_seasonality_rf_cont_alt_ref_2022-09-27.RDS")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
-saveRDS(season_cont_rf_alt_ref, paste0(res_dir, "rf results/longbow results/season_cont_rf_results_alt_ref.RDS"))
 
-seasonality_rf_cont_alt_ref
 
 #rename point estimates and CI's for combining
 par_raw <- par_raw %>% rename(est=PAR)
