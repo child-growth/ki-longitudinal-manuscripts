@@ -7,7 +7,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
-Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-09-26.RDS"))
+Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-09-27.RDS"))
 saveRDS(Zscores_alt_ref, paste0(res_dir, "rf results/longbow results/results_cont_primary_alt_ref.RDS"))
 
 

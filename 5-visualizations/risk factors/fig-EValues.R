@@ -12,7 +12,9 @@ library(EValue)
 #Load data
 d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 
-d <- d %>% filter(!(intervention_variable %in% c("anywast06","pers_wast","enstunt","enwast","trth2o")))
+unique(d$intervention_variable)
+
+d <- d %>% filter(!(intervention_variable %in% c("anywast06","pers_wast","enstunt","enwast","trth2o","lag_WHZ_quart","single")))
 
 
 #Drop reference levels
