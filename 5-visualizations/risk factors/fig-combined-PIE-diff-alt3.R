@@ -20,6 +20,10 @@ library(tidytext)
 
 #Make for PAF/CIR plots
 
+#Make rain quartile a postnatal child category
+
+#add labels for PIE and ATE to the first panel
+
 
 #----------------------------------------------------------
 # Plot parameters
@@ -62,11 +66,13 @@ saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 head(df_full)
 
+df_full %>% filter(intervention_variable=="birthwt", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
 #----------------------------------------------------------------------------------
 
-df <- df_full %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")))
+df <- df_full %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast","month","brthmon","trth2o")))
 unique(df$intervention_level)
 unique(df$intervention_variable)
 df$intervention_level <- as.character(df$intervention_level)
@@ -276,12 +282,12 @@ ylimits=c(-0.1, 0.8)
 outcome_var="haz"
 ylab="Adjusted difference in LAZ at 24 months"
 
-plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), outcome_var="haz", ylab="Adjusted difference in LAZ at 24 months", legend=F){
+plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, outcome_var="haz", ylab="Adjusted difference in LAZ at 24 months", legend=F, xaxis=F){
   
   plotdf <- d %>% filter(outcome_variable==outcome_var, !is.na(est))
   plotdf <- plotdf %>% 
     ungroup() %>% 
-    arrange(parameter, est) 
+    arrange(parameter, -est) 
   rflevels = unique(plotdf$intervention_level_f2)
   plotdf$intervention_level_f2=factor(plotdf$intervention_level_f2, levels=rflevels)
   rflevels2 = unique(plotdf$RFlabel)
@@ -296,7 +302,6 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), outcome_var="haz", yl
     geom_hline(yintercept = 0, size=0.25) +
     geom_text(aes(y= est, label=reflabel, hjust=-.5), size=1.65, color=grey_color) +
     coord_flip(ylim=ylimits) +
-    labs(x = NULL, y = ylab) +
     geom_hline(yintercept = 0, alpha=0.5) +
     #facet_grid( RFlabel ~ ., scales="free_y",switch = "y") +
     ggforce::facet_col(facets = vars(RFlabel),
@@ -307,28 +312,41 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), outcome_var="haz", yl
                        #labels=c("0.1","0","-0.1","-0.2","-0.3","-0.4","-0.5","-0.6","-0.7","-0.8")
                        ) +
     guides(color=guide_legend(title="Estimate type:"), shape=guide_legend(title="Estimate type:"), fill=guide_legend(title="Estimate type:")) + 
-    scale_color_manual(values = c("#287D8EFF", grey_color), guide = guide_legend(reverse = T) ) +
-    scale_fill_manual(values = c("#287D8EFF", grey_color), guide = guide_legend(reverse = T) ) +
-    #scale_alpha_manual(values = c(1, 0.5), guide = guide_legend(reverse = T) ) +
+    scale_color_manual(values = c("black","#287D8EFF"), guide = guide_legend(reverse = T) ) +
+    scale_fill_manual(values = c("black","#287D8EFF"), guide = guide_legend(reverse = T) ) +
+    scale_alpha_manual(values = c(1, 0.75), guide = guide_legend(reverse = T) ) +
     scale_shape_manual(values = c(23, 21), guide = guide_legend(reverse = T) ) +
     guides(color=guide_legend(title="Estimate type:", nrow=2,byrow=TRUE), 
            alpha=guide_legend(title="Estimate type:", nrow=2,byrow=TRUE), 
            shape=guide_legend(title="Estimate type:", nrow=2,byrow=TRUE), 
-           fill=guide_legend(title="Estimate type:", nrow=2,byrow=TRUE)) + 
-    theme(strip.background = element_blank(),
-          legend.position = ifelse(legend,"bottom","none"),
-          strip.placement = "outside",
-          strip.clip = "off",
-          strip.text.y.left = element_text(angle = 0, size=6, hjust = 0, margin = margin(r = -75), face = "bold"),
-          axis.text.y = element_text(size=6, hjust = 1),
-          axis.text.x = element_text(size=6),
-          legend.text = element_text(size=6),
-          legend.title = element_text(size=6),
-          axis.title.x = element_text(size=6),
-          axis.ticks.x = element_line(size = c(0,0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)),
-          panel.spacing = unit(0, "lines"),
-          legend.box.background = element_rect(colour = grey_color), 
-          plot.margin = unit(c(0, 0, 0, 0), "cm")) 
+           fill=guide_legend(title="Estimate type:", nrow=2,byrow=TRUE)) +
+    #ggtitle(plotdf$RFgroup[1]) + 
+      theme(strip.background = element_blank(),
+            legend.position = ifelse(legend,"bottom","none"),
+            panel.background=element_blank(),
+            panel.border=element_rect(colour="grey80"),
+            strip.placement = "outside",
+            strip.clip = "off",
+            strip.text.y.left = element_text(angle = 0, size=6, hjust = 0,
+                                             margin = margin(r = facet_label_pos), face = "bold"),
+            axis.text.y = element_text(size=6, hjust = 1),
+            legend.text = element_text(size=6),
+            legend.title = element_text(size=6),
+            plot.title.position = "plot",
+            plot.title = element_text(size=10),
+            panel.spacing = unit(0, "lines"),
+            legend.box.background = element_rect(colour = grey_color), 
+            plot.margin = unit(c(0, 0, 0, 0), "cm")) 
+  if(xaxis){
+   p <- p + labs(x = NULL, y = ylab, title=plotdf$RFgroup[1]) +
+      theme(axis.text.x = element_text(size=6),
+            axis.title.x = element_text(size=6)) 
+    }else{
+    p <- p + labs(x = NULL, y = NULL, title=plotdf$RFgroup[1]) +
+      theme(axis.text.x =element_blank(),
+            axis.title.x = element_blank(),
+            axis.ticks.x = element_blank())   
+    }
 
   return(p)
 }
@@ -339,31 +357,46 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), outcome_var="haz", yl
 # LAZ
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-unique(df$RFgroup)
-p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",])
-p1
-
-p2 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",])
-p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",])
-p4 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], legend=T, xaxis=T)
-
-p_laz <- grid.arrange(p1, p2, p3, p4, 
-                      nrow = 4, ncol = 1,
-                      heights = c(25,25,25,25))
-
-
+  unique(df$RFgroup)
+  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], facet_label_pos= -75)
+  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -50)
+  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -35)
+  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T, facet_label_pos= -60)
+  
+  plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
+  
+  p_laz <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
+                        ncol = 1,
+                        #label_size = 8,
+                        align = "h",
+                        #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
+                        rel_heights = c(25,15,25,40))
   
   ggsave(p_laz, file=paste0(here::here(),"/figures/fig2_alt3_laz.png"), width=4, height=8)
-  ggsave(p_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt3_laz.png"), width=4, height=8)
+  #ggsave(p_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt3_laz.png"), width=4, height=8)
     
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # WLZ
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-  p_wlz <- plot_combined_pie_ate(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
+  #p_wlz <- plot_combined_pie_ate(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
+  
+  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -75)
+  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -50)
+  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -35)
+  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.45),   outcome_var="whz", legend=F, xaxis=T, facet_label_pos= -60, ylab="Adjusted difference in WLZ at 24 months")
+  
+  plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
+  
+  p_wlz <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
+                     ncol = 1,
+                     #label_size = 8,
+                     align = "h",
+                     #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
+                     rel_heights = c(25,15,25,40))
   
 
 ggsave(p_wlz, file=paste0(here::here(),"/figures/fig3_alt3_wlz.png"), width=4, height=8)
-ggsave(p_wlz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3_alt_wlz.png"), width=4, height=8)
+#ggsave(p_wlz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3_alt_wlz.png"), width=4, height=8)
 
