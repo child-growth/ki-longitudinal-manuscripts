@@ -17,11 +17,11 @@ d_unstrat <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/results_
   filter(type=="ATE", agecat=="24 months") %>%
   mutate(birthwt="Unstratified")
 
-df <- d_unstrat %>% filter(outcome_variable=="haz", intervention_variable=="parity") %>% droplevels() %>% arrange(studyid, birthwt)
 
 
 d <- bind_rows(d, d_unstrat)
 table(d$birthwt)
+table(d$intervention_variable)
 
 #get number of children:
 Ns <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin_N.RDS"))
@@ -69,14 +69,14 @@ d <- d %>% filter(intervention_level != d$baseline_level)
 
 #drop rare levels
 
-#laz birth order
-df <- d %>% filter(outcome_variable=="haz", intervention_variable=="parity")%>% droplevels()
-table(df$studyid, df$birthwt)
 
-d <- d %>% filter(n_cell > 50)
+table(d$intervention_variable, d$outcome_variable)
 
-df <- d %>% filter(outcome_variable=="haz", intervention_variable=="parity")%>% droplevels()
-table(df$studyid, df$birthwt)
+d <- d %>% filter(n_cell > 10)
+head(d)
+
+table(d$intervention_variable, d$Nlevels, d$outcome_variable)
+
 
 #Count number of BW levels and only keep when estimates for both levels by study
 d <- d %>% group_by(studyid, country, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
@@ -85,6 +85,7 @@ d <- d %>% group_by(studyid, country, intervention_variable, agecat, interventio
   mutate(Nstudies=n()) %>% filter(Nstudies>2)
 table(d$Nlevels)
 table(d$Nstudies)
+table(d$intervention_variable)
 
 
 df <- d %>% filter(outcome_variable=="haz", intervention_variable=="parity") %>% droplevels() %>% arrange(studyid, birthwt) %>% select(studyid, estimate, ci_lower, ci_upper)

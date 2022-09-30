@@ -30,6 +30,9 @@ textcol = "grey20"
 #-----------------------------------
 rfp <- readRDS(paste0(BV_dir,'/results/cov_missingness.rds'))
 
+saveRDS(rfp, file=paste0(here::here(),"/data/cov_missingness_plotdf.RDS"))
+
+
 # gather rf missingness by study into long format
 d <- rfp %>% 
   gather(risk_factor,missingness,-studyid, -country) 
