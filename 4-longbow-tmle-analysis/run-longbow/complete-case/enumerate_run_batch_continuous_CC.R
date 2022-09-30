@@ -64,9 +64,8 @@ specify_longbow_cc <- function(j, analyses_df=analyses, params=default_params){
 
 
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow_cc)
-enumerated_analyses <- enumerated_analyses[15:16]
 
 
-run_ki_tmle(enumerated_analyses, results_folder="results_cont_CC", overwrite = T, skip_failed = F, rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors_CC.Rmd"))
+run_ki_tmle(enumerated_analyses, results_folder="results_cont_CC", overwrite = F, skip_failed = F, rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors_CC.Rmd"))
 
 
