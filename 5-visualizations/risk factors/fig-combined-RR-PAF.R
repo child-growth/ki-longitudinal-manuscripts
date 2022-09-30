@@ -13,6 +13,15 @@ library(gtable)
 library(cowplot)
 
 
+#----------------------------------------------------------
+# Plot parameters
+#----------------------------------------------------------
+
+dodge_width = 0.7
+
+# Colors
+color_vec = c("#7F7F7F", "#E377C2")
+main_color <- "#287D8EFF"
 
 #----------------------------------------------------------------------------------
 # Load data
@@ -43,6 +52,7 @@ library(cowplot)
 # saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled")
+table(df_full$agecat)
 table(df_full$parameter)
 df_full$RR
 #----------------------------------------------------------------------------------
@@ -60,7 +70,7 @@ unique(df$intervention_variable)
 unique(df$RFlabel_ref)
 df$intervention_level <- as.character(df$intervention_level)
 df$intervention_level[df$intervention_level=="Full or late term"] <- "Full/late term"
-df$intervention_level[df$intervention_level=="[0%, 2%]"] <- "[0%,2%]"
+df$intervention_level[df$intervention_level=="[0%, 2%]"] <- "<=2%"
 df$intervention_level[df$intervention_level=="No" & !(df$intervention_variable %in% c("enwast","enstunt"))] <- "None"
 df$intervention_level[df$intervention_variable %in% c("enwast","enstunt")] <- "No"
 df$intervention_level[df$intervention_level=="Normal weight"] <- ">=18.5 BMI"
@@ -114,7 +124,7 @@ head(df)
 table(df$agecat)
 
 # Only include  Z-scores and subset to last age examined
-df <- df %>% filter(agecat=="0-24 months")
+df <- df %>% filter(agecat=="0-24 months"|agecat=="0-24 months (no birth st.)")
 
 #Pooled estimates
 df <- df %>% filter(region=="Pooled") %>%
@@ -154,7 +164,7 @@ df <- df %>% group_by(outcome_variable, RFlabel) %>% mutate(n=max(n, na.rm=T)) %
 #RFlabel=atop(bold(RFlabel),textstyle("\nN=",n)))
 #RFlabel=paste0("bold('",RFlabel,"')\nN=",n))
 #RFlabel=bquote(bold(RFlabel)~paste0("\nN=",n)))
-df$intervention_level_f[df$parameter!="Population Intervention Effect"] <- df$intervention_level[df$parameter!="Population Intervention Effect"]  
+df$intervention_level_f[df$parameter!="PAF"] <- df$intervention_level[df$parameter!="PAF"]  
 
 unique(df$intervention_level_f)
 unique(df$intervention_level2[is.na(df$intervention_level)])
@@ -169,16 +179,16 @@ unique(df$intervention_level2[is.na(df$intervention_level)])
 #     "atop(atop(textstyle('THAT'),textstyle('Extraposed')),italic('that')*textstyle('-omission'))",
 #     "atop(atop(textstyle('THAT'),textstyle('Post-predicate')),italic('that')*textstyle('-omission'))")
 
-unique(df$outcome_variable)
+unique(df$parameter)
 
 df <- df %>%
   mutate(
-    parameter = factor(parameter, levels=c("Population Intervention Effect","Mean Difference")),
+    parameter = factor(parameter, levels=c("PAF","CIR")),
     outcome_variable = factor(outcome_variable, levels=c("ever_stunted", "ever_wasted")))
 
 #Sort and set Y-axis order
 df <- df %>% group_by(intervention_variable, outcome_variable) %>%
-  mutate(par=ifelse(parameter=="Population Intervention Effect",1,0), max_est= max(-est *par), 
+  mutate(par=ifelse(parameter=="PAF",1,0), max_est= max(-est *par), 
          intervention_level_f2=paste0(intervention_level_f, " ", intervention_variable)) %>% 
   ungroup() %>% 
   arrange(outcome_variable,  -par,   RFgroup, max_est,  intervention_variable,  reflabel,  -est) 
@@ -222,8 +232,8 @@ variable_labels = c(
     "42% shifted to [20-30)", "82% shifted to >=35 fage" = "82% shifted to \u226535", "30% shifted to >=150 mhtcm" =
     "30% shifted to \u2265150", "35% shifted to >=45 mwtkg" = "35% shifted to \u226545", "40% shifted to >=20 mbmi" =
     "40% shifted to \u226520", "68% shifted to High meducyrs" = "68% shifted to High", "77% shifted to High feducyrs" =
-    "77% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to [0%,2%] perdiar24" =
-    "48% shifted to [0%,2%]", "78% shifted to Post-max rain rain_quartile" =
+    "77% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to <=2% perdiar24" =
+    "48% shifted to \u22642%", "78% shifted to Post-max rain rain_quartile" =
     "78% shifted to Post-max rain", "70% shifted to Yes earlybf" = "70% shifted to Yes", "Male sex" =
     "Male", "Female sex" = "Female", "<48 birthlen" = "<48", ">=50 birthlen" =
     "\u226550", "[48-50) birthlen" = "[48-50)", "< 2500 g birthwt" = "< 2500 g", "<2500g birthwt" =
@@ -243,8 +253,8 @@ variable_labels = c(
     "\u226545", "<20 mbmi" = "<20", ">=20 mbmi" = "\u226520", "Low meducyrs" =
     "Low", "High meducyrs" = "High", "Medium meducyrs" = "Medium", "Low feducyrs" =
     "Low", "High feducyrs" = "High", "Medium feducyrs" = "Medium", "No predexfd6" =
-    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "[0%,2%] perdiar24" =
-    "[0%,2%]", "Opposite max rain rain_quartile" = "Opposite max rain", "Post-max rain rain_quartile" =
+    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "<=2% perdiar24" =
+    "\u22642%", "Opposite max rain rain_quartile" = "Opposite max rain", "Post-max rain rain_quartile" =
     "Post-max rain", "Pre-max rain rain_quartile" = "Pre-max rain", "Max rain rain_quartile" =
     "Max rain", "No earlybf" = "No", "Yes earlybf" = "Yes", "51% shifted to Female sex" =
     "51% shifted to Female", "67% shifted to >=50 birthlen" = "67% shifted to \u226550", "25% shifted to >= 2500 g birthwt" =
@@ -258,8 +268,8 @@ variable_labels = c(
     "43% shifted to [20-30)", "82% shifted to >=35 fage" = "82% shifted to \u226535", "32% shifted to >=150 mhtcm" =
     "32% shifted to \u2265150", "38% shifted to >=45 mwtkg" = "38% shifted to \u226545", "41% shifted to >=20 mbmi" =
     "41% shifted to \u226520", "69% shifted to High meducyrs" = "69% shifted to High", "76% shifted to High feducyrs" =
-    "76% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to [0%,2%] perdiar24" =
-    "48% shifted to [0%,2%]", "75% shifted to Opposite max rain rain_quartile" =
+    "76% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to <=2% perdiar24" =
+    "48% shifted to \u22642%", "75% shifted to Opposite max rain rain_quartile" =
     "75% shifted to Opposite max rain", "72% shifted to Yes earlybf" = "72% shifted to Yes", "Male sex" =
     "Male", "Female sex" = "Female", "<48 birthlen" = "<48", ">=50 birthlen" =
     "\u226550", "[48-50) birthlen" = "[48-50)", "< 2500 g birthwt" = "< 2500 g", "<2500g birthwt" =
@@ -279,8 +289,8 @@ variable_labels = c(
     "\u226545", "<20 mbmi" = "<20", ">=20 mbmi" = "\u226520", "Low meducyrs" =
     "Low", "High meducyrs" = "High", "Medium meducyrs" = "Medium", "Low feducyrs" =
     "Low", "High feducyrs" = "High", "Medium feducyrs" = "Medium", "No predexfd6" =
-    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "[0%,2%] perdiar24" =
-    "[0%,2%]", "Post-max rain rain_quartile" = "Post-max rain", "Opposite max rain rain_quartile" =
+    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "<=2% perdiar24" =
+    "\u22642%", "Post-max rain rain_quartile" = "Post-max rain", "Opposite max rain rain_quartile" =
     "Opposite max rain", "Pre-max rain rain_quartile" = "Pre-max rain", "Max rain rain_quartile" =
     "Max rain", "No earlybf" = "No", "Yes earlybf" = "Yes"
 )
@@ -291,7 +301,7 @@ variable_labels = c(
 #----------------------------------------------------------
 d=df %>% filter(intervention_variable=="earlybf"|intervention_variable=="parity")
 ylimits=c(-0.1, 0.8)
-outcome_var="haz"
+outcome_var="ever_stunted"
 ylab="Adjusted difference in LAZ at 24 months"
 legend=F
 xaxis=F
@@ -301,7 +311,8 @@ facet_label_pos= -75
 unique(df$outcome_variable)
 unique(df$intervention_variable)
 unique(df$intervention_level_f2)
-plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, outcome_var="ever_stunted", ylab="Adjusted difference in LAZ at 24 months", legend=F, xaxis=F){
+
+plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, outcome_var="ever_stunted", ylab="Adjusted difference in LAZ at 24 months", legend=F, xaxis=F, yaxis=T){
   
   plotdf <- d %>% filter(outcome_variable==outcome_var, !is.na(est))
   plotdf <- plotdf %>% mutate(
@@ -342,14 +353,20 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
   
   grey_color <- "grey40"
   
+  if(yaxis){
+    alpha_vals=c(1, 0)
+  }else{
+    alpha_vals=c(0, 1)
+  }
+  
   p <- ggplot(plotdf, aes(x=intervention_level_f2, alpha=parameter,
                           shape=parameter, color=parameter,  fill=parameter)) + 
     geom_point(aes(y=est),  size = 1.5, position = position_dodge2(dodge_width)) +
     geom_linerange(aes(ymin=CI1, ymax=CI2), position = position_dodge2(dodge_width)) +
     geom_hline(yintercept = 0, size=0.25) +
     geom_text(aes(y= est, label=reflabel, hjust=-.5), size=1.65, color="grey20") +
-    coord_flip(ylim=ylimits) +
-    geom_hline(yintercept = 0, alpha=0.5) +
+    coord_flip(#ylim=ylimits
+               ) +
     #facet_grid( RFlabel ~ ., scales="free_y",switch = "y") +
     ggforce::facet_col(facets = vars(RFlabel),
                        scales = "free_y",
@@ -357,14 +374,10 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
                        #labeller = label_parsed
     ) +
     scale_x_discrete(labels=variable_labels) +
-    scale_y_continuous(trans="log10",
-                       #breaks = c(-0.1,0,0.1,0.2,0.3,0.4, 0.5, 0.6, 0.7, 0.8), 
-                       #labels=c("0.1","0","-0.1","-0.2","-0.3","-0.4","-0.5","-0.6","-0.7","-0.8")
-    ) +
     guides(color=guide_legend(title="Estimate type:"), shape=guide_legend(title="Estimate type:"), fill=guide_legend(title="Estimate type:")) + 
     scale_color_manual(values = c("black","#287D8EFF"), guide = guide_legend(reverse = T) ) +
     scale_fill_manual(values = c("black","#287D8EFF"), guide = guide_legend(reverse = T) ) +
-    scale_alpha_manual(values = c(1, 0.5), guide = guide_legend(reverse = T) ) +
+    scale_alpha_manual(values =alpha_vals, guide = guide_legend(reverse = T) ) +
     scale_shape_manual(values = c(23, 21), guide = guide_legend(reverse = T) ) +
     guides(color=guide_legend(title="Estimate type:", nrow=2,byrow=TRUE), 
            alpha=guide_legend(title="Estimate type:", nrow=2,byrow=TRUE), 
@@ -378,11 +391,6 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
           strip.placement = "outside",
           strip.clip = "off",
           panel.grid.minor = element_blank(),
-          strip.text.y.left = element_text(angle = 0, size=6, hjust = 0,
-                                           margin = margin(r = facet_label_pos), 
-                                           face = "bold"
-          ),
-          axis.text.y = element_text(size=6, hjust = 1, colour=grey_color),
           legend.text = element_text(size=6),
           legend.title = element_text(size=6),
           axis.ticks=element_line( colour=grey_color),
@@ -392,6 +400,26 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
           legend.box.background = element_rect(colour = grey_color), 
           plot.margin = unit(c(0, 0, 0, 0), "cm")) 
   p
+  
+  if(yaxis){
+    p <- p +     geom_hline(yintercept = 0, alpha=0.5) +
+      theme(
+            axis.text.y = element_text(size=6, hjust = 1, colour=grey_color),
+            strip.text.y.left = element_text(angle = 0, size=6, hjust = 0,
+                                             margin = margin(r = facet_label_pos), 
+                                             face = "bold"
+            ),
+      ) 
+  }else{
+    p <- p + scale_y_continuous(trans="log10")  +
+      geom_hline(yintercept = 1, alpha=0.5) +
+      theme(axis.ticks.y =element_blank(),
+            axis.text.y =element_blank(),
+            plot.title = element_text(color = "white"),
+            strip.text.y.left  =element_blank(),
+            axis.title.y = element_blank()#,
+      )   
+  }
   
   if(xaxis){
     p <- p + labs(x = NULL, y = ylab, title=plotdf$RFgroup[1]) +
@@ -416,20 +444,35 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
 
 unique(df$RFgroup)
 p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], facet_label_pos= -35, xaxis=T, ylab="")
-p1
-
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -45, xaxis=T, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -15, xaxis=T, ylab="")
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T, facet_label_pos= -40)
 
 plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
 
-p_laz <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
+p_laz_PAF <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
                    ncol = 1,
                    #label_size = 8,
                    align = "h",
                    #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
                    rel_heights = c(28,20,28,35))
+
+
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], facet_label_pos= -35, xaxis=T, ylab="", yaxis=F)
+p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -45, xaxis=T, ylab="", yaxis=F)
+p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -15, xaxis=T, ylab="", yaxis=F)
+p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T, facet_label_pos= -40, yaxis=F)
+
+plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
+
+p_laz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
+                       ncol = 1,
+                       #label_size = 8,
+                       align = "h",
+                       #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
+                       rel_heights = c(28,20,28,35))
+
+p_laz <- plot_grid(p_laz_PAF, p_laz_RR, ncol = 2, rel_widths = c(10,5))
 
 ggsave(p_laz, file=paste0(here::here(),"/figures/EDfig6_stunt_PAF.png"), width=4, height=9)
 #ggsave(p_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt3_laz.png"), width=4, height=8)
@@ -460,5 +503,5 @@ p_wlz <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
 ggsave(p_wlz, file=paste0(here::here(),"/figures/EDfig7_wast_PAF.png"), width=4, height=9)
 
 
-ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=18.3, height=18.3, units = 'cm')
+#ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2.png"), width=18.3, height=18.3, units = 'cm')
 

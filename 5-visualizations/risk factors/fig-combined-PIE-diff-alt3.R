@@ -21,7 +21,6 @@ library(tidytext)
 # Plot parameters
 #----------------------------------------------------------
 
-yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 dodge_width = 0.7
 
 # Colors
@@ -73,7 +72,7 @@ unique(df$intervention_variable)
 unique(df$RFlabel_ref)
 df$intervention_level <- as.character(df$intervention_level)
 df$intervention_level[df$intervention_level=="Full or late term"] <- "Full/late term"
-df$intervention_level[df$intervention_level=="[0%, 2%]"] <- "[0%,2%]"
+df$intervention_level[df$intervention_level=="[0%, 2%]"] <- "<=2%"
 df$intervention_level[df$intervention_level=="No" & !(df$intervention_variable %in% c("enwast","enstunt"))] <- "None"
 df$intervention_level[df$intervention_variable %in% c("enwast","enstunt")] <- "No"
 df$intervention_level[df$intervention_level=="Normal weight"] <- ">=18.5 BMI"
@@ -232,8 +231,8 @@ variable_labels = c(
     "42% shifted to [20-30)", "82% shifted to >=35 fage" = "82% shifted to \u226535", "30% shifted to >=150 mhtcm" =
     "30% shifted to \u2265150", "35% shifted to >=45 mwtkg" = "35% shifted to \u226545", "40% shifted to >=20 mbmi" =
     "40% shifted to \u226520", "68% shifted to High meducyrs" = "68% shifted to High", "77% shifted to High feducyrs" =
-    "77% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to [0%,2%] perdiar24" =
-    "48% shifted to [0%,2%]", "78% shifted to Post-max rain rain_quartile" =
+    "77% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to <=2% perdiar24" =
+    "48% shifted to \u22642%", "78% shifted to Post-max rain rain_quartile" =
     "78% shifted to Post-max rain", "70% shifted to Yes earlybf" = "70% shifted to Yes", "Male sex" =
     "Male", "Female sex" = "Female", "<48 birthlen" = "<48", ">=50 birthlen" =
     "\u226550", "[48-50) birthlen" = "[48-50)", "< 2500 g birthwt" = "< 2500 g", "<2500g birthwt" =
@@ -253,8 +252,8 @@ variable_labels = c(
     "\u226545", "<20 mbmi" = "<20", ">=20 mbmi" = "\u226520", "Low meducyrs" =
     "Low", "High meducyrs" = "High", "Medium meducyrs" = "Medium", "Low feducyrs" =
     "Low", "High feducyrs" = "High", "Medium feducyrs" = "Medium", "No predexfd6" =
-    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "[0%,2%] perdiar24" =
-    "[0%,2%]", "Opposite max rain rain_quartile" = "Opposite max rain", "Post-max rain rain_quartile" =
+    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "<=2% perdiar24" =
+    "\u22642%", "Opposite max rain rain_quartile" = "Opposite max rain", "Post-max rain rain_quartile" =
     "Post-max rain", "Pre-max rain rain_quartile" = "Pre-max rain", "Max rain rain_quartile" =
     "Max rain", "No earlybf" = "No", "Yes earlybf" = "Yes", "51% shifted to Female sex" =
     "51% shifted to Female", "67% shifted to >=50 birthlen" = "67% shifted to \u226550", "25% shifted to >= 2500 g birthwt" =
@@ -268,8 +267,8 @@ variable_labels = c(
     "43% shifted to [20-30)", "82% shifted to >=35 fage" = "82% shifted to \u226535", "32% shifted to >=150 mhtcm" =
     "32% shifted to \u2265150", "38% shifted to >=45 mwtkg" = "38% shifted to \u226545", "41% shifted to >=20 mbmi" =
     "41% shifted to \u226520", "69% shifted to High meducyrs" = "69% shifted to High", "76% shifted to High feducyrs" =
-    "76% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to [0%,2%] perdiar24" =
-    "48% shifted to [0%,2%]", "75% shifted to Opposite max rain rain_quartile" =
+    "76% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to <=2% perdiar24" =
+    "48% shifted to \u22642%", "75% shifted to Opposite max rain rain_quartile" =
     "75% shifted to Opposite max rain", "72% shifted to Yes earlybf" = "72% shifted to Yes", "Male sex" =
     "Male", "Female sex" = "Female", "<48 birthlen" = "<48", ">=50 birthlen" =
     "\u226550", "[48-50) birthlen" = "[48-50)", "< 2500 g birthwt" = "< 2500 g", "<2500g birthwt" =
@@ -289,8 +288,8 @@ variable_labels = c(
     "\u226545", "<20 mbmi" = "<20", ">=20 mbmi" = "\u226520", "Low meducyrs" =
     "Low", "High meducyrs" = "High", "Medium meducyrs" = "Medium", "Low feducyrs" =
     "Low", "High feducyrs" = "High", "Medium feducyrs" = "Medium", "No predexfd6" =
-    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "[0%,2%] perdiar24" =
-    "[0%,2%]", "Post-max rain rain_quartile" = "Post-max rain", "Opposite max rain rain_quartile" =
+    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "<=2% perdiar24" =
+    "\u22642%", "Post-max rain rain_quartile" = "Post-max rain", "Opposite max rain rain_quartile" =
     "Opposite max rain", "Pre-max rain rain_quartile" = "Pre-max rain", "Max rain rain_quartile" =
     "Max rain", "No earlybf" = "No", "Yes earlybf" = "Yes"
 )
