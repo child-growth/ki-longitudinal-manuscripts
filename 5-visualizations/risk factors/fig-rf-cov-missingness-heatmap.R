@@ -36,15 +36,13 @@ rfp <- readRDS(paste0(here::here(),"/data/cov_missingness_plotdf.RDS"))
 
 # gather rf missingness by study into long format
 d <- rfp %>% 
-  gather(risk_factor,missingness,-studyid, -country) 
+  gather(risk_factor,missingness,-studyid, -country) #%>%
+  #mutate(missingness = (100-missingness))
+summary(d$missingness)
+head(d)
 
 
 
-
-#Drop EE gestational age
-dim(d)
-d <- d %>% filter(!(studyid=="EE" & risk_factor=="gagebrth"))
-dim(d)
 
 
 #Mark measure frequency
@@ -159,26 +157,23 @@ dd$RFlabel[dd$risk_factor=="rain_quartile"] <-  "Rain quartile"
 
 table(dd$risk_factor, is.na(dd$RFlabel))
 dd <- dd %>% filter(!is.na(RFlabel))
-# dfull <- dd
-# dd <- dd %>% filter(N>0) 
 
-# Sort by missingness 
-# dd <- dd %>% group_by(region, risk_factor) %>% mutate(sumN=sum(N))
-# dd <- dd %>% 
-#   group_by(region) %>%
-#   dplyr::arrange(-sumN, .by_group = TRUE) 
-# dd$RFlabel <- factor(dd$RFlabel, levels = unique(dd$RFlabel))
+#Sort by missingness
+dd <- dd %>% group_by(region, risk_factor) %>% mutate(sumN=sum(N))
+dd <- dd %>%
+  group_by(region) %>%
+  dplyr::arrange(missingness, .by_group = TRUE)
+dd$RFlabel <- factor(dd$RFlabel, levels = unique(dd$RFlabel))
 
 
-# dd <- dd %>% 
-#   group_by(region, studycountry) %>% mutate(maxN=max(N, na.rm=T))%>%
-#   group_by(region) %>%
-#   dplyr::arrange(maxN, .by_group = TRUE) 
-# dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
-# dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
-# table(dd$studycountry)
+dd <- dd %>%
+  group_by(region, studycountry) %>% mutate(maxmissingness=max(missingness, na.rm=T))%>%
+  group_by(region) %>%
+  dplyr::arrange(maxmissingness, .by_group = TRUE)
+dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
+dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
+table(dd$studycountry)
 
-#categorize missingness
 
 
 #-----------------------------------
@@ -189,20 +184,26 @@ dd <- dd %>% filter(!is.na(RFlabel))
 textcol = "grey20"
 
 #NOTE! Do I have missigness reversed?
+dd %>% filter(risk_factor=="sex")
 
 #make categorical missingness
-dd$missingness[dd$missingness>50] <- NA
 summary(dd$missingness)
-dd$miss_cat <- cut(dd$missingness, breaks=c(0, 0.5, 1, 5, 10, 25, 100))
+#dd$missingness[dd$missingness>50] <- NA
+summary(dd$missingness)
+summary(dd$missingness[dd$missingness<50])
+dd$miss_cat <- cut(dd$missingness, include.lowest = TRUE, breaks=c(0, 0.5, 1, 5, 10, 25, 50, 90, 100))
 table(dd$miss_cat )
+
+dd$miss_cat <-  recode(dd$miss_cat, "(90,100]"="Not Measured", "(50,90]"=">50")
+
 
 viridis_cols = c(viridis(
   n = length(levels(dd$miss_cat)) - 1,
   alpha = 1,
-  begin = 0,
-  end = 0.8,
+  begin = 0.5,
+  end = 1,
   direction = -1,
-  option = "C"
+  option = "B"
 ),"grey90")
 
 viridis_cols
@@ -240,6 +241,8 @@ hm
 
 
 
+ggsave(hm, file=paste0(here::here(),"/figures/fig-rf-cov-missigness-heatmap.png"), width=6, height=6)
+ggsave(hm, file=paste0(BV_dir,"/figures/risk-factor/fig-rf-cov-missigness-heatmap.png"), width=6, height=6)
 
 
 # # save plot 
