@@ -20,10 +20,11 @@ library(cowplot)
 
 
 # CIR
-CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="CIR") %>% filter(agecat=="6-24 months",intervention_variable!="perdiar24")
+CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds")) %>% mutate(parameter="CIR") %>% filter(agecat=="6-24 months",intervention_variable!="perdiar24")
 
 #Prev 
-prev_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="Prev") %>% filter(agecat=="24 months",intervention_variable!="perdiar24")
+#prev_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="Prev") %>% filter(agecat=="24 months",intervention_variable!="perdiar24")
+prev_raw <-NULL
 
 #PAF
 paf_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds"))
@@ -37,7 +38,9 @@ prev_raw <- prev_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
 
 df_full <- bind_rows(paf_raw, CIR_raw, prev_raw)
 
+saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 
+df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled")
 
 
 #----------------------------------------------------------------------------------

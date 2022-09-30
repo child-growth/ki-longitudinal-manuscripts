@@ -8,7 +8,13 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 
-dfull <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/results_cont_bwt_strat_bin.RDS"))
+# dfull <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/results_cont_bwt_strat_bin.RDS"))
+# saveRDS(dfull, file=paste0(here::here(),"/data/temp_plotdf_bw_strat.RDS"))
+
+dfull <- readRDS(paste0(here::here(),"/data/temp_plotdf_bw_strat.RDS"))
+
+
+
 d <- dfull %>% filter(type=="ATE", agecat=="24 months")
 
 #Get full data results (binary variable)
