@@ -28,9 +28,10 @@ textcol = "grey20"
 #-----------------------------------
 # load the risk factor missingness and N's
 #-----------------------------------
-rfp <- readRDS(paste0(BV_dir,'/results/cov_missingness.rds'))
-
-saveRDS(rfp, file=paste0(here::here(),"/data/cov_missingness_plotdf.RDS"))
+# rfp <- readRDS(paste0(BV_dir,'/results/cov_missingness.rds'))
+# 
+# saveRDS(rfp, file=paste0(here::here(),"/data/cov_missingness_plotdf.RDS"))
+rfp <- readRDS(paste0(here::here(),"/data/cov_missingness_plotdf.RDS"))
 
 
 # gather rf missingness by study into long format
@@ -72,8 +73,6 @@ dd$country[dd$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
 #-----------------------------------
 # Do some final tidying up for the plot
 #-----------------------------------
-
-
 
 # make a study-country label, and make the monthly variable into a factor
 # including an anonymous label (temporary) for sharing with WHO
@@ -197,12 +196,26 @@ summary(dd$missingness)
 dd$miss_cat <- cut(dd$missingness, breaks=c(0, 0.5, 1, 5, 10, 25, 100))
 table(dd$miss_cat )
 
+viridis_cols = c(viridis(
+  n = length(levels(dd$miss_cat)) - 1,
+  alpha = 1,
+  begin = 0,
+  end = 0.8,
+  direction = -1,
+  option = "C"
+),"grey90")
+
+viridis_cols
 
 hm <- ggplot(dd,aes(x=RFlabel,y=studycountry, fill=factor(miss_cat))) +
   facet_grid(region~., scales = "free_y", space="free") +
   geom_tile(colour="white",size=0.25) +
   scale_y_discrete(expand=c(0,0))+
   theme_grey(base_size=10)+
+  scale_fill_manual(na.value="grey90", 
+                    guide=guide_legend(title="Percent missing",title.vjust = 1,
+                                       label.position="bottom",label.hjust=0.1,nrow=1),
+                    values = viridis_cols) +
   theme(
     #aspect.ratio = 1,
     legend.title=element_text(color=textcol,size=8),
@@ -229,7 +242,6 @@ hm
 
 
 
-
-# save plot 
-ggsave(filename=paste0(BV_dir,"/figures/risk-factor/fig-rf-cov-missigness-heatmap.png"),
-       plot = rfhmgrid,device='png',width=18.3,height=18.6, units = 'cm')
+# # save plot 
+# ggsave(filename=paste0(BV_dir,"/figures/risk-factor/fig-rf-cov-missigness-heatmap.png"),
+#        plot = rfhmgrid,device='png',width=18.3,height=18.6, units = 'cm')

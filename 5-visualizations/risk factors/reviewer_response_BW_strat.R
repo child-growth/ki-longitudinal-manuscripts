@@ -14,7 +14,7 @@ dfull <- readRDS(paste0(here::here(),"/data/plotdf_bw_strat.RDS"))
 
 
 
-plotdf <- RMAest_clean %>% filter(agecat=="24 months") %>% mutate(RF_lev = paste0(RFlabel,": ",intervention_level, " vs. ",baseline_level," (Ref)"))
+plotdf <- dfull %>% filter(agecat=="24 months") %>% mutate(RF_lev = paste0(RFlabel,": ",intervention_level, " vs. ",baseline_level," (Ref)"))
 
 
 plotdf$outcome_variable <- gsub("haz", "LAZ", plotdf$outcome_variable)
