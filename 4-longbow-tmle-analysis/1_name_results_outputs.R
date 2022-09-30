@@ -12,11 +12,11 @@ Zscores_bwt_strat <- readRDS(paste0(res_dir, "rf results/raw longbow results/res
 head(Zscores_bwt_strat)
 saveRDS(Zscores_bwt_strat, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat.RDS"))
 
-Zscores_bwt_strat_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_alt_ref_2022-09-30.RDS"))
+Zscores_bwt_strat_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_2022-09-30.RDS"))
 saveRDS(Zscores_bwt_strat_bin, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin.RDS"))
 Zscores_bwt_strat_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_obs_counts_2022-09-30.RDS"))
 saveRDS(Zscores_bwt_strat_bin_N, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin_N.RDS"))
-Zscores_full_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_2022-09-23.RDS"))
+Zscores_full_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_alt_ref_2022-09-30.RDS"))
 saveRDS(Zscores_full_bin, paste0(res_dir, "rf results/longbow results/results_cont_full_bin.RDS"))
 Zscores_full_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_obs_counts_2022-09-23.RDS"))
 saveRDS(Zscores_full_bin_N, paste0(res_dir, "rf results/longbow results/results_cont_full_bin_N.RDS"))

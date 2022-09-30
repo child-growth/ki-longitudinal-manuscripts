@@ -31,7 +31,7 @@ paf_raw <- paf_raw %>% filter(!(intervention_variable %in% c("anywast06","enstun
                     outcome_variable %in% c("ever_stunted","ever_wasted")) %>% as.data.frame()
 
 #rename point estimates and CI's for combining
-paf_raw <- paf_raw %>% rename(est=PAF, CI1=PAF.CI1, CI2=PAF.CI2)
+paf_raw <- paf_raw %>% subset(., select= -c(PAR, CI1, CI2)) %>% rename(est=PAF, CI1=PAF.CI1, CI2=PAF.CI2)
 CIR_raw <- CIR_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
 #prev_raw <- prev_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
 
