@@ -12,15 +12,15 @@ Zscores_bwt_strat <- readRDS(paste0(res_dir, "rf results/raw longbow results/res
 head(Zscores_bwt_strat)
 saveRDS(Zscores_bwt_strat, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat.RDS"))
 
-Zscores_bwt_strat_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_2022-09-30.RDS"))
+Zscores_bwt_strat_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_2022-10-01.RDS"))
 df <- Zscores_bwt_strat_bin %>% filter(agecat=="24 months", type=="ATE", intervention_level!=baseline_level, !is.na(birthwt))
 table(df$intervention_variable, df$outcome_variable)
 df2 <- df %>% filter(intervention_variable=="cleanck", outcome_variable=="whz")
 
 saveRDS(Zscores_bwt_strat_bin, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin.RDS"))
-Zscores_bwt_strat_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_obs_counts_2022-09-30.RDS"))
+Zscores_bwt_strat_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_obs_counts_2022-10-01.RDS"))
 saveRDS(Zscores_bwt_strat_bin_N, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin_N.RDS"))
-Zscores_full_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_alt_ref_2022-09-30.RDS"))
+Zscores_full_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_alt_ref_2022-10-01.RDS"))
 saveRDS(Zscores_full_bin, paste0(res_dir, "rf results/longbow results/results_cont_full_bin.RDS"))
 Zscores_full_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_obs_counts_2022-09-23.RDS"))
 saveRDS(Zscores_full_bin_N, paste0(res_dir, "rf results/longbow results/results_cont_full_bin_N.RDS"))
@@ -40,6 +40,8 @@ results_cont_primary_alt_ref
 Zscores18mo <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_18mo_2021-10-31.RDS"))
 saveRDS(Zscores18mo, paste0(res_dir, "rf results/longbow results/results_cont18mo.RDS"))
 
+Zscores_cc <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_CC_2022-10-01.RDS"))
+saveRDS(Zscores_cc, paste0(res_dir, "rf results/longbow results/results_cont_CC.RDS"))
 
 
 Zscores_waz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_waz_2021-07-28.RDS"))
