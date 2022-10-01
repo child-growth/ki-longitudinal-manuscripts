@@ -72,10 +72,10 @@ d <- d %>% filter(intervention_level != d$baseline_level)
 
 table(d$intervention_variable, d$outcome_variable)
 
-d <- d %>% filter(n_cell > 10)
+#d <- d %>% filter(n_cell > 10)
 head(d)
 
-table(d$intervention_variable, d$Nlevels, d$outcome_variable)
+table(d$intervention_variable, d$birthwt, d$outcome_variable)
 
 
 #Count number of BW levels and only keep when estimates for both levels by study
@@ -94,6 +94,8 @@ table(df$studyid, df$birthwt)
 RMAest <- d %>% group_by(Nstudies, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, birthwt) %>%
   do(pool.cont(., method="REML")) %>% as.data.frame()
 RMAest$region <- "Pooled"
+
+
 
 
 

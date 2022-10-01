@@ -28,29 +28,32 @@ main_color <- "#287D8EFF"
 #----------------------------------------------------------------------------------
 
 
-# # CIR
-# #CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds")) %>% mutate(parameter="CIR") 
-# CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="CIR") 
-# #Prev 
-# #prev_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="Prev") %>% filter(agecat=="24 months",intervention_variable!="perdiar24")
-# #prev_raw <-NULL
-# 
-# #PAF
-# paf_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds")) %>% mutate(parameter="PAF")
-# paf_raw <- paf_raw %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")),
-#                     outcome_variable %in% c("ever_stunted","ever_wasted")) %>% as.data.frame()
-# 
-# #rename point estimates and CI's for combining
-# paf_raw <- paf_raw %>% subset(., select= -c(PAR, CI1, CI2)) %>% rename(est=PAF, CI1=PAF.CI1, CI2=PAF.CI2)
-# CIR_raw <- CIR_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
-# #prev_raw <- prev_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
-# 
-# df_full <- bind_rows(paf_raw, CIR_raw#, prev_raw
-#                      )
-# 
-# head(df_full)
-# 
-# saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
+# CIR
+#CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds")) %>% mutate(parameter="CIR")
+CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="CIR")
+summary(CIR_raw$RR)
+
+#Prev
+#prev_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="Prev") %>% filter(agecat=="24 months",intervention_variable!="perdiar24")
+#prev_raw <-NULL
+
+#PAF
+paf_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds")) %>% mutate(parameter="PAF")
+paf_raw <- paf_raw %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")),
+                    outcome_variable %in% c("ever_stunted","ever_wasted")) %>% as.data.frame()
+
+#rename point estimates and CI's for combining
+paf_raw <- paf_raw %>% subset(., select= -c(PAR, CI1, CI2)) %>% rename(est=PAF, CI1=PAF.CI1, CI2=PAF.CI2)
+CIR_raw <- CIR_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
+summary(CIR_raw$est)
+#prev_raw <- prev_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
+
+df_full <- bind_rows(paf_raw, CIR_raw#, prev_raw
+                     )
+
+head(df_full)
+
+saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled")
