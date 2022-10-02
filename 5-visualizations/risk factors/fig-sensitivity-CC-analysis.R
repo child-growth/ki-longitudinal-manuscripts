@@ -81,7 +81,6 @@ p_cc_sens
 ggsave(p_cc_sens, filename = "cc_sens.png",height = 8, width = 10)
 
 
-ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png"), width=30, height=18.3, units = 'cm')
+ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/cc_sens.png"),height = 8, width = 10)
 
-# paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png")
 
