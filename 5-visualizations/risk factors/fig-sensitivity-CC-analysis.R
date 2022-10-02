@@ -10,12 +10,12 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 
-dfull <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results.rds")) %>% mutate(analysis="Main")
-dfull_cc <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results_cc.rds")) %>% mutate(analysis="CC")
+dfull <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results.rds")) %>% mutate(Analysis="Main")
+dfull_cc <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results_cc.rds")) %>% mutate(Analysis="Complete Case")
 dfull <- bind_rows(dfull, dfull_cc) 
 unique(dfull$region)
 dfull <- dfull %>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
-table(dfull$intervention_variable, dfull$analysis)
+table(dfull$intervention_variable, dfull$Analysis)
 dfull <- dfull %>% group_by(outcome_variable, intervention_variable) %>% filter(n()>=2)
 
 plotdf <- dfull %>% filter(agecat=="24 months") %>% mutate(RF_lev = paste0(RFlabel,": ",intervention_level, " vs. ",baseline_level," (Ref)"))
@@ -52,7 +52,7 @@ plotdf$RFlabel[plotdf$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. 
 plotdf$RFlabel[plotdf$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
 plotdf$RFlabel[plotdf$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
-plotdf <- plotdf %>% subset(., select = c(analysis, outcome_variable, intervention_variable, intervention_level, PAR, CI1, CI2, RFlabel, RFlabel_ref)) %>% 
+plotdf <- plotdf %>% subset(., select = c(Analysis, outcome_variable, intervention_variable, intervention_level, PAR, CI1, CI2, RFlabel, RFlabel_ref)) %>% 
   filter(!is.na(PAR)) %>% mutate(measure="PAR")  %>%
   group_by(outcome_variable) %>%
   arrange(-PAR) %>%
@@ -61,9 +61,9 @@ plotdf <- plotdf %>% mutate(RFlabel_ref = factor(RFlabel_ref, levels = unique(pl
 
 min(-plotdf$CI2)
 max(-plotdf$CI1)
-p_cc_sens<- ggplot(plotdf, aes(x=RFlabel_ref, group=analysis)) + 
-  geom_point(aes(y=-PAR, color=analysis, fill=analysis), position=position_dodge(width=0.5), size = 3) +
-  geom_linerange(aes(ymin=-CI1, ymax=-CI2, color=analysis), position=position_dodge(width=0.5), alpha=0.5, size = 1) +
+p_cc_sens<- ggplot(plotdf, aes(x=RFlabel_ref, group=Analysis)) + 
+  geom_point(aes(y=-PAR, color=Analysis, fill=Analysis), position=position_dodge(width=0.5), size = 3) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2, color=Analysis), position=position_dodge(width=0.5), alpha=0.5, size = 1) +
   labs(x = "Exposure", y = "Adjusted difference in Z-score at 24 months") +
   geom_hline(yintercept = 0) +
   coord_flip(ylim =c(-0.05,0.45)) +
@@ -78,9 +78,9 @@ p_cc_sens<- ggplot(plotdf, aes(x=RFlabel_ref, group=analysis)) +
         panel.spacing = unit((0), "lines")) 
 p_cc_sens
 
-ggsave(p_cc_sens, filename = "cc_sens.png",height = 8, width = 10)
 
 
-ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/cc_sens.png"),height = 8, width = 10)
+ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/risk_factor/PIE_CC_sens.png"), width=5, height=7)
+ggsave(p_cc_sens, file=paste0(here::here(),"/figures/PIE_CC_sens.png"),  width=5, height=7)
 
 
