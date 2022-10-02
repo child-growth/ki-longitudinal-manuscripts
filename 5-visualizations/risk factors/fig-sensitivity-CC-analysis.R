@@ -1,0 +1,87 @@
+
+
+
+rm(list=ls())
+source(paste0(here::here(), "/0-config.R"))
+source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
+source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
+
+
+
+
+
+dfull <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results.rds")) %>% mutate(analysis="Main")
+dfull_cc <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results_cc.rds")) %>% mutate(analysis="CC")
+dfull <- bind_rows(dfull, dfull_cc) 
+unique(dfull$region)
+dfull <- dfull %>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
+table(dfull$intervention_variable, dfull$analysis)
+dfull <- dfull %>% group_by(outcome_variable, intervention_variable) %>% filter(n()>=2)
+
+plotdf <- dfull %>% filter(agecat=="24 months") %>% mutate(RF_lev = paste0(RFlabel,": ",intervention_level, " vs. ",baseline_level," (Ref)"))
+
+plotdf$outcome_variable <- gsub("haz", "LAZ", plotdf$outcome_variable)
+plotdf$outcome_variable <- gsub("whz", "WLZ", plotdf$outcome_variable)
+plotdf <- plotdf %>% filter(intervention_variable!="safeh20", intervention_variable!="pers_wast")
+
+plotdf$intervention_level <- as.character(plotdf$intervention_level)
+plotdf$intervention_level[plotdf$intervention_level=="Full or late term"] <- "Full/late term"
+plotdf$intervention_level[plotdf$intervention_level=="[0%, 2%]"] <- "[0%,2%]"
+plotdf$intervention_level[plotdf$intervention_level=="No" & !(plotdf$intervention_variable %in% c("enwast","enstunt"))] <- "None"
+plotdf$intervention_level[plotdf$intervention_variable %in% c("enwast","enstunt")] <- "No"
+plotdf$intervention_level[plotdf$intervention_level=="Yes"] <- "All"
+plotdf$intervention_level[plotdf$intervention_level=="Normal weight"] <- ">=18.5 BMI"
+plotdf$intervention_level[plotdf$intervention_level=="1" & plotdf$intervention_variable %in% c("brthmon","month")] <- "Jan."
+plotdf$intervention_level[plotdf$intervention_level=="0" & plotdf$intervention_variable %in% c("single")] <- "partnered"
+plotdf$intervention_level[plotdf$intervention_level=="1" & plotdf$intervention_variable %in% c("parity")] <- "Firstborn"
+plotdf$intervention_level[plotdf$intervention_level=="None" & plotdf$intervention_variable %in% c("vagbrth")] <- "C-section"
+plotdf$intervention_level[plotdf$intervention_level=="None" & plotdf$intervention_variable %in% c("hdlvry")] <- "No"
+plotdf$RFlabel[plotdf$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
+plotdf$RFlabel[plotdf$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
+plotdf$RFlabel[plotdf$RFlabel=="Gestational age at birth"] <- "Gestational age"
+plotdf$intervention_level[plotdf$intervention_level=="Full or late term"] <- "Full/late term"
+plotdf$intervention_level[plotdf$intervention_level=="(0%, 5%]"] <- "(0%,5%]"
+plotdf$intervention_level[plotdf$intervention_level=="No"] <- "None"
+plotdf$intervention_level[plotdf$intervention_level=="Yes"] <- "All"
+plotdf$intervention_level[plotdf$intervention_level=="1" & plotdf$intervention_variable %in% c("brthmon","month")] <- "Jan."
+plotdf$intervention_level[plotdf$intervention_level=="0" & plotdf$intervention_variable %in% c("single")] <- "Partnered"
+plotdf$intervention_level[plotdf$intervention_level=="1" & plotdf$intervention_variable %in% c("parity")] <- "Firstborn"
+plotdf$intervention_level[plotdf$intervention_level=="None" & plotdf$intervention_variable %in% c("vagbrth")] <- "C-section"
+plotdf$intervention_level[plotdf$intervention_level=="None" & plotdf$intervention_variable %in% c("hdlvry")] <- "No"
+plotdf$RFlabel[plotdf$RFlabel=="Diarrhea <24 mo.  (% days"] <- "Diarrhea <24mo. (% days)"
+plotdf$RFlabel[plotdf$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6mo. (% days)"
+plotdf$RFlabel[plotdf$RFlabel=="Gestational age at birth"] <- "Gestational age"
+
+plotdf <- plotdf %>% subset(., select = c(analysis, outcome_variable, intervention_variable, intervention_level, PAR, CI1, CI2, RFlabel, RFlabel_ref)) %>% 
+  filter(!is.na(PAR)) %>% mutate(measure="PAR")  %>%
+  group_by(outcome_variable) %>%
+  arrange(-PAR) %>%
+  mutate(RFlabel_ref = paste0(RFlabel," shifted to ", intervention_level))
+plotdf <- plotdf %>% mutate(RFlabel_ref = factor(RFlabel_ref, levels = unique(plotdf$RFlabel_ref)))
+
+min(-plotdf$CI2)
+max(-plotdf$CI1)
+p_cc_sens<- ggplot(plotdf, aes(x=RFlabel_ref, group=analysis)) + 
+  geom_point(aes(y=-PAR, color=analysis, fill=analysis), position=position_dodge(width=0.5), size = 3) +
+  geom_linerange(aes(ymin=-CI1, ymax=-CI2, color=analysis), position=position_dodge(width=0.5), alpha=0.5, size = 1) +
+  labs(x = "Exposure", y = "Adjusted difference in Z-score at 24 months") +
+  geom_hline(yintercept = 0) +
+  coord_flip(ylim =c(-0.05,0.45)) +
+  facet_grid(~outcome_variable) +
+  scale_fill_manual(values=tableau11[3:1]) +
+  scale_colour_manual(values=tableau11[3:1]) +
+  theme(strip.background = element_blank(),
+        legend.position="bottom",
+        axis.text.y = element_text(size=8, hjust=0),
+        strip.text.x = element_text(size=14),
+        axis.text.x = element_text(size=10), 
+        panel.spacing = unit((0), "lines")) 
+p_cc_sens
+
+ggsave(p_cc_sens, filename = "cc_sens.png",height = 8, width = 10)
+
+
+ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png"), width=30, height=18.3, units = 'cm')
+
+# paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ATE_bw_strat.png")
+
