@@ -11,6 +11,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 dfull <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/results_cont_bwt_strat_bin.RDS"))
 
 d <- dfull %>% filter(type=="ATE", agecat=="24 months")
+table(d$intervention_variable, d$birthwt)
 
 #Get full data results (binary variable)
 d_unstrat <- readRDS(paste0(BV_dir,"/results/rf results/longbow results/results_cont_full_bin.RDS")) %>% 
@@ -33,7 +34,8 @@ head(d)
 
 d <- left_join(d, Ndf, by=c("studyid", "country","agecat", "outcome_variable","birthwt", "intervention_variable", "intervention_level"))
 table(d$n_cell < 50)
-
+table(is.na(d$n_cell))
+d[is.na(d$n_cell),]
 
 
 #to do: 
@@ -71,17 +73,21 @@ d <- d %>% filter(intervention_level != d$baseline_level)
 
 
 table(d$intervention_variable, d$outcome_variable)
+table(d$intervention_variable, d$birthwt, d$outcome_variable)
 
 #d <- d %>% filter(n_cell > 10)
 head(d)
 
 table(d$intervention_variable, d$birthwt, d$outcome_variable)
+table(d$intervention_variable, d$Nlevels, d$outcome_variable)
 
+
+df <- d %>% filter(intervention_variable=="cleanck", outcome_variable=="haz") %>% arrange(studyid)
 
 #Count number of BW levels and only keep when estimates for both levels by study
-d <- d %>% group_by(studyid, country, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
+d <- d %>% group_by(studyid, country, intervention_variable, agecat, outcome_variable) %>%
   mutate(Nlevels=n()) %>% filter(Nlevels==3) %>% 
-  group_by(birthwt,intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
+  group_by(birthwt,intervention_variable, agecat, outcome_variable) %>%
   mutate(Nstudies=n()) %>% filter(Nstudies>2)
 table(d$Nlevels)
 table(d$Nstudies)
@@ -101,6 +107,7 @@ RMAest$region <- "Pooled"
 
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest)
+table(RMAest_clean$intervention_variable)
 table(RMAest_clean$birthwt)
 
 

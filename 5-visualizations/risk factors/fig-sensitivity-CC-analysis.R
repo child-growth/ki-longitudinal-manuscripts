@@ -80,7 +80,7 @@ p_cc_sens
 
 
 
-ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/risk_factor/PIE_CC_sens.png"), width=5, height=7)
+ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/risk-factor/PIE_CC_sens.png"), width=5, height=7)
 ggsave(p_cc_sens, file=paste0(here::here(),"/figures/PIE_CC_sens.png"),  width=5, height=7)
 
 
