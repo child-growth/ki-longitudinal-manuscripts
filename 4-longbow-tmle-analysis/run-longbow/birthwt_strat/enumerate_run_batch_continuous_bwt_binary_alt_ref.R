@@ -45,16 +45,15 @@ load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf.Rdata")
 d <- d %>% filter(!is.na(birthwt), agecat=="24 months") %>% droplevels()
 table(d$agecat)
 
-risk_var_to_binary <- function(d){
-  
-  for(i in 1:ncol(d)){
-    if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
-  }
-  
+levels(d$impsan)
 
+risk_var_to_binary <- function(d){
   
   d <- d %>%
     mutate(
+      impsan  =factor(impsan , levels=c("0", "1")),
+      predexfd6  =factor(predexfd6 , levels=c("0", "1")),
+      sex  =factor(sex , levels=c("Male", "Female")),
       mhtcm  =factor(mhtcm , levels=c("<150 cm", ">=150 cm")),
       fhtcm   =factor(fhtcm  , levels=c(  "<162 cm",  ">=162 cm")),
       mwtkg   =factor(mwtkg  , levels=c("<45 kg" , ">=45 kg")),
@@ -125,21 +124,12 @@ d <- d %>% filter(!is.na(birthwt), agecat=="24 months")  %>% droplevels()
 
 d <- risk_var_to_binary(d)
 
-
-# d$nrooms <- factor(d$nrooms, levels=c("1","2","3","4+"))
-# d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
-# d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
-# d$meducyrs <- factor(d$meducyrs, levels=c("Low", "Medium" ,"High" ))
-# d$feducyrs <- factor(d$feducyrs, levels=c("Low", "Medium" ,"High" ))
-# d$birthlen <- factor(d$birthlen, levels=c("<48 cm", "[48-50) cm", ">=50 cm"))
-# d$gagebrth <- factor(d$gagebrth, levels=c("Preterm", "Early term", "Full or late term")) 
-
-
-
 save(d, file="/data/KI/UCB-SuperLearner/Manuscript analysis data/st_meanZ_rf_bwt_strat_bin_alt_ref.Rdata")
 
 
-analyses <- analyses %>% filter(!(A %in% c("brthmon","month",  "enstunt",   "single",    "enwast","predfeed3",  "birthlen", "birthwt",   "predfeed6",     "predfeed36",    "exclfeed3","exclfeed6",     "exclfeed36","fhtcm_rf",  "anywast06",     "pers_wast",   
+
+unique(analyses$A)
+analyses <- analyses %>% filter(!(A %in% c("safeh20","fhtcm","brthmon","month",  "enstunt",   "single",    "enwast","predfeed3",  "birthlen", "birthwt",   "predfeed6",     "predfeed36",    "exclfeed3","exclfeed6",     "exclfeed36","fhtcm_rf",  "anywast06",     "pers_wast",   
                                            "predfeed3",     "predfeed6",     "predfeed36",    "exclfeed3",     "exclfeed6",     "exclfeed36" )))
 
 analyses$strata
@@ -153,7 +143,8 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 run_ki_tmle(enumerated_analyses, results_folder="results_cont_bwt_strat_bin_alt_ref", overwrite = F, skip_failed = F)
 
 
-
+analyses2 <- analyses2 %>% filter(!(A %in% c("safeh20","fhtcm","brthmon","month",  "enstunt",   "single",    "enwast","predfeed3",  "birthlen", "birthwt",   "predfeed6",     "predfeed36",    "exclfeed3","exclfeed6",     "exclfeed36","fhtcm_rf",  "anywast06",     "pers_wast",   
+                                           "predfeed3",     "predfeed6",     "predfeed36",    "exclfeed3",     "exclfeed6",     "exclfeed36" )))
 analyses2$file <- gsub("rf.Rdata","rf_bwt_strat_bin.Rdata",analyses2$file)
 for(i in 1:nrow(analyses2)){
   analyses2$strata[[i]] <- c("agecat",  "studyid", "country")
@@ -164,7 +155,5 @@ enumerated_analyses2 <- lapply(seq_len(nrow(analyses2)), analyses_df=analyses2, 
 run_ki_tmle(enumerated_analyses2, results_folder="results_cont_full_bin_alt_ref", overwrite = F, skip_failed = F)
 
 
-#Exclude events without a certain number of strata
 
-#Exclude anything with less than 10 or less than 50 observations
 
