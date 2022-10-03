@@ -79,7 +79,6 @@ table(d$intervention_variable, d$birthwt, d$outcome_variable)
 head(d)
 
 table(d$intervention_variable, d$birthwt, d$outcome_variable)
-table(d$intervention_variable, d$Nlevels, d$outcome_variable)
 
 
 df <- d %>% filter(intervention_variable=="cleanck", outcome_variable=="haz") %>% arrange(studyid)

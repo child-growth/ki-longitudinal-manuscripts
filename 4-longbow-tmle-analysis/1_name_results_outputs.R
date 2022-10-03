@@ -18,11 +18,11 @@ table(df$intervention_variable, df$outcome_variable)
 df2 <- df %>% filter(intervention_variable=="cleanck", outcome_variable=="whz")
 
 saveRDS(Zscores_bwt_strat_bin, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin.RDS"))
-Zscores_bwt_strat_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_obs_counts_2022-10-01.RDS"))
+Zscores_bwt_strat_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_obs_counts_2022-10-02.RDS"))
 saveRDS(Zscores_bwt_strat_bin_N, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin_N.RDS"))
-Zscores_full_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_alt_ref_2022-10-01.RDS"))
+Zscores_full_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_alt_ref_2022-10-02.RDS"))
 saveRDS(Zscores_full_bin, paste0(res_dir, "rf results/longbow results/results_cont_full_bin.RDS"))
-Zscores_full_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_obs_counts_2022-09-23.RDS"))
+Zscores_full_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_alt_ref_obs_counts_2022-10-02.RDS"))
 saveRDS(Zscores_full_bin_N, paste0(res_dir, "rf results/longbow results/results_cont_full_bin_N.RDS"))
 
 Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_mwtkg_2021-10-03.RDS"))
@@ -35,7 +35,6 @@ saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-09-27.RDS"))
 saveRDS(Zscores_alt_ref, paste0(res_dir, "rf results/longbow results/results_cont_primary_alt_ref.RDS"))
 
-results_cont_primary_alt_ref
 
 Zscores18mo <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_18mo_2021-10-31.RDS"))
 saveRDS(Zscores18mo, paste0(res_dir, "rf results/longbow results/results_cont18mo.RDS"))

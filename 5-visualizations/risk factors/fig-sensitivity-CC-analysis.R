@@ -10,11 +10,10 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 
-dfull <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results.rds")) %>% mutate(Analysis="Main")
-dfull_cc <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results_cc.rds")) %>% mutate(Analysis="Complete Case")
-dfull <- bind_rows(dfull, dfull_cc) 
+dfull_main <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results.rds")) %>% mutate(Analysis="Main")%>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
+dfull_cc <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results_cc.rds")) %>% mutate(Analysis="Complete Case")%>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
+dfull <- bind_rows(dfull_main, dfull_cc) 
 unique(dfull$region)
-dfull <- dfull %>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
 table(dfull$intervention_variable, dfull$Analysis)
 dfull <- dfull %>% group_by(outcome_variable, intervention_variable) %>% filter(n()>=2)
 
@@ -80,7 +79,21 @@ p_cc_sens
 
 
 
-ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/risk-factor/PIE_CC_sens.png"), width=5, height=7)
-ggsave(p_cc_sens, file=paste0(here::here(),"/figures/PIE_CC_sens.png"),  width=5, height=7)
+ggsave(p_cc_sens, file=paste0(BV_dir,"/figures/risk-factor/PIE_CC_sens.png"), width=7, height=9)
+ggsave(p_cc_sens, file=paste0(here::here(),"/figures/PIE_CC_sens.png"),  width=7, height=9)
+
+
+
+#plot difference by CC analysis
+df_diff <- left_join(dfull_main, dfull_cc, by=c("intervention_variable","intervention_level", "outcome_variable"))
+head(df_diff)
+
+summary(abs(df_diff$PAR.x-df_diff$PAR.y))
+
+
+
+
+
+
 
 
