@@ -80,6 +80,7 @@ unique(df$RFlabel_ref)
 df$intervention_level <- as.character(df$intervention_level)
 df$intervention_level[df$intervention_level=="Full or late term"] <- "Full/late term"
 df$intervention_level[df$intervention_level=="[0%, 2%]"] <- "<=2%"
+df$baseline_level[df$baseline_level=="[0%, 2%]"] <- "<=2%"
 df$intervention_level[df$intervention_level=="No" & !(df$intervention_variable %in% c("enwast","enstunt"))] <- "None"
 df$intervention_level[df$intervention_variable %in% c("enwast","enstunt")] <- "No"
 df$intervention_level[df$intervention_level=="Normal weight"] <- ">=18.5 BMI"
@@ -92,6 +93,9 @@ df$intervention_level[df$intervention_level=="Yes" & df$intervention_variable %i
 df$intervention_level[df$intervention_level=="None" & df$intervention_variable %in% c("hdlvry")] <- "No"
 df$intervention_level[df$intervention_level=="None" & df$intervention_variable %in% c("cleanck")] <- "No"
 df$intervention_level[df$intervention_level=="None" & df$intervention_variable %in% c("earlybf")] <- "No"
+df$intervention_level[df$intervention_level=="None"] <- "No"
+df$baseline_level[df$baseline_level=="None"] <- "No"
+
 df$intervention_level[df$intervention_variable=="birthwt" & df$parameter=="Mean Difference" ] <- "<2500g" 
 df$baseline_level[df$baseline_level =="WealthQ1"] <- "Q1"
 df$RFlabel_ref[df$RFlabel_ref =="HH wealth, ref: WealthQ1"] <- "HH wealth, ref: Q1"
@@ -100,7 +104,7 @@ df$RFlabel_ref[df$RFlabel_ref =="Vaginal birth, ref: Yes" ] <- "Vaginal birth, r
 
 
 df$RFlabel[df$RFlabel=="Diarrhea <24 mo.  (% days)"] <- "Diarrhea (% days)"
-df$RFlabel[df$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea (% days)"
+df$RFlabel[df$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea <6 mo. (% days)"
 df$RFlabel[df$RFlabel=="Gestational age at birth"] <- "Gestational age"
 
 
@@ -166,7 +170,7 @@ df <- df %>%
       RFtype %in% c("Postnatal child health", "Breastfeeding","Time") ~ "Postnatal child characteristics",
       RFtype==RFtype ~ "At-birth child characteristics"))
 
-
+df %>% filter(intervention_variable=="hhwealth_quart")
 
 #get PAF label and facet label
 df <- df %>% group_by(outcome_variable, RFlabel) %>% mutate(n=max(n, na.rm=T)) %>% ungroup() %>%
@@ -229,82 +233,54 @@ df$baseline_level <- stringi::stri_replace_all_fixed(
 unique(df$intervention_level_f)
 unique(df$intervention_level_f2)
 
-cat(paste(paste0("\"",df$intervention_level_f2,"\"=\"",df$intervention_level_f,"\""), collapse=","), "\n")
+cat(paste(unique(paste0("\"",df$intervention_level_f2,"\"=\"",df$intervention_level_f,"\"")), collapse=","), "\n")
 
 
 variable_labels = c(
-  "51% shifted to Female sex" = "51% shifted to Female", "67% shifted to >=50 birthlen" =
-    "67% shifted to \u226550", "24% shifted to >= 2500 g birthwt" = "24% shifted to \u2265 2500 g", "49% shifted to Full/late term gagebrth" =
-    "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "91% shifted to No vagbrth" =
-    "91% shifted to No", "66% shifted to 1 parity" = "66% shifted to 1", "38% shifted to 1 nchldlt5" =
-    "38% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
-    "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
-    "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
-    "75% shifted to Yes", "51% shifted to Yes cleanck" = "51% shifted to Yes", "42% shifted to [20-30) mage" =
-    "42% shifted to [20-30)", "82% shifted to >=35 fage" = "82% shifted to \u226535", "30% shifted to >=150 mhtcm" =
-    "30% shifted to \u2265150", "35% shifted to >=45 mwtkg" = "35% shifted to \u226545", "40% shifted to >=20 mbmi" =
-    "40% shifted to \u226520", "68% shifted to High meducyrs" = "68% shifted to High", "77% shifted to High feducyrs" =
-    "77% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to <=2% perdiar24" =
-    "48% shifted to \u22642%", "78% shifted to Post-max rain rain_quartile" =
-    "78% shifted to Post-max rain", "70% shifted to Yes earlybf" = "70% shifted to Yes", "Male sex" =
-    "Male", "Female sex" = "Female", "<48 birthlen" = "<48", ">=50 birthlen" =
-    "\u226550", "[48-50) birthlen" = "[48-50)", "< 2500 g birthwt" = "< 2500 g", "<2500g birthwt" =
-    "<2500g", "Preterm gagebrth" = "Preterm", "Full/late term gagebrth" = "Full/late term", "Early term gagebrth" =
-    "Early term", "Yes hdlvry" = "Yes", "No hdlvry" = "No", "Yes vagbrth" =
-    "Yes", "No vagbrth" = "No", "3+ parity" = "3+", "2 parity" = "2", "1 parity" =
-    "1", "2+ nchldlt5" = "2+", "1 nchldlt5" = "1", "8+ nhh" = "8+", "6-7 nhh" =
-    "6-7", "3 or less nhh" = "3 or less", "4-5 nhh" = "4-5", "1 nrooms" = "1", "4+ nrooms" =
-    "4+", "3 nrooms" = "3", "2 nrooms" = "2", "Q1 hhwealth_quart" = "Q1", "Q4 hhwealth_quart" =
-    "Q4", "Q3 hhwealth_quart" = "Q3", "Q2 hhwealth_quart" = "Q2", "Food Insecure hfoodsec" =
-    "Food Insecure", "Food Secure hfoodsec" = "Food Secure", "Mildly Food Insecure hfoodsec" =
-    "Mildly Food Insecure", "No impsan" = "No", "Yes impsan" = "Yes", "No impfloor" =
-    "No", "Yes impfloor" = "Yes", "No cleanck" = "No", "Yes cleanck" = "Yes", "<20 mage" =
-    "<20", "[20-30) mage" = "[20-30)", ">=30 mage" = "\u226530", "<30 fage" =
-    "<30", ">=35 fage" = "\u226535", "[30-35) fage" = "[30-35)", "<150 mhtcm" =
-    "<150", ">=150 mhtcm" = "\u2265150", "<45 mwtkg" = "<45", ">=45 mwtkg" =
-    "\u226545", "<20 mbmi" = "<20", ">=20 mbmi" = "\u226520", "Low meducyrs" =
-    "Low", "High meducyrs" = "High", "Medium meducyrs" = "Medium", "Low feducyrs" =
-    "Low", "High feducyrs" = "High", "Medium feducyrs" = "Medium", "No predexfd6" =
-    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "<=2% perdiar24" =
-    "\u22642%", "Opposite max rain rain_quartile" = "Opposite max rain", "Post-max rain rain_quartile" =
-    "Post-max rain", "Pre-max rain rain_quartile" = "Pre-max rain", "Max rain rain_quartile" =
-    "Max rain", "No earlybf" = "No", "Yes earlybf" = "Yes", "51% shifted to Female sex" =
-    "51% shifted to Female", "67% shifted to >=50 birthlen" = "67% shifted to \u226550", "25% shifted to >= 2500 g birthwt" =
-    "25% shifted to \u2265 2500 g", "49% shifted to Full/late term gagebrth" =
-    "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "91% shifted to No vagbrth" =
-    "91% shifted to No", "67% shifted to 1 parity" = "67% shifted to 1", "38% shifted to 1 nchldlt5" =
-    "38% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
-    "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
-    "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
-    "75% shifted to Yes", "51% shifted to Yes cleanck" = "51% shifted to Yes", "43% shifted to [20-30) mage" =
-    "43% shifted to [20-30)", "82% shifted to >=35 fage" = "82% shifted to \u226535", "32% shifted to >=150 mhtcm" =
-    "32% shifted to \u2265150", "38% shifted to >=45 mwtkg" = "38% shifted to \u226545", "41% shifted to >=20 mbmi" =
-    "41% shifted to \u226520", "69% shifted to High meducyrs" = "69% shifted to High", "76% shifted to High feducyrs" =
-    "76% shifted to High", "37% shifted to Yes predexfd6" = "37% shifted to Yes", "48% shifted to <=2% perdiar24" =
-    "48% shifted to \u22642%", "75% shifted to Opposite max rain rain_quartile" =
-    "75% shifted to Opposite max rain", "72% shifted to Yes earlybf" = "72% shifted to Yes", "Male sex" =
-    "Male", "Female sex" = "Female", "<48 birthlen" = "<48", ">=50 birthlen" =
-    "\u226550", "[48-50) birthlen" = "[48-50)", "< 2500 g birthwt" = "< 2500 g", "<2500g birthwt" =
-    "<2500g", "Preterm gagebrth" = "Preterm", "Full/late term gagebrth" = "Full/late term", "Early term gagebrth" =
-    "Early term", "Yes hdlvry" = "Yes", "No hdlvry" = "No", "Yes vagbrth" =
-    "Yes", "No vagbrth" = "No", "3+ parity" = "3+", "2 parity" = "2", "1 parity" =
-    "1", "2+ nchldlt5" = "2+", "1 nchldlt5" = "1", "8+ nhh" = "8+", "3 or less nhh" =
-    "3 or less", "6-7 nhh" = "6-7", "4-5 nhh" = "4-5", "1 nrooms" = "1", "3 nrooms" =
-    "3", "4+ nrooms" = "4+", "2 nrooms" = "2", "Q1 hhwealth_quart" = "Q1", "Q3 hhwealth_quart" =
-    "Q3", "Q4 hhwealth_quart" = "Q4", "Q2 hhwealth_quart" = "Q2", "Food Insecure hfoodsec" =
-    "Food Insecure", "Food Secure hfoodsec" = "Food Secure", "Mildly Food Insecure hfoodsec" =
-    "Mildly Food Insecure", "No impsan" = "No", "Yes impsan" = "Yes", "No impfloor" =
-    "No", "Yes impfloor" = "Yes", "No cleanck" = "No", "Yes cleanck" = "Yes", "<20 mage" =
-    "<20", ">=30 mage" = "\u226530", "[20-30) mage" = "[20-30)", "<30 fage" =
-    "<30", ">=35 fage" = "\u226535", "[30-35) fage" = "[30-35)", "<150 mhtcm" =
-    "<150", ">=150 mhtcm" = "\u2265150", "<45 mwtkg" = "<45", ">=45 mwtkg" =
-    "\u226545", "<20 mbmi" = "<20", ">=20 mbmi" = "\u226520", "Low meducyrs" =
-    "Low", "High meducyrs" = "High", "Medium meducyrs" = "Medium", "Low feducyrs" =
-    "Low", "High feducyrs" = "High", "Medium feducyrs" = "Medium", "No predexfd6" =
-    "No", "Yes predexfd6" = "Yes", ">2% perdiar24" = ">2%", "<=2% perdiar24" =
-    "\u22642%", "Post-max rain rain_quartile" = "Post-max rain", "Opposite max rain rain_quartile" =
-    "Opposite max rain", "Pre-max rain rain_quartile" = "Pre-max rain", "Max rain rain_quartile" =
-    "Max rain", "No earlybf" = "No", "Yes earlybf" = "Yes"
+  "51% shifted to Female sex" = "51% shifted to Female", "55% shifted to >=50 birthlen" =
+    "55% shifted to \u226550", "15% shifted to >= 2500 g birthwt" = "15% shifted to \u2265 2500 g", "45% shifted to Full/late term gagebrth" =
+    "45% shifted to Full/late term", "49% shifted to No hdlvry" = "49% shifted to No", "91% shifted to No vagbrth" =
+    "91% shifted to No", "62% shifted to 1 parity" = "62% shifted to 1", "39% shifted to 1 nchldlt5" =
+    "39% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "93% shifted to 4+ nrooms" =
+    "93% shifted to 4+", "NA% shifted to Q4 hhwealth_quart" = "NA% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
+    "50% shifted to Food Secure", "28% shifted to Yes impsan" = "28% shifted to Yes", "83% shifted to Yes impfloor" =
+    "83% shifted to Yes", "33% shifted to Yes cleanck" = "33% shifted to Yes", "3% shifted to Yes safeh20" =
+    "3% shifted to Yes", "41% shifted to [20-30) mage" = "41% shifted to [20-30)", "89% shifted to >=35 fage" =
+    "89% shifted to \u226535", "26% shifted to >=150 mhtcm" = "26% shifted to \u2265150", "4% shifted to >=162 fhtcm" =
+    "4% shifted to \u2265162", "31% shifted to >=45 mwtkg" = "31% shifted to \u226545", "38% shifted to >=20 mbmi" =
+    "38% shifted to \u226520", "6% shifted to 0 single" = "6% shifted to 0", "67% shifted to High meducyrs" =
+    "67% shifted to High", "80% shifted to High feducyrs" = "80% shifted to High", "72% shifted to Yes earlybf" =
+    "72% shifted to Yes", "51% shifted to <=2% perdiar6" = "51% shifted to \u22642%", "32% shifted to Yes predexfd6" =
+    "32% shifted to Yes", "Female sex" = "Female", "Male sex" = "Male", ">=50 birthlen" =
+    "\u226550", "<48 birthlen" = "<48", "[48-50) birthlen" = "[48-50)", ">= 2500 g birthwt" =
+    "\u2265 2500 g", "< 2500 g birthwt" = "< 2500 g", "Full or late term gagebrth" =
+    "Full or late term", "Preterm gagebrth" = "Preterm", "Early term gagebrth" =
+    "Early term", "No hdlvry" = "No", "Yes hdlvry" = "Yes", "No vagbrth" = "No", "Vaginal birth vagbrth" =
+    "Vaginal birth", "1 parity" = "1", "3+ parity" = "3+", "2 parity" = "2", "1 nchldlt5" =
+    "1", "2+ nchldlt5" = "2+", "3 or less nhh" = "3 or less", "6-7 nhh" = "6-7", "4-5 nhh" =
+    "4-5", "8+ nhh" = "8+", "4+ nrooms" = "4+", "2 nrooms" = "2", "3 nrooms" =
+    "3", "1 nrooms" = "1", "Q4 hhwealth_quart" = "Q4", "Q1 hhwealth_quart" =
+    "Q1", "Q2 hhwealth_quart" = "Q2", "Q3 hhwealth_quart" = "Q3", "Food Secure hfoodsec" =
+    "Food Secure", "Food Insecure hfoodsec" = "Food Insecure", "Mildly Food Insecure hfoodsec" =
+    "Mildly Food Insecure", "Yes impsan" = "Yes", "No impsan" = "No", "Yes impfloor" =
+    "Yes", "No impfloor" = "No", "Yes cleanck" = "Yes", "No cleanck" = "No", "Yes safeh20" =
+    "Yes", "No safeh20" = "No", "[20-30) mage" = "[20-30)", "<20 mage" = "<20", ">=30 mage" =
+    "\u226530", ">=35 fage" = "\u226535", "<30 fage" = "<30", "[30-35) fage" =
+    "[30-35)", ">=150 mhtcm" = "\u2265150", "<150 mhtcm" = "<150", ">=162 fhtcm" =
+    "\u2265162", "<162 fhtcm" = "<162", ">=45 mwtkg" = "\u226545", "<45 mwtkg" =
+    "<45", ">=20 mbmi" = "\u226520", "<20 mbmi" = "<20", "Partnered single" =
+    "Partnered", "Unpartnered single" = "Unpartnered", "High meducyrs" = "High", "Low meducyrs" =
+    "Low", "Medium meducyrs" = "Medium", "High feducyrs" = "High", "Low feducyrs" =
+    "Low", "Medium feducyrs" = "Medium", "Yes earlybf" = "Yes", "No earlybf" =
+    "No", "<=2% perdiar6" = "\u22642%", ">2% perdiar6" = ">2%", "Yes predexfd6" =
+    "Yes", "No predexfd6" = "No", "63% shifted to >=50 birthlen" = "63% shifted to \u226550", "27% shifted to >= 2500 g birthwt" =
+    "27% shifted to \u2265 2500 g", "48% shifted to Full/late term gagebrth" =
+    "48% shifted to Full/late term", "54% shifted to No hdlvry" = "54% shifted to No", "94% shifted to 4+ nrooms" =
+    "94% shifted to 4+", "30% shifted to Yes impsan" = "30% shifted to Yes", "1% shifted to Yes safeh20" =
+    "1% shifted to Yes", "85% shifted to Yes impfloor" = "85% shifted to Yes", "35% shifted to Yes cleanck" =
+    "35% shifted to Yes", "40% shifted to [20-30) mage" = "40% shifted to [20-30)", "76% shifted to Yes earlybf" =
+    "76% shifted to Yes", "30% shifted to Yes predexfd6" = "30% shifted to Yes", "55% shifted to <=2% perdiar6" =
+    "55% shifted to \u22642%"
 )
 
 
@@ -334,21 +310,25 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
       intervention_level_f2=="4-5 nhh" ~ 2,
       intervention_level_f2=="6-7 nhh" ~ 3,
       intervention_level_f2=="8+ nhh" ~ 4,
+      intervention_level_f2=="1 nrooms" ~ 1,
+      intervention_level_f2=="2 nrooms" ~ 2,
+      intervention_level_f2=="3 nrooms" ~ 3,
+      intervention_level_f2=="4+ nrooms" ~ 4,
       intervention_level_f2=="Yes earlybf" ~ 1,
       intervention_level_f2=="1 parity" ~ 1,
       intervention_level_f2=="8+ nhh" ~ 4,
       intervention_level_f2==">=30 mage" ~ 1,
       intervention_level_f2=="[20-30) mage" ~ 2,
-      outcome_variable=="haz" & intervention_level_f2=="Post-max rain rain_quartile" ~ 1,
-      outcome_variable=="haz" & intervention_level_f2=="Max rain rain_quartile" ~ 2,
-      outcome_variable=="haz" & intervention_level_f2=="Pre-max rain rain_quartile" ~ 3,
-      outcome_variable=="haz" & intervention_level_f2=="Opposite max rain rain_quartile"  ~ 4,
-      outcome_variable=="whz" & intervention_level_f2=="Post-max rain rain_quartile" ~ 4,
-      outcome_variable=="whz" & intervention_level_f2=="Max rain rain_quartile" ~ 3,
-      outcome_variable=="whz" & intervention_level_f2=="Pre-max rain rain_quartile" ~ 2,
-      outcome_variable=="whz" & intervention_level_f2=="Opposite max rain rain_quartile"  ~ 1,
-      outcome_variable=="whz" & intervention_level_f2=="Q4 hhwealth_quart"  ~ 2,
-      outcome_variable=="whz" & intervention_level_f2=="4+ nrooms"  ~ 5,
+      outcome_variable=="ever_stunted" & intervention_level_f2=="Post-max rain rain_quartile" ~ 1,
+      outcome_variable=="ever_stunted" & intervention_level_f2=="Max rain rain_quartile" ~ 2,
+      outcome_variable=="ever_stunted" & intervention_level_f2=="Pre-max rain rain_quartile" ~ 3,
+      outcome_variable=="ever_stunted" & intervention_level_f2=="Opposite max rain rain_quartile"  ~ 4,
+      outcome_variable=="ever_wasted" & intervention_level_f2=="Post-max rain rain_quartile" ~ 4,
+      outcome_variable=="ever_wasted" & intervention_level_f2=="Max rain rain_quartile" ~ 3,
+      outcome_variable=="ever_wasted" & intervention_level_f2=="Pre-max rain rain_quartile" ~ 2,
+      outcome_variable=="ever_wasted" & intervention_level_f2=="Opposite max rain rain_quartile"  ~ 1,
+      outcome_variable=="ever_wasted" & intervention_level_f2=="Q4 hhwealth_quart"  ~ 2,
+      outcome_variable=="ever_wasted" & intervention_level_f2=="4+ nrooms"  ~ 5,
       intervention_level_f2==intervention_level_f2 ~ 5,
     ))
   
@@ -464,18 +444,20 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
 
 unique(df$RFgroup)
 p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], facet_label_pos= -35, xaxis=T, ylab="")
-p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -45, xaxis=T, ylab="")
+p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -20, xaxis=T, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -15, xaxis=T, ylab="")
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T, facet_label_pos= -40)
 
 plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
+
+relheights= c(28,13,28,35)
 
 p_laz_PAF <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
                    ncol = 1,
                    #label_size = 8,
                    align = "h",
                    #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
-                   rel_heights = c(28,20,28,35))
+                   rel_heights=relheights )
 
 
 p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], facet_label_pos= -35, xaxis=T, ylab="", yaxis=F)
@@ -490,7 +472,7 @@ p_laz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                        #label_size = 8,
                        align = "h",
                        #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
-                       rel_heights = c(28,20,28,35))
+                       rel_heights = relheights)
 
 p_laz <- plot_grid(p_laz_PAF, p_laz_RR, ncol = 2, rel_widths = c(10,5))
 
@@ -505,7 +487,7 @@ ggsave(p_laz, file=paste0(here::here(),"/figures/EDfig6_stunt_PAF.png"), width=4
 #p_wlz <- plot_combined_paf_RR(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
 
 p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -35, xaxis=T, ylab="")
-p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -58, xaxis=T, ylab="")
+p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=T, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -15, xaxis=T, ylab="")
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", legend=F, xaxis=T, facet_label_pos= -40)
 
@@ -517,10 +499,10 @@ p_wlz_PAF <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                    #label_size = 8,
                    align = "h",
                    #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
-                   rel_heights = c(28,20,28,35))
+                   rel_heights = relheights)
 
 p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -35, xaxis=T, ylab="", yaxis=F)
-p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -58, xaxis=T, ylab="", yaxis=F)
+p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=T, ylab="", yaxis=F)
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -15, xaxis=T, ylab="", yaxis=F)
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", legend=F, xaxis=T, facet_label_pos= -40, yaxis=F)
 
@@ -532,7 +514,7 @@ p_wlz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                        #label_size = 8,
                        align = "h",
                        #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
-                       rel_heights = c(28,20,28,35))
+                       rel_heights = relheights)
 
 p_wlz <- plot_grid(p_wlz_PAF, p_wlz_RR, ncol = 2, rel_widths = c(10,5))
 
