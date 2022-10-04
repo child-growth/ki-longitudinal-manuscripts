@@ -9,9 +9,8 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 
-
-dfull_main <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results.rds")) %>% mutate(Analysis="Main")%>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
-dfull_cc <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results_cc.rds")) %>% mutate(Analysis="Complete Case")%>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
+dfull_main <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results.rds")) %>% mutate(Analysis="Main analysis with covariate imputation")%>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
+dfull_cc <- readRDS(paste0(here::here(),"/data/pooled_Zscore_PAR_results_cc.rds")) %>% mutate(Analysis="Sensitivity analysis that excludes\nchildren with missing covariates")%>% filter(outcome_variable!="waz", agecat=="24 months", region=="Pooled")
 dfull <- bind_rows(dfull_main, dfull_cc) 
 unique(dfull$region)
 table(dfull$intervention_variable, dfull$Analysis)
@@ -69,6 +68,10 @@ p_cc_sens<- ggplot(plotdf, aes(x=RFlabel_ref, group=Analysis)) +
   facet_grid(~outcome_variable) +
   scale_fill_manual(values=tableau11[3:1]) +
   scale_colour_manual(values=tableau11[3:1]) +
+  guides(color=guide_legend(title="Analysis:", nrow=2,byrow=TRUE), 
+         alpha=guide_legend(title="Analysis:", nrow=2,byrow=TRUE), 
+         shape=guide_legend(title="Analysis:", nrow=2,byrow=TRUE), 
+         fill=guide_legend(title="Analysis:", nrow=2,byrow=TRUE)) +
   theme(strip.background = element_blank(),
         legend.position="bottom",
         axis.text.y = element_text(size=8, hjust=0),

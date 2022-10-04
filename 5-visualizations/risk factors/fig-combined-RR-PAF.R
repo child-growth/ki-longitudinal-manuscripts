@@ -225,6 +225,13 @@ df$baseline_level <- stringi::stri_replace_all_fixed(
   vectorize_all = F
 )
 
+df$intervention_level_f <- ifelse(
+  df$parameter == "CIR",
+  paste0("<span style='color:#89b4bc'>", df$intervention_level_f, "</span>"),
+  df$intervention_level_f
+)
+
+
 
 #----------------------------------------------------------
 # Set names
@@ -284,6 +291,8 @@ variable_labels = c(
 )
 
 
+
+
 #----------------------------------------------------------
 # plot function
 #----------------------------------------------------------
@@ -296,11 +305,7 @@ xaxis=F
 facet_label_pos= -75
 
 
-unique(df$outcome_variable)
-unique(df$intervention_variable)
-unique(df$intervention_level_f2)
-
-plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, outcome_var="ever_stunted", ylab="Adjusted difference in LAZ at 24 months", legend=F, xaxis=F, yaxis=T){
+plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, outcome_var="ever_stunted", ylab="Adjusted difference in LAZ at 24 months", legend=F, xaxis=F, yaxis=F){
   
   plotdf <- d %>% filter(outcome_variable==outcome_var, !is.na(est))
   plotdf <- plotdf %>% mutate(
@@ -337,7 +342,7 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
     ungroup() %>% 
     arrange(parameter,-(est*par), -order_var, est) 
   
-  if(!yaxis){
+  if(yaxis){
     plotdf <- plotdf %>% 
       mutate(est=ifelse(par==1,1,est),
              CI1=ifelse(par==1,1,CI1),
@@ -352,9 +357,9 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
   grey_color <- "grey40"
   
   if(yaxis){
-    alpha_vals=c(1, 0)
-  }else{
     alpha_vals=c(0, 1)
+  }else{
+    alpha_vals=c(1, 0)
   }
   
   
@@ -367,7 +372,6 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
     geom_text(aes(y= est, label=reflabel, hjust=-.5), size=1.65, color="grey20") +
     coord_flip(#ylim=ylimits
                ) +
-    #facet_grid( RFlabel ~ ., scales="free_y",switch = "y") +
     ggforce::facet_col(facets = vars(RFlabel),
                        scales = "free_y",
                        space = "free" , strip.position = 'left'#,
@@ -402,17 +406,17 @@ plot_combined_paf_RR <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, 
   p
   
   if(yaxis){
-    p <- p +     geom_hline(yintercept = 0, alpha=0.5) +
+    p <- p +  geom_hline(yintercept = 1, alpha=0.5) +  scale_y_continuous(trans="log10")  +
       theme(
-            axis.text.y = element_text(size=6, hjust = 1, colour=grey_color),
-            strip.text.y.left = element_text(angle = 0, size=6, hjust = 0,
+            axis.text.y = element_markdown(size=6, hjust = 1, colour=grey_color),
+            strip.text.y.left = element_markdown(angle = 0, size=6, hjust = 0,
                                              margin = margin(r = facet_label_pos), 
                                              face = "bold"
             ),
       ) 
   }else{
-    p <- p + scale_y_continuous(trans="log10")  +
-      geom_hline(yintercept = 1, alpha=0.5) +
+    p <- p +
+      geom_hline(yintercept = 0, alpha=0.5) +
       theme(axis.ticks.y =element_blank(),
             axis.text.y =element_blank(),
             plot.title = element_text(color = "white"),
@@ -460,10 +464,10 @@ p_laz_PAF <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                    rel_heights=relheights )
 
 
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], facet_label_pos= -35, xaxis=T, ylab="", yaxis=F)
-p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -45, xaxis=T, ylab="", yaxis=F)
-p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -15, xaxis=T, ylab="", yaxis=F)
-p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T, facet_label_pos= -40, yaxis=F)
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], facet_label_pos= -35, xaxis=T, ylab="", yaxis=T)
+p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -45, xaxis=T, ylab="", yaxis=T)
+p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -15, xaxis=T, ylab="", yaxis=T)
+p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T, facet_label_pos= -40, yaxis=T)
 
 plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
 
@@ -474,7 +478,7 @@ p_laz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                        #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
                        rel_heights = relheights)
 
-p_laz <- plot_grid(p_laz_PAF, p_laz_RR, ncol = 2, rel_widths = c(10,5))
+p_laz <- plot_grid(p_laz_RR, p_laz_PAF, ncol = 2, rel_widths = c(10,5))
 
 ggsave(p_laz, file=paste0(here::here(),"/figures/EDfig6_stunt_PAF.png"), width=4, height=9)
 #ggsave(p_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt3_laz.png"), width=4, height=8)
@@ -501,10 +505,10 @@ p_wlz_PAF <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                    #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
                    rel_heights = relheights)
 
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -35, xaxis=T, ylab="", yaxis=F)
-p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=T, ylab="", yaxis=F)
-p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -15, xaxis=T, ylab="", yaxis=F)
-p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", legend=F, xaxis=T, facet_label_pos= -40, yaxis=F)
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -35, xaxis=T, ylab="", yaxis=T)
+p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=T, ylab="", yaxis=T)
+p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", facet_label_pos= -15, xaxis=T, ylab="", yaxis=T)
+p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="ever_wasted", legend=F, xaxis=T, facet_label_pos= -40, yaxis=T)
 
 
 plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
@@ -516,7 +520,7 @@ p_wlz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                        #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
                        rel_heights = relheights)
 
-p_wlz <- plot_grid(p_wlz_PAF, p_wlz_RR, ncol = 2, rel_widths = c(10,5))
+p_wlz <- plot_grid(p_wlz_RR,p_wlz_PAF, ncol = 2, rel_widths = c(10,5))
 
 
 ggsave(p_wlz, file=paste0(here::here(),"/figures/EDfig7_wast_PAF.png"), width=4, height=9)
