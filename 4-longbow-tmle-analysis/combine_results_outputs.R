@@ -164,6 +164,7 @@ table(d$intervention_variable, d$outcome_variable)
 load(paste0(res_dir,"stunting_rf_Ns_sub.rdata"))
 N_sums_bin <- N_sums %>% mutate(continuous = 0)
 N_sums_bin[N_sums_bin$intervention_variable=="fage",]
+N_sums_bin[N_sums_bin$intervention_variable=="hhwealth_quart",]
 
 load(paste0(res_dir,"continuous_rf_Ns_sub.rdata"))
 N_sums_cont <- N_sums %>% mutate(continuous = 1)
@@ -173,6 +174,10 @@ d[d$intervention_variable=="hhwealth_quart",]
 
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
+N_sums$intervention_level <- gsub("Wealth ","",N_sums$intervention_level)
+N_sums$intervention_level <- gsub("Wealth","",N_sums$intervention_level)
+N_sums$baseline_level <- gsub("Wealth ","",N_sums$baseline_level)
+N_sums$baseline_level <- gsub("Wealth","",N_sums$baseline_level)
 
 
 dim(d)

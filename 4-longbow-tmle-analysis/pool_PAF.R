@@ -12,11 +12,8 @@ d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 
 
 
-
-temp <- d %>% filter(intervention_variable=="fage" & outcome_variable=="ever_stunted")
-dim(temp)
-table(temp$intervention_level)
-table(temp$baseline_level)
+temp <- d %>% filter(intervention_variable=="hhwealth_quart" & outcome_variable=="ever_stunted", type=="PAF")
+temp
 
 
 
@@ -69,6 +66,8 @@ Prev_est_raw <- Prev_est_raw %>% subset(., select = - c(CI1, CI2, Nstudies, base
 
 
 Prev_est[Prev_est$intervention_variable=="fage",]
+Prev_est[Prev_est$intervention_variable=="hhwealth_quart",]
+RMAest[RMAest$intervention_variable=="hhwealth_quart" &!is.na(RMAest$n),]
 
 
 
