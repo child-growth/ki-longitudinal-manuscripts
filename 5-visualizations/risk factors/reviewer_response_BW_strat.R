@@ -50,7 +50,7 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=`Birth weight`)) +
   geom_text(aes(label=Nstudies, y=-1)) +
   labs(x = "Exposure", y = "ATE") +
   geom_hline(yintercept = 0) +
-  coord_flip(ylim =c(-0.75, 0.5)) +
+  coord_flip(ylim =c(-0.25, 0.5)) +
   facet_grid(~outcome_variable) +
   scale_fill_manual(values=tableau11[3:1]) +
   scale_colour_manual(values=tableau11[3:1]) +

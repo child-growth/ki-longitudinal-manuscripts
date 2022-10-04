@@ -145,7 +145,7 @@ run_ki_tmle(enumerated_analyses, results_folder="results_cont_bwt_strat_bin_alt_
 
 analyses2 <- analyses2 %>% filter(!(A %in% c("safeh20","fhtcm","brthmon","month",  "enstunt",   "single",    "enwast","predfeed3",  "birthlen", "birthwt",   "predfeed6",     "predfeed36",    "exclfeed3","exclfeed6",     "exclfeed36","fhtcm_rf",  "anywast06",     "pers_wast",   
                                            "predfeed3",     "predfeed6",     "predfeed36",    "exclfeed3",     "exclfeed6",     "exclfeed36" )))
-analyses2$file <- gsub("rf.Rdata","rf_bwt_strat_bin.Rdata",analyses2$file)
+analyses2$file <- gsub("rf.Rdata","rf_bwt_strat_bin_alt_ref.Rdata",analyses2$file)
 for(i in 1:nrow(analyses2)){
   analyses2$strata[[i]] <- c("agecat",  "studyid", "country")
 }
@@ -155,5 +155,7 @@ enumerated_analyses2 <- lapply(seq_len(nrow(analyses2)), analyses_df=analyses2, 
 run_ki_tmle(enumerated_analyses2, results_folder="results_cont_full_bin_alt_ref", overwrite = F, skip_failed = F)
 
 
-
+load("/data/KI/UCB-SuperLearner/Manuscript analysis data/wast_meanZ_rf_bwt_strat_bin_alt_ref.Rdata")
+levels(d$sex)
+results_folder="results_cont_full_bin_alt_ref"
 
