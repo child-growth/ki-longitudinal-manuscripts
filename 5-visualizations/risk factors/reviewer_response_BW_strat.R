@@ -50,7 +50,7 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=`Birth weight`)) +
   geom_text(aes(label=Nstudies, y=-1)) +
   labs(x = "Exposure", y = "ATE") +
   geom_hline(yintercept = 0) +
-  coord_flip(ylim =c(-0.25, 0.5)) +
+  coord_flip(ylim =c(-0.25, 0.75)) +
   facet_grid(~outcome_variable) +
   scale_fill_manual(values=tableau11[3:1]) +
   scale_colour_manual(values=tableau11[3:1]) +
@@ -62,7 +62,7 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=`Birth weight`)) +
         panel.spacing = unit((0), "lines")) 
 p_bw_strat
 
-ggsave(p_bw_strat, file=paste0(here::here(),"/figures/bwstrat.png"), width=4, height=9)
+ggsave(p_bw_strat, file=paste0(here::here(),"/figures/bwstrat.png"), width=8, height=9)
 
 # ggsave(p_bw_strat, filename = "bwstrat.png",height = 8, width = 10)
 # 

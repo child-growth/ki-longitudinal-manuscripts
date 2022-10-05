@@ -255,7 +255,7 @@ variable_labels = c(
     "45% shifted to Full/late term", "49% shifted to No hdlvry" = "49% shifted to No", "91% shifted to No vagbrth" =
     "91% shifted to No", "62% shifted to 1 parity" = "62% shifted to 1", "39% shifted to 1 nchldlt5" =
     "39% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "93% shifted to 4+ nrooms" =
-    "93% shifted to 4+", "NA% shifted to Q4 hhwealth_quart" = "NA% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
+    "93% shifted to 4+", "74% shifted to Q4 hhwealth_quart" = "74% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
     "50% shifted to Food Secure", "28% shifted to Yes impsan" = "28% shifted to Yes", "83% shifted to Yes impfloor" =
     "83% shifted to Yes", "33% shifted to Yes cleanck" = "33% shifted to Yes", "3% shifted to Yes safeh20" =
     "3% shifted to Yes", "41% shifted to [20-30) mage" = "41% shifted to [20-30)", "89% shifted to >=35 fage" =
@@ -264,30 +264,45 @@ variable_labels = c(
     "38% shifted to \u226520", "6% shifted to 0 single" = "6% shifted to 0", "67% shifted to High meducyrs" =
     "67% shifted to High", "80% shifted to High feducyrs" = "80% shifted to High", "72% shifted to Yes earlybf" =
     "72% shifted to Yes", "51% shifted to <=2% perdiar6" = "51% shifted to \u22642%", "32% shifted to Yes predexfd6" =
-    "32% shifted to Yes", "Female sex" = "Female", "Male sex" = "Male", ">=50 birthlen" =
-    "\u226550", "<48 birthlen" = "<48", "[48-50) birthlen" = "[48-50)", ">= 2500 g birthwt" =
-    "\u2265 2500 g", "< 2500 g birthwt" = "< 2500 g", "Full or late term gagebrth" =
-    "Full or late term", "Preterm gagebrth" = "Preterm", "Early term gagebrth" =
-    "Early term", "No hdlvry" = "No", "Yes hdlvry" = "Yes", "No vagbrth" = "No", "Vaginal birth vagbrth" =
-    "Vaginal birth", "1 parity" = "1", "3+ parity" = "3+", "2 parity" = "2", "1 nchldlt5" =
-    "1", "2+ nchldlt5" = "2+", "3 or less nhh" = "3 or less", "6-7 nhh" = "6-7", "4-5 nhh" =
-    "4-5", "8+ nhh" = "8+", "4+ nrooms" = "4+", "2 nrooms" = "2", "3 nrooms" =
-    "3", "1 nrooms" = "1", "Q4 hhwealth_quart" = "Q4", "Q1 hhwealth_quart" =
-    "Q1", "Q2 hhwealth_quart" = "Q2", "Q3 hhwealth_quart" = "Q3", "Food Secure hfoodsec" =
-    "Food Secure", "Food Insecure hfoodsec" = "Food Insecure", "Mildly Food Insecure hfoodsec" =
-    "Mildly Food Insecure", "Yes impsan" = "Yes", "No impsan" = "No", "Yes impfloor" =
-    "Yes", "No impfloor" = "No", "Yes cleanck" = "Yes", "No cleanck" = "No", "Yes safeh20" =
-    "Yes", "No safeh20" = "No", "[20-30) mage" = "[20-30)", "<20 mage" = "<20", ">=30 mage" =
-    "\u226530", ">=35 fage" = "\u226535", "<30 fage" = "<30", "[30-35) fage" =
-    "[30-35)", ">=150 mhtcm" = "\u2265150", "<150 mhtcm" = "<150", ">=162 fhtcm" =
-    "\u2265162", "<162 fhtcm" = "<162", ">=45 mwtkg" = "\u226545", "<45 mwtkg" =
-    "<45", ">=20 mbmi" = "\u226520", "<20 mbmi" = "<20", "Partnered single" =
-    "Partnered", "Unpartnered single" = "Unpartnered", "High meducyrs" = "High", "Low meducyrs" =
-    "Low", "Medium meducyrs" = "Medium", "High feducyrs" = "High", "Low feducyrs" =
-    "Low", "Medium feducyrs" = "Medium", "Yes earlybf" = "Yes", "No earlybf" =
-    "No", "<=2% perdiar6" = "\u22642%", ">2% perdiar6" = ">2%", "Yes predexfd6" =
-    "Yes", "No predexfd6" = "No", "63% shifted to >=50 birthlen" = "63% shifted to \u226550", "27% shifted to >= 2500 g birthwt" =
-    "27% shifted to \u2265 2500 g", "48% shifted to Full/late term gagebrth" =
+    "32% shifted to Yes", "Female sex" = "<span style='color:#89b4bc'>Female</span>", "Male sex" =
+    "<span style='color:#89b4bc'>Male</span>", ">=50 birthlen" = "<span style='color:#89b4bc'>\u226550</span>", "<48 birthlen" =
+    "<span style='color:#89b4bc'><48</span>", "[48-50) birthlen" = "<span style='color:#89b4bc'>[48-50)</span>", ">= 2500 g birthwt" =
+    "<span style='color:#89b4bc'>\u2265 2500 g</span>", "< 2500 g birthwt" =
+    "<span style='color:#89b4bc'>< 2500 g</span>", "Full or late term gagebrth" =
+    "<span style='color:#89b4bc'>Full or late term</span>", "Preterm gagebrth" =
+    "<span style='color:#89b4bc'>Preterm</span>", "Early term gagebrth" = "<span style='color:#89b4bc'>Early term</span>", "No hdlvry" =
+    "<span style='color:#89b4bc'>No</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "No vagbrth" =
+    "<span style='color:#89b4bc'>No</span>", "Vaginal birth vagbrth" = "<span style='color:#89b4bc'>Vaginal birth</span>", "1 parity" =
+    "<span style='color:#89b4bc'>1</span>", "3+ parity" = "<span style='color:#89b4bc'>3+</span>", "2 parity" =
+    "<span style='color:#89b4bc'>2</span>", "1 nchldlt5" = "<span style='color:#89b4bc'>1</span>", "2+ nchldlt5" =
+    "<span style='color:#89b4bc'>2+</span>", "3 or less nhh" = "<span style='color:#89b4bc'>3 or less</span>", "6-7 nhh" =
+    "<span style='color:#89b4bc'>6-7</span>", "4-5 nhh" = "<span style='color:#89b4bc'>4-5</span>", "8+ nhh" =
+    "<span style='color:#89b4bc'>8+</span>", "4+ nrooms" = "<span style='color:#89b4bc'>4+</span>", "2 nrooms" =
+    "<span style='color:#89b4bc'>2</span>", "3 nrooms" = "<span style='color:#89b4bc'>3</span>", "1 nrooms" =
+    "<span style='color:#89b4bc'>1</span>", "Q4 hhwealth_quart" = "<span style='color:#89b4bc'>Q4</span>", "Q1 hhwealth_quart" =
+    "<span style='color:#89b4bc'>Q1</span>", "Q2 hhwealth_quart" = "<span style='color:#89b4bc'>Q2</span>", "Q3 hhwealth_quart" =
+    "<span style='color:#89b4bc'>Q3</span>", "Food Secure hfoodsec" = "<span style='color:#89b4bc'>Food Secure</span>", "Food Insecure hfoodsec" =
+    "<span style='color:#89b4bc'>Food Insecure</span>", "Mildly Food Insecure hfoodsec" =
+    "<span style='color:#89b4bc'>Mildly Food Insecure</span>", "Yes impsan" =
+    "<span style='color:#89b4bc'>Yes</span>", "No impsan" = "<span style='color:#89b4bc'>No</span>", "Yes impfloor" =
+    "<span style='color:#89b4bc'>Yes</span>", "No impfloor" = "<span style='color:#89b4bc'>No</span>", "Yes cleanck" =
+    "<span style='color:#89b4bc'>Yes</span>", "No cleanck" = "<span style='color:#89b4bc'>No</span>", "Yes safeh20" =
+    "<span style='color:#89b4bc'>Yes</span>", "No safeh20" = "<span style='color:#89b4bc'>No</span>", "[20-30) mage" =
+    "<span style='color:#89b4bc'>[20-30)</span>", "<20 mage" = "<span style='color:#89b4bc'><20</span>", ">=30 mage" =
+    "<span style='color:#89b4bc'>\u226530</span>", ">=35 fage" = "<span style='color:#89b4bc'>\u226535</span>", "<30 fage" =
+    "<span style='color:#89b4bc'><30</span>", "[30-35) fage" = "<span style='color:#89b4bc'>[30-35)</span>", ">=150 mhtcm" =
+    "<span style='color:#89b4bc'>\u2265150</span>", "<150 mhtcm" = "<span style='color:#89b4bc'><150</span>", ">=162 fhtcm" =
+    "<span style='color:#89b4bc'>\u2265162</span>", "<162 fhtcm" = "<span style='color:#89b4bc'><162</span>", ">=45 mwtkg" =
+    "<span style='color:#89b4bc'>\u226545</span>", "<45 mwtkg" = "<span style='color:#89b4bc'><45</span>", ">=20 mbmi" =
+    "<span style='color:#89b4bc'>\u226520</span>", "<20 mbmi" = "<span style='color:#89b4bc'><20</span>", "Partnered single" =
+    "<span style='color:#89b4bc'>Partnered</span>", "Unpartnered single" = "<span style='color:#89b4bc'>Unpartnered</span>", "High meducyrs" =
+    "<span style='color:#89b4bc'>High</span>", "Low meducyrs" = "<span style='color:#89b4bc'>Low</span>", "Medium meducyrs" =
+    "<span style='color:#89b4bc'>Medium</span>", "High feducyrs" = "<span style='color:#89b4bc'>High</span>", "Low feducyrs" =
+    "<span style='color:#89b4bc'>Low</span>", "Medium feducyrs" = "<span style='color:#89b4bc'>Medium</span>", "Yes earlybf" =
+    "<span style='color:#89b4bc'>Yes</span>", "No earlybf" = "<span style='color:#89b4bc'>No</span>", "<=2% perdiar6" =
+    "<span style='color:#89b4bc'>\u22642%</span>", ">2% perdiar6" = "<span style='color:#89b4bc'>>2%</span>", "Yes predexfd6" =
+    "<span style='color:#89b4bc'>Yes</span>", "No predexfd6" = "<span style='color:#89b4bc'>No</span>", "63% shifted to >=50 birthlen" =
+    "63% shifted to \u226550", "27% shifted to >= 2500 g birthwt" = "27% shifted to \u2265 2500 g", "48% shifted to Full/late term gagebrth" =
     "48% shifted to Full/late term", "54% shifted to No hdlvry" = "54% shifted to No", "94% shifted to 4+ nrooms" =
     "94% shifted to 4+", "30% shifted to Yes impsan" = "30% shifted to Yes", "1% shifted to Yes safeh20" =
     "1% shifted to Yes", "85% shifted to Yes impfloor" = "85% shifted to Yes", "35% shifted to Yes cleanck" =
