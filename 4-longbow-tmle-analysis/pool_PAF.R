@@ -9,14 +9,19 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load data
 d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
+head(d)
 
 
+temp <- d %>% filter(intervention_variable=="perdiar6" & outcome_variable=="ever_wasted", type=="PAF", agecat=="6-24 months")
+temp
 
-temp <- d %>% filter(intervention_variable=="hhwealth_quart" & outcome_variable=="ever_stunted", type=="PAF")
+temp <- d %>% filter(intervention_variable=="perdiar6" & outcome_variable=="ever_wasted", type=="RR", agecat=="6-24 months", intervention_level != baseline_level)
 temp
 
 
 
+#drop sparse outcomes
+d <- d %>% filter(n>=10)
 
 
 #Drop duplicated (unadjusted sex and month variables)

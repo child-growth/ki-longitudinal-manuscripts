@@ -7,16 +7,43 @@ source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R"))
 source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
-bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-09-29.RDS")) #%>% filter(intervention_variable!="fage")
 
-d <- bin_primary_alt_ref %>% filter(type=="RR")
+dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% filter(type=="RR", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
+
+#get parity
+bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-10-05.RDS")) %>% filter(outcome_variable!="ever_wasted", agecat=="0-24 months", type=="RR", intervention_variable=="parity")
+bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-10-05.RDS")) %>% 
+  filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(parity)) %>%
+  group_by(studyid, country, parity) %>% summarise(min_n_cell=min(n_cell)) %>% rename(intervention_level=parity) %>% mutate(intervention_variable="parity")
+bin_primary_alt_ref <- left_join(bin_primary_alt_ref, bin_primary_alt_ref_ns, by =c("studyid", "country","intervention_variable","intervention_level"))
+
+
+d <- bind_rows(dfull, bin_primary_alt_ref) 
+
+
+
 
 #drop morbidity and mortality analysis
 d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")
 
 
-#Drop reference levels
-d <- d %>% filter(intervention_level != d$baseline_level)
+#Drop reference levels and sparse estimates
+d <- d %>% filter(intervention_level != d$baseline_level)  %>% filter(min_n_cell>=10)
+
+
+#Drop duplicated (unadjusted sex and month variables)
+dim(d)
+d <- distinct(d)
+dim(d)
+
+d <- droplevels(d)
+
+
+
+temp <- d %>% filter(intervention_variable=="perdiar6" & outcome_variable=="ever_wasted")
+temp
+
+
 
 
 #Subset agecat
@@ -25,9 +52,7 @@ head(d)
 d <- mark_region(d)
 
 unique(d$intervention_variable)
-# d <- d %>% filter(intervention_variable=="perdiar6"|intervention_variable=="perdiar24", agecat=="24 months"|agecat=="6-24 months",
-#                   outcome_variable %in% c("ever_wasted","wasted"), ci_lower!=ci_upper)
-# 
+
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
