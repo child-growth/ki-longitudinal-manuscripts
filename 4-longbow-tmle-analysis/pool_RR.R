@@ -24,14 +24,13 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 #Subset agecat
 d <- droplevels(d)
 
-unique(d$intervention_variable)
-d <- d %>% filter(intervention_variable=="perdiar6"|intervention_variable=="perdiar24", agecat=="24 months"|agecat=="6-24 months",
-                  outcome_variable %in% c("ever_wasted","wasted"), ci_lower!=ci_upper)
+
 
 #temp
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
+
 
 RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()

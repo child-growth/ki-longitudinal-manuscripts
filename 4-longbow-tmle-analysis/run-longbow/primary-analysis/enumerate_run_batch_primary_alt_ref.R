@@ -35,6 +35,7 @@ d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
 }
+levels(d$parity)
 d$nrooms <- factor(d$nrooms, levels=c("1","2","3","4+"))
 d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
 d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
@@ -65,6 +66,7 @@ d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
 }
+d$parity <- factor(d$parity, levels=c("1","2","3+"))
 d$nrooms <- factor(d$nrooms, levels=c("1","2","3","4+"))
 d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
 d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
@@ -80,6 +82,7 @@ d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
 }
+d$parity <- factor(d$parity, levels=c("1","2","3+"))
 d$nrooms <- factor(d$nrooms, levels=c("1","2","3","4+"))
 d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
 d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
@@ -95,3 +98,8 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
 run_ki_tmle(enumerated_analyses, results_folder="results_bin_primary_alt_ref", overwrite = F, skip_failed=F)
+
+
+results_folder="results_bin_primary_alt_ref"
+base_directory = paste0(BV_dir,"/tmle/",results_folder,"/")
+base_directory
