@@ -497,7 +497,7 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
     
    p <- p + geom_label(aes(y=est, color=parameter, label=lab), data=ann_text, fill="white", alpha=1, label.padding = unit(0.05, "lines"),
                        label.r = unit(0.05, "lines"),
-                       label.size = 0.05, size=2) +
+                       label.size = 0.05, size=1.8, fontface = "bold") +
      geom_curve(aes( y = est-label_format$label_adj[1]*label_format$rev_arrow[1], xend = intervention_level_f2, yend = arrow_end-label_format$arrow_lengths[1]*label_format$rev_arrow[1],  color=parameter), curvature = label_format$arrow_curve[1], alpha=0.75, size=label_format$arrow_size, arrow = arrow(length = unit(0.2, "cm")), data=ann_text[1,]) +
      geom_curve(aes( y = est-label_format$label_adj[2]*label_format$rev_arrow[2], xend = intervention_level_f2, yend = arrow_end-label_format$arrow_lengths[2]*label_format$rev_arrow[2],  color=parameter), curvature = label_format$arrow_curve[2], alpha=0.75, size=label_format$arrow_size, arrow = arrow(length = unit(0.2, "cm")), data=ann_text[2,]) 
     

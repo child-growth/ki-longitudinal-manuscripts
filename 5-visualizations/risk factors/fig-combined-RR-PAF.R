@@ -455,7 +455,7 @@ p_laz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                    #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
                    rel_heights=relheights )
 
-ylims=c(0, 40)
+ylims=c(-5, 40)
 p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims, facet_label_pos= -35, xaxis=T, ylab="", yaxis=F)
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims, facet_label_pos= -45, xaxis=T, ylab="", yaxis=F)
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims, facet_label_pos= -15, xaxis=T, ylab="", yaxis=F)
@@ -497,7 +497,7 @@ p_wlz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                    #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
                    rel_heights = relheights)
 
-ylims=c(0, 15)
+ylims=c(-5, 20)
 p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -35, xaxis=T, ylab="", yaxis=F)
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=T, ylab="", yaxis=F)
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -15, xaxis=T, ylab="", yaxis=F)
