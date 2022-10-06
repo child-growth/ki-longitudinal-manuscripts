@@ -9,17 +9,35 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% 
-  filter(type=="RR", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
+  filter(type=="RR", intervention_variable=="nhh",intervention_variable=="nrooms", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
 
-#get parity
-bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-10-06.RDS")) %>% filter(outcome_variable=="ever_wasted", agecat=="0-24 months", type=="RR", intervention_variable=="parity")
-bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-10-06.RDS")) %>% 
+#get parity, nhh, and nrooms
+bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-10-06.RDS")) %>% 
+  filter(outcome_variable=="ever_wasted", agecat=="0-24 months", intervention_variable=="parity"|intervention_variable=="nhh"|intervention_variable=="nrooms")
+
+bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-10-06.RDS")) 
+bin_primary_alt_ref_ns_parity <- bin_primary_alt_ref_ns %>% 
   filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(parity)) %>%
   group_by(studyid, country, parity) %>% summarise(min_n_cell=min(n_cell)) %>% rename(intervention_level=parity) %>% mutate(intervention_variable="parity")
+
+bin_primary_alt_ref_ns_nhh <- bin_primary_alt_ref_ns %>% 
+  filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(nhh)) %>%
+  group_by(studyid, country, nhh ) %>% summarise(min_n_cell=min(n_cell)) %>% rename(intervention_level=nhh) %>% mutate(intervention_variable="nhh")
+
+bin_primary_alt_ref_ns_nrooms <- bin_primary_alt_ref_ns %>% 
+  filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(nrooms)) %>%
+  group_by(studyid, country, nrooms) %>% summarise(min_n_cell=min(n_cell)) %>% rename(intervention_level=nrooms) %>% mutate(intervention_variable="nrooms")
+bin_primary_alt_ref_ns <- bind_rows(bin_primary_alt_ref_ns_parity, bin_primary_alt_ref_ns_nhh, bin_primary_alt_ref_ns_nrooms)
+
 bin_primary_alt_ref <- left_join(bin_primary_alt_ref, bin_primary_alt_ref_ns, by =c("studyid", "country","intervention_variable","intervention_level"))
 
-bin_primary_alt_ref %>% filter(intervention_variable=="parity" & outcome_variable =="ever_wasted")
-dfull %>% filter(intervention_variable=="parity" & outcome_variable =="ever_wasted")
+#save subset for PAF
+saveRDS(bin_primary_alt_ref, paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds"))
+
+
+bin_primary_alt_ref <- bin_primary_alt_ref %>% filter(type=="RR")
+
+
 
 d <- bind_rows(dfull, bin_primary_alt_ref) 
 
@@ -42,13 +60,6 @@ d <- distinct(d)
 dim(d)
 
 d <- droplevels(d)
-
-
-
-temp <- d %>% filter(intervention_variable=="parity" & outcome_variable=="ever_stunted")
-unique(temp$baseline_level)
-temp
-
 
 
 #Subset agecat
