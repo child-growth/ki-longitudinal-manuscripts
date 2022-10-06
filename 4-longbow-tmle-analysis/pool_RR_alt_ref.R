@@ -21,11 +21,11 @@ bin_primary_alt_ref_ns_parity <- bin_primary_alt_ref_ns %>%
   group_by(studyid, country, parity) %>% summarise(min_n_cell=min(n_cell)) %>% rename(intervention_level=parity) %>% mutate(intervention_variable="parity")
 
 bin_primary_alt_ref_ns_nhh <- bin_primary_alt_ref_ns %>% 
-  filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(nhh)) %>%
+  filter(agecat=="0-24 months", !is.na(nhh)) %>%
   group_by(studyid, country, nhh ) %>% summarise(min_n_cell=min(n_cell)) %>% rename(intervention_level=nhh) %>% mutate(intervention_variable="nhh")
 
 bin_primary_alt_ref_ns_nrooms <- bin_primary_alt_ref_ns %>% 
-  filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(nrooms)) %>%
+  filter( agecat=="0-24 months", !is.na(nrooms)) %>%
   group_by(studyid, country, nrooms) %>% summarise(min_n_cell=min(n_cell)) %>% rename(intervention_level=nrooms) %>% mutate(intervention_variable="nrooms")
 bin_primary_alt_ref_ns <- bind_rows(bin_primary_alt_ref_ns_parity, bin_primary_alt_ref_ns_nhh, bin_primary_alt_ref_ns_nrooms)
  
