@@ -18,15 +18,15 @@ bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/r
 bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-10-06.RDS")) 
 bin_primary_alt_ref_ns_parity <- bin_primary_alt_ref_ns %>% 
   filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(parity)) %>%
-  group_by(studyid, country, parity) %>% summarise(min_n_cell=min(n_cell), n=n[1]) %>% rename(intervention_level=parity) %>% mutate(intervention_variable="parity")
+  group_by(studyid, country, parity) %>% summarise(min_n_cell=min(n_cell), n_cell=n_cell[1], n=n[1]) %>% rename(intervention_level=parity) %>% mutate(intervention_variable="parity")
 
 bin_primary_alt_ref_ns_nhh <- bin_primary_alt_ref_ns %>% 
   filter(agecat=="0-24 months", !is.na(nhh)) %>%
-  group_by(studyid, country, nhh ) %>% summarise(min_n_cell=min(n_cell), n=n[1]) %>% rename(intervention_level=nhh) %>% mutate(intervention_variable="nhh")
+  group_by(studyid, country, nhh ) %>% summarise(min_n_cell=min(n_cell), n_cell=n_cell[1], n=n[1]) %>% rename(intervention_level=nhh) %>% mutate(intervention_variable="nhh")
 
 bin_primary_alt_ref_ns_nrooms <- bin_primary_alt_ref_ns %>% 
   filter( agecat=="0-24 months", !is.na(nrooms)) %>%
-  group_by(studyid, country, nrooms) %>% summarise(min_n_cell=min(n_cell), n=n[1]) %>% rename(intervention_level=nrooms) %>% mutate(intervention_variable="nrooms")
+  group_by(studyid, country, nrooms) %>% summarise(min_n_cell=min(n_cell), n_cell=n_cell[1], n=n[1]) %>% rename(intervention_level=nrooms) %>% mutate(intervention_variable="nrooms")
 bin_primary_alt_ref_ns <- bind_rows(bin_primary_alt_ref_ns_parity, bin_primary_alt_ref_ns_nhh, bin_primary_alt_ref_ns_nrooms)
  
 bin_primary_alt_ref <- left_join(bin_primary_alt_ref, bin_primary_alt_ref_ns, by =c("studyid", "country","intervention_variable","intervention_level"))
