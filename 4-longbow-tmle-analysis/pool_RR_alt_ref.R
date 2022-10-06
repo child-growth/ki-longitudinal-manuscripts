@@ -13,11 +13,11 @@ dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
 
 #get parity, nhh, and nrooms
 bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-10-06.RDS")) %>% 
-  filter( agecat=="0-24 months", (outcome_variable=="ever_wasted" & intervention_variable=="parity")|intervention_variable=="nhh"|intervention_variable=="nrooms")
+  filter( agecat=="0-24 months", (intervention_variable=="parity")|intervention_variable=="nhh"|intervention_variable=="nrooms")
 
 bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-10-06.RDS")) 
 bin_primary_alt_ref_ns_parity <- bin_primary_alt_ref_ns %>% 
-  filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(parity)) %>%
+  filter( agecat=="0-24 months", !is.na(parity)) %>%
   group_by(studyid, country, parity) %>% summarise(min_n_cell=min(n_cell), n_cell=n_cell[1], n=n[1]) %>% rename(intervention_level=parity) %>% mutate(intervention_variable="parity")
 
 bin_primary_alt_ref_ns_nhh <- bin_primary_alt_ref_ns %>% 
