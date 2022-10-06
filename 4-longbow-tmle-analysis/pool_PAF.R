@@ -26,6 +26,7 @@ d <- bind_rows(d, bin_primary_alt_ref)
 d <- d %>% filter(min_n_cell >=10)
 
 d %>% filter(intervention_variable=="nhh", agecat=="0-24 months", outcome_variable=="ever_wasted")
+d %>% filter(intervention_variable=="birthlen", agecat=="0-24 months", outcome_variable=="ever_wasted")
 
 
 #Drop duplicated (unadjusted sex and month variables)

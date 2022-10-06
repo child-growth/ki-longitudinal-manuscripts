@@ -31,6 +31,7 @@ bin_primary_alt_ref_ns <- bind_rows(bin_primary_alt_ref_ns_parity, bin_primary_a
  
 bin_primary_alt_ref <- left_join(bin_primary_alt_ref, bin_primary_alt_ref_ns, by =c("studyid", "country","intervention_variable","intervention_level"))
 bin_primary_alt_ref <- bin_primary_alt_ref %>% group_by(studyid, country, intervention_variable) %>% mutate(min_n_cell=ifelse(is.na(min_n_cell),min(min_n_cell, na.rm=T),min_n_cell)) #minimum N's for prevalence
+bin_primary_alt_ref <- bin_primary_alt_ref %>% group_by(intervention_variable, intervention_level, agecat, outcome_variable, type) %>% mutate(n_cell=sum(n_cell,na.rm=T), n=sum(n,na.rm=T)) #minimum N's for prevalence
 
 #save subset for PAF
 saveRDS(bin_primary_alt_ref, paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds"))
