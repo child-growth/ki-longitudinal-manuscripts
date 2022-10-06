@@ -12,16 +12,13 @@ d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
 head(d)
 
 
-temp <- d %>% filter(intervention_variable=="perdiar6" & outcome_variable=="ever_wasted", type=="PAF", agecat=="6-24 months")
-temp
-
-temp <- d %>% filter(intervention_variable=="perdiar6" & outcome_variable=="ever_wasted", type=="RR", agecat=="6-24 months", intervention_level != baseline_level)
-temp
-
+# # #d <- d %>% filter(intervention_variable=="parity" & outcome_variable=="ever_stunted", type=="PAF", agecat=="6-24 months")
+# d <- d %>% filter(intervention_variable=="nhh" & outcome_variable=="ever_wasted", agecat=="0-24 months")
+# d
 
 
 #drop sparse outcomes
-d <- d %>% filter(n>=10 | type!="PAF")
+d <- d %>% filter(min_n_cell >=10)
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -40,6 +37,8 @@ d <- d %>% filter(type=="PAR")
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.par(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
+RMAest
+
 
 RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.par(.)) %>% as.data.frame()
@@ -60,9 +59,8 @@ Prev_est_raw <- rbind(Prev_est, Prev_est_region)
 Prev_est_raw <- Prev_est_raw %>% subset(., select = - c(CI1, CI2, Nstudies, baseline_level, intervention_level))
 
 
-Prev_est[Prev_est$intervention_variable=="fage",]
-Prev_est[Prev_est$intervention_variable=="hhwealth_quart",]
-RMAest[RMAest$intervention_variable=="hhwealth_quart" &!is.na(RMAest$n),]
+Prev_est[Prev_est$intervention_variable=="nhh",]
+RMAest[RMAest$intervention_variable=="nhh" &!is.na(RMAest$n),]
 
 
 
@@ -70,10 +68,6 @@ RMAest[RMAest$intervention_variable=="hhwealth_quart" &!is.na(RMAest$n),]
 dim(RMAest_raw)
 df <- left_join(RMAest_raw, Prev_est_raw, by = c("outcome_variable","intervention_variable", "agecat","region"))
 dim(df)
-
-
-
-
 
 #Calculate PAF 
 df2 <- df %>% group_by(intervention_variable, agecat, outcome_variable, region) %>%
@@ -84,6 +78,7 @@ summary(df2$PAF)
 summary(df2$PAF.CI1)
 summary(df2$PAF.CI2)
 
+df2[df2$intervention_variable=="nhh",]
 
 
 # #------------------------------------------
@@ -118,11 +113,10 @@ RMAest <- df2
 
 
 #Clean up dataframe for plotting
-RMAest[RMAest$intervention_variable=="fage",]
+RMAest[RMAest$intervention_variable=="nhh",]
 
 RMAest_clean <- RMA_clean(RMAest)
 
-temp<-RMAest_clean[RMAest_clean$intervention_variable=="fage"&!is.na(RMAest_clean$intervention_variable),]
 
 #Add reference level to label
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)
