@@ -35,8 +35,17 @@ d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
 }
-levels(d$parity)
-d$nrooms <- factor(d$nrooms, levels=c("1","2","3","4+"))
+levels(d$nhh)
+
+table(d$nhh)
+table(d$nrooms)
+
+d <- d %>% mutate(
+  nhh = factor(case_when(nhh=="8+"|nhh=="6-7" ~ "6+",   nhh=="4-5"|nhh=="3 or less" ~ "5 or less"), levels = c("5 or less", "6+")),
+  nrooms = factor(case_when(nrooms=="1" ~ "1",   nrooms=="2"|nrooms=="3"|nrooms=="4+" ~ "2+"), levels = c("1", "2+"))
+)
+
+d$parity <- factor(d$parity, levels=c("2","1","3+"))
 d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
 d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
 d$meducyrs <- factor(d$meducyrs, levels=c("Low", "Medium" ,"High" ))
@@ -51,7 +60,14 @@ d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
 }
-d$nrooms <- factor(d$nrooms, levels=c("1","2","3","4+"))
+
+d <- d %>% mutate(
+  nhh = factor(case_when(nhh=="8+"|nhh=="6-7" ~ "6+",   nhh=="4-5"|nhh=="3 or less" ~ "5 or less"), levels = c("5 or less", "6+")),
+  nrooms = factor(case_when(nrooms=="1" ~ "1",   nrooms=="2"|nrooms=="3"|nrooms=="4+" ~ "2+"), levels = c("1", "2+"))
+)
+
+
+d$parity <- factor(d$parity, levels=c("2","1","3+"))
 d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
 d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
 d$meducyrs <- factor(d$meducyrs, levels=c("Low", "Medium" ,"High" ))
@@ -66,8 +82,13 @@ d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
 }
-d$parity <- factor(d$parity, levels=c("1","2","3+"))
-d$nrooms <- factor(d$nrooms, levels=c("1","2","3","4+"))
+
+d <- d %>% mutate(
+  nhh = factor(case_when(nhh=="8+"|nhh=="6-7" ~ "6+",   nhh=="4-5"|nhh=="3 or less" ~ "5 or less"), levels = c("5 or less", "6+")),
+  nrooms = factor(case_when(nrooms=="1" ~ "1",   nrooms=="2"|nrooms=="3"|nrooms=="4+" ~ "2+"), levels = c("1", "2+"))
+)
+
+d$parity <- factor(d$parity, levels=c("2","1","3+"))
 d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
 d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
 d$meducyrs <- factor(d$meducyrs, levels=c("Low", "Medium" ,"High" ))
@@ -82,8 +103,13 @@ d <- as.data.frame(d)
 for(i in 1:ncol(d)){
   if(is.factor(d[,i])){d[,i] <- fct_rev(d[,i])}
 }
-d$parity <- factor(d$parity, levels=c("1","2","3+"))
-d$nrooms <- factor(d$nrooms, levels=c("1","2","3","4+"))
+
+d <- d %>% mutate(
+  nhh = factor(case_when(nhh=="8+"|nhh=="6-7" ~ "6+",   nhh=="4-5"|nhh=="3 or less" ~ "5 or less"), levels = c("5 or less", "6+")),
+  nrooms = factor(case_when(nrooms=="1" ~ "1",   nrooms=="2"|nrooms=="3"|nrooms=="4+" ~ "2+"), levels = c("1", "2+"))
+)
+
+d$parity <- factor(d$parity, levels=c("2","1","3+"))
 d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
 d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
 d$meducyrs <- factor(d$meducyrs, levels=c("Low", "Medium" ,"High" ))

@@ -12,8 +12,8 @@ dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
   filter(type=="RR", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
 
 #get parity
-bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-10-05.RDS")) %>% filter(outcome_variable=="ever_wasted", agecat=="0-24 months", type=="RR", intervention_variable=="parity")
-bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-10-05.RDS")) %>% 
+bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-10-06.RDS")) %>% filter(outcome_variable=="ever_wasted", agecat=="0-24 months", type=="RR", intervention_variable=="parity")
+bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-10-06.RDS")) %>% 
   filter(outcome_variable!="ever_wasted", agecat=="0-24 months", !is.na(parity)) %>%
   group_by(studyid, country, parity) %>% summarise(min_n_cell=min(n_cell)) %>% rename(intervention_level=parity) %>% mutate(intervention_variable="parity")
 bin_primary_alt_ref <- left_join(bin_primary_alt_ref, bin_primary_alt_ref_ns, by =c("studyid", "country","intervention_variable","intervention_level"))
@@ -23,6 +23,8 @@ dfull %>% filter(intervention_variable=="parity" & outcome_variable =="ever_wast
 
 d <- bind_rows(dfull, bin_primary_alt_ref) 
 
+d %>% filter(intervention_variable=="parity" & outcome_variable =="ever_stunted", intervention_level != d$baseline_level)
+d %>% filter(intervention_variable=="parity" & outcome_variable =="ever_wasted", intervention_level != d$baseline_level)
 
 
 
