@@ -9,12 +9,12 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load data
 d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
-  filter( intervention_variable!="nhh",intervention_variable!="nrooms")
+  filter( intervention_variable!="nhh",intervention_variable!="nrooms",intervention_variable!="parity")
 
 head(d)
 
 
-bin_primary_alt_ref <- readRDS(paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds")) %>%   filter( intervention_variable!="parity")
+bin_primary_alt_ref <- readRDS(paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds"))
 d <- bind_rows(d, bin_primary_alt_ref)
 
 # # #d <- d %>% filter(intervention_variable=="parity" & outcome_variable=="ever_stunted", type=="PAF", agecat=="6-24 months")
