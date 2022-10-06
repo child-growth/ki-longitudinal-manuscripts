@@ -13,8 +13,8 @@ head(d)
 
 
 # # #d <- d %>% filter(intervention_variable=="parity" & outcome_variable=="ever_stunted", type=="PAF", agecat=="6-24 months")
-d <- d %>% filter(intervention_variable=="nhh" & outcome_variable=="ever_wasted", agecat=="0-24 months")
-d
+# d <- d %>% filter(intervention_variable=="nhh" & outcome_variable=="ever_wasted", agecat=="0-24 months")
+# d
 
 
 #drop sparse outcomes
