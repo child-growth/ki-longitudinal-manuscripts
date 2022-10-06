@@ -8,9 +8,14 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds"))
+d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
+  filter( intervention_variable!="nhh",intervention_variable!="nrooms")
+
 head(d)
 
+
+bin_primary_alt_ref <- readRDS(paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds")) %>%   filter( intervention_variable!="parity")
+d <- bind_rows(d, bin_primary_alt_ref)
 
 # # #d <- d %>% filter(intervention_variable=="parity" & outcome_variable=="ever_stunted", type=="PAF", agecat=="6-24 months")
 # d <- d %>% filter(intervention_variable=="nhh" & outcome_variable=="ever_wasted", agecat=="0-24 months")
@@ -19,6 +24,8 @@ head(d)
 
 #drop sparse outcomes
 d <- d %>% filter(min_n_cell >=10)
+
+d %>% filter(intervention_variable=="nhh", agecat=="0-24 months", outcome_variable=="ever_wasted")
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -33,11 +40,18 @@ prev <- d %>% filter(type=="E(Y)")
 dpaf <- d %>% filter(type=="PAF")
 d <- d %>% filter(type=="PAR")
 
+prev %>% filter(intervention_variable=="nhh", agecat=="0-24 months", outcome_variable=="ever_wasted")
+dpaf %>% filter(intervention_variable=="nhh", agecat=="0-24 months", outcome_variable=="ever_wasted")
+d %>% filter(intervention_variable=="nhh", agecat=="0-24 months", outcome_variable=="ever_wasted")
+
+
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
   do(pool.par(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
 RMAest
+
+RMAest %>% filter(intervention_variable=="nhh")
 
 
 RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
