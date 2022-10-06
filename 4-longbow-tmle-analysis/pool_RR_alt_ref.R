@@ -43,9 +43,9 @@ d <- droplevels(d)
 
 
 
-temp <- d %>% filter(intervention_variable=="perdiar6" & outcome_variable=="ever_wasted")
+temp <- d %>% filter(intervention_variable=="parity" & outcome_variable=="ever_stunted")
+unique(temp$baseline_level)
 temp
-
 
 
 

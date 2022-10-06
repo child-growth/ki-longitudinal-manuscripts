@@ -55,8 +55,6 @@ summary(CIR_raw$est)
 df_full <- bind_rows(paf_raw, CIR_raw#, prev_raw
                      )
 
-head(df_full)
-
 saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 
 
