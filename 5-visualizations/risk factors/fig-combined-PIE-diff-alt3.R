@@ -85,9 +85,10 @@ df$RFlabel_ref[df$RFlabel_ref =="Vaginal birth, ref: Yes" ] <- "Vaginal birth, r
 
 
 
-df$RFlabel[df$RFlabel=="Diarrhea <24 mo.  (% days)"] <- "Diarrhea (% days)"
+df$RFlabel[df$RFlabel=="Diarrhea <24 mo.  (% days)"] <- "Diarrhea <24 months (% days)"
 df$RFlabel[df$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea (% days)"
 df$RFlabel[df$RFlabel=="Gestational age at birth"] <- "Gestational age"
+df$RFlabel[df$RFlabel=="HH wealth"] <- "HH wealth quartile"
 
 
 
@@ -462,7 +463,7 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
             strip.text.y.left = element_markdown(angle = 0, size=6, hjust = 0,
                                              margin = margin(r = facet_label_pos)
                                              ),
-            axis.text.y = element_markdown(size=6, hjust = 1, colour="black"),
+            axis.text.y = element_markdown(size=6, hjust = 1, colour="black", margin = margin(r=1)),
             legend.text = element_text(size=6),
             legend.title = element_text(size=6),
             axis.ticks=element_line( colour=grey_color),
@@ -473,6 +474,7 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
             legend.box.background = element_rect(colour = grey_color), 
             plot.margin = unit(c(0, 0, 0, 0), "cm")) 
   p
+  
   
   if(xaxis){
    p <- p + labs(x = NULL, y = ylab, title=plotdf$RFgroup[1]) +
@@ -497,7 +499,7 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
     
    p <- p + geom_label(aes(y=est, color=parameter, label=lab), data=ann_text, fill="white", alpha=1, label.padding = unit(0.05, "lines"),
                        label.r = unit(0.05, "lines"),
-                       label.size = 0.05, size=2) +
+                       label.size = 0.05, size=1.8, fontface = "bold") +
      geom_curve(aes( y = est-label_format$label_adj[1]*label_format$rev_arrow[1], xend = intervention_level_f2, yend = arrow_end-label_format$arrow_lengths[1]*label_format$rev_arrow[1],  color=parameter), curvature = label_format$arrow_curve[1], alpha=0.75, size=label_format$arrow_size, arrow = arrow(length = unit(0.2, "cm")), data=ann_text[1,]) +
      geom_curve(aes( y = est-label_format$label_adj[2]*label_format$rev_arrow[2], xend = intervention_level_f2, yend = arrow_end-label_format$arrow_lengths[2]*label_format$rev_arrow[2],  color=parameter), curvature = label_format$arrow_curve[2], alpha=0.75, size=label_format$arrow_size, arrow = arrow(length = unit(0.2, "cm")), data=ann_text[2,]) 
     
@@ -517,11 +519,11 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                                       label_pos=c(0.2, 0.6),
                                       lab_levels=c("[48-50) birthlen", "67% shifted to >=50 birthlen"),
                                       label_adj=c(0.035, 0.03),
-                                      arrow_curve=c(0.5,0.5),
+                                      arrow_curve=c(-0.5,0.5),
                                       arrow_lengths=c(-0.015, -0.015),
                                       rev_arrow=c(-1,1),
                                       arrow_size=0.3))
-  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -20, xaxis=T, ylab="")
+  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -30, xaxis=T, ylab="")
   p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -12, xaxis=T, ylab="")
   p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T, facet_label_pos= -42)
   
@@ -544,8 +546,16 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
 
   #p_wlz <- plot_combined_pie_ate(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
 
-  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -35, xaxis=T, ylab="")
-  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -20, xaxis=T, ylab="")
+  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -35, xaxis=T, ylab="", label_params=T,
+                              label_format=list(
+                                label_pos=c(0.42, 0.3),
+                                lab_levels=c(">=50 birthlen", "67% shifted to >=50 birthlen"),
+                                label_adj=c(-0.02, 0.015),
+                                arrow_curve=c(-0.35,0.35),
+                                arrow_lengths=c(-0, -0),
+                                rev_arrow=c(-1,1),
+                                arrow_size=0.3))
+  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -30, xaxis=T, ylab="")
   p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -12, xaxis=T, ylab="")
   p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months", legend=F, xaxis=T, facet_label_pos= -55)
   
