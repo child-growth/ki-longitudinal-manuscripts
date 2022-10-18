@@ -73,6 +73,11 @@ dpool <- df %>% ungroup() %>%
   group_by(intervention_variable, 
            outcome_variable) 
 
+#flip birth reference
+dpool %>% filter(agecat=="Birth", intervention_variable=="parity", region=="Pooled")
+
+dpool 
+
 #----------------------------------------------------------
 # Plot PAR - combined LAZ and WLZ
 #----------------------------------------------------------
@@ -174,17 +179,17 @@ plot_ext_par <- function(d, outcome, agecat, region, text_pos=NULL, range=NULL, 
   return(p)
 }
 
-plot_laz_birth <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="Birth", region="Pooled", text_pos=-0.65, range=c(-0.7, 0.4))
+plot_laz_birth <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="Birth", region="Pooled", text_pos=-0.55, range=c(-0.6, 0.4))
 plot_laz_6 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="6 months", region="Pooled", text_pos=-0.25, range=c(-0.3, 0.8))
 plot_laz_24 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Pooled", text_pos=-0.45, range=c(-0.5, 0.6), xaxis=T)
 
-plot_wlz_birth <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="Birth", region="Pooled", text_pos=-0.85, range=c(-0.9, 0.2))
-plot_wlz_6 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="6 months", region="Pooled", text_pos=-0.65, range=c(-0.7, 0.4))
-plot_wlz_24 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Pooled", text_pos=-0.65, range=c(-0.7, 0.4), xaxis=T)
+plot_wlz_birth <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="Birth", region="Pooled", text_pos=-0.4, range=c(-0.45, 0.2))
+plot_wlz_6 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="6 months", region="Pooled", text_pos=-0.4, range=c(-0.45, 0.4))
+plot_wlz_24 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Pooled", text_pos=-0.4, range=c(-0.45, 0.4), xaxis=T)
 
-plot_laz_africa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Africa", text_pos=-1, range=c(-1.1, 1))
-plot_laz_la <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Latin America", text_pos=-1, range=c(-1.1, 1))
-plot_laz_sa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="South Asia", text_pos=-1, range=c(-1.1, 1), xaxis=T)
+plot_laz_africa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Africa", text_pos=-0.55, range=c(-0.6, 1))
+plot_laz_la <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Latin America", text_pos=-0.55, range=c(-0.6, 1))
+plot_laz_sa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="South Asia", text_pos=-0.55, range=c(-0.6, 1), xaxis=T)
 
 plot_wlz_africa <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Africa", text_pos=-0.5, range=c(-0.6, 0.8))
 plot_wlz_la <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Latin America", text_pos=-0.5, range=c(-0.6, 0.8))

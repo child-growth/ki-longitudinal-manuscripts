@@ -47,7 +47,7 @@ exposure_vars <- c(
 
 d<-data.frame(d)
 
-d <- d %>% filter(agecat %in% c("24 months"))
+#d <- d %>% filter(agecat %in% c("24 months"))
 
 #Get distinct obs (duplicates for adjusted and unadjusted, and often for wlz and haz)
 dim(d)

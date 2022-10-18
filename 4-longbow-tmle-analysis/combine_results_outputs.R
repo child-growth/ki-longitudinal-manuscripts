@@ -167,7 +167,7 @@ N_sums_bin[N_sums_bin$intervention_variable=="fage",]
 N_sums_bin[N_sums_bin$intervention_variable=="hhwealth_quart",]
 
 load(paste0(res_dir,"continuous_rf_Ns_sub.rdata"))
-N_sums_cont <- N_sums %>% mutate(continuous = 1)
+N_sums_cont <- N_sums %>% mutate(continuous = 1) %>% droplevels()
 N_sums_cont$intervention_level <- gsub("Wealth","",N_sums_cont$intervention_level)
 N_sums_cont[N_sums_cont$intervention_variable=="hhwealth_quart",]
 d[d$intervention_variable=="hhwealth_quart",]
@@ -176,19 +176,19 @@ N_sums <- rbind(N_sums_bin, N_sums_cont)
 
 N_sums$intervention_level <- gsub("Wealth ","",N_sums$intervention_level)
 N_sums$intervention_level <- gsub("Wealth","",N_sums$intervention_level)
-N_sums$baseline_level <- gsub("Wealth ","",N_sums$baseline_level)
-N_sums$baseline_level <- gsub("Wealth","",N_sums$baseline_level)
+
 
 
 dim(d)
 dim(N_sums)
 d <- left_join(d, N_sums, by = c("agecat", "outcome_variable", "intervention_variable", "intervention_level", "continuous"))
 head(d)
-dim(d)
-table(is.na(d$n[d$continuous==0 & d$type=="PAR"]))
-table(is.na(d$n[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months"]))
 
-
+#merge in zscore N's for continious
+head(Ndf)
+Ndf <- Ndf %>% mutate(continuous = 1) %>% rename(study_n_cell=n_cell, study_n=n)
+d <- left_join(d, Ndf, by = c("studyid", "country","agecat", "outcome_variable", "intervention_variable", "intervention_level", "continuous"))
+head(d)
 
 df <- d[d$continuous==1 & d$type=="PAR" & d$agecat=="24 months",]
 df[is.na(df$n) & !is.na(df$estimate),]

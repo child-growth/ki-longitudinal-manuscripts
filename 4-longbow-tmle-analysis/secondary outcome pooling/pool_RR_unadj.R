@@ -26,6 +26,9 @@ RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, base
   do(poolRR(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
 
+RMAest %>% filter(intervention_variable=="birthwt", agecat=="24 months",outcome_variable %in% c("stunted","wasted"), region=="Pooled"|region=="Africa") %>% select(outcome_variable,intervention_level,   RR, RR.CI1, RR.CI2, region) 
+
+
 RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
   do(poolRR(.)) %>% as.data.frame()
 
