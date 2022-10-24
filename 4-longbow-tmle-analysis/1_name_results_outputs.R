@@ -33,6 +33,14 @@ Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/raw longbow results/results
 table(Zscores_mwtkg$intervention_variable, Zscores_mwtkg$intervention_level)
 saveRDS(Zscores_mwtkg, paste0(res_dir, "rf results/longbow results/results_cont_mwtkg.RDS"))
 
+Zscores_sga <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_sga_2022-10-23.RDS"))
+table(Zscores_sga$intervention_variable, Zscores_sga$intervention_level)
+saveRDS(Zscores_sga, paste0(res_dir, "rf results/longbow results/results_cont_sga.RDS"))
+
+
+Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
+saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
+
 Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 
@@ -158,8 +166,10 @@ saveRDS(enwast_wlz, paste0(res_dir, "rf results/longbow results/results_results_
 #Save N's
 Zscores_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_obs_counts_2021-04-22.RDS"))
 Zscores_prim_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_obs_counts_2021-09-24.RDS"))
-Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_mwtkg_obs_counts_2021-10-03.RDS"))
-saveRDS(Zscores_mwtkg, paste0(res_dir, "rf results/longbow results/results_cont_mwtkg_obs_counts.RDS"))
+Zscores_mwtkg_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_mwtkg_obs_counts_2021-10-03.RDS"))
+saveRDS(Zscores_mwtkg_N , paste0(res_dir, "rf results/longbow results/results_cont_mwtkg_obs_counts.RDS"))
+Zscores_sga_N  <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_sga_obs_counts_2022-10-23.RDS"))
+saveRDS(Zscores_sga_N, paste0(res_dir, "rf results/longbow results/results_cont_sga_obs_counts.RDS"))
 
 
 bin_Ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_obs_counts_2021-10-04.RDS"))

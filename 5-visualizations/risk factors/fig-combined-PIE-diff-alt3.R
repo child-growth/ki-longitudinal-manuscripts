@@ -36,7 +36,7 @@ main_color <- "#89b4bc"
 # 
 # #Mean differences
 # ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
-# 
+# unique(ATE_raw$intervention_variable)
 # 
 # 
 # #rename point estimates and CI's for combining
@@ -46,6 +46,7 @@ main_color <- "#89b4bc"
 # df_full <- bind_rows(par_raw, ATE_raw)
 # 
 # saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
+# df_full %>% filter(intervention_variable=="SGA")
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS")) %>% filter( region=="Pooled", agecat=="24 months")
 head(df_full)

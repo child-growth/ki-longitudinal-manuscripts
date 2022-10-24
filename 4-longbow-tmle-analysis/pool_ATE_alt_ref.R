@@ -9,7 +9,10 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-09-28.RDS"))
 Zscores_alt_ref_season <- readRDS(paste0(BV_dir,"/results/rf results/raw longbow results/results_seasonality_rf_cont_alt_ref_2022-09-28.RDS")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
-dfull <- bind_rows(Zscores_alt_ref, Zscores_alt_ref_season)
+Zscores_sga <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_sga.RDS"))
+
+
+dfull <- bind_rows(Zscores_alt_ref, Zscores_alt_ref_season, Zscores_sga)
 
 unique(dfull$intervention_variable)
 
@@ -45,7 +48,7 @@ RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervent
 
 RMAest_raw <- rbind(RMAest, RMAest_region)
 
-
+RMAest_raw %>% filter(intervention_variable=="SGA", intervention_level!= baseline_level, region=="Pooled")
 
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest_raw)
