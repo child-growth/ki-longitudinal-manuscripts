@@ -13,13 +13,15 @@ season_cont_rf <- readRDS(paste0(res_dir, "rf results/longbow results/season_con
 #get alt paf reference for haz
 season_cont_rf_haz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_seasonality_rf_cont_alt_ref_2022-09-28.RDS"))
 season_cont_rf_haz <- season_cont_rf_haz %>% filter(outcome_variable=="haz")
+Zscores_sga <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_sga.RDS")) 
+
 
 season_cont_rf %>% filter(type=="PAR")
 season_cont_rf_haz %>% filter(type=="PAR")
 
 Zscores_mwtkg <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_mwtkg.RDS"))
 table(Zscores_mwtkg$intervention_level)
-Zscores <- bind_rows(Zscores, Zscores_mwtkg, season_cont_rf, season_cont_rf_haz)
+Zscores <- bind_rows(Zscores, Zscores_mwtkg, season_cont_rf, season_cont_rf_haz,Zscores_sga)
 
 #save for optx plots
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS"))
