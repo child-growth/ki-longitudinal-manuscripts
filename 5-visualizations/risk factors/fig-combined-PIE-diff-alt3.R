@@ -51,6 +51,7 @@ main_color <- "#89b4bc"
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS")) %>% filter( region=="Pooled", agecat=="24 months")
 head(df_full)
 
+df_full %>% filter(intervention_variable=="SGA")
 
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
