@@ -16,8 +16,7 @@ dfull %>% filter(outcome_variable=="whz", intervention_variable=="fhtcm", agecat
 
 unique(dfull$type)
 d <- dfull %>% filter(type=="PAR")
-table(d$intervention_variable, d$outcome_variable)
-
+unique(d$intervention_variable)
 
 
 #Subset to continious outcomes
