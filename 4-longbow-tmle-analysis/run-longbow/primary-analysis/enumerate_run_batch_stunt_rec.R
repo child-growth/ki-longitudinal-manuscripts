@@ -25,15 +25,15 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 #check data
 load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_rec_rf.Rdata")
 table(d$studyid, d$s03rec24 )
-table(d$mbmi, d$s03rec24 )
-table(d$mhtcm, d$s03rec24 )
-table(d$fage, d$s03rec24 )
-load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_inc_rec_rf.Rdata")
-table(d$mbmi, d$s06rec1824)
-table(d$mhtcm, d$s06rec1824)
-prop.table(table(d$s06rec1824))
+table(d$sga, d$s03rec24 )
+# table(d$mhtcm, d$s03rec24 )
+# table(d$fage, d$s03rec24 )
+# load("/data/KI/UCB-SuperLearner/Manuscript analysis data/st_inc_rec_rf.Rdata")
+# table(d$mbmi, d$s06rec1824)
+# table(d$mhtcm, d$s06rec1824)
+# prop.table(table(d$s06rec1824))
 
 
 paste0(BV_dir,"/tmle/","bin_stunt_rec","/")
-run_ki_tmle(enumerated_analyses, results_folder="bin_stunt_rec", overwrite = F, skip_failed=F)
+run_ki_tmle(enumerated_analyses, results_folder="bin_stunt_rec", overwrite = F, skip_failed=T)
 

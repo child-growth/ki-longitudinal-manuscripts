@@ -66,7 +66,7 @@ table(cov$mbmi)
 dput(colnames(cov))
 
 cov <- cov %>% subset(., select = c(studyid, subjid,  country, 
-                                    gagebrth, brthmon, parity, birthwt, birthlen, vagbrth, 
+                                    gagebrth, brthmon, parity, birthwt, birthlen, sga, 
                                     hdlvry, mage, mhtcm, mwtkg, mbmi, meducyrs, single, 
                                     fage, fhtcm, feducyrs, trth2o, cleanck, impfloor, 
                                     nrooms, nhh, nchldlt5, earlybf, hfoodsec,  

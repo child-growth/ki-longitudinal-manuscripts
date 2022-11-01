@@ -40,6 +40,9 @@ rr  <- rr %>% filter(!(outcome_variable=="pers_wast" & agecat != "0-24 months"),
 d <- bind_rows(rr, ate)
 head(d)
 
+table(d$intervention_variable)
+d <- d %>% filter(intervention_variable!="vagbrth")
+
 #temp fix fage
 unique(d$intervention_level)
 unique(d$baseline_level)

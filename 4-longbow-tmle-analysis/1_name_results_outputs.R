@@ -20,6 +20,7 @@ df2
 saveRDS(Zscores_bwt_strat_bin, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin.RDS"))
 Zscores_bwt_strat_bin_N <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_bwt_strat_bin_alt_ref_obs_counts_2022-10-03.RDS"))
 saveRDS(Zscores_bwt_strat_bin_N, paste0(res_dir, "rf results/longbow results/results_cont_bwt_strat_bin_N.RDS"))
+
 Zscores_full_bin <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_full_bin_alt_ref_2022-10-03.RDS"))
 Zscores_full_bin$intervention_level
 Zscores_full_bin %>% filter(intervention_variable=="sex", outcome_variable=="whz", type=="ATE")
@@ -38,13 +39,12 @@ table(Zscores_sga$intervention_variable, Zscores_sga$intervention_level)
 saveRDS(Zscores_sga, paste0(res_dir, "rf results/longbow results/results_cont_sga.RDS"))
 
 
-Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
+Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_2022-10-28.RDS"))
+#Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
 saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 
-Zscores <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_cont_2021-04-22.RDS"))
-saveRDS(Zscores, paste0(res_dir, "rf results/longbow results/results_cont.RDS"))
 
-Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-09-27.RDS"))
+Zscores_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_primary_alt_ref_2022-10-28.RDS"))
 saveRDS(Zscores_alt_ref, paste0(res_dir, "rf results/longbow results/results_cont_primary_alt_ref.RDS"))
 
 
@@ -59,13 +59,13 @@ Zscores_waz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_w
 saveRDS(Zscores_waz, paste0(res_dir, "rf results/longbow results/results_waz.RDS"))
 
 
-bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_2021-10-04.RDS")) #%>% filter(intervention_variable!="fage")
+bin_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_2022-10-28.RDS")) #%>% filter(intervention_variable!="fage")
 # bin_primary_tz <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_tz_2021-08-08.RDS"))
 # fage_primary <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_primary_fage_2021-08-09.RDS"))
 # bin_primary <- bind_rows(bin_primary,bin_primary_tz, fage_primary)
 #bin_other <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_2021-04-23.RDS"))
 
-bin_other <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_secondary_2021-10-04.RDS"))
+bin_other <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_secondary_2022-10-28.RDS"))
 
 
 saveRDS(bin_primary, paste0(res_dir, "rf results/longbow results/results_bin_primary.RDS"))
@@ -130,11 +130,11 @@ saveRDS(season_bin_rf, paste0(res_dir, "rf results/longbow results/season_bin_rf
 mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/results_mediation_2021-10-04.RDS"))
 saveRDS(mediation, paste0(res_dir, "rf results/longbow results/mediation.RDS"))
 
-stunt_rec <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_stunt_rec_2021-10-04.RDS"))
+stunt_rec <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_stunt_rec_2022-10-28.RDS"))
 saveRDS(stunt_rec, paste0(res_dir, "rf results/longbow results/results_bin_stunt_rec.RDS"))
 
 
-optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_opttx_vim_2021-08-21.RDS"))   
+optx_results <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_opttx_vim_2022-10-26.RDS"))   
 optx_results <- optx_results %>% filter(!(intervention_variable) %in% c("fhtcm",  "mbmi", "mhtcm", "mwtkg"))
 optx_results_mwtkg <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_opttx_vim_mwtkg_2021-10-03.RDS"))   
 optx_results_season <- readRDS(paste0(res_dir, "rf results/raw longbow results/opttx_vim_season_results_2021-06-05.RDS"))   

@@ -13,7 +13,7 @@ results <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results
 
 #drop EE gestational age
 dim(results)
-results <- results %>% filter(!(studyid=="EE" & intervention_variable=="gagebrth"))
+results <- results %>% filter(!(studyid=="EE" & intervention_variable=="gagebrth"), untransformed_se!=0)
 dim(results)
 
 saveRDS(results, paste0(BV_dir,"/results/rf results/full_VIM_results.rds"))

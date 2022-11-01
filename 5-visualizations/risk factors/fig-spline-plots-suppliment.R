@@ -20,6 +20,8 @@ d <- d %>% filter(agedays < 24 * 30.4167)
 d <- subset(d, select = -c(id, arm, tr))
 dim(d)
 
+d<- d %>% rename(birthord=parity)
+
 #clean up labels
 title_vec <-
   c("sex","Sex",
@@ -33,7 +35,7 @@ title_vec <-
     "mbmi","Mother's BMI",
     "meducyrs","Mother's education",
     "feducyrs","Father's education",
-    "parity","Birth order",
+    "birthord","Birth order",
     "hfoodsec","HH food security",
     "nchldlt5", "# of children <5 in HH",
     "hhwealth_quart","HH wealth",
@@ -68,7 +70,7 @@ title_vec <-
     "rain_quartile","Rain quartile")
 
 #set exposures
-exposures <- c("sex",                   "gagebrth",         "parity",        "birthwt",      
+exposures <- c("sex",                   "gagebrth",         "birthord",        "birthwt",      
                "birthlen",      "vagbrth",       "hdlvry",        "mage",          "meducyrs",     
                "single",        "fage",          "fhtcm",         "feducyrs",      "trth2o",        "cleanck",       "impfloor",      "nrooms",       
                "nhh",           "nchldlt5",      "earlybf",       "hfoodsec",      "anywast06",     "pers_wast",     "enstunt",       "enwast",       
@@ -952,12 +954,12 @@ saveRDS(res[[2]],  file=paste0(here(),"/figures/risk-factor/figure-data/",outcom
 
 
 #------------------------------------------------------------------------------------------------
-# parity
+# birthord
 #------------------------------------------------------------------------------------------------
 
 #Make WLZ plot:
 
-Avar="parity"
+Avar="birthord"
 degree=6
 outcome="WLZ"
 
@@ -966,14 +968,13 @@ print(res[[1]])
 
 ggsave(res[[1]], file=paste0(here(),"/figures/risk-factor/spline-plots/",outcome,"-",Avar,"-spline.png"), width=6, height=6)
 
-
 #Save plot data
 saveRDS(res[[2]],  file=paste0(here(),"/figures/risk-factor/figure-data/",outcome,"-",Avar,"-spline.RDS"))
 
 
 #Make LAZ plot:
 
-Avar="parity"
+Avar="birthord"
 degree=6
 outcome="LAZ"
 

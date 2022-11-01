@@ -59,14 +59,14 @@ specify_rf_analysis <- function(A, Y, file,  W=NULL, V= c("agecat","studyid","co
 
 
 st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                      "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
+                                      "mbmi",          "single",        "fage","fage_rf",          "fhtcm",    
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
                                  Y=c("ever_stunted"), file="st_cuminc_rf_primary.rdata")
 
 st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
-                                              "birthlen",       "vagbrth",       "hdlvry",    
+                                              "birthlen",       "vagbrth","sga",       "hdlvry",    
                                               "enwast", "anywast06", "pers_wast", 
                                               "trth2o", "cleanck", "impfloor",  
                                               "impsan", "safeh20",
@@ -75,14 +75,14 @@ st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                               "predexfd6", "earlybf", "month"),
                                          Y=c("ever_stunted"), file="st_cuminc_nobirth_rf_primary.rdata")
 sst_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                      "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
+                                      "mbmi",          "single",        "fage","fage_rf",          "fhtcm",    
                                       "nrooms",      "nchldlt5",    "nhh",              
                                       "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                       "feducyrs", "hfoodsec"),
                                  Y=c("ever_sstunted"), file="sst_cuminc_rf_primary.rdata")
 
 sst_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
-                                              "birthlen",       "vagbrth",       "hdlvry",    
+                                              "birthlen",       "vagbrth","sga",       "hdlvry",    
                                               "enwast", "anywast06", "pers_wast", 
                                               "trth2o", "cleanck", "impfloor",  
                                               "impsan", "safeh20",
@@ -94,14 +94,14 @@ sst_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
 
 
 cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                   "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
+                                   "mbmi",          "single",        "fage","fage_rf",          "fhtcm",    
                                    "nrooms",      "nchldlt5",    "nhh",              
                                    "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                    "feducyrs", "hfoodsec"),
                               Y=c("ever_wasted"), file="wast_cuminc_rf_primary.rdata")
 
 cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
-                                           "birthlen",       "vagbrth",       "hdlvry",    
+                                           "birthlen",       "vagbrth","sga",       "hdlvry",    
                                            "enstunt", 
                                            "trth2o", "cleanck", "impfloor",  
                                            "impsan", "safeh20",
@@ -111,14 +111,14 @@ cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",
                                       Y=c("ever_wasted"), file="wast_cuminc_nobirth_rf_primary.rdata")
 
 swast_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm",         "mwtkg",        
-                                   "mbmi",          "single",        "fage","fage_rf",          "fhtcm","fhtcm_rf",       
+                                   "mbmi",          "single",        "fage","fage_rf",          "fhtcm",    
                                    "nrooms",      "nchldlt5",    "nhh",              
                                    "hhwealth_quart", "brthmon", "parity",   "meducyrs", 
                                    "feducyrs", "hfoodsec"),
                               Y=c("ever_swasted"), file="swast_cuminc_rf_primary.rdata")
 
 swast_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
-                                           "birthlen",       "vagbrth",       "hdlvry",    
+                                           "birthlen",       "vagbrth","sga",       "hdlvry",    
                                            "enstunt", 
                                            "trth2o", "cleanck", "impfloor",  
                                            "impsan", "safeh20",

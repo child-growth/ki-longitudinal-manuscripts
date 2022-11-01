@@ -11,7 +11,7 @@ head(dfull)
 
 
 unique(dfull$type)
-d <- dfull %>% filter(type=="RR")
+d <- dfull %>% filter(type=="RR", untransformed_se!=0)
 
 #drop morbidity and mortality analysis
 d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")
@@ -23,6 +23,7 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 
 #Subset agecat
 d <- droplevels(d)
+table(d$intervention_variable)
 
 
 
@@ -49,3 +50,6 @@ RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean
 
 #Save cleaned data
 saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
+
+
+df <- RMAest_clean %>% filter(intervention_variable=="sga")

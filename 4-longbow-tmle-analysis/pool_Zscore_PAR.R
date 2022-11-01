@@ -28,7 +28,7 @@ d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_waz"|
 
 #drop sparse variables (at least 10 obs per variable) and extreme/sparse kenaba estimate
 dim(d)
-d <- d %>% filter(adjustment_set!="", !(agecat=="Birth"& studyid=="Keneba"& outcome_variable=="whz"))
+d <- d %>% filter(adjustment_set!="", !(agecat=="Birth"& studyid=="Keneba"& outcome_variable=="whz"), untransformed_se!=0)
 dim(d)
 
 d <- droplevels(d)

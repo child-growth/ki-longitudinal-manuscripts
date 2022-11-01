@@ -228,6 +228,8 @@ d$gagebrth[d$studyid=="SAS-CompFeed"] <- NA
 d$gagebrth[d$studyid=="EE"] <- NA
 
 
+
+
 #parity
 #Combine parity and birthorder to have sufficient data to analyze
 #Parity (which includes stillborns past a certain gestational age) is assumed
@@ -290,6 +292,18 @@ table(d$studyid, is.na(d$birthwt))
 #fix 8 observations in CMC cohort with missing birthweight that still have missingess code (9998) rather than NA
 table(df$birthwt==9998)
 df$birthwt[df$birthwt==9998] <- NA
+
+
+#calculate SGA
+sga <- igb_value2zscore(gagebrth=d$gagebrth, val=d$birthwt/1000, var = "wtkg", sex = d$sex)
+d$W_sga <- sga
+d$W_sga[is.na(sga)] <- NA
+d$W_sga[is.infinite(sga)] <- NA
+d$sga <- ifelse(sga < (-1.282),"SGA","Not SGA")
+d$sga[is.na(sga)] <- NA
+d$sga[is.infinite(sga)] <- NA
+table(d$sga)
+
 #--------------------------------------------------------------------------
 # parental characteristics
 #--------------------------------------------------------------------------
@@ -497,7 +511,8 @@ colnames(d)
 
 d <- subset(d, select = c(studyid,       subjid,        sex,           month,  country,       region,         arm,           tr,            gagebrth,     
                           brthmon,       parity,       
-                          birthwt,       birthlen,      vagbrth,       hdlvry,        mage,          mhtcm,        
+                          birthwt,       birthlen,   sga, W_sga, # vagbrth,      
+                          hdlvry,        mage,          mhtcm,        
                           mwtkg,         mbmi,          meducyrs,      single,        fage,          fhtcm,         feducyrs,     
                           trth2o,        cleanck,       impfloor,      nrooms,        nhh,           nchldlt5,      ses,          
                           earlybf,       hfoodsec,   measurefreq,   anywast06,    
@@ -791,6 +806,10 @@ d$parity <- relevel(d$parity, ref="1")
 d$birthwt <- relevel(d$birthwt, ref="Normal or high birthweight")
 
 
+#SGA
+d$sga <- relevel(factor(d$sga), ref="Not SGA")
+
+
 #birth length: 
 #No WHO categories:
 #Based on quantiles
@@ -870,7 +889,7 @@ d$nrooms <- relevel(d$nrooms, ref="4+")
 d$brthmon <- factor(d$brthmon)
 d$month <- factor(d$month)
 d$single <- factor(d$single)
-d$vagbrth <- factor(d$vagbrth)
+#d$vagbrth <- factor(d$vagbrth)
 d$hdlvry <- factor(d$hdlvry)
 d$hfoodsec <- factor(d$hfoodsec)
 d$enstunt <- factor(d$enstunt)
@@ -898,30 +917,27 @@ for(i in 1:ncol(d)){
 # Check for sparsity across RF levels
 #--------------------------------------------
 
-tabRF <- function(d, Avar){
-  tab <- table(paste0(d$studyid, " ",d$country), d[,Avar])
-  tab <- tab[rowSums(tab)!=0, ]
-  print(tab)
-}
-
-
-
-
-
-tabRF(d, "gagebrth")
-tabRF(d, "birthwt")
-tabRF(d, "birthlen")
-tabRF(d, "parity") 
-tabRF(d, "mage")
-tabRF(d, "mhtcm") 
-tabRF(d, "mwtkg") 
-tabRF(d, "mbmi") 
-tabRF(d, "fage")
-tabRF(d, "fhtcm")
-tabRF(d, "feducyrs")
-tabRF(d, "nrooms")
-tabRF(d, "nhh")
-tabRF(d, "nchldlt5")
+# tabRF <- function(d, Avar){
+#   tab <- table(paste0(d$studyid, " ",d$country), d[,Avar])
+#   tab <- tab[rowSums(tab)!=0, ]
+#   print(tab)
+# }
+# 
+# 
+# tabRF(d, "gagebrth")
+# tabRF(d, "birthwt")
+# tabRF(d, "birthlen")
+# tabRF(d, "parity") 
+# tabRF(d, "mage")
+# tabRF(d, "mhtcm") 
+# tabRF(d, "mwtkg") 
+# tabRF(d, "mbmi") 
+# tabRF(d, "fage")
+# tabRF(d, "fhtcm")
+# tabRF(d, "feducyrs")
+# tabRF(d, "nrooms")
+# tabRF(d, "nhh")
+# tabRF(d, "nchldlt5")
 
 
 

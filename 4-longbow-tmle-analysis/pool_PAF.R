@@ -23,7 +23,7 @@ d <- bind_rows(d, bin_primary_alt_ref)
 
 
 #drop sparse outcomes
-d <- d %>% filter(min_n_cell >=10)
+d <- d %>% filter(min_n_cell >=10, untransformed_se!=0)
 
 d %>% filter(intervention_variable=="nhh", agecat=="0-24 months", outcome_variable=="ever_wasted")
 d %>% filter(intervention_variable=="birthlen", agecat=="0-24 months", outcome_variable=="ever_wasted")

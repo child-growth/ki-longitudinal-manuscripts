@@ -38,5 +38,5 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 # run_ki_tmle(enumerated_analyses, results_folder="results_vel_glm", overwrite = F, skip_failed=F,
 #             rmd_filename = here("4-longbow-tmle-analysis/run-longbow/longbow_RiskFactors_vel.Rmd"))
 
-run_ki_tmle(enumerated_analyses, results_folder="results_vel", overwrite = F, skip_failed=F)
+run_ki_tmle(enumerated_analyses, results_folder="results_vel", overwrite = F, skip_failed=T)
 

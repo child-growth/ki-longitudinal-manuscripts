@@ -87,6 +87,6 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
 
-run_ki_tmle(enumerated_analyses, results_folder="results_cont_primary_alt_ref", overwrite = F, skip_failed = F)
+run_ki_tmle(enumerated_analyses, results_folder="results_cont_primary_alt_ref", overwrite = F, skip_failed = T)
 
 

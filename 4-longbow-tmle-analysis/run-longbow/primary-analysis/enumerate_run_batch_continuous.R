@@ -23,11 +23,11 @@ load(here("4-longbow-tmle-analysis","analysis specification","adjusted_continuou
 
 #Drop growth velocity
 dim(analyses)
-analyses <- analyses %>% filter(Y=="haz" | Y=="whz")
+analyses <- analyses %>% filter(Y=="haz" | Y=="whz", !(A %in% c("brthmon","month", "enstunt","enwast","vagbrth","fhtcm_rf","anywast06","pers_wast",  "trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36"  )))
 dim(analyses)
 
 #specify analyses
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 paste0(BV_dir,"/tmle/","results_cont","/")
-run_ki_tmle(enumerated_analyses, results_folder="results_cont", overwrite = F, skip_failed = F)
+run_ki_tmle(enumerated_analyses, results_folder="results_cont", overwrite = F, skip_failed =T)

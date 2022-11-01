@@ -32,7 +32,8 @@ default_params$script_params$count_Y <- FALSE
 #Subset to just optx estimates
 load(paste0(ghapdata_dir,"st_meanZ_optx.Rdata"))
 Avars <-c( "gagebrth",      "birthwt",      
-           "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
+           "birthlen",  "sga",  #    "vagbrth",       
+           "hdlvry",        "mage",          "mhtcm",         "mwtkg",        
            "mbmi",          "single",        "fage",          "fhtcm",         "nrooms",        "nhh",           "nchldlt5",     
            "hhwealth_quart", "month", "brthmon", "parity",   "meducyrs", 
            "feducyrs", "hfoodsec",  
