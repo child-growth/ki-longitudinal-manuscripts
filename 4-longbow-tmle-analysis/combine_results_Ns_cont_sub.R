@@ -9,6 +9,7 @@ library(longbowRiskFactors)
 d <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_obs_counts.RDS"))
 d_mwtkg <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_mwtkg_obs_counts.RDS"))
 d_sga <- readRDS(paste0(res_dir,"rf results/longbow results/results_cont_sga_obs_counts.RDS"))
+d_sga <- d_sga %>% rename(sga=SGA)
 head(d)
 d <- d %>% filter(is.na(mwtkg)&is.na(mhtcm)&is.na(mbmi)&is.na(fhtcm))
 d <- bind_rows(d, d_mwtkg, d_sga)
@@ -43,7 +44,7 @@ exposure_vars <- c(
   "birthwt",       "mage",          "mhtcm",         "single",        "nrooms",       
   "feducyrs",      "hfoodsec",      "exclfeed6",     "s03rec24",      "enstunt",      
   "predfeed6",     "predexfd6",     "sex",          "brthmon",      
-  "month",     "pers_wast",    "lag_WHZ_quart","rain_quartile", "SGA")
+  "month",     "pers_wast",    "lag_WHZ_quart","rain_quartile", "sga")
 
 
 d<-data.frame(d)
