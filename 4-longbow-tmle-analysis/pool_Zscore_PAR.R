@@ -28,7 +28,7 @@ d <- d %>% filter(outcome_variable=="y_rate_haz"|outcome_variable=="y_rate_waz"|
 
 #drop sparse variables (at least 10 obs per variable) and extreme/sparse kenaba estimate
 dim(d)
-d <- d %>% filter(adjustment_set!="", !(agecat=="Birth"& studyid=="Keneba"& outcome_variable=="whz"), untransformed_se!=0)
+d <- d %>% filter(intervention_variable!="SGA",adjustment_set!="", !(agecat=="Birth"& studyid=="Keneba"& outcome_variable=="whz"), untransformed_se!=0)
 dim(d)
 
 d <- droplevels(d)
@@ -54,6 +54,7 @@ RMAest_clean <- RMA_clean(RMAest_raw, outcome="continuous")
 RMAest_clean[is.na(RMAest_clean$intervention_level),]
 table(is.na(RMAest_clean$intervention_level))
 table(is.na(RMAest_clean$intervention_variable))
+table((RMAest_clean$intervention_variable))
 
 #Add reference level to label
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$intervention_level)

@@ -41,7 +41,7 @@ head(ATE_raw)
 ATE_sga <- ATE_raw %>% filter(intervention_variable=="SGA")
 ATE_sga <- ATE_sga %>% mutate(intervention_level="Not SGA", baseline_level="SGA", ATE=-ATE, CI1_temp=CI1, CI1=-CI2, CI2=-CI1_temp) %>% subset(., select=-c(CI1_temp))
 ATE_raw <- ATE_raw %>% filter(intervention_variable!="SGA")
-ATE_raw %>% filter(intervention_variable=="SGA",region=="Pooled", agecat=="24 months")
+ATE_raw %>% filter(intervention_variable=="sga",region=="Pooled", agecat=="24 months")
 ATE_raw <- bind_rows(ATE_raw, ATE_sga)
 #rename point estimates and CI's for combining
 par_raw <- par_raw %>% rename(est=PAR)
