@@ -11,7 +11,7 @@ source(paste0(here::here(), "/0-config.R"))
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 table(cov$studyid, cov$enstunt)
 table(cov$mwtkg)
-table(cov$fhtcm)
+table(cov$vagbrth)
 
 #Check reference levels
 for(i in 3:ncol(cov)){
@@ -772,15 +772,23 @@ adjustment_sets <- list(
   
   birthwt=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
             "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
-            "vagbrth","hdlvry",
+            #"vagbrth","hdlvry",
             "single",
             "W_nrooms","W_nhh","W_nchldlt5",
             "brthmon","W_parity",
-            "trth2o","cleanck","impfloor","impsan","safeh20"),   
+            "trth2o","cleanck","impfloor","impsan","safeh20"),  
+  
+  sga=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
+            "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
+            #"vagbrth","hdlvry",
+            "single",
+            "W_nrooms","W_nhh","W_nchldlt5",
+            "brthmon","W_parity",
+            "trth2o","cleanck","impfloor","impsan","safeh20"),  
   
   birthlen=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
              "W_mhtcm","W_mwtkg","W_bmi", "W_fhtcm",
-             "vagbrth","hdlvry",
+             #"vagbrth","hdlvry",
              "single",
              "W_nrooms","W_nhh","W_nchldlt5",
              "brthmon","W_parity",

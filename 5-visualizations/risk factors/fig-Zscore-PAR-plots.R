@@ -305,7 +305,7 @@ ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-fact
 plotdf_waz <- plotdf %>% filter(outcome_variable=="waz") %>% droplevels()
 plotdf_waz <- plotdf_waz %>% arrange(outcome_variable, RFgroup, -PAR) 
 rflevels = unique(plotdf_waz$RFlabel_ref)
-plotdf_waz$RFlabel_ref=factor(plotdf_waz$RFlabel_ref, levels=rflevels)2
+plotdf_waz$RFlabel_ref=factor(plotdf_waz$RFlabel_ref, levels=rflevels)
 
 pPAR_waz <- ggplot(plotdf_waz, aes(x=RFlabel_ref, group=RFgroup, color=RFgroup)) + 
   geom_point(aes(y=-PAR),  size = 4) +

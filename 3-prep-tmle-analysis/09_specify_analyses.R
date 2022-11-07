@@ -45,7 +45,7 @@ st_cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mht
                                  Y=c("ever_stunted","ever_sstunted"), file="st_cuminc_rf.Rdata")
 
 st_cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
-                                              "birthlen",       "vagbrth",       "hdlvry",    
+                                              "birthlen",       "vagbrth", "sga",       "hdlvry",    
                                               "enwast", "anywast06", "pers_wast", 
                                               "trth2o", "cleanck", "impfloor",  
                                               "impsan", "safeh20",
@@ -65,7 +65,7 @@ cuminc <- specify_rf_analysis(A=c( "sex",               "mage",          "mhtcm"
                               Y=c("ever_wasted", "ever_swasted"), file="wast_cuminc_rf.Rdata")
 
 cuminc_nobirth <- specify_rf_analysis(A=c( "gagebrth",      "birthwt",    
-                                           "birthlen",       "vagbrth",       "hdlvry",    
+                                           "birthlen",       "vagbrth", "sga",       "hdlvry",    
                                            "enstunt", 
                                            "trth2o", "cleanck", "impfloor",  
                                            "impsan", "safeh20",
@@ -80,7 +80,7 @@ pers_wast <- specify_rf_analysis(A=Avars, Y="pers_wast", file="pers_wast_rf.Rdat
 
 
 WHZ_quart_prev <- specify_rf_analysis(A="lag_WHZ_quart", Y="stunted", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-                                                                          "vagbrth","hdlvry",
+                                                                          "vagbrth", "sga","hdlvry",
                                                                           "single",
                                                                           "W_nrooms","W_nhh","W_nchldlt5",
                                                                           "month","brthmon","W_parity",
@@ -88,7 +88,7 @@ WHZ_quart_prev <- specify_rf_analysis(A="lag_WHZ_quart", Y="stunted", W=c("arm",
                                       file="stuntprev_whz_rf.Rdata")
 
 WHZ_quart_cuminc <- specify_rf_analysis(A="lag_WHZ_quart", Y="ever_stunted", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-                                                                                 "vagbrth","hdlvry",
+                                                                                 "vagbrth", "sga","hdlvry",
                                                                                  "single",
                                                                                  "W_nrooms","W_nhh","W_nchldlt5",
                                                                                  "month","brthmon","W_parity",
@@ -140,7 +140,7 @@ whz <- specify_rf_analysis(A=Avars, Y="whz", file="wast_meanZ_rf.Rdata")
 
 #WLZ preceding growth velocity
 WHZ_quart_vel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-                                                                                 "vagbrth","hdlvry",
+                                                                                 "vagbrth", "sga","hdlvry",
                                                                                  "single",
                                                                                  "W_nrooms","W_nhh","W_nchldlt5",
                                                                                  "month","brthmon","W_parity",
@@ -148,7 +148,7 @@ WHZ_quart_vel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm","s
                                         file="laz_vel_whz_rf.Rdata")
 
 WHZ_quart_lenvel <- specify_rf_analysis(A="lag_WHZ_quart", Y="y_rate", W=c("arm","sex", "W_mage", "W_fage", "meducyrs", "feducyrs", "hhwealth_quart", "hfoodsec",
-                                                                        "vagbrth","hdlvry",
+                                                                        "vagbrth", "sga","hdlvry",
                                                                         "single",
                                                                         "W_nrooms","W_nhh","W_nchldlt5",
                                                                         "month","brthmon","W_parity",

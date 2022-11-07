@@ -45,6 +45,7 @@ d <- d %>% mutate(
   nrooms = factor(case_when(nrooms=="1" ~ "1",   nrooms=="2"|nrooms=="3"|nrooms=="4+" ~ "2+"), levels = c("1", "2+"))
 )
 
+
 d$parity <- factor(d$parity, levels=c("2","1","3+"))
 d$mage <- factor(d$mage, levels=c("<20","[20-30)",">=30"))
 d$fage <- factor(d$fage, levels=c("<30","[30-35)",">=35"))
@@ -123,7 +124,7 @@ analyses$file <- gsub(".rdata","_alt_ref.rdata",analyses$file)
 enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
-run_ki_tmle(enumerated_analyses, results_folder="results_bin_primary_alt_ref", overwrite = F, skip_failed=F)
+run_ki_tmle(enumerated_analyses, results_folder="results_bin_primary_alt_ref", overwrite = F, skip_failed=T)
 
 
 results_folder="results_bin_primary_alt_ref"

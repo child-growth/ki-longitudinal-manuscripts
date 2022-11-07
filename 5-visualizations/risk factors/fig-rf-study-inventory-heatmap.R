@@ -126,6 +126,8 @@ dd$RFlabel[dd$risk_factor=="sex"] <-  "Sex"
 dd$RFlabel[dd$risk_factor=="enwast"] <-  "Enrolled wasted"
 dd$RFlabel[dd$risk_factor=="enstunt"] <-  "Enrolled stunted"
 dd$RFlabel[dd$risk_factor=="gagebrth"] <-  "Gestational age at birth"
+dd$RFlabel[dd$risk_factor=="sga"] <-  "Small for gestational age"
+dd$RFlabel[dd$risk_factor=="SGA"] <-  "Small for gestational age"
 dd$RFlabel[dd$risk_factor=="predexfd6"] <-  "Excl/Pred breastfed <6mo."
 dd$RFlabel[dd$risk_factor=="mage"] <- "Mother's age" 
 dd$RFlabel[dd$risk_factor=="mhtcm"] <- "Mother's height" 
@@ -173,12 +175,13 @@ dd <- dd %>% filter(!is.na(RFlabel))
 # dd <- dd %>% filter(N>0) 
 
 # Sort by size 
-dd <- dd %>% group_by(region, risk_factor) %>% mutate(sumN=sum(N))
+dd <- dd %>% group_by(risk_factor) %>% mutate(sumN=sum(N))
 dd <- dd %>% 
   group_by(region) %>%
   dplyr::arrange(-sumN, .by_group = TRUE) 
 dd$RFlabel <- factor(dd$RFlabel, levels = unique(dd$RFlabel))
 
+  temp <- dd %>% distinct(sumN, risk_factor)
 
 
 #aggregate N's for topbar
@@ -192,6 +195,7 @@ dd <- dd %>%
 dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
 dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
 table(dd$studycountry)
+
 
 #aggregate N's for sidebar
 dhist_c <- dd %>% group_by(region, studycountry) %>% summarize(N=max(N, na.rm=T))%>% mutate(studycountry=factor(studycountry, levels=unique(dd$studycountry))) %>% arrange(studycountry)
@@ -300,7 +304,7 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000, fill=region)
 # add margin around plots
 hm2 = hm + theme(plot.margin = unit(c(0.3,1,1.2,0), "cm")) #top, right, bottom, left
 sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0.45,0.4,2.1,-0.8), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(1, 1.51, 0, 2.6), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(1, 1.51, 0, 2.7), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2, empty,  

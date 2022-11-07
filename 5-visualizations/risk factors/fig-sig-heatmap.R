@@ -19,8 +19,6 @@ ate %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", regi
 par %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
 
 
-#stunting recovery results for Jade:
-temp <-rr %>% filter(outcome_variable == "s06rec1824", RR.CI1!=RR.CI2, region=="Pooled") %>% arrange(RR)
 
 #Match columns names
 rr <- rr %>% rename(est=RR, CI.lb=RR.CI1, CI.ub=RR.CI2)
@@ -39,6 +37,12 @@ rr  <- rr %>% filter(!(outcome_variable=="pers_wast" & agecat != "0-24 months"),
 
 d <- bind_rows(rr, ate)
 head(d)
+
+dsub <- d %>% filter(agecat=="Birth") 
+table(dsub$intervention_variable, dsub$outcome_variable)
+
+table(d$intervention_variable)
+d <- d %>% filter(intervention_variable!="vagbrth")
 
 #temp fix fage
 unique(d$intervention_level)
@@ -121,14 +125,6 @@ d$pval_cat[d$pval_cat %in% c("0.2-1 decrease risk", "0.2-1 increase risk")] <- "
 table(d$pval_cat)
 d$pval_cat <- factor(d$pval_cat, levels = c("<0.001 decrease risk", "<0.05 decrease risk", "<0.2 decrease risk", "0.2-1", "<0.2 increase risk", "<0.05 increase risk", "<0.001 increase risk"))
 
-
-  
-#-----------------------------------
-# Temporarily drop non-sensical combinations
-# (Will change upstream)
-#----------------------------------- 
-unique(d$intervention_level)
-d <- d %>% filter(intervention_level != "Q4")
   
 #-----------------------------------
 # Plot heatmaps
@@ -137,7 +133,7 @@ d <- d %>% filter(intervention_level != "Q4")
 d <- d %>% filter(!is.na(RFlabel))
 
 #Concatenate variable and level for the x-axis
-d$xvar <- paste0(d$RFlabel,": ",d$intervention_level, " (ref: ",d$baseline_level,")")
+d$xvar <- paste0(d$RFlabel,":\n",d$intervention_level, " (ref: ",d$baseline_level,")")
 
 d <- d %>% group_by(intervention_variable) %>%
   mutate(mean_pval = mean(sig)) %>% ungroup() %>%    
@@ -225,17 +221,17 @@ pooled_data = d[d$region=="Pooled",]
 # Manually add in N/A values to create legend entry for non-existent contrast - at least 1 N/A needed for legend entry
 # Create N/A values for any missing pair of xvar and outcome_variable, arbitrarily set agecat to Birth
 # Filter data so no extra blank columns are displayed
-pooled_data = pooled_data %>% 
-                complete(xvar, outcome_variable, fill = list(agecat = "Birth")) %>% 
-                filter((outcome_variable %in% agecat_with_ranges & agecat != "Birth") | !(outcome_variable %in% agecat_with_ranges)) %>% 
-                replace_na(list(pval_cat = "Not estimated"))
+# pooled_data = pooled_data %>% 
+#                 complete(xvar, outcome_variable, fill = list(agecat = "Birth")) %>% 
+#                 filter((outcome_variable %in% agecat_with_ranges & agecat != "Birth") | !(outcome_variable %in% agecat_with_ranges)) %>% 
+#                 replace_na(list(pval_cat = "Not estimated"))
 
-rr  <- rr %>% filter(!(outcome_variable=="pers_wast" & agecat != "0-24 months"), outcome_variable!="s03rec24") %>% droplevels()
 
 pooled_data <- pooled_data %>% filter(!(outcome_variable=="Stunt\nrev." & agecat == "Birth"))
 pooled_data <- droplevels(pooled_data)
 
 table(pooled_data$outcome_variable, pooled_data$agecat)
+
 
 
 hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
@@ -262,6 +258,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
     strip.text.y = element_text(angle=0,size=10),
     plot.background=element_blank(),
     panel.border=element_blank(),
+    #panel.spacing = unit(0.5, "lines"),
     strip.background = element_blank(),
     panel.background=element_rect(fill="grey80", colour="grey80"),
     panel.grid.major = element_blank(), panel.grid.minor = element_blank()
@@ -284,10 +281,13 @@ ggsave(hm, file=paste0(BV_dir,"/figures/risk-factor/fig-sig-heatmap.png"), heigh
 # Filter data so no extra blank columns are displayed
 region_data = d[d$region!="Pooled",]
 
-region_data = region_data %>% 
-  complete(xvar, outcome_variable, fill = list(yvar = "Birth, Africa")) %>% 
-  filter((outcome_variable %in% agecat_with_ranges & yvar != "Birth, Africa") | !(outcome_variable %in% agecat_with_ranges)) %>% 
-  replace_na(list(pval_cat = "Not estimated"))
+region_data  <- region_data %>% filter(!(outcome_variable=="pers_wast" & agecat != "0-24 months"), outcome_variable!="s03rec24") %>% droplevels()
+
+
+# region_data = region_data %>% 
+#   complete(xvar, outcome_variable, fill = list(yvar = "Birth, Africa")) %>% 
+#   filter((outcome_variable %in% agecat_with_ranges & yvar != "Birth, Africa") | !(outcome_variable %in% agecat_with_ranges)) %>% 
+#   replace_na(list(pval_cat = "Not estimated"))
 
 hm_strat <- ggplot(region_data,aes(x=xvar, y=yvar, fill=pval_cat)) +
   facet_grid(. ~ outcome_variable, scales = "free", space="free") +

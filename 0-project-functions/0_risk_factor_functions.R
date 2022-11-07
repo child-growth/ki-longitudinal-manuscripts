@@ -367,7 +367,7 @@ RMA_clean <- function(RMAest, outcome="binary",
                                                   "impfloor","cleanck",
                                                   "brthmon" ,"month",
                                                   "lag_WHZ_quart",
-                                                  "rain_quartile", "SGA"))   
+                                                  "rain_quartile", "sga","SGA"))   
   
   
   #Add variable labels
@@ -419,6 +419,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFlabel[RMAest$intervention_variable=="lag_WHZ_quart"] <-  "Prior WLZ"
   RMAest$RFlabel[RMAest$intervention_variable=="rain_quartile"] <-  "Rain quartile"
   RMAest$RFlabel[RMAest$intervention_variable=="SGA"] <-  "Small-for-gestational age"
+  RMAest$RFlabel[RMAest$intervention_variable=="sga"] <-  "Small-for-gestational age"
   
   
   
@@ -428,6 +429,7 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFtype <- NA
   RMAest$RFtype[RMAest$intervention_variable=="sex"] <-  "Birth characteristics"
   RMAest$RFtype[RMAest$intervention_variable=="SGA"] <-  "Birth characteristics"
+  RMAest$RFtype[RMAest$intervention_variable=="sga"] <-  "Birth characteristics"
   RMAest$RFtype[RMAest$intervention_variable=="enwast"] <-  "Postnatal child health" 
   RMAest$RFtype[RMAest$intervention_variable=="enstunt"] <-  "Postnatal child health" 
   RMAest$RFtype[RMAest$intervention_variable=="gagebrth"] <-  "Birth characteristics"
@@ -474,6 +476,8 @@ RMA_clean <- function(RMAest, outcome="binary",
   RMAest$RFtype[RMAest$intervention_variable=="enwast"] <-  "Postnatal child health"
   RMAest$RFtype[RMAest$intervention_variable=="anywast06"] <-  "Postnatal child health"
   RMAest$RFtype[RMAest$intervention_variable=="pers_wast"] <-  "Postnatal child health"
+  
+  RMAest <- RMAest %>% droplevels()
   
   return(RMAest)
 }

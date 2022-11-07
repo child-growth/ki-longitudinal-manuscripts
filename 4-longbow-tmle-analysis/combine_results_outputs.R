@@ -155,9 +155,10 @@ unique(d$outcome_variable)
 d$continuous <- ifelse(d$outcome_variable %in% c("haz","whz","y_rate_haz","y_rate_waz","y_rate_len","y_rate_wtkg"), 1, 0)
 table(d$intervention_variable, d$outcome_variable)
 
-#Drop non-included risk factors (treat h20, with very little variance, month and birth month, and secondry breastfeeding indicators)
+#Drop non-included risk factors for the main analysis (treat h20, with very little variance, month and birth month, and secondry breastfeeding indicators)
 #d <- d %>% filter(!(intervention_variable %in% c("enstunt","trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36","brthmon","month")) )
-d <- d %>% filter(!(intervention_variable %in% c("trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36","brthmon","month")) )
+unique(d$intervention_variable)
+d <- d %>% filter(!(intervention_variable %in% c("vagbrth","trth2o","predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36","brthmon","month")) )
 table(d$intervention_variable, d$outcome_variable)
 
 #----------------------------------------------------------
