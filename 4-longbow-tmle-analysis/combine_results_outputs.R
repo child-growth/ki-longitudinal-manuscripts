@@ -175,6 +175,8 @@ N_sums_cont$intervention_level <- gsub("Wealth","",N_sums_cont$intervention_leve
 N_sums_cont[N_sums_cont$intervention_variable=="hhwealth_quart",]
 d[d$intervention_variable=="hhwealth_quart",]
 
+unique(N_sums_cont$intervention_variable)
+
 N_sums <- rbind(N_sums_bin, N_sums_cont)
 
 N_sums$intervention_level <- gsub("Wealth ","",N_sums$intervention_level)
@@ -252,3 +254,5 @@ d_unadj <- d %>% filter(adjusted==0)
 saveRDS(d_adj, paste0(res_dir,"rf results/full_RF_results.rds"))
 saveRDS(d_unadj, paste0(res_dir,"rf results/full_RF_unadj_results.rds"))
 
+
+d_adj %>% filter(intervention_variable=="sga")
