@@ -511,7 +511,7 @@ colnames(d)
 
 d <- subset(d, select = c(studyid,       subjid,        sex,           month,  country,       region,         arm,           tr,            gagebrth,     
                           brthmon,       parity,       
-                          birthwt,       birthlen,   sga, W_sga, # vagbrth,      
+                          birthwt,       birthlen,   sga, W_sga,  vagbrth,      
                           hdlvry,        mage,          mhtcm,        
                           mwtkg,         mbmi,          meducyrs,      single,        fage,          fhtcm,         feducyrs,     
                           trth2o,        cleanck,       impfloor,      nrooms,        nhh,           nchldlt5,      ses,          

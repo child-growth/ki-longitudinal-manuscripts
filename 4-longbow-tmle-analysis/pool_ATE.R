@@ -14,6 +14,10 @@ d <- dfull %>% filter(type=="ATE", agecat!="All")
 
 d %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", estimate != 0)
 
+df <- d %>% filter(intervention_variable=="parity", outcome_variable=="haz", agecat=="6 months")
+head(df)
+df <- d %>% filter(intervention_variable=="parity", outcome_variable=="whz", agecat=="6 months")
+head(df)
 
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)

@@ -11,7 +11,7 @@ source(paste0(here::here(), "/0-config.R"))
 cov<-readRDS(paste0(ghapdata_dir,"FINAL_clean_covariates.rds"))
 table(cov$studyid, cov$enstunt)
 table(cov$mwtkg)
-table(cov$fhtcm)
+table(cov$vagbrth)
 
 #Check reference levels
 for(i in 3:ncol(cov)){

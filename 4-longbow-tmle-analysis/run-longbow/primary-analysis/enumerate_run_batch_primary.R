@@ -33,4 +33,4 @@ table(d$mwtkg , d$ever_sstunted)
 table(d$sga , d$ever_sstunted)
 
 paste0(BV_dir,"/tmle/","results_bin_primary","/")
-run_ki_tmle(enumerated_analyses, results_folder="results_bin_primary", overwrite = F, skip_failed=T)
+run_ki_tmle(enumerated_analyses, results_folder="results_bin_primary", overwrite = F, skip_failed=F)

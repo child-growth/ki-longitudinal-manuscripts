@@ -43,7 +43,8 @@ unique(RMAest_raw$intervention_level)
 #Clean up dataframe for plotting
 RMAest_clean <- RMA_clean(RMAest_raw)
 
-unique(RMAest_clean$intervention_level)
+unique(RMAest_raw$intervention_variable)
+unique(RMAest_clean$intervention_variable)
 
 #Add reference level to label
 RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean$baseline_level)

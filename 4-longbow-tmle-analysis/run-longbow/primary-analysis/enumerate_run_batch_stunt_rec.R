@@ -35,5 +35,5 @@ table(d$sga, d$s03rec24 )
 
 
 paste0(BV_dir,"/tmle/","bin_stunt_rec","/")
-run_ki_tmle(enumerated_analyses, results_folder="bin_stunt_rec", overwrite = F, skip_failed=T)
+run_ki_tmle(enumerated_analyses, results_folder="bin_stunt_rec", overwrite = F, skip_failed=F)
 

@@ -34,4 +34,4 @@ enumerated_analyses <- lapply(seq_len(nrow(analyses)), specify_longbow)
 
 
 paste0(BV_dir,"/tmle/","results_bin_secondary","/")
-run_ki_tmle(enumerated_analyses, results_folder="results_bin_secondary", overwrite = F, skip_failed=T)
+run_ki_tmle(enumerated_analyses, results_folder="results_bin_secondary", overwrite = F, skip_failed=F)
