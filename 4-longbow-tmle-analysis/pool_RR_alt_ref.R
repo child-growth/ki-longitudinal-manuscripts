@@ -76,11 +76,11 @@ d <- mark_region(d)
 unique(d$intervention_variable)
 
 
-RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
+RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, n_cell, study_n_cell, study_n, n, min_n_cell, adjusted) %>%
   do(poolRR(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
 
-RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%
+RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, n_cell, study_n_cell, study_n, n, min_n_cell, adjusted) %>%
   do(poolRR(.)) %>% as.data.frame()
 
 RMAest_raw <- rbind(RMAest, RMAest_region)

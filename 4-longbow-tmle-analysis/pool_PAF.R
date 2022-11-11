@@ -25,10 +25,7 @@ unique(d$intervention_variable)
 #drop sparse outcomes
 unique(d$intervention_variable)
 d$min_n_cell[d$intervention_variable=="sga"]
-d <- d %>% filter(min_n_cell >=10 | intervention_variable=="sga", untransformed_se!=0)
-
-d %>% filter(intervention_variable=="nhh", agecat=="0-24 months", outcome_variable=="ever_wasted")
-d %>% filter(intervention_variable=="birthlen", agecat=="0-24 months", outcome_variable=="ever_wasted")
+d <- d %>% filter(min_n_cell >=10, untransformed_se!=0)
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -142,3 +139,6 @@ RMAest_clean <- RMAest_clean %>% filter(!is.na(region))
 
 # save pooled PAF's
 saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds"))
+
+df <- RMAest_clean %>% filter(intervention_variable=="sga")
+df
