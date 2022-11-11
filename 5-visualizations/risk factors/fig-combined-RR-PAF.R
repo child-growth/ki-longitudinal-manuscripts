@@ -36,6 +36,11 @@ main_color <- "#287d8e"
 # CIR
 CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds")) %>% mutate(parameter="CIR")
 summary(CIR_raw$RR)
+CIR_raw$RR[CIR_raw$intervention_variable=="sga"] <- 1/CIR_raw$RR[CIR_raw$intervention_variable=="sga"] 
+CIR_raw$RR.CI1[CIR_raw$intervention_variable=="sga"] <- 1/CIR_raw$RR.CI1[CIR_raw$intervention_variable=="sga"] 
+CIR_raw$RR.CI2[CIR_raw$intervention_variable=="sga"] <- 1/CIR_raw$RR.CI2[CIR_raw$intervention_variable=="sga"] 
+
+
 
 #Prev
 #prev_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="Prev") %>% filter(agecat=="24 months",intervention_variable!="perdiar24")
