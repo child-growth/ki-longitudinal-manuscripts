@@ -131,7 +131,7 @@ saveRDS(season_cont_rf_alt_ref, paste0(res_dir, "rf results/longbow results/seas
 season_bin_rf <- readRDS(paste0(res_dir,  "rf results/raw longbow results/seasonality_rf_bin_results_2021-04-22.RDS"))
 saveRDS(season_bin_rf, paste0(res_dir, "rf results/longbow results/season_bin_rf_results.RDS"))
 
-mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/results_mediation_2021-10-04.RDS"))
+mediation <- readRDS(paste0(res_dir,  "rf results/raw longbow results/results_mediation_2022-11-10.RDS"))
 saveRDS(mediation, paste0(res_dir, "rf results/longbow results/mediation.RDS"))
 
 stunt_rec <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_bin_stunt_rec_2022-10-28.RDS"))

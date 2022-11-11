@@ -54,3 +54,4 @@ saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")
 
 
 df <- RMAest_clean %>% filter(intervention_variable=="sga")
+df

@@ -25,40 +25,43 @@ d <- d %>% filter(outcome_variable %in% c("haz", "whz"))
 #Subset to parental variables
 unique(d$intervention_variable)
 d <- d %>% filter(intervention_variable %in% c("mage", "fage", "mhtcm", "mwtkg", "mbmi", "single", "fhtcm"))
-
+table(d$analysis)
 
 #Mark how many birth variables are adjusted for in each study
 d$num_birth_vars <- 0
 d$num_birth_vars <- ifelse(grepl("gagebrth",d$adjustment_set), d$num_birth_vars + 1, d$num_birth_vars)
 d$num_birth_vars <- ifelse(grepl("birthwt",d$adjustment_set), d$num_birth_vars + 1, d$num_birth_vars)
 d$num_birth_vars <- ifelse(grepl("birthlen",d$adjustment_set), d$num_birth_vars + 1, d$num_birth_vars)
-d$num_birth_vars <- ifelse(grepl("vagbrth",d$adjustment_set), d$num_birth_vars + 1, d$num_birth_vars)
+d$num_birth_vars <- ifelse(grepl("sga",d$adjustment_set), d$num_birth_vars + 1, d$num_birth_vars)
 d$num_birth_vars <- ifelse(grepl("hdlvry",d$adjustment_set), d$num_birth_vars + 1, d$num_birth_vars)
 d$num_birth_vars <- ifelse(grepl("parity",d$adjustment_set), d$num_birth_vars + 1, d$num_birth_vars)
 
 table(d$num_birth_vars, d$analysis)
 
-#Subset to cohorts measuring suffiicient birth covariates
-df <- d %>% filter(num_birth_vars>3 | analysis=="prim")
+#Subset to cohorts measuring sufficient birth covariates
+df <- d %>% filter(num_birth_vars>2 | analysis=="prim")
 med_studies <- unique(df$studyid[df$analysis=="med"])
+med_studies
 
 d_nonmed <- d %>% filter(studyid %in% med_studies)
 
 #Get N children
 load(paste0(ghapdata_dir,"/mediation_HAZ.Rdata"))
-d <- d %>% filter(studyid %in% med_studies) %>% filter(agecat=="24 months")
+d <- df %>% filter(studyid %in% med_studies) %>% filter(agecat=="24 months")
 nrow(d)
+length(med_studies)
 
 
 #Drop reference levels
 d <- d_nonmed %>% filter(ci_lower !=  ci_upper)
+table(d$analysis)
 
-#Compare cohort-specific estimates
-plotdf <- d %>% filter(agecat=="6 months") %>% select(strata_label, intervention_variable, outcome_variable, intervention_level, analysis, estimate) %>% spread(analysis, estimate)
-head(plotdf)
-ggplot(plotdf, aes(x=prim, y=med)) + 
-  geom_point() + 
-  coord_cartesian(xlim=c(-1.5, 1.5), ylim=c(-1.5, 1.5)) + geom_abline(intercept = 0, slope = 1) 
+# #Compare cohort-specific estimates
+# plotdf <- d %>% filter(agecat=="6 months") %>% select(strata_label, intervention_variable, outcome_variable, intervention_level, analysis, estimate) %>% spread(analysis, estimate)
+# head(plotdf)
+# ggplot(plotdf, aes(x=prim, y=med)) + 
+#   geom_point() + 
+#   coord_cartesian(xlim=c(-1.5, 1.5), ylim=c(-1.5, 1.5)) + geom_abline(intercept = 0, slope = 1) 
 
 
 # Pool estimates
@@ -66,6 +69,7 @@ d <- droplevels(d)
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,analysis) %>%
   do(pool.cont(.)) %>% as.data.frame()
 head(RMAest)
+table(RMAest$analysis)
 
 
 #Clean up dataframe for plotting
@@ -73,7 +77,7 @@ RMAest_clean <- RMA_clean(RMAest)
 head(RMAest_clean)
 
 int_vars <- c("mhtcm", "mwtkg", "mbmi", "fhtcm")
-plotdf <- RMAest_clean %>% filter(agecat=="6 months", CI1!=CI2, intervention_variable %in% int_vars)
+plotdf <- RMAest_clean %>% filter(agecat=="24 months", CI1!=CI2, intervention_variable %in% int_vars)
 plotdf$intervention_variable <- factor(plotdf$intervention_variable , levels= rev(c("fhtcm", "mhtcm", "mbmi", "mwtkg")))
 plotdf$Analysis <- ifelse(plotdf$analysis=="prim", "Primary", "Mediation")
 plotdf <- plotdf %>% arrange(intervention_variable) %>% mutate(RFlabel2 = paste0(RFlabel,"\nref: ",baseline_level),
@@ -101,7 +105,8 @@ p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))
              switch = "y")+
   labs(x = "Exposure level", y = "Adjusted Z-score difference") +
   geom_hline(yintercept = 0, linetype="dashed") +
-  scale_y_continuous(limits = c(-.78, 0.22), breaks=c(-0.8,-0.6, -0.4, -0.2, 0, 0.2), labels=scaleFUN, expand = c(0,0)) +
+  coord_cartesian(ylim = c(-1, 0.22)) +
+  scale_y_continuous(breaks=c(-1,-0.8,-0.6, -0.4, -0.2, 0, 0.2), labels=scaleFUN, expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,3)]) +  
   ggtitle("LAZ                                                       WLZ")+
   theme(strip.background = element_blank(),
@@ -118,6 +123,6 @@ p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))
   guides(color=guide_legend(ncol=1))+
   coord_flip()
 
-ggsave(p, file=paste0(fig_dir,"/risk-factor/fig-mediation.png"), width=10, height=6)
+ggsave(p, file=paste0(fig_dir,"risk-factor/fig-mediation.png"), width=10, height=6)
 p
 

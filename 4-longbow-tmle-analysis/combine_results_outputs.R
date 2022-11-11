@@ -256,3 +256,5 @@ saveRDS(d_unadj, paste0(res_dir,"rf results/full_RF_unadj_results.rds"))
 
 
 d_adj %>% filter(intervention_variable=="sga")
+d$min_n_cell[d_adj$intervention_variable=="sga"]
+

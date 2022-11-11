@@ -78,8 +78,9 @@ fig4a <- plot_grid(plen_lagwhz, p_earlywast, labels = "auto", ncol = 2, align = 
 pmort_comb = plot_grid(pmort[[2]], pmort[[1]], labels = c("c","d"),  nrow = 1, align = 'v', axis = 'l', rel_widths = c(1.5, 1))
 
 
-fig4  <- plot_grid(fig4a, pmort_comb, labels = c("",""), ncol = 1, rel_heights = c(1,1))
+fig4  <- plot_grid(fig4a, pmort_comb, labels = c("",""), ncol = 1, rel_heights = c(1,1), align = 'h', axis = 'l')
 ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig4.png"), width=18.3, height=9)
+ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig4_alt.png"), width=18.3/1.25, height=9/1.25)
 
 
 

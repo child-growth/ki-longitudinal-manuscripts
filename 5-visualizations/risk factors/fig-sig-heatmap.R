@@ -18,7 +18,9 @@ par %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", regi
 ate %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
 par %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
 
-
+ate %>% filter(intervention_variable=="parity", outcome_variable=="haz", region=="Pooled", intervention_level =="3+")
+rr %>% filter(intervention_variable=="parity", outcome_variable=="ever_stunted", region=="Pooled", intervention_level =="3+")
+rr %>% filter(intervention_variable=="parity", outcome_variable=="ever_wasted", region=="Pooled", intervention_level =="3+")
 
 #Match columns names
 rr <- rr %>% rename(est=RR, CI.lb=RR.CI1, CI.ub=RR.CI2)
@@ -42,7 +44,7 @@ dsub <- d %>% filter(agecat=="Birth")
 table(dsub$intervention_variable, dsub$outcome_variable)
 
 table(d$intervention_variable)
-d <- d %>% filter(intervention_variable!="vagbrth")
+d <- d %>% filter(intervention_variable!="vagbrth", agecat!="18 months")
 
 #temp fix fage
 unique(d$intervention_level)
@@ -125,6 +127,7 @@ d$pval_cat[d$pval_cat %in% c("0.2-1 decrease risk", "0.2-1 increase risk")] <- "
 table(d$pval_cat)
 d$pval_cat <- factor(d$pval_cat, levels = c("<0.001 decrease risk", "<0.05 decrease risk", "<0.2 decrease risk", "0.2-1", "<0.2 increase risk", "<0.05 increase risk", "<0.001 increase risk"))
 
+temp <- d %>% filter(intervention_variable=="parity", region=="Pooled")
   
 #-----------------------------------
 # Plot heatmaps
@@ -251,7 +254,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
     legend.key.width=grid::unit(1,"cm"),
     legend.position = "bottom",
     axis.text.x=element_text(size=8,colour=textcol,angle=45,hjust=1),
-    axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
+    axis.text.y=element_text(size=8,vjust = 0.5,colour=textcol),
     axis.ticks=element_line(size=0.4),
     plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
     strip.text.x = element_text(size=10),
@@ -266,8 +269,7 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
   guides(fill = guide_legend("P-value strength", nrow=2)) + 
   labs(x="Exposure",y="Age category",title="") +
   coord_flip()
-hm  
-  
+
   
 # save plot 
 ggsave(hm, file=paste0(BV_dir,"/figures/risk-factor/fig-sig-heatmap.png"), height=14, width=11.5)

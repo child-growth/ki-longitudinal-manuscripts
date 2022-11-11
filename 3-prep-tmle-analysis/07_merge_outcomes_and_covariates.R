@@ -218,9 +218,9 @@ A<-c( "sex",              "gagebrth",      "birthwt",
 save(d, Y, A,V, id,  file="st_meanZ_rf.Rdata")
 
 #save subset for the mediation analysis
-d <- d %>% filter(agecat!="Birth")
-d <- droplevels(d)
-save(d, file="mediation_HAZ.Rdata")
+df <- d %>% filter(agecat=="24 months")
+df <- droplevels(df)
+save(df, file="mediation_HAZ.Rdata")
 
 #Save just 24 month outcomes for optx analysis
 table(d$agecat)
@@ -535,10 +535,11 @@ A<-c( "sex",              "gagebrth",      "birthwt",
 
 save(d, Y, A,V, id,  file="wast_meanZ_rf.Rdata")
 
-#Save subset for mediation analysis
-d <- d %>% filter(agecat!="Birth")
-d <- droplevels(d)
-save(d, file="mediation_WHZ.Rdata")
+
+#save subset for the mediation analysis
+df <- d %>% filter(agecat=="24 months")
+df <- droplevels(df)
+save(df, file="mediation_WHZ.Rdata")
 
 #Save just 24 month outcomes for optx analysis
 table(d$agecat)

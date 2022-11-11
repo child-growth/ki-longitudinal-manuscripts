@@ -42,7 +42,7 @@ bin_primary_alt_ref <- bin_primary_alt_ref %>% filter(type=="RR", untransformed_
 
 
 d <- bind_rows(dfull, bin_primary_alt_ref) 
-
+unique(d$intervention_variable)
 
 
 #drop morbidity and mortality analysis
@@ -50,7 +50,7 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 
 
 #Drop reference levels and sparse estimates
-d <- d %>% filter(intervention_level != d$baseline_level)  %>% filter(min_n_cell>=10)
+d <- d %>% filter(intervention_level != d$baseline_level)  %>% filter(min_n_cell>=10|intervention_variable=="sga")
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -90,3 +90,6 @@ RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean
 
 #Save cleaned data
 saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds"))
+
+df <- RMAest_clean %>% filter(intervention_variable=="sga")
+df
