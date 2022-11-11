@@ -50,7 +50,7 @@ RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, base
 RMAest$region <- "Pooled"
 RMAest
 
-RMAest %>% filter(intervention_variable=="nhh")
+RMAest %>% filter(intervention_variable=="sga")
 
 
 RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%

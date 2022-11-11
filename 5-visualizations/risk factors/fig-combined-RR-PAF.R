@@ -75,6 +75,7 @@ table(df_full$intervention_variable,df_full$parameter)
 df_full$n[df_full$intervention_variable=="sga"]
 df_full$n_cell[df_full$intervention_variable=="sga"]
 df_full$parameter[df_full$intervention_variable=="sga"]
+df_full$est[df_full$intervention_variable=="sga"]
 
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
