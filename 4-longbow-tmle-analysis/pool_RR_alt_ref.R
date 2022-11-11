@@ -9,11 +9,13 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% 
-  filter(type=="RR", intervention_variable!="nhh",intervention_variable!="nrooms", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
+  filter(type=="RR", intervention_variable!="nhh",intervention_variable!="nrooms",intervention_variable!="sga", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
+unique(dfull$intervention_variable)
+
 
 #get parity, nhh, and nrooms
 bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-10-28.RDS")) %>% 
-  filter( agecat=="0-24 months", (intervention_variable=="parity")|intervention_variable=="nhh"|intervention_variable=="nrooms")
+  filter( agecat=="0-24 months"|agecat=="0-24 months (no birth st.)"|agecat=="0-24 months (no birth wast)", (intervention_variable=="parity")|intervention_variable=="nhh"|intervention_variable=="nrooms"|intervention_variable=="sga")
 
 bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-10-28.RDS")) 
 bin_primary_alt_ref_ns_parity <- bin_primary_alt_ref_ns %>% 
@@ -27,11 +29,16 @@ bin_primary_alt_ref_ns_nhh <- bin_primary_alt_ref_ns %>%
 bin_primary_alt_ref_ns_nrooms <- bin_primary_alt_ref_ns %>% 
   filter( agecat=="0-24 months", !is.na(nrooms)) %>%
   group_by(studyid, country, nrooms) %>% summarise(min_n_cell=min(n_cell), n_cell=n_cell[1], n=n[1]) %>% rename(intervention_level=nrooms) %>% mutate(intervention_variable="nrooms")
-bin_primary_alt_ref_ns <- bind_rows(bin_primary_alt_ref_ns_parity, bin_primary_alt_ref_ns_nhh, bin_primary_alt_ref_ns_nrooms)
+
+bin_primary_alt_ref_ns_sga <- bin_primary_alt_ref_ns %>% 
+  filter( agecat=="0-24 months (no birth st.)"|agecat=="0-24 months (no birth wast)", !is.na(sga)) %>%
+  group_by(studyid, country, sga) %>% summarise(min_n_cell=min(n_cell), n_cell=n_cell[1], n=n[1]) %>% rename(intervention_level=sga) %>% mutate(intervention_variable="sga")
+bin_primary_alt_ref_ns <- bind_rows(bin_primary_alt_ref_ns_parity, bin_primary_alt_ref_ns_nhh, bin_primary_alt_ref_ns_nrooms, bin_primary_alt_ref_ns_sga)
  
 bin_primary_alt_ref <- left_join(bin_primary_alt_ref, bin_primary_alt_ref_ns, by =c("studyid", "country","intervention_variable","intervention_level"))
 bin_primary_alt_ref <- bin_primary_alt_ref %>% group_by(studyid, country, intervention_variable) %>% mutate(min_n_cell=ifelse(is.na(min_n_cell),min(min_n_cell, na.rm=T),min_n_cell)) #minimum N's for prevalence
 bin_primary_alt_ref <- bin_primary_alt_ref %>% group_by(intervention_variable, intervention_level, agecat, outcome_variable, type) %>% mutate(n_cell=sum(n_cell,na.rm=T), n=sum(n,na.rm=T)) #minimum N's for prevalence
+unique(bin_primary_alt_ref$intervention_variable)
 
 #save subset for PAF
 saveRDS(bin_primary_alt_ref, paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds"))
