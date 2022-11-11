@@ -13,19 +13,17 @@ library(ggplot2)
 vim <- readRDS(paste0(res_dir, "rf results/longbow results/opttx_vim_results.RDS")) %>% 
   filter(type=="PAR", agecat=="24 months",!is.na(estimate))# %>%
   #mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
+unique(vim$intervention_variable)
+
 par <- readRDS(paste0(res_dir, "rf results/longbow results/results_cont_prim.RDS")) %>% 
   filter(type=="PAR", agecat=="24 months",!is.na(estimate),outcome_variable=="haz"|outcome_variable=="whz") #%>%
   #mutate(adjusted = adjustment_set!="unadjusted" , 1, 0) %>% filter(adjusted == 1)
 
 d <- left_join(par, vim, by = c("agecat","studyid","country","intervention_variable","outcome_variable","type")) %>% filter(!is.na(estimate.y))
 
-#Check
-par1 <- par %>% filter(intervention_variable=="perdiar24")
-df <- d %>% filter(intervention_variable=="perdiar24")
-
 
 #Keep only primary breastfeeding exposure and trth20
-d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36", "trth2o")) )
+d <- d %>% filter(!(intervention_variable %in% c("predfeed3","predfeed6","predfeed36","exclfeed3","exclfeed6","exclfeed36", "trth2o","vagbrth")) )
 
 # Drop non-sensical combinations
 unique(d$intervention_variable)

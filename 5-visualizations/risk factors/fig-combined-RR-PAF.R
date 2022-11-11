@@ -60,12 +60,17 @@ saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled")
 
-
+df_full %>% filter(intervention_variable=="sga")
 df_full <- df_full %>% filter(!(intervention_variable=="parity" & baseline_level=="1" & parameter=="CIR"), intervention_variable!="safeh20")
 
 table(df_full$intervention_variable)
 table(df_full$agecat)
 table(df_full$intervention_variable,df_full$parameter)
+
+df_full$n[df_full$intervention_variable=="sga"]
+df_full$n_cell[df_full$intervention_variable=="sga"]
+df_full$parameter[df_full$intervention_variable=="sga"]
+
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
 #----------------------------------------------------------------------------------
