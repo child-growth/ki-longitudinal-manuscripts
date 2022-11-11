@@ -244,13 +244,12 @@ cat(paste(paste0("\"",df$intervention_level_f2,"\"=\"",df$intervention_level_f,"
 variable_labels = c(
   "51% shifted to Female sex" = "51% shifted to Female", "67% shifted to >=50 birthlen" =
     "67% shifted to \u226550", "24% shifted to >= 2500 birthwt" = "24% shifted to \u2265 2500", "49% shifted to Full/late term gagebrth" =
-    "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "91% shifted to No vagbrth" =
-    "91% shifted to No", "66% shifted to 1 parity" = "66% shifted to 1", "34% shifted to Not SGA SGA" =
-    "34% shifted to Not SGA", "38% shifted to 1 nchldlt5" = "38% shifted to 1", "81% shifted to 3 or less nhh" =
-    "81% shifted to 3 or less", "91% shifted to 4+ nrooms" = "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" =
-    "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" = "50% shifted to Food Secure", "31% shifted to Yes impsan" =
-    "31% shifted to Yes", "75% shifted to Yes impfloor" = "75% shifted to Yes", "51% shifted to Yes cleanck" =
-    "51% shifted to Yes", "75% shifted to Opposite max rain rain_quartile" =
+    "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "66% shifted to 1 parity" =
+    "66% shifted to 1", "NA% shifted to Not SGA sga" = "NA% shifted to Not SGA", "38% shifted to 1 nchldlt5" =
+    "38% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
+    "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
+    "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
+    "75% shifted to Yes", "51% shifted to Yes cleanck" = "51% shifted to Yes", "75% shifted to Opposite max rain rain_quartile" =
     "75% shifted to Opposite max rain", "42% shifted to [20-30) mage" = "42% shifted to [20-30)", "82% shifted to >=35 fage" =
     "82% shifted to \u226535", "30% shifted to >=150 mhtcm" = "30% shifted to \u2265150", "35% shifted to >=45 mwtkg" =
     "35% shifted to \u226545", "40% shifted to >=20 mbmi" = "40% shifted to \u226520", "68% shifted to High meducyrs" =
@@ -263,10 +262,10 @@ variable_labels = c(
     "<span style='color:#89b4bc'>Preterm</span>", "Full/late term gagebrth" =
     "<span style='color:#89b4bc'>Full/late term</span>", "Early term gagebrth" =
     "<span style='color:#89b4bc'>Early term</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "No hdlvry" =
-    "<span style='color:#89b4bc'>No</span>", "Yes vagbrth" = "<span style='color:#89b4bc'>Yes</span>", "No vagbrth" =
     "<span style='color:#89b4bc'>No</span>", "3+ parity" = "<span style='color:#89b4bc'>3+</span>", "2 parity" =
-    "<span style='color:#89b4bc'>2</span>", "1 parity" = "<span style='color:#89b4bc'>1</span>", "SGA SGA" =
-    "<span style='color:#89b4bc'>SGA</span>", "Not SGA SGA" = "<span style='color:#89b4bc'>Not SGA</span>", "2+ nchldlt5" =
+    "<span style='color:#89b4bc'>2</span>", "1 parity" = "<span style='color:#89b4bc'>1</span>", "SGA sga" =
+    "<span style='color:#89b4bc'>SGA</span>", "Not SGA sga" = "<span style='color:#89b4bc'>Not SGA</span>", "Yes vagbrth" =
+    "<span style='color:#89b4bc'>Yes</span>", "No vagbrth" = "<span style='color:#89b4bc'>No</span>", "2+ nchldlt5" =
     "<span style='color:#89b4bc'>2+</span>", "1 nchldlt5" = "<span style='color:#89b4bc'>1</span>", "8+ nhh" =
     "<span style='color:#89b4bc'>8+</span>", "6-7 nhh" = "<span style='color:#89b4bc'>6-7</span>", "3 or less nhh" =
     "<span style='color:#89b4bc'>3 or less</span>", "4-5 nhh" = "<span style='color:#89b4bc'>4-5</span>", "1 nrooms" =
@@ -298,13 +297,12 @@ variable_labels = c(
     "<span style='color:#89b4bc'>Yes</span>", "51% shifted to Female sex" =
     "51% shifted to Female", "67% shifted to >=50 birthlen" = "67% shifted to \u226550", "25% shifted to >= 2500 birthwt" =
     "25% shifted to \u2265 2500", "49% shifted to Full/late term gagebrth" =
-    "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "91% shifted to No vagbrth" =
-    "91% shifted to No", "67% shifted to 1 parity" = "67% shifted to 1", "34% shifted to Not SGA SGA" =
-    "34% shifted to Not SGA", "38% shifted to 1 nchldlt5" = "38% shifted to 1", "81% shifted to 3 or less nhh" =
-    "81% shifted to 3 or less", "91% shifted to 4+ nrooms" = "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" =
-    "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" = "50% shifted to Food Secure", "31% shifted to Yes impsan" =
-    "31% shifted to Yes", "75% shifted to Yes impfloor" = "75% shifted to Yes", "51% shifted to Yes cleanck" =
-    "51% shifted to Yes", "75% shifted to Opposite max rain rain_quartile" =
+    "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "67% shifted to 1 parity" =
+    "67% shifted to 1", "NA% shifted to Not SGA sga" = "NA% shifted to Not SGA", "38% shifted to 1 nchldlt5" =
+    "38% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
+    "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
+    "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
+    "75% shifted to Yes", "51% shifted to Yes cleanck" = "51% shifted to Yes", "75% shifted to Opposite max rain rain_quartile" =
     "75% shifted to Opposite max rain", "43% shifted to [20-30) mage" = "43% shifted to [20-30)", "82% shifted to >=35 fage" =
     "82% shifted to \u226535", "32% shifted to >=150 mhtcm" = "32% shifted to \u2265150", "38% shifted to >=45 mwtkg" =
     "38% shifted to \u226545", "41% shifted to >=20 mbmi" = "41% shifted to \u226520", "69% shifted to High meducyrs" =
@@ -317,10 +315,10 @@ variable_labels = c(
     "<span style='color:#89b4bc'>Preterm</span>", "Full/late term gagebrth" =
     "<span style='color:#89b4bc'>Full/late term</span>", "Early term gagebrth" =
     "<span style='color:#89b4bc'>Early term</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "No hdlvry" =
-    "<span style='color:#89b4bc'>No</span>", "Yes vagbrth" = "<span style='color:#89b4bc'>Yes</span>", "No vagbrth" =
     "<span style='color:#89b4bc'>No</span>", "3+ parity" = "<span style='color:#89b4bc'>3+</span>", "2 parity" =
-    "<span style='color:#89b4bc'>2</span>", "1 parity" = "<span style='color:#89b4bc'>1</span>", "SGA SGA" =
-    "<span style='color:#89b4bc'>SGA</span>", "Not SGA SGA" = "<span style='color:#89b4bc'>Not SGA</span>", "2+ nchldlt5" =
+    "<span style='color:#89b4bc'>2</span>", "1 parity" = "<span style='color:#89b4bc'>1</span>", "SGA sga" =
+    "<span style='color:#89b4bc'>SGA</span>", "Not SGA sga" = "<span style='color:#89b4bc'>Not SGA</span>", "Yes vagbrth" =
+    "<span style='color:#89b4bc'>Yes</span>", "No vagbrth" = "<span style='color:#89b4bc'>No</span>", "2+ nchldlt5" =
     "<span style='color:#89b4bc'>2+</span>", "1 nchldlt5" = "<span style='color:#89b4bc'>1</span>", "8+ nhh" =
     "<span style='color:#89b4bc'>8+</span>", "3 or less nhh" = "<span style='color:#89b4bc'>3 or less</span>", "6-7 nhh" =
     "<span style='color:#89b4bc'>6-7</span>", "4-5 nhh" = "<span style='color:#89b4bc'>4-5</span>", "1 nrooms" =
