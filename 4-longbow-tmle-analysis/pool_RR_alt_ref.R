@@ -57,7 +57,7 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 
 
 #Drop reference levels and sparse estimates
-d <- d %>% filter(intervention_level != d$baseline_level)  %>% filter(min_n_cell>=10|intervention_variable=="sga")
+d <- d %>% filter(intervention_level != d$baseline_level)  %>% filter(min_n_cell>=10)
 
 
 #Drop duplicated (unadjusted sex and month variables)
@@ -76,11 +76,11 @@ d <- mark_region(d)
 unique(d$intervention_variable)
 
 
-RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, n_cell, study_n_cell, study_n, n, min_n_cell, adjusted) %>%
+RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, n_cell, n, adjusted) %>%
   do(poolRR(.)) %>% as.data.frame()
 RMAest$region <- "Pooled"
 
-RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, n_cell, study_n_cell, study_n, n, min_n_cell, adjusted) %>%
+RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, n_cell, n, adjusted) %>%
   do(poolRR(.)) %>% as.data.frame()
 
 RMAest_raw <- rbind(RMAest, RMAest_region)
