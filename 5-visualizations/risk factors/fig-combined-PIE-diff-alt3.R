@@ -60,7 +60,7 @@ df_full %>% filter(intervention_variable=="sga")
 ##### Cleaning dataset
 #----------------------------------------------------------------------------------
 
-df <- df_full %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast","month","brthmon","trth2o")))
+df <- df_full %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast","month","brthmon","trth2o","vagbrth")))
 
 #temp
 df$intervention_level2 <- df$intervention_level
@@ -160,35 +160,20 @@ df <- df %>%
       RFtype==RFtype ~ "At-birth child characteristics"))
 
 #get PAF label and facet label
+
+
 df <- df %>% group_by(outcome_variable, RFlabel) %>% mutate(n=max(n, na.rm=T)) %>% ungroup() %>%
     mutate(intervention_level_f=paste0(round((1-n_cell/n)*100), "% shifted to ", intervention_level),
                     n = format(n ,big.mark=",", trim=TRUE),
                     RFlabel=str_c("**",RFlabel,"**<br>N=",n))
-
+unique(df$RFlabel)
+df$RFlabel <- gsub("  "," ",df$RFlabel)
 
 df$intervention_level_f[df$parameter!="Population Intervention Effect"] <- df$intervention_level[df$parameter!="Population Intervention Effect"]  
 
-#df$RFlabel <- gsub("\'s","\\\\'s",df$RFlabel)
-
 unique(df$RFlabel)
-
-#df$RFlabel <- gsub(" ","",df$RFlabel)
-#df$RFlabel[df$RFlabel=="Birth length (cm)\nN=20,024" ] <- "Birth_length (cm)\nitalic('N=20,024')" 
-
-
-
 unique(df$intervention_level_f)
 unique(df$intervention_level2[is.na(df$intervention_level)])
-
-#https://stackoverflow.com/questions/16490331/combining-new-lines-and-italics-in-facet-labels-with-ggplot2
-
-# levels(length_subject$CONSTRUCTION) <- 
-#   c("atop(textstyle('THAT'),textstyle('Extraposed'))", 
-#     "atop(textstyle('THAT'),textstyle('Post-predicate'))",
-#     "atop(atop(textstyle('TO'),textstyle('Extraposed')),italic('for')*textstyle('-subject'))",
-#     "atop(atop(textstyle('TO'),textstyle('Post-predicate')),italic('for')*textstyle('-subject'))",
-#     "atop(atop(textstyle('THAT'),textstyle('Extraposed')),italic('that')*textstyle('-omission'))",
-#     "atop(atop(textstyle('THAT'),textstyle('Post-predicate')),italic('that')*textstyle('-omission'))")
 
 
 df <- df %>%
@@ -220,9 +205,6 @@ df$baseline_level <- stringi::stri_replace_all_fixed(
   vectorize_all = F
 )
 
-
-
-
 df$intervention_level_f <- ifelse(
   df$parameter == "Mean Difference",
   paste0("<span style='color:#89b4bc'>", df$intervention_level_f, "</span>"),
@@ -245,7 +227,7 @@ variable_labels = c(
   "51% shifted to Female sex" = "51% shifted to Female", "67% shifted to >=50 birthlen" =
     "67% shifted to \u226550", "24% shifted to >= 2500 birthwt" = "24% shifted to \u2265 2500", "49% shifted to Full/late term gagebrth" =
     "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "66% shifted to 1 parity" =
-    "66% shifted to 1", "NA% shifted to Not SGA sga" = "NA% shifted to Not SGA", "38% shifted to 1 nchldlt5" =
+    "66% shifted to 1", "34% shifted to Not SGA sga" = "34% shifted to Not SGA", "38% shifted to 1 nchldlt5" =
     "38% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
     "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
     "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
@@ -298,7 +280,7 @@ variable_labels = c(
     "51% shifted to Female", "67% shifted to >=50 birthlen" = "67% shifted to \u226550", "25% shifted to >= 2500 birthwt" =
     "25% shifted to \u2265 2500", "49% shifted to Full/late term gagebrth" =
     "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "67% shifted to 1 parity" =
-    "67% shifted to 1", "NA% shifted to Not SGA sga" = "NA% shifted to Not SGA", "38% shifted to 1 nchldlt5" =
+    "67% shifted to 1", "34% shifted to Not SGA sga" = "34% shifted to Not SGA", "38% shifted to 1 nchldlt5" =
     "38% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
     "91% shifted to 4+", "73% shifted to Q4 hhwealth_quart" = "73% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
     "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
@@ -354,32 +336,32 @@ variable_labels = c(
 #----------------------------------------------------------
 # plot function
 #----------------------------------------------------------
-d=df %>% filter(intervention_variable=="earlybf"|intervention_variable=="parity")
-ylimits=c(-0.1, 0.8)
-outcome_var="haz"
-ylab="Adjusted difference in LAZ at 24 months"
-legend=F
-xaxis=F
-facet_label_pos= -75
-
-
-d=df[df$RFgroup=="At-birth child characteristics",]
-facet_label_pos= -35
-xaxis=T
-ylab=""
-yaxis=T
-
-label_params=T
-label_pos=c(0.4, 0.7)
-lab_levels=c(">=50 birthlen", "67% shifted to >=50 birthlen")
-label_format=list(
-  label_pos=c(0.2, 0.6),
-  lab_levels=c("[48-50) birthlen", "67% shifted to >=50 birthlen"),
-  label_adj=c(0.045, 0.035),
-  arrow_curve=c(-0.25,0.25),
-  arrow_lengths=c(-0.01, -0.01),
-  rev_arrow=c(1,1),
-  arrow_size=0.3)
+# d=df %>% filter(intervention_variable=="earlybf"|intervention_variable=="parity")
+# ylimits=c(-0.1, 0.8)
+# outcome_var="haz"
+# ylab="Adjusted difference in LAZ at 24 months"
+# legend=F
+# xaxis=F
+# facet_label_pos= -75
+# 
+# 
+# d=df[df$RFgroup=="At-birth child characteristics",]
+# facet_label_pos= -35
+# xaxis=T
+# ylab=""
+# yaxis=T
+# 
+# label_params=T
+# label_pos=c(0.4, 0.7)
+# lab_levels=c(">=50 birthlen", "67% shifted to >=50 birthlen")
+# label_format=list(
+#   label_pos=c(0.2, 0.6),
+#   lab_levels=c("[48-50) birthlen", "67% shifted to >=50 birthlen"),
+#   label_adj=c(0.045, 0.035),
+#   arrow_curve=c(-0.25,0.25),
+#   arrow_lengths=c(-0.01, -0.01),
+#   rev_arrow=c(1,1),
+#   arrow_size=0.3)
 
 plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, outcome_var="haz", 
                                   ylab="Adjusted difference in LAZ at 24 months", legend=F, xaxis=F, 
@@ -427,6 +409,7 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
   
   rflevels = unique(plotdf$intervention_level_f2)
   plotdf$intervention_level_f2=factor(plotdf$intervention_level_f2, levels=rflevels)
+  plotdf$RFlabel = gsub("  "," ",plotdf$RFlabel)
   rflevels2 = unique(plotdf$RFlabel)
   plotdf$RFlabel=factor(plotdf$RFlabel, levels=rflevels2)
   
@@ -520,7 +503,11 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
 # LAZ
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], facet_label_pos= -35, xaxis=T, ylab="", label_params=T, 
+
+  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], 
+                              #facet_label_pos= -35,
+                              facet_label_pos= -41,
+                              xaxis=T, ylab="", label_params=T, 
                               label_format=list(
                                       label_pos=c(0.2, 0.6),
                                       lab_levels=c("[48-50) birthlen", "67% shifted to >=50 birthlen"),
@@ -531,7 +518,9 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                                       arrow_size=0.3))
   p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -30, xaxis=T, ylab="")
   p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -12, xaxis=T, ylab="")
-  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T, facet_label_pos= -42)
+  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T
+                              #, facet_label_pos= -42)
+                              , facet_label_pos= -53)
   
   plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
   
@@ -552,7 +541,10 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
 
   #p_wlz <- plot_combined_pie_ate(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
 
-  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -35, xaxis=T, ylab="", label_params=T,
+  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", 
+                              #facet_label_pos= -35,
+                              facet_label_pos= -43,
+                              xaxis=T, ylab="", label_params=T,
                               label_format=list(
                                 label_pos=c(0.42, 0.3),
                                 lab_levels=c(">=50 birthlen", "67% shifted to >=50 birthlen"),

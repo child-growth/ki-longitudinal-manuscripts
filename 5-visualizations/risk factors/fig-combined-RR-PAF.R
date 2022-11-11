@@ -242,8 +242,8 @@ cat(paste(unique(paste0("\"",df$intervention_level_f2,"\"=\"",df$intervention_le
 variable_labels = c(
   "51% shifted to Female sex" = "51% shifted to Female", "55% shifted to >=50 birthlen" =
     "55% shifted to \u226550", "15% shifted to >= 2500 g birthwt" = "15% shifted to \u2265 2500 g", "45% shifted to Full/late term gagebrth" =
-    "45% shifted to Full/late term", "49% shifted to No hdlvry" = "49% shifted to No", "91% shifted to No vagbrth" =
-    "91% shifted to No", "83% shifted to 2 parity" = "83% shifted to 2", "39% shifted to 1 nchldlt5" =
+    "45% shifted to Full/late term", "49% shifted to No hdlvry" = "49% shifted to No", "83% shifted to 2 parity" =
+    "83% shifted to 2", "NA% shifted to Not SGA sga" = "NA% shifted to Not SGA", "39% shifted to 1 nchldlt5" =
     "39% shifted to 1", "74% shifted to Q4 hhwealth_quart" = "74% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
     "50% shifted to Food Secure", "28% shifted to Yes impsan" = "28% shifted to Yes", "83% shifted to Yes impfloor" =
     "83% shifted to Yes", "33% shifted to Yes cleanck" = "33% shifted to Yes", "75% shifted to <=5 nhh" =
@@ -260,10 +260,10 @@ variable_labels = c(
     "<span style='color:#89b4bc'><2500g</span>", "Full or late term gagebrth" =
     "<span style='color:#89b4bc'>Full or late term</span>", "Preterm gagebrth" =
     "<span style='color:#89b4bc'>Preterm</span>", "Early term gagebrth" = "<span style='color:#89b4bc'>Early term</span>", "No hdlvry" =
-    "<span style='color:#89b4bc'>No</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "No vagbrth" =
-    "<span style='color:#89b4bc'>No</span>", "Vaginal birth vagbrth" = "<span style='color:#89b4bc'>Vaginal birth</span>", "2 parity" =
+    "<span style='color:#89b4bc'>No</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "2 parity" =
     "<span style='color:#89b4bc'>2</span>", "3+ parity" = "<span style='color:#89b4bc'>3+</span>", "1 parity" =
-    "<span style='color:#89b4bc'>1</span>", "1 nchldlt5" = "<span style='color:#89b4bc'>1</span>", "2+ nchldlt5" =
+    "<span style='color:#89b4bc'>1</span>", "Not SGA sga" = "<span style='color:#89b4bc'>Not SGA</span>", "SGA sga" =
+    "<span style='color:#89b4bc'>SGA</span>", "1 nchldlt5" = "<span style='color:#89b4bc'>1</span>", "2+ nchldlt5" =
     "<span style='color:#89b4bc'>2+</span>", "Q4 hhwealth_quart" = "<span style='color:#89b4bc'>Q4</span>", "Q1 hhwealth_quart" =
     "<span style='color:#89b4bc'>Q1</span>", "Q2 hhwealth_quart" = "<span style='color:#89b4bc'>Q2</span>", "Q3 hhwealth_quart" =
     "<span style='color:#89b4bc'>Q3</span>", "Food Secure hfoodsec" = "<span style='color:#89b4bc'>Food Secure</span>", "Food Insecure hfoodsec" =
@@ -460,7 +460,7 @@ plot_combined_paf_RR <- function(d, ylimits, facet_label_pos= -75, outcome_var="
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ylims=c(0.7, 3)
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims, facet_label_pos= -35, xaxis=F, ylab="")
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims, facet_label_pos= -45, xaxis=F, ylab="")
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims, facet_label_pos= -20, xaxis=F, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims, facet_label_pos= -15, xaxis=F, ylab="")
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household &\nEnvironmental Characteristics",], ylimits=ylims, legend=F, xaxis=T, facet_label_pos= -40)
@@ -477,7 +477,7 @@ p_laz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                    rel_heights=relheights )
 
 ylims=c(-5, 40)
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  facet_label_pos= -35, xaxis=F, ylab="", yaxis=F)
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  facet_label_pos= -20, xaxis=F, ylab="", yaxis=F)
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims, facet_label_pos= -45, xaxis=F, ylab="", yaxis=F)
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims,  facet_label_pos= -15, xaxis=F, ylab="", yaxis=F)
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household &\nEnvironmental Characteristics",], ylimits=ylims,  ylab="Population attributable fraction (%)", legend=F, xaxis=T, facet_label_pos= -40, yaxis=F)
@@ -505,7 +505,7 @@ df <- df %>% filter(!(intervention_variable=="perdiar6" & parameter!="CIR" & out
 
 #p_wlz <- plot_combined_paf_RR(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
 ylims=c(0.8, 1.5)
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -35, xaxis=F, ylab="")
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=F, ylab="")
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=F, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -15, xaxis=F, ylab="")
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household &\nEnvironmental Characteristics",], ylimits=ylims,  outcome_var="ever_wasted", legend=F, xaxis=T, facet_label_pos= -40)
