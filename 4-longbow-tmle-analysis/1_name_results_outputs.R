@@ -55,7 +55,7 @@ saveRDS(Zscores_alt_ref, paste0(res_dir, "rf results/longbow results/results_con
 Zscores18mo <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_18mo_2021-10-31.RDS"))
 saveRDS(Zscores18mo, paste0(res_dir, "rf results/longbow results/results_cont18mo.RDS"))
 
-Zscores_cc <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_CC_2022-10-01.RDS"))
+Zscores_cc <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_cont_CC_2022-11-11.RDS"))
 saveRDS(Zscores_cc, paste0(res_dir, "rf results/longbow results/results_cont_CC.RDS"))
 
 

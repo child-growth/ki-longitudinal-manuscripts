@@ -31,7 +31,7 @@ textcol = "grey20"
 # rfp <- readRDS(paste0(BV_dir,'/results/cov_missingness.rds'))
 # 
 # saveRDS(rfp, file=paste0(here::here(),"/data/cov_missingness_plotdf.RDS"))
-rfp <- readRDS(paste0(here::here(),"/data/cov_missingness_plotdf.RDS"))
+rfp <- readRDS(paste0(here::here(),"/data/cov_missingness_plotdf.RDS")) %>% subset(., select=-c(vagbrth))
 
 
 # gather rf missingness by study into long format
@@ -130,6 +130,7 @@ dd$RFlabel[dd$risk_factor=="fhtcm"] <- "Father's height"
 dd$RFlabel[dd$risk_factor=="birthwt"] <- "Birthweight (kg)" 
 dd$RFlabel[dd$risk_factor=="birthlen"] <- "Birth length (cm)" 
 dd$RFlabel[dd$risk_factor=="vagbrth"] <- "Vaginal birth" 
+dd$RFlabel[dd$risk_factor=="sga"] <- "Small-for-gestational age" 
 dd$RFlabel[dd$risk_factor=="hdlvry"] <- "Child delivered at home" 
 dd$RFlabel[dd$risk_factor=="single"] <- "Single parent" 
 dd$RFlabel[dd$risk_factor=="nrooms"] <- "# of rooms in HH" 
@@ -159,7 +160,6 @@ table(dd$risk_factor, is.na(dd$RFlabel))
 dd <- dd %>% filter(!is.na(RFlabel))
 
 #Sort by missingness
-dd <- dd %>% group_by(region, risk_factor) %>% mutate(sumN=sum(N))
 dd <- dd %>%
   group_by(region) %>%
   dplyr::arrange(missingness, .by_group = TRUE)
