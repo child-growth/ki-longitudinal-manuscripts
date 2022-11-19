@@ -56,6 +56,10 @@ df <- par %>% subset(., select = c(region, agecat, outcome_variable, interventio
   filter(!is.na(PAR)) %>% mutate(measure="PAR")
 
 
+saveRDS(df, file=paste0(here::here(),"/data/temp_plotdf_extended.RDS"))
+
+
+df <- readRDS(paste0(here::here(),"/data/temp_plotdf_extended.RDS"))
 
 
 #----------------------------------------------------------

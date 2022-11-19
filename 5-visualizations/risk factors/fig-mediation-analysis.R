@@ -94,7 +94,7 @@ perc_change = plotdf %>% group_by(intervention_variable, intervention_level, out
   summarise(med=first(ATE), prim=last(ATE)) %>%
   mutate(perc_change=(med-prim)/prim * 100) %>% ungroup %>%
   mutate(md=median(perc_change), mn=mean(perc_change)) 
-
+perc_change
 
 p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))) + 
   geom_point(aes(y=ATE, color=Analysis), size = 3, position = pd) +

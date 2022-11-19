@@ -59,7 +59,8 @@ dd <- mutate(dd,
                                    levels=unique(studycountry[order(overall_wastprev)]), 
                                    ordered=TRUE))
 levels(dd$studycountry)
-
+length(unique(dd$studycountry))
+unique(dd$short_description)
 
 # categorize wasting prevalence
 dd$wpcat <- cut(dd$overall_wastprev,breaks=c(0,5,10,20,30,40,50,60,100),labels=c("<5","5-10","10-20","20-30","30-40","40-50","50-60",">60"))
