@@ -360,7 +360,7 @@ p2 <- ggplot() +
   scale_y_continuous(limits=c(-2.2, -0.75), breaks = seq(-2.2, 0.4, 0.2), labels = seq(-2.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
-  ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
+  #ggtitle(paste0("Spline curves of LAZ, stratified by\nlevels of ", Avar)) +
   theme(legend.position = c(0.8,0.9))
 print(p2)
 
