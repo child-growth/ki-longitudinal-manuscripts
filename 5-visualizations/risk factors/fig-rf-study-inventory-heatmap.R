@@ -52,6 +52,9 @@ dim(d)
 d <- d %>% filter(!(studyid=="EE" & risk_factor=="gagebrth"))
 dim(d)
 
+unique(d$risk_factor)
+d <- d %>% filter(!(risk_factor %in% c("enstunt","enwast")))
+
 
 #Mark measure frequency
 d <- mark_measure_freq(d)
@@ -174,18 +177,20 @@ dd <- dd %>% filter(!is.na(RFlabel))
 # dfull <- dd
 # dd <- dd %>% filter(N>0) 
 
-# Sort by size 
-dd <- dd %>% group_by(risk_factor) %>% mutate(sumN=sum(N))
+# Sort by size and number of studies measurin RF
+dd <- dd %>% group_by(risk_factor) %>% mutate(sumN=sum(N), N_studies=sum(presence)) 
+            
 dd <- dd %>% 
   group_by(region) %>%
-  dplyr::arrange(-sumN, .by_group = TRUE) 
+  dplyr::arrange(-N_studies, -sumN, .by_group = TRUE) 
 dd$RFlabel <- factor(dd$RFlabel, levels = unique(dd$RFlabel))
 
-  temp <- dd %>% distinct(sumN, risk_factor)
+  temp <- dd %>% distinct(N_studies, sumN, risk_factor)
 
 
 #aggregate N's for topbar
-dhist_a <- dd %>% group_by(risk_factor) %>% summarize(N=sum(N))  %>% mutate(risk_factor=factor(risk_factor, levels=unique(dd$risk_factor))) %>% arrange(risk_factor)
+dhist_a <- dd %>% group_by(risk_factor) %>% summarize(N=sum(N), N_studies=max(N_studies))  %>%
+  mutate(risk_factor=factor(risk_factor, levels=unique(dd$risk_factor))) %>% arrange(risk_factor)
 
 
 dd <- dd %>% 
@@ -251,17 +256,17 @@ nrfbar <- ggplot(dhist_a, aes(y = N/1000, x = risk_factor, fill=risk_factor)) +
     # make background white
     panel.background = element_blank(),
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-    plot.title=element_text(colour=textcol,hjust=0.04,size=12,face="bold"),
+    plot.title=element_text(colour=textcol,hjust=0, vjust=1,size=12,face="bold"),
     axis.title.x=element_blank(),
     axis.text.x=element_blank(),
     axis.ticks.x=element_blank(),
     panel.border = element_blank(),
     axis.title.y = element_text(size=10)
   ) +
-  scale_y_continuous(expand=c(0,0), limits=c(0,100),
-                     breaks=seq(0,100,by=20),labels=seq(0,100,by=20))+
-  ylab("Sample size (1000's)") + xlab("") +
-  geom_hline(yintercept = seq(0,100,by=20),color='white',size=0.3) +
+  scale_y_continuous(expand=c(0,0), limits=c(0,85),
+                     breaks=seq(0,80,by=20),labels=seq(0,80,by=20)) +
+  ylab("Sample size\n(1000's)") + xlab("") +
+  geom_hline(yintercept = seq(0,80,by=20),color='white',size=0.3) +
   ggtitle("a")
 
 
@@ -303,8 +308,8 @@ sidebar_c <- ggplot(data = dhist_c, aes(x = studycountry, y=N/1000, fill=region)
 
 # add margin around plots
 hm2 = hm + theme(plot.margin = unit(c(0.3,1,1.2,0), "cm")) #top, right, bottom, left
-sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0.45,0.4,2.1,-0.8), "cm"))
-nrfbar2 = nrfbar + theme(plot.margin = unit(c(1, 1.51, 0, 2.7), "cm"))
+sidebar_c2 = sidebar_c + theme(plot.margin = unit(c(0.425,0.4,2.15,-0.8), "cm"))
+nrfbar2 = nrfbar + theme(plot.margin = unit(c(1, 1.6, 0, 2.5), "cm"))
 empty <- grid::textGrob("") 
 
 rfhmgrid <- grid.arrange(nrfbar2, empty,  

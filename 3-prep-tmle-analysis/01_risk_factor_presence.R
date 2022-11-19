@@ -34,6 +34,10 @@ exposures <- c("studyid", "country", "sex",                   "gagebrth",       
                "hhwealth_quart",      "impsan",        "safeh20",       "perdiar6",      "perdiar24",         "predexfd6", "rain_quartile") 
 
 
+#NOTE! NEED TO MERGE IN CHILD ANTHRO!
+df_children <- readRDS(rf_co_occurrence_path) %>% filter(agedays < 730) %>% distinct(studyid, country, subjid)
+
+
 #Calculate presence by study
 cov_presence <- cov %>% dplyr::select(exposures) %>%
   group_by(studyid, country) %>%
@@ -52,9 +56,16 @@ cov_N <- cov %>% dplyr::select(exposures) %>%
   group_by(studyid, country) %>%
   summarise_all(., funs(sum_not_na))
 
+#Calculate N children by study
+df_children_cov <- left_join(df_children, cov, by=c("studyid", "country", "subjid"))
+cov_Nchildren <- cov %>% dplyr::select(exposures) %>%
+  group_by(studyid, country) %>%
+  summarise_all(., funs(sum_not_na))
+
 saveRDS(cov_presence, file = paste0(BV_dir,"/results/cov_presence.rds"))
 saveRDS(cov_missingness, file = paste0(BV_dir,"/results/cov_missingness.rds"))
 saveRDS(cov_N, file = paste0(BV_dir,"/results/cov_N.rds"))
+saveRDS(cov_Nchildren, file = paste0(BV_dir,"/results/cov_Nchildren.rds"))
 
 
 

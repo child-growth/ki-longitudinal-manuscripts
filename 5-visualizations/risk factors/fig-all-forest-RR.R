@@ -91,6 +91,7 @@ d$intervention_level[d$intervention_variable=="birthwt"] <- "< 2500 g"
 d <- d%>% filter(!is.na(intervention_variable),!is.na(intervention_level), !is.na(outcome_variable), !is.na(agecat))
 d <- droplevels(d)
 
+unique(d$intervention_variable)
 #Test data set
 #df <- d %>% filter(intervention_variable=="birthlen",outcome_variable %in% c("ever_stunted"), agecat %in% c("0-24 months", "24 months"))
 

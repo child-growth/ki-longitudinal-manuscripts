@@ -35,7 +35,7 @@ d <- d %>% filter(agecat=="24 months")  %>% droplevels()
 table(d$country, is.na(d$sex))
 table(d$studyid, d$country)
 
-table(d$studyid, is.na(d$gagebrth))
+table(d$studyid, d$sga)
 
 head(d)
 

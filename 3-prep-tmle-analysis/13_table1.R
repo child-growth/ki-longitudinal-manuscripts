@@ -81,7 +81,8 @@ exposure_tab(d, Avar="sex")
 
 
 exposures <- c("sex",                   "gagebrth",         "parity",        "birthwt",      
-               "birthlen",      "vagbrth",       "hdlvry",        "mage",          "mhtcm",         "mwtkg",         "mbmi",          "meducyrs",     
+               "birthlen",      "sga", #"vagbrth",       
+               "hdlvry",        "mage",          "mhtcm",         "mwtkg",         "mbmi",          "meducyrs",     
                "single",        "fage",          "fhtcm",         "feducyrs",      "trth2o",        "cleanck",       "impfloor",      "nrooms",       
                "nhh",           "nchldlt5",      "earlybf",       "hfoodsec",      "anywast06",     "pers_wast",     "enstunt",       "enwast",       
                "hhwealth_quart",      "impsan",        "safeh20",       "perdiar6",      "perdiar24",         "predexfd6") 

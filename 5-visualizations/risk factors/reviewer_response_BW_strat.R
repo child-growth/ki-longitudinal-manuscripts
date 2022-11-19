@@ -38,7 +38,7 @@ dfull$intervention_level[is.na(dfull$intervention_level) & dfull$intervention_va
 
 
 
-plotdf <- dfull %>% filter(agecat=="24 months") %>% mutate(RF_lev = paste0(RFlabel,": ",intervention_level, " vs. ",baseline_level," (Ref)"))
+plotdf <- dfull %>% filter(agecat=="24 months", intervention_variable!="vagbrth") %>% mutate(RF_lev = paste0(RFlabel,": ",intervention_level, " vs. ",baseline_level," (Ref)"))
 
 
 plotdf$outcome_variable <- gsub("haz", "LAZ", plotdf$outcome_variable)
@@ -78,14 +78,15 @@ p_bw_strat<- ggplot(plotdf, aes(x=RF_lev, group=`Birth weight`)) +
   facet_grid(~outcome_variable) +
   scale_fill_manual(values=tableau11[3:1]) +
   scale_colour_manual(values=tableau11[3:1]) +
+  guides(fill=guide_legend(nrow=2,byrow=TRUE), color=guide_legend(nrow=2,byrow=TRUE)) +
   theme(strip.background = element_blank(),
-        legend.position="bottom",
+        legend.position="bottom", 
+        legend.justification = "left",
         axis.text.y = element_text(size=8, hjust=0),
         strip.text.x = element_text(size=14),
         axis.text.x = element_text(size=10), 
         panel.spacing = unit((1.5), "lines")
         ) 
-p_bw_strat
 
 ggsave(p_bw_strat, file=paste0(here::here(),"/figures/bwstrat.png"), width=8, height=9)
 

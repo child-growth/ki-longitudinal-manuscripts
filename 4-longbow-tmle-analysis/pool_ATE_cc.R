@@ -19,6 +19,7 @@ d %>% filter(intervention_variable=="rain_quartile", estimate    != 0)
 
 #Drop reference levels
 d <- d %>% filter(intervention_level != d$baseline_level)
+unique(d$intervention_variable)
 
 #temp
 #d<-d[d$intervention_variable=="single",] %>% filter(outcome_variable == "haz", agecat=="24 months" )

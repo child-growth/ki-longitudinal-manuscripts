@@ -58,6 +58,7 @@ table(!is.na(df$estimate.x) & !is.na(df$estimate.y))
 df$diff <- (df$estimate.x -df$estimate.y)
 df$abs_diff <- abs(df$estimate.x -df$estimate.y)
 
+df[df$num_cov>30,]
 
 mean(df$diff, na.rm=T)
 ave_abs_diff = round(mean(df$abs_diff, na.rm=T),2)

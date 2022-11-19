@@ -9,6 +9,13 @@ ate <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results.rds"))
 rr <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
 par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"))
 
+
+rr %>% filter(intervention_variable=="sga", agecat=="24 months", region=="Pooled")
+
+rr %>% filter(intervention_variable=="parity",intervention_level=="3+", agecat=="6-24 months", region=="Pooled", outcome_variable %in% c("ever_stunted","ever_wasted"))
+rr %>% filter(intervention_variable=="parity",intervention_level=="3+", agecat=="0-6 months", region=="Pooled", outcome_variable %in% c("ever_stunted","ever_wasted"))
+
+
 #Get PAR vs ATE diff for reviewer comments
 ate %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
 par %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="6 months")

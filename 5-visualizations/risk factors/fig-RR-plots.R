@@ -58,6 +58,8 @@ df <- df %>% filter(outcome_variable %in% c("Ever Stunted", "Ever Wasted", "Ever
  length(unique(df$region))
  length(unique(df$outcome_variable))
  length(unique(df$intervention_variable))
+ 
+ unique(df$intervention_variable)
 
 for(i in unique(df$region)){
   for(j in unique(df$outcome_variable)){
