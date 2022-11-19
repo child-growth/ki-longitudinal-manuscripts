@@ -107,10 +107,10 @@ p_earlywast <- ggplot(plotdf2 %>% filter(pooled==1), aes(x=Xvar)) +
   geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3, color="#287D8EFF") +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
                  color="#287D8EFF", alpha=0.5, size = 1) +
-  labs(x = "Wasting exposure", y = "Cumulative incidence\nratio: stunting 6-24 mo.") +
+  labs(x = "Wasting exposure", y = "Cumulative incidence ratio\nof stunting 6-24 mo.") +
   geom_hline(yintercept = 1) +
   #geom_text(aes(x=c(1, 2, 3), y=((plotdf2$RR.CI2))+.02, label=paste0("N studies: ",Nstudies)), size=3,  hjust=0) +
-  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits =c(0.5, 1.75), expand = c(0,0)) +
+  scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN, limits =c(0.515, 1.75), expand = c(0,0)) +
   scale_fill_manual(values=rep(tableau10[1],4)) +
   scale_colour_manual(values=rep(tableau10[1],4)) +
   theme(strip.background = element_blank(),
@@ -118,9 +118,7 @@ p_earlywast <- ggplot(plotdf2 %>% filter(pooled==1), aes(x=Xvar)) +
         axis.text.y = element_text(size=12),
         strip.text.x = element_text(size=14),
         axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
-        panel.spacing = unit(0, "lines")) #+
-  #ggtitle("Risk of stunting onset\nby measure of early wasting")
-p_earlywast
+        panel.spacing = unit(0, "lines")) 
 
 ggsave(p_earlywast, file=paste0(BV_dir,"/figures/risk-factor/fig-wasting-prior-to-stunting.png"), height=4, width=4)
 

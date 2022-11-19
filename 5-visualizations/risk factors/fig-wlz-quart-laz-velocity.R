@@ -46,6 +46,11 @@ plen_plotdf$pooled <- factor(ifelse(plen_plotdf$agecat=="Unstratified","Yes","No
 #Pooled, all ages for "Unstratified"
 levels(plen_plotdf$agecat)[length(levels(plen_plotdf$agecat))] <- "Pooled, all ages"
 
+
+saveRDS(plen_plotdf, file=paste0(here::here(),"/data/wlz-quart_laz_vel_plotdf.RDS"))
+
+color_vec<-c("#287D8EFF", tableau11[1])
+
 plen_lagwhz <- ggplot(plen_plotdf %>% filter(cohort==0), aes(x=intervention_level)) + 
   geom_point(aes(y=ATE, fill=intervention_variable), color="#878787", fill="#878787", size=2.5, stroke=0, alpha=0.25,
              position=position_jitter(width=0.1), data=plen_plotdf %>% filter(cohort==1)) +

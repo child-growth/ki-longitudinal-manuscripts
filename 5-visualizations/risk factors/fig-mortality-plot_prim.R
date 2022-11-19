@@ -316,7 +316,7 @@ pmort_flurry <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative haza
              data=pmort_data_cohort,
              position=position_jitter(width=0.2), alpha=0.5) +
   geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
-  labs(y = "", x = "CGF Exposure prior\nto death or censoring") +
+  labs(y = "", x = "Exposure prior to\ndeath or censoring") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
   #scale_colour_manual(values=cbbPalette[-1]) +
@@ -342,7 +342,7 @@ pmorb_flurry <- ggplot(p_data_pooled %>% filter(outcome_variable!="Relative haza
              data=p_data_cohort,
              position=position_jitter(width=0.2), alpha=0.5) +
   geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
-  labs(y = "", x = "CGF Exposure: cumulative\nincidence under 6 mo.") +
+  labs(y = "", x = "Exposure: cumulative incidence\nunder 6 mo.") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
   #scale_colour_manual(values=cbbPalette[-1]) +
@@ -394,7 +394,7 @@ p_co <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative risk of conc
                        aes(x=cgf_cat)) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), color="#287D8EFF") +
   geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
-  labs(y = "", x = "CGF Exposure: cumulative\nincidence under 6 mo.") +
+  labs(y = "", x = "Exposure: cumulative incidence\nunder 6 mo.") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
   #scale_colour_manual(values=cbbPalette[-1]) +
@@ -417,7 +417,7 @@ p_pers <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative risk of\np
                aes(x=cgf_cat)) +
   geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2), color="#287D8EFF") +
   geom_point(aes(y=RR), size=3, stroke = 1, color="#287D8EFF") +
-  labs(y = "", x = "CGF Exposure: cumulative\nincidence under 6 mo.") +
+  labs(y = "", x = " Exposure: cumulative incidence\nunder 6 mo.") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(breaks=c(0.5 ,1, 2, 4, 8, 16), trans='log10', labels=c("0.5","1","2","4","8","16")) +
   #scale_colour_manual(values=cbbPalette[-1]) +
