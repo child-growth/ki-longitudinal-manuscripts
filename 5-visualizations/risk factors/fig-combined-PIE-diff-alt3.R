@@ -54,7 +54,13 @@ saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS")) %>% filter( region=="Pooled", agecat=="24 months")
 head(df_full)
 
-df_full %>% filter(intervention_variable=="sga")
+df_full %>% filter(intervention_variable=="predexfd6")
+df_full %>% filter(intervention_variable=="perdiar24")
+
+# ate %>% filter(intervention_variable=="predexfd6", agecat=="6 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
+# ate %>% filter(intervention_variable=="predexfd6", agecat=="24 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
+# ate %>% filter(intervention_variable=="perdiar24", agecat=="24 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
+
 
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
@@ -541,7 +547,7 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
 
   #p_wlz <- plot_combined_pie_ate(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
 
-  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", 
+  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", 
                               #facet_label_pos= -35,
                               facet_label_pos= -43,
                               xaxis=T, ylab="", label_params=T,
@@ -553,9 +559,9 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                                 arrow_lengths=c(-0, -0),
                                 rev_arrow=c(-1,1),
                                 arrow_size=0.3))
-  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -30, xaxis=T, ylab="")
-  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", facet_label_pos= -12, xaxis=T, ylab="")
-  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.45),  outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months", legend=F, xaxis=T, facet_label_pos= -55)
+  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -30, xaxis=T, ylab="")
+  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -12, xaxis=T, ylab="")
+  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months", legend=F, xaxis=T, facet_label_pos= -55)
   
 
   
