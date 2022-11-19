@@ -16,6 +16,7 @@ source(paste0(here::here(), "/0-project-functions/0_clean_study_data_functions.R
 
 rr <- readRDS(paste0(here::here(),"/data/pooled_RR_results.rds")) %>% filter( intervention_level !=   baseline_level) %>% mutate(RR=round(RR,2), RR.CI1=round(RR.CI1,2), RR.CI2=round(RR.CI2,2))
 ate <- readRDS(paste0(here::here(),"/data/pooled_ATE_results.rds")) %>% filter( intervention_level !=   baseline_level) %>% mutate(ATE=round(ATE,2), CI1=round(CI1,2), CI2=round(CI2,2))
+#par <- readRDS(paste0(here::here(),"/data/pooled_PAR_results.rds")) %>% filter( intervention_level !=   baseline_level) %>% mutate(ATE=round(ATE,2), CI1=round(CI1,2), CI2=round(CI2,2))
 
 
 unique(rr$intervention_variable)
@@ -148,3 +149,8 @@ rr %>% filter(intervention_variable=="nrooms", agecat=="24 months",outcome_varia
 rr %>% filter(intervention_variable=="rain_quartile", agecat=="24 months",outcome_variable %in% c("stunted","wasted"), region=="Pooled") %>% select(outcome_variable,intervention_level,   RR, RR.CI1, RR.CI2, region) 
 
 ate %>% filter(intervention_variable=="rain_quartile", agecat=="24 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
+
+unique(ate$intervention_variable)
+ate %>% filter(intervention_variable=="predexfd6", agecat=="6 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
+ate %>% filter(intervention_variable=="predexfd6", agecat=="24 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
+ate %>% filter(intervention_variable=="perdiar24", agecat=="24 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
