@@ -61,6 +61,9 @@ saveRDS(df, file=paste0(here::here(),"/data/temp_plotdf_extended.RDS"))
 
 df <- readRDS(paste0(here::here(),"/data/temp_plotdf_extended.RDS"))
 
+#Temp: update color to monochrome:
+cbbPalette <- rep("grey20",11)
+
 
 #----------------------------------------------------------
 # Clean up plot dataframe
@@ -138,13 +141,15 @@ plotdf$RFlabel_ref=factor(plotdf$RFlabel_ref, levels=rflevels)
 
 
 
+
+
 plotdf_agestrat <- plotdf %>% filter(agecat %in% c("Birth","6 months","24 months"), region=="Pooled", outcome_variable %in% c("LAZ", "WLZ"), !is.na(PAR))  
 plotdf_regionstrat <- plotdf %>% filter(agecat=="24 months", region!="Pooled", outcome_variable %in% c("LAZ", "WLZ"), !is.na(PAR))  
 
 
-plot_ext_par <- function(d, outcome, agecat, region, text_pos=NULL, range=NULL, xaxis=F){
+plot_ext_par <- function(d, outcome, agecat, region, text_pos=NULL, range=NULL, xaxis=F, xaxis_lab=NULL){
   
-  xaxis_lab <- ifelse(xaxis,"Population intervention effect, difference in z-score","")
+  xaxis_lab <- ifelse(xaxis,xaxis_lab,"")
   plot_title <- ifelse(region=="Pooled", agecat, region)
     
   d<- plotdf %>% filter(outcome_variable==!!(outcome), agecat==!!(agecat), region==!!(region))
@@ -185,21 +190,23 @@ plot_ext_par <- function(d, outcome, agecat, region, text_pos=NULL, range=NULL, 
   return(p)
 }
 
+
+
 plot_laz_birth <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="Birth", region="Pooled", text_pos=-0.55, range=c(-0.6, 0.4))
 plot_laz_6 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="6 months", region="Pooled", text_pos=-0.25, range=c(-0.3, 0.8))
-plot_laz_24 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Pooled", text_pos=-0.15, range=c(-0.2, 0.6), xaxis=T)
+plot_laz_24 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Pooled", text_pos=-0.15, range=c(-0.2, 0.6), xaxis=T, xaxis_lab="Population intervention effect, difference in LAZ")
 
 plot_wlz_birth <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="Birth", region="Pooled", text_pos=-0.4, range=c(-0.45, 0.4))
 plot_wlz_6 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="6 months", region="Pooled", text_pos=-0.1, range=c(-0.15, 0.2))
-plot_wlz_24 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Pooled", text_pos=-0.1, range=c(-0.15, 0.25), xaxis=T)
+plot_wlz_24 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Pooled", text_pos=-0.1, range=c(-0.15, 0.25), xaxis=T, xaxis_lab="Population intervention effect, difference in WLZ")
 
 plot_laz_africa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Africa", text_pos=-0.55, range=c(-0.6, 0.5))
 plot_laz_la <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Latin America", text_pos=-0.55, range=c(-0.6, 0.5))
-plot_laz_sa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="South Asia", text_pos=-0.55, range=c(-0.6, 0.5), xaxis=T)
+plot_laz_sa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="South Asia", text_pos=-0.55, range=c(-0.6, 0.5), xaxis=T, xaxis_lab="Population intervention effect, difference in LAZ")
 
 plot_wlz_africa <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Africa", text_pos=-0.5, range=c(-0.6, 0.4))
 plot_wlz_la <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Latin America", text_pos=-0.5, range=c(-0.6, 0.4))
-plot_wlz_sa <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="South Asia", text_pos=-0.5, range=c(-0.6, 0.4), xaxis=T)
+plot_wlz_sa <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="South Asia", text_pos=-0.5, range=c(-0.6, 0.4), xaxis=T, xaxis_lab="Population intervention effect, difference in WLZ")
 
 
 plot_laz_region = grid.arrange(plot_laz_africa, plot_laz_la, plot_laz_sa, ncol = 1, nrow = 3,
@@ -209,6 +216,9 @@ plot_wlz_region = grid.arrange(plot_wlz_africa, plot_wlz_la, plot_wlz_sa, ncol =
 
 ggsave(plot_laz_region, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-region.png"), height=18, width=12)
 ggsave(plot_wlz_region, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-region.png"), height=18, width=12)
+
+ggsave(plot_laz_region, file=paste0(here(), "/figures/fig-laz-PAR-strat-region.png"), height=18, width=13)
+ggsave(plot_wlz_region, file=paste0(here(), "/figures/fig-wlz-PAR-strat-region.png"), height=18, width=13)
 
 
 
@@ -223,4 +233,8 @@ plot_wlz_age = grid.arrange(plot_wlz_birth, plot_wlz_6, plot_wlz_24, ncol = 1, n
 
 ggsave(plot_laz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-laz-PAR-strat-age.png"), height=18, width=12)
 ggsave(plot_wlz_age, file=paste0(BV_dir, "/figures/manuscript-figure-composites/risk-factor/extended-data/fig-wlz-PAR-strat-age.png"), height=18, width=12)
+
+
+ggsave(plot_laz_age, file=paste0(here(), "/figures/fig-laz-PAR-strat-age.png"), height=18, width=13)
+ggsave(plot_wlz_age, file=paste0(here(), "/figures/fig-wlz-PAR-strat-age.png"), height=18, width=13)
 

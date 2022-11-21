@@ -48,22 +48,26 @@ levels(plen_plotdf$agecat)[length(levels(plen_plotdf$agecat))] <- "Pooled, all a
 
 
 saveRDS(plen_plotdf, file=paste0(here::here(),"/data/wlz-quart_laz_vel_plotdf.RDS"))
+plen_plotdf <- readRDS(paste0(here::here(),"/data/wlz-quart_laz_vel_plotdf.RDS"))
 
+#Color the pooled point
 color_vec<-c("#287D8EFF", tableau11[1])
+unique(plen_plotdf$agecat)
+plen_plotdf <- plen_plotdf %>% mutate(pooled=factor(ifelse(agecat=="Pooled, all ages","yes","no")))
+
 
 plen_lagwhz <- ggplot(plen_plotdf %>% filter(cohort==0), aes(x=intervention_level)) + 
-  geom_point(aes(y=ATE, fill=intervention_variable), color="#878787", fill="#878787", size=2.5, stroke=0, alpha=0.25,
+  geom_point(aes(y=ATE), color="#878787", fill="#878787", size=2.5, stroke=0, alpha=0.25,
              position=position_jitter(width=0.1), data=plen_plotdf %>% filter(cohort==1)) +
-  geom_point(aes(y=ATE, fill=intervention_variable), size = 3, color="#287D8EFF") +
- # geom_point(data=d, aes(y=ATE, fill=pooled, color=pooled), size = 3) +
-  geom_linerange(aes(ymin=CI1, ymax=CI2), color="#287D8EFF",
+  geom_point(aes(y=ATE, color=pooled, fill=pooled), size = 3) +
+  geom_linerange(aes(ymin=CI1, ymax=CI2, color=pooled),
                  alpha=0.5, size = 1) +
   facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
   labs(x = "Quartile of mean WLZ in the prior 3 months\nReference: quartile 1", y = "Difference in linear growth\nvelocity (cm per 3-months)") +
   geom_hline(yintercept = 0) +
   coord_cartesian(ylim=c(-0.3, 0.55)) +
-  # scale_fill_manual(values=tableau11[c(9,1)]) +
-  # scale_colour_manual(values=tableau11[c(9,1)]) +
+  scale_fill_manual(values=color_vec) +
+  scale_colour_manual(values=color_vec) +
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=12),
@@ -72,6 +76,7 @@ plen_lagwhz <- ggplot(plen_plotdf %>% filter(cohort==0), aes(x=intervention_leve
         panel.spacing = unit(0, "lines")) 
 plen_lagwhz
 
+ggsave(plen_lagwhz, file=paste0(here(),"/figures/risk-factor/fig-WLZ-quart-len-vel.png"), height=4, width=10)
 ggsave(plen_lagwhz, file=paste0(BV_dir,"/figures/risk-factor/fig-WLZ-quart-len-vel.png"), height=4, width=10)
 saveRDS(plen_lagwhz, file=paste0(BV_dir,"/figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds"))
 saveRDS(plen_plotdf, file=paste0(BV_dir,"/figures/risk-factor/figure-data/fig-WLZ-quart-len-vel.rds"))
