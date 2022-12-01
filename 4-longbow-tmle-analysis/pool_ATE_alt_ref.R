@@ -16,6 +16,8 @@ dfull <- bind_rows(Zscores_alt_ref, Zscores_alt_ref_season)#, Zscores_sga)
 
 unique(dfull$intervention_variable)
 
+dfull %>% filter(intervention_variable=="nrooms")
+
 
 d <- dfull %>% filter(type=="ATE", agecat!="All")
 

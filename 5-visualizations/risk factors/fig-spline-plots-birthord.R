@@ -263,6 +263,7 @@ return(res)
 orange_color_gradient = c("#FF7F0E", "#ffb26e", "#f5caab")
 blue_color_gradient = c("#1F77B4", "#85cdff", "#b8e7ff")
 purple_color_gradient = c("#7644ff", "#b3adff", "#e4dbff")
+greyscale_color_gradient =c("grey10","grey50", "grey80")
 
 #------------------------------------------------------------------------------------------------
 # WLZ-birth order
@@ -304,14 +305,14 @@ Avar="birth order"
 p1 <- ggplot() +
   geom_line(data=plotdf_wlz_parity, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_wlz_parity, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=orange_color_gradient, name = paste0( Avar)) +
-  scale_fill_manual(values=orange_color_gradient, name = paste0( Avar)) +
-  scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_color_manual(values=greyscale_color_gradient, name = paste0( Avar)) +
+  scale_fill_manual(values=greyscale_color_gradient, name = paste0( Avar)) +
+  scale_x_continuous(limits=c(0,731), expand = c(0, 0),
+                     breaks = 0:12*30.4167*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-1, -0.18), breaks = seq(-1.2, 0.4, 0.2), labels = seq(-1.2, 0.4, 0.2)) +
   xlab("Child age in months") + ylab("Mean WLZ") +
   #coord_cartesian(ylim=c(-2,1)) +
-  ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
+  #ggtitle(paste0("Spline curves of WLZ, stratified by\nlevels of ", Avar)) +
   theme(legend.position = c(0.8,0.9))
 
 print(p1)
@@ -348,15 +349,14 @@ plotdf_laz_parity <- plotdf_laz_parity %>%
 plotdf_laz_parity <- plotdf_laz_parity %>% mutate(level = factor(level, levels=c( "1", "2","3+")))
 
 
-light_blue_color_gradient = c("#0fb3bf", "#83ced3", "#c5e0e2")
 
 p2 <- ggplot() + 
   geom_line(data=plotdf_laz_parity, aes(x=agedays, y=est, group=level, color=level), size=1.25) +
   #geom_ribbon(data=plotdf_wlz_mhtcm, aes(x=agedays,ymin=ci.lb, ymax=ci.ub, group=level, color=level,  fill=level), alpha=0.3, color=NA) +
-  scale_color_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
-  scale_fill_manual(values=light_blue_color_gradient, name = paste0( Avar)) +
-  scale_x_continuous(limits=c(1,730), expand = c(0, 0),
-                     breaks = 0:12*30.41*2, labels = 0:12*2) +
+  scale_color_manual(values=greyscale_color_gradient, name = paste0( Avar)) +
+  scale_fill_manual(values=greyscale_color_gradient, name = paste0( Avar)) +
+  scale_x_continuous(limits=c(0,731), expand = c(0, 0),
+                     breaks = 0:12*30.4167*2, labels = 0:12*2) +
   scale_y_continuous(limits=c(-2.2, -0.75), breaks = seq(-2.2, 0.4, 0.2), labels = seq(-2.2, 0.4, 0.2)) + 
   xlab("Child age in months") + ylab("Mean LAZ") + 
   #coord_cartesian(ylim=c(-2,1)) +
@@ -370,7 +370,7 @@ print(p2)
  saveRDS(list(p1, p2),  file=paste0(BV_dir,"/figures/plot-objects/risk-factor/birth_order_spline_objects.RDS"))
 
  
- pos2 = pos = c(0.895,0.835)
+ pos2 = pos = c(0.895,0.852)
  
  p1a <- p1   + ggtitle("") + theme(legend.position = pos2, legend.spacing.y = unit(0.5, 'mm'),  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Birth order", nrow=1)) + theme(legend.key = element_blank(), legend.background = element_blank()) 
  p2a <- p2   + ggtitle("") + theme(legend.position = pos2, legend.spacing.y = unit(0.5, 'mm'),  legend.title=element_text(size=8), legend.text=element_text(size=6)) + guides(color = guide_legend("Birth order", nrow=1)) + theme(legend.key = element_blank(), legend.background = element_blank()) 
@@ -378,13 +378,13 @@ print(p2)
  titleA <- ggdraw() + draw_label("Stratified by birth order", fontface='bold')
 
  #Faceted plots
- Twoby1plotA <- plot_grid(p1a, p2a, labels = c("",""), ncol = 2)
- Twoby1plotA_t <- plot_grid(titleA, Twoby1plotA, ncol=1, rel_heights=c(0.1, 1.5))
+ Twoby1plotA <- plot_grid(p1a, p2a, labels = c("a","b"), ncol = 1)
+ #Twoby1plotA_t <- plot_grid(titleA, Twoby1plotA, ncol=1, rel_heights=c(0.1, 1.5))
 
- Twoby1plotA_t <- plot_grid(titleA, p1a, p2a, ncol=1, rel_heights=c(0.1, 1, 1))
+ #Twoby1plotA_t <- plot_grid(titleA, p1a, p2a, ncol=1, rel_heights=c(0.1, 1, 1))
  
   
- ggsave(Twoby1plotA_t, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ED_spline_birth_order.png"), width=7, height=5)
+ ggsave(Twoby1plotA, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ED_spline_birth_order.png"), width=7, height=5)
  
  
  

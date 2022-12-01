@@ -56,31 +56,17 @@ ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-fact
 
 
 #Figure 4
-#p_lagwhz <- readRDS(paste0(BV_dir,"/figures/plot objects/risk factor/fig-WLZ-quart-stunt-CI.rds"))
 p_earlywast <- readRDS(paste0(BV_dir,"/figures/plot-objects/risk-factor/fig-wasting-prior-to-stunting.rds"))
 plotdf2 <- readRDS(paste0(BV_dir,"/figures/risk-factor/figure-data/fig-wasting-prior-to-stunting.rds"))
-
-
 plen_lagwhz <- readRDS(paste0(BV_dir,"/figures/plot-objects/risk-factor/fig-WLZ-quart-len-vel.rds"))
-
-
-#load("C:/Users/andre/Documents/HBGDki/ki-longitudinal-manuscripts/results/rf_mortality_plot_objects.Rdata")
 pmort <- readRDS(paste0(BV_dir,"/results/rf_mort+morb-no-overlap_plots-seperated_objects.RDS"))
 fig4a <- plot_grid(plen_lagwhz, p_earlywast, labels = "auto", ncol = 2, align = 'v', axis = 'l', rel_widths=c(2,1))
-# fig4b <- plot_grid(p2, p3, p, p1, labels = c("C","D","E","F"), ncol = 2) #, align = 'v', axis = 'l')
-# fig4 <- plot_grid(fig4a, fig4b, labels = c("",""), ncol = 1, rel_heights = c(1,2))
 
-# pmort_comb <- plot_grid(pmort[[1]], pmort[[2]], labels = c("c","d"), ncol = 2, align = 'v', axis = 'l', rel_widths=c(1,1.5))
-# pmort_comb <- plot_grid(pmort[[1]], blank, pmort[[2]], labels = c("c","","d"), nrow = 1, align = 'v', axis = 'l', rel_widths=c(1, 0.5, 1.5))
 
-#pmort_comb = grid.arrange(pmort[[1]], blank, pmort[[2]],  nrow = 1, widths = c(1, 0, 1.25))
-#pmort_comb = grid.arrange(pmort[[2]], blank, pmort[[1]],  nrow = 1, widths = c(1.5, 0, 1))
 pmort_comb = plot_grid(pmort[[2]], pmort[[1]], labels = c("c","d"),  nrow = 1, align = 'v', axis = 'l', rel_widths = c(1.5, 1))
-
-
 fig4  <- plot_grid(fig4a, pmort_comb, labels = c("",""), ncol = 1, rel_heights = c(1,1), align = 'h', axis = 'l')
-ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig4.png"), width=18.3, height=9)
-ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig4_alt.png"), width=18.3/1.25, height=9/1.25)
+
+ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig4.png"), width=18.3/1.25, height=9/1.25)
 
 
 

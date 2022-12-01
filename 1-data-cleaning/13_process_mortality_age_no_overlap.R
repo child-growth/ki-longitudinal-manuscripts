@@ -124,7 +124,7 @@ d <- d %>% arrange(studyid, country, subjid, agedays) %>%
     ever_wast_uwt = max(cum_wast_uwt),
     ever_co = max(cum_co)
   )
-
+head(d)
 
 #drop studies with <5 deaths
 d <- d %>% group_by(studyid, country) %>% filter(sum(dead, na.rm=T)>4)

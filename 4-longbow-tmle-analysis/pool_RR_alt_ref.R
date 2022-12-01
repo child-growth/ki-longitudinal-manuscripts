@@ -9,15 +9,21 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% 
-  filter(type=="RR", intervention_variable!="nhh",intervention_variable!="nrooms",intervention_variable!="sga", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
+  filter(type=="RR", #intervention_variable!="nhh",intervention_variable!="nrooms",
+         intervention_variable!="sga", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
 unique(dfull$intervention_variable)
+
+dfull %>% filter(intervention_variable=="nrooms")
+dfull %>% filter(intervention_variable=="nhh")
 
 
 #get parity, nhh, and nrooms
-bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-11-11.RDS")) %>% 
+bin_primary_alt_ref <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_2022-11-30.RDS")) %>% 
   filter( agecat=="0-24 months"|agecat=="0-24 months (no birth st.)"|agecat=="0-24 months (no birth wast)", (intervention_variable=="parity")|intervention_variable=="nhh"|intervention_variable=="nrooms"|intervention_variable=="sga")
 
-bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-11-11.RDS")) 
+bin_primary_alt_ref%>% filter(intervention_variable=="nrooms")
+
+bin_primary_alt_ref_ns <- readRDS(paste0(res_dir, "rf results/raw longbow results/results_results_bin_primary_alt_ref_obs_counts_2022-11-30.RDS")) 
 bin_primary_alt_ref_ns_parity <- bin_primary_alt_ref_ns %>% 
   filter( agecat=="0-24 months", !is.na(parity)) %>%
   group_by(studyid, country, parity) %>% summarise(min_n_cell=min(n_cell), n_cell=n_cell[1], n=n[1]) %>% rename(intervention_level=parity) %>% mutate(intervention_variable="parity")

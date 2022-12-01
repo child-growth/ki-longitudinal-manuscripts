@@ -97,7 +97,9 @@ X_vector_sev <- c("sstunt","swast","sunderwt","sstunt_suwt","swast_suwt","sev_co
 # Wvars=Wvars
 # V=NULL
 # no_exp_overlap=T
-# 
+
+head(d)
+
 res_temp <- run_cox_meta(df=d, X_vector="swast", Y="dead", Wvars=Wvars, V=NULL, agecat=NULL, no_exp_overlap=T)
 
 

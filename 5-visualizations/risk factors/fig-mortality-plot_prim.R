@@ -67,7 +67,7 @@ dHR <- dHR  %>%
   dplyr::filter(cgf_cat != "Wasted (MUAC)", 
                 cgf_cat != "Sev. wasted (MUAC)") %>%
   filter(!grepl("ever_",X), method=="RE"|is.na(method), 
-          is.na(region)|is.na(method), agecat=="overall", adj==0)
+          is.na(region)|is.na(method), agecat=="overall", adj==0, is.na(sex))
 
 
 unique(dHR$X)
@@ -102,6 +102,7 @@ dHR <- dHR[ , !(names(dHR) %in% dropped)]
 table(dHR$pooled)
 pmort_data_cohort <- dHR %>% filter(pooled==0)
 p_prim_pooled  <- dHR %>% filter(pooled==1) %>% arrange(RR)
+dim(p_prim_pooled)
 p_prim_pooled
 
 p_prim_pooled %>% select(Measure, RR, RR.CI1, RR.CI2)
@@ -295,9 +296,9 @@ p_flurry <- ggplot(p_data_pooled, aes(x=cgf_cat)) +
         panel.spacing = unit(0, "lines"),
         plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        text = element_text(size=16), 
+        text = element_text(size=16),  strip.text=element_text(size=14, vjust=0.8),
         legend.position = "none") + 
-  facet_wrap(~outcome_variabl, ncol=3, strip.position = "bottom") +
+  facet_wrap(~outcome_variable, ncol=3, strip.position = "bottom") +
   coord_flip(ylim=c(0.4,16))
 p_flurry
 
@@ -326,7 +327,7 @@ pmort_flurry <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative haza
         panel.spacing = unit(0, "lines"),
         plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        text = element_text(size=16), 
+        text = element_text(size=16),  strip.text=element_text(size=14, vjust=0.8),
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=1, strip.position = "bottom") +
   coord_flip(ylim=c(0.4,16))
@@ -352,7 +353,7 @@ pmorb_flurry <- ggplot(p_data_pooled %>% filter(outcome_variable!="Relative haza
         panel.spacing = unit(0, "lines"),
         plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        text = element_text(size=16), 
+        text = element_text(size=16),  strip.text=element_text(size=14, vjust=0.8),
         #axis.text.y = element_blank(),
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=2, strip.position = "bottom") +
@@ -383,7 +384,7 @@ pmort <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative hazard of\n
         panel.spacing = unit(0, "lines"),
         plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        text = element_text(size=16), 
+        text = element_text(size=16),  strip.text=element_text(size=14, vjust=0.8),
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=1, strip.position = "bottom") +
   coord_flip(ylim=c(0.4,16))
@@ -404,7 +405,7 @@ p_co <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative risk of conc
         panel.spacing = unit(0, "lines"),
         plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        text = element_text(size=16), 
+        text = element_text(size=16),  strip.text=element_text(size=14, vjust=0.8),
         #axis.text.y = element_blank(),
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=2, strip.position = "bottom") +
@@ -427,7 +428,7 @@ p_pers <- ggplot(p_data_pooled %>% filter(outcome_variable=="Relative risk of\np
         panel.spacing = unit(0, "lines"),
         plot.title = element_text(hjust = 0.5),
         strip.background = element_blank(),
-        text = element_text(size=16), 
+        text = element_text(size=16),  strip.text=element_text(size=14, vjust=0.8),
         #axis.text.y = element_blank(),
         legend.position = "none") + 
   facet_wrap(~outcome_variable, ncol=2, strip.position = "bottom") +
