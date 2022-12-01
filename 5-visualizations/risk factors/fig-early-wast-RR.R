@@ -117,7 +117,7 @@ p_earlywast <- ggplot(plotdf2 %>% filter(pooled==1), aes(x=Xvar)) +
         legend.position="none",
         axis.text.y = element_text(size=12),
         strip.text.x = element_text(size=14),
-        axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
+        axis.text.x = element_text(size=12), #, angle = 20, hjust = 1),
         panel.spacing = unit(0, "lines")) 
 
 ggsave(p_earlywast, file=paste0(BV_dir,"/figures/risk-factor/fig-wasting-prior-to-stunting.png"), height=4, width=4)

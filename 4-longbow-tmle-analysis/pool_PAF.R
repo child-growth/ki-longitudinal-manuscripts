@@ -14,7 +14,14 @@ d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
 head(d)
 
 
-bin_primary_alt_ref <- readRDS(paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds"))
+bin_primary_alt_ref <- readRDS(paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds")) #%>% filter(intervention_variable!="sga")
+unique(d$intervention_variable)
+unique(bin_primary_alt_ref$intervention_variable)
+
+d %>% filter(intervention_variable=="gagebrth",outcome_variable=="ever_stunted", type=="RR",intervention_level==baseline_level)
+bin_primary_alt_ref %>% filter(intervention_variable=="gagebrth",outcome_variable=="ever_stunted", type=="RR")
+
+
 d <- bind_rows(d, bin_primary_alt_ref)
 unique(d$intervention_variable)
 # # #d <- d %>% filter(intervention_variable=="parity" & outcome_variable=="ever_stunted", type=="PAF", agecat=="6-24 months")
