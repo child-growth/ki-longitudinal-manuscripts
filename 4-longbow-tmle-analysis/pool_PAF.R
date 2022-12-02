@@ -8,11 +8,11 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 
 #Load data
-d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
+d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) #%>%
   filter( intervention_variable!="nhh",intervention_variable!="nrooms",intervention_variable!="parity")
 
 head(d)
-
+d %>% filter(intervention_variable=="nrooms", outcome_variable=="ever_stunted")
 
 bin_primary_alt_ref <- readRDS(paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds")) #%>% filter(intervention_variable!="sga")
 unique(d$intervention_variable)
@@ -23,10 +23,6 @@ bin_primary_alt_ref %>% filter(intervention_variable=="gagebrth",outcome_variabl
 
 
 d <- bind_rows(d, bin_primary_alt_ref)
-unique(d$intervention_variable)
-# # #d <- d %>% filter(intervention_variable=="parity" & outcome_variable=="ever_stunted", type=="PAF", agecat=="6-24 months")
-# d <- d %>% filter(intervention_variable=="nhh" & outcome_variable=="ever_wasted", agecat=="0-24 months")
-# d
 
 
 #drop sparse outcomes
@@ -57,7 +53,6 @@ RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, base
 RMAest$region <- "Pooled"
 RMAest
 
-RMAest %>% filter(intervention_variable=="sga")
 
 
 RMAest_region <- d %>% group_by(region, intervention_variable, agecat, intervention_level, baseline_level, outcome_variable,n_cell,n) %>%
@@ -79,9 +74,6 @@ Prev_est_raw <- rbind(Prev_est, Prev_est_region)
 Prev_est_raw <- Prev_est_raw %>% subset(., select = - c(CI1, CI2, Nstudies, baseline_level, intervention_level))
 
 
-Prev_est[Prev_est$intervention_variable=="nhh",]
-RMAest[RMAest$intervention_variable=="nhh" &!is.na(RMAest$n),]
-
 
 
 
@@ -99,7 +91,7 @@ summary(df2$PAF)
 summary(df2$PAF.CI1)
 summary(df2$PAF.CI2)
 
-df2[df2$intervention_variable=="nhh",]
+df2[df2$intervention_variable=="nrooms",]
 
 
 # #------------------------------------------
@@ -130,7 +122,7 @@ df2[df2$intervention_variable=="nhh",]
 
 
 
-RMAest <- df2
+RMAest <- df2 %>% filter(!(intervention_variable=="nrooms" & intervention_level =="1"))
 
 
 #Clean up dataframe for plotting
@@ -147,5 +139,5 @@ RMAest_clean <- RMAest_clean %>% filter(!is.na(region))
 # save pooled PAF's
 saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds"))
 
-df <- RMAest_clean %>% filter(intervention_variable=="sga")
+df <- RMAest_clean %>% filter(intervention_variable=="nrooms",outcome_variable =="ever_stunted",agecat=="0-24 months")
 df
