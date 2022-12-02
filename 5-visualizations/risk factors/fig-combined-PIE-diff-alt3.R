@@ -102,6 +102,8 @@ df$RFlabel[df$RFlabel=="Diarrhea <6 mo. (% days)"] <- "Diarrhea (% days)"
 df$RFlabel[df$RFlabel=="Gestational age at birth"] <- "Gestational age"
 df$RFlabel[df$RFlabel=="HH wealth"] <- "HH wealth quartile"
 
+df$RFlabel[df$RFlabel=="Small-for-gestational age"] <- "Small for gestational age"
+df$RFlabel_ref[df$RFlabel_ref =="Small-for-gestational age, ref: SGA" ] <- "Small for gestational age, ref: SGA" 
 
 
 #add units to intervention variables
@@ -253,8 +255,7 @@ variable_labels = c(
     "<span style='color:#89b4bc'>Early term</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "No hdlvry" =
     "<span style='color:#89b4bc'>No</span>", "3+ parity" = "<span style='color:#89b4bc'>3+</span>", "2 parity" =
     "<span style='color:#89b4bc'>2</span>", "1 parity" = "<span style='color:#89b4bc'>1</span>", "SGA sga" =
-    "<span style='color:#89b4bc'>SGA</span>", "Not SGA sga" = "<span style='color:#89b4bc'>Not SGA</span>", "Yes vagbrth" =
-    "<span style='color:#89b4bc'>Yes</span>", "No vagbrth" = "<span style='color:#89b4bc'>No</span>", "2+ nchldlt5" =
+    "<span style='color:#89b4bc'>SGA</span>", "Not SGA sga" = "<span style='color:#89b4bc'>Not SGA</span>", "2+ nchldlt5" =
     "<span style='color:#89b4bc'>2+</span>", "1 nchldlt5" = "<span style='color:#89b4bc'>1</span>", "8+ nhh" =
     "<span style='color:#89b4bc'>8+</span>", "6-7 nhh" = "<span style='color:#89b4bc'>6-7</span>", "3 or less nhh" =
     "<span style='color:#89b4bc'>3 or less</span>", "4-5 nhh" = "<span style='color:#89b4bc'>4-5</span>", "1 nrooms" =
@@ -306,8 +307,7 @@ variable_labels = c(
     "<span style='color:#89b4bc'>Early term</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "No hdlvry" =
     "<span style='color:#89b4bc'>No</span>", "3+ parity" = "<span style='color:#89b4bc'>3+</span>", "2 parity" =
     "<span style='color:#89b4bc'>2</span>", "1 parity" = "<span style='color:#89b4bc'>1</span>", "SGA sga" =
-    "<span style='color:#89b4bc'>SGA</span>", "Not SGA sga" = "<span style='color:#89b4bc'>Not SGA</span>", "Yes vagbrth" =
-    "<span style='color:#89b4bc'>Yes</span>", "No vagbrth" = "<span style='color:#89b4bc'>No</span>", "2+ nchldlt5" =
+    "<span style='color:#89b4bc'>SGA</span>", "Not SGA sga" = "<span style='color:#89b4bc'>Not SGA</span>", "2+ nchldlt5" =
     "<span style='color:#89b4bc'>2+</span>", "1 nchldlt5" = "<span style='color:#89b4bc'>1</span>", "8+ nhh" =
     "<span style='color:#89b4bc'>8+</span>", "3 or less nhh" = "<span style='color:#89b4bc'>3 or less</span>", "6-7 nhh" =
     "<span style='color:#89b4bc'>6-7</span>", "4-5 nhh" = "<span style='color:#89b4bc'>4-5</span>", "1 nrooms" =
