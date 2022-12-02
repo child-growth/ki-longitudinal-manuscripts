@@ -33,6 +33,36 @@ main_color <- "#287d8e"
 #----------------------------------------------------------------------------------
 
 
+<<<<<<< HEAD
+# CIR
+CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds")) %>% mutate(parameter="CIR")
+CIR_raw %>% filter(intervention_variable=="nrooms", outcome_variable=="ever_stunted")
+
+#Prev
+#prev_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="Prev") %>% filter(agecat=="24 months",intervention_variable!="perdiar24")
+#prev_raw <-NULL
+
+#PAF
+paf_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds")) %>% mutate(parameter="PAF")
+paf_raw <- paf_raw %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")),
+                    outcome_variable %in% c("ever_stunted","ever_wasted")) %>% as.data.frame()
+
+paf_raw %>% filter(intervention_variable == "sga")
+
+#rename point estimates and CI's for combining
+paf_raw <- paf_raw %>% subset(., select= -c(PAR, CI1, CI2)) %>% rename(est=PAF, CI1=PAF.CI1, CI2=PAF.CI2)
+CIR_raw <- CIR_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
+summary(CIR_raw$est)
+#prev_raw <- prev_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
+
+df_full <- bind_rows(paf_raw, CIR_raw#, prev_raw
+                     )
+
+saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
+
+
+df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled")
+=======
 # # CIR
 # CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds")) %>% mutate(parameter="CIR")
 # 
@@ -61,6 +91,7 @@ main_color <- "#287d8e"
 
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled") %>% distinct( parameter, outcome_variable, intervention_variable, intervention_level, baseline_level,est,    CI1,   CI2, .keep_all = T)
+>>>>>>> 332fc04964284f1cb8f5d8293299b37134f359ee
 
 df_full %>% filter(intervention_variable=="sga")
 df_full <- df_full %>% filter(!(intervention_variable=="parity" & baseline_level=="1" & parameter=="CIR"), intervention_variable!="safeh20")
