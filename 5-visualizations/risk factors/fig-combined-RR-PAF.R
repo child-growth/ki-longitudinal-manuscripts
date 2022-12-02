@@ -57,8 +57,10 @@ saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled") %>% distinct( parameter, outcome_variable, intervention_variable, intervention_level, baseline_level,est,    CI1,   CI2, .keep_all = T)
 
-df_full %>% filter(intervention_variable=="sga")
-df_full <- df_full %>% filter(!(intervention_variable=="parity" & baseline_level=="1" & parameter=="CIR"), intervention_variable!="safeh20")
+df_full %>% filter(intervention_variable=="nhh", outcome_variable=="ever_stunted")
+df_full <- df_full %>% filter(!(intervention_variable=="parity" & baseline_level=="1" & parameter=="CIR"),
+                              !(intervention_variable=="nhh" & baseline_level=="3 or less" & parameter=="CIR"),
+                              intervention_variable!="safeh20")
 
 table(df_full$intervention_variable)
 table(df_full$agecat)
@@ -95,18 +97,19 @@ df$intervention_level[df$intervention_level=="None" & df$intervention_variable %
 df$intervention_level[df$intervention_level=="None"] <- "No"
 df$baseline_level[df$baseline_level=="None"] <- "No"
 
-df2 <- df %>% filter(intervention_variable=="nhh")
-df$baseline_level[df$intervention_variable=="nhh" & df$parameter!="PAF"] <- "<=5"
-df$intervention_level[df$intervention_variable=="nhh" & df$parameter!="PAF"]<- ">5"
-df$baseline_level[df$intervention_variable=="nhh" & df$parameter=="PAF"] <- "<=5"
-df$intervention_level[df$intervention_variable=="nhh" & df$parameter=="PAF"] <- "<=5"
+# df2 <- df %>% filter(intervention_variable=="nhh")
+# df$baseline_level[df$intervention_variable=="nhh" & df$parameter!="PAF"] <- "<=5"
+# df$intervention_level[df$intervention_variable=="nhh" & df$parameter!="PAF"]<- ">5"
+# df$baseline_level[df$intervention_variable=="nhh" & df$parameter=="PAF"] <- "<=5"
+# df$intervention_level[df$intervention_variable=="nhh" & df$parameter=="PAF"] <- "<=5"
 
 
 df$intervention_level[df$intervention_variable=="birthwt" & df$parameter=="CIR" ] <- "<2500g" 
 df$baseline_level[df$baseline_level =="WealthQ1"] <- "Q1"
 df$RFlabel_ref[df$RFlabel_ref =="HH wealth, ref: WealthQ1"] <- "HH wealth, ref: Q1"
 df$RFlabel_ref[df$RFlabel_ref =="Vaginal birth, ref: Yes" ] <- "Vaginal birth, ref: Yes" 
-
+df$RFlabel[df$RFlabel=="Small-for-gestational age"] <- "Small for gestational age"
+df$RFlabel_ref[df$RFlabel_ref =="Small-for-gestational age, ref: SGA" ] <- "Small for gestational age, ref: SGA" 
 
 
 df$RFlabel[df$RFlabel=="Diarrhea <24 mo.  (% days)"] <- "Diarrhea (% days)"
