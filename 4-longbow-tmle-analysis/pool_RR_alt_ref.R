@@ -13,7 +13,7 @@ dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
          intervention_variable!="sga", !(intervention_variable=="parity" & outcome_variable=="ever_wasted"))
 unique(dfull$intervention_variable)
 
-dfull %>% filter(intervention_variable=="nrooms")
+dfull %>% filter(intervention_variable=="nrooms", outcome_variable=="ever_stunted")
 dfull %>% filter(intervention_variable=="nhh")
 
 
@@ -59,7 +59,7 @@ unique(d$intervention_variable)
 
 
 #drop morbidity and mortality analysis
-d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")
+d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624", !(intervention_variable=="nrooms" & baseline_level=="1"))
 
 
 #Drop reference levels and sparse estimates
@@ -104,5 +104,5 @@ RMAest_clean$RFlabel_ref <- paste0(RMAest_clean$RFlabel, ", ref: ", RMAest_clean
 #Save cleaned data
 saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds"))
 
-df <- RMAest_clean %>% filter(intervention_variable=="sga")
+df <- RMAest_clean %>% filter(intervention_variable=="nrooms", outcome_variable=="ever_stunted", region=="Pooled", agecat=="0-24 months")
 df
