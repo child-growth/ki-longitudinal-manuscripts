@@ -56,6 +56,7 @@ head(df_full)
 
 df_full %>% filter(intervention_variable=="predexfd6")
 df_full %>% filter(intervention_variable=="perdiar24")
+df_full %>% filter(intervention_variable=="nrooms")
 
 # ate %>% filter(intervention_variable=="predexfd6", agecat=="6 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
 # ate %>% filter(intervention_variable=="predexfd6", agecat=="24 months",outcome_variable %in% c("haz","whz"), region=="Pooled")

@@ -33,6 +33,7 @@ main_color <- "#287d8e"
 #----------------------------------------------------------------------------------
 
 
+<<<<<<< HEAD
 # CIR
 CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds")) %>% mutate(parameter="CIR")
 CIR_raw %>% filter(intervention_variable=="nrooms", outcome_variable=="ever_stunted")
@@ -61,6 +62,36 @@ saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled")
+=======
+# # CIR
+# CIR_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results_alt_ref.rds")) %>% mutate(parameter="CIR")
+# 
+# 
+# #Prev
+# #prev_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds")) %>% mutate(parameter="Prev") %>% filter(agecat=="24 months",intervention_variable!="perdiar24")
+# #prev_raw <-NULL
+# 
+# #PAF
+# paf_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds")) %>% mutate(parameter="PAF")
+# paf_raw <- paf_raw %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")),
+#                     outcome_variable %in% c("ever_stunted","ever_wasted")) %>% as.data.frame()
+# 
+# paf_raw %>% filter(intervention_variable == "sga")
+# 
+# #rename point estimates and CI's for combining
+# paf_raw <- paf_raw %>% subset(., select= -c(PAR, CI1, CI2)) %>% rename(est=PAF, CI1=PAF.CI1, CI2=PAF.CI2)
+# CIR_raw <- CIR_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
+# summary(CIR_raw$est)
+# #prev_raw <- prev_raw %>% rename(est=RR, CI1=RR.CI1, CI2=RR.CI2)
+# 
+# df_full <- bind_rows(paf_raw, CIR_raw#, prev_raw
+#                      )
+# 
+# saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
+
+
+df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled") %>% distinct( parameter, outcome_variable, intervention_variable, intervention_level, baseline_level,est,    CI1,   CI2, .keep_all = T)
+>>>>>>> 332fc04964284f1cb8f5d8293299b37134f359ee
 
 df_full %>% filter(intervention_variable=="sga")
 df_full <- df_full %>% filter(!(intervention_variable=="parity" & baseline_level=="1" & parameter=="CIR"), intervention_variable!="safeh20")
@@ -69,10 +100,7 @@ table(df_full$intervention_variable)
 table(df_full$agecat)
 table(df_full$intervention_variable,df_full$parameter)
 
-df_full$n[df_full$intervention_variable=="sga"]
-df_full$n_cell[df_full$intervention_variable=="sga"]
-df_full$parameter[df_full$intervention_variable=="sga"]
-df_full$est[df_full$intervention_variable=="sga"]
+df_full %>% filter(intervention_variable=="nrooms")
 
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
@@ -161,6 +189,8 @@ df <- df %>% filter(region=="Pooled") %>%
   mutate(RFlabel_ref = paste0(RFlabel,"\n(ref.: ", baseline_level,")"))
 unique(df$RFlabel_ref)
 
+
+
 #Subset to needed variables
 df <- df %>% subset(., select = c(parameter, outcome_variable, intervention_variable, intervention_level, baseline_level, est, CI1, CI2, RFlabel, RFlabel_ref,  RFtype, n_cell, n, Nstudies)) %>% 
   filter(!is.na(est)) 
@@ -168,9 +198,13 @@ df <- df %>% subset(., select = c(parameter, outcome_variable, intervention_vari
 
 
 #Add reference level
-df_ref <- df %>% ungroup() %>% distinct(parameter, intervention_variable, baseline_level, outcome_variable, RFlabel, RFlabel_ref,  RFtype, n_cell, n, Nstudies) %>%
+#df_ref <- df %>% ungroup() %>% distinct(parameter, intervention_variable, baseline_level, outcome_variable, RFlabel, RFlabel_ref,  RFtype, n_cell, n, Nstudies) %>%
+df_ref <- df %>% ungroup() %>% distinct(parameter, intervention_variable, baseline_level, outcome_variable, RFlabel, RFlabel_ref,  RFtype) %>%
   mutate(intervention_level=baseline_level, est=1, CI1=1, CI2=1, reflabel="ref") %>% filter(parameter=="CIR")
 df <- bind_rows(df, df_ref)
+
+df %>% filter(intervention_variable=="gagebrth", intervention_level==baseline_level)
+
 
 #temp 
 df <- df %>% filter(!(intervention_variable=="parity" & parameter=="CIR" & intervention_level=="2" & Nstudies=="8"))
@@ -251,7 +285,7 @@ variable_labels = c(
   "51% shifted to Female sex" = "51% shifted to Female", "55% shifted to >=50 birthlen" =
     "55% shifted to \u226550", "15% shifted to >= 2500 g birthwt" = "15% shifted to \u2265 2500 g", "45% shifted to Full/late term gagebrth" =
     "45% shifted to Full/late term", "49% shifted to No hdlvry" = "49% shifted to No", "83% shifted to 2 parity" =
-    "83% shifted to 2", "NA% shifted to Not SGA sga" = "NA% shifted to Not SGA", "39% shifted to 1 nchldlt5" =
+    "83% shifted to 2", "36% shifted to Not SGA sga" = "36% shifted to Not SGA", "39% shifted to 1 nchldlt5" =
     "39% shifted to 1", "74% shifted to Q4 hhwealth_quart" = "74% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
     "50% shifted to Food Secure", "28% shifted to Yes impsan" = "28% shifted to Yes", "83% shifted to Yes impfloor" =
     "83% shifted to Yes", "33% shifted to Yes cleanck" = "33% shifted to Yes", "75% shifted to <=5 nhh" =
@@ -485,8 +519,8 @@ p_laz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                    rel_heights=relheights )
 
 ylims=c(-5, 40)
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  facet_label_pos= -20, xaxis=F, ylab="", yaxis=F)
-p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims, facet_label_pos= -45, xaxis=F, ylab="", yaxis=F)
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  facet_label_pos= -18, xaxis=F, ylab="", yaxis=F)
+p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims, facet_label_pos= -47, xaxis=F, ylab="", yaxis=F)
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims,  facet_label_pos= -15, xaxis=F, ylab="", yaxis=F)
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household &\nEnvironmental Characteristics",], ylimits=ylims,  ylab="Population attributable fraction (%)", legend=F, xaxis=T, facet_label_pos= -40, yaxis=F)
 
@@ -510,10 +544,15 @@ ggsave(p_laz, file=paste0(here::here(),"/figures/EDfig6_stunt_PAF.png"), width=6
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 df <- df %>% filter(!(intervention_variable=="perdiar6" & parameter!="CIR" & outcome_variable == "ever_wasted"))
+df
+
+head(df)
+df2 <- df %>% filter(intervention_level== baseline_level)
+
 
 #p_wlz <- plot_combined_paf_RR(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
 ylims=c(0.8, 1.5)
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -50, xaxis=F, ylab="")
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -47, xaxis=F, ylab="")
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=F, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -15, xaxis=F, ylab="")
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household &\nEnvironmental Characteristics",], ylimits=ylims,  outcome_var="ever_wasted", legend=F, xaxis=T, facet_label_pos= -40)
