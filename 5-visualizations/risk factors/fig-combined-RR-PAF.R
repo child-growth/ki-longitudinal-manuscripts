@@ -41,7 +41,6 @@ paf_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds")) 
 paf_raw <- paf_raw %>% filter(!(intervention_variable %in% c("anywast06","enstunt","enwast","pers_wast")),
                     outcome_variable %in% c("ever_stunted","ever_wasted")) %>% as.data.frame()
 
-paf_raw %>% filter(intervention_variable == "sga")
 
 #rename point estimates and CI's for combining
 paf_raw <- paf_raw %>% subset(., select= -c(PAR, CI1, CI2)) %>% rename(est=PAF, CI1=PAF.CI1, CI2=PAF.CI2)
