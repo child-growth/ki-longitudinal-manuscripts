@@ -15,7 +15,7 @@ d <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>%
 bin_primary_alt_ref <- readRDS(paste0(BV_dir,"/results/rf results/bin_primary_alt_ref_subset.rds")) #%>% filter(intervention_variable!="sga")
 unique(d$intervention_variable)
 unique(bin_primary_alt_ref$intervention_variable)
-bin_primary_alt_ref %>% filter(intervention_variable=="nrooms", outcome_variable=="ever_stunted")
+bin_primary_alt_ref %>% filter(intervention_variable=="nhh", outcome_variable=="ever_wasted") %>% as.data.frame()
 
 
 d %>% filter(intervention_variable=="gagebrth",outcome_variable=="ever_stunted", type=="RR",intervention_level==baseline_level)
