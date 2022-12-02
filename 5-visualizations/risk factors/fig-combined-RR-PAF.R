@@ -56,7 +56,6 @@ saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled") %>% distinct( parameter, outcome_variable, intervention_variable, intervention_level, baseline_level,est,    CI1,   CI2, .keep_all = T)
 
-df_full %>% filter(intervention_variable=="nhh", outcome_variable=="ever_stunted")
 df_full <- df_full %>% filter(!(intervention_variable=="parity" & baseline_level=="1" & parameter=="CIR"),
                               !(intervention_variable=="nhh" & baseline_level=="3 or less" & parameter=="CIR"),
                               intervention_variable!="safeh20")
