@@ -142,3 +142,6 @@ saveRDS(RMAest_clean, paste0(BV_dir,"/results/rf results/pooled_PAF_results.rds"
 
 df <- RMAest_clean %>% filter(intervention_variable=="nrooms",outcome_variable =="ever_stunted",agecat=="0-24 months")
 df
+
+df <- RMAest_clean %>% filter(intervention_variable=="nhh",outcome_variable =="ever_stunted",agecat=="0-24 months")
+df
