@@ -96,7 +96,7 @@ for(i in 1:ncol(d)){
 # )
 
 #d$nhh <- factor(d$nhh, levels=c("8+","6-7","4-5","3 or less"))
-d$nhh <- factor(d$nhh, levels=rev(c("8+","6-7","4-5","3 or less")))
+d$nhh <- factor(d$nhh, levels=c("6-7","8+","4-5","3 or less"))
 d$nrooms <- factor(d$nrooms, levels=rev(c("1","2","4+","3")))
 d$sga <- factor(d$sga, levels=c("Not SGA","SGA"))
 d$parity <- factor(d$parity, levels=c("2","1","3+"))
@@ -120,7 +120,7 @@ for(i in 1:ncol(d)){
 #   nrooms = factor(case_when(nrooms=="1" ~ "1",   nrooms=="2"|nrooms=="3"|nrooms=="4+" ~ "2+"), levels = c("1", "2+"))
 # )
 #d$nhh <- factor(d$nhh, levels=c("8+","6-7","4-5","3 or less"))
-d$nhh <- factor(d$nhh, levels=rev(c("8+","6-7","4-5","3 or less")))
+d$nhh <- factor(d$nhh, levels=c("6-7","8+","4-5","3 or less"))
 d$nrooms <- factor(d$nrooms, levels=rev(c("1","2","4+","3")))
 d$sga <- factor(d$sga, levels=c("Not SGA","SGA"))
 d$parity <- factor(d$parity, levels=c("2","1","3+"))

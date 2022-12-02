@@ -81,7 +81,6 @@ d <- mark_region(d)
 
 unique(d$intervention_variable)
 
-d <- d %>% filter(outcome_variable=="ever_wasted", intervention_variable=="nhh", agecat=="0-24 months", baseline_level=="3 or less")
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable, n_cell, n, adjusted) %>%
   do(poolRR(.)) %>% as.data.frame()
