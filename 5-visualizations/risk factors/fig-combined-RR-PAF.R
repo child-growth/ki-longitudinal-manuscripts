@@ -57,7 +57,10 @@ saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf_paf.RDS"))
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf_paf.RDS")) %>% filter( region=="Pooled") %>% distinct( parameter, outcome_variable, intervention_variable, intervention_level, baseline_level,est,    CI1,   CI2, .keep_all = T)
 
 df_full <- df_full %>% filter(!(intervention_variable=="parity" & baseline_level=="1" & parameter=="CIR"),
-                              !(intervention_variable=="nhh" & baseline_level=="3 or less" & parameter=="CIR"),
+                              !(intervention_variable=="nhh" & baseline_level=="3 or less" & parameter=="CIR" & outcome_variable=="ever_stunted"),
+                              !(intervention_variable=="nhh" & baseline_level=="3 or less" & parameter=="CIR" & outcome_variable=="ever_wasted"),
+                              !(intervention_variable=="nhh" & baseline_level=="8+" & parameter=="CIR" & outcome_variable=="ever_wasted"),
+                              !(intervention_variable=="nrooms" & baseline_level=="4+" & parameter=="CIR"),
                               intervention_variable!="safeh20")
 
 table(df_full$intervention_variable)
@@ -246,16 +249,15 @@ unique(df$intervention_level_f2)
 cat(paste(unique(paste0("\"",df$intervention_level_f2,"\"=\"",df$intervention_level_f,"\"")), collapse=","), "\n")
 
 
-
 variable_labels = c(
   "51% shifted to Female sex" = "51% shifted to Female", "55% shifted to >=50 birthlen" =
     "55% shifted to \u226550", "15% shifted to >= 2500 g birthwt" = "15% shifted to \u2265 2500 g", "45% shifted to Full/late term gagebrth" =
     "45% shifted to Full/late term", "49% shifted to No hdlvry" = "49% shifted to No", "83% shifted to 2 parity" =
     "83% shifted to 2", "36% shifted to Not SGA sga" = "36% shifted to Not SGA", "39% shifted to 1 nchldlt5" =
-    "39% shifted to 1", "74% shifted to Q4 hhwealth_quart" = "74% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
+    "39% shifted to 1", "94% shifted to 8+ nhh" = "94% shifted to 8+", "94% shifted to 3 nrooms" =
+    "94% shifted to 3", "74% shifted to Q4 hhwealth_quart" = "74% shifted to Q4", "50% shifted to Food Secure hfoodsec" =
     "50% shifted to Food Secure", "28% shifted to Yes impsan" = "28% shifted to Yes", "83% shifted to Yes impfloor" =
-    "83% shifted to Yes", "33% shifted to Yes cleanck" = "33% shifted to Yes", "75% shifted to <=5 nhh" =
-    "75% shifted to \u22645", "74% shifted to 1 nrooms" = "74% shifted to 1", "41% shifted to [20-30) mage" =
+    "83% shifted to Yes", "33% shifted to Yes cleanck" = "33% shifted to Yes", "41% shifted to [20-30) mage" =
     "41% shifted to [20-30)", "89% shifted to >=35 fage" = "89% shifted to \u226535", "26% shifted to >=150 mhtcm" =
     "26% shifted to \u2265150", "4% shifted to >=162 fhtcm" = "4% shifted to \u2265162", "31% shifted to >=45 mwtkg" =
     "31% shifted to \u226545", "38% shifted to >=20 mbmi" = "38% shifted to \u226520", "6% shifted to 0 single" =
@@ -268,20 +270,22 @@ variable_labels = c(
     "<span style='color:#89b4bc'><2500g</span>", "Full or late term gagebrth" =
     "<span style='color:#89b4bc'>Full or late term</span>", "Preterm gagebrth" =
     "<span style='color:#89b4bc'>Preterm</span>", "Early term gagebrth" = "<span style='color:#89b4bc'>Early term</span>", "No hdlvry" =
-    "<span style='color:#89b4bc'>No</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "2 parity" =
-    "<span style='color:#89b4bc'>2</span>", "3+ parity" = "<span style='color:#89b4bc'>3+</span>", "1 parity" =
-    "<span style='color:#89b4bc'>1</span>", "Not SGA sga" = "<span style='color:#89b4bc'>Not SGA</span>", "SGA sga" =
-    "<span style='color:#89b4bc'>SGA</span>", "1 nchldlt5" = "<span style='color:#89b4bc'>1</span>", "2+ nchldlt5" =
-    "<span style='color:#89b4bc'>2+</span>", "Q4 hhwealth_quart" = "<span style='color:#89b4bc'>Q4</span>", "Q1 hhwealth_quart" =
-    "<span style='color:#89b4bc'>Q1</span>", "Q2 hhwealth_quart" = "<span style='color:#89b4bc'>Q2</span>", "Q3 hhwealth_quart" =
-    "<span style='color:#89b4bc'>Q3</span>", "Food Secure hfoodsec" = "<span style='color:#89b4bc'>Food Secure</span>", "Food Insecure hfoodsec" =
+    "<span style='color:#89b4bc'>No</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "3+ parity" =
+    "<span style='color:#89b4bc'>3+</span>", "1 parity" = "<span style='color:#89b4bc'>1</span>", "Not SGA sga" =
+    "<span style='color:#89b4bc'>Not SGA</span>", "SGA sga" = "<span style='color:#89b4bc'>SGA</span>", "1 nchldlt5" =
+    "<span style='color:#89b4bc'>1</span>", "2+ nchldlt5" = "<span style='color:#89b4bc'>2+</span>", "8+ nhh" =
+    "<span style='color:#89b4bc'>8+</span>", "4-5 nhh" = "<span style='color:#89b4bc'>4-5</span>", "6-7 nhh" =
+    "<span style='color:#89b4bc'>6-7</span>", "3 or less nhh" = "<span style='color:#89b4bc'>3 or less</span>", "3 nrooms" =
+    "<span style='color:#89b4bc'>3</span>", "2 nrooms" = "<span style='color:#89b4bc'>2</span>", "1 nrooms" =
+    "<span style='color:#89b4bc'>1</span>", "4+ nrooms" = "<span style='color:#89b4bc'>4+</span>", "Q4 hhwealth_quart" =
+    "<span style='color:#89b4bc'>Q4</span>", "Q1 hhwealth_quart" = "<span style='color:#89b4bc'>Q1</span>", "Q2 hhwealth_quart" =
+    "<span style='color:#89b4bc'>Q2</span>", "Q3 hhwealth_quart" = "<span style='color:#89b4bc'>Q3</span>", "Food Secure hfoodsec" =
+    "<span style='color:#89b4bc'>Food Secure</span>", "Food Insecure hfoodsec" =
     "<span style='color:#89b4bc'>Food Insecure</span>", "Mildly Food Insecure hfoodsec" =
     "<span style='color:#89b4bc'>Mildly Food Insecure</span>", "Yes impsan" =
     "<span style='color:#89b4bc'>Yes</span>", "No impsan" = "<span style='color:#89b4bc'>No</span>", "Yes impfloor" =
     "<span style='color:#89b4bc'>Yes</span>", "No impfloor" = "<span style='color:#89b4bc'>No</span>", "Yes cleanck" =
-    "<span style='color:#89b4bc'>Yes</span>", "No cleanck" = "<span style='color:#89b4bc'>No</span>", "<=5 nhh" =
-    "<span style='color:#89b4bc'>\u22645</span>", ">5 nhh" = "<span style='color:#89b4bc'>>5</span>", "1 nrooms" =
-    "<span style='color:#89b4bc'>1</span>", "2+ nrooms" = "<span style='color:#89b4bc'>2+</span>", "[20-30) mage" =
+    "<span style='color:#89b4bc'>Yes</span>", "No cleanck" = "<span style='color:#89b4bc'>No</span>", "[20-30) mage" =
     "<span style='color:#89b4bc'>[20-30)</span>", "<20 mage" = "<span style='color:#89b4bc'><20</span>", ">=30 mage" =
     "<span style='color:#89b4bc'>\u226530</span>", ">=35 fage" = "<span style='color:#89b4bc'>\u226535</span>", "<30 fage" =
     "<span style='color:#89b4bc'><30</span>", "[30-35) fage" = "<span style='color:#89b4bc'>[30-35)</span>", ">=150 mhtcm" =
@@ -297,11 +301,12 @@ variable_labels = c(
     "<span style='color:#89b4bc'>\u22642%</span>", ">2% perdiar6" = "<span style='color:#89b4bc'>>2%</span>", "Yes predexfd6" =
     "<span style='color:#89b4bc'>Yes</span>", "No predexfd6" = "<span style='color:#89b4bc'>No</span>", "63% shifted to >=50 birthlen" =
     "63% shifted to \u226550", "27% shifted to >= 2500 g birthwt" = "27% shifted to \u2265 2500 g", "48% shifted to Full/late term gagebrth" =
-    "48% shifted to Full/late term", "54% shifted to No hdlvry" = "54% shifted to No", "30% shifted to Yes impsan" =
+    "48% shifted to Full/late term", "54% shifted to No hdlvry" = "54% shifted to No", "91% shifted to 6-7 nhh" =
+    "91% shifted to 6-7", "95% shifted to 3 nrooms" = "95% shifted to 3", "30% shifted to Yes impsan" =
     "30% shifted to Yes", "85% shifted to Yes impfloor" = "85% shifted to Yes", "35% shifted to Yes cleanck" =
-    "35% shifted to Yes", "73% shifted to 1 nrooms" = "73% shifted to 1", "40% shifted to [20-30) mage" =
-    "40% shifted to [20-30)", "76% shifted to Yes earlybf" = "76% shifted to Yes", "30% shifted to Yes predexfd6" =
-    "30% shifted to Yes", "55% shifted to <=2% perdiar6" = "55% shifted to \u22642%"
+    "35% shifted to Yes", "40% shifted to [20-30) mage" = "40% shifted to [20-30)", "76% shifted to Yes earlybf" =
+    "76% shifted to Yes", "30% shifted to Yes predexfd6" = "30% shifted to Yes", "55% shifted to <=2% perdiar6" =
+    "55% shifted to \u22642%"
 )
 
 
@@ -468,14 +473,14 @@ plot_combined_paf_RR <- function(d, ylimits, facet_label_pos= -75, outcome_var="
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ylims=c(0.7, 3)
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims, facet_label_pos= -45, xaxis=F, ylab="")
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims, facet_label_pos= -40, xaxis=F, ylab="")
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims, facet_label_pos= -20, xaxis=F, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims, facet_label_pos= -15, xaxis=F, ylab="")
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household &\nEnvironmental Characteristics",], ylimits=ylims, legend=F, xaxis=T, facet_label_pos= -40)
 
 plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
 
-relheights= c(28,13,28,35)
+relheights= c(27,12,30,35)
 
 p_laz_RR <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
                    ncol = 1,
@@ -518,7 +523,7 @@ df2 <- df %>% filter(intervention_level== baseline_level)
 
 #p_wlz <- plot_combined_paf_RR(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
 ylims=c(0.8, 1.5)
-p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -47, xaxis=F, ylab="")
+p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -42, xaxis=F, ylab="")
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -20, xaxis=F, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims,  outcome_var="ever_wasted", facet_label_pos= -15, xaxis=F, ylab="")
 p4 <- plot_combined_paf_RR(df[df$RFgroup=="Household &\nEnvironmental Characteristics",], ylimits=ylims,  outcome_var="ever_wasted", legend=F, xaxis=T, facet_label_pos= -40)
