@@ -197,8 +197,8 @@ plot_laz_6 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="6 months", region="P
 plot_laz_24 <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Pooled", text_pos=-0.15, range=c(-0.2, 0.6), xaxis=T, xaxis_lab="Population intervention effect, difference in LAZ")
 
 plot_wlz_birth <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="Birth", region="Pooled", text_pos=-0.4, range=c(-0.45, 0.4))
-plot_wlz_6 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="6 months", region="Pooled", text_pos=-0.1, range=c(-0.15, 0.2))
-plot_wlz_24 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Pooled", text_pos=-0.1, range=c(-0.15, 0.25), xaxis=T, xaxis_lab="Population intervention effect, difference in WLZ")
+plot_wlz_6 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="6 months", region="Pooled", text_pos=-0.07, range=c(-0.09, 0.2))
+plot_wlz_24 <- plot_ext_par(d=plotdf, outcome="WLZ", agecat="24 months", region="Pooled", text_pos=-0.07, range=c(-0.09, 0.25), xaxis=T, xaxis_lab="Population intervention effect, difference in WLZ")
 
 plot_laz_africa <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Africa", text_pos=-0.55, range=c(-0.6, 0.5))
 plot_laz_la <- plot_ext_par(d=plotdf, outcome="LAZ", agecat="24 months", region="Latin America", text_pos=-0.55, range=c(-0.6, 0.5))
