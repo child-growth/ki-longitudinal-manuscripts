@@ -306,6 +306,9 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           ub = plogis(fit$beta + 1.96 * fit$se),
           nmeas.f = paste0("N=", format(sum(data[[ni]]), big.mark = ",", scientific = FALSE), " ", nlab),
           nstudy.f = paste0("N=", nstudies, " studies"),
+          Qstat=fit$QE,
+          tau2=fit$tau2,
+          I2=fit$I2,
           method.used=method_fit
         ) %>%
         as.tibble()
@@ -427,7 +430,10 @@ fit.rma <- function(data, ni, xi = NULL, yi = NULL, vi = NULL, measure = "PLO", 
           " ", nlab
         ),
         nstudy.f = paste0("N=", nstudies, " studies"),
-        method.used=method_fit
+        method.used=method_fit,
+        Qstat=fit$QE,
+        tau2=fit$tau2,
+        I2=fit$I2
       )
     
   }

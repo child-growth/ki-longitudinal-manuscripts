@@ -190,10 +190,10 @@ table(is.na(d$whz))
 
 
 
-#duration by age 
-d6 <- calc.ci.agecat(d, range=6, birth="no")
-df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration)) %>% filter(agedays < 30.6417 * 24)
-df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
+# #duration by age 
+# d6 <- calc.ci.agecat(d, range=6, birth="no")
+# df2 <- d6 %>% group_by(studyid, subjid, agecat,episode_id) %>% slice(1) %>% filter(!is.na(wasting_duration)) %>% filter(agedays < 30.6417 * 24)
+# df2 %>% group_by(agecat) %>% do(calc_dur_ci(.))
 
 
 #Specify analysis

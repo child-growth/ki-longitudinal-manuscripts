@@ -245,5 +245,6 @@ co_desc_data <- co_desc_data %>%
 saveRDS(co_desc_data, file = paste0(BV_dir,"/results/co_desc_data.rds"))
 
 
+table(co_desc_data$pooling, is.na(co_desc_data$I2) & co_desc_data$nstudies>1)
 
 

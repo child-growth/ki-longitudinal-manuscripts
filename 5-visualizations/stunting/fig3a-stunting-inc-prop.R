@@ -20,6 +20,8 @@ dinput <- readRDS(paste0(res_dir,"/desc_data_cleaned.rds"))
 
 d <- dinput %>% filter(region!="Europe")
 
+d %>% filter(agecat=="Birth", region=="Overall")
+
 #-----------------------------------------
 # Prepare data for plot
 #-----------------------------------------

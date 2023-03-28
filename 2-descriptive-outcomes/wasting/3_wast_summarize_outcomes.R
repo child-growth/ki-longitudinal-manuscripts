@@ -1,7 +1,4 @@
 
-
-
-
 rm(list = ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(),"/0-project-functions/0_descriptive_epi_wast_functions.R"))
@@ -574,7 +571,7 @@ wasting_desc_data <- bind_rows(
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Mean WLZ",  whz),
   data.frame(disease = "Wasting", age_range="1 month",   birth="yes", severe="no", measure= "Mean WLZ",  monthly.whz),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Cumulative incidence", ci_3),
-  data.frame(disease = "Wasting", age_range="3 months",   birth="strat", severe="no", measure= "Cumulative incidence", ci_3_nobirth),
+  #data.frame(disease = "Wasting", age_range="3 months",   birth="strat", severe="no", measure= "Cumulative incidence", ci_3_nobirth),
   data.frame(disease = "Wasting", age_range="3 months",   birth="yes", severe="no", measure= "Incidence_proportion", ip_3),
   data.frame(disease = "Wasting", age_range="3 months",   birth="strat", severe="no", measure= "Incidence_proportion", ip_3_nobirth),
   data.frame(disease = "Wasting", age_range="6 months",   birth="no",  severe="no",   measure= "Cumulative incidence",  ci_nobw),
@@ -628,5 +625,5 @@ wasting_desc_data$country <- stringr::str_to_title(wasting_desc_data$country)
 
 saveRDS(wasting_desc_data, file = paste0(BV_dir,"/results/wasting_desc_data.RDS"))
 
-
+table(wasting_desc_data$pooling, is.na(wasting_desc_data$I2) & wasting_desc_data$nstudies>1)
 

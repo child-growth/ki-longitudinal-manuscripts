@@ -4,29 +4,29 @@ source(paste0(here::here(), "/0-config.R"))
 
 #Primary outcomes
 wast <- readRDS(paste0(res_dir,"wasting_desc_data.RDS")) %>% mutate(analysis = "Primary")
-stunt = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects.RDS")) %>% mutate(analysis = "Primary")
+stunt = readRDS(paste0(res_dir,"stunting/shiny_desc_data_stunting_objects.RDS")) %>% mutate(analysis = "Primary")
 co_desc_data <- readRDS(paste0(res_dir,"co_desc_data.rds")) %>% mutate(analysis = "Primary", pooling=ifelse(!is.na(country) & pooling!="no pooling", "country",NA)) %>%
   filter(disease!="Underweight")
 uwt = readRDS(paste0(res_dir,"underweight_desc_data.RDS")) %>% mutate(analysis = "Underweight")
 
 
 #Fixed effects
-stunt_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe.RDS")) %>% mutate(analysis = "Fixed effects")
+stunt_fe <- readRDS(paste0(res_dir,"stunting/shiny_desc_data_stunting_objects_fe.RDS")) %>% mutate(analysis = "Fixed effects")
 wast_fe <- readRDS(paste0(res_dir,"wasting_desc_data_FE.RDS")) %>% mutate(analysis = "Fixed effects")
 co_fe <- readRDS(paste0(res_dir,"co_desc_data_FE.rds")) %>% mutate(analysis = "Fixed effects")
 
 
 #Other sensitivity
-stunt_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24.RDS")) %>% mutate(analysis = "Cohorts monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
-stunt_noProbit = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_no_probit.RDS")) %>% mutate(analysis = "No Probit")
-stunt_noProbit_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe_no_probit.RDS")) %>% mutate(analysis = "No Probit - Fixed effects")
+stunt_monthly24 = readRDS(paste0(res_dir,"stunting/shiny_desc_data_stunting_objects_monthly24.RDS")) %>% mutate(analysis = "Cohorts monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
+stunt_noProbit = readRDS(paste0(res_dir,"stunting/shiny_desc_data_stunting_objects_no_probit.RDS")) %>% mutate(analysis = "No Probit")
+stunt_noProbit_fe <- readRDS(paste0(res_dir,"stunting/shiny_desc_data_stunting_objects_fe_no_probit.RDS")) %>% mutate(analysis = "No Probit - Fixed effects")
 
 wast_noKenabaBirth =  readRDS(paste0(res_dir,"wasting_desc_data_no_Kenaba_bw.RDS")) %>% mutate(analysis = "No Kenaba birth")
 co_noKenabaBirth <- readRDS(paste0(res_dir,"co_desc_data_no_Kenaba.rds")) %>% mutate(analysis = "No Kenaba birth")
 
-stunt_noKenaba_monthly24 = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_monthly24_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba - monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
-stunt_noKenaba = readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba")
-stunt_noKenaba_fe <- readRDS(paste0(res_dir,"shiny_desc_data_stunting_objects_fe_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba - Fixed effects")
+stunt_noKenaba_monthly24 = readRDS(paste0(res_dir,"stunting/shiny_desc_data_stunting_objects_monthly24_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba - monthly 0-24 m", measure=paste0(measure," - monthly cohorts"))
+stunt_noKenaba = readRDS(paste0(res_dir,"stunting/shiny_desc_data_stunting_objects_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba")
+stunt_noKenaba_fe <- readRDS(paste0(res_dir,"stunting/shiny_desc_data_stunting_objects_fe_no_Kenaba_birth.RDS")) %>% mutate(analysis = "No Kenaba - Fixed effects")
 
 
 
@@ -75,3 +75,21 @@ dim(d)
 d <- droplevels(d)
 
 saveRDS(d, file=paste0(BV_dir,"/results/desc_data_cleaned.rds"))
+
+
+
+#Create datasets of just RE pooled estimates to extract I2 
+df_REpool <- d %>% filter(!is.na(pooling)|cohort=="pooled"|cohort=="pooled-country") %>% filter(nstudies!=1, method.used != "FE")
+df_REpool_stunt <- df_REpool %>% filter(disease=="Stunting") 
+df_REpool_wast <- df_REpool %>% filter(disease!="Stunting") 
+
+saveRDS(df_REpool_stunt, file=paste0(BV_dir,"/results/data_REpool_stunt.rds"))
+saveRDS(df_REpool_wast, file=paste0(BV_dir,"/results/data_REpool_wast.rds"))
+
+saveRDS(df_REpool_stunt, file=paste0(here::here(), "/results/data_REpool_stunt.rds"))
+saveRDS(df_REpool_wast, file=paste0(here::here(), "/results/data_REpool_wast.rds"))
+
+
+summary(df_REpool_stunt$I2)
+summary(df_REpool_stunt$I2[df_REpool_stunt$I2!=0])
+plot(hist(df_REpool_stunt$I2))
