@@ -48,9 +48,9 @@ load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 
 #Subset to monthly
 d <- d %>% filter(measurefreq == "monthly") %>% filter(agedays < 730)
-head(d)
 
-fivenum(d$wast_inc, na.rm = T)
+
+
 
 #mean number of wasting episodes per child
 df <- d %>% group_by(studyid, region, country, subjid) %>% 

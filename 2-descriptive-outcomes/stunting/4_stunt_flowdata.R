@@ -511,4 +511,21 @@ saveRDS(stunt_pooled_region_corr, file=paste0(res_dir, "stunting/stuntflow_poole
 saveRDS(stunt_pooled_region_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_region_fe.RDS"))
 
 
+#Get I2 median/IQR
+stunt_pooled_corr %>% 
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) 
+
+stunt_pooled_region_corr %>% 
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>%
+  arrange(region)
+
+
+
+
 

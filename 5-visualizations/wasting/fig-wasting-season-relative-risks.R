@@ -134,5 +134,12 @@ saveRDS(p_seasonRR, file = paste0(BV_dir,"/figures/plot-objects/season_RR_plot.r
 ggsave(p_seasonRR, file=paste0(BV_dir,"/figures/wasting/season_wlz_diff.png"), width=7, height=6)
 
 
+#Get I2 median/IQR
+df %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) 
+
+
 
 

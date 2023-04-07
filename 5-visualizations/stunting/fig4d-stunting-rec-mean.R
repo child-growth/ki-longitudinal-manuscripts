@@ -456,3 +456,12 @@ saveRDS(list(pool = pool, cohort = cohort),
         file=paste0(figdata_dir_stunting, "figdata-",meandiff_plot_name,".RDS"))
 
 
+
+#get I2 for the figure caption
+pool %>% filter(cohort=="pooled") %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>%
+  arrange(region)

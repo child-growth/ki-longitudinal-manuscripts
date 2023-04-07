@@ -259,7 +259,7 @@ pool.cont <- function(d, method="REML"){
   #cat("Var: ", d$intervention_variable[1], " level: ",d$intervention_level[1] ," age: ", d$agecat[1] , "nstudies: ", nstudies$N, "\n")
   
   if(d$intervention_level[1] == d$baseline_level[1]){
-    est <- data.frame(ATE=0, CI1=0, CI2=0, Nstudies= nstudies$N)
+    est <- data.frame(ATE=0, CI1=0, CI2=0, Nstudies= nstudies$N, QE=NA, tau2=NA, I2=NA)
   }else{
     
     fit<-NULL
@@ -269,8 +269,8 @@ pool.cont <- function(d, method="REML"){
       if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="DL", measure="GEN"))}
       if(is.null(fit)){try(fit<-rma(yi=untransformed_estimate, sei=untransformed_se, data=d, method="HE", measure="GEN"))}
     }
-    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub)
-    colnames(est)<-c("ATE","CI1","CI2")
+    est<-data.frame(fit$b, fit$ci.lb, fit$ci.ub,fit$QE,fit$tau2,fit$I2)
+    colnames(est)<-c("ATE","CI1","CI2","Qstat", "tau2", "I2")
     est$Nstudies <- nstudies$N
   }
   rownames(est) <- NULL

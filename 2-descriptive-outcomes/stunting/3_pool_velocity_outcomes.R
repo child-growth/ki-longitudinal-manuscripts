@@ -215,3 +215,28 @@ pooled_vel_sub <- rbind(
 saveRDS(pooled_vel_sub,
         file=paste0(res_dir,"stunting/pool_vel_sub.RDS"))
 
+
+#Get I2 median/IQR
+pooled_vel_sub %>% filter(pooled==1, ycat=="lencm") %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","Asia"))) %>%
+  arrange(region)
+
+pooled_vel_sub %>% filter(pooled==1, ycat=="haz") %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","Asia"))) %>%
+  arrange(region)
+
+
+
+
+
+
+
+

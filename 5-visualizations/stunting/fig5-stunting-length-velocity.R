@@ -194,7 +194,7 @@ saveRDS(velplot_cm, file=paste0(figdata_dir_stunting, "figdata-",plot_cm_name,".
 
 ## LAZ plot - stratified by region----------------------------------
 
-velplot_laz = vel %>% filter(ycat == "LAZ change (Z-score per month)") %>%
+velplot_laz = vel %>% filter(ycat == "LAZ change (Z-score per month)", pooled==0 | country_cohort=="Pooled - All") %>%
   mutate(sex = factor(sex)) 
 
 
@@ -244,6 +244,9 @@ plot_laz_name = create_name(
 # save plot and underlying data
 ggsave(plot_laz, file=paste0(fig_dir, "stunting/fig-",plot_laz_name,".png"), width=12, height=6)
 saveRDS(velplot_laz, file=paste0(figdata_dir_stunting, "figdata-",plot_laz_name,".RDS"))
+
+
+
 
 
 # combined LAZ and length plots ----------------------------------------------------------------

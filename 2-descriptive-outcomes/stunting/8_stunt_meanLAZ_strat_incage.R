@@ -116,4 +116,23 @@ saveRDS(meanlaz_age_incage, file = paste0(res_dir, "stunting/meanlaz_age_incage.
 meanlaz_age_incage_monthly = lapply(age_list, function(x) meanlaz(data = d_st_monthly, age=x))
 meanlaz_age_incage_monthly = as.data.frame(do.call(rbind, meanlaz_age_incage_monthly))
 saveRDS(meanlaz_age_incage_monthly, file = paste0(res_dir, "stunting/meanlaz_age_incage_monthly.RDS"))
- 
+
+
+#Get I2 median/IQR
+meanlaz_age_incage %>% filter(cohort=="pooled") %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>% 
+  arrange(region)
+
+
+meanlaz_age_incage_monthly %>% filter(cohort=="pooled") %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>% 
+  arrange(region)
+

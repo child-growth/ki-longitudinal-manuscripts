@@ -122,3 +122,18 @@ pooled_diff_age_df = bind_rows(pooled_diff_age_list)
 # save data
 #-------------------------------------------
 saveRDS(pooled_diff_age_df, file = paste0(res_dir, "stunting/haz_meandiff_sex.RDS"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

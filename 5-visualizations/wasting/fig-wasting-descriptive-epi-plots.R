@@ -20,22 +20,6 @@ d$lb[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence
 d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] <-
   d$ub[(is.na(d$pooling) | d$pooling=="no pooling") & d$measure %in% c("Prevalence","Cumulative incidence","Incidence proportion","Persistent wasting", "Recovery" )] * 100
 
-#reviewer response
-temp <- d %>% filter(measure=="Incidence rate", pooling=="overall", agecat=="0-3 months")
-#convert from per 1000 person-days to episodes per year
-temp$est <- (temp$est / 1000) * 365
-temp$lb <- (temp$lb / 1000) * 365
-temp$ub <- (temp$ub / 1000) * 365
-temp
-
-temp <- d %>% filter(measure=="Cumulative incidence", pooling=="overall", agecat=="0-3 months")
-#convert from per 1000 person-days to episodes per year
-temp
-
-temp <- d %>% filter(measure=="Cumulative incidence"|measure=="Persistent wasting", cohort=="pooled", birth=="yes", severe=="no",region=="South Asia", disease!="Stunting")
-temp
-
-#d %>% filter(measure=="Prevalence", disease=="co-occurrence", cohort!="pooled")
 
 d$nmeas.f <- clean_nmeans(d$nmeas)
 d$nstudy.f <- gsub("N=","",d$nstudy.f)
@@ -194,6 +178,16 @@ prev_plot <- ki_desc_flurry_plot(d,
                      yrange=c(0,24),
                      returnData=T)
 
+#Get I2 median/IQR
+prev_plot$data %>% filter(pooling!="no pooling", nstudies > 1) %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>%
+  arrange(region)
+
+
 prev_plot_no_cohort <- ki_desc_plot(d,
                                  Disease="Wasting",
                                  Measure="Prevalence", 
@@ -320,6 +314,14 @@ saveRDS(list(mean_wlz_plot, prev_plot, ip_plot_primary), file=paste0(BV_dir,"/fi
 ip_plot_primary[[2]] %>% filter(pooling=="overall") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 ip_plot_primary[[2]] %>% filter(region=="South Asia",pooling=="regional") %>% subset(., select = c(measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 
+#Get I2 median/IQR
+ip_plot_primary$data %>% filter(pooling!="no pooling", nstudies > 1) %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>%
+  arrange(region)
 
 #-------------------------------------------------------------------------------------------
 # Wasting incidence -birthstrat
@@ -355,6 +357,10 @@ ggsave(ip_plot[[1]], file=paste0(BV_dir,"/figures/wasting/fig-",ip_plot_name, "_
 saveRDS(ip_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",ip_plot_name,"_birthstrat.RDS"))
 
 #ggsave(ci_plot[[1]] + ggtitle("Wasting incidence"), file=paste0(BV_dir,"/figures/wasting/fig-",ci_plot_name, "_birthstrat_presentation.png"), width=13, height=3)
+
+
+
+
 
 
 #-------------------------------------------------------------------------------------------
@@ -519,9 +525,10 @@ inc_plot_primary <- inc_combo_plot(d,
                    legend.pos = c(.92,.8))
 inc_plot_primary
 
+
 # define standardized plot names
 inc_plot_name = create_name(
-  outcome = "underweight",
+  outcome = "wasting",
   cutoff = 2,
   measure = "incidence rate",
   population = "overall and region-stratified",
@@ -540,6 +547,18 @@ saveRDS(inc_plot_primary, file=paste0(BV_dir,"/figures/plot-objects/inc_plot_obj
 
 inc_plot_primary$data %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 inc_plot_primary$data %>% arrange(region, agecat)
+
+
+#Get I2 median/IQR
+inc_plot_primary$data %>% filter(pooling!="no pooling", nstudies > 1) %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>%
+  arrange(region)
+
+
 
 # #-------------------------------------------------------------------------------------------
 # # Wasting incidence proportion
@@ -715,6 +734,18 @@ saveRDS(rec_plot, file=paste0(BV_dir,"/figures/plot-objects/rec_plot_object.rds"
 rec_plot[[2]] %>% filter(region=="Overall") %>% subset(., select = c(age_range,measure, region, nstudies, nmeas, est, lb, ub, agecat)) %>% mutate(est=round(est,2), lb=round(lb,2), ub=round(ub,2))
 
 
+#Get I2 median/IQR
+rec_plot[[2]] %>% filter(pooling!="no pooling", nstudies > 1) %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>%
+  arrange(region)
+
+
+
+
 #Plot just the overall facet for presentation slide
 df <- d %>% filter(
     disease == "Wasting" &
@@ -765,6 +796,8 @@ rec_plot_name = create_name(
 ggsave(p, file=paste0(BV_dir,"/figures/wasting/fig-",rec_plot_name, ".png"), width=8, height=5)
 
 saveRDS(df, file=paste0(figdata_dir_wasting,"figdata-",rec_plot_name,".RDS"))
+
+
 
 #-------------------------------------------------------------------------------------------
 # Persistent Wasting 
@@ -843,8 +876,6 @@ saveRDS(perswast_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",perswast_
 
 
 
-
-
 #-------------------------------------------------------------------------------------------
 # Prevalence of co-occurrence
 #-------------------------------------------------------------------------------------------
@@ -920,6 +951,17 @@ ggsave(co_plot_sasia$plot, file=paste0(BV_dir,"/figures/wasting/fig-","co_plot_s
 saveRDS(co_plot[[2]], file=paste0(figdata_dir_wasting,"figdata-",co_plot_name,".RDS"))
 
 saveRDS(co_plot, file=paste0(BV_dir,"/figures/plot-objects/co_plot_object.rds"))
+
+
+
+#Get I2 median/IQR
+co_plot$data %>% filter(pooling!="no pooling", nstudies > 1) %>%
+  group_by(region) %>%
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) %>%
+  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>%
+  arrange(region)
 
 
 

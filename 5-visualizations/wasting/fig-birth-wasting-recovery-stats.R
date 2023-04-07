@@ -92,3 +92,7 @@ saveRDS(d, file=paste0(BV_dir, "/results/figure-data/figdata-birth-stratified-ou
 saveRDS(birthstrat_stats_plot, file=paste0(BV_dir,"/figures/plot-objects/birthstrat_stats_plot_object.rds"))
 
 
+#Get I2 median/IQR
+d %>% summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) 

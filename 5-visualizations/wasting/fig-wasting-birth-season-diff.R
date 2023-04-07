@@ -182,3 +182,10 @@ saveRDS(p_season_birth_diff_FE, file = paste0(BV_dir,"/figures/plot-objects/seas
 ggsave(p_season_birth_diff_FE, file=paste0(BV_dir,"/figures/wasting/season_birth_wlz_diff_FE.png"), width=5, height=4)
 
 
+#Get I2 median/IQR
+df %>% 
+  summarise(quantile = c("Median","Q1", "Q3"),
+            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
+  spread(quantile, I2) 
+
+
