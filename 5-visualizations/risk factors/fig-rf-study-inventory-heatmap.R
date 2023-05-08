@@ -200,6 +200,7 @@ dd <- dd %>%
 dd$studycountry <- sapply(dd$studycountry, function(x) as.character(x))
 dd$studycountry <- factor(dd$studycountry, levels = unique(dd$studycountry))
 table(dd$studycountry)
+length(unique(dd$studycountry))
 
 
 #aggregate N's for sidebar

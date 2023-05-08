@@ -511,19 +511,34 @@ saveRDS(stunt_pooled_region_corr, file=paste0(res_dir, "stunting/stuntflow_poole
 saveRDS(stunt_pooled_region_corr_fe, file=paste0(res_dir, "stunting/stuntflow_pooled_region_fe.RDS"))
 
 
+#Get I2 for plot legend by merging in both overall and birth strat data sources
+stunt_pooled_corr = readRDS(file=paste0(res_dir, "stunting/stuntflow_pooled_reml.RDS"))
+birthlaz_data = readRDS(paste0(res_dir, "stunting/stuntflow_pooled_birthlaz_reml.RDS"))
+df <- bind_rows(stunt_pooled_corr, birthlaz_data)
+table(df$label)
+
 #Get I2 median/IQR
-stunt_pooled_corr %>% 
+df <- df %>% mutate(agem=as.numeric(as.character(agem))) %>%
+  filter(agem<=15) %>% 
+  filter(label %in% c("Newly stunted","Stunting relapse","Recovered"))
+
+# drop rows that pooled over age not in underlying cohort data
+nrow(df)
+df = df[-which(df$agem<2 & df$label=="Stunting relapse"),]
+df = df[-which(df$agem<1 & df$label=="Recovered"),]
+nrow(df)
+
+# drop newly stunted if age <2 months
+# these are an artifact of how age was coded
+# within stunting categories
+nrow(df)
+df = df[-which(df$birth_laz=="LAZ under -2" & df$label=="Newly stunted"),]
+nrow(df)
+
+df %>% filter(as.numeric(as.character(agem))<=15) %>%
   summarise(quantile = c("Median","Q1", "Q3"),
             I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
   spread(quantile, I2) 
-
-stunt_pooled_region_corr %>% 
-  group_by(region) %>%
-  summarise(quantile = c("Median","Q1", "Q3"),
-            I2 = quantile(I2, c(0.5, 0.25, 0.75), na.rm=TRUE)) %>%
-  spread(quantile, I2) %>%
-  mutate(region=factor(region, levels=c("Overall","Africa","Latin America","South Asia"))) %>%
-  arrange(region)
 
 
 

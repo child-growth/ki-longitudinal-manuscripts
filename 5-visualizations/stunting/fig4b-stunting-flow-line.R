@@ -173,3 +173,6 @@ p_inc = grid.arrange(p_inc_newly, p_inc_relapse, p_inc_rev,
 ggsave(p_inc, file=paste0(fig_dir, "stunting/fig-stunt-2-flow-line-overall-allage-primary.png"), 
        width=6, height=4)
 saveRDS(plot_combine, file=paste0(figdata_dir_stunting, "figdata-stunt-2-flow-line-overall-allage-primary.RDS"))
+
+
+

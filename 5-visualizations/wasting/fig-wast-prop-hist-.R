@@ -26,10 +26,10 @@ plotdf <- bind_rows(d_propinc, temp) %>% mutate(region=factor(region, levels=c("
 p <- ggplot(plotdf, aes(x = prop_wast, color=region, fill=region)) +  
   geom_histogram(aes(y = stat(density) * 500), binwidth = 5) + 
   #facet_wrap(~region, scales = "free") +   
-  facet_wrap(~region, nrow=2) +   
+  facet_wrap(~region, nrow=1) +   
   ylab("Percent of children") + 
   xlab("Percent of measurements where child was wasted") +
-  scale_x_continuous(expand=c(0,0)) +
+  scale_x_continuous(expand=c(0,0), breaks=c(0,20,40,60,80)) +
   scale_y_continuous(expand = expansion(add = c(0, 5))) +
   #scale_y_continuous(expand=c(0.1,0.1)) +
   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C")) + 
@@ -56,7 +56,7 @@ p
 
 p_overall <- ggplot(plotdf %>% filter(prop_wast>0, region=="Overall"), aes(x = prop_wast, color=region, fill=region)) +
   geom_histogram(aes(y = stat(density) * 500), binwidth = 5) + ylab(NULL) + xlab(NULL) +
-  scale_x_continuous(limits=c(1,100), expand=c(0,0)) +
+  scale_x_continuous(limits=c(1,100), expand=c(0,0), breaks=c(0,20,50,80)) +
   scale_y_continuous(expand = expansion(add = c(0, 5))) +
   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=F) +
   scale_fill_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=F) +
@@ -64,7 +64,7 @@ p_overall <- ggplot(plotdf %>% filter(prop_wast>0, region=="Overall"), aes(x = p
 
 p_LatinAmerica <- ggplot(plotdf %>% filter(prop_wast>0, region=="Latin America"), aes(x = prop_wast, color=region, fill=region)) +
   geom_histogram(aes(y = stat(density) * 500), binwidth = 5) + ylab(NULL) + xlab(NULL) +
-  scale_x_continuous(limits=c(1,100), expand=c(0,0)) +
+  scale_x_continuous(limits=c(1,100), expand=c(0,0), breaks=c(0,20,50,80)) +
   scale_y_continuous(expand = expansion(add = c(0, 5))) +
   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=F) +
   scale_fill_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=F) +
@@ -72,7 +72,7 @@ p_LatinAmerica <- ggplot(plotdf %>% filter(prop_wast>0, region=="Latin America")
 
 p_Africa <- ggplot(plotdf %>% filter(prop_wast>0, region=="Africa"), aes(x = prop_wast, color=region, fill=region)) +
   geom_histogram(aes(y = stat(density) * 500), binwidth = 5) + ylab(NULL) + xlab(NULL) +
-  scale_x_continuous(limits=c(1,100), expand=c(0,0)) +
+  scale_x_continuous(limits=c(1,100), expand=c(0,0), breaks=c(0,20,50,80)) +
   scale_y_continuous(expand = expansion(add = c(0, 5))) +
   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=F) +
   scale_fill_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=F) +
@@ -80,7 +80,7 @@ p_Africa <- ggplot(plotdf %>% filter(prop_wast>0, region=="Africa"), aes(x = pro
 
 p_SouthAsia <- ggplot(plotdf %>% filter(prop_wast>0, region=="South Asia"), aes(x = prop_wast, color=region, fill=region)) +
   geom_histogram(aes(y = stat(density) * 500), binwidth = 5) + ylab(NULL) + xlab(NULL) +
-  scale_x_continuous(limits=c(1,100), expand=c(0,0)) +
+  scale_x_continuous(limits=c(1,100), expand=c(0,0), breaks=c(0,20,50,80)) +
   scale_y_continuous(expand = expansion(add = c(0, 5))) +
   scale_color_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=F) +
   scale_fill_manual(values=c("Black", "#1F77B4", "#FF7F0E", "#2CA02C"), drop=F) +
@@ -99,7 +99,7 @@ annotation_custom2 <- function (grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax
                                           ymin = ymin, ymax = ymax))
 }
 
-x_min=25
+x_min=10
 x_max=100
 y_min=10
 y_max=100
@@ -121,6 +121,7 @@ full_plot <-  p +
 
 
 # save plot 
-ggsave(full_plot, file=paste0(BV_dir,"/figures/wasting/fig-supp-5b-wast-prop-histogram.png"), width=6, height=4)
+ggsave(full_plot, file=paste0(BV_dir,"/figures/wasting/fig-supp-5b-wast-prop-histogram.png"), width=6, height=5)
 
+#ggsave(p, file=paste0(BV_dir,"/figures/wasting/pooled_pers024.png"), width=8, height=5)
 
