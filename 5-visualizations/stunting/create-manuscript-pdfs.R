@@ -71,7 +71,7 @@ p4b
 
 p4 <- plot_grid(p4a[[1]], p4b, labels = c("a","b"), ncol = 1, rel_heights = c(1, 1.5))
 
-ggsave(plot = p5a, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig4.pdf"), device='pdf', width=6, height=4)
+ggsave(plot = p4, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig4.pdf"), device='pdf', width=12, height=10)
 
 
 
