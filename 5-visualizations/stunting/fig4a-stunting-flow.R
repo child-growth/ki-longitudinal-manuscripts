@@ -110,14 +110,22 @@ ggsave(bar_plot_noRE, file=paste0(fig_dir, "stunting/fig-",
 ggsave(bar_plot_noRE_region, file=paste0(fig_dir, "stunting/fig-",
             bar_plot_noRE_region_name,".png"), width=15, height=4)
 
-saveRDS(plot_overall, file=paste0(figdata_dir_stunting, "figdata-",
-                                   bar_plot_noRE_name,".RDS"))
+saveRDS(plot_overall, file=paste0(figdata_dir_stunting, "figdata-",bar_plot_noRE_name,".RDS"))
 saveRDS(plot_region, file=paste0(figdata_dir_stunting, "figdata-",
                                  bar_plot_noRE_region_name,".RDS"))
 
 
 
 
+
+#save plot objects
+saveRDS(
+  list(
+    bar_plot_noRE = bar_plot_noRE,
+    bar_plot_noRE_region = bar_plot_noRE_region
+  ),
+  file = paste0(figdata_dir_stunting, "figdata-4a.RDS")
+)
 
 
 

@@ -456,6 +456,13 @@ saveRDS(list(pool = pool, cohort = cohort),
         file=paste0(figdata_dir_stunting, "figdata-",meandiff_plot_name,".RDS"))
 
 
+#save plot objects
+saveRDS(
+  meandiff_plot,
+  file = paste0(figdata_dir_stunting, "figdata-5b.RDS")
+)
+
+
 
 #get I2 for the figure caption
 pool %>% filter(cohort=="pooled") %>%

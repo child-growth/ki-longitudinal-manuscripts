@@ -279,5 +279,6 @@ arrange_figures = grid.arrange(
                                heights = c(4, 4.75),
                                widths= 8)
 
-ggsave(arrange_figures, file=paste0(fig_dir, "/stunting/fig-DHS-LAZ.png"), width=8, height=6
-       )
+ggsave(arrange_figures, file=paste0(fig_dir, "/stunting/fig-DHS-LAZ.png"), width=8, height=6)
+ggsave(plot = arrange_figures, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig2.pdf"), device='pdf', width=8, height=6)
+

@@ -193,11 +193,48 @@ plot_combine$ub[recodes] <- NA
 # combine with overall plot ----------------------
 # main_line_data <- readRDS(paste0(figdata_dir_stunting, "figdata-stunt-2-flow-line-overall-allage-primary.RDS"))
 # main_line_data <- main_line_data %>% mutate(birth_laz = "Overall")
+plot_overall$agem = as.numeric(as.character(plot_overall$agem))
+plot_overall <- plot_overall %>% rename(classif=label) %>% mutate(cohort_country="Overall") %>% 
+  filter(classif %in% c(
+    "Newly stunted",
+    "Stunting relapse",
+    "Stunting reversed")) %>%
+  droplevels()
+
 plot_combine <- bind_rows(plot_combine, plot_overall) %>% 
   mutate(birth_laz = factor(birth_laz, levels = c(
     "Overall", "Birth LAZ under -2", 
     "Birth LAZ -2 to 0", "Birth LAZ 0 or more"
   )))
+
+
+ggplot(plot_overall , 
+       aes(x=agem, y = percent))+
+  facet_grid(classif ~birth_laz, scales = "free") +
+  # cohort-specific
+  geom_line(aes(group = cohort_country, col = classif), size = 0.5, alpha = 0.75, 
+            data = plot_overall %>% filter(cohort_country!="Pooled")
+  ) +
+  # pooled
+  geom_line(aes( group = cohort_country), size=0.7,
+            data = plot_overall %>% filter(cohort_country=="Pooled")) +
+  # pooled bounds
+  geom_errorbar(aes(ymin = lb, 
+                    ymax = ub,
+                    group = cohort_country), size=0.5,
+                data = plot_overall %>% filter(cohort_country=="Pooled"),
+                width = 0.3) +
+  
+  scale_color_manual("", values = c(pink_green[c(4,5)],"#ADDE66")) +
+  xlab("Child age, months") +
+  ylab("Incidence proportion (%)") +
+  theme(legend.position = "none",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.title.x = element_text(size=14),
+        axis.title.y = element_text(size=14))  +
+  guides(color = guide_legend(nrow = 1, byrow = TRUE))  
+
 
 # make plot  -----------------------------------------------------
 p_inc = ggplot(plot_combine , 
@@ -207,7 +244,8 @@ p_inc = ggplot(plot_combine ,
   
   # cohort-specific
   geom_line(aes(group = cohort_country, col = classif), size = 0.5, alpha = 0.75, 
-            data = plot_combine %>% filter(cohort_country!="Pooled")) +
+            data = plot_combine %>% filter(cohort_country!="Pooled")
+            ) +
   
   # pooled
   geom_line(aes( group = cohort_country), size=0.7,
@@ -242,3 +280,9 @@ p_inc
 ggsave(p_inc, file=paste0(fig_dir, "stunting/fig-stunt-2-flow-line-birthlaz-allage-primary.png"),
        width=8, height=6)
 saveRDS(plot_combine, file=paste0(figdata_dir_stunting, "figdata-stunt-2-flow-line-birthlaz-allage-primary.RDS"))
+
+#save plot objects
+saveRDS(
+  p_inc,
+  file = paste0(figdata_dir_stunting, "figdata-4b.RDS")
+)

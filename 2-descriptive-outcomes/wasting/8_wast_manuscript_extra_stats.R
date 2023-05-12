@@ -10,6 +10,41 @@ load(paste0(ghapdata_dir, "Wasting_inc_data.RData"))
 d <- d %>% filter(measurefreq == "monthly")
 
 
+#percent of children with multiple episodes
+dmult <- d %>% group_by(studyid, country, subjid) %>% 
+  filter(agedays < 730, !is.na(whz), max(agedays)> 21*30.4167) %>% 
+  summarise(mult_wast=1*(sum(wast_inc)>1)) %>%
+  group_by(studyid) %>% filter(n() >= 50)
+prop.table(table(dmult$mult_wast))*100
+
+
+
+prev.data = dmult %>%
+  group_by(studyid,country) %>%
+  summarise(nmeas=n(),
+            prev=mean(mult_wast),
+            nxprev=sum(mult_wast==1)) %>%
+  mutate(agecat="all")
+
+prev.data <- droplevels(prev.data)
+prev.res <- fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age="all",measure="PLO",nlab="children", method="REML")
+prev.res = prev.res %>%
+  mutate(est=est*100,lb=lb*100,ub=ub*100)
+prev.res
+
+# estimate random effects, format results
+prev.res=lapply((levels(prev.data$agecat)),function(x)
+  fit.rma(data=prev.data,ni="nmeas", xi="nxprev",age=x,measure="PLO",nlab="children", method=method))
+prev.res=as.data.frame(rbindlist(prev.res, use.names=TRUE, fill=T))
+prev.res$est=as.numeric(prev.res$est)
+prev.res$lb=as.numeric(prev.res$lb)
+prev.res$ub=as.numeric(prev.res$ub)
+
+prev.res$agecat=factor(levels(prev.data$agecat))
+prev.res$ptest.f=sprintf("%0.0f",prev.res$est)
+
+
+
 # #NOTE: Meta-analysis now in separate script
 # #Subset to monthly
 # 

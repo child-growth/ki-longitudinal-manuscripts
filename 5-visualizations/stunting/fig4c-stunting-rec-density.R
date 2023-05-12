@@ -345,3 +345,10 @@ ggsave(rec_histogram_plot, file=paste0(fig_dir, "stunting/fig-",rec_histogram_pl
                                        ".png"), width=8, height=5)
 
 saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,".RDS"))
+
+
+#save plot objects
+saveRDS(
+  rec_histogram_plot,
+  file = paste0(figdata_dir_stunting, "figdata-5a.RDS")
+)

@@ -13,6 +13,11 @@ par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds"
 par_unadj <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results_unadj.rds"))  %>% mutate(Analysis="Unadjusted")
 
 
+unique(par$intervention_variable)
+unique(par_unadj$intervention_variable)
+
+length(unique(par$intervention_variable))
+length(unique(par_unadj$intervention_variable))
 
 par <- bind_rows(par, par_unadj)
 
@@ -46,6 +51,8 @@ par <- par %>% filter( agecat=="24 months", region=="Pooled", !is.na(PAR)) %>%
 
 
 unique(par$RFlabel_ref)
+par$RFlabel_ref[par$RFlabel_ref=="Mother's height shifted to NA" ] <- "Mother's height shifted to >=150 cm" 
+par$RFlabel_ref[par$RFlabel_ref=="Mother's BMI shifted to NA" ] <- "Mother's BMI shifted to >=20 kg/m²" 
 
 df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR, CI1, CI2, RFlabel, RFlabel_ref, n_cell, n, Analysis)) %>% 
   filter(!is.na(PAR)) %>% mutate(measure="PAR")
@@ -129,8 +136,8 @@ pPAR <- ggplot(plotdf, aes(x=RFlabel_ref, shape=Analysis, group=Analysis)) +
         axis.text.x = element_text(size=12)) +
   guides(color=FALSE,
          shape =  guide_legend(reverse = TRUE))
-pPAR
 
-ggsave(pPAR, file=paste0(BV_dir, "/figures/risk-factor/fig-PAR-unadj-comp.png"), height=10, width=16)
+
+ggsave(pPAR, file=paste0(BV_dir, "/figures/risk-factor/fig-PAR-unadj-comp.png"), height=10, width=10)
 
 

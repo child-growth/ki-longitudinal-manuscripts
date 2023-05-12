@@ -1,4 +1,5 @@
 
+
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 
@@ -6,15 +7,44 @@ source(paste0(here::here(), "/0-config.R"))
 #Load data
 ate <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_FE.rds")) 
 rr <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_FE_results.rds"))
+par <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results_FE.rds"))
+
+#Get PAR vs ATE diff for reviewer comments
+ate %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
+par %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
+
+ate %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+par %>% filter(intervention_variable=="pers_wast", outcome_variable=="haz", region=="Pooled", agecat=="24 months")
+
+ate %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
+par %>% filter(intervention_variable=="predexfd6", outcome_variable=="haz", region=="Pooled", agecat=="6 months")
+
+ate %>% filter(intervention_variable=="parity", outcome_variable=="haz", region=="Pooled", intervention_level =="3+")
+rr %>% filter(intervention_variable=="parity", outcome_variable=="ever_stunted", region=="Pooled", intervention_level =="3+")
+rr %>% filter(intervention_variable=="parity", outcome_variable=="ever_wasted", region=="Pooled", intervention_level =="3+")
 
 #Match columns names
-rr <- rr %>% rename(est=RR, ci.lb=RR.CI1, ci.ub=RR.CI2)
-ate <- ate %>% rename(est=ATE, ci.lb=CI1, ci.ub=CI2)
+rr <- rr %>% rename(est=RR, CI.lb=RR.CI1, CI.ub=RR.CI2)
+ate <- ate %>% rename(est=ATE, CI.lb=CI1, CI.ub=CI2)
 
+pers <- rr[rr$outcome_variable=="pers_wast",]
+table(pers$agecat)
+rr  <- rr %>% filter(!(outcome_variable=="pers_wast" & agecat != "0-24 months"), outcome_variable!="s03rec24") %>% droplevels()
 
+#Flip direction of RR for wasting recovery (so outcome is recovered, rather than still stunted)
 d <- bind_rows(rr, ate)
-
 head(d)
+
+dsub <- d %>% filter(agecat=="Birth") 
+table(dsub$intervention_variable, dsub$outcome_variable)
+
+table(d$intervention_variable)
+d <- d %>% filter(intervention_variable!="vagbrth", agecat!="18 months")
+
+#temp fix fage
+unique(d$intervention_level)
+unique(d$baseline_level)
+d$baseline_level[d$baseline_level==">38 years"] <- ">35 years"
 
 
 #Drop reference levels
@@ -22,21 +52,21 @@ dim(d)
 d <- d %>% filter(intervention_level != baseline_level)
 dim(d)
 
-#drop month and birthmonth
+#drop month and birthmonth and CGF exposures
 unique(d$intervention_variable)
-d <- d %>% filter(!(intervention_variable %in% c("brthmon", "month")))
+d <- d %>% filter(!(intervention_variable %in% c("brthmon", "month","anywast06","enstunt","enwast","pers_wast")))
 
 #Drop probit-specific Europe estimates
 d <- d %>% filter(region!="N.America & Europe")
 d <- d %>% mutate(region = factor(region, levels = c("Pooled","South Asia","Africa","Latin America")))
 
 #keep overall pooled only in rare outcomes
-d <- d %>% filter(!(outcome_variable %in% c("ever_co", "wast_rec90d") & region!="Pooled"))
+d <- d %>% filter(!(outcome_variable %in% c("ever_co", "wast_rec90d","s06rec1824") & region!="Pooled"))
 
 
 #Drop secondary outcomes
 table(d$outcome_variable)
-d <- d %>% filter(outcome_variable %in% c("pers_wast","ever_stunted","stunted","ever_wasted","wasted","wast_rec90d","ever_co","haz","whz")) 
+d <- d %>% filter(outcome_variable %in% c("pers_wast","ever_stunted","stunted","ever_wasted","wasted","wast_rec90d","ever_co","haz","whz","s06rec1824")) 
 d$outcome_variable <- gsub("haz", "LAZ", d$outcome_variable)
 d$outcome_variable <- gsub("whz", "WLZ", d$outcome_variable)
 d$outcome_variable <- gsub("stunted", "Stunted", d$outcome_variable)
@@ -45,12 +75,19 @@ d$outcome_variable <- gsub("wast_rec90d", "Recovery\nfrom\nwasting", d$outcome_v
 d$outcome_variable <- gsub("ever_co", "Stunted\nand wasted", d$outcome_variable)
 d$outcome_variable <- gsub("ever_Stunted", "Ever\nstunted", d$outcome_variable)
 d$outcome_variable <- gsub("ever_Wasted", "Ever\nwasted", d$outcome_variable)
-d$outcome_variable <- gsub("pers_wast", "Persistently\nwasted", d$outcome_variable)
-d <- d %>% mutate(outcome_variable=factor(outcome_variable, levels = c("LAZ","Stunted","Ever\nstunted","WLZ","Wasted","Ever\nwasted","Persistently\nwasted","Stunted\nand wasted", "Recovery\nfrom\nwasting")))
+# d$outcome_variable <- gsub("pers_wast", "Pers\nwast", d$outcome_variable)
+# d$outcome_variable <- gsub("s06rec1824", "Stunt\nrev.", d$outcome_variable)
+d$outcome_variable <- gsub("pers_wast", "Pers\nwast", d$outcome_variable)
+d$outcome_variable <- gsub("s06rec1824", "Stunt\nrev.", d$outcome_variable)
+
+d <- d %>% mutate(outcome_variable=factor(outcome_variable, levels = c("LAZ","Stunted","Ever\nstunted","WLZ","Wasted","Ever\nwasted","Stunted\nand wasted", "Pers\nwast","Recovery\nfrom\nwasting","Stunt\nrev.")))
 table(d$outcome_variable)
 levels(d$outcome_variable)
+table(d$outcome_variable, d$agecat)
+
 
 #clean up agecats
+d$agecat[d$outcome_variable=="Stunt\nrev."] <- "0-24 months"
 d$agecat <- gsub(" \\(no birth st.\\)", "", d$agecat)
 d$agecat <- gsub(" \\(no birth wast\\)", "", d$agecat)
 unique(d$agecat)
@@ -63,7 +100,7 @@ d <- d %>% filter(!(intervention_variable %in% c("lag_WHZ_quart")))
 #Calculate P-values
 
 #calculate the test statistic: z = Est/SE.
-d <- d %>% mutate(se = (ci.ub-ci.lb)/(2*1.96))
+d <- d %>% mutate(se = (CI.ub-CI.lb)/(2*1.96))
 d$se[!is.na(d$logRR.psi)] <-  NA
 d$Z <- ifelse(!is.na(d$logRR.psi), d$logRR.psi/d$logSE, d$est/d$se)
 
@@ -85,23 +122,16 @@ d$pval_cat[d$pval_cat %in% c("0.2-1 decrease risk", "0.2-1 increase risk")] <- "
 table(d$pval_cat)
 d$pval_cat <- factor(d$pval_cat, levels = c("<0.001 decrease risk", "<0.05 decrease risk", "<0.2 decrease risk", "0.2-1", "<0.2 increase risk", "<0.05 increase risk", "<0.001 increase risk"))
 
+temp <- d %>% filter(intervention_variable=="parity", region=="Pooled")
 
-  
-#-----------------------------------
-# Temporarily drop non-sensical combinations
-# (Will change upstream)
-#----------------------------------- 
-unique(d$intervention_level)
-d <- d %>% filter(intervention_level != "Q4")
-  
 #-----------------------------------
 # Plot heatmaps
 #-----------------------------------
-  
+
 d <- d %>% filter(!is.na(RFlabel))
 
 #Concatenate variable and level for the x-axis
-d$xvar <- paste0(d$RFlabel,": ",d$intervention_level)
+d$xvar <- paste0(d$RFlabel,":\n",d$intervention_level, " (ref: ",d$baseline_level,")")
 
 d <- d %>% group_by(intervention_variable) %>%
   mutate(mean_pval = mean(sig)) %>% ungroup() %>%    
@@ -122,50 +152,54 @@ d$yvar <- paste0(d$agecat,", ", d$region)
 unique(d$yvar)
 
 d = d %>% mutate(agecat = case_when(
-  agecat == "Birth" ~ "Birth prev.", 
-  agecat ==  "6 months" ~ "6 prev.",
-  agecat ==  "24 months" ~ "24 prev.",
-  agecat ==  "0-24 months" ~ "0-24 CI",
-  agecat ==  "0-6 months" ~ "0-6 CI",
-  agecat ==  "6-24 months" ~ "6-24 CI"),
-  agecat = factor(agecat, levels = list("Birth prev.", "6 prev.", "24 prev.", "0-24 CI", "0-6 CI", "6-24 CI")))
+  agecat == "Birth" ~ "Birth", 
+  agecat ==  "6 months" ~ "6 mo",
+  agecat ==  "24 months" ~ "24 mo",
+  agecat ==  "0-24 months" ~ "0-24 mo",
+  agecat ==  "0-6 months" ~ "0-6 mo",
+  agecat ==  "6-24 months" ~ "6-24 mo"),
+  agecat = factor(agecat, levels = list("Birth", "6 mo", "24 mo", "0-24 mo", "0-6 mo", "6-24 mo")))
 
-country_agecat_levels = list("Birth prev., Pooled", "6 prev., Pooled", "24 prev., Pooled", 
-                             "Birth prev., Africa", "6 prev., Africa", "24 prev., Africa", 
-                             "Birth prev., Latin America", "6 prev., Latin America", "24 prev., Latin America",
-                             "Birth prev., South Asia", "6 prev., South Asia", "24 prev., South Asia",
-                             "0-24 CI, Pooled", "0-6 CI, Pooled", "6-24 CI, Pooled",
-                             "0-24 CI, Africa", "0-6 CI, Africa", "6-24 CI, Africa", 
-                             "0-24 CI, Latin America", "0-6 CI, Latin America", "6-24 CI, Latin America", 
-                             "0-24 CI, South Asia", "0-6 CI, South Asia", "6-24 CI, South Asia")   
+country_agecat_levels = list("Birth, Pooled", "6 mo, Pooled", "24 mo, Pooled", 
+                             "0-24 mo, Pooled", "0-6 mo, Pooled", "6-24 mo, Pooled",
+                             "Birth, Africa", "Birth, Latin America", "Birth, South Asia", 
+                             "6 mo, Africa", "6 mo, Latin America", "6 mo, South Asia", 
+                             "24 mo, Africa", 
+                             "24 mo, Latin America",
+                             "24 mo, South Asia",
+                             "0-24 mo, Africa", 
+                             "0-24 mo, Latin America",  
+                             "0-24 mo, South Asia", 
+                             "0-6 mo, Africa", "0-6 mo, Latin America", "0-6 mo, South Asia", 
+                             "6-24 mo, Africa", "6-24 mo, Latin America", "6-24 mo, South Asia")  
 
 d = d %>% mutate(yvar = case_when(
-  yvar == "Birth, Pooled" ~ "Birth prev., Pooled", 
-  yvar == "24 months, Africa" ~ "24 prev., Africa",
-  yvar == "6 months, Latin America" ~ "6 prev., Latin America",
-  yvar == "Birth, Latin America" ~ "Birth prev., Latin America",
-  yvar == "6 months, Africa" ~ "6 prev., Africa",
-  yvar == "24 months, South Asia" ~ "24 prev., South Asia",     
-  yvar == "Birth, Africa" ~ "Birth prev., Africa",   
-  yvar == "6 months, South Asia" ~ "6 prev., South Asia",
-  yvar == "Birth, South Asia" ~ "Birth prev., South Asia",   
-  yvar == "24 months, Latin America" ~ "24 prev., Latin America",
-  yvar == "24 months, Pooled" ~ "24 prev., Pooled", 
-  yvar == "6 months, Pooled" ~ "6 prev., Pooled",       
-  yvar == "6-24 months, South Asia" ~ "6-24 CI, South Asia",
-  yvar == "0-24 months, Pooled" ~ "0-24 CI, Pooled",
-  yvar == "6-24 months, Africa" ~ "6-24 CI, Africa",    
-  yvar == "0-6 months, Africa" ~ "0-6 CI, Africa",   
-  yvar == "0-6 months, Pooled" ~ "0-6 CI, Pooled",   
-  yvar == "0-6 months, Latin America" ~ "0-6 CI, Latin America", 
-  yvar == "6-24 months, Latin America" ~ "6-24 CI, Latin America",
-  yvar == "0-24 months, South Asia" ~ "0-24 CI, South Asia",
-  yvar == "0-6 months, South Asia" ~ "0-6 CI, South Asia", 
-  yvar == "6-24 months, Pooled" ~ "6-24 CI, Pooled",
-  yvar == "0-24 months, Africa" ~ "0-24 CI, Africa",     
-  yvar == "0-24 months, Latin America" ~ "0-24 CI, Latin America"),
+  yvar == "Birth, Pooled" ~ "Birth, Pooled", 
+  yvar == "24 months, Africa" ~ "24 mo, Africa",
+  yvar == "6 months, Latin America" ~ "6 mo, Latin America",
+  yvar == "Birth, Latin America" ~ "Birth, Latin America",
+  yvar == "6 months, Africa" ~ "6 mo, Africa",
+  yvar == "24 months, South Asia" ~ "24 mo, South Asia",     
+  yvar == "Birth, Africa" ~ "Birth, Africa",   
+  yvar == "6 months, South Asia" ~ "6 mo, South Asia",
+  yvar == "Birth, South Asia" ~ "Birth, South Asia",   
+  yvar == "24 months, Latin America" ~ "24 mo, Latin America",
+  yvar == "24 months, Pooled" ~ "24 mo, Pooled", 
+  yvar == "6 months, Pooled" ~ "6 mo, Pooled",       
+  yvar == "6-24 months, South Asia" ~ "6-24 mo, South Asia",
+  yvar == "0-24 months, Pooled" ~ "0-24 mo, Pooled",
+  yvar == "6-24 months, Africa" ~ "6-24 mo, Africa",    
+  yvar == "0-6 months, Africa" ~ "0-6 mo, Africa",   
+  yvar == "0-6 months, Pooled" ~ "0-6 mo, Pooled",   
+  yvar == "0-6 months, Latin America" ~ "0-6 mo, Latin America", 
+  yvar == "6-24 months, Latin America" ~ "6-24 mo, Latin America",
+  yvar == "0-24 months, South Asia" ~ "0-24 mo, South Asia",
+  yvar == "0-6 months, South Asia" ~ "0-6 mo, South Asia", 
+  yvar == "6-24 months, Pooled" ~ "6-24 mo, Pooled",
+  yvar == "0-24 months, Africa" ~ "0-24 mo, Africa",     
+  yvar == "0-24 months, Latin America" ~ "0-24 mo, Latin America"),
   yvar = factor(yvar, levels = country_agecat_levels))
-  
+
 
 table(d$outcome_variable, d$region)
 table(d$yvar, d$outcome_variable)
@@ -175,20 +209,27 @@ table(d$yvar, d$outcome_variable)
 textcol = "grey20"
 cols = rev(brewer.pal(n = 7, name = "Spectral"))
 
-levels(d$pval_cat) = c(levels(d$pval_cat), "Non-existent or rare contrast")
-agecat_with_ranges = c(  "Ever\nstunted", "Ever\nwasted", "Persistently\nwasted", "Stunted\nand wasted","Recovery\nfrom\nwasting")
+levels(d$pval_cat) = c(levels(d$pval_cat), "Not estimated")
+agecat_with_ranges = c(  "Ever\nstunted", "Ever\nwasted", "Pers\nwast", "Stunted\nand wasted","Recovery\nfrom\nwasting")
 
 #Pooled estimates only 
 
 pooled_data = d[d$region=="Pooled",]
 
 # Manually add in N/A values to create legend entry for non-existent contrast - at least 1 N/A needed for legend entry
-# Create N/A values for any missing pair of xvar and outcome_variable, arbitrarily set agecat to Birth prev.
+# Create N/A values for any missing pair of xvar and outcome_variable, arbitrarily set agecat to Birth
 # Filter data so no extra blank columns are displayed
-pooled_data = pooled_data %>% 
-                complete(xvar, outcome_variable, fill = list(agecat = "Birth prev.")) %>% 
-                filter((outcome_variable %in% agecat_with_ranges & agecat != "Birth prev.") | !(outcome_variable %in% agecat_with_ranges)) %>% 
-                replace_na(list(pval_cat = "Non-existent or rare contrast"))
+# pooled_data = pooled_data %>% 
+#                 complete(xvar, outcome_variable, fill = list(agecat = "Birth")) %>% 
+#                 filter((outcome_variable %in% agecat_with_ranges & agecat != "Birth") | !(outcome_variable %in% agecat_with_ranges)) %>% 
+#                 replace_na(list(pval_cat = "Not estimated"))
+
+
+pooled_data <- pooled_data %>% filter(!(outcome_variable=="Stunt\nrev." & agecat == "Birth"))
+pooled_data <- droplevels(pooled_data)
+
+table(pooled_data$outcome_variable, pooled_data$agecat)
+
 
 
 hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
@@ -206,27 +247,24 @@ hm <- ggplot(pooled_data, aes(x=xvar, y=agecat, fill=pval_cat)) +
     legend.text=element_text(colour=textcol,size=7,face="bold"),
     legend.key.height=grid::unit(0.2,"cm"),
     legend.key.width=grid::unit(1,"cm"),
-    legend.position = "right",
+    legend.position = "bottom",
     axis.text.x=element_text(size=8,colour=textcol,angle=45,hjust=1),
-    axis.text.y=element_text(size=8,vjust = 0.2,colour=textcol),
+    axis.text.y=element_text(size=8,vjust = 0.5,colour=textcol),
     axis.ticks=element_line(size=0.4),
     plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
     strip.text.x = element_text(size=10),
     strip.text.y = element_text(angle=0,size=10),
     plot.background=element_blank(),
     panel.border=element_blank(),
+    #panel.spacing = unit(0.5, "lines"),
     strip.background = element_blank(),
     panel.background=element_rect(fill="grey80", colour="grey80"),
     panel.grid.major = element_blank(), panel.grid.minor = element_blank()
   ) + 
-  guides(fill = guide_legend("P-value strength", ncol=1)) + 
+  guides(fill = guide_legend("P-value strength", nrow=2)) + 
   labs(x="Exposure",y="Age category",title="") +
   coord_flip()
-  
-hm  
-  
+hm
+
 # save plot 
 ggsave(hm, file=paste0(BV_dir,"/figures/risk-factor/fig-sig-heatmap_FE.png"), height=14, width=11.5)
-
-
-

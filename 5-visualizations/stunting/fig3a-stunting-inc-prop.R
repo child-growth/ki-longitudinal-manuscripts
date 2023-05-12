@@ -130,5 +130,14 @@ ggsave(primary_plot, filename = paste0(fig_dir, "stunting/fig-stunt-2-inc-overal
 ggsave(monthly_plot, filename = paste0(fig_dir, "stunting/fig-stunt-2-inc-overall_region_cohort--allage-month24.png"),
        width=12, height=4)
 
+#save plot objects
+saveRDS(
+  list(
+    primary_plot = primary_plot,
+    monthly_plot = monthly_plot
+  ),
+  file = paste0(figdata_dir_stunting, "figdata-3a.RDS")
+)
+
 
 

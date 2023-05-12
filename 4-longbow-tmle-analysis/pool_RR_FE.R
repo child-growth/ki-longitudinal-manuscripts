@@ -11,7 +11,7 @@ head(dfull)
 
 
 unique(dfull$type)
-d <- dfull %>% filter(type=="RR")
+d <- dfull %>% filter(type=="RR", untransformed_se!=0)
 
 #drop morbidity and mortality analysis
 d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")
@@ -19,8 +19,10 @@ d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & 
 
 #Subset agecat
 d <- droplevels(d)
+table(d$intervention_variable)
 
-head(d)
+table(d$intervention_variable)
+
 
 
 RMAest <- d %>% group_by(intervention_variable, agecat, intervention_level, baseline_level, outcome_variable) %>%

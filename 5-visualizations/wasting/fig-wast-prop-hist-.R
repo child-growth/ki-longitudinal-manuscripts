@@ -105,17 +105,17 @@ y_min=10
 y_max=100
   
 
-
-full_plot <-  p +
-  annotation_custom2(ggplotGrob(p_overall), data=data.frame(region="Overall", prop_wast=0),
-                     xmin=x_min, xmax=x_max, ymin=y_min, ymax=y_max) +
-  annotation_custom2(ggplotGrob(p_SouthAsia), data=data.frame(region="South Asia", prop_wast=0),
-                     xmin=x_min, xmax=x_max, ymin=y_min, ymax=y_max) +
-  annotation_custom2(ggplotGrob(p_Africa), data=data.frame(region="Africa", prop_wast=0),
-                     xmin=x_min, xmax=x_max, ymin=y_min, ymax=y_max) +
-  annotation_custom2(ggplotGrob(p_LatinAmerica), data=data.frame(region="Latin America", prop_wast=0),
-                     xmin=x_min, xmax=x_max, ymin=y_min, ymax=y_max) 
-  full_plot
+full_plot <-  p 
+# full_plot <-  p +
+#   annotation_custom2(ggplotGrob(p_overall), data=data.frame(region="Overall", prop_wast=0),
+#                      xmin=x_min, xmax=x_max, ymin=y_min, ymax=y_max) +
+#   annotation_custom2(ggplotGrob(p_SouthAsia), data=data.frame(region="South Asia", prop_wast=0),
+#                      xmin=x_min, xmax=x_max, ymin=y_min, ymax=y_max) +
+#   annotation_custom2(ggplotGrob(p_Africa), data=data.frame(region="Africa", prop_wast=0),
+#                      xmin=x_min, xmax=x_max, ymin=y_min, ymax=y_max) +
+#   annotation_custom2(ggplotGrob(p_LatinAmerica), data=data.frame(region="Latin America", prop_wast=0),
+#                      xmin=x_min, xmax=x_max, ymin=y_min, ymax=y_max) 
+#   full_plot
 
 
 

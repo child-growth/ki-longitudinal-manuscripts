@@ -270,8 +270,10 @@ combined_plot_name = create_name(
 
 ## save overall plots together ----------------------------------
 
-ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-",combined_plot_name,
-                                        ".png"), width=12, height=12)
+ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-",combined_plot_name,".png"), width=12, height=12)
+ggsave(plot = combined_plot, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig6.pdf"), device='pdf', width=12, height=12)
+
+
 
 ## save input data  ----------------------------------
 

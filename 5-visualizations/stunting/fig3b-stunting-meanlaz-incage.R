@@ -140,3 +140,19 @@ ggsave(mean_laz_line_plot_monthly, file=paste0(fig_dir, "stunting/fig-meanlaz_ag
        width=8, height=4)
 ggsave(mean_laz_line_plot_monthly_noCI, file=paste0(fig_dir, "stunting/fig-meanlaz_age_incage_monthly.png"), 
        width=8, height=4)
+
+
+
+#save plot objects
+saveRDS(
+  list(
+    mean_laz_line_plot = mean_laz_line_plot,
+    mean_laz_line_plot_noCI = mean_laz_line_plot_noCI,
+    mean_laz_line_plot_monthly = mean_laz_line_plot_monthly,
+    mean_laz_line_plot_monthly_noCI = mean_laz_line_plot_monthly_noCI
+  ),
+  file = paste0(figdata_dir_stunting, "figdata-3b.RDS")
+)
+
+
+
