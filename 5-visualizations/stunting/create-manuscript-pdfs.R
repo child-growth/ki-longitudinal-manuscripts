@@ -21,15 +21,15 @@ p3 <- plot_grid(p3a[[1]], p3b[[2]], labels = c("a","b"), ncol = 1, rel_heights =
 ggsave(plot = p3, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig3.pdf"), device='pdf', width=12, height=10)
 
 
-#Figure 4
-p4a <- readRDS(paste0(figdata_dir_stunting, "figdata-4a.RDS"))
-p4b <- readRDS(paste0(figdata_dir_stunting, "figdata-4b.RDS"))
-
-p4a <- readRDS(paste0(figdata_dir_stunting, "figdata-stunt-2-flow-overall--allage-primary.RDS"))
-  
-  
-  saveRDS(plot_overall, file=paste0(figdata_dir_stunting, "figdata-",bar_plot_noRE_name,".RDS"))
-
+# #Figure 4
+# p4a <- readRDS(paste0(figdata_dir_stunting, "figdata-4a.RDS"))
+# p4b <- readRDS(paste0(figdata_dir_stunting, "figdata-4b.RDS"))
+# 
+# p4a <- readRDS(paste0(figdata_dir_stunting, "figdata-stunt-2-flow-overall--allage-primary.RDS"))
+#   
+#   
+#   saveRDS(plot_overall, file=paste0(figdata_dir_stunting, "figdata-",bar_plot_noRE_name,".RDS"))
+# 
 
 
 

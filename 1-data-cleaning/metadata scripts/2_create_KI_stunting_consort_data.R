@@ -16,8 +16,8 @@ d$agecat <- cut(d$agedays,
                 labels = paste0(0:24))
 table(d$agecat)
 
-d<-d %>% filter(studyid=="CMIN GB94")
-length(unique(d$subjid))
+# d<-d %>% filter(studyid=="CMIN GB94")
+# length(unique(d$subjid))
 
 #get summary statistics
 df <- d %>% group_by(studyid, country, region) %>%
