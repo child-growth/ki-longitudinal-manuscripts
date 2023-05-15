@@ -19,8 +19,10 @@ prev_p <- prev_p + theme(legend.position = "none") + coord_cartesian(ylim=c(0, 3
 ci_plot <- plot_list[[3]]$`plot` + theme(legend.position = c(.07,.8))
 fig2 <- plot_grid(whz_spline, prev_p, ci_plot, labels = "auto", ncol = 1, align = 'v', axis = 'l')
 
-#ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig2.png"), width=14, height=14)
 ggsave(fig2, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig2.png"), width=14, height=10)
+ggsave(plot = fig2, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig2.pdf"), device='pdf', width=14, height=10)
+
+
 
 #N's for figure caption
 plot_list[[1]]$`data`  %>% group_by(region) %>% summarize(min(N), max(N))
@@ -49,6 +51,7 @@ fig3_c <- plot_grid(birthstrat_curve, birthstrat_stats_plot, labels = c("e","f")
 
 fig3 <- plot_grid(fig3_a, inc_plot, rec_plot[[1]], fig3_c, labels = c("","b","c",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1,1,1, 1))
 ggsave(fig3, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig3.png"), width=14, height=14)
+ggsave(plot = fig3, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig3.pdf"), device='pdf', width=14, height=14)
 
 
 
@@ -103,7 +106,7 @@ bottom_plot <- plot_grid(p_seasonRR, seasonbirth_plot, labels = c("b","c"), ncol
 fig4 <- plot_grid(top_plot_lab, NULL, bottom_plot, labels = c("a",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1.5, -0.01, 1))
 
 ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig4.png"), width=14, height=14)
-#/data/KI/ki-manuscript-output/figures/manuscript-figure-composites/wasting/
+ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig4.pdf"), device='pdf', width=14, height=14)
 
 
 #Figure 5
@@ -116,6 +119,7 @@ co_p <- co_p + theme(legend.position = "none")
 fig5 <- plot_grid(co_p, bar_plot_RE, labels = "auto", ncol = 1, align = 'v', axis = 'l', rel_heights = c(1, 2))
 
 ggsave(fig5, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig5.png"), width=14, height=14)
+ggsave(plot = fig5, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig5.pdf"), device='pdf', width=14, height=14)
 
 
 #N's for figure caption
