@@ -58,10 +58,6 @@ df_full %>% filter(intervention_variable=="predexfd6")
 df_full %>% filter(intervention_variable=="perdiar24")
 df_full %>% filter(intervention_variable=="nrooms")
 
-# ate %>% filter(intervention_variable=="predexfd6", agecat=="6 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
-# ate %>% filter(intervention_variable=="predexfd6", agecat=="24 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
-# ate %>% filter(intervention_variable=="perdiar24", agecat=="24 months",outcome_variable %in% c("haz","whz"), region=="Pooled")
-
 
 #----------------------------------------------------------------------------------
 ##### Cleaning dataset
@@ -343,32 +339,7 @@ variable_labels = c(
 #----------------------------------------------------------
 # plot function
 #----------------------------------------------------------
-# d=df %>% filter(intervention_variable=="earlybf"|intervention_variable=="parity")
-# ylimits=c(-0.1, 0.8)
-# outcome_var="haz"
-# ylab="Adjusted difference in LAZ at 24 months"
-# legend=F
-# xaxis=F
-# facet_label_pos= -75
-# 
-# 
-# d=df[df$RFgroup=="At-birth child characteristics",]
-# facet_label_pos= -35
-# xaxis=T
-# ylab=""
-# yaxis=T
-# 
-# label_params=T
-# label_pos=c(0.4, 0.7)
-# lab_levels=c(">=50 birthlen", "67% shifted to >=50 birthlen")
-# label_format=list(
-#   label_pos=c(0.2, 0.6),
-#   lab_levels=c("[48-50) birthlen", "67% shifted to >=50 birthlen"),
-#   label_adj=c(0.045, 0.035),
-#   arrow_curve=c(-0.25,0.25),
-#   arrow_lengths=c(-0.01, -0.01),
-#   rev_arrow=c(1,1),
-#   arrow_size=0.3)
+
 
 plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, outcome_var="haz", 
                                   ylab="Adjusted difference in LAZ at 24 months", legend=F, xaxis=F, 
@@ -546,8 +517,6 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
 # WLZ
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-  #p_wlz <- plot_combined_pie_ate(df, ylimits=c(-0.1, 0.45), outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months")
-
   p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", 
                               #facet_label_pos= -35,
                               facet_label_pos= -43,
@@ -578,4 +547,3 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
 
 ggsave(p_wlz, file=paste0(here::here(),"/figures/fig3_alt3_wlz.png"), width=4, height=9)
 ggsave(plot = p_wlz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig3.pdf"), device='pdf', width=4, height=9)
-
