@@ -539,8 +539,8 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                         rel_heights = c(28,15,28,40))
   
   ggsave(p_laz, file=paste0(here::here(),"/figures/fig2_alt3_laz.png"), width=4, height=9)
-  #ggsave(p_laz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig2_alt3_laz.png"), width=4, height=8)
-    
+  ggsave(plot = p_laz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig2.pdf"), device='pdf', width=4, height=9)
+  
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # WLZ
@@ -577,5 +577,5 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
   
 
 ggsave(p_wlz, file=paste0(here::here(),"/figures/fig3_alt3_wlz.png"), width=4, height=9)
-#ggsave(p_wlz, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig3_alt_wlz.png"), width=4, height=8)
+ggsave(plot = p_wlz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig3.pdf"), device='pdf', width=4, height=9)
 
