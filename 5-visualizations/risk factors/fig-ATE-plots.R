@@ -11,7 +11,7 @@ theme_set(theme_ki())
 
 
 #Load data
-RMAest_clean <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))
+RMAest_clean <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results.rds"))
 
 yticks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
 
@@ -23,29 +23,15 @@ scaleFUN <- function(x) sprintf("%.1f", x)
 
 
 df <- RMAest_clean
+df <- df %>% filter(outcome_variable=="haz"|outcome_variable=="whz") 
 df <- droplevels(df)
 unique(df$outcome_variable)
-df$outcome_variable <- gsub("ever_stunted", "Ever stunted", df$outcome_variable)
-df$outcome_variable <- gsub("ever_wasted", "Ever wasted", df$outcome_variable)
-df$outcome_variable <- gsub("ever_co", "Ever wasted and stunted", df$outcome_variable)
-df$outcome_variable <- gsub("pers_wast", "Persistenly wasted", df$outcome_variable)
-df$outcome_variable <- gsub("stunted", "Stunted", df$outcome_variable)
-df$outcome_variable <- gsub("wasted", "Wasted", df$outcome_variable)
-df$outcome_variable <- gsub("sstunted", "Severely stunted", df$outcome_variable)
-df$outcome_variable <- gsub("swasted", "Severely wasted", df$outcome_variable)
-df$outcome_variable <- gsub("s03rec24", "Stunting recovery", df$outcome_variable)
-df$outcome_variable <- gsub("wast_rec90d", "Wasting recovery", df$outcome_variable)
-
-#Breastfeeding RRs for wasting responses
-d2 <- df %>% filter(outcome_variable=="Wasted" | outcome_variable=="Severely wasted",  
-                    intervention_variable=="predexfd6", intervention_level != baseline_level, region=="Pooled")  %>%
-  select(agecat , RR, RR.CI1, RR.CI2) %>% mutate(RR=round(RR,2), RR.CI1=round(RR.CI1,2), RR.CI2=round(RR.CI2,2))
-head(d2)
+df$outcome_variable <- gsub("haz", "LAZ", df$outcome_variable)
+df$outcome_variable <- gsub("whz", "WHZ", df$outcome_variable)
 
 #subset to a smaller number of plots
 length(unique(df$region)) * length(unique(df$outcome_variable)) * length(unique(df$intervention_variable))
 df <- df %>% 
-  filter(!(outcome_variable %in% c("s06rec1824","sStunted" , "ever_sStunted","ever_sWasted","dead0plus","dead624","dead6plus" , "sWasted"))) %>%
   filter(region=="Pooled", !(intervention_variable %in% c("anywast06","enstunt","enwast","lag_WHZ_quart")))
  length(unique(df$outcome_variable)) * length(unique(df$intervention_variable))
 
@@ -55,6 +41,7 @@ df <- df %>%
  
  unique(df$agecat)
  df$agecat <- factor(df$agecat, levels = c("Birth",  "6 months" , "24 months", "0-6 months", "6-24 months", "0-24 months"))
+ df <- df %>% filter(!is.na(agecat))
  
  i=unique(df$region)[1]
  j=unique(df$outcome_variable)[1]
@@ -84,14 +71,13 @@ for(i in unique(df$region)){
         
         if(length(unique(dpool$intervention_level))>1){
           p <-  ggplot(dpool, aes(x=intervention_level)) + 
-            geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
-            geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
+            geom_point(aes(y=ATE, fill=intervention_variable, color=intervention_variable), size = 3) +
+            geom_linerange(aes(ymin=CI1, ymax=CI2, color=intervention_variable),
                            alpha=0.5, size = 1) +
             facet_wrap(~agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
-            labs(x = "Exposure level", y = "Relative risk") +
-            geom_hline(yintercept = 1) +
-            geom_text(aes(x=1.2, y=(max(dpool$RR.CI2))-.1, label=paste0("N studies: ",max(dpool$Nstudies))), size=3,  hjust=0) +
-            scale_y_continuous(trans='log10') +
+            labs(x = "Exposure level", y = "Mean difference") +
+            geom_hline(yintercept = 0) +
+            geom_text(aes(x=1.2, y=(max(dpool$CI2))-.1, label=paste0("N studies: ",max(dpool$Nstudies))), size=3,  hjust=0) +
             #scale_y_continuous(breaks=yticks, trans='log10', labels=scaleFUN) +
             scale_fill_manual(values=rep(tableau10,4)) +
             scale_colour_manual(values=rep(tableau10,4)) +
@@ -105,14 +91,13 @@ for(i in unique(df$region)){
           
         }else{
           p <- ggplot(dpool, aes(x=agecat)) + 
-            geom_point(aes(y=RR, fill=intervention_variable, color=intervention_variable), size = 3) +
-            geom_linerange(aes(ymin=RR.CI1, ymax=RR.CI2, color=intervention_variable),
+            geom_point(aes(y=ATE, fill=intervention_variable, color=intervention_variable), size = 3) +
+            geom_linerange(aes(ymin=CI1, ymax=CI2, color=intervention_variable),
                            alpha=0.5, size = 1) +
             #facet_wrap(~intervention_level agecat, scales="free_x", nrow=1) +   #,  labeller = label_wrap) +
-            labs(x = "Age category", y = paste0("Relative risk\nExposure level: ",dpool$intervention_level[1])) +
-            geom_hline(yintercept = 1) +
-            geom_text(aes(x=1.2, y=(max(dpool$RR.CI2))-.1, label=paste0("N studies: ",max(dpool$Nstudies))), size=3,  hjust=0) +
-            scale_y_continuous(trans='log10') +
+            labs(x = "Age category", y = paste0("Mean difference\nExposure level: ",dpool$intervention_level[1])) +
+            geom_hline(yintercept = 0) +
+            geom_text(aes(x=1.2, y=(max(dpool$CI2))-.1, label=paste0("N studies: ",max(dpool$Nstudies))), size=3,  hjust=0) +
             scale_fill_manual(values=rep(tableau10,4)) +
             scale_colour_manual(values=rep(tableau10,4)) +
             theme(strip.background = element_blank(),
@@ -121,13 +106,13 @@ for(i in unique(df$region)){
                   strip.text.x = element_text(size=10),
                   axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
                   panel.spacing = unit(0, "lines")) +
-            ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$RFlabel_ref[1])) 
+            ggtitle(paste0("Outcome: ", dpool$outcome_variable[1], "\nExposure: ", dpool$RFlabel_ref[1])) 
           
         }
       
 
 
-      file_name <- paste0(BV_dir,"/figures/risk-factor/RR-plots/supplement/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png")
+      file_name <- paste0(BV_dir,"/figures/risk-factor/RR-plots/supplement/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-ATE.png")
       file_name <- gsub(" ","",file_name)
       ggsave(p, file=file_name, height=4, width=5)
       

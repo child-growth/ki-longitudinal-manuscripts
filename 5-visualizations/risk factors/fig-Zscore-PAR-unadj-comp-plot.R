@@ -58,6 +58,10 @@ df <- par %>% subset(., select = c(outcome_variable, intervention_variable, PAR,
   filter(!is.na(PAR)) %>% mutate(measure="PAR")
 
 
+#drop risk factors with rare estimates and rare reference level
+table(df$intervention_variable, df$Nstudies)
+df <- df %>% group_by(intervention_variable) %>% filter(min(Nstudies) >= 4, intervention_variable!="single", !is.na(est)) %>% droplevels()
+
 
 #----------------------------------------------------------
 # Plot parameters
@@ -128,7 +132,7 @@ pPAR <- ggplot(plotdf, aes(x=RFlabel_ref, shape=Analysis, group=Analysis)) +
   geom_linerange(aes(ymin=-CI1, ymax=-CI2), color="grey30", position = position_dodge(0.4)) +
   facet_wrap(~outcome) +
   coord_flip(ylim=c(-.1, 0.55)) +
-  labs(x = "Exposure", y = "Population Attributable difference") +
+  labs(x = "Exposure", y = "Population Intervention Effect") +
   geom_hline(yintercept = 0) +
   theme(strip.background = element_blank(),
         legend.position=c(0.3,0.2),
