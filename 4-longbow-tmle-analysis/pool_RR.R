@@ -11,7 +11,7 @@ head(dfull)
 
 
 unique(dfull$type)
-d <- dfull %>% filter(type=="RR", untransformed_se!=0)
+d <- dfull %>% filter(type=="RR")
 
 #drop morbidity and mortality analysis
 d <- d %>% filter(outcome_variable!="dead" & outcome_variable!="co_occurence" & outcome_variable!="pers_wasted624")

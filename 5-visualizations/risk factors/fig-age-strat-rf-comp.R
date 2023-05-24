@@ -7,6 +7,7 @@ source(paste0(here::here(), "/0-project-functions/0_risk_factor_functions.R"))
 
 #Load data
 d <- readRDS(paste0(BV_dir,"/results/rf results/pooled_RR_results.rds"))  %>% mutate(pooled=1)
+table(d$intervention_level==d$baseline_level )
 
 dfull <- readRDS(paste0(BV_dir,"/results/rf results/full_RF_results.rds")) %>% filter(type=="RR", intervention_level!=baseline_level ) %>% 
   select(studyid,country,intervention_variable, agecat,  intervention_level, baseline_level, outcome_variable, estimate, ci_lower,ci_upper) %>%

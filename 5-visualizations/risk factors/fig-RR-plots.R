@@ -101,7 +101,7 @@ for(i in unique(df$region)){
                   strip.text.x = element_text(size=10),
                   axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
                   panel.spacing = unit(0, "lines")) +
-            ggtitle(paste0("Outcome: ", dpool$outcome_variable[1], "\nExposure: ", dpool$RFlabel_ref[1])) 
+            ggtitle(paste0("Outcome: ", dpool$outcome_variable[1], "\nExposure:\n", dpool$RFlabel_ref[1])) 
           
         }else{
           p <- ggplot(dpool, aes(x=agecat)) + 
@@ -121,7 +121,7 @@ for(i in unique(df$region)){
                   strip.text.x = element_text(size=10),
                   axis.text.x = element_text(size=10), #, angle = 20, hjust = 1),
                   panel.spacing = unit(0, "lines")) +
-            ggtitle(paste0("Outcome:", dpool$outcome_variable[1], "\nExposure:", dpool$RFlabel_ref[1])) 
+            ggtitle(paste0("Outcome: ", dpool$outcome_variable[1], "\nExposure:\n", dpool$RFlabel_ref[1])) 
           
         }
       
@@ -129,7 +129,7 @@ for(i in unique(df$region)){
 
       file_name <- paste0(BV_dir,"/figures/risk-factor/RR-plots/supplement/fig-",dpool$region[1], "-", dpool$outcome_variable[1], "-", gsub(" ","",dpool$intervention_variable[1]), "-RR.png")
       file_name <- gsub(" ","",file_name)
-      ggsave(p, file=file_name, height=4, width=5)
+      ggsave(p, file=file_name, height=4, width=7)
       
       }
     }
