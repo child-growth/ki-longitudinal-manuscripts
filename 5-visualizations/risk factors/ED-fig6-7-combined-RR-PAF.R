@@ -561,8 +561,10 @@ ggsave(p_wlz, file=paste0(here::here(),"/figures/EDfig7_wast_PAF.png"), width=6,
 
 
 ggsave(plot = p_laz, width=6, height=9,
-       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig6.jpg"), device='jpg')
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig6.jpeg"), device='jpeg')
 
 ggsave(plot = p_wlz, width=6, height=9,
-       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig7.jpg"), device='jpg')
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig7.jpeg"), device='jpeg')
+
+
 
