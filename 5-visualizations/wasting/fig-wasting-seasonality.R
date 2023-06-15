@@ -331,3 +331,11 @@ saveRDS(list(p1, p2, p3, p4), file=paste0(BV_dir,"/figures/plot-objects/season_p
 save(rainmax,Zpeak,conv_shift, conversion_factor, shift_var, file=paste0(BV_dir,"/figures/plot-objects/stunting_rain_seasonality_plot_parameters.Rdata"))
 
 
+#save PNG's for Nature
+ggsave(plot = p3, width=8, height=5,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig11a.jpeg"), device='jpeg')
+ggsave(plot = p3, width=8, height=5,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig11b.jpeg"), device='jpeg')
+
+
+

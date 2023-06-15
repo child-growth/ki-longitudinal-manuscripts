@@ -125,6 +125,11 @@ ggsave(plot,
        file=paste0(fig_dir, "stunting/fig-",mean_laz_quantile_plot_name,".png"), 
        width=10, height=4)
 
+
+ggsave(plot = plot, width=10,height=4, 
+       filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig5.jpeg"), device='jpeg')
+
+
 # save data -----------------------------------------------------
 saveRDS(
   d_plot_df,

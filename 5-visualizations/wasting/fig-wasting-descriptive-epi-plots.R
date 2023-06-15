@@ -1289,3 +1289,15 @@ co_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% summarize(min
 
 inc_plot_primary$data %>% filter(cohort=="pooled", region=="Overall", agecat=="0-3") %>% mutate(est)
 ip_plot$data %>% filter(measure=="Cumulative incidence", cohort=="pooled", region=="Overall", agecat=="0-3"| agecat=="3-6") %>% mutate(est)
+
+
+
+# # #save PNG's for Nature
+#severe wasting
+ggsave(plot = sevwast_plot$plot, width=14, height=3,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5a.jpeg"), device='jpeg')
+
+#concurrent wasting and stunting
+ggsave(plot = co_plot$plot, width=14, height=3,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5d.jpeg"), device='jpeg')
+

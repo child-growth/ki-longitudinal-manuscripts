@@ -316,3 +316,9 @@ ggsave(plot_monthly, file=paste0(fig_dir, "stunting/fig-measurement-heatmap-mont
        width=8.5, height=5)
 ggsave(plot_quarterly, file=paste0(fig_dir, "stunting/fig-measurement-heatmap-quarterly.png"), 
        width=4.75, height=4)
+
+
+ggsave(plot = plot_quarterly, width=4.75,height=4, 
+       filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig3.jpeg"), device='jpeg')
+ggsave(plot = plot_monthly, width=8.5,height=5, 
+       filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig4.jpeg"), device='jpeg')

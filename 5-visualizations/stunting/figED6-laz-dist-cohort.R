@@ -115,3 +115,7 @@ plot_other = ggplot(d_plot %>% filter(!is.na(agecat) &
 plot_dist = grid.arrange(plot_sa, plot_af, plot_other, nrow=3, heights = c(2.8,1.7,2.1))
 
 ggsave(plot_dist, file=paste0(fig_dir, "stunting/fig-laz-cohort-dist.png"), width=12, height=12)
+
+ggsave(plot = plot_dist, width=12,height=12, 
+       filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig6.jpeg"), device='jpeg')
+

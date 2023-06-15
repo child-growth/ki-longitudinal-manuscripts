@@ -108,6 +108,10 @@ fig4 <- plot_grid(top_plot_lab, NULL, bottom_plot, labels = c("a",""), ncol = 1,
 ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig4.png"), width=14, height=14)
 ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig4.pdf"), device='pdf', width=14, height=14)
 
+library(ragg)
+ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig4_alt.pdf"), device='pdf', width=17, height=17, units = "cm", scale = 2)
+
+
 
 #Figure 5
 co_plot <- readRDS(paste0(BV_dir,"/figures/plot-objects/co_plot_object.rds"))

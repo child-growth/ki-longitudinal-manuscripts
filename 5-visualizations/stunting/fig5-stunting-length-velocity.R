@@ -272,6 +272,8 @@ combined_plot_name = create_name(
 
 ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-",combined_plot_name,".png"), width=12, height=12)
 ggsave(plot = combined_plot, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig6.pdf"), device='pdf', width=12, height=12)
+ggsave(plot = combined_plot, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig6-alt-size.pdf"), device='pdf', width=17, height=17, units="cm")
+
 
 
 

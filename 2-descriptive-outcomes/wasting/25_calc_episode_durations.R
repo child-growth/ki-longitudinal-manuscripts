@@ -123,6 +123,7 @@ p <- ggplot(plot_df, aes(y=duration,x=agecat)) +
 p
 
 
+
 #----------------------------------------------
 # Seperate birth category
 #----------------------------------------------
@@ -178,6 +179,14 @@ p2 <- ggplot(plot_df, aes(y=duration,x=agecat)) +
   ggtitle("") + guides(color = FALSE) 
 
 ggsave(p2, file=paste0(BV_dir,"/figures/wasting/fig-duration.png"), width=10, height=4)
+
+
+# #save PNG's for Nature
+#Duration of wasting episodes by child age and region.
+ggsave(plot = p2, width=10, height=4,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig9.jpeg"), device='jpeg')
+
+
 
 
 dur_summary_agecat2_cohort %>% filter(N>Nchildren) %>% droplevels() %>% group_by(agecat, region) %>% 

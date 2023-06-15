@@ -843,3 +843,9 @@ ggsave(Fig_4B, file=paste0(fig_dir, "stunting/fig-",rec_histogram_plot_name,"-ph
 
 saveRDS(plot_data_sub, file=paste0(figdata_dir_stunting, "figdata-",rec_histogram_plot_name,"-pheno",".RDS"))
 
+
+ggsave(plot = Fig_4B, width=9,height=7, 
+       filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig11.jpeg"), device='jpeg')
+
+
+

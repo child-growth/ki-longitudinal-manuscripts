@@ -122,6 +122,8 @@ full_plot <-  p
 
 # save plot 
 ggsave(full_plot, file=paste0(BV_dir,"/figures/wasting/fig-supp-5b-wast-prop-histogram.png"), width=6, height=5)
+# #save PNG's for Nature
+ggsave(plot = full_plot, width=6,height=5,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5b.jpeg"), device='jpeg')
 
-#ggsave(p, file=paste0(BV_dir,"/figures/wasting/pooled_pers024.png"), width=8, height=5)
 

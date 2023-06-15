@@ -410,3 +410,8 @@ combined_plot <- plot_grid(p, pdiff, labels=c("a","b"), ncol=1)
 ggsave(combined_plot, file=paste0(BV_dir,"/figures/wasting/fig-RTM-extended-data-plot.png"), width=7, height=10)
 
 
+
+# # #save PNG's for Nature
+#severe wasting
+ggsave(plot = combined_plot, width=7, height=10,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig8.jpeg"), device='jpeg')

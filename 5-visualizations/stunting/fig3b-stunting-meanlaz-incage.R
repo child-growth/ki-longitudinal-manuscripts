@@ -154,5 +154,8 @@ saveRDS(
   file = paste0(figdata_dir_stunting, "figdata-3b.RDS")
 )
 
+ggsave(plot = mean_laz_line_plot, width=9,height=5, 
+       filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig9.jpeg"), device='jpeg')
+
 
 

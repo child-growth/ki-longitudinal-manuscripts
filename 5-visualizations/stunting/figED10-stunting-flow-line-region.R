@@ -144,3 +144,12 @@ p_inc
 ggsave(p_inc, file=paste0(fig_dir, "stunting/fig-stunt-2-flow-line-region-allage-primary.png"),
        width=6, height=6)
 saveRDS(plot_combine, file=paste0(figdata_dir_stunting, "figdata-stunt-2-flow-line-region-allage-primary.RDS"))
+
+
+
+ggsave(plot = p_inc, width=6,height=6, 
+       filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig10.jpeg"), device='jpeg')
+
+
+
+

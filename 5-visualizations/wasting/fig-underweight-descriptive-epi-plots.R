@@ -812,3 +812,11 @@ prev_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% summarise(m
 #ci_plot_primary[[2]] %>% group_by(region) %>% summarise(min(nmeas), max(nmeas), min(nstudies), max(nstudies))
 inc_plot_primary$data %>% filter(cohort=="pooled") %>% group_by(region) %>% summarize(min(nmeas), max(nmeas))
 rec_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% filter(age_range=="90 days") %>% summarize(min(nmeas), max(nmeas), sum(nmeas))
+
+
+
+#save PNG's for Nature
+#Prevalence of underweight (weight-for-age Z-score < –2) by age and region.
+ggsave(plot = prev_plot$plot, width=5,height=5,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5e.jpeg"), device='jpeg')
+

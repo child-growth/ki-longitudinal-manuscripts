@@ -387,7 +387,9 @@ grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
 # save plot and underlying data
 ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.png"),
        plot = grid,device='png',width=9,height=20,limitsize = FALSE)
-ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.pdf"),
-       plot = grid,device='pdf',width=9,height=20,limitsize = FALSE)
+ggsave(filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig1.jpeg"),
+       plot = grid,device='jpeg',width=9,height=20,limitsize = FALSE)
+ggsave(filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig1.jpeg"),
+       plot = grid,device='jpeg',width=9,height=20,limitsize = FALSE)
 
 

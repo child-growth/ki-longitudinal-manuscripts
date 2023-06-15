@@ -440,6 +440,9 @@ combined_plot_strat_name = create_name(
 ggsave(combined_plot_strat, file=paste0(fig_dir, "stunting/fig-",combined_plot_strat_name,
                                         ".png"), width=12, height=12)
 
+ggsave(plot = combined_plot_strat, width=12,height=12, 
+      filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig12.jpeg"), device='jpeg')
+
 ## save input data  ----------------------------------
 
 saveRDS(

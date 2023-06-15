@@ -73,3 +73,8 @@ plot = ggplot(snl %>% filter(!is.na(agecat)), aes(x = agecat, y = estimate)) +
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 ggsave(plot, file=paste0(fig_dir, "stunting/fig-laz-violin.png"), width=9, height=3)
+
+ggsave(plot = plot, width=9,height=3, 
+       filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig7.jpeg"), device='jpeg')
+
+
