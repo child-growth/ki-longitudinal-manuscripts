@@ -87,6 +87,10 @@ p <- ggplot(df, aes(x=RFlabel, y=EVals_lb)) + geom_point(alpha=0.1) + #geom_smoo
 p
 
 ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/fig-Evalues.png"), height=10, width=8)
+ggsave(plot = p, width=10, height=8,
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig13.jpeg"), device='jpeg')
+
+
 
 
 

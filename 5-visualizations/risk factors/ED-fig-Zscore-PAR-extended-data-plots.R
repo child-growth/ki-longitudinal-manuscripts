@@ -242,13 +242,13 @@ ggsave(plot_wlz_age, file=paste0(here(), "/figures/fig-wlz-PAR-strat-age.png"), 
 
 #Nature jpeg versions
 ggsave(plot = plot_laz_age, width=18, height=13,
-       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig3.jpg"), device='jpg')
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig3.jpeg"), device='jpeg')
 ggsave(plot = plot_wlz_age, width=18, height=13,
-       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig4.jpg"), device='jpg')
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig4.jpeg"), device='jpeg')
 
 ggsave(plot = plot_laz_region, width=18, height=13,
-       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig8.jpg"), device='jpg')
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig8.jpeg"), device='jpeg')
 ggsave(plot = plot_wlz_region, width=18, height=13,
-       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig9.jpg"), device='jpg')
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig9.jpeg"), device='jpeg')
 
 

@@ -387,4 +387,9 @@ print(p2)
  ggsave(Twoby1plotA, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/ED_spline_birth_order.png"), width=7, height=5)
  
  
+ ggsave(plot = Twoby1plotA, width=7, height=5,
+        filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig10.jpeg"), device='jpeg')
+ 
+ 
+ 
  

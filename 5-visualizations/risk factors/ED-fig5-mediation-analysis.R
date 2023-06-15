@@ -127,4 +127,4 @@ ggsave(p, file=paste0(fig_dir,"risk-factor/fig-mediation.png"), width=10, height
 
 
 ggsave(plot = p, width=10, height=6,
-       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig5.jpg"), device='jpg')
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig5.jpeg"), device='jpeg')

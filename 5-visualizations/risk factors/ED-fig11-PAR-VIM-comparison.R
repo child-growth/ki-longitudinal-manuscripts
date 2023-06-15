@@ -216,6 +216,10 @@ print(pVIMcombined)
 
 
 ggsave(pVIMcombined, file=paste0(BV_dir,"/figures/risk-factor/optx_comp.png"), width=7, height=10)
+ggsave(plot = pVIMcombined, width=7, height=10,
+       filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig11.jpeg"), device='jpeg')
+
+
 
 save(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-objects.Rdata"))
 saveRDS(pVIMcombined, file=paste0(BV_dir, "/results/rf results/fig-VIM-PAR-comp-object-combined.RDS"))

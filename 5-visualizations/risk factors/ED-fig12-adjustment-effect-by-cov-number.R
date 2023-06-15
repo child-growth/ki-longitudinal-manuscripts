@@ -74,4 +74,6 @@ p <-  ggplot(df, aes(x=num_cov , y=diff)) +
 
 
 ggsave(p, file=paste0(BV_dir,"/figures/risk-factor/fig-adjusted-unadjusted-differences.png"), height=8, width=8)
+ggsave(plot = p, width=8, height=8,
+              filename=paste0(here::here(),"/figures/ED-pngs/C+C/ED-fig12.jpeg"), device='jpeg')
 
