@@ -28,28 +28,28 @@ main_color <- "#89b4bc"
 # Load data
 #----------------------------------------------------------------------------------
 
-# PIE
-par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
-#flip direction of measurement so it's Ya-Y
-par_raw <- par_raw %>% mutate(PAR=-PAR, CI1_temp=-CI2, CI2=-CI1, CI1=CI1_temp) %>% subset(., select = -c(CI1_temp))
-
-#Mean differences
-ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
-unique(ATE_raw$intervention_variable)
-#flip SGA to use SGA as the reference level
-head(ATE_raw)
-ATE_sga <- ATE_raw %>% filter(intervention_variable=="SGA")
-ATE_sga <- ATE_sga %>% mutate(intervention_level="Not SGA", baseline_level="SGA", ATE=-ATE, CI1_temp=CI1, CI1=-CI2, CI2=-CI1_temp) %>% subset(., select=-c(CI1_temp))
-ATE_raw <- ATE_raw %>% filter(intervention_variable!="SGA")
-ATE_raw %>% filter(intervention_variable=="sga",region=="Pooled", agecat=="24 months")
-ATE_raw <- bind_rows(ATE_raw, ATE_sga)
-#rename point estimates and CI's for combining
-par_raw <- par_raw %>% rename(est=PAR)
-ATE_raw <- ATE_raw %>% rename(est=ATE)
-
-df_full <- bind_rows(par_raw, ATE_raw)
-
-saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
+# # PIE
+# par_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_Zscore_PAR_results.rds")) %>% mutate(parameter="Population Intervention Effect", baseline_level=intervention_level ) %>% filter(intervention_variable!="perdiar6")
+# #flip direction of measurement so it's Ya-Y
+# par_raw <- par_raw %>% mutate(PAR=-PAR, CI1_temp=-CI2, CI2=-CI1, CI1=CI1_temp) %>% subset(., select = -c(CI1_temp))
+# 
+# #Mean differences
+# ATE_raw <- readRDS(paste0(BV_dir,"/results/rf results/pooled_ATE_results_alt_ref.rds")) %>% mutate(parameter="Mean Difference") %>% filter(intervention_variable!="perdiar6")
+# unique(ATE_raw$intervention_variable)
+# #flip SGA to use SGA as the reference level
+# head(ATE_raw)
+# ATE_sga <- ATE_raw %>% filter(intervention_variable=="SGA")
+# ATE_sga <- ATE_sga %>% mutate(intervention_level="Not SGA", baseline_level="SGA", ATE=-ATE, CI1_temp=CI1, CI1=-CI2, CI2=-CI1_temp) %>% subset(., select=-c(CI1_temp))
+# ATE_raw <- ATE_raw %>% filter(intervention_variable!="SGA")
+# ATE_raw %>% filter(intervention_variable=="sga",region=="Pooled", agecat=="24 months")
+# ATE_raw <- bind_rows(ATE_raw, ATE_sga)
+# #rename point estimates and CI's for combining
+# par_raw <- par_raw %>% rename(est=PAR)
+# ATE_raw <- ATE_raw %>% rename(est=ATE)
+# 
+# df_full <- bind_rows(par_raw, ATE_raw)
+# 
+# saveRDS(df_full, file=paste0(here::here(),"/data/temp_plotdf2_full.RDS"))
 
 df_full <- readRDS(paste0(here::here(),"/data/temp_plotdf2_full.RDS")) %>% filter( region=="Pooled", agecat=="24 months")
 head(df_full)
@@ -199,14 +199,14 @@ unique(df$intervention_level_f2)
 df$intervention_level_f <- stringi::stri_replace_all_fixed(
   df$intervention_level_f,
   c("<=", ">="),
-  c("\\u2264", "\\u2265"),
+  c("\\u2264", "\\u2265 "),
   vectorize_all = F
 )
 
 df$baseline_level <- stringi::stri_replace_all_fixed(
   df$baseline_level,
   c("<=", ">="),
-  c("\u2264", "\u2265"),
+  c("\u2264", "\u2265 "),
   vectorize_all = F
 )
 
@@ -230,7 +230,7 @@ cat(paste(paste0("\"",df$intervention_level_f2,"\"=\"",df$intervention_level_f,"
 
 variable_labels = c(
   "51% shifted to Female sex" = "51% shifted to Female", "67% shifted to >=50 birthlen" =
-    "67% shifted to \u226550", "24% shifted to >= 2500 birthwt" = "24% shifted to \u2265 2500", "49% shifted to Full/late term gagebrth" =
+    "67% shifted to \u2265 50", "24% shifted to >= 2500 birthwt" = "24% shifted to \u2265  2500", "49% shifted to Full/late term gagebrth" =
     "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "66% shifted to 1 parity" =
     "66% shifted to 1", "34% shifted to Not SGA sga" = "34% shifted to Not SGA", "38% shifted to 1 nchldlt5" =
     "38% shifted to 1", "81% shifted to 3 or less nhh" = "81% shifted to 3 or less", "91% shifted to 4+ nrooms" =
@@ -238,14 +238,14 @@ variable_labels = c(
     "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
     "75% shifted to Yes", "51% shifted to Yes cleanck" = "51% shifted to Yes", "75% shifted to Opposite max rain rain_quartile" =
     "75% shifted to Opposite max rain", "42% shifted to [20-30) mage" = "42% shifted to [20-30)", "82% shifted to >=35 fage" =
-    "82% shifted to \u226535", "30% shifted to >=150 mhtcm" = "30% shifted to \u2265150", "35% shifted to >=45 mwtkg" =
-    "35% shifted to \u226545", "40% shifted to >=20 mbmi" = "40% shifted to \u226520", "68% shifted to High meducyrs" =
+    "82% shifted to \u2265 35", "30% shifted to >=150 mhtcm" = "30% shifted to \u2265 150", "35% shifted to >=45 mwtkg" =
+    "35% shifted to \u2265 45", "40% shifted to >=20 mbmi" = "40% shifted to \u2265 20", "68% shifted to High meducyrs" =
     "68% shifted to High", "77% shifted to High feducyrs" = "77% shifted to High", "37% shifted to Yes predexfd6" =
     "37% shifted to Yes", "48% shifted to <=2% perdiar24" = "48% shifted to \u22642%", "70% shifted to Yes earlybf" =
     "70% shifted to Yes", "Male sex" = "<span style='color:#89b4bc'>Male</span>", "Female sex" =
     "<span style='color:#89b4bc'>Female</span>", "<48 birthlen" = "<span style='color:#89b4bc'><48</span>", ">=50 birthlen" =
-    "<span style='color:#89b4bc'>\u226550</span>", "[48-50) birthlen" = "<span style='color:#89b4bc'>[48-50)</span>", "< 2500 birthwt" =
-    "<span style='color:#89b4bc'>< 2500</span>", ">=2500 birthwt" = "<span style='color:#89b4bc'>\u22652500</span>", "Preterm gagebrth" =
+    "<span style='color:#89b4bc'>\u2265 50</span>", "[48-50) birthlen" = "<span style='color:#89b4bc'>[48-50)</span>", "< 2500 birthwt" =
+    "<span style='color:#89b4bc'>< 2500</span>", ">=2500 birthwt" = "<span style='color:#89b4bc'>\u2265 2500</span>", "Preterm gagebrth" =
     "<span style='color:#89b4bc'>Preterm</span>", "Full/late term gagebrth" =
     "<span style='color:#89b4bc'>Full/late term</span>", "Early term gagebrth" =
     "<span style='color:#89b4bc'>Early term</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "No hdlvry" =
@@ -269,19 +269,19 @@ variable_labels = c(
     "<span style='color:#89b4bc'>Post-max rain</span>", "Pre-max rain rain_quartile" =
     "<span style='color:#89b4bc'>Pre-max rain</span>", "Max rain rain_quartile" =
     "<span style='color:#89b4bc'>Max rain</span>", "<20 mage" = "<span style='color:#89b4bc'><20</span>", "[20-30) mage" =
-    "<span style='color:#89b4bc'>[20-30)</span>", ">=30 mage" = "<span style='color:#89b4bc'>\u226530</span>", "<30 fage" =
-    "<span style='color:#89b4bc'><30</span>", ">=35 fage" = "<span style='color:#89b4bc'>\u226535</span>", "[30-35) fage" =
+    "<span style='color:#89b4bc'>[20-30)</span>", ">=30 mage" = "<span style='color:#89b4bc'>\u2265 30</span>", "<30 fage" =
+    "<span style='color:#89b4bc'><30</span>", ">=35 fage" = "<span style='color:#89b4bc'>\u2265 35</span>", "[30-35) fage" =
     "<span style='color:#89b4bc'>[30-35)</span>", "<150 mhtcm" = "<span style='color:#89b4bc'><150</span>", ">=150 mhtcm" =
-    "<span style='color:#89b4bc'>\u2265150</span>", "<45 mwtkg" = "<span style='color:#89b4bc'><45</span>", ">=45 mwtkg" =
-    "<span style='color:#89b4bc'>\u226545</span>", "<20 mbmi" = "<span style='color:#89b4bc'><20</span>", ">=20 mbmi" =
-    "<span style='color:#89b4bc'>\u226520</span>", "Low meducyrs" = "<span style='color:#89b4bc'>Low</span>", "High meducyrs" =
+    "<span style='color:#89b4bc'>\u2265 150</span>", "<45 mwtkg" = "<span style='color:#89b4bc'><45</span>", ">=45 mwtkg" =
+    "<span style='color:#89b4bc'>\u2265 45</span>", "<20 mbmi" = "<span style='color:#89b4bc'><20</span>", ">=20 mbmi" =
+    "<span style='color:#89b4bc'>\u2265 20</span>", "Low meducyrs" = "<span style='color:#89b4bc'>Low</span>", "High meducyrs" =
     "<span style='color:#89b4bc'>High</span>", "Medium meducyrs" = "<span style='color:#89b4bc'>Medium</span>", "Low feducyrs" =
     "<span style='color:#89b4bc'>Low</span>", "High feducyrs" = "<span style='color:#89b4bc'>High</span>", "Medium feducyrs" =
     "<span style='color:#89b4bc'>Medium</span>", "No predexfd6" = "<span style='color:#89b4bc'>No</span>", "Yes predexfd6" =
     "<span style='color:#89b4bc'>Yes</span>", ">2% perdiar24" = "<span style='color:#89b4bc'>>2%</span>", "<=2% perdiar24" =
     "<span style='color:#89b4bc'>\u22642%</span>", "No earlybf" = "<span style='color:#89b4bc'>No</span>", "Yes earlybf" =
     "<span style='color:#89b4bc'>Yes</span>", "51% shifted to Female sex" =
-    "51% shifted to Female", "67% shifted to >=50 birthlen" = "67% shifted to \u226550", "25% shifted to >= 2500 birthwt" =
+    "51% shifted to Female", "67% shifted to >=50 birthlen" = "67% shifted to \u2265 50", "25% shifted to >= 2500 birthwt" =
     "25% shifted to \u2265 2500", "49% shifted to Full/late term gagebrth" =
     "49% shifted to Full/late term", "56% shifted to No hdlvry" = "56% shifted to No", "67% shifted to 1 parity" =
     "67% shifted to 1", "34% shifted to Not SGA sga" = "34% shifted to Not SGA", "38% shifted to 1 nchldlt5" =
@@ -290,14 +290,14 @@ variable_labels = c(
     "50% shifted to Food Secure", "31% shifted to Yes impsan" = "31% shifted to Yes", "75% shifted to Yes impfloor" =
     "75% shifted to Yes", "51% shifted to Yes cleanck" = "51% shifted to Yes", "75% shifted to Opposite max rain rain_quartile" =
     "75% shifted to Opposite max rain", "43% shifted to [20-30) mage" = "43% shifted to [20-30)", "82% shifted to >=35 fage" =
-    "82% shifted to \u226535", "32% shifted to >=150 mhtcm" = "32% shifted to \u2265150", "38% shifted to >=45 mwtkg" =
-    "38% shifted to \u226545", "41% shifted to >=20 mbmi" = "41% shifted to \u226520", "69% shifted to High meducyrs" =
+    "82% shifted to \u2265 35", "32% shifted to >=150 mhtcm" = "32% shifted to \u2265 150", "38% shifted to >=45 mwtkg" =
+    "38% shifted to \u2265 45", "41% shifted to >=20 mbmi" = "41% shifted to \u2265 20", "69% shifted to High meducyrs" =
     "69% shifted to High", "76% shifted to High feducyrs" = "76% shifted to High", "37% shifted to Yes predexfd6" =
     "37% shifted to Yes", "48% shifted to <=2% perdiar24" = "48% shifted to \u22642%", "72% shifted to Yes earlybf" =
     "72% shifted to Yes", "Male sex" = "<span style='color:#89b4bc'>Male</span>", "Female sex" =
     "<span style='color:#89b4bc'>Female</span>", "<48 birthlen" = "<span style='color:#89b4bc'><48</span>", ">=50 birthlen" =
-    "<span style='color:#89b4bc'>\u226550</span>", "[48-50) birthlen" = "<span style='color:#89b4bc'>[48-50)</span>", "< 2500 birthwt" =
-    "<span style='color:#89b4bc'>< 2500</span>", ">=2500 birthwt" = "<span style='color:#89b4bc'>\u22652500</span>", "Preterm gagebrth" =
+    "<span style='color:#89b4bc'>\u2265 50</span>", "[48-50) birthlen" = "<span style='color:#89b4bc'>[48-50)</span>", "< 2500 birthwt" =
+    "<span style='color:#89b4bc'>< 2500</span>", ">=2500 birthwt" = "<span style='color:#89b4bc'>\u2265 2500</span>", "Preterm gagebrth" =
     "<span style='color:#89b4bc'>Preterm</span>", "Full/late term gagebrth" =
     "<span style='color:#89b4bc'>Full/late term</span>", "Early term gagebrth" =
     "<span style='color:#89b4bc'>Early term</span>", "Yes hdlvry" = "<span style='color:#89b4bc'>Yes</span>", "No hdlvry" =
@@ -321,12 +321,12 @@ variable_labels = c(
     "<span style='color:#89b4bc'>Opposite max rain</span>", "Pre-max rain rain_quartile" =
     "<span style='color:#89b4bc'>Pre-max rain</span>", "Max rain rain_quartile" =
     "<span style='color:#89b4bc'>Max rain</span>", "<20 mage" = "<span style='color:#89b4bc'><20</span>", ">=30 mage" =
-    "<span style='color:#89b4bc'>\u226530</span>", "[20-30) mage" = "<span style='color:#89b4bc'>[20-30)</span>", "<30 fage" =
-    "<span style='color:#89b4bc'><30</span>", ">=35 fage" = "<span style='color:#89b4bc'>\u226535</span>", "[30-35) fage" =
+    "<span style='color:#89b4bc'>\u2265 30</span>", "[20-30) mage" = "<span style='color:#89b4bc'>[20-30)</span>", "<30 fage" =
+    "<span style='color:#89b4bc'><30</span>", ">=35 fage" = "<span style='color:#89b4bc'>\u2265 35</span>", "[30-35) fage" =
     "<span style='color:#89b4bc'>[30-35)</span>", "<150 mhtcm" = "<span style='color:#89b4bc'><150</span>", ">=150 mhtcm" =
-    "<span style='color:#89b4bc'>\u2265150</span>", "<45 mwtkg" = "<span style='color:#89b4bc'><45</span>", ">=45 mwtkg" =
-    "<span style='color:#89b4bc'>\u226545</span>", "<20 mbmi" = "<span style='color:#89b4bc'><20</span>", ">=20 mbmi" =
-    "<span style='color:#89b4bc'>\u226520</span>", "Low meducyrs" = "<span style='color:#89b4bc'>Low</span>", "High meducyrs" =
+    "<span style='color:#89b4bc'>\u2265 150</span>", "<45 mwtkg" = "<span style='color:#89b4bc'><45</span>", ">=45 mwtkg" =
+    "<span style='color:#89b4bc'>\u2265 45</span>", "<20 mbmi" = "<span style='color:#89b4bc'><20</span>", ">=20 mbmi" =
+    "<span style='color:#89b4bc'>\u2265 20</span>", "Low meducyrs" = "<span style='color:#89b4bc'>Low</span>", "High meducyrs" =
     "<span style='color:#89b4bc'>High</span>", "Medium meducyrs" = "<span style='color:#89b4bc'>Medium</span>", "Low feducyrs" =
     "<span style='color:#89b4bc'>Low</span>", "High feducyrs" = "<span style='color:#89b4bc'>High</span>", "Medium feducyrs" =
     "<span style='color:#89b4bc'>Medium</span>", "No predexfd6" = "<span style='color:#89b4bc'>No</span>", "Yes predexfd6" =
@@ -336,6 +336,19 @@ variable_labels = c(
 )
 
 
+
+#----------------------------------------------------------
+# TO do in formatting
+#----------------------------------------------------------
+
+# -adjust plot margins (might vary by panel)
+# -make facet titles smaller than 10 and y-axis labels 5 instead of 6
+
+#        axis.text.y = element_text(color = "grey20", size = 12, angle = 0, hjust = 1, vjust = 0, face = "plain"),  
+# strip text
+#  theme(strip.text.x = element_text(size = 30))
+
+
 #----------------------------------------------------------
 # plot function
 #----------------------------------------------------------
@@ -343,7 +356,8 @@ variable_labels = c(
 
 plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75, outcome_var="haz", 
                                   ylab="Adjusted difference in LAZ at 24 months", legend=F, xaxis=F, 
-                                  label_params=F,          
+                                  label_params=F,         
+                                  margin_size=c(0, 0, 0, 0), #margin(t = 0, r = 0, b = 0, l = 0, unit = "pt")
                                   label_format=list(label_pos=c(0.3, 0.75),
                                                     lab_levels=c(">=50 birthlen", "67% shifted to >=50 birthlen"),
                                                      label_adj=c(0.045, 0.035),
@@ -395,10 +409,10 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
   
   p <- ggplot(plotdf, aes(x=intervention_level_f2, alpha=parameter,
                           shape=parameter, color=parameter,  fill=parameter)) + 
-    geom_point(aes(y=est),  size = 1.5, position = position_dodge2(dodge_width)) +
+    geom_point(aes(y=est),  size = 1.25, position = position_dodge2(dodge_width)) +
     geom_linerange(aes(ymin=CI1, ymax=CI2), position = position_dodge2(dodge_width)) +
     geom_hline(yintercept = 0, size=0.25) +
-    geom_text(aes(y= est, label=reflabel, hjust=-.5), size=1.65, color="grey20") +
+    geom_text(aes(y= est, label=reflabel, hjust=-.5), size=1.6, color="grey10") +
     coord_flip(ylim=ylimits) +
     geom_hline(yintercept = 0, alpha=0.5) +
     ggforce::facet_col(facets = vars(RFlabel),
@@ -407,8 +421,7 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                        #labeller =  "label_parsed"
     ) +
     scale_x_discrete(labels=variable_labels) +
-    scale_y_continuous(breaks = c(-0.1,0,0.1,0.2,0.3,0.4, 0.5, 0.6, 0.7, 0.8), 
-                       #labels=c("0.1","0","-0.1","-0.2","-0.3","-0.4","-0.5","-0.6","-0.7","-0.8")
+    scale_y_continuous(breaks = c(-0.1,0,0.1,0.2,0.3,0.4, 0.5, 0.6, 0.7, 0.8) 
                        ) +
     scale_color_manual(values = c("black","#89b4bc"), guide = guide_legend(reverse = T) ) +
     scale_fill_manual(values = c("black","#89b4bc"), guide = guide_legend(reverse = T) ) +
@@ -422,31 +435,31 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
       theme(strip.background = element_blank(),
             legend.position = ifelse(legend,"bottom","none"),
             panel.background=element_blank(),
-            panel.border=element_rect(colour="grey80"),
+            panel.border=element_rect(colour="grey80", linewidth=0.35),
             strip.placement = "outside",
             strip.clip = "off",
+            panel.grid.major = element_line(linewidth=0.25),
             panel.grid.minor = element_blank(),
-            #strip.text=element_text(lineheight=10),
             strip.text.y.left = element_markdown(angle = 0, size=6, hjust = 0,
                                              margin = margin(r = facet_label_pos)
                                              ),
-            axis.text.y = element_markdown(size=6, hjust = 1, colour="black", margin = margin(r=1)),
+            axis.text.y = element_markdown(size=5, hjust = 1, colour="black", margin = margin(r=1)),
             legend.text = element_text(size=6),
             legend.title = element_text(size=6),
             axis.ticks=element_line( colour=grey_color),
             plot.title.position = "plot",
-            plot.title = element_text(size=10,hjust=0),
+            plot.title = element_text(size=8,hjust=0),
             panel.spacing = unit(0, "lines"),
             axis.ticks.length=unit(.05, "cm"),
             legend.box.background = element_rect(colour = grey_color), 
-            plot.margin = unit(c(0, 0, 0, 0), "cm")) 
+            plot.margin = unit(margin_size, "cm")) 
   p
   
   
   if(xaxis){
    p <- p + labs(x = NULL, y = ylab, title=plotdf$RFgroup[1]) +
-      theme(axis.text.x = element_text(size=6),
-            axis.title.x = element_text(size=6)) 
+      theme(axis.text.x = element_text(size=5),
+            axis.title.x = element_text(size=8)) 
     }else{
     p <- p + labs(x = NULL, y = NULL, title=plotdf$RFgroup[1]) +
       theme(axis.text.x =element_blank(),
@@ -482,42 +495,38 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
-  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], 
-                              #facet_label_pos= -35,
+  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",],
                               facet_label_pos= -41,
-                              xaxis=T, ylab="", label_params=T, 
+                              xaxis=T, ylab="", label_params=T,
                               label_format=list(
                                       label_pos=c(0.2, 0.6),
                                       lab_levels=c("[48-50) birthlen", "67% shifted to >=50 birthlen"),
-                                      label_adj=c(0.035, 0.03),
-                                      arrow_curve=c(-0.5,0.5),
-                                      arrow_lengths=c(-0.015, -0.015),
+                                      label_adj=c(0.017, 0.017),
+                                      arrow_curve=c(-0.15,0.15),
+                                      arrow_lengths=c(-0.0075, -0.0075),
                                       rev_arrow=c(-1,1),
-                                      arrow_size=0.3))
-  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -30, xaxis=T, ylab="")
-  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -12, xaxis=T, ylab="")
-  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T
-                              #, facet_label_pos= -42)
-                              , facet_label_pos= -53)
-  
+                                      arrow_size=0.3),
+                              margin_size=c(0, 0, -0.1, 0)) #t, r, b, l
+  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], facet_label_pos= -38, xaxis=T, ylab="",margin_size=c(-0.2, 0, -0.1, 0))
+  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], facet_label_pos= -18, xaxis=T, ylab="",margin_size=c(-0.2, 0, -0.1, 0))
+  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], legend=F, xaxis=T,margin_size=c(-0.2, 0, 0, 0)
+                              , facet_label_pos= -55)
+
   plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
-  
-  p_laz <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
+
+  p_laz <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
                         ncol = 1,
-                        #label_size = 8,
                         align = "h",
-                        #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
                         rel_heights = c(28,15,28,40))
-  
-  ggsave(p_laz, file=paste0(here::here(),"/figures/fig2_alt3_laz.png"), width=4, height=9)
-  ggsave(plot = p_laz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig2.pdf"), device='pdf', width=4, height=9)
-  
+
+  ggsave(plot = p_laz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig2_resized.pdf"), units="cm", device='pdf', width=17, height=17)
+
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # WLZ
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", 
+  p1 <- plot_combined_pie_ate(df[df$RFgroup=="At-birth child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz",
                               #facet_label_pos= -35,
                               facet_label_pos= -43,
                               xaxis=T, ylab="", label_params=T,
@@ -525,25 +534,23 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                                 label_pos=c(0.42, 0.3),
                                 lab_levels=c(">=50 birthlen", "67% shifted to >=50 birthlen"),
                                 label_adj=c(-0.02, 0.015),
-                                arrow_curve=c(-0.35,0.35),
+                                arrow_curve=c(-0.15,0.15),
                                 arrow_lengths=c(-0, -0),
                                 rev_arrow=c(-1,1),
-                                arrow_size=0.3))
-  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -30, xaxis=T, ylab="")
-  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -12, xaxis=T, ylab="")
-  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months", legend=F, xaxis=T, facet_label_pos= -55)
-  
+                                arrow_size=0.3),
+                              margin_size=c(0, 0, -0.1, 0))
+  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -30, xaxis=T, ylab="",margin_size=c(-0.2, 0, -0.1, 0))
+  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -12, xaxis=T, ylab="",margin_size=c(-0.2, 0, -0.1, 0))
+  p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months", legend=F, xaxis=T, facet_label_pos= -55,margin_size=c(-0.2, 0, 0, 0))
 
-  
+
+
   plots <- align_plots(p1, p2,  p3, p4, align = 'v', axis = 'l')
-  
-  p_wlz <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]], 
-                     ncol = 1,
-                     #label_size = 8,
-                     align = "h",
-                     #labels = c("At-birth child characteristics","Postnatal child characteristics","Parental Characteristics","Household & Environmental Characteristics"),
-                     rel_heights = c(28,15,28,40))
-  
 
-ggsave(p_wlz, file=paste0(here::here(),"/figures/fig3_alt3_wlz.png"), width=4, height=9)
-ggsave(plot = p_wlz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig3.pdf"), device='pdf', width=4, height=9)
+  p_wlz <- plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
+                     ncol = 1,
+                     align = "h",
+                     rel_heights = c(28,15,28,40))
+
+
+ggsave(plot = p_wlz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig3_resized.pdf"), units="cm", device='pdf', width=17, height=17)
