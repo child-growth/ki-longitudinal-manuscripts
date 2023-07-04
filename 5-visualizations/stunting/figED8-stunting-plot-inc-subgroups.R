@@ -445,6 +445,11 @@ ggsave(ip_plot_primary_mort$plot, file=paste0(fig_dir, "stunting/fig-",ip_plot_n
 saveRDS(ip_plot_primary_mort$data, file=paste0(figdata_dir_stunting, "figdata-",ip_plot_name_mort,".RDS"))
 
 
+inc_n_he
+inc_n_pov
+inc_n_mort
+
+
 #save pngs 
 ggsave(plot = ip_plot_primary_he$plot, width=10,height=4, 
        filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig8a.jpeg"), device='jpeg')

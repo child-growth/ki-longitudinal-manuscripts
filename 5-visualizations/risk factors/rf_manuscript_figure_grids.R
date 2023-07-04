@@ -47,7 +47,7 @@ Twoby1plot <- plot_grid(Twoby1plotA_t,  Twoby1plotC_t, labels = "auto", ncol = 2
 
 fig4 <- plot_grid(Twoby1plot, p_ageRR, p_severecomp, labels = c("","c","d"), ncol = 1, align = 'h', axis = 'l', rel_heights=c(1,2,1))
 ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/risk-factor/fig4.png"), width=14, height=15)
-ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig4.pdf"), device='pdf', width=14, height=14)
+ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig4.pdf"), device='pdf', width=14, height=15)
 
 
 
