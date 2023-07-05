@@ -7,15 +7,18 @@ require(ggmap)
 require(cowplot)
 
 
-# 
+
 # #Figure 3
 # p_severecomp <- readRDS(paste0(BV_dir,"/results/fig-severe-outcome-comps.RDS"))[[1]]
 # p_ageRR <- readRDS(paste0(BV_dir,"/results/fig-age-strat-wast-plot-objects.RDS"))[[1]]
 # splines <- readRDS(paste0(BV_dir,"/figures/plot-objects/risk-factor/rf_spline_objects.RDS"))
 # 
-# save(p_severecomp, p_ageRR, splines, file=paste0(here::here(),"/data/fig4_plot_objects.RData"))
-load(paste0(here::here(),"/data/fig4_plot_objects.RData"))
-
+# p=list(p_severecomp, p_ageRR, splines)
+# saveRDS(p, file=paste0(here::here(),"/data/fig4_plot_objects.RDS"))
+p=readRDS(paste0(here::here(),"/data/fig4_plot_objects.RDS"))
+p_severecomp=p[[1]]
+p_ageRR=p[[2]]
+splines=p[[3]]
 
 pos2 = pos = c(0.3,0.16)
 pos2 = pos = c(0.3,0.18)
