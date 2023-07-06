@@ -71,8 +71,8 @@ plen_lagwhz <- ggplot(plen_plotdf %>% filter(cohort==0), aes(x=intervention_leve
   theme(strip.background = element_blank(),
         legend.position="none",
         axis.text.y = element_text(size=12),
-        strip.text.x = element_text(size=10),
-        axis.text.x = element_text(size=10),
+        strip.text.x = element_text(size=11),
+        axis.text.x = element_text(size=12),
         panel.spacing = unit(0, "lines")) 
 plen_lagwhz
 

@@ -8,6 +8,7 @@ library(cowplot)
 library(tidytext)
 library(ggtext)
 library(glue)
+library(Cairo)
 
 
 
@@ -519,7 +520,7 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                         align = "h",
                         rel_heights = c(28,15,28,40))
 
-  ggsave(plot = p_laz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig2_resized.pdf"), units="cm", device='pdf', width=17, height=17)
+  ggsave(plot = p_laz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig2_resized.pdf"), units="cm", device=cairo_pdf, width=17, height=17)
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -539,8 +540,8 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                                 rev_arrow=c(-1,1),
                                 arrow_size=0.3),
                               margin_size=c(0, 0, -0.1, 0))
-  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -30, xaxis=T, ylab="",margin_size=c(-0.2, 0, -0.1, 0))
-  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -12, xaxis=T, ylab="",margin_size=c(-0.2, 0, -0.1, 0))
+  p2 <- plot_combined_pie_ate(df[df$RFgroup=="Postnatal child characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -40, xaxis=T, ylab="",margin_size=c(-0.2, 0, -0.1, 0))
+  p3 <- plot_combined_pie_ate(df[df$RFgroup=="Parental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", facet_label_pos= -20, xaxis=T, ylab="",margin_size=c(-0.2, 0, -0.1, 0))
   p4 <- plot_combined_pie_ate(df[df$RFgroup=="Household & Environmental Characteristics",], ylimits=c(-0.1, 0.52),  outcome_var="whz", ylab="Adjusted difference in WLZ at 24 months", legend=F, xaxis=T, facet_label_pos= -55,margin_size=c(-0.2, 0, 0, 0))
 
 
@@ -553,4 +554,4 @@ plot_combined_pie_ate <- function(d, ylimits=c(-0.1, 0.8), facet_label_pos= -75,
                      rel_heights = c(28,15,28,40))
 
 
-ggsave(plot = p_wlz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig3_resized.pdf"), units="cm", device='pdf', width=17, height=17)
+ggsave(plot = p_wlz, filename=paste0(here::here(),"/figures/manuscript-pdfs/c&c/Fig3_resized.pdf"), units="cm", device=cairo_pdf, width=17, height=17)
