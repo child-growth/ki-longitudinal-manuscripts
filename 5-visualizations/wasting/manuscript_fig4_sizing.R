@@ -60,9 +60,8 @@ bottom_plot <- plot_grid(p_seasonRR, seasonbirth_plot, labels = c("b","c"), ncol
 fig4 <- plot_grid(top_plot_lab, NULL, bottom_plot, labels = c("a",""), ncol = 1, align = 'h', axis = 'l', rel_heights = c(1.5, -0.01, 1))
 
 ggsave(fig4, file=paste0(BV_dir,"/figures/manuscript-figure-composites/wasting/fig4.png"), width=14, height=14)
-ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig4.pdf"), device='pdf', width=14, height=14)
-
-ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig4.pdf"), device='pdf', width=18, height=17, units = "cm")
+#ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig4.pdf"), device='pdf', width=14, height=14)
+#ggsave(plot = fig4, filename=paste0(here::here(),"/figures/manuscript-pdfs/wasting/Fig4.pdf"), device='pdf', width=18, height=17, units = "cm")
 
 #https://stackoverflow.com/questions/44711236/set-the-size-of-ggsave-exactly
 
