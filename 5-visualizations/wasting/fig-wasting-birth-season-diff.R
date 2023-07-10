@@ -19,19 +19,6 @@ d <- d %>% filter(n_cell >=10, baseline_level=="1")
 
 d[d$intervention_level=="8",]
 
-#Subset to monthly cohorts by merging in N's
-#d <- left_join(cohort_Ns, d, by = c("studyid", "country"))
-table(d$studyid)
-
-
-#Get N's for figure caption
-# d %>% filter(intervention_level == baseline_level) %>% group_by(seasonality_category) %>% 
-#   summarize(totN=sum(N), minN=min(N), maxN=max(N),
-#             tot_nchild=sum(nchild), min_nchild=min(nchild), max_nchild=max(nchild))
-
-#d <- d %>% filter(studyid!="PROVIDE")
-
-
 
 RMAest <- d %>% group_by(intervention_variable, intervention_level, baseline_level, outcome_variable) %>%
   do(pool.cont(., method="REML")) %>% as.data.frame()
@@ -90,8 +77,8 @@ theme(panel.background=element_blank(),
       # panel.grid.minor=element_blank(), 
       panel.spacing = unit(c(0, 0, 0, 0), "cm"),       
       #axis.ticks=element_blank(), 
-      #axis.text.x=element_blank(), 
-      #axis.text.y=element_blank(), 
+      axis.text.x=element_text(size=12),
+      axis.text.y=element_text(size=12),
       axis.title.x=element_blank(), 
       #axis.title.y=element_blank(),
       #plot.background = element_rect(fill = "transparent",colour = NA),

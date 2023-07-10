@@ -43,13 +43,13 @@ birthstrat_stats_plot <- ggplot(d,aes(y=est,x=born_wast_lab)) +
   geom_point(aes(fill=born_wast_lab,group=cohort), color="#878787", size = 2, 
              position = pd,
              alpha = 0.5, data=d.cohort) +
-  geom_text(aes(label=estimate, y=ypos, x=xpos), color="grey30", size=3.5) +
+  geom_text(aes(label=estimate, y=ypos, x=xpos), color="grey30", size=4) +
   xlab("")+
   ylab("") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
   scale_color_manual(values=cbbPalette[-1]) + 
   scale_fill_manual(values=cbbPalette[-1]) + 
-  theme(strip.text = element_text(size=15, margin = margin(t = 0))) +
+  theme(strip.text = element_text(size=12, margin = margin(t = 0))) +
   theme(axis.text.x = element_text(margin =  
                                      margin(t = 0, r = 0, b = 0, l = 0),
                                    size = 12))+ #,

@@ -26,6 +26,8 @@ p <- ggplot(data=plotdf, aes(x=agedays, y=fit, group=born_wast, color=born_wast,
     legend.position = c(.8,.2),
     legend.title = element_blank(),
     legend.background = element_blank(),
+    axis.text.x=element_text(size=12),
+    axis.text.y=element_text(size=12),
     legend.box.background = element_rect(colour = "grey40"),
     legend.text=element_text(size=rel(1)))    
 p

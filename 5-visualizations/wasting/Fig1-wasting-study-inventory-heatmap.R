@@ -194,9 +194,9 @@ hm <- ggplot(dd,aes(x=as.numeric(agecat),y=studycountry)) +
     #move legend to the bottom
     legend.position = "bottom",
     #set x axis text size and colour
-    axis.text.x=element_text(size=8,colour=textcol,angle=0,vjust=0.5),
+    axis.text.x=element_text(size=10,colour=textcol,angle=0,vjust=0.5),
     #set y axis text colour and adjust vertical justification
-    axis.text.y=element_text(size=8,vjust = 0.5,colour=textcol),
+    axis.text.y=element_text(size=10,vjust = 0.5,colour=textcol),
     #change axis ticks thickness
     axis.ticks=element_line(size=0.4),
     # axis.ticks.x=element_blank(),
@@ -249,7 +249,8 @@ sidebar <- ggplot(data = dp, aes(x = studycountry)) +
     strip.text.x = element_blank(),
     strip.text.y = element_blank(),
     # x-axis labels
-    axis.title.x = element_text(size=10),
+    axis.text.x = element_text(size=11),
+    axis.title.x = element_text(size=11),
     # title has to be the exact same format as for the other panel (for correct alignment)
     plot.title=element_text(colour=textcol,hjust=0,size=12,face="bold"),
     # remove grid lines
@@ -291,7 +292,7 @@ wpbar <- sidebar +
   labs(x = "",y="Wasting Prevalence (%)",title="d") +
   scale_y_continuous(expand=c(0,0),limits=c(0,30),
                      breaks=seq(0,20,by=5),labels=seq(0,20,by=5)) +
-  geom_hline(yintercept = seq(0,20,by=5),color='white',size=0.3)
+  geom_hline(yintercept = seq(0,20,by=5),color='white',size=0.3) 
 
 
 # number of obs side bar plot

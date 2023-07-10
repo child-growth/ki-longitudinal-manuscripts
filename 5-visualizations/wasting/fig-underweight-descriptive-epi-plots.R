@@ -91,7 +91,7 @@ p <- ggplot(df,aes(y=est,x=agecat, group=region)) +
   ggtitle("") +
   theme(legend.position="right")
 
-ggsave(p, file=paste0(fig_dir,"underweight/WLZ_by_region.png"), width=10, height=4)
+ggsave(p, file=paste0(fig_dir,"underweight/WAZ_by_region.png"), width=10, height=4)
 
 
 
@@ -817,6 +817,6 @@ rec_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% filter(age_r
 
 #save PNG's for Nature
 #Prevalence of underweight (weight-for-age Z-score < –2) by age and region.
-ggsave(plot = prev_plot$plot, width=5,height=5,
+ggsave(plot = prev_plot$plot, width=14, height=3,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5e.jpeg"), device='jpeg')
 

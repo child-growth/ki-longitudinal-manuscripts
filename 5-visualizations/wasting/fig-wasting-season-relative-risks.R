@@ -118,12 +118,13 @@ p_seasonRR <- ggplot(df, aes(y=ATE,x=intervention_level)) +
   ylab("WLZ difference") +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10))  +
   theme(
+    axis.text.y = element_text(size = 14),
     axis.text.x = element_text(margin =
                                  margin(t = 0, r = 0, b = 0, l = 0),
                                size = 14 #, angle = 45, hjust = 1, vjust =1
-                               )) +
-  theme(axis.title.y = element_text(size = 14)) +
-  theme(legend.position="top",
+                               ),
+    axis.title.y = element_text(size = 14),
+        legend.position="top",
         legend.title = element_text(size=14), 
         legend.text = element_text(size=12)) +
   ggtitle("") + 

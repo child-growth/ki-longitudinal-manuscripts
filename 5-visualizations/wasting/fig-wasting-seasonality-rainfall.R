@@ -151,7 +151,9 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
     scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
     scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                      labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
-    ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
+    ggtitle(cohort_name) + 
+    theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold"),
+          axis.title.x = element_text(size = 11), axis.title.y = element_text(size = 11) ) 
   }
   if(i %in% rightlab){
     p <- ggplot(rain_sub, aes(x=month, y=rain)) + geom_bar(stat='identity', width=0.5, alpha=0.5) +
@@ -167,7 +169,8 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
       scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                        labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
-      ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
+      ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold"),
+                                   axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12) ) 
   }
   
   if(!(i %in% leftlab | i %in% rightlab)){
@@ -185,7 +188,8 @@ rain_plot <- function(df, rain, cohort_name, leftlab = 0, rightlab = 0){
       scale_color_manual(values=cbbPalette[-1], drop=TRUE, limits = levels(rain$seasonality_category)) +
       scale_x_discrete(expand = c(0, 0), #breaks = 1:6*2, 
                        labels = c("Jan.","", "Mar.","", "May","", "Jul.","", "Sep.","", "Nov.",""))+
-      ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold")) 
+      ggtitle(cohort_name) + theme(legend.position = "none", plot.title = element_text(size = 12, face = "bold"),
+                                   axis.title.x = element_text(size = 11), axis.title.y = element_text(size = 11) ) 
   }
   
   return(p)

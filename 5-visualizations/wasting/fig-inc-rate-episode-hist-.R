@@ -104,7 +104,7 @@ p_overall <- ggplot(df, aes(x=num_wast), color="grey30", fill="grey30") +
   scale_x_continuous(breaks = 0:4, limits = c(-.5,4.5)) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
   ylab("") + xlab("N episodes") +
-  theme(axis.title=element_text(size=10)) 
+  theme(axis.title.x = element_text(size=11),axis.text.x = element_text(size=11),axis.text.y = element_text(size=11)) 
 
 df_Africa <- df %>% filter(region=="Africa") 
 df_Africa$mean_sd <- paste0(sprintf("%.2f",mean(df_Africa$num_wast))," (",sprintf("%.2f",sd(df_Africa$num_wast)),")")
@@ -116,7 +116,7 @@ p_Africa <- ggplot(df_Africa, aes(x=num_wast)) +
   scale_x_continuous(breaks = 0:4, limits = c(-.5,4.5)) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
   ylab("") + xlab("N episodes") +
-  theme(axis.title=element_text(size=10)) 
+  theme(axis.title.x = element_text(size=11),axis.text.x = element_text(size=11),axis.text.y = element_text(size=11)) 
 
 df_LatinAmerica <- df %>% filter(region=="Latin America") 
 df_LatinAmerica$mean_sd <- paste0(sprintf("%.2f",mean(df_LatinAmerica$num_wast))," (",sprintf("%.2f",sd(df_LatinAmerica$num_wast)),")")
@@ -128,7 +128,7 @@ p_LatinAmerica <- ggplot(df_LatinAmerica, aes(x=num_wast)) +
   scale_x_continuous(breaks = 0:4, limits = c(-.5,4.5)) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
   ylab("") + xlab("N episodes") +
-  theme(axis.title=element_text(size=10)) 
+  theme(axis.title.x = element_text(size=11),axis.text.x = element_text(size=11),axis.text.y = element_text(size=11)) 
 
 df_SouthAsia <- df %>% filter(region=="South Asia")
 df_SouthAsia$mean_sd <- paste0(sprintf("%.2f",mean(df_SouthAsia$num_wast))," (",sprintf("%.2f",sd(df_SouthAsia$num_wast)),")")
@@ -140,7 +140,7 @@ p_SouthAsia <- ggplot(df_SouthAsia, aes(x=num_wast)) +
   scale_x_continuous(breaks = 0:4, limits = c(-.5,4.5)) +
   coord_cartesian(expand = c(0,0), ylim=c(0,1)) +
   ylab("") + xlab("N episodes") +
-  theme(axis.title=element_text(size=10))
+  theme(axis.title.x = element_text(size=11),axis.text.x = element_text(size=11),axis.text.y = element_text(size=11))
 
 
 ggsave(p, file=paste0(BV_dir,"/figures/wasting/wast_episode_hist.png"), width=4.5, height=2.5)
@@ -161,14 +161,14 @@ annotation_custom2 <- function (grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax
                                           ymin = ymin, ymax = ymax))
 }
 
-inc_plot2 <- inc_plot + theme(legend.pos = c(0.1,-.225),
-                              legend.key.size = unit(0.1, "cm"),
-                              legend.key = element_rect(fill = "transparent", colour = "transparent"))
-
-inc_plot2
-
-# inc_plot2 <- inc_plot + theme(legend.position = "bottom")
+inc_plot2 <- inc_plot
+# inc_plot2 <- inc_plot + theme(legend.pos = c(0.1,-.225),
+#                               legend.key.size = unit(0.1, "cm"),
+#                               legend.key = element_rect(fill = "transparent", colour = "transparent"))
+# 
 # inc_plot2
+
+
 
 full_plot <-  inc_plot2 +
   annotation_custom2(ggplotGrob(p_overall), data=data.frame(region="Overall", agecat="0-3", est=0),
@@ -182,22 +182,3 @@ full_plot <-  inc_plot2 +
 full_plot
  
 saveRDS(full_plot, paste0(BV_dir,"/figures/plot-objects/inc_plot_object_inset.rds"))
-
-
-# #Add histogram insets
-# #https://www.blopig.com/blog/2019/08/combining-inset-plots-with-facets-using-ggplot2/
-# ## This function allows us to specify which facet to annotate
-# annotation_custom2 <- function (grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, data){
-#   layer(data = data, stat = StatIdentity, position = PositionIdentity, 
-#         geom = ggplot2:::GeomCustomAnn,
-#         inherit.aes = TRUE, params = list(grob = grob, 
-#                                           xmin = xmin, xmax = xmax, 
-#                                           ymin = ymin, ymax = ymax))
-# }
-# 
-# temp <- inc_plot[[1]] + 
-#   annotation_custom2(grob=ggplotGrob(ep_hist[[1]]), 
-#                      data = data.frame(category="Overall"),
-#                      ymin =1, ymax=10, xmin=0, xmax=20)
-# temp
-# 

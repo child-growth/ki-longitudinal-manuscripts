@@ -176,9 +176,8 @@ p2 <- ggplot(data=dfit, aes(x=(birthday/365)*12+0.5, y=(fit-shift_var)*conversio
                      #digits, 
                      position = "right",
                      expand = expand_scale(mult = c(0,0.1)), 
-                     sec.axis = sec_axis(~(./(conversion_factor)+shift_var), name = "Birth WLZ")) #+
-  # scale_x_continuous(limits=c(1,364), expand = c(0, 0),
-  #                    breaks = 1:6*30.4167*2-50, labels = rep(c("Jan.", "Mar.", "May", "Jul.", "Sep.", "Nov."),1)) 
+                     sec.axis = sec_axis(~(./(conversion_factor)+shift_var), name = "Birth WLZ")) +
+  theme(axis.text.x=element_text(size=12), axis.text.y=element_text(size=12))
 p2
 
 p2_name = create_name(
@@ -334,7 +333,7 @@ save(rainmax,Zpeak,conv_shift, conversion_factor, shift_var, file=paste0(BV_dir,
 #save PNG's for Nature
 ggsave(plot = p3, width=8, height=5,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig11a.jpeg"), device='jpeg')
-ggsave(plot = p3, width=8, height=5,
+ggsave(plot = p4, width=8, height=5,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig11b.jpeg"), device='jpeg')
 
 

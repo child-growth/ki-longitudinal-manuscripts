@@ -657,7 +657,7 @@ rec_combo_plot <- function(d, Disease, Measure, Birth, Severe, Age_range,
     
     # cohort-stratified
     geom_point(aes(shape=age_range, group=interaction(age_range, region)),
-               color = "#878787", fill = "#878787", size = 1.5, 
+               color = "#878787", fill = "#878787", size = 2, 
                data = df %>% filter(ispooled == "no"),
                position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.5),
                alpha = 0.25) +

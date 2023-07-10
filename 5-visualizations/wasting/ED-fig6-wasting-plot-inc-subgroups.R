@@ -729,11 +729,11 @@ inc_n_he
 inc_n_pov
 inc_n_mort
 
-ggsave(plot = ip_plot_primary_he$plot, width=12,height=12,
+ggsave(plot = ip_plot_primary_he$plot, width=14,height=3,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig6a.jpeg"), device='jpeg')
-ggsave(plot = ip_plot_primary_pov$plot, width=12,height=12,
+ggsave(plot = ip_plot_primary_pov$plot, width=14,height=3,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig6b.jpeg"), device='jpeg')
-ggsave(plot = ip_plot_primary_mort$plot, width=12,height=12,
+ggsave(plot = ip_plot_primary_mort$plot, width=14,height=3,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig6c.jpeg"), device='jpeg')
 
 
