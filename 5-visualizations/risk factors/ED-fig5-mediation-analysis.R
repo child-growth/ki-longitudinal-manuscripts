@@ -106,7 +106,7 @@ p <- ggplot(plotdf, aes(x=reorder(intervention_level, desc(intervention_level)))
   labs(x = "Exposure level", y = "Adjusted Z-score difference") +
   geom_hline(yintercept = 0, linetype="dashed") +
   coord_cartesian(ylim = c(-1, 0.22)) +
-  scale_y_continuous(breaks=c(-1,-0.8,-0.6, -0.4, -0.2, 0, 0.2), labels=scaleFUN, expand = c(0,0)) +
+  scale_y_continuous(breaks=c(-1,-0.8,-0.6, -0.4, -0.2, 0), labels=scaleFUN, expand = c(0,0)) +
   scale_colour_manual(values=tableau10[c(2,3)]) +  
   ggtitle("LAZ                                                       WLZ")+
   theme(strip.background = element_blank(),

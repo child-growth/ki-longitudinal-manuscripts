@@ -292,7 +292,7 @@ saveRDS(df, file=paste0(BV_dir, "/figures/wasting/figure-data/fig-GA-correction-
 
 
 # #save PNG's for Nature
-ggsave(plot = p, width=6,height=8,
+ggsave(plot = p, width=10,height=8,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig7.jpeg"), device='jpeg')
 
 
