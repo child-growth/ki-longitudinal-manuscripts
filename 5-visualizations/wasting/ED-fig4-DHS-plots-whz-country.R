@@ -23,6 +23,10 @@
 rm(list=ls())
 source(paste0(here::here(), "/0-config.R"))
 source(paste0(here::here(), "/0-project-functions/0_helper_sampling_weights.R"))
+require(cowplot)
+require(ggmap)
+if(!require(magick)){install.packages("magick")}
+library(magick)
 
 # standard region colors used in other plots
 pcols <- tableau11
@@ -240,4 +244,32 @@ ggsave(plot = dplot, width=6,height=7,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4a.jpeg"), device='jpeg')
 ggsave(plot = dhsp, width=10,height=6,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4b.jpeg"), device='jpeg')
+
+
+fig4 <- plot_grid(dplot, dhsp, labels = "auto", ncol = 1, align = 'v', axis = 'l')
+
+
+ggsave(plot = fig4, width=10, height=13, dpi=600,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4.jpeg"), device='jpeg')
+
+
+# Define the DPI and size in cm
+dpi <- 600
+width_cm <- 18
+height_cm <- 17
+
+# Convert size in cm to size in pixels
+width_px <- dpi * width_cm / 2.54  # 1 inch is 2.54 cm
+height_px <- dpi * height_cm / 2.54
+
+# Make them integers (round and convert to integer)
+width_px <- round(width_px)
+height_px <- round(height_px)
+fig4 <- image_scale(fig4, geometry = paste0(width_px, "x", height_px, "!"))
+
+
+# Write the images to a file
+#image_scale() or image_resize()
+image_write(fig4, paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4.jpeg"))
+?ggsave
 
