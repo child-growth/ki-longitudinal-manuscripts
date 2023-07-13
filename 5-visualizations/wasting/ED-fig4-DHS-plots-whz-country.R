@@ -250,7 +250,7 @@ fig4 <- plot_grid(dplot, dhsp, labels = "auto", ncol = 1, align = 'v', axis = 'l
 
 
 ggsave(plot = fig4, width=10, height=13, dpi=600,
-       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4.jpeg"), device='jpeg')
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4-initial-size.jpeg"), device='jpeg')
 
 
 # # Define the DPI and size in cm
