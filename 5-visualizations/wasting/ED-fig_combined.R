@@ -45,7 +45,9 @@ load(paste0(here::here(),"/figures/ED-pngs/wasting/ED-plots_5c.Rdata"))
 load(paste0(here::here(),"/figures/ED-pngs/wasting/ED-plots_5e.Rdata"))
 
 fig5bc <- plot_grid(fig5b, fig5c, labels = c("b","c"), ncol = 2, align = 'v', axis = 'l')
-EDfig5 <- plot_grid(fig5a, fig5bc, fig5d, fig5e, labels = c("a","","d","e"), ncol = 1, align = 'v', axis = 'l')
+EDfig5 <- plot_grid(fig5a, fig5bc, fig5d, fig5e, labels = c("a","","d","e"), ncol = 1, align = 'v', axis = 'l', rel_heights = c(1, 0.75, 1, 1))
+ggsave(plot = EDfig5, width=38, height=34, units = "cm", dpi=600,
+       filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5-initial-size.jpeg"), device='jpeg')
 
 
 # "C:\Users\andre\Documents\HBGDki\ki-longitudinal-manuscripts\figures\ED-pngs\wasting\ED-fig6a.jpeg"
