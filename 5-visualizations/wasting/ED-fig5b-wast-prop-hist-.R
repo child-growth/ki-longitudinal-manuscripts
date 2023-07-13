@@ -126,4 +126,6 @@ ggsave(full_plot, file=paste0(BV_dir,"/figures/wasting/fig-supp-5b-wast-prop-his
 ggsave(plot = full_plot, width=6,height=5,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5b.jpeg"), device='jpeg')
 
+fig5b = full_plot
+save(fig5b, file=paste0(here::here(),"/figures/ED-pngs/wasting/ED-plots_5b.Rdata"))
 
