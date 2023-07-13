@@ -819,4 +819,6 @@ rec_plot[[2]] %>% filter(cohort=="pooled") %>% group_by(region) %>% filter(age_r
 #Prevalence of underweight (weight-for-age Z-score < –2) by age and region.
 ggsave(plot = prev_plot$plot, width=14, height=3,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5e.jpeg"), device='jpeg')
+fig5e=prev_plot$plot
+save(fig5e, file=paste0(here::here(),"/figures/ED-pngs/wasting/ED-plots_5e.Rdata"))
 

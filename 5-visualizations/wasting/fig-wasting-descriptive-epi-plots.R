@@ -1301,3 +1301,6 @@ ggsave(plot = sevwast_plot$plot, width=14, height=3,
 ggsave(plot = co_plot$plot, width=14, height=3,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5d.jpeg"), device='jpeg')
 
+fig5a <- sevwast_plot$plot
+fig5d <- co_plot$plot
+save(fig5a, fig5d, file=paste0(here::here(),"/figures/ED-pngs/wasting/ED-plots_5a_5d.Rdata"))
