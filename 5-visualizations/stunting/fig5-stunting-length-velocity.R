@@ -91,7 +91,8 @@ velplot_cm = vel %>%
   dplyr::select(country_cohort, region, pooled, Mean, `Lower.95.CI`, `Upper.95.CI`, 
                 strata, sex, pct_50, pct_25) %>%
   mutate(sex = as.factor(sex)) %>%
-  gather(`pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>%
+  #gather(`pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>%
+  pivot_longer(cols = c(`pct_25`, `pct_50`, `Mean`), names_to = "msmt_type", values_to = "length_cm") %>%
   filter(
     country_cohort == "Pooled - All") %>%
   mutate(region = as.character(region)) %>% 
@@ -101,9 +102,11 @@ velplot_cm = vel %>%
          sexcol = ifelse(sex == "Male", "male_color2", "female_color2"))
 
 velplot_cm_cohort_data = vel %>% 
+  filter(ycat == "Length velocity (cm per month)") %>%
   dplyr::select(country_cohort, region, Mean, 
                 strata, sex, pct_50, pct_25, pct_15) %>%
-  gather(`pct_15`, `pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>%
+  #gather(`pct_15`, `pct_25`, `pct_50`, `Mean`, key = "msmt_type", value = "length_cm") %>%
+  pivot_longer(cols = c(`pct_15`, `pct_25`, `pct_50`, `Mean`), names_to = "msmt_type", values_to = "length_cm") %>%
     filter(
       country_cohort != "Pooled - All" &
         country_cohort != "Pooled - Asia" &
@@ -119,6 +122,8 @@ velplot_cm_cohort_data = vel %>%
   # drop european cohort
   filter(country_cohort != "Probit Belarus") %>% 
   filter(region!="Overall")
+
+temp <- velplot_cm_cohort_data %>% arrange(country_cohort)
 
 # impute missing region
 velplot_cm_cohort_data$region[velplot_cm_cohort_data$country_cohort=="Mal-ed Tanzania"] = "Africa"
@@ -274,6 +279,10 @@ ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-",combined_plot_name,".
 ggsave(plot = combined_plot, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig6.pdf"), device='pdf', width=12, height=12)
 ggsave(plot = combined_plot, filename=paste0(here::here(),"/figures/manuscript-pdfs/stunting/Fig6-alt-size.pdf"), device='pdf', width=17, height=17, units="cm")
 
+## save overall plots together ----------------------------------
+
+ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-",combined_plot_name,
+                                  ".png"), width=12, height=12)
 
 
 
