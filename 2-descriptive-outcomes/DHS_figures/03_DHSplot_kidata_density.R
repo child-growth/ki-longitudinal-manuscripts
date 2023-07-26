@@ -39,7 +39,8 @@ waz = readRDS(underweight_data_path)
 waz <- waz %>% filter(agedays < 24 * 30.4167)
 wst <- wst %>% filter(agedays < 24 * 30.4167)
 st <- st %>% filter(agedays < 24 * 30.4167)
-
+dim(st)
+length(unique(paste0(st$studyid,"-",st$subjid)))
 
 #Save Overall region
 waz.overall <- waz %>% mutate(region="Overall")

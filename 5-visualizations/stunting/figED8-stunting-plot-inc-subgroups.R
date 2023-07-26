@@ -361,6 +361,8 @@ ip_plot_primary_he <- plot_ip_subgroup(d = he,
                                        reverse_color = T,
                                        title = "a) National health expenditures (% of gross domestic product)")
 
+d_cohort %>% filter(he_cat=="5-42%" & agecat=="12-15",!is.na(he_cat)) %>% distinct()
+
 ip_plot_primary_he$plot
 
 # get N's for figure caption

@@ -33,6 +33,7 @@ source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_shared_funct
 source(paste0(here::here(), "/0-project-functions/0_descriptive_epi_stunt_functions.R"))
 
 d <- readRDS(paste0(ghapdata_dir, "stunting_data.rds"))
+table(d$studyid)
 
 # check included cohorts
 assert_that(setequal(unique(d$studyid), monthly_and_quarterly_cohorts),

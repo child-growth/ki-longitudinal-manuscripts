@@ -10,6 +10,9 @@ source(paste0(here::here(), "/0-config.R"))
 library(viridis)
 
 sn <- readRDS(paste0(res_dir, "stunting/stunt_skewed_normal.RDS"))
+
+sn %>% filter(gamma1>0.9)
+
 # gamma1 denotes the Pearson’s index of skewness
 # The direction of skewness is given by the sign.
 # The coefficient compares the sample distribution with a normal distribution. The larger the value, the larger the distribution differs from a normal distribution.
@@ -59,6 +62,7 @@ snl = sn %>%
   )) %>% 
   mutate(parameter = factor(parameter, levels = c("Mean", "Standard deviation", "Skewness")))
 
+set.seed(12345)
 plot = ggplot(snl %>% filter(!is.na(agecat)), aes(x = agecat, y = estimate)) +
   geom_violin(aes(col = agecat)) +
   geom_point(aes(col = agecat), position = position_jitter(width=0.2), alpha = 0.5) +

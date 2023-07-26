@@ -21,20 +21,59 @@ source(paste0(here::here(), "/0-config.R"))
 # Load in HBGD Data from Andrew                                                         #
 #                                                                                       #
 #########################################################################################
-consort_ki <- readRDS(paste0(BV_dir,"/data/HBGDki_CONSORT_inclusion_Ns.rds"))
+consort_ki <- readRDS(paste0(BV_dir,"/data/HBGDki_CONSORT_inclusion_Ns.rds")) %>% distinct() %>% arrange(Study_ID)
+length(unique(consort_ki$Study_ID))
+dim(distinct(consort_ki))
+
+# consort_ki$Study_ID
+# consort_ki[consort_ki$Study_ID %in% c("TDC","Keneba"),]
+# TDC
+# 
+# Keneba
+# 
+# Kenaba Gambia
+# TDC India
+
+#iLiNS-Zinc Study
+
+
+
 temp <- read.csv(paste0(BV_dir,"/data/HBGDki_CONSORT_inclusion.csv")) %>% filter(included_longitudinal==1) %>%
   rename(country=Country, Short_ID_full=Short_ID,Short_ID=Short_ID.1) %>%
   distinct(Short_ID, included,included_anthropometry,
            included_longitudinal, included_low_income, 
            included_age, 
            included_ill, included_qc, 
-           included_measurement_freq, included_1990)
+           included_measurement_freq, included_1990) %>% arrange(Short_ID) %>% 
+           filter(!(Short_ID=="prvd"&included_qc==0)) #Delete duplicate prvd
 gems <- consort_ki %>% filter(Short_ID=="gems"|Short_ID=="gmsa") %>%
   subset(., select = -c(included_small)) %>% 
   mutate(included_1990=1) %>%
   rename(subject_count=nchild)
+
+cmin_peru89 <- consort_ki %>% filter(Short_ID=="cmin"&country=="PERU") %>%
+  subset(., select = -c(included_small)) %>% 
+  mutate(included_1990=1, nobs=2775 ) %>%
+  rename(subject_count=nchild) 
+cmin_peru95 <- consort_ki %>% filter(Short_ID=="cmin"&country=="PERU") %>%
+  subset(., select = -c(included_small)) %>% 
+  mutate(included_1990=1, nobs=5038  ) %>%
+  rename(subject_count=nchild) 
+cmin_brazil89 <- consort_ki %>% filter(Short_ID=="cmin"&country=="BRAZIL") %>%
+  subset(., select = -c(included_small)) %>% 
+  mutate(included_1990=1, nobs=889 ) %>%
+  rename(subject_count=nchild) 
+cmin_GB94 <- consort_ki %>% filter(Short_ID=="cmin"&country=="GUINEA-BISSAU") %>%
+  subset(., select = -c(included_small)) %>% 
+  mutate(included_1990=1, nobs=8514 ) %>%
+  rename(subject_count=nchild) 
+cmin_Bangladesh93 <- consort_ki %>% filter(Short_ID=="cmin"&country=="BANGLADESH") %>%
+  subset(., select = -c(included_small)) %>% 
+  mutate(included_1990=1, nobs=5417  ) %>%
+  rename(subject_count=nchild) 
+
   
-consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID), !(Short_ID %in% c("mmam","gems","gmsa"))) %>%
+consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID), !(Short_ID %in% c("mmam","gems","gmsa","cmin"))) %>%
   subset(., select = -c(
     included,included_anthropometry,
     included_longitudinal, included_low_income, 
@@ -43,14 +82,20 @@ consort_ki <- consort_ki %>% filter(Study_ID != "", !is.na(Study_ID), !(Short_ID
     included_measurement_freq
   )) %>%
   rename(subject_count=nchild)
+consort_ki$measurefreq[consort_ki$Study_ID=="COHORTS"] <- NA
+consort_ki$included_quarterly[consort_ki$Short_ID=="lnsz"] <- 0
+consort_ki$measurefreq[consort_ki$Short_ID=="lnsz"] <- NA
+consort_ki$measurefreq[consort_ki$Study_ID=="TDC"] <- "monthly"
+consort_ki$included_monthly[consort_ki$Study_ID=="TDC"] <- 1
 
+dim(consort_ki)
+consort_ki <- left_join(consort_ki, temp, by=c("Short_ID")) %>% distinct()
+dim(consort_ki)
+consort_ki <- bind_rows(consort_ki, gems, cmin_peru89, cmin_peru95,cmin_Bangladesh93,cmin_GB94,cmin_brazil89)
+dim(consort_ki)
 
+consort_ki[consort_ki$Short_ID=="cmin",]
 
-consort_ki <- left_join(consort_ki, temp, by=c("Short_ID"))
-consort_ki <- bind_rows(consort_ki, gems)
-
-sum(consort_ki$subject_count)
-sum(consort_ki$nobs)
 
 consort_ki <- consort_ki %>% select("Short_ID", "country", "subject_count", "nobs", "Study_ID", "Short_Description", 
                                     "included_longitudinal", "included_anthropometry", "included_low_income", 
@@ -85,6 +130,13 @@ consort_ki <- consort_ki %>%
                              select(-measurefreq)
 # clean country labels and separate into regions
 consort_ki <- mark_region(consort_ki)
+table(consort_ki$region)
+consort_ki$included_low_income[consort_ki$region=="Africa"] <- 1
+consort_ki$included_low_income[consort_ki$region=="South Asia"& consort_ki$country!="SINGAPORE"] <- 1
+consort_ki$included_low_income[consort_ki$region=="Latin America"] <- 1
+
+                           
+            
 # for the heatmap, change South Asia to Asia, N.America to North America
 consort_ki <- consort_ki %>% mutate(region = case_when(region == "South Asia" ~ "Asia",
                                                        region == "N.America & Europe" ~ "North America & Europe",
@@ -92,10 +144,16 @@ consort_ki <- consort_ki %>% mutate(region = case_when(region == "South Asia" ~ 
                                                        region == "Latin America" ~ "Latin America",
                                                        region == "Other" ~ "Other"))
 
+#make sure all Latin America/SA/Asia countries are LMIC's
+
+
 # Clean up country names
 consort_ki$country[consort_ki$country=="TANZANIA, UNITED REPUBLIC OF"] <- "TANZANIA"
 consort_ki$country <- stringr::str_to_title(consort_ki$country)
+consort_ki[consort_ki$studyid=="CMIN",]
 consort_ki <- mutate(consort_ki, cohort = paste0(short_desc,'-', country))
+consort_ki$cohort[consort_ki$Short_ID=="cmin" & consort_ki$nobs == 2775] <- "CMIN-Peru 1989"
+consort_ki$cohort[consort_ki$Short_ID=="cmin" & consort_ki$nobs != 2775] <- "CMIN-Peru 1995"
 
 # create tally of # of exclusions to sort by, for consistent plotting
 consort_ki <- consort_ki %>% mutate(inclusionTally = 
@@ -294,6 +352,14 @@ consort_ki_bar$inclusion_metric <- factor(consort_ki_bar$inclusion_metric,
                                                       'extra6',
                                                       'extra7'))
 
+#temp=consort_ki_bar[consort_ki_bar$inclusion_metric=="included_quarterly" | consort_ki_bar$inclusion_metric=="included_monthly",] %>%group_by(cohort) %>% mutate(N=n()) %>% filter(N==1) %>% arrange(studyid)
+temp=consort_ki_bar[consort_ki_bar$inclusion_metric=="included_monthly",] %>% arrange(studyid)
+dim(temp)
+table(consort_ki_bar$inclusion_metric=="included_quarterly")
+
+consort_ki[consort_ki$studyid=="Keneba",]
+consort_ki_bar[consort_ki_bar$studyid=="Keneba",]
+
 
 pos_x <- 2.2
 pos_y <- 36
@@ -375,18 +441,21 @@ bar <- ggplot(consort_ki_bar, aes(x = inclusion_metric, y = subject_count/10000)
 #####################################################################################
 
 # add margin around plots
+#unit(c(top, right, bottom, left), units)
 hm = hm + theme(plot.margin = unit(c(0, 0.25, 0.7, 0.25), "cm"))
 sidebar = sidebar + theme(plot.margin = unit(c(0, 0.3, .25, 0.1), "cm"))
-#bar = bar + theme(plot.margin = unit(c(1, 6.3, -.65, 4.07), "cm"))
-bar = bar + theme(plot.margin = unit(c(1, -2.43, -.65, 4.085), "cm"))
+#bar = bar + theme(plot.margin = unit(c(1, -2.43, -.65, 4.085), "cm"))
+bar2 = bar + theme(plot.margin = unit(c(1, -2.43, -.65, 3.96), "cm"))
 
-grid <- grid.arrange(bar, arrangeGrob(hm, sidebar, widths = c(70, 25)),
+grid <- grid.arrange(bar2, arrangeGrob(hm, sidebar, widths = c(70, 25)),
                         nrow = 2, ncol = 1,
                         heights = c(120, 1200))
 
 # save plot and underlying data
 ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.png"),
        plot = grid,device='png',width=9,height=20,limitsize = FALSE)
+ggsave(filename=paste0(BV_dir,"/figures/shared/fig-consort.pdf"),
+       plot = grid,device='pdf',width=9,height=20,limitsize = FALSE)
 ggsave(filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig1.jpeg"),
        plot = grid,device='jpeg',width=9,height=20,limitsize = FALSE)
 ggsave(filename=paste0(here::here(),"/figures/ED-pngs/stunting/ED-fig1.jpeg"),

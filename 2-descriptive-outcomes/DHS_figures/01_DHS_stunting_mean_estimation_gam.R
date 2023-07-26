@@ -35,7 +35,8 @@ dhaz <- readRDS(file = paste0(dhs_res_dir,"clean-DHS-haz.rds"))
 table(dhaz$inghap, dhaz$country)
 dhaz$inghap <- ifelse(dhaz$country %in% ki_countries, 1, 0)
 table(dhaz$inghap, dhaz$country)
-dhaz <- dhaz %>% filter(inghap==1)
+dhaz <- dhaz %>% filter(inghap==1, !is.na(zscore))
+dim(dhaz)
 
 # set up for parallel computing
 registerDoParallel(cores = 8)
@@ -43,7 +44,7 @@ registerDoParallel(cores = 8)
 # compute weights per instructions from
 # DHS
 #---------------------------------------
-dhsz <- dhaz %>%
+dhsz <- dhaz %>% 
   mutate(wgt = weight / 1000000)
 
 #---------------------------------------
@@ -109,7 +110,8 @@ d <- readRDS(stunting_data_path)
 d$country <- factor(d$country)
 d$agem <- floor(d$agedays/30.4167)
 
-
+N_child <- d %>% filter(agedays<24*30.4167, !is.na(haz)) %>% distinct(studyid, subjid)
+dim(N_child)
 #---------------------------------------
 # fit smooths to GHAP data
 #---------------------------------------
