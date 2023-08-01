@@ -68,6 +68,7 @@ plot = ggplot(snl %>% filter(!is.na(agecat)), aes(x = agecat, y = estimate)) +
   geom_point(aes(col = agecat), position = position_jitter(width=0.2), alpha = 0.5) +
   scale_color_viridis("Age",  option = "D", discrete=T, direction = -1, end = 0.8) +
   facet_wrap(~parameter, ncol=3,scales = "free")+
+  scale_y_continuous(limits=c(-1, 0.9)) +
   xlab("Age, months") +
   ylab("Estimate") +
   theme(

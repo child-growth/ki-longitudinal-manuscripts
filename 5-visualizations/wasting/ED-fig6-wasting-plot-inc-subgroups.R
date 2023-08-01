@@ -13,10 +13,9 @@ source(paste0(here::here(), "/5-visualizations/stunting/fig-stunting-plot-desc-e
 
 # Load data for cohort-specific points
 try(data_cohort <- readRDS(paste0(BV_dir,"/results/wasting_desc_data_cohort_ip_country_stats.RDS")))
-try(data_cohort <- readRDS("C:/Users/andre/Downloads/wasting_desc_data_cohort_ip_country_stats.RDS"))
 data_cohort$country.cat[is.na(data_cohort$country.cat)] <- "Overall"
 
-
+table(data_cohort$studyid)
 
 d_cohort <- data_cohort %>% rename(est=yi,
                                    lb=ci.lb,

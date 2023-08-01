@@ -28,6 +28,8 @@ source(paste0(here::here(), "/0-config.R"))
 #Load length velocity data
 vel <- readRDS(paste0(res_dir,"/stunting/pool_vel.RDS"))
 
+vel %>% filter(ycat=="Length velocity (cm per month)", sex=="female", strata=="18-21")
+
 meanlaz = readRDS(paste0(res_dir, "stunting/meanlaz_velocityREML.RDS"))
 
 # load who standard
@@ -53,6 +55,8 @@ vel <- vel %>% mutate(pct_50 = ifelse(ycat == 'haz', NA, pct_50))
 vel <- vel %>% mutate(pct_25 = ifelse(ycat == 'haz', NA, pct_25))
 vel <- vel %>% mutate(pct_15 = ifelse(ycat == 'haz', NA, pct_15))
 
+
+vel %>% filter(country_cohort == "Probit Belarus")
 
 # clean up y label
 vel$ycat <- gsub('haz', 'LAZ change (Z-score per month)', vel$ycat)
@@ -120,7 +124,7 @@ velplot_cm_cohort_data = vel %>%
                           ifelse(sex == "Male", "male_color", "female_color")), 
          sexcol = ifelse(sex == "Male", "male_color2", "female_color2")) %>% 
   # drop european cohort
-  filter(country_cohort != "Probit Belarus") %>% 
+  #filter(country_cohort != "Probit Belarus") %>% 
   filter(region!="Overall")
 
 temp <- velplot_cm_cohort_data %>% arrange(country_cohort)
@@ -128,6 +132,7 @@ temp <- velplot_cm_cohort_data %>% arrange(country_cohort)
 # impute missing region
 velplot_cm_cohort_data$region[velplot_cm_cohort_data$country_cohort=="Mal-ed Tanzania"] = "Africa"
 velplot_cm_cohort_data$region[velplot_cm_cohort_data$country_cohort=="Tanzaniachild2 Tanzania"] = "Africa"
+velplot_cm_cohort_data$region[velplot_cm_cohort_data$region=="Asia"] = "South Asia"
 
 velplot_cm_cohort_data = velplot_cm_cohort_data %>% 
   mutate(region = factor(region, levels = c("Africa", "Latin America", "South Asia")))
@@ -137,7 +142,7 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata))+
   facet_grid( ~ sex) +
   
   # cohort-specific lines
-  geom_line(data = velplot_cm_cohort_data %>% filter(region!="Europe"), 
+  geom_line(data = velplot_cm_cohort_data ,#%>% filter(region!="Europe"), 
             aes(group = country_cohort),
             alpha=0.18) +
   
@@ -157,16 +162,17 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata))+
   # confidence intervals
   geom_errorbar(aes(ymin = Lower.95.CI, ymax = Upper.95.CI, color = sexcol),
                 alpha=0.5, size=0.8, width=0.15) +
-
-    scale_color_manual("WHO Growth\nVelocity Standards", values = c("black" = "black",
+  scale_linetype_manual(name="WHO Growth\nVelocity Standards", labels=c("50th percentile","25th percentile"), values=c("solid","dashed"))+
+    scale_color_manual("WHO Growth\nVelocityn Standards", values = c("black" = "black",
                                                                   "male_color" = mypalette[2],
                                                                   "female_color" = mypalette[1], 
                                                                   "male_color" = "male_color", 
                                                                   "female_color2" = mypalette[1], 
                                                                   "male_color2" = mypalette[2],
                                                                   "female_color2" = mypalette[1], 
-                                                                  "male_color2" = mypalette[2])) +
-  scale_y_continuous(limits=c(0.25,4), breaks=seq(0.4,4,0.2),
+                                                                  "male_color2" = mypalette[2]),
+                                                                  guide="none") +
+  scale_y_continuous(limits=c(0.05,4), breaks=seq(0,4,0.2),
                      labels=scaleFUN) +
   xlab("Child age, months") +  
   ylab("Difference in length (cm) per month")+
@@ -175,7 +181,10 @@ plot_cm <- ggplot(velplot_cm, aes(y = length_cm, x = strata))+
         strip.text.x = element_text(size=20, face="bold"),
         strip.text.y = element_text(size=20),
         axis.title.x = element_text(size=20),
-        axis.title.y = element_text(size=20))
+        axis.title.y = element_text(size=20),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(colour = "black"),
+        legend.position=c(.88, .88))
 
 plot_cm
 
@@ -281,8 +290,7 @@ ggsave(plot = combined_plot, filename=paste0(here::here(),"/figures/manuscript-p
 
 ## save overall plots together ----------------------------------
 
-ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-",combined_plot_name,
-                                  ".png"), width=12, height=12)
+ggsave(combined_plot, file=paste0(fig_dir, "stunting/fig-",combined_plot_name,".png"), width=12, height=12)
 
 
 

@@ -194,6 +194,7 @@ preprocess <- function(d){
   d$nmeas.f <- clean_nmeans(d$nmeas)
   
   # subset to primary analysis
+  d_primary <- d
   d_primary <- d %>% filter(cohort!="PROBIT-BELARUS")
   d_primary = scale_estimates(d_primary)
   return(d_primary)
@@ -209,6 +210,9 @@ he = preprocess(he_data)
 pov = preprocess(pov_data)
 birthlaz = preprocess(birthlaz_data)
 mort = preprocess(mort_data)
+
+he_data %>% filter(measure =="Incidence_proportion", severe=="no", birth=="strat", agecat %in% c("18-21 months","15-18 months"), est>15)
+he %>% filter(measure =="Incidence_proportion", severe=="no", birth=="strat", agecat %in% c("18-21 months","15-18 months"), est>15)
 
 #-------------------------------------------------------------------------------------------
 # Stunting incidence proportion - pooled by decade
