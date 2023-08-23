@@ -23,13 +23,15 @@ stunt_tab1 <- stunt %>% filter(agedays < 24 * 30.4167) %>%
 stunt_tab1
 
 
-wast <- readRDS(wasting_data_path)
-wast_tab1 <- wast %>% filter(agedays < 24 * 30.4167) %>%
+wast_tab1 <- d %>% filter(agedays < 24 * 30.4167) %>%
   filter(measurefreq=="monthly") %>%
+  filter(abs(whz) < 5 | abs(haz) < 6 | (waz >= (-6) & waz < 5)) %>%
   group_by(studyid, country) %>% 
-  summarize(nobs=n(), nchild=length(unique(paste0(subjid))))%>%
+  summarize(nobs=n(), nchild=length(unique(paste0(subjid)))) %>%
   as.data.frame()
 wast_tab1
+
+
 
 saveRDS(cc_tab1, file=paste0(BV_dir,"/results/cc_table1.rds"))
 saveRDS(stunt_tab1, file=paste0(BV_dir,"/results/stunt_table1.rds"))

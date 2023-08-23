@@ -128,7 +128,6 @@ d <- d %>%
 nrow(d)
 table(d$country)
 
-temp <- d %>% filter(country=="Brazil")
 
 # Subsetting to relevant variables
 year_vars <- c("hc19")

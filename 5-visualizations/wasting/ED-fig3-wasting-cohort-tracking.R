@@ -13,13 +13,14 @@ d <- readRDS(paste0(ghapdata_dir, "wasting_data.rds")) %>%
   mutate(agemonth = round(agedays / 30.4167)) %>% 
   filter(agemonth<=24) %>% 
   filter(!is.na(whz)) %>% 
-  mutate(country = str_to_sentence(country)) %>% 
+  mutate(country = str_to_title(country)) %>% 
   mutate(cohortid = paste0(studyid, " - ", country)) 
-
+d$cohortid[d$cohortid=="MAL-ED - South africa"] <- "MAL-ED - South africa"
+unique(d$cohortid)
 
 # Monthly cohorts ----------------------------------------------------
 dmonthly <- d %>% filter(studyid %in% monthly_cohorts) 
-  
+
 # check included cohorts
 assert_that(setequal(unique(dmonthly$studyid), monthly_cohorts),
             msg = "Check data. Included cohorts do not match.")
@@ -38,8 +39,8 @@ d_childmonths <- dmonthly %>%
 table(d_childmonths$agemonth==d_childmonths$measid)
 
 ## Expand to include all ages from 0-24 m ----------------------------------------------------
-full <- tidyr::expand(d_childmonths, 
-                  nesting(cohortid, subjid),agemonth=seq(0,24,1))
+full <- tidyr::expand(as.data.frame(d_childmonths), 
+                      nesting(cohortid, subjid),agemonth=seq(0,24,1))
 
 # For studies that had truncated measurement
 # (ie not for all months 0-24) subset data
@@ -91,6 +92,7 @@ allages_monthly = expand_grid(
 ) %>%
   mutate(cohortid = factor(cohortid, levels = rev(unique(dmonthly$cohortid))))
 
+table(allages_monthly$cohortid)
 
 # Merge data with master of all ages 
 master_df_monthly <- allages_monthly  %>%
@@ -114,6 +116,8 @@ textcol <- "grey20"
 blue_palette <- brewer.pal(n = length(unique(master_df_monthly$datacat)),
                            name = "Blues")
 blue_palette[1] = "#BFBDBD"
+
+
 
 
 # Create monthly plot ----------------------------------------------------

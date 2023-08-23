@@ -11,6 +11,8 @@ d_noBW <- d_noBW %>% filter(measurefreq == "monthly")
 
 length(unique(paste0(d$studyid,d$country)))
 d %>% ungroup() %>% distinct(region, studyid, country) %>% group_by(region) %>% summarise(N=n())
+temp <- d %>% filter(agedays < 24 *30.4167) %>% distinct(studyid, subjid)
+table(temp$studyid)
 
 #percent of children born wasted who have another episode
 temp <- d_noBW %>% group_by(studyid, country, subjid) %>% 

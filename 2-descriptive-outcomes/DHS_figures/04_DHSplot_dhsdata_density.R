@@ -53,6 +53,7 @@ dhsz$inghap <- ifelse(dhsz$country %in% ki_countries, 1, 0)
 table(dhsz$inghap, dhsz$country)
 table(dhsz$inghap, dhsz$measure)
 
+
 #---------------------------------------
 # compute weights per instructions from
 # DHS
@@ -133,3 +134,13 @@ saveRDS(dhssubden, file = paste0(dhs_res_dir,"dhs.density.ki-countries.rds"))
 dhaz_N <- dhaz %>% filter(country %in% unique(dhssubden$country))
 table(dhaz_N$country)
 dim(dhaz_N)
+
+#get monthly countries
+dhaz_N <- dhaz %>% filter(country %in% ki_countries_monthly)
+dim(dhaz_N)
+
+dwhz_N <- dwhz %>% filter(country %in% ki_countries_monthly)
+dim(dwhz_N)
+
+dwaz_N <- dwaz %>% filter(country %in% ki_countries_monthly)
+dim(dwaz_N)

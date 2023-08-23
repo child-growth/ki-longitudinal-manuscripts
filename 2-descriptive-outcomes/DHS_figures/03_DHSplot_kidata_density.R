@@ -40,6 +40,8 @@ waz <- waz %>% filter(agedays < 24 * 30.4167)
 wst <- wst %>% filter(agedays < 24 * 30.4167)
 st <- st %>% filter(agedays < 24 * 30.4167)
 dim(st)
+length(unique(paste0(waz$studyid,"-",waz$subjid)))
+length(unique(paste0(wst$studyid,"-",wst$subjid)))
 length(unique(paste0(st$studyid,"-",st$subjid)))
 
 #Save Overall region
@@ -265,6 +267,15 @@ resdf.quarterly <- resdf.quarterly %>%
 st.mon <- st %>% filter(measurefreq=="monthly")
 wst.mon <- wst %>% filter(measurefreq=="monthly")
 waz.mon <- waz %>% filter(measurefreq=="monthly")
+dim(st.mon)
+dim(wst.mon)
+dim(waz.mon)
+
+dim(st.mon %>% distinct(studyid,subjid ))
+dim(wst.mon%>% distinct(studyid,subjid ))
+dim(waz.mon%>% distinct(studyid,subjid ))
+dim(bind_rows(st.mon, wst.mon, waz.mon) %>% distinct(studyid,subjid ))
+
 
 waz.overall.mon <- waz.overall %>% filter(measurefreq=="monthly")
 wst.overall.mon <- wst.overall %>% filter(measurefreq=="monthly")
