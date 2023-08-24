@@ -472,7 +472,7 @@ plot_combined_paf_RR <- function(d, ylimits, facet_label_pos= -75, outcome_var="
 # LAZ
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-ylims=c(0.7, 3)
+ylims=c(0.86, 3)
 p1 <- plot_combined_paf_RR(df[df$RFgroup=="At-birth child characteristics",], ylimits=ylims, facet_label_pos= -40, xaxis=F, ylab="")
 p2 <- plot_combined_paf_RR(df[df$RFgroup=="Postnatal child characteristics",], ylimits=ylims, facet_label_pos= -20, xaxis=F, ylab="")
 p3 <- plot_combined_paf_RR(df[df$RFgroup=="Parental Characteristics",], ylimits=ylims, facet_label_pos= -15, xaxis=F, ylab="")

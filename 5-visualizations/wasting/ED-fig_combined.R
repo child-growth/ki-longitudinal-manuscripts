@@ -24,9 +24,10 @@ width_px <- round(width_px)
 height_px <- round(height_px)
 
 
-fig4 <- image_read(paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4.jpeg"))
-fig4_resized <- image_scale(fig4, geometry = paste0(width_px, "x", height_px, "!"))
-image_write(fig4_resized, paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4_resized.jpeg"))
+fig4 <- image_read(paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4-initial-size.jpeg"))
+fig4_resized <- image_scale(fig4, geometry = paste0(height_px/1.3, "x", height_px, "!"))
+image_write(fig4_resized, paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig4.jpeg"))
+
 
 
 # # Read the images
@@ -49,18 +50,10 @@ EDfig5 <- plot_grid(fig5a, fig5bc, fig5d, fig5e, labels = c("a","","d","e"), nco
 ggsave(plot = EDfig5, width=38, height=34, units = "cm", dpi=600,
        filename=paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5-initial-size.jpeg"), device='jpeg')
 
+fig5 <- image_read(paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5.jpeg"))
+EDfig5_resized <- image_scale(fig5, geometry = paste0(width_px, "x", height_px, "!"))
+image_write(EDfig5_resized, paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5.jpeg"))
 
-# "C:\Users\andre\Documents\HBGDki\ki-longitudinal-manuscripts\figures\ED-pngs\wasting\ED-fig6a.jpeg"
-# "C:\Users\andre\Documents\HBGDki\ki-longitudinal-manuscripts\figures\ED-pngs\wasting\ED-fig6b.jpeg"
-# "C:\Users\andre\Documents\HBGDki\ki-longitudinal-manuscripts\figures\ED-pngs\wasting\ED-fig6c.jpeg"
-# "C:\Users\andre\Documents\HBGDki\ki-longitudinal-manuscripts\figures\ED-pngs\wasting\ED-fig11a.jpeg"
-# "C:\Users\andre\Documents\HBGDki\ki-longitudinal-manuscripts\figures\ED-pngs\wasting\ED-fig11b.jpeg"
-
-
-# Combine the images in a grid. Here we're combining them in a 2x2 grid
-#fig4 <- image_append(c(fig4a, fig4b), stack=TRUE)
-fig5bc <- image_append(c(fig5b, fig5c), stack=FALSE)
-fig5 <- image_append(c(fig5a, fig5bc, fig5d, fig5e), stack=TRUE)
 image_write(fig5, paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig5.jpeg"))
 
 fig6a <- image_read(paste0(here::here(),"/figures/ED-pngs/wasting/ED-fig6a.jpeg"))

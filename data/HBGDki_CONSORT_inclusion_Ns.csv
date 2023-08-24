@@ -1,99 +1,99 @@
-"","Study_ID","country","nchild","nobs","Country","Short_ID","Short_Description","included","included_anthropometry","included_longitudinal","included_low_income","included_small","included_age","included_ill","included_qc","included_measurement_freq","measurefreq","included_monthly"
-"1","INTERBIO-21","BRAZIL",247,364,"BRA","ib21","INTERBIO-21",0,1,1,1,1,0,1,1,NA,NA,NA
-"2","INTERBIO-21","KENYA",332,454,"KEN","ib21","INTERBIO-21",0,1,1,1,1,0,1,1,NA,NA,NA
-"3","INTERBIO-21","PAKISTAN",262,368,"PAK","ib21","INTERBIO-21",0,1,1,1,1,0,1,1,NA,NA,NA
-"4","INTERBIO-21","SOUTH AFRICA",300,398,"ZAF","ib21","INTERBIO-21",0,1,1,1,1,0,1,1,NA,NA,NA
-"5","INTERBIO-21","THAILAND",532,866,"THA","ib21","INTERBIO-21",0,1,1,1,1,0,1,1,NA,NA,NA
-"6","INTERBIO-21","UNITED KINGDOM",556,983,"GBR","ib21","INTERBIO-21",0,1,1,0,1,0,1,1,NA,NA,NA
-"7","INTERGROWTH-21","CHINA",612,930,"CHN","ig21","INTERGROWTH-21",0,1,1,1,1,NA,1,1,NA,NA,NA
-"8","INTERGROWTH-21","INDIA",625,1546,"IND","ig21","INTERGROWTH-21",0,1,1,1,1,NA,1,1,NA,NA,NA
-"9","INTERGROWTH-21","ITALY",521,1007,"ITA","ig21","INTERGROWTH-21",0,1,1,0,1,NA,1,1,NA,NA,NA
-"10","INTERGROWTH-21","KENYA",611,1267,"KEN","ig21","INTERGROWTH-21",0,1,1,1,1,NA,1,1,NA,NA,NA
-"11","INTERGROWTH-21","KENYA",611,1267,"KEN","ig21","INTERGROWTH-21",0,1,1,1,1,NA,1,1,NA,NA,NA
-"12","INTERGROWTH-21","OMAN",636,1152,"OMN","ig21","INTERGROWTH-21",0,1,1,0,1,NA,1,1,NA,NA,NA
-"13","INTERGROWTH-21","UNITED KINGDOM",619,1079,"GBR","ig21","INTERGROWTH-21",0,1,1,0,1,NA,1,1,NA,NA,NA
-"14","GEMS-1","BANGLADESH",2663,5131,"BGD","gems","GEMS-1 Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"15","GEMS-1","GAMBIA",2072,3764,"GMB","gems","GEMS-1 Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"16","GEMS-1","INDIA",2543,4873,"IND","gems","GEMS-1 Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"17","GEMS-1","KENYA",2374,4547,"KEN","gems","GEMS-1 Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"18","GEMS-1","MALI",2824,5155,"MLI","gems","GEMS-1 Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"19","GEMS-1","MOZAMBIQUE",1649,3027,"MOZ","gems","GEMS-1 Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"20","GEMS-1","PAKISTAN",2327,4152,"PAK","gems","GEMS-1 Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"21","GEMS-1A","BANGLADESH",1668,3226,"BGD","gmsa","GEMS-1A Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"22","GEMS-1A","GAMBIA",1688,3132,"GMB","gmsa","GEMS-1A Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"23","GEMS-1A","INDIA",1557,2951,"IND","gmsa","GEMS-1A Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"24","GEMS-1A","KENYA",646,1246,"KEN","gmsa","GEMS-1A Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"25","GEMS-1A","MALI",1846,3455,"MLI","gmsa","GEMS-1A Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"26","GEMS-1A","MOZAMBIQUE",1079,2044,"MOZ","gmsa","GEMS-1A Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"27","GEMS-1A","PAKISTAN",1582,2935,"PAK","gmsa","GEMS-1A Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"28","MAL-ED","BANGLADESH",265,5572,"BGD","mlex","MAL-ED Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"29","MAL-ED","BRAZIL",233,4685,"BRA","mlex","MAL-ED Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"30","MAL-ED","INDIA",251,5656,"IND","mlex","MAL-ED Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"31","MAL-ED","NEPAL",240,5663,"NPL","mlex","MAL-ED Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"32","MAL-ED","PERU",303,5890,"PER","mlex","MAL-ED Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"33","MAL-ED","SOUTH AFRICA",314,6060,"ZAF","mlex","MAL-ED Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"34","MAL-ED","TANZANIA, UNITED REPUBLIC OF",262,5686,"TZA","mlex","MAL-ED Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"35","CMC-V-BCS-2002","INDIA",373,8744,"IND","cmc","CMC Vellore Birth Cohort 2002",1,1,1,1,1,1,1,1,1,"monthly",1
-"36","IRC","INDIA",410,9826,"IND","irc","Vellore Crypto Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"37","TDC","INDIA",160,3594,"IND","tdc","Transmission Dynamics of Cryptosporidial Infections",0,1,1,1,0,1,1,1,NA,NA,NA
-"38","EE","PAKISTAN",380,6431,"PAK","ee","Study of Biomarkers for Environmental Enteropathy",1,1,1,1,1,1,1,1,1,"monthly",1
-"39","Grip","PAKISTAN",203,1427,"PAK","grip","LRTI, RSV and Influenza Cohort Study",0,1,1,1,1,1,0,1,NA,NA,NA
-"40","ResPak","PAKISTAN",278,3120,"PAK","rspk","Respiratory Pathogens Birth Cohort",1,1,1,1,1,1,1,1,1,"monthly",1
-"41","WASH-Bangladesh","BANGLADESH",4823,8389,"BGD","wsb","WASH Benefits Bangladesh Trial",1,1,1,1,1,0,1,1,0,NA,NA
-"42","WASH-Kenya","KENYA",6743,8968,"KEN","wsk","WASH Benefits Kenya Trial",1,1,1,1,1,NA,1,1,0,NA,NA
-"43","MaliMMAM","MALI",447,3710,"MLI","mmam","Deuterium dilution study in Mali",0,1,1,1,1,1,0,1,NA,NA,NA
-"44","Detroit-Longitudinal","UNITED STATES",480,1276,"USA","dtwl","Detroit Longitudinal Cohort",0,1,1,0,1,1,1,1,NA,NA,NA
-"45","AgaKhanUniv","PAKISTAN",1760,3953,"PAK","akup","Aga Khan University Nutrition Intervention Study",1,1,1,1,1,1,1,1,0,NA,NA
-"46","POPS","NETHERLANDS",1220,3609,"NLD","pops","Project On Preterm and SGA Infants 1983",0,1,1,0,1,1,1,1,NA,NA,NA
-"47","SMOCC","NETHERLANDS",2026,14310,"NLD","smcc","Social Medical Survey of Children attending Child health Clinics",0,1,1,0,1,1,1,1,NA,NA,NA
-"48","UMN-Amplatz","UNITED STATES",56,715,"USA","uma","University of Minnesota Amplatz Study",0,1,1,0,0,1,0,1,NA,NA,NA
-"49","UMN-MINNoWS","UNITED STATES",116,323,"USA","umi","University of Minnesota MINNOWS Study",0,1,1,0,0,0,1,1,NA,NA,NA
-"50","UMN-MOD","UNITED STATES",46,611,"USA","umm","University of Minnesota MOD Study",0,1,1,0,0,1,0,1,NA,NA,NA
-"51","UMN-NORM","UNITED STATES",170,199,"USA","umn","University of Minnesota NORM Study",0,1,1,0,0,1,0,1,NA,NA,NA
-"52","BIGCS Ultrasound","CHINA",3423,9691,"CHN","bigu","Born in Guangzhou Cohort Study - Ultrasound Subset",0,1,1,1,1,1,1,1,NA,NA,NA
-"53","HealthyStart","UNITED STATES",1305,7569,"USA","hlts","Healthy Start Study",0,1,1,0,1,0,1,1,NA,NA,NA
-"54","DIVIDS","INDIA",2099,10972,"IND","dvds","DIVIDS-1 with 5 year Follow-up",0,1,1,1,1,1,1,1,NA,NA,NA
-"55","EU","INDIA",2020,3522,"IND","eu","Zn Supp for Diarrheal Pneuomonia",1,1,1,1,1,1,1,1,0,NA,NA
-"56","LBW","INDIA",2049,9815,"IND","zlbw","Zn Supp Trial in LBW",0,1,1,1,1,1,1,1,NA,NA,NA
-"57","VITAMIN-A","INDIA",3806,11198,"IND","vita","EPI Linked Vita A",1,1,1,1,1,1,1,1,0,NA,NA
-"58","Vitamin-B12","INDIA",805,1360,"IND","vb12","Vit B12 Supp Trial",1,1,1,1,1,1,1,1,0,NA,NA
-"59","ZnMort","INDIA",2288,2289,"IND","zmrt","Zn Supp and Infant Mortality",1,1,1,1,1,1,1,1,0,NA,NA
-"60","SAS-CompFeed","INDIA",1533,9530,"IND","cmpf","Optimal Infant Feeding Practices",1,1,1,1,1,1,1,1,1,"quarterly",0
-"61","SAS-FoodSuppl","INDIA",418,2247,"IND","fspp","Randomized Food Supplementation Trial Ages 4-12 Months",1,1,1,1,1,1,1,1,1,"quarterly",0
-"62","ZincInf","INDIA",374,1460,"IND","zinf","Zn Treatment for Diarrhea",0,1,1,1,1,1,0,1,NA,NA,NA
-"63","ZincSGA","INDIA",1992,11691,"IND","zsga","Zinc supplementation in SGA infants",0,1,1,1,1,1,0,1,NA,NA,NA
-"64","NIH-Birth","BANGLADESH",629,6216,"BGD","nbrt","NIH Birth Cohort Study",1,1,1,1,1,1,1,1,1,"quarterly",0
-"65","PROVIDE","BANGLADESH",700,9090,"BGD","prvd","PROVIDE Study",1,1,1,1,1,1,1,1,1,"monthly",1
-"66","NIH-Crypto","BANGLADESH",758,6916,"BGD","ncry","NIH Cryptosporidium Cohort Study",1,1,1,1,1,1,1,1,1,"quarterly",0
-"67","TanzaniaChild2","TANZANIA, UNITED REPUBLIC OF",2396,29594,"TZA","tzc2","Tanzania Child 2",1,1,1,1,1,1,1,1,1,"monthly",1
-"68","Keneba","GAMBIA",2923,40377,"GMB","knba","MRC Kenaba",1,1,1,1,1,1,1,1,1,"monthly",1
-"69","Bangladesh Diarrhea","BANGLADESH",125,1038,"BGD","bngd","Longitudinal Growth Study",0,1,1,1,0,1,1,1,NA,NA,NA
-"70","Burkina Faso Zn","BURKINA FASO",7167,15155,"BFA","bfzn","Zn Trial in Burkina Faso",1,1,1,1,1,1,1,1,0,NA,NA
-"71","Ecuador Zn","ECUADOR",463,1120,"ECU","eczn","Ecuador Zn Trial",0,1,1,1,1,1,1,1,NA,NA,NA
-"72","Guatemala BSC","GUATEMALA",315,2547,"GTM","gbsc","Longitudinal study of BSC in Guatemala",1,1,1,1,1,1,1,1,1,"monthly",1
-"73","Peru Huascar","PERU",153,1839,"PER","phua","Infant Growth in Peru",0,1,1,1,0,1,1,1,NA,NA,NA
-"74","Peru PersistDiarrhea","PERU",312,1445,"PER","ppd","Peru Persistent Diarrhea",0,1,1,1,1,1,0,1,NA,NA,NA
-"75","Peru Zn","PERU",302,1140,"PER","pzn","Peru Zn Fortification",0,1,1,1,1,1,0,1,NA,NA,NA
-"76","iLiNS-Zinc","BURKINA FASO",3266,9987,"BFA","lnsz","iLiNS-Zinc Study",1,1,1,1,1,1,1,1,1,"quarterly",0
-"77","GMS-Nepal","NEPAL",602,12796,"NPL","gmsn","Growth Monitoring Study, Nepal",1,1,1,1,1,1,1,1,1,"monthly",1
-"78","CMIN","BANGLADESH",279,5400,"BGD","cmin","Child Malnutrition and Infection Network",1,1,1,1,1,1,1,1,1,"monthly",1
-"79","CMIN","BRAZIL",119,889,"BRA","cmin","Child Malnutrition and Infection Network",1,1,1,1,1,1,1,1,1,"quarterly",0
-"80","CMIN","GUINEA-BISSAU",1507,9157,"GNB","cmin","Child Malnutrition and Infection Network",1,1,1,1,1,1,1,1,1,"quarterly",0
-"81","CMIN","PERU",929,12083,"PER","cmin","Child Malnutrition and Infection Network",1,1,1,1,1,1,1,1,1,"monthly",1
-"82","CONTENT","PERU",215,8339,"PER","cntt","Eval. of Neglected Enteric Infections",1,1,1,1,1,1,1,1,1,"monthly",1
-"83","PROBIT","BELARUS",16898,124197,"BLR","prbt","PROBIT Study",1,1,1,1,1,1,1,1,1,"quarterly",0
-"84","BAMBAM","UNITED STATES",302,495,"USA","bmbm","Brain Myelination in Children",0,1,1,0,1,1,1,1,NA,NA,NA
-"85","ZVITAMBO","ZIMBABWE",14086,64341,"ZWE","zvit","ZVITAMBO",1,1,1,1,1,1,1,1,1,"quarterly",0
-"86","GUSTO","SINGAPORE",1158,8582,"SGP","gsto","GUSTO",0,1,1,0,1,0,1,1,NA,NA,NA
-"87","COHORTS","BRAZIL",4852,5710,"BRA","cort","COHORTS",1,1,1,1,1,1,1,1,1,NA,NA
-"88","COHORTS","GUATEMALA",1368,7765,"GTM","cort","COHORTS",1,1,1,1,1,1,1,1,1,"quarterly",0
-"89","COHORTS","INDIA",7421,31861,"IND","cort","COHORTS",1,1,1,1,1,1,1,1,1,"quarterly",0
-"90","COHORTS","PHILIPPINES",3058,32578,"PHL","cort","COHORTS",1,1,1,1,1,1,1,1,1,"quarterly",0
-"91","COHORTS","SOUTH AFRICA",1557,1796,"ZAF","cort","COHORTS",1,1,1,1,1,1,1,1,1,NA,NA
-"92","Fels","UNITED STATES",1029,6597,"USA","fels","The Fels Longitudinal Study",0,1,1,0,1,1,1,1,NA,NA,NA
-"93","LCNI-5","MALAWI",840,4337,"MWI","lcn5","Lungwena Child Nutrition Intervention Study 5",1,1,1,1,1,1,1,1,1,"quarterly",0
-"94","iLiNS-DOSE","MALAWI",1931,5129,"MWI","ilnd","iLiNS-DOSE",1,1,1,1,1,1,1,1,0,NA,NA
-"95","iLiNS-DYAD-M","MALAWI",1205,4175,"MWI","ildm","iLiNS-DYAD-M",1,1,1,1,1,0,1,1,0,NA,NA
-"96","Ecuador Egg","ECUADOR",160,308,"ECU","eegg","Ecuador Egg Trial",0,1,1,1,0,1,1,1,NA,NA,NA
-"97","JiVitA-3","BANGLADESH",27324,107725,"BGD","jvt3","JiVitA-3 Study",1,1,1,1,1,0,1,1,1,"quarterly",0
-"98","JiVitA-4","BANGLADESH",5443,35936,"BGD","jvt4","JiVitA-4 Study",1,1,1,1,1,1,1,1,1,"quarterly",0
+,Study_ID,country,nchild,nobs,Country,Short_ID,Short_Description,included,included_anthropometry,included_longitudinal,included_low_income,included_small,included_age,included_ill,included_qc,included_measurement_freq,measurefreq,included_monthly
+1,INTERBIO-21,BRAZIL,247,364,BRA,ib21,INTERBIO-21,0,1,1,1,1,0,1,1,NA,NA,NA
+2,INTERBIO-21,KENYA,332,454,KEN,ib21,INTERBIO-21,0,1,1,1,1,0,1,1,NA,NA,NA
+3,INTERBIO-21,PAKISTAN,262,368,PAK,ib21,INTERBIO-21,0,1,1,1,1,0,1,1,NA,NA,NA
+4,INTERBIO-21,SOUTH AFRICA,300,398,ZAF,ib21,INTERBIO-21,0,1,1,1,1,0,1,1,NA,NA,NA
+5,INTERBIO-21,THAILAND,532,866,THA,ib21,INTERBIO-21,0,1,1,1,1,0,1,1,NA,NA,NA
+6,INTERBIO-21,UNITED KINGDOM,556,983,GBR,ib21,INTERBIO-21,0,1,1,0,1,0,1,1,NA,NA,NA
+7,INTERGROWTH-21,CHINA,612,930,CHN,ig21,INTERGROWTH-21,0,1,1,1,1,NA,1,1,NA,NA,NA
+8,INTERGROWTH-21,INDIA,625,1546,IND,ig21,INTERGROWTH-21,0,1,1,1,1,NA,1,1,NA,NA,NA
+9,INTERGROWTH-21,ITALY,521,1007,ITA,ig21,INTERGROWTH-21,0,1,1,0,1,NA,1,1,NA,NA,NA
+10,INTERGROWTH-21,KENYA,611,1267,KEN,ig21,INTERGROWTH-21,0,1,1,1,1,NA,1,1,NA,NA,NA
+11,INTERGROWTH-21,KENYA,611,1267,KEN,ig21,INTERGROWTH-21,0,1,1,1,1,NA,1,1,NA,NA,NA
+12,INTERGROWTH-21,OMAN,636,1152,OMN,ig21,INTERGROWTH-21,0,1,1,0,1,NA,1,1,NA,NA,NA
+13,INTERGROWTH-21,UNITED KINGDOM,619,1079,GBR,ig21,INTERGROWTH-21,0,1,1,0,1,NA,1,1,NA,NA,NA
+14,GEMS-1,BANGLADESH,2663,5131,BGD,gems,GEMS-1 Study,0,1,1,1,1,1,0,1,NA,NA,NA
+15,GEMS-1,GAMBIA,2072,3764,GMB,gems,GEMS-1 Study,0,1,1,1,1,1,0,1,NA,NA,NA
+16,GEMS-1,INDIA,2543,4873,IND,gems,GEMS-1 Study,0,1,1,1,1,1,0,1,NA,NA,NA
+17,GEMS-1,KENYA,2374,4547,KEN,gems,GEMS-1 Study,0,1,1,1,1,1,0,1,NA,NA,NA
+18,GEMS-1,MALI,2824,5155,MLI,gems,GEMS-1 Study,0,1,1,1,1,1,0,1,NA,NA,NA
+19,GEMS-1,MOZAMBIQUE,1649,3027,MOZ,gems,GEMS-1 Study,0,1,1,1,1,1,0,1,NA,NA,NA
+20,GEMS-1,PAKISTAN,2327,4152,PAK,gems,GEMS-1 Study,0,1,1,1,1,1,0,1,NA,NA,NA
+21,GEMS-1A,BANGLADESH,1668,3226,BGD,gmsa,GEMS-1A Study,0,1,1,1,1,1,0,1,NA,NA,NA
+22,GEMS-1A,GAMBIA,1688,3132,GMB,gmsa,GEMS-1A Study,0,1,1,1,1,1,0,1,NA,NA,NA
+23,GEMS-1A,INDIA,1557,2951,IND,gmsa,GEMS-1A Study,0,1,1,1,1,1,0,1,NA,NA,NA
+24,GEMS-1A,KENYA,646,1246,KEN,gmsa,GEMS-1A Study,0,1,1,1,1,1,0,1,NA,NA,NA
+25,GEMS-1A,MALI,1846,3455,MLI,gmsa,GEMS-1A Study,0,1,1,1,1,1,0,1,NA,NA,NA
+26,GEMS-1A,MOZAMBIQUE,1079,2044,MOZ,gmsa,GEMS-1A Study,0,1,1,1,1,1,0,1,NA,NA,NA
+27,GEMS-1A,PAKISTAN,1582,2935,PAK,gmsa,GEMS-1A Study,0,1,1,1,1,1,0,1,NA,NA,NA
+28,MAL-ED,BANGLADESH,265,5572,BGD,mlex,MAL-ED Study,1,1,1,1,1,1,1,1,1,monthly,1
+29,MAL-ED,BRAZIL,233,4685,BRA,mlex,MAL-ED Study,1,1,1,1,1,1,1,1,1,monthly,1
+30,MAL-ED,INDIA,251,5656,IND,mlex,MAL-ED Study,1,1,1,1,1,1,1,1,1,monthly,1
+31,MAL-ED,NEPAL,240,5663,NPL,mlex,MAL-ED Study,1,1,1,1,1,1,1,1,1,monthly,1
+32,MAL-ED,PERU,303,5890,PER,mlex,MAL-ED Study,1,1,1,1,1,1,1,1,1,monthly,1
+33,MAL-ED,SOUTH AFRICA,314,6060,ZAF,mlex,MAL-ED Study,1,1,1,1,1,1,1,1,1,monthly,1
+34,MAL-ED,"TANZANIA, UNITED REPUBLIC OF",262,5686,TZA,mlex,MAL-ED Study,1,1,1,1,1,1,1,1,1,monthly,1
+35,CMC-V-BCS-2002,INDIA,373,8744,IND,cmc,CMC Vellore Birth Cohort 2002,1,1,1,1,1,1,1,1,1,monthly,1
+36,IRC,INDIA,410,9826,IND,irc,Vellore Crypto Study,1,1,1,1,1,1,1,1,1,monthly,1
+37,TDC,INDIA,160,3594,IND,tdc,Transmission Dynamics of Cryptosporidial Infections,0,1,1,1,0,1,1,1,NA,NA,NA
+38,EE,PAKISTAN,380,6431,PAK,ee,Study of Biomarkers for Environmental Enteropathy,1,1,1,1,1,1,1,1,1,monthly,1
+39,Grip,PAKISTAN,203,1427,PAK,grip,"LRTI, RSV and Influenza Cohort Study",0,1,1,1,1,1,0,1,NA,NA,NA
+40,ResPak,PAKISTAN,278,3120,PAK,rspk,Respiratory Pathogens Birth Cohort,1,1,1,1,1,1,1,1,1,monthly,1
+41,WASH-Bangladesh,BANGLADESH,4823,8389,BGD,wsb,WASH Benefits Bangladesh Trial,1,1,1,1,1,0,1,1,0,NA,NA
+42,WASH-Kenya,KENYA,6743,8968,KEN,wsk,WASH Benefits Kenya Trial,1,1,1,1,1,NA,1,1,0,NA,NA
+43,MaliMMAM,MALI,447,3710,MLI,mmam,Deuterium dilution study in Mali,0,1,1,1,1,1,0,1,NA,NA,NA
+44,Detroit-Longitudinal,UNITED STATES,480,1276,USA,dtwl,Detroit Longitudinal Cohort,0,1,1,0,1,1,1,1,NA,NA,NA
+45,AgaKhanUniv,PAKISTAN,1760,3953,PAK,akup,Aga Khan University Nutrition Intervention Study,1,1,1,1,1,1,1,1,0,NA,NA
+46,POPS,NETHERLANDS,1220,3609,NLD,pops,Project On Preterm and SGA Infants 1983,0,1,1,0,1,1,1,1,NA,NA,NA
+47,SMOCC,NETHERLANDS,2026,14310,NLD,smcc,Social Medical Survey of Children attending Child health Clinics,0,1,1,0,1,1,1,1,NA,NA,NA
+48,UMN-Amplatz,UNITED STATES,56,715,USA,uma,University of Minnesota Amplatz Study,0,1,1,0,0,1,0,1,NA,NA,NA
+49,UMN-MINNoWS,UNITED STATES,116,323,USA,umi,University of Minnesota MINNOWS Study,0,1,1,0,0,0,1,1,NA,NA,NA
+50,UMN-MOD,UNITED STATES,46,611,USA,umm,University of Minnesota MOD Study,0,1,1,0,0,1,0,1,NA,NA,NA
+51,UMN-NORM,UNITED STATES,170,199,USA,umn,University of Minnesota NORM Study,0,1,1,0,0,1,0,1,NA,NA,NA
+52,BIGCS Ultrasound,CHINA,3423,9691,CHN,bigu,Born in Guangzhou Cohort Study - Ultrasound Subset,0,1,1,1,1,1,1,1,NA,NA,NA
+53,HealthyStart,UNITED STATES,1305,7569,USA,hlts,Healthy Start Study,0,1,1,0,1,0,1,1,NA,NA,NA
+54,DIVIDS,INDIA,2099,10972,IND,dvds,DIVIDS-1 with 5 year Follow-up,0,1,1,1,1,1,1,1,NA,NA,NA
+55,EU,INDIA,2020,3522,IND,eu,Zn Supp for Diarrheal Pneuomonia,1,1,1,1,1,1,1,1,0,NA,NA
+56,LBW,INDIA,2049,9815,IND,zlbw,Zn Supp Trial in LBW,0,1,1,1,1,1,1,1,NA,NA,NA
+57,VITAMIN-A,INDIA,3806,11198,IND,vita,EPI Linked Vita A,1,1,1,1,1,1,1,1,0,NA,NA
+58,Vitamin-B12,INDIA,805,1360,IND,vb12,Vit B12 Supp Trial,1,1,1,1,1,1,1,1,0,NA,NA
+59,ZnMort,INDIA,2288,2289,IND,zmrt,Zn Supp and Infant Mortality,1,1,1,1,1,1,1,1,0,NA,NA
+60,SAS-CompFeed,INDIA,1533,9530,IND,cmpf,Optimal Infant Feeding Practices,1,1,1,1,1,1,1,1,1,quarterly,0
+61,SAS-FoodSuppl,INDIA,418,2247,IND,fspp,Randomized Food Supplementation Trial Ages 4-12 Months,1,1,1,1,1,1,1,1,1,quarterly,0
+62,ZincInf,INDIA,374,1460,IND,zinf,Zn Treatment for Diarrhea,0,1,1,1,1,1,0,1,NA,NA,NA
+63,ZincSGA,INDIA,1992,11691,IND,zsga,Zinc supplementation in SGA infants,0,1,1,1,1,1,0,1,NA,NA,NA
+64,NIH-Birth,BANGLADESH,629,6216,BGD,nbrt,NIH Birth Cohort Study,1,1,1,1,1,1,1,1,1,quarterly,0
+65,PROVIDE,BANGLADESH,700,9090,BGD,prvd,PROVIDE Study,1,1,1,1,1,1,1,1,1,monthly,1
+66,NIH-Crypto,BANGLADESH,758,6916,BGD,ncry,NIH Cryptosporidium Cohort Study,1,1,1,1,1,1,1,1,1,quarterly,0
+67,TanzaniaChild2,"TANZANIA, UNITED REPUBLIC OF",2396,29594,TZA,tzc2,Tanzania Child 2,1,1,1,1,1,1,1,1,1,monthly,1
+68,Keneba,GAMBIA,2923,40377,GMB,knba,MRC Kenaba,1,1,1,1,1,1,1,1,1,monthly,1
+69,Bangladesh Diarrhea,BANGLADESH,125,1038,BGD,bngd,Longitudinal Growth Study,0,1,1,1,0,1,1,1,NA,NA,NA
+70,Burkina Faso Zn,BURKINA FASO,7167,15155,BFA,bfzn,Zn Trial in Burkina Faso,1,1,1,1,1,1,1,1,0,NA,NA
+71,Ecuador Zn,ECUADOR,463,1120,ECU,eczn,Ecuador Zn Trial,0,1,1,1,1,1,1,1,NA,NA,NA
+72,Guatemala BSC,GUATEMALA,315,2547,GTM,gbsc,Longitudinal study of BSC in Guatemala,1,1,1,1,1,1,1,1,1,monthly,1
+73,Peru Huascar,PERU,153,1839,PER,phua,Infant Growth in Peru,0,1,1,1,0,1,1,1,NA,NA,NA
+74,Peru PersistDiarrhea,PERU,312,1445,PER,ppd,Peru Persistent Diarrhea,0,1,1,1,1,1,0,1,NA,NA,NA
+75,Peru Zn,PERU,302,1140,PER,pzn,Peru Zn Fortification,0,1,1,1,1,1,0,1,NA,NA,NA
+76,iLiNS-Zinc,BURKINA FASO,3266,9987,BFA,lnsz,iLiNS-Zinc Study,1,1,1,1,1,1,1,1,1,quarterly,0
+77,GMS-Nepal,NEPAL,602,12796,NPL,gmsn,"Growth Monitoring Study, Nepal",1,1,1,1,1,1,1,1,1,monthly,1
+78,CMIN,BANGLADESH,279,5400,BGD,cmin,Child Malnutrition and Infection Network,1,1,1,1,1,1,1,1,1,monthly,1
+79,CMIN,BRAZIL,119,889,BRA,cmin,Child Malnutrition and Infection Network,1,1,1,1,1,1,1,1,1,quarterly,0
+80,CMIN,GUINEA-BISSAU,1507,9157,GNB,cmin,Child Malnutrition and Infection Network,1,1,1,1,1,1,1,1,1,quarterly,0
+81,CMIN,PERU,929,12083,PER,cmin,Child Malnutrition and Infection Network,1,1,1,1,1,1,1,1,1,monthly,1
+82,CONTENT,PERU,215,8339,PER,cntt,Eval. of Neglected Enteric Infections,1,1,1,1,1,1,1,1,1,monthly,1
+83,PROBIT,BELARUS,16898,124197,BLR,prbt,PROBIT Study,1,1,1,1,1,1,1,1,1,quarterly,0
+84,BAMBAM,UNITED STATES,302,495,USA,bmbm,Brain Myelination in Children,0,1,1,0,1,1,1,1,NA,NA,NA
+85,ZVITAMBO,ZIMBABWE,14086,64341,ZWE,zvit,ZVITAMBO,1,1,1,1,1,1,1,1,1,quarterly,0
+86,GUSTO,SINGAPORE,1158,8582,SGP,gsto,GUSTO,0,1,1,0,1,0,1,1,NA,NA,NA
+87,COHORTS,BRAZIL,4852,5710,BRA,cort,COHORTS,1,1,1,1,1,1,1,1,1,NA,NA
+88,COHORTS,GUATEMALA,1368,7765,GTM,cort,COHORTS,1,1,1,1,1,1,1,1,1,quarterly,0
+89,COHORTS,INDIA,7421,31861,IND,cort,COHORTS,1,1,1,1,1,1,1,1,1,quarterly,0
+90,COHORTS,PHILIPPINES,3058,32578,PHL,cort,COHORTS,1,1,1,1,1,1,1,1,1,quarterly,0
+91,COHORTS,SOUTH AFRICA,1557,1796,ZAF,cort,COHORTS,1,1,1,1,1,1,1,1,1,NA,NA
+92,Fels,UNITED STATES,1029,6597,USA,fels,The Fels Longitudinal Study,0,1,1,0,1,1,1,1,NA,NA,NA
+93,LCNI-5,MALAWI,840,4337,MWI,lcn5,Lungwena Child Nutrition Intervention Study 5,1,1,1,1,1,1,1,1,1,quarterly,0
+94,iLiNS-DOSE,MALAWI,1931,5129,MWI,ilnd,iLiNS-DOSE,1,1,1,1,1,1,1,1,0,NA,NA
+95,iLiNS-DYAD-M,MALAWI,1205,4175,MWI,ildm,iLiNS-DYAD-M,1,1,1,1,1,0,1,1,0,NA,NA
+96,Ecuador Egg,ECUADOR,160,308,ECU,eegg,Ecuador Egg Trial,0,1,1,1,0,1,1,1,NA,NA,NA
+97,JiVitA-3,BANGLADESH,27324,107725,BGD,jvt3,JiVitA-3 Study,1,1,1,1,1,0,1,1,1,quarterly,0
+98,JiVitA-4,BANGLADESH,5443,35936,BGD,jvt4,JiVitA-4 Study,1,1,1,1,1,1,1,1,1,quarterly,0
